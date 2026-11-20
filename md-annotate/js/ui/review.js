@@ -9,7 +9,7 @@
    core/review.js. Tab Review (ui/review-panel.js) và gợi ý (ui/dwell.js) ghi dấu qua setReviews.
    Xuất: applyReview, initReview, jumpUnit, laneGeo, markUnits, readingBand, repaintLanes, reviewDoc, rvState, setReviews,
      setRvTouched, stepOpen, toggleSection.
-   Dùng: core/anchor.js, core/text.js, core/sections.js, core/review.js, ui/dom.js, ui/store.js, ui/state.js,
+   Dùng: core/anchor.js, core/text.js, core/sections.js, core/review.js, ui/dom.js, ui/state.js,
      ui/sync-scroll.js, ui/views.js, ui/layout.js, ui/popup.js, ui/picks.js, ui/prompt.js, ui/review-panel.js,
      ui/dwell.js, ui/minimap.js. */
 import { locate } from '../core/anchor.js';
@@ -18,7 +18,6 @@ import { bandBounds, bandPick, bandScroll } from '../core/sections.js';
 import { allDone, linesWord, markWord, nextOpen, progress, resolveMarks, reviewRanges, reviewSections, reviewUnits, setMarks, unitsIn,
   unitsOfLines, withSug } from '../core/review.js';
 import { $, h, mqSheet, mqSide, reduceMotion, shown, toast, typing } from './dom.js';
-import { prefs } from './store.js';
 import { loadSession, S, saveClosed, scheduleSave } from './state.js';
 import { blockPairs, setByPage } from './sync-scroll.js';
 import { isSplit, view } from './views.js';
@@ -416,7 +415,6 @@ export function initReview() {
     var r = rvState(), cur = currentUnit();
     if (cur >= 0 && r.res.state[cur] === 'done') stepOpen(1, cur); else markCurrent(false);
   });
-  document.documentElement.classList.toggle('ma-rvdim', !!prefs.rvDim);
   /* X, Shift+X, J, K: bỏ qua khi đang gõ, khi hộp thoại hay hộp nhận xét mở, khi có phím bổ trợ khác Shift. */
   document.addEventListener('keydown', function (e) {
     if (e.ctrlKey || e.metaKey || e.altKey || e.isComposing || e.repeat) return;

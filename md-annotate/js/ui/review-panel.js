@@ -2,12 +2,12 @@
    chưa đọc đầu tiên của nó), Next unreviewed, Dim reviewed (prefs.rvDim), dấu mất, xoá mọi dấu; % trên tab, thanh dọc
    (#rail-rv) và thanh đáy (#dock-rv). Dữ liệu và thao tác ở ui/review.js.
    Xuất: initReviewPanel, renderReviewPanel.
-   Dùng: core/text.js, core/review.js, ui/dom.js, ui/store.js, ui/state.js, ui/render.js, ui/views.js, ui/panel.js,
+   Dùng: core/text.js, core/review.js, ui/dom.js, ui/layout.js, ui/state.js, ui/render.js, ui/views.js, ui/panel.js,
      ui/review.js. */
 import { lineOf, plural } from '../core/text.js';
 import { dropLost, firstOpen, reviewSections } from '../core/review.js';
-import { $, h, toast } from './dom.js';
-import { prefs, savePrefs } from './store.js';
+import { $, h } from './dom.js';
+import { setLayout } from './layout.js';
 import { S } from './state.js';
 import { anchors, ordered, orphans } from './render.js';
 import { lastRead, setView, view } from './views.js';
@@ -53,7 +53,6 @@ export function renderReviewPanel(r, p, blind) {
   $('rv-fill').style.width = pct;
   $('rv-bar').setAttribute('aria-valuenow', String(p.pct));
   $('rv-sub').textContent = p.done + ' of ' + plural(p.total, 'block') + ' reviewed' + (p.changed ? ' · ' + p.changed + ' edited since review' : '');
-  $('rv-dim').checked = !!prefs.rvDim;
   var nl = r.res.lost.length;
   $('rv-lost').hidden = !nl;
   $('rv-lost-t').textContent = nl ? plural(nl, 'reviewed block') + (nl === 1 ? ' is' : ' are') + ' no longer in the text (edited or deleted). ' : '';
@@ -82,8 +81,7 @@ export function initReviewPanel() {
   $('ptab-review').addEventListener('click', setRvTouched);
   $('rv-next').addEventListener('click', toText(function () { stepOpen(1); }));
   $('rv-dim').addEventListener('change', function (e) {
-    prefs.rvDim = e.target.checked; savePrefs();
-    document.documentElement.classList.toggle('ma-rvdim', prefs.rvDim);
+    setLayout('rvDim', e.target.checked);
   });
   $('rv-lost-x').addEventListener('click', function () {
     var n = rvState().res.lost.length;

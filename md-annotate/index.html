@@ -391,6 +391,11 @@
               Reading band: the first section between 25% and 50% of the pane's height, updated as you scroll. In Split
               the matching section in the other pane stays bright too.</p>
           </div>
+          <div class="ma-set">
+            <div class="ma-set__h"><label class="ma-check" for="set-rvdim"><input type="checkbox" id="set-rvdim" /> Dim reviewed blocks</label><output id="set-rvdimv-o" for="set-rvdimv"></output></div>
+            <input type="range" id="set-rvdimv" min="10" max="80" step="5" aria-label="Brightness of reviewed blocks" />
+            <p class="ma-sub">Fades the blocks you marked reviewed, for a top-to-bottom pass. Same switch as Dim reviewed in the Review tab.</p>
+          </div>
           <div><button class="ma-btn ma-btn--quiet" type="button" id="set-reset">Reset to defaults</button></div>
         </div>
       </div>

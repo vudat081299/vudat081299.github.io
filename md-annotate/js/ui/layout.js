@@ -1,6 +1,7 @@
-/* Hộp Settings (#dlg-layout): bề rộng vùng làm việc, khổ và cỡ chữ Preview, Focus mode, cuộn theo nhau. Áp ngay qua biến CSS.
+/* Hộp Settings (#dlg-layout): bề rộng vùng làm việc, khổ và cỡ chữ Preview, Focus mode, cuộn theo nhau, làm mờ khối đã đọc
+   (prefs.rvDim, độ sáng prefs.rvDimV; ô Dim reviewed của tab Review cũng gọi setLayout). Áp ngay qua biến CSS.
    layoutVal(k): tuỳ chọn Layout, chưa đặt thì lấy mặc định.
-   Xuất: initLayout, layoutVal.
+   Xuất: initLayout, layoutVal, setLayout.
    Dùng: ui/store.js, ui/dom.js, ui/views.js, ui/focus.js. */
 import { prefs, savePrefs } from './store.js';
 import { $ } from './dom.js';
@@ -9,7 +10,7 @@ import { refreshFocus } from './focus.js';
 
 /* Layout: bề rộng vùng làm việc (prefs.wrap: 'auto' | 50–100 %), khổ chữ Preview (prefs.measure: 0 = hết khung |
    50–140ch), cỡ chữ Preview (prefs.mdfs: 13–22px). Đổi là áp ngay qua biến CSS. */
-var LAYOUT_DEF = { wrap: 'auto', measure: 0, mdfs: 16, focus: false, dim: 30, sync: true, focusBy: 'pointer' };
+var LAYOUT_DEF = { wrap: 'auto', measure: 0, mdfs: 16, focus: false, dim: 30, sync: true, focusBy: 'pointer', rvDim: false, rvDimV: 40 };
 export function layoutVal(k) { return prefs[k] == null ? LAYOUT_DEF[k] : prefs[k]; }
 function applyLayout() {
   var root = document.documentElement.style, w = layoutVal('wrap'), m = layoutVal('measure'), fs = layoutVal('mdfs');
@@ -32,11 +33,18 @@ function applyLayout() {
   refreshFocus();
   $('set-dim').value = dim;
   $('set-dim-o').textContent = fo ? dim + '% visible' : 'Off';
+  var rv = !!layoutVal('rvDim'), rvv = layoutVal('rvDimV');
+  document.documentElement.classList.toggle('ma-rvdim', rv);
+  root.setProperty('--rv-dim', String(rvv / 100));
+  $('set-rvdim').checked = $('rv-dim').checked = rv;
+  $('set-rvdimv').disabled = !rv;
+  $('set-rvdimv').value = rvv;
+  $('set-rvdimv-o').textContent = rv ? rvv + '% visible' : 'Off';
   $('set-sync').checked = layoutVal('sync') !== false;
   $('set-fs').value = fs;
   $('set-fs-o').textContent = fs + 'px';
 }
-function setLayout(k, v) { prefs[k] = v; savePrefs(); applyLayout(); refreshSplit(); }
+export function setLayout(k, v) { prefs[k] = v; savePrefs(); applyLayout(); refreshSplit(); }
 
 export function initLayout() {
   applyLayout();
@@ -50,8 +58,11 @@ export function initLayout() {
     r.addEventListener('change', function () { if (r.checked) setLayout('focusBy', r.value); });
   });
   $('set-dim').addEventListener('input', function (e) { setLayout('dim', +e.target.value); });
+  $('set-rvdim').addEventListener('change', function (e) { setLayout('rvDim', e.target.checked); });
+  $('set-rvdimv').addEventListener('input', function (e) { setLayout('rvDimV', +e.target.value); });
   $('set-reset').addEventListener('click', function () {
-    delete prefs.wrap; delete prefs.measure; delete prefs.mdfs; delete prefs.focus; delete prefs.dim; delete prefs.sync; delete prefs.focusBy; savePrefs(); applyLayout(); refreshSplit();
+    Object.keys(LAYOUT_DEF).forEach(function (k) { delete prefs[k]; });
+    savePrefs(); applyLayout(); refreshSplit();
   });
   $('btn-layout').addEventListener('click', function () { $('dlg-layout').showModal(); });
 }

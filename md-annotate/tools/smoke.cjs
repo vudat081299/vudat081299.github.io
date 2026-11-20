@@ -1192,6 +1192,16 @@ const cornerClash = (page) => page.evaluate(() => {
     await rv.check('#rv-dim'); await rv.waitForTimeout(350);
     const op = await rv.evaluate(() => [...document.querySelectorAll('#v-md > *')].find((e) => e.textContent.includes('Para A7 ')).ownerDocument.defaultView.getComputedStyle([...document.querySelectorAll('#v-md > *')].find((e) => e.textContent.includes('Para A7 '))).opacity);
     check('Dim reviewed: khối đã đọc mờ, chiều cao không đổi', +op < 0.5 && (await rv.$eval('#v-md', (e) => e.scrollHeight)) === hBefore, op);
+    // Settings: cùng công tắc với tab Review, độ sáng chỉnh được, áp ngay.
+    await rv.click('#btn-layout');
+    const rvSet0 = await rv.isChecked('#set-rvdim');
+    await rv.$eval('#set-rvdimv', (el) => { el.value = 20; el.dispatchEvent(new Event('input', { bubbles: true })); });
+    await rv.waitForTimeout(350);   // opacity có transition .2s
+    const op2 = await rv.evaluate(() => getComputedStyle([...document.querySelectorAll('#v-md > *')].find((e) => e.textContent.includes('Para A7 '))).opacity);
+    await rv.uncheck('#set-rvdim');
+    const offBoth = !(await rv.isChecked('#rv-dim')) && (await rv.textContent('#set-rvdimv-o')) === 'Off';
+    await rv.check('#set-rvdim'); await rv.keyboard.press('Escape');
+    check('Settings: Dim reviewed cùng công tắc với tab Review, độ sáng 20% áp ngay', rvSet0 && +op2 === 0.2 && offBoth && (await rv.isChecked('#rv-dim')), JSON.stringify([rvSet0, op2, offBoth]));
     await rv.uncheck('#rv-dim');
     // Prompt: tắt thì không có dòng đã đọc; bật thì có, tóm tắt Options có "reviewed".
     await openOpts(rv);

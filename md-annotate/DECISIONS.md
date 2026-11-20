@@ -18,6 +18,7 @@
 - MDAN-018 · Thanh cuộn không chạm góc bo · `md-annotate/css/**`, `md-annotate/js/ui/minimap.js`
 - MDAN-019 · Chọn một dải dòng bằng Shift + bấm hoặc kéo trên lề số · `md-annotate/js/ui/picks.js`
 - MDAN-020 · Vòng focus chỉ hiện sau phím Tab · `md-annotate/css/**`, `md-annotate/js/main.js`
+- MDAN-021 · Độ sáng của khối đã đọc chỉnh ở Settings · `md-annotate/`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Nguồn tô màu cú pháp kiểu VS Code
@@ -157,3 +158,9 @@ hoặc bỏ cả dải (bắt đầu ở dòng đã chọn).
 Điều khiển bằng Tab / Space giữ nguyên, nhưng vòng focus (viền đậm quanh nút) chỉ hiện từ lần bấm Tab đầu. Mở hộp
 thoại, đóng hộp, chạm hay bấm chuột thì không có vòng; bấm chuột / chạm tắt nó tới lần Tab sau. Áp cả máy tính và
 điện thoại.
+
+## MDAN-021 · Độ sáng của khối đã đọc chỉnh ở Settings
+20/11/2026 · `md-annotate/`
+
+Hộp *Settings* có mục *Dim reviewed blocks*: cùng công tắc với ô *Dim reviewed* ở tab Review, thêm thanh kéo độ sáng
+của khối đã đọc (10–80%, mặc định 40%), áp ngay khi kéo.

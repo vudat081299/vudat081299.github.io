@@ -139,7 +139,7 @@
   đầu. Chuyển chỗ, chữ giữ nguyên: ✓. Chữ đổi: ○, tính là chưa đọc. Không tìm lại được: mất, báo toast lúc mất và ở tab *Review*.
 - Một chỗ hỏi: `rvState()`; một chỗ ghi: `setReviews()` (lưu, vẽ, Undo, cả khi đã đổi phiên). Luật ở `core/review.js` (`resolveMarks`,
   `allDone`, `markWord`, `withSug`…); `ui/*` không tự quyết đơn vị nào đã đọc. Lớp và tooltip nút làn, kể cả `.is-sug`, chỉ dựng ở `ui/review.js`.
-- Nhận xét không đánh dấu đã đọc. *Dim reviewed* (`prefs.rvDim`) chỉ làm mờ, không gập: gập làm lệch cuộn theo nhau và dải đọc.
+- Nhận xét không đánh dấu đã đọc. *Dim reviewed* (`prefs.rvDim`, cùng công tắc ở *Settings*; độ sáng `prefs.rvDimV` 10–80%, `--rv-dim`) chỉ làm mờ, không gập: gập làm lệch cuộn theo nhau và dải đọc.
 - Làn: lớp phủ `.ma-lane` trong `#wrap-*`, ngoài `#v-src` / `#v-md`. *Source*: giữa vạch nhận xét và chữ, không phải lề số;
   *Preview*: lề trái. Bấm: bật / tắt; Shift + bấm: cả dải (mốc mất khi văn bản đổi); làn của tiêu đề (hình vuông) bật cả section.
 - Phím X / Shift+X / J / K: bỏ qua khi đang gõ chữ, khi hộp thoại hay hộp nhận xét mở, khi có phím bổ trợ khác Shift. Đơn vị hiện tại: chạm
