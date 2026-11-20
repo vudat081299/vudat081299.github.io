@@ -1,9 +1,10 @@
 /* Tiện ích DOM: $(id), h() dựng phần tử, icon(), textNodes(), media query dùng chung, shown(), typing() (phím tắt
    một chữ), dragBar() (kéo vách), toast(), paintHL() (tô CSS Highlight), saveFile() (tải một Blob về máy),
-   droppedItems() (mục thả từ máy).
-   Xuất: $, dragBar, droppedItems, h, hasHL, icon, mqSheet, mqSide, paintHL, reduceMotion, saveFile, shown, textNodes, toast,
-     typing.
-   Dùng: không module nào. */
+   droppedItems() (mục thả từ máy), syncBar() (màu thanh trình duyệt khi có lớp mờ).
+   Xuất: $, dragBar, droppedItems, h, hasHL, icon, mqSheet, mqSide, paintHL, reduceMotion, saveFile, shown, syncBar, textNodes,
+     toast, typing.
+   Dùng: core/color.js. */
+import { barColor } from '../core/color.js';
 
 export function $(id) { return document.getElementById(id); }
 export function h(tag, props) {
@@ -125,4 +126,14 @@ export function droppedItems(dt) {
     if (out.length) return out;
   }
   return Array.prototype.slice.call(dt.files || []);
+}
+
+/* <meta name="theme-color"> (Chrome Android, Safari cũ tô thanh trạng thái theo nó): nền trang, phủ mọi lớp mờ đang hiện
+   (hộp thoại mở, .ma-scrim không ẩn), trộn đục. Gọi mỗi khi một lớp mờ hiện / ẩn và khi đổi theme; một chỗ duy nhất ghi thẻ này
+   sau script theme của index.html. */
+export function syncBar() {
+  var layers = [];
+  document.querySelectorAll('dialog[open], .ma-scrim:not([hidden])').forEach(function (el) { layers.push(getComputedStyle(el).backgroundColor); });
+  var c = barColor(getComputedStyle(document.documentElement).backgroundColor, layers);
+  if (c) $('theme-color').setAttribute('content', c);
 }

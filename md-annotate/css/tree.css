@@ -106,20 +106,18 @@
 
 /* MÁY ≤ 1080px: cây ra khỏi lưới, nằm trong tấm trượt từ trái. */
 @media (max-width: 1080px) {
-  .ma-dlg.ma-dlg--tree {
-    width: min(340px, 88vw); max-width: 88vw; height: 100vh; height: 100dvh; max-height: none;
-    margin: 0 auto 0 0; border: 0; border-right: 1px solid var(--line); border-radius: 0;
-  }
+  /* Thẻ là .ma-tree, sát mép trái lớp #dlg-tree (dialogs.css). */
   .ma-dlg--tree .ma-tree {
-    display: flex; position: static; flex: 1 1 auto; height: auto; min-height: 0;
-    border: 0; border-radius: 0; box-shadow: none; padding-bottom: env(safe-area-inset-bottom);
+    display: flex; position: static; flex: none; width: min(340px, 88vw); max-width: 88vw; height: 100vh; height: 100dvh; min-height: 0;
+    margin: 0 auto 0 0; border: 0; border-right: 1px solid var(--line); border-radius: 0; box-shadow: var(--shadow);
+    padding-bottom: env(safe-area-inset-bottom);
   }
   .ma-dlg--tree .ma-tree__body { border-bottom-width: var(--s2); }
   .ma-dlg--tree .ma-tree__close { display: inline-flex; }
   .ma-dlg--tree .ma-tree__grip { display: none; }
 }
 @media (max-width: 1080px) and (prefers-reduced-motion: no-preference) {
-  .ma-dlg--tree[open] { animation: ma-tree-in .22s var(--ease); }
+  .ma-dlg--tree[open] .ma-tree { animation: ma-tree-in .22s var(--ease); }
 }
 @keyframes ma-tree-in { from { transform: translateX(-24px); opacity: 0; } to { transform: none; opacity: 1; } }
 

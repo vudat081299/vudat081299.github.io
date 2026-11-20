@@ -3,7 +3,8 @@
 /* NỀN */
 *, *::before, *::after { box-sizing: border-box; }
 [hidden] { display: none !important; }
-html { -webkit-text-size-adjust: 100%; }
+/* Nền đặt rõ ở cả html: Safari coi gốc trong suốt là trắng khi tô vùng thanh trạng thái. */
+html { -webkit-text-size-adjust: 100%; background-color: var(--bg); }
 /* Split vừa khít khung nhìn: khoá cuộn trang, để thanh cuộn chính không chập chờn khi trang dư hay thiếu 1px. */
 html.ma-fit { overflow: hidden; }
 body {

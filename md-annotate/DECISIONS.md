@@ -23,6 +23,7 @@
 - MDAN-023 · Cây file hiện mặc định khi phiên có từ hai mục · `md-annotate/js/ui/tree.js`, `md-annotate/js/ui/files.js`
 - MDAN-024 · Mở file từ đĩa thêm vào cây cạnh file đang mở · `md-annotate/`
 - MDAN-025 · Prompt cho mọi file là một tuỳ chọn, mặc định chỉ file đang mở · `md-annotate/`
+- MDAN-026 · Không nền mờ sau tấm nhận xét khi chọn nhiều dòng · `md-annotate/js/ui/popup.js`, `md-annotate/css/mobile.css`
 - MDAN-027 · Tên phiên tự đặt không đổi theo file đang mở · `md-annotate/js/core/session.js`
 - MDAN-028 · Undo của xoá / chuyển chỉ trả lại đúng mục ấy · `md-annotate/js/core/session.js`, `md-annotate/js/ui/files.js`
 - MDAN-029 · Một file chưa có tên thật thì prompt không ghi tên tệp · `md-annotate/js/core/session.js`
@@ -204,6 +205,12 @@ phiên có nội dung thì mở phiên mới.
 *Options* có ô *All files* (lưu theo phiên, ẩn khi phiên có một file). Tắt: prompt, chép, tải chỉ gồm file đang mở.
 Bật: một prompt gom nhận xét của mọi file theo thứ tự cây, mỗi file một mục `## Tệp <đường dẫn>`, số chạy tiếp. Tab
 *Comments* luôn chỉ liệt kê file đang mở.
+
+## MDAN-026 · Không nền mờ sau tấm nhận xét khi chọn nhiều dòng
+20/11/2026 · `md-annotate/js/ui/popup.js`, `md-annotate/css/mobile.css`
+
+Trên điện thoại, hộp nhận xét của các dòng chọn ở lề số là tấm đáy không có nền mờ phía sau: người dùng vẫn chạm lề số
+các dòng khác để thêm / bỏ dòng, nền mờ khiến trông như trang bị khoá. Tấm của đoạn bôi đen và tấm sửa nhận xét vẫn có nền mờ nhẹ.
 
 ## MDAN-027 · Tên phiên tự đặt không đổi theo file đang mở
 20/11/2026 · `md-annotate/js/core/session.js`
