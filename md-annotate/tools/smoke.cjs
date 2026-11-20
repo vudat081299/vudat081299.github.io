@@ -211,10 +211,10 @@ const cornerClash = (page) => page.evaluate(() => {
     const v = document.getElementById('v-src'), ls = [...v.querySelectorAll('.ma-ln')];
     const src = document.getElementById('src-input').value;
     const bef = getComputedStyle(ls[0], '::before');
-    return { n: ls.length, lines: src.replace(/\n$/, '').split('\n').length, content: bef.content, top: bef.top,
+    return { n: ls.length, lines: src.replace(/\n$/, '').split('\n').length, content: bef.content, va: bef.verticalAlign,
       marked: ls.map((l, i) => l.classList.contains('has-c') ? i + 1 : 0).filter(Boolean).join() };
   });
-  check('lề số dòng: một khối mỗi dòng, số là counter ngoài text', gut.n === gut.lines && /counter\(ln\)/.test(gut.content) && gut.top === '0px', JSON.stringify(gut));
+  check('lề số dòng: một khối mỗi dòng, số là counter ngoài text', gut.n === gut.lines && /counter\(ln\)/.test(gut.content) && gut.va === 'top', JSON.stringify(gut));
   check('lề số dòng: dòng có nhận xét được đánh dấu (3, 5)', gut.marked === '3,5', gut.marked);
   const g3 = await page.$eval('#v-src .ma-ln:nth-child(3)', (el) => { const r = el.getBoundingClientRect(); return { x: r.left + 4, y: r.top + 8 }; });
   await page.mouse.click(g3.x, g3.y);
@@ -3573,6 +3573,10 @@ const cornerClash = (page) => page.evaluate(() => {
       return Math.max(0, ...ev.filter((e) => e.name === 'UpdateLayoutTree' && e.args && e.args.elementCount).map((e) => e.args.elementCount));
     };
     const nText = await p.$$eval('#v-src *, #v-md *', (els) => els.length);
+    // Cuộn nhẹ: dòng nguồn, số dòng, nút làn không định vị (mỗi phần tử định vị là một lớp vẽ; hàng nghìn lớp làm cuộn giật).
+    const layered = await p.evaluate(() => [...document.querySelectorAll('#v-src .ma-ln:not(.has-c), .ma-lane__b')]
+      .filter((e) => getComputedStyle(e).position !== 'static' || getComputedStyle(e, '::before').position !== 'static' || getComputedStyle(e, '::after').position !== 'static').length);
+    check('văn bản 2.000 dòng: dòng nguồn và nút làn không định vị', layered === 0, String(layered));
     const steps = [['ẩn / hiện cây', () => p.click('#btn-tree')], ['thu gọn / mở panel', async () => { await p.click('#btn-rail'); await p.click('#btn-unrail'); }],
       ['đổi tỉ lệ vách bằng phím', async () => { await p.focus('#divider'); await p.keyboard.press('ArrowLeft'); }]];
     for (const [name, fn] of steps) {
@@ -3580,9 +3584,9 @@ const cornerClash = (page) => page.evaluate(() => {
       check(`văn bản 2.000 dòng, ${name}: không tính lại kiểu mọi nút của văn bản`, n < nText / 2, n + ' / ' + nText);
     }
     // Làn dùng lại nút cũ khi chỉ đổi bề rộng.
-    await p.evaluate(() => { window.__lane = document.querySelector('#wrap-md .ma-lane__b:last-child'); window.__top = window.__lane.style.top; });
+    await p.evaluate(() => { window.__lane = document.querySelector('#wrap-md .ma-lane__b:last-child'); window.__h = window.__lane.parentNode.offsetHeight; });
     await p.focus('#divider'); await p.keyboard.press('ArrowRight'); await p.keyboard.press('ArrowRight'); await p.waitForTimeout(300);
-    check('đổi bề rộng khung: làn dời nút cũ, không dựng lại', await p.evaluate(() => window.__lane.isConnected && window.__lane.style.top !== window.__top));
+    check('đổi bề rộng khung: làn dời nút cũ, không dựng lại', await p.evaluate(() => window.__lane.isConnected && window.__lane.parentNode.offsetHeight !== window.__h));
     // Kéo vách trên văn bản dài: chỉ vạch đi theo, thả ra mới dàn lại.
     const d = await p.locator('#divider').boundingBox(), ra = () => p.evaluate(() => document.getElementById('views').style.getPropertyValue('--ra'));
     const ra0 = await ra();

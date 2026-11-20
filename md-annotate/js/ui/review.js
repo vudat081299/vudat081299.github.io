@@ -184,22 +184,25 @@ function styleBtn(b, r, kit) {
   if (b.className !== want) b.className = want;
   if (b.title !== t) b.title = t;
 }
-/* Vẽ làn từ số đo. Nút đầu làn còn đúng đơn vị thì dùng lại, chỉ ghi lại toạ độ khác lần vẽ trước (placed: cssText theo
-   thứ tự nút); moved (đổi cỡ khung, scheduleLayout): dấu không đổi, khỏi tô lại. Đổi bề rộng khung không dựng
-   lại hàng nghìn nút của văn bản dài; từ nút lệch đầu tiên thì dựng mới. Nút là <span>, không phải <button>: làn
-   aria-hidden, không nhận Tab (phím X / J / K thay), và kiểu của <button> đắt gấp ~4 lần khi tính lại hàng nghìn nút. */
+/* Vẽ làn từ số đo. Nút nằm trong dòng chảy của cột (css/review.css): lề trên = đỉnh nó − đáy nút trước (âm khi chồng).
+   Nút đầu làn còn đúng đơn vị thì dùng lại, chỉ ghi lại kiểu khác lần vẽ trước (placed: cssText theo thứ tự nút); moved
+   (đổi cỡ khung, scheduleLayout): dấu không đổi, khỏi tô lại. Đổi bề rộng khung không dựng lại hàng nghìn nút của văn
+   bản dài; từ nút lệch đầu tiên thì dựng mới. Nút là <span>, không phải <button>: làn aria-hidden, không nhận Tab
+   (phím X / J / K thay), và kiểu của <button> đắt gấp ~4 lần khi tính lại hàng nghìn nút. */
 var placed = { src: [], md: [] };
 function drawLane(w, r, m, kit, moved) {
-  var box = lanes[w], items = m ? m.items : [], old = box.children, keep = 0, frag = document.createDocumentFragment(), was = placed[w];
+  var box = lanes[w], items = m ? m.items : [], old = box.children, keep = 0, frag = document.createDocumentFragment(), was = placed[w], end = 0;
   geo[w] = items.map(function (e) { return { i: e.i, top: e.top, bottom: e.bottom }; });
   placed[w] = [];
+  if (m) box.style.left = Math.round(m.x) + 'px';
   while (keep < items.length && keep < old.length && +old[keep].dataset.u === items[keep].i) keep++;
   while (old.length > keep) old[old.length - 1].remove();
   items.forEach(function (e, k) {
     var b = k < keep ? old[k] : frag.appendChild(h('span', { 'data-u': String(e.i) }));
     if (k >= keep || !moved) styleBtn(b, r, kit);
-    var css = 'left:' + Math.round(m.x) + 'px;top:' + Math.round(e.top) + 'px;height:' + Math.max(16, Math.round(e.bottom - e.top)) +
-      'px;padding-top:' + Math.round(e.pad) + 'px';
+    var top = Math.round(e.top), ht = Math.max(16, Math.round(e.bottom - e.top));
+    var css = 'margin-top:' + (top - end) + 'px;height:' + ht + 'px;padding-top:' + Math.min(ht, Math.round(e.pad)) + 'px';
+    end = top + ht;
     if (k >= keep || was[k] !== css) b.style.cssText = css;
     placed[w].push(css);
   });

@@ -65,20 +65,27 @@
 #wrap-src { padding-left: var(--s4); }
 .ma-view__lbl { display: none; margin-bottom: var(--s2); }
 .ma-views[data-mode="split"] .ma-view__lbl { display: block; }
+/* --ln-pad tính ra px ở #v-src (cỡ chữ của dòng), số dòng (::before, chữ nhỏ hơn) dùng lại đúng giá trị ấy. */
+@property --ln-pad { syntax: '<length>'; inherits: true; initial-value: 0px; }
 .ma-src {
   margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; word-break: normal;
   font: 500 var(--fs-sm)/var(--lh-code) var(--mono); color: var(--ink);
   counter-reset: ln; tab-size: 4;
+  --ln-pad: calc(var(--gw, 2ch) + 20px + var(--lane-w));   /* lề trái mỗi dòng: số, vạch nhận xét, làn */
 }
 /* Lề số dòng kiểu VS Code. Số là ::before ở đầu khối dòng, nên dòng dài xuống hàng vẫn thẳng hàng đầu. */
-/* Lề: số [0, gw], vạch nhận xét [gw + 8, gw + 11], làn dấu đã đọc (--lane-w, css/review.css) trước chữ 6px. */
-.ma-ln { display: block; position: relative; padding-left: calc(var(--gw, 2ch) + 20px + var(--lane-w)); }
+/* Lề: số [0, gw], vạch nhận xét [gw + 8, gw + 11], làn dấu đã đọc (--lane-w, css/review.css) trước chữ 6px.
+   Dòng không định vị (position), số là inline-block rộng 0 (lề âm bằng --ln-pad) ở đỉnh dòng: mỗi phần tử định vị là một
+   lớp vẽ, hàng nghìn dòng thành hàng nghìn lớp làm cuộn, rê chuột, đổi bề rộng chậm hẳn (float cũng chậm). Chỉ dòng có
+   nhận xét định vị (vạch ::after). */
+.ma-ln { display: block; padding-left: var(--ln-pad); }
 .ma-ln::before {
   counter-increment: ln; content: counter(ln);
-  position: absolute; left: 0; top: 0; width: var(--gw, 2ch);
+  display: inline-block; vertical-align: top; width: var(--gw, 2ch); margin: 0 calc(var(--ln-pad) - var(--gw, 2ch)) 0 calc(-1 * var(--ln-pad));
   text-align: right; font-size: var(--fs-xs); color: var(--ink-3); font-variant-numeric: tabular-nums;
   -webkit-user-select: none; user-select: none; pointer-events: none;
 }
+.ma-ln.has-c { position: relative; }
 .ma-ln.has-c::before { color: var(--ink); font-weight: 600; pointer-events: auto; cursor: pointer; }
 .ma-ln.has-c::after {
   content: ''; position: absolute; left: calc(var(--gw, 2ch) + 8px); top: var(--s1); bottom: var(--s1); width: 3px;
@@ -91,7 +98,8 @@
 #v-src.is-lp { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
 .ma-ln.is-pick { background: linear-gradient(to right, transparent calc(var(--gw, 2ch) + 14px), var(--hl-2) 0); }
 .ma-ln.is-pick::before {
-  left: calc(-1 * var(--s1)); width: calc(var(--gw, 2ch) + 2 * var(--s1)); padding-right: var(--s1);
+  width: calc(var(--gw, 2ch) + 2 * var(--s1)); padding-right: var(--s1);
+  margin: 0 calc(var(--ln-pad) - var(--gw, 2ch) - var(--s1)) 0 calc(-1 * var(--ln-pad) - var(--s1));   /* rộng 0 như ::before thường (border-box) */
   border-radius: var(--r-xs); background: var(--accent); color: var(--on-accent); font-weight: 600;
 }
 .ma-view__head { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); margin: calc(-1 * var(--s2)) 0 var(--s2); }
