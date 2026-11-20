@@ -1443,6 +1443,23 @@ const cornerClash = (page) => page.evaluate(() => {
     await mp.mouse.move((s.left + s.right) / 2, s.top + s.h * 0.8); await mp.mouse.down(); await mp.mouse.move((s.left + s.right) / 2, s.top + s.h * 0.3, { steps: 4 }); await mp.mouse.up(); await tick(200);
     check('dải tiến độ: kéo thì cuộn theo, hộp khung nhìn dời theo', (await mp.$eval('.ma-mm[data-w="md"] .ma-mm__view', (v) => Math.round(parseFloat(v.style.top)))) < vb - 50);
     check('dải tiến độ: Split 1440 không tràn ngang', (await overflow(mp)) === 0, String(await overflow(mp)));
+    {   // Bấm lặp lại một chỗ, thu phóng 150% (toạ độ lẻ điểm ảnh): cuộn đứng yên ở Split, Preview, Source.
+      const zc = await browser.newContext({ viewport: { width: 1280, height: 800 }, deviceScaleFactor: 1.5 }), zp = await zc.newPage(); watch(zp);
+      await zp.goto(BASE); await zp.waitForFunction(() => window.marked && window.DOMPurify);
+      await zp.evaluate((t) => { const ta = document.getElementById('src-input'); ta.focus(); ta.dispatchEvent(new Event('paste')); ta.value = t; ta.dispatchEvent(new Event('input')); },
+        Array.from({ length: 60 }, (_, i) => `## Section ${i}\n\nParagraph ${i} with some words to read and review here.\n`).join('\n'));
+      await zp.waitForTimeout(400);
+      const drift = {};
+      for (const mode of ['split', 'view', 'src']) {
+        await zp.evaluate((m) => document.querySelector(`.ma-tab[data-view="${m}"]`).click(), mode); await zp.waitForTimeout(250);
+        const w = mode === 'src' ? 'src' : 'md', pos = () => zp.evaluate((w) => document.querySelector('.ma-views').dataset.mode === 'split' ? document.getElementById(w === 'src' ? 'wrap-src' : 'wrap-md').scrollTop : scrollY, w);
+        const r = await zp.$eval(`.ma-mm[data-w="${w}"]`, (m) => m.getBoundingClientRect().toJSON()), seq = [];
+        for (let i = 0; i < 8; i++) { await zp.mouse.click(r.left + r.width / 2, r.top + r.height * 0.75); await zp.waitForTimeout(60); seq.push(Math.round(await pos())); }
+        drift[mode] = seq.slice(2);   // cú đầu trên rãnh cuộn tới; ở chế độ cuộn cửa sổ đỉnh dải còn trượt một nhịp
+      }
+      check('dải tiến độ: bấm lặp lại một chỗ (thu phóng 150%) thì không trôi', Object.values(drift).every((q) => q.every((v) => v === q[0])), JSON.stringify(drift));
+      await zc.close();
+    }
 
     // Gợi ý: đọc P6 ở dải (đồng hồ giả 15 s), rồi tự cuộn qua thì hiện ✓ viền đứt; không tự đánh dấu.
     await mp.mouse.move(md.x, md.y);

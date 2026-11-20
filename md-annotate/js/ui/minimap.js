@@ -4,7 +4,7 @@
    chấm ở chỗ có nhận xét; ở Split nó thay thanh cuộn hệ thống của khung (css/reading.css ẩn thanh ấy), để không có hai thanh.
    Bề rộng, lề, khe, mép trái làm tròn theo điểm ảnh thật (devicePixelRatio), để hai khung vẽ cột rộng như nhau ở mọi mức thu phóng.
    Hai đầu dải cách mép khung có góc bo ít nhất bằng bán kính góc (cornerLimits). Bấm / kéo trên dải
-   thì cuộn tới đó (cuộn do trang, không tính là đọc). Không có đơn vị thì ẩn.
+   thì cuộn tới đó như thanh cuộn hệ thống (cuộn do trang, không tính là đọc). Không có đơn vị thì ẩn.
    Dải là phần tử position: fixed ngoài #v-src / #v-md (text của khung không đổi), đặt theo khung bằng JS. Vẽ lại đoạn
    khi ui/review.js xếp làn (vẽ, đánh dấu, đổi cỡ); khi cuộn chỉ dời hộp khung nhìn (và khung, ở chế độ cuộn cửa sổ).
    Điện thoại (≤ 720px): ẩn — lề chỉ 12px, dải sẽ đè chữ, thanh đáy đã có ✓ N%. Màn cảm ứng: chỉ để xem, không nhận chạm
@@ -54,8 +54,10 @@ function cornerLimits(el) {
 /* Khung của dải w trong khung nhìn: { left, top, H, total, split }, hoặc null khi không đặt được. */
 function frameOf(w) {
   var wrap = wrapOf(w), wr = wrap.getBoundingClientRect(), split = isSplit(), cl = cornerLimits(wrap);
-  var top = Math.max(wr.top + GAP, barBottom() + GAP, cl.top);
-  var bot = Math.min(wr.bottom - GAP, dockTop() - GAP, window.innerHeight - GAP, cl.bot);
+  /* Làm tròn ngay ở đây: dải vẽ ở đúng toạ độ này, và phép đổi điểm bấm → vị trí cuộn cũng dùng nó (lệch nửa điểm ảnh
+     nhân lên total / H lần thành vài px mỗi cú bấm). */
+  var top = snapPos(Math.max(wr.top + GAP, barBottom() + GAP, cl.top));
+  var bot = snapPos(Math.min(wr.bottom - GAP, dockTop() - GAP, window.innerHeight - GAP, cl.bot));
   if (bot - top < MIN_H) return null;
   var sbw = split ? wrap.offsetWidth - wrap.clientWidth : 0;
   return { left: wr.right - sbw - strips[w].getBoundingClientRect().width - 2, top: top, H: bot - top, total: wrap.scrollHeight, split: split, wr: wr };
@@ -140,16 +142,26 @@ function onScroll() {
     if (redraw) drawMinimap();
   });
 }
-/* Bấm / kéo: điểm ấy của nội dung vào giữa khung nhìn, ngay (không trượt), để kéo theo kịp con trỏ. Bấm trúng con trượt
-   thì giữ chỗ nắm (grab): kéo như thanh cuộn thường, không giật. */
-var grab = 0;
+/* Như thanh cuộn hệ thống. Bấm trên rãnh: điểm ấy của nội dung vào giữa khung nhìn, ngay (không trượt); kéo tiếp thì
+   theo con trỏ. Bấm trúng con trượt: không cuộn (bấm lại bao nhiêu lần cũng đứng yên); kéo thì nội dung dời theo độ dời
+   của con trỏ (dy × total / H), tính từ chỗ lúc nắm. */
+var grab = null;   // { y, s }: con trỏ và vị trí cuộn lúc nắm con trượt; null: đang bấm / kéo trên rãnh
+function scrollContent(w, f, target) {
+  noteJump();
+  if (f.split) { wrapOf(w).scrollTop = target; return; }
+  var nf = frameOf(w) || f;   // cuộn cửa sổ: đo lại, frames[w] chỉ cập nhật ở khung hình sau
+  window.scrollBy(0, target - seen(w, nf).scroll);
+}
 function scrollAt(w, clientY) {
   var f = frames[w];
   if (!f) return;
-  noteJump();
-  var s = seen(w, f), target = mmScroll(clientY - f.top, f.H, f.total, s.view);
-  if (f.split) { wrapOf(w).scrollTop = target; return; }
-  window.scrollTo(0, window.scrollY + f.wr.top + target - Math.max(0, barBottom()));
+  scrollContent(w, f, mmScroll(clientY - f.top, f.H, f.total, seen(w, f).view));
+}
+function dragThumb(w, clientY) {
+  var f = frames[w];
+  if (!f || !grab) return;
+  var view = seen(w, f).view, target = grab.s + (clientY - grab.y) * f.total / f.H;
+  scrollContent(w, f, Math.max(0, Math.min(f.total - view, target)));
 }
 export function initMinimap() {
   ['src', 'md'].forEach(function (w) {
@@ -162,11 +174,14 @@ export function initMinimap() {
       e.preventDefault();   // không bắt đầu bôi đen, không lấy focus
       el.setPointerCapture(e.pointerId);
       el.classList.add('is-drag');
-      var t = thumbOf(w).getBoundingClientRect();
-      grab = e.clientY >= t.top && e.clientY <= t.bottom ? e.clientY - (t.top + t.height / 2) : 0;
-      scrollAt(w, e.clientY - grab);
+      var t = thumbOf(w).getBoundingClientRect(), f = frames[w];
+      grab = f && e.clientY >= t.top && e.clientY <= t.bottom ? { y: e.clientY, s: seen(w, f).scroll } : null;
+      if (!grab) scrollAt(w, e.clientY);
     });
-    el.addEventListener('pointermove', function (e) { if (el.hasPointerCapture(e.pointerId)) scrollAt(w, e.clientY - grab); });
+    el.addEventListener('pointermove', function (e) {
+      if (!el.hasPointerCapture(e.pointerId)) return;
+      if (grab) dragThumb(w, e.clientY); else scrollAt(w, e.clientY);
+    });
     function end(e) { if (el.hasPointerCapture(e.pointerId)) el.releasePointerCapture(e.pointerId); el.classList.remove('is-drag'); }
     el.addEventListener('pointerup', end);
     el.addEventListener('pointercancel', end);
