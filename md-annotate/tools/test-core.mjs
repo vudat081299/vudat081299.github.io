@@ -618,6 +618,7 @@ check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi
 // ── cây folder + file (tree.js), phiên nhiều file (session.js), prompt gom file, .zip ──
 {
   const T = await import('../js/core/tree.js');
+  const { findFiles } = await import('../js/core/tree-find.js');
   const S = await import('../js/core/session.js');
   const P = await import('../js/core/prompt.js');
   const Z = await import('../js/core/zip.js');
@@ -638,6 +639,15 @@ check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi
     const c = nodes.find((n) => n.name === 'c');
     check('visibleRows: con của folder gập bị ẩn, filesInOrder thì không', eq(T.visibleRows(nodes, [c.id]).map((x) => x.node.name), ['a', 'b', 'c', 'top.md']) && eq(names(nodes, T.filesInOrder(nodes)), ['g.md', 'h.md', 'top.md']));
     check('subtree: id và mọi hậu duệ', T.subtree(nodes, c.id).length === 6 && T.subtree(nodes, 'x').length === 0);
+    // Tìm file theo mẫu (MDAN-068): RegExp không phân biệt hoa thường trên tên; không hợp lệ thì chuỗi con; giữ folder tổ tiên.
+    const fr = T.fromPaths([], null, ['docs/axb-notes.text', 'docs/abc.text', 'docs/deep/AXB-plan.text', 'notes.md', 'a(b.md', 'Tiếng.md'], mk), fn = freeze(fr.nodes);
+    const shownBy = (q) => { const f = findFiles(fn, q); return f && T.visibleRows(fn, [fr.ids['docs'] || ''], f.keep).map((x) => x.depth + ':' + x.node.name); };
+    check('findFiles: ^a.b.*\.text$ tìm axb-notes.text, AXB-plan.text (không phân biệt hoa thường), hiện cả folder tổ tiên, mở',
+      eq(shownBy('^a.b.*\\.text$'), ['0:docs', '1:deep', '2:AXB-plan.text', '1:axb-notes.text']) && findFiles(fn, '^a.b.*\\.text$').files === 2, JSON.stringify(shownBy('^a.b.*\\.text$')));
+    check('findFiles: chữ thường là chuỗi con; rỗng là null', eq(shownBy('notes'), ['0:docs', '1:axb-notes.text', '0:notes.md']) && findFiles(fn, '') === null && findFiles(fn, '  ') === null);
+    const bad = findFiles(fn, 'a(b');
+    check('findFiles: mẫu không hợp lệ thì tìm chuỗi con, không ném', bad.literal && bad.files === 1 && !findFiles(fn, 'a.b').literal);
+    check('findFiles: không khớp gì thì 0 file, không hàng nào; NFC', findFiles(fn, 'zzz').files === 0 && findFiles(fn, 'zzz').keep.size === 0 && findFiles(fn, 'tie\u0302\u0301ng').files === 1);
     const rm = T.removeNode(nodes, c.id);
     check('removeNode: xoá cả cây con', rm.removed.length === 6 && rm.nodes.length === 3 && nodes.length === 9);
     check('moveNode: không vào chính nó / hậu duệ', /itself/.test(T.moveNode(nodes, c.id, c.id).error) && /itself/.test(T.moveNode(nodes, c.id, nodes.find((n) => n.name === 'f').id).error));

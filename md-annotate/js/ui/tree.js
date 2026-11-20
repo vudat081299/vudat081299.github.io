@@ -12,20 +12,23 @@
    --tree, kéo #tree-grip 180–420, prefs.treeW. Bàn phím theo mẫu tree của WAI-ARIA (mũi
    tên, Home, End bật vòng focus như Tab, MDAN-020); kéo thả bằng chuột, chỗ thả được theo core canMove. Hàng bị xoá: hàng
    hiện tại thành hàng vào chỗ nó. Đầu cây một hàng (MDAN-060): New file, New folder, ⋯ (#tree-head-menu: Import folder,
-   Download .zip, Collapse all, theo mẫu menu button); phiên ≤ 1 mục thì #tree.is-sparse hiện gợi ý thả / nạp folder. Thụt
+   Download .zip, Collapse all, theo mẫu menu button), dưới là ô lọc file (ui/tree-find.js: đang lọc thì chỉ hiện file khớp và
+   folder tổ tiên, folder nào cũng mở, bấm folder không gập); phiên ≤ 1 mục thì #tree.is-sparse hiện gợi ý thả / nạp folder. Thụt
    đều mọi cấp: vạch thụt là phần tử riêng (#tree-guides), cây sâu thì thân cuộn ngang (--dmax, .is-x); đổi tên là ô nhập trong suốt
    đúng chỗ tên.
    Xuất: editName, focusRow, initTree, renderTree, revealTree.
-   Dùng: core/tree.js, core/text.js, ui/store.js, ui/dom.js, ui/views.js. */
+   Dùng: core/tree.js, core/text.js, ui/store.js, ui/dom.js, ui/views.js, ui/tree-find.js. */
 import { canMove, moveTargets, visibleRows } from '../core/tree.js';
 import { plural } from '../core/text.js';
 import { prefs, savePrefs } from './store.js';
 import { $, dragBar, droppedItems, h, icon, mqHandset, toast, typing } from './dom.js';
 import { refreshSplit } from './views.js';
+import { findInTree, focusFind, initTreeFind } from './tree-find.js';
 
 var W_MIN = 180, W_MAX = 420, W_DEF = 248;
 var model = null, act = {};
 var rows = [], at = {}, byId = {};   // hàng đang hiện; id → chỉ số trong rows; id → node
+var found = null;                    // kết quả lọc (core/tree-find.js findFiles) hay null khi không lọc
 var els = {};                        // id → <li>, giữ qua các lần vẽ (focus, bấm đúp, kéo không mất)
 var cur = null;                      // hàng giữ tabindex 0 (roving tabindex)
 var editing = null;                  // { id, input, orig } khi đang đổi tên
@@ -137,7 +140,7 @@ function rowEl(r, pos, size, path) {
   li.setAttribute('aria-posinset', String(pos)); li.setAttribute('aria-setsize', String(size));
   li.style.setProperty('--depth', String(r.depth));
   if (n.kind === 'dir') {
-    li.setAttribute('aria-expanded', String((model.collapsed || []).indexOf(n.id) < 0));
+    li.setAttribute('aria-expanded', String(!!found || (model.collapsed || []).indexOf(n.id) < 0));
     li.removeAttribute('aria-selected');
   } else {
     li.removeAttribute('aria-expanded');
@@ -207,7 +210,8 @@ export function renderTree(m, actions) {
   model = m; act = actions || {};
   byId = {};
   m.nodes.forEach(function (n) { byId[n.id] = n; });
-  rows = visibleRows(m.nodes, m.collapsed || []);
+  found = findInTree(m.nodes, same);
+  rows = visibleRows(m.nodes, m.collapsed || [], found && found.keep);
   at = {};
   /* Vị trí trong nhóm anh em (aria-posinset / setsize): anh em của một hàng đang hiện thì cũng hiện cả. */
   var sibs = {}, stack = [];
@@ -260,7 +264,7 @@ function activate(id) {
   var n = byId[id];
   if (!n) return;
   setCur(id, true);
-  if (n.kind === 'dir') { call('toggle', id); return; }
+  if (n.kind === 'dir') { if (!found) call('toggle', id); return; }
   call('open', id);
   closeSheet();
 }
@@ -483,12 +487,13 @@ function treeKey(e) {
     if (n.kind === 'dir' && li.getAttribute('aria-expanded') === 'false') call('toggle', id);
     else if (n.kind === 'dir' && rows[i + 1] && rows[i + 1].depth > r.depth) go(i + 1);
   } else if (k === 'ArrowLeft') {
-    if (n.kind === 'dir' && li.getAttribute('aria-expanded') === 'true') call('toggle', id);
+    if (n.kind === 'dir' && li.getAttribute('aria-expanded') === 'true' && !found) call('toggle', id);
     else if (n.parent != null && n.parent in at) go(at[n.parent]);
   } else if (k === 'Enter' || k === ' ') activate(id);
   else if (k === 'F2') editName(id);
   else if (del) call('remove', id);
   else if (k === 'ContextMenu' || (k === 'F10' && e.shiftKey)) openMenu(id);
+  else if (k === '/') { if (!focusFind()) return; }
   else if (k.length === 1 && k !== ' ') {
     clearTimeout(seekTimer); seekTimer = setTimeout(function () { seek = ''; }, 600);
     seek += k.toLowerCase();
@@ -571,6 +576,7 @@ export function initTree() {
   $('tree-new-file').addEventListener('click', function () { call('newFile', targetDir()); });
   $('tree-new-dir').addEventListener('click', function () { call('newDir', targetDir()); });
   initHead();
+  initTreeFind(function () { if (model) renderTree(model, act); }, function () { if (rows.length) { kbd(); setCur(rows[0].node.id, true); } });
   if (window.ResizeObserver) new ResizeObserver(syncX).observe($('tree-body'));
   $('tree-dir-in').addEventListener('change', function (e) {
     if (e.target.files && e.target.files.length) call('importDir', e.target.files, null);

@@ -1,12 +1,14 @@
-/* Hộp Shortcuts (#dlg-keys): bảng phím tắt và cú bấm mới, đọc từ data/shortcuts.json (REPO-001) lần mở đầu, vẽ bằng
-   vòng lặp, phím là chip <kbd class="ma-key">. Mở bằng nút #btn-keys ở hộp Settings, hoặc phím ? khi không gõ trong ô
+/* Hộp Help (#dlg-keys): hai phần, mỗi phần một bảng hàng { cách bấm / mẫu, nghĩa } đọc từ data/ (REPO-001) lần mở đầu và
+   vẽ bằng cùng một vòng lặp, cách bấm là chip <kbd class="ma-key">: phím tắt và cú bấm mới (data/shortcuts.json), tìm file ở
+   cây (data/search-help.json, mẫu của ô lọc). Mở bằng nút #btn-keys ở hộp Settings, hoặc phím ? khi không gõ trong ô
    nhập và không có hộp thoại nào mở. Logic chuẩn hoá dữ liệu ở core/shortcuts.js.
    Xuất: initHelp.
    Dùng: core/shortcuts.js, ui/dom.js. */
 import { normShortcuts } from '../core/shortcuts.js';
 import { $, h, typing } from './dom.js';
 
-var loaded = null;   // promise nạp dữ liệu: nạp một lần, lỗi thì lần mở sau thử lại
+var PARTS = [['keys-list', 'data/shortcuts.json'], ['find-help-list', 'data/search-help.json']];   // [chỗ vẽ, dữ liệu]
+var loaded = {};   // id chỗ vẽ → promise nạp: nạp một lần, lỗi thì lần mở sau thử lại
 
 function chips(keys) {
   var out = [];
@@ -21,33 +23,32 @@ function chips(keys) {
   });
   return out;
 }
-function render(groups) {
-  var box = $('keys-list');
+function render(box, groups) {
   box.replaceChildren();
   groups.forEach(function (g) {
     var dl = h('dl', { class: 'ma-keys__l' });
     g.rows.forEach(function (r) { dl.append(h('dt', null, chips(r.keys)), h('dd', null, r.action)); });
     box.append(h('section', { class: 'ma-keys' },
-      h('h3', { class: 'ma-keys__h' }, g.title),
+      h('h4', { class: 'ma-keys__h' }, g.title),
       g.note ? h('p', { class: 'ma-sub' }, g.note) : null,
       dl));
   });
-  if (!groups.length) box.append(h('p', { class: 'ma-sub' }, 'No shortcuts listed.'));
+  if (!groups.length) box.append(h('p', { class: 'ma-sub' }, 'Nothing listed.'));
 }
-function load() {
-  if (!loaded) {
-    $('keys-list').replaceChildren(h('p', { class: 'ma-sub' }, 'Loading…'));
-    loaded = fetch('data/shortcuts.json', { cache: 'no-cache' })
-      .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-      .then(function (d) { render(normShortcuts(d)); })
-      .catch(function () {
-        loaded = null;
-        $('keys-list').replaceChildren(h('p', { class: 'ma-sub' }, 'The list could not load. Check the connection and open it again.'));
-      });
-  }
+function load(id, url) {
+  if (loaded[id]) return;
+  var box = $(id);
+  box.replaceChildren(h('p', { class: 'ma-sub' }, 'Loading…'));
+  loaded[id] = fetch(url, { cache: 'no-cache' })
+    .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(function (d) { render(box, normShortcuts(d)); })
+    .catch(function () {
+      loaded[id] = null;
+      box.replaceChildren(h('p', { class: 'ma-sub' }, 'This part could not load. Check the connection and open Help again.'));
+    });
 }
 function openHelp() {
-  load();
+  PARTS.forEach(function (p) { load(p[0], p[1]); });
   if (!$('dlg-keys').open) $('dlg-keys').showModal();
 }
 

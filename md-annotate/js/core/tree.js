@@ -51,9 +51,11 @@ export function kids(nodes, parentId) {
   return nodes.filter(function (n) { return parentOf(n) === p; }).sort(order);
 }
 /* Hàng của sidebar: [{ node, depth }], bỏ con của folder đang gập. */
-export function visibleRows(nodes, collapsed) {
+/* keep (Set id, của core/tree-find.js findFiles): chỉ các nút ấy, folder nào cũng mở. */
+export function visibleRows(nodes, collapsed, keep) {
   var shut = new Set(collapsed || []), rows = [];
-  walk(nodes, function (n) { return shut.has(n.id); }, function (n, depth) { rows.push({ node: n, depth: depth }); });
+  walk(nodes, function (n) { return keep ? !keep.has(n.id) : shut.has(n.id); },
+    function (n, depth) { if (!keep || keep.has(n.id)) rows.push({ node: n, depth: depth }); });
   return rows;
 }
 /* Đường dẫn trong cây 'a/b/c.md'; id không có thì ''. */

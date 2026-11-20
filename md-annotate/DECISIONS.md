@@ -45,6 +45,8 @@
 - MDAN-065 · Hàng cây file cao hơn: 32px · `md-annotate/css/tree.css`
 - MDAN-066 · Tô màu code theo loại file, chỉ tải khi cần · `md-annotate/js/core/langs.js`, `md-annotate/js/core/file-type.js`, `md-annotate/js/ui/highlight.js`
 - MDAN-067 · Preview và Split chỉ cho file markdown · `md-annotate/js/core/langs.js`, `md-annotate/js/core/file-type.js`, `md-annotate/js/ui/views.js`
+- MDAN-068 · Cây file: đệm đáy, ô lọc file theo mẫu · `md-annotate/css/tree.css`, `md-annotate/js/ui/tree.js`, `md-annotate/js/ui/tree-find.js`, `md-annotate/js/core/tree-find.js`
+- MDAN-069 · Hộp Shortcuts thành Help, thêm phần tìm file · `md-annotate/index.html`, `md-annotate/js/ui/help.js`, `md-annotate/data/shortcuts.json`, `md-annotate/data/search-help.json`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Nguồn tô màu cú pháp kiểu VS Code
@@ -386,3 +388,18 @@ hiện chữ trơn, tải xong tự lên màu.
 
 Preview và Split chỉ có nghĩa với markdown: file khác (code, chữ trơn) ẩn hai tab ấy và mở ở Source. Chế độ đã chọn cho
 markdown vẫn được nhớ: mở file code rồi quay lại file .md thì về đúng Preview / Split cũ, kể cả sau khi tải lại trang.
+## MDAN-068 · Cây file: đệm đáy, ô lọc file theo mẫu
+20/11/2026 · `md-annotate/css/tree.css`, `md-annotate/js/ui/tree.js`, `md-annotate/js/ui/tree-find.js`, `md-annotate/js/core/tree-find.js`
+
+Cuộn cây tới cuối thì hàng cuối vẫn cách mép dưới một khoảng, cả ở tấm trượt điện thoại. Cây có từ hai file thì có ô lọc
+dưới đầu cây: gõ là lọc ngay theo tên file, không phân biệt hoa thường; chữ thường tìm tên chứa nó, biểu thức chính quy
+cũng được (^a.b.*\.text$ tìm axb-notes.text); biểu thức hỏng thì tìm như chữ thường và báo nhỏ dưới ô. Chỉ hiện file khớp
+và folder chứa chúng, mở sẵn; không khớp thì báo. Esc xoá, cây về gập / mở như trước; phím / ở hàng của cây vào ô lọc.
+
+## MDAN-069 · Hộp Shortcuts thành Help, thêm phần tìm file
+20/11/2026 · `md-annotate/index.html`, `md-annotate/js/ui/help.js`, `md-annotate/data/shortcuts.json`, `md-annotate/data/search-help.json`
+
+Hộp phím tắt đổi tên thành Help, ở cả nút trong Settings, menu More và tiêu đề hộp; phím ? vẫn mở nó. Trong Help có hai
+phần: Shortcuts and gestures (như cũ) và Searching files: cách gõ mẫu ở ô lọc của cây, có ví dụ (chữ thường, ^, $, ., .*,
+\., |, mẫu hỏng thành chữ thường) và các phím (/, ↓, Esc). Ô lọc trỏ tới Help ở tooltip.
+

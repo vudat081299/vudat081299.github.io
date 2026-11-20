@@ -46,6 +46,7 @@
         { "keys": [["Double-click"]], "action": "A file or folder in the tree: rename it (Enter saves, Esc cancels)" },
         { "keys": [["Delete"]], "action": "Delete the file or folder" },
         { "keys": [["Shift", "F10"], ["Right-click"], ["⋯"]], "action": "More actions: new file or folder here, rename, move, download, delete" },
+        { "keys": [["/"]], "action": "Filter files by name (see Searching files below)" },
         { "keys": [["Drag"]], "action": "A row onto a folder (or onto empty space for the top level): move it. Files or folders from your computer: import a copy" }
       ]
     },

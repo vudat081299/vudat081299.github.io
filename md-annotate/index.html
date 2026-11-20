@@ -99,7 +99,7 @@
       </button>
       <button class="ma-menu__i" type="button" role="menuitem" tabindex="-1" data-for="btn-keys">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18v12H3zM7 10h.01M11 10h.01M15 10h.01M8 14h8" /></svg>
-        <span>Shortcuts</span>
+        <span>Help</span>
       </button>
     </div>
 
@@ -120,6 +120,14 @@
         </button>
         <input type="file" id="tree-dir-in" webkitdirectory multiple hidden />
       </div>
+      <!-- Lọc file theo mẫu (ui/tree.js, MDAN-068): RegExp trên tên file; ẩn khi phiên ≤ 1 file. -->
+      <div class="ma-tree__find" id="tree-find" hidden>
+        <input class="ma-input ma-tree__q" id="tree-q" type="search" spellcheck="false" autocomplete="off" enterkeyhint="search"
+               placeholder="Filter files (regex)" aria-label="Filter files by name" aria-controls="tree-list"
+               aria-describedby="tree-q-note"
+               title="Matches file names, any case. Plain text finds names containing it; a regular expression works too, e.g. ^a.b.*\.text$ finds axb-notes.text. Esc clears. More in Help (?)." />
+        <p class="ma-tree__find-n" id="tree-q-note">Not a regex: matching plain text</p>
+      </div>
       <!-- Menu ⋯ của đầu cây (kiểu .ma-menu, popover); nằm trong #tree để theo cây vào tấm trượt. Biểu tượng: ui/tree.js. -->
       <div class="ma-menu" id="tree-head-menu" role="menu" aria-label="File list actions">
         <button class="ma-menu__i" type="button" role="menuitem" tabindex="-1" id="tree-import" title="Import a folder from disk (a copy)"><span>Import folder…</span></button>
@@ -133,6 +141,7 @@
           <div class="ma-tree__guides" id="tree-guides" aria-hidden="true"></div>
           <ul class="ma-tree__list" id="tree-list" role="tree" aria-label="Files"></ul>
         </div>
+        <p class="ma-tree__none" id="tree-none">No file names match</p>
         <!-- Phiên ≤ 1 mục (ui/tree.js .is-sparse): gợi ý thả file / nạp folder. -->
         <div class="ma-tree__hint" id="tree-hint">
           <p class="ma-tree__hint-t"><span class="ma-tree__hint-p">Drop files or a folder here</span><span class="ma-tree__hint-c">Add files from your device</span></p>
@@ -427,9 +436,9 @@
       <div class="ma-dlg__in">
         <div class="ma-dlg__h">
           <h2 id="dlg-layout-t">Settings</h2>
-          <button class="ma-btn ma-btn--quiet ma-dlg__act" type="button" id="btn-keys" aria-haspopup="dialog" title="Shortcuts and gestures (?)">
+          <button class="ma-btn ma-btn--quiet ma-dlg__act" type="button" id="btn-keys" aria-haspopup="dialog" title="Help: shortcuts and searching files (?)">
             <svg class="ma-i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="6" width="19" height="12" rx="2" /><path d="M6.5 10h1M10.5 10h1M14.5 10h1M18 10h-.5M8 14h8" /></svg>
-            <span>Shortcuts</span>
+            <span>Help</span>
           </button>
           <button class="ma-icbtn ma-icbtn--bare" type="button" data-close aria-label="Close">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
@@ -477,19 +486,26 @@
       </div>
     </dialog>
 
-    <!-- Bảng phím tắt: chữ ở data/shortcuts.json, ui/help.js vẽ (REPO-001). -->
+    <!-- Help: hai phần, chữ ở data/shortcuts.json và data/search-help.json, ui/help.js vẽ bằng cùng một vòng lặp (REPO-001). -->
     <dialog class="ma-dlg ma-dlg--center" id="dlg-keys" aria-labelledby="dlg-keys-t">
       <div class="ma-dlg__in">
         <div class="ma-dlg__h">
-          <h2 id="dlg-keys-t">Shortcuts and gestures</h2>
+          <h2 id="dlg-keys-t">Help</h2>
           <button class="ma-icbtn ma-icbtn--bare" type="button" data-close aria-label="Close">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
           </button>
         </div>
         <div class="ma-dlg__b">
-          <p class="ma-sub">Recently added keys, clicks and taps.</p>
-          <p class="ma-sub ma-only-touch">On a touch screen: long-press a line number to pick lines.</p>
-          <div class="ma-keys__all" id="keys-list"></div>
+          <section class="ma-help" aria-labelledby="help-keys-t">
+            <h3 class="ma-help__h" id="help-keys-t">Shortcuts and gestures</h3>
+            <p class="ma-sub">Recently added keys, clicks and taps.</p>
+            <p class="ma-sub ma-only-touch">On a touch screen: long-press a line number to pick lines.</p>
+            <div class="ma-keys__all" id="keys-list"></div>
+          </section>
+          <section class="ma-help" aria-labelledby="help-find-t">
+            <h3 class="ma-help__h" id="help-find-t">Searching files</h3>
+            <div class="ma-keys__all" id="find-help-list"></div>
+          </section>
         </div>
       </div>
     </dialog>

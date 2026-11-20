@@ -1,0 +1,26 @@
+{
+  "groups": [
+    {
+      "title": "Patterns",
+      "note": "Type in the filter box above the file list (shown with 2 or more files). It matches file names, in any case.",
+      "rows": [
+        { "keys": [["notes"]], "action": "Plain text: names that contain it (my-notes.md, Notes.txt)" },
+        { "keys": [["^read"]], "action": "^ is the start of the name: names that begin with read" },
+        { "keys": [["\\.md$"]], "action": "$ is the end, \\. is a real dot: names that end in .md" },
+        { "keys": [["a.c"]], "action": ". is any one character: abc, a-c, a1c" },
+        { "keys": [["draft.*v2"]], "action": ".* is anything, even nothing: draft-v2.md, draft notes v2.txt" },
+        { "keys": [["\\.(md|txt)$"]], "action": "| is either side, ( ) groups it: names that end in .md or .txt" },
+        { "keys": [["^a.b.*\\.text$"]], "action": "Starts with a, third character b, ends in .text: axb-notes.text" },
+        { "keys": [["a(b"]], "action": "Not a valid pattern: searched as plain text, with a note under the box" }
+      ]
+    },
+    {
+      "title": "Keys",
+      "rows": [
+        { "keys": [["/"]], "action": "With a file row focused: go to the filter box" },
+        { "keys": [["↓"], ["Enter"]], "action": "In the filter box: go to the first match" },
+        { "keys": [["Esc"]], "action": "In the filter box: clear it; folders open or close as they were" }
+      ]
+    }
+  ]
+}

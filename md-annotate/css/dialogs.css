@@ -30,6 +30,10 @@
 /* Nút phụ ở đầu hộp (Shortcuts trong Settings): nhỏ như nút trong thẻ. */
 .ma-dlg__act { min-height: var(--h-sm); padding: 0 var(--s2); font-size: var(--fs-sm); }
 /* Hộp Shortcuts: mỗi nhóm một tiêu đề, hàng là lưới hai cột (phím | việc, cột phím cùng rộng ở mọi nhóm), phím là chip .ma-key. */
+/* Help (#dlg-keys): các phần nối nhau, tách bằng một vạch trên (không bo, REPO-025); mỗi phần một tiêu đề, rồi các bảng. */
+.ma-help { display: flex; flex-direction: column; gap: var(--s2); }
+.ma-help + .ma-help { margin-top: var(--s5); padding-top: var(--s4); border-top: 1px solid var(--line); }
+.ma-help__h { margin: 0; font: 600 var(--fs-lg)/var(--lh-tight) var(--sans); color: var(--ink); }
 .ma-keys__all { display: flex; flex-direction: column; gap: var(--s4); }
 .ma-keys { display: flex; flex-direction: column; gap: var(--s2); }
 .ma-keys__h { margin: 0; font: 600 var(--fs-md)/var(--lh-tight) var(--sans); color: var(--ink); }

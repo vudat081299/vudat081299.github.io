@@ -1386,7 +1386,7 @@ const cornerClash = (page) => page.evaluate(() => {
   }
   // ── end hộp Settings ──
 
-  // ── hộp Shortcuts: mở từ Settings, hàng vẽ từ data/shortcuts.json (MDAN-015) ──
+  // ── hộp Help: mở từ Settings, hai phần vẽ từ data/shortcuts.json và data/search-help.json (MDAN-015, MDAN-069) ──
   {
     const kctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, colorScheme: 'light' });
     const kp = await kctx.newPage(); watch(kp);
@@ -1394,26 +1394,31 @@ const cornerClash = (page) => page.evaluate(() => {
     await kp.click('#btn-sample'); await kp.waitForTimeout(150);
     await kp.click('#btn-layout'); await kp.click('#btn-keys');
     await kp.waitForSelector('#keys-list dl'); await kp.waitForTimeout(250);
-    const want = await kp.evaluate(() => fetch('data/shortcuts.json').then((r) => r.json()).then((d) => d.groups.map((g) => g.title + ':' + g.rows.map((r) => r.keys.map((c) => c.join('+')).join('/') + '=' + r.action).join('|')).join('#')));
-    const got = await kp.$$eval('#keys-list .ma-keys', (ss) => ss.map((s) => s.querySelector('.ma-keys__h').textContent + ':' + [...s.querySelectorAll('dt')].map((dt) => [...dt.querySelectorAll('.ma-keys__c')].map((c) => [...c.querySelectorAll('kbd')].map((k) => k.textContent).join('+')).join('/') + '=' + dt.nextElementSibling.textContent).join('|')).join('#'));
-    check('Shortcuts: nút trong Settings mở hộp, mọi hàng của data/shortcuts.json hiện đúng', got === want && got.length > 0, got.slice(0, 120));
+    await kp.waitForSelector('#find-help-list dl');
+    const want = (url) => kp.evaluate((url) => fetch(url).then((r) => r.json()).then((d) => d.groups.map((g) => g.title + ':' + g.rows.map((r) => r.keys.map((c) => c.join('+')).join('/') + '=' + r.action).join('|')).join('#')), url);
+    const shown = (sel) => kp.$$eval(sel + ' .ma-keys', (ss) => ss.map((s) => s.querySelector('.ma-keys__h').textContent + ':' + [...s.querySelectorAll('dt')].map((dt) => [...dt.querySelectorAll('.ma-keys__c')].map((c) => [...c.querySelectorAll('kbd')].map((k) => k.textContent).join('+')).join('/') + '=' + dt.nextElementSibling.textContent).join('|')).join('#'));
+    const got = await shown('#keys-list'), gotFind = await shown('#find-help-list');
+    const title = await kp.evaluate(() => [document.getElementById('dlg-keys-t').textContent, [...document.querySelectorAll('#dlg-keys .ma-help__h')].map((x) => x.textContent).join('|'), document.querySelector('#btn-keys span').textContent]);
+    check('Help: nút Help trong Settings mở hộp Help; phần Shortcuts and gestures vẽ đúng mọi hàng của data/shortcuts.json', got === await want('data/shortcuts.json') && got.length > 0
+      && title.join('#') === 'Help#Shortcuts and gestures|Searching files#Help', JSON.stringify([title, got.slice(0, 80)]));
+    check('Help: phần Searching files vẽ đúng mọi hàng của data/search-help.json, có ví dụ ^a.b.*\\.text$', gotFind === await want('data/search-help.json') && gotFind.includes('^a.b.*\\.text$'), gotFind.slice(0, 120));
     const k = await kp.$eval('#dlg-keys', (d) => { const r = d.querySelector('.ma-dlg__in').getBoundingClientRect(), l = d.getBoundingClientRect(); return { cx: r.left + r.width / 2, cy: r.top + r.height / 2, layer: [l.left, l.top, l.width, l.height].join(), bg: getComputedStyle(d).backgroundColor, bd: getComputedStyle(d, '::backdrop').backgroundColor, kbd: d.querySelectorAll('kbd.ma-key').length, tc: document.getElementById('theme-color').content }; });
-    check('Shortcuts: hộp giữa màn hình, nền sau mờ (lớp hộp thoại phủ trọn), phím là chip kbd', Math.abs(k.cx - 720) <= 2 && Math.abs(k.cy - 450) <= 2 && /rgba\(\d+, \d+, \d+, 0\.[1-9]/.test(k.bg) && k.bd === 'rgba(0, 0, 0, 0)' && k.layer === '0,0,1440,900' && k.kbd > 10, JSON.stringify(k));
-    check('Shortcuts trên Settings: theme-color là nền trang dưới cả hai lớp mờ', k.tc === mixHex('#f5f6f3', 'rgba(11, 15, 12, 0.2)', 'rgba(11, 15, 12, 0.38)'), k.tc);
+    check('Help: hộp giữa màn hình, nền sau mờ (lớp hộp thoại phủ trọn), phím là chip kbd', Math.abs(k.cx - 720) <= 2 && Math.abs(k.cy - 450) <= 2 && /rgba\(\d+, \d+, \d+, 0\.[1-9]/.test(k.bg) && k.bd === 'rgba(0, 0, 0, 0)' && k.layer === '0,0,1440,900' && k.kbd > 10, JSON.stringify(k));
+    check('Help trên Settings: theme-color là nền trang dưới cả hai lớp mờ', k.tc === mixHex('#f5f6f3', 'rgba(11, 15, 12, 0.2)', 'rgba(11, 15, 12, 0.38)'), k.tc);
     await kp.keyboard.press('Escape');
-    check('Shortcuts: Esc đóng hộp Shortcuts, Settings còn mở', !(await kp.$eval('#dlg-keys', (d) => d.open)) && (await kp.$eval('#dlg-layout', (d) => d.open)));
-    check('Shortcuts: đóng thì theme-color về lớp mờ của Settings', (await kp.$eval('#theme-color', (x) => x.content)) === mixHex('#f5f6f3', 'rgba(11, 15, 12, 0.2)'));
+    check('Help: Esc đóng hộp Help, Settings còn mở', !(await kp.$eval('#dlg-keys', (d) => d.open)) && (await kp.$eval('#dlg-layout', (d) => d.open)));
+    check('Help: đóng thì theme-color về lớp mờ của Settings', (await kp.$eval('#theme-color', (x) => x.content)) === mixHex('#f5f6f3', 'rgba(11, 15, 12, 0.2)'));
     await kp.keyboard.press('Escape');
     await kp.keyboard.press('Shift+Slash'); await kp.waitForTimeout(100);
-    check('Shortcuts: phím ? mở hộp', await kp.$eval('#dlg-keys', (d) => d.open));
+    check('Help: phím ? mở hộp', await kp.$eval('#dlg-keys', (d) => d.open));
     await kp.keyboard.press('Escape');
     await kp.click('.ma-tab[data-view="edit"]'); await kp.focus('#src-input');
     const before = await kp.inputValue('#src-input');
     await kp.keyboard.press('End'); await kp.keyboard.type('?');
-    check('Shortcuts: gõ ? trong ô nhập không mở hộp', !(await kp.$eval('#dlg-keys', (d) => d.open)) && (await kp.inputValue('#src-input')).length === before.length + 1);
+    check('Help: gõ ? trong ô nhập không mở hộp', !(await kp.$eval('#dlg-keys', (d) => d.open)) && (await kp.inputValue('#src-input')).length === before.length + 1);
     await kctx.close();
   }
-  // ── end hộp Shortcuts ──
+  // ── end hộp Help ──
 
   // ── lớp mờ là chính <dialog> phủ trọn khung nhìn, nền là --scrim: iOS 26 Safari tô vùng thanh trạng thái theo nền phần tử
   //    fixed ở mép, không theo ::backdrop. Thẻ là con; theme-color là nền trộn lớp mờ khi mở, trả lại khi đóng. ──
@@ -2191,6 +2196,31 @@ const cornerClash = (page) => page.evaluate(() => {
     check('cây nông: rê hàng có huy hiệu — ⋯ hiện, huy hiệu vẫn hiện, đứng trước ⋯', hv.more === '1' && hv.badge === 'visible' && hv.cR <= hv.mL, JSON.stringify(hv));
     await tp.mouse.move(600, 600);
     await tp.evaluate(() => document.documentElement.style.setProperty('--tree', '248px'));
+
+    /* Lọc file (MDAN-068): mẫu RegExp không phân biệt hoa thường trên tên, hiện file khớp và folder tổ tiên (mở); mẫu hỏng thì tìm
+       chữ thường, có dòng báo; không khớp thì báo; ↓ vào hàng đầu, / ở hàng về ô lọc, Esc xoá và trả lại gập / mở cũ; 1 file thì ẩn ô. */
+    const findModel = (one) => tp.evaluate(async (one) => {
+      const T = await import('./js/ui/tree.js'), noop = () => '', N = (id, parent, kind, name) => ({ id, parent, kind, name });
+      const nodes = one ? [N('q1', null, 'file', 'only.md')] : [N('qd', null, 'dir', 'docs'), N('qe', 'qd', 'dir', 'deep'), N('q1', 'qd', 'file', 'axb-notes.text'), N('q2', 'qd', 'file', 'abc.text'),
+        N('q3', 'qe', 'file', 'AXB-plan.text'), N('q4', null, 'file', 'notes.md'), N('q5', null, 'file', 'a(b.md')];
+      T.renderTree({ sid: 'find', nodes, open: 'q4', collapsed: one ? [] : ['qd'], counts: {}, title: 'Find' },
+        { open: noop, toggle: noop, newFile: noop, newDir: noop, rename: noop, move: noop, remove: noop, importDir: noop, download: noop, collapseAll: noop });
+    }, one);
+    const fst = () => tp.evaluate(() => ({ shown: !document.getElementById('tree-find').hidden, rows: [...document.querySelectorAll('#tree-list .ma-trow')].map((r) => r.getAttribute('aria-level') + ':' + r.querySelector('.ma-trow__name').textContent).join(' '),
+      note: !!document.getElementById('tree-q-note').getClientRects().length, none: !!document.getElementById('tree-none').getClientRects().length, focus: document.activeElement.id || document.activeElement.className }));
+    await findModel(false);
+    const f0 = await fst();
+    await tp.fill('#tree-q', '^a.b.*\\.text$'); const f1 = await fst();
+    await tp.fill('#tree-q', 'a(b'); const f2 = await fst();
+    await tp.fill('#tree-q', 'zzz'); const f3 = await fst();
+    await tp.fill('#tree-q', 'NOTES'); await tp.press('#tree-q', 'ArrowDown'); const f4 = await fst();
+    await tp.keyboard.press('/'); const f5 = await fst();
+    await tp.keyboard.press('Escape'); const f6 = await fst();
+    check('lọc file: ^a.b.*\\.text$ hiện axb-notes.text, AXB-plan.text và folder tổ tiên, mở', f0.shown && f1.rows === '1:docs 2:deep 3:AXB-plan.text 2:axb-notes.text' && !f1.note, JSON.stringify([f0, f1]));
+    check('lọc file: mẫu hỏng a(b tìm chữ thường, có dòng báo; zzz thì báo không khớp', f2.rows === '1:a(b.md' && f2.note && f3.rows === '' && f3.none, JSON.stringify([f2, f3]));
+    check('lọc file: ↓ vào hàng đầu, / về ô lọc, Esc xoá mẫu và trả lại gập / mở cũ', f4.rows === '1:docs 2:axb-notes.text 1:notes.md' && /ma-trow/.test(f4.focus) && f5.focus === 'tree-q' && f6.rows === f0.rows && f0.rows === '1:docs 1:a(b.md 1:notes.md', JSON.stringify([f4, f5, f6]));
+    await findModel(true);
+    check('lọc file: phiên 1 file thì không có ô lọc', !(await fst()).shown);
     await tp.evaluate(treeDemo, false); await tp.waitForTimeout(150);
 
     // Bàn phím (mẫu tree WAI-ARIA) và vòng focus chỉ sau Tab (MDAN-020).
@@ -2260,8 +2290,10 @@ const cornerClash = (page) => page.evaluate(() => {
     check('cây: bấm chuột thì tắt vòng', !(await tp.evaluate(() => document.documentElement.classList.contains('ma-tabbing'))));
 
     await tp.focus('#tree-more'); await tp.keyboard.press('Tab');
+    const kq = await tp.evaluate(() => document.activeElement.id);
+    await tp.keyboard.press('Tab');
     const kr = await tp.evaluate(() => [document.activeElement.classList.contains('ma-trow'), getComputedStyle(document.activeElement, '::before').outlineStyle]);
-    check('cây: Tab vào cây tới hàng hiện tại, có vòng focus', kr[0] && kr[1] === 'solid' && (await focusName(tp)) === 'README.md', JSON.stringify(kr));
+    check('cây: Tab từ ⋯ đầu cây vào ô lọc, Tab nữa tới hàng hiện tại, có vòng focus', kq === 'tree-q' && kr[0] && kr[1] === 'solid' && (await focusName(tp)) === 'README.md', JSON.stringify([kq, kr]));
     // Đổi tên: F2, lỗi thì toast và vẫn sửa, Esc bỏ; bấm đúp; Enter lưu.
     const nameBox = (q) => tp.$eval(row('README.md'), (l, q) => { const e = l.querySelector(q), r = e.getBoundingClientRect(), cs = getComputedStyle(e);
       return { x: r.left, y: r.top, h: r.height, font: cs.font, ls: cs.letterSpacing, border: cs.borderTopWidth + cs.borderLeftWidth, outline: cs.outlineStyle, bg: cs.backgroundColor, shadow: cs.boxShadow, label: e.getAttribute('aria-label'), ring: getComputedStyle(l, '::before').outlineStyle }; }, q);
@@ -2749,7 +2781,7 @@ const cornerClash = (page) => page.evaluate(() => {
     }
   }
 
-  /* ---------- Thanh trên ở điện thoại: Files, tên, History, Settings, More; New session, theme, Shortcuts trong menu More ---------- */
+  /* ---------- Thanh trên ở điện thoại: Files, tên, History, Settings, More; New session, theme, Help trong menu More ---------- */
   for (const [w, scheme] of [[320, 'light'], [360, 'dark'], [390, 'light']]) {
     const hc = await browser.newContext({ viewport: { width: w, height: 760 }, colorScheme: scheme, hasTouch: true, isMobile: true, deviceScaleFactor: 2 });
     const hp = await hc.newPage(); watch(hp);
@@ -2781,17 +2813,17 @@ const cornerClash = (page) => page.evaluate(() => {
         bg: getComputedStyle(m).backgroundColor === surface };
     });
     const themeWord = scheme === 'dark' ? 'Light theme' : 'Dark theme';
-    check(`thanh trên ${w}: chạm More mở menu (New session, ${themeWord}, Shortcuts), mục ≥ 44px, trong khung, nền --surface, không vòng focus`,
-      mn.open && mn.exp === 'true' && mn.inView && mn.items.join() === `New session,${themeWord},Shortcuts` && mn.tall && !mn.ring && mn.bg, JSON.stringify(mn));
+    check(`thanh trên ${w}: chạm More mở menu (New session, ${themeWord}, Help), mục ≥ 44px, trong khung, nền --surface, không vòng focus`,
+      mn.open && mn.exp === 'true' && mn.inView && mn.items.join() === `New session,${themeWord},Help` && mn.tall && !mn.ring && mn.bg, JSON.stringify(mn));
     await hp.touchscreen.tap(20, 600); await hp.waitForTimeout(150);
     check(`thanh trên ${w}: chạm ngoài thì đóng`, !(await hp.evaluate(() => document.getElementById('bar-menu').classList.contains('is-open'))) && (await hp.getAttribute('#btn-more', 'aria-expanded')) === 'false');
-    // Mục theme đổi theme; Shortcuts mở hộp, đóng thì focus về More; New session mở phiên mới.
+    // Mục theme đổi theme; Help mở hộp, đóng thì focus về More; New session mở phiên mới.
     await hp.tap('#btn-more'); await hp.waitForTimeout(100); await hp.tap('#bar-menu >> text=' + themeWord); await hp.waitForTimeout(150);
     check(`thanh trên ${w}: mục theme đổi theme, menu đóng`, (await hp.evaluate(() => document.documentElement.classList.contains('dark'))) === (scheme !== 'dark') && !(await hp.isVisible('#bar-menu')));
-    await hp.tap('#btn-more'); await hp.waitForTimeout(100); await hp.tap('#bar-menu >> text=Shortcuts'); await hp.waitForTimeout(250);
+    await hp.tap('#btn-more'); await hp.waitForTimeout(100); await hp.tap('#bar-menu >> text=Help'); await hp.waitForTimeout(250);
     const ko = await hp.evaluate(() => document.getElementById('dlg-keys').open);
     await hp.keyboard.press('Escape'); await hp.waitForTimeout(150);
-    check(`thanh trên ${w}: Shortcuts mở hộp phím tắt, đóng thì focus về More`, ko && (await hp.evaluate(() => document.activeElement.id)) === 'btn-more');
+    check(`thanh trên ${w}: Help mở hộp Help, đóng thì focus về More`, ko && (await hp.evaluate(() => document.activeElement.id)) === 'btn-more');
     await hp.tap('#btn-more'); await hp.waitForTimeout(100); await hp.tap('#bar-menu >> text=New session'); await hp.waitForTimeout(200);
     check(`thanh trên ${w}: New session mở phiên mới (khung Edit)`, (await hp.isVisible('#src-input')) && /New session/.test(await hp.textContent('#toast')));
     // Bàn phím: Enter mở và vào mục đầu; ↓ ↑ vòng, End, Home; Esc đóng, focus về nút; ↑ trên nút vào mục cuối; Tab đóng.
@@ -2808,7 +2840,7 @@ const cornerClash = (page) => page.evaluate(() => {
     const k9 = await fo(), shut2 = !(await hp.isVisible('#bar-menu'));
     const kw = scheme === 'dark' ? 'Dark theme' : 'Light theme';   // theme đã đổi ở trên
     check(`thanh trên ${w}: bàn phím — Enter vào mục đầu, ↓ ↑ End Home, vòng focus sau Tab, Esc / Tab đóng và trả focus, ↑ trên nút vào mục cuối`,
-      k1 === 'New session' && k2 === kw && k3 === 'Shortcuts' && k4 === 'New session' && k5 === 'Shortcuts' && k6 === 'New session' && ring && k7 === 'btn-more' && shut && k8 === 'Shortcuts' && k9 === 'btn-more' && shut2,
+      k1 === 'New session' && k2 === kw && k3 === 'Help' && k4 === 'New session' && k5 === 'Help' && k6 === 'New session' && ring && k7 === 'btn-more' && shut && k8 === 'Help' && k9 === 'btn-more' && shut2,
       JSON.stringify([k1, k2, k3, k4, k5, k6, ring, k7, shut, k8, k9, shut2]));
     check(`thanh trên ${w}: không tràn ngang`, (await overflow(hp)) === 0);
     await hc.close();
@@ -3188,7 +3220,7 @@ const cornerClash = (page) => page.evaluate(() => {
 
   // ── mob:touch-picks ──
   /* ---------- Chọn dòng bằng chạm (MDAN-050): nhấn giữ số dòng vào chế độ, chạm thêm / bỏ, Done và Cancel thoát, đáy trang
-     đủ chỗ cho dòng cuối, gợi ý ở hộp Shortcuts ---------- */
+     đủ chỗ cho dòng cuối, gợi ý ở hộp Help ---------- */
   {
     const devices = pw.devices;
     const mk = async (name) => {
@@ -3242,11 +3274,11 @@ const cornerClash = (page) => page.evaluate(() => {
     b = await p.locator('#pop-done').boundingBox(); await p.touchscreen.tap(b.x + b.width / 2, b.y + b.height / 2); await p.waitForTimeout(250);
     const s5 = await st(p);
     check('chọn dòng bằng chạm: Done thoát chế độ, bỏ các dòng', !s5.picking && !s5.picks && !s5.pop && b.height >= 44, JSON.stringify([s5, b.height]));
-    // Hộp Shortcuts: gợi ý nhấn giữ chỉ ở màn cảm ứng.
+    // Hộp Help: gợi ý nhấn giữ chỉ ở màn cảm ứng.
     await p.$eval('#btn-layout', (e) => e.click()); await p.$eval('#btn-keys', (e) => e.click()); await p.waitForTimeout(400);
     const hint = await p.evaluate(() => [!![...document.querySelectorAll('#dlg-keys .ma-only-touch')].find((e) => e.getClientRects().length && /long-press a line number/i.test(e.textContent)),
       [...document.querySelectorAll('#keys-list .ma-key')].some((k) => k.textContent === 'Long-press')]);
-    check('hộp Shortcuts ở màn cảm ứng: có dòng "long-press a line number" và phím Long-press', hint[0] && hint[1], JSON.stringify(hint));
+    check('hộp Help ở màn cảm ứng: có dòng "long-press a line number" và phím Long-press', hint[0] && hint[1], JSON.stringify(hint));
     await c.close();
     // Nằm ngang: tấm chọn dòng gọn, còn thấy lề số phía trên.
     ({ c, p, cdp } = await mk('iPhone 15 Pro landscape'));
@@ -3269,7 +3301,7 @@ const cornerClash = (page) => page.evaluate(() => {
     await p.click('#pop-done'); await p.waitForTimeout(100);
     check('máy tính: nút Done thoát chế độ chọn dòng', !(await st(p)).picking);
     await p.click('#btn-layout'); await p.click('#btn-keys'); await p.waitForTimeout(400);
-    check('hộp Shortcuts ở máy tính: không có dòng gợi ý chỉ cho cảm ứng', await p.evaluate(() => [...document.querySelectorAll('#dlg-keys .ma-only-touch')].every((e) => !e.getClientRects().length)));
+    check('hộp Help ở máy tính: không có dòng gợi ý chỉ cho cảm ứng', await p.evaluate(() => [...document.querySelectorAll('#dlg-keys .ma-only-touch')].every((e) => !e.getClientRects().length)));
     await c.close();
   }
   // ── end mob:touch-picks ──

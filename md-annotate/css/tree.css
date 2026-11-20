@@ -78,6 +78,15 @@ html.ma-tree-on body > .ma-tree {
 #tree-more[aria-expanded="true"] { background: var(--chip); color: var(--ink); }
 .ma-tree__close { display: none; }
 
+/* LỌC FILE (#tree-find, MDAN-068): ô một dòng dưới đầu cây, cao bằng hàng, chữ như tên hàng (cảm ứng ≥ 16px: iOS không phóng
+   to); mẫu không hợp lệ (tìm như chữ thường) thì một dòng chữ nhỏ dưới ô báo vậy. Không khớp gì: #tree-none thay danh sách. */
+.ma-tree__find { flex: none; padding: var(--s2) var(--s2) 0; }
+.ma-tree__q.ma-input { height: var(--row-h); padding: 0 var(--s2); font-size: var(--name-fs); }
+.ma-tree__find-n { display: none; margin: var(--s1) var(--s1) 0; font-size: var(--fs-xs); line-height: var(--lh-tight); color: var(--ink-3); }
+.ma-tree__q[aria-invalid="true"] + .ma-tree__find-n { display: block; }
+.ma-tree__none { display: none; margin: var(--s3) var(--s2); font-size: var(--fs-sm); color: var(--ink-3); }
+.ma-tree.is-none .ma-tree__none { display: block; }
+
 /* THÂN: chỗ cuộn duy nhất, dọc và ngang. Đệm đáy --s3 nằm trong vùng cuộn: cuộn tới cuối, hàng cuối vẫn cách mép; viền
    trong suốt dưới nó là chỗ thanh cuộn dừng (không chạm góc bo, MDAN-018). */
 .ma-tree__body {
@@ -197,7 +206,8 @@ html.ma-tree-on body > .ma-tree {
 
 /* GỢI Ý khi phiên ≤ 1 mục (.is-sparse): khung đứt nhạt dưới danh sách; chuột: thả file, cảm ứng: nạp từ máy. */
 .ma-tree__hint { display: none; }
-.ma-tree.is-sparse .ma-tree__rows, .ma-tree.is-sparse .ma-tree__list { min-height: 0; }
+/* Danh sách ngắn hay rỗng (gợi ý, không khớp gì): khối hàng không kéo cao hết thân, chữ báo nằm ngay dưới. */
+.ma-tree:is(.is-sparse, .is-none) :is(.ma-tree__rows, .ma-tree__list) { min-height: 0; }
 .ma-tree.is-sparse .ma-tree__hint {
   display: flex; flex-direction: column; align-items: center; gap: var(--s2); margin: var(--s3) 0 var(--s2); padding: var(--s4) var(--s3) var(--s3);
   border: 1px dashed var(--line); border-radius: var(--r); text-align: center;

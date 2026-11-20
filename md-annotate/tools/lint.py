@@ -14,7 +14,7 @@
   7. Token (MDAN-009): css/*.css ngoài tokens.css không có mã màu (hex, rgb, hsl, white, black), không cỡ chữ px
      (font-size, font), không bán kính px trừ 0 / 1px / 999px. Token xanh đã bỏ (--green*, --toast-act) không
      xuất hiện ở css/, js/, index.html.
-  8. data/shortcuts.json: `groups` không rỗng; mỗi nhóm có `title` và `rows` không rỗng; mỗi hàng có `action` là chuỗi
+  8. data/shortcuts.json, data/search-help.json (bảng của Help): `groups` không rỗng; mỗi nhóm có `title` và `rows` không rỗng; mỗi hàng có `action` là chuỗi
      và `keys` là danh sách cách bấm, mỗi cách là danh sách phím (chuỗi không rỗng). Mọi data/*.json được js/ nạp
      (chuỗi 'data/<tên>.json' trong một module), không thì là file mồ côi.
 
@@ -170,31 +170,31 @@ for name, text in [('index.html', html)] + [('js/' + f, t) for f, t in js_src.it
     for m in OLD_GREEN.finditer(text):
         errors.append(f'{name}: token đã bỏ {m.group(0)} — dùng --accent (MDAN-009)')
 
-# 8. Bảng phím tắt; data/*.json không mồ côi.
-try:
-    sc = json.load(open(os.path.join(ROOT, 'data/shortcuts.json'), encoding='utf-8'))
-except Exception as e:  # noqa: BLE001
-    sc = None
-    errors.append(f'data/shortcuts.json: không đọc được JSON ({e})')
-if sc is not None:
+# 8. Bảng hàng của Help (phím tắt, mẫu tìm file): cùng một dạng; data/*.json không mồ côi.
+for name in ('data/shortcuts.json', 'data/search-help.json'):
+    try:
+        sc = json.load(open(os.path.join(ROOT, name), encoding='utf-8'))
+    except Exception as e:  # noqa: BLE001
+        errors.append(f'{name}: không đọc được JSON ({e})')
+        continue
     groups = sc.get('groups') if isinstance(sc, dict) else None
     if not isinstance(groups, list) or not groups:
-        errors.append('data/shortcuts.json: thiếu danh sách "groups"')
+        errors.append(f'{name}: thiếu danh sách "groups"')
         groups = []
     for gi, g in enumerate(groups):
         if not isinstance(g, dict) or not isinstance(g.get('title'), str) or not g['title'].strip():
-            errors.append(f'data/shortcuts.json: groups[{gi}] thiếu "title"')
+            errors.append(f'{name}: groups[{gi}] thiếu "title"')
             continue
         rows = g.get('rows')
         if not isinstance(rows, list) or not rows:
-            errors.append(f'data/shortcuts.json: nhóm "{g["title"]}" không có "rows"')
+            errors.append(f'{name}: nhóm "{g["title"]}" không có "rows"')
             continue
         for ri, r in enumerate(rows):
             keys = r.get('keys') if isinstance(r, dict) else None
             ok_keys = isinstance(keys, list) and keys and all(
                 isinstance(c, list) and c and all(isinstance(k, str) and k.strip() for k in c) for c in keys)
             if not ok_keys or not isinstance(r.get('action'), str) or not r['action'].strip():
-                errors.append(f'data/shortcuts.json: nhóm "{g["title"]}", hàng {ri}: cần "keys" [[phím…]…] và "action"')
+                errors.append(f'{name}: nhóm "{g["title"]}", hàng {ri}: cần "keys" [[phím…]…] và "action"')
 all_js = '\n'.join(js_src.values())
 for f in sorted(os.listdir(os.path.join(ROOT, 'data'))):
     if f.endswith('.json') and f"'data/{f}'" not in all_js:
