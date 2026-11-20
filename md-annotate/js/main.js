@@ -12,7 +12,7 @@
    Xuất: không (chạy khi nạp).
    Dùng: ui/store.js, ui/dom.js, ui/state.js, ui/hints.js, ui/render.js, ui/list.js, ui/prompt.js, ui/views.js,
      ui/sync-scroll.js, ui/panel.js, ui/layout.js, ui/help.js, ui/focus.js, ui/popup.js, ui/selection.js, ui/picks.js,
-     ui/history.js, ui/editor.js, ui/review.js, ui/review-panel.js, ui/minimap.js, ui/dwell.js. */
+     ui/history.js, ui/editor.js, ui/review.js, ui/review-panel.js, ui/minimap.js, ui/dwell.js, ui/tree.js. */
 import { KEY, store } from './ui/store.js';
 import { $ } from './ui/dom.js';
 import { initState, S } from './ui/state.js';
@@ -23,6 +23,7 @@ import { copyPrompt, initPrompt } from './ui/prompt.js';
 import { initViews, setView, view } from './ui/views.js';
 import { initSyncScroll } from './ui/sync-scroll.js';
 import { initPanel } from './ui/panel.js';
+import { initTree } from './ui/tree.js';
 import { initLayout } from './ui/layout.js';
 import { initHelp } from './ui/help.js';
 import { initFocus } from './ui/focus.js';
@@ -71,6 +72,7 @@ function initTheme() {
 initViews();
 initSyncScroll();
 initPanel();
+initTree();
 initLayout();
 initHelp();
 initFocus();

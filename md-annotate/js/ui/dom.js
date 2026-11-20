@@ -24,7 +24,19 @@ export function h(tag, props) {
 var PATHS = {
   pencil: 'M4 20h4L19 9l-4-4L4 16v4z',
   x: 'M6 6l12 12M18 6 6 18',
-  trash: 'M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3'
+  trash: 'M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3',
+  /* Cây file (ui/tree.js) */
+  chev: 'M9 6l6 6-6 6',
+  file: 'M14 3H6v18h12V7l-4-4zM14 3v4h4',
+  folder: 'M3 6.5A1.5 1.5 0 0 1 4.5 5H9l2 2h8.5A1.5 1.5 0 0 1 21 8.5v9a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 17.5z',
+  'folder-open': 'M3 17.5v-11A1.5 1.5 0 0 1 4.5 5H9l2 2h7.5A1.5 1.5 0 0 1 20 8.5V10M3 17.5 5.6 11h16l-2.6 8H4.5A1.5 1.5 0 0 1 3 17.5z',
+  'file-plus': 'M14 3H6v18h12V7l-4-4zM14 3v4h4M12 11v6M9 14h6',
+  'folder-plus': 'M3 6.5A1.5 1.5 0 0 1 4.5 5H9l2 2h8.5A1.5 1.5 0 0 1 21 8.5v9a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 17.5zM12 10v6M9 13h6',
+  'folder-in': 'M3 6.5A1.5 1.5 0 0 1 4.5 5H9l2 2h8.5A1.5 1.5 0 0 1 21 8.5v9a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 17.5zM12 10v6M9 13l3 3 3-3',
+  download: 'M12 4v11m-4-4 4 4 4-4M5 20h14',
+  collapse: 'M7 4l5 5 5-5M7 20l5-5 5 5',
+  dots: 'M5 11a1 1 0 1 0 0 2 1 1 0 1 0 0-2zM12 11a1 1 0 1 0 0 2 1 1 0 1 0 0-2zM19 11a1 1 0 1 0 0 2 1 1 0 1 0 0-2z',
+  back: 'M15 6l-6 6 6 6'
 };
 export function icon(name) {
   var s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');

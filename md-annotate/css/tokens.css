@@ -81,6 +81,8 @@
   --pad: 24px;                         /* lề trang trong vùng làm việc (MDAN-005) */
   --bar-h: 60px;
   --side: 360px;                       /* bề rộng panel; người dùng kéo được 320–560, lưu ở prefs.side */
+  --tree: 248px;                       /* bề rộng cây file (css/tree.css); kéo được 180–420, lưu ở prefs.treeW */
+  --tree-step: 12px;                   /* thụt mỗi cấp của cây file */
   --lane-w: 16px;                      /* làn dấu đã đọc cạnh khối (css/review.css, MDAN-013) */
   --ic-box: 14px;                      /* mọi ô đánh dấu: dấu đã đọc (bộ dấu ở đầu css/review.css), ô đánh dấu của form */
   /* Dấu ✓ là ảnh, không phải ký tự (ký tự lệch theo font): một chỗ khai báo, mọi ô đánh dấu dùng lại. Màu nằm trong ảnh:

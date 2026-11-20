@@ -1591,6 +1591,246 @@ const cornerClash = (page) => page.evaluate(() => {
   }
   // ── end dải tiến độ và gợi ý ──
 
+  /* ---------- Cây file (ui/tree.js): vẽ bằng mô hình giả, actions ghi vào window.__tree.log ---------- */
+  {
+    /* Chạy trong trang. single: phiên một file; không thì 8 cấp folder, 40 file, một folder gập, tên dài. */
+    const treeDemo = async (single) => {
+      const T = await import('./js/ui/tree.js');
+      const nodes = []; let n = 0; const id = () => 'n' + (++n);
+      if (single) nodes.push({ id: id(), parent: null, kind: 'file', name: 'untitled.md' });
+      else {
+        let parent = null; const dirs = [];
+        for (let d = 0; d < 8; d++) { const x = { id: id(), parent, kind: 'dir', name: d === 7 ? 'deepest-level-folder-with-a-very-long-name' : 'level-' + (d + 1) }; nodes.push(x); dirs.push(x); parent = x.id; }
+        for (let i = 0; i < 40; i++) nodes.push({ id: id(), parent: dirs[i % 8].id, kind: 'file', name: (i % 8 === 7 ? 'a-really-long-file-name-that-should-ellipsize-' : 'note-') + i + '.md' });
+        const col = { id: id(), parent: null, kind: 'dir', name: 'archive' }; nodes.push(col);
+        nodes.push({ id: id(), parent: col.id, kind: 'file', name: 'old.md' });
+        nodes.push({ id: id(), parent: null, kind: 'file', name: 'README.md' });
+      }
+      const open = nodes.find((x) => x.kind === 'file').id;
+      const model = { nodes, open, collapsed: single ? [] : [nodes.find((x) => x.name === 'archive').id], counts: { [open]: { c: 3, rv: 42 } }, title: 'Demo folder' };
+      const log = [], by = (i) => nodes.find((x) => x.id === i);
+      const render = () => T.renderTree(model, actions);
+      const actions = {
+        open(i) { log.push(['open', i]); model.open = i; render(); },
+        toggle(i) { log.push(['toggle', i]); const k = model.collapsed.indexOf(i); if (k < 0) model.collapsed.push(i); else model.collapsed.splice(k, 1); render(); },
+        newFile(p) { log.push(['newFile', p]); }, newDir(p) { log.push(['newDir', p]); },
+        rename(i, name) { log.push(['rename', i, name]); if (!name || /[/\\]/.test(name)) return 'Names cannot contain / or \\'; by(i).name = name; render(); return ''; },
+        move(i, p) { log.push(['move', i, p]); by(i).parent = p; render(); return ''; },
+        remove(i) { log.push(['remove', i]); }, importDir(x, p) { log.push(['importDir', p]); }, download(i) { log.push(['download', i]); },
+        collapseAll() { log.push(['collapseAll']); model.collapsed = nodes.filter((x) => x.kind === 'dir').map((x) => x.id); render(); }
+      };
+      window.__tree = { model, log, by, render };
+      render();
+    };
+    const tstate = (p) => p.evaluate(() => {
+      const t = document.getElementById('tree'), r = t.getBoundingClientRect(), d = document.getElementById('doc').getBoundingClientRect(), b = document.getElementById('btn-tree');
+      return { shown: !!t.getClientRects().length, w: Math.round(r.width), left: Math.round(r.left), docL: Math.round(d.left), docW: Math.round(d.width),
+        split: !document.getElementById('tab-split').hidden, exp: b.getAttribute('aria-expanded'), lbl: b.title, btn: !b.hidden,
+        pref: JSON.parse(localStorage.getItem('md-annotate:prefs:v1') || '{}').tree, rows: document.querySelectorAll('#tree-list .ma-trow').length };
+    });
+    const focusName = (p) => p.evaluate(() => document.activeElement?.closest?.('.ma-trow')?.querySelector('.ma-trow__name')?.textContent || document.activeElement?.tagName);
+    /* Mô hình giả đặt id cố định n1, n2…: tìm hàng theo tên ban đầu. */
+    let ids = {};
+    const nameOf = (sel) => tp.$eval(sel, (li) => li.querySelector('.ma-trow__name').textContent);
+    const row = (name) => `#tree-list .ma-trow[data-id="${ids[name]}"]`;
+
+    const tctx = await browser.newContext({ viewport: { width: 1280, height: 900 }, colorScheme: 'light' });
+    const tp = await tctx.newPage(); watch(tp);
+    await tp.goto(BASE); await tp.waitForFunction(() => window.marked && window.DOMPurify);
+    await tp.click('#btn-sample'); await tp.waitForTimeout(150);
+    const t0 = await tstate(tp);
+    check('cây: chưa có dữ liệu thì không có cột, không có nút', !t0.shown && !t0.btn, JSON.stringify(t0));
+    // Phiên một file: nút hiện, cột chưa hiện (mặc định tự động), vẽ được một hàng, đang chọn.
+    await tp.evaluate(treeDemo, true); await tp.waitForTimeout(150);
+    let ts = await tstate(tp);
+    check('cây: phiên một file — nút hiện, cột ẩn, Split còn ở 1280', ts.btn && !ts.shown && ts.split && ts.docL === t0.docL && ts.exp === 'false' && ts.lbl === 'Show files', JSON.stringify(ts));
+    await tp.click('#btn-tree'); await tp.waitForTimeout(150);
+    ts = await tstate(tp);
+    const one = await tp.$$eval('#tree-list .ma-trow', (ls) => ls.map((l) => [l.getAttribute('aria-selected'), l.getAttribute('aria-level'), l.querySelector('.ma-trow__name').textContent]));
+    check('cây: phiên một file — bấm nút hiện cột, một hàng đang chọn', ts.shown && ts.rows === 1 && one[0][0] === 'true' && one[0][1] === '1' && one[0][2] === 'untitled.md' && ts.exp === 'true' && ts.lbl === 'Hide files', JSON.stringify([ts, one]));
+
+    // Cây sâu: 8 cấp, 40 file. Bật / tắt, Split hiện lại khi tắt, nhớ qua tải lại.
+    await tp.evaluate(treeDemo, false); await tp.waitForTimeout(150);
+    ids = await tp.evaluate(() => Object.fromEntries(window.__tree.model.nodes.map((x) => [x.name, x.id])));
+    ts = await tstate(tp);
+    check('cây: cột trái rộng 248px trước #doc, 1280 mất Split', ts.shown && ts.w === 248 && ts.left < ts.docL && !ts.split && ts.rows === 50, JSON.stringify(ts));
+    check('cây: 1280 không tràn ngang', (await overflow(tp)) === 0, String(await overflow(tp)));
+    await tp.click('#btn-tree'); await tp.waitForTimeout(150);
+    ts = await tstate(tp);
+    check('cây: bấm nút ẩn cột, #doc về chỗ cũ, Split hiện lại, lưu prefs.tree', !ts.shown && ts.docL === t0.docL && ts.split && ts.pref === false && ts.exp === 'false', JSON.stringify(ts));
+    await tp.reload(); await tp.waitForFunction(() => window.marked && window.DOMPurify);
+    await tp.evaluate(treeDemo, false); await tp.waitForTimeout(150);
+    ts = await tstate(tp);
+    check('cây: tải lại vẫn ẩn', !ts.shown && ts.btn, JSON.stringify(ts));
+    await tp.evaluate(() => document.activeElement && document.activeElement.blur());
+    await tp.keyboard.press('Control+B'); await tp.waitForTimeout(150);
+    ts = await tstate(tp);
+    check('cây: Ctrl+B hiện lại, lưu prefs.tree', ts.shown && ts.pref === true, JSON.stringify(ts));
+    await tp.focus('#s-name'); await tp.keyboard.press('Control+B'); await tp.waitForTimeout(100);
+    check('cây: Ctrl+B trong ô nhập không đổi gì', (await tstate(tp)).shown);
+    await tp.evaluate(() => document.activeElement.blur());
+
+    // Mép kéo: chuột (180–420, lưu prefs.treeW), phím mũi tên.
+    const gb = await tp.$eval('#tree-grip', (g) => { const r = g.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; });
+    await tp.mouse.move(gb.x, gb.y); await tp.mouse.down(); await tp.mouse.move(gb.x + 100, gb.y, { steps: 5 }); await tp.mouse.up(); await tp.waitForTimeout(150);
+    ts = await tstate(tp);
+    const tw = await tp.evaluate(() => JSON.parse(localStorage.getItem('md-annotate:prefs:v1')).treeW);
+    check('cây: kéo mép rộng thêm 100px, lưu prefs.treeW', ts.w === 348 && tw === 348 && ts.docL === ts.left + 348 + 16, JSON.stringify({ ...ts, tw }));
+    await tp.mouse.move(gb.x + 100, gb.y); await tp.mouse.down(); await tp.mouse.move(gb.x + 600, gb.y, { steps: 5 }); await tp.mouse.up();
+    check('cây: kéo quá thì dừng ở 420px', (await tstate(tp)).w === 420);
+    await tp.focus('#tree-grip'); await tp.keyboard.press('ArrowLeft'); await tp.keyboard.press('ArrowLeft');
+    check('cây: ← trên mép hẹp lại 16px mỗi lần', (await tstate(tp)).w === 388, String((await tstate(tp)).w));
+    await tp.reload(); await tp.waitForFunction(() => window.marked && window.DOMPurify);
+    await tp.evaluate(treeDemo, false); await tp.waitForTimeout(150);
+    check('cây: tải lại giữ bề rộng', (await tstate(tp)).w === 388);
+    for (let i = 0; i < 20; i++) await tp.focus('#tree-grip').then(() => tp.keyboard.press('ArrowLeft'));
+    check('cây: hẹp nhất 180px', (await tstate(tp)).w === 180);
+
+    // Hàng sâu (cấp 9): thụt nhưng tên còn thấy ≥ 8 ký tự, ở cả 180px và 248px; title là đường dẫn đầy đủ.
+    const deep = () => tp.evaluate(() => {
+      const li = [...document.querySelectorAll('#tree-list .ma-trow')].find((l) => l.getAttribute('aria-level') === '9');
+      const nm = li.querySelector('.ma-trow__name'), r = nm.getBoundingClientRect(), top = document.querySelector('#tree-list .ma-trow .ma-trow__name').getBoundingClientRect();
+      const c = document.createElement('canvas').getContext('2d'); c.font = getComputedStyle(nm).font;
+      return { w: Math.round(r.width), need: Math.round(c.measureText('a-really').width), indent: Math.round(r.left - top.left), path: li.title };
+    });
+    let dp = await deep();
+    check('cây: 180px, hàng cấp 9 còn thấy ≥ 8 ký tự tên', dp.w >= dp.need && dp.path.split('/').length === 9, JSON.stringify(dp));
+    await tp.evaluate(() => { localStorage.setItem('md-annotate:prefs:v1', JSON.stringify({ ...JSON.parse(localStorage.getItem('md-annotate:prefs:v1')), treeW: 248 })); });
+    await tp.reload(); await tp.waitForFunction(() => window.marked && window.DOMPurify);
+    await tp.evaluate(treeDemo, false); await tp.waitForTimeout(150);
+    dp = await deep();
+    check('cây: 248px, hàng cấp 9 thụt vào mà vẫn thấy ≥ 8 ký tự tên', dp.w >= dp.need && dp.indent >= 60, JSON.stringify(dp));
+
+    // Bàn phím (mẫu tree WAI-ARIA) và vòng focus chỉ sau Tab (MDAN-020).
+    await tp.click(row('archive'));
+    const ring = await tp.$eval(row('archive'), (l) => getComputedStyle(l).outlineStyle);
+    const tl = () => tp.evaluate(() => window.__tree.log.slice(-1)[0] || []);
+    check('cây: bấm folder gập thì mở, không có vòng focus', (await tl())[0] === 'toggle' && ring === 'none' && (await tp.$eval(row('archive'), (l) => l.getAttribute('aria-expanded'))) === 'true', ring);
+    await tp.keyboard.press('ArrowDown');
+    check('cây: ↓ sang hàng con (old.md)', (await focusName(tp)) === 'old.md', await focusName(tp));
+    await tp.keyboard.press('ArrowLeft');
+    check('cây: ← ở file về folder cha', (await focusName(tp)) === 'archive', await focusName(tp));
+    await tp.keyboard.press('ArrowLeft');
+    check('cây: ← ở folder đang mở thì gập', (await tp.$eval(row('archive'), (l) => l.getAttribute('aria-expanded'))) === 'false' && (await focusName(tp)) === 'archive');
+    await tp.keyboard.press('ArrowRight');
+    check('cây: → ở folder gập thì mở', (await tp.$eval(row('archive'), (l) => l.getAttribute('aria-expanded'))) === 'true');
+    await tp.keyboard.press('ArrowRight');
+    check('cây: → ở folder đang mở thì vào con đầu', (await focusName(tp)) === 'old.md', await focusName(tp));
+    await tp.keyboard.press('End');
+    check('cây: End tới hàng cuối', (await focusName(tp)) === 'README.md', await focusName(tp));
+    await tp.keyboard.press('Home');
+    check('cây: Home tới hàng đầu', (await focusName(tp)) === 'archive', await focusName(tp));
+    await tp.keyboard.press('r');
+    check('cây: gõ chữ nhảy tới tên', (await focusName(tp)) === 'README.md', await focusName(tp));
+    await tp.keyboard.press('Enter');
+    const sel = await tp.$eval(row('README.md'), (l) => [l.getAttribute('aria-selected'), getComputedStyle(l).boxShadow]);
+    check('cây: Enter mở file, hàng thành đang chọn (nền nhạt + viền --edge-on)', JSON.stringify(await tl()) === JSON.stringify(['open', ids['README.md']]) && sel[0] === 'true' && /inset/.test(sel[1]), JSON.stringify(sel));
+    /* Tương phản trên hàng đang chọn (nền pha nhiều lớp): chữ ≥ 4,5:1, viền --edge-on ≥ 3:1, cả hai theme. */
+    const treeContrast = () => tp.evaluate(() => {
+      const parse = (c) => { const m = c.match(/[\d.]+/g).map(Number); return c.startsWith('color(') ? [m[0] * 255, m[1] * 255, m[2] * 255, m.length > 3 ? m[3] : 1] : [m[0], m[1], m[2], m.length > 3 ? m[3] : 1]; };
+      const over = (t, u) => [0, 1, 2].map((i) => t[i] * t[3] + u[i] * (1 - t[3])).concat(1);
+      const bgOf = (el) => { const ch = []; for (let n = el; n; n = n.parentElement) ch.push(getComputedStyle(n).backgroundColor); let c = [255, 255, 255, 1]; ch.reverse().forEach((x) => { const v = parse(x); if (v[3] > 0) c = over(v, c); }); return c; };
+      const lum = (c) => { const x = c.slice(0, 3).map((n) => { n /= 255; return n <= 0.03928 ? n / 12.92 : ((n + 0.055) / 1.055) ** 2.4; }); return 0.2126 * x[0] + 0.7152 * x[1] + 0.0722 * x[2]; };
+      const ratio = (a, b) => { const x = lum(a), y = lum(b); return +((Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05)).toFixed(2); };
+      const sel = document.querySelector('#tree-list .ma-trow[aria-selected="true"]'), out = {};
+      for (const [k, q] of [['name', '.ma-trow__name'], ['c', '.ma-trow__c'], ['rv', '.ma-trow__rv']]) { const el = sel.querySelector(q); out[k] = el ? ratio(parse(getComputedStyle(el).color), bgOf(el)) : 0; }
+      const edge = parse(getComputedStyle(sel).boxShadow.match(/rgba?\([^)]*\)|color\([^)]*\)/)[0]);
+      out.edge = ratio(over(edge, bgOf(sel.parentElement)), bgOf(sel.parentElement));
+      return out;
+    });
+    await tp.evaluate(() => { const m = window.__tree.model; m.counts[m.open] = { c: 3, rv: 42 }; window.__tree.render(); });
+    for (const dark of [false, true]) {
+      await tp.evaluate((d) => document.documentElement.classList.toggle('dark', d), dark); await tp.waitForTimeout(300);
+      const tc = await treeContrast();
+      check(`cây (${dark ? 'tối' : 'sáng'}): hàng đang chọn — tên, huy hiệu ≥ 4,5:1, viền ≥ 3:1`, tc.name >= 4.5 && tc.c >= 4.5 && tc.rv >= 4.5 && tc.edge >= 3, JSON.stringify(tc));
+    }
+    await tp.evaluate(() => document.documentElement.classList.remove('dark'));
+    const tabbed = await tp.evaluate(() => document.documentElement.classList.contains('ma-tabbing'));
+    const tabIdx = await tp.$$eval('#tree-list .ma-trow', (ls) => ls.filter((l) => l.tabIndex === 0).length);
+    check('cây: một hàng tabindex 0 (roving), chưa Tab thì không vòng', tabIdx === 1 && !tabbed && (await tp.$eval(row('README.md'), (l) => getComputedStyle(l).outlineStyle)) === 'none');
+
+    await tp.focus('#tree-collapse'); await tp.keyboard.press('Tab');
+    const kr = await tp.evaluate(() => [document.activeElement.classList.contains('ma-trow'), getComputedStyle(document.activeElement).outlineStyle]);
+    check('cây: Tab vào cây tới hàng hiện tại, có vòng focus', kr[0] && kr[1] === 'solid' && (await focusName(tp)) === 'README.md', JSON.stringify(kr));
+    // Đổi tên: F2, lỗi thì toast và vẫn sửa, Esc bỏ; bấm đúp; Enter lưu.
+    await tp.keyboard.press('F2');
+    const ren = () => tp.$eval('#tree-list', (ul) => { const i = ul.querySelector('.ma-trow__ren'); return i ? { v: i.value, f: document.activeElement === i, sel: i.value.slice(i.selectionStart, i.selectionEnd) } : null; });
+    let rn = await ren();
+    check('cây: F2 mở ô đổi tên, chọn phần tên trước đuôi', rn && rn.v === 'README.md' && rn.f && rn.sel === 'README', JSON.stringify(rn));
+    await tp.keyboard.type('a/b'); await tp.keyboard.press('Enter'); await tp.waitForTimeout(80);
+    rn = await ren();
+    check('cây: tên sai thì toast lỗi, vẫn đang sửa', rn && rn.f && (await tp.isVisible('#toast')) && /cannot/.test(await tp.textContent('#toast')), JSON.stringify(rn));
+    await tp.keyboard.press('Escape');
+    check('cây: Esc bỏ sửa, tên giữ, focus về hàng', !(await ren()) && (await focusName(tp)) === 'README.md');
+    await tp.dblclick(row('old.md')); await tp.waitForTimeout(80);
+    rn = await ren();
+    check('cây: bấm đúp file mở ô đổi tên', rn && rn.v === 'old.md', JSON.stringify(rn));
+    await tp.keyboard.press('Control+A'); await tp.keyboard.type('older.md'); await tp.keyboard.press('Enter'); await tp.waitForTimeout(80);
+    check('cây: Enter lưu tên mới', !(await ren()) && (await nameOf(row('old.md'))) === 'older.md' && JSON.stringify(await tl()).includes('older.md'));
+
+    // Menu hàng: Move to… bỏ chính nó và hậu duệ; Top level gọi move(id, null).
+    await tp.hover(row('level-3'));
+    await tp.click(row('level-3') + ' >> .ma-trow__more'); await tp.waitForTimeout(80);
+    const mi = () => tp.$$eval('#tree-menu .ma-menu__i', (bs) => bs.map((b) => b.textContent + (b.disabled ? '(x)' : '')));
+    const m1 = await mi();
+    check('cây: menu folder có New file here, Rename, Move to…, Delete; focus mục đầu', m1.join('|') === 'New file here|New folder here|Rename|Move to…|Download .zip|Delete' && (await tp.evaluate(() => document.activeElement.textContent)) === 'New file here', m1.join('|'));
+    const cc = (await cornerClash(tp)).filter((x) => /tree|menu/.test(x));
+    check('cây: thân cây và menu cuộn không chạm góc bo (MDAN-018)', !cc.length, cc.join(', '));
+    await tp.click('#tree-menu >> text=Move to…'); await tp.waitForTimeout(50);
+    const m2 = await mi();
+    check('cây: Move to… liệt kê folder trừ chính nó và hậu duệ, folder hiện tại tắt', m2.join('|') === 'Back|Top level|archive|level-1|level-2(x)', m2.join('|'));
+    await tp.click('#tree-menu >> text=Top level'); await tp.waitForTimeout(80);
+    check('cây: chọn Top level gọi move(id, null), menu đóng', JSON.stringify(await tl()) === JSON.stringify(['move', await tp.evaluate(() => window.__tree.model.nodes.find((x) => x.name === 'level-3').id), null]) && !(await tp.isVisible('#tree-menu')));
+    await tp.focus(row('old.md')); await tp.keyboard.press('Delete');
+    check('cây: Delete gọi remove', (await tl())[0] === 'remove');
+    await tp.focus(row('old.md')); await tp.keyboard.press('Shift+F10');
+    const menuOpen = await tp.isVisible('#tree-menu');
+    await tp.keyboard.press('Escape');
+    check('cây: Shift+F10 mở menu, Esc đóng và trả focus', menuOpen && !(await tp.isVisible('#tree-menu')) && (await focusName(tp)) === 'older.md');
+
+    // Collapse all, rồi kéo thả bằng chuột (mọi hàng trong khung, không cuộn): lên folder → move; lên hậu duệ → không gọi.
+    await tp.click('#tree-collapse');
+    check('cây: Collapse all gọi collapseAll, chỉ còn hàng cấp 1', (await tl())[0] === 'collapseAll' && (await tp.$$eval('#tree-list .ma-trow', (ls) => ls.every((l) => l.getAttribute('aria-level') === '1'))));
+    await tp.click(row('level-1') + ' .ma-trow__chev'); await tp.waitForTimeout(50);
+    const nlog = () => tp.evaluate(() => window.__tree.log.length);
+    await tp.dragAndDrop(row('README.md'), row('archive')); await tp.waitForTimeout(80);
+    const mv = await tl();
+    check('cây: kéo README.md thả lên archive gọi move', mv[0] === 'move' && mv[2] === (await tp.evaluate(() => window.__tree.model.nodes.find((x) => x.name === 'archive').id)), JSON.stringify(mv));
+    const before = await nlog();
+    await tp.dragAndDrop(row('level-1'), row('level-2')); await tp.waitForTimeout(80);
+    check('cây: thả folder vào hậu duệ của nó thì không gọi move', (await nlog()) === before);
+    // File từ máy thả lên một folder: importDir(…, folder); thả ở vùng trống: cấp trên cùng.
+    const osDrop = (sel) => tp.evaluate((sel) => {
+      const dt = new DataTransfer(); dt.items.add(new File(['# A'], 'a.md', { type: 'text/markdown' }));
+      const el = document.querySelector(sel), r = el.getBoundingClientRect(), o = { bubbles: true, cancelable: true, dataTransfer: dt, clientX: r.left + 20, clientY: r.bottom - 4 };
+      const over = el.dispatchEvent(new DragEvent('dragover', o));
+      el.dispatchEvent(new DragEvent('drop', o));
+      return { accepted: !over, last: window.__tree.log.slice(-1)[0] };
+    }, sel);
+    const od1 = await osDrop(row('archive')), od2 = await osDrop('#tree-list');
+    check('cây: thả file từ máy lên folder / vùng trống gọi importDir đúng chỗ', od1.accepted && JSON.stringify(od1.last) === JSON.stringify(['importDir', ids.archive]) && JSON.stringify(od2.last) === JSON.stringify(['importDir', null]), JSON.stringify([od1, od2]));
+    await tp.setViewportSize({ width: 1440, height: 900 }); await tp.waitForTimeout(150);
+    check('cây: 1440 không tràn ngang', (await overflow(tp)) === 0, String(await overflow(tp)));
+    await tctx.close();
+
+    // Điện thoại 390: tấm trượt từ trái, chọn file thì đóng, cây về lưới.
+    const tm = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true, deviceScaleFactor: 2 });
+    const mp2 = await tm.newPage(); watch(mp2);
+    await mp2.goto(BASE); await mp2.waitForFunction(() => window.marked && window.DOMPurify);
+    await mp2.tap('#btn-sample'); await mp2.waitForTimeout(150);
+    await mp2.evaluate(treeDemo, false); await mp2.waitForTimeout(150);
+    check('cây 390: cột không hiện, nút có, không tràn ngang', !(await tstate(mp2)).shown && (await tstate(mp2)).btn && (await overflow(mp2)) === 0, String(await overflow(mp2)));
+    await mp2.tap('#btn-tree'); await mp2.waitForTimeout(300);
+    const sh = await mp2.evaluate(() => { const d = document.getElementById('dlg-tree'), r = d.getBoundingClientRect(), row = document.querySelector('#tree-list .ma-trow').getBoundingClientRect(), more = document.querySelector('#tree-list .ma-trow__more').getBoundingClientRect();
+      return { open: d.open, inDlg: d.contains(document.getElementById('tree')), left: Math.round(r.left), w: Math.round(r.width), rowH: Math.round(row.height), more: Math.round(more.width), exp: document.getElementById('btn-tree').getAttribute('aria-expanded') }; });
+    check('cây 390: nút mở tấm trượt từ mép trái, hàng ≥ 44px, ⋯ luôn hiện', sh.open && sh.inDlg && sh.left === 0 && sh.w <= 390 && sh.rowH >= 44 && sh.more >= 44 && sh.exp === 'true', JSON.stringify(sh));
+    check('cây 390: tấm không tràn ngang', (await overflow(mp2)) === 0 && (await mp2.$eval('#dlg-tree', (d) => d.scrollWidth - d.clientWidth)) <= 0);
+    await mp2.tap(row('README.md')); await mp2.waitForTimeout(300);
+    const after = await mp2.evaluate(() => ({ open: document.getElementById('dlg-tree').open, home: document.getElementById('tree').parentNode.classList.contains('ma-grid'), last: window.__tree.log.slice(-1)[0][0] }));
+    check('cây 390: chạm file thì mở file, đóng tấm, cây về lưới', !after.open && after.home && after.last === 'open', JSON.stringify(after));
+    await tm.close();
+  }
+
   check('không lỗi console', !errors.length, errors.join(' | '));
   await browser.close();
   console.log(fails ? `md-annotate smoke: ${fails} LỖI` : 'md-annotate smoke: OK');
