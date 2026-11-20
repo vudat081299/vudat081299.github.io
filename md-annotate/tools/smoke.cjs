@@ -2409,8 +2409,8 @@ const cornerClash = (page) => page.evaluate(() => {
     fs.rmSync(tmp, { recursive: true, force: true });
   }
 
-  /* ---------- Cây docked hay tấm trượt (core/panes.js treeDocks): cột trái chỉ khi #doc nhường cây xong vẫn đủ chỗ cho chế
-     độ đọc đã chọn (Split: hai khung 420px + vách = 849; khác: READ_MIN 580); không thì tấm trượt trái, ở mọi bề rộng. ---------- */
+  /* ---------- Cây docked hay tấm trượt (MDAN-061): cột trái ở mọi khổ trừ điện thoại, hiện sẵn, không tự ẩn khi chật;
+     điện thoại (≤ 720px) thì tấm trượt trái, đóng sẵn. Split theo #doc thật: cột chiếm chỗ thì lùi về Preview. ---------- */
   {
     /* Phiên thật hai file; prefs: chế độ đọc, panel thu gọn; prefs.tree chưa chọn (mặc định hiện vì ≥ 2 mục). */
     const seed = ([view, rail, extra]) => {
@@ -2445,13 +2445,13 @@ const cornerClash = (page) => page.evaluate(() => {
     let { c, p } = await at(2560, 'split', false);
     let s = await dst(p);
     check('cây docked: 2560 Split, panel mở — cột cạnh Split (#doc ≥ 849)', docked(s) && s.mode === 'split' && s.doc >= 849 && (await overflow(p)) === 0, JSON.stringify(s));
-    // Settings: vùng làm việc 50% (1280px) thì hết chỗ cho Split cạnh cây: tấm trượt; trả lại Auto thì docked.
+    // Settings: vùng làm việc 50% thì #doc hẹp: cây vẫn là cột (không tự ẩn), Split lùi về Preview; Auto thì Split về.
     const range = (v) => p.evaluate((v) => { const r = document.getElementById('set-wrap'); r.value = v; r.dispatchEvent(new Event('input', { bubbles: true })); }, v);
     await p.click('#btn-layout'); await range(50); await p.waitForTimeout(150);
     const s50 = await dst(p);
     await p.keyboard.press('Escape'); await p.evaluate(() => { const x = JSON.parse(localStorage.getItem('md-annotate:prefs:v1')); delete x.wrap; localStorage.setItem('md-annotate:prefs:v1', JSON.stringify(x)); });
     await p.reload(); await p.waitForFunction(() => window.marked && window.DOMPurify); await p.waitForTimeout(200);
-    check('cây docked: Settings bề rộng 50% thì tấm trượt, Split giữ; Auto thì docked lại', drawer(s50) && s50.mode === 'split' && docked(await dst(p)), JSON.stringify(s50));
+    check('cây docked: Settings bề rộng 50% — vẫn là cột, Split lùi về Preview; Auto thì Split về', docked(s50) && s50.mode === 'view' && docked(await dst(p)) && (await dst(p)).mode === 'split', JSON.stringify(s50));
     await c.close();
 
     /* Đo chớp khi nạp (dùng ở dưới). */
@@ -2493,101 +2493,76 @@ const cornerClash = (page) => page.evaluate(() => {
       await c.close();
     }
 
-    // Không chớp khi nạp: 1440 Split, panel mở — cột cây không lần nào có mặt; 1920, 2560 thì đã quyết docked trước DOMContentLoaded.
+    // 1440 Split, panel mở: cây vẫn là cột ngay từ lúc nạp (trước DOMContentLoaded), #doc 766 không đủ Split nên hiện Preview,
+    // prefs.view vẫn 'split'; tab Split ẩn.
     ({ c, p } = await at(1440, 'split', false, null, spy));
     s = await dst(p);
-    check('cây tấm trượt: 1440 Split, panel mở — #doc 854 giữ Split, nút "Files"', drawer(s) && !s.drawer && s.mode === 'split' && s.doc === 854, JSON.stringify(s));
-    check('cây tấm trượt: lúc nạp cột cây không lần nào hiện (không chớp)', (await p.evaluate(() => window.__seen)) === false && (await p.evaluate(() => window.__dcl)) === false);
-    // Nút và Ctrl+B ở chế độ tấm trượt: chỉ mở / đóng tấm, không đổi prefs.tree.
-    await p.click('#btn-tree'); await p.waitForTimeout(250);
-    s = await dst(p);
-    const inDlg = await p.evaluate(() => document.getElementById('dlg-tree').contains(document.getElementById('tree')));
-    check('cây tấm trượt: bấm nút mở tấm trái, aria-expanded true, prefs.tree không đổi', s.drawer && inDlg && s.exp === 'true' && s.pref === undefined, JSON.stringify(s));
-    await p.click('#tree-list .ma-trow[data-id="b"]'); await p.waitForTimeout(250);
-    s = await dst(p);
-    check('cây tấm trượt: chọn file thì mở nó, đóng tấm, cây về chỗ cũ (ẩn)', !s.drawer && !s.col && /Second file/.test(await p.textContent('#v-md')) && s.exp === 'false', JSON.stringify(s));
+    check('cây docked: 1440 Split, panel mở — vẫn là cột (không tự ẩn), Preview thay Split, tab Split ẩn', docked(s) && s.mode === 'view' && s.doc === 766
+      && (await p.isHidden('#tab-split')) && (await overflow(p)) === 0, JSON.stringify(s));
+    check('cây docked: 1440 lúc nạp — đã docked trước DOMContentLoaded', (await p.evaluate(() => window.__dcl)) === true);
+    // Ctrl+B ẩn cột (lưu prefs.tree = false): #doc rộng ra, Split về; lần nữa hiện lại, Split lùi.
     await p.evaluate(() => document.activeElement && document.activeElement.blur());
     await p.keyboard.press('Control+B'); await p.waitForTimeout(200);
-    const kb = await dst(p);
-    await p.keyboard.press('Control+B'); await p.waitForTimeout(200);
-    check('cây tấm trượt: Ctrl+B mở tấm, lần nữa đóng; prefs.tree không đổi', kb.drawer && kb.pref === undefined && !(await dst(p)).drawer && (await dst(p)).pref === undefined, JSON.stringify(kb));
-    // Thu panel thành thanh dọc: đủ chỗ, docked (#doc 1070 cạnh cây); mở panel lại: tấm trượt.
+    s = await dst(p);
+    check('cây docked: Ctrl+B ẩn cột, lưu prefs.tree = false, Split về (#doc 854)', !s.dock && s.pref === false && s.lbl === 'Show files' && s.exp === 'false' && s.mode === 'split' && s.doc === 854, JSON.stringify(s));
+    await p.click('#btn-tree'); await p.waitForTimeout(200);
+    s = await dst(p);
+    check('cây docked: nút Files hiện lại cột, prefs.tree = true, Split lùi về Preview', docked(s) && s.pref === true && s.mode === 'view', JSON.stringify(s));
+    // Thu panel thành thanh dọc: #doc 1070 cạnh cây, Split về.
     await p.click('#btn-rail'); await p.waitForTimeout(200);
     s = await dst(p);
     check('cây docked: 1440 thanh dọc — cột cạnh Split (#doc 1070)', docked(s) && s.mode === 'split' && s.doc === 1070 && edgeOK(await geo(p)), JSON.stringify(s));
     await p.click('#btn-unrail'); await p.waitForTimeout(200);
-    check('cây tấm trượt: mở panel lại thì tấm trượt, Split giữ', drawer(await dst(p)) && (await dst(p)).mode === 'split', JSON.stringify(await dst(p)));
-    // Đổi cỡ cửa sổ: tấm đang mở, cửa sổ rộng ra đủ chỗ thì tấm đóng, cây thành cột.
-    await p.click('#btn-tree'); await p.waitForTimeout(200);
-    await p.setViewportSize({ width: 1920, height: 900 }); await p.waitForTimeout(250);
-    s = await dst(p);
-    check('cây docked: tấm mở, cửa sổ 1920 — tấm đóng, cây thành cột', docked(s) && !s.drawer && s.mode === 'split', JSON.stringify(s));
-    await p.setViewportSize({ width: 1440, height: 900 }); await p.waitForTimeout(250);
-    check('cây tấm trượt: hẹp lại 1440 — thành tấm trượt, Split giữ', drawer(await dst(p)) && (await dst(p)).mode === 'split');
-    // Ctrl+B ở chế độ docked đổi prefs.tree (như trước).
-    await p.setViewportSize({ width: 2560, height: 900 }); await p.waitForTimeout(250);
-    await p.keyboard.press('Control+B'); await p.waitForTimeout(150);
-    s = await dst(p);
-    check('cây docked: Ctrl+B ẩn cột, lưu prefs.tree = false', !s.dock && s.pref === false && s.lbl === 'Show files' && s.exp === 'false', JSON.stringify(s));
+    // Đổi cỡ cửa sổ ở mọi khổ trên 720px: vẫn là cột.
+    for (const w of [1920, 1024, 800]) {
+      await p.setViewportSize({ width: w, height: 900 }); await p.waitForTimeout(250);
+      s = await dst(p);
+      check(`cây docked: đổi cỡ cửa sổ ${w} — vẫn là cột, không tấm trượt`, docked(s) && !s.drawer && (await overflow(p)) === 0, JSON.stringify(s));
+    }
     await c.close();
 
-    for (const w of [1920, 2560]) {
-      ({ c, p } = await at(w, 'split', false, null, spy));
-      check(`cây docked: ${w} lúc nạp — đã docked trước DOMContentLoaded`, (await p.evaluate(() => window.__dcl)) === true && docked(await dst(p)));
-      await c.close();
-    }
-
-    ({ c, p } = await at(1280, 'split', false));
+    // Phiên một file, prefs.tree chưa chọn: vẫn hiện sẵn.
+    ({ c, p } = await at(1440, 'view', false));
+    await p.evaluate(() => { const k = 'md-annotate:s:dk1', s = JSON.parse(localStorage.getItem(k)); s.nodes = s.nodes.slice(0, 1); delete s.docs.b; localStorage.setItem(k, JSON.stringify(s)); });
+    await p.reload(); await p.waitForFunction(() => window.marked && window.DOMPurify); await p.waitForTimeout(250);
     s = await dst(p);
-    check('cây tấm trượt: 1280 Split — tấm trượt, Split giữ (#doc 854)', drawer(s) && s.mode === 'split' && s.doc === 854 && (await overflow(p)) === 0, JSON.stringify(s));
+    check('cây docked: phiên một file, chưa chọn ẩn / hiện — cây hiện sẵn', docked(s) && s.pref === undefined, JSON.stringify(s));
     await c.close();
 
     ({ c, p } = await at(1440, 'view', false));
     s = await dst(p);
-    check('cây docked: 1440 Preview — cột cạnh Preview, #doc 766 ≥ 580', docked(s) && s.mode === 'view' && s.doc === 766 && edgeOK(await geo(p)), JSON.stringify(s));
-    check('cây docked: tab Split vẫn có (chọn thì cây nhường chỗ)', await p.isVisible('#tab-split'));
-    // Đổi chế độ đọc: xét lại ngay.
-    await p.click('#tab-split'); await p.waitForTimeout(200);
-    s = await dst(p);
-    check('cây: chọn Split ở 1440 — cây sang tấm trượt, Split hiện', drawer(s) && s.mode === 'split' && s.doc === 854, JSON.stringify(s));
-    await p.click('.ma-tab[data-view="src"]'); await p.waitForTimeout(200);
-    s = await dst(p);
-    check('cây: chọn Source — cây docked lại', docked(s) && s.mode === 'src', JSON.stringify(s));
-    await p.click('.ma-tab[data-view="edit"]'); await p.waitForTimeout(200);
-    check('cây: Edit giữ theo chế độ đọc trước (Source): vẫn docked', docked(await dst(p)));
-    await p.click('.ma-tab[data-view="view"]'); await p.waitForTimeout(150);
-    // Kéo mép cây: 1440 còn chỗ tới 420px (trần), vùng làm việc vẫn căn giữa phần còn lại.
+    check('cây docked: 1440 Preview — cột cạnh Preview, #doc 766', docked(s) && s.mode === 'view' && s.doc === 766 && edgeOK(await geo(p)), JSON.stringify(s));
+    // Kéo mép cây: tới trần 420px, vùng làm việc vẫn căn giữa phần còn lại.
     let gb = await p.$eval('#tree-grip', (g) => { const r = g.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; });
     await p.mouse.move(gb.x, gb.y); await p.mouse.down(); await p.mouse.move(gb.x + 200, gb.y, { steps: 5 }); await p.mouse.up(); await p.waitForTimeout(150);
     s = await dst(p);
     check('cây docked: 1440 kéo mép rộng thêm 200px dừng ở 420px, #doc 594, vẫn ở mép trái, căn giữa', docked(s) && s.w === 420 && s.doc === 594 && edgeOK(await geo(p)), JSON.stringify(s));
     await c.close();
 
-    // 1280 Preview: kéo mép dừng ở chỗ còn lại (1280 − 426 − 580 = 274), không đẩy cây sang tấm trượt.
+    // 1280 Preview: kéo mép không bị chặn bởi chỗ còn lại (tới 420px), cây vẫn là cột.
     ({ c, p } = await at(1280, 'view', false));
     s = await dst(p);
     check('cây docked: 1280 Preview — #doc 606', docked(s) && s.doc === 606 && edgeOK(await geo(p)), JSON.stringify(s));
     gb = await p.$eval('#tree-grip', (g) => { const r = g.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; });
     await p.mouse.move(gb.x, gb.y); await p.mouse.down(); await p.mouse.move(gb.x + 200, gb.y, { steps: 5 }); await p.mouse.up(); await p.waitForTimeout(150);
     s = await dst(p);
-    check('cây docked: 1280 kéo mép rộng thêm 200px dừng ở 274px, #doc 580, vẫn docked', docked(s) && s.w === 274 && s.doc === 580, JSON.stringify(s));
+    check('cây docked: 1280 kéo mép rộng thêm 200px tới 420px, vẫn docked, không tràn ngang', docked(s) && s.w === 420 && (await overflow(p)) === 0, JSON.stringify(s));
     await c.close();
 
-    // 1024 (panel ra khỏi lưới): Preview docked, cây dừng trên thanh đáy; Split thì tấm trượt.
+    // 1024 (panel ra khỏi lưới): cột ở mép trái, dừng trên thanh đáy.
     ({ c, p } = await at(1024, 'view', false));
     s = await dst(p);
     const g10 = await geo(p);
     check('cây docked: 1024 Preview — cột ở mép trái, dừng trên thanh đáy, không tràn ngang', docked(s) && s.doc === 726 && edgeOK(g10) && g10.dockT != null, JSON.stringify({ s, g10 }));
-    await p.click('#tab-split'); await p.waitForTimeout(200);
-    check('cây tấm trượt: 1024 Split — tấm trượt', drawer(await dst(p)) && (await dst(p)).mode === 'split' && (await overflow(p)) === 0, JSON.stringify(await dst(p)));
     await c.close();
 
-    // Điện thoại 390: không bao giờ docked, không tràn ngang.
-    {
+    // Điện thoại 390: tấm trượt, đóng sẵn (cả khi prefs.tree = true), không tràn ngang.
+    for (const extra of [null, { tree: true }]) {
       const pc = await browser.newContext({ viewport: { width: 390, height: 760 }, hasTouch: true, isMobile: true });
       const pp = await pc.newPage(); watch(pp);
-      await pp.goto(BASE); await pp.evaluate(seed, ['view', false]); await pp.goto(BASE); await pp.waitForFunction(() => window.marked && window.DOMPurify); await pp.waitForTimeout(250);
-      check('cây 390: tấm trượt, không tràn ngang', drawer(await dst(pp)) && (await overflow(pp)) === 0, JSON.stringify(await dst(pp)));
+      await pp.goto(BASE); await pp.evaluate(seed, ['view', false, extra]); await pp.goto(BASE); await pp.waitForFunction(() => window.marked && window.DOMPurify); await pp.waitForTimeout(250);
+      const sp = await dst(pp);
+      check(`cây 390${extra ? ' (prefs.tree = true)' : ''}: tấm trượt, đóng sẵn, không tràn ngang`, drawer(sp) && !sp.drawer && sp.exp === 'false' && (await overflow(pp)) === 0, JSON.stringify(sp));
       await pc.close();
     }
   }

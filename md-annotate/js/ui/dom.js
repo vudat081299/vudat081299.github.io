@@ -57,6 +57,7 @@ export function textNodes(root) {
   return out;
 }
 export var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+export var mqPhone = window.matchMedia('(max-width: 720px)');   // điện thoại: cây là tấm trượt, mặc định ẩn
 export var mqSheet = window.matchMedia('(max-width: 720px), (pointer: coarse)');
 export var mqSide = window.matchMedia('(min-width: 1081px)');
 export var mqTouch = window.matchMedia('(pointer: coarse)');   // màn cảm ứng (con trỏ chính là ngón tay)

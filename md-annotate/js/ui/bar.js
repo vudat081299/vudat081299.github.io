@@ -7,9 +7,8 @@
    trượt lên khuất (.is-away), cuộn lên quá BACK_PX thì về; luôn hiện ở đầu trang, khi menu hay hộp thoại mở, khi focus ở trong nó.
    Xuất: initBar.
    Dùng: ui/dom.js. */
-import { $ } from './dom.js';
+import { $, mqPhone } from './dom.js';
 
-var mqPhone = window.matchMedia('(max-width: 720px)');
 var mqAway = window.matchMedia('(max-width: 720px), (max-height: 500px) and (pointer: coarse)');
 var menu, btn, bar;
 var AWAY_PX = 8, BACK_PX = 24, lastY = 0, run = 0;   // run: quãng cuộn liên tục cùng chiều (dương: xuống)

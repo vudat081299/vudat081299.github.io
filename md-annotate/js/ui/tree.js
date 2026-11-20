@@ -1,29 +1,27 @@
-/* Cây folder + file của phiên: cột fixed sát mép trái màn hình (docked) khi còn chỗ, không thì tấm trượt trái #dlg-tree, ở mọi
-   bề rộng. Docked: trang dời sang phải --tree, vùng làm việc căn giữa phần còn lại (css/tree.css, MDAN-037).
+/* Cây folder + file của phiên: cột fixed sát mép trái màn hình (docked), trên điện thoại thì tấm trượt trái #dlg-tree.
+   Docked: trang dời sang phải --tree, vùng làm việc căn giữa phần còn lại (css/tree.css, MDAN-037).
    Chỉ vẽ và nghe sự kiện: không đọc, không ghi phiên. Nơi gọi đưa dữ liệu và các hàm việc qua renderTree(model, actions); mọi
    thay đổi cây đi qua actions, rồi nơi gọi vẽ lại bằng renderTree. Hàng giữ phần tử qua các lần vẽ (khoá theo id).
    model:   { sid, nodes, open, collapsed, counts: { fileId: { c, rv } }, title } (sid: id phiên)
    actions: open(id), toggle(dirId), newFile(parentId), newDir(parentId), rename(id, name) → lỗi | '', move(id, parentId)
             → lỗi | '', remove(id), importDir(FileList | entry[], parentId), download(id | null), collapseAll().
-   Docked hay tấm trượt: core/panes.js treeDocks (#doc, khi vùng làm việc tính trong phần khung nhìn còn lại, vẫn đủ chỗ cho
-   chế độ đọc đã chọn, lastRead; số đo geo()), xét
-   lại khi #doc đổi bề rộng, cửa sổ đổi cỡ, đổi chế độ xem (layoutTree), vẽ lại cây. prefs.tree (chưa chọn: hiện khi phiên có
-   ≥ 2 mục; chỉ nút và Ctrl/⌘ + B ghi) là "muốn thấy cây": docked thì nút #btn-tree / Ctrl/⌘ + B đổi nó (html.ma-tree-on);
+   Docked hay tấm trượt: chỉ theo khổ màn (MDAN-061): điện thoại (mqPhone) là tấm trượt, đóng sẵn; mọi khổ khác là cột, không
+   tự ẩn khi chật (vùng làm việc hẹp lại, người dùng tự ẩn hay kéo hẹp cây). prefs.tree (chưa chọn: hiện; chỉ nút và
+   Ctrl/⌘ + B ghi) là "muốn thấy cây": docked thì nút #btn-tree / Ctrl/⌘ + B đổi nó (html.ma-tree-on);
    tấm trượt thì chỉ mở tấm. revealTree(): hiện cho phiên đang vẽ, không ghi prefs (MDAN-032); đổi phiên thì thôi. Bề rộng:
-   --tree, kéo #tree-grip 180–420 (docked: không quá chỗ còn lại), prefs.treeW. Bàn phím theo mẫu tree của WAI-ARIA (mũi
+   --tree, kéo #tree-grip 180–420, prefs.treeW. Bàn phím theo mẫu tree của WAI-ARIA (mũi
    tên, Home, End bật vòng focus như Tab, MDAN-020); kéo thả bằng chuột, chỗ thả được theo core canMove. Hàng bị xoá: hàng
    hiện tại thành hàng vào chỗ nó. Đầu cây một hàng (MDAN-060): New file, New folder, ⋯ (#tree-head-menu: Import folder,
    Download .zip, Collapse all, theo mẫu menu button); phiên ≤ 1 mục thì #tree.is-sparse hiện gợi ý thả / nạp folder. Thụt
    đều mọi cấp: vạch thụt là phần tử riêng (#tree-guides), cây sâu thì thân cuộn ngang (--dmax); đổi tên là ô nhập trong suốt
    đúng chỗ tên.
-   Xuất: editName, focusRow, initTree, layoutTree, renderTree, revealTree, treeTakes.
-   Dùng: core/tree.js, core/panes.js, core/text.js, ui/store.js, ui/dom.js, ui/views.js. */
+   Xuất: editName, focusRow, initTree, renderTree, revealTree.
+   Dùng: core/tree.js, core/text.js, ui/store.js, ui/dom.js, ui/views.js. */
 import { canMove, moveTargets, visibleRows } from '../core/tree.js';
-import { docRoom, treeDocks, treeRoom, viewNeed } from '../core/panes.js';
 import { plural } from '../core/text.js';
 import { prefs, savePrefs } from './store.js';
-import { $, dragBar, droppedItems, h, icon, toast, typing } from './dom.js';
-import { lastRead, refreshSplit } from './views.js';
+import { $, dragBar, droppedItems, h, icon, mqPhone, toast, typing } from './dom.js';
+import { refreshSplit } from './views.js';
 
 var W_MIN = 180, W_MAX = 420, W_DEF = 248;
 var model = null, act = {};
@@ -48,19 +46,9 @@ function parentOf(id) { var n = byId[id]; return n && n.parent != null ? n.paren
 /* ẨN / HIỆN. docked: cây được là cột trái (chưa chắc đang hiện); không thì nút mở tấm trượt. */
 function wantShown() {
   if (model && shownFor === model.sid) return true;
-  return typeof prefs.tree === 'boolean' ? prefs.tree : !!(model && model.nodes.length > 1);
+  return typeof prefs.tree === 'boolean' ? prefs.tree : true;
 }
 function treeShown() { return !!model && docked && wantShown(); }
-/* Số đo cho core/panes.js: luật bề rộng .ma-wrap đọc từ CSS (--wrap-f, --wrap-min: một chỗ ghi số, layout.js đổi), phần
-   không phải #doc của vùng làm việc (chrome: không đổi theo cây vì cây không ở trong lưới). */
-function geo() {
-  var cs = getComputedStyle(document.documentElement), main = $('doc').closest('.ma-wrap');
-  return { client: document.documentElement.clientWidth, vw: window.innerWidth,
-    frac: parseFloat(cs.getPropertyValue('--wrap-f')) || 0.7, floor: parseFloat(cs.getPropertyValue('--wrap-min')) || 0,
-    chrome: main.getBoundingClientRect().width - $('doc').clientWidth, need: viewNeed(lastRead) };
-}
-/* Cột cây lấy của #doc bao nhiêu, 0 khi không docked. ui/views.js cộng lại để biết Split có chỗ không khi không có cột. */
-export function treeTakes() { return wasOn && $('tree').parentNode === home ? docRoom(geo(), 0) - $('doc').clientWidth : 0; }
 function syncBtn() {
   var b = $('btn-tree');
   b.hidden = !model;
@@ -69,8 +57,8 @@ function syncBtn() {
   b.setAttribute('aria-expanded', String(open)); b.setAttribute('aria-label', lbl); b.title = lbl;
 }
 function applyShown() {
-  docked = treeDocks(geo(), treeW);
-  if (docked && $('dlg-tree').open) { $('dlg-tree').close(); goHome(); }   // đủ chỗ lại: tấm đóng, cây về cột ngay (sự kiện close đến sau)
+  docked = !mqPhone.matches;
+  if (docked && $('dlg-tree').open) { $('dlg-tree').close(); goHome(); }   // rời khổ điện thoại: tấm đóng, cây về cột ngay (sự kiện close đến sau)
   var on = treeShown();
   syncBtn();
   if (on === wasOn) return;
@@ -79,9 +67,6 @@ function applyShown() {
   document.documentElement.classList.toggle('ma-tree-on', on);
   refreshSplit();   // #doc đổi bề rộng: Split hiện / ẩn ngay
 }
-/* Xét lại docked / tấm trượt (đổi chế độ xem, bề rộng). Quyết theo chế độ người dùng chọn, không theo chế độ đang hiện:
-   cây vào / ra đổi bề rộng #doc, Split theo đó hiện / ẩn, nên quyết theo chế độ đang hiện thì lật qua lật lại. */
-export function layoutTree() { if (home) applyShown(); }
 /* Người dùng bật / tắt khi docked (nút, Ctrl/⌘ + B): ghi prefs.tree. */
 function setTreeShown(on) { prefs.tree = !!on; shownFor = null; savePrefs(); applyShown(); }
 /* Hiện cây cho phiên đang vẽ (nạp folder xong), không ghi lựa chọn: phiên khác theo prefs.tree như cũ. Tấm trượt: không tự mở. */
@@ -97,7 +82,7 @@ function toggle() {
   if ($('dlg-tree').open) $('dlg-tree').close(); else openSheet();
 }
 
-/* TẤM TRƯỢT (không đủ chỗ cho cột): cây vào #dlg-tree khi mở, đóng thì về chỗ cũ (con của body). */
+/* TẤM TRƯỢT (điện thoại): cây vào #dlg-tree khi mở, đóng thì về chỗ cũ (con của body). */
 var home = null, homeNext = null;
 function openSheet() {
   closeMenu(false); closeHead(false);
@@ -111,8 +96,8 @@ function closeSheet() { if ($('dlg-tree').open) $('dlg-tree').close(); }
 function goHome() { if ($('tree').parentNode !== home) home.insertBefore($('tree'), homeNext); }
 
 /* BỀ RỘNG */
-function applyW(w, cap) {
-  w = Math.max(W_MIN, Math.min(W_MAX, cap == null ? W_MAX : cap, Math.round(w)));
+function applyW(w) {
+  w = Math.max(W_MIN, Math.min(W_MAX, Math.round(w)));
   document.documentElement.style.setProperty('--tree', w + 'px');
   $('tree-grip').setAttribute('aria-valuenow', String(w));
   return w;
@@ -594,14 +579,12 @@ export function initTree() {
   treeW = applyW(typeof prefs.treeW === 'number' ? prefs.treeW : W_DEF);
   var grab = 0;   // chỗ bấm cách mép phải cây bao nhiêu: kéo không làm cây nhảy
   g.addEventListener('pointerdown', function (e) { grab = $('tree').getBoundingClientRect().right - e.clientX; });
-  /* Docked: không rộng quá chỗ còn lại (kéo không đẩy cây sang tấm trượt). */
-  var cap = function () { return Math.max(treeW, treeRoom(geo())); };
-  dragBar(g, function (x) { treeW = applyW(x + grab - $('tree').getBoundingClientRect().left, cap()); },
+  dragBar(g, function (x) { treeW = applyW(x + grab - $('tree').getBoundingClientRect().left); },
     function () { prefs.treeW = treeW; savePrefs(); });
   g.addEventListener('keydown', function (e) {
     var d = e.key === 'ArrowRight' ? 16 : e.key === 'ArrowLeft' ? -16 : 0;
     if (!d) return;
-    e.preventDefault(); treeW = applyW(treeW + d, cap()); prefs.treeW = treeW; savePrefs();
+    e.preventDefault(); treeW = applyW(treeW + d); prefs.treeW = treeW; savePrefs();
   });
 
   /* Hàng: bấm mở / gập, bấm đúp đổi tên (file và folder), ⋯ và chuột phải mở menu. */
@@ -655,14 +638,12 @@ export function initTree() {
     toggle();
   });
 
-  /* Tấm trượt: đóng thì cây về chỗ cũ. #doc đổi bề rộng (cửa sổ, panel, thanh dọc, Settings, cây): xét lại docked ngay
-     trong ResizeObserver (trước lần vẽ, không chớp). */
+  /* Tấm trượt: đóng thì cây về chỗ cũ. Qua lại khổ điện thoại: xét lại docked. */
   home = $('tree').parentNode; homeNext = $('tree').nextSibling;
   $('dlg-tree').addEventListener('close', function () {
     closeMenu(false); closeHead(false);
     goHome();
     syncBtn();
   });
-  if (window.ResizeObserver) new ResizeObserver(layoutTree).observe($('doc'));
-  window.addEventListener('resize', layoutTree);
+  mqPhone.addEventListener('change', applyShown);
 }

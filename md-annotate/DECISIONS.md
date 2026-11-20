@@ -29,7 +29,6 @@
 - MDAN-030 · Nạp folder: file chữ xét theo đuôi · `md-annotate/js/core/text.js`
 - MDAN-031 · Nạp folder vào phiên trống mở file nông nhất · `md-annotate/js/core/tree.js`
 - MDAN-032 · Nạp folder hiện cây mà không ghi lựa chọn ẩn / hiện · `md-annotate/js/ui/tree.js`, `md-annotate/js/ui/files.js`
-- MDAN-035 · Cây file là cột khi văn bản còn đủ rộng, không thì trượt từ trái · thay cho MDAN-023 · `md-annotate/js/ui/tree.js`, `md-annotate/js/ui/files.js`, `md-annotate/js/core/panes.js`, `md-annotate/css/tree.css`
 - MDAN-036 · Thanh trên ở điện thoại giữ nút chính, còn lại trong menu More · `md-annotate/index.html`, `md-annotate/js/ui/bar.js`, `md-annotate/css/mobile.css`
 - MDAN-037 · Cây file docked nằm sát mép trái màn hình, vùng làm việc căn giữa phần còn lại · `md-annotate/css/tree.css`, `md-annotate/css/base.css`, `md-annotate/js/ui/tree.js`, `md-annotate/js/core/panes.js`
 - MDAN-045 · Focus mode và Dim reviewed gộp bằng số mờ hơn, dòng dưới chuột luôn sáng · `md-annotate/`
@@ -39,6 +38,8 @@
 - MDAN-052 · Gợi ý đã đọc và khối hiện tại là hai dấu khác nhau; viên thuốc Accept N · `md-annotate/css/review.css`, `md-annotate/js/ui/review.js`, `md-annotate/js/ui/dwell.js`
 - MDAN-053 · Mở tấm nhận xét thì đoạn đang nhận xét nằm ngay trên tấm · `md-annotate/js/ui/popup.js`, `md-annotate/js/ui/selection.js`, `md-annotate/js/core/place.js`
 - MDAN-054 · Màn cảm ứng: Return trong ô nhận xét là xuống dòng · `md-annotate/js/ui/popup.js`
+- MDAN-061 · Cây file không tự ẩn khi chật; chỉ điện thoại là tấm trượt, đóng sẵn · thay cho MDAN-035 · `md-annotate/js/ui/tree.js`, `md-annotate/js/ui/views.js`, `md-annotate/js/core/panes.js`, `md-annotate/css/tree.css`
+- MDAN-062 · Không có dòng mô tả dưới tên trang · `md-annotate/index.html`, `md-annotate/css/base.css`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Nguồn tô màu cú pháp kiểu VS Code
@@ -254,15 +255,6 @@ Folder nạp thành cả phiên thì file mở đầu là file nông nhất; cù
 Nạp folder xong thì cây hiện cho phiên ấy. Lựa chọn ẩn / hiện cây chỉ được ghi khi người dùng bấm nút hay Ctrl/⌘ + B;
 phiên khác vẫn theo lựa chọn ấy (chưa chọn thì hiện khi phiên có từ hai mục).
 
-## MDAN-035 · Cây file là cột khi văn bản còn đủ rộng, không thì trượt từ trái · thay cho MDAN-023
-20/11/2026 · `md-annotate/js/ui/tree.js`, `md-annotate/js/ui/files.js`, `md-annotate/js/core/panes.js`, `md-annotate/css/tree.css`
-
-Chưa chọn thì cây chỉ hiện khi phiên có từ hai mục. Cây nằm thành cột trái chỉ khi văn bản, sau khi nhường cột, vẫn đủ
-rộng cho chế độ đọc người dùng chọn: *Split* cần hai khung 420px, chế độ khác cần 580px. Không đủ thì, ở mọi bề rộng màn
-hình, cây là tấm trượt từ trái: nút trên thanh trên hay Ctrl/⌘ + B mở tấm, chọn file thì tấm đóng, lựa chọn ẩn / hiện
-không đổi. Khi là cột, nút và Ctrl/⌘ + B ẩn / hiện cây, lựa chọn được nhớ. Nạp folder xong thì cây hiện cho phiên ấy
-(MDAN-032); khi là tấm trượt thì tấm không tự mở. Xoá không hỏi, có Undo.
-
 ## MDAN-036 · Thanh trên ở điện thoại giữ nút chính, còn lại trong menu More
 20/11/2026 · `md-annotate/index.html`, `md-annotate/js/ui/bar.js`, `md-annotate/css/mobile.css`
 
@@ -339,3 +331,16 @@ lên đỉnh, ngay dưới thanh trên.
 
 Bàn phím ảo không có Shift + Return, nên trên màn cảm ứng Return trong ô nhận xét xuống dòng, lưu bằng nút Save. Máy tính
 giữ nguyên: Enter lưu, Shift + Enter xuống dòng.
+
+## MDAN-061 · Cây file không tự ẩn khi chật; chỉ điện thoại là tấm trượt, đóng sẵn · thay cho MDAN-035
+20/11/2026 · `md-annotate/js/ui/tree.js`, `md-annotate/js/ui/views.js`, `md-annotate/js/core/panes.js`, `md-annotate/css/tree.css`
+
+Mở trang thì cây hiện sẵn thành cột ở mọi khổ màn trừ điện thoại, kể cả phiên chỉ một file, kể cả khi vùng làm việc bị
+hẹp lại. Không tự chuyển sang tấm trượt hay tự ẩn khi chật: người dùng tự ẩn (nút Files, Ctrl/⌘ + B) hay kéo hẹp cây
+(180–420px), lựa chọn được nhớ. Điện thoại (≤ 720px): cây là tấm trượt từ trái, đóng sẵn. *Split* theo bề rộng thật của
+văn bản: cột cây chiếm chỗ thì *Split* lùi về *Preview*, ẩn cây thì về lại.
+
+## MDAN-062 · Không có dòng mô tả dưới tên trang
+20/11/2026 · `md-annotate/index.html`, `md-annotate/css/base.css`
+
+Dưới tiêu đề Markdown Annotate không có câu giới thiệu.

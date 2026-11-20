@@ -1,5 +1,5 @@
-/* Cây folder + file (ui/tree.js), kiểu thanh bên của trình soạn mã (MDAN-060): cột fixed sát mép trái màn hình khi đủ chỗ,
-   không thì tấm trượt trái #dlg-tree (mọi bề rộng); nút #btn-tree ở mép trái thanh trên; đầu cây một hàng, hàng, vạch
+/* Cây folder + file (ui/tree.js), kiểu thanh bên của trình soạn mã (MDAN-060): cột fixed sát mép trái màn hình, điện thoại
+   (≤ 720px) thì tấm trượt trái #dlg-tree; nút #btn-tree ở mép trái thanh trên; đầu cây một hàng, hàng, vạch
    thụt, huy hiệu, ô đổi tên, chỗ thả, gợi ý khi trống, menu (.ma-menu: menu hàng, menu ⋯ đầu cây, menu More của thanh
    trên). Nạp sau panel.css, trước mobile.css. */
 .ma-tree {
@@ -24,7 +24,7 @@ html.dark .ma-tree { --guide: var(--line); --guide-on: color-mix(in srgb, var(--
   }
 }
 
-/* CỘT TRÁI (MDAN-037): chỉ khi html.ma-tree-on (ui/tree.js: cây có dữ liệu, đang hiện, #doc còn đủ chỗ). Cây là con của body,
+/* CỘT TRÁI (MDAN-037): chỉ khi html.ma-tree-on (ui/tree.js: cây có dữ liệu, đang hiện, không phải điện thoại). Cây là con của body,
    fixed từ đáy thanh trên tới đáy khung nhìn, cuộn riêng, chỉ viền phải. Bề rộng --tree, kéo 180–420 (prefs.treeW). Trang dời
    sang phải --tree: vùng làm việc (lưới và phần trong thanh trên) căn giữa phần còn lại; nền thanh trên vẫn trọn bề ngang,
    phần trên cột cùng nền --surface và viền phải với cột: cây đọc như một cột từ đỉnh tới đáy. */
@@ -217,7 +217,7 @@ html.ma-tree-on body > .ma-tree {
 /* Danh sách folder của "Move to…": thụt theo cấp, có trần. */
 .ma-menu__i[data-depth] { padding-left: calc(var(--s2) + min(calc(var(--depth, 0) * var(--tree-step)), 96px)); }
 
-/* TẤM TRƯỢT: không đủ chỗ cho cột (mọi bề rộng), cây vào #dlg-tree (lớp mờ trọn khung nhìn, dialogs.css). Thẻ sát mép
+/* TẤM TRƯỢT: điện thoại (≤ 720px), cây vào #dlg-tree (lớp mờ trọn khung nhìn, dialogs.css). Thẻ sát mép
    trái, rộng min(320px, 85vw) cộng vùng an toàn trái; đệm vùng an toàn trên / trái / dưới; góc phải bo --r-lg, không
    viền (viền một cạnh không đi với góc bo), nổi bằng --shadow-pop. Đệm đáy thân = --r-lg: thanh cuộn không chạm góc. */
 .ma-dlg--tree .ma-tree {

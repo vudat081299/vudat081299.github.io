@@ -78,7 +78,7 @@ html.ma-lock.ma-lock-g { scrollbar-gutter: stable; }
   .ma-grid { padding-top: var(--s2); }
   .ma-head { padding: 0 0 var(--s2); }
   .ma-head h1 { font-size: var(--fs-lg); }
-  .ma-head p, .ma-brand__own { display: none; }   /* bị cắt cụt thì vô nghĩa */
+  .ma-brand__own { display: none; }   /* bị cắt cụt thì vô nghĩa */
   .ma-docname { flex-basis: 100%; }
   .ma-doc__meta { display: none; }
   .ma-doc__bar { padding: var(--s2); }
