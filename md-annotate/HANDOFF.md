@@ -12,6 +12,13 @@ Làm xong mục nào thì xoá mục ấy.
 
 ## NỢ
 
+- Văn bản ~10.000 dòng: mỗi lần đổi bề rộng vùng chữ vẫn mất ~0,3 s dàn lại chữ (layout + prepaint) và ~0,2 s xếp lại
+  làn đã đọc (~7.700 nút); lần mở đầu ~0,8 s dàn chữ. Giảm tiếp cần `content-visibility: auto` cho khối Preview và nhóm
+  dòng Source; vướng: làn, dải tiến độ, cuộn theo nhau đo toạ độ mọi khối, ép dàn lại hết (thử: khung hình 330 → 140 ms
+  nhưng đo làn mất 2 s). Làm khi làn / bản đồ cuộn chỉ đo phần đang thấy.
+- *Focus mode*, *Dim reviewed* đặt `opacity` lên từng dòng mờ: mỗi dòng mờ là một lớp vẽ, văn bản dài có thể cuộn giật
+  lại khi bật. Chưa đo.
+
 - Gợi ý đã đọc (MDAN-016) và chỗ cuộn mỗi file chỉ ở bộ nhớ: đổi file là mất gợi ý của file trước.
 - Hai tab mở cùng một phiên: mỗi lần lưu ghi đè cả cây (`s:<id>`), việc của tab kia mất. Cần khoá theo tab hay gộp khi lưu.
 - *All files*: lần vẽ đầu sau khi tải trang neo mọi file một lần (~400 ms ở 200 file); sau đó nhớ theo doc.
