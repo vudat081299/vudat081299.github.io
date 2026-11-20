@@ -23,7 +23,7 @@ import { anchors, mdText, numbers, ordered, orphans, renderAll } from './render.
 import { flashItem, removeComment } from './list.js';
 import { isSplit, view } from './views.js';
 import { onSelChange } from './selection.js';
-import { clearPicks, gutterLine, picking } from './picks.js';
+import { cancelPicks, clearPicks, gutterLine, picking } from './picks.js';
 import { noteJump } from './dwell.js';
 
 export var pop = { mode: null, id: null, orig: '' };
@@ -252,7 +252,11 @@ export function renderPopHints() {
 
 export function initPopup() {
   $('pop-save').addEventListener('click', function () { savePop(); });
-  $('pop-cancel').addEventListener('click', function () { closePop(); });
+  $('pop-cancel').addEventListener('click', function () {
+    var lines = pop.mode === 'new' && pending && pending.lines;
+    closePop();
+    if (lines) cancelPicks();
+  });
   $('pop-del').addEventListener('click', function () { var id = pop.id; closePop(true); removeComment(id); });
   $('pop-text').addEventListener('input', renderPopHints);
   /* Enter lưu, Shift + Enter xuống dòng; màn cảm ứng: Return xuống dòng (bàn phím ảo không có Shift + Return), lưu bằng

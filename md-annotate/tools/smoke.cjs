@@ -2712,6 +2712,94 @@ const cornerClash = (page) => page.evaluate(() => {
   }
   // ── end mob:touch-sheet ──
 
+  // ── mob:touch-picks ──
+  /* ---------- Chọn dòng bằng chạm (MDAN-050): nhấn giữ số dòng vào chế độ, chạm thêm / bỏ, Done và Cancel thoát, đáy trang
+     đủ chỗ cho dòng cuối, gợi ý ở hộp Shortcuts ---------- */
+  {
+    const devices = pw.devices;
+    const mk = async (name) => {
+      const d = Object.assign({}, devices[name], { deviceScaleFactor: 1 }); delete d.defaultBrowserType;
+      const c = await browser.newContext(d), p = await c.newPage(); watch(p);
+      await p.goto(BASE); await p.waitForFunction(() => window.marked && window.DOMPurify);
+      await p.evaluate(() => document.getElementById('btn-sample').click()); await p.waitForTimeout(200);
+      await p.$eval('.ma-tab[data-view="src"]', (e) => e.click()); await p.waitForTimeout(200);
+      return { c, p, cdp: await c.newCDPSession(p) };
+    };
+    const tpt = (cdp, type, pts) => cdp.send('Input.dispatchTouchEvent', { type, touchPoints: pts });
+    const hold = async (p, cdp, x, y, ms) => { await tpt(cdp, 'touchStart', [{ x, y }]); await p.waitForTimeout(ms); await tpt(cdp, 'touchEnd', []); await p.waitForTimeout(250); };
+    const gut = (p, n) => p.evaluate((n) => { const el = document.querySelector(`#v-src .ma-ln:nth-child(${n})`); const r = el.getBoundingClientRect(); return { x: r.left + 6, y: r.top + 8 }; }, n);
+    const st = (p) => p.evaluate(() => ({ picking: document.getElementById('v-src').classList.contains('is-picking'),
+      picks: [...document.querySelectorAll('#v-src .ma-ln')].map((l, i) => (l.classList.contains('is-pick') ? i + 1 : 0)).filter(Boolean).join(),
+      pop: !document.getElementById('pop').hidden, done: !!document.getElementById('pop-done').getClientRects().length, sel: getSelection().toString() }));
+    /* Một dòng có chữ, khác `not`, đầu dòng nằm giữa thanh trên và đỉnh tấm (hay đáy khung nhìn). */
+    const visLine = (p, not) => p.evaluate((not) => {
+      const pop = document.getElementById('pop'), lim = pop.hidden ? innerHeight - 90 : pop.getBoundingClientRect().top;
+      const ls = [...document.querySelectorAll('#v-src .ma-ln')];
+      return ls.findIndex((l, i) => i + 1 !== not && l.textContent.trim() && l.getBoundingClientRect().top > 80 && l.getBoundingClientRect().top < lim - 24) + 1;
+    }, not);
+    let { c, p, cdp } = await mk('iPhone 15 Pro');
+    check('chọn dòng bằng chạm: lề số không phóng to khi chạm hai lần (touch-action)', (await p.$eval('#v-src', (e) => getComputedStyle(e).touchAction)) === 'manipulation');
+    let n = await visLine(p), g = await gut(p, n);
+    await hold(p, cdp, g.x, g.y, 120);
+    const s0 = await st(p);
+    await tpt(cdp, 'touchStart', [{ x: g.x, y: g.y }]);
+    for (let i = 1; i <= 6; i++) { await tpt(cdp, 'touchMove', [{ x: g.x, y: g.y - i * 15 }]); await p.waitForTimeout(40); }
+    await p.waitForTimeout(500); await tpt(cdp, 'touchEnd', []); await p.waitForTimeout(250);
+    const s1 = await st(p);
+    check('chọn dòng bằng chạm: chạm ngắn hay vuốt từ lề số không vào chế độ', !s0.picking && !s1.picking && !s0.pop && !s1.pop, JSON.stringify([s0, s1]));
+    await p.evaluate(() => window.scrollTo(0, 0)); await p.waitForTimeout(150);
+    n = await visLine(p); g = await gut(p, n);
+    await hold(p, cdp, g.x, g.y, 650);
+    const s2 = await st(p);
+    check('chọn dòng bằng chạm: nhấn giữ số dòng vào chế độ với dòng ấy, mở tấm có Done, không bôi đen', s2.picking && s2.picks === String(n) && s2.pop && s2.done && !s2.sel, JSON.stringify([n, s2]));
+    const m = await visLine(p, n); g = await gut(p, m);
+    await p.touchscreen.tap(g.x, g.y); await p.waitForTimeout(250);
+    const s3 = await st(p);
+    check('chọn dòng bằng chạm: chạm số dòng khác thì thêm', s3.picks.split(',').length === 2 && s3.pop, JSON.stringify([m, s3]));
+    // Đáy trang đủ chỗ: cuộn hết xuống thì dòng cuối nằm trên tấm.
+    await p.evaluate(() => window.scrollTo(0, 1e6)); await p.waitForTimeout(250);
+    const lastV = await p.evaluate(() => { const ls = document.querySelectorAll('#v-src .ma-ln'); return [ls[ls.length - 1].getBoundingClientRect().bottom, document.getElementById('pop').getBoundingClientRect().top]; });
+    check('chọn dòng bằng chạm: cuộn hết xuống thì dòng cuối nằm trên tấm', lastV[0] <= lastV[1], JSON.stringify(lastV));
+    let b = await p.locator('#pop-cancel').boundingBox(); await p.touchscreen.tap(b.x + b.width / 2, b.y + b.height / 2); await p.waitForTimeout(250);
+    const s4 = await st(p);
+    check('chọn dòng bằng chạm: Cancel ở màn cảm ứng thoát chế độ', !s4.picking && !s4.picks && !s4.pop, JSON.stringify(s4));
+    await p.evaluate(() => window.scrollTo(0, 0)); await p.waitForTimeout(150);
+    n = await visLine(p); g = await gut(p, n); await hold(p, cdp, g.x, g.y, 650);
+    b = await p.locator('#pop-done').boundingBox(); await p.touchscreen.tap(b.x + b.width / 2, b.y + b.height / 2); await p.waitForTimeout(250);
+    const s5 = await st(p);
+    check('chọn dòng bằng chạm: Done thoát chế độ, bỏ các dòng', !s5.picking && !s5.picks && !s5.pop && b.height >= 44, JSON.stringify([s5, b.height]));
+    // Hộp Shortcuts: gợi ý nhấn giữ chỉ ở màn cảm ứng.
+    await p.$eval('#btn-layout', (e) => e.click()); await p.$eval('#btn-keys', (e) => e.click()); await p.waitForTimeout(400);
+    const hint = await p.evaluate(() => [!![...document.querySelectorAll('#dlg-keys .ma-only-touch')].find((e) => e.getClientRects().length && /long-press a line number/i.test(e.textContent)),
+      [...document.querySelectorAll('#keys-list .ma-key')].some((k) => k.textContent === 'Long-press')]);
+    check('hộp Shortcuts ở màn cảm ứng: có dòng "long-press a line number" và phím Long-press', hint[0] && hint[1], JSON.stringify(hint));
+    await c.close();
+    // Nằm ngang: tấm chọn dòng gọn, còn thấy lề số phía trên.
+    ({ c, p, cdp } = await mk('iPhone 15 Pro landscape'));
+    n = await p.evaluate(() => [...document.querySelectorAll('#v-src .ma-ln')].findIndex((l) => l.textContent.trim() && l.getBoundingClientRect().top > 70) + 1);
+    await p.evaluate((n) => document.querySelector(`#v-src .ma-ln:nth-child(${n})`).scrollIntoView({ block: 'center' }), n); await p.waitForTimeout(150);
+    g = await gut(p, n); await hold(p, cdp, g.x, g.y, 650); await p.waitForTimeout(300);
+    const land = await p.evaluate(() => [Math.round(document.getElementById('pop').getBoundingClientRect().top), innerHeight, !!document.querySelector('#v-src .is-pick')]);
+    check('chọn dòng bằng chạm, nằm ngang: tấm gọn, còn ≥ 40% khung nhìn cho lề số', land[2] && land[0] >= land[1] * 0.4, JSON.stringify(land));
+    await c.close();
+    // Máy tính: Cancel giữ dòng (MDAN-014); bấm dòng đã chọn chỉ mở lại hộp, không bỏ dòng. Không có gợi ý nhấn giữ.
+    c = await browser.newContext({ viewport: { width: 1280, height: 900 } }); p = await c.newPage(); watch(p);
+    await p.goto(BASE); await p.waitForFunction(() => window.marked && window.DOMPurify);
+    await p.click('#btn-sample'); await p.click('.ma-tab[data-view="src"]'); await p.waitForTimeout(200);
+    g = await gut(p, 3); await p.mouse.dblclick(g.x, g.y); await p.waitForTimeout(200);
+    await p.click('#pop-cancel'); await p.waitForTimeout(100);
+    const d1 = await st(p);
+    g = await gut(p, 3); await p.mouse.click(g.x, g.y); await p.waitForTimeout(200);
+    const d2 = await st(p);
+    check('máy tính: Cancel giữ dòng; bấm dòng đã chọn mở lại hộp mà không bỏ dòng', d1.picking && d1.picks === '3' && !d1.pop && d2.picks === '3' && d2.pop && d2.done, JSON.stringify([d1, d2]));
+    await p.click('#pop-done'); await p.waitForTimeout(100);
+    check('máy tính: nút Done thoát chế độ chọn dòng', !(await st(p)).picking);
+    await p.click('#btn-layout'); await p.click('#btn-keys'); await p.waitForTimeout(400);
+    check('hộp Shortcuts ở máy tính: không có dòng gợi ý chỉ cho cảm ứng', await p.evaluate(() => [...document.querySelectorAll('#dlg-keys .ma-only-touch')].every((e) => !e.getClientRects().length)));
+    await c.close();
+  }
+  // ── end mob:touch-picks ──
+
   check('không lỗi console', !errors.length, errors.join(' | '));
   await browser.close();
   console.log(fails ? `md-annotate smoke: ${fails} LỖI` : 'md-annotate smoke: OK');

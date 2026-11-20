@@ -46,9 +46,12 @@ html.ma-lock.ma-lock-g { scrollbar-gutter: stable; }
   .ma-dock { padding-top: var(--s1); padding-bottom: calc(var(--s1) + var(--sa-b)); }
   .ma-head { display: none; }
 }
+/* Chữ chỉ cho màn cảm ứng (gợi ý nhấn giữ, cách dùng viên thuốc) và chỉ cho chuột / bàn phím. */
+.ma-only-touch { display: none; }
+@media (pointer: coarse) { .ma-only-touch { display: revert; } .ma-only-mouse { display: none; } }
 /* Màn cảm ứng và điện thoại: mọi điều khiển cao ít nhất --h-touch. */
 @media (max-width: 720px), (pointer: coarse) {
-  .ma-btn, .ma-tab, .ma-ptab, .ma-chip, .ma-fmt span, .ma-opts summary, .ma-check, .ma-syn, .ma-rail__n, .ma-toast__btn { min-height: var(--h-touch); }
+  .ma-btn, .ma-pop__done, .ma-tab, .ma-ptab, .ma-chip, .ma-fmt span, .ma-opts summary, .ma-check, .ma-syn, .ma-rail__n, .ma-toast__btn { min-height: var(--h-touch); }
   .ma-icbtn, .ma-item__act .ma-icbtn, .ma-rail .ma-rail__copy { width: var(--h-touch); height: var(--h-touch); }
   .ma-input, .ma-docname { height: var(--h-touch); }
   .ma-pathrow .ma-input { height: var(--h-touch); }
@@ -141,4 +144,9 @@ html.ma-sheet-sp body { padding-bottom: max(calc(var(--dock-h, 0px) + var(--sa-b
 .ma-pop.is-sheet #pop-text { resize: none; }
 .ma-pop.is-sheet .ma-btn { min-height: var(--h-touch); flex: 1; }
 .ma-pop.is-sheet .ma-pop__keys { display: none; }
+/* Chọn dòng ở điện thoại nằm ngang: tấm gọn (bỏ trích dẫn, chip; dòng đã chọn tô ngay trên trang), để còn thấy lề số. */
+@media (max-height: 500px) {
+  .ma-pop.is-sheet:has(#pop-head:not([hidden])) :is(.ma-pop__q, .ma-chips) { display: none; }
+  .ma-pop.is-sheet:has(#pop-head:not([hidden])) #pop-text { height: var(--h-touch); min-height: var(--h-touch); }
+}
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
