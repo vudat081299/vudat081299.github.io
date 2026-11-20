@@ -12,7 +12,7 @@ import { chipHints, pct } from '../core/hints.js';
 import { addComment, editComment, findComment, overlapWarning, partsOf } from '../core/comments.js';
 import { popPlace } from '../core/place.js';
 import { pickSummary } from '../core/picks.js';
-import { $, h, hasHL, mqSheet, shown, toast } from './dom.js';
+import { $, h, mqSheet, paintHL, shown, toast } from './dom.js';
 import { rangeAt } from './anchor-dom.js';
 import { S, scheduleSave } from './state.js';
 import { recordUse, seedState, stats } from './hints.js';
@@ -42,10 +42,7 @@ export function paintPending() {
     if (pos.src && shown($('v-src'))) { var a = rangeAt($('v-src'), pos.src[0], pos.src[1]); if (a) rs.push(a); }
     if (pos.md && shown($('v-md'))) { var b = rangeAt($('v-md'), pos.md[0], pos.md[1]); if (b) rs.push(b); }
   }
-  if (hasHL) {
-    if (rs.length) CSS.highlights.set('ma-pending', new Highlight(...rs));
-    else CSS.highlights.delete('ma-pending');
-  }
+  paintHL('ma-pending', rs);
   return rs;
 }
 /* rect: chỗ đặt hộp (dòng vừa bấm ở lề số); không có thì dưới đoạn đang chọn. */
@@ -133,7 +130,7 @@ function showPop(rect) {
 }
 function clearPending() {
   pending = null;
-  if (hasHL) CSS.highlights.delete('ma-pending');
+  paintHL('ma-pending', []);
 }
 export function closePop(silent) {
   if (!pop.mode) return;

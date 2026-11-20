@@ -8,7 +8,7 @@
      ui/views.js, ui/popup.js. */
 import { locate } from '../core/anchor.js';
 import { pickable, pickInfo } from '../core/picks.js';
-import { $, hasHL } from './dom.js';
+import { $, hasHL, paintHL } from './dom.js';
 import { rangeAt } from './anchor-dom.js';
 import { S } from './state.js';
 import { marksOf } from './marks.js';
@@ -40,8 +40,7 @@ function paint() {
     var pos = locate(p, mdText, false), r = pos && rangeAt($('v-md'), pos[0], pos[1]);
     if (r) rs.push(r);
   });
-  if (rs.length) CSS.highlights.set('ma-mirror', new Highlight(...rs));
-  else if (picking) CSS.highlights.delete('ma-mirror');
+  if (rs.length || picking) paintHL('ma-mirror', rs);
 }
 /* Mở hộp cho các dòng đã chọn, hoặc cập nhật hộp đang mở (giữ chỗ, giữ chữ). ln: dòng vừa bấm, chỗ đặt hộp mới. */
 function showPicks(ln) {
@@ -68,7 +67,7 @@ export function clearPicks() {
   if (!picking) return;
   picking = false; picked = [];
   paint();
-  if (hasHL) CSS.highlights.delete('ma-mirror');
+  paintHL('ma-mirror', []);
   if (pop.mode === 'new' && pending && pending.lines) closePop(true);
 }
 /* Sau khi #v-src / #v-md vẽ lại hay đổi chế độ xem: tô lại; văn bản hay phiên đã đổi thì thoát. */

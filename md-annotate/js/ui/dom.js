@@ -1,6 +1,6 @@
 /* Tiện ích DOM: $(id), h() dựng phần tử, icon(), textNodes(), media query dùng chung, shown(), typing() (phím tắt
-   một chữ), dragBar() (kéo vách), toast().
-   Xuất: $, dragBar, h, hasHL, icon, mqSheet, mqSide, reduceMotion, shown, textNodes, toast, typing.
+   một chữ), dragBar() (kéo vách), toast(), paintHL() (tô CSS Highlight).
+   Xuất: $, dragBar, h, hasHL, icon, mqSheet, mqSide, paintHL, reduceMotion, shown, textNodes, toast, typing.
    Dùng: không module nào. */
 
 export function $(id) { return document.getElementById(id); }
@@ -44,6 +44,15 @@ export var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 export var mqSheet = window.matchMedia('(max-width: 720px), (pointer: coarse)');
 export var mqSide = window.matchMedia('(min-width: 1081px)');
 export var hasHL = !!(window.CSS && CSS.highlights && window.Highlight);
+/* Tô CSS Highlight `name` bằng các Range (rỗng: bỏ tô). Mỗi tên giữ một Highlight trong registry, chỉ thay range: Safari
+   không vẽ lại khi xoá Highlight khỏi registry, vết tô còn trên chữ. Đừng gọi CSS.highlights.set / delete ở chỗ khác. */
+export function paintHL(name, ranges) {
+  if (!hasHL) return;
+  var hl = CSS.highlights.get(name);
+  if (!hl) { hl = new Highlight(); CSS.highlights.set(name, hl); }
+  hl.clear();
+  ranges.forEach(function (r) { hl.add(r); });
+}
 export function shown(el) { return !!(el && el.getClientRects().length); }
 /* Phần tử nhận phím là chỗ gõ chữ (ô nhập chữ, textarea, select, contenteditable): phím tắt một chữ (X, J, K, ?) bỏ qua.
    Checkbox, radio, thanh trượt không phải chỗ gõ: vừa bấm "Dim reviewed" thì X vẫn chạy. */

@@ -5,7 +5,7 @@
    Dùng: core/anchor.js, ui/dom.js, ui/anchor-dom.js, ui/state.js, ui/render.js, ui/views.js, ui/popup.js,
      ui/picks.js. */
 import { locate } from '../core/anchor.js';
-import { $, hasHL } from './dom.js';
+import { $, hasHL, paintHL } from './dom.js';
 import { rangeAt, readSelection } from './anchor-dom.js';
 import { S } from './state.js';
 import { mdText } from './render.js';
@@ -36,7 +36,7 @@ function mirrorSel() {
       var pos = toSrc ? locate(info, S.text, true) : (mdText ? locate(info, mdText, false) : null);
       if (pos) r = rangeAt(toSrc ? $('v-src') : $('v-md'), pos[0], pos[1]);
     }
-    if (r) CSS.highlights.set('ma-mirror', new Highlight(r)); else CSS.highlights.delete('ma-mirror');
+    paintHL('ma-mirror', r ? [r] : []);
   });
 }
 

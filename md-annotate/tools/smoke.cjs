@@ -530,6 +530,9 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   check('điện thoại: hộp Layout ẩn mục bề rộng, chỉ thân hộp cuộn', ml.w === 'none' && ml.dlg <= 0, JSON.stringify(ml));
   await m.tap('#dlg-layout [data-close]');
   await scriptSelect(m, '#v-md', 'Try selecting this sentence');
+  await m.tap('#fab'); await m.tap('#v-md h1'); await m.waitForTimeout(100);
+  check('điện thoại: chạm ra ngoài tấm đáy thì hết tô đoạn đang chọn', !(await m.isVisible('#pop')) && await m.evaluate(() => !CSS.highlights.get('ma-pending').size && getSelection().isCollapsed));
+  await scriptSelect(m, '#v-md', 'Try selecting this sentence');
   check('điện thoại: vùng chọn hiện nút nổi', await m.isVisible('#fab'));
   await m.tap('#fab');
   check('điện thoại: hộp nhận xét là tấm đáy', await m.isVisible('#pop') && await m.evaluate(() => document.getElementById('pop').classList.contains('is-sheet')));
@@ -634,14 +637,14 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   // Bôi đen ở Source: đoạn tương ứng bên Preview được tô (ma-mirror), chưa mở hộp.
   await scriptSelect(sp, '#v-src', 'Short paragraph number 3.');
   await sp.waitForTimeout(150);
-  const mir = await sp.evaluate(() => { const h = CSS.highlights.get('ma-mirror'); if (!h) return null; const r = [...h][0]; return { t: r.toString(), inMd: document.getElementById('v-md').contains(r.startContainer) }; });
+  const mir = await sp.evaluate(() => { const h = CSS.highlights.get('ma-mirror'); if (!h || !h.size) return null; const r = [...h][0]; return { t: r.toString(), inMd: document.getElementById('v-md').contains(r.startContainer) }; });
   check('Split: bôi đen ở Source thì Preview tô đúng đoạn', mir && mir.inMd && mir.t === 'Short paragraph number 3.', JSON.stringify(mir));
   await scriptSelect(sp, '#v-md', 'Short paragraph number 4');
   await sp.waitForTimeout(150);
-  const mir2 = await sp.evaluate(() => { const h = CSS.highlights.get('ma-mirror'); if (!h) return null; const r = [...h][0]; return { t: r.toString(), inSrc: document.getElementById('v-src').contains(r.startContainer) }; });
+  const mir2 = await sp.evaluate(() => { const h = CSS.highlights.get('ma-mirror'); if (!h || !h.size) return null; const r = [...h][0]; return { t: r.toString(), inSrc: document.getElementById('v-src').contains(r.startContainer) }; });
   check('Split: bôi đen ở Preview thì Source tô đúng đoạn', mir2 && mir2.inSrc && mir2.t.startsWith('Short paragraph number 4'), JSON.stringify(mir2));
   await sp.evaluate(() => getSelection().removeAllRanges()); await sp.waitForTimeout(150);
-  check('bỏ chọn thì hết tô phản chiếu', await sp.evaluate(() => !CSS.highlights.get('ma-mirror')));
+  check('bỏ chọn thì hết tô phản chiếu', await sp.evaluate(() => !(CSS.highlights.get('ma-mirror') || {}).size));
   // Focus theo chuột ở Split: section cùng số bên kia cũng sáng.
   await sp.click('#btn-layout'); await sp.check('#set-focus'); await sp.keyboard.press('Escape');
   await sp.evaluate(() => { document.getElementById('wrap-src').scrollTop = 0; }); await sp.waitForTimeout(150);
