@@ -3549,6 +3549,54 @@ const cornerClash = (page) => page.evaluate(() => {
   }
   // ── end modes ──
 
+  // ── văn bản dài: đổi bề rộng (MDAN-071) ──
+  {
+    const c = await treeContext({ viewport: { width: 1600, height: 900 }, colorScheme: 'light' });   // cây hiện sẵn: thử ẩn / hiện
+    const p = await c.newPage(); watch(p);
+    await p.goto(BASE); await p.waitForFunction(() => window.marked && window.DOMPurify);
+    const lines = [];
+    for (let s = 0; lines.length < 2000; s++) {
+      lines.push('## Section ' + s, '', 'Paragraph ' + s + ' with **bold** and `code`, long enough to wrap when the pane is narrow, more words.', '',
+        '- item a', '- item b', '', '| a | b |', '|---|---|', '| ' + s + ' | y |', '', '```js', 'const x = ' + s + ';', '```', '');
+    }
+    await pasteText(p, lines.join('\n'));
+    await p.click('.ma-tab[data-view="split"]'); await p.waitForTimeout(600);
+    /* Số phần tử trình duyệt tính lại kiểu (UpdateLayoutTree của trace) trong một thao tác: số đếm, không phải thời gian, nên không chập chờn. */
+    const cdp = await c.newCDPSession(p);
+    const restyled = async (fn) => {
+      const ev = [];
+      cdp.on('Tracing.dataCollected', (d) => ev.push(...d.value));
+      const done = new Promise((r) => cdp.once('Tracing.tracingComplete', r));
+      await cdp.send('Tracing.start', { categories: 'devtools.timeline', transferMode: 'ReportEvents' });
+      await fn(); await p.waitForTimeout(400);
+      await cdp.send('Tracing.end'); await done;
+      return Math.max(0, ...ev.filter((e) => e.name === 'UpdateLayoutTree' && e.args && e.args.elementCount).map((e) => e.args.elementCount));
+    };
+    const nText = await p.$$eval('#v-src *, #v-md *', (els) => els.length);
+    const steps = [['ẩn / hiện cây', () => p.click('#btn-tree')], ['thu gọn / mở panel', async () => { await p.click('#btn-rail'); await p.click('#btn-unrail'); }],
+      ['đổi tỉ lệ vách bằng phím', async () => { await p.focus('#divider'); await p.keyboard.press('ArrowLeft'); }]];
+    for (const [name, fn] of steps) {
+      const n = await restyled(fn);
+      check(`văn bản 2.000 dòng, ${name}: không tính lại kiểu mọi nút của văn bản`, n < nText / 2, n + ' / ' + nText);
+    }
+    // Làn dùng lại nút cũ khi chỉ đổi bề rộng.
+    await p.evaluate(() => { window.__lane = document.querySelector('#wrap-md .ma-lane__b:last-child'); window.__top = window.__lane.style.top; });
+    await p.focus('#divider'); await p.keyboard.press('ArrowRight'); await p.keyboard.press('ArrowRight'); await p.waitForTimeout(300);
+    check('đổi bề rộng khung: làn dời nút cũ, không dựng lại', await p.evaluate(() => window.__lane.isConnected && window.__lane.style.top !== window.__top));
+    // Kéo vách trên văn bản dài: chỉ vạch đi theo, thả ra mới dàn lại.
+    const d = await p.locator('#divider').boundingBox(), ra = () => p.evaluate(() => document.getElementById('views').style.getPropertyValue('--ra'));
+    const ra0 = await ra();
+    await p.mouse.move(d.x + d.width / 2, d.y + 200); await p.mouse.down();
+    for (let i = 1; i <= 5; i++) await p.mouse.move(d.x + d.width / 2 - i * 20, d.y + 200);
+    const mid = await p.evaluate(() => !!document.querySelector('.ma-ghost'));
+    const raMid = await ra();
+    await p.mouse.up(); await p.waitForTimeout(200);
+    const end = [await ra(), await p.evaluate(() => !document.querySelector('.ma-ghost'))];
+    check('văn bản dài: kéo vách chỉ dời vạch .ma-ghost, thả ra mới đổi tỉ lệ', mid && raMid === ra0 && end[0] !== ra0 && end[1], JSON.stringify([ra0, raMid, end]));
+    await c.close();
+  }
+  // ── end văn bản dài ──
+
   check('không lỗi console', !errors.length, errors.join(' | '));
   await browser.close();
   console.log(fails ? `md-annotate smoke: ${fails} LỖI` : 'md-annotate smoke: OK');

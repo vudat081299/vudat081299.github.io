@@ -1,9 +1,10 @@
 /* Panel bên phải: ba tab Comments / Prompt / Review (setPane; thân của tab là #pane-<data-pane>), kéo mép trái đổi bề rộng (prefs.side), thu gọn thành thanh dọc
    (prefs.rail), tấm trượt #dlg-panel ở máy ≤ 1080px.
    Xuất: initPanel, setPane.
-   Dùng: ui/store.js, ui/dom.js. */
+   Dùng: ui/store.js, ui/dom.js, ui/views.js. */
 import { prefs, savePrefs } from './store.js';
 import { $, dragBar, mqSide } from './dom.js';
+import { longText } from './views.js';
 
 export function setPane(name) {
   document.querySelectorAll('.ma-ptab').forEach(function (b) {
@@ -29,7 +30,7 @@ function setRail(on) {
 export function initPanel() {
   sideW = typeof prefs.side === 'number' ? applySide(prefs.side) : 360;
   dragBar($('panel-grip'), function (x) { sideW = applySide($('panel').getBoundingClientRect().right - x); },
-    function () { prefs.side = sideW; savePrefs(); });
+    function () { prefs.side = sideW; savePrefs(); }, longText);
   $('panel-grip').addEventListener('keydown', function (e) {
     var d = e.key === 'ArrowLeft' ? 16 : e.key === 'ArrowRight' ? -16 : 0;
     if (!d) return;

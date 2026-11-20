@@ -37,7 +37,10 @@ html.dark .ma-tree { --guide: var(--line); --guide-on: color-mix(in srgb, var(--
    sang phải --tree: vùng làm việc (lưới và phần trong thanh trên) căn giữa phần còn lại; nền thanh trên vẫn trọn bề ngang,
    phần trên cột cùng nền --surface và viền phải với cột: cây đọc như một cột từ đỉnh tới đáy. */
 body > .ma-tree { display: none; }
-html.ma-tree-on { --tree-off: var(--tree); }
+/* --tree-off: cây docked chiếm mép trái bao nhiêu. Không kế thừa, đặt thẳng lên hai phần tử dùng nó: biến kế thừa đổi ở html
+   thì trình duyệt tính lại kiểu mọi nút của văn bản (10.000 dòng: ~0,6 s mỗi lần ẩn / hiện cây). */
+@property --tree-off { syntax: '<length>'; inherits: false; initial-value: 0px; }
+html.ma-tree-on :is(.ma-wrap, .ma-bar__in) { --tree-off: var(--tree); }
 html.ma-tree-on body { padding-left: var(--tree); }
 html.ma-tree-on .ma-bar { margin-left: calc(-1 * var(--tree)); padding-left: var(--tree); }
 html.ma-tree-on .ma-bar::before {

@@ -1,12 +1,14 @@
 /* Chế độ xem: Edit / Source / Preview / Split (setView); Preview và Split chỉ ở file markdown (viewFor, MDAN-067), Split
    chỉ khi đủ chỗ (splitOK); chiều cao hai khung (sizePanes, html.ma-fit), vách giữa (prefs.split), nút Syntax colors.
-   Xuất: initViews, isSplit, lastRead, refreshSplit, setView, sizePanes, view.
-   Dùng: core/panes.js, core/file-type.js, ui/store.js, ui/dom.js, ui/state.js, ui/render.js, ui/popup.js, ui/picks.js. */
+   longText(): kéo vách / mép cây / mép panel có dàn lại ngay không (dragBar).
+   Xuất: initViews, isSplit, lastRead, longText, refreshSplit, setView, sizePanes, view.
+   Dùng: core/panes.js, core/file-type.js, core/runs.js, ui/store.js, ui/dom.js, ui/state.js, ui/render.js, ui/popup.js, ui/picks.js. */
 import { paneHeight, splitFits } from '../core/panes.js';
 import { viewFor } from '../core/file-type.js';
+import { lineCount } from '../core/runs.js';
 import { prefs, savePrefs } from './store.js';
 import { $, dragBar, mqSide, shown } from './dom.js';
-import { openType } from './state.js';
+import { D, openType } from './state.js';
 import { renderAll, renderMeta } from './render.js';
 import { closePop, pop } from './popup.js';
 import { clearPicks, repaintPicks } from './picks.js';
@@ -60,6 +62,10 @@ export function sizePanes() {
   if (ph.fit && !de.classList.contains('ma-fit')) window.scrollTo(0, 0);
   de.classList.toggle('ma-fit', ph.fit);
 }
+/* Văn bản dài hơn LIVE_MAX dòng: kéo vách, mép cây, mép panel chỉ dời vạch, thả ra mới dàn lại (dragBar); 2.000 dòng đã
+   mất ~70 ms mỗi bước kéo, 10.000 dòng ~0,5 s. */
+var LIVE_MAX = 1500;
+export function longText() { return lineCount(D.text) > LIVE_MAX; }
 var rafSplit = 0;
 /* Vách giữa hai khung: kéo hoặc phím mũi tên; tỉ lệ lưu ở prefs.split. */
 function applySplit(r) {
@@ -93,7 +99,7 @@ export function initViews() {
   dragBar($('divider'), function (x) {
     var r = $('views').getBoundingClientRect();
     splitR = applySplit((x - r.left) / r.width);
-  }, function () { prefs.split = splitR; savePrefs(); });
+  }, function () { prefs.split = splitR; savePrefs(); }, longText);
   $('divider').addEventListener('keydown', function (e) {
     var d = e.key === 'ArrowLeft' ? -0.02 : e.key === 'ArrowRight' ? 0.02 : 0;
     if (!d) return;

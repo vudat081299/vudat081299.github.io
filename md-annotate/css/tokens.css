@@ -83,7 +83,6 @@
 
   --pad: 24px;                         /* lề trang trong vùng làm việc (MDAN-005) */
   --wrap-f: .7; --wrap-min: 1280px;    /* vùng làm việc: phần khung nhìn còn lại, sàn (MDAN-005; ui/layout.js đổi, ui/tree.js đọc) */
-  --tree-off: 0px;                     /* cây docked chiếm mép trái bao nhiêu (css/tree.css, MDAN-037) */
   --bar-h: 60px;
   --side: 360px;                       /* bề rộng panel; người dùng kéo được 320–560, lưu ở prefs.side */
   --tree: 248px;                       /* bề rộng cây file (css/tree.css); kéo được 180–420, lưu ở prefs.treeW */

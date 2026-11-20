@@ -49,12 +49,18 @@
 
 .ma-views { display: grid; grid-template-columns: minmax(0, 1fr); }
 /* Song song: hai khung cao bằng phần còn lại của khung nhìn (--pane-h, JS tính), cuộn riêng; vách giữa kéo được. */
+/* --ra / --rb (tỉ lệ vách, ui/views.js đặt khi kéo) không kế thừa: biến kế thừa đổi ở #views thì mọi nút của hai khung
+   tính lại kiểu mỗi bước kéo. */
+@property --ra { syntax: '*'; inherits: false; }
+@property --rb { syntax: '*'; inherits: false; }
 .ma-views[data-mode="split"] { grid-template-columns: minmax(0, var(--ra, 1fr)) 9px minmax(0, var(--rb, 1fr)); }
 .ma-views[data-mode="split"] .ma-view { height: var(--pane-h, 70vh); overflow: auto; overscroll-behavior: contain; scrollbar-width: thin; }
 .ma-divider { position: relative; cursor: col-resize; touch-action: none; }
 .ma-divider::before { content: ''; position: absolute; top: 0; bottom: 0; left: 4px; width: 1px; background: var(--line); transition: background var(--dur) var(--ease), width var(--dur) var(--ease), left var(--dur) var(--ease); }
 .ma-divider:hover::before, .ma-tabbing .ma-divider:focus-visible::before, .ma-divider.is-drag::before { left: 3px; width: 3px; background: var(--accent); }
 .ma-divider:focus-visible { outline: none; }
+/* Vạch thay vách khi kéo trên văn bản dài (ui/dom.js dragBar): fixed, dời bằng transform, khung không dàn lại tới khi thả. */
+.ma-ghost { position: fixed; z-index: 70; width: 3px; margin-left: -1px; background: var(--edge-on); pointer-events: none; }
 .ma-view { min-width: 0; padding: var(--s5) var(--s6) var(--s6); }
 #wrap-src { padding-left: var(--s4); }
 .ma-view__lbl { display: none; margin-bottom: var(--s2); }

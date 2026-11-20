@@ -22,7 +22,7 @@ import { canMove, moveTargets, visibleRows } from '../core/tree.js';
 import { plural } from '../core/text.js';
 import { prefs, savePrefs } from './store.js';
 import { $, dragBar, droppedItems, h, icon, mqHandset, toast, typing } from './dom.js';
-import { refreshSplit } from './views.js';
+import { longText, refreshSplit } from './views.js';
 import { findInTree, focusFind, initTreeFind } from './tree-find.js';
 
 var W_MIN = 180, W_MAX = 420, W_DEF = 248;
@@ -590,7 +590,7 @@ export function initTree() {
   var grab = 0;   // chỗ bấm cách mép phải cây bao nhiêu: kéo không làm cây nhảy
   g.addEventListener('pointerdown', function (e) { grab = $('tree').getBoundingClientRect().right - e.clientX; });
   dragBar(g, function (x) { treeW = applyW(x + grab - $('tree').getBoundingClientRect().left); },
-    function () { prefs.treeW = treeW; savePrefs(); });
+    function () { prefs.treeW = treeW; savePrefs(); }, longText);
   g.addEventListener('keydown', function (e) {
     var d = e.key === 'ArrowRight' ? 16 : e.key === 'ArrowLeft' ? -16 : 0;
     if (!d) return;

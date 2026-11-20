@@ -147,19 +147,19 @@ function firstLineC(el, cache) {
   if (!(k in cache)) { var st = getComputedStyle(el); cache[k] = parseFloat(st.paddingTop) + parseFloat(st.borderTopWidth) + lineH(st) / 2; }
   return cache[k];
 }
-function fillLane(w, r) {
-  var box = lanes[w], wrap = wrapOf(w), root = rootOf(w), out = [];
-  box.replaceChildren();
-  geo[w] = out;
-  if (!shown(root) || !r.units.length) return;
+/* Đo làn của một khung, chỉ đọc DOM: { x, items: [{ i, top, bottom, pad }] } (toạ độ nội dung của #wrap-*; pad: đệm trên
+   để dấu căn giữa dòng đầu, css/review.css), hoặc null khi khung ẩn hay không có đơn vị. */
+function measureLane(w, r) {
+  var wrap = wrapOf(w), root = rootOf(w), out = [];
+  if (!shown(root) || !r.units.length) return null;
   var wr = wrap.getBoundingClientRect(), off = wr.top - wrap.scrollTop, x;
-  var laneW = parseFloat(getComputedStyle(box).getPropertyValue('--lane-w')) || 16;
+  var cs = getComputedStyle(lanes[w]), laneW = parseFloat(cs.getPropertyValue('--lane-w')) || 16, icBox = parseFloat(cs.getPropertyValue('--ic-box')) || 14;
   if (w === 'src') {
     var l0 = root.firstElementChild;
-    if (!l0) return;
+    if (!l0) return null;
     x = l0.getBoundingClientRect().left - wr.left + parseFloat(getComputedStyle(l0).paddingLeft) - laneW - 6;
   } else x = Math.max(0, root.getBoundingClientRect().left - wr.left - laneW - 6);
-  var kit = laneKit(r), frag = document.createDocumentFragment(), cache = {};
+  var cache = {};
   r.units.forEach(function (u, i) {
     var top, bottom, c;
     if (w === 'src') {
@@ -173,30 +173,54 @@ function fillLane(w, r) {
       var rc = el.getBoundingClientRect(); top = rc.top; bottom = rc.bottom;
       c = firstLineC(el, cache);
     }
-    top -= off; bottom -= off;
-    out.push({ i: i, top: top, bottom: bottom });
-    var btn = h('button', { type: 'button', tabindex: '-1', 'data-u': String(i), title: tip(r, i, kit.shown), class: laneClass(r, i, kit) });
-    btn.style.cssText = 'left:' + Math.round(x) + 'px;top:' + Math.round(top) + 'px;height:' + Math.max(16, Math.round(bottom - top)) + 'px;--c:' + Math.round(c) + 'px';
-    frag.append(btn);
+    out.push({ i: i, top: top - off, bottom: bottom - off, pad: Math.max(0, c - icBox / 2) });
+  });
+  return { x: x, items: out };
+}
+/* Lớp và tooltip của một nút làn; giữ .is-cur / .is-flash. Chỉ ghi khi khác (ghi lại y nguyên vẫn bắt tính lại kiểu). */
+function styleBtn(b, r, kit) {
+  var i = +b.dataset.u, want = laneClass(r, i, kit), t = tip(r, i, kit.shown);
+  ['is-cur', 'is-flash'].forEach(function (c) { if (b.classList.contains(c)) want += ' ' + c; });
+  if (b.className !== want) b.className = want;
+  if (b.title !== t) b.title = t;
+}
+/* Vẽ làn từ số đo. Nút đầu làn còn đúng đơn vị thì dùng lại, chỉ ghi lại toạ độ khác lần vẽ trước (placed: cssText theo
+   thứ tự nút); moved (đổi cỡ khung, scheduleLayout): dấu không đổi, khỏi tô lại. Đổi bề rộng khung không dựng
+   lại hàng nghìn nút của văn bản dài; từ nút lệch đầu tiên thì dựng mới. Nút là <span>, không phải <button>: làn
+   aria-hidden, không nhận Tab (phím X / J / K thay), và kiểu của <button> đắt gấp ~4 lần khi tính lại hàng nghìn nút. */
+var placed = { src: [], md: [] };
+function drawLane(w, r, m, kit, moved) {
+  var box = lanes[w], items = m ? m.items : [], old = box.children, keep = 0, frag = document.createDocumentFragment(), was = placed[w];
+  geo[w] = items.map(function (e) { return { i: e.i, top: e.top, bottom: e.bottom }; });
+  placed[w] = [];
+  while (keep < items.length && keep < old.length && +old[keep].dataset.u === items[keep].i) keep++;
+  while (old.length > keep) old[old.length - 1].remove();
+  items.forEach(function (e, k) {
+    var b = k < keep ? old[k] : frag.appendChild(h('span', { 'data-u': String(e.i) }));
+    if (k >= keep || !moved) styleBtn(b, r, kit);
+    var css = 'left:' + Math.round(m.x) + 'px;top:' + Math.round(e.top) + 'px;height:' + Math.max(16, Math.round(e.bottom - e.top)) +
+      'px;padding-top:' + Math.round(e.pad) + 'px';
+    if (k >= keep || was[k] !== css) b.style.cssText = css;
+    placed[w].push(css);
   });
   box.append(frag);
 }
 var laying = false, painting = false;   // chặn vòng: currentUnit() → ensureGeo() → layoutLanes() → paintCur()
 var laneUnits = null;                    // units mà làn đang vẽ
-function layoutLanes() {
-  var r = rvState(); laying = true; fillLane('src', r); fillLane('md', r); laying = false; laneUnits = r.units; paintCur();
+function layoutLanes(moved) {
+  var r = rvState(), kit = laneKit(r);
+  laying = true;
+  var m = { src: measureLane('src', r), md: measureLane('md', r) };   // đo cả hai khung rồi mới ghi: không ép xếp lại giữa chừng
+  moved = moved && laneUnits === r.units;
+  drawLane('src', r, m.src, kit, moved); drawLane('md', r, m.md, kit, moved);
+  laying = false; laneUnits = r.units; paintCur();
   noteLayout(); drawMinimap();
 }
 /* Chỉ dấu hay gợi ý đổi (đơn vị, chỗ không đổi): đổi lớp và tooltip của nút có sẵn, không đo lại, không dựng lại. */
 function restyleLanes(r) {
   var kit = laneKit(r);
   ['src', 'md'].forEach(function (w) {
-    Array.prototype.forEach.call(lanes[w].children, function (b) {
-      var i = +b.dataset.u, want = laneClass(r, i, kit), t = tip(r, i, kit.shown);
-      ['is-cur', 'is-flash'].forEach(function (c) { if (b.classList.contains(c)) want += ' ' + c; });
-      if (b.className !== want) b.className = want;
-      if (b.title !== t) b.title = t;
-    });
+    Array.prototype.forEach.call(lanes[w].children, function (b) { styleBtn(b, r, kit); });
   });
   paintCur(); drawMinimap(); syncPill(r);
 }
@@ -217,7 +241,7 @@ function scheduleCur() { if (!curRaf) curRaf = requestAnimationFrame(function ()
 var layoutRaf = 0;
 function scheduleLayout() {
   if (layoutRaf) return;
-  layoutRaf = requestAnimationFrame(function () { layoutRaf = 0; layoutLanes(); syncPill(); });
+  layoutRaf = requestAnimationFrame(function () { layoutRaf = 0; layoutLanes(true); syncPill(); });
 }
 function onLaneClick(e) {
   var b = e.target.closest && e.target.closest('.ma-lane__b');

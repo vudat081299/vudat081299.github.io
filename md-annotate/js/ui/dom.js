@@ -88,15 +88,28 @@ export function typing(t) {
   return t.tagName === 'INPUT' && !NOT_TEXT.test(t.type);
 }
 
-/* Kéo một vách (chuột / bút / chạm) theo trục ngang: onMove(clientX) khi kéo, onDone() khi thả. */
-export function dragBar(el, onMove, onDone) {
+/* Kéo một vách (chuột / bút / chạm) theo trục ngang: onMove(clientX) khi kéo, onDone() khi thả. ghostly() đúng lúc bấm
+   (văn bản dài: dàn lại mỗi bước kéo mất hàng trăm ms) thì chỉ vạch .ma-ghost đi theo con trỏ; thả ra mới gọi onMove một lần. */
+export function dragBar(el, onMove, onDone, ghostly) {
   el.addEventListener('pointerdown', function (e) {
     if (e.button !== 0) return;
     e.preventDefault(); el.setPointerCapture(e.pointerId); el.classList.add('is-drag');
-    var move = function (ev) { onMove(ev.clientX); };
+    var ghost = null, last = null;
+    if (ghostly && ghostly()) {
+      var r = el.getBoundingClientRect();
+      ghost = h('div', { class: 'ma-ghost' });
+      ghost.style.cssText = 'left:' + e.clientX + 'px;top:' + r.top + 'px;height:' + r.height + 'px';
+      document.body.append(ghost);
+    }
+    var move = function (ev) {
+      if (!ghost) { onMove(ev.clientX); return; }
+      last = ev.clientX;
+      ghost.style.transform = 'translateX(' + (last - e.clientX) + 'px)';
+    };
     var up = function () {
       el.classList.remove('is-drag');
       el.removeEventListener('pointermove', move); el.removeEventListener('pointerup', up); el.removeEventListener('pointercancel', up);
+      if (ghost) { ghost.remove(); if (last != null) onMove(last); }
       onDone();
     };
     el.addEventListener('pointermove', move); el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up);

@@ -29,7 +29,7 @@
 /* Thu gọn thành thanh dọc: còn nút mở, số nhận xét, tải và chép. */
 .ma-rail { display: none; }
 html.ma-railed .ma-grid { grid-template-columns: minmax(0, 1fr) 56px; }
-html.ma-railed .ma-grid > .ma-panel > :not(.ma-rail) { display: none; }
+html.ma-railed .ma-panel > :is(.ma-panel__grip, .ma-panel__head, .ma-panel__body, .ma-panel__foot) { display: none; }
 html.ma-railed .ma-grid > .ma-panel .ma-rail { display: flex; flex-direction: column; align-items: center; gap: var(--s2); height: 100%; padding: var(--s2) 0; }
 .ma-rail__n {
   min-width: var(--h); min-height: var(--h); border: 0; border-radius: var(--r-sm); background: var(--chip);

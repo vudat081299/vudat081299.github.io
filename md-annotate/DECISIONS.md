@@ -48,6 +48,7 @@
 - MDAN-068 · Cây file: đệm đáy, ô lọc file theo mẫu · `md-annotate/css/tree.css`, `md-annotate/js/ui/tree.js`, `md-annotate/js/ui/tree-find.js`, `md-annotate/js/core/tree-find.js`
 - MDAN-069 · Hộp Shortcuts thành Help, thêm phần tìm file · `md-annotate/index.html`, `md-annotate/js/ui/help.js`, `md-annotate/data/shortcuts.json`, `md-annotate/data/search-help.json`
 - MDAN-070 · Code đơn giản nhất mà dễ đọc; giao diện, logic, luật tách nhau; thứ dùng chung ở một chỗ · `md-annotate/`
+- MDAN-071 · Văn bản dài: đổi bề rộng vùng chữ không đứng hình · `md-annotate/`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Nguồn tô màu cú pháp kiểu VS Code
@@ -411,3 +412,10 @@ Viết code đơn giản nhất mà dễ đọc: hàm và module thường, tên
 (DOM, CSS), logic (hàm thuần, không DOM) và luật / cấu hình (hằng, bảng phím, token, luật tìm) tách nhau, mỗi tính năng
 một module trong lớp của nó, theo cách xếp thư mục sẵn có. Thứ dùng ở hai chỗ trở lên nằm một chỗ chung và mọi nơi gọi nó,
 không chép thành biến thể; chỉ dùng một chỗ thì không tách ra.
+
+## MDAN-071 · Văn bản dài: đổi bề rộng vùng chữ không đứng hình
+20/11/2026 · `md-annotate/`
+
+Với văn bản khoảng 10.000 dòng, kéo vách giữa *Split*, ẩn / hiện cây file, thu gọn / mở panel nhận xét không được làm
+trang đứng hình nửa giây. Đổi bề rộng chỉ dàn lại chữ, không dựng lại hay tính lại phần khác. Văn bản dài thì khi kéo
+vách (cả mép cây, mép panel) chỉ vạch đi theo chuột, thả ra mới dàn lại.
