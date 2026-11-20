@@ -96,7 +96,7 @@ html.ma-tree-on body > .ma-tree {
    biểu tượng 16px + 8px, tên, đuôi (huy hiệu, ⋯). */
 .ma-trow {
   position: relative; display: flex; align-items: center; height: var(--row-h); box-sizing: border-box;
-  width: 100%; padding: 0 0 0 calc(var(--s1) + var(--depth, 0) * var(--tree-step));
+  width: 100%; padding: 0 0 0 var(--s1);
   color: var(--ink-2); cursor: pointer;
 }
 /* THẺ của hàng (::before, dưới chữ nhờ isolation): bo --r-sm, lùi --card-y trên / dưới, tới mép phải hàng; mép trái ngay trước
@@ -124,7 +124,8 @@ html.ma-tree-on body > .ma-tree {
 .ma-trow.is-drop::before { background: var(--accent-soft); box-shadow: inset 0 0 0 1px var(--edge-on); }
 .ma-trow.is-dragging { opacity: .5; }
 .ma-trow__chev, .ma-trow__ic { flex: none; height: 16px; display: grid; place-items: center; color: var(--ink-3); }
-.ma-trow__chev { width: 15px; margin-right: 5px; }
+/* Thụt là lề trái của chevron, không phải đệm của hàng: đuôi ⋯ (sticky) được dời trên trọn bề ngang hàng. */
+.ma-trow__chev { width: 15px; margin: 0 5px 0 calc(var(--depth, 0) * var(--tree-step)); }
 .ma-trow__chev svg { width: 13px; height: 13px; }
 .ma-trow[aria-expanded="true"] .ma-trow__chev svg { transform: rotate(90deg); }
 @media (prefers-reduced-motion: no-preference) { .ma-trow__chev svg { transition: transform var(--dur) var(--ease); } }

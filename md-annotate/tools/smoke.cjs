@@ -2126,14 +2126,15 @@ const cornerClash = (page) => page.evaluate(() => {
       const a = getComputedStyle(l, '::before'), r = l.getBoundingClientRect(), ic = l.querySelector('.ma-trow__ic').getBoundingClientRect();
       const L = r.left + parseFloat(a.left), R = r.right - parseFloat(a.right);
       l.classList.add('is-menu'); const mb = l.querySelector('.ma-trow__more').getBoundingClientRect(); l.classList.remove('is-menu');
-      const moreIn = [mb.left - L, R - mb.right, mb.top - (r.top + parseFloat(a.top)), r.bottom - parseFloat(a.bottom) - mb.bottom].map((v) => +v.toFixed(1));
+      const bd = document.getElementById('tree-body'), vR = Math.min(R, bd.getBoundingClientRect().left + bd.clientWidth - parseFloat(getComputedStyle(bd).paddingRight));   // thẻ bị cắt ở mép thân khi cây cuộn ngang
+      const moreIn = [mb.left - L, vR - mb.right, mb.top - (r.top + parseFloat(a.top)), r.bottom - parseFloat(a.bottom) - mb.bottom].map((v) => +v.toFixed(1));
       return { sel: l.getAttribute('aria-selected'), rowBg: getComputedStyle(l).backgroundColor, fill: a.backgroundColor, radius: parseFloat(a.borderTopLeftRadius),
         border: [a.borderTopWidth, a.borderRightWidth, a.borderBottomWidth, a.borderLeftWidth, a.borderTopStyle].join(' '), insetL: +(ic.left - L).toFixed(1), w: +(R - L).toFixed(1), rowW: r.width,
         bodyL: document.getElementById('tree-body').getBoundingClientRect().left, L, after: getComputedStyle(l, '::after').content, shadow: getComputedStyle(l).boxShadow, outline: [a.outlineStyle, a.boxShadow].join(' '), moreIn };
     });
     check('cây: Enter mở file, hàng thành thẻ chọn: bo, không viền, không vòng, nền nhạt, lùi vào trong (bắt đầu trước biểu tượng, không trọn hàng), hàng không tô, không vạch riêng, ⋯ gọn trong thẻ (lùi ≥ 2px mọi cạnh) (MDAN-060)',
       JSON.stringify(await tl()) === JSON.stringify(['open', ids['README.md']]) && sel.sel === 'true' && /rgba\(0, 0, 0, 0\)|transparent/.test(sel.rowBg) && !/, 0\)$|transparent/.test(sel.fill)
-      && sel.radius >= 4 && sel.border === '0px 0px 0px 0px none' && sel.outline === 'none none' && sel.insetL > 0 && sel.insetL <= 12 && sel.w < sel.rowW - 8 && sel.L - sel.bodyL >= 8 && sel.after === 'none' && sel.shadow === 'none' && sel.moreIn.every((v) => v >= 2), JSON.stringify(sel));
+      && sel.radius >= 4 && sel.border === '0px 0px 0px 0px none' && / none$/.test(sel.outline) && sel.insetL > 0 && sel.insetL <= 12 && sel.w < sel.rowW - 8 && sel.L - sel.bodyL >= 8 && sel.after === 'none' && sel.shadow === 'none' && sel.moreIn.every((v) => v >= 2), JSON.stringify(sel));
     /* Tương phản trên hàng đang chọn (nền pha nhiều lớp): chữ ≥ 4,5:1, nền thẻ tách khỏi nền thân, cả hai theme. */
     const treeContrast = () => tp.evaluate(() => {
       const parse = (c) => { const m = c.match(/[\d.]+/g).map(Number); return c.startsWith('color(') ? [m[0] * 255, m[1] * 255, m[2] * 255, m.length > 3 ? m[3] : 1] : [m[0], m[1], m[2], m.length > 3 ? m[3] : 1]; };
