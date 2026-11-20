@@ -2656,6 +2656,62 @@ const cornerClash = (page) => page.evaluate(() => {
   }
   // ── end mob:touch-layout ──
 
+  // ── mob:touch-sheet ──
+  /* ---------- Tấm nhận xét ở điện thoại: cuộn để đoạn chọn nằm ngay trên tấm (lưu không cuộn), nút nổi tránh đoạn chọn,
+     Return xuống dòng ở màn cảm ứng, bàn phím ảo không che tấm / toast ---------- */
+  {
+    const devices = pw.devices;
+    for (const name of ['iPhone 15 Pro', 'iPhone SE', 'iPhone 15 Pro landscape']) {
+      const d = Object.assign({}, devices[name], { deviceScaleFactor: 1 }); delete d.defaultBrowserType;
+      const c = await browser.newContext(d), p = await c.newPage(); watch(p);
+      await p.goto(BASE); await p.waitForFunction(() => window.marked && window.DOMPurify);
+      await p.evaluate(() => document.getElementById('btn-sample').click()); await p.waitForTimeout(250);
+      const res = [];
+      for (const needle of ['Three steps', 'then type a comment', 'Copy prompt']) {
+        await p.evaluate(() => window.scrollTo(0, 0)); await p.waitForTimeout(100);
+        await scriptSelect(p, '#v-md', needle);
+        const sel = await p.evaluate(() => { const r = getSelection().getRangeAt(0).getBoundingClientRect(); return [r.top, r.bottom]; });
+        const fb = await p.$eval('#fab', (f) => { const r = f.getBoundingClientRect(); return [r.top, r.bottom]; });
+        const b = await p.locator('#fab').boundingBox(); await p.touchscreen.tap(b.x + b.width / 2, b.y + b.height / 2);
+        await p.waitForTimeout(700);
+        const r = await p.evaluate(() => {
+          const rg = [...CSS.highlights.get('ma-pending')][0].getBoundingClientRect(), pop = document.getElementById('pop');
+          return { top: rg.top, bottom: rg.bottom, sheet: innerHeight - pop.offsetHeight, bar: Math.max(0, document.querySelector('.ma-bar').getBoundingClientRect().bottom), y: scrollY };
+        });
+        await p.fill('#pop-text', 'note');
+        const sb = await p.locator('#pop-save').boundingBox(); await p.touchscreen.tap(sb.x + sb.width / 2, sb.y + sb.height / 2);
+        await p.waitForTimeout(250);
+        res.push({ needle, fabClear: fb[1] <= sel[0] || fb[0] >= sel[1], shown: r.bottom <= r.sheet && r.top >= r.bar - 1, saveKept: (await p.evaluate(() => scrollY)) === r.y });
+      }
+      check(`tấm nhận xét (${name}): đoạn chọn hiện ngay trên tấm, nút nổi không che đoạn, lưu không cuộn trang`, res.every((x) => x.fabClear && x.shown && x.saveKept), JSON.stringify(res));
+      if (name === 'iPhone 15 Pro') {
+        // Return xuống dòng ở màn cảm ứng; lưu bằng Save.
+        await p.evaluate(() => window.scrollTo(0, 0)); await scriptSelect(p, '#v-md', 'Three steps');
+        const b = await p.locator('#fab').boundingBox(); await p.touchscreen.tap(b.x + b.width / 2, b.y + b.height / 2); await p.waitForTimeout(300);
+        await p.focus('#pop-text'); await p.keyboard.type('line one'); await p.keyboard.press('Enter'); await p.keyboard.type('line two');
+        const ret = await p.evaluate(() => [document.getElementById('pop-text').value, !document.getElementById('pop').hidden, document.getElementById('pop-text').getAttribute('enterkeyhint')]);
+        check('màn cảm ứng: Return trong ô nhận xét xuống dòng, không lưu; enterkeyhint=enter', ret[0] === 'line one\nline two' && ret[1] && ret[2] === 'enter', JSON.stringify(ret));
+        // Bàn phím ảo kiểu iOS: khung nhìn không co, chỉ visualViewport co. Tấm và toast nằm trên bàn phím.
+        const kb = await p.evaluate(async () => {
+          const vv = window.visualViewport, h = innerHeight - 300;
+          Object.defineProperty(vv, 'height', { configurable: true, get: () => h });
+          vv.dispatchEvent(new Event('resize'));
+          (await import('./js/ui/dom.js')).toast('Saved somewhere');
+          await new Promise((r) => setTimeout(r, 250));
+          const pop = document.getElementById('pop').getBoundingClientRect(), t = document.getElementById('toast').getBoundingClientRect();
+          const out = { kb: getComputedStyle(document.documentElement).getPropertyValue('--kb').trim(), popBottom: Math.round(pop.bottom), popTop: Math.round(pop.top), toastBottom: Math.round(t.bottom), vvh: h };
+          delete vv.height; vv.dispatchEvent(new Event('resize'));
+          return out;
+        });
+        check('bàn phím ảo (visualViewport co): tấm nhận xét và toast nằm trên bàn phím, tấm trọn phần còn lại', kb.kb === '300px' && kb.popBottom <= kb.vvh + 1 && kb.popTop >= 0 && kb.toastBottom <= kb.popTop + 1, JSON.stringify(kb));
+        const sb = await p.locator('#pop-save').boundingBox(); await p.touchscreen.tap(sb.x + sb.width / 2, sb.y + sb.height / 2); await p.waitForTimeout(200);
+        check('màn cảm ứng: Save lưu nhận xét nhiều dòng', /line one\nline two|line one line two/.test(await p.$eval('#out', (e) => e.textContent)) || (await p.$$('#list .ma-item')).length > 0);
+      }
+      await c.close();
+    }
+  }
+  // ── end mob:touch-sheet ──
+
   check('không lỗi console', !errors.length, errors.join(' | '));
   await browser.close();
   console.log(fails ? `md-annotate smoke: ${fails} LỖI` : 'md-annotate smoke: OK');

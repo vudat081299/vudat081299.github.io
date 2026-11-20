@@ -1,8 +1,9 @@
 /* Tiện ích DOM: $(id), h() dựng phần tử, icon(), textNodes(), media query dùng chung, shown(), typing() (phím tắt
    một chữ), dragBar() (kéo vách), toast(), paintHL() (tô CSS Highlight), saveFile() (tải một Blob về máy),
    droppedItems() (mục thả từ máy), syncBar() (màu thanh trình duyệt khi có lớp mờ).
+   trackKeyboard() (bàn phím ảo che bao nhiêu: --kb, --vvh).
    Xuất: $, dragBar, droppedItems, h, hasHL, icon, mqSheet, mqSide, mqTouch, paintHL, placeToast, reduceMotion, saveFile, shown,
-     syncBar, textNodes, toast, typing.
+     syncBar, textNodes, toast, trackKeyboard, typing.
    Dùng: core/color.js. */
 import { barColor } from '../core/color.js';
 
@@ -127,6 +128,24 @@ export function placeToast() {
     if (r.right > tr.left && r.left < tr.right && r.top < tr.bottom) lift = Math.max(lift, vh - r.top + 8);
   });
   if (lift) t.style.bottom = Math.round(lift) + 'px';
+}
+
+/* Bàn phím ảo: Chrome Android co khung nhìn (interactive-widget=resizes-content ở thẻ viewport), iOS Safari thì không, chỉ
+   visualViewport co lại. --kb: phần khung nhìn bàn phím che (px), --vvh: chiều cao còn lại; mobile.css nâng tấm đáy, hộp thoại,
+   toast lên trên bàn phím. Đang phóng to (scale ≠ 1) thì visualViewport co vì phóng to, không phải vì bàn phím: bỏ qua. */
+export function trackKeyboard() {
+  var vv = window.visualViewport;
+  if (!vv) return;
+  var set = function () {
+    var kb = Math.abs(vv.scale - 1) < 0.01 ? Math.max(0, Math.round(window.innerHeight - vv.height - vv.offsetTop)) : 0;
+    var st = document.documentElement.style;
+    st.setProperty('--kb', kb + 'px');
+    st.setProperty('--vvh', Math.round(vv.height) + 'px');
+    placeToast();
+  };
+  vv.addEventListener('resize', set);
+  vv.addEventListener('scroll', set);
+  set();
 }
 
 /* Tải data (Blob) về máy với tên name: link tạm có download, bấm, thu hồi URL sau một giây. */

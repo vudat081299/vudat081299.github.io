@@ -1,10 +1,12 @@
-/* Bôi đen → hộp nhận xét: chuột mở ngay khi thả (kể cả kéo từ vùng nền), cảm ứng / bàn phím hiện nút nổi;
+/* Bôi đen → hộp nhận xét: chuột mở ngay khi thả (kể cả kéo từ vùng nền), cảm ứng / bàn phím hiện nút nổi (ở đáy, đoạn chọn
+   ở nửa dưới thì lên đỉnh: core/place.js fabSide);
    bấm đoạn đã nhận xét để sửa; Split tô đoạn tương ứng ở khung kia (ma-mirror). Lề số dòng ở ui/picks.js; đang chọn
    dòng thì bôi đen không mở hộp, không hiện nút nổi, không tô ma-mirror.
    Xuất: initSelection, onSelChange.
-   Dùng: core/anchor.js, ui/dom.js, ui/anchor-dom.js, ui/state.js, ui/render.js, ui/views.js, ui/popup.js,
+   Dùng: core/anchor.js, core/place.js, ui/dom.js, ui/anchor-dom.js, ui/state.js, ui/render.js, ui/views.js, ui/popup.js,
      ui/picks.js. */
 import { locate } from '../core/anchor.js';
+import { fabSide } from '../core/place.js';
 import { $, hasHL, paintHL } from './dom.js';
 import { rangeAt, readSelection } from './anchor-dom.js';
 import { D } from './state.js';
@@ -19,6 +21,17 @@ export function onSelChange() {
   var info = pop.mode || picking ? null : readSelection();
   if (info) { lastSel = info; lastSelAt = Date.now(); }
   $('fab').hidden = !info;
+  placeFab();
+}
+/* Nút nổi không che đoạn đang chọn: mặc định ở đáy; đoạn ở nửa dưới (hay chạm nút) thì ngay dưới thanh trên. */
+function placeFab() {
+  var f = $('fab'), sel = window.getSelection();
+  f.classList.remove('is-top');
+  if (f.hidden || !sel || !sel.rangeCount) return;
+  var rs = sel.getRangeAt(0).getClientRects();
+  if (!rs.length || fabSide(rs[0].top, rs[rs.length - 1].bottom, f.getBoundingClientRect().top, window.innerHeight) !== 'top') return;
+  f.style.setProperty('--fab-top', Math.max(0, Math.round(document.querySelector('.ma-bar').getBoundingClientRect().bottom)) + 'px');
+  f.classList.add('is-top');
 }
 /* Split: bôi đen một bên thì đoạn tương ứng bên kia được tô (CSS Highlight 'ma-mirror', không sửa DOM). Tìm đoạn
    bằng chính cách neo nhận xét (locate: nguyên văn, rồi chỉ chữ và số), nên chọn ở Source có cú pháp markdown vẫn

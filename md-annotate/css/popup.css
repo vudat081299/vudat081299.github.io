@@ -57,12 +57,14 @@
   bottom: calc(var(--s5) + var(--sa-b));
   min-height: var(--h-touch); padding: 0 var(--s5); border-radius: var(--r-pill); box-shadow: var(--shadow-pop);
 }
+/* Đoạn chọn ở nửa dưới: nút lên đỉnh, ngay dưới thanh trên (--fab-top: đáy thanh trên, ui/selection.js). */
+.ma-fab.is-top { top: calc(max(var(--fab-top, 0px), var(--sa-t)) + var(--s3)); bottom: auto; }
 .ma-dock { display: none; }
 /* TOAST: nền đảo (mực), chữ nền, một dòng nếu đủ chỗ. width: max-content: left 50% không được bóp hộp còn nửa khung nhìn.
    Nút Undo: chữ đậm trên nền mờ của chính màu chữ, đọc được ở cả hai theme. Điện thoại: rộng hết, trừ lề (mobile.css). */
 .ma-toast {
   position: fixed; z-index: 80; left: 50%; transform: translateX(-50%);
-  bottom: calc(var(--s5) + var(--sa-b));
+  bottom: calc(var(--s5) + var(--sa-b) + var(--kb));
   width: max-content; max-width: min(560px, calc(100vw - 2 * var(--s4)));
   display: flex; align-items: center; gap: var(--s3); min-height: calc(var(--h-sm) + 2 * var(--s2)); padding: var(--s2) var(--s4);
   background: var(--ink); color: var(--bg); border-radius: var(--r); box-shadow: var(--shadow-pop);

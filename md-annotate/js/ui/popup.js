@@ -1,27 +1,30 @@
 /* Hộp nhận xét: mở cho đoạn mới (openNew) hoặc để sửa (openEdit), tô đoạn đang chọn (ma-pending),
    gợi ý dạng chip, lưu, đóng. Đoạn mới có thể là các dòng chọn ở lề số (pending.lines, ui/picks.js): hộp có thêm
    hàng đầu (số dòng, nhãn, nút kéo), cập nhật tại chỗ khi chọn thêm / bỏ dòng (updateNew), và không đóng khi bấm
-   ra ngoài (MDAN-014). Tấm đáy (máy hẹp / cảm ứng) có nền mờ #pop-scrim, trừ khi chọn nhiều dòng (MDAN-026).
+   ra ngoài (MDAN-014). Tấm đáy (máy hẹp / cảm ứng) có nền mờ #pop-scrim, trừ khi chọn nhiều dòng (MDAN-026); mở tấm thì
+   trang cuộn để đoạn nằm ngay trên tấm (revealAbove), đáy trang có thêm chỗ bằng tấm (html.ma-sheet-sp), bỏ đi khi đóng mà
+   không làm trang nhảy. Lưu không cuộn trang. Màn cảm ứng: Return trong ô chữ xuống dòng, lưu bằng nút Save.
    Xuất: closePop, initPopup, openEdit, openNew, paintPending, pending, pop, popDirty, renderPopHints, updateNew.
    Dùng: core/text.js, core/anchor.js, core/hints.js, core/comments.js, core/place.js, core/picks.js, ui/dom.js,
      ui/anchor-dom.js, ui/state.js, ui/hints.js, ui/marks.js, ui/render.js, ui/list.js, ui/views.js,
-     ui/selection.js, ui/picks.js. */
+     ui/selection.js, ui/picks.js, ui/dwell.js. */
 import { plural } from '../core/text.js';
 import { locate } from '../core/anchor.js';
 import { chipHints, pct } from '../core/hints.js';
 import { addComment, editComment, findComment, overlapWarning, partsOf } from '../core/comments.js';
-import { popPlace } from '../core/place.js';
+import { popPlace, sheetReveal } from '../core/place.js';
 import { pickSummary } from '../core/picks.js';
-import { $, h, mqSheet, paintHL, shown, syncBar, toast } from './dom.js';
+import { $, h, mqSheet, mqTouch, paintHL, reduceMotion, shown, syncBar, toast } from './dom.js';
 import { rangeAt } from './anchor-dom.js';
 import { D, scheduleSave } from './state.js';
 import { recordUse, seedState, stats } from './hints.js';
 import { markActive } from './marks.js';
 import { anchors, mdText, numbers, ordered, orphans, renderAll } from './render.js';
 import { flashItem, removeComment } from './list.js';
-import { view } from './views.js';
+import { isSplit, view } from './views.js';
 import { onSelChange } from './selection.js';
 import { clearPicks, gutterLine, picking } from './picks.js';
+import { noteJump } from './dwell.js';
 
 export var pop = { mode: null, id: null, orig: '' };
 var popExpanded = false;
@@ -56,7 +59,15 @@ export function openNew(info, rect) {
   $('pop-del').hidden = true;
   $('pop-text').value = '';
   popExpanded = false;
-  showPop(rect || (rs.length ? lastRect(ownRange(rs)) : null));
+  var own = rs.length ? ownRange(rs) : null;
+  showPop(rect || (own ? lastRect(own) : null), rect ? null : spanRect(own));
+}
+/* Khung bao cả đoạn (đỉnh dòng đầu, đáy dòng cuối) và nút nằm trong nó, cho tấm đáy (revealAbove). */
+function spanRect(target) {
+  if (!target) return null;
+  var rs = target.getClientRects(), b = target.getBoundingClientRect();
+  return { top: rs.length ? rs[0].top : b.top, bottom: rs.length ? rs[rs.length - 1].bottom : b.bottom,
+    node: target.startContainer ? target.startContainer.parentNode : target };
 }
 /* Ở Split đoạn được tô ở cả hai khung: hộp đặt cạnh khung người dùng đã bôi đen (pending.origin). */
 function ownRange(rs) {
@@ -70,6 +81,7 @@ export function updateNew(info) {
   markLong();
   renderPopHints();
   syncScrim();
+  if ($('pop').classList.contains('is-sheet') && !$('pop').hidden) sheetSpace();
 }
 function fillNew() {
   var multi = !!pending.lines;
@@ -107,7 +119,7 @@ export function openEdit(id, anchorEl) {
   $('pop-del').hidden = false;
   $('pop-text').value = c.comment;
   popExpanded = false;
-  showPop(lastRect(anchorEl));
+  showPop(lastRect(anchorEl), spanRect(anchorEl));
 }
 /* Khung chữ cuối của một phần tử hay Range (đoạn chọn qua nhiều dòng thì hộp đặt dưới dòng cuối). */
 function lastRect(target) {
@@ -115,7 +127,8 @@ function lastRect(target) {
   var rects = target.getClientRects();
   return rects.length ? rects[rects.length - 1] : target.getBoundingClientRect();
 }
-function showPop(rect) {
+/* rect: chỗ đặt hộp nổi; span: { top, bottom, node } đoạn mà tấm đáy không được che (mặc định rect). */
+function showPop(rect, span) {
   var el = $('pop');
   var sheet = mqSheet.matches;
   el.classList.toggle('is-sheet', sheet);
@@ -132,8 +145,37 @@ function showPop(rect) {
     $('pop-text').focus({ preventScroll: true });
   } else {
     el.style.top = ''; el.style.left = '';
+    sheetSpace();
+    revealAbove(span || rect);
   }
   syncScrim();
+}
+
+/* TẤM ĐÁY: đáy trang có thêm chỗ bằng chiều cao tấm (--sheet-h), để cả dòng cuối văn bản cuộn lên được trên tấm. */
+function sheetSpace() {
+  var de = document.documentElement;
+  de.style.setProperty('--sheet-h', Math.ceil($('pop').offsetHeight + 8) + 'px');
+  de.classList.add('ma-sheet-sp');
+}
+/* Đóng tấm: bỏ chỗ thêm chỉ khi bỏ không làm trang nhảy (đang cuộn trong phần thêm thì chờ người dùng cuộn lên). */
+function dropSpace() {
+  var de = document.documentElement;
+  if (!de.classList.contains('ma-sheet-sp') || (pop.mode && $('pop').classList.contains('is-sheet'))) return;
+  de.classList.remove('ma-sheet-sp');
+  if (window.scrollY > document.scrollingElement.scrollHeight - window.innerHeight + 1) de.classList.add('ma-sheet-sp');
+}
+/* Cuộn để đoạn đang nhận xét nằm ngay trên đỉnh tấm (core/place.js sheetReveal): khung Split chứa đoạn thì cuộn khung,
+   không thì cuộn trang. Cuộn do trang: không tính là đã đọc (ui/dwell.js). */
+function revealAbove(span) {
+  if (!span) return;
+  var kb = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--kb')) || 0;
+  var sheetTop = window.innerHeight - kb - $('pop').offsetHeight;   // không đọc getBoundingClientRect: tấm đang trượt lên
+  var pane = span.node && span.node.closest && isSplit() ? span.node.closest('.ma-view') : null;
+  var head = pane ? pane.getBoundingClientRect().top : Math.max(0, document.querySelector('.ma-bar').getBoundingClientRect().bottom);
+  var d = Math.round(sheetReveal(span.top, span.bottom, sheetTop, head, 12));
+  if (!d) return;
+  noteJump();
+  (pane || window).scrollBy({ top: d, behavior: reduceMotion.matches ? 'auto' : 'smooth' });
 }
 /* Nền mờ sau tấm đáy: chỉ khi tấm hiện và không ở chế độ chọn dòng (vẫn bấm lề số các dòng khác, MDAN-026). */
 function syncScrim() {
@@ -153,6 +195,7 @@ export function closePop(silent) {
   pop.mode = null; pop.id = null; pop.orig = '';
   $('pop').hidden = true;
   syncScrim();
+  dropSpace();
   if (!silent) onSelChange();
 }
 export function popDirty() {
@@ -212,11 +255,17 @@ export function initPopup() {
   $('pop-cancel').addEventListener('click', function () { closePop(); });
   $('pop-del').addEventListener('click', function () { var id = pop.id; closePop(true); removeComment(id); });
   $('pop-text').addEventListener('input', renderPopHints);
+  /* Enter lưu, Shift + Enter xuống dòng; màn cảm ứng: Return xuống dòng (bàn phím ảo không có Shift + Return), lưu bằng
+     nút Save, hay Ctrl / ⌘ + Return ở bàn phím rời. */
+  var enterHint = function () { $('pop-text').setAttribute('enterkeyhint', mqTouch.matches ? 'enter' : 'done'); };
+  enterHint(); mqTouch.addEventListener('change', enterHint);
   $('pop-text').addEventListener('keydown', function (e) {
     if (e.key !== 'Enter' || e.isComposing || e.keyCode === 229) return;
-    if (e.shiftKey && !(e.ctrlKey || e.metaKey)) return;
+    var mod = e.ctrlKey || e.metaKey;
+    if ((e.shiftKey || mqTouch.matches) && !mod) return;
     e.preventDefault(); savePop();
   });
+  window.addEventListener('scroll', dropSpace, { passive: true });
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' && pop.mode && !document.querySelector('dialog[open]')) { e.preventDefault(); closePop(); }
   });

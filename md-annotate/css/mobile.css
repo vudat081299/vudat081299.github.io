@@ -26,7 +26,8 @@ html.ma-lock.ma-lock-g { scrollbar-gutter: stable; }
   .ma-dock .ma-copy { flex: 0 1 220px; }
   .ma-dock__list { margin-right: auto; padding: 0 var(--s3) 0 var(--s2); }
   .ma-dock__list::after { content: ''; width: 7px; height: 7px; margin-left: 2px; border: solid currentColor; border-width: 2px 2px 0 0; transform: translateY(2px) rotate(-45deg); }
-  .ma-fab, .ma-toast { bottom: calc(var(--dock-h) + 10px + var(--sa-b)); }
+  .ma-fab { bottom: calc(var(--dock-h) + 10px + var(--sa-b)); }
+  .ma-toast { bottom: calc(var(--dock-h) + 10px + var(--sa-b) + var(--kb)); }
   /* Tấm panel: thẻ là .ma-panel (tự cuộn thân; thẻ không cuộn, không có thanh ở góc bo). Cao min(86vh, 760px) cộng viền trên. */
   .ma-dlg--panel .ma-panel {
     position: static; width: min(640px, calc(100vw - var(--sa-l) - var(--sa-r))); max-width: 100vw; margin: auto auto 0;
@@ -90,7 +91,7 @@ html.ma-lock.ma-lock-g { scrollbar-gutter: stable; }
   #src-input.is-empty { min-height: 120px; }
   /* Tấm đáy (History, Hints): tay nắm, thân chừa thanh home; hộp giữa (Settings, Shortcuts) không. */
   .ma-dlg__in {
-    width: 100vw; max-width: 100vw; margin: auto 0 0; max-height: 85vh; border-radius: var(--r-lg) var(--r-lg) 0 0;
+    width: 100vw; max-width: 100vw; margin: auto 0 0; max-height: min(85vh, calc(var(--vvh, 100vh) - var(--s4))); border-radius: var(--r-lg) var(--r-lg) 0 0;
     padding: var(--s3) var(--sa-r) 0 var(--sa-l); background: var(--grip), var(--surface);
   }
   .ma-dlg:not(.ma-dlg--center) .ma-dlg__b { border-bottom-width: calc(var(--r-lg) + var(--sa-b)); }
@@ -127,6 +128,10 @@ html.ma-lock.ma-lock-g { scrollbar-gutter: stable; }
   .ma-dlg[open]:not(.ma-dlg--center) .ma-dlg__in { animation: ma-sheet-in .22s var(--ease); }
 }
 @keyframes ma-sheet-in { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+/* Đáy trang thêm chỗ bằng tấm khi tấm mở (ui/popup.js), để dòng cuối văn bản cuộn lên được trên tấm. */
+html.ma-sheet-sp body { padding-bottom: max(calc(var(--dock-h, 0px) + var(--sa-b)), var(--sheet-h)); }
+/* Bàn phím ảo (iOS không co khung nhìn; ui/dom.js đặt --kb): hộp thoại kết thúc ở mép bàn phím, tấm đáy và toast nằm trên nó. */
+.ma-dlg { height: calc(100% - var(--kb)); }
 .ma-pop.is-sheet .ma-chips {
   flex-wrap: nowrap; overflow-x: auto; margin-inline: calc(-1 * var(--s4)); padding-inline: var(--s4);
   scroll-padding-inline: var(--s4); scrollbar-width: none; overscroll-behavior-x: contain;

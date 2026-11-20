@@ -196,7 +196,7 @@ import { lineCount } from '../js/core/runs.js';
 // Số dòng ở thanh trên (#doc-meta) phải bằng số dòng ở lề Source: xuống dòng cuối không mở dòng mới.
 check('lineCount: như lề số dòng', eq(['', 'a', 'a\n', 'a\nb', 'a\n\n', '\n'].map(lineCount), [0, 1, 1, 2, 2, 1]));
 check('lineCount = số dòng của sourceLines', ['a\nb\n', 'x', '\n\nq'].every((t) => lineCount(t) === sourceLines(t, [], []).lines.length));
-import { popPlace } from '../js/core/place.js';
+import { fabSide, popPlace, sheetReveal } from '../js/core/place.js';
 {
   // Khung nhìn 1280×560, hộp 400×264. Dưới đoạn đủ chỗ: ngay dưới; chỉ trên đủ: lên trên; không bên nào đủ: vẫn trọn
   // trong khung nhìn; mép phải: lùi vào.
@@ -206,6 +206,13 @@ import { popPlace } from '../js/core/place.js';
   const mid = P({ top: 279, bottom: 299, left: 1200 });
   check('popPlace: hai bên đều không đủ thì vẫn trọn trong khung nhìn', mid.top >= 8 && mid.top + 264 <= 552 && mid.left === 864, JSON.stringify(mid));
   check('popPlace: đoạn đã cuộn khuất phía trên thì hộp vẫn trong khung nhìn', P({ top: -300, bottom: -280, left: 50 }).top === 8);
+  // Tấm đáy đỉnh ở 400, thanh trên đáy ở 56, cách 12: đoạn dưới tấm thì cuộn xuống tới khi đáy đoạn ở 388.
+  const R = (t, b) => sheetReveal(t, b, 400, 56, 12);
+  check('sheetReveal: đoạn bị tấm che thì cuộn xuống tới ngay trên tấm', R(466, 495) === 107 && R(380, 399) === 11);
+  check('sheetReveal: đoạn đã nằm gọn thì không cuộn', R(100, 380) === 0 && R(68, 120) === 0);
+  check('sheetReveal: đoạn dưới thanh trên thì cuộn lên, không đẩy đáy xuống dưới tấm', R(30, 60) === -38 && R(20, 380) === -8);
+  check('sheetReveal: đoạn cao hơn chỗ trống thì đáy sát tấm', R(10, 900) === 512);
+  check('fabSide: đoạn ở nửa dưới hay chạm nút thì nút lên trên', fabSide(500, 520, 529, 659) === 'top' && fabSide(100, 130, 529, 659) === 'bottom' && fabSide(200, 525, 529, 659) === 'top');
 }
 // ── end review: render & select ──
 // ── review: layout & scroll ──
