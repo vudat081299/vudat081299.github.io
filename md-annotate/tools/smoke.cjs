@@ -1729,7 +1729,9 @@ const cornerClash = (page) => page.evaluate(() => {
     };
     const tstate = (p) => p.evaluate(() => {
       const t = document.getElementById('tree'), r = t.getBoundingClientRect(), d = document.getElementById('doc').getBoundingClientRect(), b = document.getElementById('btn-tree');
+      const m = document.querySelector('main').getBoundingClientRect();
       return { shown: !!t.getClientRects().length, w: Math.round(r.width), left: Math.round(r.left), docL: Math.round(d.left), docW: Math.round(d.width),
+        gapL: m.left - (t.getClientRects().length ? r.right : 0), gapR: document.documentElement.clientWidth - m.right,
         split: !document.getElementById('tab-split').hidden, exp: b.getAttribute('aria-expanded'), lbl: b.title, btn: !b.hidden,
         pref: JSON.parse(localStorage.getItem('md-annotate:prefs:v1') || '{}').tree, rows: document.querySelectorAll('#tree-list .ma-trow').length };
     });
@@ -1781,7 +1783,7 @@ const cornerClash = (page) => page.evaluate(() => {
     await tp.mouse.move(gb.x, gb.y); await tp.mouse.down(); await tp.mouse.move(gb.x + 100, gb.y, { steps: 5 }); await tp.mouse.up(); await tp.waitForTimeout(150);
     ts = await tstate(tp);
     const tw = await tp.evaluate(() => JSON.parse(localStorage.getItem('md-annotate:prefs:v1')).treeW);
-    check('cây: kéo mép rộng thêm 100px, lưu prefs.treeW', ts.w === 348 && tw === 348 && ts.docL === ts.left + 348 + 16, JSON.stringify({ ...ts, tw }));
+    check('cây: kéo mép rộng thêm 100px, lưu prefs.treeW; cây vẫn ở mép trái, vùng làm việc căn giữa phần còn lại', ts.w === 348 && tw === 348 && ts.left === 0 && Math.abs(ts.gapL - ts.gapR) <= 1, JSON.stringify({ ...ts, tw }));
     await tp.mouse.move(gb.x + 100, gb.y); await tp.mouse.down(); await tp.mouse.move(gb.x + 600, gb.y, { steps: 5 }); await tp.mouse.up();
     check('cây: kéo quá thì dừng ở 420px', (await tstate(tp)).w === 420);
     await tp.focus('#tree-grip'); await tp.keyboard.press('ArrowLeft'); await tp.keyboard.press('ArrowLeft');
@@ -1936,8 +1938,8 @@ const cornerClash = (page) => page.evaluate(() => {
     check('cây 390: nút mở tấm trượt từ mép trái, hàng ≥ 44px, ⋯ luôn hiện', sh.open && sh.inDlg && sh.left === 0 && sh.w <= 390 && sh.rowH >= 44 && sh.more >= 44 && sh.exp === 'true', JSON.stringify(sh));
     check('cây 390: tấm không tràn ngang', (await overflow(mp2)) === 0 && (await mp2.$eval('#dlg-tree', (d) => Math.max(d.scrollWidth - d.clientWidth, document.getElementById('tree').scrollWidth - document.getElementById('tree').clientWidth))) <= 0);
     await mp2.tap(row('README.md')); await mp2.waitForTimeout(300);
-    const after = await mp2.evaluate(() => ({ open: document.getElementById('dlg-tree').open, home: document.getElementById('tree').parentNode.classList.contains('ma-grid'), last: window.__tree.log.slice(-1)[0][0] }));
-    check('cây 390: chạm file thì mở file, đóng tấm, cây về lưới', !after.open && after.home && after.last === 'open', JSON.stringify(after));
+    const after = await mp2.evaluate(() => ({ open: document.getElementById('dlg-tree').open, home: document.getElementById('tree').parentNode === document.body, last: window.__tree.log.slice(-1)[0][0] }));
+    check('cây 390: chạm file thì mở file, đóng tấm, cây về chỗ cũ (con của body)', !after.open && after.home && after.last === 'open', JSON.stringify(after));
     await tm.close();
   }
 
@@ -2106,7 +2108,7 @@ const cornerClash = (page) => page.evaluate(() => {
     };
     const dst = (p) => p.evaluate(() => {
       const b = document.getElementById('btn-tree'), t = document.getElementById('tree'), d = document.getElementById('doc');
-      return { dock: document.documentElement.classList.contains('ma-tree-on'), col: !!t.getClientRects().length && t.parentNode.classList.contains('ma-grid'),
+      return { dock: document.documentElement.classList.contains('ma-tree-on'), col: !!t.getClientRects().length && t.parentNode === document.body,
         doc: d.clientWidth, w: Math.round(t.getBoundingClientRect().width), mode: document.getElementById('views').dataset.mode, lbl: b.title, aria: b.getAttribute('aria-label'),
         exp: b.getAttribute('aria-expanded'), pop: b.getAttribute('aria-haspopup'), drawer: document.getElementById('dlg-tree').open,
         pref: JSON.parse(localStorage.getItem('md-annotate:prefs:v1') || '{}').tree };
@@ -2135,16 +2137,49 @@ const cornerClash = (page) => page.evaluate(() => {
     check('cây docked: Settings bề rộng 50% thì tấm trượt, Split giữ; Auto thì docked lại', drawer(s50) && s50.mode === 'split' && docked(await dst(p)), JSON.stringify(s50));
     await c.close();
 
-    // Không chớp khi nạp: 1920 Split, panel mở — cột cây không lần nào có mặt; 2560 thì đã quyết docked trước DOMContentLoaded.
+    /* Đo chớp khi nạp (dùng ở dưới). */
     const spy = () => {
       window.__seen = false;
       new MutationObserver(() => { if (document.documentElement && document.documentElement.classList.contains('ma-tree-on')) window.__seen = true; })
         .observe(document, { attributes: true, attributeFilter: ['class'], subtree: true });
       document.addEventListener('DOMContentLoaded', () => { window.__dcl = document.documentElement.classList.contains('ma-tree-on'); });
     };
-    ({ c, p } = await at(1920, 'split', false, null, spy));
+    /* Cột ở mép trái màn hình (MDAN-037): x = 0, từ đáy thanh trên tới đáy khung nhìn (≤ 1080px: tới đỉnh thanh đáy); vùng
+       làm việc căn giữa phần còn lại, phần trong thanh trên thẳng hàng với nó, nền thanh trên trọn bề ngang; không đè panel,
+       dải tiến độ; thanh trên nằm trên cây. */
+    const geo = (p) => p.evaluate(() => {
+      const R = (el) => el.getBoundingClientRect(), cw = document.documentElement.clientWidth, tree = document.getElementById('tree');
+      const t = R(tree), m = R(document.querySelector('main')), bin = R(document.querySelector('.ma-bar__in')), bar = R(document.querySelector('.ma-bar'));
+      const pn = document.getElementById('panel'), mm = [...document.querySelectorAll('.ma-mm')].filter((x) => x.getClientRects().length).map((x) => R(x).left);
+      const dock = document.getElementById('dock'), dk = dock.getClientRects().length ? R(dock).top : null;
+      const hit = document.elementFromPoint(t.left + t.width / 2, t.top + t.height / 2), top = document.elementFromPoint(t.left + 10, bar.top + 10);
+      return { tl: t.left, tt: t.top, tb: t.bottom, tr: t.right, barB: bar.bottom, barL: bar.left, barW: bar.width, vh: innerHeight, cw,
+        gapL: m.left - t.right, gapR: cw - m.right, binL: bin.left - m.left, binR: bin.right - m.right, panelL: pn.getClientRects().length ? R(pn).left : null,
+        mm, dockT: dk, inTree: tree.contains(hit), barOver: !!top && !!top.closest('.ma-bar'), ov: document.documentElement.scrollWidth - cw };
+    });
+    const edgeOK = (g) => g.tl === 0 && Math.abs(g.tt - g.barB) <= 0.5 && (g.dockT == null ? g.tb === g.vh : g.tb <= g.dockT) && Math.abs(g.gapL - g.gapR) <= 1
+      && Math.abs(g.binL) <= 1 && Math.abs(g.binR) <= 1 && g.barL === 0 && g.barW === g.cw && (g.panelL == null || g.panelL >= g.tr) && g.mm.every((x) => x >= g.tr)
+      && g.inTree && g.barOver && g.ov === 0;
+
+    for (const w of [1920, 2560]) {
+      ({ c, p } = await at(w, 'split', false));
+      s = await dst(p);
+      const g = await geo(p);
+      check(`cây docked ${w}: Split, panel mở — cột ở mép trái (x = 0), từ đáy thanh trên tới đáy khung nhìn; vùng làm việc căn giữa phần còn lại; thanh trên thẳng hàng; không đè panel, dải tiến độ`,
+        docked(s) && s.mode === 'split' && s.doc === (w === 1920 ? 854 : 1192) && edgeOK(g), JSON.stringify({ s, g }));
+      await p.click('.ma-tab[data-view="view"]'); await p.waitForTimeout(200);
+      const gv = await geo(p);
+      check(`cây docked ${w}: Preview (trang cuộn) — vẫn ở mép trái, trọn chiều cao, dải tiến độ không chạm cây`, edgeOK(gv) && gv.mm.length > 0, JSON.stringify(gv));
+      await p.evaluate(() => window.scrollTo(0, 600)); await p.waitForTimeout(100);
+      const gs = await geo(p);
+      check(`cây docked ${w}: cuộn trang thì cây đứng yên dưới thanh trên`, gs.tt === gv.tt && gs.tb === gv.tb && gs.tl === 0, JSON.stringify(gs));
+      await c.close();
+    }
+
+    // Không chớp khi nạp: 1440 Split, panel mở — cột cây không lần nào có mặt; 1920, 2560 thì đã quyết docked trước DOMContentLoaded.
+    ({ c, p } = await at(1440, 'split', false, null, spy));
     s = await dst(p);
-    check('cây tấm trượt: 1920 Split, panel mở — #doc 918 giữ Split, nút "Files"', drawer(s) && !s.drawer && s.mode === 'split' && s.doc === 918, JSON.stringify(s));
+    check('cây tấm trượt: 1440 Split, panel mở — #doc 854 giữ Split, nút "Files"', drawer(s) && !s.drawer && s.mode === 'split' && s.doc === 854, JSON.stringify(s));
     check('cây tấm trượt: lúc nạp cột cây không lần nào hiện (không chớp)', (await p.evaluate(() => window.__seen)) === false && (await p.evaluate(() => window.__dcl)) === false);
     // Nút và Ctrl+B ở chế độ tấm trượt: chỉ mở / đóng tấm, không đổi prefs.tree.
     await p.click('#btn-tree'); await p.waitForTimeout(250);
@@ -2153,25 +2188,25 @@ const cornerClash = (page) => page.evaluate(() => {
     check('cây tấm trượt: bấm nút mở tấm trái, aria-expanded true, prefs.tree không đổi', s.drawer && inDlg && s.exp === 'true' && s.pref === undefined, JSON.stringify(s));
     await p.click('#tree-list .ma-trow[data-id="b"]'); await p.waitForTimeout(250);
     s = await dst(p);
-    check('cây tấm trượt: chọn file thì mở nó, đóng tấm, cây về lưới (ẩn)', !s.drawer && !s.col && /Second file/.test(await p.textContent('#v-md')) && s.exp === 'false', JSON.stringify(s));
+    check('cây tấm trượt: chọn file thì mở nó, đóng tấm, cây về chỗ cũ (ẩn)', !s.drawer && !s.col && /Second file/.test(await p.textContent('#v-md')) && s.exp === 'false', JSON.stringify(s));
     await p.evaluate(() => document.activeElement && document.activeElement.blur());
     await p.keyboard.press('Control+B'); await p.waitForTimeout(200);
     const kb = await dst(p);
     await p.keyboard.press('Control+B'); await p.waitForTimeout(200);
     check('cây tấm trượt: Ctrl+B mở tấm, lần nữa đóng; prefs.tree không đổi', kb.drawer && kb.pref === undefined && !(await dst(p)).drawer && (await dst(p)).pref === undefined, JSON.stringify(kb));
-    // Thu panel thành thanh dọc: đủ chỗ, docked (đo: #doc ≥ 849 cạnh cây); mở panel lại: tấm trượt.
+    // Thu panel thành thanh dọc: đủ chỗ, docked (#doc 1070 cạnh cây); mở panel lại: tấm trượt.
     await p.click('#btn-rail'); await p.waitForTimeout(200);
     s = await dst(p);
-    check('cây docked: 1920 thanh dọc — cột cạnh Split', docked(s) && s.mode === 'split' && s.doc >= 849, JSON.stringify(s));
+    check('cây docked: 1440 thanh dọc — cột cạnh Split (#doc 1070)', docked(s) && s.mode === 'split' && s.doc === 1070 && edgeOK(await geo(p)), JSON.stringify(s));
     await p.click('#btn-unrail'); await p.waitForTimeout(200);
     check('cây tấm trượt: mở panel lại thì tấm trượt, Split giữ', drawer(await dst(p)) && (await dst(p)).mode === 'split', JSON.stringify(await dst(p)));
-    // Đổi cỡ cửa sổ: tấm đang mở, cửa sổ rộng ra đủ chỗ thì tấm đóng, cây vào lưới.
+    // Đổi cỡ cửa sổ: tấm đang mở, cửa sổ rộng ra đủ chỗ thì tấm đóng, cây thành cột.
     await p.click('#btn-tree'); await p.waitForTimeout(200);
-    await p.setViewportSize({ width: 2560, height: 900 }); await p.waitForTimeout(250);
-    s = await dst(p);
-    check('cây docked: tấm mở, cửa sổ 2560 — tấm đóng, cây vào lưới', docked(s) && !s.drawer && s.mode === 'split', JSON.stringify(s));
     await p.setViewportSize({ width: 1920, height: 900 }); await p.waitForTimeout(250);
-    check('cây tấm trượt: hẹp lại 1920 — ra khỏi lưới, Split giữ', drawer(await dst(p)) && (await dst(p)).mode === 'split');
+    s = await dst(p);
+    check('cây docked: tấm mở, cửa sổ 1920 — tấm đóng, cây thành cột', docked(s) && !s.drawer && s.mode === 'split', JSON.stringify(s));
+    await p.setViewportSize({ width: 1440, height: 900 }); await p.waitForTimeout(250);
+    check('cây tấm trượt: hẹp lại 1440 — thành tấm trượt, Split giữ', drawer(await dst(p)) && (await dst(p)).mode === 'split');
     // Ctrl+B ở chế độ docked đổi prefs.tree (như trước).
     await p.setViewportSize({ width: 2560, height: 900 }); await p.waitForTimeout(250);
     await p.keyboard.press('Control+B'); await p.waitForTimeout(150);
@@ -2179,9 +2214,11 @@ const cornerClash = (page) => page.evaluate(() => {
     check('cây docked: Ctrl+B ẩn cột, lưu prefs.tree = false', !s.dock && s.pref === false && s.lbl === 'Show files' && s.exp === 'false', JSON.stringify(s));
     await c.close();
 
-    ({ c, p } = await at(2560, 'split', false, null, spy));
-    check('cây docked: 2560 lúc nạp — đã docked trước DOMContentLoaded', (await p.evaluate(() => window.__dcl)) === true && docked(await dst(p)));
-    await c.close();
+    for (const w of [1920, 2560]) {
+      ({ c, p } = await at(w, 'split', false, null, spy));
+      check(`cây docked: ${w} lúc nạp — đã docked trước DOMContentLoaded`, (await p.evaluate(() => window.__dcl)) === true && docked(await dst(p)));
+      await c.close();
+    }
 
     ({ c, p } = await at(1280, 'split', false));
     s = await dst(p);
@@ -2190,7 +2227,7 @@ const cornerClash = (page) => page.evaluate(() => {
 
     ({ c, p } = await at(1440, 'view', false));
     s = await dst(p);
-    check('cây docked: 1440 Preview — cột cạnh Preview, #doc 590 ≥ 580', docked(s) && s.mode === 'view' && s.doc === 590 && (await overflow(p)) === 0, JSON.stringify(s));
+    check('cây docked: 1440 Preview — cột cạnh Preview, #doc 766 ≥ 580', docked(s) && s.mode === 'view' && s.doc === 766 && edgeOK(await geo(p)), JSON.stringify(s));
     check('cây docked: tab Split vẫn có (chọn thì cây nhường chỗ)', await p.isVisible('#tab-split'));
     // Đổi chế độ đọc: xét lại ngay.
     await p.click('#tab-split'); await p.waitForTimeout(200);
@@ -2202,12 +2239,40 @@ const cornerClash = (page) => page.evaluate(() => {
     await p.click('.ma-tab[data-view="edit"]'); await p.waitForTimeout(200);
     check('cây: Edit giữ theo chế độ đọc trước (Source): vẫn docked', docked(await dst(p)));
     await p.click('.ma-tab[data-view="view"]'); await p.waitForTimeout(150);
-    // Kéo mép cây khi docked: dừng ở chỗ còn lại (590 + 248 − 580 = 258), không đẩy cây sang tấm trượt.
-    const gb = await p.$eval('#tree-grip', (g) => { const r = g.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; });
+    // Kéo mép cây: 1440 còn chỗ tới 420px (trần), vùng làm việc vẫn căn giữa phần còn lại.
+    let gb = await p.$eval('#tree-grip', (g) => { const r = g.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; });
     await p.mouse.move(gb.x, gb.y); await p.mouse.down(); await p.mouse.move(gb.x + 200, gb.y, { steps: 5 }); await p.mouse.up(); await p.waitForTimeout(150);
     s = await dst(p);
-    check('cây docked: kéo mép rộng thêm 200px dừng ở 258px, vẫn docked', docked(s) && s.w === 258 && s.doc === 580, JSON.stringify(s));
+    check('cây docked: 1440 kéo mép rộng thêm 200px dừng ở 420px, #doc 594, vẫn ở mép trái, căn giữa', docked(s) && s.w === 420 && s.doc === 594 && edgeOK(await geo(p)), JSON.stringify(s));
     await c.close();
+
+    // 1280 Preview: kéo mép dừng ở chỗ còn lại (1280 − 426 − 580 = 274), không đẩy cây sang tấm trượt.
+    ({ c, p } = await at(1280, 'view', false));
+    s = await dst(p);
+    check('cây docked: 1280 Preview — #doc 606', docked(s) && s.doc === 606 && edgeOK(await geo(p)), JSON.stringify(s));
+    gb = await p.$eval('#tree-grip', (g) => { const r = g.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; });
+    await p.mouse.move(gb.x, gb.y); await p.mouse.down(); await p.mouse.move(gb.x + 200, gb.y, { steps: 5 }); await p.mouse.up(); await p.waitForTimeout(150);
+    s = await dst(p);
+    check('cây docked: 1280 kéo mép rộng thêm 200px dừng ở 274px, #doc 580, vẫn docked', docked(s) && s.w === 274 && s.doc === 580, JSON.stringify(s));
+    await c.close();
+
+    // 1024 (panel ra khỏi lưới): Preview docked, cây dừng trên thanh đáy; Split thì tấm trượt.
+    ({ c, p } = await at(1024, 'view', false));
+    s = await dst(p);
+    const g10 = await geo(p);
+    check('cây docked: 1024 Preview — cột ở mép trái, dừng trên thanh đáy, không tràn ngang', docked(s) && s.doc === 726 && edgeOK(g10) && g10.dockT != null, JSON.stringify({ s, g10 }));
+    await p.click('#tab-split'); await p.waitForTimeout(200);
+    check('cây tấm trượt: 1024 Split — tấm trượt', drawer(await dst(p)) && (await dst(p)).mode === 'split' && (await overflow(p)) === 0, JSON.stringify(await dst(p)));
+    await c.close();
+
+    // Điện thoại 390: không bao giờ docked, không tràn ngang.
+    {
+      const pc = await browser.newContext({ viewport: { width: 390, height: 760 }, hasTouch: true, isMobile: true });
+      const pp = await pc.newPage(); watch(pp);
+      await pp.goto(BASE); await pp.evaluate(seed, ['view', false]); await pp.goto(BASE); await pp.waitForFunction(() => window.marked && window.DOMPurify); await pp.waitForTimeout(250);
+      check('cây 390: tấm trượt, không tràn ngang', drawer(await dst(pp)) && (await overflow(pp)) === 0, JSON.stringify(await dst(pp)));
+      await pc.close();
+    }
   }
 
   /* ---------- Thanh trên ở điện thoại: Files, tên, History, Settings, More; New session, theme, Shortcuts trong menu More ---------- */

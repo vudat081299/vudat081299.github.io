@@ -28,7 +28,9 @@ a { color: inherit; }
 /* Thanh cuộn mảnh, nhạt, theo theme. */
 * { scrollbar-width: thin; scrollbar-color: var(--sb-thumb) transparent; }
 .ma-panel__body, .ma-dlg__b, .ma-out, .ma-opts__in, .ma-view { scrollbar-gutter: stable; }
-.ma-wrap { width: var(--wrap-w, min(100%, max(70vw, 1280px))); margin-inline: auto; padding: 0 var(--pad); } /* mặc định ~70%, ≥ 1280px; chỉnh ở Layout (MDAN-005) */
+/* Vùng làm việc: --wrap-f của khung nhìn còn lại (trừ cây docked), không hẹp hơn --wrap-min, không quá chỗ có; căn giữa (MDAN-005,
+   MDAN-037). core/panes.js wrapWidth tính y như vậy. */
+.ma-wrap { width: min(100%, max(calc(var(--wrap-f) * (100vw - var(--tree-off))), var(--wrap-min))); margin-inline: auto; padding: 0 var(--pad); }
 svg.ma-i { width: 16px; height: 16px; flex: none; }
 
 /* THANH TRÊN */

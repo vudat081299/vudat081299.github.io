@@ -31,6 +31,7 @@
 - MDAN-032 · Nạp folder hiện cây mà không ghi lựa chọn ẩn / hiện · `md-annotate/js/ui/tree.js`, `md-annotate/js/ui/files.js`
 - MDAN-035 · Cây file là cột khi văn bản còn đủ rộng, không thì trượt từ trái · thay cho MDAN-023 · `md-annotate/js/ui/tree.js`, `md-annotate/js/ui/files.js`, `md-annotate/js/core/panes.js`, `md-annotate/css/tree.css`
 - MDAN-036 · Thanh trên ở điện thoại giữ nút chính, còn lại trong menu More · `md-annotate/index.html`, `md-annotate/js/ui/bar.js`, `md-annotate/css/mobile.css`
+- MDAN-037 · Cây file docked nằm sát mép trái màn hình, vùng làm việc căn giữa phần còn lại · `md-annotate/css/tree.css`, `md-annotate/css/base.css`, `md-annotate/js/ui/tree.js`, `md-annotate/js/core/panes.js`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Nguồn tô màu cú pháp kiểu VS Code
@@ -261,3 +262,10 @@ không đổi. Khi là cột, nút và Ctrl/⌘ + B ẩn / hiện cây, lựa ch
 Điện thoại (≤ 720px): trái là nút *Files* (biểu tượng sidebar) rồi tên gọn; phải là *History*, *Settings* và *More* (⋯).
 *New session*, đổi theme sáng / tối và *Shortcuts* nằm trong *More*. *History* (đổi phiên) và *Settings* (cỡ chữ, khổ
 chữ, Focus) là việc dùng thường khi đọc trên điện thoại; mở phiên mới, đổi theme ít dùng. Máy rộng giữ nguyên các nút.
+
+## MDAN-037 · Cây file docked nằm sát mép trái màn hình, vùng làm việc căn giữa phần còn lại
+20/11/2026 · `md-annotate/css/tree.css`, `md-annotate/css/base.css`, `md-annotate/js/ui/tree.js`, `md-annotate/js/core/panes.js`
+
+Khi là cột (MDAN-035), cây là thanh bên kiểu trình soạn mã: sát mép trái màn hình, từ dưới thanh trên tới đáy màn hình,
+cuộn riêng, chỉ có viền phải. Thanh trên vẫn trọn bề ngang. Vùng làm việc (MDAN-005: 70%, không hẹp hơn 1280px) tính
+trên phần màn hình còn lại và căn giữa trong đó; nút, tên trang trên thanh trên thẳng hàng với vùng làm việc.

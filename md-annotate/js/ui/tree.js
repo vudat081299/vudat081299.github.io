@@ -1,10 +1,12 @@
-/* Cây folder + file của phiên: cột trái của lưới (docked) khi còn chỗ, không thì tấm trượt trái #dlg-tree, ở mọi bề rộng.
+/* Cây folder + file của phiên: cột fixed sát mép trái màn hình (docked) khi còn chỗ, không thì tấm trượt trái #dlg-tree, ở mọi
+   bề rộng. Docked: trang dời sang phải --tree, vùng làm việc căn giữa phần còn lại (css/tree.css, MDAN-037).
    Chỉ vẽ và nghe sự kiện: không đọc, không ghi phiên. Nơi gọi đưa dữ liệu và các hàm việc qua renderTree(model, actions); mọi
    thay đổi cây đi qua actions, rồi nơi gọi vẽ lại bằng renderTree. Hàng giữ phần tử qua các lần vẽ (khoá theo id).
    model:   { sid, nodes, open, collapsed, counts: { fileId: { c, rv } }, title } (sid: id phiên)
    actions: open(id), toggle(dirId), newFile(parentId), newDir(parentId), rename(id, name) → lỗi | '', move(id, parentId)
             → lỗi | '', remove(id), importDir(FileList | entry[], parentId), download(id | null), collapseAll().
-   Docked hay tấm trượt: core/panes.js treeDocks (#doc nhường cây xong vẫn đủ chỗ cho chế độ đọc đã chọn, lastRead), xét
+   Docked hay tấm trượt: core/panes.js treeDocks (#doc, khi vùng làm việc tính trong phần khung nhìn còn lại, vẫn đủ chỗ cho
+   chế độ đọc đã chọn, lastRead; số đo geo()), xét
    lại khi #doc đổi bề rộng, cửa sổ đổi cỡ, đổi chế độ xem (layoutTree), vẽ lại cây. prefs.tree (chưa chọn: hiện khi phiên có
    ≥ 2 mục; chỉ nút và Ctrl/⌘ + B ghi) là "muốn thấy cây": docked thì nút #btn-tree / Ctrl/⌘ + B đổi nó (html.ma-tree-on);
    tấm trượt thì chỉ mở tấm. revealTree(): hiện cho phiên đang vẽ, không ghi prefs (MDAN-032); đổi phiên thì thôi. Bề rộng:
@@ -14,7 +16,7 @@
    Xuất: editName, focusRow, initTree, layoutTree, renderTree, revealTree, treeTakes.
    Dùng: core/tree.js, core/panes.js, ui/store.js, ui/dom.js, ui/views.js. */
 import { canMove, moveTargets, visibleRows } from '../core/tree.js';
-import { treeDocks, treeRoom, viewNeed } from '../core/panes.js';
+import { docRoom, treeDocks, treeRoom, viewNeed } from '../core/panes.js';
 import { prefs, savePrefs } from './store.js';
 import { $, dragBar, droppedItems, h, icon, toast, typing } from './dom.js';
 import { lastRead, refreshSplit } from './views.js';
@@ -38,16 +40,22 @@ function call(name) {
 }
 function parentOf(id) { var n = byId[id]; return n && n.parent != null ? n.parent : null; }
 
-/* ẨN / HIỆN. docked: cây được nằm trong lưới (chưa chắc đang hiện); không thì nút mở tấm trượt. */
+/* ẨN / HIỆN. docked: cây được là cột trái (chưa chắc đang hiện); không thì nút mở tấm trượt. */
 function wantShown() {
   if (model && shownFor === model.sid) return true;
   return typeof prefs.tree === 'boolean' ? prefs.tree : !!(model && model.nodes.length > 1);
 }
 function treeShown() { return !!model && docked && wantShown(); }
-function gapW() { return parseFloat(getComputedStyle(home || $('tree').parentNode).columnGap) || 0; }
-/* Cột cây chiếm bao nhiêu của #doc (cây + khe), 0 khi không trong lưới. ui/views.js cộng lại để biết Split có chỗ không. */
-export function treeTakes() { return wasOn && $('tree').parentNode === home ? $('tree').offsetWidth + gapW() : 0; }
-function room() { return { avail: $('doc').clientWidth + treeTakes(), gap: gapW(), need: viewNeed(lastRead) }; }
+/* Số đo cho core/panes.js: luật bề rộng .ma-wrap đọc từ CSS (--wrap-f, --wrap-min: một chỗ ghi số, layout.js đổi), phần
+   không phải #doc của vùng làm việc (chrome: không đổi theo cây vì cây không ở trong lưới). */
+function geo() {
+  var cs = getComputedStyle(document.documentElement), main = $('doc').closest('.ma-wrap');
+  return { client: document.documentElement.clientWidth, vw: window.innerWidth,
+    frac: parseFloat(cs.getPropertyValue('--wrap-f')) || 0.7, floor: parseFloat(cs.getPropertyValue('--wrap-min')) || 0,
+    chrome: main.getBoundingClientRect().width - $('doc').clientWidth, need: viewNeed(lastRead) };
+}
+/* Cột cây lấy của #doc bao nhiêu, 0 khi không docked. ui/views.js cộng lại để biết Split có chỗ không khi không có cột. */
+export function treeTakes() { return wasOn && $('tree').parentNode === home ? docRoom(geo(), 0) - $('doc').clientWidth : 0; }
 function syncBtn() {
   var b = $('btn-tree');
   b.hidden = !model;
@@ -56,9 +64,8 @@ function syncBtn() {
   b.setAttribute('aria-expanded', String(open)); b.setAttribute('aria-label', lbl); b.title = lbl;
 }
 function applyShown() {
-  var r = room();
-  docked = treeDocks({ avail: r.avail, tree: treeW, gap: r.gap, need: r.need });
-  if (docked && $('dlg-tree').open) { $('dlg-tree').close(); goHome(); }   // đủ chỗ lại: tấm đóng, cây về lưới ngay (sự kiện close đến sau)
+  docked = treeDocks(geo(), treeW);
+  if (docked && $('dlg-tree').open) { $('dlg-tree').close(); goHome(); }   // đủ chỗ lại: tấm đóng, cây về cột ngay (sự kiện close đến sau)
   var on = treeShown();
   syncBtn();
   if (on === wasOn) return;
@@ -85,7 +92,7 @@ function toggle() {
   if ($('dlg-tree').open) $('dlg-tree').close(); else openSheet();
 }
 
-/* TẤM TRƯỢT (không đủ chỗ cho cột): cây vào #dlg-tree khi mở, đóng thì về chỗ cũ trong lưới. */
+/* TẤM TRƯỢT (không đủ chỗ cho cột): cây vào #dlg-tree khi mở, đóng thì về chỗ cũ (con của body). */
 var home = null, homeNext = null;
 function openSheet() {
   closeMenu(false);
@@ -497,7 +504,7 @@ export function initTree() {
   var grab = 0;   // chỗ bấm cách mép phải cây bao nhiêu: kéo không làm cây nhảy
   g.addEventListener('pointerdown', function (e) { grab = $('tree').getBoundingClientRect().right - e.clientX; });
   /* Docked: không rộng quá chỗ còn lại (kéo không đẩy cây sang tấm trượt). */
-  var cap = function () { return Math.max(treeW, treeRoom(room())); };
+  var cap = function () { return Math.max(treeW, treeRoom(geo())); };
   dragBar(g, function (x) { treeW = applyW(x + grab - $('tree').getBoundingClientRect().left, cap()); },
     function () { prefs.treeW = treeW; savePrefs(); });
   g.addEventListener('keydown', function (e) {

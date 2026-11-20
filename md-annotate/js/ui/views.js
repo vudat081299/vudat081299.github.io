@@ -11,7 +11,7 @@ import { clearPicks, repaintPicks } from './picks.js';
 import { layoutTree, treeTakes } from './tree.js';
 
 /* Split chỉ khi mỗi khung được ≥ 420px. Muốn Split mà chưa đủ chỗ thì hiện Preview, prefs.view vẫn nhớ 'split'.
-   Đo #doc như khi không có cột cây: chọn Split thì cây nhường chỗ, sang tấm trượt (ui/tree.js). */
+   Đo #doc như khi không có cột cây (treeTakes): chọn Split thì cây nhường chỗ, sang tấm trượt (ui/tree.js). */
 function splitOK() { return splitFits($('doc').clientWidth + treeTakes()); }
 export var view = prefs.view || 'view';
 export var lastRead = view === 'edit' ? 'view' : view;
@@ -36,7 +36,7 @@ export function setView(v) {
   if (v !== 'edit' && pop.mode) closePop(true);
   /* Chọn dòng chỉ có ở nơi có lề số dòng (Source, Split): sang Edit / Preview thì thoát. */
   if (v === 'edit' || v === 'view') clearPicks(); else repaintPicks();
-  layoutTree();   // chế độ đọc đã chọn đổi: cây vào / ra lưới
+  layoutTree();   // chế độ đọc đã chọn đổi: cây thành cột hay tấm trượt
 }
 export function isSplit() { return $('views').dataset.mode === 'split'; }
 /* Bề rộng thay đổi (cửa sổ, panel, thu gọn): xem lại Split và chiều cao hai khung.

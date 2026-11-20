@@ -3,7 +3,7 @@
 import { lexSpans, pairBlocks } from '../js/core/blocks.js';
 import { numberSections, lineSections, bandBounds, bandPick, spanAt } from '../js/core/sections.js';
 import { syncCurves, followTop } from '../js/core/sync-math.js';
-import { paneHeight, READ_MIN, splitFits, treeDocks, treeRoom, viewNeed } from '../js/core/panes.js';
+import { docRoom, paneHeight, READ_MIN, splitFits, treeDocks, treeRoom, viewNeed, wrapWidth } from '../js/core/panes.js';
 import { normShortcuts } from '../js/core/shortcuts.js';
 
 let fails = 0;
@@ -254,15 +254,25 @@ import { popPlace } from '../js/core/place.js';
 check('splitFits: hai khung 420px + vách 9px', !splitFits(848) && splitFits(849));
 check('viewNeed: Split cần hai khung + vách, chế độ khác cần READ_MIN (580)', viewNeed('split') === 849 && viewNeed('view') === READ_MIN && viewNeed('src') === 580 && viewNeed('edit') === 580);
 {
-  // Số đo thật (vùng làm việc mặc định, panel 360px / thanh dọc 56px, cây 248px, khe 16px): avail là #doc khi không có cây.
-  const dock = (avail, v) => treeDocks({ avail, tree: 248, gap: 16, need: viewNeed(v) });
-  check('treeDocks: 2560 panel mở (1366) — Split docked', dock(1366, 'split'));
-  check('treeDocks: 1920 panel mở (918) — Split thành tấm trượt, Preview docked', !dock(918, 'split') && dock(918, 'view'));
-  check('treeDocks: 1920 thanh dọc (1222) — Split docked', dock(1222, 'split'));
-  check('treeDocks: 1280 / 1440 panel mở (854) — Split tấm trượt, Preview docked (590 ≥ 580)', !dock(854, 'split') && dock(854, 'view'));
-  check('treeDocks: mốc đúng bằng need thì docked, thiếu 1px thì không', treeDocks({ avail: 1113, tree: 248, gap: 16, need: 849 }) && !treeDocks({ avail: 1112, tree: 248, gap: 16, need: 849 }));
-  check('treeDocks: điện thoại 390 (356) không bao giờ docked, kể cả cây 180px', !treeDocks({ avail: 356, tree: 180, gap: 16, need: viewNeed('view') }));
-  check('treeRoom: cây rộng nhất còn docked', treeRoom({ avail: 1366, gap: 16, need: 849 }) === 501 && treeRoom({ avail: 854, gap: 16, need: 580 }) === 258);
+  /* Cây docked ở mép trái màn hình, vùng làm việc căn giữa phần còn lại (MDAN-037). Số đo thật, Auto (70%, sàn 1280px):
+     chrome = lề 2×24 + viền #doc 2 + khe 16 + panel 360 = 426 (thanh dọc 56: 122; ≤ 1080px panel ra khỏi lưới: 50). */
+  const g = (vw, chrome, v, o) => ({ client: vw, vw, frac: 0.7, floor: 1280, chrome, need: viewNeed(v), ...(o || {}) });
+  check('wrapWidth: không cây = 70vw, sàn 1280, không quá khung nhìn', wrapWidth(g(2560, 426), 0) === 1792 && wrapWidth(g(1920, 426), 0) === 1344 && wrapWidth(g(1440, 426), 0) === 1280 && wrapWidth(g(1024, 50), 0) === 1024);
+  check('wrapWidth: tính trong phần khung nhìn trừ cây', wrapWidth(g(2560, 426), 248) === 0.7 * 2312 && wrapWidth(g(1920, 426), 248) === 1280 && wrapWidth(g(1440, 426), 248) === 1192);
+  check('wrapWidth: Settings 50% (sàn 720) và thanh cuộn (client < vw)', wrapWidth(g(2560, 426, 'view', { frac: 0.5, floor: 720 }), 248) === 1156 && wrapWidth(g(1300, 426, 'view', { client: 1285 }), 248) === 1037);
+  check('docRoom: #doc = vùng làm việc − chrome', docRoom(g(1920, 426), 248) === 854 && docRoom(g(1920, 426), 0) === 918);
+  const dock = (vw, chrome, v) => treeDocks(g(vw, chrome, v), 248);
+  check('treeDocks: 2560, 1920 panel mở — Split docked (#doc 1192, 854)', dock(2560, 426, 'split') && dock(1920, 426, 'split'));
+  check('treeDocks: 1440 / 1280 panel mở — Split tấm trượt (766, 606), Preview docked', !dock(1440, 426, 'split') && dock(1440, 426, 'view') && !dock(1280, 426, 'split') && dock(1280, 426, 'view'));
+  check('treeDocks: thanh dọc — Split docked ở 1440 (1070) và 1280 (910)', dock(1440, 122, 'split') && dock(1280, 122, 'split'));
+  check('treeDocks: 1024 (panel ra khỏi lưới) Preview docked, Split không', dock(1024, 50, 'view') && !dock(1024, 50, 'split'));
+  check('treeDocks: mốc đúng bằng need thì docked, thiếu 1px thì không', treeDocks(g(1525, 426, 'split'), 250) && !treeDocks(g(1525, 426, 'split'), 251));
+  check('treeDocks: điện thoại 390 không bao giờ docked, kể cả cây 180px', !treeDocks(g(390, 34, 'view'), 180));
+  check('treeDocks: Settings 50% ở 2560 — Split tấm trượt', !treeDocks(g(2560, 426, 'split', { frac: 0.5, floor: 720 }), 248));
+  check('treeRoom: chỗ còn lại (sàn đủ) — 1280 Preview 274, 1920 Split 645', treeRoom(g(1280, 426, 'view')) === 274 && treeRoom(g(1920, 426, 'split')) === 645);
+  check('treeRoom: sàn không đủ thì theo phần 70% — 50% ở 2560 Split', treeRoom(g(2560, 426, 'split', { frac: 0.5, floor: 720 })) === 10);
+  const rm = (o) => { const t = treeRoom(o); return treeDocks(o, t) && !treeDocks(o, t + 1); };
+  check('treeRoom: là cây rộng nhất còn docked (mọi trường hợp trên)', [g(1280, 426, 'view'), g(1920, 426, 'split'), g(2560, 426, 'split', { frac: 0.5, floor: 720 }), g(1440, 122, 'split'), g(2560, 426, 'split', { frac: 0.6, floor: 720 })].every(rm));
 }
 check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi ≥ 320', eq(paneHeight(900, 100.5, 0), { h: 782, fit: true }) && eq(paneHeight(500, 100, 76), { h: 320, fit: false }));
 // ── end review: layout & scroll ──
