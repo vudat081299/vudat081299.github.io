@@ -1,7 +1,7 @@
 /* Hộp nhận xét: mở cho đoạn mới (openNew) hoặc để sửa (openEdit), tô đoạn đang chọn (ma-pending),
    gợi ý dạng chip, lưu, đóng. Đoạn mới có thể là các dòng chọn ở lề số (pending.lines, ui/picks.js): hộp có thêm
    hàng đầu (số dòng, nhãn, nút kéo), cập nhật tại chỗ khi chọn thêm / bỏ dòng (updateNew), và không đóng khi bấm
-   ra ngoài (MDAN-014).
+   ra ngoài (MDAN-014). Tấm đáy (máy hẹp / cảm ứng) có nền mờ #pop-scrim, trừ khi chọn nhiều dòng (MDAN-026).
    Xuất: closePop, initPopup, openEdit, openNew, paintPending, pending, pop, popDirty, renderPopHints, updateNew.
    Dùng: core/text.js, core/anchor.js, core/hints.js, core/comments.js, core/place.js, core/picks.js, ui/dom.js,
      ui/anchor-dom.js, ui/state.js, ui/hints.js, ui/marks.js, ui/render.js, ui/list.js, ui/views.js,
@@ -12,7 +12,7 @@ import { chipHints, pct } from '../core/hints.js';
 import { addComment, editComment, findComment, overlapWarning, partsOf } from '../core/comments.js';
 import { popPlace } from '../core/place.js';
 import { pickSummary } from '../core/picks.js';
-import { $, h, mqSheet, paintHL, shown, toast } from './dom.js';
+import { $, h, mqSheet, paintHL, shown, syncBar, toast } from './dom.js';
 import { rangeAt } from './anchor-dom.js';
 import { D, scheduleSave } from './state.js';
 import { recordUse, seedState, stats } from './hints.js';
@@ -69,6 +69,7 @@ export function updateNew(info) {
   fillNew();
   markLong();
   renderPopHints();
+  syncScrim();
 }
 function fillNew() {
   var multi = !!pending.lines;
@@ -132,6 +133,14 @@ function showPop(rect) {
   } else {
     el.style.top = ''; el.style.left = '';
   }
+  syncScrim();
+}
+/* Nền mờ sau tấm đáy: chỉ khi tấm hiện và không ở chế độ chọn dòng (vẫn bấm lề số các dòng khác, MDAN-026). */
+function syncScrim() {
+  var on = !$('pop').hidden && $('pop').classList.contains('is-sheet') && !(pop.mode === 'new' && pending && pending.lines);
+  if ($('pop-scrim').hidden !== on) return;
+  $('pop-scrim').hidden = !on;
+  syncBar();
 }
 function clearPending() {
   pending = null;
@@ -143,6 +152,7 @@ export function closePop(silent) {
   clearPending();
   pop.mode = null; pop.id = null; pop.orig = '';
   $('pop').hidden = true;
+  syncScrim();
   if (!silent) onSelChange();
 }
 export function popDirty() {
@@ -222,6 +232,7 @@ export function initPopup() {
   window.addEventListener('resize', function () {
     if (pop.mode && !$('pop').classList.contains('is-sheet') && mqSheet.matches) {
       $('pop').classList.add('is-sheet'); $('pop').style.top = ''; $('pop').style.left = ''; $('pop-grip').hidden = true;
+      syncScrim();
     }
   });
 }

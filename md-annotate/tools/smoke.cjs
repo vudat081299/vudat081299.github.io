@@ -1399,6 +1399,49 @@ const cornerClash = (page) => page.evaluate(() => {
   }
   // ── end lớp mờ ──
 
+  // ── tấm đáy của hộp nhận xét: nền mờ là lớp fixed #pop-scrim (không phải bóng), không chặn chạm; chọn nhiều dòng thì
+  //    không có nền mờ, vẫn chạm được lề số các dòng khác (MDAN-026) ──
+  for (const scheme of ['light', 'dark']) {
+    const sctx2 = await browser.newContext({ viewport: { width: 390, height: 844 }, colorScheme: scheme, hasTouch: true, isMobile: true, deviceScaleFactor: 2 });
+    const sp = await sctx2.newPage(); watch(sp);
+    await sp.goto(BASE); await sp.waitForFunction(() => window.marked && window.DOMPurify);
+    await sp.tap('#btn-sample'); await sp.waitForTimeout(150);
+    const bg = scheme === 'dark' ? '#090b0a' : '#f5f6f3';
+    const dim = () => sp.evaluate(() => {
+      const sc = document.getElementById('pop-scrim'), pop = document.getElementById('pop'), r = sc.getBoundingClientRect(), cs = getComputedStyle(sc);
+      const probe = document.createElement('i'); probe.style.backgroundColor = 'var(--scrim-live)'; document.body.append(probe);
+      const want = getComputedStyle(probe).backgroundColor; probe.remove();
+      return { shown: !!sc.getClientRects().length, rect: [r.left, r.top, r.width, r.height].join(), bg: cs.backgroundColor, want, pe: cs.pointerEvents, z: +cs.zIndex,
+        popZ: +getComputedStyle(pop).zIndex, barZ: +getComputedStyle(document.querySelector('.ma-bar')).zIndex || 0, dockZ: +getComputedStyle(document.getElementById('dock')).zIndex,
+        spread: Math.max(0, ...(getComputedStyle(pop).boxShadow.match(/-?[\d.]+px/g) || []).map(parseFloat)), sheet: pop.classList.contains('is-sheet') && !pop.hidden,
+        tc: document.getElementById('theme-color').content };
+    });
+    await scriptSelect(sp, '#v-md', 'Try selecting this sentence');
+    await sp.tap('#fab'); await sp.waitForTimeout(250);
+    const d1 = await dim();
+    check(`tấm đáy ${scheme}: nền mờ là lớp fixed trọn khung nhìn, nền --scrim-live, dưới tấm, trên thanh đáy; tấm không còn bóng phủ; theme-color trộn`,
+      d1.sheet && d1.shown && d1.rect === '0,0,390,844' && d1.bg === d1.want && d1.pe === 'none' && d1.z === d1.popZ - 1 && d1.z > d1.dockZ && d1.z > d1.barZ && d1.spread < 100 && d1.tc === mixHex(bg, d1.want), JSON.stringify(d1));
+    await sp.tap('#v-md h1'); await sp.waitForTimeout(150);
+    const d2 = await dim();
+    check(`tấm đáy ${scheme}: chạm ra ngoài (xuyên qua nền mờ) đóng tấm, nền mờ ẩn, theme-color trả lại`, !d2.sheet && !d2.shown && d2.tc === bg, JSON.stringify(d2));
+    // Chọn nhiều dòng ở lề số (Source): tấm hiện, không có nền mờ; chạm lề dòng khác vẫn thêm / bỏ dòng.
+    await sp.tap('.ma-tab[data-view="src"]'); await sp.waitForTimeout(150);
+    const gut = (n) => sp.$eval(`#v-src .ma-ln:nth-child(${n})`, (el) => { el.scrollIntoView({ block: 'start' }); const r = el.getBoundingClientRect(); return { x: r.left + 4, y: r.top + 8 }; });
+    const picks = () => sp.$$eval('#v-src .ma-ln', (ls) => ls.map((l, i) => (l.classList.contains('is-pick') ? i + 1 : 0)).filter(Boolean).join());
+    const g3 = await gut(3); await sp.mouse.dblclick(g3.x, g3.y); await sp.waitForTimeout(250);
+    const d3 = await dim();
+    check(`tấm đáy ${scheme}: chọn dòng mở tấm mà không có nền mờ, theme-color là nền trang`, d3.sheet && !d3.shown && d3.tc === bg && (await picks()) === '3' && await sp.isVisible('#pop-head'), JSON.stringify([d3, await picks()]));
+    const g7 = await sp.$eval('#v-src .ma-ln:nth-child(7)', (el) => { const r = el.getBoundingClientRect(); return { x: r.left + 4, y: r.top + 8 }; });
+    const hit = await sp.evaluate((g) => { const t = document.elementFromPoint(g.x, g.y); return [!!(t && t.closest('.ma-ln')), Math.round(document.getElementById('pop').getBoundingClientRect().top)]; }, g7);
+    await sp.touchscreen.tap(g7.x, g7.y); await sp.waitForTimeout(200);
+    const d4 = await dim();
+    check(`tấm đáy ${scheme}: tấm đang mở, chạm lề số dòng khác vẫn thêm dòng, vẫn không có nền mờ`, hit[0] && g7.y < hit[1] && (await picks()) === '3,7' && d4.sheet && !d4.shown && (await sp.textContent('#pop-sum')).startsWith('2 lines'), JSON.stringify([hit, g7, await picks(), d4]));
+    await sp.keyboard.press('Escape'); await sp.waitForTimeout(100);
+    check(`tấm đáy ${scheme}: Esc thoát chọn dòng, tấm ẩn, không còn nền mờ`, !(await dim()).sheet && !(await dim()).shown && (await picks()) === '');
+    await sctx2.close();
+  }
+  // ── end tấm đáy ──
+
   // ── đã đọc: J / K / X tiến lên được cả khi trang không cuộn được, cả khi bấm nhanh lúc đang cuộn mượt ──
   {
     const actx = await browser.newContext({ viewport: { width: 1280, height: 900 }, colorScheme: 'light' });

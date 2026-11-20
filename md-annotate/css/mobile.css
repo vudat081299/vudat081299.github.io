@@ -66,11 +66,13 @@
 }
 /* Máy 320px: thanh trên chỉ đủ chỗ cho biểu tượng và bốn nút; tên trang có ở tiêu đề ngay dưới. */
 @media (max-width: 359px) { .ma-brand__txt { display: none; } }
-/* Hộp nhận xét thành tấm trượt đáy ở máy hẹp hoặc màn cảm ứng: nền mờ phía sau bằng bóng (không chặn chạm: chạm ra
-   ngoài vẫn tới trang và đóng hộp), tay nắm trang trí, trượt lên khi mở; chip gợi ý một hàng cuộn ngang. */
+/* Hộp nhận xét thành tấm trượt đáy ở máy hẹp hoặc màn cảm ứng: tay nắm trang trí, trượt lên khi mở; chip gợi ý một
+   hàng cuộn ngang. Nền mờ phía sau là #pop-scrim (lớp fixed riêng, như hộp thoại: dialogs.css), không chặn chạm: chạm ra
+   ngoài vẫn tới trang và đóng hộp; ui/popup.js chỉ hiện nó khi không chọn nhiều dòng (MDAN-026). Lớp hiện ngay, không mờ dần. */
+.ma-scrim { position: fixed; inset: 0; z-index: 59; pointer-events: none; background-color: var(--scrim-live); }   /* ngay dưới .ma-pop (60) */
 .ma-pop.is-sheet {
   position: fixed; left: 0; right: 0; bottom: 0; top: auto; width: auto; max-height: 82vh; overflow: auto;
-  border: 0; border-radius: var(--r-lg) var(--r-lg) 0 0; box-shadow: 0 0 0 100vmax var(--scrim-live), var(--shadow-pop);
+  border: 0; border-radius: var(--r-lg) var(--r-lg) 0 0; box-shadow: var(--shadow-pop);
   border-top: var(--r-lg) solid transparent;   /* tấm cuộn được: thanh cuộn dừng cách góc bo một bán kính (như .ma-dlg__b) */
   padding: calc(var(--s4) + var(--s2) - var(--r-lg)) var(--s4) calc(var(--s4) + env(safe-area-inset-bottom));
 }

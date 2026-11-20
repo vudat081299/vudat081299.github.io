@@ -42,8 +42,8 @@
 - Token ở `css/tokens.css` (chữ `--fs-*` + `--lh*`, bo `--r-*`, vật lồng trong bo nhỏ hơn; cao `--h-*`, khoảng `--s*`, `--dur`).
 - Họ component chung luật ở `css/base.css` (nút, nhóm tab `.ma-tabs` / `.ma-seg` / `.ma-fmt`, ô nhập, huy hiệu, phím): thêm biến thể vào họ.
 - Theme: khoá chung `hub-theme`, đặt trước lần vẽ đầu; chưa chọn thì theo hệ điều hành (REPO-024). `html` và `body` có nền `--bg` đặt rõ.
-- Lớp mờ là phần tử fixed phủ trọn khung nhìn, nền `--scrim` / `--scrim-live` (hộp thoại: chính `<dialog>`, thẻ là con); không `::backdrop`, không bóng:
-  iOS 26 Safari tô vùng thanh trạng thái theo nền phần tử fixed ở mép. Lớp hiện / ẩn thì `syncBar()` đặt `theme-color` = nền trộn lớp mờ.
+- Lớp mờ: phần tử fixed trọn khung nhìn, nền `--scrim` / `--scrim-live` (hộp thoại: chính `<dialog>`, thẻ là con; tấm nhận xét: `#pop-scrim`, không có khi chọn dòng,
+  MDAN-026), không `::backdrop` / bóng: iOS 26 Safari tô vùng thanh trạng thái theo nền phần tử fixed ở mép. Hiện / ẩn lớp: `syncBar()` (`theme-color` = nền trộn lớp).
 - Bề rộng (MDAN-005): `.ma-wrap` rộng `max(70vw, 1280px)`, không quá khung nhìn, căn giữa, lề `--pad`. Panel rộng `--side` (kéo `#panel-grip`,
   320–560, `prefs.side`), thu gọn thành `.ma-rail` 56px (`html.ma-railed`, `prefs.rail`); thanh dọc giữ nút chép.
 - *Split* khi `#doc` đủ cho hai khung ≥ 420px (`splitFits()`), không theo media query; chưa đủ thì hiện *Preview*, `prefs.view`
