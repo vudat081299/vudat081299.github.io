@@ -406,7 +406,7 @@ const cornerClash = (page) => page.evaluate(() => {
   await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
   check('1024×768, cuộn tới cuối: nút chép vẫn trong khung nhìn', await inView(page, '#dock-copy'));
   check('1024×768: không tràn ngang', (await overflow(page)) === 0);
-  await page.click('#dock-n');
+  await page.click('#dock-n'); await page.waitForTimeout(300);   // tấm trượt lên (.22s) rồi mới đo
   check('1024×768: bấm số nhận xét mở panel trong tấm trượt, nút chép thấy', await page.isVisible('#dlg-panel #list') && (await page.$$('#dlg-panel #list .ma-item')).length === 32 && await inView(page, '#dlg-panel #btn-copy'));
   await page.click('#dlg-panel [data-close]');
   await page.waitForTimeout(50);
