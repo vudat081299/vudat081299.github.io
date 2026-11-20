@@ -2120,12 +2120,12 @@ const cornerClash = (page) => page.evaluate(() => {
       const L = r.left + parseFloat(a.left), R = r.right - parseFloat(a.right);
       return { sel: l.getAttribute('aria-selected'), rowBg: getComputedStyle(l).backgroundColor, fill: a.backgroundColor, radius: parseFloat(a.borderTopLeftRadius),
         border: [a.borderTopWidth, a.borderRightWidth, a.borderBottomWidth, a.borderLeftWidth, a.borderTopStyle].join(' '), insetL: +(ic.left - L).toFixed(1), w: +(R - L).toFixed(1), rowW: r.width,
-        bodyL: document.getElementById('tree-body').getBoundingClientRect().left, L, after: getComputedStyle(l, '::after').content, shadow: getComputedStyle(l).boxShadow };
+        bodyL: document.getElementById('tree-body').getBoundingClientRect().left, L, after: getComputedStyle(l, '::after').content, shadow: getComputedStyle(l).boxShadow, outline: [a.outlineStyle, a.boxShadow].join(' ') };
     });
-    check('cây: Enter mở file, hàng thành thẻ chọn: bo, viền đủ bốn cạnh 1px, nền nhạt, lùi vào trong (bắt đầu trước biểu tượng, không trọn hàng), hàng không tô, không vạch riêng (MDAN-060)',
+    check('cây: Enter mở file, hàng thành thẻ chọn: bo, không viền, không vòng, nền nhạt, lùi vào trong (bắt đầu trước biểu tượng, không trọn hàng), hàng không tô, không vạch riêng (MDAN-060)',
       JSON.stringify(await tl()) === JSON.stringify(['open', ids['README.md']]) && sel.sel === 'true' && /rgba\(0, 0, 0, 0\)|transparent/.test(sel.rowBg) && !/, 0\)$|transparent/.test(sel.fill)
-      && sel.radius >= 4 && sel.border === '1px 1px 1px 1px solid' && sel.insetL > 0 && sel.insetL <= 12 && sel.w < sel.rowW - 8 && sel.L - sel.bodyL >= 8 && sel.after === 'none' && sel.shadow === 'none', JSON.stringify(sel));
-    /* Tương phản trên hàng đang chọn (nền pha nhiều lớp): chữ ≥ 4,5:1, viền --edge-on ≥ 3:1, cả hai theme. */
+      && sel.radius >= 4 && sel.border === '0px 0px 0px 0px none' && sel.outline === 'none none' && sel.insetL > 0 && sel.insetL <= 12 && sel.w < sel.rowW - 8 && sel.L - sel.bodyL >= 8 && sel.after === 'none' && sel.shadow === 'none', JSON.stringify(sel));
+    /* Tương phản trên hàng đang chọn (nền pha nhiều lớp): chữ ≥ 4,5:1, nền thẻ tách khỏi nền thân, cả hai theme. */
     const treeContrast = () => tp.evaluate(() => {
       const parse = (c) => { const m = c.match(/[\d.]+/g).map(Number); return c.startsWith('color(') ? [m[0] * 255, m[1] * 255, m[2] * 255, m.length > 3 ? m[3] : 1] : [m[0], m[1], m[2], m.length > 3 ? m[3] : 1]; };
       const over = (t, u) => [0, 1, 2].map((i) => t[i] * t[3] + u[i] * (1 - t[3])).concat(1);
@@ -2133,10 +2133,10 @@ const cornerClash = (page) => page.evaluate(() => {
       const lum = (c) => { const x = c.slice(0, 3).map((n) => { n /= 255; return n <= 0.03928 ? n / 12.92 : ((n + 0.055) / 1.055) ** 2.4; }); return 0.2126 * x[0] + 0.7152 * x[1] + 0.0722 * x[2]; };
       const ratio = (a, b) => { const x = lum(a), y = lum(b); return +((Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05)).toFixed(2); };
       const sel = document.querySelector('#tree-list .ma-trow[aria-selected="true"]'), out = {};
-      /* Viền thẻ chọn (::before) trên nền thân và trên nền thẻ; chữ trên nền thẻ; vạch thụt trên nền thân (trang trí, chỉ ghi số). */
+      /* Nền thẻ chọn (::before) trên nền thân; chữ trên nền thẻ; vạch thụt trên nền thân (trang trí, chỉ ghi số). */
       const cb = getComputedStyle(sel, '::before'), base = bgOf(sel), fill = over(parse(cb.backgroundColor), base);
       for (const [k, q] of [['name', '.ma-trow__name'], ['c', '.ma-trow__c'], ['rv', '.ma-trow__rv']]) { const el = sel.querySelector(q); if (el) { const bg = over(parse(getComputedStyle(el).backgroundColor), fill); out[k] = ratio(parse(getComputedStyle(el).color), bg); } }
-      out.edge = Math.min(ratio(over(parse(cb.borderTopColor), base), base), ratio(over(parse(cb.borderTopColor), fill), fill));
+      out.card = ratio(fill, base);
       const g = document.querySelector('#tree-guides .ma-tree__g');
       out.guide = g ? ratio(over(parse(getComputedStyle(g).backgroundColor), base), base) : 0;
       return out;
@@ -2145,7 +2145,7 @@ const cornerClash = (page) => page.evaluate(() => {
     for (const dark of [false, true]) {
       await tp.evaluate((d) => document.documentElement.classList.toggle('dark', d), dark); await tp.waitForTimeout(300);
       const tc = await treeContrast();
-      check(`cây (${dark ? 'tối' : 'sáng'}): thẻ chọn — tên, huy hiệu ≥ 4,5:1, viền thẻ ≥ 3:1 trên nền thân và nền thẻ; vạch thụt thấy được (≥ 1,15:1)`, tc.name >= 4.5 && tc.c >= 4.5 && tc.rv >= 4.5 && tc.edge >= 3 && tc.guide >= 1.15, JSON.stringify(tc));
+      check(`cây (${dark ? 'tối' : 'sáng'}): thẻ chọn — tên, huy hiệu ≥ 4,5:1, nền thẻ tách khỏi nền thân (≥ 1,12:1); vạch thụt thấy được (≥ 1,15:1)`, tc.name >= 4.5 && tc.c >= 4.5 && tc.rv >= 4.5 && tc.card >= 1.12 && tc.guide >= 1.15, JSON.stringify(tc));
     }
     await tp.evaluate(() => document.documentElement.classList.remove('dark'));
     const tabbed = await tp.evaluate(() => document.documentElement.classList.contains('ma-tabbing'));

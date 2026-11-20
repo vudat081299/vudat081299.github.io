@@ -105,17 +105,18 @@ html.ma-tree-on body > .ma-tree {
 .ma-tabbing .ma-trow:focus-visible { outline: 1px solid var(--ring); outline-offset: -1px; }
 @media (hover: hover) { .ma-trow:hover { background: var(--chip); color: var(--ink); } }
 /* File đang mở: một thẻ bo --r-sm quanh phần nội dung của hàng (từ ô chevron trống của file tới mép phải hàng, lùi 2px trên
-   / dưới), nền --accent-soft, viền đủ bốn cạnh --edge-on (≥ 3:1, REPO-025: viền trọn thì bo được); không tô cả hàng, không
+   / dưới), chỉ nền xanh nhạt (đậm hơn --accent-soft một nấc), không viền, không vòng; tên đậm 600. Không tô cả hàng, không
    vạch trái riêng. Thẻ nằm dưới chữ (hàng là một lớp riêng, isolation). */
 .ma-trow { isolation: isolate; }
 .ma-trow[aria-selected="true"], .ma-trow[aria-selected="true"]:hover { background: transparent; color: var(--ink); }
 .ma-trow[aria-selected="true"]::before {
   content: ''; position: absolute; z-index: -1; top: 2px; bottom: 2px; right: 0;
   left: calc(var(--s1) + var(--depth, 0) * var(--tree-step) + 12px);
-  border: 1px solid var(--edge-on); border-radius: var(--r-sm); background: var(--accent-soft);
+  border-radius: var(--r-sm); background: color-mix(in srgb, var(--accent) 18%, transparent);
 }
 .ma-trow[aria-selected="true"] { --name-w: 600; }
-.ma-trow[aria-selected="true"] .ma-trow__ic { color: var(--ink-2); }
+/* Nền thẻ đậm hơn: % review dùng --ink-2 để giữ ≥ 4,5:1 ở theme tối. */
+.ma-trow[aria-selected="true"] .ma-trow__ic, .ma-trow[aria-selected="true"] .ma-trow__rv { color: var(--ink-2); }
 .ma-trow[aria-selected="true"] .ma-trow__c { background: var(--surface); }
 .ma-trow.is-drop { background: var(--accent-soft); box-shadow: inset 0 0 0 1px var(--edge-on); }
 .ma-trow.is-dragging { opacity: .5; }
