@@ -88,6 +88,12 @@ const accentCheck = (page) => page.evaluate(() => {
   return { bgLum: +bg.toFixed(2), ratio: +((Math.max(bg, fg) + 0.05) / (Math.min(bg, fg) + 0.05)).toFixed(2) };
 });
 const overflow = (page) => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+/* Nền #rrggbb phủ lần lượt các lớp 'rgba(r, g, b, a)' → #rrggbb (đáp án tính độc lập cho theme-color khi có lớp mờ). */
+const mixHex = (bg, ...layers) => {
+  let c = [1, 3, 5].map((i) => parseInt(bg.slice(i, i + 2), 16));
+  for (const l of layers) { const v = l.match(/[\d.]+/g).map(Number); c = c.map((x, i) => v[i] * v[3] + x * (1 - v[3])); }
+  return '#' + c.map((x) => Math.round(x).toString(16).padStart(2, '0')).join('');
+};
 /* MDAN-018: mọi vùng cuộn đang hiện (dọc, hoặc ngang khi đang tràn): thanh cuộn không chạy vào góc bo của chính nó hay
    khung chứa nó (khoảng từ mép tới vùng thanh cuộn ≥ bán kính góc ấy). Trả danh sách chỗ vi phạm. */
 const cornerClash = (page) => page.evaluate(() => {
@@ -469,7 +475,7 @@ const cornerClash = (page) => page.evaluate(() => {
   const ringTab = await page.evaluate(() => getComputedStyle(document.activeElement).outlineStyle);
   await page.keyboard.press('Shift+Tab');
   check('hộp Settings: nút tự focus không có vòng; bấm Tab mới có', ringDlg[1] && ringDlg[2] === 'none' && ringTab === 'solid', JSON.stringify([ringDlg, ringTab]));
-  check('hộp Layout: một vùng cuộn, khung hộp không cuộn', await page.$eval('#dlg-layout', (d) => d.scrollHeight <= d.clientHeight));
+  check('hộp Layout: một vùng cuộn, lớp và thẻ hộp không cuộn', await page.$eval('#dlg-layout', (d) => [d, d.querySelector('.ma-dlg__in')].every((x) => x.scrollHeight <= x.clientHeight)));
   check('nút Layout mở hộp', await page.isVisible('#dlg-layout'));
   const setRange = (sel, v) => page.$eval(sel, (el, v) => { el.value = v; el.dispatchEvent(new Event('input', { bubbles: true })); }, v);
   await setRange('#set-wrap', 50);
@@ -565,7 +571,7 @@ const cornerClash = (page) => page.evaluate(() => {
   check('điện thoại: tab Hiển thị không tràn ngang', (await overflow(m)) === 0);
   check('điện thoại: không có tab Song song', !(await m.isVisible('#tab-split')));
   await m.tap('#btn-layout'); await m.waitForTimeout(200);
-  const ml = await m.evaluate(() => { const d = document.getElementById('dlg-layout'); return { w: getComputedStyle(document.querySelector('.ma-set--wrap')).display, dlg: d.scrollHeight - d.clientHeight }; });
+  const ml = await m.evaluate(() => { const d = document.getElementById('dlg-layout'), c = d.querySelector('.ma-dlg__in'); return { w: getComputedStyle(document.querySelector('.ma-set--wrap')).display, dlg: Math.max(d.scrollHeight - d.clientHeight, c.scrollHeight - c.clientHeight) }; });
   check('điện thoại: hộp Layout ẩn mục bề rộng, chỉ thân hộp cuộn', ml.w === 'none' && ml.dlg <= 0, JSON.stringify(ml));
   await m.tap('#dlg-layout [data-close]');
   /* Safari iOS coi focus do script đặt là :focus-visible; focusVisible: true giả lập điều đó trong Chromium. */
@@ -1305,10 +1311,10 @@ const cornerClash = (page) => page.evaluate(() => {
     await gp.goto(BASE); await gp.waitForFunction(() => window.marked && window.DOMPurify);
     await gp.click('#btn-sample'); await gp.waitForTimeout(150);
     await gp.click('#btn-layout'); await gp.waitForTimeout(250);
-    const g = await gp.$eval('#dlg-layout', (d) => { const r = d.getBoundingClientRect(); return { cx: r.left + r.width / 2, cy: r.top + r.height / 2, w: innerWidth, h: innerHeight, bd: getComputedStyle(d, '::backdrop').backgroundColor }; });
+    const g = await gp.$eval('#dlg-layout', (d) => { const r = d.querySelector('.ma-dlg__in').getBoundingClientRect(), l = d.getBoundingClientRect(); return { cx: r.left + r.width / 2, cy: r.top + r.height / 2, w: innerWidth, h: innerHeight, layer: [l.left, l.top, l.width, l.height], bg: getComputedStyle(d).backgroundColor, bd: getComputedStyle(d, '::backdrop').backgroundColor }; });
     const tag = `${vw}×${vh} ${scheme}`;
     check(`Settings ${tag}: hộp giữa màn hình`, Math.abs(g.cx - g.w / 2) <= 2 && Math.abs(g.cy - g.h / 2) <= 2, JSON.stringify(g));
-    check(`Settings ${tag}: nền sau mờ`, /rgba\(\d+, \d+, \d+, 0\.[1-9]/.test(g.bd), g.bd);
+    check(`Settings ${tag}: nền sau mờ nhẹ, là chính lớp hộp thoại phủ trọn khung nhìn (không phải ::backdrop)`, /rgba\(\d+, \d+, \d+, 0\.[1-4]/.test(g.bg) && g.bd === 'rgba(0, 0, 0, 0)' && g.layer.join() === [0, 0, g.w, g.h].join(), JSON.stringify(g));
     await gp.mouse.click(4, Math.round(vh / 2)); await gp.waitForTimeout(100);
     check(`Settings ${tag}: bấm nền mờ thì đóng`, !(await gp.$eval('#dlg-layout', (d) => d.open)));
     await gp.click('#btn-layout'); await gp.waitForTimeout(100); await gp.keyboard.press('Escape');
@@ -1328,10 +1334,12 @@ const cornerClash = (page) => page.evaluate(() => {
     const want = await kp.evaluate(() => fetch('data/shortcuts.json').then((r) => r.json()).then((d) => d.groups.map((g) => g.title + ':' + g.rows.map((r) => r.keys.map((c) => c.join('+')).join('/') + '=' + r.action).join('|')).join('#')));
     const got = await kp.$$eval('#keys-list .ma-keys', (ss) => ss.map((s) => s.querySelector('.ma-keys__h').textContent + ':' + [...s.querySelectorAll('dt')].map((dt) => [...dt.querySelectorAll('.ma-keys__c')].map((c) => [...c.querySelectorAll('kbd')].map((k) => k.textContent).join('+')).join('/') + '=' + dt.nextElementSibling.textContent).join('|')).join('#'));
     check('Shortcuts: nút trong Settings mở hộp, mọi hàng của data/shortcuts.json hiện đúng', got === want && got.length > 0, got.slice(0, 120));
-    const k = await kp.$eval('#dlg-keys', (d) => { const r = d.getBoundingClientRect(); return { cx: r.left + r.width / 2, cy: r.top + r.height / 2, bd: getComputedStyle(d, '::backdrop').backgroundColor, kbd: d.querySelectorAll('kbd.ma-key').length }; });
-    check('Shortcuts: hộp giữa màn hình, nền sau mờ, phím là chip kbd', Math.abs(k.cx - 720) <= 2 && Math.abs(k.cy - 450) <= 2 && /rgba\(\d+, \d+, \d+, 0\.[1-9]/.test(k.bd) && k.kbd > 10, JSON.stringify(k));
+    const k = await kp.$eval('#dlg-keys', (d) => { const r = d.querySelector('.ma-dlg__in').getBoundingClientRect(), l = d.getBoundingClientRect(); return { cx: r.left + r.width / 2, cy: r.top + r.height / 2, layer: [l.left, l.top, l.width, l.height].join(), bg: getComputedStyle(d).backgroundColor, bd: getComputedStyle(d, '::backdrop').backgroundColor, kbd: d.querySelectorAll('kbd.ma-key').length, tc: document.getElementById('theme-color').content }; });
+    check('Shortcuts: hộp giữa màn hình, nền sau mờ (lớp hộp thoại phủ trọn), phím là chip kbd', Math.abs(k.cx - 720) <= 2 && Math.abs(k.cy - 450) <= 2 && /rgba\(\d+, \d+, \d+, 0\.[1-9]/.test(k.bg) && k.bd === 'rgba(0, 0, 0, 0)' && k.layer === '0,0,1440,900' && k.kbd > 10, JSON.stringify(k));
+    check('Shortcuts trên Settings: theme-color là nền trang dưới cả hai lớp mờ', k.tc === mixHex('#f5f6f3', 'rgba(11, 15, 12, 0.2)', 'rgba(11, 15, 12, 0.38)'), k.tc);
     await kp.keyboard.press('Escape');
     check('Shortcuts: Esc đóng hộp Shortcuts, Settings còn mở', !(await kp.$eval('#dlg-keys', (d) => d.open)) && (await kp.$eval('#dlg-layout', (d) => d.open)));
+    check('Shortcuts: đóng thì theme-color về lớp mờ của Settings', (await kp.$eval('#theme-color', (x) => x.content)) === mixHex('#f5f6f3', 'rgba(11, 15, 12, 0.2)'));
     await kp.keyboard.press('Escape');
     await kp.keyboard.press('Shift+Slash'); await kp.waitForTimeout(100);
     check('Shortcuts: phím ? mở hộp', await kp.$eval('#dlg-keys', (d) => d.open));
@@ -1343,6 +1351,53 @@ const cornerClash = (page) => page.evaluate(() => {
     await kctx.close();
   }
   // ── end hộp Shortcuts ──
+
+  // ── lớp mờ là chính <dialog> phủ trọn khung nhìn, nền là --scrim: iOS 26 Safari tô vùng thanh trạng thái theo nền phần tử
+  //    fixed ở mép, không theo ::backdrop. Thẻ là con; theme-color là nền trộn lớp mờ khi mở, trả lại khi đóng. ──
+  for (const [vw, vh, scheme] of [[390, 844, 'light'], [390, 844, 'dark'], [1280, 800, 'light'], [1280, 800, 'dark']]) {
+    const touch = vw < 700;
+    const lctx = await browser.newContext({ viewport: { width: vw, height: vh }, colorScheme: scheme, hasTouch: touch, isMobile: touch, deviceScaleFactor: touch ? 2 : 1 });
+    const lp = await lctx.newPage(); watch(lp);
+    await lp.goto(BASE); await lp.waitForFunction(() => window.marked && window.DOMPurify);
+    await lp.click('#btn-sample'); await lp.waitForTimeout(150);
+    await lp.evaluate(async () => {   // cây vài file, để #btn-tree mở tấm trượt ở máy hẹp
+      const T = await import('./js/ui/tree.js'), nodes = [{ id: 'd', parent: null, kind: 'dir', name: 'docs' }];
+      for (let i = 0; i < 6; i++) nodes.push({ id: 'f' + i, parent: i % 2 ? 'd' : null, kind: 'file', name: 'note-' + i + '.md' });
+      const noop = () => '';
+      T.renderTree({ nodes, open: 'f0', collapsed: [], counts: {}, title: 'Demo' }, { open: noop, toggle: noop, newFile: noop, newDir: noop, rename: noop, move: noop, remove: noop, importDir: noop, download: noop, collapseAll: noop });
+    });
+    const tag = `${vw}×${vh} ${scheme}`, bg = scheme === 'dark' ? '#090b0a' : '#f5f6f3';
+    const tc = () => lp.$eval('#theme-color', (x) => x.content);
+    check(`lớp mờ ${tag}: theme-color lúc đầu là nền trang, html có nền đặt rõ`, (await tc()) === bg && (await lp.evaluate(() => getComputedStyle(document.documentElement).backgroundColor === getComputedStyle(document.body).backgroundColor)), await tc());
+    const bad = [];
+    for (const [id, btn, place] of [['dlg-hist', 'btn-hist', 'sheet'], ['dlg-hints', 'btn-hints', 'sheet'], ['dlg-layout', 'btn-layout', 'center'], ['dlg-keys', 'btn-keys', 'center'], ['dlg-panel', 'dock-n', 'bottom'], ['dlg-tree', 'btn-tree', 'left']]) {
+      if (vw > 1080 && (place === 'bottom' || place === 'left')) continue;
+      await lp.evaluate((b) => document.getElementById(b).click(), btn); await lp.waitForTimeout(350);
+      const g = await lp.evaluate((id) => {
+        const d = document.getElementById(id), l = d.getBoundingClientRect(), card = d.querySelector(':scope > .ma-dlg__in, :scope > .ma-panel, :scope > .ma-tree'), c = card.getBoundingClientRect();
+        const probe = document.createElement('i'); document.body.append(probe);
+        probe.style.backgroundColor = d.classList.contains('ma-dlg--live') ? 'var(--scrim-live)' : 'var(--scrim)'; const want = getComputedStyle(probe).backgroundColor;
+        probe.style.backgroundColor = 'var(--surface)'; const surface = getComputedStyle(probe).backgroundColor; probe.remove();
+        return { open: d.open, layer: [l.left, l.top, l.width, l.height].join(), view: [0, 0, innerWidth, innerHeight].join(), bg: getComputedStyle(d).backgroundColor, want,
+          bd: getComputedStyle(d, '::backdrop').backgroundColor, card: [c.left, c.top, c.right, c.bottom].map(Math.round), cardBg: getComputedStyle(card).backgroundColor, surface,
+          tc: document.getElementById('theme-color').content };
+      }, id);
+      const [L, T, R, B] = g.card, cx = (L + R) / 2, cy = (T + B) / 2;
+      const placed = { sheet: L === 0 && R === vw && B === vh, bottom: Math.abs(cx - vw / 2) <= 1 && B === vh, left: L === 0 && T === 0 && B === vh && R < vw,
+        center: Math.abs(cx - vw / 2) <= 1 && Math.abs(cy - vh / 2) <= 1 }[vw > 720 && place === 'sheet' ? 'center' : place];
+      if (!g.open || g.layer !== g.view || g.bg !== g.want || !/, 0\.\d+\)$/.test(g.bg) || g.bd !== 'rgba(0, 0, 0, 0)' || g.cardBg !== g.surface || !placed || g.tc !== mixHex(bg, g.want)) bad.push(id + ' ' + JSON.stringify(g));
+      // bấm / chạm lớp ngoài thẻ: đóng (mọi hộp thoại, như khi lớp là ::backdrop)
+      const pt = L > 8 || T > 8 ? [4, 4] : [vw - 4, 4];
+      if (touch) await lp.touchscreen.tap(pt[0], pt[1]); else await lp.mouse.click(pt[0], pt[1]);
+      await lp.waitForTimeout(150);
+      const after = await lp.evaluate((id) => [document.getElementById(id).open, document.getElementById('theme-color').content], id);
+      if (after[0] || after[1] !== bg) { bad.push(id + ' ngoài thẻ: ' + JSON.stringify(after)); if (after[0]) await lp.keyboard.press('Escape'); }
+    }
+    check(`lớp mờ ${tag}: mọi hộp thoại là lớp trọn khung nhìn nền --scrim, ::backdrop trong suốt, thẻ đúng chỗ, theme-color trộn rồi trả lại, chạm ngoài thẻ thì đóng`, !bad.length, bad.join(' | '));
+    check(`lớp mờ ${tag}: không tràn ngang`, (await overflow(lp)) === 0);
+    await lctx.close();
+  }
+  // ── end lớp mờ ──
 
   // ── đã đọc: J / K / X tiến lên được cả khi trang không cuộn được, cả khi bấm nhanh lúc đang cuộn mượt ──
   {
@@ -1822,10 +1877,10 @@ const cornerClash = (page) => page.evaluate(() => {
     await mp2.evaluate(treeDemo, false); await mp2.waitForTimeout(150);
     check('cây 390: cột không hiện, nút có, không tràn ngang', !(await tstate(mp2)).shown && (await tstate(mp2)).btn && (await overflow(mp2)) === 0, String(await overflow(mp2)));
     await mp2.tap('#btn-tree'); await mp2.waitForTimeout(300);
-    const sh = await mp2.evaluate(() => { const d = document.getElementById('dlg-tree'), r = d.getBoundingClientRect(), row = document.querySelector('#tree-list .ma-trow').getBoundingClientRect(), more = document.querySelector('#tree-list .ma-trow__more').getBoundingClientRect();
+    const sh = await mp2.evaluate(() => { const d = document.getElementById('dlg-tree'), r = document.getElementById('tree').getBoundingClientRect(), row = document.querySelector('#tree-list .ma-trow').getBoundingClientRect(), more = document.querySelector('#tree-list .ma-trow__more').getBoundingClientRect();
       return { open: d.open, inDlg: d.contains(document.getElementById('tree')), left: Math.round(r.left), w: Math.round(r.width), rowH: Math.round(row.height), more: Math.round(more.width), exp: document.getElementById('btn-tree').getAttribute('aria-expanded') }; });
     check('cây 390: nút mở tấm trượt từ mép trái, hàng ≥ 44px, ⋯ luôn hiện', sh.open && sh.inDlg && sh.left === 0 && sh.w <= 390 && sh.rowH >= 44 && sh.more >= 44 && sh.exp === 'true', JSON.stringify(sh));
-    check('cây 390: tấm không tràn ngang', (await overflow(mp2)) === 0 && (await mp2.$eval('#dlg-tree', (d) => d.scrollWidth - d.clientWidth)) <= 0);
+    check('cây 390: tấm không tràn ngang', (await overflow(mp2)) === 0 && (await mp2.$eval('#dlg-tree', (d) => Math.max(d.scrollWidth - d.clientWidth, document.getElementById('tree').scrollWidth - document.getElementById('tree').clientWidth))) <= 0);
     await mp2.tap(row('README.md')); await mp2.waitForTimeout(300);
     const after = await mp2.evaluate(() => ({ open: document.getElementById('dlg-tree').open, home: document.getElementById('tree').parentNode.classList.contains('ma-grid'), last: window.__tree.log.slice(-1)[0][0] }));
     check('cây 390: chạm file thì mở file, đóng tấm, cây về lưới', !after.open && after.home && after.last === 'open', JSON.stringify(after));

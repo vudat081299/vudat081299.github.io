@@ -842,5 +842,23 @@ check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi
 }
 // ── end cây folder + file ──
 
+// ── màu thanh trình duyệt khi có lớp mờ (core/color.js) ──
+{
+  const C = await import('../js/core/color.js');
+  check('parseColor: rgb, rgba, cú pháp có /, color(srgb), hex ngắn / dài',
+    eq(C.parseColor('rgb(245, 246, 243)'), { r: 245, g: 246, b: 243, a: 1 }) && eq(C.parseColor('rgba(11, 15, 12, 0.38)'), { r: 11, g: 15, b: 12, a: 0.38 }) &&
+    eq(C.parseColor('rgb(0 0 0 / 50%)'), { r: 0, g: 0, b: 0, a: 0.5 }) && eq(C.parseColor('color(srgb 1 0 0.5 / 0.2)'), { r: 255, g: 0, b: 127.5, a: 0.2 }) &&
+    eq(C.parseColor('#abc'), { r: 170, g: 187, b: 204, a: 1 }) && eq(C.parseColor(' #F5F6F3 '), { r: 245, g: 246, b: 243, a: 1 }));
+  check('parseColor: chuỗi lạ thì null', C.parseColor('transparentish') === null && C.parseColor('color(display-p3 1 0 0)') === null && C.parseColor('rgb(1, 2)') === null && C.parseColor('') === null);
+  check('barColor: không lớp thì là nền', C.barColor('rgb(245, 246, 243)', []) === '#f5f6f3' && C.barColor('#090b0a') === '#090b0a');
+  check('barColor: --scrim sáng (.38) và --scrim-live tối (.42) trộn đục lên --bg',
+    C.barColor('rgb(245, 246, 243)', ['rgba(11, 15, 12, 0.38)']) === '#9c9e9b' && C.barColor('rgb(9, 11, 10)', ['rgba(0, 0, 0, 0.42)']) === '#050606');
+  const two = C.barColor('rgb(245, 246, 243)', ['rgba(11, 15, 12, 0.2)', 'rgba(11, 15, 12, 0.38)']);
+  check('barColor: hai lớp chồng nhau đậm hơn một lớp; lớp trong suốt, lớp hỏng bỏ qua',
+    two === C.barColor('rgb(245, 246, 243)', ['rgba(11, 15, 12, 0.38)', 'rgba(11, 15, 12, 0.2)']) && two < '#9c9e9b' &&
+    C.barColor('rgb(245, 246, 243)', ['rgba(0, 0, 0, 0)', 'nonsense']) === '#f5f6f3' && C.barColor('nope', []) === null, two);
+}
+// ── end màu thanh ──
+
 console.log(fails ? `md-annotate core: ${fails} LỖI` : 'md-annotate core: OK');
 process.exit(fails ? 1 : 0);

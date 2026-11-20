@@ -13,19 +13,17 @@
 | `css/*.css` | `tokens` → `base` → `views` → `panel` → `tree` → `popup` → `dialogs` → `focus` → `review` → `reading` → `mobile`; thứ tự link là cascade |
 | `js/core/anchor.js`, `js/core/comments.js` | neo đoạn trích (`locate`, `quoteFrom`); thêm / sửa / xoá, neo, xếp, đánh số nhận xét, `partsOf` |
 | `js/core/session.js`, `js/core/tree.js`, `js/core/zip.js`, `js/core/prompt.js` | phiên là cây file (thêm, xoá, nạp, mở file từ đĩa, Undo), index, tên tự đặt; cây phẳng (thứ tự, tên, chuyển); ghi `.zip`; prompt một / mọi file, nhãn L12 |
-| `js/core/hints.js`, `js/core/place.js`, `js/core/tokens.js`, `js/core/runs.js` | đếm, xếp hạng gợi ý, chip; chỗ đặt hộp nổi (`popPlace`); token của *Source*; cắt chữ theo token / highlight / dòng, `lineCount` |
+| `js/core/hints.js`, `js/core/place.js`, `js/core/tokens.js`, `js/core/runs.js`, `js/core/color.js` | đếm, xếp hạng gợi ý, chip; chỗ đặt hộp nổi (`popPlace`); token của *Source*; cắt chữ theo token / highlight / dòng, `lineCount`; trộn lớp mờ lên nền (`barColor`) |
 | `js/core/blocks.js`, `js/core/sections.js`, `js/core/panes.js`, `js/core/picks.js`, `js/core/sync-math.js`, `js/core/text.js`, `js/core/shortcuts.js` | `lexSpans`, `pairBlocks` (khối nguồn ↔ Preview); đánh số section, dải đọc; `splitFits`, cao hai khung; nhiều dòng (`pickInfo`); cuộn theo nhau; `plural`, `lineOf`, `slug`, `importCheck`; `normShortcuts` |
 | `js/{core,ui}/review.js`, `js/ui/review-panel.js`, `js/{core,ui}/minimap.js`, `js/{core,ui}/dwell.js` | đã đọc: đơn vị, neo dấu, tiến độ; làn, phím, nút hộp nhận xét, viên thuốc; tab *Review*; dải tiến độ; gợi ý theo thời gian đọc (MDAN-016) |
-| `js/ui/store.js`, `js/ui/dom.js`, `js/ui/state.js`, `js/ui/render.js` | `localStorage`, khoá, `prefs`; `$`, `h()`, `icon()`, `toast()`, `dragBar()`, `saveFile()`; phiên `S`, file mở `D`, lưu, chuyển phiên / file; `renderAll()`, kết quả neo `mdText`, `anchors`…, `anchorsOf(doc)` |
-| `js/ui/tree.js`, `js/ui/files.js` | cột cây / tấm trượt trái, chỉ vẽ và nghe (`renderTree(model, actions)`); việc của cây, `setTree()`, nạp folder, tải |
+| `js/ui/store.js`, `js/ui/dom.js`, `js/ui/state.js`, `js/ui/render.js` | `localStorage`, khoá, `prefs`; `$`, `h()`, `icon()`, `toast()`, `dragBar()`, `saveFile()`, `syncBar()`; phiên `S`, file mở `D`, lưu, chuyển phiên / file; `renderAll()`, kết quả neo `mdText`, `anchors`…, `anchorsOf(doc)` |
 | `js/ui/anchor-dom.js`, `js/ui/marks.js`, `js/ui/markdown.js`, `js/ui/source-view.js` | vùng chọn ↔ vị trí chữ; `<mark class="ma-hl">`, tô active / hover; `marked` + DOMPurify, `unlink()`, `ghExtras()`, `mdLex()`; vẽ `#v-src` |
 | `js/ui/list.js`, `js/ui/prompt.js`, `js/ui/popup.js`, `js/ui/selection.js`, `js/ui/picks.js` | danh sách nhận xét; panel *Prompt*, chép, tải, *Options*; hộp nhận xét; bôi đen → hộp, nút nổi, `ma-mirror`; chọn nhiều dòng ở lề số, nút kéo hộp |
 | `js/ui/views.js`, `js/ui/sync-scroll.js`, `js/ui/focus.js`, `js/ui/layout.js`, `js/ui/help.js` | chế độ xem, `splitOK()`, `sizePanes()`, vách giữa; cuộn theo nhau; *Focus mode*, dải đọc; hộp *Settings* (`#dlg-layout`), `layoutVal()`; hộp *Shortcuts* |
-| `js/ui/panel.js`, `js/ui/hints.js`, `js/ui/history.js`, `js/ui/editor.js` | panel, mép kéo, thanh dọc, tấm trượt; số đếm gợi ý, hộp *Hints*; hộp *History*; khung *Edit*, dán, mở / thả file, văn bản mẫu, tên phiên |
+| `js/ui/panel.js`, `js/ui/hints.js`, `js/ui/history.js`, `js/ui/editor.js`, `js/ui/tree.js`, `js/ui/files.js` | panel, mép kéo, thanh dọc, tấm trượt; số đếm gợi ý, hộp *Hints*; hộp *History*; khung *Edit*, dán, mở / thả file, văn bản mẫu, tên phiên; cột cây / tấm trượt trái, chỉ vẽ và nghe (`renderTree(model, actions)`); việc của cây, `setTree()`, nạp folder, tải |
 
 - `js/core/` là logic: nhận và trả dữ liệu thường; không DOM, `window`, `localStorage`, lớp CSS; chỉ import `js/core/`
-  (`tools/lint.py` kiểm). `js/ui/` đọc DOM và vị trí, gọi `js/core/`, ghi DOM; sự kiện trong `init…()` của nó.
-- Tính năng mới: logic vào `js/core/`, giao diện và sự kiện vào một module `js/ui/`; `main.js` gọi `init…()`.
+  (`tools/lint.py` kiểm). Tính năng mới: giao diện và sự kiện vào một module `js/ui/` (đọc DOM, gọi `js/core/`, ghi DOM), sự kiện trong `init…()` của nó, `main.js` gọi.
 - Thứ tự gọi `init…()` là thứ tự đăng ký sự kiện: hai module nghe cùng phần tử thì đừng đảo (cặp ghi ở đầu `main.js`).
 - Biến dùng chung: `export var` ở module sở hữu; nơi khác chỉ đọc, gán lại qua hàm của chủ (`switchTo()`, `openFileId()`).
 - Import vòng được; code cấp cao của module không gọi sang module khác, việc lúc nạp nằm trong `init…()`. Mỗi file mở đầu bằng chú thích: làm gì, xuất gì, dùng module nào.
@@ -43,7 +41,9 @@
 - Chữ ≥ 4,5:1; chỉ báo trạng thái ≥ 3:1 (focus `--ring`, thẻ / hàng đang chọn `--edge-on`), cả hai theme. Vòng focus chỉ sau phím Tab (MDAN-020).
 - Token ở `css/tokens.css` (chữ `--fs-*` + `--lh*`, bo `--r-*`, vật lồng trong bo nhỏ hơn; cao `--h-*`, khoảng `--s*`, `--dur`).
 - Họ component chung luật ở `css/base.css` (nút, nhóm tab `.ma-tabs` / `.ma-seg` / `.ma-fmt`, ô nhập, huy hiệu, phím): thêm biến thể vào họ.
-- Theme: khoá chung `hub-theme`, đặt trước lần vẽ đầu; chưa chọn thì theo hệ điều hành (REPO-024).
+- Theme: khoá chung `hub-theme`, đặt trước lần vẽ đầu; chưa chọn thì theo hệ điều hành (REPO-024). `html` và `body` có nền `--bg` đặt rõ.
+- Lớp mờ là phần tử fixed phủ trọn khung nhìn, nền `--scrim` / `--scrim-live` (hộp thoại: chính `<dialog>`, thẻ là con); không `::backdrop`, không bóng:
+  iOS 26 Safari tô vùng thanh trạng thái theo nền phần tử fixed ở mép. Lớp hiện / ẩn thì `syncBar()` đặt `theme-color` = nền trộn lớp mờ.
 - Bề rộng (MDAN-005): `.ma-wrap` rộng `max(70vw, 1280px)`, không quá khung nhìn, căn giữa, lề `--pad`. Panel rộng `--side` (kéo `#panel-grip`,
   320–560, `prefs.side`), thu gọn thành `.ma-rail` 56px (`html.ma-railed`, `prefs.rail`); thanh dọc giữ nút chép.
 - *Split* khi `#doc` đủ cho hai khung ≥ 420px (`splitFits()`), không theo media query; chưa đủ thì hiện *Preview*, `prefs.view`
