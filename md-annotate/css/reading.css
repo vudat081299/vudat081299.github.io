@@ -7,12 +7,16 @@
 .ma-views[data-mode="split"] .ma-view { scrollbar-width: none; }
 .ma-views[data-mode="split"] .ma-view::-webkit-scrollbar { display: none; }
 .ma-mm {
-  position: fixed; z-index: 20; width: calc(var(--mm-p) * 4 + var(--mm-w) * 2); cursor: pointer; touch-action: none;
+  position: fixed; z-index: 20; width: calc(var(--mm-p) * 2 + var(--mm-w) * 2 + var(--mm-gap)); cursor: pointer; touch-action: none;
   -webkit-user-select: none; user-select: none;
 }
 .ma-mm > * { pointer-events: none; }
-/* Dải đơn vị sát thanh cuộn, hai đầu bo tròn; cột khung nhìn (.ma-mm__view) riêng bên trái, không đè lên dải. */
-.ma-mm__in { position: absolute; top: 0; bottom: 0; right: var(--mm-p); width: var(--mm-w); border-radius: var(--r-pill); overflow: hidden; }
+/* Dải đơn vị, hai đầu bo tròn; cột khung nhìn (.ma-mm__view) riêng bên trái, cách --mm-gap. Rãnh nhạt cao hết dải: đơn vị
+   đầu / cuối cách mép khung một khoảng đệm, không có rãnh thì dải trông ngắn hơn đường đi của con trượt. */
+.ma-mm__in {
+  position: absolute; top: 0; bottom: 0; right: var(--mm-p); width: var(--mm-w); border-radius: var(--r-pill); overflow: hidden;
+  background: var(--line-2);
+}
 .ma-mm__col { position: absolute; top: 0; bottom: 0; left: var(--mm-p); width: var(--mm-w); }
 .ma-mm__s { position: absolute; left: 0; right: 0; border-radius: 1px; background: var(--line); }
 .ma-mm__s:first-child { border-top-left-radius: var(--r-pill); border-top-right-radius: var(--r-pill); }

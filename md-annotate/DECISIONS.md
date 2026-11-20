@@ -123,7 +123,7 @@ Chủ trang soát Tech Design không theo thứ tự rồi đọc từ trên xu�
 một dải mảnh ở mép phải (trái thanh cuộn), hai đầu bo tròn: đoạn theo vị trí từng khối, đặc là đã đọc, rỗng là đã đổi
 chữ, nhạt là chưa đọc. Bên trái dải là thanh cuộn tự vẽ: con trượt xám, chấm ở nhận xét; ở Split nó thay thanh cuộn hệ
 thống của khung, để không có hai thanh song song. Hai cột cùng bề rộng, bằng con trượt của thanh cuộn hệ thống, ở cả hai
-khung. Bấm / kéo thì cuộn tới. Điện thoại ẩn dải; màn cảm ứng chỉ xem. Khối nằm ở dải đọc
+khung; cùng chiều cao, cách nhau một khe nhỏ. Bấm / kéo thì cuộn tới. Điện thoại ẩn dải; màn cảm ứng chỉ xem. Khối nằm ở dải đọc
 đủ lâu (khoảng 40% số từ ở 230 từ/phút, 4–60 giây) rồi người đọc tự cuộn qua thì được gợi ý (✓ viền đứt, nút "Accept N
 suggested"); gợi ý không bao giờ tự thành dấu. Mặc định bật, tắt được ở tab Review; gợi ý không lưu, chỉ trong phiên đang
 mở. Tab ẩn, cửa sổ mất focus, rảnh tay, cuộn do trang (J / K / X, dải tiến độ) không tính.

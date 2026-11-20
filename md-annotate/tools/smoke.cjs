@@ -1372,6 +1372,13 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
       const s = await strip(w);
       check(`dải tiến độ (${w}): hiện ở Split, sát mép phải, trái thanh cuộn, không đè chữ hay làn`, s.shown && s.right <= s.sbLeft + 0.5 && s.sbLeft - s.right <= 8 && s.left >= s.textRight - 1 && s.left > s.laneRight && s.top >= s.paneTop && s.bottom <= s.paneBottom, JSON.stringify(s));
       check(`dải tiến độ (${w}): chưa đọc gì thì mọi đoạn nhạt, có hộp khung nhìn`, s.segs.length > 0 && s.segs.every((x) => x.startsWith('todo')) && s.view, s.segs.slice(0, 4).join(' '));
+      const geo = await mp.evaluate((w) => {
+        const m = document.querySelector(`.ma-mm[data-w="${w}"]`), c = m.querySelector('.ma-mm__col').getBoundingClientRect(), l = m.querySelector('.ma-mm__in').getBoundingClientRect();
+        const d = document.getElementById('doc'), dr = d.getBoundingClientRect(), rad = parseFloat(getComputedStyle(d).borderBottomRightRadius);
+        return { col: [c.top, c.bottom, c.width], lane: [l.top, l.bottom, l.width], gap: l.left - c.right, toCorner: dr.bottom - l.bottom, rad };
+      }, w);
+      check(`dải tiến độ (${w}): thanh cuộn và dải cùng cao, cùng rộng 6px, cách nhau ≥ 4px`,
+        geo.col[0] === geo.lane[0] && geo.col[1] === geo.lane[1] && geo.col[2] === 6 && geo.lane[2] === 6 && geo.gap >= 4, JSON.stringify(geo));
     }
     // Trạng thái đoạn: đã đọc đặc, đổi chữ rỗng, chấm ở nhận xét; vị trí theo đơn vị trong khung.
     const u3 = await laneOf('Para P3 '), u10 = await laneOf('Para P10 ');

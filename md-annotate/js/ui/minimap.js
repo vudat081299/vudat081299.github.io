@@ -2,7 +2,7 @@
    trái thanh cuộn. Mỗi đơn vị một đoạn theo vị trí / chiều cao của nó trong khung: đặc --accent đã đọc, rỗng viền đã đổi
    chữ (○), nhạt chưa đọc, viền đứt được gợi ý (ui/dwell.js). Trái dải là thanh cuộn tự vẽ: con trượt xám theo khung nhìn,
    chấm ở chỗ có nhận xét; ở Split nó thay thanh cuộn hệ thống của khung (css/reading.css ẩn thanh ấy), để không có hai thanh.
-   Bề rộng, lề, mép trái làm tròn theo điểm ảnh thật (devicePixelRatio), để hai khung vẽ cột rộng như nhau ở mọi mức thu phóng. Bấm / kéo trên dải
+   Bề rộng, lề, khe, mép trái làm tròn theo điểm ảnh thật (devicePixelRatio), để hai khung vẽ cột rộng như nhau ở mọi mức thu phóng. Bấm / kéo trên dải
    thì cuộn tới đó (cuộn do trang, không tính là đọc). Không có đơn vị thì ẩn.
    Dải là phần tử position: fixed ngoài #v-src / #v-md (text của khung không đổi), đặt theo khung bằng JS. Vẽ lại đoạn
    khi ui/review.js xếp làn (vẽ, đánh dấu, đổi cỡ); khi cuộn chỉ dời hộp khung nhìn (và khung, ở chế độ cuộn cửa sổ).
@@ -30,7 +30,7 @@ function snapPos(px) { var r = window.devicePixelRatio || 1; return Math.round(p
 /* Bề rộng cột và lề từ token, làm tròn theo điểm ảnh thật; gán lên từng dải. */
 function sizeStrips() {
   var cs = getComputedStyle(document.documentElement);
-  ['--mm-w', '--mm-p'].forEach(function (k) {
+  ['--mm-w', '--mm-p', '--mm-gap'].forEach(function (k) {
     var v = snap(parseFloat(cs.getPropertyValue(k)) || 1) + 'px';
     strips.src.style.setProperty(k, v); strips.md.style.setProperty(k, v);
   });
