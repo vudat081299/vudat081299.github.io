@@ -14,6 +14,7 @@
 - MDAN-014 · Hộp của các dòng đã chọn không đóng khi bấm ra ngoài · `md-annotate/js/ui/popup.js`, `md-annotate/js/ui/picks.js`
 - MDAN-015 · Hộp Settings giữa màn hình, nền mờ; bảng phím tắt mới · `md-annotate/`
 - MDAN-016 · Dải tiến độ cạnh khung, gợi ý đã đọc theo thời gian đọc · `md-annotate/`
+- MDAN-017 · Một bộ dấu đã đọc, khai báo một chỗ · `md-annotate/css/**`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Nguồn tô màu cú pháp kiểu VS Code
@@ -120,8 +121,16 @@ kiểu giữa màn hình, nền mờ. Bảng chỉ liệt kê phím và cú bấ
 
 Chủ trang soát Tech Design không theo thứ tự rồi đọc từ trên xuống, nên cần thấy cả văn bản đã đọc tới đâu. Mỗi khung có
 một dải mảnh ở mép phải (trái thanh cuộn), hai đầu bo tròn: đoạn theo vị trí từng khối, đặc là đã đọc, rỗng là đã đổi
-chữ, nhạt là chưa đọc, chấm ở nhận xét. Khung nhìn là cột đen riêng bên trái dải, không đè lên dải, không nền, ứng với
-con trượt của thanh cuộn; bấm / kéo thì cuộn tới. Điện thoại ẩn dải; màn cảm ứng chỉ xem. Khối nằm ở dải đọc
+chữ, nhạt là chưa đọc. Bên trái dải là thanh cuộn tự vẽ: con trượt xám, chấm ở nhận xét; ở Split nó thay thanh cuộn hệ
+thống của khung, để không có hai thanh song song. Hai cột cùng bề rộng, bằng con trượt của thanh cuộn hệ thống, ở cả hai
+khung. Bấm / kéo thì cuộn tới. Điện thoại ẩn dải; màn cảm ứng chỉ xem. Khối nằm ở dải đọc
 đủ lâu (khoảng 40% số từ ở 230 từ/phút, 4–60 giây) rồi người đọc tự cuộn qua thì được gợi ý (✓ viền đứt, nút "Accept N
 suggested"); gợi ý không bao giờ tự thành dấu. Mặc định bật, tắt được ở tab Review; gợi ý không lưu, chỉ trong phiên đang
 mở. Tab ẩn, cửa sổ mất focus, rảnh tay, cuộn do trang (J / K / X, dải tiến độ) không tính.
+
+## MDAN-017 · Một bộ dấu đã đọc, khai báo một chỗ
+20/11/2026 · `md-annotate/css/**`
+
+Mọi dấu đã đọc (làn cạnh khối, dàn ý tab Review) và ô đánh dấu của form dùng chung một bộ: cùng cỡ, cùng ảnh ✓, cùng
+màu cho từng trạng thái, khai báo một lần rồi dùng lại. ✓ là ảnh, không phải ký tự, để luôn nằm giữa ô. Dấu căn giữa
+dòng đầu của khối.

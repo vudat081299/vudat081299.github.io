@@ -1,39 +1,37 @@
 /* Dải tiến độ và gợi ý theo thời gian đọc (MDAN-016; ui/minimap.js, ui/dwell.js). Nạp sau review.css, trước mobile.css.
    Đã đọc là --accent đặc; đã đổi chữ rỗng viền --ink-3 (≥ 3:1); chưa đọc nhạt --line; gợi ý nền --hl-2 viền đứt. */
 
-/* DẢI TIẾN ĐỘ: fixed, JS đặt left / top / height sát mép phải khung, trái thanh cuộn. Vùng bấm chỉ rộng hơn vạch 2px:
-   phần lề phải còn lại vẫn là nền để kéo bôi đen (MDAN-016). */
+/* DẢI TIẾN ĐỘ: fixed, JS đặt left / top / height sát mép phải khung. Hai cột: thanh cuộn tự vẽ (.ma-mm__col: con trượt
+   xám, chấm nhận xét) rồi dải đơn vị (.ma-mm__in). Ở Split thanh cuộn hệ thống của khung luôn ẩn (ẩn theo dải thì khung đổi bề rộng sau khi vẽ), thanh tự vẽ thay.
+   Vùng bấm chỉ rộng bằng hai cột: phần lề phải còn lại vẫn là nền để kéo bôi đen (MDAN-016). */
+.ma-views[data-mode="split"] .ma-view { scrollbar-width: none; }
+.ma-views[data-mode="split"] .ma-view::-webkit-scrollbar { display: none; }
 .ma-mm {
-  position: fixed; z-index: 20; width: calc(var(--mm-v) + var(--mm-w) + 5px); cursor: pointer; touch-action: none;
+  position: fixed; z-index: 20; width: calc(var(--mm-p) * 4 + var(--mm-w) * 2); cursor: pointer; touch-action: none;
   -webkit-user-select: none; user-select: none;
 }
 .ma-mm > * { pointer-events: none; }
 /* Dải đơn vị sát thanh cuộn, hai đầu bo tròn; cột khung nhìn (.ma-mm__view) riêng bên trái, không đè lên dải. */
-.ma-mm__in { position: absolute; top: 0; bottom: 0; right: 1px; width: var(--mm-w); border-radius: var(--r-pill); overflow: hidden; }
+.ma-mm__in { position: absolute; top: 0; bottom: 0; right: var(--mm-p); width: var(--mm-w); border-radius: var(--r-pill); overflow: hidden; }
+.ma-mm__col { position: absolute; top: 0; bottom: 0; left: var(--mm-p); width: var(--mm-w); }
 .ma-mm__s { position: absolute; left: 0; right: 0; border-radius: 1px; background: var(--line); }
 .ma-mm__s:first-child { border-top-left-radius: var(--r-pill); border-top-right-radius: var(--r-pill); }
 .ma-mm__s:last-of-type { border-bottom-left-radius: var(--r-pill); border-bottom-right-radius: var(--r-pill); }
 .ma-mm__s.is-done { background: var(--accent); }
 .ma-mm__s.is-changed { background: var(--surface); box-shadow: inset 0 0 0 1px var(--ink-3); }
 .ma-mm__s.is-sug { background: var(--hl-2); outline: 1px dashed var(--ink-4); outline-offset: -1px; }
-/* Chấm nhận xét: tròn mực, viền nền để nổi trên đoạn xanh lẫn đoạn nhạt. */
+/* Con trượt: xám như thanh cuộn hệ thống, đậm hơn khi rê / kéo. Chấm nhận xét nằm trên nó: tròn mực, viền nền để nổi. */
+.ma-mm__view { position: absolute; left: 0; right: 0; border-radius: var(--r-pill); background: var(--sb-thumb); }
+@media (hover: hover) { .ma-mm:hover .ma-mm__view, .ma-mm.is-drag .ma-mm__view { background: var(--sb-thumb-on); } }
 .ma-mm__dot {
-  position: absolute; left: 50%; width: var(--mm-w); height: var(--mm-w); margin: calc(var(--mm-w) / -2) 0 0 calc(var(--mm-w) / -2);
+  position: absolute; left: 0; width: var(--mm-w); height: var(--mm-w); margin-top: calc(var(--mm-w) / -2);
   border-radius: var(--r-pill); background: var(--ink); box-shadow: 0 0 0 1px var(--surface);
 }
-.ma-mm__view { position: absolute; left: 1px; width: var(--mm-v); border-radius: var(--r-pill); background: var(--ink); }
-@media (hover: hover) { .ma-mm:hover .ma-mm__view, .ma-mm.is-drag .ma-mm__view { background: var(--ring); } }
 /* Màn cảm ứng: chỉ để xem (vạch mảnh không đạt --h-touch, lại nằm chỗ ngón tay vuốt). Điện thoại: ui/minimap.js ẩn. */
 @media (pointer: coarse) { .ma-mm { pointer-events: none; } }
 
-/* GỢI Ý trên làn: ✓ viền đứt trên nền xanh nhạt, vạch đứt suốt khối. Khác .is-cur (✓ viền đứt trên nền trắng). */
-.ma-lane .ma-lane__b.is-sug:not(.is-head)::before { top: 18px; background: repeating-linear-gradient(to bottom, var(--accent-line) 0 3px, transparent 3px 6px); }
-.ma-lane .ma-lane__b.is-sug:not(.is-head)::after { content: '✓'; color: var(--ink-2); border: 1.5px dashed var(--ink-3); background: var(--hl-2); }
-html.ma-reviewing .ma-lane__b.is-sug.is-cur:not(.is-head)::after {
-  content: '✓'; color: var(--ink-2); border: 1.5px dashed var(--ink-3); background: var(--hl-2);
-  box-shadow: 0 0 0 2px var(--surface), 0 0 0 3px var(--edge-on);
-}
-@media (hover: hover) { .ma-lane__b.is-sug:not(.is-head):hover::after { border-style: solid; } }
+/* GỢI Ý trên làn: dấu ✓ viền đứt ở bộ dấu (css/review.css); ở đây chỉ vạch đứt suốt khối. */
+.ma-lane .ma-lane__b.is-sug:not(.is-head)::before { top: var(--below); background: repeating-linear-gradient(to bottom, var(--accent-line) 0 3px, transparent 3px 6px); }
 /* Màn cảm ứng chưa có dấu: làn tắt (review.css); có gợi ý thì chỉ hiện nút của đơn vị được gợi ý. */
 @media (hover: none) {
   html:not(.ma-reviewing) .ma-lane:has(.is-sug) { display: block; }

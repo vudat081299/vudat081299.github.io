@@ -26,6 +26,8 @@
   --ring:      var(--ink);           /* vòng focus, viền ô nhập đang gõ */
   --edge-on:   var(--ink-4);         /* viền của thẻ / hàng đang chọn */
 
+  --sb-thumb:    color-mix(in srgb, var(--ink) 26%, transparent);   /* con trượt thanh cuộn, cả thanh tự vẽ */
+  --sb-thumb-on: color-mix(in srgb, var(--ink) 45%, transparent);
   --scrim:     rgba(11, 15, 12, .38);
   --scrim-live: rgba(11, 15, 12, .2);   /* hộp Settings: mờ nhẹ, vẫn đọc được thay đổi phía sau */
   --chip:      rgba(11, 15, 12, .05);
@@ -80,14 +82,21 @@
   --bar-h: 60px;
   --side: 360px;                       /* bề rộng panel; người dùng kéo được 320–560, lưu ở prefs.side */
   --lane-w: 16px;                      /* làn dấu đã đọc cạnh khối (css/review.css, MDAN-013) */
-  --mm-w: 6px;                         /* vạch của dải tiến độ cạnh phải khung (css/reading.css, MDAN-016) */
-  --mm-v: 3px;                         /* cột khung nhìn, trái dải tiến độ */
+  --ic-box: 14px;                      /* mọi ô đánh dấu: dấu đã đọc (bộ dấu ở đầu css/review.css), ô đánh dấu của form */
+  /* Dấu ✓ là ảnh, không phải ký tự (ký tự lệch theo font): một chỗ khai báo, mọi ô đánh dấu dùng lại. Màu nằm trong ảnh:
+     --ic-check là --on-accent (trên --accent), --ic-check-hint là --ink-3 (✓ mờ, gợi ý); đổi token màu thì đổi cả đây. */
+  --ic-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4.5 8.3l2.4 2.4 4.6-5' fill='none' stroke='%23052e16' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  --ic-check-hint: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4.5 8.3l2.4 2.4 4.6-5' fill='none' stroke='%235b645e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  --mm-w: 6px;                         /* thanh cuộn tự vẽ và dải tiến độ cạnh phải khung, cùng một bề rộng như con trượt của
+                                          thanh cuộn mảnh (css/reading.css, MDAN-016) */
+  --mm-p: 1px;                         /* lề quanh hai cột; ui/minimap.js làm tròn hai số này theo điểm ảnh thật */
 
   --display: 'Space Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --sans:    'Be Vietnam Pro', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --mono:    'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 html.dark {
+  --ic-check-hint: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4.5 8.3l2.4 2.4 4.6-5' fill='none' stroke='%238d9891' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   --bg:        #090b0a;
   --surface:   #101412;
   --surface-2: #171c19;

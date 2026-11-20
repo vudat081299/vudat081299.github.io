@@ -1,6 +1,35 @@
 /* Đánh dấu đã đọc (MDAN-013, ui/review.js, ui/review-panel.js): làn dấu cạnh khối, làm mờ khối đã đọc, nút ✓ Reviewed
    của hộp nhận xét, viên thuốc ở máy hẹp, tab Review của panel. Nạp sau focus.css, trước mobile.css.
-   ✓ là chữ --on-accent trên nền --accent (6,5:1); ○ (đã đổi chữ) là vòng --ink-3 (≥ 3:1), không dùng xanh làm chữ. */
+   ✓ là ảnh --ic-check (--on-accent trên --accent, 6,5:1); ○ (đã đổi chữ) là vòng --ink-3 (≥ 3:1), không dùng xanh làm chữ. */
+
+/* BỘ DẤU ĐÃ ĐỌC: một hình, một bộ trạng thái, khai báo ở đây, dùng chung cho làn (.ma-lane__b::after) và dàn ý tab Review
+   (.ma-rvs__ic::after); ô đánh dấu của form (base.css) dùng cùng ảnh ✓. Tròn là một khối, vuông là cả section.
+   Cỡ --ic-box; ảnh phủ trọn ô kể cả viền (border-box) nên viền dày / mỏng / đứt không xê dịch ✓. */
+.ma-lane__b::after, .ma-rvs__ic::after {
+  content: ''; position: absolute; left: 50%; width: var(--ic-box); height: var(--ic-box); margin-left: calc(var(--ic-box) / -2);
+  box-sizing: border-box; border: 1.5px solid transparent; border-radius: var(--r-pill);
+  background: transparent center / 100% no-repeat border-box;
+}
+.ma-lane__b.is-head::after, .ma-rvs__ic::after { border-color: var(--ink-4); border-radius: var(--r-xs); background-color: var(--surface); }
+.ma-lane__b.is-done::after, .ma-lane__b.is-head.sec-done::after, .ma-rvs.is-done .ma-rvs__ic::after {
+  border-color: var(--accent); background-color: var(--accent); background-image: var(--ic-check);
+}
+.ma-lane__b.is-head.sec-part::after, .ma-rvs.is-part .ma-rvs__ic::after,
+.ma-lane__b.is-head.sec-changed::after, .ma-rvs.is-changed .ma-rvs__ic::after {
+  border-color: var(--accent); background-image: linear-gradient(to right, var(--accent) 50%, var(--surface) 50%);
+}
+.ma-lane__b.is-head.sec-changed::after, .ma-rvs.is-changed .ma-rvs__ic::after, .ma-lane__b.is-changed::after { border-color: var(--ink-3); }
+.ma-lane__b.is-changed::after { background-color: var(--surface); }
+/* ✓ mờ viền đứt: rê lên khối chưa đọc, khối X sẽ đánh dấu (.is-cur), khối được gợi ý (.is-sug, nền xanh nhạt). */
+@media (hover: hover) { .ma-lane__b.is-todo:not(.is-head):hover::after { border: 1px dashed var(--ink-4); background-image: var(--ic-check-hint); } }
+html.ma-reviewing .ma-lane__b.is-cur.is-todo:not(.is-head)::after,
+.ma-lane .ma-lane__b.is-sug:not(.is-head)::after { border: 1.5px dashed var(--ink-3); background-color: var(--surface); background-image: var(--ic-check-hint); }
+.ma-lane .ma-lane__b.is-sug:not(.is-head)::after { background-color: var(--hl-2); }
+@media (hover: hover) { .ma-lane__b.is-sug:not(.is-head):hover::after { border-style: solid; } }
+/* Vòng ngoài: khối X sẽ đánh dấu khi nó đã có dấu, hay là tiêu đề. */
+html.ma-reviewing .ma-lane__b.is-cur:not(.is-todo)::after,
+html.ma-reviewing .ma-lane__b.is-cur.is-head::after,
+html.ma-reviewing .ma-lane__b.is-sug.is-cur:not(.is-head)::after { box-shadow: 0 0 0 2px var(--surface), 0 0 0 3px var(--edge-on); }
 /* LÀN: lớp phủ trong #wrap-*, nút đặt tuyệt đối theo toạ độ JS tính; không chữ, không chọn được. */
 .ma-view { position: relative; }
 .ma-lane { position: absolute; left: 0; top: 0; width: 0; height: 0; -webkit-user-select: none; user-select: none; }
@@ -8,39 +37,22 @@
   position: absolute; z-index: 1; width: var(--lane-w); min-height: 0; padding: 0; margin: 0;
   border: 0; border-radius: var(--r-xs); background: transparent; cursor: pointer;
 }
-/* Vạch dọc suốt khối (::before) và dấu ở đầu khối (::after, 14px). */
+/* Dấu (::after) căn giữa dòng đầu của khối: --c là tâm dòng ấy tính từ đỉnh nút (ui/review.js đo). Vạch dọc suốt khối
+   (::before) bắt đầu ngay dưới dấu. Tiêu đề: nút của cả section, không vạch. */
+.ma-lane__b { --below: calc(var(--c, 9px) + var(--ic-box) / 2 + 2px); }
+.ma-lane__b::after { top: calc(var(--c, 9px) - var(--ic-box) / 2); }
 .ma-lane__b::before {
   content: ''; position: absolute; left: 50%; top: var(--s1); bottom: var(--s1); width: 2px; margin-left: -1px;
   border-radius: var(--r-pill); background: transparent;
 }
-.ma-lane__b::after {
-  content: ''; position: absolute; left: 50%; top: 2px; width: 14px; height: 14px; margin-left: -7px; box-sizing: border-box;
-  display: grid; place-items: center; border-radius: var(--r-pill);
-  font: 600 var(--fs-xs)/1 var(--sans);
-}
-.ma-lane__b.is-done::before { background: var(--accent-line); top: 18px; }
-.ma-lane__b.is-done::after { content: '✓'; background: var(--accent); color: var(--on-accent); }
-.ma-lane__b.is-changed::before { top: 18px; background: repeating-linear-gradient(to bottom, var(--ink-4) 0 3px, transparent 3px 6px); }
-.ma-lane__b.is-changed::after { border: 1.5px solid var(--ink-3); background: var(--surface); }
-/* Khối tiêu đề: nút của cả section, hình vuông (khối là hình tròn): ✓ hết, nửa xanh một phần hay có khối đổi chữ
-   (viền --ink-3), rỗng chưa đọc. */
+.ma-lane__b.is-done::before { background: var(--accent-line); top: var(--below); }
+.ma-lane__b.is-changed::before { top: var(--below); background: repeating-linear-gradient(to bottom, var(--ink-4) 0 3px, transparent 3px 6px); }
 .ma-lane__b.is-head::before { display: none; }
-.ma-lane__b.is-head::after { content: ''; color: var(--on-accent); border: 1.5px solid var(--ink-4); border-radius: var(--r-xs); background: var(--surface); }
-.ma-lane__b.is-head.sec-done::after { content: '✓'; border-color: var(--accent); background: var(--accent); }
-.ma-lane__b.is-head.sec-part::after { border-color: var(--accent); background: linear-gradient(to right, var(--accent) 50%, var(--surface) 50%); }
-.ma-lane__b.is-head.sec-changed::after { border-color: var(--ink-3); background: linear-gradient(to right, var(--accent) 50%, var(--surface) 50%); }
 /* Chưa có dấu nào thì nút section chỉ hiện khi rê; chưa đọc thì không hiện gì (rê: dấu mờ). */
 html:not(.ma-reviewing) .ma-lane__b.is-head:not(:hover)::after { visibility: hidden; }
-@media (hover: hover) {
-  .ma-lane__b:hover { background: var(--chip); }
-  .ma-lane__b.is-todo:not(.is-head):hover::after { content: '✓'; color: var(--ink-3); border: 1px dashed var(--ink-4); }
-}
+@media (hover: hover) { .ma-lane__b:hover { background: var(--chip); } }
 /* Màn cảm ứng chưa có dấu: tắt làn, để chạm sát mép không đánh dấu nhầm (bắt đầu bằng hộp nhận xét hay tab Review). */
 @media (hover: none) { html:not(.ma-reviewing) .ma-lane { display: none; } }
-/* Đơn vị X sẽ đánh dấu (khi phiên đã có dấu): chưa đọc thì hiện dấu ✓ mờ viền đứt, đã đọc / đổi chữ thì thêm vòng ngoài. */
-html.ma-reviewing .ma-lane__b.is-cur.is-todo:not(.is-head)::after { content: '✓'; color: var(--ink-3); border: 1px dashed var(--ink-3); background: var(--surface); }
-html.ma-reviewing .ma-lane__b.is-cur:not(.is-todo)::after,
-html.ma-reviewing .ma-lane__b.is-cur.is-head::after { box-shadow: 0 0 0 2px var(--surface), 0 0 0 3px var(--edge-on); }
 .ma-lane__b:focus-visible { outline: 2px solid var(--ring); outline-offset: 0; }
 @media (prefers-reduced-motion: no-preference) { .ma-lane__b.is-flash::after { animation: ma-rv-flash 1.1s var(--ease) 1; } }
 .ma-lane__b.is-flash { background: var(--accent-soft); }
@@ -91,14 +103,7 @@ html.ma-rvdim #v-src .ma-ln.is-rv, html.ma-rvdim #v-md .is-rv { opacity: .4; }
   position: relative; flex: none; width: var(--h-sm); height: var(--h-sm); padding: 0; border: 0; border-radius: var(--r-sm);
   background: transparent; cursor: pointer;
 }
-.ma-rvs__ic::after {
-  content: ''; position: absolute; left: 50%; top: 50%; width: 16px; height: 16px; margin: -8px 0 0 -8px; box-sizing: border-box;
-  display: grid; place-items: center; border-radius: var(--r-xs); border: 1.5px solid var(--ink-4); background: var(--surface);
-  font: 600 var(--fs-xs)/1 var(--sans); color: var(--on-accent);
-}
-.ma-rvs.is-done .ma-rvs__ic::after { content: '✓'; border-color: var(--accent); background: var(--accent); }
-.ma-rvs.is-part .ma-rvs__ic::after { border-color: var(--accent); background: linear-gradient(to right, var(--accent) 50%, var(--surface) 50%); }
-.ma-rvs.is-changed .ma-rvs__ic::after { border-color: var(--ink-3); background: linear-gradient(to right, var(--accent) 50%, var(--surface) 50%); }
+.ma-rvs__ic::after { top: 50%; margin-top: calc(var(--ic-box) / -2); }
 .ma-rvs__main {
   flex: 1; min-width: 0; display: flex; align-items: baseline; gap: var(--s2); min-height: var(--h-sm); padding: var(--s1) var(--s2);
   border: 0; border-radius: var(--r-sm); background: transparent; text-align: left;

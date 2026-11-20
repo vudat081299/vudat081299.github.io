@@ -36,8 +36,7 @@
 - Tính năng mới: logic vào `js/core/`, giao diện và sự kiện vào một module `js/ui/`; `main.js` gọi `init…()`.
 - Thứ tự gọi `init…()` là thứ tự đăng ký sự kiện: hai module nghe cùng phần tử thì đừng đảo (cặp ghi ở đầu `main.js`).
 - Biến dùng chung: `export var` ở module sở hữu; nơi khác chỉ đọc, gán lại qua hàm của chủ (`switchTo()`, `replaceDeleted()`).
-- Import vòng được; code cấp cao của module không gọi sang module khác, việc lúc nạp nằm trong `init…()`.
-- Mỗi file mở đầu bằng chú thích: làm gì, xuất gì, dùng module nào.
+- Import vòng được; code cấp cao của module không gọi sang module khác, việc lúc nạp nằm trong `init…()`. Mỗi file mở đầu bằng chú thích: làm gì, xuất gì, dùng module nào.
 
 ## Ngôn ngữ (MDAN-007)
 
@@ -146,9 +145,10 @@
   dải đọc (dưới con trỏ khi Focus theo chuột), làn `.is-cur`; vừa nhảy tới (đỉnh ngay trên mốc trên, `bandScroll`) thì là nó tới khi khung rời đường cuộn (`pin`).
 - Nút ✓ Reviewed của hộp nhận xét (nới ra trọn khối, cả khi chọn dòng ở lề số) do `ui/review.js` theo dõi hộp bằng MutationObserver.
 - Prompt: *Say which lines I reviewed* (`rvPrompt`, mặc định tắt) thêm `Đã đọc kỹ: … Chưa đọc: …`; tắt thì prompt y hệt từng byte.
-- Máy hẹp / cảm ứng: viên thuốc `#rv-pill` chỉ đánh dấu, không bỏ dấu. Màn cảm ứng chưa có dấu thì tắt làn.
-- Dải tiến độ (MDAN-016): `.ma-mm` fixed, mép phải khung đang hiện, trái thanh cuộn; mỗi đơn vị một đoạn theo vị trí (đặc ✓, rỗng ○, nhạt,
-  viền đứt gợi ý), chấm nhận xét, hai đầu bo tròn; cột đen khung nhìn riêng bên trái dải; bấm / kéo thì cuộn tới; lề còn lại vẫn kéo bôi đen. ≤ 720px ẩn; cảm ứng chỉ xem.
+- Bộ dấu (MDAN-017): tròn là khối, vuông là section, ✓ là ảnh `--ic-check`, cỡ `--ic-box`; khai báo một lần ở đầu `css/review.css`, ô đánh dấu
+  của form dùng cùng ảnh, cùng cỡ; dấu căn giữa dòng đầu khối (`--c`). Máy hẹp / cảm ứng: `#rv-pill` chỉ đánh dấu, không bỏ dấu; chưa có dấu thì tắt làn.
+- Dải tiến độ (MDAN-016): `.ma-mm` fixed, mép phải khung; mỗi đơn vị một đoạn (đặc ✓, rỗng ○, nhạt, viền đứt gợi ý), hai đầu bo tròn. Trái dải là
+  thanh cuộn tự vẽ (con trượt `--sb-thumb`, chấm nhận xét), ở *Split* thay thanh cuộn của khung (ẩn); bấm / kéo thì cuộn tới. ≤ 720px ẩn; cảm ứng chỉ xem.
 - Gợi ý (`prefs.rvSuggest`, mặc định bật): đơn vị chạm dải đọc (luật của Focus band, cả khi Focus tắt) cộng thời gian; rời dải đi lên sau
   `dwellNeed` (40% số từ ÷ 230 wpm, 4–60 s) thì có ✓ viền đứt `.is-sug` và nút *Accept N suggested* ở tab *Review*. Không bao giờ tự đánh dấu.
 - Chỉ đếm khi tab hiện, cửa sổ có focus, có thao tác trong 60 s; rời dải chỉ tính lúc người dùng tự cuộn; J / K / X, dải tiến độ gọi `noteJump()`.

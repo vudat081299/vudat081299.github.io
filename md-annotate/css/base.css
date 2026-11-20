@@ -22,7 +22,7 @@ a { color: inherit; }
 ::highlight(ma-mirror) { background-color: var(--hl-mirror); }
 :focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
 /* Thanh cuộn mảnh, nhạt, theo theme. */
-* { scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--ink) 22%, transparent) transparent; }
+* { scrollbar-width: thin; scrollbar-color: var(--sb-thumb) transparent; }
 .ma-panel__body, .ma-dlg__b, .ma-out, .ma-opts__in, .ma-view { scrollbar-gutter: stable; }
 .ma-wrap { width: var(--wrap-w, min(100%, max(70vw, 1280px))); margin-inline: auto; padding: 0 var(--pad); } /* mặc định ~70%, ≥ 1280px; chỉnh ở Layout (MDAN-005) */
 svg.ma-i { width: 16px; height: 16px; flex: none; }
@@ -142,14 +142,13 @@ html:not(.dark) .ma-moon, html.dark .ma-sun { display: none; }
 /* Ô đánh dấu vẽ tay: Chrome tự làm tối accent-color khi màu sáng (thành xanh đậm), nên không dùng accent-color.
    Đang chọn: nền --accent, dấu --on-accent. Ô trong bản dựng (.ma-md, task list kiểu GitHub) giữ mặc định. */
 .ma-check input[type="checkbox"], .ma-syn input[type="checkbox"] {
-  -webkit-appearance: none; appearance: none; flex: none; position: relative; width: 16px; height: 16px; margin: 0;
+  -webkit-appearance: none; appearance: none; flex: none; position: relative; width: var(--ic-box); height: var(--ic-box); margin: 0;
   border: 1.5px solid var(--ink-4); border-radius: var(--r-xs); background: var(--surface); cursor: pointer;
   transition: background-color var(--dur) var(--ease), border-color var(--dur) var(--ease);
 }
-.ma-check input[type="checkbox"]:checked, .ma-syn input[type="checkbox"]:checked { background: var(--accent); border-color: var(--accent); }
-.ma-check input[type="checkbox"]:checked::after, .ma-syn input[type="checkbox"]:checked::after {
-  content: ''; position: absolute; left: 50%; top: 50%; width: 4px; height: 8px; box-sizing: border-box;
-  border: solid var(--on-accent); border-width: 0 2px 2px 0; transform: translate(-50%, -60%) rotate(45deg);
+/* ✓ dùng chung ảnh --ic-check (tokens.css) với dấu đã đọc. */
+.ma-check input[type="checkbox"]:checked, .ma-syn input[type="checkbox"]:checked {
+  border-color: var(--accent); background: var(--accent) var(--ic-check) center / 100% no-repeat border-box;
 }
 .ma-check input[type="checkbox"]:focus-visible, .ma-syn input[type="checkbox"]:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
 .ma-check input[type="checkbox"]:disabled, .ma-syn input[type="checkbox"]:disabled { opacity: .5; cursor: default; }

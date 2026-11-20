@@ -102,6 +102,20 @@ function laneClass(r, i, secOf) {
   return 'ma-lane__b is-' + r.res.state[i] + (u.head ? ' is-head sec-' + secOf[u.sec] : '');
 }
 function secStates(r) { var o = {}; r.secs.forEach(function (sc) { o[sc.sec] = sc.state; }); return o; }
+/* Tâm dòng đầu của phần tử, tính từ đỉnh nó (px): đệm trên + viền trên + nửa chiều cao dòng. Bảng: theo ô đầu. Kiểu tính
+   một lần mỗi thẻ (cache) — văn bản dài có hàng nghìn khối. */
+function lineH(cs) { var l = parseFloat(cs.lineHeight); return isNaN(l) ? parseFloat(cs.fontSize) * 1.25 : l; }
+function firstLineC(el, cache) {
+  if (el.tagName === 'TABLE') {
+    var c = el.querySelector('th, td');
+    if (!c) return 9;
+    var cs = getComputedStyle(c);
+    return c.getBoundingClientRect().top - el.getBoundingClientRect().top + parseFloat(cs.paddingTop) + lineH(cs) / 2;
+  }
+  var k = el.tagName + '.' + el.className;
+  if (!(k in cache)) { var st = getComputedStyle(el); cache[k] = parseFloat(st.paddingTop) + parseFloat(st.borderTopWidth) + lineH(st) / 2; }
+  return cache[k];
+}
 function fillLane(w, r) {
   var box = lanes[w], wrap = wrapOf(w), root = rootOf(w), out = [];
   box.replaceChildren();
@@ -114,22 +128,24 @@ function fillLane(w, r) {
     if (!l0) return;
     x = l0.getBoundingClientRect().left - wr.left + parseFloat(getComputedStyle(l0).paddingLeft) - laneW - 6;
   } else x = Math.max(0, root.getBoundingClientRect().left - wr.left - laneW - 6);
-  var secOf = secStates(r), frag = document.createDocumentFragment();
+  var secOf = secStates(r), frag = document.createDocumentFragment(), cache = {};
   r.units.forEach(function (u, i) {
-    var top, bottom;
+    var top, bottom, c;
     if (w === 'src') {
       var a = root.children[u.a], b = root.children[u.b];
       if (!a || !b) return;
       top = a.getBoundingClientRect().top; bottom = b.getBoundingClientRect().bottom;
+      c = firstLineC(a, cache);
     } else {
       var el = mdEl(r, i);
       if (!el) return;
       var rc = el.getBoundingClientRect(); top = rc.top; bottom = rc.bottom;
+      c = firstLineC(el, cache);
     }
     top -= off; bottom -= off;
     out.push({ i: i, top: top, bottom: bottom });
     var btn = h('button', { type: 'button', tabindex: '-1', 'data-u': String(i), title: tip(r, i), class: laneClass(r, i, secOf) });
-    btn.style.cssText = 'left:' + Math.round(x) + 'px;top:' + Math.round(top) + 'px;height:' + Math.max(16, Math.round(bottom - top)) + 'px';
+    btn.style.cssText = 'left:' + Math.round(x) + 'px;top:' + Math.round(top) + 'px;height:' + Math.max(16, Math.round(bottom - top)) + 'px;--c:' + Math.round(c) + 'px';
     frag.append(btn);
   });
   box.append(frag);
