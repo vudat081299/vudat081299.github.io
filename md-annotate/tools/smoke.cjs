@@ -80,6 +80,8 @@ async function openOpts(page) {
 const inView = (page, sel) => page.$eval(sel, (el) => { const r = el.getBoundingClientRect(); return r.width > 0 && r.top >= 0 && r.bottom <= innerHeight; });
 const out = (page) => page.$eval('#out', (el) => el.textContent);
 const items = (page) => page.$$eval('#list .ma-item', (els) => els.map((e) => e.textContent));
+/* Dán chữ vào ô Edit như người dùng dán (sự kiện paste rồi input). */
+const pasteText = (page, t) => page.evaluate((t) => { const ta = document.getElementById('src-input'); ta.focus(); ta.dispatchEvent(new Event('paste')); ta.value = t; ta.dispatchEvent(new Event('input')); }, t);
 const accentCheck = (page) => page.evaluate(() => {
   const lum = (c) => { const x = c.match(/[\d.]+/g).slice(0, 3).map((n) => { n /= 255; return n <= 0.03928 ? n / 12.92 : ((n + 0.055) / 1.055) ** 2.4; }); return 0.2126 * x[0] + 0.7152 * x[1] + 0.0722 * x[2]; };
   const b = document.getElementById('btn-copy'), was = b.disabled;
@@ -3438,7 +3440,7 @@ const cornerClash = (page) => page.evaluate(() => {
     const pc = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, colorScheme: 'dark' });
     const pp = await pc.newPage(); watch(pp);
     await pp.goto(BASE); await pp.waitForFunction(() => window.marked && window.DOMPurify);
-    await pp.evaluate((t) => { const ta = document.getElementById('src-input'); ta.focus(); ta.dispatchEvent(new Event('paste')); ta.value = t; ta.dispatchEvent(new Event('input')); }, MD);
+    await pasteText(pp, MD);
     await pp.waitForSelector('#v-md pre code span.hljs-keyword');
     check('tô màu nạp khi cần: điện thoại tô khối code, không tràn ngang', (await overflow(pp)) === 0);
     await pc.close();
@@ -3453,8 +3455,7 @@ const cornerClash = (page) => page.evaluate(() => {
     await fpg.route(/languages\/go\.min\.js$/, (r) => r.abort());
     await fpg.route(/languages\/rust\.min\.js$/, (r) => r.fulfill({ status: 200, contentType: 'text/javascript', body: 'export default function () { return {}; }' }));
     await fpg.goto(BASE); await fpg.waitForFunction(() => window.marked && window.DOMPurify);
-    await fpg.evaluate((t) => { const ta = document.getElementById('src-input'); ta.focus(); ta.dispatchEvent(new Event('paste')); ta.value = t; ta.dispatchEvent(new Event('input')); },
-      '# Hỏng\n\n```go\nfunc main() {}\n```\n\n```rust\nfn main() {}\n```\n\n```python\nx = 1\n```\n');
+    await pasteText(fpg, '# Hỏng\n\n```go\nfunc main() {}\n```\n\n```rust\nfn main() {}\n```\n\n```python\nx = 1\n```\n');
     await fpg.waitForSelector('#v-md code.language-python .hljs-number'); await fpg.waitForTimeout(300);
     const fail = await fpg.evaluate(() => [...document.querySelectorAll('#v-md pre code')].map((c) => c.querySelectorAll('span').length + ':' + c.textContent.trim()));
     check('tô màu nạp khi cần: tải hỏng / sai integrity thì chữ trơn, ngôn ngữ khác vẫn tô', fail[0] === '0:func main() {}' && fail[1] === '0:fn main() {}' && /^[1-9]\d*:x = 1$/.test(fail[2]), JSON.stringify(fail));
@@ -3474,7 +3475,7 @@ const cornerClash = (page) => page.evaluate(() => {
       pref: JSON.parse(localStorage.getItem('md-annotate:prefs:v1') || '{}').view
     }));
     await mp.goto(BASE); await mp.waitForFunction(() => window.marked && window.DOMPurify);
-    await mp.evaluate((t) => { const ta = document.getElementById('src-input'); ta.focus(); ta.dispatchEvent(new Event('paste')); ta.value = t; ta.dispatchEvent(new Event('input')); }, DOC);
+    await pasteText(mp, DOC);
     await mp.click('.ma-tab[data-view="split"]'); await mp.waitForTimeout(150);
     const md = await state();
     check('chế độ xem: file .md có Edit, Source, Preview, Split', md.tabs === 'edit,src,view,split' && md.mode === 'split' && md.pref === 'split', JSON.stringify(md));
