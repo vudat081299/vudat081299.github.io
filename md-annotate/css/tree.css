@@ -78,7 +78,7 @@ html.ma-tree-on body > .ma-tree {
 .ma-tree__body.is-drop { background: var(--accent-soft); outline: 1px dashed var(--edge-on); outline-offset: -4px; }
 /* Khối hàng: rộng bằng thân, hay rộng hơn khi hàng sâu nhất cần (--dmax: cấp sâu nhất đang hiện, ui/tree.js): mỗi hàng giữ
    ≥ ~96px cho tên, thụt không bao giờ bị nén; thân cuộn ngang, trang không. Mỗi hàng rộng bằng chỗ nhìn thấy của thân
-   (100cqw), hàng sâu thì rộng đủ cho chính nó: thẻ file mở luôn ôm sát tên. */
+   (100cqw), hay bằng cả khối khi cây sâu: mọi hàng cùng mép phải, ⋯ cùng một cột. */
 .ma-tree__rows { position: relative; min-width: calc(var(--dmax, 0) * var(--tree-step) + var(--row-min)); min-height: 100%; }
 .ma-tree__list { position: relative; list-style: none; margin: 0; padding: 0; min-height: 100%; }
 
@@ -96,29 +96,32 @@ html.ma-tree-on body > .ma-tree {
    biểu tượng 16px + 8px, tên, đuôi (huy hiệu, ⋯). */
 .ma-trow {
   position: relative; display: flex; align-items: center; height: var(--row-h); box-sizing: border-box;
-  width: max(100cqw, calc(var(--depth, 0) * var(--tree-step) + var(--row-min))); padding: 0 var(--s1) 0 calc(var(--s1) + var(--depth, 0) * var(--tree-step));
-  border-radius: var(--r-sm); color: var(--ink-2); cursor: pointer;
+  width: 100%; padding: 0 0 0 calc(var(--s1) + var(--depth, 0) * var(--tree-step));
+  color: var(--ink-2); cursor: pointer;
 }
-@media (prefers-reduced-motion: no-preference) { .ma-trow { transition: background var(--dur) var(--ease); } }
+/* THẺ của hàng (::before, dưới chữ nhờ isolation): bo --r-sm, lùi --card-y trên / dưới, tới mép phải hàng; mép trái ngay trước
+   nội dung (file: trước biểu tượng, ô chevron trống bỏ ngoài; folder: trước chevron). Mọi trạng thái vẽ lên cùng một thẻ:
+   rê --chip, file đang mở nền xanh 18% (không viền, tên 600), thả vào nền nhạt + viền, focus bàn phím vòng 1px --ring.
+   --row-solid: màu đặc của thẻ trên --surface, làm nền cho đuôi ⋯ khi nó dính mép phải và đè lên tên. */
+.ma-trow { isolation: isolate; --card-l: 12px; --card-y: 2px; --row-solid: var(--surface); }
+.ma-trow[aria-expanded] { --card-l: -2px; }
+.ma-trow::before {
+  content: ''; position: absolute; z-index: -1; top: var(--card-y); bottom: var(--card-y); right: 0;
+  left: calc(var(--s1) + var(--depth, 0) * var(--tree-step) + var(--card-l)); border-radius: var(--r-sm);
+}
+@media (prefers-reduced-motion: no-preference) { .ma-trow::before { transition: background var(--dur) var(--ease); } }
 .ma-trow:focus { outline: none; }
-/* Focus bàn phím: vòng 1px --ring trọn bốn cạnh (≥ 3:1), không nền; rê: nền --chip. Hai thứ khác nhau và nhẹ hơn hàng chọn. */
-.ma-tabbing .ma-trow:focus-visible { outline: 1px solid var(--ring); outline-offset: -1px; }
-@media (hover: hover) { .ma-trow:hover { background: var(--chip); color: var(--ink); } }
-/* File đang mở: một thẻ bo --r-sm quanh phần nội dung của hàng (từ ô chevron trống của file tới mép phải hàng, lùi 2px trên
-   / dưới), chỉ nền xanh nhạt (đậm hơn --accent-soft một nấc), không viền, không vòng; tên đậm 600. Không tô cả hàng, không
-   vạch trái riêng. Thẻ nằm dưới chữ (hàng là một lớp riêng, isolation). */
-.ma-trow { isolation: isolate; }
-.ma-trow[aria-selected="true"], .ma-trow[aria-selected="true"]:hover { background: transparent; color: var(--ink); }
-.ma-trow[aria-selected="true"]::before {
-  content: ''; position: absolute; z-index: -1; top: 2px; bottom: 2px; right: 0;
-  left: calc(var(--s1) + var(--depth, 0) * var(--tree-step) + 12px);
-  border-radius: var(--r-sm); background: color-mix(in srgb, var(--accent) 18%, transparent);
+.ma-tabbing .ma-trow:focus-visible::before { outline: 1px solid var(--ring); outline-offset: -1px; }
+@media (hover: hover) {
+  .ma-trow:hover { color: var(--ink); --row-solid: var(--chip-solid); }
+  .ma-trow:hover::before { background: var(--chip); }
 }
-.ma-trow[aria-selected="true"] { --name-w: 600; }
+.ma-trow[aria-selected="true"] { color: var(--ink); --name-w: 600; --row-solid: color-mix(in srgb, var(--accent) 18%, var(--surface)); }
+.ma-trow[aria-selected="true"]::before { background: color-mix(in srgb, var(--accent) 18%, transparent); }
 /* Nền thẻ đậm hơn: % review dùng --ink-2 để giữ ≥ 4,5:1 ở theme tối. */
 .ma-trow[aria-selected="true"] .ma-trow__ic, .ma-trow[aria-selected="true"] .ma-trow__rv { color: var(--ink-2); }
 .ma-trow[aria-selected="true"] .ma-trow__c { background: var(--surface); }
-.ma-trow.is-drop { background: var(--accent-soft); box-shadow: inset 0 0 0 1px var(--edge-on); }
+.ma-trow.is-drop::before { background: var(--accent-soft); box-shadow: inset 0 0 0 1px var(--edge-on); }
 .ma-trow.is-dragging { opacity: .5; }
 .ma-trow__chev, .ma-trow__ic { flex: none; height: 16px; display: grid; place-items: center; color: var(--ink-3); }
 .ma-trow__chev { width: 15px; margin-right: 5px; }
@@ -128,9 +131,25 @@ html.ma-tree-on body > .ma-tree {
 .ma-trow__ic { width: 16px; margin-right: var(--s2); }
 .ma-trow__ic svg { width: 16px; height: 16px; }
 .ma-trow__name { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--name-fs); font-weight: var(--name-w, 400); line-height: var(--lh-tight); }
-/* ĐUÔI: huy hiệu (số nhận xét: viên thuốc; % đã đọc: mờ) rồi ⋯. Chuột: đuôi giữ chỗ 24px, ⋯ hiện khi rê / focus / menu mở,
-   nằm đè chỗ huy hiệu (huy hiệu ẩn, không gì xê dịch); cảm ứng: ⋯ luôn hiện, sau huy hiệu, mờ --ink-4 (biểu tượng ≥ 3:1). */
-.ma-trow__end { flex: none; display: flex; align-items: center; justify-content: flex-end; gap: var(--s1); margin-left: var(--s1); }
+/* ĐUÔI: huy hiệu (số nhận xét: viên thuốc; % đã đọc: mờ) rồi ⋯. Chuột: đuôi giữ chỗ 24px, ⋯ 20px hiện khi rê / focus / menu
+   mở, nằm đè chỗ huy hiệu (huy hiệu ẩn, không gì xê dịch), gọn trong thẻ; cảm ứng: ⋯ luôn hiện, sau huy hiệu, mờ --ink-4
+   (biểu tượng ≥ 3:1). Đuôi dính mép phải thân (sticky): cây cuộn ngang thì ⋯ vẫn ở mép phải, không trôi giữa tấm, không bị
+   cắt; nền đặc (thấp hơn thẻ 1px mỗi bên, chừa vòng focus; mép trái mờ dần 12px) che phần tên nằm dưới. */
+.ma-trow__end {
+  flex: none; display: flex; align-items: center; justify-content: flex-end; gap: var(--s1); margin-left: var(--s1);
+  position: sticky; right: 0; z-index: 1; padding: 0 var(--s1);
+}
+/* Nền đuôi: ::before màu thẻ, góc phải bo như thẻ (khi dính mép, thẻ trông như kết thúc gọn ở đó); ::after màu thân phủ khe
+   đệm phải của thân (chữ cuộn dưới đó không lộ). Không cuộn thì cả hai trùng màu chỗ chúng nằm, không thấy. */
+.ma-trow__end::before, .ma-trow__end::after {
+  content: ''; position: absolute; z-index: -1; top: 50%; height: calc(var(--row-h) - 2 * var(--card-y) - 2px); transform: translateY(-50%);
+}
+.ma-trow__end::before {
+  left: -12px; right: 0; border-radius: 0 var(--r-sm) var(--r-sm) 0;
+  background: linear-gradient(to right, transparent, var(--row-solid) 12px);
+}
+.ma-trow__end::after { left: 100%; width: calc(var(--s2) + 1px); height: var(--row-h); background: var(--surface); }
+.ma-trow.is-drop .ma-trow__end::before { background: transparent; }
 .ma-trow__meta { display: flex; align-items: center; gap: var(--s1); }
 .ma-trow__c {
   display: inline-grid; place-items: center; min-width: 18px; height: 18px; padding: 0 5px;
@@ -138,13 +157,14 @@ html.ma-tree-on body > .ma-tree {
   font: 500 var(--fs-xs)/1 var(--mono); font-variant-numeric: tabular-nums;
 }
 .ma-trow__rv { font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-3); font-variant-numeric: tabular-nums; }
-.ma-trow__more.ma-icbtn { flex: none; width: 24px; height: 24px; border-radius: var(--r-xs); color: var(--ink-4); }
+.ma-trow__more.ma-icbtn { flex: none; width: 20px; height: 20px; border-radius: var(--r-xs); color: var(--ink-4); }
 .ma-trow__more.ma-icbtn svg { width: 16px; height: 16px; }
 .ma-trow:focus-within .ma-trow__more, .ma-trow.is-menu .ma-trow__more { color: var(--ink-2); }
 @media (hover: hover) {
-  .ma-trow__end { position: relative; min-width: 24px; }
-  .ma-trow__more.ma-icbtn { position: absolute; right: -2px; top: 50%; transform: translateY(-50%); }
+  .ma-trow__end { min-width: 20px; }
+  .ma-trow__more.ma-icbtn { position: absolute; right: var(--s1); top: 50%; transform: translateY(-50%); }
   .ma-trow:hover .ma-trow__more { color: var(--ink-2); }
+  .ma-trow .ma-trow__more.ma-icbtn:hover, .ma-trow.is-menu .ma-trow__more.ma-icbtn { background: color-mix(in srgb, var(--ink) 9%, transparent); color: var(--ink); }
   .ma-trow:not(:hover):not(:focus-within):not(.is-menu) .ma-trow__more { display: none; }
   .ma-trow:hover .ma-trow__meta, .ma-trow:focus-within .ma-trow__meta, .ma-trow.is-menu .ma-trow__meta { visibility: hidden; }
 }
@@ -221,7 +241,7 @@ html.ma-tree-on body > .ma-tree {
   .ma-bar { --tg: var(--h-touch); }
   .ma-tree__head { min-height: calc(var(--h-touch) + var(--s2)); }
   .ma-menu__i { min-height: var(--h-touch); }
-  .ma-trow[aria-selected="true"]::before { top: 4px; bottom: 4px; }
+  .ma-trow { --card-y: 4px; }
   .ma-trow__more.ma-icbtn { width: var(--h-touch); height: var(--h-touch); margin-right: calc(-1 * var(--s1)); }
   .ma-tree__hint-b.ma-btn { min-height: var(--h-touch); }
 }

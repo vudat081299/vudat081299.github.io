@@ -297,7 +297,8 @@ file, New folder và ⋯ (Import folder, Download .zip, Collapse all); tấm tr�
 (28px, cảm ứng 44px). Mỗi cấp thụt bằng nhau, ở mọi độ sâu, không nén: tên sắp hẹp hơn ~96px thì danh sách cuộn ngang
 trong thanh bên, trang không cuộn ngang, file đang mở được cuộn vào tầm nhìn. Mỗi folder đang mở có một vạch mảnh, nhạt,
 dưới tâm chevron của nó, chỉ dài qua các hàng con; vạch của folder chứa hàng hiện tại đậm hơn. File đang mở là một thẻ bo
-góc chỉ có nền xanh nhạt, không viền, không vòng, ôm phần biểu tượng và tên, không tô cả hàng, không vạch trái riêng. Đổi
+góc chỉ có nền xanh nhạt, không viền, không vòng, ôm phần biểu tượng và tên, không tô cả hàng, không vạch trái riêng; rê
+chuột dùng cùng dáng thẻ. Nút ⋯ nhỏ, nằm gọn trong thẻ; cây cuộn ngang thì ⋯ mọi hàng đứng một cột ở mép phải thân. Đổi
 tên ngay trên tên: không ô nhập nhìn thấy (không viền, không vòng, không nền), chữ không xê dịch, chỉ có con trỏ và màu
 vùng chọn chung. Phiên chỉ một file thì có gợi ý thả file hay nạp folder. Tấm trượt rộng tối đa 320px, tránh vùng an toàn
 trên, trái, dưới, góc phải bo, nổi bằng bóng.

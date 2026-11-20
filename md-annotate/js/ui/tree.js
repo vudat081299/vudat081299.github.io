@@ -249,12 +249,15 @@ export function renderTree(m, actions) {
   rows.forEach(function (r) { els[r.node.id].tabIndex = r.node.id === cur ? 0 : -1; });
   paintGuides(); markGuide();
   if (hadFocus && cur != null && !editing) els[cur].focus({ preventScroll: true });
+  var shownOpen = null;
   if (m.open !== lastOpen) {
     lastOpen = m.open;
-    if (m.open in at) { if (!hadFocus) setCur(m.open, false); reveal(els[m.open]); }
+    if (m.open in at) { if (!hadFocus) setCur(m.open, false); shownOpen = els[m.open]; }
   }
   if (menuFor && !(menuFor in at)) closeMenu(false);
   applyShown();
+  /* Cuộn tới file mở sau khi cây đã hiện (ẩn thì thân rộng 0, không đo được). */
+  if (shownOpen) reveal(shownOpen);
 }
 function setCur(id, focus) {
   if (!(id in at)) return;

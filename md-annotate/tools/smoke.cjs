@@ -2084,21 +2084,28 @@ const cornerClash = (page) => page.evaluate(() => {
       const top = by.zr.getBoundingClientRect(), sel = getComputedStyle(by.zf, '::before');
       return { steps: [...steps], step: parseFloat(getComputedStyle(by.z0).getPropertyValue('--tree-step')), guides: n, delta, px, span, nameW: Math.round(nm.width),
         bodyX: b.scrollWidth - b.clientWidth, sl: b.scrollLeft, page: document.documentElement.scrollWidth - document.documentElement.clientWidth,
-        seen: nm.left >= q.left - 0.5 && nm.left + 96 <= q.left + b.clientWidth + 0.5, topW: Math.round(top.width), bodyW: b.clientWidth, cardR: sel.right };
+        seen: nm.left >= q.left - 0.5 && nm.left + 96 <= q.left + b.clientWidth + 0.5, topW: Math.round(top.width), bodyW: b.clientWidth, cardR: sel.right, ends: ends() };
+      /* Đuôi ⋯ của mọi hàng: một cột, trong tầm nhìn của thân, ở cả hai đầu cuộn ngang (sticky). */
+      function ends() {
+        const edge = (sl) => { b.scrollLeft = sl; const xs = rows.map((r) => Math.round(r.querySelector('.ma-trow__end').getBoundingClientRect().right));
+          return { one: new Set(xs).size === 1, inView: Math.max(...xs) <= q.left + b.clientWidth - parseFloat(getComputedStyle(b).paddingRight) + 0.5 }; };
+        const keep = b.scrollLeft, out = [edge(0), edge(b.scrollWidth)]; b.scrollLeft = keep; return out;
+      }
     });
     check('cây 25 cấp: thụt đều 12px mọi cấp, 25 vạch dưới tâm chevron (±0,5px, 1px trùng điểm ảnh), dài đúng các hàng con cháu',
       deep25.steps.length === 1 && deep25.steps[0] === deep25.step && deep25.step === 12 && deep25.guides === 25 && deep25.delta <= 0.5 && deep25.px === 0 && deep25.span <= 0.5, JSON.stringify(deep25));
     check('cây 25 cấp: tên sâu nhất ≥ 96px; thân cuộn ngang, trang không; file mở được cuộn ngang vào tầm nhìn', deep25.nameW >= 96 && deep25.bodyX > 0 && deep25.sl > 0 && deep25.page === 0 && deep25.seen, JSON.stringify(deep25));
+    check('cây 25 cấp: ⋯ mọi hàng một cột, dính mép phải thân khi cuộn ngang (không trôi giữa tấm, không bị cắt)', deep25.ends.every((e) => e.one && e.inView), JSON.stringify(deep25.ends));
     await tp.evaluate(treeDemo, false); await tp.waitForTimeout(150);
 
     // Bàn phím (mẫu tree WAI-ARIA) và vòng focus chỉ sau Tab (MDAN-020).
     await tp.click(row('archive'));
-    const ring = await tp.$eval(row('archive'), (l) => getComputedStyle(l).outlineStyle);
+    const ring = await tp.$eval(row('archive'), (l) => getComputedStyle(l, '::before').outlineStyle);
     const tl = () => tp.evaluate(() => window.__tree.log.slice(-1)[0] || []);
     check('cây: bấm folder gập thì mở, không có vòng focus', (await tl())[0] === 'toggle' && ring === 'none' && (await tp.$eval(row('archive'), (l) => l.getAttribute('aria-expanded'))) === 'true', ring);
     await tp.keyboard.press('ArrowDown');
     check('cây: ↓ sang hàng con (old.md)', (await focusName(tp)) === 'old.md', await focusName(tp));
-    const arrowRing = await tp.evaluate(() => [document.documentElement.classList.contains('ma-tabbing'), getComputedStyle(document.activeElement).outlineStyle]);
+    const arrowRing = await tp.evaluate(() => [document.documentElement.classList.contains('ma-tabbing'), getComputedStyle(document.activeElement, '::before').outlineStyle]);
     check('cây: bấm hàng rồi ↓ — mũi tên là bàn phím, hàng có vòng focus (MDAN-020)', arrowRing[0] && arrowRing[1] === 'solid', JSON.stringify(arrowRing));
     await tp.keyboard.press('ArrowLeft');
     check('cây: ← ở file về folder cha', (await focusName(tp)) === 'archive', await focusName(tp));
@@ -2118,13 +2125,15 @@ const cornerClash = (page) => page.evaluate(() => {
     const sel = await tp.$eval(row('README.md'), (l) => {
       const a = getComputedStyle(l, '::before'), r = l.getBoundingClientRect(), ic = l.querySelector('.ma-trow__ic').getBoundingClientRect();
       const L = r.left + parseFloat(a.left), R = r.right - parseFloat(a.right);
+      l.classList.add('is-menu'); const mb = l.querySelector('.ma-trow__more').getBoundingClientRect(); l.classList.remove('is-menu');
+      const moreIn = [mb.left - L, R - mb.right, mb.top - (r.top + parseFloat(a.top)), r.bottom - parseFloat(a.bottom) - mb.bottom].map((v) => +v.toFixed(1));
       return { sel: l.getAttribute('aria-selected'), rowBg: getComputedStyle(l).backgroundColor, fill: a.backgroundColor, radius: parseFloat(a.borderTopLeftRadius),
         border: [a.borderTopWidth, a.borderRightWidth, a.borderBottomWidth, a.borderLeftWidth, a.borderTopStyle].join(' '), insetL: +(ic.left - L).toFixed(1), w: +(R - L).toFixed(1), rowW: r.width,
-        bodyL: document.getElementById('tree-body').getBoundingClientRect().left, L, after: getComputedStyle(l, '::after').content, shadow: getComputedStyle(l).boxShadow, outline: [a.outlineStyle, a.boxShadow].join(' ') };
+        bodyL: document.getElementById('tree-body').getBoundingClientRect().left, L, after: getComputedStyle(l, '::after').content, shadow: getComputedStyle(l).boxShadow, outline: [a.outlineStyle, a.boxShadow].join(' '), moreIn };
     });
-    check('cây: Enter mở file, hàng thành thẻ chọn: bo, không viền, không vòng, nền nhạt, lùi vào trong (bắt đầu trước biểu tượng, không trọn hàng), hàng không tô, không vạch riêng (MDAN-060)',
+    check('cây: Enter mở file, hàng thành thẻ chọn: bo, không viền, không vòng, nền nhạt, lùi vào trong (bắt đầu trước biểu tượng, không trọn hàng), hàng không tô, không vạch riêng, ⋯ gọn trong thẻ (lùi ≥ 2px mọi cạnh) (MDAN-060)',
       JSON.stringify(await tl()) === JSON.stringify(['open', ids['README.md']]) && sel.sel === 'true' && /rgba\(0, 0, 0, 0\)|transparent/.test(sel.rowBg) && !/, 0\)$|transparent/.test(sel.fill)
-      && sel.radius >= 4 && sel.border === '0px 0px 0px 0px none' && sel.outline === 'none none' && sel.insetL > 0 && sel.insetL <= 12 && sel.w < sel.rowW - 8 && sel.L - sel.bodyL >= 8 && sel.after === 'none' && sel.shadow === 'none', JSON.stringify(sel));
+      && sel.radius >= 4 && sel.border === '0px 0px 0px 0px none' && sel.outline === 'none none' && sel.insetL > 0 && sel.insetL <= 12 && sel.w < sel.rowW - 8 && sel.L - sel.bodyL >= 8 && sel.after === 'none' && sel.shadow === 'none' && sel.moreIn.every((v) => v >= 2), JSON.stringify(sel));
     /* Tương phản trên hàng đang chọn (nền pha nhiều lớp): chữ ≥ 4,5:1, nền thẻ tách khỏi nền thân, cả hai theme. */
     const treeContrast = () => tp.evaluate(() => {
       const parse = (c) => { const m = c.match(/[\d.]+/g).map(Number); return c.startsWith('color(') ? [m[0] * 255, m[1] * 255, m[2] * 255, m.length > 3 ? m[3] : 1] : [m[0], m[1], m[2], m.length > 3 ? m[3] : 1]; };
@@ -2150,16 +2159,16 @@ const cornerClash = (page) => page.evaluate(() => {
     await tp.evaluate(() => document.documentElement.classList.remove('dark'));
     const tabbed = await tp.evaluate(() => document.documentElement.classList.contains('ma-tabbing'));
     const tabIdx = await tp.$$eval('#tree-list .ma-trow', (ls) => ls.filter((l) => l.tabIndex === 0).length);
-    check('cây: một hàng tabindex 0 (roving); đã dùng mũi tên thì hàng có vòng', tabIdx === 1 && tabbed && (await tp.$eval(row('README.md'), (l) => getComputedStyle(l).outlineStyle)) === 'solid');
+    check('cây: một hàng tabindex 0 (roving); đã dùng mũi tên thì hàng có vòng', tabIdx === 1 && tabbed && (await tp.$eval(row('README.md'), (l) => getComputedStyle(l, '::before').outlineStyle)) === 'solid');
     await tp.mouse.click(5, 5);
     check('cây: bấm chuột thì tắt vòng', !(await tp.evaluate(() => document.documentElement.classList.contains('ma-tabbing'))));
 
     await tp.focus('#tree-more'); await tp.keyboard.press('Tab');
-    const kr = await tp.evaluate(() => [document.activeElement.classList.contains('ma-trow'), getComputedStyle(document.activeElement).outlineStyle]);
+    const kr = await tp.evaluate(() => [document.activeElement.classList.contains('ma-trow'), getComputedStyle(document.activeElement, '::before').outlineStyle]);
     check('cây: Tab vào cây tới hàng hiện tại, có vòng focus', kr[0] && kr[1] === 'solid' && (await focusName(tp)) === 'README.md', JSON.stringify(kr));
     // Đổi tên: F2, lỗi thì toast và vẫn sửa, Esc bỏ; bấm đúp; Enter lưu.
     const nameBox = (q) => tp.$eval(row('README.md'), (l, q) => { const e = l.querySelector(q), r = e.getBoundingClientRect(), cs = getComputedStyle(e);
-      return { x: r.left, y: r.top, h: r.height, font: cs.font, ls: cs.letterSpacing, border: cs.borderTopWidth + cs.borderLeftWidth, outline: cs.outlineStyle, bg: cs.backgroundColor, shadow: cs.boxShadow, label: e.getAttribute('aria-label'), ring: getComputedStyle(l).outlineStyle }; }, q);
+      return { x: r.left, y: r.top, h: r.height, font: cs.font, ls: cs.letterSpacing, border: cs.borderTopWidth + cs.borderLeftWidth, outline: cs.outlineStyle, bg: cs.backgroundColor, shadow: cs.boxShadow, label: e.getAttribute('aria-label'), ring: getComputedStyle(l, '::before').outlineStyle }; }, q);
     const nb0 = await nameBox('.ma-trow__name');
     await tp.keyboard.press('F2');
     const nb1 = await nameBox('.ma-trow__ren');
