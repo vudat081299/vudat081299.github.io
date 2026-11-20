@@ -2822,7 +2822,7 @@ const cornerClash = (page) => page.evaluate(() => {
     const im = { on: await p.evaluate(() => document.documentElement.classList.contains('ma-tree-on')), prefs: await p.evaluate(() => localStorage.getItem('md-annotate:prefs:v1')), toast: await toastText(p) };
     await p.click('#btn-new'); await p.waitForTimeout(200);
     im.after = await p.evaluate(() => document.documentElement.classList.contains('ma-tree-on'));
-    check('nạp folder: cây hiện, prefs.tree không ghi; phiên mới một file thì cây ẩn; .ts nạp, nhị phân bỏ', im.on && !/"tree"/.test(im.prefs || '') && !im.after && im.toast === 'Imported 3 files, skipped 1.', JSON.stringify(im));
+    check('nạp folder: cây đang tắt vẫn hiện cho phiên ấy, prefs.tree giữ false; phiên mới thì cây ẩn lại; .ts nạp, nhị phân bỏ', im.on && /"tree":false/.test(im.prefs || '') && !im.after && im.toast === 'Imported 3 files, skipped 1.', JSON.stringify(im));
     await p.close();
     fs.rmSync(tmp, { recursive: true, force: true });
 

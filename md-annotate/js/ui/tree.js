@@ -5,7 +5,7 @@
    model:   { sid, nodes, open, collapsed, counts: { fileId: { c, rv } }, title } (sid: id phiên)
    actions: open(id), toggle(dirId), newFile(parentId), newDir(parentId), rename(id, name) → lỗi | '', move(id, parentId)
             → lỗi | '', remove(id), importDir(FileList | entry[], parentId), download(id | null), collapseAll().
-   Docked hay tấm trượt: chỉ theo khổ màn (MDAN-061): điện thoại (mqPhone) là tấm trượt, đóng sẵn; mọi khổ khác là cột, không
+   Docked hay tấm trượt: chỉ theo khổ màn (MDAN-061): điện thoại (mqHandset: ≤ 720px, hay màn cảm ứng thấp ≤ 500px khi xoay ngang) là tấm trượt, đóng sẵn; mọi khổ khác là cột, không
    tự ẩn khi chật (vùng làm việc hẹp lại, người dùng tự ẩn hay kéo hẹp cây). prefs.tree (chưa chọn: hiện; chỉ nút và
    Ctrl/⌘ + B ghi) là "muốn thấy cây": docked thì nút #btn-tree / Ctrl/⌘ + B đổi nó (html.ma-tree-on);
    tấm trượt thì chỉ mở tấm. revealTree(): hiện cho phiên đang vẽ, không ghi prefs (MDAN-032); đổi phiên thì thôi. Bề rộng:
@@ -20,7 +20,7 @@
 import { canMove, moveTargets, visibleRows } from '../core/tree.js';
 import { plural } from '../core/text.js';
 import { prefs, savePrefs } from './store.js';
-import { $, dragBar, droppedItems, h, icon, mqPhone, toast, typing } from './dom.js';
+import { $, dragBar, droppedItems, h, icon, mqHandset, toast, typing } from './dom.js';
 import { refreshSplit } from './views.js';
 
 var W_MIN = 180, W_MAX = 420, W_DEF = 248;
@@ -57,7 +57,7 @@ function syncBtn() {
   b.setAttribute('aria-expanded', String(open)); b.setAttribute('aria-label', lbl); b.title = lbl;
 }
 function applyShown() {
-  docked = !mqPhone.matches;
+  docked = !mqHandset.matches;
   if (docked && $('dlg-tree').open) { $('dlg-tree').close(); goHome(); }   // rời khổ điện thoại: tấm đóng, cây về cột ngay (sự kiện close đến sau)
   var on = treeShown();
   syncBtn();
@@ -645,5 +645,5 @@ export function initTree() {
     goHome();
     syncBtn();
   });
-  mqPhone.addEventListener('change', applyShown);
+  mqHandset.addEventListener('change', applyShown);
 }

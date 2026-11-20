@@ -14,14 +14,13 @@
    Dùng: core/minimap.js, core/review.js, ui/dom.js, ui/state.js, ui/views.js, ui/review.js, ui/dwell.js. */
 import { mmDots, mmScroll, mmSegments, mmView } from '../core/minimap.js';
 import { withSug } from '../core/review.js';
-import { $, h, shown } from './dom.js';
+import { $, h, shown, mqPhone } from './dom.js';
 import { D } from './state.js';
 import { isSplit, view } from './views.js';
 import { laneGeo, rvState } from './review.js';
 import { noteJump, sugIdx } from './dwell.js';
 
 var GAP = 8, MIN_H = 80, SEG_MIN = 2, VIEW_MIN = 12, DOT_GAP = 5;
-var mqPhone = window.matchMedia('(max-width: 720px)');
 var strips = {}, frames = { src: null, md: null };
 function wrapOf(w) { return $(w === 'src' ? 'wrap-src' : 'wrap-md'); }
 function rootOf(w) { return $(w === 'src' ? 'v-src' : 'v-md'); }

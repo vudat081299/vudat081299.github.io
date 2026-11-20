@@ -337,7 +337,8 @@ giữ nguyên: Enter lưu, Shift + Enter xuống dòng.
 
 Mở trang thì cây hiện sẵn thành cột ở mọi khổ màn trừ điện thoại, kể cả phiên chỉ một file, kể cả khi vùng làm việc bị
 hẹp lại. Không tự chuyển sang tấm trượt hay tự ẩn khi chật: người dùng tự ẩn (nút Files, Ctrl/⌘ + B) hay kéo hẹp cây
-(180–420px), lựa chọn được nhớ. Điện thoại (≤ 720px): cây là tấm trượt từ trái, đóng sẵn. *Split* theo bề rộng thật của
+(180–420px), lựa chọn được nhớ. Điện thoại (≤ 720px, kể cả
+xoay ngang): cây là tấm trượt từ trái, đóng sẵn. *Split* theo bề rộng thật của
 văn bản: cột cây chiếm chỗ thì *Split* lùi về *Preview*, ẩn cây thì về lại.
 
 ## MDAN-062 · Không có dòng mô tả dưới tên trang

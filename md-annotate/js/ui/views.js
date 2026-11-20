@@ -77,7 +77,10 @@ export function initViews() {
   if (window.ResizeObserver) new ResizeObserver(function () {
     cancelAnimationFrame(rafSplit); rafSplit = requestAnimationFrame(refreshSplit);
   }).observe($('doc'));
-  window.addEventListener('resize', function () { cancelAnimationFrame(rafSplit); rafSplit = requestAnimationFrame(refreshSplit); });
+  var later = function () { cancelAnimationFrame(rafSplit); rafSplit = requestAnimationFrame(refreshSplit); };
+  window.addEventListener('resize', later);
+  /* #doc đổi bề rộng mà cửa sổ không đổi (ẩn / hiện cột cây, kéo mép cây, thanh dọc): xét lại Split. */
+  if (window.ResizeObserver) new ResizeObserver(later).observe($('doc'));
 
   splitR = applySplit(typeof prefs.split === 'number' ? prefs.split : 0.5);
   dragBar($('divider'), function (x) {

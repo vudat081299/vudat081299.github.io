@@ -168,7 +168,7 @@
   Bất biến và mọi luật (tên, trùng, file kế bên, `canMove`, tên tải về, tên phiên tự đặt `sessionTitle` không theo file mở MDAN-027) ở core.
 - `S` là phiên, `D` là doc của file mở (chữ, nhận xét, dấu đọc); tuỳ chọn prompt ở `S`; gắn với một văn bản (Undo, gợi ý, chọn dòng): `docKey()`. Một chỗ ghi
   cây: `setTree()` ở `ui/files.js`; actions của `renderTree` chỉ gọi core rồi `setTree`. Hộp nhận xét có chữ thì không rời file mở (`canLeave()`). Đổi file giữ chế độ xem, chỗ cuộn (bộ nhớ).
-- Hai cách hiện (MDAN-061): điện thoại (`mqPhone`, ≤ 720px) thì tấm trượt `#dlg-tree` (chọn file thì đóng); mọi khổ khác là cột, không tự ẩn khi chật. Cột (MDAN-037): con của `body`, fixed ở mép trái màn hình, từ đáy
+- Hai cách hiện (MDAN-061): điện thoại (`mqHandset`: ≤ 720px, hay cảm ứng cao ≤ 500px khi xoay ngang) thì tấm trượt `#dlg-tree` (chọn file thì đóng); mọi khổ khác là cột, không tự ẩn khi chật. Cột (MDAN-037): con của `body`, fixed ở mép trái màn hình, từ đáy
   thanh trên tới đáy khung nhìn (≤ 1080px: trên thanh đáy); `body` đệm trái `--tree`, vùng làm việc và phần trong thanh trên căn giữa phần còn lại.
 - `prefs.tree` (chưa chọn: hiện) là "muốn thấy cây": cột thì `#btn-tree` / Ctrl/⌘ + B đổi nó; tấm trượt thì chỉ mở tấm. Nạp folder hiện cây cho phiên ấy, không ghi
   nó (MDAN-032). Kéo mép 180–420px tự do; *Split* theo bề rộng `#doc` thật (cột cây chiếm chỗ thì *Split* lùi về *Preview*, ẩn cây thì về lại).

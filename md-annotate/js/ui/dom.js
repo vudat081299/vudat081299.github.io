@@ -57,7 +57,9 @@ export function textNodes(root) {
   return out;
 }
 export var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-export var mqPhone = window.matchMedia('(max-width: 720px)');   // điện thoại: cây là tấm trượt, mặc định ẩn
+export var mqPhone = window.matchMedia('(max-width: 720px)');
+/* Điện thoại, cả khi xoay ngang (màn cảm ứng thấp): cây là tấm trượt, đóng sẵn (MDAN-061). */
+export var mqHandset = window.matchMedia('(max-width: 720px), (pointer: coarse) and (max-height: 500px)');
 export var mqSheet = window.matchMedia('(max-width: 720px), (pointer: coarse)');
 export var mqSide = window.matchMedia('(min-width: 1081px)');
 export var mqTouch = window.matchMedia('(pointer: coarse)');   // màn cảm ứng (con trỏ chính là ngón tay)
