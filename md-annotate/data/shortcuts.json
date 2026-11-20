@@ -4,8 +4,10 @@
       "title": "Multi-line comments",
       "note": "In Source, or the Source pane of Split.",
       "rows": [
-        { "keys": [["Double-click"]], "action": "A line number: start picking lines for one comment" },
+        { "keys": [["Double-click"], ["Shift", "Click"]], "action": "A line number: start picking lines for one comment" },
         { "keys": [["Click"], ["Tap"]], "action": "A line number while picking: add or remove that line" },
+        { "keys": [["Shift", "Click"]], "action": "A line number while picking: add every line from the last clicked one to this one" },
+        { "keys": [["Drag"]], "action": "Across line numbers while picking: add the lines (start on an unpicked line) or remove them (start on a picked one)" },
         { "keys": [["Esc"]], "action": "Leave line picking: hide the comment box and drop the lines" },
         { "keys": [["Enter"], ["Save"]], "action": "Save the comment and leave line picking" },
         { "keys": [["Cancel"]], "action": "Hide the comment box but keep the lines; click a line number to bring it back" },

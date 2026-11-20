@@ -119,12 +119,12 @@
 
 ## Nhận xét nhiều dòng (MDAN-012)
 
-- Chỉ ở nơi có lề số dòng (*Source*, khung Source của *Split*), chỉ bằng lề số (`ui/picks.js`). *Preview* không chọn dòng.
-- Bấm đúp lề: vào chế độ chọn dòng với dòng ấy, mở hộp; không bôi đen chữ. Ngoài chế độ, bấm một lần giữ như cũ.
-- Trong chế độ, bấm lề thêm / bỏ một dòng (không cần liền; dòng trống không chọn được); hộp đang mở cập nhật tại chỗ.
-- Thoát: Esc, Save, bỏ dòng cuối, sang Edit / Preview, mở phiên khác, văn bản đổi (`repaintPicks()`).
-- Hộp của chế độ không đóng khi bấm ra ngoài (MDAN-014); Cancel chỉ ẩn hộp, giữ các dòng, bấm lề thì hộp hiện lại.
-- Trong chế độ, bôi đen chữ không mở hộp, không hiện nút nổi. Dòng đã chọn `.is-pick`; *Split* tô chữ ở Preview (`ma-mirror`).
+- Chỉ bằng lề số dòng (*Source*, khung Source của *Split*; `ui/picks.js`). Bấm đúp hoặc Shift + bấm lề: vào chế độ chọn dòng với
+  dòng ấy, mở hộp; không bôi đen chữ. Ngoài chế độ, bấm một lần giữ như cũ. Dòng chọn `.is-pick`; *Split* tô Preview (`ma-mirror`).
+- Trong chế độ, bấm lề thêm / bỏ một dòng (không cần liền; dòng trống không chọn được); hộp đang mở cập nhật tại chỗ. Shift + bấm thêm cả
+  dải từ dòng bấm gần nhất; kéo trên lề (chuột) thêm cả dải nếu bắt đầu ở dòng chưa chọn, bỏ nếu đã chọn, lùi thì co (MDAN-019).
+- Thoát: Esc, Save, bỏ dòng cuối, sang Edit / Preview, mở phiên khác, văn bản đổi (`repaintPicks()`). Hộp của chế độ không đóng
+  khi bấm ra ngoài (MDAN-014); Cancel chỉ ẩn hộp, giữ các dòng, bấm lề thì hộp hiện lại. Bôi đen chữ trong chế độ: không hộp, không nút nổi.
 - Hộp: `3 lines · L12, L15-16` và nút kéo `#pop-grip` (con trỏ, phím mũi tên; trọn khung nhìn; không nhớ chỗ). Mặc định
   dưới dòng vừa bấm, lùi qua lề số để không che lề. Tấm trượt đáy và hộp bôi đen không có nút kéo.
 - `parts`: mỗi dải dòng liền một đoạn trích (`origin: 'src'`, quote là trọn các dòng); chỉ lưu khi ≥ 2 phần; `quote`…

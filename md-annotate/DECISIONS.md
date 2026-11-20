@@ -16,6 +16,7 @@
 - MDAN-016 · Dải tiến độ cạnh khung, gợi ý đã đọc theo thời gian đọc · `md-annotate/`
 - MDAN-017 · Một bộ dấu đã đọc, khai báo một chỗ · `md-annotate/css/**`
 - MDAN-018 · Thanh cuộn không chạm góc bo · `md-annotate/css/**`, `md-annotate/js/ui/minimap.js`
+- MDAN-019 · Chọn một dải dòng bằng Shift + bấm hoặc kéo trên lề số · `md-annotate/js/ui/picks.js`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Nguồn tô màu cú pháp kiểu VS Code
@@ -141,3 +142,10 @@ dòng đầu của khối.
 
 Vùng nào có góc bo x thì thanh cuộn (tự vẽ hay của hệ thống) cách mép trên / dưới ở góc ấy ít nhất x, để khi cuộn tới
 đầu hoặc cuối con trượt không bị góc bo cắt hay dính vào đường cong. Áp cho mọi vùng cuộn của trang.
+
+## MDAN-019 · Chọn một dải dòng bằng Shift + bấm hoặc kéo trên lề số
+20/11/2026 · `md-annotate/js/ui/picks.js`
+
+Ở chế độ chọn nhiều dòng, chọn từng dòng một thì chậm. Shift + bấm lề số dòng: chưa vào chế độ thì vào với dòng ấy,
+đã vào thì thêm cả dải liền từ dòng bấm gần nhất. Đang chọn thì kéo trên lề để thêm cả dải (bắt đầu ở dòng chưa chọn)
+hoặc bỏ cả dải (bắt đầu ở dòng đã chọn).

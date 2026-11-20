@@ -979,6 +979,27 @@ const cornerClash = (page) => page.evaluate(() => {
     await dragSelect(ml, '#v-src', 'Delta end');
     check('bôi đen ngoài chế độ: hộp đoạn chữ như cũ, không có nút kéo', (await ml.isVisible('#pop')) && !(await ml.isVisible('#pop-grip')) && !(await ml.isVisible('#pop-head')) && (await ml.textContent('#pop-q')) === 'Delta end', JSON.stringify([await ml.isVisible('#pop'), await ml.isVisible('#pop-grip'), await ml.textContent('#pop-q')]));
     await ml.keyboard.press('Escape'); await ml.evaluate(() => getSelection().removeAllRanges());
+    // MDAN-019: Shift + bấm vào chế độ / thêm cả dải; kéo trên lề thêm hoặc bỏ cả dải.
+    const sclick = async (n) => { await ml.keyboard.down('Shift'); await gclick(n); await ml.keyboard.up('Shift'); };
+    await sclick(3);
+    check('nhiều dòng: Shift + bấm lề ngoài chế độ thì vào chế độ với dòng ấy, không bôi đen', (await picks()) === '3' && (await ml.isVisible('#pop-head')) && await ml.evaluate(() => getSelection().isCollapsed), await picks());
+    await sclick(9);
+    check('nhiều dòng: Shift + bấm thêm cả dải từ dòng bấm gần nhất (bỏ dòng trống)', (await picks()) === '3,4,6,7,8,9' && (await sum()) === '6 lines · L3-4, L6-9', (await picks()) + ' | ' + (await sum()));
+    await ml.keyboard.press('Escape');
+    const gdrag = async (a, b, back) => {
+      const ga = await gut(a), gb = await gut(b);
+      await ml.mouse.move(ga.x, ga.y); await ml.mouse.down(); await ml.mouse.move(gb.x, gb.y, { steps: 6 });
+      if (back) { const gc = await gut(back); await ml.mouse.move(gc.x, gc.y, { steps: 4 }); }
+      await ml.mouse.up(); await ml.waitForTimeout(100);
+    };
+    await gdbl(3); await gdrag(6, 8);
+    check('nhiều dòng: kéo trên lề từ dòng chưa chọn thì thêm cả dải, hộp cập nhật', (await picks()) === '3,6,7,8' && (await sum()) === '4 lines · L3, L6-8', (await picks()) + ' | ' + (await sum()));
+    await gdrag(7, 8);
+    check('nhiều dòng: kéo từ dòng đã chọn thì bỏ cả dải', (await picks()) === '3,6', await picks());
+    await gdrag(4, 9, 6);
+    check('nhiều dòng: kéo rồi lùi lại thì dải co theo', (await picks()) === '3,4,6', await picks());
+    check('nhiều dòng: kéo trên lề không bôi đen chữ', await ml.evaluate(() => getSelection().isCollapsed));
+    await ml.keyboard.press('Escape');
     // Lưu: một nhận xét, hai phần; dòng 8 (không phải dòng 6 giống hệt) được tô.
     await gdbl(3); await gclick(4); await gclick(8);
     await ml.keyboard.type('Gộp hai chỗ'); await ml.keyboard.press('Enter');
