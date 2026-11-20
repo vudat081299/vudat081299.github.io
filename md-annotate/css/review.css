@@ -68,9 +68,8 @@ html:not(.ma-reviewing) .ma-lane__b.is-head:not(:hover)::after { visibility: hid
 /* Điện thoại: Preview chừa lề trái cho làn khi đang đánh dấu. */
 @media (max-width: 720px) { html.ma-reviewing #wrap-md { padding-left: calc(var(--lane-w) + var(--s3)); } }
 
-/* LÀM MỜ khối đã đọc (Dim reviewed): chỉ mờ, không gập — gập làm lệch cuộn theo nhau và dải đọc. */
-#v-src .ma-ln.is-rv, #v-md .is-rv { transition: opacity .2s var(--ease); }
-html.ma-rvdim #v-src .ma-ln.is-rv, html.ma-rvdim #v-md .is-rv { opacity: var(--rv-dim, .4); }   /* Settings: prefs.rvDimV */
+/* LÀM MỜ khối đã đọc (Dim reviewed): chỉ mờ, không gập — gập làm lệch cuộn theo nhau và dải đọc. Luật ở css/focus.css
+   (gộp với Focus mode). */
 
 /* HỘP NHẬN XÉT: nút ✓ Reviewed kèm nhãn dòng (mono, mờ), đầu hàng nút; có nó thì dòng phím tắt lên một hàng riêng. */
 .ma-pop__rv { gap: var(--s1); margin-right: auto; }

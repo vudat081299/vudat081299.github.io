@@ -108,22 +108,32 @@
     <nav class="ma-tree" id="tree" aria-label="Files">
       <div class="ma-tree__grip" id="tree-grip" role="separator" aria-orientation="vertical" tabindex="0"
            aria-label="Resize file list" title="Drag to resize"></div>
+      <!-- Đầu cây một hàng: nhãn Files + tên phiên, New file, New folder, ⋯ (#tree-head-menu), Close (chỉ tấm trượt). -->
       <div class="ma-tree__head">
-        <span class="ma-tree__t" id="tree-title"></span>
-        <div class="ma-tree__tools">
-          <button class="ma-icbtn ma-icbtn--bare" type="button" id="tree-new-file" aria-label="New file" title="New file"></button>
-          <button class="ma-icbtn ma-icbtn--bare" type="button" id="tree-new-dir" aria-label="New folder" title="New folder"></button>
-          <button class="ma-icbtn ma-icbtn--bare" type="button" id="tree-import" aria-label="Import folder" title="Import a folder from disk (a copy)"></button>
-          <button class="ma-icbtn ma-icbtn--bare" type="button" id="tree-zip" aria-label="Download .zip" title="Download all files as .zip"></button>
-          <button class="ma-icbtn ma-icbtn--bare" type="button" id="tree-collapse" aria-label="Collapse all" title="Collapse all folders"></button>
-          <button class="ma-icbtn ma-icbtn--bare ma-tree__close" type="button" data-close aria-label="Close">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
-          </button>
-        </div>
+        <span class="ma-tree__t"><span class="ma-tree__k">Files</span><span class="ma-tree__n" id="tree-title"></span></span>
+        <button class="ma-icbtn ma-icbtn--bare" type="button" id="tree-new-file" aria-label="New file" title="New file"></button>
+        <button class="ma-icbtn ma-icbtn--bare" type="button" id="tree-new-dir" aria-label="New folder" title="New folder"></button>
+        <button class="ma-icbtn ma-icbtn--bare" type="button" id="tree-more" aria-haspopup="menu" aria-expanded="false" aria-controls="tree-head-menu"
+                aria-label="More file actions" title="Import, download, collapse"></button>
+        <button class="ma-icbtn ma-icbtn--bare ma-tree__close" type="button" data-close aria-label="Close files" title="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
+        </button>
         <input type="file" id="tree-dir-in" webkitdirectory multiple hidden />
+      </div>
+      <!-- Menu ⋯ của đầu cây (kiểu .ma-menu, popover); nằm trong #tree để theo cây vào tấm trượt. Biểu tượng: ui/tree.js. -->
+      <div class="ma-menu" id="tree-head-menu" role="menu" aria-label="File list actions">
+        <button class="ma-menu__i" type="button" role="menuitem" tabindex="-1" id="tree-import" title="Import a folder from disk (a copy)"><span>Import folder…</span></button>
+        <button class="ma-menu__i" type="button" role="menuitem" tabindex="-1" id="tree-zip" title="Download all files as .zip"><span>Download .zip</span></button>
+        <div class="ma-menu__sep" role="separator"></div>
+        <button class="ma-menu__i" type="button" role="menuitem" tabindex="-1" id="tree-collapse" title="Collapse all folders"><span>Collapse all</span></button>
       </div>
       <div class="ma-tree__body" id="tree-body">
         <ul class="ma-tree__list" id="tree-list" role="tree" aria-label="Files"></ul>
+        <!-- Phiên ≤ 1 mục (ui/tree.js .is-sparse): gợi ý thả file / nạp folder. -->
+        <div class="ma-tree__hint" id="tree-hint">
+          <p class="ma-tree__hint-t"><span class="ma-tree__hint-p">Drop files or a folder here</span><span class="ma-tree__hint-c">Add files from your device</span></p>
+          <button class="ma-btn ma-btn--quiet ma-tree__hint-b" type="button" id="tree-hint-import">Import folder…</button>
+        </div>
       </div>
     </nav>
 

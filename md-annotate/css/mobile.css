@@ -3,6 +3,7 @@
 /* VÙNG AN TOÀN (--sa-*, tokens.css): chữ và nút không nằm dưới tai thỏ, góc bo màn hình, thanh home. */
 .ma-wrap { padding-left: max(var(--pad), var(--sa-l)); padding-right: max(var(--pad), var(--sa-r)); }
 .ma-bar { padding-top: var(--sa-t); }
+@media (min-width: 721px) { .ma-bar #btn-tree { margin-top: var(--sa-t); } }   /* nút Files đặt tuyệt đối (tree.css): xuống cùng hàng */
 /* KHOÁ CUỘN: có lớp mờ (hộp thoại mở, #pop-scrim hiện) thì trang sau nó đứng yên (ui/dom.js syncBar gắn html.ma-lock);
    giữ chỗ thanh cuộn (ma-lock-g, chỉ khi trang đang có thanh) để không xô ngang. Thẻ, tấm cuộn không lan ra trang. */
 html.ma-lock { overflow: hidden; }

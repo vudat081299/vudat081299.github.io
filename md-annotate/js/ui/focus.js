@@ -1,8 +1,8 @@
-/* Focus mode: mờ mọi thứ ngoài một section; chọn section theo chuột (pointer) hoặc dải đọc 25–50% (band). Ở dải đọc,
-   dòng dưới chuột cũng sáng (.is-line).
+/* Focus mode: mờ mọi thứ ngoài một section; chọn section theo chuột (pointer) hoặc dải đọc 25–50% (band). Dòng dưới
+   chuột luôn sáng (.is-line), cả khi đã đọc (Dim reviewed); cách gộp hai lớp mờ ở css/focus.css (MDAN-045).
    Xuất: initFocus, refreshBand, refreshFocus.
    Dùng: core/sections.js, ui/dom.js, ui/views.js, ui/sync-scroll.js, ui/layout.js. */
-import { bandBounds, bandPick, lineSections, numberSections, spanAt } from '../core/sections.js';
+import { bandBounds, bandPick, lineSections, numberSections, partAt, partCount, partLines, spanAt, subItems } from '../core/sections.js';
 import { $, shown } from './dom.js';
 import { isSplit } from './views.js';
 import { blockPairs, setByPage } from './sync-scroll.js';
@@ -72,8 +72,15 @@ export function refreshBand(from) {
   bandRaf = requestAnimationFrame(function () {
     bandRaf = 0;
     if (!focusOn()) return;
-    // Theo chuột: khung vẽ lại mất .is-sec; đặt lại section đang sáng, không thì cả khung mờ tới lần rê kế tiếp.
-    if (layoutVal('focusBy') !== 'band') { ['v-src', 'v-md'].forEach(function (id) { if (litSec[id] != null) applySec($(id), litSec[id]); }); return; }
+    // Theo chuột: khung vẽ lại mất .is-sec; đặt lại section đang sáng, không thì cả khung mờ tới lần rê kế tiếp. Cuộn
+    // khi chuột đứng yên: section và dòng theo chữ dưới chuột (trừ khi hộp nhận xét mở: giữ section đang ghi).
+    if (layoutVal('focusBy') !== 'band') {
+      ['v-src', 'v-md'].forEach(function (id) { if (litSec[id] != null) applySec($(id), litSec[id]); });
+      if ($('pop') && !$('pop').hidden) return;
+      var pt = ptr && document.elementFromPoint(ptr.x, ptr.y), pr = pt && pt.closest('#v-src, #v-md');
+      if (pr) pointAt(pr, pt);
+      return;
+    }
     var root = bandFrom && shown(bandFrom) ? bandFrom : (shown($('v-md')) ? $('v-md') : $('v-src'));
     if (!shown(root)) return;
     var sec = bandSec(root);
@@ -89,14 +96,25 @@ export function refreshFocus() {
   if (focusOn() && layoutVal('focusBy') === 'band') refreshBand();
 }
 
-/* Dòng dưới chuột ở dải đọc. Source: một .ma-ln. Preview: mục danh sách, hàng bảng, mục định nghĩa, hoặc cả khối cấp
-   cao. Khối cấp cao chứa nó (host) sáng; trong host, anh em của nó và của mỗi tổ tiên tới host mờ (.ma-dimx), vì
-   opacity của con không vượt được cha. Ở Split, khung kia sáng khối ghép với nó (blockPairs, như cuộn theo nhau). */
+/* Dòng dưới chuột (cả hai cách chọn section). Source: một .ma-ln. Preview: mục danh sách, hàng bảng, mục định nghĩa,
+   hoặc cả khối cấp cao. Khối cấp cao chứa nó (host) sáng; trong host, anh em của nó và của mỗi tổ tiên tới host mờ
+   (.ma-dimx), vì opacity của con không vượt được cha.
+   Split: hai khung sáng cùng một phần, phần sâu nhất ghép được cả hai bên (pairAt): khối (blockPairs, như cuộn theo
+   nhau), mục / hàng (core partAt, partLines), mục con (core subItems). Source sáng mọi dòng của phần ấy, không chỉ dòng
+   dưới chuột, để hai khung cho cùng một độ sáng (MDAN-045). */
+var lineAt = null, lineSplit = false; // phần tử dưới chuột đang sáng, để rê trong cùng một dòng không gắn lại lớp
 function clearLines() {
+  lineAt = null;
   ['v-src', 'v-md'].forEach(function (id) {
     $(id).querySelectorAll('.is-line, .ma-dimx').forEach(function (x) { x.classList.remove('is-line', 'ma-dimx'); });
   });
 }
+/* Phần ở Preview của khối cấp cao: mục của danh sách, hàng của bảng; khối khác: []. */
+function mdParts(host) {
+  if (host.tagName === 'UL' || host.tagName === 'OL') return Array.prototype.filter.call(host.children, function (x) { return x.tagName === 'LI'; });
+  return host.tagName === 'TABLE' ? Array.prototype.slice.call(host.rows) : [];
+}
+function blankLine(k) { var l = $('v-src').children[k]; return !l || !/\S/.test(l.textContent); }
 function lightMdUnit(u) {
   var root = $('v-md'), host = u;
   while (host.parentElement !== root) host = host.parentElement;
@@ -106,27 +124,73 @@ function lightMdUnit(u) {
   }
 }
 function lightSrcLines(a, b) {
-  var lines = $('v-src').querySelectorAll('.ma-ln');
+  var lines = $('v-src').children;
   for (var i = a; i <= b && i < lines.length; i++) lines[i].classList.add('is-line');
 }
-function lineAtPointer(root, t) {
-  clearLines();
-  if (!t || !t.closest || !root.contains(t)) return;
-  var bp = blockPairs(), split = isSplit();
+/* Mục con cháu (<li>) của mục danh sách `part` ở Preview ghép với dòng của chúng ở Source (core subItems, dòng ab của
+   mục); null nếu không có con hay số mục hai bên lệch. */
+function nestedPairs(part, ab) {
+  var lis = part.tagName === 'LI' ? part.querySelectorAll('li') : [];
+  if (!lis.length) return null;
+  var lines = $('v-src').children, texts = [];
+  for (var k = ab[0]; k <= ab[1]; k++) texts[k] = lines[k] ? lines[k].textContent.replace(/\n$/, '') : '';
+  var subs = subItems(texts, ab[0], ab[1]);
+  return subs.length === lis.length ? { lis: lis, subs: subs } : null;
+}
+function ownText(li) { return Array.prototype.some.call(li.childNodes, function (n) { return n.nodeType === 3 && /\S/.test(n.data); }); }
+/* Phần ghép của khối nguồn sp (khối Preview host): pi là mục / hàng chứa chỗ dưới chuột (-1: không biết), hit(li, [a, b])
+   cho biết mục con li (dòng a–b) chứa nó. Trả { el, a, b, own }: phần tử Preview, dòng nguồn của nó, và dòng chữ riêng của
+   các mục tổ tiên có chữ trần (Preview để chữ ấy sáng, MDAN-010; Source sáng theo). */
+function pairPart(sp, host, pi, hit) {
+  var parts = mdParts(host);
+  if (pi < 0 || parts.length !== partCount(sp)) return { el: host, a: sp.a, b: sp.b, own: [] };
+  var ab = partLines(sp, pi, blankLine), np = nestedPairs(parts[pi], ab), hits = [];
+  if (np) np.subs.forEach(function (r, s) { if (hit(np.lis[s], r)) hits.push(s); });   // thứ tự cây: chứa sau cùng là sâu nhất
+  if (!hits.length) return { el: parts[pi], a: ab[0], b: ab[1], own: [] };
+  var last = hits.pop(), own = [];
+  [{ el: parts[pi], a: ab[0] }].concat(hits.map(function (s) { return { el: np.lis[s], a: np.subs[s][0] }; })).forEach(function (x) {
+    var f = np.subs.filter(function (r) { return r[0] > x.a; })[0];
+    if (ownText(x.el)) own.push([x.a, f ? f[0] - 1 : x.a]);
+  });
+  return { el: np.lis[last], a: np.subs[last][0], b: np.subs[last][1], own: own };
+}
+/* Phần ghép của chỗ dưới chuột (u: .ma-ln hay phần tử Preview), hoặc null nếu khối của nó không ghép với khung kia. */
+function pairAt(root, u) {
+  var bp = blockPairs();
   if (root.id === 'v-src') {
-    var ln = t.closest('.ma-ln');
-    if (!ln) return;
-    ln.classList.add('is-line');
-    var idx = Array.prototype.indexOf.call(root.querySelectorAll('.ma-ln'), ln), k = spanAt(bp.spans, idx);
-    if (split && k >= 0 && bp.toMd[k] >= 0) lightMdUnit(bp.blocks[bp.toMd[k]]);
-  } else {
-    var u = t.closest('li, tr, dt, dd') || t.closest('#v-md > *');
-    if (!u || !root.contains(u) || u === root) return;
-    lightMdUnit(u);
-    var host = u; while (host.parentElement !== root) host = host.parentElement;
-    var j = bp.blocks.indexOf(host), k2 = j >= 0 ? bp.toSrc[j] : -1;
-    if (split && k2 >= 0) lightSrcLines(bp.spans[k2].a, bp.spans[k2].b);
+    var idx = Array.prototype.indexOf.call(root.children, u), k = spanAt(bp.spans, idx);
+    if (k < 0 || bp.toMd[k] < 0) return null;
+    return pairPart(bp.spans[k], bp.blocks[bp.toMd[k]], partAt(bp.spans[k], idx), function (li, r) { return idx >= r[0] && idx <= r[1]; });
   }
+  var top = u, pi = -1;
+  while (top.parentElement !== root) top = top.parentElement;
+  var j = bp.blocks.indexOf(top), k2 = j >= 0 ? bp.toSrc[j] : -1;
+  if (k2 < 0) return null;
+  mdParts(top).forEach(function (x, i) { if (x.contains(u)) pi = i; });
+  return pairPart(bp.spans[k2], top, pi, function (li) { return li.contains(u); });
+}
+function lineAtPointer(root, t) {
+  var u = null, split = isSplit();
+  if (t && t.closest && root.contains(t)) u = root.id === 'v-src' ? t.closest('.ma-ln') : t.closest('li, tr, dt, dd') || t.closest('#v-md > *');
+  if (u && (u === root || !root.contains(u))) u = null;
+  if (u && u === lineAt && split === lineSplit && u.isConnected) return;
+  clearLines();
+  if (!u) return;
+  lineAt = u; lineSplit = split;
+  var p = split ? pairAt(root, u) : null;
+  if (!p) { if (root.id === 'v-src') u.classList.add('is-line'); else lightMdUnit(u); return; }
+  lightMdUnit(p.el);
+  lightSrcLines(p.a, p.b);
+  p.own.forEach(function (r) { lightSrcLines(r[0], r[1]); });
+}
+/* Theo chuột: section của khối dưới chuột sáng ở cả hai khung (Split), rồi dòng dưới chuột. */
+function pointAt(root, t) {
+  var el = t && t.closest && t.closest(root.id === 'v-src' ? '.ma-ln' : '#v-md > *');
+  if (!el || !root.contains(el)) return;
+  ensureSec(root);
+  if (!el.dataset.sec) markSections(root);
+  focusBoth(root, el.dataset.sec);
+  lineAtPointer(root, t);
 }
 
 /* Sự kiện cuộn của dải đọc phải đăng ký sau initSyncScroll (xem setByPage). */
@@ -139,18 +203,14 @@ export function initFocus() {
       if (raf) return;
       raf = requestAnimationFrame(function () {
         raf = 0;
-        if (layoutVal('focusBy') === 'band') { lineAtPointer(root, lastT); return; }
-        var el = lastT && lastT.closest && lastT.closest(id === 'v-src' ? '.ma-ln' : '#v-md > *');
-        if (!el || !root.contains(el)) return;
-        ensureSec(root);
-        if (!el.dataset.sec) markSections(root);
-        focusBoth(root, el.dataset.sec);
+        if (layoutVal('focusBy') === 'band') lineAtPointer(root, lastT); else pointAt(root, lastT);
       });
     });
     root.addEventListener('pointerleave', function () {
-      if (layoutVal('focusBy') === 'band') { ptr = null; clearLines(); return; }
-      if (layoutVal('focusBy') !== 'pointer') return;
-      if ($('pop') && !$('pop').hidden) return; // đang ghi nhận xét: giữ section sáng
+      var by = layoutVal('focusBy');
+      if (by === 'pointer' && $('pop') && !$('pop').hidden) return; // đang ghi nhận xét: giữ section và dòng sáng
+      ptr = null; clearLines();
+      if (by !== 'pointer') return;
       var o = otherRoot(root);
       if (o.matches(':hover')) return;
       clearFocus(root); clearFocus(o);
@@ -166,6 +226,6 @@ export function initFocus() {
   // Đóng hộp nhận xét khi con trỏ đã ra ngoài khung: bỏ làm mờ (chế độ theo chuột).
   new MutationObserver(function () {
     if (!$('pop').hidden || layoutVal('focusBy') !== 'pointer') return;
-    if (!$('v-src').matches(':hover') && !$('v-md').matches(':hover')) { clearFocus($('v-src')); clearFocus($('v-md')); }
+    if (!$('v-src').matches(':hover') && !$('v-md').matches(':hover')) { ptr = null; clearLines(); clearFocus($('v-src')); clearFocus($('v-md')); }
   }).observe($('pop'), { attributes: true, attributeFilter: ['hidden'] });
 }

@@ -58,9 +58,9 @@
   (`bandBounds`). Vẽ lại thì section đang sáng được đặt lại (`refreshBand()`). *Split*: section cùng số ở khung kia cũng sáng; dải
   chỉ đo trên khung người dùng cuộn gần nhất (`bandFrom`), cuộn do trang đặt (`setByPage`) không đổi nó; chưa cuộn thì đo trên Preview.
 - "Chạm dải" (`bandPick`): khối đầu tiên có đáy dưới mốc 25%, đỉnh trên mốc 50%; đuôi khối trước còn trong dải thì nó thắng; không chạm thì khối ngay trên.
-- Ở dải đọc, dòng dưới chuột cũng sáng (`.is-line`): một `.ma-ln`, hoặc `li` / `tr` / `dt` / `dd` / khối cấp cao ở *Preview*; phần
-  khác của khối chứa nó mờ (`.ma-dimx`). *Split*: khung kia sáng khối ghép (`blockPairs()`: cùng số khối thì i ↔ i, lệch thì
-  `pairBlocks` theo dãy con chung dài nhất của thẻ). Cuộn thì tìm lại dòng dưới chuột; rời khung thì hết.
+- Dòng dưới chuột luôn sáng (`.is-line`, cả hai cách chọn): một `.ma-ln`, hoặc `li` / `tr` / `dt` / `dd` / khối cấp cao ở *Preview*; phần khác của khối chứa nó mờ (`.ma-dimx`).
+  *Split*: hai khung sáng cùng phần sâu nhất ghép được (khối của `blockPairs()`, mục / hàng `partAt`, mục con `subItems`); Source sáng mọi dòng của phần ấy. Cuộn thì tìm lại dòng (theo chuột: cả section) dưới chuột; rời khung thì hết.
+- Hai lớp mờ (Focus, *Dim reviewed*) gộp bằng min, không nhân; dòng dưới chuột = 1 (MDAN-045). Lớp chỉ đặt biến `--o-f` / `--o-r`; `opacity` chỉ ở phần tử mang, không ở tổ tiên của phần tử mang khác (`css/focus.css`).
 - Khối nguồn (`lexSpans`) neo vào văn bản gốc, không cộng dồn `raw`: marked bỏ khối `[id]: url` và đổi tab đầu dòng. Bôi đen ở *Split*: đoạn tương ứng ở khung kia tô bằng Highlight `ma-mirror` (`mirrorSel`, `locate`); hộp nhận xét mở thì `ma-pending` thay.
 - *Preview* giống GitHub (MDAN-006): màu `--gh-*`, code tô bằng highlight.js (`--hl-*`) khi khối rào ghi ngôn ngữ hljs biết; `ghExtras()` đổi
   `> [!NOTE|TIP|…]` thành `.ma-alert`. Cỡ chữ trong `.ma-md` bằng `em` theo `--md-fs`. Rộng hết khung; trích khối vạch trái, bảng viền bo góc.
@@ -124,7 +124,7 @@
   đầu. Chuyển chỗ, chữ giữ nguyên: ✓. Chữ đổi: ○, tính là chưa đọc. Không tìm lại được: mất, báo toast lúc mất và ở tab *Review*.
 - Một chỗ hỏi: `rvState()`; một chỗ ghi: `setReviews()` (lưu, vẽ, Undo, cả khi đã đổi file / phiên). Luật ở `core/review.js` (`resolveMarks`,
   `allDone`, `markWord`, `withSug`…); `ui/*` không tự quyết đơn vị nào đã đọc. Lớp và tooltip nút làn, kể cả `.is-sug`, chỉ dựng ở `ui/review.js`.
-- Nhận xét không đánh dấu đã đọc. *Dim reviewed* (`prefs.rvDim`, cùng công tắc ở *Settings*; độ sáng `prefs.rvDimV` 10–80%, `--rv-dim`) chỉ làm mờ, không gập: gập làm lệch cuộn theo nhau và dải đọc.
+- Nhận xét không đánh dấu đã đọc. *Dim reviewed* (`prefs.rvDim`, cùng công tắc ở *Settings*; độ sáng `prefs.rvDimV` 10–80%, `--rv-dim`) chỉ làm mờ, không gập: gập làm lệch cuộn theo nhau và dải đọc. Dòng trống ở Source mờ theo dòng ngay trên (`rvLines`).
 - Làn: lớp phủ `.ma-lane` trong `#wrap-*`, ngoài `#v-src` / `#v-md`. *Source*: giữa vạch nhận xét và chữ, không phải lề số;
   *Preview*: lề trái. Bấm: bật / tắt; Shift + bấm: cả dải (mốc mất khi văn bản đổi); làn của tiêu đề (hình vuông) bật cả section.
 - Phím X / Shift+X / J / K: bỏ qua khi đang gõ chữ, khi hộp thoại hay hộp nhận xét mở, khi có phím bổ trợ khác Shift. Đơn vị hiện tại: chạm
@@ -166,18 +166,18 @@
 
 - Phiên là cây (`core/session.js`, `core/tree.js`): `nodes` phẳng trỏ cha, `docs[fileId]` (`text`, `comments`, `reviews`, `rvPct`, `real`), `open`, `collapsed`.
   Bất biến và mọi luật (tên, trùng, file kế bên, `canMove`, tên tải về, tên phiên tự đặt `sessionTitle` không theo file mở MDAN-027) ở core.
-- `S` là phiên, `D` là doc của file mở: chữ, nhận xét, dấu đọc qua `D`, tuỳ chọn prompt ở `S`. Gắn với một văn bản (Undo, gợi ý, chọn dòng): `docKey()`.
-- Một chỗ ghi cây: `setTree()` ở `ui/files.js`; actions của `renderTree` chỉ gọi core rồi `setTree`. Hộp nhận xét có chữ thì không rời file mở (`canLeave()`).
-- Hai cách hiện (MDAN-035, `layoutTree()`): cột khi `#doc` nhường cây xong vẫn ≥ `viewNeed(lastRead)` (*Split* 849, khác `READ_MIN` 580; theo chế độ đọc
-  đã chọn, không theo chế độ đang hiện, để khỏi lật), không thì tấm trượt `#dlg-tree` (chọn file thì đóng). Cột (MDAN-037): con của `body`, fixed ở mép trái màn hình, từ đáy thanh
-  trên tới đáy khung nhìn (≤ 1080px: trên thanh đáy); `body` đệm trái `--tree`, vùng làm việc và phần trong thanh trên căn giữa phần còn lại (`docRoom`).
-- `prefs.tree` (chưa chọn: hiện khi phiên ≥ 2 mục) là "muốn thấy cây": cột thì `#btn-tree` / Ctrl/⌘ + B đổi nó; tấm trượt thì chỉ mở tấm. Nạp folder hiện cây
-  cho phiên ấy, không ghi `prefs.tree` (MDAN-032). Xét lại khi `#doc` đổi bề rộng (ResizeObserver, trước lần vẽ), đổi chế độ xem, vẽ cây. Kéo mép cây dừng ở
-  chỗ còn lại. *Split* tính `#doc` như khi không có cột (`treeTakes()`). Đổi file giữ chế độ xem; chỗ cuộn mỗi file nhớ trong bộ nhớ.
+- `S` là phiên, `D` là doc của file mở (chữ, nhận xét, dấu đọc); tuỳ chọn prompt ở `S`; gắn với một văn bản (Undo, gợi ý, chọn dòng): `docKey()`. Một chỗ ghi
+  cây: `setTree()` ở `ui/files.js`; actions của `renderTree` chỉ gọi core rồi `setTree`. Hộp nhận xét có chữ thì không rời file mở (`canLeave()`). Đổi file giữ chế độ xem, chỗ cuộn (bộ nhớ).
+- Hai cách hiện (MDAN-035, `layoutTree()`): cột khi `#doc` nhường cây xong vẫn ≥ `viewNeed(lastRead)` (*Split* 849, khác `READ_MIN` 580; theo chế độ đọc đã chọn,
+  không theo chế độ đang hiện, để khỏi lật), không thì tấm trượt `#dlg-tree` (chọn file thì đóng). Cột (MDAN-037): con của `body`, fixed ở mép trái màn hình, từ đáy
+  thanh trên tới đáy khung nhìn (≤ 1080px: trên thanh đáy); `body` đệm trái `--tree`, vùng làm việc và phần trong thanh trên căn giữa phần còn lại (`docRoom`).
+- `prefs.tree` (chưa chọn: hiện khi ≥ 2 mục) là "muốn thấy cây": cột thì `#btn-tree` / Ctrl/⌘ + B đổi nó; tấm trượt thì chỉ mở tấm. Nạp folder hiện cây cho phiên ấy, không ghi
+  nó (MDAN-032). Xét lại khi `#doc` đổi rộng (ResizeObserver), đổi chế độ xem, vẽ cây; kéo mép dừng ở chỗ còn lại; *Split* tính `#doc` như khi không có cột (`treeTakes()`).
+- Dáng (MDAN-060): `#btn-tree` > 720px luôn ở mép trái thanh trên (`--pad` + vùng an toàn), tên trang thẳng vùng làm việc, hẹp thì đứng sau nút. Đầu cây một hàng (FILES,
+  tên, New file, New folder, ⋯); hàng 28px, vạch thụt `--guide`; file mở: `--accent-soft` + vạch trái bo trọn `--edge-on`; tấm trượt: vùng an toàn, góc phải bo, không viền.
 - Mở file từ đĩa: file mở trống, chưa có tên thật thì điền, không thì thêm cạnh nó (MDAN-024). Nạp folder là bản sao, bộ nhớ đầy thì hoàn lại: bỏ `skipEntry`
   (không đọc vào), không phải chữ (`isTextFile`, MDAN-030), có NUL, > 1 MB; phiên trống thì mở `firstFile` (MDAN-031); xong mà đã đổi phiên thì vào phiên ấy.
-- Xoá không hỏi, toast có Undo (cả chuyển): `applyUndo` chỉ trả lại mục ấy (MDAN-028), cả khi đã đổi phiên (`sessionFor`). Tải: `downloadOf`, `zipOf`.
-- *All files* (`S.promptAll`, `allFilesOffered`, MDAN-025): `buildPromptAll`; file không mở neo qua `anchorsOf()` (nhớ theo doc). Tab *Comments* chỉ có file mở.
+- Xoá không hỏi, toast có Undo (cả chuyển): `applyUndo` chỉ trả lại mục ấy (MDAN-028), cả khi đã đổi phiên (`sessionFor`). Tải: `downloadOf`, `zipOf`. *All files* (`S.promptAll`, `allFilesOffered`, MDAN-025): `buildPromptAll`; file không mở neo qua `anchorsOf()` (nhớ theo doc). Tab *Comments* chỉ có file mở.
 
 ## Lưu trữ
 

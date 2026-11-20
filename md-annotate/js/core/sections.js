@@ -1,6 +1,7 @@
 /* Section của Focus mode, thuần: đánh số section (mỗi tiêu đề cấp cao mở một section mới) và chọn khối chạm dải đọc.
    Đọc / ghi DOM ở ui/focus.js.
-   Xuất: bandBounds, bandPick, bandScroll, lineSections, numberSections, spanAt.
+   Xuất: bandBounds, bandPick, bandScroll, lineSections, numberSections, partAt, partCount, partLines, spanAt,
+     subItems.
    Dùng: không module nào. */
 
 /* flags[i]: khối i mở section mới. Trả số section ('0', '1', …) của từng khối. */
@@ -53,4 +54,53 @@ export function spanAt(spans, line) {
     if (line < spans[mid].a) hi = mid - 1; else if (line > spans[mid].b) lo = mid + 1; else return mid;
   }
   return -1;
+}
+
+/* Phần của khối nguồn sp mà Preview tách riêng khi sáng dòng dưới chuột: mục cấp cao của danh sách (sp.items) hay hàng
+   của bảng (tag TABLE: hàng 0 ở dòng a, dòng a + 1 là dòng phân cách, hàng k ≥ 1 ở dòng a + k + 1). partCount: số phần
+   (0: khối không tách), để ui so với số mục / hàng ở Preview; lệch thì dùng cả khối. */
+export function partCount(sp) {
+  return sp.items ? sp.items.length : sp.tag === 'TABLE' ? sp.b - sp.a : 0;
+}
+/* Phần chứa dòng `line` của khối sp; -1 nếu ngoài khối, khối không tách, hay dòng phân cách của bảng. */
+export function partAt(sp, line) {
+  if (line < sp.a || line > sp.b) return -1;
+  if (sp.items) {
+    for (var i = sp.items.length - 1; i >= 0; i--) if (line >= sp.items[i]) return i;
+    return -1;
+  }
+  if (sp.tag !== 'TABLE') return -1;
+  var r = line - sp.a;
+  return r === 0 ? 0 : r === 1 ? -1 : r - 1;
+}
+/* Dòng [a, b] của phần i; mục danh sách bỏ dòng trống ở đuôi (blank(k): dòng k trống). Khối không tách: cả khối. */
+export function partLines(sp, i, blank) {
+  if (sp.items) {
+    var a = sp.items[i], b = i + 1 < sp.items.length ? sp.items[i + 1] - 1 : sp.b;
+    while (b > a && blank(b)) b--;
+    return [a, b];
+  }
+  if (sp.tag !== 'TABLE') return [sp.a, sp.b];
+  var l = i === 0 ? sp.a : sp.a + i + 1;
+  return [l, l];
+}
+/* Mục con trong dòng [a, b] của một mục danh sách (dòng a mở nó): mỗi dòng mở bằng dấu mục, thụt sâu hơn dòng a, là
+   một mục con, theo thứ tự như các <li> con cháu ở Preview; nó kéo tới trước dòng mở mục kế tiếp thụt không sâu hơn
+   nó, bỏ dòng trống ở đuôi. texts[k]: chữ dòng k. Trả [[a, b], …]; ui so số mục với số <li>, lệch thì bỏ. */
+var ITEM = /^([ \t]*)(?:[-*+]|\d{1,9}[.)])(?:[ \t]|$)/;
+export function subItems(texts, a, b) {
+  var out = [], base = /^[ \t]*/.exec(texts[a] || '')[0].length;
+  for (var k = a + 1; k <= b; k++) {
+    var m = ITEM.exec(texts[k] || '');
+    if (!m || m[1].length <= base) continue;
+    var e = k;
+    for (var j = k + 1; j <= b; j++) {
+      var mj = ITEM.exec(texts[j] || '');
+      if (mj && mj[1].length <= m[1].length) break;
+      e = j;
+    }
+    while (e > k && !/\S/.test(texts[e] || '')) e--;
+    out.push([k, e]);
+  }
+  return out;
 }
