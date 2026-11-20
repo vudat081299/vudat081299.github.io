@@ -564,17 +564,21 @@ export function initTree() {
     e.preventDefault(); treeW = applyW(treeW + d, cap()); prefs.treeW = treeW; savePrefs();
   });
 
-  /* Hàng: bấm mở / gập, bấm đúp (file) đổi tên, ⋯ và chuột phải mở menu. */
+  /* Hàng: bấm mở / gập, bấm đúp đổi tên (file và folder), ⋯ và chuột phải mở menu. */
   var list = $('tree-list');
   list.addEventListener('click', function (e) {
     var li = e.target.closest('.ma-trow');
     if (!li || !(li.dataset.id in at) || (editing && editing.id === li.dataset.id)) return;
     if (e.target.closest('.ma-trow__more')) { if (menuFor === li.dataset.id) closeMenu(true); else openMenu(li.dataset.id); return; }
-    /* Bấm đúp file: đổi tên. Đếm bằng e.detail, không dùng dblclick: lần bấm đầu mở file, nơi gọi có thể vẽ lại hàng. */
-    if (e.detail === 2 && byId[li.dataset.id].kind === 'file') { editName(li.dataset.id); return; }
-    /* Bấm đúp folder: lần bấm thứ hai bỏ qua, không gập rồi mở lại (nháy). */
-    if (e.detail >= 2 && byId[li.dataset.id].kind === 'dir') return;
-    activate(li.dataset.id);
+    /* Bấm đúp (file hay folder): đổi tên. Đếm bằng e.detail, không dùng dblclick: lần bấm đầu đã mở file / gập folder
+       và nơi gọi có thể vẽ lại hàng. Folder: lần bấm thứ hai trả folder về như trước lần bấm đầu rồi mới đổi tên. */
+    var id = li.dataset.id;
+    if (e.detail === 2) {
+      if (byId[id].kind === 'dir') activate(id);
+      editName(id); return;
+    }
+    if (e.detail > 2) return;
+    activate(id);
   });
   list.addEventListener('contextmenu', function (e) {
     var li = e.target.closest('.ma-trow');

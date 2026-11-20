@@ -2126,6 +2126,12 @@ const cornerClash = (page) => page.evaluate(() => {
     check('cây: bấm đúp file mở ô đổi tên', rn && rn.v === 'old.md', JSON.stringify(rn));
     await tp.keyboard.press('Control+A'); await tp.keyboard.type('older.md'); await tp.keyboard.press('Enter'); await tp.waitForTimeout(80);
     check('cây: Enter lưu tên mới', !(await ren()) && (await nameOf(row('old.md'))) === 'older.md' && JSON.stringify(await tl()).includes('older.md'));
+    const expOf = () => tp.$eval(row('archive'), (li) => li.getAttribute('aria-expanded'));
+    const exp0 = await expOf();
+    await tp.dblclick(row('archive')); await tp.waitForTimeout(120);
+    rn = await ren();
+    check('cây: bấm đúp folder mở ô đổi tên, folder giữ nguyên mở / gập', rn && rn.v === 'archive' && rn.f && (await expOf()) === exp0, JSON.stringify(rn) + ' ' + exp0 + '→' + (await expOf()));
+    await tp.keyboard.press('Escape'); await tp.waitForTimeout(60);
 
     // Menu hàng: Move to… bỏ chính nó và hậu duệ; Top level gọi move(id, null).
     await tp.hover(row('level-3'));
