@@ -36,10 +36,11 @@ export function setView(v) {
   if (v === 'edit' || v === 'view') clearPicks(); else repaintPicks();
 }
 export function isSplit() { return $('views').dataset.mode === 'split'; }
-/* Bề rộng thay đổi (cửa sổ, panel, thu gọn): xem lại Split và chiều cao hai khung. */
+/* Bề rộng thay đổi (cửa sổ, panel, thu gọn): xem lại Split và chiều cao hai khung.
+   Muốn Split: hết chỗ thì lùi về Preview, đủ chỗ lại thì về Split (setView quyết). */
 export function refreshSplit() {
   $('tab-split').hidden = !splitOK();
-  if (view !== 'edit' && ((prefs.view === 'split') !== (view === 'split'))) setView(prefs.view === 'split' ? 'split' : view);
+  if (view !== 'edit' && prefs.view === 'split' && (view === 'split') !== splitOK()) setView('split');
   else sizePanes();
 }
 export function sizePanes() {

@@ -384,6 +384,15 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
     const side = Math.round((w - Math.min(w, Math.max(0.7 * w, 1280))) / 2) + 24;
     check(`${w}px: Song song, mỗi khung ≥ 420px, vùng làm việc ~70% ở giữa`, g.mode === 'split' && g.a >= 420 && g.b >= 420 && Math.abs(g.docL - side) <= 1 && Math.abs(g.panelR - side) <= 1, JSON.stringify({ ...g, side }));
   }
+  // Đang Song song mà cửa sổ hẹp lại: lùi về Preview, vẫn nhớ split; rộng lại thì về Song song.
+  const vw = () => page.evaluate(() => ({ mode: document.getElementById('views').dataset.mode, src: !document.getElementById('wrap-src').hidden,
+    tab: document.querySelector('.ma-tab[aria-selected="true"]')?.dataset.view, pref: JSON.parse(localStorage.getItem('md-annotate:prefs:v1') || '{}').view }));
+  await page.setViewportSize({ width: 600, height: 900 }); await page.waitForTimeout(150);
+  let nv = await vw();
+  check('Song song, cửa sổ hẹp lại: lùi về Preview, vẫn nhớ split', nv.mode === 'view' && !nv.src && nv.tab === 'view' && nv.pref === 'split', JSON.stringify(nv));
+  await page.setViewportSize({ width: 1280, height: 900 }); await page.waitForTimeout(150);
+  nv = await vw();
+  check('rộng lại: về Song song', nv.mode === 'split' && nv.src && nv.tab === 'split', JSON.stringify(nv));
   // Kéo panel rộng thêm vẫn phải còn Song song: thử ở màn đủ rộng.
   await page.setViewportSize({ width: 2560, height: 900 });
   await page.evaluate(() => window.scrollTo(0, 0));
