@@ -325,9 +325,15 @@ const cornerClash = (page) => page.evaluate(() => {
   // 10. Song song.
   await page.click('.ma-tab[data-view="split"]');
   check('song song hiện cả hai', await page.isVisible('#v-src') && await page.isVisible('#v-md'));
+  const popSide = () => page.evaluate(() => { const p = document.getElementById('pop').getBoundingClientRect(), m = document.getElementById('wrap-md').getBoundingClientRect(); return { pop: Math.round(p.left), md: Math.round(m.left) }; });
+  await dragSelect(page, '#v-src', 'Mục một của danh sách');
+  const sideS = await popSide();
+  await page.keyboard.press('Escape');
   await dragSelect(page, '#v-md', 'Mục một của danh sách\nMục hai');
   const pend = await page.evaluate(() => CSS.highlights.get('ma-pending').size);
   check('đoạn đang chọn được tô ở cả hai bên', pend === 2, String(pend));
+  const sideM = await popSide();
+  check('song song: hộp nhận xét ở khung vừa bôi đen', sideS.pop < sideS.md && sideM.pop >= sideM.md, JSON.stringify({ src: sideS, md: sideM }));
   await page.keyboard.type('Gộp hai mục');
   await page.keyboard.press('Enter');
   check('chọn ở bản dựng qua hai dòng: L9-10 theo nguồn', /\. L9-10 "Mục một của danh sách Mục hai" — Gộp hai mục/.test(await out(page)), JSON.stringify(await out(page)));

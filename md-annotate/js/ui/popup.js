@@ -56,7 +56,12 @@ export function openNew(info, rect) {
   $('pop-del').hidden = true;
   $('pop-text').value = '';
   popExpanded = false;
-  showPop(rect || (rs.length ? lastRect(rs[0]) : null));
+  showPop(rect || (rs.length ? lastRect(ownRange(rs)) : null));
+}
+/* Ở Split đoạn được tô ở cả hai khung: hộp đặt cạnh khung người dùng đã bôi đen (pending.origin). */
+function ownRange(rs) {
+  var pane = $(pending.origin === 'md' ? 'v-md' : 'v-src');
+  return rs.filter(function (r) { return pane.contains(r.startContainer); })[0] || rs[0];
 }
 /* Chọn thêm / bỏ dòng khi hộp đang mở: đổi nội dung, giữ chỗ (kể cả chỗ đã kéo tới) và chữ đang gõ. */
 export function updateNew(info) {

@@ -100,7 +100,7 @@
 - Trích dẫn tối đa 2 dòng, dài hơn thì mờ dần (`.is-long`, mask theo `--ink`). Chuyển động mở tắt khi `prefers-reduced-motion`.
 - Chuột thì mở ngay khi thả, kể cả khi kéo bắt đầu ở vùng nền (lề trái / phải, nền trang quanh khung; trừ nút, ô nhập,
   panel, hộp thoại, vách kéo, thanh cuộn); cảm ứng và bàn phím thì hiện nút nổi *Comment on selection*. Máy hẹp hoặc màn cảm
-  ứng: hộp là tấm trượt đáy. Hộp dưới đoạn chọn, thiếu chỗ thì lên trên, luôn trọn khung nhìn (`popPlace`).
+  ứng: hộp là tấm trượt đáy. Hộp dưới đoạn chọn (Split: ở khung đã bôi đen), thiếu chỗ thì lên trên, trọn khung nhìn (`popPlace`).
 - Đoạn đang chọn tô bằng `::highlight(ma-pending)`, không sửa DOM: sửa DOM giữa lúc kéo chuột làm mất vùng chọn. Mọi Highlight tô qua `paintHL()`.
 - Highlight của nhận xét là `<mark class="ma-hl" data-ids>`; số thứ tự hiện bằng `::after`, không lọt vào chữ của khung.
 
