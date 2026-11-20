@@ -29,7 +29,7 @@
 }
 /* Màn cảm ứng và điện thoại: mọi điều khiển cao ít nhất --h-touch. */
 @media (max-width: 720px), (pointer: coarse) {
-  .ma-btn, .ma-tab, .ma-ptab, .ma-chip, .ma-fmt span, .ma-opts summary, .ma-check, .ma-syn, .ma-rail__n { min-height: var(--h-touch); }
+  .ma-btn, .ma-tab, .ma-ptab, .ma-chip, .ma-fmt span, .ma-opts summary, .ma-check, .ma-syn, .ma-rail__n, .ma-toast__btn { min-height: var(--h-touch); }
   .ma-icbtn, .ma-item__act .ma-icbtn, .ma-rail .ma-rail__copy { width: var(--h-touch); height: var(--h-touch); }
   .ma-input, .ma-docname { height: var(--h-touch); }
   .ma-pathrow .ma-input { height: var(--h-touch); }
@@ -57,6 +57,7 @@
   #src-input.is-empty { min-height: 120px; }
   .ma-dlg { width: 100vw; max-width: 100vw; margin: auto 0 0; max-height: 85vh; border-radius: var(--r-lg) var(--r-lg) 0 0; }
   .ma-dlg.ma-dlg--center { width: calc(100vw - 2 * var(--s4)); margin: auto; border-radius: var(--r-lg); }
+  .ma-toast { left: var(--s4); right: var(--s4); transform: none; width: auto; max-width: none; }
 }
 /* Hộp nhận xét thành tấm trượt đáy ở máy hẹp hoặc màn cảm ứng */
 .ma-pop.is-sheet {

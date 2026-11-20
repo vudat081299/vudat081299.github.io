@@ -58,16 +58,27 @@
   min-height: var(--h-touch); padding: 0 var(--s5); border-radius: var(--r-pill); box-shadow: var(--shadow-pop);
 }
 .ma-dock { display: none; }
-/* TOAST: nền đảo (mực), chữ nền; nút Undo là nút chính nhỏ (--accent + --on-accent, đọc được ở cả hai theme). */
+/* TOAST: nền đảo (mực), chữ nền, một dòng nếu đủ chỗ. width: max-content: left 50% không được bóp hộp còn nửa khung nhìn.
+   Nút Undo: chữ đậm trên nền mờ của chính màu chữ, đọc được ở cả hai theme. Điện thoại: rộng hết, trừ lề (mobile.css). */
 .ma-toast {
   position: fixed; z-index: 80; left: 50%; transform: translateX(-50%);
-  bottom: calc(var(--s5) + env(safe-area-inset-bottom)); max-width: calc(100vw - 2 * var(--s4));
+  bottom: calc(var(--s5) + env(safe-area-inset-bottom));
+  width: max-content; max-width: min(560px, calc(100vw - 2 * var(--s4)));
   display: flex; align-items: center; gap: var(--s3); min-height: calc(var(--h-sm) + 2 * var(--s2)); padding: var(--s2) var(--s4);
-  background: var(--ink); color: var(--bg); border-radius: var(--r); box-shadow: var(--shadow); font-size: var(--fs-md);
+  background: var(--ink); color: var(--bg); border-radius: var(--r); box-shadow: var(--shadow-pop);
+  font-size: var(--fs-sm); line-height: var(--lh-tight);
   pointer-events: none;   /* không chặn bôi đen chữ nằm dưới; chỉ nút Hoàn tác nhận bấm */
 }
+.ma-toast > span { flex: 1 1 auto; min-width: 0; }
+.ma-toast:has(.ma-toast__btn) { padding-right: var(--s2); }
 .ma-toast__btn {
-  pointer-events: auto; flex: none; min-height: var(--h-sm); margin-right: calc(-1 * var(--s2)); padding: 0 var(--s3);
-  border: 0; border-radius: var(--r-sm); background: var(--accent); color: var(--on-accent);
-  font: 600 var(--fs-sm)/1 var(--sans);
+  pointer-events: auto; flex: none; min-height: var(--h-sm); padding: 0 var(--s3);
+  border: 0; border-radius: var(--r-sm); background: color-mix(in srgb, var(--bg) 14%, transparent); color: var(--bg);
+  font: 600 var(--fs-sm)/1 var(--sans); transition: background var(--dur) var(--ease);
 }
+@media (hover: hover) { .ma-toast__btn:hover { background: color-mix(in srgb, var(--bg) 24%, transparent); } }
+.ma-toast__btn:active { background: color-mix(in srgb, var(--bg) 30%, transparent); }
+@media (prefers-reduced-motion: no-preference) {
+  .ma-toast:not([hidden]) { animation: ma-toast-in var(--dur) var(--ease); }
+}
+@keyframes ma-toast-in { from { opacity: 0; translate: 0 8px; } to { opacity: 1; translate: 0 0; } }
