@@ -11,8 +11,9 @@
    (dải 14px không đạt --h-touch, lại nằm đúng chỗ ngón tay vuốt cuộn).
    Toán ở core/minimap.js.
    Xuất: drawMinimap, initMinimap.
-   Dùng: core/minimap.js, ui/dom.js, ui/state.js, ui/views.js, ui/review.js, ui/dwell.js. */
+   Dùng: core/minimap.js, core/review.js, ui/dom.js, ui/state.js, ui/views.js, ui/review.js, ui/dwell.js. */
 import { mmDots, mmScroll, mmSegments, mmView } from '../core/minimap.js';
+import { withSug } from '../core/review.js';
 import { $, h, shown } from './dom.js';
 import { S } from './state.js';
 import { isSplit, view } from './views.js';
@@ -82,8 +83,7 @@ function place(w, f) {
 /* Vẽ lại cả hai dải: gọi sau mỗi lần xếp làn (ui/review.js layoutLanes). */
 export function drawMinimap() {
   if (!strips.src) return;
-  var r = rvState(), g = laneGeo(), sg = {};
-  sugIdx(r).forEach(function (i) { sg[i] = true; });
+  var r = rvState(), g = laneGeo(), shownSt = withSug(r.res.state, sugIdx(r));
   sizeStrips();
   ['src', 'md'].forEach(function (w) {
     var el = strips[w], gw = g[w] || [], wrap = wrapOf(w);
@@ -93,10 +93,7 @@ export function drawMinimap() {
     frames[w] = f;
     if (!f) { el.hidden = true; return; }
     place(w, f);
-    var items = gw.map(function (e) {
-      var s = r.res.state[e.i];
-      return { top: e.top, bottom: e.bottom, state: s !== 'done' && sg[e.i] ? 'sug' : s };
-    });
+    var items = gw.map(function (e) { return { top: e.top, bottom: e.bottom, state: shownSt[e.i] }; });
     var segs = mmSegments(items, f.total, f.H, SEG_MIN, 1).map(function (s) {
       var n = h('i', { class: 'ma-mm__s is-' + s.state });
       n.style.cssText = 'top:' + s.y.toFixed(1) + 'px;height:' + s.h.toFixed(1) + 'px';
@@ -121,8 +118,8 @@ export function drawMinimap() {
     placeView(w, f);
   });
 }
-/* Cuộn: chỉ dời hộp khung nhìn; chế độ cuộn cửa sổ thì khung của dải cũng đổi (đỉnh khung trượt dưới thanh trên), cao
-   đổi thì vẽ lại. */
+/* Cuộn: dời hộp khung nhìn và đặt lại dải theo khung (đỉnh khung trượt dưới thanh trên khi trang cuộn, cả ở Split khi
+   khung chưa vừa màn hình); cao đổi thì vẽ lại. */
 var raf = 0;
 function onScroll() {
   if (raf) return;
@@ -132,11 +129,9 @@ function onScroll() {
     ['src', 'md'].forEach(function (w) {
       var f = frames[w];
       if (!f || strips[w].hidden) return;
-      if (!f.split) {
-        var nf = frameOf(w);
-        if (!nf || Math.abs(nf.H - f.H) > 0.5 || Math.abs(nf.left - f.left) > 0.5) { redraw = true; return; }
-        frames[w] = f = nf; place(w, f);
-      }
+      var nf = frameOf(w);   // Split cũng vậy: khung chưa vừa màn hình thì trang cuộn, khung dời theo
+      if (!nf || Math.abs(nf.H - f.H) > 0.5 || Math.abs(nf.left - f.left) > 0.5) { redraw = true; return; }
+      frames[w] = f = nf; place(w, f);
       placeView(w, f);
     });
     if (redraw) drawMinimap();

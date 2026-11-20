@@ -5,14 +5,14 @@
    Dùng: core/text.js, core/review.js, ui/dom.js, ui/store.js, ui/state.js, ui/render.js, ui/views.js, ui/panel.js,
      ui/review.js. */
 import { lineOf, plural } from '../core/text.js';
-import { dropLost, reviewSections } from '../core/review.js';
+import { dropLost, firstOpen, reviewSections } from '../core/review.js';
 import { $, h, toast } from './dom.js';
 import { prefs, savePrefs } from './store.js';
-import { loadSession, S, saveClosed } from './state.js';
+import { S } from './state.js';
 import { anchors, ordered, orphans } from './render.js';
 import { lastRead, setView, view } from './views.js';
 import { setPane } from './panel.js';
-import { commitReviews, jumpUnit, rvState, setRvTouched, stepOpen, toggleSection } from './review.js';
+import { jumpUnit, rvState, setReviews, setRvTouched, stepOpen, toggleSection } from './review.js';
 
 var GLYPH = { done: 'Reviewed', part: 'Partly reviewed', changed: 'Changed since reviewed', todo: 'Not reviewed' };
 
@@ -34,14 +34,20 @@ function toText(fn) {
   };
 }
 
-export function renderReviewPanel(r, p) {
-  var has = r.units.length > 0, marked = S.reviews.length > 0, pct = p.pct + '%';
+var emptyP = null;   // chữ gốc của #rv-empty
+/* blind: chưa tách được khối (thiếu mạng): không có % để hiện, dấu vẫn giữ. */
+export function renderReviewPanel(r, p, blind) {
+  var has = r.units.length > 0, marked = S.reviews.length > 0 && !blind, pct = p.pct + '%';
   $('n-review').textContent = marked ? pct : '';
   $('rail-rv').hidden = !marked; $('rail-rv').textContent = pct;
   $('rail-rv').setAttribute('aria-label', 'Review: ' + pct + ' reviewed');
   $('dock-rv').hidden = !marked; $('dock-rv').textContent = '✓ ' + pct;
   $('dock-rv').setAttribute('aria-label', 'Review: ' + pct + ' reviewed');
   $('rv-empty').hidden = has; $('rv-body').hidden = !has;
+  var ep = $('rv-empty').querySelector('p');
+  emptyP = emptyP || ep.cloneNode(true);
+  ep.replaceChildren.apply(ep, blind ? [h('b', null, 'Preview could not load'), 'Your review marks are kept and come back once it loads.']
+    : Array.prototype.map.call(emptyP.childNodes, function (n) { return n.cloneNode(true); }));
   if (!has) return;
   $('rv-pct').textContent = pct;
   $('rv-fill').style.width = pct;
@@ -66,9 +72,7 @@ export function renderReviewPanel(r, p) {
       h('button', {
         class: 'ma-rvs__main', type: 'button', title: 'Go to this section',
         onclick: toText(function () {
-          var st = rvState().res.state, i = s.first;
-          for (var k = s.first; k <= s.last; k++) if (st[k] !== 'done') { i = k; break; }
-          jumpUnit(i);
+          jumpUnit(firstOpen(rvState().res.state, s.first, s.last));
         })
       }, h('span', { class: 'ma-rvs__t' + (s.title ? '' : ' is-pre') }, name), h('span', { class: 'ma-rvs__m' }, meta)));
   }));
@@ -82,17 +86,11 @@ export function initReviewPanel() {
     document.documentElement.classList.toggle('ma-rvdim', prefs.rvDim);
   });
   $('rv-lost-x').addEventListener('click', function () {
-    S.reviews = dropLost(S.reviews, rvState().res); commitReviews();
+    var n = rvState().res.lost.length;
+    setReviews(dropLost(S.reviews, rvState().res), 'Removed ' + plural(n, 'lost review mark') + '.');
   });
   $('rv-clear').addEventListener('click', function () {
-    var before = S.reviews, sid = S.id;
-    if (!before.length) return;
-    S.reviews = []; commitReviews();
-    toast('Cleared ' + plural(before.length, 'review mark') + '.', { label: 'Undo', fn: function () {
-      if (S.id === sid) { S.reviews = before; commitReviews(); return; }
-      var o = loadSession(sid);   // đã chuyển phiên: trả dấu về phiên của nó
-      if (o) { o.reviews = before; saveClosed(o); }
-    } });
+    if (S.reviews.length) setReviews([], 'Cleared ' + plural(S.reviews.length, 'review mark') + '.');
   });
   $('rail-rv').addEventListener('click', function () { $('btn-unrail').click(); setPane('review'); });
   $('dock-rv').addEventListener('click', function () { $('dock-n').click(); setPane('review'); setRvTouched(); });

@@ -46,7 +46,7 @@ export function buildPrompt(s, d) {
   var fs = items.map(function (c) {
     return found(s, d, c, true).map(function (f) { return { quote: f.quote, loc: s.lineNums ? f.loc : '' }; });
   });
-  var head = s.header.trim(), rv = s.rvPrompt ? reviewLine(d.review, s.path.trim()) : '';
+  var head = s.header.trim(), rv = s.rvPrompt && s.lineNums ? reviewLine(d.review, s.path.trim()) : '';   // dòng đã đọc là số dòng
   if (fs.some(function (f) { return f.some(function (x) { return x.loc; }); }) || rv) {
     var note = s.path.trim()
       ? 'Vị trí ghi dạng tệp:dòng, tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.'
@@ -90,7 +90,7 @@ export function optionsSummary(s) {
   var sum = [s.fmt === 'block' ? 'block' : 'compact'];
   if (s.lineNums) sum.push(s.path.trim() || 'line numbers');
   if (s.includeDoc) sum.push('full text');
-  if (s.rvPrompt) sum.push('reviewed');
+  if (s.rvPrompt && s.lineNums) sum.push('reviewed');
   if (s.header.trim() || s.footer.trim()) sum.push('header');
   return sum.join(' · ');
 }

@@ -80,7 +80,7 @@ export function initPrompt() {
   $('inc-doc').addEventListener('change', function (e) { S.includeDoc = e.target.checked; scheduleSave(); renderPrompt(); });
   $('rv-prompt').addEventListener('change', function (e) { S.rvPrompt = e.target.checked; scheduleSave(); renderPrompt(); });
   $('line-nums').addEventListener('change', function (e) {
-    S.lineNums = e.target.checked; $('path-row').hidden = !S.lineNums;
+    S.lineNums = e.target.checked; $('path-row').hidden = $('rv-prompt-row').hidden = !S.lineNums;
     scheduleSave(); renderPrompt();
   });
   $('p-path').addEventListener('input', function (e) { S.path = e.target.value.trim(); scheduleSave(); renderPrompt(); });

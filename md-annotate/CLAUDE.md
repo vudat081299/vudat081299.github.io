@@ -18,8 +18,7 @@
 | `js/core/tokens.js`, `js/core/runs.js` | token của *Source*; cắt chữ theo token / highlight / dòng, `lineCount` |
 | `js/core/blocks.js`, `js/core/sections.js` | `lexSpans`, `pairBlocks` (khối nguồn ↔ Preview); đánh số section, dải đọc |
 | `js/core/panes.js`, `js/core/picks.js`, `js/core/sync-math.js`, `js/core/text.js`, `js/core/shortcuts.js` | `splitFits`, cao hai khung; nhiều dòng (`pickInfo`); cuộn theo nhau; `plural`, `lineOf`, `slug`; `normShortcuts` |
-| `js/core/review.js`, `js/ui/review.js`, `js/ui/review-panel.js` | đã đọc: đơn vị, neo dấu, tiến độ; làn, phím, nút hộp nhận xét, viên thuốc; tab *Review* |
-| `js/core/minimap.js`, `js/ui/minimap.js`, `js/core/dwell.js`, `js/ui/dwell.js` | dải tiến độ cạnh khung; gợi ý đã đọc theo thời gian đọc (MDAN-016) |
+| `js/{core,ui}/review.js`, `js/ui/review-panel.js`, `js/{core,ui}/minimap.js`, `js/{core,ui}/dwell.js` | đã đọc: đơn vị, neo dấu, tiến độ; làn, phím, nút hộp nhận xét, viên thuốc; tab *Review*; dải tiến độ; gợi ý theo thời gian đọc (MDAN-016) |
 | `js/ui/store.js`, `js/ui/dom.js` | `localStorage`, khoá, `prefs`; `$`, `h()`, `icon()`, `toast()`, `dragBar()` |
 | `js/ui/state.js`, `js/ui/render.js` | phiên `S`, lưu, chuyển phiên; `renderAll()`, kết quả neo `mdText`, `anchors`, `ordered`… |
 | `js/ui/anchor-dom.js`, `js/ui/marks.js` | vùng chọn ↔ vị trí chữ; `<mark class="ma-hl">`, tô active / hover |
@@ -135,22 +134,23 @@
 ## Đánh dấu đã đọc (MDAN-013)
 
 - Đơn vị: khối của `lexSpans`; danh sách ≥ 2 mục thì mỗi mục cấp cao một đơn vị (mục con thuộc mục cha); bảng, khối code là
-  một đơn vị; khối không chữ / số / emoji (kẻ ngang) không tính. Tiến độ tính theo số dòng, làm tròn xuống.
-- Dấu ở `S.reviews` (`{ h, p, n, q, r }`, không số dòng): băm chữ chuẩn hoá (bỏ dấu mục), băm hai hàng xóm, 80 ký tự đầu.
-  Chuyển chỗ, chữ giữ nguyên: ✓. Chữ đổi: ○, tính là chưa đọc, đánh dấu lại là ✓. Không tìm lại được: mất, báo toast và tab *Review*.
+  một đơn vị; khối không chữ / số / emoji (kẻ ngang), khối chỉ có chú thích HTML không tính. Tiến độ theo số dòng, làm tròn xuống.
+- Dấu ở `S.reviews` (`{ h, p, n, q, r }`, không số dòng): băm chữ chuẩn hoá (bỏ dấu mục), băm hai hàng xóm (mép văn bản: rỗng), 80 ký tự
+  đầu. Chuyển chỗ, chữ giữ nguyên: ✓. Chữ đổi: ○, tính là chưa đọc. Không tìm lại được: mất, báo toast lúc mất và ở tab *Review*.
+- Một chỗ hỏi: `rvState()`; một chỗ ghi: `setReviews()` (lưu, vẽ, Undo, cả khi đã đổi phiên). Luật ở `core/review.js` (`resolveMarks`,
+  `allDone`, `markWord`, `withSug`…); `ui/*` không tự quyết đơn vị nào đã đọc. Lớp và tooltip nút làn, kể cả `.is-sug`, chỉ dựng ở `ui/review.js`.
 - Nhận xét không đánh dấu đã đọc. *Dim reviewed* (`prefs.rvDim`) chỉ làm mờ, không gập: gập làm lệch cuộn theo nhau và dải đọc.
 - Làn: lớp phủ `.ma-lane` trong `#wrap-*`, ngoài `#v-src` / `#v-md`. *Source*: giữa vạch nhận xét và chữ, không phải lề số;
-  *Preview*: lề trái. Bấm: bật / tắt; Shift + bấm: cả dải; làn của tiêu đề (hình vuông) bật cả section.
+  *Preview*: lề trái. Bấm: bật / tắt; Shift + bấm: cả dải (mốc mất khi văn bản đổi); làn của tiêu đề (hình vuông) bật cả section.
 - Phím X / Shift+X / J / K: bỏ qua khi đang gõ chữ, khi hộp thoại hay hộp nhận xét mở, khi có phím bổ trợ khác Shift. Đơn vị hiện tại: chạm
-  dải đọc (dưới con trỏ khi Focus theo chuột), làn `.is-cur`; vừa nhảy tới (đỉnh ngay trên mốc trên, `bandScroll`) thì là nó tới khi khung rời đường cuộn (`pin`).
-- Nút ✓ Reviewed của hộp nhận xét (nới ra trọn khối, cả khi chọn dòng ở lề số) do `ui/review.js` theo dõi hộp bằng MutationObserver.
-- Prompt: *Say which lines I reviewed* (`rvPrompt`, mặc định tắt) thêm `Đã đọc kỹ: … Chưa đọc: …`; tắt thì prompt y hệt từng byte.
-- Bộ dấu (MDAN-017): tròn là khối, vuông là section, ✓ là ảnh `--ic-check`, cỡ `--ic-box`; khai báo một lần ở đầu `css/review.css`, ô đánh dấu
+  dải đọc (dưới con trỏ khi Focus theo chuột; khung không cuộn được: đơn vị đầu), làn `.is-cur`; vừa nhảy tới thì là nó (`pin`).
+- Nút ✓ Reviewed của hộp nhận xét (nới ra trọn khối, cả dòng chọn ở lề số): `ui/review.js` theo dõi hộp (MutationObserver). Prompt: *Say which lines I reviewed* (`rvPrompt`, mặc định tắt, ẩn khi tắt số dòng) thêm `Đã đọc kỹ: … Chưa đọc: …`; tắt thì y hệt từng byte.
+- Bộ dấu (MDAN-017): tròn là khối, vuông là section, ✓ là ảnh `--ic-check`, cỡ `--ic-box`; khai báo một lần ở `css/review.css` (cả gợi ý), ô đánh dấu
   của form dùng cùng ảnh, cùng cỡ; dấu căn giữa dòng đầu khối (`--c`). Máy hẹp / cảm ứng: `#rv-pill` chỉ đánh dấu, không bỏ dấu; chưa có dấu thì tắt làn.
 - Dải tiến độ (MDAN-016): `.ma-mm` fixed, mép phải khung; mỗi đơn vị một đoạn (đặc ✓, rỗng ○, nhạt, viền đứt gợi ý) trên rãnh `--line-2` cao hết dải. Trái dải,
   cách `--mm-gap`, là thanh cuộn tự vẽ (con trượt `--sb-thumb`, chấm nhận xét), ở *Split* thay thanh của khung; hai đầu tránh góc bo (`cornerLimits`). ≤ 720px ẩn; cảm ứng chỉ xem.
 - Gợi ý (`prefs.rvSuggest`, mặc định bật): đơn vị chạm dải đọc (luật của Focus band, cả khi Focus tắt) cộng thời gian; rời dải đi lên sau
-  `dwellNeed` (40% số từ ÷ 230 wpm, 4–60 s) thì có ✓ viền đứt `.is-sug` và nút *Accept N suggested* ở tab *Review*. Không bao giờ tự đánh dấu.
+  `dwellNeed` (40% số từ ÷ 230 wpm, 4–60 s) thì có ✓ viền đứt `.is-sug` và nút *Accept N suggested* ở tab *Review*. Tiêu đề không được gợi ý. Không tự đánh dấu.
 - Chỉ đếm khi tab hiện, cửa sổ có focus, có thao tác trong 60 s; rời dải chỉ tính lúc người dùng tự cuộn; J / K / X, dải tiến độ gọi `noteJump()`.
   Gợi ý chỉ ở bộ nhớ, theo phiên; khoá là băm chữ, chữ đổi thì rơi. Chấp nhận: X, bấm làn, nút (Undo trả cả gợi ý).
 
@@ -191,7 +191,7 @@
   `<style>`, `style=`, `<form>`, `<dialog>`; id / name thêm tiền tố `user-content-`: markdown không chạm CSS, id của trang.
 - Link ở bản dựng thành `<span class="ma-a">` (`unlink()`, URL ở `title`), không dựng lại `<a>`: kéo trên link vẫn là bôi đen.
 - Chỉ một chỗ gán `innerHTML` (`renderAll()` ở `js/ui/render.js`): HTML đã qua DOMPurify. Mọi chỗ khác dựng DOM bằng `h()` và `textContent`.
-- Thiếu mạng thì *Preview* báo lỗi, *Source* vẫn dùng được (không có đơn vị đã đọc). `file://`: chỉ hiện `#file-notice`.
+- Thiếu mạng thì *Preview* báo lỗi, *Source* vẫn dùng được (không có đơn vị đã đọc; dấu giữ, không báo mất, không ghi `rvPct`). `file://`: chỉ hiện `#file-notice`.
 
 ## Cổng: `sh md-annotate/tools/check.sh`
 

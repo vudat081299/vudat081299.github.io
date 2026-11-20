@@ -19,7 +19,7 @@ export function syncInputs() {
   $('rv-prompt').checked = !!S.rvPrompt;
   $('line-nums').checked = S.lineNums;
   $('p-path').value = S.path;
-  $('path-row').hidden = !S.lineNums;
+  $('path-row').hidden = $('rv-prompt-row').hidden = !S.lineNums;
   document.querySelectorAll('input[name="fmt"]').forEach(function (r) { r.checked = r.value === S.fmt; });
 }
 function setText(t) {

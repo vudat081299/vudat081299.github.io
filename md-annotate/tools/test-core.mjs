@@ -383,6 +383,28 @@ check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi
   const twin = ['# T', 'Cùng chữ.', 'Trước một.', 'Cùng chữ.', 'Sau hai.'].join('\n\n'), ut = U(twin);
   r = R.resolveMarks(ut, markAll(ut, [3]));
   check('resolveMarks: chữ trùng hai chỗ, dấu ở chỗ thứ hai', r.state[1] === 'todo' && r.state[3] === 'done', JSON.stringify(r.state));
+  {
+    // Sửa khối đầu / cuối văn bản: thiếu một hàng xóm nhưng mép văn bản cũng là hàng xóm khớp, nên thành changed, không mất.
+    const ed = ['# Thiết kế', 'Đoạn giữa một.', 'Đoạn giữa hai.', 'Cuối cùng là đây.'].join('\n\n'), ue = U(ed), me = markAll(ue, [0, 3]);
+    const r2 = R.resolveMarks(U(ed.replace('# Thiết kế', '# Thanh toán').replace('Cuối cùng là đây.', 'Cuối cùng đã viết lại.')), me);
+    check('resolveMarks: sửa khối đầu / cuối thì changed, không mất', r2.state[0] === 'changed' && r2.state[3] === 'changed' && !r2.lost.length, JSON.stringify(r2));
+    // Chữ trùng: sửa bản đã đọc thì nó thành changed; dấu không nhảy sang bản trùng chưa đọc ở chỗ khác.
+    const du = ['Same.', 'Other.', 'Same.'].join('\n\n'), ud = U(du);
+    const r3 = R.resolveMarks(U(du.replace(/Same\.$/, 'Same!')), markAll(ud, [2]));
+    check('resolveMarks: sửa bản trùng chữ đã đọc thì changed, bản kia không nhận dấu', eq(r3.state, ['todo', 'todo', 'changed']), JSON.stringify(r3.state));
+    // Hai bản trùng đều đã đọc, sửa bản đầu: kết quả không tuỳ thứ tự đánh dấu.
+    const dd = ['Intro.', 'Same note.', 'Beta.', 'Same note.', 'End.'].join('\n\n'), udd = U(dd), ed2 = U(dd.replace('Same note.', 'Rewritten line.'));
+    const a1 = R.resolveMarks(ed2, R.setMarks(udd, markAll(udd, [1]), R.resolveMarks(udd, markAll(udd, [1])), [3], true));
+    const a2 = R.resolveMarks(ed2, R.setMarks(udd, markAll(udd, [3]), R.resolveMarks(udd, markAll(udd, [3])), [1], true));
+    check('resolveMarks: chữ trùng, sửa một bản: changed + done, không tuỳ thứ tự bấm', eq(a1.state, ['todo', 'changed', 'todo', 'done', 'todo']) && eq(a2.state, a1.state) && !a1.lost.length && !a2.lost.length, JSON.stringify([a1, a2]));
+    // Xoá khối đã đọc: khối hàng xóm có chữ gần giống dồn lên không nhận dấu (changed) — dấu mất.
+    const sb = ['Head.', 'Add field foo to table users now', 'Add field bar to table users now', 'Tail.'].join('\n\n'), us = U(sb);
+    const r4 = R.resolveMarks(U(sb.replace('Add field foo to table users now\n\n', '')), markAll(us, [1]));
+    check('resolveMarks: xoá khối đã đọc, hàng xóm gần giống không thành changed', r4.lost.length === 1 && r4.state.every((x) => x === 'todo'), JSON.stringify(r4));
+    check('reviewUnits: khối chỉ có chú thích HTML không là đơn vị', U('Một.\n\n<!-- ghi chú -->\n\nHai.').length === 2);
+    check('unitRuns / markWord: gộp đơn vị liền nhau', eq(R.unitRuns(u0, [0, 1, 5, 6]), [[0, 2], [12, 14]]) && R.markWord(u0, [0, 1, 5, 6], true) === 'Marked 4 blocks (L1–3, L13–15) reviewed.' && R.markWord(u0, [5], false) === 'Unmarked 1 block (L13).');
+    check('unitsOfLines / allDone / withSug', eq(R.unitsOfLines(u0, [6, 5, 7, 2]), [2, 3]) && R.allDone(['done', 'done'], [0, 1]) && !R.allDone(['done'], []) && !R.allDone(['done', 'todo'], [0, 1]) && eq(R.withSug(['done', 'todo', 'changed'], [0, 1, 2]), ['done', 'sug', 'sug']));
+  }
   // Đánh số lại danh sách có thứ tự (chèn bước ở đầu): các bước cũ vẫn done.
   const mSteps = markAll(u0, [7, 8]);
   const renum = T0.replace('1. bước một\n2. bước hai', '1. bước mới\n2. bước một\n3. bước hai');
@@ -419,6 +441,7 @@ check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi
   check('buildPrompt: bật mà chưa đánh dấu gì thì y hệt', buildPrompt(s, Object.assign({}, d, { review: { done: [], todo: [[1, 3]] } })) === base && buildPrompt(s, d) === base);
   check('buildPrompt: đọc hết thì không có "Chưa đọc", có tệp thì tệp:dòng', buildPrompt(Object.assign({}, s, { path: 'a.md', header: 'Đầu' }), Object.assign({}, d, { review: { done: [[1, 3]], todo: [] } })) ===
     'Đầu\nVị trí ghi dạng tệp:dòng, tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.\nĐã đọc kỹ: a.md:1-3; chỗ nào không có nhận xét là ổn.\n\n1. a.md:3 "Dòng ba." — Sửa');
+  check('buildPrompt: tắt số dòng thì không có dòng đã đọc', buildPrompt(Object.assign({}, s, { lineNums: false }), dR) === buildPrompt(Object.assign({}, s, { lineNums: false, rvPrompt: false }), dR) && optionsSummary(Object.assign({}, s, { lineNums: false })) === 'compact');
   check('optionsSummary: có "reviewed" khi bật', optionsSummary(s) === 'compact · line numbers · reviewed' && optionsSummary(Object.assign({}, s, { rvPrompt: false })) === 'compact · line numbers');
   // Phiên: reviews là trường thêm; thiếu hay hỏng thì mặc định, phiên cũ vẫn đọc được.
   const old = normSession({ text: 'x', comments: [] }, 'o');
@@ -527,6 +550,7 @@ check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi
   const sug = { [keys[1]]: true, [keys[3]]: true };
   check('sugList: gợi ý hiện ở đơn vị chưa đọc hay đã đổi chữ', eq(D.sugList(sug, keys, ['todo', 'todo', 'todo', 'changed']), [1, 3]));
   check('sugList: đơn vị đã đọc (chấp nhận gợi ý) không còn gợi ý', eq(D.sugList(sug, keys, ['todo', 'done', 'todo', 'todo']), [3]));
+  check('sugList: tiêu đề không được gợi ý', eq(D.sugList(sug, keys, ['todo', 'todo', 'todo', 'todo'], units.map((u, i) => ({ head: i === 1 }))), [3]));
   check('sugList: chữ của đơn vị đổi thì gợi ý của nó rơi', eq(D.sugList(sug, keys2, ['todo', 'todo', 'todo', 'todo']), [1]), JSON.stringify(keys2));
   // Đoạn của dải: co theo tỉ lệ, cao tối thiểu, gộp đơn vị liền cùng trạng thái.
   const seg = M.mmSegments([{ top: 0, bottom: 100, state: 'done' }, { top: 110, bottom: 200, state: 'done' }, { top: 210, bottom: 212, state: 'todo' }, { top: 600, bottom: 1000, state: 'done' }], 1000, 100, 2, 1);

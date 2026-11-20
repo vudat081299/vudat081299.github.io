@@ -53,6 +53,12 @@ html:not(.ma-reviewing) .ma-lane__b.is-head:not(:hover)::after { visibility: hid
 @media (hover: hover) { .ma-lane__b:hover { background: var(--chip); } }
 /* Màn cảm ứng chưa có dấu: tắt làn, để chạm sát mép không đánh dấu nhầm (bắt đầu bằng hộp nhận xét hay tab Review). */
 @media (hover: none) { html:not(.ma-reviewing) .ma-lane { display: none; } }
+/* Gợi ý (MDAN-016): thêm vạch đứt suốt khối. Màn cảm ứng chưa có dấu: có gợi ý thì chỉ hiện nút của đơn vị được gợi ý. */
+.ma-lane .ma-lane__b.is-sug:not(.is-head)::before { top: var(--below); background: repeating-linear-gradient(to bottom, var(--accent-line) 0 3px, transparent 3px 6px); }
+@media (hover: none) {
+  html:not(.ma-reviewing) .ma-lane:has(.is-sug) { display: block; }
+  html:not(.ma-reviewing) .ma-lane:has(.is-sug) .ma-lane__b:not(.is-sug) { display: none; }
+}
 .ma-tabbing .ma-lane__b:focus-visible { outline: 2px solid var(--ring); outline-offset: 0; }
 @media (prefers-reduced-motion: no-preference) { .ma-lane__b.is-flash::after { animation: ma-rv-flash 1.1s var(--ease) 1; } }
 .ma-lane__b.is-flash { background: var(--accent-soft); }

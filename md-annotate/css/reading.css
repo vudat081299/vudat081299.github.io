@@ -1,4 +1,4 @@
-/* Dải tiến độ và gợi ý theo thời gian đọc (MDAN-016; ui/minimap.js, ui/dwell.js). Nạp sau review.css, trước mobile.css.
+/* Dải tiến độ (MDAN-016; ui/minimap.js) và hàng gợi ý của tab Review (ui/dwell.js); dấu gợi ý trên làn ở review.css. Nạp sau review.css, trước mobile.css.
    Đã đọc là --accent đặc; đã đổi chữ rỗng viền --ink-3 (≥ 3:1); chưa đọc nhạt --line; gợi ý nền --hl-2 viền đứt. */
 
 /* DẢI TIẾN ĐỘ: fixed, JS đặt left / top / height sát mép phải khung. Hai cột: thanh cuộn tự vẽ (.ma-mm__col: con trượt
@@ -33,14 +33,6 @@
 }
 /* Màn cảm ứng: chỉ để xem (vạch mảnh không đạt --h-touch, lại nằm chỗ ngón tay vuốt). Điện thoại: ui/minimap.js ẩn. */
 @media (pointer: coarse) { .ma-mm { pointer-events: none; } }
-
-/* GỢI Ý trên làn: dấu ✓ viền đứt ở bộ dấu (css/review.css); ở đây chỉ vạch đứt suốt khối. */
-.ma-lane .ma-lane__b.is-sug:not(.is-head)::before { top: var(--below); background: repeating-linear-gradient(to bottom, var(--accent-line) 0 3px, transparent 3px 6px); }
-/* Màn cảm ứng chưa có dấu: làn tắt (review.css); có gợi ý thì chỉ hiện nút của đơn vị được gợi ý. */
-@media (hover: none) {
-  html:not(.ma-reviewing) .ma-lane:has(.is-sug) { display: block; }
-  html:not(.ma-reviewing) .ma-lane:has(.is-sug) .ma-lane__b:not(.is-sug) { display: none; }
-}
 
 /* TAB REVIEW: hàng gợi ý (chữ, Accept N suggested, Dismiss). */
 .ma-rv__sug {

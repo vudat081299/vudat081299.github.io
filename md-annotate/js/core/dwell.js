@@ -50,9 +50,10 @@ export function dwellStep(tr, items, band, dt, opt) {
 }
 
 /* Chỉ số các đơn vị đang được gợi ý: khoá có trong sug (đối tượng khoá → true), đơn vị chưa đọc ('todo' hay
-   'changed'). Đơn vị đã đọc không hiện gợi ý; khoá không còn trong văn bản (chữ đổi) thì bỏ qua. */
-export function sugList(sug, keys, state) {
+   'changed'), không phải tiêu đề (units[i].head: tiêu đề đánh dấu cả section). Đơn vị đã đọc không hiện gợi ý; khoá
+   không còn trong văn bản (chữ đổi) thì bỏ qua. */
+export function sugList(sug, keys, state, units) {
   var out = [];
-  keys.forEach(function (k, i) { if (sug[k] && state[i] !== 'done') out.push(i); });
+  keys.forEach(function (k, i) { if (sug[k] && state[i] !== 'done' && !(units && units[i].head)) out.push(i); });
   return out;
 }

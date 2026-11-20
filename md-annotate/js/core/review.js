@@ -1,13 +1,13 @@
 /* Đánh dấu đã đọc (MDAN-013), thuần: đơn vị đọc từ văn bản + khối (lexSpans), dấu đã đọc lưu ở phiên (s.reviews), neo
    lại dấu sau khi văn bản đổi, trạng thái từng đơn vị, tiến độ, section, đơn vị chưa đọc kế tiếp, dải dòng cho prompt.
    Đơn vị: mỗi khối cấp cao; danh sách ≥ 2 mục thì mỗi mục cấp cao một đơn vị (mục con thuộc mục cha). Khối không có
-   chữ, số hay emoji (kẻ ngang) không là đơn vị. Dòng đếm từ 0 (a, b).
+   chữ, số hay emoji (kẻ ngang) và khối chỉ có chú thích HTML (Preview không dựng ra gì) không là đơn vị. Dòng đếm từ 0.
    Dấu (mark) = { h, p, n, q, r }: h băm chữ chuẩn hoá của đơn vị, p / n băm đơn vị liền trước / sau, q 80 ký tự đầu
    (so gần giống, hiện khi mất), r vị trí tương đối. Không lưu số dòng: văn bản đổi thì số dòng sai.
    Trạng thái: 'done' (dấu khớp đúng chữ, ở đâu cũng được), 'changed' (chữ đã đổi, tìm lại nhờ hàng xóm / chữ gần
    giống; tính là chưa đọc), 'todo'. Dấu không tìm lại được là mất (lost), giữ tới khi người dùng bỏ.
-   Xuất: dropLost, hashStr, makeMark, nextOpen, normUnit, progress, resolveMarks, reviewRanges, reviewSections,
-     reviewUnits, setMarks, unitAt, unitsIn.
+   Xuất: allDone, dropLost, firstOpen, hashStr, linesWord, makeMark, markWord, nextOpen, normUnit, progress,
+     resolveMarks, reviewRanges, reviewSections, reviewUnits, setMarks, unitAt, unitRuns, unitsIn, unitsOfLines, withSug.
    Dùng: core/text.js. */
 import { lineStarts } from './text.js';
 
@@ -47,6 +47,7 @@ export function reviewUnits(text, spans) {
     rs.forEach(function (r) {
       var norm = normUnit(text.slice(st[r[0]], lineEnd(r[1])));
       if (!/[\p{L}\p{N}\p{So}]/u.test(norm)) return;   // \p{So}: emoji, ✓ (tiêu đề chỉ có emoji vẫn là đơn vị)
+      if (/^(?:<!--[\s\S]*?-->\s*)+$/.test(norm)) return;
       units.push({
         a: r[0], b: r[1], block: k, item: r[2], head: !!sp.heading,
         depth: sp.heading && /^H[1-6]$/.test(sp.tag) ? +sp.tag[1] : 0, sec: sec, h: hashStr(norm), q: norm.slice(0, 80)
@@ -77,34 +78,44 @@ function similar(A, B, floor) {
 var WINDOW = 150;   // dấu đã đổi chữ chỉ tìm trong ±150 đơn vị quanh chỗ cũ, để văn bản dài vẫn nhanh
 
 /* Neo lại dấu vào units. Trả { state, owner, lost }: state[i] của đơn vị i; owner[i] chỉ số dấu của nó (-1: không);
-   lost: chỉ số các dấu không tìm lại được.
-   Lượt 1: dấu khớp đúng chữ (h) — chữ trùng nhiều chỗ thì chọn chỗ có hàng xóm khớp, rồi gần r nhất.
-   Lượt 2: dấu còn lại tìm đơn vị chưa có dấu: hai hàng xóm khớp, hoặc một hàng xóm khớp và chữ gần giống ≥ 0,5,
-   hoặc chữ gần giống ≥ 0,7. Một hàng xóm khớp mà chữ khác hẳn (khối bị xoá, khối sau dồn lên) thì không lấy. */
+   lost: chỉ số các dấu không tìm lại được. Hàng xóm "khớp": đơn vị liền trước / sau có đúng băm p / n của dấu; ở mép
+   văn bản, không có hàng xóm khớp với p / n rỗng (dấu của khối đầu / cuối).
+   Lượt 1, chọn cặp (dấu, đơn vị) điểm cao nhất trước, không theo thứ tự dấu (chữ trùng: kết quả không tuỳ thứ tự bấm):
+     khớp đúng chữ (h): 10 + 4 × số hàng xóm khớp; sửa tại chỗ (chữ khác, cả hai hàng xóm khớp): 12 + 2 × độ giống.
+     Khối sửa tại chỗ thắng một bản trùng chữ nằm chỗ khác, thua bản trùng chữ có hàng xóm khớp. Trừ độ lệch vị trí r.
+   Lượt 2: dấu còn lại tìm đơn vị trống trong ±150 đơn vị: một hàng xóm khớp và chữ gần giống ≥ 0,5, hoặc chữ gần giống
+   ≥ 0,7. Đơn vị có chữ của chính hàng xóm cũ (khối bị xoá, hàng xóm dồn lên) không bao giờ nhận dấu. */
 export function resolveMarks(units, marks) {
-  var n = units.length, state = [], owner = [], lost = [], byH = {}, pend = [];
+  var n = units.length, state = [], owner = [], taken = [], lost = [], byH = {}, pairs = [], uw = [];
   units.forEach(function (u, i) { state.push('todo'); owner.push(-1); (byH[u.h] = byH[u.h] || []).push(i); });
-  function ctx(m, i) {
-    return (m.p && i > 0 && units[i - 1].h === m.p ? 1 : 0) + (m.n && i + 1 < n && units[i + 1].h === m.n ? 1 : 0);
-  }
+  function hAt(i) { return i >= 0 && i < n ? units[i].h : ''; }
+  function ctx(m, i) { return (hAt(i - 1) === (m.p || '') ? 1 : 0) + (hAt(i + 1) === (m.n || '') ? 1 : 0); }
+  function wordsAt(i) { return uw[i] || (uw[i] = words(units[i].q)); }
+  function slid(m, i) { return (m.p && units[i].h === m.p) || (m.n && units[i].h === m.n); }
   marks.forEach(function (m, k) {
-    var best = -1, bs = -Infinity;
-    (byH[m.h] || []).forEach(function (i) {
-      if (owner[i] >= 0) return;
-      var s = ctx(m, i) * 10 - Math.abs(rel(i, n) - m.r);
-      if (s > bs) { bs = s; best = i; }
+    var mw = null;
+    (byH[m.h] || []).forEach(function (i) { pairs.push([10 + 4 * ctx(m, i) - Math.abs(rel(i, n) - m.r), k, i, 'done']); });
+    var at = m.p ? (byH[m.p] || []).map(function (i) { return i + 1; }) : [0];
+    at.forEach(function (i) {
+      if (i >= n || units[i].h === m.h || slid(m, i) || ctx(m, i) < 2) return;
+      mw = mw || words(m.q);
+      pairs.push([12 + 2 * similar(mw, wordsAt(i), 0) - Math.abs(rel(i, n) - m.r), k, i, 'changed']);
     });
-    if (best >= 0) { owner[best] = k; state[best] = 'done'; } else pend.push(k);
   });
-  var uw = [];   // tập từ của đơn vị, tính khi cần lần đầu
-  pend.forEach(function (k) {
-    var m = marks[k], best = -1, bs = -Infinity, mid = Math.round(m.r * (n - 1)), mw = words(m.q);
+  pairs.sort(function (x, y) { return y[0] - x[0] || x[1] - y[1] || x[2] - y[2]; });
+  pairs.forEach(function (c) {
+    if (taken[c[1]] || owner[c[2]] >= 0) return;
+    taken[c[1]] = true; owner[c[2]] = c[1]; state[c[2]] = c[3];
+  });
+  marks.forEach(function (m, k) {
+    if (taken[k]) return;
+    var best = -1, bs = -Infinity, mid = Math.round(m.r * (n - 1)), mw = words(m.q);
     for (var i = Math.max(0, mid - WINDOW); i < Math.min(n, mid + WINDOW + 1); i++) {
-      if (owner[i] >= 0) continue;
-      var c = ctx(m, i), sim = similar(mw, uw[i] || (uw[i] = words(units[i].q)), c === 2 ? 0 : c ? 0.5 : 0.7);
-      if (!(c === 2 || (c === 1 && sim >= 0.5) || sim >= 0.7)) continue;
-      var s = c * 2 + sim * 2 - Math.abs(rel(i, n) - m.r);
-      if (s > bs) { bs = s; best = i; }
+      if (owner[i] >= 0 || slid(m, i)) continue;
+      var c = ctx(m, i), sim = similar(mw, wordsAt(i), c ? 0.5 : 0.7);
+      if (!((c && sim >= 0.5) || sim >= 0.7)) continue;
+      var sc = c * 2 + sim * 2 - Math.abs(rel(i, n) - m.r);
+      if (sc > bs) { bs = sc; best = i; }
     }
     if (best >= 0) { owner[best] = k; state[best] = 'changed'; } else lost.push(k);
   });
@@ -123,6 +134,41 @@ export function setMarks(units, marks, res, idxs, on) {
     out.push(i != null && res.state[i] === 'done' ? makeMark(units, i) : m);
   });
   if (on) idxs.forEach(function (i) { if (!seen[i]) { seen[i] = true; out.push(makeMark(units, i)); } });
+  return out;
+}
+/* Mọi đơn vị trong idx đã đọc (thao tác trên chúng là bỏ dấu); idx rỗng: false. */
+export function allDone(state, idx) {
+  return idx.length > 0 && idx.every(function (i) { return state[i] === 'done'; });
+}
+/* Thao tác đánh dấu / bỏ dấu trên idx: 'Marked 3 blocks (L4–9) reviewed.' / 'Unmarked 1 block (L4).' cho toast. */
+export function markWord(units, idx, on) {
+  var n = idx.length;
+  return (on ? 'Marked ' : 'Unmarked ') + n + ' block' + (n === 1 ? '' : 's') + ' (' + linesWord(units, idx) + ')' + (on ? ' reviewed.' : '.');
+}
+/* Nhãn dòng của các đơn vị idx (tăng dần): 'L12–18, L30'. */
+export function linesWord(units, idx) {
+  return unitRuns(units, idx).map(function (r) { return 'L' + (r[0] + 1) + (r[1] > r[0] ? '–' + (r[1] + 1) : ''); }).join(', ');
+}
+/* Dải dòng [a, b] (đếm từ 0) của các đơn vị idx (tăng dần); đơn vị liền nhau gộp một dải. */
+export function unitRuns(units, idx) {
+  var runs = [], lastI = -2;
+  idx.forEach(function (i) {
+    var u = units[i];
+    if (runs.length && lastI === i - 1) runs[runs.length - 1][1] = u.b; else runs.push([u.a, u.b]);
+    lastI = i;
+  });
+  return runs;
+}
+/* Đơn vị (tăng dần, không lặp) chứa các dòng `lines` (đếm từ 1, như dòng đã chọn ở lề số). */
+export function unitsOfLines(units, lines) {
+  var out = [];
+  lines.forEach(function (n) { var k = unitAt(units, n - 1); if (k >= 0 && out.indexOf(k) < 0) out.push(k); });
+  return out.sort(function (a, b) { return a - b; });
+}
+/* Trạng thái hiển thị của từng đơn vị (làn, dải tiến độ): state, trừ đơn vị chưa đọc được gợi ý (sugIdx) thì 'sug'. */
+export function withSug(state, sugIdx) {
+  var out = state.slice();
+  sugIdx.forEach(function (i) { if (out[i] !== 'done') out[i] = 'sug'; });
   return out;
 }
 /* Bỏ các dấu mất. */
@@ -152,6 +198,11 @@ export function nextOpen(state, from, dir) {
     if (state[i] !== 'done') return { i: i, wrapped: wrapped };
   }
   return null;
+}
+/* Đơn vị chưa đọc đầu tiên trong [a, b]; đọc hết thì a (nút tên section ở tab Review: tới chỗ chưa đọc của nó). */
+export function firstOpen(state, a, b) {
+  for (var i = a; i <= b; i++) if (state[i] !== 'done') return i;
+  return a;
 }
 /* Chỉ số đơn vị chứa dòng `line`; -1 nếu dòng nằm ngoài mọi đơn vị. */
 export function unitAt(units, line) {

@@ -4,19 +4,17 @@
    Chỉ đếm khi tab hiện, cửa sổ có focus, người dùng không rảnh tay quá 60 s; cuộn do trang (J / K / X, dải tiến độ, cuộn
    theo nhau, setByPage) không tính là đọc; đơn vị chỉ được gợi ý khi rời dải lúc người dùng tự cuộn (bánh xe, chạm,
    phím cuộn, kéo thanh cuộn). Gợi ý và thời gian chỉ ở bộ nhớ của phiên đang mở, không lưu.
-   Toán ở core/dwell.js; toạ độ làn và dải đọc ở ui/review.js.
-   Xuất: initDwell, noteJump, paintSug, sugIdx, syncSug.
-   Dùng: core/dwell.js, core/review.js, core/text.js, ui/dom.js, ui/store.js, ui/state.js, ui/views.js, ui/review.js,
-     ui/minimap.js. */
+   Toán ở core/dwell.js; toạ độ làn, dải đọc, lớp .is-sug của làn và việc ghi dấu ở ui/review.js.
+   Xuất: initDwell, noteJump, noteLayout, sugIdx, syncSug.
+   Dùng: core/dwell.js, core/review.js, core/text.js, ui/dom.js, ui/store.js, ui/state.js, ui/views.js, ui/review.js. */
 import { dwellStep, sugKeys, sugList, unitWords } from '../core/dwell.js';
-import { setMarks } from '../core/review.js';
+import { markWord, setMarks } from '../core/review.js';
 import { plural } from '../core/text.js';
-import { $, toast } from './dom.js';
+import { $ } from './dom.js';
 import { prefs, savePrefs } from './store.js';
 import { S } from './state.js';
 import { view } from './views.js';
-import { commitReviews, laneGeo, readingBand, rvState } from './review.js';
-import { drawMinimap } from './minimap.js';
+import { laneGeo, readingBand, repaintLanes, rvState, setReviews } from './review.js';
 
 var TICK = 500, USER_MS = 400, FLING_MS = 1500, IDLE_MS = 60000, QUIET_MS = 220;
 var sid = null, tr = {}, sug = {}, memo = { units: null };
@@ -29,12 +27,12 @@ function keysOf(r) {
   return memo;
 }
 function sameSession() { if (sid !== S.id) { sid = S.id; tr = {}; sug = {}; rebase = true; } }
-/* Chỉ số các đơn vị đang được gợi ý (chưa đọc), cho làn và dải tiến độ. */
+/* Chỉ số các đơn vị đang được gợi ý (chưa đọc, không phải tiêu đề), cho làn, dải tiến độ và nút Accept. */
 export function sugIdx(r) {
   sameSession();
   if (!enabled()) return [];
   r = r || rvState();
-  return sugList(sug, keysOf(r).keys, r.res.state);
+  return sugList(sug, keysOf(r).keys, r.res.state, r.units);
 }
 
 /* Cuộn do trang (J / K / X, dải tiến độ): thời gian và đơn vị rời dải lúc này không tính; hết khi cuộn lặng QUIET_MS. */
@@ -61,29 +59,15 @@ function sample() {
   var clean = !jumping && !rebase && seenVer === geoVer;
   var res = dwellStep(tr, items, [b.b1, b.b2], dt, { count: live && !jumping, emit: clean && scrollUser });
   tr = res.tr; rebase = false; seenVer = geoVer;
-  var add = 0, idxOf = {};
-  km.keys.forEach(function (k, i) { idxOf[k] = i; });
-  res.ready.forEach(function (k) { if (!sug[k] && r.res.state[idxOf[k]] !== 'done') { sug[k] = true; add++; } });
-  if (add) { paintLanes(r); syncPanel(r); drawMinimap(); }
+  var add = 0;
+  res.ready.forEach(function (k) { if (!sug[k]) { sug[k] = true; add++; } });
+  if (add) { repaintLanes(); syncPanel(r); }
 }
 var sampleRaf = 0;
 function scheduleSample() { if (!sampleRaf) sampleRaf = requestAnimationFrame(function () { sampleRaf = 0; sample(); }); }
 
-/* Dấu ✓ viền đứt trên làn của đơn vị được gợi ý; giữ tooltip gốc để trả lại khi gợi ý mất. */
-var SUG_TIP = 'Looks read: it sat in the reading band long enough. Click or press X to mark it reviewed';
-function paintLanes(r) {
-  var on = {};
-  sugIdx(r).forEach(function (i) { on[i] = true; });
-  document.querySelectorAll('.ma-lane__b').forEach(function (b) {
-    var s = !!on[+b.dataset.u] && !b.classList.contains('is-head');
-    if (s === b.classList.contains('is-sug')) return;
-    if (b.dataset.t0 == null) b.dataset.t0 = b.title;
-    b.classList.toggle('is-sug', s);
-    b.title = s ? SUG_TIP : b.dataset.t0;
-  });
-}
 /* Gọi sau mỗi lần ui/review.js xếp lại làn: toạ độ vừa đổi, đơn vị "rời dải" vì vẽ lại không phải vì đọc. */
-export function paintSug() { geoVer++; paintLanes(); }
+export function noteLayout() { geoVer++; }
 
 function syncPanel(r) {
   var n = sugIdx(r).length;
@@ -100,27 +84,22 @@ export function syncSug(r) {
   var km = keysOf(r), live = {};
   km.keys.forEach(function (k, i) { if (r.res.state[i] !== 'done') live[k] = true; });
   Object.keys(sug).forEach(function (k) { if (!live[k]) delete sug[k]; });
-  paintLanes(r);
   syncPanel(r);
 }
 
 function acceptAll() {
   var r = rvState(), km = keysOf(r), idx = sugIdx(r);
   if (!idx.length) return;
-  var before = S.reviews, sb = Object.assign({}, sug), id = S.id;
+  var sb = Object.assign({}, sug);
   idx.forEach(function (i) { delete sug[km.keys[i]]; });
-  S.reviews = setMarks(r.units, S.reviews, r.res, idx, true);
-  commitReviews();
-  toast('Marked ' + plural(idx.length, 'suggested block') + ' reviewed.', { label: 'Undo', fn: function () {
-    if (S.id === id) { S.reviews = before; sug = sb; commitReviews(); }
-  } });
+  setReviews(setMarks(r.units, S.reviews, r.res, idx, true), markWord(r.units, idx, true), function () { sug = sb; });
 }
 /* Bỏ các gợi ý đang hiện và thời gian đã đếm của chúng (không thì đi qua lần nữa là gợi ý lại ngay). */
 function dismissAll() {
   var r = rvState(), km = keysOf(r), ms = Object.assign({}, tr.ms || {});
   sugIdx(r).forEach(function (i) { delete sug[km.keys[i]]; delete ms[km.keys[i]]; });
   tr = { ms: ms, inb: tr.inb || [] };
-  paintLanes(r); syncPanel(r); drawMinimap();
+  repaintLanes(); syncPanel(r);
 }
 
 var SCROLL_KEYS = { ArrowDown: 1, ArrowUp: 1, PageDown: 1, PageUp: 1, ' ': 1, Home: 1, End: 1 };
@@ -158,8 +137,7 @@ export function initDwell() {
   $('rv-suggest').addEventListener('change', function (e) {
     prefs.rvSuggest = e.target.checked; savePrefs();
     tr = {}; sug = {}; rebase = true;
-    var r = rvState();
-    paintLanes(r); syncPanel(r); drawMinimap();
+    repaintLanes(); syncPanel(rvState());
   });
   $('rv-sug-ok').addEventListener('click', acceptAll);
   $('rv-sug-x').addEventListener('click', dismissAll);
