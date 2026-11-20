@@ -537,6 +537,8 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   check('điện thoại: vùng chọn hiện nút nổi', await m.isVisible('#fab'));
   await m.tap('#fab');
   check('điện thoại: hộp nhận xét là tấm đáy', await m.isVisible('#pop') && await m.evaluate(() => document.getElementById('pop').classList.contains('is-sheet')));
+  const fsz = await m.evaluate(() => ['pop-text', 's-name', 'hint-add-in', 'p-path', 'src-input'].map((id) => [id, parseFloat(getComputedStyle(document.getElementById(id)).fontSize)]).filter((x) => x[1] < 16));
+  check('điện thoại: ô chữ ≥ 16px (Safari iOS không phóng to khi focus)', !fsz.length, JSON.stringify(fsz));
   const sy = await m.evaluate(() => scrollY);
   await m.tap('#pop-chips .ma-chip:has-text("Viết gọn lại")');
   check('điện thoại: lưu nhận xét không kéo trang', Math.abs((await m.evaluate(() => scrollY)) - sy) < 2);

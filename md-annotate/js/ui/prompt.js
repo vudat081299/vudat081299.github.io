@@ -29,7 +29,7 @@ export function renderPrompt() {
   $('opts-sum').textContent = optionsSummary(S);
 }
 function legacyCopy(t) {
-  var ta = h('textarea', { style: 'position:fixed;top:0;left:0;opacity:0', readonly: true });
+  var ta = h('textarea', { style: 'position:fixed;top:0;left:0;opacity:0;font-size:16px', readonly: true });   // 16px: Safari iOS không phóng to
   ta.value = t; document.body.append(ta); ta.select();
   var ok = false;
   try { ok = document.execCommand('copy'); } catch (e) {}

@@ -33,6 +33,8 @@
   .ma-icbtn, .ma-item__act .ma-icbtn, .ma-rail .ma-rail__copy { width: var(--h-touch); height: var(--h-touch); }
   .ma-input, .ma-docname { height: var(--h-touch); }
   .ma-pathrow .ma-input { height: var(--h-touch); }
+  /* Safari iOS phóng to trang khi focus ô chữ nhỏ hơn 16px, và không thu lại. */
+  .ma-input, .ma-ta, .ma-docname, #pop-text, .ma-pathrow .ma-input { font-size: var(--fs-lg); }
 }
 @media (max-width: 720px) {
   :root { --pad: var(--s4); --bar-h: 56px; }
