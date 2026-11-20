@@ -121,6 +121,7 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   check('link ở bản dựng thành chữ, không còn <a>', lk.a === 0 && lk.span === 'liên kết tới ví dụ' && lk.title === 'https://example.com/path', JSON.stringify(lk));
   await page.click('#v-md .ma-a');
   check('bấm link không rời trang', page.url() === BASE || page.url().startsWith(BASE), page.url());
+  await page.waitForTimeout(700);   // quá ngưỡng bấm đúp: kéo ngay sau cú bấm trên thành chọn theo từ
   await dragSelect(page, '#v-md', 'liên kết tới ví dụ');
   check('kéo trên link mở hộp nhận xét', await page.isVisible('#pop') && (await page.textContent('#pop-q')) === 'liên kết tới ví dụ', await page.textContent('#pop-q'));
   await page.keyboard.press('Escape');
