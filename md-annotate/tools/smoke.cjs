@@ -88,6 +88,28 @@ const accentCheck = (page) => page.evaluate(() => {
   return { bgLum: +bg.toFixed(2), ratio: +((Math.max(bg, fg) + 0.05) / (Math.min(bg, fg) + 0.05)).toFixed(2) };
 });
 const overflow = (page) => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+/* MDAN-018: mọi vùng cuộn đang hiện (dọc, hoặc ngang khi đang tràn): thanh cuộn không chạy vào góc bo của chính nó hay
+   khung chứa nó (khoảng từ mép tới vùng thanh cuộn ≥ bán kính góc ấy). Trả danh sách chỗ vi phạm. */
+const cornerClash = (page) => page.evaluate(() => {
+  const out = [], px = (v) => parseFloat(v) || 0;
+  const visible = (el, r) => { for (let n = el.parentElement; n && n !== document.documentElement; n = n.parentElement) { const c = getComputedStyle(n); if (/(auto|scroll|hidden|clip)/.test(c.overflowY + c.overflowX)) { const q = n.getBoundingClientRect(); if (r.bottom <= q.top + 1 || r.top >= q.bottom - 1) return false; } } return true; };
+  document.querySelectorAll('*').forEach((el) => {
+    const cs = getComputedStyle(el);
+    if (/none/.test(cs.scrollbarWidth) || !el.getClientRects().length) return;
+    const sy = /(auto|scroll)/.test(cs.overflowY), sx = /(auto|scroll)/.test(cs.overflowX) && el.scrollWidth > el.clientWidth;
+    const r = el.getBoundingClientRect();
+    if ((!sy && !sx) || r.height < 20 || r.width < 20 || !visible(el, r)) return;
+    const name = el.id ? '#' + el.id : el.tagName.toLowerCase() + (typeof el.className === 'string' && el.className ? '.' + el.className.trim().split(/\s+/)[0] : '');
+    const tTop = r.top + px(cs.borderTopWidth), tBot = r.bottom - px(cs.borderBottomWidth), tL = r.left + px(cs.borderLeftWidth), tR = r.right - px(cs.borderRightWidth);
+    for (let n = el; n && n !== document.documentElement; n = n.parentElement) {
+      const c = n === el ? cs : getComputedStyle(n), q = n.getBoundingClientRect();
+      const tr = px(c.borderTopRightRadius), br = px(c.borderBottomRightRadius), bl = px(c.borderBottomLeftRadius);
+      if (sy && q.right - tR <= Math.max(tr, br) && ((tr && tTop - q.top < tr - 0.5) || (br && q.bottom - tBot < br - 0.5))) out.push(name + ' (dọc)');
+      if (sx && q.bottom - tBot <= Math.max(bl, br) && ((bl && tL - q.left < bl - 0.5) || (br && q.right - tR < br - 0.5))) out.push(name + ' (ngang)');
+    }
+  });
+  return [...new Set(out)];
+});
 
 (async () => {
   const browser = await chromium.launch();
@@ -561,6 +583,10 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   check('điện thoại: chạm số nhận xét mở panel trong tấm trượt', await m.isVisible('#dlg-panel') && (await m.$$('#dlg-panel #list .ma-item')).length === 1);
   await m.tap('#dlg-panel #ptab-prompt');
   check('điện thoại: tab Prompt trong tấm, có nút chép', await m.isVisible('#dlg-panel #out') && await inView(m, '#dlg-panel #btn-copy'));
+  await m.tap('#dlg-panel #opts summary'); await m.waitForTimeout(150);
+  const mclash = await cornerClash(m);
+  check('điện thoại: tấm panel, Options: thanh cuộn không chạy vào góc bo (MDAN-018)', !mclash.length, mclash.join(', '));
+  await m.tap('#dlg-panel #opts summary');
   await m.tap('#dlg-panel #ptab-list');
   check('điện thoại: tấm danh sách không tràn ngang', (await overflow(m)) === 0);
   await m.tap('#dlg-panel #list .ma-item__main');
@@ -723,6 +749,12 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   check('Focus ở Split, văn bản có [id]: url: Source sáng đúng section Plugins',
     lit[0] === '## Plugins' && lit.some((t) => t.startsWith('[syntax plugins]')) && !lit.some((t) => t.startsWith('[id]:')) && lit.length === 3, JSON.stringify(lit));
   await sp.click('#btn-layout'); await sp.click('#set-reset'); await sp.keyboard.press('Escape');
+  await sp.evaluate(() => { document.getElementById('src-input').value += '\n\n```\n' + 'x'.repeat(400) + '\n```\n'; document.getElementById('src-input').dispatchEvent(new Event('input')); });
+  await sp.waitForTimeout(400);
+  await openOpts(sp); await sp.click('#btn-layout'); await sp.click('#btn-keys'); await sp.waitForTimeout(200);
+  const clash = await cornerClash(sp);
+  check('vùng cuộn (khung, khối code dài, Options, hộp thoại): thanh cuộn không chạy vào góc bo (MDAN-018)', !clash.length, clash.join(', '));
+  await sp.keyboard.press('Escape'); await sp.keyboard.press('Escape');
   await sctx.close();
 
   // ── review: data path ──

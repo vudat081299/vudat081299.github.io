@@ -105,7 +105,7 @@ html.ma-railed .ma-grid > .ma-panel .ma-rail { display: flex; flex-direction: co
 .ma-opts[open] .ma-opts__chev { transform: rotate(180deg); }
 @media (hover: hover) { .ma-opts summary:hover { color: var(--ink); } }
 .ma-opts__sum { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-3); }
-.ma-opts__in { display: flex; flex-direction: column; gap: var(--s1); padding: 0 var(--s3) var(--s3); }
+.ma-opts__in { display: flex; flex-direction: column; gap: var(--s1); padding: 0 var(--s3); border-bottom: var(--r) solid transparent; }   /* góc bo --r (MDAN-018) */
 .ma-opts__in .ma-fmt { margin: 0 0 var(--s1); }
 .ma-opts__field { display: flex; flex-direction: column; gap: var(--s2); margin-top: var(--s2); }
 .ma-opts__lbl { display: flex; align-items: center; justify-content: space-between; }

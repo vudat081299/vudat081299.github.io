@@ -19,6 +19,7 @@
   .ma-dock__list::after { content: ''; width: 7px; height: 7px; margin-left: 2px; border: solid currentColor; border-width: 2px 2px 0 0; transform: translateY(2px) rotate(-45deg); }
   .ma-fab, .ma-toast { bottom: calc(86px + env(safe-area-inset-bottom)); }
   .ma-dlg.ma-dlg--panel { width: min(640px, 100vw); max-width: 100vw; margin: auto auto 0; max-height: none; border-radius: var(--r-lg) var(--r-lg) 0 0; border-bottom: 0; }
+  .ma-dlg.ma-dlg--panel[open] { overflow: hidden; }   /* panel trong tấm tự cuộn thân; tấm không cuộn, không có thanh ở góc bo */
   .ma-dlg--panel .ma-panel {
     position: static; height: min(86vh, 760px); min-height: 0;
     border: 0; border-radius: 0; box-shadow: none;

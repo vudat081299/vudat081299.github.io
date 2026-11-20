@@ -11,12 +11,16 @@
 .ma-doc__meta { order: 1; margin-left: auto; flex: none; font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-3); font-variant-numeric: tabular-nums; }
 
 .ma-edit { padding: var(--s4); display: flex; flex-direction: column; gap: var(--s3); }
+/* Góc bo --r-sm (MDAN-018): viền trên / dưới trong suốt dày bằng bán kính để thanh cuộn không chạm đường cong; nét viền
+   là outline (theo góc bo), gõ thì outline --ring; đệm dọc trừ phần viền ấy. */
 .ma-ta {
-  width: 100%; min-width: 0; padding: var(--s3); resize: vertical;
-  background: var(--bg); border: 1px solid var(--line); border-radius: var(--r-sm);
+  width: 100%; min-width: 0; padding: calc(var(--s3) - var(--r-sm)) var(--s3); resize: vertical;
+  background: var(--bg); border: solid transparent; border-width: var(--r-sm) 1px; border-radius: var(--r-sm);
+  outline: 1px solid var(--line); outline-offset: -1px;
   font: 500 var(--fs-sm)/var(--lh-code) var(--mono); tab-size: 4;
-  transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+  transition: outline-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
 }
+.ma-ta:focus { outline: 1px solid var(--ring); outline-offset: -1px; border-color: transparent; }
 #src-input { min-height: 52vh; }
 #src-input.is-empty { min-height: 140px; }
 .ma-edit__tools { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); }
@@ -131,7 +135,11 @@
 .ma-md blockquote > :last-child { margin-bottom: 0; }
 .ma-md :is(code, kbd, pre, samp) { font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace; }
 .ma-md code { padding: .2em .4em; margin: 0; font-size: 85%; white-space: break-spaces; background: var(--gh-code-bg); border-radius: var(--gh-r); }
-.ma-md pre { padding: 1em; overflow: auto; font-size: 85%; line-height: 1.45; color: var(--gh-fg); background: var(--gh-subtle); border-radius: var(--gh-r); word-wrap: normal; }
+/* Thanh cuộn ngang tránh hai góc bo dưới (MDAN-018): đệm trái / phải đổi một phần thành viền trong suốt dày --gh-r. */
+.ma-md pre {
+  padding: 1em calc(1em - var(--gh-r)); border: 0 solid transparent; border-inline-width: var(--gh-r); overflow: auto hidden;
+  font-size: 85%; line-height: 1.45; color: var(--gh-fg); background: var(--gh-subtle); border-radius: var(--gh-r); word-wrap: normal;
+}
 .ma-md pre code { display: inline; padding: 0; margin: 0; font-size: 100%; white-space: pre; background: transparent; border: 0; word-break: normal; }
 .ma-md table { display: block; width: max-content; max-width: 100%; overflow: auto; border-spacing: 0; border-collapse: collapse; font-variant: tabular-nums; }
 .ma-md :is(th, td) { padding: .375em .8125em; border: 1px solid var(--gh-border); }

@@ -126,7 +126,7 @@ html:not(.dark) .ma-moon, html.dark .ma-sun { display: none; }
 .ma-head p { min-width: 0; margin: 0; color: var(--ink-3); font-size: var(--fs-md); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 /* Ô NHẬP — một họ: .ma-input (một dòng), .ma-ta (nhiều dòng), tên phiên. Bo --r-sm, chữ --fs-md;
-   gõ: viền --ring + quầng --accent-soft. */
+   gõ: viền --ring + quầng --accent-soft (.ma-ta vẽ viền bằng outline: css/views.css, MDAN-018). */
 .ma-input {
   width: 100%; min-width: 0; height: var(--h); padding: 0 var(--s3);
   background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-sm);

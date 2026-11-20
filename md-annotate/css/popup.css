@@ -40,7 +40,7 @@
 .ma-chip__p { font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-3); }
 .ma-chip--more { font: 500 var(--fs-xs)/1 var(--mono); min-width: var(--h); justify-content: center; }
 #pop-text { min-height: 64px; font: 400 var(--fs-md)/var(--lh) var(--sans); background: var(--bg); }
-#pop-text:not(:focus) { border-color: var(--line-2); }
+#pop-text:not(:focus) { outline-color: var(--line-2); }
 .ma-pop__bar { display: flex; align-items: center; justify-content: flex-end; gap: var(--s1); margin-top: var(--s3); }
 /* Nút trong hộp nổi: cỡ nhỏ (--h-sm), như nút trong thẻ; tấm trượt đáy thì về --h-touch (mobile.css). */
 .ma-pop__bar .ma-btn { min-height: var(--h-sm); padding: 0 var(--s3); font-size: var(--fs-sm); }
