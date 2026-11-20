@@ -17,12 +17,18 @@
 - MDAN-017 · Một bộ dấu đã đọc, khai báo một chỗ · `md-annotate/css/**`
 - MDAN-018 · Thanh cuộn không chạm góc bo · `md-annotate/css/**`, `md-annotate/js/ui/minimap.js`
 - MDAN-019 · Chọn một dải dòng bằng Shift + bấm hoặc kéo trên lề số · `md-annotate/js/ui/picks.js`
-- MDAN-020 · Vòng focus chỉ hiện sau phím Tab · `md-annotate/css/**`, `md-annotate/js/main.js`
+- MDAN-020 · Vòng focus chỉ hiện sau phím Tab · `md-annotate/css/**`, `md-annotate/js/main.js`, `md-annotate/js/ui/tree.js`
 - MDAN-021 · Độ sáng của khối đã đọc chỉnh ở Settings · `md-annotate/`
 - MDAN-022 · Một phiên là một cây folder + file, lưu trong trình duyệt · `md-annotate/`
 - MDAN-023 · Cây file hiện mặc định khi phiên có từ hai mục · `md-annotate/js/ui/tree.js`, `md-annotate/js/ui/files.js`
 - MDAN-024 · Mở file từ đĩa thêm vào cây cạnh file đang mở · `md-annotate/`
 - MDAN-025 · Prompt cho mọi file là một tuỳ chọn, mặc định chỉ file đang mở · `md-annotate/`
+- MDAN-027 · Tên phiên tự đặt không đổi theo file đang mở · `md-annotate/js/core/session.js`
+- MDAN-028 · Undo của xoá / chuyển chỉ trả lại đúng mục ấy · `md-annotate/js/core/session.js`, `md-annotate/js/ui/files.js`
+- MDAN-029 · Một file chưa có tên thật thì prompt không ghi tên tệp · `md-annotate/js/core/session.js`
+- MDAN-030 · Nạp folder: file chữ xét theo đuôi · `md-annotate/js/core/text.js`
+- MDAN-031 · Nạp folder vào phiên trống mở file nông nhất · `md-annotate/js/core/tree.js`
+- MDAN-032 · Nạp folder hiện cây mà không ghi lựa chọn ẩn / hiện · `md-annotate/js/ui/tree.js`, `md-annotate/js/ui/files.js`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Nguồn tô màu cú pháp kiểu VS Code
@@ -157,11 +163,11 @@ Vùng nào có góc bo x thì thanh cuộn (tự vẽ hay của hệ thống) c�
 hoặc bỏ cả dải (bắt đầu ở dòng đã chọn).
 
 ## MDAN-020 · Vòng focus chỉ hiện sau phím Tab
-20/11/2026 · `md-annotate/css/**`, `md-annotate/js/main.js`
+20/11/2026 · `md-annotate/css/**`, `md-annotate/js/main.js`, `md-annotate/js/ui/tree.js`
 
 Điều khiển bằng Tab / Space giữ nguyên, nhưng vòng focus (viền đậm quanh nút) chỉ hiện từ lần bấm Tab đầu. Mở hộp
 thoại, đóng hộp, chạm hay bấm chuột thì không có vòng; bấm chuột / chạm tắt nó tới lần Tab sau. Áp cả máy tính và
-điện thoại.
+điện thoại. Mũi tên, Home, End trong cây file và menu của nó cũng là dùng bàn phím: bật vòng như Tab.
 
 ## MDAN-021 · Độ sáng của khối đã đọc chỉnh ở Settings
 20/11/2026 · `md-annotate/`
@@ -187,7 +193,8 @@ trên thanh trên ẩn / hiện cây, lựa chọn được nhớ. Nạp folder 
 ## MDAN-024 · Mở file từ đĩa thêm vào cây cạnh file đang mở
 20/11/2026 · `md-annotate/`
 
-Mở hay thả một file: file đang mở còn trống (không chữ, không nhận xét) thì file ấy nhận chữ và tên; không thì file mới
+Mở hay thả một file: file đang mở còn trống (không chữ, không nhận xét) và chưa có tên thật (người dùng chưa đặt tên)
+thì file ấy nhận chữ và tên; không thì file mới
 vào cùng folder với file đang mở và được mở. Không còn mở phiên mới, không ghi ô *Folder*. *Sample text* giữ như cũ:
 phiên có nội dung thì mở phiên mới.
 
@@ -197,3 +204,42 @@ phiên có nội dung thì mở phiên mới.
 *Options* có ô *All files* (lưu theo phiên, ẩn khi phiên có một file). Tắt: prompt, chép, tải chỉ gồm file đang mở.
 Bật: một prompt gom nhận xét của mọi file theo thứ tự cây, mỗi file một mục `## Tệp <đường dẫn>`, số chạy tiếp. Tab
 *Comments* luôn chỉ liệt kê file đang mở.
+
+## MDAN-027 · Tên phiên tự đặt không đổi theo file đang mở
+20/11/2026 · `md-annotate/js/core/session.js`
+
+Phiên chưa được đặt tên thì tên tự đặt là tên folder khi gốc cây chỉ có một folder; không thì tiêu đề (hay dòng có chữ
+đầu tiên) của file đầu tiên theo thứ tự cây có chữ. Mở file khác trong cây không đổi tên phiên ở History và đầu cây.
+
+## MDAN-028 · Undo của xoá / chuyển chỉ trả lại đúng mục ấy
+20/11/2026 · `md-annotate/js/core/session.js`, `md-annotate/js/ui/files.js`
+
+Undo chèn lại file / folder vừa xoá (cùng chữ, nhận xét, dấu đã đọc) hay đưa mục vừa chuyển về chỗ cũ, vào cây như nó
+đang là: file mới, tên mới, chữ gõ sau lần xoá đều giữ. Folder cha không còn thì về gốc; tên trùng thì thêm số (-2). Đã
+sang phiên khác thì Undo vẫn trả mục về phiên của nó, kể cả phiên đã bị bỏ vì trống sau khi xoá file cuối.
+
+## MDAN-029 · Một file chưa có tên thật thì prompt không ghi tên tệp
+20/11/2026 · `md-annotate/js/core/session.js`
+
+Phiên chỉ một file mà file ấy là chữ dán vào (chưa đặt tên, chưa mở từ đĩa) thì prompt ghi `L12`, dù ô *Folder* có chữ.
+Ô *Folder* là tiền tố khi phiên có từ hai file hay file có tên thật. Phiên một văn bản cũ có path không tách được thành
+tên file (`docs/`, `.`, rất dài) giữ nhãn y nguyên path cũ, để prompt cũ không đổi một byte.
+
+## MDAN-030 · Nạp folder: file chữ xét theo đuôi
+20/11/2026 · `md-annotate/js/core/text.js`
+
+Nạp folder và mở một file nhận file chữ / code theo đuôi (md, txt, ts, js, json, yaml, csv, html, css, py, swift, dart…)
+hay tên quen không đuôi (Makefile, LICENSE…), hoặc khi trình duyệt báo kiểu `text/*`. File có ký tự NUL trong 8 KB đầu
+là nhị phân, bỏ và đếm vào số bỏ qua. Tên file / folder bỏ dấu cách đầu và cuối; đoạn chỉ có dấu cách thì bỏ cả file.
+
+## MDAN-031 · Nạp folder vào phiên trống mở file nông nhất
+20/11/2026 · `md-annotate/js/core/tree.js`
+
+Folder nạp thành cả phiên thì file mở đầu là file nông nhất; cùng độ sâu thì `README.*` trước, rồi `index.*`, rồi file
+đầu theo thứ tự cây.
+
+## MDAN-032 · Nạp folder hiện cây mà không ghi lựa chọn ẩn / hiện
+20/11/2026 · `md-annotate/js/ui/tree.js`, `md-annotate/js/ui/files.js`
+
+Nạp folder xong thì cây hiện cho phiên ấy. Lựa chọn ẩn / hiện cây chỉ được ghi khi người dùng bấm nút hay Ctrl/⌘ + B;
+phiên khác vẫn theo lựa chọn ấy (chưa chọn thì hiện khi phiên có từ hai mục).

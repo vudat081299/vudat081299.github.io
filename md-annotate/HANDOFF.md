@@ -11,4 +11,5 @@ Làm xong mục nào thì xoá mục ấy.
 ## NỢ
 
 - Gợi ý đã đọc (MDAN-016) và chỗ cuộn mỗi file chỉ ở bộ nhớ: đổi file là mất gợi ý của file trước.
-- Tên phiên tự đặt đọc tiêu đề của file đang mở khi gốc cây không phải một folder duy nhất (`autoName`): đổi file thì tên đổi theo.
+- Hai tab mở cùng một phiên: mỗi lần lưu ghi đè cả cây (`s:<id>`), việc của tab kia mất. Cần khoá theo tab hay gộp khi lưu.
+- *All files*: lần vẽ đầu sau khi tải trang neo mọi file một lần (~400 ms ở 200 file); sau đó nhớ theo doc.

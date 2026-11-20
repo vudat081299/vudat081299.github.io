@@ -40,7 +40,7 @@
 
 - Nền, mực, font chép từ `index.html` gốc. Một màu xanh: `--accent` (MDAN-009); nền nhạt, highlight, vạch pha từ nó.
 - Xanh không làm chữ trên nền sáng (~2,3:1): chữ là mực, nhấn bằng vạch / nền nhạt / huy hiệu. Chữ trên `--accent`: `--on-accent`.
-- Chữ ≥ 4,5:1; chỉ báo trạng thái ≥ 3:1 (focus `--ring`, thẻ / hàng đang chọn `--edge-on`), cả hai theme. Vòng focus chỉ sau phím Tab (MDAN-020).
+- Chữ ≥ 4,5:1; chỉ báo trạng thái ≥ 3:1 (focus `--ring`, thẻ / hàng đang chọn `--edge-on`), cả hai theme. Vòng focus chỉ sau Tab, hay mũi tên / Home / End trong cây và menu của nó (MDAN-020).
 - Token ở `css/tokens.css` (chữ `--fs-*` + `--lh*`, bo `--r-*`, vật lồng trong bo nhỏ hơn; cao `--h-*`, khoảng `--s*`, `--dur`).
 - Họ component chung luật ở `css/base.css` (nút, nhóm tab `.ma-tabs` / `.ma-seg` / `.ma-fmt`, ô nhập, huy hiệu, phím): thêm biến thể vào họ.
 - Theme: khoá chung `hub-theme`, đặt trước lần vẽ đầu; chưa chọn thì theo hệ điều hành (REPO-024).
@@ -157,7 +157,7 @@
 - Hai kiểu: gọn `1. L12 "quote" — comment` (mặc định) và khối `### 1 · L12-14` + `> quote` + comment.
 - Nhiều phần: `3. L12 "q1"; L15-16 "q2" — comment`; khối `### 3 · L12, L15-16` + mỗi phần một khối `>`. Một đoạn: y như cũ.
 - *Line numbers* (mặc định bật, lưu theo phiên): dòng đầu và cuối của neo trong nguồn; chọn ở bản dựng cũng tính
-  qua neo nguồn. Nhãn `tệp:12-14` (`fileLabel`: ô *Folder* `S.path` là tiền tố trên đĩa + đường dẫn trong cây) khi phiên ≥ 2 file, file có tên thật hay có *Folder*.
+  qua neo nguồn. Nhãn `tệp:12-14` (`fileLabel`, MDAN-029: ô *Folder* `S.path` + đường dẫn trong cây) khi phiên ≥ 2 file hay file có tên thật.
 - Bật số dòng thì lời dẫn thêm câu: số dòng chỉ là gợi ý, lệch thì tìm theo trích dẫn (luôn giữ). Lời dẫn đầu, cuối, tuỳ chọn kèm toàn văn (khối rào dài hơn mọi dãy backtick).
 
 ## Gợi ý nhận xét
@@ -170,14 +170,14 @@
 ## Cây file (MDAN-022…025)
 
 - Phiên là cây (`core/session.js`, `core/tree.js`): `nodes` phẳng trỏ cha, `docs[fileId]` (`text`, `comments`, `reviews`, `rvPct`, `real`), `open`, `collapsed`.
-  Bất biến (≥ 1 file, `open` là một file, mỗi file đúng một doc) và mọi luật tên, trùng, file kế bên ở core; hàm đổi cây trả phiên mới.
+  Bất biến và mọi luật (tên, trùng, file kế bên, `canMove`, tên tải về, tên phiên tự đặt `sessionTitle` không theo file mở MDAN-027) ở core.
 - `S` là phiên, `D` là doc của file mở: chữ, nhận xét, dấu đọc qua `D`, tuỳ chọn prompt ở `S`. Gắn với một văn bản (Undo, gợi ý, chọn dòng): `docKey()`.
-- Một chỗ ghi cây: `setTree()` ở `ui/files.js` (lưu, vẽ prompt và cây, Undo bằng `restoreTree`). Actions của `renderTree` chỉ gọi core rồi `setTree`.
-- Cây hiện mặc định khi phiên ≥ 2 mục; Ctrl/⌘ + B, `prefs.tree` (MDAN-023). Đổi file giữ chế độ xem; chỗ cuộn mỗi file nhớ trong bộ nhớ.
-- Mở file từ đĩa: file mở trống thì điền, không thì thêm cạnh nó (MDAN-024). Nạp folder (nút đầu cây, thả lên cây hay thẻ văn bản) là bản sao:
-  bỏ mục ẩn, `node_modules`, file không phải chữ hay > 1 MB (`importCheck`); phiên trống thì folder là cả phiên; bộ nhớ đầy thì hoàn lại.
-- Xoá không hỏi, toast có Undo (cả chuyển). Tải: file `.md`, folder và cả phiên `.zip` (`zipOf`). Không ghi ngược ra đĩa (MDAN-022).
-- *All files* (`S.promptAll`, ẩn khi một file, MDAN-025): `buildPromptAll`; file không mở neo qua `anchorsOf()`. Tab *Comments* chỉ có file mở.
+- Một chỗ ghi cây: `setTree()` ở `ui/files.js`; actions của `renderTree` chỉ gọi core rồi `setTree`. Hộp nhận xét có chữ thì không rời file mở (`canLeave()`).
+- Cây hiện mặc định khi phiên ≥ 2 mục; Ctrl/⌘ + B, `prefs.tree` (MDAN-023); nạp folder hiện cây cho phiên ấy, không ghi `prefs.tree` (MDAN-032).
+- Mở file từ đĩa: file mở trống, chưa có tên thật thì điền, không thì thêm cạnh nó (MDAN-024). Nạp folder là bản sao, bộ nhớ đầy thì hoàn lại: bỏ `skipEntry`
+  (không đọc vào), không phải chữ (`isTextFile`, MDAN-030), có NUL, > 1 MB; phiên trống thì mở `firstFile` (MDAN-031); xong mà đã đổi phiên thì vào phiên ấy.
+- Xoá không hỏi, toast có Undo (cả chuyển): `applyUndo` chỉ trả lại mục ấy (MDAN-028), cả khi đã đổi phiên (`sessionFor`). Tải: `downloadOf`, `zipOf`.
+- *All files* (`S.promptAll`, `allFilesOffered`, MDAN-025): `buildPromptAll`; file không mở neo qua `anchorsOf()` (nhớ theo doc). Tab *Comments* chỉ có file mở.
 
 ## Lưu trữ
 
