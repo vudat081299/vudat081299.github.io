@@ -14,8 +14,8 @@ var LAYOUT_DEF = { wrap: 'auto', measure: 0, mdfs: 16, focus: false, dim: 30, sy
 export function layoutVal(k) { return prefs[k] == null ? LAYOUT_DEF[k] : prefs[k]; }
 function applyLayout() {
   var root = document.documentElement.style, w = layoutVal('wrap'), m = layoutVal('measure'), fs = layoutVal('mdfs');
-  if (w === 'auto') root.removeProperty('--wrap-w');
-  else root.setProperty('--wrap-w', 'min(100%, max(' + w + 'vw, 720px))');
+  if (w === 'auto') { root.removeProperty('--wrap-f'); root.removeProperty('--wrap-min'); }
+  else { root.setProperty('--wrap-f', String(w / 100)); root.setProperty('--wrap-min', '720px'); }
   if (m) root.setProperty('--md-max', m + 'ch'); else root.removeProperty('--md-max');
   root.setProperty('--md-fs', fs + 'px');
   $('set-wrap').value = w === 'auto' ? 70 : w;

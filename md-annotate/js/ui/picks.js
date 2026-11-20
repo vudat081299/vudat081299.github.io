@@ -12,7 +12,7 @@ import { locate } from '../core/anchor.js';
 import { pickable, pickInfo } from '../core/picks.js';
 import { $, hasHL, paintHL } from './dom.js';
 import { rangeAt } from './anchor-dom.js';
-import { S } from './state.js';
+import { D, docKey } from './state.js';
 import { marksOf } from './marks.js';
 import { mdText } from './render.js';
 import { isSplit } from './views.js';
@@ -39,7 +39,7 @@ function paint() {
   root.querySelectorAll('.ma-ln.is-pick').forEach(function (el) { el.classList.remove('is-pick'); });
   picked.forEach(function (n) { var el = root.children[n - 1]; if (el) el.classList.add('is-pick'); });
   if (!hasHL) return;
-  var rs = [], info = picking && isSplit() && mdText ? pickInfo(S.text, picked) : null;
+  var rs = [], info = picking && isSplit() && mdText ? pickInfo(D.text, picked) : null;
   if (info) info.parts.forEach(function (p) {
     var pos = locate(p, mdText, false), r = pos && rangeAt($('v-md'), pos[0], pos[1]);
     if (r) rs.push(r);
@@ -48,7 +48,7 @@ function paint() {
 }
 /* Mở hộp cho các dòng đã chọn, hoặc cập nhật hộp đang mở (giữ chỗ, giữ chữ). ln: dòng vừa bấm, chỗ đặt hộp mới. */
 function showPicks(ln) {
-  var info = pickInfo(S.text, picked);
+  var info = pickInfo(D.text, picked);
   if (!info) { clearPicks(); return; }
   if (pop.mode === 'new' && pending && pending.lines) updateNew(info);
   else if (!(pop.mode && popDirty())) openNew(info, placeFor(ln));
@@ -69,14 +69,14 @@ function toggle(n, ln) {
 }
 function enter(n, ln) {
   try { window.getSelection().removeAllRanges(); } catch (err) {}
-  picking = true; picked = [n]; anchor = n; pickText = S.text; pickSid = S.id;
+  picking = true; picked = [n]; anchor = n; pickText = D.text; pickSid = docKey();
   paint();
   showPicks(ln);
 }
 /* Các dòng chọn được trong [a, b] (thứ tự bất kỳ). */
 function span(a, b) {
   var out = [];
-  for (var k = Math.min(a, b); k <= Math.max(a, b); k++) if (pickable(S.text, k)) out.push(k);
+  for (var k = Math.min(a, b); k <= Math.max(a, b); k++) if (pickable(D.text, k)) out.push(k);
   return out;
 }
 /* Shift + bấm: thêm cả dải từ dòng bấm gần nhất tới dòng n. */
@@ -122,7 +122,7 @@ export function clearPicks() {
 /* Sau khi #v-src / #v-md vẽ lại hay đổi chế độ xem: tô lại; văn bản hay phiên đã đổi thì thoát. */
 export function repaintPicks() {
   if (!picking) return;
-  if (S.text !== pickText || S.id !== pickSid) clearPicks();
+  if (D.text !== pickText || docKey() !== pickSid) clearPicks();
   else paint();
 }
 
@@ -168,7 +168,7 @@ export function initPicks() {
     eatClick = false;   // cú kéo trước không sinh click (thả ngoài khung): đừng nuốt cú bấm này
     if (!picking || e.button !== 0 || e.shiftKey || e.pointerType === 'touch') return;
     var ln = gutterLine(e), n = ln && lineNo(ln);
-    if (!ln || !pickable(S.text, n)) return;
+    if (!ln || !pickable(D.text, n)) return;
     drag = { start: n, add: picked.indexOf(n) < 0, base: picked.slice(), last: n, moved: false, id: e.pointerId, ln: ln };
   });
   document.addEventListener('pointermove', function (e) {
@@ -191,12 +191,12 @@ export function initPicks() {
     if (!ln || e.detail > 1) return;   // lần bấm thứ hai của cú bấm đúp: để dblclick lo
     var n = lineNo(ln);
     if (e.shiftKey) {   // Shift + bấm: vào chế độ, hoặc thêm cả dải từ dòng bấm gần nhất
-      if (!pickable(S.text, n) || (!picking && pop.mode && popDirty())) return;
+      if (!pickable(D.text, n) || (!picking && pop.mode && popDirty())) return;
       if (picking) extend(n, ln); else enter(n, ln);
       return;
     }
     if (picking) {
-      if (pickable(S.text, n)) toggle(n, ln);
+      if (pickable(D.text, n)) toggle(n, ln);
       return;
     }
     /* Ngoài chế độ: mở nhận xét đầu tiên của dòng ấy. */
@@ -209,7 +209,7 @@ export function initPicks() {
     var ln = gutterLine(e);
     if (!ln || picking || (pop.mode && popDirty())) return;
     var n = lineNo(ln);
-    if (!pickable(S.text, n)) return;
+    if (!pickable(D.text, n)) return;
     enter(n, ln);
   });
   document.addEventListener('keydown', function (e) {

@@ -5,20 +5,26 @@
    renderAll() (applyReview) và khi khung đổi cỡ (ResizeObserver); đánh dấu (setReviews) chỉ tô lại nút có sẵn.
    Dải tiến độ (ui/minimap.js) và gợi ý theo thời gian đọc (ui/dwell.js, MDAN-016) vẽ lại sau mỗi lần xếp hay tô lại làn;
    chúng đọc toạ độ làn (laneGeo) và dải đọc (readingBand) ở đây. Lớp và tooltip của nút làn (cả .is-sug) chỉ dựng ở đây.
-   Một chỗ hỏi (rvState: đơn vị, dấu đã neo, section), một chỗ ghi (setReviews: S.reviews, lưu, vẽ lại, Undo); luật ở
-   core/review.js. Tab Review (ui/review-panel.js) và gợi ý (ui/dwell.js) ghi dấu qua setReviews.
-   Xuất: applyReview, initReview, jumpUnit, laneGeo, markUnits, readingBand, repaintLanes, reviewDoc, rvState, setReviews,
-     setRvTouched, stepOpen, toggleSection.
-   Dùng: core/anchor.js, core/text.js, core/sections.js, core/review.js, ui/dom.js, ui/state.js,
-     ui/sync-scroll.js, ui/views.js, ui/layout.js, ui/popup.js, ui/picks.js, ui/prompt.js, ui/review-panel.js,
-     ui/dwell.js, ui/minimap.js. */
+   Một chỗ hỏi (rvState: đơn vị, dấu đã neo, section), một chỗ ghi (setReviews: D.reviews, lưu, vẽ lại, Undo); luật ở
+   core/review.js. Tab Review (ui/review-panel.js) và gợi ý (ui/dwell.js) ghi dấu qua setReviews. Dấu là của file đang
+   mở (D); reviewDocOf(doc): dải dòng đã đọc của một file không mở, cho prompt All files.
+   Xuất: applyReview, initReview, jumpUnit, laneGeo, markUnits, readingBand, repaintLanes, reviewDoc, reviewDocOf, rvState,
+     setReviews, setRvTouched, stepOpen, toggleSection.
+   Dùng: core/anchor.js, core/text.js, core/sections.js, core/review.js, core/blocks.js, core/session.js, core/prompt.js,
+     ui/dom.js, ui/state.js, ui/sync-scroll.js, ui/views.js, ui/layout.js, ui/popup.js, ui/picks.js, ui/prompt.js,
+     ui/review-panel.js, ui/dwell.js, ui/minimap.js, ui/markdown.js, ui/files.js. */
 import { locate } from '../core/anchor.js';
 import { lineOf, plural } from '../core/text.js';
 import { bandBounds, bandPick, bandScroll } from '../core/sections.js';
 import { allDone, linesWord, markWord, nextOpen, progress, resolveMarks, reviewRanges, reviewSections, reviewUnits, rvLines, setMarks, unitsIn,
   unitsOfLines, withSug } from '../core/review.js';
+import { lexSpans } from '../core/blocks.js';
+import { docOf } from '../core/session.js';
+import { wantsReview } from '../core/prompt.js';
 import { $, h, mqSheet, mqSide, reduceMotion, shown, toast, typing } from './dom.js';
-import { loadSession, S, saveClosed, scheduleSave } from './state.js';
+import { D, docKey, S, saveClosed, scheduleSave, sessionFor } from './state.js';
+import { mdLex } from './markdown.js';
+import { refreshTree } from './files.js';
 import { blockPairs, setByPage } from './sync-scroll.js';
 import { isSplit, view } from './views.js';
 import { layoutVal } from './layout.js';
@@ -32,40 +38,56 @@ import { drawMinimap } from './minimap.js';
 /* Đơn vị và dấu đã neo của văn bản đang mở: { units, res, secs }. Nhớ theo văn bản, mảng dấu và khối nguồn. */
 var memo = { text: null, marks: null, spans: null };
 export function rvState() {
-  var spans = blockPairs().spans, marks = S.reviews || (S.reviews = []);
-  if (memo.text !== S.text || memo.marks !== marks || memo.spans !== spans) {
+  var spans = blockPairs().spans, marks = D.reviews || (D.reviews = []);
+  if (memo.text !== D.text || memo.marks !== marks || memo.spans !== spans) {
     /* Chỉ dấu đổi: giữ mảng units cũ (làn đang vẽ cho nó thì chỉ tô lại, restyleLanes). */
-    var units = memo.text === S.text && memo.spans === spans ? memo.units : reviewUnits(S.text, spans), res = resolveMarks(units, marks);
-    memo = { text: S.text, marks: marks, spans: spans, units: units, res: res, secs: reviewSections(units, res.state, []) };
+    var units = memo.text === D.text && memo.spans === spans ? memo.units : reviewUnits(D.text, spans), res = resolveMarks(units, marks);
+    memo = { text: D.text, marks: marks, spans: spans, units: units, res: res, secs: reviewSections(units, res.state, []) };
   }
   return memo;
 }
 /* Dải dòng cho prompt (core/prompt.js d.review), hoặc null khi tắt. */
 export function reviewDoc() {
-  if (!S.rvPrompt) return null;
+  if (!wantsReview(S)) return null;
   var r = rvState();
   return reviewRanges(r.units, r.res.state);
 }
+/* Như reviewDoc cho một file không mở: đơn vị từ marked.lexer như khi nó mở; nhớ theo doc, chữ và mảng dấu. */
+var offRv = new WeakMap();
+export function reviewDocOf(doc) {
+  if (!wantsReview(S) || !doc.reviews.length) return null;
+  var m = offRv.get(doc);
+  if (m && m.text === doc.text && m.marks === doc.reviews) return m.val;
+  var val = null;
+  try {
+    var units = reviewUnits(doc.text, lexSpans(doc.text, mdLex));
+    val = reviewRanges(units, resolveMarks(units, doc.reviews).state);
+  } catch (e) { val = null; }   // marked chưa nạp
+  offRv.set(doc, { text: doc.text, marks: doc.reviews, val: val });
+  return val;
+}
 
-/* GHI DẤU: chỗ duy nhất gán S.reviews. Lưu, vẽ lại, prompt. undoMsg: toast có Undo (trang không có chồng hoàn tác
-   chung); onUndo: việc thêm khi hoàn tác trong cùng phiên (trả gợi ý). Đã chuyển phiên thì Undo trả dấu về phiên cũ, bỏ %
-   đã lưu của nó (sai sau khi trả; tính lại khi mở). */
+/* GHI DẤU: chỗ duy nhất gán D.reviews. Lưu, vẽ lại, prompt, cây. undoMsg: toast có Undo (trang không có chồng hoàn tác
+   chung); onUndo: việc thêm khi hoàn tác trong cùng file (trả gợi ý). Đã sang file hay phiên khác thì Undo trả dấu về
+   doc của nó, bỏ % đã lưu (sai sau khi trả; tính lại khi mở). */
 export function setReviews(next, undoMsg, onUndo) {
-  var before = S.reviews, sid = S.id;
-  S.reviews = next;
+  var before = D.reviews, key = docKey(), sid = S.id, fid = S.open, base = S;
+  D.reviews = next;
   commit();
   if (undoMsg) toast(undoMsg, { label: 'Undo', fn: function () {
-    if (S.id === sid) { S.reviews = before; if (onUndo) onUndo(); commit(); return; }
-    var s = loadSession(sid);
-    if (s) { s.reviews = before; delete s.rvPct; saveClosed(s); }
+    if (docKey() === key) { D.reviews = before; if (onUndo) onUndo(); commit(); return; }
+    var s = sessionFor(sid, base), d = s && docOf(s, fid);
+    if (!d) return;
+    d.reviews = before; delete d.rvPct;
+    if (s === S) { scheduleSave(); refreshTree(); } else saveClosed(s);
   } });
 }
-function commit() { scheduleSave(); applyReview(true); if (S.rvPrompt) renderPrompt(); }
+function commit() { scheduleSave(); applyReview(true); if (wantsReview(S)) renderPrompt(); refreshTree(); }
 /* Đánh dấu (on) / bỏ dấu các đơn vị idxs. undo: có toast Undo (thao tác nhiều đơn vị). */
 export function markUnits(idxs, on, undo) {
   if (!idxs.length) return;
   var r = rvState();
-  setReviews(setMarks(r.units, S.reviews, r.res, idxs, on), undo ? markWord(r.units, idxs, on) : null);
+  setReviews(setMarks(r.units, D.reviews, r.res, idxs, on), undo ? markWord(r.units, idxs, on) : null);
 }
 /* Bật / tắt cả section: chưa đọc hết thì đánh dấu hết. Trả đơn vị cuối khi vừa đánh dấu, -1 khi vừa bỏ. */
 export function toggleSection(sec) {
@@ -214,7 +236,7 @@ function onLaneClick(e) {
    chỉ làm mờ khi html.ma-rvdim (cách gộp với Focus mode ở css/focus.css). Chỉ chạm phần tử đổi trạng thái: gỡ hết rồi
    gắn lại thì trình duyệt tính lại kiểu của mọi dòng (văn bản dài: hàng trăm ms). */
 function paintDone(r) {
-  var lines = $('v-src').children, md = new Set(), txt = (S.text || '').split('\n'), blank = [];
+  var lines = $('v-src').children, md = new Set(), txt = (D.text || '').split('\n'), blank = [];
   for (var b = 0; b < lines.length; b++) blank.push(!/\S/.test(txt[b] || ''));
   var on = rvLines(r.units, r.res.state, blank);
   r.units.forEach(function (u, i) {
@@ -233,18 +255,18 @@ export function applyReview(marksOnly) {
   var r = rvState(), p = progress(r.units, r.res.state), nl = r.res.lost.length, de = document.documentElement;
   /* Không có đơn vị mà văn bản có chữ: chưa tách được khối (thiếu mạng, Preview không dựng): dấu chưa neo được, không
      phải mất. Giữ % đã lưu, không báo mất. */
-  var blind = !r.units.length && /\S/.test(S.text || '');
-  if (!S.reviews.length) delete S.rvPct; else if (!blind) S.rvPct = p.pct;
-  if (de.classList.contains('ma-reviewing') !== S.reviews.length > 0) marksOnly = false;   // điện thoại: lề trái Preview đổi
-  de.classList.toggle('ma-reviewing', S.reviews.length > 0);
+  var blind = !r.units.length && /\S/.test(D.text || '');
+  if (!D.reviews.length) delete D.rvPct; else if (!blind) D.rvPct = p.pct;
+  if (de.classList.contains('ma-reviewing') !== D.reviews.length > 0) marksOnly = false;   // điện thoại: lề trái Preview đổi
+  de.classList.toggle('ma-reviewing', D.reviews.length > 0);
   /* Dấu mất vì văn bản đổi: báo một lần, lúc mất, như nhận xét mất neo; danh sách ở tab Review. Mở phiên đã có dấu mất
      thì không báo lại (đã báo lúc mất; toast mới sẽ che toast Undo của thao tác vừa làm). */
   if (!blind) {
-    if (lostSeen.sid === S.id && nl > lostSeen.n) {
+    if (lostSeen.sid === docKey() && nl > lostSeen.n) {
       var k = nl - lostSeen.n;
       toast(plural(k, 'reviewed block') + (k === 1 ? ' was' : ' were') + ' edited away. See the Review tab.');
     }
-    lostSeen = { sid: S.id, n: nl };
+    lostSeen = { sid: docKey(), n: nl };
   }
   paintDone(r);
   if (marksOnly && laneUnits === r.units) restyleLanes(r); else layoutLanes();
@@ -352,9 +374,9 @@ function popUnits() {
   if (pop.mode !== 'new' || !pending || $('pop').hidden) return [];
   var r = rvState();
   if (pending.lines) return unitsOfLines(r.units, pending.lines);
-  var pos = pending.origin === 'src' ? [pending.s, pending.e] : locate(pending, S.text, true);
+  var pos = pending.origin === 'src' ? [pending.s, pending.e] : locate(pending, D.text, true);
   if (!pos) return [];
-  return unitsIn(r.units, lineOf(S.text, pos[0]) - 1, lineOf(S.text, Math.max(pos[0], pos[1] - 1)) - 1);
+  return unitsIn(r.units, lineOf(D.text, pos[0]) - 1, lineOf(D.text, Math.max(pos[0], pos[1] - 1)) - 1);
 }
 function syncPopRv() {
   var b = $('pop-rv'), idx = popUnits(), h0 = $('pop').offsetHeight;
@@ -384,7 +406,7 @@ var touched = false;
 export function setRvTouched() { touched = true; syncPill(); }
 function syncPill(r, p) {
   r = r || rvState(); p = p || progress(r.units, r.res.state);
-  var want = (!mqSide.matches || mqSheet.matches) && view !== 'edit' && !!S.text && r.units.length > 0 && (S.reviews.length > 0 || touched);
+  var want = (!mqSide.matches || mqSheet.matches) && view !== 'edit' && !!D.text && r.units.length > 0 && (D.reviews.length > 0 || touched);
   $('rv-pill').hidden = !want;
   if (want) $('rv-pill-t').textContent = p.pct === 100 ? 'All reviewed ✓' : '✓ Done · next ↓';
 }
@@ -424,7 +446,7 @@ export function initReview() {
     if ((k !== 'x' && k !== 'j' && k !== 'k') || (e.shiftKey && k !== 'x')) return;
     if (typing(e.target)) return;
     if (document.querySelector('dialog[open]') || !$('pop').hidden) return;
-    if (view === 'edit' || !S.text) return;
+    if (view === 'edit' || !D.text) return;
     e.preventDefault();
     if (k === 'x') markCurrent(e.shiftKey); else stepOpen(k === 'j' ? 1 : -1);
   });

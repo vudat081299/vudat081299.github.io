@@ -1,5 +1,6 @@
 /* Bấm thật trong Chromium: dán văn bản, bôi đen ở hai chế độ xem, nhận xét bằng gõ và bằng gợi ý, prompt,
- * neo lại khi sửa văn bản, tải lại trang, lịch sử phiên, theme, khổ điện thoại.
+ * neo lại khi sửa văn bản, tải lại trang, lịch sử phiên, theme, khổ điện thoại, cây file của phiên (docked / tấm trượt),
+ * thanh trên ở điện thoại (menu More).
  * Chạy: python3 -m http.server 8347 (ở gốc repo), rồi
  *       node md-annotate/tools/smoke.cjs http://127.0.0.1:8347/md-annotate/
  * Thiếu playwright thì thoát mã 2 (BỎ QUA), như tools/smoke-index.js. */
@@ -88,6 +89,12 @@ const accentCheck = (page) => page.evaluate(() => {
   return { bgLum: +bg.toFixed(2), ratio: +((Math.max(bg, fg) + 0.05) / (Math.min(bg, fg) + 0.05)).toFixed(2) };
 });
 const overflow = (page) => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+/* Nền #rrggbb phủ lần lượt các lớp 'rgba(r, g, b, a)' → #rrggbb (đáp án tính độc lập cho theme-color khi có lớp mờ). */
+const mixHex = (bg, ...layers) => {
+  let c = [1, 3, 5].map((i) => parseInt(bg.slice(i, i + 2), 16));
+  for (const l of layers) { const v = l.match(/[\d.]+/g).map(Number); c = c.map((x, i) => v[i] * v[3] + x * (1 - v[3])); }
+  return '#' + c.map((x) => Math.round(x).toString(16).padStart(2, '0')).join('');
+};
 /* MDAN-018: mọi vùng cuộn đang hiện (dọc, hoặc ngang khi đang tràn): thanh cuộn không chạy vào góc bo của chính nó hay
    khung chứa nó (khoảng từ mép tới vùng thanh cuộn ≥ bán kính góc ấy). Trả danh sách chỗ vi phạm. */
 const cornerClash = (page) => page.evaluate(() => {
@@ -338,22 +345,28 @@ const cornerClash = (page) => page.evaluate(() => {
   await page.keyboard.press('Enter');
   check('chọn ở bản dựng qua hai dòng: L9-10 theo nguồn', /\. L9-10 "Mục một của danh sách Mục hai" — Gộp hai mục/.test(await out(page)), JSON.stringify(await out(page)));
   await openOpts(page);
-  await page.fill('#p-path', 'notes/a.md');
+  await page.fill('#p-path', 'notes/');
   const o10 = await out(page);
-  check('có tệp: vị trí dạng tệp:dòng', /\. notes\/a\.md:9-10 "Mục một/.test(o10) && /\. notes\/a\.md:5 "liên kết/.test(o10) && /tệp:dòng/.test(o10), JSON.stringify(o10));
+  check('có folder, một file dán chưa có tên: vẫn L12, không tên tệp (MDAN-029)', /\. L9-10 "Mục một/.test(o10) && /\. L5 "liên kết/.test(o10) && !/notes\//.test(o10), JSON.stringify(o10));
   await page.uncheck('#line-nums');
   const o11 = await out(page);
-  check('tắt số dòng: không vị trí, không câu dẫn', !/notes\/a\.md|L\d|file:line|Line numbers/.test(o11) && !(await page.isVisible('#p-path')), JSON.stringify(o11));
+  check('tắt số dòng: không vị trí, không câu dẫn', !/notes\/|L\d|file:line|Line numbers/.test(o11) && !(await page.isVisible('#p-path')), JSON.stringify(o11));
   await page.waitForTimeout(400);
   await page.reload();
   await page.waitForFunction(() => window.marked && window.DOMPurify);
-  check('tắt số dòng và tệp lưu theo phiên', !(await page.isChecked('#line-nums')) && (await page.inputValue('#p-path')) === 'notes/a.md');
+  check('tắt số dòng và folder lưu theo phiên', !(await page.isChecked('#line-nums')) && (await page.inputValue('#p-path')) === 'notes/');
   await openOpts(page);
   await page.check('#line-nums');
   await page.click('#ptab-list');
   await page.setInputFiles('#file-in', { name: 'ghi-chu.md', mimeType: 'text/markdown', buffer: Buffer.from('# Ghi chú\n\nMột dòng.\n') });
   await page.waitForTimeout(200);
-  check('mở file: phiên mới, tệp điền sẵn tên file', (await page.inputValue('#p-path')) === 'ghi-chu.md' && (await page.$$('#list .ma-item')).length === 0);
+  check('mở file khi file đang mở có chữ: thêm vào cây cạnh nó và mở, không ghi ô Folder (MDAN-024)', (await page.inputValue('#p-path')) === 'notes/' && (await page.$$('#list .ma-item')).length === 0
+    && (await page.$$eval('#tree-list .ma-trow', (ls) => ls.map((l) => l.querySelector('.ma-trow__name').textContent + (l.getAttribute('aria-selected') === 'true' ? '*' : '')).join())) === 'ghi-chu.md*,untitled.md');
+  const openNamed = (nm) => page.evaluate(async (nm) => { const S = await import('./js/ui/state.js'); S.openFileId(S.S.nodes.find((n) => n.name === nm).id); }, nm);
+  await openNamed('untitled.md'); await page.waitForTimeout(150);
+  const o12 = await out(page);
+  check('có folder, hai file: vị trí dạng folder/tệp:dòng', /\. notes\/untitled\.md:9-10 "Mục một/.test(o12) && /\. notes\/untitled\.md:5 "liên kết/.test(o12) && /tệp:dòng/.test(o12), JSON.stringify(o12));
+  await openNamed('ghi-chu.md'); await page.waitForTimeout(150);
   await page.click('#btn-hints');
   check('đủ 5 lần dùng thì gợi ý hiện %', /%/.test(await page.textContent('#hints-list')));
   await page.keyboard.press('Escape');
@@ -468,7 +481,7 @@ const cornerClash = (page) => page.evaluate(() => {
   const ringTab = await page.evaluate(() => getComputedStyle(document.activeElement).outlineStyle);
   await page.keyboard.press('Shift+Tab');
   check('hộp Settings: nút tự focus không có vòng; bấm Tab mới có', ringDlg[1] && ringDlg[2] === 'none' && ringTab === 'solid', JSON.stringify([ringDlg, ringTab]));
-  check('hộp Layout: một vùng cuộn, khung hộp không cuộn', await page.$eval('#dlg-layout', (d) => d.scrollHeight <= d.clientHeight));
+  check('hộp Layout: một vùng cuộn, lớp và thẻ hộp không cuộn', await page.$eval('#dlg-layout', (d) => [d, d.querySelector('.ma-dlg__in')].every((x) => x.scrollHeight <= x.clientHeight)));
   check('nút Layout mở hộp', await page.isVisible('#dlg-layout'));
   const setRange = (sel, v) => page.$eval(sel, (el, v) => { el.value = v; el.dispatchEvent(new Event('input', { bubbles: true })); }, v);
   await setRange('#set-wrap', 50);
@@ -564,7 +577,7 @@ const cornerClash = (page) => page.evaluate(() => {
   check('điện thoại: tab Hiển thị không tràn ngang', (await overflow(m)) === 0);
   check('điện thoại: không có tab Song song', !(await m.isVisible('#tab-split')));
   await m.tap('#btn-layout'); await m.waitForTimeout(200);
-  const ml = await m.evaluate(() => { const d = document.getElementById('dlg-layout'); return { w: getComputedStyle(document.querySelector('.ma-set--wrap')).display, dlg: d.scrollHeight - d.clientHeight }; });
+  const ml = await m.evaluate(() => { const d = document.getElementById('dlg-layout'), c = d.querySelector('.ma-dlg__in'); return { w: getComputedStyle(document.querySelector('.ma-set--wrap')).display, dlg: Math.max(d.scrollHeight - d.clientHeight, c.scrollHeight - c.clientHeight) }; });
   check('điện thoại: hộp Layout ẩn mục bề rộng, chỉ thân hộp cuộn', ml.w === 'none' && ml.dlg <= 0, JSON.stringify(ml));
   await m.tap('#dlg-layout [data-close]');
   /* Safari iOS coi focus do script đặt là :focus-visible; focusVisible: true giả lập điều đó trong Chromium. */
@@ -1304,10 +1317,10 @@ const cornerClash = (page) => page.evaluate(() => {
     await gp.goto(BASE); await gp.waitForFunction(() => window.marked && window.DOMPurify);
     await gp.click('#btn-sample'); await gp.waitForTimeout(150);
     await gp.click('#btn-layout'); await gp.waitForTimeout(250);
-    const g = await gp.$eval('#dlg-layout', (d) => { const r = d.getBoundingClientRect(); return { cx: r.left + r.width / 2, cy: r.top + r.height / 2, w: innerWidth, h: innerHeight, bd: getComputedStyle(d, '::backdrop').backgroundColor }; });
+    const g = await gp.$eval('#dlg-layout', (d) => { const r = d.querySelector('.ma-dlg__in').getBoundingClientRect(), l = d.getBoundingClientRect(); return { cx: r.left + r.width / 2, cy: r.top + r.height / 2, w: innerWidth, h: innerHeight, layer: [l.left, l.top, l.width, l.height], bg: getComputedStyle(d).backgroundColor, bd: getComputedStyle(d, '::backdrop').backgroundColor }; });
     const tag = `${vw}×${vh} ${scheme}`;
     check(`Settings ${tag}: hộp giữa màn hình`, Math.abs(g.cx - g.w / 2) <= 2 && Math.abs(g.cy - g.h / 2) <= 2, JSON.stringify(g));
-    check(`Settings ${tag}: nền sau mờ`, /rgba\(\d+, \d+, \d+, 0\.[1-9]/.test(g.bd), g.bd);
+    check(`Settings ${tag}: nền sau mờ nhẹ, là chính lớp hộp thoại phủ trọn khung nhìn (không phải ::backdrop)`, /rgba\(\d+, \d+, \d+, 0\.[1-4]/.test(g.bg) && g.bd === 'rgba(0, 0, 0, 0)' && g.layer.join() === [0, 0, g.w, g.h].join(), JSON.stringify(g));
     await gp.mouse.click(4, Math.round(vh / 2)); await gp.waitForTimeout(100);
     check(`Settings ${tag}: bấm nền mờ thì đóng`, !(await gp.$eval('#dlg-layout', (d) => d.open)));
     await gp.click('#btn-layout'); await gp.waitForTimeout(100); await gp.keyboard.press('Escape');
@@ -1327,10 +1340,12 @@ const cornerClash = (page) => page.evaluate(() => {
     const want = await kp.evaluate(() => fetch('data/shortcuts.json').then((r) => r.json()).then((d) => d.groups.map((g) => g.title + ':' + g.rows.map((r) => r.keys.map((c) => c.join('+')).join('/') + '=' + r.action).join('|')).join('#')));
     const got = await kp.$$eval('#keys-list .ma-keys', (ss) => ss.map((s) => s.querySelector('.ma-keys__h').textContent + ':' + [...s.querySelectorAll('dt')].map((dt) => [...dt.querySelectorAll('.ma-keys__c')].map((c) => [...c.querySelectorAll('kbd')].map((k) => k.textContent).join('+')).join('/') + '=' + dt.nextElementSibling.textContent).join('|')).join('#'));
     check('Shortcuts: nút trong Settings mở hộp, mọi hàng của data/shortcuts.json hiện đúng', got === want && got.length > 0, got.slice(0, 120));
-    const k = await kp.$eval('#dlg-keys', (d) => { const r = d.getBoundingClientRect(); return { cx: r.left + r.width / 2, cy: r.top + r.height / 2, bd: getComputedStyle(d, '::backdrop').backgroundColor, kbd: d.querySelectorAll('kbd.ma-key').length }; });
-    check('Shortcuts: hộp giữa màn hình, nền sau mờ, phím là chip kbd', Math.abs(k.cx - 720) <= 2 && Math.abs(k.cy - 450) <= 2 && /rgba\(\d+, \d+, \d+, 0\.[1-9]/.test(k.bd) && k.kbd > 10, JSON.stringify(k));
+    const k = await kp.$eval('#dlg-keys', (d) => { const r = d.querySelector('.ma-dlg__in').getBoundingClientRect(), l = d.getBoundingClientRect(); return { cx: r.left + r.width / 2, cy: r.top + r.height / 2, layer: [l.left, l.top, l.width, l.height].join(), bg: getComputedStyle(d).backgroundColor, bd: getComputedStyle(d, '::backdrop').backgroundColor, kbd: d.querySelectorAll('kbd.ma-key').length, tc: document.getElementById('theme-color').content }; });
+    check('Shortcuts: hộp giữa màn hình, nền sau mờ (lớp hộp thoại phủ trọn), phím là chip kbd', Math.abs(k.cx - 720) <= 2 && Math.abs(k.cy - 450) <= 2 && /rgba\(\d+, \d+, \d+, 0\.[1-9]/.test(k.bg) && k.bd === 'rgba(0, 0, 0, 0)' && k.layer === '0,0,1440,900' && k.kbd > 10, JSON.stringify(k));
+    check('Shortcuts trên Settings: theme-color là nền trang dưới cả hai lớp mờ', k.tc === mixHex('#f5f6f3', 'rgba(11, 15, 12, 0.2)', 'rgba(11, 15, 12, 0.38)'), k.tc);
     await kp.keyboard.press('Escape');
     check('Shortcuts: Esc đóng hộp Shortcuts, Settings còn mở', !(await kp.$eval('#dlg-keys', (d) => d.open)) && (await kp.$eval('#dlg-layout', (d) => d.open)));
+    check('Shortcuts: đóng thì theme-color về lớp mờ của Settings', (await kp.$eval('#theme-color', (x) => x.content)) === mixHex('#f5f6f3', 'rgba(11, 15, 12, 0.2)'));
     await kp.keyboard.press('Escape');
     await kp.keyboard.press('Shift+Slash'); await kp.waitForTimeout(100);
     check('Shortcuts: phím ? mở hộp', await kp.$eval('#dlg-keys', (d) => d.open));
@@ -1342,6 +1357,96 @@ const cornerClash = (page) => page.evaluate(() => {
     await kctx.close();
   }
   // ── end hộp Shortcuts ──
+
+  // ── lớp mờ là chính <dialog> phủ trọn khung nhìn, nền là --scrim: iOS 26 Safari tô vùng thanh trạng thái theo nền phần tử
+  //    fixed ở mép, không theo ::backdrop. Thẻ là con; theme-color là nền trộn lớp mờ khi mở, trả lại khi đóng. ──
+  for (const [vw, vh, scheme] of [[390, 844, 'light'], [390, 844, 'dark'], [1280, 800, 'light'], [1280, 800, 'dark']]) {
+    const touch = vw < 700;
+    const lctx = await browser.newContext({ viewport: { width: vw, height: vh }, colorScheme: scheme, hasTouch: touch, isMobile: touch, deviceScaleFactor: touch ? 2 : 1 });
+    const lp = await lctx.newPage(); watch(lp);
+    await lp.goto(BASE); await lp.waitForFunction(() => window.marked && window.DOMPurify);
+    await lp.click('#btn-sample'); await lp.waitForTimeout(150);
+    await lp.evaluate(async () => {   // cây vài file, để #btn-tree mở tấm trượt ở máy hẹp
+      const T = await import('./js/ui/tree.js'), nodes = [{ id: 'd', parent: null, kind: 'dir', name: 'docs' }];
+      for (let i = 0; i < 6; i++) nodes.push({ id: 'f' + i, parent: i % 2 ? 'd' : null, kind: 'file', name: 'note-' + i + '.md' });
+      const noop = () => '';
+      T.renderTree({ nodes, open: 'f0', collapsed: [], counts: {}, title: 'Demo' }, { open: noop, toggle: noop, newFile: noop, newDir: noop, rename: noop, move: noop, remove: noop, importDir: noop, download: noop, collapseAll: noop });
+    });
+    const tag = `${vw}×${vh} ${scheme}`, bg = scheme === 'dark' ? '#090b0a' : '#f5f6f3';
+    const tc = () => lp.$eval('#theme-color', (x) => x.content);
+    check(`lớp mờ ${tag}: theme-color lúc đầu là nền trang, html có nền đặt rõ`, (await tc()) === bg && (await lp.evaluate(() => getComputedStyle(document.documentElement).backgroundColor === getComputedStyle(document.body).backgroundColor)), await tc());
+    const bad = [];
+    for (const [id, btn, place] of [['dlg-hist', 'btn-hist', 'sheet'], ['dlg-hints', 'btn-hints', 'sheet'], ['dlg-layout', 'btn-layout', 'center'], ['dlg-keys', 'btn-keys', 'center'], ['dlg-panel', 'dock-n', 'bottom'], ['dlg-tree', 'btn-tree', 'left']]) {
+      if (vw > 1080 && (place === 'bottom' || place === 'left')) continue;
+      await lp.evaluate((b) => document.getElementById(b).click(), btn); await lp.waitForTimeout(350);
+      const g = await lp.evaluate((id) => {
+        const d = document.getElementById(id), l = d.getBoundingClientRect(), card = d.querySelector(':scope > .ma-dlg__in, :scope > .ma-panel, :scope > .ma-tree'), c = card.getBoundingClientRect();
+        const probe = document.createElement('i'); document.body.append(probe);
+        probe.style.backgroundColor = d.classList.contains('ma-dlg--live') ? 'var(--scrim-live)' : 'var(--scrim)'; const want = getComputedStyle(probe).backgroundColor;
+        probe.style.backgroundColor = 'var(--surface)'; const surface = getComputedStyle(probe).backgroundColor; probe.remove();
+        return { open: d.open, layer: [l.left, l.top, l.width, l.height].join(), view: [0, 0, innerWidth, innerHeight].join(), bg: getComputedStyle(d).backgroundColor, want,
+          bd: getComputedStyle(d, '::backdrop').backgroundColor, card: [c.left, c.top, c.right, c.bottom].map(Math.round), cardBg: getComputedStyle(card).backgroundColor, surface,
+          tc: document.getElementById('theme-color').content };
+      }, id);
+      const [L, T, R, B] = g.card, cx = (L + R) / 2, cy = (T + B) / 2;
+      const placed = { sheet: L === 0 && R === vw && B === vh, bottom: Math.abs(cx - vw / 2) <= 1 && B === vh, left: L === 0 && T === 0 && B === vh && R < vw,
+        center: Math.abs(cx - vw / 2) <= 1 && Math.abs(cy - vh / 2) <= 1 }[vw > 720 && place === 'sheet' ? 'center' : place];
+      if (!g.open || g.layer !== g.view || g.bg !== g.want || !/, 0\.\d+\)$/.test(g.bg) || g.bd !== 'rgba(0, 0, 0, 0)' || g.cardBg !== g.surface || !placed || g.tc !== mixHex(bg, g.want)) bad.push(id + ' ' + JSON.stringify(g));
+      // bấm / chạm lớp ngoài thẻ: đóng (mọi hộp thoại, như khi lớp là ::backdrop)
+      const pt = L > 8 || T > 8 ? [4, 4] : [vw - 4, 4];
+      if (touch) await lp.touchscreen.tap(pt[0], pt[1]); else await lp.mouse.click(pt[0], pt[1]);
+      await lp.waitForTimeout(150);
+      const after = await lp.evaluate((id) => [document.getElementById(id).open, document.getElementById('theme-color').content], id);
+      if (after[0] || after[1] !== bg) { bad.push(id + ' ngoài thẻ: ' + JSON.stringify(after)); if (after[0]) await lp.keyboard.press('Escape'); }
+    }
+    check(`lớp mờ ${tag}: mọi hộp thoại là lớp trọn khung nhìn nền --scrim, ::backdrop trong suốt, thẻ đúng chỗ, theme-color trộn rồi trả lại, chạm ngoài thẻ thì đóng`, !bad.length, bad.join(' | '));
+    check(`lớp mờ ${tag}: không tràn ngang`, (await overflow(lp)) === 0);
+    await lctx.close();
+  }
+  // ── end lớp mờ ──
+
+  // ── tấm đáy của hộp nhận xét: nền mờ là lớp fixed #pop-scrim (không phải bóng), không chặn chạm; chọn nhiều dòng thì
+  //    không có nền mờ, vẫn chạm được lề số các dòng khác (MDAN-026) ──
+  for (const scheme of ['light', 'dark']) {
+    const sctx2 = await browser.newContext({ viewport: { width: 390, height: 844 }, colorScheme: scheme, hasTouch: true, isMobile: true, deviceScaleFactor: 2 });
+    const sp = await sctx2.newPage(); watch(sp);
+    await sp.goto(BASE); await sp.waitForFunction(() => window.marked && window.DOMPurify);
+    await sp.tap('#btn-sample'); await sp.waitForTimeout(150);
+    const bg = scheme === 'dark' ? '#090b0a' : '#f5f6f3';
+    const dim = () => sp.evaluate(() => {
+      const sc = document.getElementById('pop-scrim'), pop = document.getElementById('pop'), r = sc.getBoundingClientRect(), cs = getComputedStyle(sc);
+      const probe = document.createElement('i'); probe.style.backgroundColor = 'var(--scrim-live)'; document.body.append(probe);
+      const want = getComputedStyle(probe).backgroundColor; probe.remove();
+      return { shown: !!sc.getClientRects().length, rect: [r.left, r.top, r.width, r.height].join(), bg: cs.backgroundColor, want, pe: cs.pointerEvents, z: +cs.zIndex,
+        popZ: +getComputedStyle(pop).zIndex, barZ: +getComputedStyle(document.querySelector('.ma-bar')).zIndex || 0, dockZ: +getComputedStyle(document.getElementById('dock')).zIndex,
+        spread: Math.max(0, ...(getComputedStyle(pop).boxShadow.match(/-?[\d.]+px/g) || []).map(parseFloat)), sheet: pop.classList.contains('is-sheet') && !pop.hidden,
+        tc: document.getElementById('theme-color').content };
+    });
+    await scriptSelect(sp, '#v-md', 'Try selecting this sentence');
+    await sp.tap('#fab'); await sp.waitForTimeout(250);
+    const d1 = await dim();
+    check(`tấm đáy ${scheme}: nền mờ là lớp fixed trọn khung nhìn, nền --scrim-live, dưới tấm, trên thanh đáy; tấm không còn bóng phủ; theme-color trộn`,
+      d1.sheet && d1.shown && d1.rect === '0,0,390,844' && d1.bg === d1.want && d1.pe === 'none' && d1.z === d1.popZ - 1 && d1.z > d1.dockZ && d1.z > d1.barZ && d1.spread < 100 && d1.tc === mixHex(bg, d1.want), JSON.stringify(d1));
+    await sp.tap('#v-md h1'); await sp.waitForTimeout(150);
+    const d2 = await dim();
+    check(`tấm đáy ${scheme}: chạm ra ngoài (xuyên qua nền mờ) đóng tấm, nền mờ ẩn, theme-color trả lại`, !d2.sheet && !d2.shown && d2.tc === bg, JSON.stringify(d2));
+    // Chọn nhiều dòng ở lề số (Source): tấm hiện, không có nền mờ; chạm lề dòng khác vẫn thêm / bỏ dòng.
+    await sp.tap('.ma-tab[data-view="src"]'); await sp.waitForTimeout(150);
+    const gut = (n) => sp.$eval(`#v-src .ma-ln:nth-child(${n})`, (el) => { el.scrollIntoView({ block: 'start' }); const r = el.getBoundingClientRect(); return { x: r.left + 4, y: r.top + 8 }; });
+    const picks = () => sp.$$eval('#v-src .ma-ln', (ls) => ls.map((l, i) => (l.classList.contains('is-pick') ? i + 1 : 0)).filter(Boolean).join());
+    const g3 = await gut(3); await sp.mouse.dblclick(g3.x, g3.y); await sp.waitForTimeout(250);
+    const d3 = await dim();
+    check(`tấm đáy ${scheme}: chọn dòng mở tấm mà không có nền mờ, theme-color là nền trang`, d3.sheet && !d3.shown && d3.tc === bg && (await picks()) === '3' && await sp.isVisible('#pop-head'), JSON.stringify([d3, await picks()]));
+    const g7 = await sp.$eval('#v-src .ma-ln:nth-child(7)', (el) => { const r = el.getBoundingClientRect(); return { x: r.left + 4, y: r.top + 8 }; });
+    const hit = await sp.evaluate((g) => { const t = document.elementFromPoint(g.x, g.y); return [!!(t && t.closest('.ma-ln')), Math.round(document.getElementById('pop').getBoundingClientRect().top)]; }, g7);
+    await sp.touchscreen.tap(g7.x, g7.y); await sp.waitForTimeout(200);
+    const d4 = await dim();
+    check(`tấm đáy ${scheme}: tấm đang mở, chạm lề số dòng khác vẫn thêm dòng, vẫn không có nền mờ`, hit[0] && g7.y < hit[1] && (await picks()) === '3,7' && d4.sheet && !d4.shown && (await sp.textContent('#pop-sum')).startsWith('2 lines'), JSON.stringify([hit, g7, await picks(), d4]));
+    await sp.keyboard.press('Escape'); await sp.waitForTimeout(100);
+    check(`tấm đáy ${scheme}: Esc thoát chọn dòng, tấm ẩn, không còn nền mờ`, !(await dim()).sheet && !(await dim()).shown && (await picks()) === '');
+    await sctx2.close();
+  }
+  // ── end tấm đáy ──
 
   // ── đã đọc: J / K / X tiến lên được cả khi trang không cuộn được, cả khi bấm nhanh lúc đang cuộn mượt ──
   {
@@ -1593,13 +1698,13 @@ const cornerClash = (page) => page.evaluate(() => {
 
   // ── làm mờ: Focus mode và Dim reviewed gộp bằng min, dòng dưới chuột sáng (MDAN-045) ──
   {
-    /* Đo độ sáng thấy được (tích opacity qua mọi tổ tiên) của từng mẫu ở mọi tổ hợp: khung {Source, Preview, Split} ×
+    /* Đo độ sáng thấy được (tích opacity qua mọi tổ tiên) của từng mẫu ở mọi tổ hợp (1920px, cây là cột): khung {Source, Preview, Split} ×
        chọn section {pointer, band} × {đã đọc, chưa} × {trong section sáng, ngoài} × {đoạn, mục danh sách, bảng, code} ×
        {dòng dưới chuột, không}. Kỳ vọng: dòng dưới chuột (và phần ghép ở khung kia) = 1; còn lại = min(--dim nếu ngoài
        section, --rv-dim nếu đã đọc). Split: hai khung cho cùng một số. */
     const DIM = 0.3, RVD = 0.4;
-    const xctx = await browser.newContext({ viewport: { width: 1440, height: 1300 }, colorScheme: 'light' });
-    await xctx.addInitScript(() => { try { if (!sessionStorage.getItem('x')) { localStorage.setItem('md-annotate:prefs:v1', JSON.stringify({ view: 'split', focus: true, rvDim: true })); sessionStorage.setItem('x', '1'); } } catch (e) {} });
+    const xctx = await browser.newContext({ viewport: { width: 1920, height: 1300 }, colorScheme: 'light' });
+    await xctx.addInitScript(() => { try { if (!sessionStorage.getItem('x')) { localStorage.setItem('md-annotate:prefs:v1', JSON.stringify({ view: 'split', focus: true, rvDim: true, tree: true })); sessionStorage.setItem('x', '1'); } } catch (e) {} });
     const mx = await xctx.newPage(); watch(mx);
     await mx.goto(BASE); await mx.waitForFunction(() => window.marked && window.DOMPurify);
     const sec = (X) => [`## Sec ${X}`, '', `Para ${X}1 reviewed text.`, '', `Para ${X}2 plain text.`, '', `- Item ${X}1 plain`, `- Item ${X}2 reviewed`, `- Item ${X}3 plain`, '',
@@ -1627,6 +1732,9 @@ const cornerClash = (page) => page.evaluate(() => {
       return unit.classList.contains('is-rv') === rev && ln.classList.contains('is-rv') === rev;
     }), PROBES);
     check('làm mờ: đánh dấu đúng tám đơn vị đã đọc ở cả hai khung', rvOk);
+    // Đo khi cây là cột fixed ở mép trái (MDAN-037), ngoài lưới: con trỏ và dải đọc phải không lệch vì nó.
+    check('làm mờ: đo với cây là cột fixed bên trái, vẫn Split', await mx.evaluate(() => document.documentElement.classList.contains('ma-tree-on')
+      && getComputedStyle(document.getElementById('tree')).position === 'fixed' && !!document.getElementById('v-src').getClientRects().length && !!document.getElementById('v-md').getClientRects().length));
     /* Đo mọi mẫu ở các khung đang hiện: { khoá: { src, md, srcSec, mdSec } }. */
     const measure = () => mx.evaluate((P) => {
       const eff = (el) => { let o = 1; for (let n = el; n && n.nodeType === 1; n = n.parentElement) o *= +getComputedStyle(n).opacity; return Math.round(o * 1000) / 1000; };
@@ -1808,6 +1916,808 @@ const cornerClash = (page) => page.evaluate(() => {
     await xctx.close();
   }
   // ── end làm mờ ──
+
+  /* ---------- Cây file (ui/tree.js): vẽ bằng mô hình giả, actions ghi vào window.__tree.log ---------- */
+  {
+    /* Chạy trong trang. single: phiên một file; không thì 8 cấp folder, 40 file, một folder gập, tên dài. */
+    const treeDemo = async (single) => {
+      const T = await import('./js/ui/tree.js');
+      const nodes = []; let n = 0; const id = () => 'n' + (++n);
+      if (single) nodes.push({ id: id(), parent: null, kind: 'file', name: 'untitled.md' });
+      else {
+        let parent = null; const dirs = [];
+        for (let d = 0; d < 8; d++) { const x = { id: id(), parent, kind: 'dir', name: d === 7 ? 'deepest-level-folder-with-a-very-long-name' : 'level-' + (d + 1) }; nodes.push(x); dirs.push(x); parent = x.id; }
+        for (let i = 0; i < 40; i++) nodes.push({ id: id(), parent: dirs[i % 8].id, kind: 'file', name: (i % 8 === 7 ? 'a-really-long-file-name-that-should-ellipsize-' : 'note-') + i + '.md' });
+        const col = { id: id(), parent: null, kind: 'dir', name: 'archive' }; nodes.push(col);
+        nodes.push({ id: id(), parent: col.id, kind: 'file', name: 'old.md' });
+        nodes.push({ id: id(), parent: null, kind: 'file', name: 'README.md' });
+      }
+      const open = nodes.find((x) => x.kind === 'file').id;
+      const model = { nodes, open, collapsed: single ? [] : [nodes.find((x) => x.name === 'archive').id], counts: { [open]: { c: 3, rv: 42 } }, title: 'Demo folder' };
+      const log = [], by = (i) => nodes.find((x) => x.id === i);
+      const render = () => T.renderTree(model, actions);
+      const actions = {
+        open(i) { log.push(['open', i]); model.open = i; render(); },
+        toggle(i) { log.push(['toggle', i]); const k = model.collapsed.indexOf(i); if (k < 0) model.collapsed.push(i); else model.collapsed.splice(k, 1); render(); },
+        newFile(p) { log.push(['newFile', p]); }, newDir(p) { log.push(['newDir', p]); },
+        rename(i, name) { log.push(['rename', i, name]); if (!name || /[/\\]/.test(name)) return 'Names cannot contain / or \\'; by(i).name = name; render(); return ''; },
+        move(i, p) { log.push(['move', i, p]); by(i).parent = p; render(); return ''; },
+        remove(i) { log.push(['remove', i]); }, importDir(x, p) { log.push(['importDir', p]); }, download(i) { log.push(['download', i]); },
+        collapseAll() { log.push(['collapseAll']); model.collapsed = nodes.filter((x) => x.kind === 'dir').map((x) => x.id); render(); }
+      };
+      window.__tree = { model, log, by, render };
+      render();
+    };
+    const tstate = (p) => p.evaluate(() => {
+      const t = document.getElementById('tree'), r = t.getBoundingClientRect(), d = document.getElementById('doc').getBoundingClientRect(), b = document.getElementById('btn-tree');
+      const m = document.querySelector('main').getBoundingClientRect();
+      return { shown: !!t.getClientRects().length, w: Math.round(r.width), left: Math.round(r.left), docL: Math.round(d.left), docW: Math.round(d.width),
+        gapL: m.left - (t.getClientRects().length ? r.right : 0), gapR: document.documentElement.clientWidth - m.right,
+        split: !document.getElementById('tab-split').hidden, exp: b.getAttribute('aria-expanded'), lbl: b.title, btn: !b.hidden,
+        pref: JSON.parse(localStorage.getItem('md-annotate:prefs:v1') || '{}').tree, rows: document.querySelectorAll('#tree-list .ma-trow').length };
+    });
+    const focusName = (p) => p.evaluate(() => document.activeElement?.closest?.('.ma-trow')?.querySelector('.ma-trow__name')?.textContent || document.activeElement?.tagName);
+    /* Mô hình giả đặt id cố định n1, n2…: tìm hàng theo tên ban đầu. */
+    let ids = {};
+    const nameOf = (sel) => tp.$eval(sel, (li) => li.querySelector('.ma-trow__name').textContent);
+    const row = (name) => `#tree-list .ma-trow[data-id="${ids[name]}"]`;
+
+    // 2560: cột cây vừa cạnh Split, kéo mép tới 420px vẫn còn chỗ (docked / tấm trượt theo chỗ: khối "cây docked" cuối file).
+    const tctx = await browser.newContext({ viewport: { width: 2560, height: 900 }, colorScheme: 'light' });
+    const tp = await tctx.newPage(); watch(tp);
+    await tp.goto(BASE); await tp.waitForFunction(() => window.marked && window.DOMPurify);
+    await tp.click('#btn-sample'); await tp.waitForTimeout(150);
+    const t0 = await tstate(tp);
+    check('cây: phiên một file của trang — có nút, không có cột', !t0.shown && t0.btn, JSON.stringify(t0));
+    // Phiên một file: nút hiện, cột chưa hiện (mặc định tự động), vẽ được một hàng, đang chọn.
+    await tp.evaluate(treeDemo, true); await tp.waitForTimeout(150);
+    let ts = await tstate(tp);
+    check('cây: phiên một file — nút hiện, cột ẩn, Split còn', ts.btn && !ts.shown && ts.split && ts.docL === t0.docL && ts.exp === 'false' && ts.lbl === 'Show files', JSON.stringify(ts));
+    await tp.click('#btn-tree'); await tp.waitForTimeout(150);
+    ts = await tstate(tp);
+    const one = await tp.$$eval('#tree-list .ma-trow', (ls) => ls.map((l) => [l.getAttribute('aria-selected'), l.getAttribute('aria-level'), l.querySelector('.ma-trow__name').textContent]));
+    check('cây: phiên một file — bấm nút hiện cột, một hàng đang chọn', ts.shown && ts.rows === 1 && one[0][0] === 'true' && one[0][1] === '1' && one[0][2] === 'untitled.md' && ts.exp === 'true' && ts.lbl === 'Hide files', JSON.stringify([ts, one]));
+
+    // Cây sâu: 8 cấp, 40 file. Bật / tắt, Split hiện lại khi tắt, nhớ qua tải lại.
+    await tp.evaluate(treeDemo, false); await tp.waitForTimeout(150);
+    ids = await tp.evaluate(() => Object.fromEntries(window.__tree.model.nodes.map((x) => [x.name, x.id])));
+    ts = await tstate(tp);
+    check('cây: cột trái rộng 248px trước #doc, Split vẫn có', ts.shown && ts.w === 248 && ts.left < ts.docL && ts.split && ts.rows === 50, JSON.stringify(ts));
+    check('cây: 2560 không tràn ngang', (await overflow(tp)) === 0, String(await overflow(tp)));
+    await tp.click('#btn-tree'); await tp.waitForTimeout(150);
+    ts = await tstate(tp);
+    check('cây: bấm nút ẩn cột, #doc về chỗ cũ, Split hiện lại, lưu prefs.tree', !ts.shown && ts.docL === t0.docL && ts.split && ts.pref === false && ts.exp === 'false', JSON.stringify(ts));
+    await tp.reload(); await tp.waitForFunction(() => window.marked && window.DOMPurify);
+    await tp.evaluate(treeDemo, false); await tp.waitForTimeout(150);
+    ts = await tstate(tp);
+    check('cây: tải lại vẫn ẩn', !ts.shown && ts.btn, JSON.stringify(ts));
+    await tp.evaluate(() => document.activeElement && document.activeElement.blur());
+    await tp.keyboard.press('Control+B'); await tp.waitForTimeout(150);
+    ts = await tstate(tp);
+    check('cây: Ctrl+B hiện lại, lưu prefs.tree', ts.shown && ts.pref === true, JSON.stringify(ts));
+    await tp.focus('#s-name'); await tp.keyboard.press('Control+B'); await tp.waitForTimeout(100);
+    check('cây: Ctrl+B trong ô nhập không đổi gì', (await tstate(tp)).shown);
+    await tp.evaluate(() => document.activeElement.blur());
+
+    // Mép kéo: chuột (180–420, lưu prefs.treeW), phím mũi tên.
+    const gb = await tp.$eval('#tree-grip', (g) => { const r = g.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; });
+    await tp.mouse.move(gb.x, gb.y); await tp.mouse.down(); await tp.mouse.move(gb.x + 100, gb.y, { steps: 5 }); await tp.mouse.up(); await tp.waitForTimeout(150);
+    ts = await tstate(tp);
+    const tw = await tp.evaluate(() => JSON.parse(localStorage.getItem('md-annotate:prefs:v1')).treeW);
+    check('cây: kéo mép rộng thêm 100px, lưu prefs.treeW; cây vẫn ở mép trái, vùng làm việc căn giữa phần còn lại', ts.w === 348 && tw === 348 && ts.left === 0 && Math.abs(ts.gapL - ts.gapR) <= 1, JSON.stringify({ ...ts, tw }));
+    await tp.mouse.move(gb.x + 100, gb.y); await tp.mouse.down(); await tp.mouse.move(gb.x + 600, gb.y, { steps: 5 }); await tp.mouse.up();
+    check('cây: kéo quá thì dừng ở 420px', (await tstate(tp)).w === 420);
+    await tp.focus('#tree-grip'); await tp.keyboard.press('ArrowLeft'); await tp.keyboard.press('ArrowLeft');
+    check('cây: ← trên mép hẹp lại 16px mỗi lần', (await tstate(tp)).w === 388, String((await tstate(tp)).w));
+    await tp.reload(); await tp.waitForFunction(() => window.marked && window.DOMPurify);
+    await tp.evaluate(treeDemo, false); await tp.waitForTimeout(150);
+    check('cây: tải lại giữ bề rộng', (await tstate(tp)).w === 388);
+    for (let i = 0; i < 20; i++) await tp.focus('#tree-grip').then(() => tp.keyboard.press('ArrowLeft'));
+    check('cây: hẹp nhất 180px', (await tstate(tp)).w === 180);
+
+    // Hàng sâu (cấp 9): thụt nhưng tên còn thấy ≥ 8 ký tự, ở cả 180px và 248px; title là đường dẫn đầy đủ.
+    const deep = () => tp.evaluate(() => {
+      const li = [...document.querySelectorAll('#tree-list .ma-trow')].find((l) => l.getAttribute('aria-level') === '9');
+      const nm = li.querySelector('.ma-trow__name'), r = nm.getBoundingClientRect(), top = document.querySelector('#tree-list .ma-trow .ma-trow__name').getBoundingClientRect();
+      const c = document.createElement('canvas').getContext('2d'); c.font = getComputedStyle(nm).font;
+      return { w: Math.round(r.width), need: Math.round(c.measureText('a-really').width), indent: Math.round(r.left - top.left), path: li.title };
+    });
+    let dp = await deep();
+    check('cây: 180px, hàng cấp 9 còn thấy ≥ 8 ký tự tên', dp.w >= dp.need && dp.path.split('/').length === 9, JSON.stringify(dp));
+    await tp.evaluate(() => { localStorage.setItem('md-annotate:prefs:v1', JSON.stringify({ ...JSON.parse(localStorage.getItem('md-annotate:prefs:v1')), treeW: 248 })); });
+    await tp.reload(); await tp.waitForFunction(() => window.marked && window.DOMPurify);
+    await tp.evaluate(treeDemo, false); await tp.waitForTimeout(150);
+    dp = await deep();
+    check('cây: 248px, hàng cấp 9 thụt vào mà vẫn thấy ≥ 8 ký tự tên', dp.w >= dp.need && dp.indent >= 60, JSON.stringify(dp));
+
+    // Bàn phím (mẫu tree WAI-ARIA) và vòng focus chỉ sau Tab (MDAN-020).
+    await tp.click(row('archive'));
+    const ring = await tp.$eval(row('archive'), (l) => getComputedStyle(l).outlineStyle);
+    const tl = () => tp.evaluate(() => window.__tree.log.slice(-1)[0] || []);
+    check('cây: bấm folder gập thì mở, không có vòng focus', (await tl())[0] === 'toggle' && ring === 'none' && (await tp.$eval(row('archive'), (l) => l.getAttribute('aria-expanded'))) === 'true', ring);
+    await tp.keyboard.press('ArrowDown');
+    check('cây: ↓ sang hàng con (old.md)', (await focusName(tp)) === 'old.md', await focusName(tp));
+    const arrowRing = await tp.evaluate(() => [document.documentElement.classList.contains('ma-tabbing'), getComputedStyle(document.activeElement).outlineStyle]);
+    check('cây: bấm hàng rồi ↓ — mũi tên là bàn phím, hàng có vòng focus (MDAN-020)', arrowRing[0] && arrowRing[1] === 'solid', JSON.stringify(arrowRing));
+    await tp.keyboard.press('ArrowLeft');
+    check('cây: ← ở file về folder cha', (await focusName(tp)) === 'archive', await focusName(tp));
+    await tp.keyboard.press('ArrowLeft');
+    check('cây: ← ở folder đang mở thì gập', (await tp.$eval(row('archive'), (l) => l.getAttribute('aria-expanded'))) === 'false' && (await focusName(tp)) === 'archive');
+    await tp.keyboard.press('ArrowRight');
+    check('cây: → ở folder gập thì mở', (await tp.$eval(row('archive'), (l) => l.getAttribute('aria-expanded'))) === 'true');
+    await tp.keyboard.press('ArrowRight');
+    check('cây: → ở folder đang mở thì vào con đầu', (await focusName(tp)) === 'old.md', await focusName(tp));
+    await tp.keyboard.press('End');
+    check('cây: End tới hàng cuối', (await focusName(tp)) === 'README.md', await focusName(tp));
+    await tp.keyboard.press('Home');
+    check('cây: Home tới hàng đầu', (await focusName(tp)) === 'archive', await focusName(tp));
+    await tp.keyboard.press('r');
+    check('cây: gõ chữ nhảy tới tên', (await focusName(tp)) === 'README.md', await focusName(tp));
+    await tp.keyboard.press('Enter');
+    const sel = await tp.$eval(row('README.md'), (l) => [l.getAttribute('aria-selected'), getComputedStyle(l).boxShadow]);
+    check('cây: Enter mở file, hàng thành đang chọn (nền nhạt + viền --edge-on)', JSON.stringify(await tl()) === JSON.stringify(['open', ids['README.md']]) && sel[0] === 'true' && /inset/.test(sel[1]), JSON.stringify(sel));
+    /* Tương phản trên hàng đang chọn (nền pha nhiều lớp): chữ ≥ 4,5:1, viền --edge-on ≥ 3:1, cả hai theme. */
+    const treeContrast = () => tp.evaluate(() => {
+      const parse = (c) => { const m = c.match(/[\d.]+/g).map(Number); return c.startsWith('color(') ? [m[0] * 255, m[1] * 255, m[2] * 255, m.length > 3 ? m[3] : 1] : [m[0], m[1], m[2], m.length > 3 ? m[3] : 1]; };
+      const over = (t, u) => [0, 1, 2].map((i) => t[i] * t[3] + u[i] * (1 - t[3])).concat(1);
+      const bgOf = (el) => { const ch = []; for (let n = el; n; n = n.parentElement) ch.push(getComputedStyle(n).backgroundColor); let c = [255, 255, 255, 1]; ch.reverse().forEach((x) => { const v = parse(x); if (v[3] > 0) c = over(v, c); }); return c; };
+      const lum = (c) => { const x = c.slice(0, 3).map((n) => { n /= 255; return n <= 0.03928 ? n / 12.92 : ((n + 0.055) / 1.055) ** 2.4; }); return 0.2126 * x[0] + 0.7152 * x[1] + 0.0722 * x[2]; };
+      const ratio = (a, b) => { const x = lum(a), y = lum(b); return +((Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05)).toFixed(2); };
+      const sel = document.querySelector('#tree-list .ma-trow[aria-selected="true"]'), out = {};
+      for (const [k, q] of [['name', '.ma-trow__name'], ['c', '.ma-trow__c'], ['rv', '.ma-trow__rv']]) { const el = sel.querySelector(q); out[k] = el ? ratio(parse(getComputedStyle(el).color), bgOf(el)) : 0; }
+      const edge = parse(getComputedStyle(sel).boxShadow.match(/rgba?\([^)]*\)|color\([^)]*\)/)[0]);
+      out.edge = ratio(over(edge, bgOf(sel.parentElement)), bgOf(sel.parentElement));
+      return out;
+    });
+    await tp.evaluate(() => { const m = window.__tree.model; m.counts[m.open] = { c: 3, rv: 42 }; window.__tree.render(); });
+    for (const dark of [false, true]) {
+      await tp.evaluate((d) => document.documentElement.classList.toggle('dark', d), dark); await tp.waitForTimeout(300);
+      const tc = await treeContrast();
+      check(`cây (${dark ? 'tối' : 'sáng'}): hàng đang chọn — tên, huy hiệu ≥ 4,5:1, viền ≥ 3:1`, tc.name >= 4.5 && tc.c >= 4.5 && tc.rv >= 4.5 && tc.edge >= 3, JSON.stringify(tc));
+    }
+    await tp.evaluate(() => document.documentElement.classList.remove('dark'));
+    const tabbed = await tp.evaluate(() => document.documentElement.classList.contains('ma-tabbing'));
+    const tabIdx = await tp.$$eval('#tree-list .ma-trow', (ls) => ls.filter((l) => l.tabIndex === 0).length);
+    check('cây: một hàng tabindex 0 (roving); đã dùng mũi tên thì hàng có vòng', tabIdx === 1 && tabbed && (await tp.$eval(row('README.md'), (l) => getComputedStyle(l).outlineStyle)) === 'solid');
+    await tp.mouse.click(5, 5);
+    check('cây: bấm chuột thì tắt vòng', !(await tp.evaluate(() => document.documentElement.classList.contains('ma-tabbing'))));
+
+    await tp.focus('#tree-collapse'); await tp.keyboard.press('Tab');
+    const kr = await tp.evaluate(() => [document.activeElement.classList.contains('ma-trow'), getComputedStyle(document.activeElement).outlineStyle]);
+    check('cây: Tab vào cây tới hàng hiện tại, có vòng focus', kr[0] && kr[1] === 'solid' && (await focusName(tp)) === 'README.md', JSON.stringify(kr));
+    // Đổi tên: F2, lỗi thì toast và vẫn sửa, Esc bỏ; bấm đúp; Enter lưu.
+    await tp.keyboard.press('F2');
+    const ren = () => tp.$eval('#tree-list', (ul) => { const i = ul.querySelector('.ma-trow__ren'); return i ? { v: i.value, f: document.activeElement === i, sel: i.value.slice(i.selectionStart, i.selectionEnd) } : null; });
+    let rn = await ren();
+    check('cây: F2 mở ô đổi tên, chọn phần tên trước đuôi', rn && rn.v === 'README.md' && rn.f && rn.sel === 'README', JSON.stringify(rn));
+    await tp.keyboard.type('a/b'); await tp.keyboard.press('Enter'); await tp.waitForTimeout(80);
+    rn = await ren();
+    check('cây: tên sai thì toast lỗi, vẫn đang sửa', rn && rn.f && (await tp.isVisible('#toast')) && /cannot/.test(await tp.textContent('#toast')), JSON.stringify(rn));
+    await tp.keyboard.press('Escape');
+    check('cây: Esc bỏ sửa, tên giữ, focus về hàng', !(await ren()) && (await focusName(tp)) === 'README.md');
+    await tp.dblclick(row('old.md')); await tp.waitForTimeout(80);
+    rn = await ren();
+    check('cây: bấm đúp file mở ô đổi tên', rn && rn.v === 'old.md', JSON.stringify(rn));
+    await tp.keyboard.press('Control+A'); await tp.keyboard.type('older.md'); await tp.keyboard.press('Enter'); await tp.waitForTimeout(80);
+    check('cây: Enter lưu tên mới', !(await ren()) && (await nameOf(row('old.md'))) === 'older.md' && JSON.stringify(await tl()).includes('older.md'));
+
+    // Menu hàng: Move to… bỏ chính nó và hậu duệ; Top level gọi move(id, null).
+    await tp.hover(row('level-3'));
+    await tp.click(row('level-3') + ' >> .ma-trow__more'); await tp.waitForTimeout(80);
+    const mi = () => tp.$$eval('#tree-menu .ma-menu__i', (bs) => bs.map((b) => b.textContent + (b.disabled ? '(x)' : '')));
+    const m1 = await mi();
+    check('cây: menu folder có New file here, Rename, Move to…, Delete; focus mục đầu', m1.join('|') === 'New file here|New folder here|Rename|Move to…|Download .zip|Delete' && (await tp.evaluate(() => document.activeElement.textContent)) === 'New file here', m1.join('|'));
+    const cc = (await cornerClash(tp)).filter((x) => /tree|menu/.test(x));
+    check('cây: thân cây và menu cuộn không chạm góc bo (MDAN-018)', !cc.length, cc.join(', '));
+    await tp.click('#tree-menu >> text=Move to…'); await tp.waitForTimeout(50);
+    const m2 = await mi();
+    check('cây: Move to… liệt kê folder trừ chính nó và hậu duệ, folder hiện tại tắt', m2.join('|') === 'Back|Top level|archive|level-1|level-2(x)', m2.join('|'));
+    await tp.click('#tree-menu >> text=Top level'); await tp.waitForTimeout(80);
+    check('cây: chọn Top level gọi move(id, null), menu đóng', JSON.stringify(await tl()) === JSON.stringify(['move', await tp.evaluate(() => window.__tree.model.nodes.find((x) => x.name === 'level-3').id), null]) && !(await tp.isVisible('#tree-menu')));
+    await tp.focus(row('old.md')); await tp.keyboard.press('Delete');
+    check('cây: Delete gọi remove', (await tl())[0] === 'remove');
+    await tp.focus(row('old.md')); await tp.keyboard.press('Shift+F10');
+    const menuOpen = await tp.isVisible('#tree-menu');
+    await tp.keyboard.press('Escape');
+    check('cây: Shift+F10 mở menu, Esc đóng và trả focus', menuOpen && !(await tp.isVisible('#tree-menu')) && (await focusName(tp)) === 'older.md');
+
+    // Collapse all, rồi kéo thả bằng chuột (mọi hàng trong khung, không cuộn): lên folder → move; lên hậu duệ → không gọi.
+    await tp.click('#tree-collapse');
+    check('cây: Collapse all gọi collapseAll, chỉ còn hàng cấp 1', (await tl())[0] === 'collapseAll' && (await tp.$$eval('#tree-list .ma-trow', (ls) => ls.every((l) => l.getAttribute('aria-level') === '1'))));
+    await tp.click(row('level-1') + ' .ma-trow__chev'); await tp.waitForTimeout(50);
+    const nlog = () => tp.evaluate(() => window.__tree.log.length);
+    await tp.dragAndDrop(row('README.md'), row('archive')); await tp.waitForTimeout(80);
+    const mv = await tl();
+    check('cây: kéo README.md thả lên archive gọi move', mv[0] === 'move' && mv[2] === (await tp.evaluate(() => window.__tree.model.nodes.find((x) => x.name === 'archive').id)), JSON.stringify(mv));
+    const before = await nlog();
+    await tp.dragAndDrop(row('level-1'), row('level-2')); await tp.waitForTimeout(80);
+    check('cây: thả folder vào hậu duệ của nó thì không gọi move', (await nlog()) === before);
+    // File từ máy thả lên một folder: importDir(…, folder); thả ở vùng trống: cấp trên cùng.
+    const osDrop = (sel) => tp.evaluate((sel) => {
+      const dt = new DataTransfer(); dt.items.add(new File(['# A'], 'a.md', { type: 'text/markdown' }));
+      const el = document.querySelector(sel), r = el.getBoundingClientRect(), o = { bubbles: true, cancelable: true, dataTransfer: dt, clientX: r.left + 20, clientY: r.bottom - 4 };
+      const over = el.dispatchEvent(new DragEvent('dragover', o));
+      el.dispatchEvent(new DragEvent('drop', o));
+      return { accepted: !over, last: window.__tree.log.slice(-1)[0] };
+    }, sel);
+    const od1 = await osDrop(row('archive')), od2 = await osDrop('#tree-list');
+    check('cây: thả file từ máy lên folder / vùng trống gọi importDir đúng chỗ', od1.accepted && JSON.stringify(od1.last) === JSON.stringify(['importDir', ids.archive]) && JSON.stringify(od2.last) === JSON.stringify(['importDir', null]), JSON.stringify([od1, od2]));
+    await tp.setViewportSize({ width: 1440, height: 900 }); await tp.waitForTimeout(150);
+    check('cây: 1440 không tràn ngang', (await overflow(tp)) === 0, String(await overflow(tp)));
+    await tctx.close();
+
+    // Điện thoại 390: tấm trượt từ trái, chọn file thì đóng, cây về lưới.
+    const tm = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true, deviceScaleFactor: 2 });
+    const mp2 = await tm.newPage(); watch(mp2);
+    await mp2.goto(BASE); await mp2.waitForFunction(() => window.marked && window.DOMPurify);
+    await mp2.tap('#btn-sample'); await mp2.waitForTimeout(150);
+    await mp2.evaluate(treeDemo, false); await mp2.waitForTimeout(150);
+    check('cây 390: cột không hiện, nút có, không tràn ngang', !(await tstate(mp2)).shown && (await tstate(mp2)).btn && (await overflow(mp2)) === 0, String(await overflow(mp2)));
+    await mp2.tap('#btn-tree'); await mp2.waitForTimeout(300);
+    const sh = await mp2.evaluate(() => { const d = document.getElementById('dlg-tree'), r = document.getElementById('tree').getBoundingClientRect(), row = document.querySelector('#tree-list .ma-trow').getBoundingClientRect(), more = document.querySelector('#tree-list .ma-trow__more').getBoundingClientRect();
+      return { open: d.open, inDlg: d.contains(document.getElementById('tree')), left: Math.round(r.left), w: Math.round(r.width), rowH: Math.round(row.height), more: Math.round(more.width), exp: document.getElementById('btn-tree').getAttribute('aria-expanded') }; });
+    check('cây 390: nút mở tấm trượt từ mép trái, hàng ≥ 44px, ⋯ luôn hiện', sh.open && sh.inDlg && sh.left === 0 && sh.w <= 390 && sh.rowH >= 44 && sh.more >= 44 && sh.exp === 'true', JSON.stringify(sh));
+    check('cây 390: tấm không tràn ngang', (await overflow(mp2)) === 0 && (await mp2.$eval('#dlg-tree', (d) => Math.max(d.scrollWidth - d.clientWidth, document.getElementById('tree').scrollWidth - document.getElementById('tree').clientWidth))) <= 0);
+    await mp2.tap(row('README.md')); await mp2.waitForTimeout(300);
+    const after = await mp2.evaluate(() => ({ open: document.getElementById('dlg-tree').open, home: document.getElementById('tree').parentNode === document.body, last: window.__tree.log.slice(-1)[0][0] }));
+    check('cây 390: chạm file thì mở file, đóng tấm, cây về chỗ cũ (con của body)', !after.open && after.home && after.last === 'open', JSON.stringify(after));
+    await tm.close();
+  }
+
+  /* ---------- Cây file nối vào phiên thật: phiên cũ nâng tại chỗ, file / folder mới, đổi tên, kéo chuyển, xoá + Undo,
+     nhận xét tách theo file, prompt All files, nạp folder 7 tầng, .zip, Ctrl+B, tấm trượt ở điện thoại ---------- */
+  {
+    const fs = require('fs'), os = require('os'), path = require('path'), { spawnSync } = require('child_process');
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'ma-tree-'));
+    const ready = (p) => p.waitForFunction(() => window.marked && window.DOMPurify);
+    const paste = (p, t) => p.evaluate((t) => { const ta = document.getElementById('src-input'); ta.focus(); ta.dispatchEvent(new Event('paste')); ta.value = t; ta.dispatchEvent(new Event('input')); }, t);
+    const rows = (p) => p.$$eval('#tree-list .ma-trow', (ls) => ls.map((l) => l.getAttribute('aria-level') + ':' + (l.querySelector('.ma-trow__name') || {}).textContent + (l.getAttribute('aria-selected') === 'true' ? '*' : '')));
+    const rowOf = (name) => `#tree-list .ma-trow:has(> .ma-trow__name:text-is("${name}"))`;
+    const comment = async (p, needle, text) => { await dragSelect(p, '#v-md', needle); await p.keyboard.type(text); await p.keyboard.press('Enter'); await p.waitForTimeout(150); };
+    const marks = (p) => p.$$eval('#v-md mark.ma-hl', (ms) => ms.map((m) => m.textContent).join('|'));
+    const treeOn = (p) => p.evaluate(() => !!document.getElementById('tree').getClientRects().length);
+    const toastText = (p) => p.$eval('#toast', (t) => (t.hidden ? '' : t.textContent));
+
+    // 1. Phiên cũ (chữ ở gốc, path là tên file): nâng tại chỗ thành một file; prompt y hệt từng byte như bản trước
+    //    (chuỗi dưới đây chép từ bản trước khi có cây, cùng phiên này).
+    const lc = await browser.newContext({ viewport: { width: 1440, height: 900 }, colorScheme: 'light' });
+    const lp = await lc.newPage(); watch(lp);
+    await lp.goto(BASE); await ready(lp);
+    await lp.evaluate(async () => {
+      const R = await import('./js/core/review.js'), B = await import('./js/core/blocks.js');
+      const text = '# Cũ\n\nMột câu cũ.\n\nCâu hai còn đây.\n';
+      const units = R.reviewUnits(text, B.lexSpans(text, (t) => window.marked.lexer(t, { gfm: true })));
+      localStorage.setItem('md-annotate:s:leg1', JSON.stringify({ id: 'leg1', name: 'Phiên cũ', named: true, created: 1, updated: 2, header: '', footer: '', fmt: 'inline',
+        includeDoc: false, lineNums: true, rvPrompt: true, path: 'notes/a.md', text,
+        comments: [{ id: 'c1', quote: 'Một câu cũ.', comment: 'Viết gọn lại', origin: 'src', prefix: '', suffix: '', rel: 0.3, created: 1 }],
+        reviews: [R.makeMark(units, 1)], rvPct: 33 }));
+      localStorage.setItem('md-annotate:index:v1', JSON.stringify([{ id: 'leg1', name: 'Phiên cũ', created: 1, updated: 2, chars: text.length, count: 1, rv: 33 }]));
+      localStorage.setItem('md-annotate:current', JSON.stringify('leg1'));
+    });
+    await lp.goto(BASE); await ready(lp); await lp.waitForTimeout(400);
+    const OLD = 'Vị trí ghi dạng tệp:dòng, tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.\nĐã đọc kỹ: notes/a.md:3; chỗ nào không có nhận xét là ổn. Chưa đọc: notes/a.md:1, notes/a.md:5.\n\n1. notes/a.md:3 "Một câu cũ." — Viết gọn lại';
+    check('phiên cũ: prompt y hệt từng byte sau khi nâng', (await out(lp)) === OLD, JSON.stringify(await out(lp)));
+    await openOpts(lp); await lp.check('#inc-doc'); await lp.uncheck('#inc-doc'); await lp.waitForTimeout(500);   // một lần lưu
+    const up = await lp.evaluate(() => { const s = JSON.parse(localStorage.getItem('md-annotate:s:leg1')); const d = s.docs && s.docs[s.open];
+      return { nodes: s.nodes && s.nodes.map((n) => n.name), path: s.path, text: d && d.text, nc: d && d.comments.length, nrv: d && d.reviews.length, legacy: 'text' in s }; });
+    check('phiên cũ: một file a.md, ô Folder là notes/, chữ, nhận xét, dấu đã đọc còn', up.nodes && up.nodes.join() === 'a.md' && up.path === 'notes/' && up.text === '# Cũ\n\nMột câu cũ.\n\nCâu hai còn đây.\n' && up.nc === 1 && up.nrv === 1
+      && (await lp.inputValue('#p-path')) === 'notes/' && (await items(lp)).length === 1 && (await lp.textContent('#n-review')) === '33%', JSON.stringify([up, await lp.textContent('#n-review')]));
+    check('phiên cũ: một file thì cây ẩn mặc định, nút có', !(await treeOn(lp)) && (await lp.isVisible('#btn-tree')));
+    await lc.close();
+
+    // 2. Hai file: file mới, đổi tên, nhận xét tách theo file, chuyển file giữ chế độ xem, prompt All files.
+    const fc = await browser.newContext({ viewport: { width: 1440, height: 900 }, colorScheme: 'light', acceptDownloads: true });
+    const fp = await fc.newPage(); watch(fp);
+    await fp.goto(BASE); await ready(fp);
+    await paste(fp, '# Tệp A\n\nCâu riêng của A.\n'); await fp.waitForTimeout(200);
+    await fp.click('.ma-tab[data-view="view"]');
+    await comment(fp, 'Câu riêng của A.', 'sửa A');
+    await fp.evaluate(() => document.activeElement && document.activeElement.blur());
+    await fp.keyboard.press('Control+B'); await fp.waitForTimeout(150);
+    check('cây thật: Ctrl+B hiện cây một file', (await treeOn(fp)) && (await rows(fp)).join() === '1:untitled.md*', JSON.stringify(await rows(fp)));
+    await fp.click('#tree-new-file'); await fp.waitForTimeout(150);
+    const ren = await fp.evaluate(() => { const i = document.querySelector('#tree-list .ma-trow__ren'); return i && document.activeElement === i ? i.value : null; });
+    await fp.keyboard.press('Control+A'); await fp.keyboard.type('b.md'); await fp.keyboard.press('Enter'); await fp.waitForTimeout(150);
+    check('cây thật: New file tạo untitled-2.md, mở nó, đổi tên tại chỗ thành b.md', ren === 'untitled-2.md' && (await rows(fp)).join() === '1:b.md*,1:untitled.md' && (await fp.inputValue('#src-input')) === '' && (await fp.isVisible('#start')), JSON.stringify([ren, await rows(fp)]));
+    await paste(fp, '# Tệp B\n\nCâu riêng của B.\n'); await fp.waitForTimeout(200);
+    await comment(fp, 'Câu riêng của B.', 'sửa B');
+    check('cây thật: file B có nhận xét của nó', (await items(fp)).length === 1 && /sửa B/.test((await items(fp))[0]) && (await marks(fp)) === 'Câu riêng của B.', JSON.stringify([await items(fp), await marks(fp)]));
+    await fp.click('.ma-tab[data-view="src"]');
+    await fp.click(rowOf('untitled.md')); await fp.waitForTimeout(200);
+    const swA = { items: await items(fp), mode: await fp.$eval('#views', (v) => v.dataset.mode), src: await fp.$eval('#v-src', (e) => e.textContent), cnt: await fp.$eval(rowOf('b.md'), (l) => l.getAttribute('aria-label')) };
+    check('cây thật: sang file A — chỉ nhận xét của A, vẫn ở Source, cây đếm nhận xét của B', swA.items.length === 1 && /sửa A/.test(swA.items[0]) && swA.mode === 'src' && swA.src.startsWith('# Tệp A') && /1 comment/.test(swA.cnt), JSON.stringify(swA));
+    await fp.click('.ma-tab[data-view="view"]'); await fp.click(rowOf('b.md')); await fp.waitForTimeout(200);
+    check('cây thật: về file B — highlight của B, không của A', (await marks(fp)) === 'Câu riêng của B.' && (await items(fp)).length === 1, await marks(fp));
+    await openOpts(fp);
+    check('cây thật: hai file thì có ô All files', await fp.isVisible('#all-row'));
+    const one = await out(fp);
+    await fp.check('#p-all'); await fp.waitForTimeout(100);
+    const all = await out(fp);
+    check('cây thật: All files gom cả hai file, nhãn từng file, số chạy tiếp', !/untitled\.md/.test(one) && /## Tệp b\.md\n\n1\. b\.md:3 "Câu riêng của B\." — sửa B/.test(all) && /## Tệp untitled\.md\n\n2\. untitled\.md:3 "Câu riêng của A\." — sửa A/.test(all) && /all files/.test(await fp.textContent('#opts-sum')), JSON.stringify([one, all]));
+    check('cây thật: Comments chỉ liệt kê file đang mở, chân panel đếm cả hai', (await items(fp)).length === 1 && /2 comments/.test(await fp.textContent('#foot-n')));
+
+    // Folder mới, kéo b.md vào folder, nhãn prompt theo đường dẫn mới; xoá folder rồi Undo.
+    await fp.click(rowOf('untitled.md')); await fp.waitForTimeout(150);
+    await fp.click('#tree-new-dir'); await fp.waitForTimeout(150);
+    await fp.keyboard.press('Control+A'); await fp.keyboard.type('docs'); await fp.keyboard.press('Enter'); await fp.waitForTimeout(150);
+    await fp.dragAndDrop(rowOf('b.md'), rowOf('docs')); await fp.waitForTimeout(250);
+    check('cây thật: kéo b.md thả lên docs — chuyển vào folder, prompt ghi docs/b.md', (await rows(fp)).join() === '1:docs,2:b.md,1:untitled.md*' && /## Tệp docs\/b\.md\n\n1\. docs\/b\.md:3/.test(await out(fp)) && /Moved b\.md to docs/.test(await toastText(fp)), JSON.stringify([await rows(fp), await toastText(fp)]));
+    await fp.click(rowOf('b.md')); await fp.waitForTimeout(150);
+    await fp.focus(rowOf('docs')); await fp.keyboard.press('Delete'); await fp.waitForTimeout(200);
+    const del = { rows: await rows(fp), toast: await toastText(fp), items: await items(fp) };
+    check('cây thật: xoá folder đang chứa file mở — không hỏi, mở file kế bên, toast có Undo', del.rows.join() === '1:untitled.md*' && del.toast.startsWith('Deleted folder docs (1 file).') && /sửa A/.test(del.items.join()) && await fp.isVisible('.ma-toast__btn'), JSON.stringify(del));
+    await fp.click('.ma-toast__btn'); await fp.waitForTimeout(250);
+    check('cây thật: Undo trả folder, file và nhận xét, mở lại file cũ', (await rows(fp)).join() === '1:docs,2:b.md*,1:untitled.md' && /sửa B/.test((await items(fp)).join()) && /docs\/b\.md:3 "Câu riêng của B\." — sửa B/.test(await out(fp)), JSON.stringify(await rows(fp)));
+    await fp.click(rowOf('untitled.md')); await fp.waitForTimeout(150);
+    await fp.fill('#p-path', 'repo/'); await fp.waitForTimeout(100);
+    check('cây thật: ô Folder là tiền tố của mọi nhãn', /## Tệp repo\/docs\/b\.md/.test(await out(fp)) && /repo\/untitled\.md:3/.test(await out(fp)));
+    await fp.fill('#p-path', '');
+
+    // Mở file từ đĩa khi file đang mở có chữ: thêm cạnh nó (cùng folder) và mở; không ghi ô Folder.
+    await fp.click(rowOf('b.md')); await fp.waitForTimeout(150);
+    await fp.setInputFiles('#file-in', { name: 'c.md', mimeType: 'text/markdown', buffer: Buffer.from('# C\n\nCâu của C.\n') });
+    await fp.waitForTimeout(300);
+    check('cây thật: mở file từ đĩa thêm vào cùng folder với file đang mở', (await rows(fp)).join() === '1:docs,2:b.md,2:c.md*,1:untitled.md' && (await fp.inputValue('#p-path')) === '' && (await items(fp)).length === 0, JSON.stringify(await rows(fp)));
+
+    // Tải: một file .md, folder .zip, cả phiên .zip (đọc bằng Python zipfile).
+    const dl = async (fn) => { const [d] = await Promise.all([fp.waitForEvent('download'), fn()]); const f = path.join(tmp, d.suggestedFilename()); await d.saveAs(f); return f; };
+    const fmd = await dl(async () => { await fp.click(rowOf('c.md'), { button: 'right' }); await fp.click('#tree-menu >> text=Download'); });
+    check('cây thật: Download một file — tên và chữ của nó', path.basename(fmd) === 'c.md' && fs.readFileSync(fmd, 'utf8') === '# C\n\nCâu của C.\n');
+    const zipCheck = (f) => { const r = spawnSync('python3', ['-I', '-c', 'import sys, json, zipfile\nz = zipfile.ZipFile(sys.argv[1])\nprint(json.dumps({"bad": z.testzip(), "names": z.namelist(), "b": z.read(z.namelist()[0]).decode()}))', f]); try { return JSON.parse(r.stdout.toString()); } catch (e) { return { err: r.stderr.toString() }; } };
+    const fz = await dl(async () => { await fp.click(rowOf('docs'), { button: 'right' }); await fp.click('#tree-menu >> text=Download .zip'); });
+    const zd = zipCheck(fz);
+    check('cây thật: Download .zip của folder — zip hợp lệ, chỉ cây con', path.basename(fz) === 'docs.zip' && zd.bad === null && zd.names.join() === 'docs/b.md,docs/c.md' && zd.b === '# Tệp B\n\nCâu riêng của B.\n', JSON.stringify([path.basename(fz), zd]));
+    const fa = await dl(() => fp.click('#tree-zip'));
+    const za = zipCheck(fa);
+    check('cây thật: .zip cả phiên — tên theo tên phiên, đủ file', /^[a-z0-9-]+\.zip$/.test(path.basename(fa)) && za.bad === null && za.names.join() === 'docs/b.md,docs/c.md,untitled.md', JSON.stringify([path.basename(fa), za]));
+
+    // History: hàng ghi số file; mở lại phiên vẽ lại cây.
+    await fp.click('#btn-hist');
+    check('cây thật: History ghi "3 files"', /3 files ·/.test(await fp.textContent('#hist-list .ma-row.is-cur')), await fp.textContent('#hist-list .ma-row.is-cur'));
+    await fp.keyboard.press('Escape');
+    await fp.keyboard.press('Control+B'); await fp.waitForTimeout(150);
+    check('cây thật: Ctrl+B ẩn cây, nhớ prefs.tree', !(await treeOn(fp)) && (await fp.evaluate(() => JSON.parse(localStorage.getItem('md-annotate:prefs:v1')).tree)) === false);
+
+    // 3. Nạp folder 7 tầng (ô chọn folder): bỏ mục ẩn, node_modules, ảnh, file > 1 MB; phiên trống thì folder là cả phiên.
+    const root = path.join(tmp, 'proj');
+    const put = (rel, data) => { fs.mkdirSync(path.dirname(path.join(root, rel)), { recursive: true }); fs.writeFileSync(path.join(root, rel), data); };
+    put('a/b/c/d/e/f/g/deep.md', '# Sâu\n\nCâu ở tầng bảy.\n'); put('readme.md', '# Proj\n'); put('notes.txt', 'plain\n');
+    put('.git/config.md', 'x'); put('node_modules/m/readme.md', 'x'); put('logo.png', Buffer.from([0x89, 0x50, 0x4e, 0x47, 0, 1, 2, 3])); put('big.md', 'x'.repeat(1100000));
+    await fp.click('#btn-new'); await fp.waitForTimeout(150);
+    await fp.setInputFiles('#tree-dir-in', root); await fp.waitForTimeout(600);
+    const imp = { rows: await rows(fp), toast: await toastText(fp), title: await fp.textContent('#tree-title'), on: await treeOn(fp) };
+    check('nạp folder: phiên trống thành folder proj, 9 tầng, tên phiên, cây hiện', imp.rows.join() === '1:proj,2:a,3:b,4:c,5:d,6:e,7:f,8:g,9:deep.md,2:notes.txt,2:readme.md*' && imp.title === 'proj' && imp.on, JSON.stringify(imp));
+    check('nạp folder: toast "Imported 3 files, skipped 2." (ẩn và node_modules bỏ không đếm)', imp.toast === 'Imported 3 files, skipped 2.', imp.toast);
+    check('nạp folder: readme.md (nông nhất, README trước) mở ở chế độ đọc (MDAN-031)', (await fp.isVisible('#v-md h1')) && (await fp.textContent('#v-md h1')) === 'Proj' && imp.rows.includes('2:readme.md*'), JSON.stringify(imp.rows));
+    check('nạp folder: cây hiện mà không ghi prefs.tree (MDAN-032)', imp.on && (await fp.evaluate(() => JSON.parse(localStorage.getItem('md-annotate:prefs:v1')).tree)) === false);
+    await fp.setInputFiles('#tree-dir-in', path.join(root, 'a', 'b', 'c')); await fp.waitForTimeout(500);
+    check('nạp folder lần hai: vào gốc cạnh proj, file mở giữ nguyên', (await rows(fp)).slice(0, 2).join() === '1:c,2:d' && (await rows(fp)).some((r) => r.endsWith('readme.md*')), JSON.stringify(await rows(fp)));
+    await fp.reload(); await ready(fp); await fp.waitForTimeout(200);
+    check('nạp folder: tải lại vẫn còn cây và file mở; cây theo prefs.tree (ẩn)', (await rows(fp)).filter((r) => r.endsWith('*')).join() === '2:readme.md*' && (await fp.textContent('#v-md h1')) === 'Proj' && !(await treeOn(fp)), JSON.stringify(await rows(fp)));
+    check('cây thật: 1440 không tràn ngang', (await overflow(fp)) === 0);
+    await fc.close();
+
+    // 4. Điện thoại 390: tấm trượt trái với phiên thật, chạm file thì mở, đóng tấm.
+    const mc = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true, deviceScaleFactor: 2 });
+    const mp3 = await mc.newPage(); watch(mp3);
+    await mp3.goto(BASE); await ready(mp3);
+    await mp3.setInputFiles('#tree-dir-in', path.join(root, 'a', 'b', 'c', 'd', 'e')); await mp3.waitForTimeout(500);
+    check('điện thoại: nạp folder, cây không chiếm cột, không tràn ngang', !(await treeOn(mp3)) && (await overflow(mp3)) === 0);
+    await mp3.tap('#btn-tree'); await mp3.waitForTimeout(300);
+    const msh = await mp3.evaluate(() => ({ open: document.getElementById('dlg-tree').open, n: document.querySelectorAll('#dlg-tree .ma-trow').length }));
+    check('điện thoại: tấm trượt có cây thật', msh.open && msh.n === 4, JSON.stringify(msh));
+    await mp3.evaluate(() => { const r = [...document.querySelectorAll('#tree-list .ma-trow')].find((l) => l.textContent.includes('deep.md')); r.scrollIntoView(); });
+    await mp3.tap(rowOf('deep.md')); await mp3.waitForTimeout(300);
+    check('điện thoại: chạm file thì mở nó, đóng tấm', !(await mp3.evaluate(() => document.getElementById('dlg-tree').open)) && /Câu ở tầng bảy/.test(await mp3.textContent('#v-md')));
+    await mc.close();
+    fs.rmSync(tmp, { recursive: true, force: true });
+  }
+
+  /* ---------- Cây docked hay tấm trượt (core/panes.js treeDocks): cột trái chỉ khi #doc nhường cây xong vẫn đủ chỗ cho chế
+     độ đọc đã chọn (Split: hai khung 420px + vách = 849; khác: READ_MIN 580); không thì tấm trượt trái, ở mọi bề rộng. ---------- */
+  {
+    /* Phiên thật hai file; prefs: chế độ đọc, panel thu gọn; prefs.tree chưa chọn (mặc định hiện vì ≥ 2 mục). */
+    const seed = ([view, rail, extra]) => {
+      const text = '# Doc\n\n' + Array.from({ length: 30 }, (_, i) => 'Paragraph ' + i + ' with enough words to wrap across the preview line.').join('\n\n');
+      const s = { id: 'dk1', name: 'Dock', named: true, created: 1, updated: 2, open: 'a', collapsed: [],
+        nodes: [{ id: 'a', parent: null, kind: 'file', name: 'a.md' }, { id: 'b', parent: null, kind: 'file', name: 'b.md' }],
+        docs: { a: { text, comments: [], reviews: [] }, b: { text: '# B\n\nSecond file.\n', comments: [], reviews: [] } } };
+      localStorage.setItem('md-annotate:s:dk1', JSON.stringify(s));
+      localStorage.setItem('md-annotate:index:v1', JSON.stringify([{ id: 'dk1', name: 'Dock', created: 1, updated: 2, chars: 10, count: 0 }]));
+      localStorage.setItem('md-annotate:current', JSON.stringify('dk1'));
+      localStorage.setItem('md-annotate:prefs:v1', JSON.stringify({ view, rail, ...(extra || {}) }));
+    };
+    const dst = (p) => p.evaluate(() => {
+      const b = document.getElementById('btn-tree'), t = document.getElementById('tree'), d = document.getElementById('doc');
+      return { dock: document.documentElement.classList.contains('ma-tree-on'), col: !!t.getClientRects().length && t.parentNode === document.body,
+        doc: d.clientWidth, w: Math.round(t.getBoundingClientRect().width), mode: document.getElementById('views').dataset.mode, lbl: b.title, aria: b.getAttribute('aria-label'),
+        exp: b.getAttribute('aria-expanded'), pop: b.getAttribute('aria-haspopup'), drawer: document.getElementById('dlg-tree').open,
+        pref: JSON.parse(localStorage.getItem('md-annotate:prefs:v1') || '{}').tree };
+    });
+    /* Mở trang với phiên trên; init: script chạy trước mọi script của trang (đo chớp). */
+    const at = async (w, view, rail, extra, init) => {
+      const c = await browser.newContext({ viewport: { width: w, height: 900 }, colorScheme: 'light' });
+      const p = await c.newPage(); watch(p);
+      await p.goto(BASE); await p.evaluate(seed, [view, rail, extra]);
+      if (init) await p.addInitScript(init);
+      await p.goto(BASE); await p.waitForFunction(() => window.marked && window.DOMPurify); await p.waitForTimeout(250);
+      return { c, p };
+    };
+    const docked = (s) => s.dock && s.col && s.lbl === 'Hide files' && s.aria === 'Hide files' && s.exp === 'true' && s.pop === null;
+    const drawer = (s) => !s.dock && !s.col && s.lbl === 'Files' && s.aria === 'Files' && s.pop === 'dialog' && s.exp === String(s.drawer);
+
+    let { c, p } = await at(2560, 'split', false);
+    let s = await dst(p);
+    check('cây docked: 2560 Split, panel mở — cột cạnh Split (#doc ≥ 849)', docked(s) && s.mode === 'split' && s.doc >= 849 && (await overflow(p)) === 0, JSON.stringify(s));
+    // Settings: vùng làm việc 50% (1280px) thì hết chỗ cho Split cạnh cây: tấm trượt; trả lại Auto thì docked.
+    const range = (v) => p.evaluate((v) => { const r = document.getElementById('set-wrap'); r.value = v; r.dispatchEvent(new Event('input', { bubbles: true })); }, v);
+    await p.click('#btn-layout'); await range(50); await p.waitForTimeout(150);
+    const s50 = await dst(p);
+    await p.keyboard.press('Escape'); await p.evaluate(() => { const x = JSON.parse(localStorage.getItem('md-annotate:prefs:v1')); delete x.wrap; localStorage.setItem('md-annotate:prefs:v1', JSON.stringify(x)); });
+    await p.reload(); await p.waitForFunction(() => window.marked && window.DOMPurify); await p.waitForTimeout(200);
+    check('cây docked: Settings bề rộng 50% thì tấm trượt, Split giữ; Auto thì docked lại', drawer(s50) && s50.mode === 'split' && docked(await dst(p)), JSON.stringify(s50));
+    await c.close();
+
+    /* Đo chớp khi nạp (dùng ở dưới). */
+    const spy = () => {
+      window.__seen = false;
+      new MutationObserver(() => { if (document.documentElement && document.documentElement.classList.contains('ma-tree-on')) window.__seen = true; })
+        .observe(document, { attributes: true, attributeFilter: ['class'], subtree: true });
+      document.addEventListener('DOMContentLoaded', () => { window.__dcl = document.documentElement.classList.contains('ma-tree-on'); });
+    };
+    /* Cột ở mép trái màn hình (MDAN-037): x = 0, từ đáy thanh trên tới đáy khung nhìn (≤ 1080px: tới đỉnh thanh đáy); vùng
+       làm việc căn giữa phần còn lại, phần trong thanh trên thẳng hàng với nó, nền thanh trên trọn bề ngang; không đè panel,
+       dải tiến độ; thanh trên nằm trên cây. */
+    const geo = (p) => p.evaluate(() => {
+      const R = (el) => el.getBoundingClientRect(), cw = document.documentElement.clientWidth, tree = document.getElementById('tree');
+      const t = R(tree), m = R(document.querySelector('main')), bin = R(document.querySelector('.ma-bar__in')), bar = R(document.querySelector('.ma-bar'));
+      const pn = document.getElementById('panel'), mm = [...document.querySelectorAll('.ma-mm')].filter((x) => x.getClientRects().length).map((x) => R(x).left);
+      const dock = document.getElementById('dock'), dk = dock.getClientRects().length ? R(dock).top : null;
+      const hit = document.elementFromPoint(t.left + t.width / 2, t.top + t.height / 2), top = document.elementFromPoint(t.left + 10, bar.top + 10);
+      return { tl: t.left, tt: t.top, tb: t.bottom, tr: t.right, barB: bar.bottom, barL: bar.left, barW: bar.width, vh: innerHeight, cw,
+        gapL: m.left - t.right, gapR: cw - m.right, binL: bin.left - m.left, binR: bin.right - m.right, panelL: pn.getClientRects().length ? R(pn).left : null,
+        mm, dockT: dk, inTree: tree.contains(hit), barOver: !!top && !!top.closest('.ma-bar'), ov: document.documentElement.scrollWidth - cw };
+    });
+    const edgeOK = (g) => g.tl === 0 && Math.abs(g.tt - g.barB) <= 0.5 && (g.dockT == null ? g.tb === g.vh : g.tb <= g.dockT) && Math.abs(g.gapL - g.gapR) <= 1
+      && Math.abs(g.binL) <= 1 && Math.abs(g.binR) <= 1 && g.barL === 0 && g.barW === g.cw && (g.panelL == null || g.panelL >= g.tr) && g.mm.every((x) => x >= g.tr)
+      && g.inTree && g.barOver && g.ov === 0;
+
+    for (const w of [1920, 2560]) {
+      ({ c, p } = await at(w, 'split', false));
+      s = await dst(p);
+      const g = await geo(p);
+      check(`cây docked ${w}: Split, panel mở — cột ở mép trái (x = 0), từ đáy thanh trên tới đáy khung nhìn; vùng làm việc căn giữa phần còn lại; thanh trên thẳng hàng; không đè panel, dải tiến độ`,
+        docked(s) && s.mode === 'split' && s.doc === (w === 1920 ? 854 : 1192) && edgeOK(g), JSON.stringify({ s, g }));
+      await p.click('.ma-tab[data-view="view"]'); await p.waitForTimeout(200);
+      const gv = await geo(p);
+      check(`cây docked ${w}: Preview (trang cuộn) — vẫn ở mép trái, trọn chiều cao, dải tiến độ không chạm cây`, edgeOK(gv) && gv.mm.length > 0, JSON.stringify(gv));
+      await p.evaluate(() => window.scrollTo(0, 600)); await p.waitForTimeout(100);
+      const gs = await geo(p);
+      check(`cây docked ${w}: cuộn trang thì cây đứng yên dưới thanh trên`, gs.tt === gv.tt && gs.tb === gv.tb && gs.tl === 0, JSON.stringify(gs));
+      await c.close();
+    }
+
+    // Không chớp khi nạp: 1440 Split, panel mở — cột cây không lần nào có mặt; 1920, 2560 thì đã quyết docked trước DOMContentLoaded.
+    ({ c, p } = await at(1440, 'split', false, null, spy));
+    s = await dst(p);
+    check('cây tấm trượt: 1440 Split, panel mở — #doc 854 giữ Split, nút "Files"', drawer(s) && !s.drawer && s.mode === 'split' && s.doc === 854, JSON.stringify(s));
+    check('cây tấm trượt: lúc nạp cột cây không lần nào hiện (không chớp)', (await p.evaluate(() => window.__seen)) === false && (await p.evaluate(() => window.__dcl)) === false);
+    // Nút và Ctrl+B ở chế độ tấm trượt: chỉ mở / đóng tấm, không đổi prefs.tree.
+    await p.click('#btn-tree'); await p.waitForTimeout(250);
+    s = await dst(p);
+    const inDlg = await p.evaluate(() => document.getElementById('dlg-tree').contains(document.getElementById('tree')));
+    check('cây tấm trượt: bấm nút mở tấm trái, aria-expanded true, prefs.tree không đổi', s.drawer && inDlg && s.exp === 'true' && s.pref === undefined, JSON.stringify(s));
+    await p.click('#tree-list .ma-trow[data-id="b"]'); await p.waitForTimeout(250);
+    s = await dst(p);
+    check('cây tấm trượt: chọn file thì mở nó, đóng tấm, cây về chỗ cũ (ẩn)', !s.drawer && !s.col && /Second file/.test(await p.textContent('#v-md')) && s.exp === 'false', JSON.stringify(s));
+    await p.evaluate(() => document.activeElement && document.activeElement.blur());
+    await p.keyboard.press('Control+B'); await p.waitForTimeout(200);
+    const kb = await dst(p);
+    await p.keyboard.press('Control+B'); await p.waitForTimeout(200);
+    check('cây tấm trượt: Ctrl+B mở tấm, lần nữa đóng; prefs.tree không đổi', kb.drawer && kb.pref === undefined && !(await dst(p)).drawer && (await dst(p)).pref === undefined, JSON.stringify(kb));
+    // Thu panel thành thanh dọc: đủ chỗ, docked (#doc 1070 cạnh cây); mở panel lại: tấm trượt.
+    await p.click('#btn-rail'); await p.waitForTimeout(200);
+    s = await dst(p);
+    check('cây docked: 1440 thanh dọc — cột cạnh Split (#doc 1070)', docked(s) && s.mode === 'split' && s.doc === 1070 && edgeOK(await geo(p)), JSON.stringify(s));
+    await p.click('#btn-unrail'); await p.waitForTimeout(200);
+    check('cây tấm trượt: mở panel lại thì tấm trượt, Split giữ', drawer(await dst(p)) && (await dst(p)).mode === 'split', JSON.stringify(await dst(p)));
+    // Đổi cỡ cửa sổ: tấm đang mở, cửa sổ rộng ra đủ chỗ thì tấm đóng, cây thành cột.
+    await p.click('#btn-tree'); await p.waitForTimeout(200);
+    await p.setViewportSize({ width: 1920, height: 900 }); await p.waitForTimeout(250);
+    s = await dst(p);
+    check('cây docked: tấm mở, cửa sổ 1920 — tấm đóng, cây thành cột', docked(s) && !s.drawer && s.mode === 'split', JSON.stringify(s));
+    await p.setViewportSize({ width: 1440, height: 900 }); await p.waitForTimeout(250);
+    check('cây tấm trượt: hẹp lại 1440 — thành tấm trượt, Split giữ', drawer(await dst(p)) && (await dst(p)).mode === 'split');
+    // Ctrl+B ở chế độ docked đổi prefs.tree (như trước).
+    await p.setViewportSize({ width: 2560, height: 900 }); await p.waitForTimeout(250);
+    await p.keyboard.press('Control+B'); await p.waitForTimeout(150);
+    s = await dst(p);
+    check('cây docked: Ctrl+B ẩn cột, lưu prefs.tree = false', !s.dock && s.pref === false && s.lbl === 'Show files' && s.exp === 'false', JSON.stringify(s));
+    await c.close();
+
+    for (const w of [1920, 2560]) {
+      ({ c, p } = await at(w, 'split', false, null, spy));
+      check(`cây docked: ${w} lúc nạp — đã docked trước DOMContentLoaded`, (await p.evaluate(() => window.__dcl)) === true && docked(await dst(p)));
+      await c.close();
+    }
+
+    ({ c, p } = await at(1280, 'split', false));
+    s = await dst(p);
+    check('cây tấm trượt: 1280 Split — tấm trượt, Split giữ (#doc 854)', drawer(s) && s.mode === 'split' && s.doc === 854 && (await overflow(p)) === 0, JSON.stringify(s));
+    await c.close();
+
+    ({ c, p } = await at(1440, 'view', false));
+    s = await dst(p);
+    check('cây docked: 1440 Preview — cột cạnh Preview, #doc 766 ≥ 580', docked(s) && s.mode === 'view' && s.doc === 766 && edgeOK(await geo(p)), JSON.stringify(s));
+    check('cây docked: tab Split vẫn có (chọn thì cây nhường chỗ)', await p.isVisible('#tab-split'));
+    // Đổi chế độ đọc: xét lại ngay.
+    await p.click('#tab-split'); await p.waitForTimeout(200);
+    s = await dst(p);
+    check('cây: chọn Split ở 1440 — cây sang tấm trượt, Split hiện', drawer(s) && s.mode === 'split' && s.doc === 854, JSON.stringify(s));
+    await p.click('.ma-tab[data-view="src"]'); await p.waitForTimeout(200);
+    s = await dst(p);
+    check('cây: chọn Source — cây docked lại', docked(s) && s.mode === 'src', JSON.stringify(s));
+    await p.click('.ma-tab[data-view="edit"]'); await p.waitForTimeout(200);
+    check('cây: Edit giữ theo chế độ đọc trước (Source): vẫn docked', docked(await dst(p)));
+    await p.click('.ma-tab[data-view="view"]'); await p.waitForTimeout(150);
+    // Kéo mép cây: 1440 còn chỗ tới 420px (trần), vùng làm việc vẫn căn giữa phần còn lại.
+    let gb = await p.$eval('#tree-grip', (g) => { const r = g.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; });
+    await p.mouse.move(gb.x, gb.y); await p.mouse.down(); await p.mouse.move(gb.x + 200, gb.y, { steps: 5 }); await p.mouse.up(); await p.waitForTimeout(150);
+    s = await dst(p);
+    check('cây docked: 1440 kéo mép rộng thêm 200px dừng ở 420px, #doc 594, vẫn ở mép trái, căn giữa', docked(s) && s.w === 420 && s.doc === 594 && edgeOK(await geo(p)), JSON.stringify(s));
+    await c.close();
+
+    // 1280 Preview: kéo mép dừng ở chỗ còn lại (1280 − 426 − 580 = 274), không đẩy cây sang tấm trượt.
+    ({ c, p } = await at(1280, 'view', false));
+    s = await dst(p);
+    check('cây docked: 1280 Preview — #doc 606', docked(s) && s.doc === 606 && edgeOK(await geo(p)), JSON.stringify(s));
+    gb = await p.$eval('#tree-grip', (g) => { const r = g.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; });
+    await p.mouse.move(gb.x, gb.y); await p.mouse.down(); await p.mouse.move(gb.x + 200, gb.y, { steps: 5 }); await p.mouse.up(); await p.waitForTimeout(150);
+    s = await dst(p);
+    check('cây docked: 1280 kéo mép rộng thêm 200px dừng ở 274px, #doc 580, vẫn docked', docked(s) && s.w === 274 && s.doc === 580, JSON.stringify(s));
+    await c.close();
+
+    // 1024 (panel ra khỏi lưới): Preview docked, cây dừng trên thanh đáy; Split thì tấm trượt.
+    ({ c, p } = await at(1024, 'view', false));
+    s = await dst(p);
+    const g10 = await geo(p);
+    check('cây docked: 1024 Preview — cột ở mép trái, dừng trên thanh đáy, không tràn ngang', docked(s) && s.doc === 726 && edgeOK(g10) && g10.dockT != null, JSON.stringify({ s, g10 }));
+    await p.click('#tab-split'); await p.waitForTimeout(200);
+    check('cây tấm trượt: 1024 Split — tấm trượt', drawer(await dst(p)) && (await dst(p)).mode === 'split' && (await overflow(p)) === 0, JSON.stringify(await dst(p)));
+    await c.close();
+
+    // Điện thoại 390: không bao giờ docked, không tràn ngang.
+    {
+      const pc = await browser.newContext({ viewport: { width: 390, height: 760 }, hasTouch: true, isMobile: true });
+      const pp = await pc.newPage(); watch(pp);
+      await pp.goto(BASE); await pp.evaluate(seed, ['view', false]); await pp.goto(BASE); await pp.waitForFunction(() => window.marked && window.DOMPurify); await pp.waitForTimeout(250);
+      check('cây 390: tấm trượt, không tràn ngang', drawer(await dst(pp)) && (await overflow(pp)) === 0, JSON.stringify(await dst(pp)));
+      await pc.close();
+    }
+  }
+
+  /* ---------- Thanh trên ở điện thoại: Files, tên, History, Settings, More; New session, theme, Shortcuts trong menu More ---------- */
+  for (const [w, scheme] of [[320, 'light'], [360, 'dark'], [390, 'light']]) {
+    const hc = await browser.newContext({ viewport: { width: w, height: 760 }, colorScheme: scheme, hasTouch: true, isMobile: true, deviceScaleFactor: 2 });
+    const hp = await hc.newPage(); watch(hp);
+    await hp.goto(BASE); await hp.waitForFunction(() => window.marked && window.DOMPurify);
+    await hp.tap('#btn-sample'); await hp.waitForTimeout(150);
+    await hp.evaluate(async () => {   // cây vài file: nút Files hiện
+      const T = await import('./js/ui/tree.js'), noop = () => '';
+      T.renderTree({ nodes: [{ id: 'f1', parent: null, kind: 'file', name: 'a.md' }, { id: 'f2', parent: null, kind: 'file', name: 'b.md' }], open: 'f1', collapsed: [], counts: {}, title: 'Demo' },
+        { open: noop, toggle: noop, newFile: noop, newDir: noop, rename: noop, move: noop, remove: noop, importDir: noop, download: noop, collapseAll: noop });
+    });
+    const bar = await hp.evaluate(() => {
+      const ids = ['btn-tree', 'btn-hist', 'btn-layout', 'btn-more'], rs = ids.map((id) => document.getElementById(id).getBoundingClientRect());
+      const brand = document.querySelector('.ma-brand').getBoundingClientRect();
+      return { h: Math.round(document.querySelector('.ma-bar').getBoundingClientRect().height),
+        order: [rs[0], brand, ...rs.slice(1)].every((r, i, a) => !i || r.left >= a[i - 1].right) && rs[0].left === 16,
+        sizes: rs.every((r) => r.width >= 44 && r.height >= 44 && r.left >= 0 && r.right <= innerWidth),
+        hidden: ['btn-new', 'theme'].every((id) => !document.getElementById(id).getClientRects().length),
+        more: document.getElementById('btn-more').getAttribute('aria-haspopup') };
+    });
+    check(`thanh trên ${w}: Files sát lề trái, rồi tên, History, Settings, More; nút ≥ 44px, trong khung; New session và theme ẩn; cao 57px`,
+      bar.h === 57 && bar.order && bar.sizes && bar.hidden && bar.more === 'menu' && (await overflow(hp)) === 0, JSON.stringify(bar));
+    // Chạm: mở menu, mục ≥ 44px, trong khung nhìn, chưa có vòng focus; chạm ngoài thì đóng.
+    await hp.tap('#btn-more'); await hp.waitForTimeout(150);
+    const mn = await hp.evaluate(() => {
+      const m = document.getElementById('bar-menu'), r = m.getBoundingClientRect(), its = [...m.querySelectorAll('.ma-menu__i')], ae = document.activeElement;
+      const probe = document.createElement('i'); document.body.append(probe); probe.style.backgroundColor = 'var(--surface)'; const surface = getComputedStyle(probe).backgroundColor; probe.remove();
+      return { open: m.classList.contains('is-open'), exp: document.getElementById('btn-more').getAttribute('aria-expanded'), inView: r.left >= 0 && r.right <= innerWidth && r.bottom <= innerHeight,
+        items: its.map((i) => i.textContent.trim()), tall: its.every((i) => i.getBoundingClientRect().height >= 44), ring: getComputedStyle(ae).outlineStyle !== 'none' || document.documentElement.classList.contains('ma-tabbing'),
+        bg: getComputedStyle(m).backgroundColor === surface };
+    });
+    const themeWord = scheme === 'dark' ? 'Light theme' : 'Dark theme';
+    check(`thanh trên ${w}: chạm More mở menu (New session, ${themeWord}, Shortcuts), mục ≥ 44px, trong khung, nền --surface, không vòng focus`,
+      mn.open && mn.exp === 'true' && mn.inView && mn.items.join() === `New session,${themeWord},Shortcuts` && mn.tall && !mn.ring && mn.bg, JSON.stringify(mn));
+    await hp.touchscreen.tap(20, 600); await hp.waitForTimeout(150);
+    check(`thanh trên ${w}: chạm ngoài thì đóng`, !(await hp.evaluate(() => document.getElementById('bar-menu').classList.contains('is-open'))) && (await hp.getAttribute('#btn-more', 'aria-expanded')) === 'false');
+    // Mục theme đổi theme; Shortcuts mở hộp, đóng thì focus về More; New session mở phiên mới.
+    await hp.tap('#btn-more'); await hp.waitForTimeout(100); await hp.tap('#bar-menu >> text=' + themeWord); await hp.waitForTimeout(150);
+    check(`thanh trên ${w}: mục theme đổi theme, menu đóng`, (await hp.evaluate(() => document.documentElement.classList.contains('dark'))) === (scheme !== 'dark') && !(await hp.isVisible('#bar-menu')));
+    await hp.tap('#btn-more'); await hp.waitForTimeout(100); await hp.tap('#bar-menu >> text=Shortcuts'); await hp.waitForTimeout(250);
+    const ko = await hp.evaluate(() => document.getElementById('dlg-keys').open);
+    await hp.keyboard.press('Escape'); await hp.waitForTimeout(150);
+    check(`thanh trên ${w}: Shortcuts mở hộp phím tắt, đóng thì focus về More`, ko && (await hp.evaluate(() => document.activeElement.id)) === 'btn-more');
+    await hp.tap('#btn-more'); await hp.waitForTimeout(100); await hp.tap('#bar-menu >> text=New session'); await hp.waitForTimeout(200);
+    check(`thanh trên ${w}: New session mở phiên mới (khung Edit)`, (await hp.isVisible('#src-input')) && /New session/.test(await hp.textContent('#toast')));
+    // Bàn phím: Enter mở và vào mục đầu; ↓ ↑ vòng, End, Home; Esc đóng, focus về nút; ↑ trên nút vào mục cuối; Tab đóng.
+    const fo = () => hp.evaluate(() => (document.activeElement.textContent || '').trim() || document.activeElement.id);
+    await hp.focus('#btn-more'); await hp.keyboard.press('Tab'); await hp.keyboard.press('Shift+Tab');
+    await hp.keyboard.press('Enter'); await hp.waitForTimeout(80);
+    const k1 = await fo(); await hp.keyboard.press('ArrowDown'); const k2 = await fo(); await hp.keyboard.press('End'); const k3 = await fo();
+    await hp.keyboard.press('ArrowDown'); const k4 = await fo(); await hp.keyboard.press('ArrowUp'); const k5 = await fo(); await hp.keyboard.press('Home'); const k6 = await fo();
+    const ring = await hp.evaluate(() => getComputedStyle(document.activeElement).outlineStyle !== 'none');
+    await hp.keyboard.press('Escape'); await hp.waitForTimeout(80);
+    const k7 = await fo(), shut = !(await hp.isVisible('#bar-menu'));
+    await hp.keyboard.press('ArrowUp'); await hp.waitForTimeout(80); const k8 = await fo();
+    await hp.keyboard.press('Tab'); await hp.waitForTimeout(80);
+    const k9 = await fo(), shut2 = !(await hp.isVisible('#bar-menu'));
+    const kw = scheme === 'dark' ? 'Dark theme' : 'Light theme';   // theme đã đổi ở trên
+    check(`thanh trên ${w}: bàn phím — Enter vào mục đầu, ↓ ↑ End Home, vòng focus sau Tab, Esc / Tab đóng và trả focus, ↑ trên nút vào mục cuối`,
+      k1 === 'New session' && k2 === kw && k3 === 'Shortcuts' && k4 === 'New session' && k5 === 'Shortcuts' && k6 === 'New session' && ring && k7 === 'btn-more' && shut && k8 === 'Shortcuts' && k9 === 'btn-more' && shut2,
+      JSON.stringify([k1, k2, k3, k4, k5, k6, ring, k7, shut, k8, k9, shut2]));
+    check(`thanh trên ${w}: không tràn ngang`, (await overflow(hp)) === 0);
+    await hc.close();
+  }
+  {
+    const dc = await browser.newContext({ viewport: { width: 1280, height: 800 } });
+    const dp2 = await dc.newPage(); watch(dp2);
+    await dp2.goto(BASE); await dp2.waitForFunction(() => window.marked && window.DOMPurify);
+    check('thanh trên 1280: không có More, New session và theme hiện', !(await dp2.isVisible('#btn-more')) && (await dp2.isVisible('#btn-new')) && (await dp2.isVisible('#theme')));
+    await dc.close();
+  }
+
+  /* ---------- Cây file: Undo chỉ trả lại mục ấy (MDAN-028), chặn rời file khi hộp nhận xét có chữ, phiên cũ path lạ,
+     nạp folder không ghi prefs.tree, New folder trong folder gập, Move to… trong khung nhìn, All files 200 file, vạch kéo ---------- */
+  {
+    const fs = require('fs'), os = require('os'), path = require('path');
+    const ready = (p) => p.waitForFunction(() => window.marked && window.DOMPurify);
+    const mk = (id, files, extra) => {
+      const nodes = [], docs = {};
+      files.forEach((f) => { const kind = f.kind || 'file'; nodes.push({ id: f.id, parent: f.parent || null, kind, name: f.name }); if (kind === 'file') docs[f.id] = { text: f.text, comments: f.comments || [], reviews: [], real: true }; });
+      return Object.assign({ id, name: '', named: false, created: 1, updated: 1, header: '', footer: '', fmt: 'inline', includeDoc: false, lineNums: true, path: '', rvPrompt: false, promptAll: false, nodes, docs, open: files.find((f) => (f.kind || 'file') === 'file').id, collapsed: [] }, extra || {});
+    };
+    const seed = async (ctx, sessions, cur, prefs) => {
+      const p = await ctx.newPage(); watch(p);
+      await p.goto(BASE); await ready(p);
+      await p.evaluate(([ss, cur, prefs]) => { localStorage.clear(); for (const s of ss) localStorage.setItem('md-annotate:s:' + s.id, JSON.stringify(s)); localStorage.setItem('md-annotate:current', JSON.stringify(cur)); localStorage.setItem('md-annotate:prefs:v1', JSON.stringify(prefs)); }, [sessions, cur, prefs]);
+      await p.goto(BASE); await ready(p); await p.waitForTimeout(300);
+      return p;
+    };
+    const C = (id, quote, comment) => ({ id, quote, comment, prefix: '', suffix: '', origin: 'src', rel: 0 });
+    const stored = (p, id) => p.evaluate((id) => JSON.parse(localStorage.getItem('md-annotate:s:' + id)), id);
+    const rowSel = (id) => `#tree-list .ma-trow[data-id="${id}"]`;
+    const menuDo = async (p, id, label) => { await p.click(rowSel(id), { button: 'right' }); await p.click(`#tree-menu .ma-menu__i:has-text("${label}")`); await p.waitForTimeout(150); };
+    const toastText = (p) => p.$eval('#toast', (t) => (t.hidden ? '' : t.textContent));
+    const names = (st) => st.nodes.map((n) => n.name).sort().join();
+    const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, colorScheme: 'light' });
+
+    // Xoá b.md, rồi New file và gõ chữ; Undo: b.md quay lại, file mới và chữ còn, focus về hàng b.md.
+    let p = await seed(ctx, [mk('U1', [{ id: 'fa', name: 'a.md', text: '# A\n\nalpha\n' }, { id: 'fb', name: 'b.md', text: '# B\n\nbeta\n', comments: [C('cb', 'beta', 'b')] }])], 'U1', { tree: true });
+    await menuDo(p, 'fb', 'Delete');
+    await p.click('#tree-new-file'); await p.waitForTimeout(150); await p.keyboard.press('Enter'); await p.waitForTimeout(100);
+    await p.fill('#src-input', 'IMPORTANT NEW WORK'); await p.waitForTimeout(450);
+    await p.click('#toast .ma-toast__btn'); await p.waitForTimeout(300);
+    let st = await stored(p, 'U1');
+    const u1 = { names: names(st), work: Object.values(st.docs).some((d) => d.text === 'IMPORTANT NEW WORK'), b: st.docs.fb && st.docs.fb.comments.length, ed: await p.inputValue('#src-input'), focus: await p.evaluate(() => document.activeElement.dataset.id) };
+    check('Undo xoá: chỉ trả lại b.md, file mới và chữ gõ sau vẫn còn, focus về hàng b.md', u1.names === 'a.md,b.md,untitled.md' && u1.work && u1.b === 1 && u1.ed === 'IMPORTANT NEW WORK' && u1.focus === 'fb', JSON.stringify(u1));
+    await p.close();
+
+    // Xoá file cuối của phiên rồi mở phiên khác (phiên trống bị bỏ khi chuyển); Undo dựng lại phiên ấy.
+    p = await seed(ctx, [mk('U2', [{ id: 'fo', name: 'only.md', text: '# Only\n\nprecious text\n', comments: [C('co', 'precious text', 'c')] }]), mk('U3', [{ id: 'fz', name: 'other.md', text: '# Other\n\nz\n' }])], 'U2', { tree: true });
+    await menuDo(p, 'fo', 'Delete');
+    await p.evaluate(async () => { const S = await import('./js/ui/state.js'); S.switchTo(S.loadSession('U3')); });
+    await p.waitForTimeout(200);
+    await p.click('#toast .ma-toast__btn'); await p.waitForTimeout(300);
+    st = await stored(p, 'U2');
+    const u2 = { names: st && names(st), c: st && st.docs.fo && st.docs.fo.comments.length, idx: await p.evaluate(() => JSON.parse(localStorage.getItem('md-annotate:index:v1')).map((e) => e.id).join()), cur: await p.evaluate(async () => (await import('./js/ui/state.js')).S.id) };
+    check('Undo xoá sau khi đã chuyển phiên: phiên bị bỏ vì trống được dựng lại, vào History, phiên đang mở giữ nguyên', u2.names === 'only.md' && u2.c === 1 && /U2/.test(u2.idx) && u2.cur === 'U3', JSON.stringify(u2));
+    await p.close();
+
+    // Hộp nhận xét đang có chữ: bấm file khác, New file, phiên mới đều bị chặn, toast báo, bản nháp còn.
+    p = await seed(ctx, [mk('U4', [{ id: 'fa', name: 'a.md', text: '# Alpha\n\nalpha paragraph with several words here\n' }, { id: 'fb', name: 'b.md', text: '# Beta\n\nbeta text\n' }])], 'U4', { tree: true });
+    await dragSelect(p, '#v-md', 'paragraph with several');
+    await p.keyboard.type('a half-typed draft');
+    await p.click(rowSel('fb')); await p.waitForTimeout(200);
+    const g1 = { open: await p.evaluate(async () => (await import('./js/ui/state.js')).S.open), toast: await toastText(p), pop: await p.isVisible('#pop'), draft: await p.inputValue('#pop-text') };
+    await p.click('#tree-new-file'); await p.waitForTimeout(150);
+    await p.click('#btn-new'); await p.waitForTimeout(150);
+    const g2 = { files: await p.$$eval('#tree-list .ma-trow', (ls) => ls.length), sid: await p.evaluate(async () => (await import('./js/ui/state.js')).S.id), draft: await p.inputValue('#pop-text') };
+    check('hộp nhận xét có chữ: đổi file, New file, phiên mới bị chặn, toast báo, bản nháp còn', g1.open === 'fa' && g1.toast === 'Save or cancel the comment first.' && g1.pop && g1.draft === 'a half-typed draft' && g2.files === 2 && g2.sid === 'U4' && g2.draft === 'a half-typed draft', JSON.stringify([g1, g2]));
+    await p.click('#pop-cancel'); await p.waitForTimeout(100);
+    await p.click(rowSel('fb')); await p.waitForTimeout(200);
+    check('huỷ hộp rồi bấm file khác: đổi được', (await p.evaluate(async () => (await import('./js/ui/state.js')).S.open)) === 'fb');
+    await p.close();
+
+    // Phiên cũ có path 'docs/' (không tách được tên file): nhãn giữ y hệt bản một văn bản.
+    p = await seed(ctx, [{ id: 'L2', name: '', named: false, created: 1, updated: 1, header: '', footer: '', fmt: 'inline', includeDoc: false, lineNums: true, rvPrompt: false, path: 'docs/',
+      text: '# T\n\nhello world line\n\nsecond para here\n', comments: [{ id: 'c1', quote: 'hello world', comment: 'fix', prefix: '', suffix: '', origin: 'src', rel: 0.1 }], reviews: [] }], 'L2', {});
+    check('phiên cũ path "docs/": prompt y hệt bản cũ ("docs/:3"), ô Folder giữ nguyên văn', (await out(p)) === 'Vị trí ghi dạng tệp:dòng, tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.\n\n1. docs/:3 "hello world" — fix' && (await p.inputValue('#p-path')) === 'docs/', JSON.stringify(await out(p)));
+    await p.close();
+
+    // Nạp folder (chưa chọn ẩn / hiện cây): cây hiện cho phiên ấy, prefs.tree không được ghi; phiên mới theo luật mặc định.
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'ma-imp-'));
+    fs.mkdirSync(path.join(tmp, 'kit', 'sub'), { recursive: true });
+    fs.writeFileSync(path.join(tmp, 'kit', 'README.md'), '# Kit\n'); fs.writeFileSync(path.join(tmp, 'kit', 'sub', 'a.md'), '# A\n');
+    fs.writeFileSync(path.join(tmp, 'kit', 'app.ts'), 'let x = 1;\n'); fs.writeFileSync(path.join(tmp, 'kit', 'blob.dat'), Buffer.from([0, 1, 2, 3]));
+    p = await seed(ctx, [], 'none', {});
+    await p.setInputFiles('#tree-dir-in', path.join(tmp, 'kit')); await p.waitForTimeout(500);
+    const im = { on: await p.evaluate(() => document.documentElement.classList.contains('ma-tree-on')), prefs: await p.evaluate(() => localStorage.getItem('md-annotate:prefs:v1')), toast: await toastText(p) };
+    await p.click('#btn-new'); await p.waitForTimeout(200);
+    im.after = await p.evaluate(() => document.documentElement.classList.contains('ma-tree-on'));
+    check('nạp folder: cây hiện, prefs.tree không ghi; phiên mới một file thì cây ẩn; .ts nạp, nhị phân bỏ', im.on && !/"tree"/.test(im.prefs || '') && !im.after && im.toast === 'Imported 3 files, skipped 1.', JSON.stringify(im));
+    await p.close();
+    fs.rmSync(tmp, { recursive: true, force: true });
+
+    // New folder trong folder đang gập: folder ấy mở ra, ô đổi tên hiện và có focus.
+    p = await seed(ctx, [mk('U5', [{ id: 'd', kind: 'dir', name: 'docs' }, { id: 'f1', parent: 'd', name: 'in.md', text: '# In\n' }, { id: 'f2', name: 'top.md', text: '# Top\n' }], { open: 'f2', collapsed: ['d'] })], 'U5', { tree: true });
+    await menuDo(p, 'd', 'New folder here');
+    const nf = await p.evaluate(() => { const i = document.querySelector('#tree-list .ma-trow__ren'); return { input: !!i && document.activeElement === i && i.value, exp: document.querySelector('#tree-list .ma-trow[data-id="d"]').getAttribute('aria-expanded') }; });
+    check('New folder trong folder gập: folder mở ra, ô đổi tên có focus', nf.input === 'folder' && nf.exp === 'true', JSON.stringify(nf));
+    await p.keyboard.press('Escape');
+    await p.close();
+
+    // Move to… ở hàng sát đáy khung nhìn: menu con cao hơn vẫn nằm trọn trong khung nhìn.
+    const deep = []; let par = null;
+    for (let i = 0; i < 12; i++) { deep.push({ id: 'd' + i, kind: 'dir', parent: par, name: 'level-' + i }); deep.push({ id: 'f' + i, parent: 'd' + i, name: 'f' + i + '.md', text: '# F' + i + '\n' }); par = 'd' + i; }
+    const sc = await browser.newContext({ viewport: { width: 1280, height: 800 }, colorScheme: 'light' });
+    p = await seed(sc, [mk('U6', deep.concat([{ id: 'r', name: 'readme.md', text: '# R\n' }]), { open: 'r' })], 'U6', { tree: true });
+    const last = await p.evaluate(() => { const b = document.getElementById('tree-body'); b.scrollTop = 1e6; const rs = [...document.querySelectorAll('#tree-list .ma-trow')]; const r = rs[rs.length - 1].getBoundingClientRect(); return { x: r.x + 20, y: r.bottom - 4 }; });
+    await p.mouse.click(last.x, last.y, { button: 'right' }); await p.waitForTimeout(100);
+    await p.click('#tree-menu .ma-menu__i[aria-haspopup]'); await p.waitForTimeout(100);
+    const mr = await p.evaluate(() => { const r = document.getElementById('tree-menu').getBoundingClientRect(); return { top: r.top, bottom: r.bottom, vh: innerHeight, focus: document.activeElement.textContent.trim() }; });
+    check('Move to… sát đáy: menu con trọn khung nhìn', mr.top >= 0 && mr.bottom <= mr.vh && mr.focus === 'Back', JSON.stringify(mr));
+    await p.keyboard.press('Escape'); await p.waitForTimeout(50);
+    const back = await p.evaluate(() => [document.getElementById('tree-menu').classList.contains('is-open'), document.activeElement.textContent.trim()]);
+    check('Esc ở Move to… lùi về menu chính, focus ở Move to…', back[0] && back[1] === 'Move to…', JSON.stringify(back));
+    await p.close(); await sc.close();
+
+    // All files với 200 file có nhận xét: gập / mở một folder vẫn nhanh (không neo lại 200 file, không vẽ lại prompt).
+    const many = [{ id: 'dm', kind: 'dir', name: 'many' }];
+    const body = 'Some text paragraph that is long enough to matter. '.repeat(200);
+    for (let i = 0; i < 200; i++) many.push({ id: 'm' + i, parent: 'dm', name: 'file-' + i + '.md', text: '# F' + i + '\n\n' + body + '\n\nUnique sentence number ' + i + ' here.\n', comments: [C('c' + i, 'Unique sentence number ' + i, 'fix ' + i)] });
+    many.push({ id: 'dz', kind: 'dir', name: 'zz-empty' });
+    p = await seed(ctx, [mk('U7', many, { promptAll: true })], 'U7', { tree: true });
+    const perf = await p.evaluate(async () => {
+      const row = document.querySelector('#tree-list .ma-trow[data-id="dz"]'), t = [];
+      for (let i = 0; i < 4; i++) { const t0 = performance.now(); row.click(); t.push(performance.now() - t0); await new Promise((r) => setTimeout(r, 50)); }
+      const R = await import('./js/ui/render.js'), t0 = performance.now();
+      R.renderAll();
+      return { toggle: Math.max(...t), render: performance.now() - t0, n: document.getElementById('foot-n').textContent };
+    });
+    check('All files, 200 file: gập / mở folder < 60 ms, vẽ lại < 150 ms, đếm đủ 200 nhận xét', perf.toggle < 60 && perf.render < 150 && perf.n === '200 comments', JSON.stringify(perf));
+    await p.close();
+
+    // Vạch kéo của panel và cây (rê / kéo, focus): chỉ báo trạng thái ≥ 3:1, cả hai theme.
+    p = await seed(ctx, [mk('U8', [{ id: 'fa', name: 'a.md', text: '# A\n' }, { id: 'fb', name: 'b.md', text: '# B\n' }])], 'U8', { tree: true });
+    for (const dark of [false, true]) {
+      await p.evaluate((d) => document.documentElement.classList.toggle('dark', d), dark); await p.waitForTimeout(250);
+      const gc = await p.evaluate(() => {
+        const parse = (c) => { const m = c.match(/[\d.]+/g).map(Number); return c.startsWith('color(') ? [m[0] * 255, m[1] * 255, m[2] * 255, m.length > 3 ? m[3] : 1] : [m[0], m[1], m[2], m.length > 3 ? m[3] : 1]; };
+        const over = (t, u) => [0, 1, 2].map((i) => t[i] * t[3] + u[i] * (1 - t[3])).concat(1);
+        const bgOf = (el) => { const ch = []; for (let n = el; n; n = n.parentElement) ch.push(getComputedStyle(n).backgroundColor); let c = [255, 255, 255, 1]; ch.reverse().forEach((x) => { const v = parse(x); if (v[3] > 0) c = over(v, c); }); return c; };
+        const lum = (c) => { const x = c.slice(0, 3).map((n) => { n /= 255; return n <= 0.03928 ? n / 12.92 : ((n + 0.055) / 1.055) ** 2.4; }); return 0.2126 * x[0] + 0.7152 * x[1] + 0.0722 * x[2]; };
+        const ratio = (a, b) => { const x = lum(a), y = lum(b); return +((Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05)).toFixed(2); };
+        const out = {}, still = document.createElement('style');
+        still.textContent = '*, *::before { transition: none !important; }';   // đọc màu cuối, không giữa chuyển động
+        document.head.append(still);
+        for (const id of ['panel-grip', 'tree-grip']) {
+          const g = document.getElementById(id), bg = bgOf(g.parentElement);
+          g.classList.add('is-drag');
+          out[id + '-drag'] = ratio(over(parse(getComputedStyle(g, '::before').backgroundColor), bg), bg);
+          g.classList.remove('is-drag'); document.documentElement.classList.add('ma-tabbing'); g.focus();
+          out[id + '-focus'] = ratio(over(parse(getComputedStyle(g, '::before').backgroundColor), bg), bg);
+          g.blur(); document.documentElement.classList.remove('ma-tabbing');
+        }
+        still.remove();
+        return out;
+      });
+      check(`vạch kéo panel / cây (${dark ? 'tối' : 'sáng'}): rê / kéo và focus ≥ 3:1`, Object.values(gc).every((v) => v >= 3), JSON.stringify(gc));
+    }
+    await p.close();
+    await ctx.close();
+  }
 
   check('không lỗi console', !errors.length, errors.join(' | '));
   await browser.close();

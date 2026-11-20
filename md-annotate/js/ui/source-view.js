@@ -6,11 +6,11 @@ import { tokens } from '../core/tokens.js';
 import { sourceLines } from '../core/runs.js';
 import { prefs } from './store.js';
 import { $, h } from './dom.js';
-import { S } from './state.js';
+import { D } from './state.js';
 import { markEl } from './marks.js';
 
 export function paintSrc(ranges) {
-  var root = $('v-src'), text = S.text;
+  var root = $('v-src'), text = D.text;
   root.textContent = '';
   if (!text) return;
   var toks = prefs.syntax === false ? [] : tokens(text);

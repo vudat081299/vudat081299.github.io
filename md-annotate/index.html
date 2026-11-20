@@ -36,6 +36,7 @@
     <link rel="stylesheet" href="css/base.css" />
     <link rel="stylesheet" href="css/views.css" />
     <link rel="stylesheet" href="css/panel.css" />
+    <link rel="stylesheet" href="css/tree.css" />
     <link rel="stylesheet" href="css/popup.css" />
     <link rel="stylesheet" href="css/dialogs.css" />
     <link rel="stylesheet" href="css/focus.css" />
@@ -47,12 +48,18 @@
   <body>
     <header class="ma-bar">
       <div class="ma-wrap ma-bar__in">
+        <!-- Ẩn / hiện cây file (ui/tree.js), mọi phiên. hidden chỉ tới lần vẽ cây đầu lúc khởi động (renderTree). -->
+        <button class="ma-icbtn" id="btn-tree" type="button" aria-controls="tree" aria-expanded="false" aria-keyshortcuts="Control+B Meta+B"
+                aria-label="Show files" title="Show files" hidden>
+          <svg class="ma-i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="2" /><path d="M9.5 4.5v15M6 8.5h1.5M6 11.5h1.5" /></svg>
+        </button>
         <a class="ma-brand" href="../" aria-label="Back to home">
           <span class="ma-brand__mark" aria-hidden="true"></span>
           <span class="ma-brand__txt"><span class="ma-brand__own">vudat081299 / </span><b>md-annotate</b></span>
         </a>
         <span class="ma-bar__sp"></span>
-        <button class="ma-btn" id="btn-new" type="button" title="New session">
+        <!-- .ma-bar__opt: điện thoại (≤ 720px) ẩn, có ở menu More (#btn-more, ui/bar.js). -->
+        <button class="ma-btn ma-bar__opt" id="btn-new" type="button" title="New session">
           <svg class="ma-i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
           <span class="ma-btn__lbl">New session</span>
         </button>
@@ -64,7 +71,7 @@
         <button class="ma-icbtn" id="btn-layout" type="button" aria-label="Settings" title="Settings: layout, focus mode, shortcuts">
           <svg class="ma-i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8" /><circle cx="16" cy="7" r="2" /><circle cx="10" cy="17" r="2" /></svg>
         </button>
-        <button class="ma-icbtn" id="theme" type="button" aria-label="Toggle light / dark" title="Light / dark">
+        <button class="ma-icbtn ma-bar__opt" id="theme" type="button" aria-label="Toggle light / dark" title="Light / dark">
           <svg class="ma-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.8 6.8 0 0 0 10.5 10.5Z" />
           </svg>
@@ -73,8 +80,52 @@
             <path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4 17 7M7 17l-1.6 1.6" />
           </svg>
         </button>
+        <button class="ma-icbtn ma-bar__more" id="btn-more" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="bar-menu"
+                aria-label="More" title="More">
+          <svg class="ma-i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 11a1 1 0 1 0 0 2 1 1 0 1 0 0-2zM12 11a1 1 0 1 0 0 2 1 1 0 1 0 0-2zM19 11a1 1 0 1 0 0 2 1 1 0 1 0 0-2z" /></svg>
+        </button>
       </div>
     </header>
+    <!-- Menu More của thanh trên ở điện thoại: mỗi mục bấm nút thật của nó (data-for). Kiểu .ma-menu (css/tree.css). -->
+    <div class="ma-menu" id="bar-menu" role="menu" aria-label="More" tabindex="-1">
+      <button class="ma-menu__i" type="button" role="menuitem" tabindex="-1" data-for="btn-new">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
+        <span>New session</span>
+      </button>
+      <button class="ma-menu__i" type="button" role="menuitem" tabindex="-1" data-for="theme">
+        <svg class="ma-to-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.8 6.8 0 0 0 10.5 10.5Z" /></svg>
+        <svg class="ma-to-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2" /><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4 17 7M7 17l-1.6 1.6" /></svg>
+        <span id="bar-theme">Dark theme</span>
+      </button>
+      <button class="ma-menu__i" type="button" role="menuitem" tabindex="-1" data-for="btn-keys">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18v12H3zM7 10h.01M11 10h.01M15 10h.01M8 14h8" /></svg>
+        <span>Shortcuts</span>
+      </button>
+    </div>
+
+    <!-- Cây folder + file của phiên (ui/tree.js): cột fixed sát mép trái màn hình khi đủ chỗ (html.ma-tree-on), không thì
+         nằm trong tấm trượt trái #dlg-tree, mở bằng #btn-tree. Thân là chỗ cuộn. -->
+    <nav class="ma-tree" id="tree" aria-label="Files">
+      <div class="ma-tree__grip" id="tree-grip" role="separator" aria-orientation="vertical" tabindex="0"
+           aria-label="Resize file list" title="Drag to resize"></div>
+      <div class="ma-tree__head">
+        <span class="ma-tree__t" id="tree-title"></span>
+        <div class="ma-tree__tools">
+          <button class="ma-icbtn ma-icbtn--bare" type="button" id="tree-new-file" aria-label="New file" title="New file"></button>
+          <button class="ma-icbtn ma-icbtn--bare" type="button" id="tree-new-dir" aria-label="New folder" title="New folder"></button>
+          <button class="ma-icbtn ma-icbtn--bare" type="button" id="tree-import" aria-label="Import folder" title="Import a folder from disk (a copy)"></button>
+          <button class="ma-icbtn ma-icbtn--bare" type="button" id="tree-zip" aria-label="Download .zip" title="Download all files as .zip"></button>
+          <button class="ma-icbtn ma-icbtn--bare" type="button" id="tree-collapse" aria-label="Collapse all" title="Collapse all folders"></button>
+          <button class="ma-icbtn ma-icbtn--bare ma-tree__close" type="button" data-close aria-label="Close">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
+          </button>
+        </div>
+        <input type="file" id="tree-dir-in" webkitdirectory multiple hidden />
+      </div>
+      <div class="ma-tree__body" id="tree-body">
+        <ul class="ma-tree__list" id="tree-list" role="tree" aria-label="Files"></ul>
+      </div>
+    </nav>
 
     <main class="ma-wrap ma-grid">
       <div class="ma-left">
@@ -222,11 +273,12 @@
                     <label><input type="radio" name="fmt" value="inline" /><span>"Quote" — comment</span></label>
                     <label><input type="radio" name="fmt" value="block" /><span>&gt; Block quote</span></label>
                   </div>
+                  <label class="ma-check" id="all-row" title="One prompt with the comments of every file in this session" hidden><input type="checkbox" id="p-all" /> All files</label>
                   <label class="ma-check"><input type="checkbox" id="line-nums" /> Line numbers</label>
-                  <label class="ma-pathrow" id="path-row">
-                    <span class="ma-label">File</span>
+                  <label class="ma-pathrow" id="path-row" title="Folder of these files on disk: locations become folder/file:line">
+                    <span class="ma-label">Folder</span>
                     <input class="ma-input" id="p-path" type="text" spellcheck="false" autocomplete="off"
-                           placeholder="notes/a.md (optional)" aria-label="File path, locations become file:line" />
+                           placeholder="docs/ (optional)" aria-label="Folder path on disk, locations become folder/file:line" />
                   </label>
                   <label class="ma-check" id="rv-prompt-row" title="Adds a line listing the lines you marked reviewed, so the AI knows those parts are fine"><input type="checkbox" id="rv-prompt" /> Say which lines I reviewed</label>
                   <label class="ma-check"><input type="checkbox" id="inc-doc" /> Include the full text at the end</label>
@@ -292,6 +344,8 @@
         </aside>
     </main>
 
+    <!-- Nền mờ sau tấm đáy của hộp nhận xét (ui/popup.js); không có khi chọn nhiều dòng -->
+    <div class="ma-scrim" id="pop-scrim" hidden></div>
     <!-- Hộp nhận xét: mở khi bôi đen (chuột) hoặc bấm nút nổi (cảm ứng, bàn phím) -->
     <div class="ma-pop" id="pop" role="dialog" aria-label="Comment on the selected passage" hidden>
       <!-- Chỉ khi chọn nhiều dòng (ui/picks.js): số dòng, nhãn, nút kéo hộp -->
@@ -347,6 +401,7 @@
     </dialog>
 
     <dialog class="ma-dlg ma-dlg--panel" id="dlg-panel" aria-label="Comments, prompt and review"></dialog>
+    <dialog class="ma-dlg ma-dlg--tree" id="dlg-tree" aria-label="Files"></dialog>
 
     <dialog class="ma-dlg ma-dlg--center ma-dlg--live" id="dlg-layout" aria-labelledby="dlg-layout-t">
       <div class="ma-dlg__in">

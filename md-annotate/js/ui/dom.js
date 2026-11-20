@@ -1,7 +1,10 @@
 /* Tiện ích DOM: $(id), h() dựng phần tử, icon(), textNodes(), media query dùng chung, shown(), typing() (phím tắt
-   một chữ), dragBar() (kéo vách), toast(), paintHL() (tô CSS Highlight).
-   Xuất: $, dragBar, h, hasHL, icon, mqSheet, mqSide, paintHL, reduceMotion, shown, textNodes, toast, typing.
-   Dùng: không module nào. */
+   một chữ), dragBar() (kéo vách), toast(), paintHL() (tô CSS Highlight), saveFile() (tải một Blob về máy),
+   droppedItems() (mục thả từ máy), syncBar() (màu thanh trình duyệt khi có lớp mờ).
+   Xuất: $, dragBar, droppedItems, h, hasHL, icon, mqSheet, mqSide, paintHL, reduceMotion, saveFile, shown, syncBar, textNodes,
+     toast, typing.
+   Dùng: core/color.js. */
+import { barColor } from '../core/color.js';
 
 export function $(id) { return document.getElementById(id); }
 export function h(tag, props) {
@@ -24,7 +27,19 @@ export function h(tag, props) {
 var PATHS = {
   pencil: 'M4 20h4L19 9l-4-4L4 16v4z',
   x: 'M6 6l12 12M18 6 6 18',
-  trash: 'M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3'
+  trash: 'M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3',
+  /* Cây file (ui/tree.js) */
+  chev: 'M9 6l6 6-6 6',
+  file: 'M14 3H6v18h12V7l-4-4zM14 3v4h4',
+  folder: 'M3 6.5A1.5 1.5 0 0 1 4.5 5H9l2 2h8.5A1.5 1.5 0 0 1 21 8.5v9a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 17.5z',
+  'folder-open': 'M3 17.5v-11A1.5 1.5 0 0 1 4.5 5H9l2 2h7.5A1.5 1.5 0 0 1 20 8.5V10M3 17.5 5.6 11h16l-2.6 8H4.5A1.5 1.5 0 0 1 3 17.5z',
+  'file-plus': 'M14 3H6v18h12V7l-4-4zM14 3v4h4M12 11v6M9 14h6',
+  'folder-plus': 'M3 6.5A1.5 1.5 0 0 1 4.5 5H9l2 2h8.5A1.5 1.5 0 0 1 21 8.5v9a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 17.5zM12 10v6M9 13h6',
+  'folder-in': 'M3 6.5A1.5 1.5 0 0 1 4.5 5H9l2 2h8.5A1.5 1.5 0 0 1 21 8.5v9a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 17.5zM12 10v6M9 13l3 3 3-3',
+  download: 'M12 4v11m-4-4 4 4 4-4M5 20h14',
+  collapse: 'M7 4l5 5 5-5M7 20l5-5 5 5',
+  dots: 'M5 11a1 1 0 1 0 0 2 1 1 0 1 0 0-2zM12 11a1 1 0 1 0 0 2 1 1 0 1 0 0-2zM19 11a1 1 0 1 0 0 2 1 1 0 1 0 0-2z',
+  back: 'M15 6l-6 6 6 6'
 };
 export function icon(name) {
   var s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -89,4 +104,36 @@ export function toast(msg, action) {
   t.hidden = false;
   clearTimeout(toastTimer);
   toastTimer = setTimeout(function () { t.hidden = true; }, action ? 6000 : 2800);
+}
+
+/* Tải data (Blob) về máy với tên name: link tạm có download, bấm, thu hồi URL sau một giây. */
+export function saveFile(data, name) {
+  var url = URL.createObjectURL(data);
+  var a = h('a', { href: url, download: name });
+  document.body.append(a); a.click(); a.remove();
+  setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+}
+
+/* Mục thả từ máy: FileSystemEntry (đọc được folder) khi trình duyệt có, không thì File. Gọi ngay trong sự kiện drop:
+   dataTransfer hết hạn sau đó. */
+export function droppedItems(dt) {
+  var out = [];
+  if (dt.items && dt.items.length && dt.items[0].webkitGetAsEntry) {
+    for (var i = 0; i < dt.items.length; i++) {
+      var en = dt.items[i].kind === 'file' ? dt.items[i].webkitGetAsEntry() : null;
+      if (en) out.push(en);
+    }
+    if (out.length) return out;
+  }
+  return Array.prototype.slice.call(dt.files || []);
+}
+
+/* <meta name="theme-color"> (Chrome Android, Safari cũ tô thanh trạng thái theo nó): nền trang, phủ mọi lớp mờ đang hiện
+   (hộp thoại mở, .ma-scrim không ẩn), trộn đục. Gọi mỗi khi một lớp mờ hiện / ẩn và khi đổi theme; một chỗ duy nhất ghi thẻ này
+   sau script theme của index.html. */
+export function syncBar() {
+  var layers = [];
+  document.querySelectorAll('dialog[open], .ma-scrim:not([hidden])').forEach(function (el) { layers.push(getComputedStyle(el).backgroundColor); });
+  var c = barColor(getComputedStyle(document.documentElement).backgroundColor, layers);
+  if (c) $('theme-color').setAttribute('content', c);
 }

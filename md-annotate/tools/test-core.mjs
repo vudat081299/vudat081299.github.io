@@ -3,7 +3,7 @@
 import { lexSpans, pairBlocks } from '../js/core/blocks.js';
 import { numberSections, lineSections, bandBounds, bandPick, spanAt } from '../js/core/sections.js';
 import { syncCurves, followTop } from '../js/core/sync-math.js';
-import { paneHeight, splitFits } from '../js/core/panes.js';
+import { docRoom, paneHeight, READ_MIN, splitFits, treeDocks, treeRoom, viewNeed, wrapWidth } from '../js/core/panes.js';
 import { normShortcuts } from '../js/core/shortcuts.js';
 
 let fails = 0;
@@ -100,6 +100,10 @@ import * as dpPrompt from '../js/core/prompt.js';
 import * as dpSession from '../js/core/session.js';
 import * as dpHints from '../js/core/hints.js';
 import * as dpText from '../js/core/text.js';
+/* Phiên dạng cũ (text, comments, path ở cấp phiên) → phiên mới qua normSession (chép trước, không sửa bản gốc), rồi prompt
+   của file đang mở. Mọi bài thử prompt dạng cũ đi qua đây: prompt sau khi nâng phải y hệt từng byte như trước. */
+const upS = (o) => dpSession.normSession(JSON.parse(JSON.stringify(o)), 'x');
+const bp = (o, d) => { const u = upS(o); return dpPrompt.buildPrompt(u, u.docs[u.open], d); };
 {
   /* Nhận xét dựng như ui/anchor-dom.js: quoteFrom trên chữ của khung, chỗ của chuỗi `needle` thứ nth. */
   const quoteAt = (full, needle, nth, which = 'src') => {
@@ -142,16 +146,16 @@ import * as dpText from '../js/core/text.js';
     const s = ses(text, [c1, c2, c3]);
     const d = dpComments.anchorAll(s.comments, s.text, '');
     check('anchorAll: xếp theo vị trí, mất neo không có số', eq(d.ordered.map((c) => c.id), ['b', 'a', 'c']) && eq(d.numbers, { b: 1, a: 2 }) && d.orphans.c === true);
-    check('buildPrompt: gọn, L3 và L4-5', dpPrompt.buildPrompt(s, d) ===
-      'Số dòng (L) tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.\n\n1. L3 "Dòng ba." — Ngắn hơn\n2. L4-5 "Dòng bốn tiếp" — Gộp hai dòng', JSON.stringify(dpPrompt.buildPrompt(s, d)));
+    check('buildPrompt: gọn, L3 và L4-5', bp(s, d) ===
+      'Số dòng (L) tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.\n\n1. L3 "Dòng ba." — Ngắn hơn\n2. L4-5 "Dòng bốn tiếp" — Gộp hai dòng', JSON.stringify(bp(s, d)));
     s.fmt = 'block'; s.path = 'notes/a.md'; s.header = ' Đầu '; s.footer = 'Cuối'; s.includeDoc = true;
-    check('buildPrompt: khối, tệp:dòng, lời dẫn, toàn văn', dpPrompt.buildPrompt(s, d) ===
+    check('buildPrompt: khối, tệp:dòng, lời dẫn, toàn văn', bp(s, d) ===
       'Đầu\nVị trí ghi dạng tệp:dòng, tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.\n\n' +
       '### 1 · notes/a.md:3\n> Dòng ba.\n\nNgắn hơn\n\n### 2 · notes/a.md:4-5\n> Dòng bốn\n> tiếp\n\nGộp\n hai   dòng\n\nCuối\n\n' +
-      'Văn bản gốc:\n`````markdown\n' + text.trimEnd() + '\n`````', JSON.stringify(dpPrompt.buildPrompt(s, d)));
+      'Văn bản gốc:\n`````markdown\n' + text.trimEnd() + '\n`````', JSON.stringify(bp(s, d)));
     s.lineNums = false;
-    check('buildPrompt: tắt số dòng thì không nhãn, không câu dẫn số dòng', !/notes\/a\.md|tệp:dòng/.test(dpPrompt.buildPrompt(s, d)));
-    check('buildPrompt: không nhận xét, không toàn văn thì rỗng', dpPrompt.buildPrompt(ses(text, [c3]), dpComments.anchorAll([c3], text, '')) === '');
+    check('buildPrompt: tắt số dòng thì không nhãn, không câu dẫn số dòng', !/notes\/a\.md|tệp:dòng/.test(bp(s, d)));
+    check('buildPrompt: không nhận xét, không toàn văn thì rỗng', bp(ses(text, [c3]), dpComments.anchorAll([c3], text, '')) === '');
     check('lineOf: đầu dòng, cuối văn bản', dpText.lineOf('a\nb\n', 0) === 1 && dpText.lineOf('a\nb\n', 2) === 2 && dpText.lineOf('a\nb\n', 4) === 3);
     check('slug: bỏ dấu tiếng Việt', dpText.slug('Bài thử Đặng — số 1') === 'bai-thu-dang-so-1');
   }
@@ -177,13 +181,13 @@ import * as dpText from '../js/core/text.js';
   }
   // Phiên: đổi tên, index.
   {
-    const s = { text: '# Tiêu đề\n\nthân', comments: [], named: true, name: 'Cũ' };
+    const s = upS({ text: '# Tiêu đề\n\nthân', comments: [], named: true, name: 'Cũ' });
     dpSession.renameSession(s, '');
     check('renameSession: tên rỗng thì về tên tự đặt', s.named === false && s.name === 'Tiêu đề');
     const idx = [{ id: 'a' }, { id: 'b' }];
     check('indexWith / indexWithout', eq(dpSession.indexWithout(idx, 'a'), [{ id: 'b' }]) &&
-      dpSession.indexWith(idx, { id: 'b', text: 'x', comments: [], name: 'x', created: 1, updated: 2 })[0].id === 'b' &&
-      eq(dpSession.indexWith(idx, { id: 'a', text: ' ', comments: [] }).map((e) => e.id), ['b']));
+      dpSession.indexWith(idx, Object.assign(upS({ text: 'x', comments: [], name: 'x', created: 1, updated: 2 }), { id: 'b' }))[0].id === 'b' &&
+      eq(dpSession.indexWith(idx, Object.assign(upS({ text: ' ', comments: [] }), { id: 'a' })).map((e) => e.id), ['b']));
   }
 }
 // ── end review: data path ──
@@ -265,6 +269,28 @@ import { popPlace } from '../js/core/place.js';
   check('bandBounds: dải (theo vị trí trong văn bản) không lùi khi cuộn tới', mono);
 }
 check('splitFits: hai khung 420px + vách 9px', !splitFits(848) && splitFits(849));
+check('viewNeed: Split cần hai khung + vách, chế độ khác cần READ_MIN (580)', viewNeed('split') === 849 && viewNeed('view') === READ_MIN && viewNeed('src') === 580 && viewNeed('edit') === 580);
+{
+  /* Cây docked ở mép trái màn hình, vùng làm việc căn giữa phần còn lại (MDAN-037). Số đo thật, Auto (70%, sàn 1280px):
+     chrome = lề 2×24 + viền #doc 2 + khe 16 + panel 360 = 426 (thanh dọc 56: 122; ≤ 1080px panel ra khỏi lưới: 50). */
+  const g = (vw, chrome, v, o) => ({ client: vw, vw, frac: 0.7, floor: 1280, chrome, need: viewNeed(v), ...(o || {}) });
+  check('wrapWidth: không cây = 70vw, sàn 1280, không quá khung nhìn', wrapWidth(g(2560, 426), 0) === 1792 && wrapWidth(g(1920, 426), 0) === 1344 && wrapWidth(g(1440, 426), 0) === 1280 && wrapWidth(g(1024, 50), 0) === 1024);
+  check('wrapWidth: tính trong phần khung nhìn trừ cây', wrapWidth(g(2560, 426), 248) === 0.7 * 2312 && wrapWidth(g(1920, 426), 248) === 1280 && wrapWidth(g(1440, 426), 248) === 1192);
+  check('wrapWidth: Settings 50% (sàn 720) và thanh cuộn (client < vw)', wrapWidth(g(2560, 426, 'view', { frac: 0.5, floor: 720 }), 248) === 1156 && wrapWidth(g(1300, 426, 'view', { client: 1285 }), 248) === 1037);
+  check('docRoom: #doc = vùng làm việc − chrome', docRoom(g(1920, 426), 248) === 854 && docRoom(g(1920, 426), 0) === 918);
+  const dock = (vw, chrome, v) => treeDocks(g(vw, chrome, v), 248);
+  check('treeDocks: 2560, 1920 panel mở — Split docked (#doc 1192, 854)', dock(2560, 426, 'split') && dock(1920, 426, 'split'));
+  check('treeDocks: 1440 / 1280 panel mở — Split tấm trượt (766, 606), Preview docked', !dock(1440, 426, 'split') && dock(1440, 426, 'view') && !dock(1280, 426, 'split') && dock(1280, 426, 'view'));
+  check('treeDocks: thanh dọc — Split docked ở 1440 (1070) và 1280 (910)', dock(1440, 122, 'split') && dock(1280, 122, 'split'));
+  check('treeDocks: 1024 (panel ra khỏi lưới) Preview docked, Split không', dock(1024, 50, 'view') && !dock(1024, 50, 'split'));
+  check('treeDocks: mốc đúng bằng need thì docked, thiếu 1px thì không', treeDocks(g(1525, 426, 'split'), 250) && !treeDocks(g(1525, 426, 'split'), 251));
+  check('treeDocks: điện thoại 390 không bao giờ docked, kể cả cây 180px', !treeDocks(g(390, 34, 'view'), 180));
+  check('treeDocks: Settings 50% ở 2560 — Split tấm trượt', !treeDocks(g(2560, 426, 'split', { frac: 0.5, floor: 720 }), 248));
+  check('treeRoom: chỗ còn lại (sàn đủ) — 1280 Preview 274, 1920 Split 645', treeRoom(g(1280, 426, 'view')) === 274 && treeRoom(g(1920, 426, 'split')) === 645);
+  check('treeRoom: sàn không đủ thì theo phần 70% — 50% ở 2560 Split', treeRoom(g(2560, 426, 'split', { frac: 0.5, floor: 720 })) === 10);
+  const rm = (o) => { const t = treeRoom(o); return treeDocks(o, t) && !treeDocks(o, t + 1); };
+  check('treeRoom: là cây rộng nhất còn docked (mọi trường hợp trên)', [g(1280, 426, 'view'), g(1920, 426, 'split'), g(2560, 426, 'split', { frac: 0.5, floor: 720 }), g(1440, 122, 'split'), g(2560, 426, 'split', { frac: 0.6, floor: 720 })].every(rm));
+}
 check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi ≥ 320', eq(paneHeight(900, 100.5, 0), { h: 782, fit: true }) && eq(paneHeight(500, 100, 76), { h: 320, fit: false }));
 // ── end review: layout & scroll ──
 
@@ -284,9 +310,10 @@ check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi
 {
   const { lineRuns, pickable, pickInfo, pickSummary } = await import('../js/core/picks.js');
   const { addComment, anchorAll, markRanges, overlapWarning, partsOf } = await import('../js/core/comments.js');
-  const { buildPrompt, locLabel } = await import('../js/core/prompt.js');
-  const { normSession } = await import('../js/core/session.js');
+  const { locLabel } = await import('../js/core/prompt.js');
+  const { normSession, docOf } = await import('../js/core/session.js');
   const { locate } = await import('../js/core/anchor.js');
+  const buildPrompt = bp;
   check('lineRuns: xếp, gộp dòng liền, bỏ trùng', eq(lineRuns([20, 12, 16, 15, 16]), [[12, 12], [15, 16], [20, 20]]));
   check('pickSummary: số dòng và nhãn', pickSummary([20, 12, 16, 15]) === '4 lines · L12, L15-16, L20' && pickSummary([3]) === '1 line · L3');
   const text = ['# Doc', '', 'Alpha line.', 'Beta line.', '   ', '- [ ] same', 'Gamma.', '- [ ] same', 'Delta.', '```js', 'x = 1', '```', ''].join('\n');
@@ -315,7 +342,7 @@ check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi
   check('anchorAll: xếp theo vị trí phần đầu', eq(d.ordered.map((c) => c.id), [mc.id, S.comments[1].id]));
   const rs = markRanges(d).src.filter((r) => r.id === mc.id);
   check('markRanges: mỗi phần một dải, số chỉ ở phần đầu', rs.length === 2 && rs[0].n === 1 && rs[1].n === 0);
-  check('locLabel: nhãn từng phần', locLabel(S, d, mc, false) === 'L3-4, L8' && locLabel(Object.assign({}, S, { path: 'a.md' }), d, mc, true) === 'a.md:3-4, a.md:8');
+  check('locLabel: nhãn từng phần', locLabel(S, d, mc, '') === 'L3-4, L8' && locLabel(S, d, mc, 'a.md') === 'a.md:3-4, a.md:8');
   check('buildPrompt nhiều phần: gọn', buildPrompt(S, d) ===
     'Số dòng (L) tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.\n\n1. L3-4 "Alpha line. Beta line."; L8 "- [ ] same" — Gộp lại\n2. L6 "- [ ] same" — Một dòng', JSON.stringify(buildPrompt(S, d)));
   check('buildPrompt nhiều phần: gọn, có tệp', buildPrompt(Object.assign({}, S, { path: 'a.md' }), d).includes('\n1. a.md:3-4 "Alpha line. Beta line."; a.md:8 "- [ ] same" — Gộp lại\n'));
@@ -340,17 +367,18 @@ check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi
   check('overlapWarning: một đoạn thường như cũ', overlapWarning(d, [{ pos: [first, first + 10], quote: '- [ ] same' }]) === 'Same passage as comment #2. Saving adds a separate item.');
   // Phiên đã lưu: parts giữ, parts hỏng / một phần thì bỏ, phiên cũ không đổi.
   const raw = JSON.parse(JSON.stringify({ text, comments: [mc, { id: 'z', quote: 'Delta.', comment: 'c', parts: [{ quote: 'Delta.' }, null, 5] }, { id: 'y', quote: 'Gamma.', comment: 'c', parts: 'x' }, { id: 'w', quote: 'Gamma.', comment: 'c' }] }));
-  const ns = normSession(raw, 'id1');
-  check('normSession: giữ parts hợp lệ, bỏ parts hỏng hay một phần', ns.comments.length === 4 && ns.comments[0].parts.length === 2 && !('parts' in ns.comments[1]) && !('parts' in ns.comments[2]) && !('parts' in ns.comments[3]));
-  check('partsOf: không parts thì chính nó', partsOf(ns.comments[3])[0] === ns.comments[3] && partsOf(ns.comments[0]) === ns.comments[0].parts);
+  const ns = normSession(raw, 'id1'), nc = docOf(ns).comments;
+  check('normSession: giữ parts hợp lệ, bỏ parts hỏng hay một phần', nc.length === 4 && nc[0].parts.length === 2 && !('parts' in nc[1]) && !('parts' in nc[2]) && !('parts' in nc[3]));
+  check('partsOf: không parts thì chính nó', partsOf(nc[3])[0] === nc[3] && partsOf(nc[0]) === nc[0].parts);
 }
 // ── end nhận xét nhiều dòng ──
 // ── đánh dấu đã đọc (MDAN-013) ──
 {
   const R = await import('../js/core/review.js');
-  const { buildPrompt, optionsSummary } = await import('../js/core/prompt.js');
+  const { optionsSummary } = await import('../js/core/prompt.js');
   const { anchorAll } = await import('../js/core/comments.js');
-  const { normSession, createSession, indexWith } = await import('../js/core/session.js');
+  const { normSession, createSession, indexWith, docOf, renameIn } = await import('../js/core/session.js');
+  const buildPrompt = (s, d) => dpPrompt.buildPrompt(s, docOf(s), d);
   // Bộ tách giả: mỗi khối cách nhau dòng trống; khối mở bằng '#' là tiêu đề; danh sách có items như marked.
   const lexer = (text) => text.split(/\n{2,}/).filter((b) => b.trim()).map((raw) => {
     if (/^#/.test(raw)) return { type: 'heading', depth: raw.match(/^#+/)[0].length, raw };
@@ -455,23 +483,24 @@ check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi
   // Prompt: tắt thì y hệt từng byte; bật thì thêm dòng tiếng Việt; chưa đánh dấu gì thì không thêm.
   const text = 'Dòng một.\n\nDòng ba.\n';
   const cm = { id: 'a', quote: 'Dòng ba.', comment: 'Sửa', origin: 'src', prefix: 'Dòng một.\n\n', suffix: '\n', rel: 0.5, created: 1 };
-  const s = Object.assign(createSession(text, {}), { comments: [cm] });
-  const d = anchorAll(s.comments, text, '');
+  const s = createSession(text, {});
+  docOf(s).comments.push(cm);
+  const d = anchorAll(docOf(s).comments, text, '');
   const base = buildPrompt(s, d);
   const dR = Object.assign({}, d, { review: { done: [[1, 1]], todo: [[3, 3]] } });
   check('buildPrompt: tắt dòng đã đọc thì y hệt từng byte', buildPrompt(s, dR) === base && base === 'Số dòng (L) tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.\n\n1. L3 "Dòng ba." — Sửa', JSON.stringify(base));
   s.rvPrompt = true;
   check('buildPrompt: bật dòng đã đọc', buildPrompt(s, dR) === 'Số dòng (L) tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.\nĐã đọc kỹ: L1; chỗ nào không có nhận xét là ổn. Chưa đọc: L3.\n\n1. L3 "Dòng ba." — Sửa', JSON.stringify(buildPrompt(s, dR)));
   check('buildPrompt: bật mà chưa đánh dấu gì thì y hệt', buildPrompt(s, Object.assign({}, d, { review: { done: [], todo: [[1, 3]] } })) === base && buildPrompt(s, d) === base);
-  check('buildPrompt: đọc hết thì không có "Chưa đọc", có tệp thì tệp:dòng', buildPrompt(Object.assign({}, s, { path: 'a.md', header: 'Đầu' }), Object.assign({}, d, { review: { done: [[1, 3]], todo: [] } })) ===
+  check('buildPrompt: đọc hết thì không có "Chưa đọc", có tệp thì tệp:dòng', buildPrompt(Object.assign(renameIn(s, s.open, 'a.md').s, { header: 'Đầu' }), Object.assign({}, d, { review: { done: [[1, 3]], todo: [] } })) ===
     'Đầu\nVị trí ghi dạng tệp:dòng, tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.\nĐã đọc kỹ: a.md:1-3; chỗ nào không có nhận xét là ổn.\n\n1. a.md:3 "Dòng ba." — Sửa');
   check('buildPrompt: tắt số dòng thì không có dòng đã đọc', buildPrompt(Object.assign({}, s, { lineNums: false }), dR) === buildPrompt(Object.assign({}, s, { lineNums: false, rvPrompt: false }), dR) && optionsSummary(Object.assign({}, s, { lineNums: false })) === 'compact');
   check('optionsSummary: có "reviewed" khi bật', optionsSummary(s) === 'compact · line numbers · reviewed' && optionsSummary(Object.assign({}, s, { rvPrompt: false })) === 'compact · line numbers');
   // Phiên: reviews là trường thêm; thiếu hay hỏng thì mặc định, phiên cũ vẫn đọc được.
   const old = normSession({ text: 'x', comments: [] }, 'o');
   const bad = normSession({ text: 'x', comments: [], reviews: [null, { h: 5 }, { h: 'k', r: 7, q: 3 }], rvPrompt: 'yes' }, 'b');
-  check('normSession: phiên cũ không có reviews thì []', eq(old.reviews, []) && old.rvPrompt === false);
-  check('normSession: bỏ dấu hỏng, sửa trường', eq(bad.reviews, [{ h: 'k', p: '', n: '', q: '', r: 1 }]) && bad.rvPrompt === false, JSON.stringify(bad.reviews));
+  check('normSession: phiên cũ không có reviews thì []', eq(docOf(old).reviews, []) && old.rvPrompt === false);
+  check('normSession: bỏ dấu hỏng, sửa trường', eq(docOf(bad).reviews, [{ h: 'k', p: '', n: '', q: '', r: 1 }]) && bad.rvPrompt === false, JSON.stringify(docOf(bad).reviews));
   {
     // bandScroll: cuộn tới đâu để khối k là khối dải đọc chọn (X kế tiếp trúng nó), cả khi dải trượt sát đầu / cuối.
     const { bandScroll } = await import('../js/core/sections.js');
@@ -484,7 +513,7 @@ check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi
     check('bandScroll: mọi khối giữa văn bản tới được dải đọc, sát đầu / cuối cũng được', reach.length >= 27 && [0, 1, 2, 10, 20].every((k) => reach.includes(k)), JSON.stringify(reach));
     check('bandScroll: đặt đỉnh ở 30% thì khối trước thắng (cách cũ hỏng)', naive.length < reach.length - 10, naive.length + ' / ' + reach.length);
   }
-  check('indexWith: % đã đọc vào index khi có', indexWith([], Object.assign(createSession('x', {}), { rvPct: 40 }))[0].rv === 40 && !('rv' in indexWith([], createSession('x', {}))[0]));
+  check('indexWith: % đã đọc vào index khi có', indexWith([], ((x) => { docOf(x).rvPct = 40; return x; })(createSession('x', {})))[0].rv === 40 && !('rv' in indexWith([], createSession('x', {}))[0]));
 }
 // ── end đánh dấu đã đọc ──
 
@@ -504,7 +533,7 @@ check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi
 // ── đã đọc, nhiều dòng: trường hợp biên ──
 {
   const R = await import('../js/core/review.js');
-  const { normSession } = await import('../js/core/session.js');
+  const { normSession, docOf } = await import('../js/core/session.js');
   const { anchorAll } = await import('../js/core/comments.js');
   // Tiêu đề setext (gạch === / --- ở dòng dưới): tên section không kèm vạch gạch.
   const st = 'Title\n=====\n\nBody one.\n\nSub\n---\n\nBody two.\n';
@@ -518,8 +547,8 @@ check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi
   // parts hỏng từng trường (rel không phải số, prefix không phải chuỗi) trong bộ nhớ: sửa lại, phần vẫn neo được.
   const text = 'Alpha one.\nBeta two.\nGamma three.\nAlpha one.\n';
   const ns = normSession({ text, comments: [{ id: 'a', quote: 'Alpha one.', comment: 'c', origin: 'src', parts: [{ quote: 'Alpha one.', origin: 'src', rel: 'x', prefix: 3, suffix: null }, { quote: 'Gamma three.', origin: 9 }] }] }, 's');
-  const pa = anchorAll(ns.comments, text, '').anchors.a.parts;
-  check('normSession: trường hỏng của parts được sửa, phần vẫn neo', pa.every((x) => x.src) && ns.comments[0].parts.every((p) => typeof p.prefix === 'string' && typeof p.suffix === 'string' && Number.isFinite(p.rel) && (p.origin === 'src' || p.origin === 'md')), JSON.stringify([pa, ns.comments[0].parts]));
+  const pa = anchorAll(docOf(ns).comments, text, '').anchors.a.parts;
+  check('normSession: trường hỏng của parts được sửa, phần vẫn neo', pa.every((x) => x.src) && docOf(ns).comments[0].parts.every((p) => typeof p.prefix === 'string' && typeof p.suffix === 'string' && Number.isFinite(p.rel) && (p.origin === 'src' || p.origin === 'md')), JSON.stringify([pa, docOf(ns).comments[0].parts]));
   // Sửa hàng loạt (đổi một từ ở mọi đoạn) trong văn bản dài đã đọc hết: mọi dấu thành changed, neo lại vẫn nhanh
   // (chạy ở mỗi lần vẽ khi đang gõ).
   const mk = (tag) => Array.from({ length: 2500 }, (_, i) => {
@@ -593,6 +622,428 @@ check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi
   check('mmDots: đổi ra px trên dải, bỏ chấm quá gần', eq(M.mmDots([500, 10, 520, 900], 1000, 100, 4), [1, 50, 90]), JSON.stringify(M.mmDots([500, 10, 520, 900], 1000, 100, 4)));
 }
 // ── end dải tiến độ và gợi ý ──
+
+// ── cây folder + file (tree.js), phiên nhiều file (session.js), prompt gom file, .zip ──
+{
+  const T = await import('../js/core/tree.js');
+  const S = await import('../js/core/session.js');
+  const P = await import('../js/core/prompt.js');
+  const Z = await import('../js/core/zip.js');
+  const { anchorAll } = await import('../js/core/comments.js');
+  const { quoteFrom } = await import('../js/core/anchor.js');
+  const freeze = (a) => Object.freeze(a.map((n) => Object.freeze(Object.assign({}, n))));
+  const N = (id, parent, kind, name) => ({ id, parent, kind, name });
+  let k = 0; const mk = (kind) => kind[0] + (++k);
+  const names = (nodes, ids) => ids.map((id) => nodes.find((n) => n.id === id).name);
+
+  // Sâu ≥ 6, gập folder, thứ tự hiển thị; mọi hàm không sửa mảng / nút đầu vào (đóng băng thì sửa là ném lỗi).
+  {
+    const r = T.fromPaths([], null, ['a/b/c/d/e/f/g.md', 'a/b/c/d/e/f/h.md', 'a/top.md'], mk);
+    const nodes = freeze(r.nodes), g = r.ids['a/b/c/d/e/f/g.md'];
+    check('tree: sâu 7 tầng, pathOf', T.pathOf(nodes, g) === 'a/b/c/d/e/f/g.md' && T.pathOf(nodes, 'không có') === '');
+    const rows = T.visibleRows(nodes, []);
+    check('visibleRows: depth từ 0, folder trước file', eq(rows.map((x) => x.depth + ':' + x.node.name), ['0:a', '1:b', '2:c', '3:d', '4:e', '5:f', '6:g.md', '6:h.md', '1:top.md']), JSON.stringify(rows.map((x) => x.depth + ':' + x.node.name)));
+    const c = nodes.find((n) => n.name === 'c');
+    check('visibleRows: con của folder gập bị ẩn, filesInOrder thì không', eq(T.visibleRows(nodes, [c.id]).map((x) => x.node.name), ['a', 'b', 'c', 'top.md']) && eq(names(nodes, T.filesInOrder(nodes)), ['g.md', 'h.md', 'top.md']));
+    check('subtree: id và mọi hậu duệ', T.subtree(nodes, c.id).length === 6 && T.subtree(nodes, 'x').length === 0);
+    const rm = T.removeNode(nodes, c.id);
+    check('removeNode: xoá cả cây con', rm.removed.length === 6 && rm.nodes.length === 3 && nodes.length === 9);
+    check('moveNode: không vào chính nó / hậu duệ', /itself/.test(T.moveNode(nodes, c.id, c.id).error) && /itself/.test(T.moveNode(nodes, c.id, nodes.find((n) => n.name === 'f').id).error));
+    const mv = T.moveNode(nodes, g, null);
+    check('moveNode: lên gốc', !mv.error && mv.nodes.find((n) => n.id === g).parent === null && nodes.find((n) => n.id === g).parent !== null);
+    check('moveNode: cha là file thì lỗi', T.moveNode(nodes, c.id, nodes.find((n) => n.name === 'top.md').id).error === 'Parent folder not found.');
+  }
+  // Thứ tự tự nhiên, không phân biệt hoa thường; folder trước.
+  {
+    const nodes = freeze([N('1', null, 'file', 'file10.md'), N('2', null, 'file', 'file2.md'), N('3', null, 'file', 'File1.md'), N('4', null, 'dir', 'zeta'), N('5', null, 'dir', 'Alpha'), N('6', null, 'file', 'a.md')]);
+    check('kids: folder trước, so tên tự nhiên', eq(T.kids(nodes, null).map((n) => n.name), ['Alpha', 'zeta', 'a.md', 'File1.md', 'file2.md', 'file10.md']));
+  }
+  // Tên: hỏng, trùng anh em không phân biệt hoa thường (cả NFC / NFD), tự đổi khi thêm.
+  {
+    const nodes = freeze([N('d', null, 'dir', 'docs'), N('r', null, 'file', 'readme.md'), N('u', null, 'file', 'untitled.md'), N('v', null, 'file', 'untitled-2.md'), N('t', null, 'file', 'Tiếng Việt.md')]);
+    check('nameError: rỗng, /, \\, .., quá 255', ['', '  ', 'a/b', 'a\\b', '.', '..', 'x'.repeat(256)].every((x) => T.nameError(nodes, null, x, null)) && T.nameError(nodes, null, 'x'.repeat(255), null) === '');
+    check('nameError: trùng anh em không phân biệt hoa thường', /already exists/.test(T.nameError(nodes, null, 'README.md', null)) && /folder named "docs"/.test(T.nameError(nodes, null, 'Docs', null)) && T.nameError(nodes, 'd', 'readme.md', null) === '');
+    check('nameError: tên NFD trùng tên NFC', /already exists/.test(T.nameError(nodes, null, 'Tiếng Việt.md'.normalize('NFD'), null)));
+    check('renameNode: đổi hoa thường của chính nó được, trùng nút khác thì lỗi', !T.renameNode(nodes, 'r', 'README.md').error && /already exists/.test(T.renameNode(nodes, 'r', 'Untitled.md').error));
+    check('uniqueName: untitled-3.md, folder docs-2', T.uniqueName(nodes, null, 'untitled.md') === 'untitled-3.md' && T.uniqueName(nodes, null, 'DOCS') === 'DOCS-2' && T.uniqueName(nodes, 'd', 'readme.md') === 'readme.md');
+    check('addNode: trùng tên, trùng id, cha không có thì lỗi; được thì mảng mới', /already exists/.test(T.addNode(nodes, N('n', null, 'file', 'Readme.md')).error) && T.addNode(nodes, N('r', 'd', 'file', 'x.md')).error === 'Duplicate id.' && T.addNode(nodes, N('n', 'zz', 'file', 'x.md')).error === 'Parent folder not found.' && T.addNode(nodes, N('n', 'd', 'file', 'x.md')).nodes.length === 6);
+  }
+  // Nạp folder: gộp folder đã có (khác hoa thường), file trùng thì đổi tên, bỏ đoạn rỗng / '.', bỏ đường dẫn có '..'.
+  {
+    const nodes = freeze([N('d', null, 'dir', 'docs'), N('a', 'd', 'file', 'a.md'), N('f', null, 'file', 'notes')]);
+    const r = T.fromPaths(nodes, null, ['Docs/a.md', 'docs/sub/b.md', './x.md', 'docs//sub/c.md', '../bad.md', 'notes/n.md', 'notes/m.md'], mk);
+    check('fromPaths: gộp folder đã có, file trùng thành a-2.md', T.pathOf(r.nodes, r.ids['Docs/a.md']) === 'docs/a-2.md' && T.pathOf(r.nodes, r.ids['docs/sub/b.md']) === 'docs/sub/b.md' && T.pathOf(r.nodes, r.ids['docs//sub/c.md']) === 'docs/sub/c.md', JSON.stringify(r.ids));
+    check('fromPaths: một folder sub, bỏ ./ và đường dẫn có ..', r.nodes.filter((n) => n.name === 'sub').length === 1 && T.pathOf(r.nodes, r.ids['./x.md']) === 'x.md' && !('../bad.md' in r.ids));
+    check('fromPaths: folder trùng tên file thì notes-2, các file sau vào cùng folder ấy', T.pathOf(r.nodes, r.ids['notes/n.md']) === 'notes-2/n.md' && T.pathOf(r.nodes, r.ids['notes/m.md']) === 'notes-2/m.md' && nodes.length === 3);
+    const into = T.fromPaths(nodes, 'd', ['q/w.md'], mk);
+    check('fromPaths: dưới một folder', T.pathOf(into.nodes, into.ids['q/w.md']) === 'docs/q/w.md');
+  }
+  // Vòng cha – con (dữ liệu hỏng): không treo, không hiện; normSession cắt vòng.
+  {
+    const nodes = freeze([N('x', 'y', 'dir', 'x'), N('y', 'x', 'dir', 'y'), N('f', 'x', 'file', 'f.md'), N('g', null, 'file', 'g.md')]);
+    check('tree: vòng không treo, nút trong vòng không hiện', eq(T.visibleRows(nodes, []).map((r) => r.node.id), ['g']) && T.pathOf(nodes, 'f') === 'y/x/f.md' && eq(T.filesInOrder(nodes), ['g']));
+    const s = S.normSession({ nodes: nodes.map((n) => Object.assign({}, n)), docs: { f: { text: 'F' }, g: { text: 'G' } }, open: 'f' }, 'c');
+    check('normSession: cắt vòng, mọi nút tới được từ gốc', T.visibleRows(s.nodes, []).length === 4 && T.filesInOrder(s.nodes).length === 2 && s.open === 'f');
+  }
+  // afterRemove: giữ file mở; xoá nó thì file kế sau, hết thì kế trước, hết file thì null.
+  {
+    const nodes = freeze([N('d', null, 'dir', 'd'), N('a', 'd', 'file', 'a.md'), N('b', 'd', 'file', 'b.md'), N('c', null, 'file', 'c.md')]);
+    check('afterRemove: kế bên theo thứ tự hiển thị', T.afterRemove(nodes, ['a'], 'a') === 'b' && T.afterRemove(nodes, ['c'], 'c') === 'b' && T.afterRemove(nodes, ['d', 'a', 'b'], 'a') === 'c' && T.afterRemove(nodes, ['c'], 'a') === 'a' && T.afterRemove(nodes, ['d', 'a', 'b', 'c'], 'b') === null);
+  }
+
+  // Phiên: tạo mới, nâng phiên cũ, chuẩn hoá khuôn mới.
+  {
+    const s = S.createSession('Chữ', { fmt: 'block' });
+    const f = s.nodes[0];
+    check('createSession: một file untitled.md, real false, mở nó', s.nodes.length === 1 && f.kind === 'file' && f.name === 'untitled.md' && f.parent === null && s.open === f.id && S.docOf(s).text === 'Chữ' && S.docOf(s).real === false && s.promptAll === false && eq(s.collapsed, []) && s.fmt === 'block');
+    const up = (path, extra) => S.normSession(Object.assign({ text: 'T', comments: [], reviews: [{ h: 'k' }], path, rvPct: 30 }, extra), 'o');
+    const a = up('notes/a.md'), b = up(''), c = up('docs/'), w = up('C:\\x\\a.md');
+    check('normSession: phiên cũ có path → file a.md thật, phần trước là tiền tố', a.nodes.length === 1 && a.nodes[0].name === 'a.md' && a.path === 'notes/' && S.docOf(a).real === true && S.docOf(a).rvPct === 30 && S.docOf(a).reviews.length === 1 && !('text' in a) && !('comments' in a) && !('rvPct' in a));
+    check('normSession: phiên cũ không path → untitled.md, real false', b.nodes[0].name === 'untitled.md' && S.docOf(b).real === false && b.path === '' && c.nodes[0].name === 'untitled.md' && c.path === 'docs/');
+    check('fileLabel: bằng path cũ', S.fileLabel(a, a.open) === 'notes/a.md' && S.fileLabel(b, b.open) === '' && S.fileLabel(w, w.open) === 'C:\\x\\a.md' && S.fileLabel(c, c.open) === 'docs/');
+    check('normSession: không dùng được thì null', S.normSession(null, 'x') === null && S.normSession({ comments: [] }, 'x') === null && S.normSession('x', 'x') === null);
+    const raw = {
+      nodes: [null, { id: 'd', parent: null, kind: 'dir', name: 'docs' }, { id: 'a', parent: 'd', kind: 'file', name: 'a.md' },
+        { id: 'a', parent: null, kind: 'file', name: 'dup-id.md' }, { id: 'x', kind: 'weird', name: 'x' }, { id: 'nodoc', parent: null, kind: 'file', name: 'n.md' },
+        { id: 'o', parent: 'gone', kind: 'file', name: 'orphan.md' }, { id: 'p', parent: 'a', kind: 'file', name: 'under-file.md' },
+        { id: 'q', parent: 'd', kind: 'file', name: 'A.MD' }, { id: 'r', parent: null, kind: 'file', name: '../bad' }, { id: 'e', parent: null, kind: 'dir', name: 'empty' }],
+      docs: { a: { text: 'A', comments: [null, { quote: 'A', comment: 'c' }], reviews: 'x', rvPct: 'x', real: 1 }, o: { text: 'O' }, p: { text: 'P' }, q: { text: 'Q' }, r: { text: 'R' }, zz: { text: 'thừa' }, nodoc: { text: 5 } },
+      open: 'gone', collapsed: ['d', 'd', 'a', 'nope', 'e'], promptAll: 'yes'
+    };
+    const n = S.normSession(raw, 'id');
+    const paths = T.filesInOrder(n.nodes).map((id) => T.pathOf(n.nodes, id));
+    check('normSession: bỏ nút hỏng, mồ côi về gốc, tên trùng / hỏng đổi', eq(paths, ['docs/A-2.MD', 'docs/a.md', 'orphan.md', 'under-file.md', 'untitled.md']), JSON.stringify(paths));
+    check('normSession: docs khớp nodes, doc chuẩn hoá', eq(Object.keys(n.docs).sort(), ['a', 'o', 'p', 'q', 'r']) && n.docs.a.comments.length === 1 && eq(n.docs.a.reviews, []) && !('rvPct' in n.docs.a) && n.docs.a.real === false && n.docs.o.real === false);
+    check('normSession: open hợp lệ, collapsed chỉ folder có thật, promptAll là boolean', n.open === 'q' && eq(n.collapsed, ['d', 'e']) && n.promptAll === false && n.id === 'id');
+    const none = S.normSession({ nodes: [{ id: 'd', parent: null, kind: 'dir', name: 'd' }], docs: {} }, 'z');
+    check('normSession: không còn file thì thêm untitled.md rỗng', S.fileCount(none) === 1 && S.docOf(none).text === '' && none.nodes.length === 2);
+  }
+  // Đổi cây: trả phiên mới, phiên cũ không đổi; docs luôn khớp nodes.
+  {
+    const s0 = S.createSession('# Một', {}), before = JSON.stringify(s0);
+    const r1 = S.addFile(s0, null, 'untitled.md', 'Hai', false);
+    const r2 = S.addDir(r1.s, null, 'docs');
+    const r3 = S.addPaths(r2.s, r2.id, [{ path: 'x/y.md', text: 'Y' }, { path: 'z.md', text: '' }]);
+    check('addFile / addDir / addPaths: không sửa phiên đầu vào', JSON.stringify(s0) === before && r1.s !== s0 && S.fileCount(r1.s) === 2);
+    check('addFile: tên trùng tự đổi, doc mới', T.pathOf(r1.s.nodes, r1.id) === 'untitled-2.md' && r1.s.docs[r1.id].text === 'Hai' && r1.s.open === s0.open);
+    check('addPaths: dưới folder, real true', T.pathOf(r3.s.nodes, r3.ids['x/y.md']) === 'docs/x/y.md' && r3.s.docs[r3.ids['x/y.md']].real === true && S.fileCount(r3.s) === 4);
+    check('addFile: tên hỏng là lỗi, phiên giữ nguyên', S.addFile(s0, null, 'a/b', '', false).error !== '' && S.addFile(s0, null, 'a/b', '', false).s === s0);
+    const x = r3.s.nodes.find((n) => n.name === 'x').id, y = r3.ids['x/y.md'];
+    let s = S.toggleDir(r3.s, x);
+    check('toggleDir: gập rồi mở', eq(s.collapsed, [x]) && eq(S.toggleDir(s, x).collapsed, []) && eq(r3.s.collapsed, []));
+    s = S.openFile(S.toggleDir(s, r2.id), y);
+    check('openFile: mở các folder chứa nó', s.open === y && eq(s.collapsed, []));
+    const rn = S.renameIn(s0, s0.open, 'note.md');
+    check('renameIn: file thành real, phiên cũ không đổi', S.docOf(rn.s).real === true && rn.s.nodes[0].name === 'note.md' && S.docOf(s0).real === false && rn.s.docs !== s0.docs);
+    check('moveIn: trùng tên ở chỗ mới thì lỗi', /already exists/.test(S.moveIn(S.addFile(r3.s, r2.id, 'untitled.md', '', false).s, s0.open, r2.id).error));
+    const rm = S.removeNodes(s, [r2.id]);
+    check('removeNodes: xoá folder thì doc của file trong nó đi theo, file mở chuyển sang kế bên', rm.removed.length === 4 && Object.keys(rm.s.docs).length === 2 && rm.s.open === r1.id && !(y in rm.s.docs) && s.docs[y]);
+    const all = S.removeNodes(r1.s, [r1.s.nodes[0].id, r1.id]);
+    check('removeNodes: xoá hết file thì còn untitled.md rỗng', S.fileCount(all.s) === 1 && S.docOf(all.s).text === '' && all.s.nodes[0].name === 'untitled.md');
+  }
+  // Tên tự đặt, phiên trống, index, file cho .zip.
+  {
+    const e = S.createSession('', {});
+    check('isEmpty: phiên mới trống; có folder hay chữ thì không', S.isEmpty(e) && !S.isEmpty(S.addDir(e, null, 'd').s) && !S.isEmpty(S.createSession('x', {})));
+    const one = S.addPaths(S.createSession('', {}), null, [{ path: 'proj/a.md', text: '# A' }]).s;
+    const onlyDir = S.removeNodes(one, [one.nodes[0].id]).s;
+    check('autoName: gốc chỉ một folder thì tên folder', S.autoName(onlyDir) === 'proj' && S.autoName(one) === 'A');
+    const two = S.addFile(S.createSession('', {}), null, 'b.md', '## Thứ hai', true).s;
+    check('autoName: file mở rỗng thì file đầu có chữ; không có chữ thì Untitled session', S.autoName(two) === 'Thứ hai' && S.autoName(e) === 'Untitled session');
+    let s = S.addFile(S.createSession('x'.repeat(100), {}), null, 'b.md', 'y'.repeat(300), true).s;
+    s = S.addFile(s, null, 'c.md', 'z', true).s;
+    const byName = (nm) => s.docs[s.nodes.find((n) => n.name === nm).id];
+    byName('untitled.md').rvPct = 100; byName('b.md').rvPct = 0; byName('b.md').comments.push({ id: 'k' });
+    const ent = S.indexWith([], s)[0];
+    check('indexWith: files, chars, count tổng; rv bình quân theo độ dài mọi file có chữ, file chưa có rvPct là 0%', ent.files === 3 && ent.chars === 401 && ent.count === 1 && ent.rv === 24, JSON.stringify(ent));
+    S.touchSession(s);
+    check('touchSession: tên tự đặt từ file đầu theo thứ tự cây, không từ file mở', s.name === 'y'.repeat(60) && S.sessionTitle(s) === 'y'.repeat(60));
+    const z = S.addDir(S.addPaths(S.createSession('', {}), null, [{ path: 'd/a.md', text: 'A' }]).s, null, 'rỗng').s;
+    check('treeFiles: file theo thứ tự cây, folder rỗng có /', eq(S.treeFiles(z).map((f) => f.path), ['d/a.md', 'untitled.md', 'rỗng/']));
+  }
+
+  // Prompt nhiều file: thứ tự cây, số chạy tiếp, nhãn tiền tố + đường dẫn, file không nhận xét bị bỏ.
+  {
+    const TA = '# A\n\nMột dòng.\nHai dòng.\n', TB = 'Đầu B.\n\nCuối B.\n', TC = 'Không nhận xét.\n';
+    const cm = (id, text, q, comment) => { const i = text.indexOf(q); return Object.assign({ id, comment, created: 0 }, quoteFrom(text, i, i + q.length, 'src', q)); };
+    const s = S.normSession({ name: '', header: '', footer: '', fmt: 'inline', includeDoc: false, lineNums: true, path: 'repo', rvPrompt: false, promptAll: true,
+      nodes: [N('c', null, 'file', 'c.md'), N('d', null, 'dir', 'docs'), N('b', 'd', 'file', 'B.md'), N('a', 'd', 'file', 'a.md')],
+      docs: { a: { text: TA, comments: [cm('a1', TA, 'Hai dòng.', 'Sửa A')] }, b: { text: TB, comments: [cm('b2', TB, 'Cuối B.', 'Sửa B2'), cm('b1', TB, 'Đầu B.', 'Sửa B1')] }, c: { text: TC, comments: [] } },
+      open: 'c' }, 'm');
+    const list = (o = {}) => ['c', 'b', 'a'].map((id) => ({ fileId: id, doc: s.docs[id], d: Object.assign(anchorAll(s.docs[id].comments, s.docs[id].text, ''), o[id] ? { review: o[id] } : {}) }));
+    const note = 'Vị trí ghi dạng tệp:dòng, tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.';
+    const got = P.buildPromptAll(s, list());
+    check('buildPromptAll: gọn', got === note + '\n\n## Tệp repo/docs/a.md\n\n1. repo/docs/a.md:4 "Hai dòng." — Sửa A\n\n## Tệp repo/docs/B.md\n\n2. repo/docs/B.md:1 "Đầu B." — Sửa B1\n3. repo/docs/B.md:3 "Cuối B." — Sửa B2', JSON.stringify(got));
+    const blk = P.buildPromptAll(Object.assign({}, s, { fmt: 'block', header: 'Đầu', footer: 'Cuối' }), list());
+    check('buildPromptAll: khối, lời dẫn', blk === 'Đầu\n' + note + '\n\n## Tệp repo/docs/a.md\n\n### 1 · repo/docs/a.md:4\n> Hai dòng.\n\nSửa A\n\n## Tệp repo/docs/B.md\n\n### 2 · repo/docs/B.md:1\n> Đầu B.\n\nSửa B1\n\n### 3 · repo/docs/B.md:3\n> Cuối B.\n\nSửa B2\n\nCuối', JSON.stringify(blk));
+    const rv = P.buildPromptAll(Object.assign({}, s, { rvPrompt: true }), list({ a: { done: [[1, 2]], todo: [[4, 4]] }, c: { done: [[1, 1]], todo: [] } }));
+    check('buildPromptAll: dòng đã đọc theo file, file chỉ có dòng đã đọc vẫn vào', rv === note + '\n\n## Tệp repo/docs/a.md\n\nĐã đọc kỹ: repo/docs/a.md:1-2; chỗ nào không có nhận xét là ổn. Chưa đọc: repo/docs/a.md:4.\n\n1. repo/docs/a.md:4 "Hai dòng." — Sửa A\n\n## Tệp repo/docs/B.md\n\n2. repo/docs/B.md:1 "Đầu B." — Sửa B1\n3. repo/docs/B.md:3 "Cuối B." — Sửa B2\n\n## Tệp repo/c.md\n\nĐã đọc kỹ: repo/c.md:1; chỗ nào không có nhận xét là ổn.', JSON.stringify(rv));
+    const off = P.buildPromptAll(Object.assign({}, s, { lineNums: false, rvPrompt: true }), list({ c: { done: [[1, 1]], todo: [] } }));
+    check('buildPromptAll: tắt số dòng thì không nhãn, không câu dẫn, vẫn có tên tệp', off === '## Tệp repo/docs/a.md\n\n1. "Hai dòng." — Sửa A\n\n## Tệp repo/docs/B.md\n\n2. "Đầu B." — Sửa B1\n3. "Cuối B." — Sửa B2', JSON.stringify(off));
+    const full = P.buildPromptAll(Object.assign({}, s, { includeDoc: true }), list());
+    check('buildPromptAll: kèm toàn văn mọi file có chữ, theo thứ tự cây', full.endsWith('3. repo/docs/B.md:3 "Cuối B." — Sửa B2\n\nVăn bản gốc của repo/docs/a.md:\n```markdown\n# A\n\nMột dòng.\nHai dòng.\n```\n\nVăn bản gốc của repo/docs/B.md:\n```markdown\nĐầu B.\n\nCuối B.\n```\n\nVăn bản gốc của repo/c.md:\n```markdown\nKhông nhận xét.\n```'), JSON.stringify(full));
+    check('buildPromptAll: không nhận xét, không toàn văn thì rỗng', P.buildPromptAll(s, [list()[0]]) === '');
+    check('buildPrompt một file trong phiên nhiều file: nhãn tệp', P.buildPrompt(s, s.docs.a, list()[2].d, 'a') === note + '\n\n1. repo/docs/a.md:4 "Hai dòng." — Sửa A');
+    check('promptsAll / optionsSummary', P.promptsAll(s) && !P.promptsAll(Object.assign({}, s, { promptAll: false })) && P.optionsSummary(s) === 'compact · all files · line numbers' && P.optionsSummary(Object.assign({}, s, { promptAll: false })) === 'compact · repo/c.md');
+    // Phiên một file: gom hay không cũng y hệt buildPrompt.
+    const one = S.normSession({ text: TA, comments: [cm('a1', TA, 'Hai dòng.', 'Sửa A')], path: 'x/a.md', promptAll: true }, 'o');
+    const d1 = anchorAll(S.docOf(one).comments, TA, '');
+    check('buildPromptAll: phiên một file y hệt buildPrompt', !P.promptsAll(one) && P.buildPromptAll(one, [{ fileId: one.open, doc: S.docOf(one), d: d1 }]) === P.buildPrompt(one, S.docOf(one), d1) && P.buildPrompt(one, S.docOf(one), d1) === 'Vị trí ghi dạng tệp:dòng, tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.\n\n1. x/a.md:4 "Hai dòng." — Sửa A');
+    // Phiên cũ đủ mọi tuỳ chọn: prompt sau khi nâng y hệt từng byte (chuỗi chép từ bản trước khi có cây).
+    const legacy = { text: TA, comments: [cm('a1', TA, 'Hai dòng.', 'Sửa A')], path: ' C:\\x\\a.md ', fmt: 'block', header: 'H', footer: 'F', includeDoc: true, rvPrompt: true, lineNums: true, name: 'Tên', named: true };
+    const dl = Object.assign(anchorAll(legacy.comments, TA, ''), { review: { done: [[1, 1]], todo: [[3, 4]] } });
+    const ul = S.normSession(JSON.parse(JSON.stringify(legacy)), 'l');
+    check('phiên cũ nâng lên: prompt, tóm tắt, tên tải về y hệt', P.buildPrompt(ul, S.docOf(ul), dl) === 'H\nVị trí ghi dạng tệp:dòng, tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.\nĐã đọc kỹ: C:\\x\\a.md:1; chỗ nào không có nhận xét là ổn. Chưa đọc: C:\\x\\a.md:3-4.\n\n### 1 · C:\\x\\a.md:4\n> Hai dòng.\n\nSửa A\n\nF\n\nVăn bản gốc:\n```markdown\n# A\n\nMột dòng.\nHai dòng.\n```' &&
+      P.optionsSummary(ul) === 'block · C:\\x\\a.md · full text · reviewed · header' && P.exportName(ul) === 'ten-comments.md', JSON.stringify(P.buildPrompt(ul, S.docOf(ul), dl)));
+  }
+
+  // ZIP: CRC-32, cấu trúc đọc lại bằng JS, và bằng zipfile của Python (công cụ thật).
+  {
+    check('crc32: vector chuẩn', Z.crc32(new TextEncoder().encode('123456789')) === 0xCBF43926 && Z.crc32(new Uint8Array(0)) === 0);
+    const files = [{ path: 'docs/a.md', text: 'Xin chào\n' }, { path: 'Tài liệu/ghi chú.md', text: '# Đầu\n' + 'x'.repeat(1000) }, { path: 'rỗng/', text: '' }, { path: 'e.md', text: '' }];
+    const z = Z.zipFiles(files, new Date(2024, 0, 2, 3, 4, 6));
+    const v = new DataView(z.buffer, z.byteOffset, z.byteLength), dec = new TextDecoder();
+    const end = z.length - 22, cnt = v.getUint16(end + 10, true), cdSize = v.getUint32(end + 12, true), cd = v.getUint32(end + 16, true);
+    let o = cd; const seen = [];
+    for (let i = 0; i < cnt; i++) {
+      const flags = v.getUint16(o + 8, true), method = v.getUint16(o + 10, true), crc = v.getUint32(o + 16, true), size = v.getUint32(o + 20, true);
+      const nl = v.getUint16(o + 28, true), at = v.getUint32(o + 42, true), name = dec.decode(z.subarray(o + 46, o + 46 + nl));
+      const lnl = v.getUint16(at + 26, true), data = z.subarray(at + 30 + lnl, at + 30 + lnl + size);
+      seen.push({ ok: v.getUint32(o, true) === 0x02014B50 && v.getUint32(at, true) === 0x04034B50 && flags === 0x0800 && method === 0 && Z.crc32(data) === crc, name, text: dec.decode(data) });
+      o += 46 + nl;
+    }
+    check('zipFiles: đọc lại bằng JS', v.getUint32(end, true) === 0x06054B50 && cnt === 4 && o === cd + cdSize && seen.every((x) => x.ok) && eq(seen.map((x) => [x.name, x.text]), files.map((f) => [f.path, f.text])), JSON.stringify(seen));
+    const { spawnSync } = await import('node:child_process');
+    const py = 'import sys, io, json, zipfile\nz = zipfile.ZipFile(io.BytesIO(sys.stdin.buffer.read()))\n' +
+      'print(json.dumps({"bad": z.testzip(), "names": z.namelist(), "texts": [z.read(n).decode("utf-8") for n in z.namelist()], "dt": list(z.infolist()[0].date_time), "utf8": all(i.flag_bits & 0x800 for i in z.infolist()), "dirs": [i.is_dir() for i in z.infolist()]}))';
+    const r = spawnSync('python3', ['-I', '-c', py], { input: Buffer.from(z) });
+    let res = null; try { res = JSON.parse(r.stdout.toString()); } catch (e) { /* in lỗi bên dưới */ }
+    check('zipFiles: Python zipfile đọc được, CRC đúng, tên UTF-8, giờ, folder rỗng', res && res.bad === null && eq(res.names, files.map((f) => f.path)) && eq(res.texts, files.map((f) => f.text)) && eq(res.dt, [2024, 1, 2, 3, 4, 6]) && res.utf8 && eq(res.dirs, [false, false, true, false]), r.stderr.toString() + r.stdout.toString());
+    const s = S.addPaths(S.createSession('', {}), null, [{ path: 'a/b.md', text: 'B' }]).s;
+    check('zipOf: cả cây', dec.decode(S.zipOf(s, new Date(2024, 0, 1)).subarray(30, 30 + 6)) === 'a/b.md');
+  }
+}
+// ── nối cây vào giao diện: mở file từ đĩa, nạp folder, tải một folder, Undo ──
+{
+  const T = await import('../js/core/tree.js');
+  const S = await import('../js/core/session.js');
+  const X = await import('../js/core/text.js');
+  let k = 0; const mk = (kind) => kind[0] + (++k);
+  const byName = (s, name) => s.nodes.find((n) => n.name === name);
+  const paths = (s) => T.filesInOrder(s.nodes).map((id) => T.pathOf(s.nodes, id));
+  {
+    const r = T.fromPaths([], null, ['a/empty/', 'a/b.md', 'a/empty/'], mk);
+    check('fromPaths: đường dẫn kết thúc / chỉ dựng folder, không vào ids, không trùng', eq(r.nodes.map((n) => n.kind + ':' + n.name), ['dir:a', 'dir:empty', 'file:b.md']) && eq(Object.keys(r.ids), ['a/b.md']), JSON.stringify(r));
+  }
+  // Mở file từ đĩa (MDAN-024): file đang mở trống thì điền, không thì thêm cạnh nó.
+  {
+    const s0 = S.createSession('', {});
+    const a = S.openFromDisk(s0, 'ghi-chu.md', '# G\n');
+    check('openFromDisk: phiên trống — điền file đang mở, tên thật, phiên mang tên file', !a.added && a.id === s0.open && a.s.nodes.length === 1 && a.s.nodes[0].name === 'ghi-chu.md' && S.docOf(a.s).text === '# G\n' && S.docOf(a.s).real && a.s.name === 'ghi-chu' && a.s.named && S.docOf(s0).text === '', JSON.stringify(a.s));
+    let s1 = S.addPaths(S.createSession('', {}), null, [{ path: 'docs/a.md', text: 'A' }]).s;
+    s1 = S.openFile(s1, T.filesInOrder(s1.nodes)[0]);
+    const docs = byName(s1, 'docs').id;
+    const b = S.openFromDisk(s1, 'a.md', 'B');
+    check('openFromDisk: file đang mở có chữ — thêm cạnh nó (cùng folder), tên tránh trùng, mở file mới', b.added && b.s.open === b.id && S.dirOf(b.s, b.id) === docs && eq(paths(b.s), ['docs/a-2.md', 'docs/a.md', 'untitled.md']) && S.docOf(b.s).text === 'B' && !b.s.named, JSON.stringify(paths(b.s)));
+    const c = S.openFromDisk(S.openFile(b.s, byName(b.s, 'untitled.md').id), 'x.md', 'X');
+    check('openFromDisk: file trống trong phiên nhiều file — điền, không đổi tên phiên', !c.added && byName(c.s, 'x.md') && c.s.nodes.length === b.s.nodes.length && !c.s.named, JSON.stringify(paths(c.s)));
+    const d = S.openFromDisk(s0, 'a/b', 'z');
+    check('openFromDisk: tên hỏng thì giữ untitled.md', d.s.nodes[0].name === 'untitled.md' && S.docOf(d.s).text === 'z');
+  }
+  // Nạp folder (MDAN-022): phiên trống thì thay nội dung, không thì nạp dưới folder đích và mở folder ấy ra.
+  {
+    const items = [{ path: 'notes/a.md', text: 'A' }, { path: 'notes/sub/deep/b.md', text: 'B' }, { path: 'notes/empty/', text: '' }];
+    const r = S.importPaths(S.createSession('', {}), null, items);
+    S.touchSession(r.s);
+    check('importPaths: phiên trống — folder nạp là cả phiên, mở file nông nhất, tên phiên là tên folder', r.files === 2 && r.skipped === 0 && eq(paths(r.s), ['notes/sub/deep/b.md', 'notes/a.md']) && r.s.open === r.ids['notes/a.md'] && r.s.name === 'notes' && !!byName(r.s, 'empty') && S.normSession(JSON.parse(JSON.stringify(r.s)), r.s.id).nodes.length === r.s.nodes.length, JSON.stringify(paths(r.s)));
+    let s = S.addDir(S.createSession('text', {}), null, 'inbox').s;
+    const inbox = byName(s, 'inbox').id, open = s.open;
+    s = S.toggleDir(s, inbox);
+    const r2 = S.importPaths(s, inbox, items);
+    check('importPaths: phiên có chữ — nạp dưới folder đích, folder ấy mở ra, file mở giữ nguyên', r2.files === 2 && r2.s.open === open && r2.s.collapsed.indexOf(inbox) < 0 && eq(paths(r2.s), ['inbox/notes/sub/deep/b.md', 'inbox/notes/a.md', 'untitled.md']), JSON.stringify(paths(r2.s)));
+    const r3 = S.importPaths(S.createSession('', {}), null, [{ path: 'only/', text: '' }]);
+    check('importPaths: phiên trống, chỉ folder rỗng — giữ file trống', r3.files === 0 && S.fileCount(r3.s) === 1 && !!byName(r3.s, 'only'));
+  }
+  // Tải một folder: đường dẫn tính từ folder cha của nó; gập hết; mở ra; Undo giữ chữ sửa sau ảnh chụp.
+  {
+    let s = S.addPaths(S.createSession('', {}), null, [{ path: 'p/notes/a.md', text: 'A' }, { path: 'p/notes/x/', text: '' }, { path: 'p/z.md', text: 'Z' }]).s;
+    const notes = byName(s, 'notes').id;
+    check('treeFiles(folder): đường dẫn từ folder cha, giữ folder rỗng, bỏ file ngoài', eq(S.treeFiles(s, notes), [{ path: 'notes/a.md', text: 'A' }, { path: 'notes/x/', text: '' }]), JSON.stringify(S.treeFiles(s, notes)));
+    const z = S.zipOf(s, new Date(2024, 0, 1), notes);
+    check('zipOf(folder): mục đầu là notes/a.md', new TextDecoder().decode(z.subarray(30, 30 + 10)) === 'notes/a.md');
+    const all = S.collapseAll(s);
+    check('collapseAll: mọi folder gập, phiên đầu vào không đổi', all.collapsed.length === 3 && s.collapsed.length === 0);
+    const rv = S.reveal(all, byName(s, 'a.md').id);
+    check('reveal: mở các folder chứa nút', eq(rv.collapsed, [byName(s, 'x').id]) && S.reveal(all, notes, true).collapsed.indexOf(notes) < 0);
+    s = S.openFile(s, byName(s, 'a.md').id);
+    const snap = s, rm = S.removeNodes(s, [notes]), del = rm.s;
+    S.docOf(del, byName(s, 'z.md').id).text = 'Z sửa sau';
+    const back = S.applyUndo(Object.assign({}, del, { header: 'H' }), rm.undo).s;
+    check('applyUndo (xoá): cây, file mở về như trước; chữ sửa sau và tuỳ chọn giữ', eq(paths(back), paths(snap)) && back.open === snap.open && S.docOf(back, byName(s, 'z.md').id).text === 'Z sửa sau' && S.docOf(back).text === 'A' && back.header === 'H');
+    check('dirOf: folder chứa, gốc là null', S.dirOf(s, byName(s, 'a.md').id) === notes && S.dirOf(s, byName(s, 'p').id) === null && S.dirOf(s, 'không có') === null);
+  }
+  check('importCheck: ẩn / node_modules bỏ không đếm, folder chọn ẩn vẫn nạp; ảnh, > 1 MB bỏ có đếm',
+    X.importCheck('r/.git/x.md', '', 1) === 'ignore' && X.importCheck('r/node_modules/a.md', '', 1) === 'ignore' && X.importCheck('.cfg/a.md', '', 1) === '' &&
+    X.importCheck('r/a.png', 'image/png', 1) === 'skip' && X.importCheck('r/a.md', '', X.MAX_IMPORT + 1) === 'skip' && X.importCheck('r/a.md', '', X.MAX_IMPORT) === '' && X.importCheck('.env', '', 1) === 'ignore');
+}
+// ── Undo chỉ trả lại mục ấy (MDAN-028), nhãn, tên tự đặt, luật nạp, chỗ chuyển, tải về ──
+{
+  const T = await import('../js/core/tree.js');
+  const S = await import('../js/core/session.js');
+  const X = await import('../js/core/text.js');
+  const P = await import('../js/core/prompt.js');
+  const C = await import('../js/core/comments.js');
+  const byName = (s, name) => s.nodes.find((n) => n.name === name);
+  const paths = (s) => T.filesInOrder(s.nodes).map((id) => T.pathOf(s.nodes, id));
+  // Xoá rồi làm thêm việc (file mới, đổi tên, gõ chữ), Undo: chỉ file đã xoá quay lại, việc sau còn nguyên.
+  {
+    let s = S.createSession('A text', {});
+    const b = S.addFile(s, null, 'b.md', 'B text', true); s = b.s;
+    const rm = S.removeNodes(s, [b.id]); s = rm.s;
+    const c = S.addFile(s, null, 'new.md', 'typed new work', true); s = S.openFile(c.s, c.id);
+    s = S.renameIn(s, byName(s, 'untitled.md').id, 'renamed.md').s;
+    const u = S.applyUndo(s, rm.undo);
+    check('applyUndo (xoá): việc làm sau vẫn còn, file xoá quay lại', eq(paths(u.s).sort(), ['b.md', 'new.md', 'renamed.md']) && S.docOf(u.s, c.id).text === 'typed new work' && S.docOf(u.s, b.id).text === 'B text' && u.id === b.id && u.s.open === c.id, JSON.stringify(paths(u.s)));
+    check('applyUndo: không sửa phiên đầu vào, Undo lần hai không làm gì', paths(s).length === 2 && S.applyUndo(u.s, rm.undo).s === u.s);
+  }
+  // Xoá folder chứa file mở; folder cha đã mất thì về gốc; tên trùng thì đổi; folder gập giữ; file mở trở lại.
+  {
+    let s = S.addPaths(S.createSession('', {}), null, [{ path: 'p/d/a.md', text: 'A' }, { path: 'p/d/sub/b.md', text: 'B' }, { path: 'x.md', text: 'X' }]).s;
+    s = S.removeNodes(s, [s.open]).s;   // bỏ untitled.md
+    const d = byName(s, 'd').id, sub = byName(s, 'sub').id;
+    s = S.openFile(s, byName(s, 'a.md').id); s = S.toggleDir(s, sub);
+    const rm = S.removeNodes(s, [d]);
+    let cur = S.removeNodes(rm.s, [byName(rm.s, 'p').id]).s;   // folder cha cũng bị xoá sau đó
+    cur = S.addDir(cur, null, 'd').s;                            // một folder mới cùng tên ở gốc
+    const u = S.applyUndo(cur, rm.undo).s;
+    check('applyUndo (xoá): cha mất thì về gốc, trùng tên thành d-2, cây con nguyên, gập giữ, mở lại file cũ', eq(paths(u), ['d-2/sub/b.md', 'd-2/a.md', 'x.md']) && u.open === byName(s, 'a.md').id && u.collapsed.indexOf(sub) >= 0 && !!byName(u, 'd'), JSON.stringify(paths(u)));
+  }
+  // Xoá file cuối cùng: phiên có untitled.md trống; Undo bỏ nó nếu còn trống, giữ nếu đã gõ chữ.
+  {
+    const s = S.addFile(S.createSession('', {}), null, 'only.md', 'quý', true);
+    const s1 = S.removeNodes(s.s, [s.s.open]).s;
+    const rm = S.removeNodes(s1, [s.id]);
+    check('removeNodes: xoá file cuối thì có untitled.md, undo ghi lại nó', S.fileCount(rm.s) === 1 && rm.undo.added === rm.s.open);
+    const u1 = S.applyUndo(rm.s, rm.undo).s;
+    check('applyUndo: untitled.md thêm khi xoá còn trống thì bỏ', eq(paths(u1), ['only.md']) && u1.open === s.id && S.docOf(u1).text === 'quý');
+    const typed = Object.assign({}, rm.s, { docs: Object.assign({}, rm.s.docs, { [rm.s.open]: { text: 'mới', comments: [], reviews: [], real: false } }) });
+    check('applyUndo: untitled.md đã có chữ thì giữ', eq(paths(S.applyUndo(typed, rm.undo).s), ['only.md', 'untitled.md']));
+  }
+  // Chuyển: Undo về folder cũ; chỉ nút ấy; folder cũ mất thì về gốc; trùng tên thì đổi; nút đã xoá thì thôi.
+  {
+    let s = S.addPaths(S.createSession('', {}), null, [{ path: 'a/f.md', text: 'F' }, { path: 'b/g.md', text: 'G' }]).s;
+    const a = byName(s, 'a').id, b = byName(s, 'b').id, f = byName(s, 'f.md').id;
+    const mv = S.moveIn(s, f, b);
+    check('moveIn: undo ghi folder cũ; chuyển về chỗ cũ thì không có undo', mv.undo.kind === 'move' && mv.undo.parent === a && S.moveIn(s, f, a).undo === null);
+    let cur = S.renameIn(mv.s, byName(mv.s, 'g.md').id, 'g2.md').s;
+    let u = S.applyUndo(cur, mv.undo).s;
+    check('applyUndo (chuyển): về folder cũ, đổi tên làm sau giữ', eq(paths(u), ['a/f.md', 'b/g2.md', 'untitled.md']), JSON.stringify(paths(u)));
+    cur = S.addFile(mv.s, a, 'f.md', 'khác', true).s;
+    check('applyUndo (chuyển): trùng tên ở folder cũ thì f-2.md', eq(paths(S.applyUndo(cur, mv.undo).s), ['a/f-2.md', 'a/f.md', 'b/g.md', 'untitled.md']));
+    cur = S.removeNodes(mv.s, [a]).s;
+    check('applyUndo (chuyển): folder cũ mất thì về gốc; nút mất thì không làm gì', eq(paths(S.applyUndo(cur, mv.undo).s), ['b/g.md', 'f.md', 'untitled.md']) && S.applyUndo(S.removeNodes(mv.s, [f]).s, mv.undo).id === '');
+  }
+  // Phiên cũ: path không tách được thành tên file — nhãn y hệt bản một văn bản (so với chuỗi của bản cũ).
+  {
+    const text = '# T\n\nhello world line\n\nsecond para here\n';
+    const legacy = (path) => ({ text, comments: [{ id: 'c1', quote: 'hello world', comment: 'fix', prefix: '', suffix: '', origin: 'src', rel: 0.1 }], path, header: '', footer: '', fmt: 'inline', lineNums: true, includeDoc: false, reviews: [], rvPrompt: false, named: false, name: '', created: 1, updated: 1 });
+    const NOTE = 'Vị trí ghi dạng tệp:dòng, tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.\n\n1. ';
+    const long = 'x/' + 'y'.repeat(300);
+    const got = ['docs/', '.', '..', 'C:\\work\\', long, ' docs/a.md ', 'a/b/c'].map((p) => {
+      const n = S.normSession(JSON.parse(JSON.stringify(legacy(p))), 'x'), d = S.docOf(n);
+      return P.buildPrompt(n, d, C.anchorAll(d.comments, d.text, ''));
+    });
+    const want = ['docs/', '.', '..', 'C:\\work\\', long, 'docs/a.md', 'a/b/c'].map((l) => NOTE + l + ':3 "hello world" — fix');
+    check('phiên cũ: path docs/, ., .., C:\\work\\, > 255 ký tự — prompt y hệt bản cũ', eq(got, want), JSON.stringify(got.filter((g, i) => g !== want[i])));
+    const n = S.normSession(JSON.parse(JSON.stringify(legacy('docs/'))), 'x');
+    check('phiên cũ legacy: ô Folder giữ nguyên văn, sửa ô thì nhãn theo; thêm file thì về luật cây', n.path === 'docs/' && S.fileLabel(Object.assign({}, n, { path: 'repo/' }), n.open) === 'repo/' && S.fileLabel(S.addFile(n, null, 'b.md', '', true).s, n.open) === 'docs/untitled.md');
+    const again = S.normSession(JSON.parse(JSON.stringify(n)), 'x');
+    check('phiên cũ legacy: lưu rồi đọc lại vẫn giữ; đổi tên file thì thôi', S.docOf(again).legacy === true && S.fileLabel(S.renameIn(n, n.open, 'a.md').s, n.open) === 'docs/a.md');
+  }
+  // File dán chữ (chưa tên thật) trong phiên một file: không nhãn tệp dù ô Folder có chữ (MDAN-029).
+  {
+    const s = Object.assign(S.createSession('# T\n\nhello\n', {}), { path: 'docs' });
+    check('fileLabel: một file chưa có tên thật — rỗng dù có Folder; tên thật hay hai file thì có tiền tố', S.fileLabel(s, s.open) === '' && P.optionsSummary(s) === 'compact · line numbers' &&
+      S.fileLabel(S.renameIn(s, s.open, 'a.md').s, s.open) === 'docs/a.md' && S.fileLabel(S.addFile(s, null, 'b.md', '', false).s, s.open) === 'docs/untitled.md');
+  }
+  // Tên tự đặt không theo file đang mở (MDAN-027).
+  {
+    let s = S.createSession('# Alpha', {});
+    const b = S.addFile(s, null, 'b.md', '# Beta', true); s = b.s;
+    check('autoName: không đổi khi đổi file mở; file đầu theo thứ tự cây có chữ', S.autoName(s) === 'Beta' && S.autoName(S.openFile(s, b.id)) === 'Beta' && S.sessionTitle(S.createSession('', {})) === '' && S.sessionTitle(Object.assign({}, s, { named: true, name: 'Tên' })) === 'Tên');
+  }
+  // Mở file từ đĩa: file trống có tên thật (người dùng đặt) không bị ghi đè, file mới vào cạnh nó.
+  {
+    let s = S.createSession('# A', {});
+    const n = S.addFile(s, null, 'untitled.md', '', false); s = S.openFile(n.s, n.id);
+    s = S.renameIn(s, n.id, 'spec.md').s;
+    const r = S.openFromDisk(s, 'readme.md', '# R');
+    check('openFromDisk: file mở trống nhưng có tên thật — thêm cạnh, spec.md giữ tên', r.added && !!byName(r.s, 'spec.md') && !!byName(r.s, 'readme.md') && S.openFromDisk(s, '  x.md ', 'X').s.nodes.some((x) => x.name === 'x.md'));
+  }
+  // Luật file chữ (MDAN-030), mục bỏ qua, tên có dấu cách.
+  {
+    check('isTextFile: theo đuôi trước kiểu (.ts dù video/mp2t), tên quen không đuôi, text/*; nhị phân không rõ kiểu thì không',
+      X.isTextFile('app.ts', 'video/mp2t') && X.isTextFile('a.PY', '') && X.isTextFile('Makefile', '') && X.isTextFile('x.weird', 'text/x-weird') &&
+      !X.isTextFile('blob.dat', '') && !X.isTextFile('logo.png', 'image/png') && !X.isTextFile('noext', ''));
+    check('hasNul: NUL trong 8 KB đầu', X.hasNul('\u0000\u0001PK') && !X.hasNul('chữ') && !X.hasNul('x'.repeat(9000) + '\u0000'));
+    check('importCheck: .ts nạp, .dat không rõ kiểu bỏ có đếm, file tên node_modules không phải folder', X.importCheck('r/app.ts', 'video/mp2t', 1) === '' && X.importCheck('r/blob.dat', '', 1) === 'skip' && X.importCheck('r/node_modules', 'text/plain', 1) === '');
+    check('skipEntry: tên ẩn, folder node_modules', X.skipEntry('.git', true) && X.skipEntry('.DS_Store', false) && X.skipEntry('node_modules', true) && !X.skipEntry('src', true));
+    check('nameError: dấu cách đầu / cuối là lỗi', /space/.test(T.nameError([], null, ' x.md')) && /space/.test(T.nameError([], null, 'x.md ')) && T.nameError([], null, 'a b.md') === '');
+    const r = S.importPaths(S.createSession('x', {}), null, [{ path: 'a /b.md', text: 'x' }, { path: 'a/c.md', text: 'y' }, { path: ' /d.md', text: 'z' }, { path: 'e/ f.md ', text: 'w' }]);
+    check('importPaths: đoạn bỏ dấu cách đầu / cuối, đoạn chỉ dấu cách thì bỏ và đếm', eq(paths(r.s), ['a/b.md', 'a/c.md', 'e/f.md', 'untitled.md']) && r.files === 3 && r.skipped === 1, JSON.stringify([paths(r.s), r.skipped]));
+    const g = S.importPaths(S.createSession('x', {}), 'không có', [{ path: 'q/w.md', text: 'w' }]);
+    check('importPaths: folder đích không còn thì nạp ở gốc', eq(paths(g.s), ['q/w.md', 'untitled.md']) && g.files === 1);
+  }
+  // File mở đầu sau khi nạp folder vào phiên trống (MDAN-031).
+  {
+    const open = (items) => { const r = S.importPaths(S.createSession('', {}), null, items.map((p) => ({ path: p, text: p }))); return T.pathOf(r.s.nodes, r.s.open); };
+    check('firstFile: file nông nhất, README trước index, rồi thứ tự hiển thị', open(['proj/a/b/deep.md', 'proj/notes.txt', 'proj/readme.md']) === 'proj/readme.md' &&
+      open(['p/z.md', 'p/index.html', 'p/README']) === 'p/README' && open(['p/z.md', 'p/index.md']) === 'p/index.md' && open(['p/sub/x.md', 'p/b.md', 'p/a.md']) === 'p/a.md' && T.firstFile([]) === null);
+  }
+  // Chỗ chuyển: vòng và trùng tên cùng một luật (canMove) cho kéo thả và Move to….
+  {
+    const N = (id, parent, kind, name) => ({ id, parent, kind, name });
+    const nodes = [N('d', null, 'dir', 'docs'), N('r', 'd', 'file', 'readme.md'), N('s', 'd', 'dir', 'sub'), N('t', null, 'file', 'readme.md'), N('e', null, 'dir', 'empty')];
+    check('canMove: trùng tên, vào chính nó / hậu duệ, cùng chỗ thì không', !T.canMove(nodes, 't', 'd') && T.canMove(nodes, 't', 's') && !T.canMove(nodes, 'd', 's') && !T.canMove(nodes, 'd', 'd') && !T.canMove(nodes, 't', null) && T.canMove(nodes, 'r', null) === false && T.canMove(nodes, 's', null));
+    const mt = T.moveTargets(nodes, 't').map((x) => (x.name || 'Top') + ':' + x.depth + (x.ok ? '' : 'x'));
+    check('moveTargets: gốc rồi folder theo thứ tự, trừ chính nó / hậu duệ, ok theo canMove', eq(mt, ['Top:0x', 'docs:1x', 'sub:2', 'empty:1']) && eq(T.moveTargets(nodes, 'd').map((x) => x.name), ['', 'empty']), JSON.stringify(mt));
+  }
+  // Thêm folder / file trong folder đang gập: folder ấy mở ra (thấy hàng mới, đổi tên tại chỗ được).
+  {
+    let s = S.addDir(S.createSession('x', {}), null, 'a').s;
+    const a = byName(s, 'a').id;
+    s = S.toggleDir(s, a);
+    check('addDir / addFile: folder cha đang gập thì mở ra', S.addDir(s, a, 'folder').s.collapsed.indexOf(a) < 0 && S.addFile(s, a, 'n.md', '', false).s.collapsed.indexOf(a) < 0 && s.collapsed.indexOf(a) >= 0);
+  }
+  // Tên và kiểu file tải về; câu hỏi dùng chung với giao diện.
+  {
+    const s = S.addPaths(Object.assign(S.createSession('', {}), { name: 'Tên phiên', named: true }), null, [{ path: 'd/a.md', text: 'A' }, { path: 'd/NOTES', text: 'N' }, { path: 'd/x.txt', text: 'X' }]).s;
+    const dn = (nm) => S.downloadOf(s, nm == null ? null : byName(s, nm).id);
+    check('downloadOf: file giữ tên (thiếu đuôi thêm .md), kiểu theo đuôi; folder / cả phiên .zip', eq(dn('a.md'), { name: 'a.md', type: 'text/markdown;charset=utf-8', zip: false }) && dn('NOTES').name === 'NOTES.md' && /markdown/.test(dn('NOTES').type) && /^text\/plain/.test(dn('x.txt').type) &&
+      eq(dn('d'), { name: 'd.zip', type: 'application/zip', zip: true }) && dn(null).name === 'ten-phien.zip', JSON.stringify([dn('NOTES'), dn(null)]));
+    const one = S.createSession('x', {});
+    check('wantsReview / allFilesOffered', P.wantsReview({ rvPrompt: true, lineNums: true }) && !P.wantsReview({ rvPrompt: true, lineNums: false }) && !P.wantsReview({ rvPrompt: false, lineNums: true }) && P.allFilesOffered(s) && !P.allFilesOffered(one) && !P.promptsAll(Object.assign({}, one, { promptAll: true })));
+  }
+}
+// ── end cây folder + file ──
+
+// ── màu thanh trình duyệt khi có lớp mờ (core/color.js) ──
+{
+  const C = await import('../js/core/color.js');
+  check('parseColor: rgb, rgba, cú pháp có /, color(srgb), hex ngắn / dài',
+    eq(C.parseColor('rgb(245, 246, 243)'), { r: 245, g: 246, b: 243, a: 1 }) && eq(C.parseColor('rgba(11, 15, 12, 0.38)'), { r: 11, g: 15, b: 12, a: 0.38 }) &&
+    eq(C.parseColor('rgb(0 0 0 / 50%)'), { r: 0, g: 0, b: 0, a: 0.5 }) && eq(C.parseColor('color(srgb 1 0 0.5 / 0.2)'), { r: 255, g: 0, b: 127.5, a: 0.2 }) &&
+    eq(C.parseColor('#abc'), { r: 170, g: 187, b: 204, a: 1 }) && eq(C.parseColor(' #F5F6F3 '), { r: 245, g: 246, b: 243, a: 1 }));
+  check('parseColor: chuỗi lạ thì null', C.parseColor('transparentish') === null && C.parseColor('color(display-p3 1 0 0)') === null && C.parseColor('rgb(1, 2)') === null && C.parseColor('') === null);
+  check('barColor: không lớp thì là nền', C.barColor('rgb(245, 246, 243)', []) === '#f5f6f3' && C.barColor('#090b0a') === '#090b0a');
+  check('barColor: --scrim sáng (.38) và --scrim-live tối (.42) trộn đục lên --bg',
+    C.barColor('rgb(245, 246, 243)', ['rgba(11, 15, 12, 0.38)']) === '#9c9e9b' && C.barColor('rgb(9, 11, 10)', ['rgba(0, 0, 0, 0.42)']) === '#050606');
+  const two = C.barColor('rgb(245, 246, 243)', ['rgba(11, 15, 12, 0.2)', 'rgba(11, 15, 12, 0.38)']);
+  check('barColor: hai lớp chồng nhau đậm hơn một lớp; lớp trong suốt, lớp hỏng bỏ qua',
+    two === C.barColor('rgb(245, 246, 243)', ['rgba(11, 15, 12, 0.38)', 'rgba(11, 15, 12, 0.2)']) && two < '#9c9e9b' &&
+    C.barColor('rgb(245, 246, 243)', ['rgba(0, 0, 0, 0)', 'nonsense']) === '#f5f6f3' && C.barColor('nope', []) === null, two);
+}
+// ── end màu thanh ──
 
 console.log(fails ? `md-annotate core: ${fails} LỖI` : 'md-annotate core: OK');
 process.exit(fails ? 1 : 0);

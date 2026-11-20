@@ -1,10 +1,13 @@
 /* Danh sách nhận xét trong panel: vẽ thẻ, nhảy tới đoạn, sửa, xoá (có Undo), rê thẻ ↔ rê đoạn.
    Xuất: flashItem, initList, removeComment, renderList.
-   Dùng: core/comments.js, ui/dom.js, ui/state.js, ui/marks.js, ui/render.js, ui/prompt.js, ui/views.js,
-     ui/panel.js, ui/popup.js. */
+   Danh sách chỉ có nhận xét của file đang mở (D).
+   Dùng: core/comments.js, core/session.js, ui/dom.js, ui/state.js, ui/marks.js, ui/render.js, ui/prompt.js,
+     ui/views.js, ui/panel.js, ui/popup.js, ui/files.js. */
 import { cutComment, partsOf, restoreComment } from '../core/comments.js';
+import { docOf } from '../core/session.js';
 import { $, h, icon, mqSide, reduceMotion, toast } from './dom.js';
-import { loadSession, S, saveClosed, scheduleSave } from './state.js';
+import { D, docKey, S, saveClosed, scheduleSave, sessionFor } from './state.js';
+import { refreshTree } from './files.js';
 import { hoverMarks, marksOf } from './marks.js';
 import { anchors, numbers, ordered, orphans, renderAll } from './render.js';
 import { locText } from './prompt.js';
@@ -15,7 +18,7 @@ import { closePop, openEdit, pending, pop, popDirty } from './popup.js';
 /* Danh sách nhận xét trong panel. Panel nằm ở cột phải (máy rộng) hoặc trong tấm trượt #dlg-panel. */
 export function renderList() {
   fillList($('list'));
-  var total = S.comments.length;
+  var total = D.comments.length;
   $('n-comments').textContent = total ? String(total) : '';
   $('list-empty').hidden = total > 0;
   $('dock-n').textContent = total ? 'Comments · ' + total : 'Comments';
@@ -26,7 +29,7 @@ function leaveSheet(fn) { return function () { if (inSheet()) $('dlg-panel').clo
 function fillList(ol) {
   ol.replaceChildren();
   ordered.forEach(function (c) {
-    var orphan = !!orphans[c.id], num = numbers[c.id], loc = orphan ? '' : locText(c, false);
+    var orphan = !!orphans[c.id], num = numbers[c.id], loc = orphan ? '' : locText(c);
     var li = h('li', { class: 'ma-item' + (orphan ? ' is-orphan' : '') + (pop.id === c.id ? ' is-active' : ''), 'data-id': c.id },
       h('button', { class: 'ma-item__main', type: 'button', title: 'Go to this passage', onclick: leaveSheet(function () { jumpTo(c.id); }) },
         h('span', { class: 'ma-item__top' },
@@ -87,17 +90,20 @@ function editFromList(id) {
   openEdit(id, ms.length ? ms[ms.length - 1] : li);
 }
 export function removeComment(id) {
-  var cut = cutComment(S, id), sid = S.id;
+  var cut = cutComment(D, id), key = docKey(), sid = S.id, fid = S.open, base = S;
   if (!cut) return;
   if (pop.id === id) closePop(true);
   scheduleSave(); renderAll();
   toast('Comment deleted.', {
     label: 'Undo',
     fn: function () {
-      if (S.id === sid) { restoreComment(S, cut); scheduleSave(); renderAll(); return; }
-      /* Đã chuyển phiên trong lúc toast còn hiện: trả nhận xét về phiên của nó (đã lưu khi chuyển), không vào S. */
-      var s = loadSession(sid);
-      if (s) { restoreComment(s, cut); saveClosed(s); }
+      if (docKey() === key) { restoreComment(D, cut); scheduleSave(); renderAll(); return; }
+      /* Đã sang file hay phiên khác trong lúc toast còn hiện: trả nhận xét về doc của nó (phiên cũ đã lưu khi chuyển, bị
+         xoá vì trống thì dựng lại từ base), không vào file đang mở. */
+      var s = sessionFor(sid, base), d = s && docOf(s, fid);
+      if (!d) return;
+      restoreComment(d, cut);
+      if (s === S) { scheduleSave(); refreshTree(); } else saveClosed(s);
     }
   });
 }

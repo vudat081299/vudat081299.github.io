@@ -3,7 +3,7 @@
    "Accept N suggested" ở tab Review. Không bao giờ tự đánh dấu: chấp nhận bằng X, bấm làn (ui/review.js) hay nút.
    Chỉ đếm khi tab hiện, cửa sổ có focus, người dùng không rảnh tay quá 60 s; cuộn do trang (J / K / X, dải tiến độ, cuộn
    theo nhau, setByPage) không tính là đọc; đơn vị chỉ được gợi ý khi rời dải lúc người dùng tự cuộn (bánh xe, chạm,
-   phím cuộn, kéo thanh cuộn). Gợi ý và thời gian chỉ ở bộ nhớ của phiên đang mở, không lưu.
+   phím cuộn, kéo thanh cuộn). Gợi ý và thời gian chỉ ở bộ nhớ của file đang mở (docKey), không lưu.
    Toán ở core/dwell.js; toạ độ làn, dải đọc, lớp .is-sug của làn và việc ghi dấu ở ui/review.js.
    Xuất: initDwell, noteJump, noteLayout, sugIdx, syncSug.
    Dùng: core/dwell.js, core/review.js, core/text.js, ui/dom.js, ui/store.js, ui/state.js, ui/views.js, ui/review.js. */
@@ -12,7 +12,7 @@ import { markWord, setMarks } from '../core/review.js';
 import { plural } from '../core/text.js';
 import { $ } from './dom.js';
 import { prefs, savePrefs } from './store.js';
-import { S } from './state.js';
+import { D, docKey } from './state.js';
 import { view } from './views.js';
 import { laneGeo, readingBand, repaintLanes, rvState, setReviews } from './review.js';
 
@@ -23,10 +23,10 @@ var last = 0, userUntil = -Infinity, scrollUser = false, inputAt = 0, jumping = 
 function now() { return performance.now(); }
 function enabled() { return prefs.rvSuggest !== false; }
 function keysOf(r) {
-  if (memo.units !== r.units) memo = { units: r.units, keys: sugKeys(r.units), words: unitWords(S.text, r.units) };
+  if (memo.units !== r.units) memo = { units: r.units, keys: sugKeys(r.units), words: unitWords(D.text, r.units) };
   return memo;
 }
-function sameSession() { if (sid !== S.id) { sid = S.id; tr = {}; sug = {}; rebase = true; } }
+function sameSession() { if (sid !== docKey()) { sid = docKey(); tr = {}; sug = {}; rebase = true; } }
 /* Chỉ số các đơn vị đang được gợi ý (chưa đọc, không phải tiêu đề), cho làn, dải tiến độ và nút Accept. */
 export function sugIdx(r) {
   sameSession();
@@ -48,7 +48,7 @@ function sample() {
   var t = now(), dt = Math.min(1000, Math.max(0, t - last));
   last = t;
   sameSession();
-  if (!enabled() || view === 'edit' || !S.text) { tr = {}; rebase = true; return; }
+  if (!enabled() || view === 'edit' || !D.text) { tr = {}; rebase = true; return; }
   var b = readingBand();
   if (!b) { tr = {}; rebase = true; return; }
   var r = rvState(), g = laneGeo()[b.w];
@@ -92,7 +92,7 @@ function acceptAll() {
   if (!idx.length) return;
   var sb = Object.assign({}, sug);
   idx.forEach(function (i) { delete sug[km.keys[i]]; });
-  setReviews(setMarks(r.units, S.reviews, r.res, idx, true), markWord(r.units, idx, true), function () { sug = sb; });
+  setReviews(setMarks(r.units, D.reviews, r.res, idx, true), markWord(r.units, idx, true), function () { sug = sb; });
 }
 /* Bỏ các gợi ý đang hiện và thời gian đã đếm của chúng (không thì đi qua lần nữa là gợi ý lại ngay). */
 function dismissAll() {

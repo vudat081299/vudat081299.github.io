@@ -8,7 +8,7 @@ import { lineOf, plural } from '../core/text.js';
 import { dropLost, firstOpen, reviewSections } from '../core/review.js';
 import { $, h } from './dom.js';
 import { setLayout } from './layout.js';
-import { S } from './state.js';
+import { D } from './state.js';
 import { anchors, ordered, orphans } from './render.js';
 import { lastRead, setView, view } from './views.js';
 import { setPane } from './panel.js';
@@ -21,7 +21,7 @@ function commentLines() {
   var out = [];
   ordered.forEach(function (c) {
     var a = anchors[c.id];
-    if (!orphans[c.id] && a && a.src) out.push(lineOf(S.text, a.src[0]) - 1);
+    if (!orphans[c.id] && a && a.src) out.push(lineOf(D.text, a.src[0]) - 1);
   });
   return out;
 }
@@ -37,7 +37,7 @@ function toText(fn) {
 var emptyP = null;   // chữ gốc của #rv-empty
 /* blind: chưa tách được khối (thiếu mạng): không có % để hiện, dấu vẫn giữ. */
 export function renderReviewPanel(r, p, blind) {
-  var has = r.units.length > 0, marked = S.reviews.length > 0 && !blind, pct = p.pct + '%';
+  var has = r.units.length > 0, marked = D.reviews.length > 0 && !blind, pct = p.pct + '%';
   $('n-review').textContent = marked ? pct : '';
   $('rail-rv').hidden = !marked; $('rail-rv').textContent = pct;
   $('rail-rv').setAttribute('aria-label', 'Review: ' + pct + ' reviewed');
@@ -85,10 +85,10 @@ export function initReviewPanel() {
   });
   $('rv-lost-x').addEventListener('click', function () {
     var n = rvState().res.lost.length;
-    setReviews(dropLost(S.reviews, rvState().res), 'Removed ' + plural(n, 'lost review mark') + '.');
+    setReviews(dropLost(D.reviews, rvState().res), 'Removed ' + plural(n, 'lost review mark') + '.');
   });
   $('rv-clear').addEventListener('click', function () {
-    if (S.reviews.length) setReviews([], 'Cleared ' + plural(S.reviews.length, 'review mark') + '.');
+    if (D.reviews.length) setReviews([], 'Cleared ' + plural(D.reviews.length, 'review mark') + '.');
   });
   $('rail-rv').addEventListener('click', function () { $('btn-unrail').click(); setPane('review'); });
   $('dock-rv').addEventListener('click', function () { $('dock-n').click(); setPane('review'); setRvTouched(); });

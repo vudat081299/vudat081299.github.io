@@ -18,11 +18,11 @@
   .ma-dock__list { margin-right: auto; padding: 0 var(--s3) 0 var(--s2); }
   .ma-dock__list::after { content: ''; width: 7px; height: 7px; margin-left: 2px; border: solid currentColor; border-width: 2px 2px 0 0; transform: translateY(2px) rotate(-45deg); }
   .ma-fab, .ma-toast { bottom: calc(86px + env(safe-area-inset-bottom)); }
-  .ma-dlg.ma-dlg--panel { width: min(640px, 100vw); max-width: 100vw; margin: auto auto 0; max-height: none; border-radius: var(--r-lg) var(--r-lg) 0 0; border-bottom: 0; }
-  .ma-dlg.ma-dlg--panel[open] { overflow: hidden; }   /* panel trong tấm tự cuộn thân; tấm không cuộn, không có thanh ở góc bo */
+  /* Tấm panel: thẻ là .ma-panel (tự cuộn thân; thẻ không cuộn, không có thanh ở góc bo). Cao min(86vh, 760px) cộng viền trên. */
   .ma-dlg--panel .ma-panel {
-    position: static; height: min(86vh, 760px); min-height: 0;
-    border: 0; border-radius: 0; box-shadow: none;
+    position: static; width: min(640px, 100vw); max-width: 100vw; margin: auto auto 0;
+    height: calc(min(86vh, 760px) + 1px); min-height: 0;
+    border: 1px solid var(--line); border-bottom: 0; border-radius: var(--r-lg) var(--r-lg) 0 0; box-shadow: var(--shadow);
   }
   .ma-dlg--panel .ma-panel__close { display: inline-flex; }
   .ma-dlg--panel .ma-panel__grip, .ma-dlg--panel #btn-rail { display: none; }
@@ -40,9 +40,13 @@
 @media (max-width: 720px) {
   :root { --pad: var(--s4); --bar-h: 56px; }
   .ma-bar { position: static; }
-  .ma-bar__in { gap: var(--s1); }   /* 360px: đủ chỗ cho tên md-annotate cạnh bốn nút */
-  .ma-bar .ma-btn__lbl { display: none; }
+  /* Thanh trên: Files, tên, History, Settings, More (New session, theme, Shortcuts trong menu #bar-menu, ui/bar.js).
+     360px: đủ chỗ cho tên md-annotate cạnh bốn nút. */
+  .ma-bar__in { gap: var(--s1); }
+  .ma-bar .ma-btn__lbl, .ma-bar .ma-bar__opt { display: none; }
+  .ma-bar .ma-bar__more { display: inline-flex; }
   .ma-bar .ma-btn { width: var(--h-touch); padding: 0; flex: none; }
+  .ma-menu:focus { outline: none; }   /* mở bằng chạm: focus ở khung menu, không vòng */
   .ma-grid { padding-top: var(--s2); }
   .ma-head { padding: 0 0 var(--s2); }
   .ma-head h1 { font-size: var(--fs-lg); }
@@ -60,17 +64,19 @@
   .ma-edit { padding: var(--s2); }
   #src-input { min-height: 46vh; }
   #src-input.is-empty { min-height: 120px; }
-  .ma-dlg { width: 100vw; max-width: 100vw; margin: auto 0 0; max-height: 85vh; border-radius: var(--r-lg) var(--r-lg) 0 0; }
-  .ma-dlg.ma-dlg--center { width: calc(100vw - 2 * var(--s4)); margin: auto; border-radius: var(--r-lg); }
+  .ma-dlg__in { width: 100vw; max-width: 100vw; margin: auto 0 0; max-height: 85vh; border-radius: var(--r-lg) var(--r-lg) 0 0; }
+  .ma-dlg--center .ma-dlg__in { width: calc(100vw - 2 * var(--s4)); margin: auto; border-radius: var(--r-lg); }
   .ma-toast { left: var(--s4); right: var(--s4); transform: none; width: auto; max-width: none; }
 }
 /* Máy 320px: thanh trên chỉ đủ chỗ cho biểu tượng và bốn nút; tên trang có ở tiêu đề ngay dưới. */
 @media (max-width: 359px) { .ma-brand__txt { display: none; } }
-/* Hộp nhận xét thành tấm trượt đáy ở máy hẹp hoặc màn cảm ứng: nền mờ phía sau bằng bóng (không chặn chạm: chạm ra
-   ngoài vẫn tới trang và đóng hộp), tay nắm trang trí, trượt lên khi mở; chip gợi ý một hàng cuộn ngang. */
+/* Hộp nhận xét thành tấm trượt đáy ở máy hẹp hoặc màn cảm ứng: tay nắm trang trí, trượt lên khi mở; chip gợi ý một
+   hàng cuộn ngang. Nền mờ phía sau là #pop-scrim (lớp fixed riêng, như hộp thoại: dialogs.css), không chặn chạm: chạm ra
+   ngoài vẫn tới trang và đóng hộp; ui/popup.js chỉ hiện nó khi không chọn nhiều dòng (MDAN-026). Lớp hiện ngay, không mờ dần. */
+.ma-scrim { position: fixed; inset: 0; z-index: 59; pointer-events: none; background-color: var(--scrim-live); }   /* ngay dưới .ma-pop (60) */
 .ma-pop.is-sheet {
   position: fixed; left: 0; right: 0; bottom: 0; top: auto; width: auto; max-height: 82vh; overflow: auto;
-  border: 0; border-radius: var(--r-lg) var(--r-lg) 0 0; box-shadow: 0 0 0 100vmax var(--scrim-live), var(--shadow-pop);
+  border: 0; border-radius: var(--r-lg) var(--r-lg) 0 0; box-shadow: var(--shadow-pop);
   border-top: var(--r-lg) solid transparent;   /* tấm cuộn được: thanh cuộn dừng cách góc bo một bán kính (như .ma-dlg__b) */
   padding: calc(var(--s4) + var(--s2) - var(--r-lg)) var(--s4) calc(var(--s4) + env(safe-area-inset-bottom));
 }

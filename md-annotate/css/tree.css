@@ -1,0 +1,129 @@
+/* Cây folder + file (ui/tree.js): cột fixed sát mép trái màn hình khi đủ chỗ, không thì tấm trượt trái #dlg-tree (mọi bề
+   rộng); đầu cây, hàng, huy hiệu, ô đổi tên, chỗ thả, menu hàng (.ma-menu, cả menu More của thanh trên). Nạp sau panel.css,
+   trước mobile.css. */
+/* CỘT TRÁI (MDAN-037): chỉ khi html.ma-tree-on (ui/tree.js: cây có dữ liệu, đang hiện, #doc còn đủ chỗ). Cây là con của body,
+   fixed từ đáy thanh trên tới đáy khung nhìn, cuộn riêng, chỉ viền phải. Bề rộng --tree, kéo 180–420 (prefs.treeW). Trang dời
+   sang phải --tree: vùng làm việc (lưới và phần trong thanh trên) căn giữa phần còn lại; nền thanh trên vẫn trọn bề ngang. */
+body > .ma-tree { display: none; }
+html.ma-tree-on { --tree-off: var(--tree); }
+html.ma-tree-on body { padding-left: var(--tree); }
+html.ma-tree-on .ma-bar { margin-left: calc(-1 * var(--tree)); padding-left: var(--tree); }
+html.ma-tree-on body > .ma-tree {
+  display: flex; position: fixed; z-index: 25; left: 0; top: calc(var(--bar-h) + 1px); bottom: 0; width: var(--tree);
+  padding-bottom: env(safe-area-inset-bottom); border-right: 1px solid var(--line);
+}
+/* ≤ 1080px: thanh đáy (mobile.css) cao 76px: cây dừng trên nó. */
+@media (max-width: 1080px) {
+  html.ma-tree-on body > .ma-tree { bottom: calc(76px + env(safe-area-inset-bottom)); padding-bottom: 0; }
+}
+.ma-tree { flex-direction: column; min-width: 0; overflow: hidden; background: var(--surface); user-select: none; -webkit-user-select: none; }
+/* Kéo mép phải để đổi bề rộng. */
+.ma-tree__grip { position: absolute; z-index: 2; right: 0; top: 0; bottom: 0; width: 8px; cursor: col-resize; touch-action: none; }
+.ma-tree__grip::before { content: ''; position: absolute; top: var(--s3); bottom: var(--s3); right: 0; width: 3px; border-radius: var(--r-pill); background: transparent; transition: background var(--dur) var(--ease); }
+/* Như #panel-grip: rê / kéo --edge-on, focus --ring (≥ 3:1). */
+.ma-tree__grip.is-drag::before { background: var(--edge-on); }
+@media (hover: hover) { .ma-tree__grip:hover::before { background: var(--edge-on); } }
+.ma-tabbing .ma-tree__grip:focus-visible::before { background: var(--ring); }
+.ma-tree__grip:focus-visible { outline: none; }
+
+/* Đầu: tên phiên, rồi hàng nút biểu tượng gọn (thiếu chỗ thì xuống dòng). */
+.ma-tree__head { flex: none; display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--s1); padding: var(--s2) var(--s2) var(--s1) var(--s3); border-bottom: 1px solid var(--line-2); }
+.ma-tree__t { flex: 1 1 8em; min-width: 0; min-height: var(--h-sm); display: flex; align-items: center; font: 600 var(--fs-md)/var(--lh-tight) var(--sans); color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ma-tree__t > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.ma-tree__tools { flex: none; display: flex; margin-left: auto; }
+.ma-tree__tools .ma-icbtn { width: var(--h-sm); height: var(--h-sm); }
+.ma-tree__tools .ma-icbtn svg { width: 16px; height: 16px; }
+.ma-tree__close { display: none; }
+
+/* Thân: chỗ cuộn duy nhất; đệm đáy là viền trong suốt (thanh cuộn dừng trên nó). */
+.ma-tree__body {
+  position: relative; flex: 1 1 auto; min-height: 0; overflow: auto; overscroll-behavior: contain;
+  padding: var(--s1) var(--s1) 0; border-bottom: var(--s2) solid transparent;
+}
+.ma-tree__body.is-drop { background: var(--accent-soft); box-shadow: inset 0 0 0 1px var(--edge-on); }
+.ma-tree__list { list-style: none; margin: 0; padding: 0; min-height: 100%; }
+
+/* HÀNG: thụt theo --depth, trần thụt chừa ≥ ~8 ký tự tên ở mọi bề rộng (đường dẫn đầy đủ ở title). */
+.ma-trow {
+  position: relative; display: flex; align-items: center; gap: var(--s1);
+  min-height: var(--h-sm); padding: 0 var(--s1) 0 calc(var(--s1) + min(calc(var(--depth, 0) * var(--tree-step)), calc(100% - 152px)));
+  border-radius: var(--r-sm); color: var(--ink-2); cursor: pointer;
+  transition: background var(--dur) var(--ease);
+}
+.ma-trow:focus { outline: none; }
+.ma-tabbing .ma-trow:focus-visible { outline: 2px solid var(--ring); outline-offset: -2px; }
+@media (hover: hover) { .ma-trow:hover { background: var(--chip); color: var(--ink); } }
+/* File đang mở: nền nhạt + viền --edge-on (≥ 3:1), chữ mực, không phải chữ xanh. */
+.ma-trow[aria-selected="true"] { background: var(--accent-soft); box-shadow: inset 0 0 0 1px var(--edge-on); color: var(--ink); }
+.ma-trow[aria-selected="true"] .ma-trow__name { font-weight: 600; }
+.ma-trow.is-drop { background: var(--accent-soft); box-shadow: inset 0 0 0 2px var(--edge-on); }
+.ma-trow.is-dragging { opacity: .5; }
+.ma-trow__chev, .ma-trow__ic { flex: none; width: 16px; height: 16px; display: grid; place-items: center; color: var(--ink-3); }
+.ma-trow__chev svg { width: 14px; height: 14px; transition: transform var(--dur) var(--ease); }
+.ma-trow[aria-expanded="true"] .ma-trow__chev svg { transform: rotate(90deg); }
+.ma-trow__ic svg { width: 16px; height: 16px; }
+.ma-trow__name { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--fs-md); line-height: var(--lh-tight); }
+/* Huy hiệu: số nhận xét (viên thuốc) và % đã đọc (mờ). */
+.ma-trow__meta { flex: none; display: flex; align-items: center; gap: var(--s1); }
+.ma-trow__c {
+  display: inline-grid; place-items: center; min-width: 18px; height: 18px; padding: 0 var(--s1);
+  border-radius: var(--r-pill); background: var(--chip); color: var(--ink-2);
+  font: 500 var(--fs-xs)/1 var(--mono); font-variant-numeric: tabular-nums;
+}
+.ma-trow__rv { font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-3); font-variant-numeric: tabular-nums; }
+/* Nút ⋯: chuột thì hiện khi rê / focus / menu đang mở; cảm ứng luôn hiện. */
+.ma-trow__more.ma-icbtn { flex: none; width: 24px; height: 24px; border-radius: var(--r-xs); }
+.ma-trow__more.ma-icbtn svg { width: 16px; height: 16px; }
+@media (hover: hover) {
+  .ma-trow:not(:hover):not(:focus-within):not(.is-menu) .ma-trow__more { display: none; }
+}
+/* Ô đổi tên tại chỗ. */
+.ma-trow__ren.ma-input { flex: 1 1 auto; height: calc(var(--h-sm) - 6px); padding: 0 var(--s1); font-size: var(--fs-md); user-select: text; -webkit-user-select: text; }
+
+/* MENU HÀNG: popover (lớp trên cùng, cả khi cây trong tấm trượt). */
+.ma-menu {
+  position: fixed; inset: auto; margin: 0; z-index: 60; min-width: 184px; max-width: min(300px, calc(100vw - 2 * var(--s4)));
+  max-height: min(60vh, 420px); overflow: auto; overscroll-behavior: contain; padding: 0 var(--s1);
+  display: none; flex-direction: column; gap: 1px;
+  background: var(--surface); color: var(--ink); border-radius: var(--r); box-shadow: var(--shadow-pop);
+  /* viền trên / dưới trong suốt dày bằng góc bo: thanh cuộn không chạm đường cong (MDAN-018); nét viền là outline */
+  border: solid transparent; border-width: var(--r) 1px; outline: 1px solid var(--line); outline-offset: -1px;
+}
+.ma-menu.is-open { display: flex; }
+.ma-menu__h { padding: var(--s1) var(--s2); font: 500 var(--fs-xs)/var(--lh-tight) var(--mono); color: var(--ink-3); letter-spacing: .04em; text-transform: uppercase; }
+.ma-menu__i {
+  display: flex; align-items: center; gap: var(--s2); min-height: var(--h-sm); padding: 0 var(--s2);
+  border: 0; border-radius: var(--r-sm); background: transparent; text-align: left;
+  font: 400 var(--fs-md)/var(--lh-tight) var(--sans); color: var(--ink-2); white-space: nowrap;
+}
+.ma-menu__i svg { flex: none; width: 16px; height: 16px; color: var(--ink-3); }
+.ma-menu__i > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.ma-menu__i:focus { outline: none; background: var(--chip); color: var(--ink); }
+.ma-tabbing .ma-menu__i:focus-visible { outline: 2px solid var(--ring); outline-offset: -2px; }
+@media (hover: hover) { .ma-menu__i:hover { background: var(--chip); color: var(--ink); } }
+.ma-menu__i:disabled { opacity: .5; cursor: default; background: transparent; }
+.ma-menu__i--danger, .ma-menu__i--danger svg { color: var(--danger); }
+.ma-menu__sep { height: 1px; margin: var(--s1) 0; background: var(--line-2); }
+/* Danh sách folder của "Move to…": thụt theo cấp, có trần. */
+.ma-menu__i[data-depth] { padding-left: calc(var(--s2) + min(calc(var(--depth, 0) * var(--tree-step)), 96px)); }
+
+/* TẤM TRƯỢT: không đủ chỗ cho cột (mọi bề rộng), cây vào #dlg-tree. Thẻ là .ma-tree, sát mép trái lớp (dialogs.css). */
+.ma-dlg--tree .ma-tree {
+  display: flex; position: static; flex: none; width: min(340px, 88vw); max-width: 88vw; height: 100vh; height: 100dvh; min-height: 0;
+  margin: 0 auto 0 0; border: 0; border-right: 1px solid var(--line); border-radius: 0; box-shadow: var(--shadow);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.ma-dlg--tree .ma-tree__close { display: inline-flex; }
+.ma-dlg--tree .ma-tree__grip { display: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .ma-dlg--tree[open] .ma-tree { animation: ma-tree-in .22s var(--ease); }
+}
+@keyframes ma-tree-in { from { transform: translateX(-24px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+/* Màn cảm ứng và điện thoại: hàng, nút, mục menu cao --h-touch. */
+@media (max-width: 720px), (pointer: coarse) {
+  .ma-trow, .ma-menu__i { min-height: var(--h-touch); }
+  .ma-tree__tools .ma-icbtn { width: var(--h-touch); height: var(--h-touch); }
+  .ma-trow__more.ma-icbtn { width: var(--h-touch); height: var(--h-touch); margin-right: calc(-1 * var(--s1)); }
+  .ma-trow__ren.ma-input { height: calc(var(--h-touch) - 8px); font-size: var(--fs-lg); }
+}

@@ -3,7 +3,8 @@
 /* NỀN */
 *, *::before, *::after { box-sizing: border-box; }
 [hidden] { display: none !important; }
-html { -webkit-text-size-adjust: 100%; }
+/* Nền đặt rõ ở cả html: Safari coi gốc trong suốt là trắng khi tô vùng thanh trạng thái. */
+html { -webkit-text-size-adjust: 100%; background-color: var(--bg); }
 /* Split vừa khít khung nhìn: khoá cuộn trang, để thanh cuộn chính không chập chờn khi trang dư hay thiếu 1px. */
 html.ma-fit { overflow: hidden; }
 body {
@@ -27,7 +28,9 @@ a { color: inherit; }
 /* Thanh cuộn mảnh, nhạt, theo theme. */
 * { scrollbar-width: thin; scrollbar-color: var(--sb-thumb) transparent; }
 .ma-panel__body, .ma-dlg__b, .ma-out, .ma-opts__in, .ma-view { scrollbar-gutter: stable; }
-.ma-wrap { width: var(--wrap-w, min(100%, max(70vw, 1280px))); margin-inline: auto; padding: 0 var(--pad); } /* mặc định ~70%, ≥ 1280px; chỉnh ở Layout (MDAN-005) */
+/* Vùng làm việc: --wrap-f của khung nhìn còn lại (trừ cây docked), không hẹp hơn --wrap-min, không quá chỗ có; căn giữa (MDAN-005,
+   MDAN-037). core/panes.js wrapWidth tính y như vậy. */
+.ma-wrap { width: min(100%, max(calc(var(--wrap-f) * (100vw - var(--tree-off))), var(--wrap-min))); margin-inline: auto; padding: 0 var(--pad); }
 svg.ma-i { width: 16px; height: 16px; flex: none; }
 
 /* THANH TRÊN */
@@ -52,6 +55,8 @@ svg.ma-i { width: 16px; height: 16px; flex: none; }
 .ma-brand b { font-weight: 500; color: var(--ink); }
 .ma-brand__txt { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .ma-bar__sp { flex: 1; }
+/* Nút More: chỉ ở điện thoại (mobile.css), thay các nút .ma-bar__opt. */
+.ma-bar .ma-bar__more { display: none; }
 
 /* NÚT — một họ: chính (--go), phụ (mặc định), trơn (--quiet, --bare, thanh trên), chỉ biểu tượng (.ma-icbtn).
    Cao --h (trong thẻ: --h-sm), bo --r-sm, chữ --fs-md 600. Rê: nền --chip; tắt: mờ 50%, nút chính tắt thì xám. */
@@ -78,6 +83,8 @@ svg.ma-i { width: 16px; height: 16px; flex: none; }
 .ma-btn--go:disabled { opacity: 1; background: var(--chip); border-color: transparent; color: var(--ink-3); }
 .ma-btn--go:disabled .ma-kbd { color: inherit; background: color-mix(in srgb, var(--ink) 8%, transparent); }
 html:not(.dark) .ma-moon, html.dark .ma-sun { display: none; }
+/* Mục theme của menu More: biểu tượng của theme sẽ chuyển sang. */
+html.dark .ma-to-dark, html:not(.dark) .ma-to-light { display: none; }
 
 /* HUY HIỆU — số đếm (trung tính, viên thuốc) và số thứ tự nhận xét (nền --accent, bo --r-xs). Mono --fs-xs, cao 20px. */
 .ma-badge {

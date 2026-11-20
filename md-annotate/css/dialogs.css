@@ -1,13 +1,20 @@
 /* Hộp thoại: khung chung, hộp Settings (.ma-set), hàng của History / Hints (.ma-row). */
-/* HỘP THOẠI */
+/* HỘP THOẠI. <dialog> là lớp phủ trọn khung nhìn, nền của nó là lớp mờ (::backdrop trong suốt): iOS 26 Safari tô vùng
+   thanh trạng thái theo nền của phần tử fixed ở mép màn hình, không theo ::backdrop. Thẻ nhìn thấy là con: .ma-dlg__in,
+   hay .ma-panel / .ma-tree dời vào tấm trượt (mobile.css, tree.css). Lớp hiện ngay, không mờ dần; chuyển động chỉ ở thẻ. */
 .ma-dlg {
-  width: min(600px, calc(100vw - 2 * var(--s4))); max-height: min(80vh, 720px); padding: 0;
-  background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--shadow);
+  position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none;
+  margin: 0; padding: 0; border: 0; overflow: hidden;
+  background-color: var(--scrim); color: var(--ink);
 }
-.ma-dlg::backdrop { background: var(--scrim); }
-/* Hộp thoại là khung flex không cuộn; chỉ thân (.ma-dlg__b) cuộn. Tránh hai thanh cuộn chồng nhau. */
-.ma-dlg[open]:not(.ma-dlg--panel) { display: flex; flex-direction: column; overflow: hidden; }
-.ma-dlg__in { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; }
+.ma-dlg::backdrop { background: transparent; }
+.ma-dlg[open] { display: flex; }
+/* Thẻ: giữa lớp (margin auto), khung flex không cuộn; chỉ thân (.ma-dlg__b) cuộn. Tránh hai thanh cuộn chồng nhau. */
+.ma-dlg__in {
+  display: flex; flex-direction: column; min-height: 0; overflow: hidden; margin: auto;
+  width: min(600px, calc(100vw - 2 * var(--s4))); max-height: min(80vh, 720px);
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--shadow);
+}
 /* Đầu: tiêu đề --fs-lg, nút đóng trơn --h; lề trái bằng lề thân (--s4). */
 .ma-dlg__h { flex: none; display: flex; align-items: center; gap: var(--s2); padding: var(--s2) var(--s2) var(--s2) var(--s4); border-bottom: 1px solid var(--line); }
 .ma-dlg__h h2 { margin: 0; flex: 1; font: 600 var(--fs-lg)/var(--lh-tight) var(--display); }
@@ -17,8 +24,8 @@
 .ma-dlg__b { padding-bottom: 0; border-bottom: var(--r-lg) solid transparent; }
 /* Hộp giữa màn hình (Settings, Shortcuts): giữa cả ở điện thoại (mobile.css), nền sau mờ. Settings (--live) hẹp và
    mờ nhẹ (--scrim-live) để vẫn thấy thay đổi đang kéo ở hai bên hộp (MDAN-015). */
-.ma-dlg--live { width: min(420px, calc(100vw - 2 * var(--s4))); }
-.ma-dlg--live::backdrop { background: var(--scrim-live); }
+.ma-dlg--live { background-color: var(--scrim-live); }
+.ma-dlg--live .ma-dlg__in { width: min(420px, calc(100vw - 2 * var(--s4))); }
 @media (max-width: 720px) { .ma-set.ma-set--wrap { display: none; } }
 /* Nút phụ ở đầu hộp (Shortcuts trong Settings): nhỏ như nút trong thẻ. */
 .ma-dlg__act { min-height: var(--h-sm); padding: 0 var(--s2); font-size: var(--fs-sm); }

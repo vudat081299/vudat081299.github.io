@@ -1,5 +1,5 @@
 /* Điểm vào: gọi init… của từng module đúng thứ tự cũ, rồi khởi động. Chỉ giữ ở đây việc dùng chung cả trang:
-   phím tắt chép prompt, đóng hộp thoại, nút theme.
+   phím tắt chép prompt, đóng hộp thoại (và màu thanh trình duyệt theo lớp mờ, syncBar), nút theme.
    Thứ tự quan trọng (hai module nghe cùng phần tử):
    - initSyncScroll trước initFocus: cuộn #wrap-src / #wrap-md (sync bỏ syncExpect cũ của khung người dùng cuộn trước
      khi focus hỏi setByPage);
@@ -12,10 +12,11 @@
    Xuất: không (chạy khi nạp).
    Dùng: ui/store.js, ui/dom.js, ui/state.js, ui/hints.js, ui/render.js, ui/list.js, ui/prompt.js, ui/views.js,
      ui/sync-scroll.js, ui/panel.js, ui/layout.js, ui/help.js, ui/focus.js, ui/popup.js, ui/selection.js, ui/picks.js,
-     ui/history.js, ui/editor.js, ui/review.js, ui/review-panel.js, ui/minimap.js, ui/dwell.js. */
+     ui/history.js, ui/editor.js, ui/review.js, ui/review-panel.js, ui/minimap.js, ui/dwell.js, ui/tree.js, ui/bar.js.
+   ui/files.js (cây của phiên) không có init: renderAll() vẽ cây lần đầu. */
 import { KEY, store } from './ui/store.js';
-import { $ } from './ui/dom.js';
-import { initState, S } from './ui/state.js';
+import { $, syncBar } from './ui/dom.js';
+import { D, initState, S } from './ui/state.js';
 import { initHints, loadDefaultHints, renderHintsDlg } from './ui/hints.js';
 import { checkRenderer, renderAll } from './ui/render.js';
 import { initList } from './ui/list.js';
@@ -23,6 +24,8 @@ import { copyPrompt, initPrompt } from './ui/prompt.js';
 import { initViews, setView, view } from './ui/views.js';
 import { initSyncScroll } from './ui/sync-scroll.js';
 import { initPanel } from './ui/panel.js';
+import { initTree } from './ui/tree.js';
+import { initBar } from './ui/bar.js';
 import { initLayout } from './ui/layout.js';
 import { initHelp } from './ui/help.js';
 import { initFocus } from './ui/focus.js';
@@ -51,6 +54,8 @@ function initDialogs() {
   document.querySelectorAll('dialog').forEach(function (d) {
     d.addEventListener('click', function (e) { if (e.target === d) d.close(); });
     d.addEventListener('close', function () { if (d.contains($('toast'))) document.body.append($('toast')); });
+    /* Mở / đóng (thuộc tính open, mọi đường: showModal, close, Esc): màu thanh trình duyệt theo lớp mờ. */
+    new MutationObserver(syncBar).observe(d, { attributes: true, attributeFilter: ['open'] });
   });
 }
 /* html.ma-tabbing: vòng focus chỉ hiện từ lần bấm Tab đầu (css/base.css); bấm chuột / chạm thì tắt. Focus do script đặt
@@ -64,13 +69,14 @@ function initTheme() {
   $('theme').addEventListener('click', function () {
     var dark = document.documentElement.classList.toggle('dark');
     try { localStorage.setItem('hub-theme', dark ? 'dark' : 'light'); } catch (e) {}
-    $('theme-color').setAttribute('content', dark ? '#090b0a' : '#f5f6f3');
+    syncBar();
   });
 }
 
 initViews();
 initSyncScroll();
 initPanel();
+initTree();
 initLayout();
 initHelp();
 initFocus();
@@ -83,6 +89,7 @@ initShortcuts();
 initDialogs();
 initKbdRing();
 initTheme();
+initBar();
 initPopup();
 initSelection();
 initPicks();
@@ -96,7 +103,7 @@ initState();
 checkRenderer();
 syncInputs();
 renderAll();
-setView(S.text ? view : 'edit');
+setView(D.text ? view : 'edit');
 renderHistCount();
 store.set(KEY.cur, S.id);
 
