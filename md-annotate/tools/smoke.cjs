@@ -462,6 +462,12 @@ const cornerClash = (page) => page.evaluate(() => {
   const wrapW = () => page.$eval('main.ma-wrap', (el) => Math.round(el.getBoundingClientRect().width));
   check('Layout mặc định: vùng làm việc 70% ở 1920', Math.abs((await wrapW()) - 1344) <= 1, String(await wrapW()));
   await page.click('#btn-layout');
+  /* Safari (Mac, iOS) coi focus tự động của hộp thoại là :focus-visible; focusVisible: true giả lập điều đó. */
+  const ringDlg = await page.evaluate(() => { const a = document.activeElement; a.blur(); a.focus({ focusVisible: true }); return [a.id, a.matches(':focus-visible'), getComputedStyle(a).outlineStyle]; });
+  await page.keyboard.press('Tab');
+  const ringTab = await page.evaluate(() => getComputedStyle(document.activeElement).outlineStyle);
+  await page.keyboard.press('Shift+Tab');
+  check('hộp Settings: nút tự focus không có vòng; bấm Tab mới có', ringDlg[1] && ringDlg[2] === 'none' && ringTab === 'solid', JSON.stringify([ringDlg, ringTab]));
   check('hộp Layout: một vùng cuộn, khung hộp không cuộn', await page.$eval('#dlg-layout', (d) => d.scrollHeight <= d.clientHeight));
   check('nút Layout mở hộp', await page.isVisible('#dlg-layout'));
   const setRange = (sel, v) => page.$eval(sel, (el, v) => { el.value = v; el.dispatchEvent(new Event('input', { bubbles: true })); }, v);
@@ -561,6 +567,13 @@ const cornerClash = (page) => page.evaluate(() => {
   const ml = await m.evaluate(() => { const d = document.getElementById('dlg-layout'); return { w: getComputedStyle(document.querySelector('.ma-set--wrap')).display, dlg: d.scrollHeight - d.clientHeight }; });
   check('điện thoại: hộp Layout ẩn mục bề rộng, chỉ thân hộp cuộn', ml.w === 'none' && ml.dlg <= 0, JSON.stringify(ml));
   await m.tap('#dlg-layout [data-close]');
+  /* Safari iOS coi focus do script đặt là :focus-visible; focusVisible: true giả lập điều đó trong Chromium. */
+  const ringAt = (p) => p.evaluate(() => { const a = document.getElementById('btn-layout'); a.focus({ focusVisible: true }); return getComputedStyle(a).outlineStyle; });
+  const mRingTouch = await ringAt(m);
+  await m.keyboard.press('Tab'); await m.keyboard.press('Shift+Tab');
+  const mRingKbd = await m.evaluate(() => getComputedStyle(document.activeElement).outlineStyle);
+  await m.tap('#v-md h1');
+  check('điện thoại: chạm không để lại vòng focus; bàn phím thì có', mRingTouch === 'none' && mRingKbd === 'solid' && (await ringAt(m)) === 'none', JSON.stringify([mRingTouch, mRingKbd]));
   await scriptSelect(m, '#v-md', 'Try selecting this sentence');
   await m.tap('#fab'); await m.tap('#v-md h1'); await m.waitForTimeout(100);
   check('điện thoại: chạm ra ngoài tấm đáy thì hết tô đoạn đang chọn', !(await m.isVisible('#pop')) && await m.evaluate(() => !CSS.highlights.get('ma-pending').size && getSelection().isCollapsed));

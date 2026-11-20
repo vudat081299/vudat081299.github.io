@@ -53,6 +53,13 @@ function initDialogs() {
     d.addEventListener('close', function () { if (d.contains($('toast'))) document.body.append($('toast')); });
   });
 }
+/* html.ma-tabbing: vòng focus chỉ hiện từ lần bấm Tab đầu (css/base.css); bấm chuột / chạm thì tắt. Focus do script đặt
+   (hộp thoại tự focus nút đầu, trả focus khi đóng) không có vòng. */
+function initKbdRing() {
+  var root = document.documentElement;
+  window.addEventListener('keydown', function (e) { if (e.key === 'Tab') root.classList.add('ma-tabbing'); }, true);
+  window.addEventListener('pointerdown', function () { root.classList.remove('ma-tabbing'); }, true);
+}
 function initTheme() {
   $('theme').addEventListener('click', function () {
     var dark = document.documentElement.classList.toggle('dark');
@@ -74,6 +81,7 @@ initHints();
 initList();
 initShortcuts();
 initDialogs();
+initKbdRing();
 initTheme();
 initPopup();
 initSelection();

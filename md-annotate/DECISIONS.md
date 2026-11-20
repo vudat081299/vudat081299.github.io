@@ -17,6 +17,7 @@
 - MDAN-017 · Một bộ dấu đã đọc, khai báo một chỗ · `md-annotate/css/**`
 - MDAN-018 · Thanh cuộn không chạm góc bo · `md-annotate/css/**`, `md-annotate/js/ui/minimap.js`
 - MDAN-019 · Chọn một dải dòng bằng Shift + bấm hoặc kéo trên lề số · `md-annotate/js/ui/picks.js`
+- MDAN-020 · Vòng focus chỉ hiện sau phím Tab · `md-annotate/css/**`, `md-annotate/js/main.js`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Nguồn tô màu cú pháp kiểu VS Code
@@ -149,3 +150,10 @@ Vùng nào có góc bo x thì thanh cuộn (tự vẽ hay của hệ thống) c�
 Ở chế độ chọn nhiều dòng, chọn từng dòng một thì chậm. Shift + bấm lề số dòng: chưa vào chế độ thì vào với dòng ấy,
 đã vào thì thêm cả dải liền từ dòng bấm gần nhất. Đang chọn thì kéo trên lề để thêm cả dải (bắt đầu ở dòng chưa chọn)
 hoặc bỏ cả dải (bắt đầu ở dòng đã chọn).
+
+## MDAN-020 · Vòng focus chỉ hiện sau phím Tab
+20/11/2026 · `md-annotate/css/**`, `md-annotate/js/main.js`
+
+Điều khiển bằng Tab / Space giữ nguyên, nhưng vòng focus (viền đậm quanh nút) chỉ hiện từ lần bấm Tab đầu. Mở hộp
+thoại, đóng hộp, chạm hay bấm chuột thì không có vòng; bấm chuột / chạm tắt nó tới lần Tab sau. Áp cả máy tính và
+điện thoại.

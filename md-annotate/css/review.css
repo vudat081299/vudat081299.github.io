@@ -53,7 +53,7 @@ html:not(.ma-reviewing) .ma-lane__b.is-head:not(:hover)::after { visibility: hid
 @media (hover: hover) { .ma-lane__b:hover { background: var(--chip); } }
 /* Màn cảm ứng chưa có dấu: tắt làn, để chạm sát mép không đánh dấu nhầm (bắt đầu bằng hộp nhận xét hay tab Review). */
 @media (hover: none) { html:not(.ma-reviewing) .ma-lane { display: none; } }
-.ma-lane__b:focus-visible { outline: 2px solid var(--ring); outline-offset: 0; }
+.ma-tabbing .ma-lane__b:focus-visible { outline: 2px solid var(--ring); outline-offset: 0; }
 @media (prefers-reduced-motion: no-preference) { .ma-lane__b.is-flash::after { animation: ma-rv-flash 1.1s var(--ease) 1; } }
 .ma-lane__b.is-flash { background: var(--accent-soft); }
 @keyframes ma-rv-flash { 0%, 30% { box-shadow: 0 0 0 4px var(--accent-line); } 100% { box-shadow: 0 0 0 0 transparent; } }

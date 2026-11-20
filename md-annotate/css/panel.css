@@ -22,7 +22,7 @@
 /* Kéo mép trái để đổi bề rộng panel. */
 .ma-panel__grip { position: absolute; z-index: 2; left: 0; top: 0; bottom: 0; width: 8px; cursor: col-resize; touch-action: none; }
 .ma-panel__grip::before { content: ''; position: absolute; top: var(--s3); bottom: var(--s3); left: 0; width: 3px; border-radius: var(--r-pill); background: transparent; transition: background var(--dur) var(--ease); }
-.ma-panel__grip:hover::before, .ma-panel__grip:focus-visible::before, .ma-panel__grip.is-drag::before { background: var(--accent); }
+.ma-panel__grip:hover::before, .ma-tabbing .ma-panel__grip:focus-visible::before, .ma-panel__grip.is-drag::before { background: var(--accent); }
 .ma-panel__grip:focus-visible { outline: none; }
 /* Thu gọn thành thanh dọc: còn nút mở, số nhận xét, tải và chép. */
 .ma-rail { display: none; }
@@ -93,7 +93,7 @@ html.ma-railed .ma-grid > .ma-panel .ma-rail { display: flex; flex-direction: co
 .ma-fmt label { flex: 1; position: relative; display: flex; }
 .ma-fmt input { position: absolute; opacity: 0; pointer-events: none; }
 .ma-fmt span { flex: 1; cursor: pointer; }
-.ma-fmt input:focus-visible + span { outline: 2px solid var(--ring); outline-offset: 1px; }
+.ma-tabbing .ma-fmt input:focus-visible + span { outline: 2px solid var(--ring); outline-offset: 1px; }
 .ma-opts { margin-bottom: var(--s3); border: 1px solid var(--line); border-radius: var(--r); }
 .ma-opts summary {
   display: flex; align-items: center; gap: var(--s2); min-height: var(--h); padding: 0 var(--s3);
