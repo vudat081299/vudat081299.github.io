@@ -61,12 +61,28 @@
   .ma-dlg.ma-dlg--center { width: calc(100vw - 2 * var(--s4)); margin: auto; border-radius: var(--r-lg); }
   .ma-toast { left: var(--s4); right: var(--s4); transform: none; width: auto; max-width: none; }
 }
-/* Hộp nhận xét thành tấm trượt đáy ở máy hẹp hoặc màn cảm ứng */
+/* Hộp nhận xét thành tấm trượt đáy ở máy hẹp hoặc màn cảm ứng: nền mờ phía sau bằng bóng (không chặn chạm: chạm ra
+   ngoài vẫn tới trang và đóng hộp), tay nắm trang trí, trượt lên khi mở; chip gợi ý một hàng cuộn ngang. */
 .ma-pop.is-sheet {
   position: fixed; left: 0; right: 0; bottom: 0; top: auto; width: auto; max-height: 82vh; overflow: auto;
-  border-radius: var(--r-lg) var(--r-lg) 0 0; padding: var(--s4) var(--s4) calc(var(--s4) + env(safe-area-inset-bottom));
+  border: 0; border-radius: var(--r-lg) var(--r-lg) 0 0; box-shadow: 0 0 0 100vmax var(--scrim-live), var(--shadow-pop);
+  padding: calc(var(--s4) + var(--s2)) var(--s4) calc(var(--s4) + env(safe-area-inset-bottom));
 }
-.ma-pop.is-sheet .ma-chip { min-height: var(--h-touch); }
+.ma-pop.is-sheet::before {
+  content: ''; position: absolute; top: var(--s2); left: 50%; width: 36px; height: 4px; margin-left: -18px;
+  border-radius: var(--r-pill); background: var(--ink-4);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .ma-pop.is-sheet:not([hidden]) { animation: ma-sheet-in .22s var(--ease); }
+}
+@keyframes ma-sheet-in { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+.ma-pop.is-sheet .ma-chips {
+  flex-wrap: nowrap; overflow-x: auto; margin-inline: calc(-1 * var(--s4)); padding-inline: var(--s4);
+  scroll-padding-inline: var(--s4); scrollbar-width: none; overscroll-behavior-x: contain;
+}
+.ma-pop.is-sheet .ma-chips::-webkit-scrollbar { display: none; }
+.ma-pop.is-sheet .ma-chip { flex: none; min-height: var(--h-touch); }
+.ma-pop.is-sheet #pop-text { resize: none; }
 .ma-pop.is-sheet .ma-btn { min-height: var(--h-touch); flex: 1; }
 .ma-pop.is-sheet .ma-pop__keys { display: none; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
