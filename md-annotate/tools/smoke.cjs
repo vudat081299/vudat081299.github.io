@@ -2800,6 +2800,49 @@ const cornerClash = (page) => page.evaluate(() => {
   }
   // ── end mob:touch-picks ──
 
+  // ── mob:touch-bar ──
+  /* ---------- Thanh trên tự ẩn ở điện thoại (MDAN-051): cuộn xuống thì trượt lên khuất, cuộn lên một chút thì về; luôn hiện ở
+     đầu trang và khi hộp thoại / menu mở; giảm chuyển động thì không trượt; máy tính không ẩn ---------- */
+  {
+    const devices = pw.devices;
+    const barState = (p) => p.evaluate(() => { const b = document.querySelector('.ma-bar'), r = b.getBoundingClientRect(); return { away: b.classList.contains('is-away'), bottom: Math.round(r.bottom), y: Math.round(scrollY), tr: getComputedStyle(b).transitionDuration }; });
+    for (const [name, reduced] of [['iPhone 15 Pro', false], ['iPhone 15 Pro landscape', false], ['Pixel 7', true]]) {
+      const d = Object.assign({}, devices[name], { deviceScaleFactor: 1, reducedMotion: reduced ? 'reduce' : 'no-preference' }); delete d.defaultBrowserType;
+      const c = await browser.newContext(d), p = await c.newPage(); watch(p);
+      const cdp = await c.newCDPSession(p);
+      await p.goto(BASE); await p.waitForFunction(() => window.marked && window.DOMPurify);
+      await p.evaluate(() => document.getElementById('btn-sample').click()); await p.waitForTimeout(250);
+      const vh = await p.evaluate(() => innerHeight);
+      const sw = async (y1, y2) => {
+        await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: 150, y: y1 }] });
+        for (let i = 1; i <= 8; i++) { await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: 150, y: y1 + (y2 - y1) * i / 8 }] }); await p.waitForTimeout(16); }
+        await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] }); await p.waitForTimeout(450);
+      };
+      const top = await barState(p);
+      await sw(vh - 80, vh - 280);
+      const down = await barState(p);
+      await sw(vh / 2, vh / 2 + 50);
+      const up = await barState(p);
+      await sw(vh - 80, vh - 280);
+      await p.$eval('#btn-layout', (e) => e.click()); await p.waitForTimeout(300);
+      const dlg = await barState(p);
+      await p.keyboard.press('Escape'); await p.waitForTimeout(100);
+      await p.evaluate(() => window.scrollTo(0, 0)); await p.waitForTimeout(300);
+      const back = await barState(p);
+      check(`thanh trên tự ẩn (${name}${reduced ? ', giảm chuyển động' : ''}): ở đầu trang hiện; cuộn xuống khuất; cuộn lên chút thì về; hộp thoại mở thì hiện; về đầu thì hiện`,
+        !top.away && down.away && down.bottom <= 0 && down.y > 0 && !up.away && up.bottom > 0 && !dlg.away && !back.away && (reduced ? parseFloat(down.tr) === 0 : parseFloat(down.tr) > 0),
+        JSON.stringify({ top, down, up, dlg, back }));
+      await c.close();
+    }
+    const c = await browser.newContext({ viewport: { width: 1280, height: 800 } }), p = await c.newPage(); watch(p);
+    await p.goto(BASE); await p.waitForFunction(() => window.marked && window.DOMPurify);
+    await p.click('#btn-sample'); await p.waitForTimeout(200);
+    await p.mouse.move(600, 500); await p.mouse.wheel(0, 400); await p.waitForTimeout(300);
+    check('máy tính: thanh trên không tự ẩn', !(await barState(p)).away);
+    await c.close();
+  }
+  // ── end mob:touch-bar ──
+
   check('không lỗi console', !errors.length, errors.join(' | '));
   await browser.close();
   console.log(fails ? `md-annotate smoke: ${fails} LỖI` : 'md-annotate smoke: OK');
