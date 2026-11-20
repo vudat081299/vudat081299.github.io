@@ -32,6 +32,7 @@
 - MDAN-035 · Cây file là cột khi văn bản còn đủ rộng, không thì trượt từ trái · thay cho MDAN-023 · `md-annotate/js/ui/tree.js`, `md-annotate/js/ui/files.js`, `md-annotate/js/core/panes.js`, `md-annotate/css/tree.css`
 - MDAN-036 · Thanh trên ở điện thoại giữ nút chính, còn lại trong menu More · `md-annotate/index.html`, `md-annotate/js/ui/bar.js`, `md-annotate/css/mobile.css`
 - MDAN-037 · Cây file docked nằm sát mép trái màn hình, vùng làm việc căn giữa phần còn lại · `md-annotate/css/tree.css`, `md-annotate/css/base.css`, `md-annotate/js/ui/tree.js`, `md-annotate/js/core/panes.js`
+- MDAN-060 · Thanh bên cây file: đầu một hàng, vạch thụt, nút Files ở mép trái, theo vùng an toàn · `md-annotate/css/tree.css`, `md-annotate/index.html`, `md-annotate/js/ui/tree.js`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Nguồn tô màu cú pháp kiểu VS Code
@@ -268,4 +269,15 @@ chữ, Focus) là việc dùng thường khi đọc trên điện thoại; mở 
 
 Khi là cột (MDAN-035), cây là thanh bên kiểu trình soạn mã: sát mép trái màn hình, từ dưới thanh trên tới đáy màn hình,
 cuộn riêng, chỉ có viền phải. Thanh trên vẫn trọn bề ngang. Vùng làm việc (MDAN-005: 70%, không hẹp hơn 1280px) tính
-trên phần màn hình còn lại và căn giữa trong đó; nút, tên trang trên thanh trên thẳng hàng với vùng làm việc.
+trên phần màn hình còn lại và căn giữa trong đó; tên trang và các nút trên thanh trên thẳng hàng với vùng làm việc, trừ nút
+Files (MDAN-060).
+
+## MDAN-060 · Thanh bên cây file: đầu một hàng, vạch thụt, nút Files ở mép trái, theo vùng an toàn
+20/11/2026 · `md-annotate/css/tree.css`, `md-annotate/index.html`, `md-annotate/js/ui/tree.js`
+
+Cây file trông như thanh bên của trình soạn mã. Nút Files luôn ở mép trái thanh trên (lề trang cộng vùng an toàn), dù cây
+là cột, tấm trượt hay đang ẩn; tên trang vẫn thẳng hàng vùng làm việc, cửa sổ hẹp thì đứng ngay sau nút, không chồng, không
+nhảy. Khi là cột, phần thanh trên phía trên cột cùng nền với cột. Đầu cây một hàng: nhãn Files, tên phiên, New file, New
+folder và ⋯ (Import folder, Download .zip, Collapse all); tấm trượt thêm nút đóng. Hàng thấp (28px, cảm ứng 44px), mỗi cấp
+một vạch dọc mảnh; file đang mở là nền xanh nhạt cùng vạch trái bo tròn, không phải hộp có viền. Phiên chỉ một file thì có
+gợi ý thả file hay nạp folder. Tấm trượt rộng tối đa 320px, tránh vùng an toàn trên, trái, dưới, góc phải bo, nổi bằng bóng.

@@ -1756,12 +1756,35 @@ const cornerClash = (page) => page.evaluate(() => {
     ts = await tstate(tp);
     const one = await tp.$$eval('#tree-list .ma-trow', (ls) => ls.map((l) => [l.getAttribute('aria-selected'), l.getAttribute('aria-level'), l.querySelector('.ma-trow__name').textContent]));
     check('cây: phiên một file — bấm nút hiện cột, một hàng đang chọn', ts.shown && ts.rows === 1 && one[0][0] === 'true' && one[0][1] === '1' && one[0][2] === 'untitled.md' && ts.exp === 'true' && ts.lbl === 'Hide files', JSON.stringify([ts, one]));
+    const hint = () => tp.evaluate(() => { const x = document.getElementById('tree-hint'); return { on: !!x.getClientRects().length, t: x.querySelector('.ma-tree__hint-t').innerText.trim() }; });
+    const h1 = await hint();
+    check('cây: phiên một file — gợi ý "Drop files or a folder here" dưới danh sách (MDAN-060)', h1.on && h1.t === 'Drop files or a folder here', JSON.stringify(h1));
 
     // Cây sâu: 8 cấp, 40 file. Bật / tắt, Split hiện lại khi tắt, nhớ qua tải lại.
     await tp.evaluate(treeDemo, false); await tp.waitForTimeout(150);
     ids = await tp.evaluate(() => Object.fromEntries(window.__tree.model.nodes.map((x) => [x.name, x.id])));
     ts = await tstate(tp);
     check('cây: cột trái rộng 248px trước #doc, Split vẫn có', ts.shown && ts.w === 248 && ts.left < ts.docL && ts.split && ts.rows === 50, JSON.stringify(ts));
+    check('cây: nhiều mục thì không có gợi ý', !(await hint()).on);
+    /* Đầu cây một hàng (MDAN-060): nhãn, tên, New file, New folder, ⋯ cùng một hàng cao --h; Close ẩn khi là cột. */
+    const head = await tp.evaluate(() => {
+      const hd = document.querySelector('#tree .ma-tree__head').getBoundingClientRect();
+      const parts = ['.ma-tree__k', '#tree-title', '#tree-new-file', '#tree-new-dir', '#tree-more'].map((q) => document.querySelector(q).getBoundingClientRect());
+      return { h: hd.height, row: parts.every((r) => r.height > 0 && r.top >= hd.top && r.bottom <= hd.bottom), order: parts.every((r, i, a) => !i || r.left >= a[i - 1].right - 0.5),
+        close: !!document.querySelector('#tree .ma-tree__close').getClientRects().length, btn: Math.round(parts[2].width) };
+    });
+    check('cây: đầu cây một hàng cao 40px: FILES, tên, New file, New folder, ⋯; nút 28px; không có Close', head.h === 40 && head.row && head.order && !head.close && head.btn === 28, JSON.stringify(head));
+    // Menu ⋯: bấm mở (Import folder…, Download .zip, Collapse all), Esc đóng và trả focus; ↓ trên nút mở và vào mục đầu.
+    await tp.click('#tree-more'); await tp.waitForTimeout(80);
+    const hm = await tp.evaluate(() => ({ open: document.getElementById('tree-head-menu').classList.contains('is-open'), exp: document.getElementById('tree-more').getAttribute('aria-expanded'),
+      items: [...document.querySelectorAll('#tree-head-menu .ma-menu__i')].map((b) => b.textContent.trim()).join('|'), focus: document.activeElement.id }));
+    await tp.keyboard.press('Escape'); await tp.waitForTimeout(50);
+    const hm2 = await tp.evaluate(() => ({ open: document.getElementById('tree-head-menu').classList.contains('is-open'), focus: document.activeElement.id, exp: document.getElementById('tree-more').getAttribute('aria-expanded') }));
+    await tp.keyboard.press('ArrowDown'); await tp.waitForTimeout(50);
+    const hm3 = await tp.evaluate(() => document.activeElement.id);
+    await tp.keyboard.press('Escape');
+    check('cây: ⋯ mở menu Import folder… | Download .zip | Collapse all, focus mục đầu; Esc đóng, focus về ⋯; ↓ trên ⋯ mở lại', hm.open && hm.exp === 'true' && hm.items === 'Import folder…|Download .zip|Collapse all' && hm.focus === 'tree-import'
+      && !hm2.open && hm2.focus === 'tree-more' && hm2.exp === 'false' && hm3 === 'tree-import', JSON.stringify([hm, hm2, hm3]));
     check('cây: 2560 không tràn ngang', (await overflow(tp)) === 0, String(await overflow(tp)));
     await tp.click('#btn-tree'); await tp.waitForTimeout(150);
     ts = await tstate(tp);
@@ -1832,9 +1855,9 @@ const cornerClash = (page) => page.evaluate(() => {
     check('cây: Home tới hàng đầu', (await focusName(tp)) === 'archive', await focusName(tp));
     await tp.keyboard.press('r');
     check('cây: gõ chữ nhảy tới tên', (await focusName(tp)) === 'README.md', await focusName(tp));
-    await tp.keyboard.press('Enter');
-    const sel = await tp.$eval(row('README.md'), (l) => [l.getAttribute('aria-selected'), getComputedStyle(l).boxShadow]);
-    check('cây: Enter mở file, hàng thành đang chọn (nền nhạt + viền --edge-on)', JSON.stringify(await tl()) === JSON.stringify(['open', ids['README.md']]) && sel[0] === 'true' && /inset/.test(sel[1]), JSON.stringify(sel));
+    await tp.keyboard.press('Enter'); await tp.waitForTimeout(250);   // nền chuyển màu --dur
+    const sel = await tp.$eval(row('README.md'), (l) => { const a = getComputedStyle(l, '::after'); return [l.getAttribute('aria-selected'), getComputedStyle(l).backgroundColor, a.width, a.borderRadius, getComputedStyle(l).boxShadow]; });
+    check('cây: Enter mở file, hàng thành đang chọn (nền nhạt + vạch trái bo trọn 3px, không viền một cạnh; MDAN-060)', JSON.stringify(await tl()) === JSON.stringify(['open', ids['README.md']]) && sel[0] === 'true' && !/\/ 0\)$|, 0\)$|transparent/.test(sel[1]) && sel[2] === '3px' && parseFloat(sel[3]) > 1 && sel[4] === 'none', JSON.stringify(sel));
     /* Tương phản trên hàng đang chọn (nền pha nhiều lớp): chữ ≥ 4,5:1, viền --edge-on ≥ 3:1, cả hai theme. */
     const treeContrast = () => tp.evaluate(() => {
       const parse = (c) => { const m = c.match(/[\d.]+/g).map(Number); return c.startsWith('color(') ? [m[0] * 255, m[1] * 255, m[2] * 255, m.length > 3 ? m[3] : 1] : [m[0], m[1], m[2], m.length > 3 ? m[3] : 1]; };
@@ -1844,15 +1867,18 @@ const cornerClash = (page) => page.evaluate(() => {
       const ratio = (a, b) => { const x = lum(a), y = lum(b); return +((Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05)).toFixed(2); };
       const sel = document.querySelector('#tree-list .ma-trow[aria-selected="true"]'), out = {};
       for (const [k, q] of [['name', '.ma-trow__name'], ['c', '.ma-trow__c'], ['rv', '.ma-trow__rv']]) { const el = sel.querySelector(q); out[k] = el ? ratio(parse(getComputedStyle(el).color), bgOf(el)) : 0; }
-      const edge = parse(getComputedStyle(sel).boxShadow.match(/rgba?\([^)]*\)|color\([^)]*\)/)[0]);
-      out.edge = ratio(over(edge, bgOf(sel.parentElement)), bgOf(sel.parentElement));
+      /* Vạch trái (::after) trên nền hàng đang chọn; vạch thụt (--guide) trên nền thân cây (trang trí, chỉ ghi số). */
+      out.edge = ratio(over(parse(getComputedStyle(sel, '::after').backgroundColor), bgOf(sel)), bgOf(sel));
+      const g = document.querySelector('#tree-list .ma-trow[aria-level="3"]');
+      const gm = g && getComputedStyle(g, '::before').backgroundImage.match(/rgba?\([^)]*\)|color\([^)]*\)/);
+      out.guide = gm ? ratio(over(parse(gm[0]), bgOf(g)), bgOf(g)) : 0;
       return out;
     });
     await tp.evaluate(() => { const m = window.__tree.model; m.counts[m.open] = { c: 3, rv: 42 }; window.__tree.render(); });
     for (const dark of [false, true]) {
       await tp.evaluate((d) => document.documentElement.classList.toggle('dark', d), dark); await tp.waitForTimeout(300);
       const tc = await treeContrast();
-      check(`cây (${dark ? 'tối' : 'sáng'}): hàng đang chọn — tên, huy hiệu ≥ 4,5:1, viền ≥ 3:1`, tc.name >= 4.5 && tc.c >= 4.5 && tc.rv >= 4.5 && tc.edge >= 3, JSON.stringify(tc));
+      check(`cây (${dark ? 'tối' : 'sáng'}): hàng đang chọn — tên, huy hiệu ≥ 4,5:1, vạch trái ≥ 3:1`, tc.name >= 4.5 && tc.c >= 4.5 && tc.rv >= 4.5 && tc.edge >= 3, JSON.stringify(tc));
     }
     await tp.evaluate(() => document.documentElement.classList.remove('dark'));
     const tabbed = await tp.evaluate(() => document.documentElement.classList.contains('ma-tabbing'));
@@ -1861,7 +1887,7 @@ const cornerClash = (page) => page.evaluate(() => {
     await tp.mouse.click(5, 5);
     check('cây: bấm chuột thì tắt vòng', !(await tp.evaluate(() => document.documentElement.classList.contains('ma-tabbing'))));
 
-    await tp.focus('#tree-collapse'); await tp.keyboard.press('Tab');
+    await tp.focus('#tree-more'); await tp.keyboard.press('Tab');
     const kr = await tp.evaluate(() => [document.activeElement.classList.contains('ma-trow'), getComputedStyle(document.activeElement).outlineStyle]);
     check('cây: Tab vào cây tới hàng hiện tại, có vòng focus', kr[0] && kr[1] === 'solid' && (await focusName(tp)) === 'README.md', JSON.stringify(kr));
     // Đổi tên: F2, lỗi thì toast và vẫn sửa, Esc bỏ; bấm đúp; Enter lưu.
@@ -1901,7 +1927,7 @@ const cornerClash = (page) => page.evaluate(() => {
     check('cây: Shift+F10 mở menu, Esc đóng và trả focus', menuOpen && !(await tp.isVisible('#tree-menu')) && (await focusName(tp)) === 'older.md');
 
     // Collapse all, rồi kéo thả bằng chuột (mọi hàng trong khung, không cuộn): lên folder → move; lên hậu duệ → không gọi.
-    await tp.click('#tree-collapse');
+    await tp.click('#tree-more'); await tp.click('#tree-collapse');
     check('cây: Collapse all gọi collapseAll, chỉ còn hàng cấp 1', (await tl())[0] === 'collapseAll' && (await tp.$$eval('#tree-list .ma-trow', (ls) => ls.every((l) => l.getAttribute('aria-level') === '1'))));
     await tp.click(row('level-1') + ' .ma-trow__chev'); await tp.waitForTimeout(50);
     const nlog = () => tp.evaluate(() => window.__tree.log.length);
@@ -2046,7 +2072,7 @@ const cornerClash = (page) => page.evaluate(() => {
     const fz = await dl(async () => { await fp.click(rowOf('docs'), { button: 'right' }); await fp.click('#tree-menu >> text=Download .zip'); });
     const zd = zipCheck(fz);
     check('cây thật: Download .zip của folder — zip hợp lệ, chỉ cây con', path.basename(fz) === 'docs.zip' && zd.bad === null && zd.names.join() === 'docs/b.md,docs/c.md' && zd.b === '# Tệp B\n\nCâu riêng của B.\n', JSON.stringify([path.basename(fz), zd]));
-    const fa = await dl(() => fp.click('#tree-zip'));
+    const fa = await dl(async () => { await fp.click('#tree-more'); await fp.click('#tree-zip'); });
     const za = zipCheck(fa);
     check('cây thật: .zip cả phiên — tên theo tên phiên, đủ file', /^[a-z0-9-]+\.zip$/.test(path.basename(fa)) && za.bad === null && za.names.join() === 'docs/b.md,docs/c.md,untitled.md', JSON.stringify([path.basename(fa), za]));
 
@@ -2272,6 +2298,88 @@ const cornerClash = (page) => page.evaluate(() => {
       await pp.goto(BASE); await pp.evaluate(seed, ['view', false]); await pp.goto(BASE); await pp.waitForFunction(() => window.marked && window.DOMPurify); await pp.waitForTimeout(250);
       check('cây 390: tấm trượt, không tràn ngang', drawer(await dst(pp)) && (await overflow(pp)) === 0, JSON.stringify(await dst(pp)));
       await pc.close();
+    }
+  }
+
+  /* ---------- Nút Files và tấm trượt theo vùng an toàn (MDAN-060): nút luôn ở mép trái thanh trên (lề --pad + vùng an toàn trái),
+     tên trang thẳng hàng vùng làm việc, hẹp thì đứng sau nút một khoảng gap; docked thì nút nằm trên cột cây, phần thanh trên
+     trên cột cùng nền với cột; tấm trượt: đầu dưới vùng an toàn trên, hàng không dưới vùng an toàn trái, thân trên vùng an toàn dưới. ---------- */
+  {
+    const seed = () => {
+      const N = [{ id: 'd', parent: null, kind: 'dir', name: 'docs' }, { id: 'g', parent: 'd', kind: 'dir', name: 'guides' }], docs = {};
+      const f = (id, parent, name) => { N.push({ id, parent, kind: 'file', name }); docs[id] = { text: '# ' + name + '\n\n' + 'Words in a paragraph. '.repeat(30) + '\n', comments: [], reviews: [], real: true }; };
+      f('a', 'g', 'deep-file-with-a-long-name.md'); f('b', 'd', 'overview.md'); f('c', null, 'README.md');
+      localStorage.setItem('md-annotate:s:sa1', JSON.stringify({ id: 'sa1', name: 'Safe', named: true, created: 1, updated: 2, nodes: N, docs, open: 'a', collapsed: [] }));
+      localStorage.setItem('md-annotate:current', JSON.stringify('sa1'));
+      localStorage.setItem('md-annotate:prefs:v1', JSON.stringify({ view: 'view', rail: false }));
+    };
+    const open = async (vp, touch, inset) => {
+      const c = await browser.newContext({ viewport: vp, hasTouch: !!touch, isMobile: !!touch, colorScheme: 'light' });
+      const p = await c.newPage(); watch(p);
+      let ok = true;
+      if (inset) { const cdp = await c.newCDPSession(p); await cdp.send('Emulation.setSafeAreaInsetsOverride', { insets: inset }).catch(() => { ok = false; }); }
+      await p.goto(BASE); await p.evaluate(seed); await p.goto(BASE); await p.waitForFunction(() => window.marked && window.DOMPurify); await p.waitForTimeout(250);
+      if (inset) ok = ok && (await p.evaluate(() => { const x = document.createElement('i'); x.style.cssText = 'position:fixed;padding-top:env(safe-area-inset-top);padding-left:env(safe-area-inset-left)'; document.body.append(x); const v = parseFloat(getComputedStyle(x).paddingTop) + parseFloat(getComputedStyle(x).paddingLeft); x.remove(); return v > 0; }));
+      return { c, p, ok };
+    };
+    const bar = (p) => p.evaluate(() => {
+      const R = (q) => document.querySelector(q).getBoundingClientRect(), bin = document.querySelector('.ma-bar__in'), cs = getComputedStyle(bin);
+      const tg = R('#btn-tree'), br = R('.ma-brand'), m = R('main'), t = document.getElementById('tree'), on = document.documentElement.classList.contains('ma-tree-on');
+      const pad = parseFloat(cs.paddingRight), gap = parseFloat(cs.columnGap);
+      const inset = (() => { const x = document.createElement('i'); x.style.cssText = 'position:fixed;padding-left:env(safe-area-inset-left)'; document.body.append(x); const v = parseFloat(getComputedStyle(x).paddingLeft); x.remove(); return v; })();
+      const want = Math.max(m.left + pad, tg.right + gap), tr = on ? t.getBoundingClientRect() : null;
+      return { tgL: tg.left, pad, inset, brL: br.left, want, mL: m.left, gap, overlap: tg.right > br.left, on,
+        above: tr ? tg.left >= tr.left && tg.right <= tr.right && tg.bottom <= tr.top : null,
+        surf: on ? getComputedStyle(document.querySelector('.ma-bar'), '::before').backgroundColor === getComputedStyle(t).backgroundColor : null };
+    });
+    for (const w of [2560, 1920, 1440, 1280, 1024, 800, 721, 390, 320]) {
+      const { c, p } = await open({ width: w, height: 800 }, w <= 720);
+      const b = await bar(p);
+      check(`nút Files ${w}: ở mép trái thanh trên (x = --pad), tên trang thẳng vùng làm việc hoặc sau nút một khoảng gap, không chồng`,
+        Math.abs(b.tgL - b.pad - b.inset) <= 0.5 && Math.abs(b.brL - b.want) <= 0.5 && !b.overlap && (await overflow(p)) === 0, JSON.stringify(b));
+      if (b.on) check(`nút Files ${w}: docked — nút nằm trên cột cây, phần thanh trên trên cột cùng nền với cây`, b.above && b.surf, JSON.stringify(b));
+      await c.close();
+    }
+    // Nút không nhảy khi ẩn / hiện cột (1920): bấm ẩn, nút giữ chỗ.
+    {
+      const { c, p } = await open({ width: 1920, height: 800 });
+      const b1 = await bar(p); await p.click('#btn-tree'); await p.waitForTimeout(150); const b2 = await bar(p);
+      check('nút Files 1920: ẩn cột thì nút đứng yên, tên trang về thẳng vùng làm việc', b1.on && !b2.on && b1.tgL === b2.tgL && Math.abs(b2.brL - b2.want) <= 0.5, JSON.stringify([b1, b2]));
+      await c.close();
+    }
+    // iPhone 15 Pro dọc, vùng an toàn trên 59 / dưới 34: đầu tấm dưới vùng an toàn, thân dừng trên vùng dưới, góc phải bo, đầu một hàng.
+    {
+      const { c, p, ok } = await open({ width: 393, height: 852 }, true, { top: 59, bottom: 34, left: 0, right: 0 });
+      if (!ok) console.log('  BỎ QUA tấm trượt theo vùng an toàn: trình duyệt không giả lập được safe-area');
+      else {
+        await p.tap('#btn-tree'); await p.waitForTimeout(400);
+        const d = await p.evaluate(() => {
+          const t = document.getElementById('tree'), r = t.getBoundingClientRect(), hd = t.querySelector('.ma-tree__head').getBoundingClientRect(), bd = document.getElementById('tree-body').getBoundingClientRect();
+          const cs = getComputedStyle(t), btns = [...t.querySelectorAll('.ma-tree__head .ma-icbtn')].filter((x) => x.getClientRects().length).map((x) => x.getBoundingClientRect());
+          return { w: r.width, left: r.left, headTop: hd.top, headH: hd.height, bodyB: bd.bottom, vh: innerHeight, rr: cs.borderTopRightRadius, rb: cs.borderBottomRightRadius, rl: cs.borderTopLeftRadius,
+            btns: btns.length, row: btns.every((x) => x.top >= hd.top && x.bottom <= hd.bottom && x.width >= 44), shadow: cs.boxShadow !== 'none', bl: cs.borderRightWidth };
+        });
+        check('tấm trượt iPhone (an toàn 59 / 34): rộng 320, sát trái; đầu dưới vùng an toàn trên; thân dừng trên vùng an toàn dưới; góc phải bo, có bóng, không viền một cạnh; đầu một hàng, 4 nút ≥ 44px',
+          d.w === 320 && d.left === 0 && d.headTop >= 59 && d.bodyB <= d.vh - 34 && d.rr === '16px' && d.rb === '16px' && d.rl === '0px' && d.shadow && d.bl === '0px' && d.btns === 4 && d.row && d.headH <= 53, JSON.stringify(d));
+        check('tấm trượt iPhone: thân cây không chạm góc bo (MDAN-018)', !(await cornerClash(p)).filter((x) => /tree/.test(x)).length, (await cornerClash(p)).join());
+      }
+      await c.close();
+    }
+    // Ngang 852×393, vùng an toàn trái / phải 59, dưới 21: hàng và đầu tấm không nằm dưới vùng an toàn trái; nút Files lùi theo nó.
+    {
+      const { c, p, ok } = await open({ width: 852, height: 393 }, true, { top: 0, bottom: 21, left: 59, right: 59 });
+      if (!ok) console.log('  BỎ QUA tấm trượt ngang theo vùng an toàn: trình duyệt không giả lập được safe-area');
+      else {
+        const b = await bar(p);
+        check('nút Files 852 ngang: x = --pad + vùng an toàn trái, tên trang sau nút', Math.abs(b.tgL - b.pad - 59) <= 0.5 && Math.abs(b.brL - b.want) <= 0.5 && !b.overlap, JSON.stringify(b));
+        await p.tap('#btn-tree'); await p.waitForTimeout(400);
+        const d = await p.evaluate(() => {
+          const t = document.getElementById('tree'), rows = [...t.querySelectorAll('.ma-trow')].map((x) => x.getBoundingClientRect().left);
+          return { w: t.getBoundingClientRect().width, rowL: Math.min(...rows), headL: t.querySelector('.ma-tree__k').getBoundingClientRect().left, bodyB: document.getElementById('tree-body').getBoundingClientRect().bottom, vh: innerHeight };
+        });
+        check('tấm trượt ngang (an toàn trái 59): hàng, nhãn đầu không dưới vùng an toàn; rộng 320 + 59; thân trên vùng an toàn dưới', d.rowL >= 59 && d.headL >= 59 && d.w === 379 && d.bodyB <= d.vh - 21 && (await overflow(p)) === 0, JSON.stringify(d));
+      }
+      await c.close();
     }
   }
 

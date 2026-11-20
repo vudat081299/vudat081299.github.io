@@ -166,18 +166,18 @@
 
 - Phiên là cây (`core/session.js`, `core/tree.js`): `nodes` phẳng trỏ cha, `docs[fileId]` (`text`, `comments`, `reviews`, `rvPct`, `real`), `open`, `collapsed`.
   Bất biến và mọi luật (tên, trùng, file kế bên, `canMove`, tên tải về, tên phiên tự đặt `sessionTitle` không theo file mở MDAN-027) ở core.
-- `S` là phiên, `D` là doc của file mở: chữ, nhận xét, dấu đọc qua `D`, tuỳ chọn prompt ở `S`. Gắn với một văn bản (Undo, gợi ý, chọn dòng): `docKey()`.
-- Một chỗ ghi cây: `setTree()` ở `ui/files.js`; actions của `renderTree` chỉ gọi core rồi `setTree`. Hộp nhận xét có chữ thì không rời file mở (`canLeave()`).
-- Hai cách hiện (MDAN-035, `layoutTree()`): cột khi `#doc` nhường cây xong vẫn ≥ `viewNeed(lastRead)` (*Split* 849, khác `READ_MIN` 580; theo chế độ đọc
-  đã chọn, không theo chế độ đang hiện, để khỏi lật), không thì tấm trượt `#dlg-tree` (chọn file thì đóng). Cột (MDAN-037): con của `body`, fixed ở mép trái màn hình, từ đáy thanh
-  trên tới đáy khung nhìn (≤ 1080px: trên thanh đáy); `body` đệm trái `--tree`, vùng làm việc và phần trong thanh trên căn giữa phần còn lại (`docRoom`).
-- `prefs.tree` (chưa chọn: hiện khi phiên ≥ 2 mục) là "muốn thấy cây": cột thì `#btn-tree` / Ctrl/⌘ + B đổi nó; tấm trượt thì chỉ mở tấm. Nạp folder hiện cây
-  cho phiên ấy, không ghi `prefs.tree` (MDAN-032). Xét lại khi `#doc` đổi bề rộng (ResizeObserver, trước lần vẽ), đổi chế độ xem, vẽ cây. Kéo mép cây dừng ở
-  chỗ còn lại. *Split* tính `#doc` như khi không có cột (`treeTakes()`). Đổi file giữ chế độ xem; chỗ cuộn mỗi file nhớ trong bộ nhớ.
+- `S` là phiên, `D` là doc của file mở (chữ, nhận xét, dấu đọc); tuỳ chọn prompt ở `S`; gắn với một văn bản (Undo, gợi ý, chọn dòng): `docKey()`. Một chỗ ghi
+  cây: `setTree()` ở `ui/files.js`; actions của `renderTree` chỉ gọi core rồi `setTree`. Hộp nhận xét có chữ thì không rời file mở (`canLeave()`). Đổi file giữ chế độ xem, chỗ cuộn (bộ nhớ).
+- Hai cách hiện (MDAN-035, `layoutTree()`): cột khi `#doc` nhường cây xong vẫn ≥ `viewNeed(lastRead)` (*Split* 849, khác `READ_MIN` 580; theo chế độ đọc đã chọn,
+  không theo chế độ đang hiện, để khỏi lật), không thì tấm trượt `#dlg-tree` (chọn file thì đóng). Cột (MDAN-037): con của `body`, fixed ở mép trái màn hình, từ đáy
+  thanh trên tới đáy khung nhìn (≤ 1080px: trên thanh đáy); `body` đệm trái `--tree`, vùng làm việc và phần trong thanh trên căn giữa phần còn lại (`docRoom`).
+- `prefs.tree` (chưa chọn: hiện khi ≥ 2 mục) là "muốn thấy cây": cột thì `#btn-tree` / Ctrl/⌘ + B đổi nó; tấm trượt thì chỉ mở tấm. Nạp folder hiện cây cho phiên ấy, không ghi
+  nó (MDAN-032). Xét lại khi `#doc` đổi rộng (ResizeObserver), đổi chế độ xem, vẽ cây; kéo mép dừng ở chỗ còn lại; *Split* tính `#doc` như khi không có cột (`treeTakes()`).
+- Dáng (MDAN-060): `#btn-tree` > 720px luôn ở mép trái thanh trên (`--pad` + vùng an toàn), tên trang thẳng vùng làm việc, hẹp thì đứng sau nút. Đầu cây một hàng (FILES,
+  tên, New file, New folder, ⋯); hàng 28px, vạch thụt `--guide`; file mở: `--accent-soft` + vạch trái bo trọn `--edge-on`; tấm trượt: vùng an toàn, góc phải bo, không viền.
 - Mở file từ đĩa: file mở trống, chưa có tên thật thì điền, không thì thêm cạnh nó (MDAN-024). Nạp folder là bản sao, bộ nhớ đầy thì hoàn lại: bỏ `skipEntry`
   (không đọc vào), không phải chữ (`isTextFile`, MDAN-030), có NUL, > 1 MB; phiên trống thì mở `firstFile` (MDAN-031); xong mà đã đổi phiên thì vào phiên ấy.
-- Xoá không hỏi, toast có Undo (cả chuyển): `applyUndo` chỉ trả lại mục ấy (MDAN-028), cả khi đã đổi phiên (`sessionFor`). Tải: `downloadOf`, `zipOf`.
-- *All files* (`S.promptAll`, `allFilesOffered`, MDAN-025): `buildPromptAll`; file không mở neo qua `anchorsOf()` (nhớ theo doc). Tab *Comments* chỉ có file mở.
+- Xoá không hỏi, toast có Undo (cả chuyển): `applyUndo` chỉ trả lại mục ấy (MDAN-028), cả khi đã đổi phiên (`sessionFor`). Tải: `downloadOf`, `zipOf`. *All files* (`S.promptAll`, `allFilesOffered`, MDAN-025): `buildPromptAll`; file không mở neo qua `anchorsOf()` (nhớ theo doc). Tab *Comments* chỉ có file mở.
 
 ## Lưu trữ
 
