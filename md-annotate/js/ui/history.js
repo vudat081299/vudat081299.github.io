@@ -25,7 +25,11 @@ function renderHist() {
     var main = h('button', {
       class: 'ma-row__main', type: 'button', title: cur ? 'Current session' : 'Open this session',
       onclick: function () {
-        if (!cur) { var s = loadSession(e.id); if (s) switchTo(s); else toast('Could not read this session.'); }
+        if (!cur) {
+          var s = loadSession(e.id);
+          if (!s) toast('Could not read this session.');
+          else if (!switchTo(s)) return;   // hộp nhận xét có chữ chưa lưu: giữ hộp History, toast đã báo
+        }
         $('dlg-hist').close();
       }
     }, h('span', { class: 'ma-row__t' }, e.name || 'Untitled session'), h('span', { class: 'ma-row__m' }, meta));
