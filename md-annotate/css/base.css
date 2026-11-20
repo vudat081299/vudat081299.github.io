@@ -51,7 +51,7 @@ svg.ma-i { width: 16px; height: 16px; flex: none; }
 .ma-bar__sp { flex: 1; }
 
 /* NÚT — một họ: chính (--go), phụ (mặc định), trơn (--quiet, --bare, thanh trên), chỉ biểu tượng (.ma-icbtn).
-   Cao --h (trong thẻ: --h-sm), bo --r-sm, chữ --fs-md 600. Rê: nền --chip; tắt: mờ 50%. */
+   Cao --h (trong thẻ: --h-sm), bo --r-sm, chữ --fs-md 600. Rê: nền --chip; tắt: mờ 50%, nút chính tắt thì xám. */
 .ma-btn, .ma-icbtn {
   display: inline-flex; align-items: center; justify-content: center; gap: var(--s2); flex: none;
   min-height: var(--h); padding: 0 var(--s4);
@@ -71,6 +71,9 @@ svg.ma-i { width: 16px; height: 16px; flex: none; }
   .ma-btn--go:hover { color: var(--on-accent); background: var(--accent); filter: brightness(1.06); }
 }
 .ma-btn:disabled, .ma-icbtn:disabled { opacity: .5; cursor: default; filter: none; }
+/* Nút chính tắt: xám trung tính, không phải xanh mờ (trông như đang lỗi). */
+.ma-btn--go:disabled { opacity: 1; background: var(--chip); border-color: transparent; color: var(--ink-3); }
+.ma-btn--go:disabled .ma-kbd { color: inherit; background: color-mix(in srgb, var(--ink) 8%, transparent); }
 html:not(.dark) .ma-moon, html.dark .ma-sun { display: none; }
 
 /* HUY HIỆU — số đếm (trung tính, viên thuốc) và số thứ tự nhận xét (nền --accent, bo --r-xs). Mono --fs-xs, cao 20px. */
