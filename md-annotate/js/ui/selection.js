@@ -7,7 +7,7 @@
      ui/picks.js. */
 import { locate } from '../core/anchor.js';
 import { clampInto, edgeScroll, fabSide } from '../core/place.js';
-import { $, hasHL, paintHL, shown } from './dom.js';
+import { $, barBottom, dockTop, hasHL, paintHL, shown } from './dom.js';
 import { rangeAt, readSelection } from './anchor-dom.js';
 import { D } from './state.js';
 import { mdText } from './render.js';
@@ -30,7 +30,7 @@ function placeFab() {
   if (f.hidden || !sel || !sel.rangeCount) return;
   var rs = sel.getRangeAt(0).getClientRects();
   if (!rs.length || fabSide(rs[0].top, rs[rs.length - 1].bottom, f.getBoundingClientRect().top, window.innerHeight) !== 'top') return;
-  f.style.setProperty('--fab-top', Math.max(0, Math.round(document.querySelector('.ma-bar').getBoundingClientRect().bottom)) + 'px');
+  f.style.setProperty('--fab-top', Math.round(barBottom()) + 'px');
   f.classList.add('is-top');
 }
 /* Split: bôi đen một bên thì đoạn tương ứng bên kia được tô (CSS Highlight 'ma-mirror', không sửa DOM). Tìm đoạn
@@ -72,8 +72,7 @@ function caretAt(x, y) {
 function textBox(g) {
   var r = g.root.getBoundingClientRect(), cs = getComputedStyle(g.root);
   var v = g.scroller ? g.scroller.getBoundingClientRect() : { top: 0, bottom: window.innerHeight };
-  var vt = Math.max(v.top, document.querySelector('.ma-bar').getBoundingClientRect().bottom), vb = v.bottom;
-  if (shown($('dock'))) vb = Math.min(vb, $('dock').getBoundingClientRect().top);
+  var vt = Math.max(v.top, barBottom()), vb = Math.min(v.bottom, dockTop());
   return { left: r.left + parseFloat(cs.paddingLeft), right: r.right - parseFloat(cs.paddingRight),
     top: Math.max(vt, r.top), bottom: Math.min(vb, r.bottom), vt: vt, vb: vb };
 }

@@ -1,8 +1,9 @@
 /* Tiện ích DOM: $(id), h() dựng phần tử, icon(), textNodes(), media query dùng chung, shown(), typing() (phím tắt
    một chữ), dragBar() (kéo vách), toast(), paintHL() (tô CSS Highlight), saveFile() (tải một Blob về máy),
    droppedItems() (mục thả từ máy), syncBar() (màu thanh trình duyệt khi có lớp mờ).
-   trackKeyboard() (bàn phím ảo che bao nhiêu: --kb, --vvh).
-   Xuất: $, dragBar, droppedItems, h, hasHL, icon, mqSheet, mqSide, mqTouch, paintHL, placeToast, reduceMotion, saveFile, shown,
+   trackKeyboard() (bàn phím ảo che bao nhiêu: --kb, --vvh), barBottom() / dockTop() (phần thấy của trang giữa
+   thanh trên và thanh đáy).
+   Xuất: $, barBottom, dockTop, dragBar, droppedItems, h, hasHL, icon, mqSheet, mqSide, mqTouch, paintHL, placeToast, reduceMotion, saveFile, shown,
      syncBar, textNodes, toast, trackKeyboard, typing.
    Dùng: core/color.js. */
 import { barColor } from '../core/color.js';
@@ -74,6 +75,10 @@ export function paintHL(name, ranges) {
   ranges.forEach(function (r) { hl.add(r); });
 }
 export function shown(el) { return !!(el && el.getClientRects().length); }
+/* Đáy thanh trên trong khung nhìn (≥ 0; điện thoại cuộn xuống thì thanh khuất, 0): phần thấy của trang bắt đầu dưới nó. */
+export function barBottom() { var b = document.querySelector('.ma-bar'); return b ? Math.max(0, b.getBoundingClientRect().bottom) : 0; }
+/* Đỉnh thanh đáy (≤ 1080px) trong khung nhìn; không có thì đáy khung nhìn. */
+export function dockTop() { var d = $('dock'); return d && shown(d) ? d.getBoundingClientRect().top : window.innerHeight; }
 /* Phần tử nhận phím là chỗ gõ chữ (ô nhập chữ, textarea, select, contenteditable): phím tắt một chữ (X, J, K, ?) bỏ qua.
    Checkbox, radio, thanh trượt không phải chỗ gõ: vừa bấm "Dim reviewed" thì X vẫn chạy. */
 var NOT_TEXT = /^(?:checkbox|radio|range|button|submit|reset|file|color|image)$/;

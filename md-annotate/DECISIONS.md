@@ -47,6 +47,7 @@
 - MDAN-067 · Preview và Split chỉ cho file markdown · `md-annotate/js/core/langs.js`, `md-annotate/js/core/file-type.js`, `md-annotate/js/ui/views.js`
 - MDAN-068 · Cây file: đệm đáy, ô lọc file theo mẫu · `md-annotate/css/tree.css`, `md-annotate/js/ui/tree.js`, `md-annotate/js/ui/tree-find.js`, `md-annotate/js/core/tree-find.js`
 - MDAN-069 · Hộp Shortcuts thành Help, thêm phần tìm file · `md-annotate/index.html`, `md-annotate/js/ui/help.js`, `md-annotate/data/shortcuts.json`, `md-annotate/data/search-help.json`
+- MDAN-070 · Code đơn giản nhất mà dễ đọc; giao diện, logic, luật tách nhau; thứ dùng chung ở một chỗ · `md-annotate/`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Nguồn tô màu cú pháp kiểu VS Code
@@ -403,3 +404,10 @@ Hộp phím tắt đổi tên thành Help, ở cả nút trong Settings, menu Mo
 phần: Shortcuts and gestures (như cũ) và Searching files: cách gõ mẫu ở ô lọc của cây, có ví dụ (chữ thường, ^, $, ., .*,
 \., |, mẫu hỏng thành chữ thường) và các phím (/, ↓, Esc). Ô lọc trỏ tới Help ở tooltip.
 
+## MDAN-070 · Code đơn giản nhất mà dễ đọc; giao diện, logic, luật tách nhau; thứ dùng chung ở một chỗ
+20/11/2026 · `md-annotate/`
+
+Viết code đơn giản nhất mà dễ đọc: hàm và module thường, tên rõ, không framework, không lớp trừu tượng "để sau". Giao diện
+(DOM, CSS), logic (hàm thuần, không DOM) và luật / cấu hình (hằng, bảng phím, token, luật tìm) tách nhau, mỗi tính năng
+một module trong lớp của nó, theo cách xếp thư mục sẵn có. Thứ dùng ở hai chỗ trở lên nằm một chỗ chung và mọi nơi gọi nó,
+không chép thành biến thể; chỉ dùng một chỗ thì không tách ra.

@@ -14,7 +14,7 @@ import { chipHints, pct } from '../core/hints.js';
 import { addComment, editComment, findComment, overlapWarning, partsOf } from '../core/comments.js';
 import { popPlace, sheetReveal } from '../core/place.js';
 import { pickSummary } from '../core/picks.js';
-import { $, h, mqSheet, mqTouch, paintHL, shown, syncBar, toast } from './dom.js';
+import { $, barBottom, h, mqSheet, mqTouch, paintHL, shown, syncBar, toast } from './dom.js';
 import { rangeAt } from './anchor-dom.js';
 import { D, scheduleSave } from './state.js';
 import { recordUse, seedState, stats } from './hints.js';
@@ -171,7 +171,7 @@ function revealAbove(span) {
   var kb = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--kb')) || 0;
   var sheetTop = window.innerHeight - kb - $('pop').offsetHeight;   // không đọc getBoundingClientRect: tấm đang trượt lên
   var pane = span.node && span.node.closest && isSplit() ? span.node.closest('.ma-view') : null;
-  var head = pane ? pane.getBoundingClientRect().top : Math.max(0, document.querySelector('.ma-bar').getBoundingClientRect().bottom);
+  var head = pane ? pane.getBoundingClientRect().top : barBottom();
   var d = Math.round(sheetReveal(span.top, span.bottom, sheetTop, head, 12));
   if (!d) return;
   noteJump();
