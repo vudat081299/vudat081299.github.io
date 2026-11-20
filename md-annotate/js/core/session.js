@@ -1,22 +1,25 @@
 /* Mô hình phiên, thuần (dữ liệu thường, không DOM, không localStorage): một phiên là một cây folder + file text.
    Tạo phiên, chuẩn hoá phiên đọc từ bộ nhớ (nâng phiên cũ một văn bản thành một file), thêm / xoá / đổi tên / chuyển nút
-   mà docs luôn khớp nodes, nhãn file trong prompt, tên tự đặt, danh sách phiên (index), file để tải .zip.
-   Đọc / ghi bộ nhớ ở ui/state.js.
+   mà docs luôn khớp nodes, Undo của xoá / chuyển, nhãn file trong prompt, tên tự đặt, danh sách phiên (index), tên và
+   kiểu file tải về, file để tải .zip. Đọc / ghi bộ nhớ ở ui/state.js.
    Phiên: { id, name, named, created, updated, header, footer, fmt, includeDoc, lineNums, path, rvPrompt, promptAll,
      nodes: [{ id, parent, kind, name }] (core/tree.js), docs: { fileId: doc }, open: fileId, collapsed: [dirId] }.
-   doc: { text, comments, reviews, rvPct?, real } — comments / reviews như trước (core/comments.js, core/review.js);
-     real: tên file là thật (mở / nạp từ đĩa, người dùng đổi tên), file dán chữ tên tự đặt untitled.md thì false.
+   doc: { text, comments, reviews, rvPct?, real, legacy? } — comments / reviews như trước (core/comments.js, core/review.js);
+     real: tên file là thật (mở / nạp từ đĩa, người dùng đổi tên), file dán chữ tên tự đặt untitled.md thì false;
+     legacy: file nâng từ phiên cũ mà path cũ không tách được thành tên file (VD 'docs/', '.'): nhãn là path nguyên văn.
    path: tiền tố thư mục trên đĩa (VD 'docs/'), ghép trước đường dẫn trong cây ở nhãn prompt (fileLabel).
    Bất biến (normSession giữ): ≥ 1 file; open là một file trong nodes; mỗi file đúng một docs[id], không doc thừa.
    Hàm đổi cây (addFile, addDir, addPaths, importPaths, openFromDisk, removeNodes, renameIn, moveIn, openFile, reveal,
-   toggleDir, collapseAll, restoreTree) không sửa phiên đầu vào:
+   toggleDir, collapseAll, applyUndo) không sửa phiên đầu vào:
    trả phiên mới (chép nông; nodes, docs, collapsed là mảng / object mới; doc không đổi thì dùng chung).
-   Xuất: addDir, addFile, addPaths, autoName, collapseAll, createSession, dirOf, docOf, fileCount, fileLabel, importPaths,
-     indexWith, indexWithout, isEmpty, moveIn, normIndex, normSession, openFile, openFromDisk, removeNodes, renameIn,
-     renameIndex, renameSession, restoreTree, reveal, textTitle, toggleDir, touchSession, treeFiles, uid, UNTITLED, zipOf.
-   Dùng: core/tree.js, core/zip.js. */
-import { addNode, afterRemove, filesInOrder, fromPaths, kids, moveNode, nameError, pathOf, removeNode, renameNode,
+   Xuất: addDir, addFile, addPaths, applyUndo, autoName, collapseAll, createSession, dirOf, docOf, downloadOf, fileCount,
+     fileLabel, importPaths, indexWith, indexWithout, isEmpty, moveIn, normIndex, normSession, openFile, openFromDisk,
+     removeNodes, renameIn, renameIndex, renameSession, reveal, sessionTitle, textTitle, toggleDir, touchSession, treeFiles,
+     uid, UNTITLED, zipOf.
+   Dùng: core/tree.js, core/text.js, core/zip.js. */
+import { addNode, afterRemove, filesInOrder, firstFile, fromPaths, kids, moveNode, nameError, pathOf, removeNode, renameNode,
   subtree, uniqueName, visibleRows } from './tree.js';
+import { slug } from './text.js';
 import { zipFiles } from './zip.js';
 
 export var UNTITLED = 'untitled.md';
@@ -42,8 +45,9 @@ export function createSession(text, prefs) {
 
 /* Phiên đọc từ bộ nhớ (s có thể hỏng): sửa tại chỗ cho đúng khuôn, hoặc null nếu không dùng được.
    Phiên cũ (text là chuỗi, không có nodes) nâng tại chỗ thành một file: tên là phần sau '/' (hoặc '\') cuối của path cũ,
-   real: true, phần trước thành tiền tố path; path cũ không có tên dùng được thì untitled.md, real: false. Nhờ vậy nhãn
-   prompt (fileLabel) đúng bằng path cũ và prompt y hệt từng byte. */
+   real: true, phần trước thành tiền tố path; path cũ không có tên dùng được ('docs/', '.', quá dài) thì untitled.md,
+   real: false, legacy: true và path giữ nguyên văn. Nhờ vậy nhãn prompt (fileLabel) đúng bằng path cũ và prompt y hệt
+   từng byte. */
 export function normSession(s, id) {
   if (!s || typeof s !== 'object') return null;
   if (!Array.isArray(s.nodes)) {
@@ -68,7 +72,8 @@ function upgrade(s) {
   var real = !!name && !nameError([], null, name, null);
   var f = uid(), doc = { text: s.text, comments: s.comments, reviews: s.reviews, real: real };
   if ('rvPct' in s) doc.rvPct = s.rvPct;
-  s.path = p.slice(0, k + 1);
+  if (!real && p) doc.legacy = true;
+  s.path = real ? p.slice(0, k + 1) : p;
   s.nodes = [{ id: f, parent: null, kind: 'file', name: real ? name : UNTITLED }];
   s.docs = {}; s.docs[f] = doc;
   s.open = f; s.collapsed = [];
@@ -103,8 +108,8 @@ function normTree(s) {
   var taken = new Map();
   nodes.forEach(function (n) {
     var sib = taken.get(n.parent) || [];
-    var bad = nameError([], null, n.name, null);
-    var name = bad ? (n.kind === 'file' ? UNTITLED : 'folder') : n.name;
+    var nm = n.name.trim(), bad = nameError([], null, nm, null);
+    var name = bad ? (n.kind === 'file' ? UNTITLED : 'folder') : nm;
     n.name = uniqueName(sib, null, name);
     sib.push({ id: n.id, parent: null, kind: n.kind, name: n.name });
     taken.set(n.parent, sib);
@@ -144,6 +149,7 @@ function normDoc(d) {
     }) : [];
   if (!Number.isFinite(d.rvPct)) delete d.rvPct;
   d.real = d.real === true;
+  if (d.legacy !== true || d.real) delete d.legacy;
   return d;
 }
 /* Ngữ cảnh neo của một đoạn trích (nhận xét hay một phần) sửa tại chỗ cho đúng kiểu: rel không phải số thì locate
@@ -174,12 +180,15 @@ function prefixOf(s) {
   var p = s.path.trim();
   return p && !/[\/\\]$/.test(p) ? p + '/' : p;
 }
-/* Nhãn file trong prompt khi bật số dòng: tiền tố + đường dẫn trong cây khi phiên có ≥ 2 file, hoặc file real, hoặc tiền
-   tố khác rỗng; không thì '' (prompt ghi L12 như cũ). */
+/* Nhãn file trong prompt khi bật số dòng (MDAN-029): tiền tố + đường dẫn trong cây khi phiên có ≥ 2 file hoặc file có tên
+   thật (real); phiên một file chưa có tên thật thì '' (prompt ghi L12), dù ô Folder có chữ — trừ file nâng từ phiên cũ
+   (legacy): nhãn là ô Folder nguyên văn, như bản một văn bản. */
 export function fileLabel(s, fileId) {
-  var d = docOf(s, fileId), pre = prefixOf(s);
+  var d = docOf(s, fileId);
   if (!d) return '';
-  return fileCount(s) > 1 || d.real || pre ? pre + pathOf(s.nodes, fileId) : '';
+  var many = fileCount(s) > 1;
+  if (!many && !d.real) return d.legacy ? s.path.trim() : '';
+  return prefixOf(s) + pathOf(s.nodes, fileId);
 }
 /* Tên gợi ý từ chữ: tiêu đề markdown đầu tiên, không thì dòng có chữ đầu tiên; '' khi không có. */
 export function textTitle(t) {
@@ -187,16 +196,17 @@ export function textTitle(t) {
   var line = m ? m[1] : '';
   return line.replace(/\]\([^)]*\)/g, '').replace(/[*_`#>\[\]|]/g, '').replace(/\s+/g, ' ').trim().slice(0, 60);
 }
-/* Tên tự đặt: gốc chỉ có một folder thì tên folder; không thì từ chữ của file đang mở, rồi file đầu tiên có chữ. */
+/* Tên tự đặt (MDAN-027), không theo file đang mở: gốc chỉ có một folder thì tên folder; không thì tên lấy từ chữ của file
+   đầu tiên theo thứ tự cây có chữ; không có thì 'Untitled session'. */
 export function autoName(s) {
   var top = kids(s.nodes, null);
   if (top.length === 1 && top[0].kind === 'dir') return top[0].name;
-  var t = textTitle(docOf(s).text);
-  if (t) return t;
   var ids = filesInOrder(s.nodes);
-  for (var i = 0; i < ids.length; i++) { t = textTitle(s.docs[ids[i]].text); if (t) return t; }
+  for (var i = 0; i < ids.length; i++) { var t = textTitle(s.docs[ids[i]].text); if (t) return t; }
   return 'Untitled session';
 }
+/* Tên phiên đang dùng: tên người dùng đặt, không thì tên tự đặt; phiên trống thì ''. */
+export function sessionTitle(s) { return s.named ? s.name : isEmpty(s) ? '' : autoName(s); }
 /* Phiên trống: một file, không folder, chữ rỗng, không nhận xét. */
 export function isEmpty(s) {
   var d = docOf(s);
@@ -222,6 +232,17 @@ export function treeFiles(s, rootId) {
 }
 /* Cả cây (hoặc cây con của folder rootId) thành file .zip (Uint8Array), date là giờ ghi vào các mục. */
 export function zipOf(s, date, rootId) { return zipFiles(treeFiles(s, rootId), date); }
+/* Tải một nút (id) hay cả phiên (null): { name, type, zip }. File: tên của nó (thiếu đuôi thì thêm .md), kiểu
+   text/markdown khi đuôi .md / .markdown hay thiếu đuôi, không thì text/plain. Folder: <tên>.zip; cả phiên: <slug tên phiên>.zip
+   (zip: true, nội dung là zipOf). */
+export function downloadOf(s, id) {
+  var n = id == null ? null : s.nodes.filter(function (x) { return x.id === id; })[0];
+  if (n && n.kind === 'file') {
+    var ext = /\.[^.]+$/.test(n.name), md = !ext || /\.(md|markdown)$/i.test(n.name);
+    return { name: ext ? n.name : n.name + '.md', type: (md ? 'text/markdown' : 'text/plain') + ';charset=utf-8', zip: false };
+  }
+  return { name: (n ? n.name : slug(s.name || autoName(s))) + '.zip', type: 'application/zip', zip: true };
+}
 
 /* ── đổi cây (trả phiên mới) ── */
 
@@ -229,20 +250,20 @@ function withTree(s, nodes, docs, extra) {
   var o = Object.assign({}, s, { nodes: nodes, docs: docs || s.docs, collapsed: s.collapsed.slice() });
   return extra ? Object.assign(o, extra) : o;
 }
-/* Thêm file dưới parentId (null = gốc); tên trùng anh em tự đổi (untitled-2.md…), tên hỏng là lỗi. Không đổi file mở.
-   Trả { s, id, error }; lỗi thì s là phiên đầu vào, id ''. */
+/* Thêm file dưới parentId (null = gốc); tên trùng anh em tự đổi (untitled-2.md…), tên hỏng là lỗi. Không đổi file mở;
+   các folder chứa nó mở ra (thấy được hàng mới). Trả { s, id, error }; lỗi thì s là phiên đầu vào, id ''. */
 export function addFile(s, parentId, name, text, real) {
   var id = uid(), r = addNode(s.nodes, { id: id, parent: parentId, kind: 'file', name: uniqueName(s.nodes, parentId, name) });
   if (r.error) return { s: s, id: '', error: r.error };
   var docs = Object.assign({}, s.docs);
   docs[id] = emptyDoc(text, real);
-  return { s: withTree(s, r.nodes, docs), id: id, error: '' };
+  return { s: reveal(withTree(s, r.nodes, docs), id), id: id, error: '' };
 }
-/* Thêm folder; tên trùng tự đổi. Trả { s, id, error }. */
+/* Thêm folder; tên trùng tự đổi; các folder chứa nó mở ra. Trả { s, id, error }. */
 export function addDir(s, parentId, name) {
   var id = uid(), r = addNode(s.nodes, { id: id, parent: parentId, kind: 'dir', name: uniqueName(s.nodes, parentId, name) });
   if (r.error) return { s: s, id: '', error: r.error };
-  return { s: withTree(s, r.nodes), id: id, error: '' };
+  return { s: reveal(withTree(s, r.nodes), id), id: id, error: '' };
 }
 /* Nạp nhiều file theo đường dẫn ([{ path, text }], tính từ parentId; path kết thúc '/' là folder rỗng): folder trung gian,
    gộp folder đã có (tree.js fromPaths); file mới real: true. Trả { s, ids: { path: fileId } }. */
@@ -253,23 +274,28 @@ export function addPaths(s, parentId, files) {
   return { s: withTree(s, r.nodes, docs), ids: r.ids };
 }
 /* Nạp folder từ đĩa (bản sao, MDAN-022). items: [{ path, text }] như addPaths. Phiên trống (isEmpty) và có file nạp
-   được: cây nạp thay nội dung phiên (bỏ file trống), mở file đầu tiên theo thứ tự hiển thị. Không thì nạp dưới parentId,
-   mở folder ấy ra (bỏ khỏi collapsed), file đang mở giữ nguyên. Trả { s, ids, files: số file đã nạp }. */
+   được: cây nạp thay nội dung phiên (bỏ file trống), mở file đầu (firstFile, MDAN-031). Không thì nạp dưới parentId
+   (folder không còn trong cây thì gốc), mở folder ấy ra (bỏ khỏi collapsed), file đang mở giữ nguyên.
+   Trả { s, ids, files: số file đã nạp, skipped: số file có trong items mà đường dẫn không dùng được }. */
 export function importPaths(s, parentId, items) {
   var count = function (ids) { return Object.keys(ids).length; };
+  var want = items.filter(function (it) { return !/[\/\\]$/.test(it.path); }).length;
+  var out = function (o, ids) { return { s: o, ids: ids, files: count(ids), skipped: want - count(ids) }; };
   if (isEmpty(s)) {
     var b = addPaths(withTree(s, [], {}, { collapsed: [] }), null, items);
-    if (count(b.ids)) return { s: openFile(b.s, filesInOrder(b.s.nodes)[0]), ids: b.ids, files: count(b.ids) };
+    if (count(b.ids)) return out(openFile(b.s, firstFile(b.s.nodes)), b.ids);
   }
+  if (parentId != null && !s.nodes.some(function (n) { return n.id === parentId && n.kind === 'dir'; })) parentId = null;
   var r = addPaths(s, parentId, items);
-  return { s: parentId == null ? r.s : reveal(r.s, parentId, true), ids: r.ids, files: count(r.ids) };
+  return out(parentId == null ? r.s : reveal(r.s, parentId, true), r.ids);
 }
-/* Mở một file từ đĩa (MDAN-024). File đang mở trống (không chữ, không nhận xét): điền chữ, đặt tên theo file (tránh trùng
-   anh em), real: true; phiên trống thì phiên cũng mang tên file (bỏ đuôi). Không thì thêm file cạnh file đang mở (cùng
-   folder) và mở nó. Tên không dùng được thì untitled.md. Trả { s, id, added }. */
+/* Mở một file từ đĩa (MDAN-024). File đang mở trống (không chữ, không nhận xét) và chưa có tên thật (real): điền chữ, đặt
+   tên theo file (tránh trùng anh em), real: true; phiên trống thì phiên cũng mang tên file (bỏ đuôi). Không thì thêm file
+   cạnh file đang mở (cùng folder) và mở nó. Tên bỏ dấu cách đầu / cuối; không dùng được thì untitled.md. Trả { s, id, added }. */
 export function openFromDisk(s, name, text) {
+  name = String(name).trim();
   var d = docOf(s), parent = dirOf(s, s.open), ok = !nameError([], null, name, null);
-  if (d.text.trim() || d.comments.length) {
+  if (d.text.trim() || d.comments.length || d.real) {
     var a = addFile(s, parent, ok ? name : UNTITLED, text, true);
     return { s: openFile(a.s, a.id), id: a.id, added: true };
   }
@@ -282,22 +308,27 @@ export function openFromDisk(s, name, text) {
   return { s: o, id: s.open, added: false };
 }
 /* Xoá các nút (và hậu duệ); doc của file bị xoá bỏ theo; file mở bị xoá thì mở file kế bên (afterRemove). Xoá hết file
-   thì thêm untitled.md rỗng ở gốc (phiên luôn có ≥ 1 file). Trả { s, removed: id[] }. */
+   thì thêm untitled.md rỗng ở gốc (phiên luôn có ≥ 1 file). Trả { s, removed: id[], undo } (undo: cho applyUndo; null khi
+   không xoá gì). */
 export function removeNodes(s, ids) {
   var nodes = s.nodes, removed = [];
   (ids || []).forEach(function (id) { var r = removeNode(nodes, id); nodes = r.nodes; removed = removed.concat(r.removed); });
-  if (!removed.length) return { s: s, removed: [] };
-  var gone = new Set(removed), docs = {};
+  if (!removed.length) return { s: s, removed: [], undo: null };
+  var gone = new Set(removed), docs = {}, back = {};
   nodes.forEach(function (n) { if (n.kind === 'file') docs[n.id] = s.docs[n.id]; });
-  var open = afterRemove(s.nodes, removed, s.open);
+  var open = afterRemove(s.nodes, removed, s.open), added = null;
   if (open === null) {
-    open = uid();
+    open = added = uid();
     nodes = nodes.concat([{ id: open, parent: null, kind: 'file', name: uniqueName(nodes, null, UNTITLED) }]);
     docs[open] = emptyDoc('', false);
   }
   var o = withTree(s, nodes, docs, { open: open });
   o.collapsed = o.collapsed.filter(function (d) { return !gone.has(d); });
-  return { s: o, removed: removed };
+  removed.forEach(function (id) { if (s.docs[id]) back[id] = s.docs[id]; });
+  var byId = new Map(s.nodes.map(function (n) { return [n.id, n]; }));
+  var undo = { kind: 'remove', nodes: removed.map(function (id) { return byId.get(id); }), docs: back, open: gone.has(s.open) ? s.open : null,
+    collapsed: s.collapsed.filter(function (d) { return gone.has(d); }), added: added };
+  return { s: o, removed: removed, undo: undo };
 }
 /* Đổi tên một nút; tên trùng hay hỏng là lỗi. File đổi tên thành real: true. Trả { s, error }. */
 export function renameIn(s, id, name) {
@@ -307,10 +338,11 @@ export function renameIn(s, id, name) {
   if (docs[id] && !docs[id].real) { docs = Object.assign({}, docs); docs[id] = Object.assign({}, docs[id], { real: true }); }
   return { s: withTree(s, r.nodes, docs), error: '' };
 }
-/* Chuyển nút vào folder parentId (null = gốc). Trả { s, error }. */
+/* Chuyển nút vào folder parentId (null = gốc). Trả { s, error, undo } (undo: cho applyUndo; null khi không chuyển). */
 export function moveIn(s, id, parentId) {
   var r = moveNode(s.nodes, id, parentId);
-  return r.error ? { s: s, error: r.error } : { s: withTree(s, r.nodes), error: '' };
+  if (r.error || r.nodes === s.nodes) return { s: s, error: r.error, undo: null };
+  return { s: withTree(s, r.nodes), error: '', undo: { kind: 'move', id: id, parent: dirOf(s, id) } };
 }
 /* Mở file id: mọi folder chứa nó được mở ra (bỏ khỏi collapsed). id không phải file thì trả phiên đầu vào. */
 export function openFile(s, id) {
@@ -333,13 +365,43 @@ export function reveal(s, id, self) {
 export function collapseAll(s) {
   return withTree(s, s.nodes, s.docs, { collapsed: s.nodes.filter(function (n) { return n.kind === 'dir'; }).map(function (n) { return n.id; }) });
 }
-/* Hoàn tác một lần đổi cây (Undo của xoá / chuyển): cây, file mở, folder gập lấy từ ảnh chụp snap; tuỳ chọn và tên lấy
-   từ phiên hiện tại cur; doc của file còn trong cur lấy từ cur (chữ, nhận xét sửa sau ảnh chụp không mất), file đã xoá
-   lấy từ snap. */
-export function restoreTree(cur, snap) {
-  var docs = {};
-  snap.nodes.forEach(function (n) { if (n.kind === 'file') docs[n.id] = docOf(cur, n.id) || snap.docs[n.id]; });
-  return Object.assign({}, cur, { nodes: snap.nodes.slice(), docs: docs, open: snap.open, collapsed: snap.collapsed.slice() });
+/* Undo của xoá / chuyển (MDAN-028) trên phiên HIỆN TẠI cur: chỉ trả lại đúng mục ấy, mọi việc làm sau (file mới, tên
+   mới, chữ) giữ nguyên. u là undo của removeNodes / moveIn. Trả { s, id: nút được trả lại ('' khi không làm gì) }.
+   Xoá: chèn lại các nút đã xoá cùng doc của chúng; folder cha không còn thì về gốc; tên trùng anh em thì đổi (uniqueName);
+   folder gập như trước; file mở bị xoá thì mở lại nó; file untitled.md mà lần xoá thêm vào (xoá hết file) còn trống thì bỏ.
+   Chuyển: nút về folder cũ (không còn, hay giờ là hậu duệ của nó, thì gốc); tên trùng thì đổi. Nút không còn thì thôi.
+   Folder chứa nút được trả lại mở ra. */
+export function applyUndo(cur, u) {
+  if (!u) return { s: cur, id: '' };
+  var has = function (nodes, id) { return nodes.some(function (n) { return n.id === id; }); };
+  if (u.kind === 'move') {
+    if (!has(cur.nodes, u.id)) return { s: cur, id: '' };
+    var p = u.parent != null && cur.nodes.some(function (n) { return n.id === u.parent && n.kind === 'dir'; }) &&
+      subtree(cur.nodes, u.id).indexOf(u.parent) < 0 ? u.parent : null;
+    if (dirOf(cur, u.id) === p) return { s: reveal(cur, u.id), id: u.id };
+    var me = cur.nodes.filter(function (n) { return n.id === u.id; })[0];
+    var nm = uniqueName(cur.nodes.filter(function (n) { return n.id !== u.id; }), p, me.name);
+    var mv = cur.nodes.map(function (n) { return n.id === u.id ? { id: n.id, parent: p, kind: n.kind, name: nm } : n; });
+    return { s: reveal(withTree(cur, mv), u.id), id: u.id };
+  }
+  var nodes = cur.nodes.slice(), docs = Object.assign({}, cur.docs), top = '';
+  var drop = u.added && cur.docs[u.added] && !cur.docs[u.added].real && !cur.docs[u.added].text.trim() && !cur.docs[u.added].comments.length;
+  if (drop) { nodes = nodes.filter(function (n) { return n.id !== u.added; }); delete docs[u.added]; }
+  u.nodes.forEach(function (n) {
+    if (has(nodes, n.id) || (n.kind === 'file' && !u.docs[n.id])) return;
+    var p = n.parent != null && nodes.some(function (x) { return x.id === n.parent && x.kind === 'dir'; }) ? n.parent : null;
+    nodes.push({ id: n.id, parent: p, kind: n.kind, name: uniqueName(nodes, p, n.name) });
+    if (n.kind === 'file') docs[n.id] = u.docs[n.id];
+    if (!top) top = n.id;
+  });
+  if (!top) return { s: cur, id: '' };
+  var o = withTree(cur, nodes, docs);
+  o.collapsed = o.collapsed.concat(u.collapsed.filter(function (d) { return o.collapsed.indexOf(d) < 0; }));
+  if (u.open && docs[u.open]) o.open = u.open;
+  else if (!docs[o.open]) o.open = filesInOrder(nodes)[0];
+  o = reveal(o, top);
+  if (o.open !== cur.open) o = reveal(o, o.open);
+  return { s: o, id: top };
 }
 /* Gập / mở folder id. */
 export function toggleDir(s, id) {
@@ -353,12 +415,12 @@ export function toggleDir(s, id) {
 
 /* Trước khi lưu: tên tự đặt (nếu người dùng chưa đặt) và giờ sửa. */
 export function touchSession(s) {
-  if (!s.named) s.name = isEmpty(s) ? '' : autoName(s);
+  if (!s.named) s.name = sessionTitle(s);
   s.updated = Date.now();
 }
 /* Danh sách phiên sau khi lưu s: s lên đầu; phiên trống không vào danh sách.
    Mục: files (số file), chars (tổng ký tự), count (tổng nhận xét); rv: % đã đọc (làm tròn xuống) khi có file có rvPct,
-   bình quân theo độ dài chữ của các file ấy. */
+   bình quân theo độ dài chữ của mọi file có chữ (file chưa có rvPct tính 0%). */
 export function indexWith(idx, s) {
   idx = indexWithout(idx, s.id);
   if (!isEmpty(s)) {
@@ -366,10 +428,12 @@ export function indexWith(idx, s) {
     files.forEach(function (id) {
       var d = s.docs[id];
       chars += d.text.length; count += d.comments.length;
-      if (Number.isFinite(d.rvPct)) { rvN++; rvPlain += d.rvPct; rvSum += d.rvPct * d.text.length; rvLen += d.text.length; }
+      var pct = Number.isFinite(d.rvPct) ? d.rvPct : 0;
+      if (Number.isFinite(d.rvPct)) { rvN++; rvPlain += d.rvPct; }
+      rvSum += pct * d.text.length; rvLen += d.text.length;
     });
     var e = { id: s.id, name: s.name, created: s.created, updated: s.updated, files: files.length, chars: chars, count: count };
-    /* % đã đọc, ui/review.js tính lúc vẽ; hộp History hiện. Mọi file có rvPct đều rỗng thì bình quân thường. */
+    /* % đã đọc, ui/review.js tính lúc vẽ; hộp History hiện. Mọi file đều rỗng thì bình quân thường của các rvPct. */
     if (rvN) e.rv = Math.floor((rvLen ? rvSum / rvLen : rvPlain / rvN) + 1e-9);
     idx.unshift(e);
   }

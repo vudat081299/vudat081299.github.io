@@ -3,12 +3,11 @@
    file khi bật All files (promptsAll → buildPromptAll; file không mở neo qua render.js anchorsOf, dấu đã đọc qua
    review.js reviewDocOf). Dải dòng đã đọc của file đang mở từ ui/review.js.
    Xuất: copyPrompt, initPrompt, locText, renderPrompt, syncOptions.
-   Dùng: core/text.js, core/comments.js, core/prompt.js, core/session.js, core/tree.js, ui/store.js, ui/dom.js,
+   Dùng: core/text.js, core/comments.js, core/prompt.js, core/tree.js, ui/store.js, ui/dom.js,
      ui/state.js, ui/render.js, ui/review.js. */
 import { plural } from '../core/text.js';
 import { anchorAll } from '../core/comments.js';
-import { buildPrompt, buildPromptAll, exportName, included, locLabel, optionsSummary, promptsAll, promptSize } from '../core/prompt.js';
-import { fileCount } from '../core/session.js';
+import { allFilesOffered, buildPrompt, buildPromptAll, exportName, included, locLabel, optionsSummary, promptsAll, promptSize } from '../core/prompt.js';
 import { filesInOrder } from '../core/tree.js';
 import { prefs, savePrefs } from './store.js';
 import { $, h, saveFile, toast } from './dom.js';
@@ -41,7 +40,7 @@ export function renderPrompt() {
   $('foot-n').textContent = r.n ? plural(r.n, 'comment') : 'No comments yet';
   ['btn-copy', 'btn-export', 'dock-copy', 'rail-copy', 'rail-export'].forEach(function (id) { $(id).disabled = !r.p; });
   $('opts-sum').textContent = optionsSummary(S);
-  $('all-row').hidden = fileCount(S) < 2;
+  $('all-row').hidden = !allFilesOffered(S);
 }
 /* Đổ tuỳ chọn của S vào các ô của Options. */
 export function syncOptions() {
@@ -53,7 +52,7 @@ export function syncOptions() {
   $('p-all').checked = S.promptAll;
   $('p-path').value = S.path;
   $('path-row').hidden = $('rv-prompt-row').hidden = !S.lineNums;
-  $('all-row').hidden = fileCount(S) < 2;
+  $('all-row').hidden = !allFilesOffered(S);
   document.querySelectorAll('input[name="fmt"]').forEach(function (r) { r.checked = r.value === S.fmt; });
 }
 function legacyCopy(t) {

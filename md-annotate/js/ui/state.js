@@ -2,9 +2,11 @@
    mở file khác trong cây. S và D chỉ gán lại ở đây: switchTo() / replaceDeleted() (phiên khác), putSession() (cùng phiên,
    cây đổi: chỉ ui/files.js gọi), openFileId() (file khác). Nơi khác đọc chữ, nhận xét, dấu đã đọc qua D; tuỳ chọn phiên ở S.
    docKey(): khoá "văn bản đang mở" (phiên + file) cho việc gắn với một văn bản (Undo, gợi ý đã đọc, chọn dòng).
+   Rời file đang mở (đổi file, đổi phiên) bị chặn khi hộp nhận xét có chữ chưa lưu (canLeave, toast): một chỗ cho mọi
+   đường (bấm cây, New file, xoá, Undo, nạp folder, History, phiên mới). sessionFor(): phiên của một Undo đến muộn.
    Mỗi file nhớ chỗ cuộn trong bộ nhớ của lần nạp trang. Mô hình phiên (tạo, chuẩn hoá, tên tự đặt) ở core/session.js.
-   Xuất: D, docKey, flushSave, initState, loadIndex, loadSession, newSession, openFileId, putSession, replaceDeleted, S,
-     saveClosed, saveNow, scheduleSave, switchTo.
+   Xuất: canLeave, D, docKey, flushSave, initState, loadIndex, loadSession, newSession, openFileId, putSession, replaceDeleted,
+     S, saveClosed, saveNow, scheduleSave, sessionFor, switchTo.
    Dùng: core/session.js, ui/store.js, ui/dom.js, ui/render.js, ui/views.js, ui/popup.js, ui/picks.js, ui/history.js,
      ui/editor.js, ui/files.js. */
 import { createSession, docOf, indexWith, isEmpty, normIndex, normSession, openFile, touchSession } from '../core/session.js';
@@ -12,7 +14,7 @@ import { KEY, prefs, store } from './store.js';
 import { $, toast } from './dom.js';
 import { renderAll } from './render.js';
 import { lastRead, setView, view } from './views.js';
-import { closePop } from './popup.js';
+import { closePop, pop, popDirty } from './popup.js';
 import { clearPicks } from './picks.js';
 import { renderHistCount } from './history.js';
 import { syncInputs } from './editor.js';
@@ -48,17 +50,31 @@ export function saveNow(quiet) {
   return ok;
 }
 export function flushSave() { if (saveTimer) saveNow(); }
-/* Ghi một phiên không mở (VD Undo xoá nhận xét sau khi đã chuyển phiên): lưu, đưa lên đầu index. */
+/* Ghi một phiên không mở (VD Undo xoá nhận xét sau khi đã chuyển phiên): lưu, đưa lên đầu index. Trả false khi bộ nhớ
+   không ghi được. */
 export function saveClosed(s) {
   touchSession(s);
-  if (store.set(KEY.s(s.id), s)) store.set(KEY.index, indexWith(loadIndex(), s));
+  var ok = store.set(KEY.s(s.id), s) && store.set(KEY.index, indexWith(loadIndex(), s));
   renderHistCount();
+  return ok;
 }
-/* Mở phiên next thay phiên đang mở; phiên đang mở được lưu trước, trống thì xoá khỏi bộ nhớ. */
+/* Phiên mà một Undo đến muộn ghi vào: phiên đang mở nếu cùng id; không thì bản đã lưu; phiên trống bị xoá khi chuyển
+   (switchTo) thì base — bản trong bộ nhớ lúc thao tác, để Undo dựng lại phiên ấy. */
+export function sessionFor(sid, base) { return S.id === sid ? S : loadSession(sid) || base || null; }
+/* Rời file đang mở được không: hộp nhận xét có chữ chưa lưu thì không, báo bằng toast (bản nháp không mất). */
+export function canLeave() {
+  if (!(pop.mode && popDirty())) return true;
+  toast('Save or cancel the comment first.');
+  return false;
+}
+/* Mở phiên next thay phiên đang mở; phiên đang mở được lưu trước, trống thì xoá khỏi bộ nhớ. Trả false khi bị chặn
+   (canLeave). */
 export function switchTo(next) {
+  if (next.id !== S.id && !canLeave()) return false;
   flushSave();
   if (isEmpty(S) && next.id !== S.id) store.del(KEY.s(S.id));
   show(next);
+  return true;
 }
 /* Phiên đang mở vừa bị xoá khỏi bộ nhớ (hộp History): bỏ lần lưu đang hẹn, để không ghi lại nó, rồi mở next. */
 export function replaceDeleted(next) {
@@ -97,18 +113,21 @@ function enterDoc() {
   restoreScroll();
 }
 /* Thay S bằng next, cùng phiên (cây đổi; next dựng bằng core/session.js). Chỉ ui/files.js gọi. File mở đổi thì rời file
-   cũ (đóng hộp nhận xét, thoát chọn dòng, nhớ chỗ cuộn) rồi vẽ file mới; doc của file mở bị thay (điền chữ) thì vẽ lại. */
+   cũ (đóng hộp nhận xét, thoát chọn dòng, nhớ chỗ cuộn) rồi vẽ file mới; doc của file mở bị thay (điền chữ) thì vẽ lại.
+   Trả false (S giữ nguyên) khi file mở đổi mà không rời được (canLeave). */
 export function putSession(next) {
   var moved = next.open !== S.open;
+  if (moved && !canLeave()) return false;
   if (moved) leaveDoc();
   var changed = moved || docOf(next) !== D;
   S = next; D = docOf(S);
   if (changed) enterDoc();
+  return true;
 }
 /* Mở file id của phiên (bấm ở cây): mở các folder chứa nó, lưu, vẽ, cây. */
 export function openFileId(id) {
   if (id === S.open || !docOf(S, id)) return;
-  putSession(openFile(S, id));
+  if (!putSession(openFile(S, id))) return;
   scheduleSave();
   refreshTree();
 }

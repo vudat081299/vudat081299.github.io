@@ -10,8 +10,8 @@
    mở (D); reviewDocOf(doc): dải dòng đã đọc của một file không mở, cho prompt All files.
    Xuất: applyReview, initReview, jumpUnit, laneGeo, markUnits, readingBand, repaintLanes, reviewDoc, reviewDocOf, rvState,
      setReviews, setRvTouched, stepOpen, toggleSection.
-   Dùng: core/anchor.js, core/text.js, core/sections.js, core/review.js, core/blocks.js, core/session.js, ui/dom.js,
-     ui/state.js, ui/sync-scroll.js, ui/views.js, ui/layout.js, ui/popup.js, ui/picks.js, ui/prompt.js,
+   Dùng: core/anchor.js, core/text.js, core/sections.js, core/review.js, core/blocks.js, core/session.js, core/prompt.js,
+     ui/dom.js, ui/state.js, ui/sync-scroll.js, ui/views.js, ui/layout.js, ui/popup.js, ui/picks.js, ui/prompt.js,
      ui/review-panel.js, ui/dwell.js, ui/minimap.js, ui/markdown.js, ui/files.js. */
 import { locate } from '../core/anchor.js';
 import { lineOf, plural } from '../core/text.js';
@@ -20,8 +20,9 @@ import { allDone, linesWord, markWord, nextOpen, progress, resolveMarks, reviewR
   unitsOfLines, withSug } from '../core/review.js';
 import { lexSpans } from '../core/blocks.js';
 import { docOf } from '../core/session.js';
+import { wantsReview } from '../core/prompt.js';
 import { $, h, mqSheet, mqSide, reduceMotion, shown, toast, typing } from './dom.js';
-import { D, docKey, loadSession, S, saveClosed, scheduleSave } from './state.js';
+import { D, docKey, S, saveClosed, scheduleSave, sessionFor } from './state.js';
 import { mdLex } from './markdown.js';
 import { refreshTree } from './files.js';
 import { blockPairs, setByPage } from './sync-scroll.js';
@@ -47,14 +48,14 @@ export function rvState() {
 }
 /* Dải dòng cho prompt (core/prompt.js d.review), hoặc null khi tắt. */
 export function reviewDoc() {
-  if (!S.rvPrompt) return null;
+  if (!wantsReview(S)) return null;
   var r = rvState();
   return reviewRanges(r.units, r.res.state);
 }
 /* Như reviewDoc cho một file không mở: đơn vị từ marked.lexer như khi nó mở; nhớ theo doc, chữ và mảng dấu. */
 var offRv = new WeakMap();
 export function reviewDocOf(doc) {
-  if (!S.rvPrompt || !doc.reviews.length) return null;
+  if (!wantsReview(S) || !doc.reviews.length) return null;
   var m = offRv.get(doc);
   if (m && m.text === doc.text && m.marks === doc.reviews) return m.val;
   var val = null;
@@ -70,18 +71,18 @@ export function reviewDocOf(doc) {
    chung); onUndo: việc thêm khi hoàn tác trong cùng file (trả gợi ý). Đã sang file hay phiên khác thì Undo trả dấu về
    doc của nó, bỏ % đã lưu (sai sau khi trả; tính lại khi mở). */
 export function setReviews(next, undoMsg, onUndo) {
-  var before = D.reviews, key = docKey(), sid = S.id, fid = S.open;
+  var before = D.reviews, key = docKey(), sid = S.id, fid = S.open, base = S;
   D.reviews = next;
   commit();
   if (undoMsg) toast(undoMsg, { label: 'Undo', fn: function () {
     if (docKey() === key) { D.reviews = before; if (onUndo) onUndo(); commit(); return; }
-    var s = S.id === sid ? S : loadSession(sid), d = s && docOf(s, fid);
+    var s = sessionFor(sid, base), d = s && docOf(s, fid);
     if (!d) return;
     d.reviews = before; delete d.rvPct;
     if (s === S) { scheduleSave(); refreshTree(); } else saveClosed(s);
   } });
 }
-function commit() { scheduleSave(); applyReview(true); if (S.rvPrompt) renderPrompt(); refreshTree(); }
+function commit() { scheduleSave(); applyReview(true); if (wantsReview(S)) renderPrompt(); refreshTree(); }
 /* Đánh dấu (on) / bỏ dấu các đơn vị idxs. undo: có toast Undo (thao tác nhiều đơn vị). */
 export function markUnits(idxs, on, undo) {
   if (!idxs.length) return;

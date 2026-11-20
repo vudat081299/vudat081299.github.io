@@ -1,12 +1,13 @@
 /* Cây folder + file của một phiên, thuần (không DOM): cây phẳng, mỗi nút { id, parent: null | id, kind: 'dir' | 'file', name },
    parent trỏ lên, sâu bao nhiêu cũng được. Xếp hiển thị, đường dẫn, kiểm tên, thêm / đổi tên / chuyển / xoá nút, nạp
-   danh sách đường dẫn (nạp folder từ đĩa), chọn file mở sau khi xoá.
+   danh sách đường dẫn (nạp folder từ đĩa), chọn file mở sau khi xoá, folder đích được của một lần chuyển, file mở đầu.
    Không hàm nào sửa mảng hay nút đầu vào; hàm đổi cây trả mảng mới. error là câu tiếng Anh cho toast, '' khi được.
    Thứ tự hiển thị: folder trước, rồi file; trong mỗi nhóm so tên tự nhiên (numeric, không phân biệt hoa thường, dấu).
-   Tên: không rỗng, không chứa / hay \, không phải . / .., tối đa 255 ký tự, không trùng anh em (không phân biệt hoa thường).
+   Tên: không rỗng, không dấu cách ở đầu / cuối, không chứa / hay \, không phải . / .., tối đa 255 ký tự, không trùng anh em
+   (không phân biệt hoa thường, NFC).
    Nút có cha mất hay vòng cha – con không tới được từ gốc: các hàm duyệt bỏ qua, không treo (session.js sửa lúc đọc).
-   Xuất: addNode, afterRemove, filesInOrder, fromPaths, kids, MAX_NAME, moveNode, nameError, nameKey, pathOf,
-     removeNode, renameNode, subtree, uniqueName, visibleRows.
+   Xuất: addNode, afterRemove, canMove, filesInOrder, firstFile, fromPaths, kids, MAX_NAME, moveNode, moveTargets, nameError,
+     nameKey, pathOf, removeNode, renameNode, subtree, uniqueName, visibleRows.
    Dùng: không module nào. */
 
 export var MAX_NAME = 255;
@@ -83,6 +84,7 @@ export function subtree(nodes, id) {
 /* Lý do tên không dùng được dưới parentId, hoặc ''. selfId: nút đang đổi tên, không tính là trùng với chính nó. */
 export function nameError(nodes, parentId, name, selfId) {
   if (typeof name !== 'string' || !name.trim()) return 'Name cannot be empty.';
+  if (name !== name.trim()) return 'Name cannot start or end with a space.';
   if (/[\/\\]/.test(name)) return 'Name cannot contain / or \\.';
   if (name === '.' || name === '..') return 'Name cannot be . or ..';
   if (name.length > MAX_NAME) return 'Name is longer than ' + MAX_NAME + ' characters.';
@@ -138,6 +140,21 @@ export function moveNode(nodes, id, parentId) {
   if (nameError(nodes, p, n.name, id)) return { nodes: nodes, error: 'A file or folder named "' + n.name + '" already exists in that folder.' };
   return { nodes: nodes.map(function (x) { return x.id === id ? { id: x.id, parent: p, kind: x.kind, name: x.name } : x; }), error: '' };
 }
+/* Chuyển id vào to (null = gốc) được không: nút có, to khác folder đang chứa nó, moveNode không lỗi (vòng, trùng tên).
+   Cùng luật cho chỗ thả khi kéo và danh sách Move to…. */
+export function canMove(nodes, id, to) {
+  var n = byId(nodes, id), p = to == null ? null : to;
+  return !!n && parentOf(n) !== p && !moveNode(nodes, id, p).error;
+}
+/* Chỗ chuyển id tới, cho menu Move to…: gốc rồi mọi folder theo thứ tự hiển thị trừ chính nó và hậu duệ.
+   [{ id: null | dirId, name, depth (gốc 0), ok: canMove }]. */
+export function moveTargets(nodes, id) {
+  var skip = new Set(subtree(nodes, id)), out = [{ id: null, name: '', depth: 0, ok: canMove(nodes, id, null) }];
+  walk(nodes, function (n) { return skip.has(n.id); }, function (n, depth) {
+    if (n.kind === 'dir' && !skip.has(n.id)) out.push({ id: n.id, name: n.name, depth: depth + 1, ok: canMove(nodes, id, n.id) });
+  });
+  return out;
+}
 /* Xoá nút và mọi hậu duệ. */
 export function removeNode(nodes, id) {
   var gone = subtree(nodes, id), set = new Set(gone);
@@ -146,7 +163,8 @@ export function removeNode(nodes, id) {
 /* Nạp danh sách đường dẫn ('a/b/c.md', tính từ parentId) thành file: dựng folder trung gian, gộp vào folder đã có cùng
    tên (không phân biệt hoa thường); file trùng tên một nút đã có thì đổi tên bằng uniqueName. mkId(kind) cho id mới.
    Đường dẫn kết thúc bằng '/' ('a/empty/') chỉ dựng folder (folder rỗng nạp từ đĩa), không có trong ids.
-   Đoạn rỗng và '.' bị bỏ ('a//b', './a'); đường dẫn có đoạn không dùng được ('..', quá dài) bị bỏ, không có trong ids.
+   Đoạn rỗng và '.' bị bỏ ('a//b', './a'); mỗi đoạn bỏ dấu cách đầu / cuối; đường dẫn có đoạn không dùng được ('..', chỉ
+   dấu cách, quá dài) bị bỏ, không có trong ids.
    Trả { nodes, ids: { path: fileId } } (khoá là đường dẫn đúng như đưa vào). */
 export function fromPaths(nodes, parentId, paths, mkId) {
   var out = nodes.slice(), ids = {}, root = parentId == null ? null : parentId;
@@ -157,7 +175,8 @@ export function fromPaths(nodes, parentId, paths, mkId) {
   out.forEach(function (n) { at(parentOf(n)).set(nameKey(n.name), n); });
   (paths || []).forEach(function (path) {
     if (typeof path !== 'string') return;
-    var segs = path.split(/[\/\\]/).filter(function (x) { return x && x !== '.'; }), dirOnly = /[\/\\]$/.test(path);
+    var segs = path.split(/[\/\\]/).filter(function (x) { return x && x !== '.'; }).map(function (x) { return x.trim(); });
+    var dirOnly = /[\/\\]$/.test(path);
     if (!segs.length || segs.some(function (x) { return nameError([], null, x, null); })) return;
     var p = root;
     for (var i = 0; i < segs.length - (dirOnly ? 0 : 1); i++) {
@@ -191,4 +210,14 @@ export function afterRemove(nodes, removedIds, openId) {
   for (var k = i + 1; k < files.length; k++) if (!gone.has(files[k])) return files[k];
   for (k = i - 1; k >= 0; k--) if (!gone.has(files[k])) return files[k];
   return left[0];
+}
+/* File mở đầu khi cả phiên là một folder vừa nạp (MDAN-031): file nông nhất; cùng độ sâu thì README.* trước, rồi
+   index.*, rồi file đầu theo thứ tự hiển thị. Không có file thì null. */
+export function firstFile(nodes) {
+  var best = null, rank = function (n) { return /^readme(\.|$)/i.test(n.name) ? 0 : /^index(\.|$)/i.test(n.name) ? 1 : 2; };
+  walk(nodes, null, function (n, depth) {
+    if (n.kind !== 'file') return;
+    if (!best || depth < best.depth || (depth === best.depth && rank(n) < best.rank)) best = { id: n.id, depth: depth, rank: rank(n) };
+  });
+  return best ? best.id : null;
 }

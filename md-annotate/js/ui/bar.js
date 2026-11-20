@@ -1,7 +1,8 @@
 /* Thanh trên ở điện thoại (≤ 720px): nút More (#btn-more) mở menu #bar-menu gồm các nút ẩn trên thanh (.ma-bar__opt:
    New session, theme) và Shortcuts. Mỗi mục bấm nút thật của nó (data-for): việc vẫn chỉ ở một chỗ. Menu theo mẫu menu
    button của WAI-ARIA: Enter / Space / ↓ mở và vào mục đầu, ↑ vào mục cuối; ↑ ↓ Home End trong menu; Esc, Tab, chạm ngoài
-   thì đóng (Esc, Tab trả focus về nút). Mở bằng chạm / chuột thì focus ở khung menu, chưa tô mục nào.
+   thì đóng (Esc, Tab trả focus về nút). Mở bằng chạm / chuột thì focus ở khung menu, chưa tô mục nào. Mũi tên, Home, End
+   bật vòng focus như Tab (MDAN-020).
    Xuất: initBar.
    Dùng: ui/dom.js. */
 import { $ } from './dom.js';
@@ -33,8 +34,10 @@ function close(refocus) {
   btn.setAttribute('aria-expanded', 'false');
   if (refocus) btn.focus();
 }
+function kbd() { document.documentElement.classList.add('ma-tabbing'); }
 function menuKey(e) {
   var its = items(), i = its.indexOf(document.activeElement), k = e.key;
+  if (k === 'ArrowDown' || k === 'ArrowUp' || k === 'Home' || k === 'End') kbd();
   if (k === 'ArrowDown') its[(i + 1) % its.length].focus();
   else if (k === 'ArrowUp') its[i < 0 ? its.length - 1 : (i - 1 + its.length) % its.length].focus();
   else if (k === 'Home') its[0].focus();
@@ -53,7 +56,7 @@ export function initBar() {
   });
   btn.addEventListener('keydown', function (e) {
     if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
-    e.preventDefault();
+    e.preventDefault(); kbd();
     open(e.key === 'ArrowDown' ? 'first' : 'last');
   });
   menu.addEventListener('keydown', menuKey);

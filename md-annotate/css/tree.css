@@ -23,8 +23,10 @@ html.ma-tree-on .ma-grid > .ma-tree { display: flex; }
 /* Kéo mép phải để đổi bề rộng. */
 .ma-tree__grip { position: absolute; z-index: 2; right: 0; top: 0; bottom: 0; width: 8px; cursor: col-resize; touch-action: none; }
 .ma-tree__grip::before { content: ''; position: absolute; top: var(--s3); bottom: var(--s3); right: 0; width: 3px; border-radius: var(--r-pill); background: transparent; transition: background var(--dur) var(--ease); }
-.ma-tabbing .ma-tree__grip:focus-visible::before, .ma-tree__grip.is-drag::before { background: var(--accent); }
-@media (hover: hover) { .ma-tree__grip:hover::before { background: var(--accent); } }
+/* Như #panel-grip: rê / kéo --edge-on, focus --ring (≥ 3:1). */
+.ma-tree__grip.is-drag::before { background: var(--edge-on); }
+@media (hover: hover) { .ma-tree__grip:hover::before { background: var(--edge-on); } }
+.ma-tabbing .ma-tree__grip:focus-visible::before { background: var(--ring); }
 .ma-tree__grip:focus-visible { outline: none; }
 
 /* Đầu: tên phiên, rồi hàng nút biểu tượng gọn (thiếu chỗ thì xuống dòng). */

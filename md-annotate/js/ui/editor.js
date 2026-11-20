@@ -5,12 +5,12 @@
    Dùng: core/text.js, core/session.js, ui/dom.js, ui/state.js, ui/render.js, ui/views.js, ui/prompt.js, ui/files.js. */
 import { normNewlines, plural } from '../core/text.js';
 import { isEmpty } from '../core/session.js';
-import { $, toast } from './dom.js';
+import { $, droppedItems, toast } from './dom.js';
 import { D, flushSave, newSession, S, scheduleSave, switchTo } from './state.js';
 import { renderAll, renderMeta } from './render.js';
 import { lastRead, setView, view } from './views.js';
 import { syncOptions } from './prompt.js';
-import { droppedItems, importItems, openDiskFile, refreshTree } from './files.js';
+import { importItems, openDiskFile, refreshTree } from './files.js';
 
 export function syncInputs() {
   $('src-input').value = D.text;
@@ -27,7 +27,7 @@ function setText(t) {
 var ta, pasteIntoEmpty = false, renderTimer = null;
 function loadSample() {
   var t = $('sample-md').textContent.replace(/^\n/, '');
-  if (!isEmpty(S)) switchTo(newSession(''));
+  if (!isEmpty(S) && !switchTo(newSession(''))) return;
   setText(t); setView(lastRead);
 }
 /* Trang trống: dán từ clipboard bằng nút, hoặc Ctrl/⌘ + V ở bất cứ đâu ngoài ô nhập. */
@@ -96,7 +96,7 @@ export function initEditor() {
   $('s-name').addEventListener('blur', function () { flushSave(); });
 
   $('btn-new').addEventListener('click', function () {
-    if (!isEmpty(S)) switchTo(newSession(''));
+    if (!isEmpty(S) && !switchTo(newSession(''))) return;
     setView('edit'); ta.focus();
     toast('New session. The previous one is in History.');
   });

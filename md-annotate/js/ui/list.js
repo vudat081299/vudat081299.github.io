@@ -6,7 +6,7 @@
 import { cutComment, partsOf, restoreComment } from '../core/comments.js';
 import { docOf } from '../core/session.js';
 import { $, h, icon, mqSide, reduceMotion, toast } from './dom.js';
-import { D, docKey, loadSession, S, saveClosed, scheduleSave } from './state.js';
+import { D, docKey, S, saveClosed, scheduleSave, sessionFor } from './state.js';
 import { refreshTree } from './files.js';
 import { hoverMarks, marksOf } from './marks.js';
 import { anchors, numbers, ordered, orphans, renderAll } from './render.js';
@@ -90,7 +90,7 @@ function editFromList(id) {
   openEdit(id, ms.length ? ms[ms.length - 1] : li);
 }
 export function removeComment(id) {
-  var cut = cutComment(D, id), key = docKey(), sid = S.id, fid = S.open;
+  var cut = cutComment(D, id), key = docKey(), sid = S.id, fid = S.open, base = S;
   if (!cut) return;
   if (pop.id === id) closePop(true);
   scheduleSave(); renderAll();
@@ -98,9 +98,9 @@ export function removeComment(id) {
     label: 'Undo',
     fn: function () {
       if (docKey() === key) { restoreComment(D, cut); scheduleSave(); renderAll(); return; }
-      /* Đã sang file hay phiên khác trong lúc toast còn hiện: trả nhận xét về doc của nó (phiên cũ đã lưu khi chuyển),
-         không vào file đang mở. */
-      var s = S.id === sid ? S : loadSession(sid), d = s && docOf(s, fid);
+      /* Đã sang file hay phiên khác trong lúc toast còn hiện: trả nhận xét về doc của nó (phiên cũ đã lưu khi chuyển, bị
+         xoá vì trống thì dựng lại từ base), không vào file đang mở. */
+      var s = sessionFor(sid, base), d = s && docOf(s, fid);
       if (!d) return;
       restoreComment(d, cut);
       if (s === S) { scheduleSave(); refreshTree(); } else saveClosed(s);

@@ -4,7 +4,8 @@
    neo bị bỏ. d.review (tuỳ chọn): dải dòng đã đọc / chưa đọc (core/review.js reviewRanges); chỉ vào prompt khi s.rvPrompt.
    Nhãn tệp của một file là session.js fileLabel (tiền tố path + đường dẫn trong cây; '' thì ghi L12).
    Một file: buildPrompt. Gom mọi file (s.promptAll, phiên ≥ 2 file, xem promptsAll): buildPromptAll.
-   Xuất: buildPrompt, buildPromptAll, exportName, included, locLabel, optionsSummary, promptsAll, promptSize, rangeLabel.
+   Xuất: allFilesOffered, buildPrompt, buildPromptAll, exportName, included, locLabel, optionsSummary, promptsAll, promptSize,
+     rangeLabel, wantsReview.
    Dùng: core/text.js, core/session.js, core/comments.js, core/tree.js. */
 import { lineOf, oneLine, slug } from './text.js';
 import { autoName, fileCount, fileLabel } from './session.js';
@@ -42,6 +43,9 @@ function reviewLine(r, label) {
   var f = function (rs) { return rs.map(function (x) { return rangeLabel(x[0], x[1], label); }).join(', '); };
   return 'Đã đọc kỹ: ' + f(r.done) + '; chỗ nào không có nhận xét là ổn.' + (r.todo.length ? ' Chưa đọc: ' + f(r.todo) + '.' : '');
 }
+/* Dòng đã đọc vào prompt khi bật *Say which lines I reviewed* và bật số dòng (dòng đã đọc là số dòng). Nơi dựng dải dòng
+   đã đọc (ui/review.js) hỏi đây trước khi tính. */
+export function wantsReview(s) { return s.rvPrompt === true && s.lineNums !== false; }
 var NOTE_L = 'Số dòng (L) tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.';
 var NOTE_FILE = 'Vị trí ghi dạng tệp:dòng, tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.';
 /* Phần của một file: nhận xét vào prompt, các phần tìm thấy (tắt số dòng thì không nhãn), dòng đã đọc. */
@@ -50,7 +54,7 @@ function fileParts(s, doc, d, label) {
   var fs = items.map(function (c) {
     return found(doc, d, c, label).map(function (f) { return { quote: f.quote, loc: s.lineNums ? f.loc : '' }; });
   });
-  var rv = s.rvPrompt && s.lineNums ? reviewLine(d.review, label) : '';   // dòng đã đọc là số dòng
+  var rv = wantsReview(s) ? reviewLine(d.review, label) : '';
   return { items: items, fs: fs, rv: rv, hasLoc: fs.some(function (f) { return f.some(function (x) { return x.loc; }); }) };
 }
 /* Các nhận xét của một file, đánh số từ start + 1. */
@@ -90,8 +94,10 @@ export function buildPrompt(s, doc, d, fileId) {
   if (s.includeDoc && doc.text.trim()) parts.push('Văn bản gốc:\n' + fenced(doc.text));
   return p.items.length || s.includeDoc ? parts.join('\n\n') : '';
 }
-/* Prompt gom mọi file khi bật s.promptAll và phiên có ≥ 2 file. */
-export function promptsAll(s) { return s.promptAll === true && fileCount(s) > 1; }
+/* Ô All files có nghĩa (hiện) khi phiên có ≥ 2 file. */
+export function allFilesOffered(s) { return fileCount(s) > 1; }
+/* Prompt gom mọi file khi bật s.promptAll và ô ấy có nghĩa. */
+export function promptsAll(s) { return s.promptAll === true && allFilesOffered(s); }
 /* Prompt gom nhiều file. files: [{ fileId, doc, d }] (mỗi file một kết quả neo), xếp lại theo thứ tự hiển thị của cây.
    Phiên chỉ một file thì y hệt buildPrompt của file ấy. Dạng (các khối cách nhau dòng trống):
      [lời dẫn đầu]
@@ -144,7 +150,7 @@ export function optionsSummary(s) {
   if (all) sum.push('all files');
   if (s.lineNums) sum.push((!all && fileLabel(s, s.open)) || 'line numbers');
   if (s.includeDoc) sum.push('full text');
-  if (s.rvPrompt && s.lineNums) sum.push('reviewed');
+  if (wantsReview(s)) sum.push('reviewed');
   if (s.header.trim() || s.footer.trim()) sum.push('header');
   return sum.join(' · ');
 }

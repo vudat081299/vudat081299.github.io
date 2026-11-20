@@ -42,12 +42,12 @@ function mdInto(el, html) {
 }
 function joinText(root) { return textNodes(root).map(function (n) { return n.data; }).join(''); }
 
-/* Chữ bản dựng của văn bản không mở, nhớ theo chữ (tối đa OFF_MAX văn bản). Chưa có thư viện markdown thì ''. */
-var offMd = new Map(), OFF_MAX = 200;
+/* Chữ bản dựng của văn bản không mở, nhớ theo chữ (LRU, tối đa OFF_MAX văn bản). Chưa có thư viện markdown thì null. */
+var offMd = new Map(), OFF_MAX = 400;
 function mdTextOf(text) {
-  if (offMd.has(text)) return offMd.get(text);
+  if (offMd.has(text)) { var hit = offMd.get(text); offMd.delete(text); offMd.set(text, hit); return hit; }
   var html = mdHtml(text);
-  if (html == null) return '';
+  if (html == null) return null;
   var el = document.createElement('div');
   mdInto(el, html);
   var t = joinText(el);
@@ -56,8 +56,17 @@ function mdTextOf(text) {
   return t;
 }
 /* Kết quả neo của một doc không mở ({ ordered, orphans, anchors, numbers }), neo như khi nó đang mở (không nhận xét thì
-   khỏi dựng Preview). */
-export function anchorsOf(doc) { return anchorAll(doc.comments, doc.text, doc.comments.length ? mdTextOf(doc.text) : ''); }
+   khỏi dựng Preview). Nhớ theo doc: dùng lại khi chữ, mảng nhận xét và số nhận xét không đổi (neo không đọc chữ nhận
+   xét); chưa có thư viện markdown thì không nhớ. Vẽ lại với All files ở 200 file không neo lại 200 file. */
+var offAnchors = new WeakMap();
+export function anchorsOf(doc) {
+  var c = offAnchors.get(doc);
+  if (c && c.text === doc.text && c.comments === doc.comments && c.n === doc.comments.length) return c.val;
+  var md = doc.comments.length ? mdTextOf(doc.text) : '';
+  var val = anchorAll(doc.comments, doc.text, md || '');
+  if (md != null) offAnchors.set(doc, { text: doc.text, comments: doc.comments, n: doc.comments.length, val: val });
+  return val;
+}
 
 export function renderAll() {
   var text = D.text, mdRoot = $('v-md');

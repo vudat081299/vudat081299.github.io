@@ -347,7 +347,7 @@ const cornerClash = (page) => page.evaluate(() => {
   await openOpts(page);
   await page.fill('#p-path', 'notes/');
   const o10 = await out(page);
-  check('có folder: vị trí dạng folder/tệp:dòng', /\. notes\/untitled\.md:9-10 "Mục một/.test(o10) && /\. notes\/untitled\.md:5 "liên kết/.test(o10) && /tệp:dòng/.test(o10), JSON.stringify(o10));
+  check('có folder, một file dán chưa có tên: vẫn L12, không tên tệp (MDAN-029)', /\. L9-10 "Mục một/.test(o10) && /\. L5 "liên kết/.test(o10) && !/notes\//.test(o10), JSON.stringify(o10));
   await page.uncheck('#line-nums');
   const o11 = await out(page);
   check('tắt số dòng: không vị trí, không câu dẫn', !/notes\/|L\d|file:line|Line numbers/.test(o11) && !(await page.isVisible('#p-path')), JSON.stringify(o11));
@@ -362,6 +362,11 @@ const cornerClash = (page) => page.evaluate(() => {
   await page.waitForTimeout(200);
   check('mở file khi file đang mở có chữ: thêm vào cây cạnh nó và mở, không ghi ô Folder (MDAN-024)', (await page.inputValue('#p-path')) === 'notes/' && (await page.$$('#list .ma-item')).length === 0
     && (await page.$$eval('#tree-list .ma-trow', (ls) => ls.map((l) => l.querySelector('.ma-trow__name').textContent + (l.getAttribute('aria-selected') === 'true' ? '*' : '')).join())) === 'ghi-chu.md*,untitled.md');
+  const openNamed = (nm) => page.evaluate(async (nm) => { const S = await import('./js/ui/state.js'); S.openFileId(S.S.nodes.find((n) => n.name === nm).id); }, nm);
+  await openNamed('untitled.md'); await page.waitForTimeout(150);
+  const o12 = await out(page);
+  check('có folder, hai file: vị trí dạng folder/tệp:dòng', /\. notes\/untitled\.md:9-10 "Mục một/.test(o12) && /\. notes\/untitled\.md:5 "liên kết/.test(o12) && /tệp:dòng/.test(o12), JSON.stringify(o12));
+  await openNamed('ghi-chu.md'); await page.waitForTimeout(150);
   await page.click('#btn-hints');
   check('đủ 5 lần dùng thì gợi ý hiện %', /%/.test(await page.textContent('#hints-list')));
   await page.keyboard.press('Escape');
@@ -1809,6 +1814,8 @@ const cornerClash = (page) => page.evaluate(() => {
     check('cây: bấm folder gập thì mở, không có vòng focus', (await tl())[0] === 'toggle' && ring === 'none' && (await tp.$eval(row('archive'), (l) => l.getAttribute('aria-expanded'))) === 'true', ring);
     await tp.keyboard.press('ArrowDown');
     check('cây: ↓ sang hàng con (old.md)', (await focusName(tp)) === 'old.md', await focusName(tp));
+    const arrowRing = await tp.evaluate(() => [document.documentElement.classList.contains('ma-tabbing'), getComputedStyle(document.activeElement).outlineStyle]);
+    check('cây: bấm hàng rồi ↓ — mũi tên là bàn phím, hàng có vòng focus (MDAN-020)', arrowRing[0] && arrowRing[1] === 'solid', JSON.stringify(arrowRing));
     await tp.keyboard.press('ArrowLeft');
     check('cây: ← ở file về folder cha', (await focusName(tp)) === 'archive', await focusName(tp));
     await tp.keyboard.press('ArrowLeft');
@@ -1848,7 +1855,9 @@ const cornerClash = (page) => page.evaluate(() => {
     await tp.evaluate(() => document.documentElement.classList.remove('dark'));
     const tabbed = await tp.evaluate(() => document.documentElement.classList.contains('ma-tabbing'));
     const tabIdx = await tp.$$eval('#tree-list .ma-trow', (ls) => ls.filter((l) => l.tabIndex === 0).length);
-    check('cây: một hàng tabindex 0 (roving), chưa Tab thì không vòng', tabIdx === 1 && !tabbed && (await tp.$eval(row('README.md'), (l) => getComputedStyle(l).outlineStyle)) === 'none');
+    check('cây: một hàng tabindex 0 (roving); đã dùng mũi tên thì hàng có vòng', tabIdx === 1 && tabbed && (await tp.$eval(row('README.md'), (l) => getComputedStyle(l).outlineStyle)) === 'solid');
+    await tp.mouse.click(5, 5);
+    check('cây: bấm chuột thì tắt vòng', !(await tp.evaluate(() => document.documentElement.classList.contains('ma-tabbing'))));
 
     await tp.focus('#tree-collapse'); await tp.keyboard.press('Tab');
     const kr = await tp.evaluate(() => [document.activeElement.classList.contains('ma-trow'), getComputedStyle(document.activeElement).outlineStyle]);
@@ -2054,13 +2063,14 @@ const cornerClash = (page) => page.evaluate(() => {
     await fp.click('#btn-new'); await fp.waitForTimeout(150);
     await fp.setInputFiles('#tree-dir-in', root); await fp.waitForTimeout(600);
     const imp = { rows: await rows(fp), toast: await toastText(fp), title: await fp.textContent('#tree-title'), on: await treeOn(fp) };
-    check('nạp folder: phiên trống thành folder proj, 9 tầng, tên phiên, cây hiện', imp.rows.join() === '1:proj,2:a,3:b,4:c,5:d,6:e,7:f,8:g,9:deep.md*,2:notes.txt,2:readme.md' && imp.title === 'proj' && imp.on, JSON.stringify(imp));
+    check('nạp folder: phiên trống thành folder proj, 9 tầng, tên phiên, cây hiện', imp.rows.join() === '1:proj,2:a,3:b,4:c,5:d,6:e,7:f,8:g,9:deep.md,2:notes.txt,2:readme.md*' && imp.title === 'proj' && imp.on, JSON.stringify(imp));
     check('nạp folder: toast "Imported 3 files, skipped 2." (ẩn và node_modules bỏ không đếm)', imp.toast === 'Imported 3 files, skipped 2.', imp.toast);
-    check('nạp folder: file sâu nhất mở ở chế độ đọc', (await fp.isVisible('#v-md h1')) && /Câu ở tầng bảy/.test(await fp.textContent('#v-md')));
+    check('nạp folder: readme.md (nông nhất, README trước) mở ở chế độ đọc (MDAN-031)', (await fp.isVisible('#v-md h1')) && (await fp.textContent('#v-md h1')) === 'Proj' && imp.rows.includes('2:readme.md*'), JSON.stringify(imp.rows));
+    check('nạp folder: cây hiện mà không ghi prefs.tree (MDAN-032)', imp.on && (await fp.evaluate(() => JSON.parse(localStorage.getItem('md-annotate:prefs:v1')).tree)) === false);
     await fp.setInputFiles('#tree-dir-in', path.join(root, 'a', 'b', 'c')); await fp.waitForTimeout(500);
-    check('nạp folder lần hai: vào gốc cạnh proj, file mở giữ nguyên', (await rows(fp)).slice(0, 2).join() === '1:c,2:d' && (await rows(fp)).some((r) => r.endsWith('deep.md*')), JSON.stringify(await rows(fp)));
+    check('nạp folder lần hai: vào gốc cạnh proj, file mở giữ nguyên', (await rows(fp)).slice(0, 2).join() === '1:c,2:d' && (await rows(fp)).some((r) => r.endsWith('readme.md*')), JSON.stringify(await rows(fp)));
     await fp.reload(); await ready(fp); await fp.waitForTimeout(200);
-    check('nạp folder: tải lại vẫn còn cây và file mở', (await rows(fp)).filter((r) => r.endsWith('*')).join() === '9:deep.md*' && /Câu ở tầng bảy/.test(await fp.textContent('#v-md')), JSON.stringify(await rows(fp)));
+    check('nạp folder: tải lại vẫn còn cây và file mở; cây theo prefs.tree (ẩn)', (await rows(fp)).filter((r) => r.endsWith('*')).join() === '2:readme.md*' && (await fp.textContent('#v-md h1')) === 'Proj' && !(await treeOn(fp)), JSON.stringify(await rows(fp)));
     check('cây thật: 1440 không tràn ngang', (await overflow(fp)) === 0);
     await fc.close();
 
@@ -2270,6 +2280,157 @@ const cornerClash = (page) => page.evaluate(() => {
     await dp2.goto(BASE); await dp2.waitForFunction(() => window.marked && window.DOMPurify);
     check('thanh trên 1280: không có More, New session và theme hiện', !(await dp2.isVisible('#btn-more')) && (await dp2.isVisible('#btn-new')) && (await dp2.isVisible('#theme')));
     await dc.close();
+  }
+
+  /* ---------- Cây file: Undo chỉ trả lại mục ấy (MDAN-028), chặn rời file khi hộp nhận xét có chữ, phiên cũ path lạ,
+     nạp folder không ghi prefs.tree, New folder trong folder gập, Move to… trong khung nhìn, All files 200 file, vạch kéo ---------- */
+  {
+    const fs = require('fs'), os = require('os'), path = require('path');
+    const ready = (p) => p.waitForFunction(() => window.marked && window.DOMPurify);
+    const mk = (id, files, extra) => {
+      const nodes = [], docs = {};
+      files.forEach((f) => { const kind = f.kind || 'file'; nodes.push({ id: f.id, parent: f.parent || null, kind, name: f.name }); if (kind === 'file') docs[f.id] = { text: f.text, comments: f.comments || [], reviews: [], real: true }; });
+      return Object.assign({ id, name: '', named: false, created: 1, updated: 1, header: '', footer: '', fmt: 'inline', includeDoc: false, lineNums: true, path: '', rvPrompt: false, promptAll: false, nodes, docs, open: files.find((f) => (f.kind || 'file') === 'file').id, collapsed: [] }, extra || {});
+    };
+    const seed = async (ctx, sessions, cur, prefs) => {
+      const p = await ctx.newPage(); watch(p);
+      await p.goto(BASE); await ready(p);
+      await p.evaluate(([ss, cur, prefs]) => { localStorage.clear(); for (const s of ss) localStorage.setItem('md-annotate:s:' + s.id, JSON.stringify(s)); localStorage.setItem('md-annotate:current', JSON.stringify(cur)); localStorage.setItem('md-annotate:prefs:v1', JSON.stringify(prefs)); }, [sessions, cur, prefs]);
+      await p.goto(BASE); await ready(p); await p.waitForTimeout(300);
+      return p;
+    };
+    const C = (id, quote, comment) => ({ id, quote, comment, prefix: '', suffix: '', origin: 'src', rel: 0 });
+    const stored = (p, id) => p.evaluate((id) => JSON.parse(localStorage.getItem('md-annotate:s:' + id)), id);
+    const rowSel = (id) => `#tree-list .ma-trow[data-id="${id}"]`;
+    const menuDo = async (p, id, label) => { await p.click(rowSel(id), { button: 'right' }); await p.click(`#tree-menu .ma-menu__i:has-text("${label}")`); await p.waitForTimeout(150); };
+    const toastText = (p) => p.$eval('#toast', (t) => (t.hidden ? '' : t.textContent));
+    const names = (st) => st.nodes.map((n) => n.name).sort().join();
+    const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, colorScheme: 'light' });
+
+    // Xoá b.md, rồi New file và gõ chữ; Undo: b.md quay lại, file mới và chữ còn, focus về hàng b.md.
+    let p = await seed(ctx, [mk('U1', [{ id: 'fa', name: 'a.md', text: '# A\n\nalpha\n' }, { id: 'fb', name: 'b.md', text: '# B\n\nbeta\n', comments: [C('cb', 'beta', 'b')] }])], 'U1', { tree: true });
+    await menuDo(p, 'fb', 'Delete');
+    await p.click('#tree-new-file'); await p.waitForTimeout(150); await p.keyboard.press('Enter'); await p.waitForTimeout(100);
+    await p.fill('#src-input', 'IMPORTANT NEW WORK'); await p.waitForTimeout(450);
+    await p.click('#toast .ma-toast__btn'); await p.waitForTimeout(300);
+    let st = await stored(p, 'U1');
+    const u1 = { names: names(st), work: Object.values(st.docs).some((d) => d.text === 'IMPORTANT NEW WORK'), b: st.docs.fb && st.docs.fb.comments.length, ed: await p.inputValue('#src-input'), focus: await p.evaluate(() => document.activeElement.dataset.id) };
+    check('Undo xoá: chỉ trả lại b.md, file mới và chữ gõ sau vẫn còn, focus về hàng b.md', u1.names === 'a.md,b.md,untitled.md' && u1.work && u1.b === 1 && u1.ed === 'IMPORTANT NEW WORK' && u1.focus === 'fb', JSON.stringify(u1));
+    await p.close();
+
+    // Xoá file cuối của phiên rồi mở phiên khác (phiên trống bị bỏ khi chuyển); Undo dựng lại phiên ấy.
+    p = await seed(ctx, [mk('U2', [{ id: 'fo', name: 'only.md', text: '# Only\n\nprecious text\n', comments: [C('co', 'precious text', 'c')] }]), mk('U3', [{ id: 'fz', name: 'other.md', text: '# Other\n\nz\n' }])], 'U2', { tree: true });
+    await menuDo(p, 'fo', 'Delete');
+    await p.evaluate(async () => { const S = await import('./js/ui/state.js'); S.switchTo(S.loadSession('U3')); });
+    await p.waitForTimeout(200);
+    await p.click('#toast .ma-toast__btn'); await p.waitForTimeout(300);
+    st = await stored(p, 'U2');
+    const u2 = { names: st && names(st), c: st && st.docs.fo && st.docs.fo.comments.length, idx: await p.evaluate(() => JSON.parse(localStorage.getItem('md-annotate:index:v1')).map((e) => e.id).join()), cur: await p.evaluate(async () => (await import('./js/ui/state.js')).S.id) };
+    check('Undo xoá sau khi đã chuyển phiên: phiên bị bỏ vì trống được dựng lại, vào History, phiên đang mở giữ nguyên', u2.names === 'only.md' && u2.c === 1 && /U2/.test(u2.idx) && u2.cur === 'U3', JSON.stringify(u2));
+    await p.close();
+
+    // Hộp nhận xét đang có chữ: bấm file khác, New file, phiên mới đều bị chặn, toast báo, bản nháp còn.
+    p = await seed(ctx, [mk('U4', [{ id: 'fa', name: 'a.md', text: '# Alpha\n\nalpha paragraph with several words here\n' }, { id: 'fb', name: 'b.md', text: '# Beta\n\nbeta text\n' }])], 'U4', { tree: true });
+    await dragSelect(p, '#v-md', 'paragraph with several');
+    await p.keyboard.type('a half-typed draft');
+    await p.click(rowSel('fb')); await p.waitForTimeout(200);
+    const g1 = { open: await p.evaluate(async () => (await import('./js/ui/state.js')).S.open), toast: await toastText(p), pop: await p.isVisible('#pop'), draft: await p.inputValue('#pop-text') };
+    await p.click('#tree-new-file'); await p.waitForTimeout(150);
+    await p.click('#btn-new'); await p.waitForTimeout(150);
+    const g2 = { files: await p.$$eval('#tree-list .ma-trow', (ls) => ls.length), sid: await p.evaluate(async () => (await import('./js/ui/state.js')).S.id), draft: await p.inputValue('#pop-text') };
+    check('hộp nhận xét có chữ: đổi file, New file, phiên mới bị chặn, toast báo, bản nháp còn', g1.open === 'fa' && g1.toast === 'Save or cancel the comment first.' && g1.pop && g1.draft === 'a half-typed draft' && g2.files === 2 && g2.sid === 'U4' && g2.draft === 'a half-typed draft', JSON.stringify([g1, g2]));
+    await p.click('#pop-cancel'); await p.waitForTimeout(100);
+    await p.click(rowSel('fb')); await p.waitForTimeout(200);
+    check('huỷ hộp rồi bấm file khác: đổi được', (await p.evaluate(async () => (await import('./js/ui/state.js')).S.open)) === 'fb');
+    await p.close();
+
+    // Phiên cũ có path 'docs/' (không tách được tên file): nhãn giữ y hệt bản một văn bản.
+    p = await seed(ctx, [{ id: 'L2', name: '', named: false, created: 1, updated: 1, header: '', footer: '', fmt: 'inline', includeDoc: false, lineNums: true, rvPrompt: false, path: 'docs/',
+      text: '# T\n\nhello world line\n\nsecond para here\n', comments: [{ id: 'c1', quote: 'hello world', comment: 'fix', prefix: '', suffix: '', origin: 'src', rel: 0.1 }], reviews: [] }], 'L2', {});
+    check('phiên cũ path "docs/": prompt y hệt bản cũ ("docs/:3"), ô Folder giữ nguyên văn', (await out(p)) === 'Vị trí ghi dạng tệp:dòng, tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.\n\n1. docs/:3 "hello world" — fix' && (await p.inputValue('#p-path')) === 'docs/', JSON.stringify(await out(p)));
+    await p.close();
+
+    // Nạp folder (chưa chọn ẩn / hiện cây): cây hiện cho phiên ấy, prefs.tree không được ghi; phiên mới theo luật mặc định.
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'ma-imp-'));
+    fs.mkdirSync(path.join(tmp, 'kit', 'sub'), { recursive: true });
+    fs.writeFileSync(path.join(tmp, 'kit', 'README.md'), '# Kit\n'); fs.writeFileSync(path.join(tmp, 'kit', 'sub', 'a.md'), '# A\n');
+    fs.writeFileSync(path.join(tmp, 'kit', 'app.ts'), 'let x = 1;\n'); fs.writeFileSync(path.join(tmp, 'kit', 'blob.dat'), Buffer.from([0, 1, 2, 3]));
+    p = await seed(ctx, [], 'none', {});
+    await p.setInputFiles('#tree-dir-in', path.join(tmp, 'kit')); await p.waitForTimeout(500);
+    const im = { on: await p.evaluate(() => document.documentElement.classList.contains('ma-tree-on')), prefs: await p.evaluate(() => localStorage.getItem('md-annotate:prefs:v1')), toast: await toastText(p) };
+    await p.click('#btn-new'); await p.waitForTimeout(200);
+    im.after = await p.evaluate(() => document.documentElement.classList.contains('ma-tree-on'));
+    check('nạp folder: cây hiện, prefs.tree không ghi; phiên mới một file thì cây ẩn; .ts nạp, nhị phân bỏ', im.on && !/"tree"/.test(im.prefs || '') && !im.after && im.toast === 'Imported 3 files, skipped 1.', JSON.stringify(im));
+    await p.close();
+    fs.rmSync(tmp, { recursive: true, force: true });
+
+    // New folder trong folder đang gập: folder ấy mở ra, ô đổi tên hiện và có focus.
+    p = await seed(ctx, [mk('U5', [{ id: 'd', kind: 'dir', name: 'docs' }, { id: 'f1', parent: 'd', name: 'in.md', text: '# In\n' }, { id: 'f2', name: 'top.md', text: '# Top\n' }], { open: 'f2', collapsed: ['d'] })], 'U5', { tree: true });
+    await menuDo(p, 'd', 'New folder here');
+    const nf = await p.evaluate(() => { const i = document.querySelector('#tree-list .ma-trow__ren'); return { input: !!i && document.activeElement === i && i.value, exp: document.querySelector('#tree-list .ma-trow[data-id="d"]').getAttribute('aria-expanded') }; });
+    check('New folder trong folder gập: folder mở ra, ô đổi tên có focus', nf.input === 'folder' && nf.exp === 'true', JSON.stringify(nf));
+    await p.keyboard.press('Escape');
+    await p.close();
+
+    // Move to… ở hàng sát đáy khung nhìn: menu con cao hơn vẫn nằm trọn trong khung nhìn.
+    const deep = []; let par = null;
+    for (let i = 0; i < 12; i++) { deep.push({ id: 'd' + i, kind: 'dir', parent: par, name: 'level-' + i }); deep.push({ id: 'f' + i, parent: 'd' + i, name: 'f' + i + '.md', text: '# F' + i + '\n' }); par = 'd' + i; }
+    const sc = await browser.newContext({ viewport: { width: 1280, height: 800 }, colorScheme: 'light' });
+    p = await seed(sc, [mk('U6', deep.concat([{ id: 'r', name: 'readme.md', text: '# R\n' }]), { open: 'r' })], 'U6', { tree: true });
+    const last = await p.evaluate(() => { const b = document.getElementById('tree-body'); b.scrollTop = 1e6; const rs = [...document.querySelectorAll('#tree-list .ma-trow')]; const r = rs[rs.length - 1].getBoundingClientRect(); return { x: r.x + 20, y: r.bottom - 4 }; });
+    await p.mouse.click(last.x, last.y, { button: 'right' }); await p.waitForTimeout(100);
+    await p.click('#tree-menu .ma-menu__i[aria-haspopup]'); await p.waitForTimeout(100);
+    const mr = await p.evaluate(() => { const r = document.getElementById('tree-menu').getBoundingClientRect(); return { top: r.top, bottom: r.bottom, vh: innerHeight, focus: document.activeElement.textContent.trim() }; });
+    check('Move to… sát đáy: menu con trọn khung nhìn', mr.top >= 0 && mr.bottom <= mr.vh && mr.focus === 'Back', JSON.stringify(mr));
+    await p.keyboard.press('Escape'); await p.waitForTimeout(50);
+    const back = await p.evaluate(() => [document.getElementById('tree-menu').classList.contains('is-open'), document.activeElement.textContent.trim()]);
+    check('Esc ở Move to… lùi về menu chính, focus ở Move to…', back[0] && back[1] === 'Move to…', JSON.stringify(back));
+    await p.close(); await sc.close();
+
+    // All files với 200 file có nhận xét: gập / mở một folder vẫn nhanh (không neo lại 200 file, không vẽ lại prompt).
+    const many = [{ id: 'dm', kind: 'dir', name: 'many' }];
+    const body = 'Some text paragraph that is long enough to matter. '.repeat(200);
+    for (let i = 0; i < 200; i++) many.push({ id: 'm' + i, parent: 'dm', name: 'file-' + i + '.md', text: '# F' + i + '\n\n' + body + '\n\nUnique sentence number ' + i + ' here.\n', comments: [C('c' + i, 'Unique sentence number ' + i, 'fix ' + i)] });
+    many.push({ id: 'dz', kind: 'dir', name: 'zz-empty' });
+    p = await seed(ctx, [mk('U7', many, { promptAll: true })], 'U7', { tree: true });
+    const perf = await p.evaluate(async () => {
+      const row = document.querySelector('#tree-list .ma-trow[data-id="dz"]'), t = [];
+      for (let i = 0; i < 4; i++) { const t0 = performance.now(); row.click(); t.push(performance.now() - t0); await new Promise((r) => setTimeout(r, 50)); }
+      const R = await import('./js/ui/render.js'), t0 = performance.now();
+      R.renderAll();
+      return { toggle: Math.max(...t), render: performance.now() - t0, n: document.getElementById('foot-n').textContent };
+    });
+    check('All files, 200 file: gập / mở folder < 60 ms, vẽ lại < 150 ms, đếm đủ 200 nhận xét', perf.toggle < 60 && perf.render < 150 && perf.n === '200 comments', JSON.stringify(perf));
+    await p.close();
+
+    // Vạch kéo của panel và cây (rê / kéo, focus): chỉ báo trạng thái ≥ 3:1, cả hai theme.
+    p = await seed(ctx, [mk('U8', [{ id: 'fa', name: 'a.md', text: '# A\n' }, { id: 'fb', name: 'b.md', text: '# B\n' }])], 'U8', { tree: true });
+    for (const dark of [false, true]) {
+      await p.evaluate((d) => document.documentElement.classList.toggle('dark', d), dark); await p.waitForTimeout(250);
+      const gc = await p.evaluate(() => {
+        const parse = (c) => { const m = c.match(/[\d.]+/g).map(Number); return c.startsWith('color(') ? [m[0] * 255, m[1] * 255, m[2] * 255, m.length > 3 ? m[3] : 1] : [m[0], m[1], m[2], m.length > 3 ? m[3] : 1]; };
+        const over = (t, u) => [0, 1, 2].map((i) => t[i] * t[3] + u[i] * (1 - t[3])).concat(1);
+        const bgOf = (el) => { const ch = []; for (let n = el; n; n = n.parentElement) ch.push(getComputedStyle(n).backgroundColor); let c = [255, 255, 255, 1]; ch.reverse().forEach((x) => { const v = parse(x); if (v[3] > 0) c = over(v, c); }); return c; };
+        const lum = (c) => { const x = c.slice(0, 3).map((n) => { n /= 255; return n <= 0.03928 ? n / 12.92 : ((n + 0.055) / 1.055) ** 2.4; }); return 0.2126 * x[0] + 0.7152 * x[1] + 0.0722 * x[2]; };
+        const ratio = (a, b) => { const x = lum(a), y = lum(b); return +((Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05)).toFixed(2); };
+        const out = {}, still = document.createElement('style');
+        still.textContent = '*, *::before { transition: none !important; }';   // đọc màu cuối, không giữa chuyển động
+        document.head.append(still);
+        for (const id of ['panel-grip', 'tree-grip']) {
+          const g = document.getElementById(id), bg = bgOf(g.parentElement);
+          g.classList.add('is-drag');
+          out[id + '-drag'] = ratio(over(parse(getComputedStyle(g, '::before').backgroundColor), bg), bg);
+          g.classList.remove('is-drag'); document.documentElement.classList.add('ma-tabbing'); g.focus();
+          out[id + '-focus'] = ratio(over(parse(getComputedStyle(g, '::before').backgroundColor), bg), bg);
+          g.blur(); document.documentElement.classList.remove('ma-tabbing');
+        }
+        still.remove();
+        return out;
+      });
+      check(`vạch kéo panel / cây (${dark ? 'tối' : 'sáng'}): rê / kéo và focus ≥ 3:1`, Object.values(gc).every((v) => v >= 3), JSON.stringify(gc));
+    }
+    await p.close();
+    await ctx.close();
   }
 
   check('không lỗi console', !errors.length, errors.join(' | '));

@@ -1,20 +1,22 @@
 /* Cây folder + file của phiên: cột trái của lưới (docked) khi còn chỗ, không thì tấm trượt trái #dlg-tree, ở mọi bề rộng.
    Chỉ vẽ và nghe sự kiện: không đọc, không ghi phiên. Nơi gọi đưa dữ liệu và các hàm việc qua renderTree(model, actions); mọi
    thay đổi cây đi qua actions, rồi nơi gọi vẽ lại bằng renderTree. Hàng giữ phần tử qua các lần vẽ (khoá theo id).
-   model:   { nodes, open, collapsed, counts: { fileId: { c, rv } }, title }
+   model:   { sid, nodes, open, collapsed, counts: { fileId: { c, rv } }, title } (sid: id phiên)
    actions: open(id), toggle(dirId), newFile(parentId), newDir(parentId), rename(id, name) → lỗi | '', move(id, parentId)
             → lỗi | '', remove(id), importDir(FileList | entry[], parentId), download(id | null), collapseAll().
    Docked hay tấm trượt: core/panes.js treeDocks (#doc nhường cây xong vẫn đủ chỗ cho chế độ đọc đã chọn, lastRead), xét
    lại khi #doc đổi bề rộng, cửa sổ đổi cỡ, đổi chế độ xem (layoutTree), vẽ lại cây. prefs.tree (chưa chọn: hiện khi phiên có
-   ≥ 2 mục) là "muốn thấy cây": docked thì nút #btn-tree / Ctrl/⌘ + B đổi nó (html.ma-tree-on); tấm trượt thì chỉ mở tấm.
-   Bề rộng: --tree, kéo #tree-grip 180–420 (docked: không quá chỗ còn lại), prefs.treeW. Bàn phím theo mẫu tree của
-   WAI-ARIA; kéo thả bằng chuột.
-   Xuất: editName, initTree, layoutTree, renderTree, setTreeShown, treeShown, treeTakes.
+   ≥ 2 mục; chỉ nút và Ctrl/⌘ + B ghi) là "muốn thấy cây": docked thì nút #btn-tree / Ctrl/⌘ + B đổi nó (html.ma-tree-on);
+   tấm trượt thì chỉ mở tấm. revealTree(): hiện cho phiên đang vẽ, không ghi prefs (MDAN-032); đổi phiên thì thôi. Bề rộng:
+   --tree, kéo #tree-grip 180–420 (docked: không quá chỗ còn lại), prefs.treeW. Bàn phím theo mẫu tree của WAI-ARIA (mũi
+   tên, Home, End bật vòng focus như Tab, MDAN-020); kéo thả bằng chuột, chỗ thả được theo core canMove. Hàng bị xoá: hàng
+   hiện tại thành hàng vào chỗ nó.
+   Xuất: editName, focusRow, initTree, layoutTree, renderTree, revealTree, treeTakes.
    Dùng: core/tree.js, core/panes.js, ui/store.js, ui/dom.js, ui/views.js. */
-import { subtree, visibleRows } from '../core/tree.js';
+import { canMove, moveTargets, visibleRows } from '../core/tree.js';
 import { treeDocks, treeRoom, viewNeed } from '../core/panes.js';
 import { prefs, savePrefs } from './store.js';
-import { $, dragBar, h, icon, toast, typing } from './dom.js';
+import { $, dragBar, droppedItems, h, icon, toast, typing } from './dom.js';
 import { lastRead, refreshSplit } from './views.js';
 
 var W_MIN = 180, W_MAX = 420, W_DEF = 248;
@@ -23,8 +25,9 @@ var rows = [], at = {}, byId = {};   // hàng đang hiện; id → chỉ số tr
 var els = {};                        // id → <li>, giữ qua các lần vẽ (focus, bấm đúp, kéo không mất)
 var cur = null;                      // hàng giữ tabindex 0 (roving tabindex)
 var editing = null;                  // { id, input, orig } khi đang đổi tên
-var lastOpen = null, wasOn = null, docked = false, treeW = W_DEF;
-var menu = null, menuFor = null;
+var lastOpen = null, wasOn = null, docked = false, treeW = W_DEF, curAt = 0;   // curAt: chỉ số của hàng hiện tại ở lần vẽ trước
+var shownFor = null;                 // id phiên mà revealTree() hiện cây cho
+var menu = null, menuFor = null, menuSub = false, menuAt = null;   // menuSub: đang ở Move to…; menuAt: chỗ neo của place()
 var dragId = null, dropAt, hoverDir = null, hoverTimer = 0;
 var seek = '', seekTimer = 0;
 var fine = window.matchMedia('(pointer: fine)');
@@ -36,8 +39,11 @@ function call(name) {
 function parentOf(id) { var n = byId[id]; return n && n.parent != null ? n.parent : null; }
 
 /* ẨN / HIỆN. docked: cây được nằm trong lưới (chưa chắc đang hiện); không thì nút mở tấm trượt. */
-function wantShown() { return typeof prefs.tree === 'boolean' ? prefs.tree : !!(model && model.nodes.length > 1); }
-export function treeShown() { return !!model && docked && wantShown(); }
+function wantShown() {
+  if (model && shownFor === model.sid) return true;
+  return typeof prefs.tree === 'boolean' ? prefs.tree : !!(model && model.nodes.length > 1);
+}
+function treeShown() { return !!model && docked && wantShown(); }
 function gapW() { return parseFloat(getComputedStyle(home || $('tree').parentNode).columnGap) || 0; }
 /* Cột cây chiếm bao nhiêu của #doc (cây + khe), 0 khi không trong lưới. ui/views.js cộng lại để biết Split có chỗ không. */
 export function treeTakes() { return wasOn && $('tree').parentNode === home ? $('tree').offsetWidth + gapW() : 0; }
@@ -64,7 +70,15 @@ function applyShown() {
 /* Xét lại docked / tấm trượt (đổi chế độ xem, bề rộng). Quyết theo chế độ người dùng chọn, không theo chế độ đang hiện:
    cây vào / ra đổi bề rộng #doc, Split theo đó hiện / ẩn, nên quyết theo chế độ đang hiện thì lật qua lật lại. */
 export function layoutTree() { if (home) applyShown(); }
-export function setTreeShown(on) { prefs.tree = !!on; savePrefs(); applyShown(); }
+/* Người dùng bật / tắt khi docked (nút, Ctrl/⌘ + B): ghi prefs.tree. */
+function setTreeShown(on) { prefs.tree = !!on; shownFor = null; savePrefs(); applyShown(); }
+/* Hiện cây cho phiên đang vẽ (nạp folder xong), không ghi lựa chọn: phiên khác theo prefs.tree như cũ. Tấm trượt: không tự mở. */
+export function revealTree() { if (model) { shownFor = model.sid; applyShown(); } }
+/* Focus hàng id khi cây đang hiện (cột hay tấm trượt), VD sau Undo: focus không rơi về body. */
+export function focusRow(id) {
+  if (!(id in at) || !(docked ? treeShown() : $('dlg-tree').open)) return;
+  setCur(id, true);
+}
 function toggle() {
   if (!model) return;
   if (docked) { setTreeShown(!treeShown()); return; }
@@ -158,6 +172,8 @@ function reveal(li) {
 export function renderTree(m, actions) {
   var ae = document.activeElement;
   var hadFocus = !!(ae && ae.classList && ae.classList.contains('ma-trow') && $('tree').contains(ae));
+  var same = !!model && model.sid === m.sid;
+  if (!same) shownFor = null;
   model = m; act = actions || {};
   byId = {};
   m.nodes.forEach(function (n) { byId[n.id] = n; });
@@ -180,7 +196,10 @@ export function renderTree(m, actions) {
   reconcile($('tree-list'), want);
   $('tree-title').replaceChildren(h('span', { title: m.title || 'Files' }, m.title || 'Files'));
 
+  /* Hàng hiện tại vừa mất (xoá, gập folder chứa nó): hàng vào chỗ nó; chưa có thì file mở. */
+  if (same && cur != null && !(cur in at) && rows.length) cur = rows[Math.min(curAt, rows.length - 1)].node.id;
   if (cur == null || !(cur in at)) cur = m.open in at ? m.open : (rows[0] ? rows[0].node.id : null);
+  curAt = cur in at ? at[cur] : 0;
   rows.forEach(function (r) { els[r.node.id].tabIndex = r.node.id === cur ? 0 : -1; });
   if (hadFocus && cur != null && !editing) els[cur].focus({ preventScroll: true });
   if (m.open !== lastOpen) {
@@ -193,7 +212,7 @@ export function renderTree(m, actions) {
 function setCur(id, focus) {
   if (!(id in at)) return;
   if (cur != null && els[cur]) els[cur].tabIndex = -1;
-  cur = id; els[id].tabIndex = 0;
+  cur = id; curAt = at[id]; els[id].tabIndex = 0;
   if (focus) { els[id].focus({ preventScroll: true }); reveal(els[id]); }
 }
 
@@ -273,32 +292,38 @@ function mainItems(id) {
   }
   out.push(item('pencil', 'Rename', function () { editName(id); }, { keepFocus: true }),
     h('button', { class: 'ma-menu__i', type: 'button', role: 'menuitem', tabindex: '-1', 'aria-haspopup': 'menu',
-      onclick: function () { fillMenu(moveItems(id)); } }, icon('folder'), h('span', null, 'Move to…')),
+      onclick: function () { menuSub = true; fillMenu(moveItems(id)); } }, icon('folder'), h('span', null, 'Move to…')),
     item('download', n.kind === 'dir' ? 'Download .zip' : 'Download', function () { call('download', id); }),
     h('div', { class: 'ma-menu__sep', role: 'separator' }),
     item('trash', 'Delete', function () { call('remove', id); }, { danger: true }));
   return out;
 }
+/* Move to…: chỗ đến và chỗ nào được (folder hiện tại, trùng tên thì tắt) từ core moveTargets. */
 function moveItems(id) {
-  var n = byId[id], skip = {};
-  subtree(model.nodes, id).forEach(function (x) { skip[x] = true; });
-  var here = n.parent == null ? null : n.parent;
   var out = [
     h('button', { class: 'ma-menu__i', type: 'button', role: 'menuitem', tabindex: '-1',
-      onclick: function () { fillMenu(mainItems(id)); } }, icon('back'), h('span', null, 'Back')),
-    h('div', { class: 'ma-menu__h', role: 'presentation' }, 'Move ' + n.name + ' to'),
-    item(null, 'Top level', function () { moved(id, null); }, { disabled: here === null, depth: 0 })
+      onclick: function () { backMenu(id); } }, icon('back'), h('span', null, 'Back')),
+    h('div', { class: 'ma-menu__h', role: 'presentation' }, 'Move ' + byId[id].name + ' to')
   ];
-  visibleRows(model.nodes, []).forEach(function (r) {
-    if (r.node.kind !== 'dir' || skip[r.node.id]) return;
-    out.push(item('folder', r.node.name, function () { moved(id, r.node.id); }, { disabled: here === r.node.id, depth: r.depth + 1 }));
+  moveTargets(model.nodes, id).forEach(function (t) {
+    out.push(item(t.id == null ? null : 'folder', t.id == null ? 'Top level' : t.name, function () { moved(id, t.id); },
+      { disabled: !t.ok, depth: t.depth }));
   });
   return out;
 }
+/* Từ Move to… về menu chính, focus ở Move to…. */
+function backMenu(id) {
+  menuSub = false;
+  fillMenu(mainItems(id));
+  var b = menu.querySelector('[aria-haspopup]');
+  if (b) b.focus();
+}
 function moved(id, to) { var err = call('move', id, to); if (err) toast(err); }
 function menuItems() { return Array.prototype.filter.call(menu.querySelectorAll('.ma-menu__i'), function (b) { return !b.disabled; }); }
+/* Thay ruột menu (menu chính ↔ Move to…) rồi đặt lại trong khung nhìn: menu con cao hơn. */
 function fillMenu(items) {
   menu.replaceChildren.apply(menu, items);
+  if (menuAt) place.apply(null, menuAt);
   var first = menuItems()[0];
   if (first) first.focus();
 }
@@ -307,15 +332,15 @@ function openMenu(id, x, y) {
   var li = els[id];
   if (!li || !byId[id]) return;
   setCur(id, false);
-  menuFor = id; li.classList.add('is-menu');
+  menuFor = id; menuSub = false; li.classList.add('is-menu');
   menu.replaceChildren.apply(menu, mainItems(id));
   menu.classList.add('is-open');
   if (menu.showPopover) { try { menu.showPopover(); } catch (e) {} }
   if (x == null) {
     var b = li.querySelector('.ma-trow__more'), r = (b || li).getBoundingClientRect();
-    x = r.right; y = r.bottom + 2;
-    place(x, y, true, r.top - 2);
-  } else place(x, y, false, y);
+    menuAt = [r.right, r.bottom + 2, true, r.top - 2];
+  } else menuAt = [x, y, false, y];
+  place.apply(null, menuAt);
   var first = menuItems()[0];
   if (first) first.focus();
 }
@@ -332,15 +357,18 @@ function closeMenu(refocus) {
   menu.classList.remove('is-open');
   if (menu.hidePopover) { try { menu.hidePopover(); } catch (e) {} }
   var id = menuFor;
-  menuFor = null;
+  menuFor = null; menuSub = false; menuAt = null;
   if (els[id]) els[id].classList.remove('is-menu');
   if (refocus && id in at) setCur(id, true);
 }
+/* Phím mũi tên, Home, End là dùng bàn phím: bật vòng focus như Tab (MDAN-020). */
+function kbd() { document.documentElement.classList.add('ma-tabbing'); }
 function menuKey(e) {
   var its = menuItems(), i = its.indexOf(document.activeElement), k = e.key;
-  if (k === 'ArrowDown' || k === 'ArrowUp') { if (its.length) its[(i + (k === 'ArrowDown' ? 1 : -1) + its.length) % its.length].focus(); }
-  else if (k === 'Home') { if (its[0]) its[0].focus(); }
-  else if (k === 'End') { if (its.length) its[its.length - 1].focus(); }
+  if (k === 'ArrowDown' || k === 'ArrowUp') { kbd(); if (its.length) its[(i + (k === 'ArrowDown' ? 1 : -1) + its.length) % its.length].focus(); }
+  else if (k === 'Home') { kbd(); if (its[0]) its[0].focus(); }
+  else if (k === 'End') { kbd(); if (its.length) its[its.length - 1].focus(); }
+  else if (k === 'Escape' && menuSub) backMenu(menuFor);   // Move to…: Esc lùi một cấp
   else if (k === 'Escape') closeMenu(true);
   else if (k === 'Tab') closeMenu(true);
   else return;
@@ -357,6 +385,7 @@ function treeKey(e) {
   var del = k === 'Delete' || (e.metaKey && k === 'Backspace');
   if ((e.ctrlKey || e.metaKey || e.altKey) && !del) return;
   var go = function (j) { if (rows[j]) setCur(rows[j].node.id, true); };
+  if (/^(?:Arrow(?:Up|Down|Left|Right)|Home|End)$/.test(k)) kbd();
   if (k === 'ArrowDown') go(i + 1);
   else if (k === 'ArrowUp') go(i - 1);
   else if (k === 'Home') go(0);
@@ -390,10 +419,6 @@ function targetOf(e) {
   if (!li || !(li.dataset.id in byId)) return null;
   return byId[li.dataset.id].kind === 'dir' ? li.dataset.id : parentOf(li.dataset.id);
 }
-function canMove(id, to) {
-  if (!(id in byId) || to === parentOf(id)) return false;
-  return to == null || subtree(model.nodes, id).indexOf(to) < 0;
-}
 function showDrop(to) {
   if (dropAt === to) return;
   clearDrop();
@@ -406,17 +431,6 @@ function clearDrop() {
   else if (dropAt != null && els[dropAt]) els[dropAt].classList.remove('is-drop');
   dropAt = undefined;
   clearTimeout(hoverTimer); hoverDir = null;
-}
-function dropped(dt) {
-  var out = [];
-  if (dt.items && dt.items.length && dt.items[0].webkitGetAsEntry) {
-    for (var i = 0; i < dt.items.length; i++) {
-      var en = dt.items[i].kind === 'file' ? dt.items[i].webkitGetAsEntry() : null;
-      if (en) out.push(en);
-    }
-    if (out.length) return out;
-  }
-  return dt.files;
 }
 function initDrag() {
   var list = $('tree-list'), body = $('tree-body');
@@ -436,7 +450,7 @@ function initDrag() {
   body.addEventListener('dragover', function (e) {
     if (!model || (!dragId && !hasFiles(e.dataTransfer))) return;
     e.preventDefault();
-    var to = targetOf(e), ok = dragId ? canMove(dragId, to) : true;
+    var to = targetOf(e), ok = dragId ? canMove(model.nodes, dragId, to) : true;
     e.dataTransfer.dropEffect = ok ? (dragId ? 'move' : 'copy') : 'none';
     if (ok) showDrop(to); else clearDrop();
     var li = e.target.closest && e.target.closest('.ma-trow'), d = li && li.dataset.id;
@@ -451,8 +465,8 @@ function initDrag() {
     e.preventDefault();
     var to = targetOf(e), id = dragId;
     clearDrop();
-    if (id) { if (canMove(id, to)) moved(id, to); return; }
-    call('importDir', dropped(e.dataTransfer), to);
+    if (id) { if (canMove(model.nodes, id, to)) moved(id, to); return; }
+    call('importDir', droppedItems(e.dataTransfer), to);
   });
 }
 
@@ -500,6 +514,8 @@ export function initTree() {
     if (e.target.closest('.ma-trow__more')) { if (menuFor === li.dataset.id) closeMenu(true); else openMenu(li.dataset.id); return; }
     /* Bấm đúp file: đổi tên. Đếm bằng e.detail, không dùng dblclick: lần bấm đầu mở file, nơi gọi có thể vẽ lại hàng. */
     if (e.detail === 2 && byId[li.dataset.id].kind === 'file') { editName(li.dataset.id); return; }
+    /* Bấm đúp folder: lần bấm thứ hai bỏ qua, không gập rồi mở lại (nháy). */
+    if (e.detail >= 2 && byId[li.dataset.id].kind === 'dir') return;
     activate(li.dataset.id);
   });
   list.addEventListener('contextmenu', function (e) {

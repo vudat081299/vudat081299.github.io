@@ -1,7 +1,8 @@
 /* Tiện ích DOM: $(id), h() dựng phần tử, icon(), textNodes(), media query dùng chung, shown(), typing() (phím tắt
-   một chữ), dragBar() (kéo vách), toast(), paintHL() (tô CSS Highlight), saveFile() (tải một Blob về máy), syncBar() (màu
-   thanh trình duyệt khi có lớp mờ).
-   Xuất: $, dragBar, h, hasHL, icon, mqSheet, mqSide, paintHL, reduceMotion, saveFile, shown, syncBar, textNodes, toast, typing.
+   một chữ), dragBar() (kéo vách), toast(), paintHL() (tô CSS Highlight), saveFile() (tải một Blob về máy),
+   droppedItems() (mục thả từ máy), syncBar() (màu thanh trình duyệt khi có lớp mờ).
+   Xuất: $, dragBar, droppedItems, h, hasHL, icon, mqSheet, mqSide, paintHL, reduceMotion, saveFile, shown, syncBar, textNodes,
+     toast, typing.
    Dùng: core/color.js. */
 import { barColor } from '../core/color.js';
 
@@ -111,6 +112,20 @@ export function saveFile(data, name) {
   var a = h('a', { href: url, download: name });
   document.body.append(a); a.click(); a.remove();
   setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+}
+
+/* Mục thả từ máy: FileSystemEntry (đọc được folder) khi trình duyệt có, không thì File. Gọi ngay trong sự kiện drop:
+   dataTransfer hết hạn sau đó. */
+export function droppedItems(dt) {
+  var out = [];
+  if (dt.items && dt.items.length && dt.items[0].webkitGetAsEntry) {
+    for (var i = 0; i < dt.items.length; i++) {
+      var en = dt.items[i].kind === 'file' ? dt.items[i].webkitGetAsEntry() : null;
+      if (en) out.push(en);
+    }
+    if (out.length) return out;
+  }
+  return Array.prototype.slice.call(dt.files || []);
 }
 
 /* <meta name="theme-color"> (Chrome Android, Safari cũ tô thanh trạng thái theo nó): nền trang, phủ mọi lớp mờ đang hiện
