@@ -32,6 +32,11 @@
 - MDAN-035 · Cây file là cột khi văn bản còn đủ rộng, không thì trượt từ trái · thay cho MDAN-023 · `md-annotate/js/ui/tree.js`, `md-annotate/js/ui/files.js`, `md-annotate/js/core/panes.js`, `md-annotate/css/tree.css`
 - MDAN-036 · Thanh trên ở điện thoại giữ nút chính, còn lại trong menu More · `md-annotate/index.html`, `md-annotate/js/ui/bar.js`, `md-annotate/css/mobile.css`
 - MDAN-037 · Cây file docked nằm sát mép trái màn hình, vùng làm việc căn giữa phần còn lại · `md-annotate/css/tree.css`, `md-annotate/css/base.css`, `md-annotate/js/ui/tree.js`, `md-annotate/js/core/panes.js`
+- MDAN-050 · Chọn dòng bằng chạm: nhấn giữ số dòng · `md-annotate/js/ui/picks.js`, `md-annotate/js/ui/popup.js`, `md-annotate/data/shortcuts.json`
+- MDAN-051 · Thanh trên ở điện thoại tự ẩn khi cuộn xuống · `md-annotate/js/ui/bar.js`, `md-annotate/css/mobile.css`
+- MDAN-052 · Gợi ý đã đọc và khối hiện tại là hai dấu khác nhau; viên thuốc Accept N · `md-annotate/css/review.css`, `md-annotate/js/ui/review.js`, `md-annotate/js/ui/dwell.js`
+- MDAN-053 · Mở tấm nhận xét thì đoạn đang nhận xét nằm ngay trên tấm · `md-annotate/js/ui/popup.js`, `md-annotate/js/ui/selection.js`, `md-annotate/js/core/place.js`
+- MDAN-054 · Màn cảm ứng: Return trong ô nhận xét là xuống dòng · `md-annotate/js/ui/popup.js`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Nguồn tô màu cú pháp kiểu VS Code
@@ -101,7 +106,7 @@ bản: hai mục ấy trông y hệt nhau trong prompt. Chỉ cảnh báo, khôn
 
 Một nhận xét có thể gắn vào nhiều dòng không liền nhau. Chỉ chọn bằng lề số dòng (*Source* và khung Source của *Split*),
 không bằng bôi đen: bấm đúp số dòng thì vào chế độ chọn dòng, bấm một lần để thêm / bỏ dòng; Esc hoặc Save thì thoát,
-Cancel đóng hộp nhưng giữ các dòng. Ngoài chế độ, bấm số dòng và bôi đen chữ giữ như cũ. Hộp nhận xét của chế độ này
+Cancel đóng hộp nhưng giữ các dòng (màn cảm ứng: MDAN-050). Ngoài chế độ, bấm số dòng và bôi đen chữ giữ như cũ. Hộp nhận xét của chế độ này
 có nút kéo đi chỗ khác; lần mở sau hộp về chỗ mặc định. Mỗi dải dòng liền là một đoạn trích; prompt gọn ghi
 `3. L12 "…"; L15-16 "…" — nhận xét`, nhận xét một đoạn ra chữ y như trước.
 
@@ -120,7 +125,7 @@ nói dòng nào đã đọc kỹ; mặc định tắt.
 19/11/2026 · `md-annotate/js/ui/popup.js`, `md-annotate/js/ui/picks.js`
 
 Đang chọn nhiều dòng thì hộp nhận xét ở lại khi bấm chữ, panel, nền trang hay cuộn: chỉ Esc (thoát chế độ, ẩn hộp),
-Save (lưu, thoát) và Cancel (ẩn hộp, giữ các dòng) đóng nó. Sau Cancel, bấm một số dòng thì hộp hiện lại với các dòng
+Save (lưu, thoát), Done (thoát) và Cancel (ẩn hộp, giữ các dòng; màn cảm ứng thì thoát, MDAN-050) đóng nó. Sau Cancel, bấm một số dòng thì hộp hiện lại với các dòng
 đang chọn. Hộp của đoạn bôi đen và hộp sửa vẫn đóng khi bấm ra ngoài như cũ.
 
 ## MDAN-015 · Hộp Settings giữa màn hình, nền mờ; bảng phím tắt mới
@@ -141,8 +146,8 @@ một dải mảnh ở mép phải (trái thanh cuộn), hai đầu bo tròn: đ
 chữ, nhạt là chưa đọc. Bên trái dải là thanh cuộn tự vẽ: con trượt xám, chấm ở nhận xét; ở Split nó thay thanh cuộn hệ
 thống của khung, để không có hai thanh song song. Hai cột cùng bề rộng, bằng con trượt của thanh cuộn hệ thống, ở cả hai
 khung; cùng chiều cao, cách nhau một khe nhỏ. Bấm / kéo thì cuộn tới. Điện thoại ẩn dải; màn cảm ứng chỉ xem. Khối nằm ở dải đọc
-đủ lâu (khoảng 40% số từ ở 230 từ/phút, 4–60 giây) rồi người đọc tự cuộn qua thì được gợi ý (✓ viền đứt, nút "Accept N
-suggested"); gợi ý không bao giờ tự thành dấu. Mặc định bật, tắt được ở tab Review; gợi ý không lưu, chỉ trong phiên đang
+đủ lâu (khoảng 40% số từ ở 230 từ/phút, 4–60 giây) rồi người đọc tự cuộn qua thì được gợi ý (nút "Accept N
+suggested"; dấu gợi ý là đĩa ✓ xanh nhạt, MDAN-052); gợi ý không bao giờ tự thành dấu. Mặc định bật, tắt được ở tab Review; gợi ý không lưu, chỉ trong phiên đang
 mở. Tab ẩn, cửa sổ mất focus, rảnh tay, cuộn do trang (J / K / X, dải tiến độ) không tính.
 
 ## MDAN-017 · Một bộ dấu đã đọc, khai báo một chỗ
@@ -269,3 +274,40 @@ chữ, Focus) là việc dùng thường khi đọc trên điện thoại; mở 
 Khi là cột (MDAN-035), cây là thanh bên kiểu trình soạn mã: sát mép trái màn hình, từ dưới thanh trên tới đáy màn hình,
 cuộn riêng, chỉ có viền phải. Thanh trên vẫn trọn bề ngang. Vùng làm việc (MDAN-005: 70%, không hẹp hơn 1280px) tính
 trên phần màn hình còn lại và căn giữa trong đó; nút, tên trang trên thanh trên thẳng hàng với vùng làm việc.
+
+## MDAN-050 · Chọn dòng bằng chạm: nhấn giữ số dòng
+20/11/2026 · `md-annotate/js/ui/picks.js`, `md-annotate/js/ui/popup.js`, `md-annotate/data/shortcuts.json`
+
+Trên màn cảm ứng không có bấm đúp chắc chắn, không có Shift, không có Esc. Nhấn giữ một số dòng ở Source thì vào chế độ chọn
+dòng (bấm đúp vẫn được, chạm hai lần lên lề số không phóng to); chạm thêm số dòng để thêm / bỏ. Hộp có nút Done (×) để thoát;
+ở màn cảm ứng Cancel cũng thoát, máy tính giữ MDAN-014 (Cancel ẩn hộp, giữ dòng). Hộp đã ẩn mà chạm một dòng đã chọn thì chỉ
+mở lại hộp, không bỏ dòng ấy. Đáy trang có thêm chỗ để dòng cuối cuộn lên trên tấm. Hộp Shortcuts ở màn cảm ứng có một
+dòng: "long-press a line number to pick lines".
+
+## MDAN-051 · Thanh trên ở điện thoại tự ẩn khi cuộn xuống
+20/11/2026 · `md-annotate/js/ui/bar.js`, `md-annotate/css/mobile.css`
+
+Điện thoại dọc (≤ 720px) và nằm ngang thấp (cao ≤ 500px): thanh trên trượt lên khuất khi cuộn xuống, cuộn lên một chút thì
+trượt về, như Safari hay app đọc báo. Luôn hiện ở đầu trang, khi menu More hay một hộp thoại mở. Người dùng chọn giảm
+chuyển động thì hiện / ẩn ngay, không trượt. Máy rộng giữ thanh dính như cũ.
+
+## MDAN-052 · Gợi ý đã đọc và khối hiện tại là hai dấu khác nhau; viên thuốc Accept N
+20/11/2026 · `md-annotate/css/review.css`, `md-annotate/js/ui/review.js`, `md-annotate/js/ui/dwell.js`
+
+Hai dấu cũ (✓ viền đứt) trông như nhau, chủ trang không phân biệt được. Gợi ý theo thời gian đọc là đĩa ✓ xanh nhạt đặc,
+không viền đứt (giữ vạch chấm suốt khối). Khối hiện tại (khối X hay viên thuốc sẽ đánh dấu) là một vạch dọc mảnh cạnh khối,
+không có ✓. Cả hai là chỉ báo ≥ 3:1 ở hai theme. Màn cảm ứng có gợi ý thì viên thuốc đổi thành "Accept N": chạm là đánh
+dấu mọi gợi ý, có Undo như thường. Tab Review ở màn cảm ứng nói về viên thuốc, không nói phím X / J / K hay làn.
+
+## MDAN-053 · Mở tấm nhận xét thì đoạn đang nhận xét nằm ngay trên tấm
+20/11/2026 · `md-annotate/js/ui/popup.js`, `md-annotate/js/ui/selection.js`, `md-annotate/js/core/place.js`
+
+Trên điện thoại tấm nhận xét che mất đoạn vừa chọn. Mở tấm thì trang cuộn để đoạn ấy nằm ngay trên đỉnh tấm, cách một
+khoảng nhỏ; lưu vẫn không cuộn trang. Nút nổi "Comment on selection" đặt xa đoạn chọn: đoạn ở nửa dưới màn hình thì nút
+lên đỉnh, ngay dưới thanh trên.
+
+## MDAN-054 · Màn cảm ứng: Return trong ô nhận xét là xuống dòng
+20/11/2026 · `md-annotate/js/ui/popup.js`
+
+Bàn phím ảo không có Shift + Return, nên trên màn cảm ứng Return trong ô nhận xét xuống dòng, lưu bằng nút Save. Máy tính
+giữ nguyên: Enter lưu, Shift + Enter xuống dòng.
