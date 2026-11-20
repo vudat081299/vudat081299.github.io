@@ -3,16 +3,17 @@
    thụt, huy hiệu, ô đổi tên, chỗ thả, gợi ý khi trống, menu (.ma-menu: menu hàng, menu ⋯ đầu cây, menu More của thanh
    trên). Nạp sau panel.css, trước mobile.css. */
 .ma-tree {
-  --row-h: 28px;                       /* hàng, nút đầu cây ở máy có chuột; cảm ứng: --h-touch */
+  --row-h: var(--h-sm);                /* hàng, nút đầu cây ở máy có chuột (32px); cảm ứng: --h-touch */
   --name-fs: var(--fs-sm);             /* chữ tên hàng và ô đổi tên; cảm ứng --fs-lg (iOS không phóng to ô nhập ≥ 16px) */
-  /* Hình học một hàng, mọi luật dưới đây tính từ đây: ô chevron + khe, biểu tượng + khe, nút ⋯ trong cột ⋯, đệm phải. */
+  /* Hình học một hàng, mọi luật dưới đây tính từ đây: ô chevron + khe, biểu tượng + khe, cột ⋯ và nút ⋯ (theo --row-h: tâm
+     ⋯ của hàng thẳng tâm nút đầu cây, cùng cỡ --row-h), đệm phải. */
   --chev-w: 15px; --chev-gap: 3px; --ic-w: 16px; --ic-gap: 6px;
-  --more-b: 20px;                      /* nút ⋯; cảm ứng --h-touch */
-  --more-w: 24px;                      /* cột ⋯ ở mép phải hàng; cảm ứng --h-touch */
   --row-end: 2px;                      /* đệm phải của hàng sau cột ⋯; cảm ứng 0 */
+  --more-w: calc(var(--row-h) - 2 * var(--row-end));   /* cột ⋯ ở mép phải hàng */
+  --more-b: calc(var(--more-w) - 2 * var(--row-end));  /* nút ⋯: lùi --row-end khỏi mép thẻ mọi phía */
   --row-fixed: calc(var(--s1) + var(--chev-w) + var(--chev-gap) + var(--ic-w) + var(--ic-gap) + var(--s1) + var(--more-w) + var(--row-end));
   --name-min: 96px;                    /* tên ngắn nhất trước khi thụt đẩy thân cuộn ngang */
-  --fit-d: 3;                          /* thụt tới chừng này cấp thì không bao giờ cuộn ngang, ở mọi bề rộng */
+  --fit-d: 2;                          /* thụt tới chừng này cấp thì không bao giờ cuộn ngang, ở mọi bề rộng */
   --guide: var(--line-2);              /* vạch thụt; của folder chứa hàng hiện tại: --guide-on */
   --guide-on: color-mix(in srgb, var(--ink-4) 45%, var(--line-2));
 }
@@ -253,7 +254,7 @@ html.ma-tree-on body > .ma-tree {
 
 /* Màn cảm ứng và điện thoại: hàng, nút, mục menu cao --h-touch; thụt 14px; chữ tên --fs-lg. */
 @media (max-width: 720px), (pointer: coarse) {
-  .ma-tree { --row-h: var(--h-touch); --tree-step: 14px; --name-fs: var(--fs-lg); --more-b: var(--h-touch); --more-w: var(--h-touch); --row-end: 0px; }
+  .ma-tree { --row-h: var(--h-touch); --tree-step: 14px; --name-fs: var(--fs-lg); --row-end: 0px; }
   .ma-bar { --tg: var(--h-touch); }
   .ma-tree__head { min-height: calc(var(--h-touch) + var(--s2)); }
   .ma-menu__i { min-height: var(--h-touch); }

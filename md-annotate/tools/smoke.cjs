@@ -2007,7 +2007,7 @@ const cornerClash = (page) => page.evaluate(() => {
     check('cây: cột trái rộng 248px trước #doc, Split vẫn có', ts.shown && ts.w === 248 && ts.left < ts.docL && ts.split && ts.rows === 50, JSON.stringify(ts));
     check('cây: nhiều mục thì không có gợi ý', !(await hint()).on);
     /* Đầu cây một hàng (MDAN-060): khối chữ (FILES nhỏ trên tên phiên, cùng mép trái), rồi New file, New folder, ⋯ cùng một
-       hàng cao --h + --s2; nút 28px, tâm ⋯ thẳng tâm ⋯ của hàng; Close ẩn khi là cột. */
+       hàng cao --h + --s2; nút cao bằng hàng (--row-h), tâm ⋯ thẳng tâm ⋯ của hàng; Close ẩn khi là cột. */
     const head = await tp.evaluate(() => {
       const hd = document.querySelector('#tree .ma-tree__head').getBoundingClientRect();
       const [k, t, ...b] = ['.ma-tree__k', '#tree-title', '#tree-new-file', '#tree-new-dir', '#tree-more'].map((q) => document.querySelector(q).getBoundingClientRect());
@@ -2017,7 +2017,7 @@ const cornerClash = (page) => page.evaluate(() => {
         order: b.every((r, i) => r.left >= (i ? b[i - 1].right : Math.max(k.right, t.right)) - 0.5), close: !!document.querySelector('#tree .ma-tree__close').getClientRects().length,
         btn: Math.round(b[0].width), moreDx: Math.abs((b[2].left + b[2].width / 2) - (rm.left + rm.width / 2) - (bd.offsetWidth - bd.clientWidth)) };   // trừ thanh cuộn dọc nếu nó chiếm chỗ
     });
-    check('cây: đầu cây một hàng cao 48px: FILES trên tên, rồi New file, New folder, ⋯; nút 28px, ⋯ thẳng ⋯ của hàng; không có Close', head.h === 48 && head.row && head.stack && head.order && !head.close && head.btn === 28 && head.moreDx <= 0.5, JSON.stringify(head));
+    check('cây: đầu cây một hàng cao 48px: FILES trên tên, rồi New file, New folder, ⋯; nút 32px (--row-h), ⋯ thẳng ⋯ của hàng; không có Close', head.h === 48 && head.row && head.stack && head.order && !head.close && head.btn === 32 && head.moreDx <= 0.5, JSON.stringify(head));
     // Menu ⋯: bấm mở (Import folder…, Download .zip, Collapse all), Esc đóng và trả focus; ↓ trên nút mở và vào mục đầu.
     await tp.click('#tree-more'); await tp.waitForTimeout(80);
     const hm = await tp.evaluate(() => ({ open: document.getElementById('tree-head-menu').classList.contains('is-open'), exp: document.getElementById('tree-more').getAttribute('aria-expanded'),

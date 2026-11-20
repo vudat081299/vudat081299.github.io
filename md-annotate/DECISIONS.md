@@ -41,6 +41,7 @@
 - MDAN-061 · Cây file không tự ẩn khi chật; chỉ điện thoại là tấm trượt, đóng sẵn · thay cho MDAN-035 · `md-annotate/js/ui/tree.js`, `md-annotate/js/ui/views.js`, `md-annotate/js/core/panes.js`, `md-annotate/css/tree.css`
 - MDAN-062 · Không có dòng mô tả dưới tên trang · `md-annotate/index.html`, `md-annotate/css/base.css`
 - MDAN-063 · Cây file nông không cuộn ngang; ⋯ một cột cố định ở mép phải hàng · `md-annotate/css/tree.css`, `md-annotate/js/ui/tree.js`
+- MDAN-065 · Hàng cây file cao hơn: 32px · `md-annotate/css/tree.css`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Nguồn tô màu cú pháp kiểu VS Code
@@ -287,7 +288,7 @@ Cây file trông như thanh bên của trình soạn mã. Nút Files luôn ở m
 là cột, tấm trượt hay đang ẩn; tên trang vẫn thẳng hàng vùng làm việc, cửa sổ hẹp thì đứng ngay sau nút, không chồng, không
 nhảy. Khi là cột, phần thanh trên phía trên cột cùng nền với cột. Đầu cây một hàng: nhãn Files nhỏ trên tên phiên, New
 file, New folder và ⋯ (Import folder, Download .zip, Collapse all); tấm trượt thêm nút đóng, tách bằng một vạch. Hàng thấp
-(28px, cảm ứng 44px). Mỗi cấp thụt bằng nhau, ở mọi độ sâu, không nén: tên sắp hẹp hơn ~96px thì danh sách cuộn ngang
+(32px theo MDAN-065, cảm ứng 44px). Mỗi cấp thụt bằng nhau, ở mọi độ sâu, không nén: tên sắp hẹp hơn ~96px thì danh sách cuộn ngang
 trong thanh bên, trang không cuộn ngang, file đang mở được cuộn vào tầm nhìn. Mỗi folder đang mở có một vạch mảnh, nhạt,
 dưới tâm chevron của nó, chỉ dài qua các hàng con; vạch của folder chứa hàng hiện tại đậm hơn. File đang mở là một thẻ bo
 góc chỉ có nền xanh nhạt, không viền, không vòng, ôm phần biểu tượng và tên, không tô cả hàng, không vạch trái riêng; rê
@@ -354,3 +355,9 @@ Thanh bên cây file không có thanh cuộn ngang trong trường hợp thườ
 sâu, khi phần thụt đẩy tên hàng sâu nhất xuống dưới ~96px, mới cuộn ngang như MDAN-060; cây không thụt thì không bao giờ,
 kể cả khi kéo hẹp. Nút ⋯ mọi hàng đứng một cột cố định ở mép phải: cùng cỡ, giữa hàng, thẳng nút ⋯ của đầu cây; huy hiệu
 đứng trước nó, không bị ẩn khi rê.
+
+## MDAN-065 · Hàng cây file cao hơn: 32px
+20/11/2026 · `md-annotate/css/tree.css`
+
+Hàng của cây file (file và folder như nhau) cao 32px thay cho 28px ở máy có chuột; màn cảm ứng giữ 44px. Nút ⋯, chevron,
+biểu tượng, huy hiệu, vạch thụt và thẻ rê / chọn theo cùng chiều cao, giữa hàng.
