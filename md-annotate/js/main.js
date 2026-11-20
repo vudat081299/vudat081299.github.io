@@ -21,7 +21,7 @@ import { initHints, loadDefaultHints, renderHintsDlg } from './ui/hints.js';
 import { checkRenderer, renderAll } from './ui/render.js';
 import { initList } from './ui/list.js';
 import { copyPrompt, initPrompt } from './ui/prompt.js';
-import { initViews, setView, view } from './ui/views.js';
+import { initViews, lastRead, setView, view } from './ui/views.js';
 import { initSyncScroll } from './ui/sync-scroll.js';
 import { initPanel } from './ui/panel.js';
 import { initTree } from './ui/tree.js';
@@ -104,7 +104,8 @@ initState();
 checkRenderer();
 syncInputs();
 renderAll();
-setView(D.text ? view : 'edit');
+/* Chế độ đã chọn (Split lùi về Preview khi thiếu chỗ vẫn được nhớ, không ghi đè bằng chế độ đang hiện). */
+setView(D.text ? (view === 'edit' ? 'edit' : lastRead) : 'edit');
 renderHistCount();
 store.set(KEY.cur, S.id);
 

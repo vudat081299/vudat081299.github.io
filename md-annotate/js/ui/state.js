@@ -87,7 +87,8 @@ function show(next) {
   store.set(KEY.cur, S.id);
   syncInputs();
   renderAll();
-  setView(D.text ? (view === 'edit' ? lastRead : view) : 'edit');
+  /* Chế độ đọc người dùng chọn (lastRead), không phải chế độ đang hiện: Split đang lùi về Preview vì thiếu chỗ thì vẫn nhớ Split. */
+  setView(D.text ? lastRead : 'edit');
   restoreScroll();
   renderHistCount();
   refreshTree();
