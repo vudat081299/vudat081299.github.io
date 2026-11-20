@@ -36,6 +36,7 @@
     <link rel="stylesheet" href="css/base.css" />
     <link rel="stylesheet" href="css/views.css" />
     <link rel="stylesheet" href="css/panel.css" />
+    <link rel="stylesheet" href="css/tree.css" />
     <link rel="stylesheet" href="css/popup.css" />
     <link rel="stylesheet" href="css/dialogs.css" />
     <link rel="stylesheet" href="css/focus.css" />
@@ -47,6 +48,11 @@
   <body>
     <header class="ma-bar">
       <div class="ma-wrap ma-bar__in">
+        <!-- Ẩn / hiện cây file (ui/tree.js). Ẩn tới khi cây có dữ liệu (renderTree). -->
+        <button class="ma-icbtn" id="btn-tree" type="button" aria-controls="tree" aria-expanded="false" aria-keyshortcuts="Control+B Meta+B"
+                aria-label="Show files" title="Show files" hidden>
+          <svg class="ma-i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="2" /><path d="M9.5 4.5v15M6 8.5h1.5M6 11.5h1.5" /></svg>
+        </button>
         <a class="ma-brand" href="../" aria-label="Back to home">
           <span class="ma-brand__mark" aria-hidden="true"></span>
           <span class="ma-brand__txt"><span class="ma-brand__own">vudat081299 / </span><b>md-annotate</b></span>
@@ -77,6 +83,30 @@
     </header>
 
     <main class="ma-wrap ma-grid">
+      <!-- Cột trái: cây folder + file của phiên (ui/tree.js). Thân là chỗ cuộn. Máy ≤ 1080px: cây nằm trong tấm trượt
+           trái #dlg-tree, mở bằng #btn-tree. -->
+      <nav class="ma-tree" id="tree" aria-label="Files">
+        <div class="ma-tree__grip" id="tree-grip" role="separator" aria-orientation="vertical" tabindex="0"
+             aria-label="Resize file list" title="Drag to resize"></div>
+        <div class="ma-tree__head">
+          <span class="ma-tree__t" id="tree-title"></span>
+          <div class="ma-tree__tools">
+            <button class="ma-icbtn ma-icbtn--bare" type="button" id="tree-new-file" aria-label="New file" title="New file"></button>
+            <button class="ma-icbtn ma-icbtn--bare" type="button" id="tree-new-dir" aria-label="New folder" title="New folder"></button>
+            <button class="ma-icbtn ma-icbtn--bare" type="button" id="tree-import" aria-label="Import folder" title="Import a folder from disk (a copy)"></button>
+            <button class="ma-icbtn ma-icbtn--bare" type="button" id="tree-zip" aria-label="Download .zip" title="Download all files as .zip"></button>
+            <button class="ma-icbtn ma-icbtn--bare" type="button" id="tree-collapse" aria-label="Collapse all" title="Collapse all folders"></button>
+            <button class="ma-icbtn ma-icbtn--bare ma-tree__close" type="button" data-close aria-label="Close">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
+            </button>
+          </div>
+          <input type="file" id="tree-dir-in" webkitdirectory multiple hidden />
+        </div>
+        <div class="ma-tree__body" id="tree-body">
+          <ul class="ma-tree__list" id="tree-list" role="tree" aria-label="Files"></ul>
+        </div>
+      </nav>
+
       <div class="ma-left">
       <div class="ma-head">
         <h1>Markdown Annotate</h1>
@@ -347,6 +377,7 @@
     </dialog>
 
     <dialog class="ma-dlg ma-dlg--panel" id="dlg-panel" aria-label="Comments, prompt and review"></dialog>
+    <dialog class="ma-dlg ma-dlg--tree" id="dlg-tree" aria-label="Files"></dialog>
 
     <dialog class="ma-dlg ma-dlg--center ma-dlg--live" id="dlg-layout" aria-labelledby="dlg-layout-t">
       <div class="ma-dlg__in">
