@@ -105,6 +105,17 @@ html:not(.dark) .ma-moon, html.dark .ma-sun { display: none; }
 }
 @media (hover: hover) { .ma-tab:hover, .ma-ptab:hover, .ma-fmt span:hover { color: var(--ink); } }
 .ma-tab[aria-selected="true"], .ma-ptab[aria-selected="true"], .ma-fmt input:checked + span { background: var(--tab-on); color: var(--ink); box-shadow: var(--tab-ring); }
+/* Biến thể gạch chân (.ma-tabs--line, chế độ xem): không rãnh; tab cao hết thanh chứa nó (thanh tự trừ đệm bằng lề âm),
+   mục chọn có vạch --accent nằm trên mép dưới thanh. */
+.ma-tabs--line { padding: 0; gap: 0; background: none; border-radius: 0; }
+.ma-tabs--line .ma-tab { position: relative; border-radius: 0; color: var(--ink-3); }
+.ma-tabs--line .ma-tab::after {
+  content: ''; position: absolute; left: var(--s2); right: var(--s2); bottom: 0; height: 2px;
+  border-radius: var(--r-pill) var(--r-pill) 0 0; background: transparent; transition: background var(--dur) var(--ease);
+}
+.ma-tabs--line .ma-tab[aria-selected="true"] { background: none; box-shadow: none; color: var(--ink); }
+.ma-tabs--line .ma-tab[aria-selected="true"]::after { background: var(--accent); }
+@media (hover: hover) { .ma-tabs--line .ma-tab:not([aria-selected="true"]):hover::after { background: var(--line-2); } }
 
 /* ĐẦU TRANG */
 .ma-head { display: flex; align-items: baseline; gap: var(--s3); min-width: 0; padding: 0 0 var(--s3); }

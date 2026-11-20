@@ -495,9 +495,10 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   check('máy tối thì trang tối', await dpage.evaluate(() => document.documentElement.classList.contains('dark')));
   const tab = await dpage.evaluate(() => {
     const lum = (c) => { const v = c.match(/[\d.]+/g).slice(0, 3).map((x) => { x /= 255; return x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4; }); return 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2]; };
-    const t = document.querySelector('.ma-tab[aria-selected="true"]');
+    const t = document.querySelector('.ma-ptab[aria-selected="true"]');
     const a = lum(getComputedStyle(t).backgroundColor), b = lum(getComputedStyle(t.parentElement).backgroundColor);
-    return { ratio: (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05), ring: getComputedStyle(t).boxShadow };
+    const v = document.querySelector('.ma-tab[aria-selected="true"]'), u = lum(getComputedStyle(v, '::after').backgroundColor), d = lum(getComputedStyle(document.getElementById('doc')).backgroundColor);
+    return { ratio: (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05), ring: getComputedStyle(t).boxShadow, line: (Math.max(u, d) + 0.05) / (Math.min(u, d) + 0.05) };
   });
   await dpage.click('#btn-sample');
   await dpage.click('.ma-tab[data-view="src"]');
@@ -510,7 +511,7 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   check('tô màu: mọi token ≥ 4,5:1 trên nền (tối)', dlow.n > 10 && !dlow.low.length, JSON.stringify(dlow));
   const dacc = await accentCheck(dpage);
   check('nút chính xanh sáng, chữ tối ≥ 4,5:1 (tối)', dacc.bgLum > 0.3 && dacc.ratio >= 4.5, JSON.stringify(dacc));
-  check('tối: tab đang chọn sáng hơn nền nhóm tab và có viền xanh', tab.ratio >= 1.2 && /inset/.test(tab.ring), JSON.stringify(tab));
+  check('tối: tab panel đang chọn sáng hơn nền nhóm tab và có viền xanh; tab chế độ xem có vạch ≥ 3:1', tab.ratio >= 1.2 && /inset/.test(tab.ring) && tab.line >= 3, JSON.stringify(tab));
   await dctx.close();
 
   /* ---------- Điện thoại ---------- */

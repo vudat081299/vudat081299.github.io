@@ -48,7 +48,7 @@
   .ma-doc__bar { padding: var(--s2); }
   .ma-start { padding: var(--s5) var(--s4); gap: var(--s4); }
   .ma-steps { grid-template-columns: 1fr; gap: var(--s2); }
-  .ma-tabs { flex: 1; }
+  .ma-tabs { flex: 1; margin-top: 0; }
   .ma-tab { flex: 1; padding: 0 var(--s2); }
   .ma-doc__meta { margin-left: 0; width: 100%; }
   .ma-view, #wrap-src { padding: var(--s3) var(--s3) var(--s4); }
