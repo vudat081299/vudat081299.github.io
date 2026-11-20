@@ -78,10 +78,11 @@ html.ma-tree-on body > .ma-tree {
 #tree-more[aria-expanded="true"] { background: var(--chip); color: var(--ink); }
 .ma-tree__close { display: none; }
 
-/* THÂN: chỗ cuộn duy nhất, dọc và ngang; đệm đáy là viền trong suốt (thanh cuộn dừng trên nó). */
+/* THÂN: chỗ cuộn duy nhất, dọc và ngang. Đệm đáy --s3 nằm trong vùng cuộn: cuộn tới cuối, hàng cuối vẫn cách mép; viền
+   trong suốt dưới nó là chỗ thanh cuộn dừng (không chạm góc bo, MDAN-018). */
 .ma-tree__body {
   position: relative; flex: 1 1 auto; min-height: 0; overflow: auto; overscroll-behavior: contain;
-  padding: var(--s2) var(--s2) 0; border-bottom: var(--s2) solid transparent; container-type: inline-size;
+  padding: var(--s2) var(--s2) var(--s3); border-bottom: var(--s2) solid transparent; container-type: inline-size;
 }
 .ma-tree__body.is-drop { background: var(--accent-soft); outline: 1px dashed var(--edge-on); outline-offset: -4px; }
 /* Khối hàng: rộng bằng thân; chỉ rộng hơn khi phần thụt (--dmax: cấp sâu nhất đang hiện, ui/tree.js) đẩy tên hàng sâu nhất

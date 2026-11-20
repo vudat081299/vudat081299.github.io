@@ -2173,15 +2173,16 @@ const cornerClash = (page) => page.evaluate(() => {
         const mores = rows.map((r) => { const m = r.querySelector('.ma-trow__more').getBoundingClientRect(), q = r.getBoundingClientRect();
           return [+m.left.toFixed(1), m.width, +((m.top + m.height / 2) - (q.top + q.height / 2)).toFixed(1)]; });
         const sf = rows.find((r) => r.dataset.id === 'sf'), nm = sf.querySelector('.ma-trow__name');
+        b.scrollTop = b.scrollHeight; const endGap = b.getBoundingClientRect().top + b.clientTop + b.clientHeight - rows[rows.length - 1].getBoundingClientRect().bottom; b.scrollTop = 0;
         return { bodyX: b.scrollWidth - b.clientWidth, isX: b.classList.contains('is-x'), vbar: b.scrollHeight > b.clientHeight, xs: new Set(mores.map((m) => m[0])).size, ws: new Set(mores.map((m) => m[1])).size,
           dy: Math.max(...mores.map((m) => Math.abs(m[2]))), cut: nm.scrollWidth > nm.clientWidth && getComputedStyle(nm).textOverflow === 'ellipsis',
-          selMore: getComputedStyle(sf.querySelector('.ma-trow__more')).opacity, idle: getComputedStyle(rows.find((r) => r.dataset.id === 's2').querySelector('.ma-trow__more')).opacity };
+          endGap, selMore: getComputedStyle(sf.querySelector('.ma-trow__more')).opacity, idle: getComputedStyle(rows.find((r) => r.dataset.id === 's2').querySelector('.ma-trow__more')).opacity };
       });
     };
     for (const w of [248, 180]) {
       const sh = await shallow(w);
-      check(`cây nông ${w}px: thân không tràn ngang, tên dài cắt …, ⋯ một cột cùng cỡ giữa hàng, hiện ở file mở, ẩn ở hàng thường`,
-        sh.bodyX === 0 && !sh.isX && sh.vbar && sh.cut && sh.xs === 1 && sh.ws === 1 && sh.dy <= 0.5 && sh.selMore === '1' && sh.idle === '0', JSON.stringify(sh));
+      check(`cây nông ${w}px: thân không tràn ngang, tên dài cắt …, ⋯ một cột cùng cỡ giữa hàng, hiện ở file mở, ẩn ở hàng thường; cuộn tới cuối, hàng cuối cách mép ≥ 12px`,
+        sh.bodyX === 0 && !sh.isX && sh.vbar && sh.endGap >= 12 && sh.cut && sh.xs === 1 && sh.ws === 1 && sh.dy <= 0.5 && sh.selMore === '1' && sh.idle === '0', JSON.stringify(sh));
     }
     const hov = await tp.evaluate(() => { const r = [...document.querySelectorAll('#tree-list .ma-trow')].find((l) => l.dataset.id === 's1'); r.scrollIntoView({ block: 'center' }); const q = r.getBoundingClientRect(); return { x: q.left + 30, y: q.top + q.height / 2 }; });
     await tp.mouse.move(hov.x, hov.y); await tp.waitForTimeout(250);
