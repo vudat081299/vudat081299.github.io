@@ -1984,15 +1984,18 @@ const cornerClash = (page) => page.evaluate(() => {
     await tp.goto(BASE); await tp.waitForFunction(() => window.marked && window.DOMPurify);
     await tp.click('#btn-sample'); await tp.waitForTimeout(150);
     const t0 = await tstate(tp);
-    check('cây: phiên một file của trang — có nút, không có cột', !t0.shown && t0.btn, JSON.stringify(t0));
-    // Phiên một file: nút hiện, cột chưa hiện (mặc định tự động), vẽ được một hàng, đang chọn.
+    check('cây: phiên một file của trang — có nút, cột hiện sẵn (MDAN-061)', t0.shown && t0.btn && t0.exp === 'true', JSON.stringify(t0));
+    // Phiên một file: cột hiện sẵn, một hàng đang chọn, Split còn (2560); nút ẩn rồi hiện lại, ghi prefs.tree.
     await tp.evaluate(treeDemo, true); await tp.waitForTimeout(150);
     let ts = await tstate(tp);
-    check('cây: phiên một file — nút hiện, cột ẩn, Split còn', ts.btn && !ts.shown && ts.split && ts.docL === t0.docL && ts.exp === 'false' && ts.lbl === 'Show files', JSON.stringify(ts));
+    const one = await tp.$$eval('#tree-list .ma-trow', (ls) => ls.map((l) => [l.getAttribute('aria-selected'), l.getAttribute('aria-level'), l.querySelector('.ma-trow__name').textContent]));
+    check('cây: phiên một file — cột hiện, một hàng đang chọn, Split còn', ts.btn && ts.shown && ts.split && ts.rows === 1 && one[0][0] === 'true' && one[0][1] === '1' && one[0][2] === 'untitled.md'
+      && ts.exp === 'true' && ts.lbl === 'Hide files', JSON.stringify([ts, one]));
+    await tp.click('#btn-tree'); await tp.waitForTimeout(150);
+    const tOff = await tstate(tp);
     await tp.click('#btn-tree'); await tp.waitForTimeout(150);
     ts = await tstate(tp);
-    const one = await tp.$$eval('#tree-list .ma-trow', (ls) => ls.map((l) => [l.getAttribute('aria-selected'), l.getAttribute('aria-level'), l.querySelector('.ma-trow__name').textContent]));
-    check('cây: phiên một file — bấm nút hiện cột, một hàng đang chọn', ts.shown && ts.rows === 1 && one[0][0] === 'true' && one[0][1] === '1' && one[0][2] === 'untitled.md' && ts.exp === 'true' && ts.lbl === 'Hide files', JSON.stringify([ts, one]));
+    check('cây: phiên một file — nút ẩn cột (prefs.tree = false), bấm lại hiện (true)', !tOff.shown && tOff.pref === false && tOff.lbl === 'Show files' && ts.shown && ts.pref === true, JSON.stringify([tOff, ts]));
     const hint = () => tp.evaluate(() => { const x = document.getElementById('tree-hint'); return { on: !!x.getClientRects().length, t: x.querySelector('.ma-tree__hint-t').innerText.trim() }; });
     const h1 = await hint();
     check('cây: phiên một file — gợi ý "Drop files or a folder here" dưới danh sách (MDAN-060)', h1.on && h1.t === 'Drop files or a folder here', JSON.stringify(h1));
