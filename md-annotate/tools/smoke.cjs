@@ -3375,6 +3375,94 @@ const cornerClash = (page) => page.evaluate(() => {
   }
   // ── end mob:touch-review ──
 
+  // ── hl: tô màu nạp khi cần (MDAN-066) ──
+  {
+    const hlRows = (p) => p.$$eval('#tree-list .ma-trow', (ls) => ls.map((l) => (l.querySelector('.ma-trow__name') || {}).textContent));
+    const hlRow = (name) => `#tree-list .ma-trow:has(> .ma-trow__name:text-is("${name}"))`;
+    const PY = 'def f(x):\n    return "hi"  # note\n';
+    const MD = '# Code\n\nMở đầu có chữ.\n\n```python\n' + PY + '```\n\nCuối.\n';
+    const RS = 'fn main() {\n    let n = 42; // số\n    println!("{}", n);\n}\n';
+    const hc = await treeContext({ viewport: { width: 1920, height: 900 }, colorScheme: 'light' });
+    const hp = await hc.newPage(); watch(hp);
+    const hlReq = [];
+    hp.on('request', (r) => { const m = /\/highlight\.js\/11\.9\.0\/(.+)$/.exec(r.url()); if (m) hlReq.push(m[1]); });
+    await hp.goto(BASE); await hp.waitForFunction(() => window.marked && window.DOMPurify); await hp.waitForTimeout(300);
+    check('tô màu nạp khi cần: mở trang không tải highlight.js', hlReq.length === 0, hlReq.join());
+    const plain = await hp.evaluate((t) => {
+      const ta = document.getElementById('src-input');
+      ta.focus(); ta.dispatchEvent(new Event('paste')); ta.value = t; ta.dispatchEvent(new Event('input'));
+      const c = document.querySelector('#v-md pre code');
+      return { spans: c.querySelectorAll('span').length, h: c.getBoundingClientRect().height };
+    }, MD);
+    check('tô màu nạp khi cần: khối code hiện chữ trơn ngay', plain.spans === 0, JSON.stringify(plain));
+    await hp.waitForSelector('#v-md pre code span.hljs-keyword');
+    const up = await hp.$eval('#v-md pre code', (c) => ({ text: c.textContent, kw: c.querySelector('.hljs-keyword').textContent, cm: !!c.querySelector('.hljs-comment'), h: c.getBoundingClientRect().height }));
+    check('tô màu nạp khi cần: khối ```python tải lõi + python, không gì khác', hlReq.join() === 'es/core.min.js,es/languages/python.min.js', hlReq.join());
+    check('tô màu nạp khi cần: chữ trơn lên màu, chữ và chiều cao giữ nguyên', up.text === PY && up.kw === 'def' && up.cm && up.h === plain.h, JSON.stringify([up, plain.h]));
+    const kwColor = () => hp.$eval('#v-md .hljs-keyword', (e) => getComputedStyle(e).color);
+    const light = await kwColor();
+
+    // Nhận xét trong khối đã tô: mark bọc trong span màu, màu còn nguyên.
+    await hp.waitForTimeout(700);
+    await dragSelect(hp, '#v-md', 'return "hi"');
+    check('tô màu nạp khi cần: bôi đen trong khối đã tô mở hộp nhận xét', await hp.isVisible('#pop') && (await hp.textContent('#pop-q')) === 'return "hi"', await hp.textContent('#pop-q'));
+    await hp.keyboard.type('Sửa chữ'); await hp.keyboard.press('Enter');
+    const mk = await hp.$eval('#v-md pre code', (c) => ({ mark: [...c.querySelectorAll('mark')].map((m) => m.textContent).join('').replace(/\s/g, ''), kw: c.querySelectorAll('.hljs-keyword').length, text: c.textContent }));
+    check('tô màu nạp khi cần: nhận xét trong code có highlight, khối vẫn tô màu, chữ không đổi', mk.mark === 'return"hi"' && mk.kw === 2 && mk.text === PY, JSON.stringify(mk));
+
+    // Mở file .rs: chỉ lúc ấy mới tải rust; Source của file code tô bằng highlight.js, text đúng bằng nguồn.
+    check('tô màu nạp khi cần: chưa mở file .rs thì chưa tải rust', !hlReq.some((u) => /rust/.test(u)));
+    await hp.setInputFiles('#file-in', { name: 'main.rs', mimeType: 'text/plain', buffer: Buffer.from(RS) });
+    await hp.click('.ma-tab[data-view="src"]');
+    await hp.waitForSelector('#v-src .sx-punct');
+    const rs = await hp.$eval('#v-src', (v) => ({ text: v.textContent, kw: [...v.querySelectorAll('.sx-punct')].map((e) => e.textContent), cm: [...v.querySelectorAll('.sx-comment')].map((e) => e.textContent), lines: v.querySelectorAll('.ma-ln').length }));
+    check('tô màu nạp khi cần: mở main.rs thì tải rust (một lần)', hlReq.filter((u) => /rust/.test(u)).length === 1 && hlReq.length === 3, hlReq.join());
+    check('tô màu nạp khi cần: Source của .rs có token màu, text đúng bằng nguồn', rs.text === RS && rs.kw.includes('fn') && rs.kw.includes('let') && rs.cm.join() === '// số' && rs.lines === 4, JSON.stringify(rs));
+
+    // Về file markdown: Source tô bằng bộ tách markdown như cũ, khối code ở Preview còn màu; không tải lại gì.
+    await hp.click(hlRow('untitled.md')); await hp.waitForTimeout(200);
+    const back = await hp.evaluate(() => ({ head: !!document.querySelector('#v-src .sx-head'), md: document.querySelectorAll('#v-md pre code .hljs-keyword').length }));
+    check('tô màu nạp khi cần: về file .md — Source tô markdown, Preview vẫn tô code, không tải lại', back.head && back.md === 2 && hlReq.length === 3, JSON.stringify([back, hlReq]));
+
+    // Split và theme tối: cả hai khung tô, màu code theo theme.
+    await hp.click('.ma-tab[data-view="split"]'); await hp.waitForTimeout(200);
+    const sp = await hp.evaluate(() => ({ split: !document.getElementById('wrap-src').hidden && !document.getElementById('wrap-md').hidden && getComputedStyle(document.getElementById('wrap-src')).display !== 'none', src: !!document.querySelector('#v-src .sx-code'), md: !!document.querySelector('#v-md .hljs-keyword') }));
+    check('tô màu nạp khi cần: Split — hai khung đều tô màu', sp.split && sp.src && sp.md, JSON.stringify(sp));
+    await hp.click('#theme'); await hp.waitForTimeout(100);
+    check('tô màu nạp khi cần: theme tối đổi màu code ở Preview', (await kwColor()) !== light, light);
+    await hp.click('#theme');
+    check('tô màu nạp khi cần: cây có hai file', (await hlRows(hp)).join() === 'main.rs,untitled.md', (await hlRows(hp)).join());
+    await hc.close();
+
+    // Điện thoại: khối code lên màu, không tràn ngang.
+    const pc = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, colorScheme: 'dark' });
+    const pp = await pc.newPage(); watch(pp);
+    await pp.goto(BASE); await pp.waitForFunction(() => window.marked && window.DOMPurify);
+    await pp.evaluate((t) => { const ta = document.getElementById('src-input'); ta.focus(); ta.dispatchEvent(new Event('paste')); ta.value = t; ta.dispatchEvent(new Event('input')); }, MD);
+    await pp.waitForSelector('#v-md pre code span.hljs-keyword');
+    check('tô màu nạp khi cần: điện thoại tô khối code, không tràn ngang', (await overflow(pp)) === 0);
+    await pc.close();
+
+    // Tải hỏng (mất mạng, sai integrity): chữ trơn, một cảnh báo, không lỗi script. Trang này không vào `errors`:
+    // trình duyệt tự ghi lỗi mạng / integrity vào console.
+    const fc = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+    const fpg = await fc.newPage();
+    const warns = [], pageErr = [];
+    fpg.on('console', (m) => { if (m.type() === 'warning' && /code colors/.test(m.text())) warns.push(m.text()); });
+    fpg.on('pageerror', (e) => pageErr.push(String(e)));
+    await fpg.route(/languages\/go\.min\.js$/, (r) => r.abort());
+    await fpg.route(/languages\/rust\.min\.js$/, (r) => r.fulfill({ status: 200, contentType: 'text/javascript', body: 'export default function () { return {}; }' }));
+    await fpg.goto(BASE); await fpg.waitForFunction(() => window.marked && window.DOMPurify);
+    await fpg.evaluate((t) => { const ta = document.getElementById('src-input'); ta.focus(); ta.dispatchEvent(new Event('paste')); ta.value = t; ta.dispatchEvent(new Event('input')); },
+      '# Hỏng\n\n```go\nfunc main() {}\n```\n\n```rust\nfn main() {}\n```\n\n```python\nx = 1\n```\n');
+    await fpg.waitForSelector('#v-md code.language-python .hljs-number'); await fpg.waitForTimeout(300);
+    const fail = await fpg.evaluate(() => [...document.querySelectorAll('#v-md pre code')].map((c) => c.querySelectorAll('span').length + ':' + c.textContent.trim()));
+    check('tô màu nạp khi cần: tải hỏng / sai integrity thì chữ trơn, ngôn ngữ khác vẫn tô', fail[0] === '0:func main() {}' && fail[1] === '0:fn main() {}' && /^[1-9]\d*:x = 1$/.test(fail[2]), JSON.stringify(fail));
+    check('tô màu nạp khi cần: tải hỏng chỉ một cảnh báo, không lỗi script', warns.length === 1 && !pageErr.length, JSON.stringify([warns, pageErr]));
+    await fc.close();
+  }
+  // ── end hl ──
+
   check('không lỗi console', !errors.length, errors.join(' | '));
   await browser.close();
   console.log(fails ? `md-annotate smoke: ${fails} LỖI` : 'md-annotate smoke: OK');

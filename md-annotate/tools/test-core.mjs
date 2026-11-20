@@ -1037,5 +1037,36 @@ check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi
 }
 // ── end màu thanh ──
 
+// ── loại file, sổ ngôn ngữ, token code (MDAN-066) ──
+import { fileType, langOf } from '../js/core/file-type.js';
+import { LANGS, CORE_SRI } from '../js/core/langs.js';
+import { hlRuns, sxTokens } from '../js/core/code-tokens.js';
+{
+  const k = (n) => fileType(n).kind + ':' + fileType(n).lang;
+  check('loại file: markdown theo đuôi, không đuôi là markdown', ['a.md', 'B.MARKDOWN', 'x.mdx', 'README', 'notes/LICENSE'].every((n) => k(n) === 'markdown:null'));
+  check('loại file: code theo đuôi hay tên', k('a.py') === 'code:python' && k('App.TSX') === 'code:typescript' && k('Makefile') === 'code:makefile' && k('Dockerfile') === 'code:dockerfile' && k('i.htm') === 'code:xml');
+  check('loại file: đuôi lạ là chữ trơn', ['a.txt', 'data.csv', 'x.log', 'a.', '.env'].every((n) => k(n) === 'plain:null'));
+  check('langOf: khối rào theo alias, chữ hoa, ký tự lạ', langOf('JS') === 'javascript' && langOf('c++') === 'cpp' && langOf('c#') === 'csharp' && langOf('text') === null && langOf('') === null);
+  const sri = /^sha384-[A-Za-z0-9+/]{64}$/;
+  const bad = Object.keys(LANGS).filter((id) => !sri.test(LANGS[id][1]) || (LANGS[id][2] || '').split(' ').some((d) => d && !LANGS[d]));
+  check('sổ ngôn ngữ: mỗi dòng có integrity sha384, ngôn ngữ nạp kèm có trong sổ', sri.test(CORE_SRI) && !bad.length, bad.join());
+  const seen = new Map(), dup = [];
+  Object.keys(LANGS).forEach((id) => [id].concat(LANGS[id][0].split(' ').filter(Boolean)).forEach((n) => { if (seen.has(n) && seen.get(n) !== id) dup.push(n); seen.set(n, id); }));
+  check('sổ ngôn ngữ: không tên nào trỏ hai ngôn ngữ', !dup.length, dup.join());
+
+  // highlight.js: chữ đã thoát trong span lồng; span language-* theo lớp ngoài.
+  const html = '<span class="hljs-keyword">if</span> a &lt; b &amp;&amp; <span class="hljs-string">&quot;x&#x27;<span class="hljs-subst">${y}</span>&quot;</span>' +
+    '<span class="language-css"><span class="hljs-attribute">color</span></span>';
+  const text = 'if a < b && "x\'${y}"color';
+  const runs = hlRuns(html);
+  check('hlRuns: vị trí đếm trên chữ gốc', eq(runs.map((r) => text.slice(r.s, r.e)), ['if', '"x\'', '${y}', '"', 'color']), JSON.stringify(runs));
+  check('hlRuns: lớp trong cùng, span ngôn ngữ nhúng trong suốt', eq(runs.map((r) => r.c), ['hljs-keyword', 'hljs-string', 'hljs-subst', 'hljs-string', 'hljs-attribute']));
+  const sx = sxTokens(runs);
+  check('sxTokens: đổi sang sx-*, bỏ lớp không màu, gộp đoạn liền cùng màu',
+    eq(sx, [{ s: 0, e: 2, c: 'sx-punct' }, { s: 12, e: 15, c: 'sx-string' }, { s: 19, e: 20, c: 'sx-string' }, { s: 20, e: 25, c: 'sx-link' }]), JSON.stringify(sx));
+  check('sxTokens: lớp nhiều chữ lấy chữ đầu', eq(sxTokens([{ s: 0, e: 3, c: 'hljs-title function_' }, { s: 3, e: 5, c: 'hljs-title class_' }]), [{ s: 0, e: 5, c: 'sx-code' }]));
+}
+// ── end loại file ──
+
 console.log(fails ? `md-annotate core: ${fails} LỖI` : 'md-annotate core: OK');
 process.exit(fails ? 1 : 0);

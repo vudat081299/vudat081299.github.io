@@ -95,7 +95,7 @@
 /* Màu cú pháp: chỉ đổi màu và kiểu chữ, không đổi chữ — text của khung vẫn đúng bằng nguồn. */
 .sx-head { color: var(--sx-head); font-weight: 600; }
 .sx-punct, .sx-quote { color: var(--sx-punct); }
-.sx-qtext { color: var(--ink-2); font-style: italic; }
+.sx-qtext, .sx-comment { color: var(--ink-2); font-style: italic; }
 .sx-link { color: var(--sx-link); }
 .sx-url { color: var(--sx-url); text-decoration: underline; text-underline-offset: 2px; }
 .sx-code, .sx-fence, .sx-info { color: var(--sx-code); }

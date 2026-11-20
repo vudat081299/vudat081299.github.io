@@ -9,11 +9,12 @@
 
 | File | Việc |
 |---|---|
-| `index.html`, `js/main.js` | markup, script theme (trước lần vẽ đầu), báo `file://`, ba thư viện CDN; gọi `init…` theo thứ tự, khởi động, phím tắt chép, đóng hộp thoại, nút theme, bàn phím ảo |
+| `index.html`, `js/main.js` | markup, script theme (trước lần vẽ đầu), báo `file://`, hai thư viện CDN (marked, DOMPurify); gọi `init…` theo thứ tự, khởi động, phím tắt chép, đóng hộp thoại, nút theme, bàn phím ảo |
 | `css/*.css` | `tokens` → `base` → `views` → `panel` → `tree` → `popup` → `dialogs` → `focus` → `review` → `reading` → `mobile`; thứ tự link là cascade |
 | `js/core/anchor.js`, `js/core/comments.js` | neo đoạn trích (`locate`, `quoteFrom`); thêm / sửa / xoá, neo, xếp, đánh số nhận xét, `partsOf` |
 | `js/core/session.js`, `js/core/tree.js`, `js/core/zip.js`, `js/core/prompt.js` | phiên là cây file (thêm, xoá, nạp, mở file từ đĩa, Undo), index, tên tự đặt; cây phẳng (thứ tự, tên, chuyển); ghi `.zip`; prompt một / mọi file, nhãn L12 |
 | `js/core/hints.js`, `js/core/place.js`, `js/core/tokens.js`, `js/core/runs.js`, `js/core/color.js` | đếm, xếp hạng gợi ý, chip; chỗ đặt hộp nổi (`popPlace`), tấm đáy cuộn bao nhiêu (`sheetReveal`), nút nổi (`fabSide`); token của *Source*; cắt chữ theo token / highlight / dòng, `lineCount`; trộn lớp mờ lên nền (`barColor`) |
+| `js/core/langs.js`, `js/core/file-type.js`, `js/core/code-tokens.js`, `js/ui/highlight.js` | sổ loại file và ngôn ngữ highlight.js (chỉ dữ liệu); tên file → loại (`fileType`), tên khối rào → ngôn ngữ (`langOf`); HTML của highlight.js → token; nạp highlight.js khi cần, tô khối code ở *Preview* (`paintFences`), token *Source* của file code (`codeTokens`) |
 | `js/core/blocks.js`, `js/core/sections.js`, `js/core/panes.js`, `js/core/picks.js`, `js/core/sync-math.js`, `js/core/text.js`, `js/core/shortcuts.js` | `lexSpans`, `pairBlocks` (khối nguồn ↔ Preview); đánh số section, dải đọc; `splitFits`, cao hai khung; nhiều dòng (`pickInfo`); cuộn theo nhau; `plural`, `lineOf`, `slug`, `importCheck`; `normShortcuts` |
 | `js/{core,ui}/review.js`, `js/ui/review-panel.js`, `js/{core,ui}/minimap.js`, `js/{core,ui}/dwell.js` | đã đọc: đơn vị, neo dấu, tiến độ; làn, phím, nút hộp nhận xét, viên thuốc; tab *Review*; dải tiến độ; gợi ý theo thời gian đọc (MDAN-016) |
 | `js/ui/store.js`, `js/ui/dom.js`, `js/ui/state.js`, `js/ui/render.js` | `localStorage`, khoá, `prefs`; `$`, `h()`, `icon()`, `toast()` / `placeToast()`, `dragBar()`, `saveFile()`, `syncBar()` (cả khoá cuộn), `trackKeyboard()`; phiên `S`, file mở `D`, lưu, chuyển phiên / file; `renderAll()`, kết quả neo `mdText`, `anchors`…, `anchorsOf(doc)` |
@@ -62,7 +63,7 @@
   *Split*: hai khung sáng cùng phần sâu nhất ghép được (khối của `blockPairs()`, mục / hàng `partAt`, mục con `subItems`); Source sáng mọi dòng của phần ấy. Cuộn thì tìm lại dòng (theo chuột: cả section) dưới chuột; rời khung thì hết.
 - Hai lớp mờ (Focus, *Dim reviewed*) gộp bằng min, không nhân; dòng dưới chuột = 1 (MDAN-045). Lớp chỉ đặt biến `--o-f` / `--o-r`; `opacity` chỉ ở phần tử mang, không ở tổ tiên của phần tử mang khác (`css/focus.css`).
 - Khối nguồn (`lexSpans`) neo vào văn bản gốc, không cộng dồn `raw`: marked bỏ khối `[id]: url` và đổi tab đầu dòng. Bôi đen ở *Split*: đoạn tương ứng ở khung kia tô bằng Highlight `ma-mirror` (`mirrorSel`, `locate`); hộp nhận xét mở thì `ma-pending` thay.
-- *Preview* giống GitHub (MDAN-006): màu `--gh-*`, code tô bằng highlight.js (`--hl-*`) khi khối rào ghi ngôn ngữ hljs biết; `ghExtras()` đổi
+- *Preview* giống GitHub (MDAN-006): màu `--gh-*`, code tô bằng highlight.js (`--hl-*`) khi khối rào ghi ngôn ngữ có trong sổ (`langOf`); `ghExtras()` đổi
   `> [!NOTE|TIP|…]` thành `.ma-alert`. Cỡ chữ trong `.ma-md` bằng `em` theo `--md-fs`. Rộng hết khung; trích khối vạch trái, bảng viền bo góc.
 - Cuộn theo nhau ở *Split* (`prefs.sync`, mặc định bật, điện thoại ẩn ở *Settings*): mốc là đỉnh các cặp khối của `blockPairs()` (thêm đáy làm giật), nội suy Hermite
   đơn điệu; tham chiếu giữa khung, sát mép trượt về mép. Khung theo đặt ngay trong sự kiện cuộn (không rAF); bỏ qua `syncExpect`.
@@ -89,16 +90,15 @@
   mở thì trang (khung *Split*) cuộn ngay để đoạn nằm trên tấm (MDAN-053, `sheetReveal`), đáy trang thêm chỗ bằng tấm (`html.ma-sheet-sp`, bỏ khi không làm trang nhảy).
 - Mọi tấm đáy (nhận xét, panel, History / Hints): tay nắm `--grip` vẽ bằng nền, trượt lên, chừa thanh home. Bàn phím ảo: `trackKeyboard()` đặt `--kb` / `--vvh`, tấm, hộp thoại, toast nằm trên nó. Màn cảm ứng: Return xuống dòng, lưu bằng Save (MDAN-054).
 
-## Tô màu và lề số dòng ở *Source* (MDAN-001)
+## Tô màu và lề số dòng ở *Source* (MDAN-001, MDAN-066)
 
-- `tokens()` tách token theo dòng (khối rào, đầu mục, kẻ ngang, phân cách bảng, trích khối, dấu danh sách), rồi
-  `inlineToks()` trong dòng (mã, link, thẻ HTML, URL, đậm, nghiêng, gạch, chuỗi, `|` của bảng).
+- Loại file theo tên (`fileType`): markdown (md, markdown, mdx, không đuôi) tô bằng `tokens()`; đuôi / tên của một ngôn ngữ trong `LANGS` tô bằng highlight.js (`codeTokens`: lớp `hljs-*` → `sx-*`, `.sx-comment`); còn lại chữ trơn.
+- highlight.js chỉ tải khi cần: lõi và module ES của từng ngôn ngữ trên cdnjs, `fetch` có integrity rồi `import()` từ blob; mở trang không tải gì, file mặc định là markdown nên không preload. Chữ trơn trước, ngôn ngữ sẵn thì `renderAll()` (đang bôi đen trong khung thì chờ bỏ chọn); hỏng thì chữ trơn, một cảnh báo console. Thêm ngôn ngữ: một dòng trong `LANGS` (`js/core/langs.js`), in bằng `node md-annotate/tools/hl-lang.mjs <id>`; `--check` tải lại cả sổ và so integrity (cần mạng).
+- `tokens()` tách token theo dòng (khối rào, đầu mục, kẻ ngang, phân cách bảng, trích khối, dấu danh sách), rồi `inlineToks()` trong dòng (mã, link, thẻ HTML, URL, đậm, nghiêng, gạch, chuỗi, `|` của bảng).
 - Token không chồng nhau, theo thứ tự. `paintSrc()` cắt nguồn theo mép token, mép highlight và đầu dòng; `<mark>` bọc ngoài `<span class="sx-*">`.
-- Text của `#v-src` phải đúng bằng nguồn: vùng chọn, neo, số dòng đều đếm trên nó (smoke kiểm). `#doc-meta` đếm dòng
-  bằng `lineCount()` như lề. Tìm token không quét lại cả dòng sau mỗi token (dòng dài vẫn tuyến tính).
+- Text của `#v-src` phải đúng bằng nguồn: vùng chọn, neo, số dòng đều đếm trên nó (smoke kiểm). `#doc-meta` đếm dòng bằng `lineCount()` như lề. Tìm token không quét lại cả dòng sau mỗi token (dòng dài vẫn tuyến tính).
 - Màu chỉ ở token `--sx-*`; mỗi màu ≥ 4,5:1 trên nền thẻ và trên `--hl` / `--hl-2`, cả hai theme. *Syntax colors* (`prefs.syntax`) tắt: chữ trơn.
-- Lề số dòng: mỗi dòng một `<span class="ma-ln">` (block, giữ cả ký tự xuống dòng), số là `::before` + counter,
-  `user-select: none`. Không chèn số dòng thành chữ. Dòng có nhận xét: `.has-c` + `data-c` (id), vạch `--accent`;
+- Lề số dòng: mỗi dòng một `<span class="ma-ln">` (block, giữ cả ký tự xuống dòng), số là `::before` + counter, `user-select: none`. Không chèn số dòng thành chữ. Dòng có nhận xét: `.has-c` + `data-c` (id), vạch `--accent`;
   bấm vào lề mở nhận xét đầu của dòng, bấm đúp thì chọn nhiều dòng. Sau vạch là làn đã đọc (`--lane-w`; cảm ứng: vùng chạm 44px bằng `::before`), rồi chữ; lề (`gutterLine`) dừng trước làn.
 
 ## Nhận xét nhiều dòng (MDAN-012)
@@ -188,7 +188,7 @@
 
 ## An toàn
 
-- Markdown dựng bằng `marked` rồi làm sạch bằng `DOMPurify`, cả hai ghim phiên bản và có `integrity`. DOMPurify bỏ
+- Markdown dựng bằng `marked` rồi làm sạch bằng `DOMPurify`, cả hai ghim phiên bản và có `integrity`; highlight.js cũng ghim, `fetch` kiểm `integrity` (`CORE_SRI`, `LANGS`). DOMPurify bỏ
   `<style>`, `style=`, `<form>`, `<dialog>`; id / name thêm tiền tố `user-content-`: markdown không chạm CSS, id của trang.
 - Link ở bản dựng thành `<span class="ma-a">` (`unlink()`, URL ở `title`), không dựng lại `<a>`: kéo trên link vẫn là bôi đen.
 - Chỉ một chỗ gán `innerHTML` (`mdInto()` ở `js/ui/render.js`, cho `#v-md` và bản dựng tách rời): HTML đã qua DOMPurify. Mọi chỗ khác dựng DOM bằng `h()` và `textContent`.

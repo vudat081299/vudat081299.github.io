@@ -1,5 +1,5 @@
-/* Markdown → HTML: marked + DOMPurify (ghim phiên bản), đổi link thành span (unlink), kiểu GitHub
-   (ghExtras: hộp [!NOTE], highlight.js), và mdLex() (marked.lexer cho core/blocks.js).
+/* Markdown → HTML: marked + DOMPurify (ghim phiên bản), đổi link thành span (unlink), hộp [!NOTE] kiểu GitHub
+   (ghExtras), và mdLex() (marked.lexer cho core/blocks.js). Tô màu khối code ở ui/highlight.js.
    Xuất: ghExtras, mdHtml, mdLex, unlink.
    Dùng: không module nào. */
 
@@ -33,7 +33,7 @@ export function unlink(root) {
   root.querySelectorAll('img').forEach(function (img) { img.draggable = false; });
 }
 
-/* Thêm kiểu GitHub cho bản dựng: hộp > [!NOTE] … và tô màu code. Không đổi chữ nào ngoài nhãn [!…]. */
+/* Thêm kiểu GitHub cho bản dựng: hộp > [!NOTE] …. Không đổi chữ nào ngoài nhãn [!…]. */
 var ALERTS = { NOTE: 'Note', TIP: 'Tip', IMPORTANT: 'Important', WARNING: 'Warning', CAUTION: 'Caution' };
 export function ghExtras(root) {
   root.querySelectorAll('blockquote').forEach(function (bq) {
@@ -47,14 +47,6 @@ export function ghExtras(root) {
     if (!p.textContent.trim() && !p.querySelector('img')) p.remove();
     bq.classList.add('ma-alert', 'ma-alert--' + kind.toLowerCase());
     bq.setAttribute('data-alert', ALERTS[kind]);
-  });
-  if (!window.hljs) return;
-  window.hljs.configure({ ignoreUnescapedHTML: true });
-  root.querySelectorAll('pre code').forEach(function (code) {
-    var m = /(?:^|\s)language-([\w+#.-]+)/.exec(code.className);
-    // Như GitHub: chỉ tô khi khối rào ghi ngôn ngữ hljs biết; không ghi hoặc lạ thì để chữ trơn.
-    if (!m || !window.hljs.getLanguage(m[1])) return;
-    window.hljs.highlightElement(code);
   });
 }
 

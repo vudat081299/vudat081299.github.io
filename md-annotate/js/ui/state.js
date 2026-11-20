@@ -2,14 +2,16 @@
    mở file khác trong cây. S và D chỉ gán lại ở đây: switchTo() / replaceDeleted() (phiên khác), putSession() (cùng phiên,
    cây đổi: chỉ ui/files.js gọi), openFileId() (file khác). Nơi khác đọc chữ, nhận xét, dấu đã đọc qua D; tuỳ chọn phiên ở S.
    docKey(): khoá "văn bản đang mở" (phiên + file) cho việc gắn với một văn bản (Undo, gợi ý đã đọc, chọn dòng).
+   openType(): loại của file đang mở theo tên (core/file-type.js).
    Rời file đang mở (đổi file, đổi phiên) bị chặn khi hộp nhận xét có chữ chưa lưu (canLeave, toast): một chỗ cho mọi
    đường (bấm cây, New file, xoá, Undo, nạp folder, History, phiên mới). sessionFor(): phiên của một Undo đến muộn.
    Mỗi file nhớ chỗ cuộn trong bộ nhớ của lần nạp trang. Mô hình phiên (tạo, chuẩn hoá, tên tự đặt) ở core/session.js.
-   Xuất: canLeave, D, docKey, flushSave, initState, loadIndex, loadSession, newSession, openFileId, putSession, replaceDeleted,
-     S, saveClosed, saveNow, scheduleSave, sessionFor, switchTo.
-   Dùng: core/session.js, ui/store.js, ui/dom.js, ui/render.js, ui/views.js, ui/popup.js, ui/picks.js, ui/history.js,
-     ui/editor.js, ui/files.js. */
+   Xuất: canLeave, D, docKey, flushSave, initState, loadIndex, loadSession, newSession, openFileId, openType, putSession,
+     replaceDeleted, S, saveClosed, saveNow, scheduleSave, sessionFor, switchTo.
+   Dùng: core/session.js, core/file-type.js, ui/store.js, ui/dom.js, ui/render.js, ui/views.js, ui/popup.js, ui/picks.js,
+     ui/history.js, ui/editor.js, ui/files.js. */
 import { createSession, docOf, indexWith, isEmpty, normIndex, normSession, openFile, touchSession } from '../core/session.js';
+import { fileType } from '../core/file-type.js';
 import { KEY, prefs, store } from './store.js';
 import { $, toast } from './dom.js';
 import { renderAll } from './render.js';
@@ -30,6 +32,9 @@ export var S = (function () {
 })();
 export var D = docOf(S);
 export function docKey() { return S.id + '/' + S.open; }
+export function openType() {
+  return fileType(S.nodes.filter(function (n) { return n.id === S.open; })[0].name);
+}
 
 /* LƯU PHIÊN */
 var saveTimer = null, warnedQuota = false;

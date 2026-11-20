@@ -5,7 +5,7 @@
    Xuất: anchors, anchorsOf, checkRenderer, mdText, numbers, ordered, orphans, renderAll, renderMeta.
    Dùng: core/text.js, core/comments.js, core/runs.js, ui/dom.js, ui/state.js, ui/markdown.js, ui/marks.js,
      ui/source-view.js, ui/list.js, ui/prompt.js, ui/views.js, ui/sync-scroll.js, ui/focus.js, ui/popup.js,
-     ui/picks.js, ui/review.js, ui/files.js. */
+     ui/picks.js, ui/review.js, ui/files.js, ui/highlight.js. */
 import { plural } from '../core/text.js';
 import { anchorAll, markRanges } from '../core/comments.js';
 import { lineCount } from '../core/runs.js';
@@ -23,6 +23,7 @@ import { paintPending, pending, pop } from './popup.js';
 import { repaintPicks } from './picks.js';
 import { applyReview } from './review.js';
 import { refreshTree } from './files.js';
+import { paintFences } from './highlight.js';
 
 export var mdText = '';            // chữ của bản dựng (nối các nút text)
 export var anchors = {};           // id → { src: [a,b] | null, md: [a,b] | null }
@@ -77,6 +78,7 @@ export function renderAll() {
     mdText = '';
   } else {
     mdInto(mdRoot, html);
+    paintFences(mdRoot);   // chỉ khung đang xem: tô màu không đổi chữ, bản dựng tách rời không cần
     invalidateSync();
     mdText = joinText(mdRoot);
   }

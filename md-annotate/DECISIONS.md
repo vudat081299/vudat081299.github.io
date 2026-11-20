@@ -43,6 +43,7 @@
 - MDAN-063 · Cây file nông không cuộn ngang; ⋯ một cột cố định ở mép phải hàng · `md-annotate/css/tree.css`, `md-annotate/js/ui/tree.js`
 - MDAN-064 · Kéo từ nền hai bên văn bản là bôi đen văn bản; thanh trên và panel không bôi đen được · `md-annotate/js/ui/selection.js`, `md-annotate/css/base.css`
 - MDAN-065 · Hàng cây file cao hơn: 32px · `md-annotate/css/tree.css`
+- MDAN-066 · Tô màu code theo loại file, chỉ tải khi cần · `md-annotate/js/core/langs.js`, `md-annotate/js/core/file-type.js`, `md-annotate/js/ui/highlight.js`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Nguồn tô màu cú pháp kiểu VS Code
@@ -370,3 +371,11 @@ trừ ô gõ chữ. Chỉ chuột và bút; màn cảm ứng kéo vẫn là cu�
 
 Hàng của cây file (file và folder như nhau) cao 32px thay cho 28px ở máy có chuột; màn cảm ứng giữ 44px. Nút ⋯, chevron,
 biểu tượng, huy hiệu, vạch thụt và thẻ rê / chọn theo cùng chiều cao, giữa hàng.
+
+## MDAN-066 · Tô màu code theo loại file, chỉ tải khi cần
+20/11/2026 · `md-annotate/js/core/langs.js`, `md-annotate/js/core/file-type.js`, `md-annotate/js/ui/highlight.js`
+
+Mỗi loại file có bộ tô màu riêng, và bộ tô màu của một loại chỉ tải khi có file hay khối code loại ấy, không tải sẵn trong
+trang. Markdown dùng bộ tách token có sẵn (file mặc định là markdown). File code (py, js, rs…) tô ở Source bằng highlight.js
+theo đuôi; khối code có ghi ngôn ngữ ở Preview cũng thế. Đuôi lạ (txt, csv…) là chữ trơn. Chưa tải xong hay tải hỏng thì
+hiện chữ trơn, tải xong tự lên màu.
