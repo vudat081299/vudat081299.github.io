@@ -2032,7 +2032,7 @@ const cornerClash = (page) => page.evaluate(() => {
     check('cây: 2560 không tràn ngang', (await overflow(tp)) === 0, String(await overflow(tp)));
     await tp.click('#btn-tree'); await tp.waitForTimeout(150);
     ts = await tstate(tp);
-    check('cây: bấm nút ẩn cột, #doc về chỗ cũ, Split hiện lại, lưu prefs.tree', !ts.shown && ts.docL === t0.docL && ts.split && ts.pref === false && ts.exp === 'false', JSON.stringify(ts));
+    check('cây: bấm nút ẩn cột, #doc rộng ra, Split còn, lưu prefs.tree', !ts.shown && ts.split && ts.pref === false && ts.exp === 'false', JSON.stringify(ts));
     await tp.reload(); await tp.waitForFunction(() => window.marked && window.DOMPurify);
     await tp.evaluate(treeDemo, false); await tp.waitForTimeout(150);
     ts = await tstate(tp);
@@ -2317,7 +2317,7 @@ const cornerClash = (page) => page.evaluate(() => {
       return { nodes: s.nodes && s.nodes.map((n) => n.name), path: s.path, text: d && d.text, nc: d && d.comments.length, nrv: d && d.reviews.length, legacy: 'text' in s }; });
     check('phiên cũ: một file a.md, ô Folder là notes/, chữ, nhận xét, dấu đã đọc còn', up.nodes && up.nodes.join() === 'a.md' && up.path === 'notes/' && up.text === '# Cũ\n\nMột câu cũ.\n\nCâu hai còn đây.\n' && up.nc === 1 && up.nrv === 1
       && (await lp.inputValue('#p-path')) === 'notes/' && (await items(lp)).length === 1 && (await lp.textContent('#n-review')) === '33%', JSON.stringify([up, await lp.textContent('#n-review')]));
-    check('phiên cũ: một file thì cây ẩn mặc định, nút có', !(await treeOn(lp)) && (await lp.isVisible('#btn-tree')));
+    check('phiên cũ: một file thì cây vẫn hiện sẵn (MDAN-061), nút có', (await treeOn(lp)) && (await lp.isVisible('#btn-tree')));
     await lc.close();
 
     // 2. Hai file: file mới, đổi tên, nhận xét tách theo file, chuyển file giữ chế độ xem, prompt All files.
@@ -2328,8 +2328,11 @@ const cornerClash = (page) => page.evaluate(() => {
     await fp.click('.ma-tab[data-view="view"]');
     await comment(fp, 'Câu riêng của A.', 'sửa A');
     await fp.evaluate(() => document.activeElement && document.activeElement.blur());
+    const on0 = await treeOn(fp), r0 = (await rows(fp)).join();
     await fp.keyboard.press('Control+B'); await fp.waitForTimeout(150);
-    check('cây thật: Ctrl+B hiện cây một file', (await treeOn(fp)) && (await rows(fp)).join() === '1:untitled.md*', JSON.stringify(await rows(fp)));
+    const off = !(await treeOn(fp));
+    await fp.keyboard.press('Control+B'); await fp.waitForTimeout(150);
+    check('cây thật: cây một file hiện sẵn; Ctrl+B ẩn, lần nữa hiện', on0 && r0 === '1:untitled.md*' && off && (await treeOn(fp)), JSON.stringify([on0, r0, off]));
     await fp.click('#tree-new-file'); await fp.waitForTimeout(150);
     const ren = await fp.evaluate(() => { const i = document.querySelector('#tree-list .ma-trow__ren'); return i && document.activeElement === i ? i.value : null; });
     await fp.keyboard.press('Control+A'); await fp.keyboard.type('b.md'); await fp.keyboard.press('Enter'); await fp.waitForTimeout(150);
