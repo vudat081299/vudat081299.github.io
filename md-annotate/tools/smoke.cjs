@@ -120,6 +120,21 @@ const cornerClash = (page) => page.evaluate(() => {
 
 (async () => {
   const browser = await chromium.launch();
+  /* Cây hiện sẵn ở mọi khổ > 720px (MDAN-061) làm hẹp #doc. Phần không thử cây: tắt cây sẵn (prefs.tree = false khi phiên chưa
+     chọn), để số đo bề rộng như cũ. Phần thử cây mở context bằng treeContext (không vá). */
+  const treeContext = browser.newContext.bind(browser);
+  browser.newContext = async (o) => {
+    const c = await treeContext(o);
+    await c.addInitScript(() => {
+      const get = Storage.prototype.getItem;
+      Storage.prototype.getItem = function (k) {
+        const v = get.call(this, k);
+        if (k !== 'md-annotate:prefs:v1') return v;
+        try { const x = JSON.parse(v || '{}'); if (!('tree' in x)) x.tree = false; return JSON.stringify(x); } catch (e) { return v; }
+      };
+    });
+    return c;
+  };
   const errors = [];
   const watch = (page) => {
     page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
@@ -1964,7 +1979,7 @@ const cornerClash = (page) => page.evaluate(() => {
     const row = (name) => `#tree-list .ma-trow[data-id="${ids[name]}"]`;
 
     // 2560: cột cây vừa cạnh Split, kéo mép tới 420px vẫn còn chỗ (docked / tấm trượt theo chỗ: khối "cây docked" cuối file).
-    const tctx = await browser.newContext({ viewport: { width: 2560, height: 900 }, colorScheme: 'light' });
+    const tctx = await treeContext({ viewport: { width: 2560, height: 900 }, colorScheme: 'light' });
     const tp = await tctx.newPage(); watch(tp);
     await tp.goto(BASE); await tp.waitForFunction(() => window.marked && window.DOMPurify);
     await tp.click('#btn-sample'); await tp.waitForTimeout(150);
@@ -2277,7 +2292,7 @@ const cornerClash = (page) => page.evaluate(() => {
 
     // 1. Phiên cũ (chữ ở gốc, path là tên file): nâng tại chỗ thành một file; prompt y hệt từng byte như bản trước
     //    (chuỗi dưới đây chép từ bản trước khi có cây, cùng phiên này).
-    const lc = await browser.newContext({ viewport: { width: 1440, height: 900 }, colorScheme: 'light' });
+    const lc = await treeContext({ viewport: { width: 1440, height: 900 }, colorScheme: 'light' });
     const lp = await lc.newPage(); watch(lp);
     await lp.goto(BASE); await ready(lp);
     await lp.evaluate(async () => {
@@ -2303,7 +2318,7 @@ const cornerClash = (page) => page.evaluate(() => {
     await lc.close();
 
     // 2. Hai file: file mới, đổi tên, nhận xét tách theo file, chuyển file giữ chế độ xem, prompt All files.
-    const fc = await browser.newContext({ viewport: { width: 1440, height: 900 }, colorScheme: 'light', acceptDownloads: true });
+    const fc = await treeContext({ viewport: { width: 1440, height: 900 }, colorScheme: 'light', acceptDownloads: true });
     const fp = await fc.newPage(); watch(fp);
     await fp.goto(BASE); await ready(fp);
     await paste(fp, '# Tệp A\n\nCâu riêng của A.\n'); await fp.waitForTimeout(200);
@@ -2433,7 +2448,7 @@ const cornerClash = (page) => page.evaluate(() => {
     });
     /* Mở trang với phiên trên; init: script chạy trước mọi script của trang (đo chớp). */
     const at = async (w, view, rail, extra, init) => {
-      const c = await browser.newContext({ viewport: { width: w, height: 900 }, colorScheme: 'light' });
+      const c = await treeContext({ viewport: { width: w, height: 900 }, colorScheme: 'light' });
       const p = await c.newPage(); watch(p);
       await p.goto(BASE); await p.evaluate(seed, [view, rail, extra]);
       if (init) await p.addInitScript(init);
@@ -2559,7 +2574,7 @@ const cornerClash = (page) => page.evaluate(() => {
 
     // Điện thoại 390: tấm trượt, đóng sẵn (cả khi prefs.tree = true), không tràn ngang.
     for (const extra of [null, { tree: true }]) {
-      const pc = await browser.newContext({ viewport: { width: 390, height: 760 }, hasTouch: true, isMobile: true });
+      const pc = await treeContext({ viewport: { width: 390, height: 760 }, hasTouch: true, isMobile: true });
       const pp = await pc.newPage(); watch(pp);
       await pp.goto(BASE); await pp.evaluate(seed, ['view', false, extra]); await pp.goto(BASE); await pp.waitForFunction(() => window.marked && window.DOMPurify); await pp.waitForTimeout(250);
       const sp = await dst(pp);
@@ -2581,7 +2596,7 @@ const cornerClash = (page) => page.evaluate(() => {
       localStorage.setItem('md-annotate:prefs:v1', JSON.stringify({ view: 'view', rail: false }));
     };
     const open = async (vp, touch, inset) => {
-      const c = await browser.newContext({ viewport: vp, hasTouch: !!touch, isMobile: !!touch, colorScheme: 'light' });
+      const c = await treeContext({ viewport: vp, hasTouch: !!touch, isMobile: !!touch, colorScheme: 'light' });
       const p = await c.newPage(); watch(p);
       let ok = true;
       if (inset) { const cdp = await c.newCDPSession(p); await cdp.send('Emulation.setSafeAreaInsetsOverride', { insets: inset }).catch(() => { ok = false; }); }
