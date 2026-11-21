@@ -27,7 +27,7 @@ import { D, docKey, openType, S, saveClosed, scheduleSave, sessionFor } from './
 import { mdLex } from './markdown.js';
 import { refreshTree } from './files.js';
 import { blockPairs, setByPage } from './sync-scroll.js';
-import { isSplit, view } from './views.js';
+import { isSplit, paneRoot, paneWrap, view } from './views.js';
 import { layoutVal } from './layout.js';
 import { closePop, pending, pop, popDirty, renderPopHints } from './popup.js';
 import { clearPicks } from './picks.js';
@@ -102,8 +102,6 @@ export function toggleSection(sec) {
 
 /* LÀN DẤU. geo.src / geo.md: [{ i, top, bottom }] theo thứ tự, toạ độ trong nội dung của #wrap-* (không đổi khi cuộn). */
 var lanes = {}, geo = { src: [], md: [] }, anchor = null;   // anchor: { i, units } của lần bấm làn trước (Shift + bấm)
-function wrapOf(w) { return $(w === 'src' ? 'wrap-src' : 'wrap-md'); }
-function rootOf(w) { return $(w === 'src' ? 'v-src' : 'v-md'); }
 /* Phần tử Preview của đơn vị i: khối cấp cao, hoặc mục <li> thứ item khi số mục hai bên khớp. */
 function mdEl(r, i) {
   var u = r.units[i], bp = blockPairs(), j = bp.toMd[u.block], el = j >= 0 ? bp.blocks[j] : null;
@@ -151,7 +149,7 @@ function firstLineC(el, cache) {
 /* Đo làn của một khung, chỉ đọc DOM: { x, items: [{ i, top, bottom, pad }] } (toạ độ nội dung của #wrap-*; pad: đệm trên
    để dấu căn giữa dòng đầu, css/review.css), hoặc null khi khung ẩn hay không có đơn vị. */
 function measureLane(w, r) {
-  var wrap = wrapOf(w), root = rootOf(w), out = [];
+  var wrap = paneWrap(w), root = paneRoot(w), out = [];
   if (!shown(root) || !r.units.length) return null;
   var wr = wrap.getBoundingClientRect(), off = wr.top - wrap.scrollTop, x;
   var cs = getComputedStyle(lanes[w]), laneW = parseFloat(cs.getPropertyValue('--lane-w')) || 16, icBox = parseFloat(cs.getPropertyValue('--ic-box')) || 14;
@@ -320,11 +318,11 @@ function currentUnit() {
   var w = activePane(), g = ensureGeo(w);
   if (!g.length) return -1;
   if (layoutVal('focus') && layoutVal('focusBy') === 'pointer' && ptr && ptr.w && geo[ptr.w].length) {
-    var gp = geo[ptr.w], o = wrapOf(ptr.w).getBoundingClientRect().top - wrapOf(ptr.w).scrollTop, y = ptr.y - o;
+    var gp = geo[ptr.w], o = paneWrap(ptr.w).getBoundingClientRect().top - paneWrap(ptr.w).scrollTop, y = ptr.y - o;
     for (var k = 0; k < gp.length; k++) if (gp[k].bottom > y) return gp[k].i;
     return gp[gp.length - 1].i;
   }
-  var sc = isSplit() ? wrapOf(w) : document.scrollingElement;
+  var sc = isSplit() ? paneWrap(w) : document.scrollingElement;
   if (pin) {
     var t = sc.scrollTop;
     if (pin.sc === sc && pin.units === rvState().units && t >= Math.min(pin.from, pin.to) - 2 && t <= Math.max(pin.from, pin.to) + 2) return pin.i;
@@ -339,8 +337,8 @@ function currentUnit() {
 export function readingBand(w) {
   w = w || activePane();
   if (!w) return null;
-  var wrap = wrapOf(w), split = isSplit(), sc = split ? wrap : document.scrollingElement;
-  var vr = split ? wrap.getBoundingClientRect() : { top: Math.max(0, rootOf(w).getBoundingClientRect().top), bottom: window.innerHeight };
+  var wrap = paneWrap(w), split = isSplit(), sc = split ? wrap : document.scrollingElement;
+  var vr = split ? wrap.getBoundingClientRect() : { top: Math.max(0, paneRoot(w).getBoundingClientRect().top), bottom: window.innerHeight };
   var band = bandBounds(vr.top, vr.bottom, window.innerHeight, sc.scrollTop, sc.scrollHeight - sc.clientHeight);
   var off = wrap.getBoundingClientRect().top - wrap.scrollTop;
   return { w: w, b1: band[0] - off, b2: band[1] - off };
@@ -354,10 +352,10 @@ var pin = null;
 var BAND_UP = 6;
 export function jumpUnit(i) {
   var w = activePane(), g = ensureGeo(w), e = g.filter(function (x) { return x.i === i; })[0];
-  if (!e && w) { var o = w === 'src' ? 'md' : 'src'; if (shown(rootOf(o))) { e = ensureGeo(o).filter(function (x) { return x.i === i; })[0]; if (e) w = o; } }
+  if (!e && w) { var o = w === 'src' ? 'md' : 'src'; if (shown(paneRoot(o))) { e = ensureGeo(o).filter(function (x) { return x.i === i; })[0]; if (e) w = o; } }
   if (!e) return;
   noteJump();   // cuộn do trang: đơn vị đi qua dải lúc này không tính là đã đọc (ui/dwell.js)
-  var wrap = wrapOf(w), how = reduceMotion.matches ? 'auto' : 'smooth', vh = window.innerHeight, wr = wrap.getBoundingClientRect();
+  var wrap = paneWrap(w), how = reduceMotion.matches ? 'auto' : 'smooth', vh = window.innerHeight, wr = wrap.getBoundingClientRect();
   if (isSplit()) {
     var maxS = wrap.scrollHeight - wrap.clientHeight, ts = bandScroll(function (s) {
       return wr.top + e.top - s - bandBounds(wr.top, wr.bottom, vh, s, maxS)[0];
@@ -366,7 +364,7 @@ export function jumpUnit(i) {
     wrap.scrollTo({ behavior: how, top: ts });
   } else {
     var de = document.scrollingElement, maxW = de.scrollHeight - de.clientHeight, y0 = window.scrollY;
-    var unitY = wr.top + y0 + e.top, rootY = rootOf(w).getBoundingClientRect().top + y0;
+    var unitY = wr.top + y0 + e.top, rootY = paneRoot(w).getBoundingClientRect().top + y0;
     var tw = bandScroll(function (s) {
       return unitY - s - bandBounds(Math.max(0, rootY - s), vh, vh, s, maxW)[0];
     }, maxW, BAND_UP);

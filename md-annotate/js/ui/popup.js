@@ -21,7 +21,7 @@ import { recordUse, seedState, stats } from './hints.js';
 import { markActive } from './marks.js';
 import { anchors, mdText, numbers, ordered, orphans, renderAll } from './render.js';
 import { flashItem, removeComment } from './list.js';
-import { isSplit, view } from './views.js';
+import { isSplit, paneRoot, view } from './views.js';
 import { onSelChange } from './selection.js';
 import { cancelPicks, clearPicks, gutterLine, picking } from './picks.js';
 import { noteJump } from './dwell.js';
@@ -71,7 +71,7 @@ function spanRect(target) {
 }
 /* Ở Split đoạn được tô ở cả hai khung: hộp đặt cạnh khung người dùng đã bôi đen (pending.origin). */
 function ownRange(rs) {
-  var pane = $(pending.origin === 'md' ? 'v-md' : 'v-src');
+  var pane = paneRoot(pending.origin);
   return rs.filter(function (r) { return pane.contains(r.startContainer); })[0] || rs[0];
 }
 /* Chọn thêm / bỏ dòng khi hộp đang mở: đổi nội dung, giữ chỗ (kể cả chỗ đã kéo tới) và chữ đang gõ. */

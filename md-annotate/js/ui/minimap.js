@@ -14,16 +14,14 @@
    Dùng: core/minimap.js, core/review.js, ui/dom.js, ui/state.js, ui/views.js, ui/review.js, ui/dwell.js. */
 import { mmDots, mmScroll, mmSegments, mmView } from '../core/minimap.js';
 import { withSug } from '../core/review.js';
-import { $, barBottom, dockTop, h, shown, mqPhone } from './dom.js';
+import { barBottom, dockTop, h, shown, mqPhone } from './dom.js';
 import { D } from './state.js';
-import { isSplit, view } from './views.js';
+import { isSplit, paneRoot, paneWrap, view } from './views.js';
 import { laneGeo, rvState } from './review.js';
 import { noteJump, sugIdx } from './dwell.js';
 
 var GAP = 8, MIN_H = 80, SEG_MIN = 2, VIEW_MIN = 12, DOT_GAP = 5;
 var strips = {}, frames = { src: null, md: null };
-function wrapOf(w) { return $(w === 'src' ? 'wrap-src' : 'wrap-md'); }
-function rootOf(w) { return $(w === 'src' ? 'v-src' : 'v-md'); }
 function snap(px) { var r = window.devicePixelRatio || 1; return Math.max(1, Math.round(px * r)) / r; }
 function snapPos(px) { var r = window.devicePixelRatio || 1; return Math.round(px * r) / r; }
 /* Bề rộng cột và lề từ token, làm tròn theo điểm ảnh thật; gán lên từng dải. */
@@ -51,7 +49,7 @@ function cornerLimits(el) {
 }
 /* Khung của dải w trong khung nhìn: { left, top, H, total, split }, hoặc null khi không đặt được. */
 function frameOf(w) {
-  var wrap = wrapOf(w), wr = wrap.getBoundingClientRect(), split = isSplit(), cl = cornerLimits(wrap);
+  var wrap = paneWrap(w), wr = wrap.getBoundingClientRect(), split = isSplit(), cl = cornerLimits(wrap);
   /* Làm tròn ngay ở đây: dải vẽ ở đúng toạ độ này, và phép đổi điểm bấm → vị trí cuộn cũng dùng nó (lệch nửa điểm ảnh
      nhân lên total / H lần thành vài px mỗi cú bấm). */
   var top = snapPos(Math.max(wr.top + GAP, barBottom() + GAP, cl.top));
@@ -62,7 +60,7 @@ function frameOf(w) {
 }
 /* Phần nội dung của khung đang thấy: { scroll, view } theo toạ độ nội dung. */
 function seen(w, f) {
-  var wrap = wrapOf(w);
+  var wrap = paneWrap(w);
   if (f.split) return { scroll: wrap.scrollTop, view: wrap.clientHeight };
   var wr = wrap.getBoundingClientRect(), a = Math.max(0, Math.min(f.total, barBottom() - wr.top)), b = Math.max(a, Math.min(f.total, window.innerHeight - wr.top));
   return { scroll: a, view: b - a };
@@ -83,8 +81,8 @@ export function drawMinimap() {
   var r = rvState(), g = laneGeo(), shownSt = withSug(r.res.state, sugIdx(r));
   sizeStrips();
   ['src', 'md'].forEach(function (w) {
-    var el = strips[w], gw = g[w] || [], wrap = wrapOf(w);
-    var ok = view !== 'edit' && !!D.text && !mqPhone.matches && shown(rootOf(w)) && gw.length > 0;
+    var el = strips[w], gw = g[w] || [], wrap = paneWrap(w);
+    var ok = view !== 'edit' && !!D.text && !mqPhone.matches && shown(paneRoot(w)) && gw.length > 0;
     el.hidden = !ok;
     var f = ok ? frameOf(w) : null;
     frames[w] = f;
@@ -98,7 +96,7 @@ export function drawMinimap() {
     });
     /* Chấm nhận xét: đỉnh của <mark> đầu tiên mỗi nhận xét trong khung. */
     var off = f.wr.top - wrap.scrollTop, ys = [], seenId = {};
-    rootOf(w).querySelectorAll('mark.ma-hl').forEach(function (m) {
+    paneRoot(w).querySelectorAll('mark.ma-hl').forEach(function (m) {
       var id = m.dataset.ids;
       if (seenId[id]) return;
       seenId[id] = true;
@@ -140,7 +138,7 @@ function onScroll() {
 var grab = null;   // { y, s }: con trỏ và vị trí cuộn lúc nắm con trượt; null: đang bấm / kéo trên rãnh
 function scrollContent(w, f, target) {
   noteJump();
-  if (f.split) { wrapOf(w).scrollTop = target; return; }
+  if (f.split) { paneWrap(w).scrollTop = target; return; }
   var nf = frameOf(w) || f;   // cuộn cửa sổ: đo lại, frames[w] chỉ cập nhật ở khung hình sau
   window.scrollBy(0, target - seen(w, nf).scroll);
 }
@@ -177,7 +175,7 @@ export function initMinimap() {
     function end(e) { if (el.hasPointerCapture(e.pointerId)) el.releasePointerCapture(e.pointerId); el.classList.remove('is-drag'); }
     el.addEventListener('pointerup', end);
     el.addEventListener('pointercancel', end);
-    wrapOf(w).addEventListener('scroll', onScroll, { passive: true });
+    paneWrap(w).addEventListener('scroll', onScroll, { passive: true });
   });
   window.addEventListener('scroll', onScroll, { passive: true });
   mqPhone.addEventListener('change', drawMinimap);

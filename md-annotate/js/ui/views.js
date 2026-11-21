@@ -2,7 +2,7 @@
    khác chỉ có tab Source, Edit là nút bật / tắt #btn-edit (MDAN-074). Split chỉ khi đủ chỗ (splitOK); chiều cao hai khung
    (sizePanes, html.ma-fit), vách giữa (prefs.split), nút Syntax colors.
    longText(): kéo vách / mép cây / mép panel có dàn lại ngay không (dragBar).
-   Xuất: initViews, isSplit, lastRead, longText, refreshSplit, setView, sizePanes, view.
+   Xuất: initViews, isSplit, lastRead, longText, paneRoot, paneWrap, refreshSplit, setView, sizePanes, view.
    Dùng: core/panes.js, core/file-type.js, core/runs.js, ui/store.js, ui/dom.js, ui/state.js, ui/render.js, ui/popup.js, ui/picks.js. */
 import { paneHeight, splitFits } from '../core/panes.js';
 import { viewFor } from '../core/file-type.js';
@@ -54,6 +54,9 @@ export function setView(v) {
   if (v === 'edit' || v === 'view') clearPicks(); else repaintPicks();
 }
 export function isSplit() { return $('views').dataset.mode === 'split'; }
+/* Hai khung, gọi bằng 'src' (Source) | 'md' (Preview): khung cuộn #wrap-* và chữ #v-*. */
+export function paneWrap(w) { return $(w === 'md' ? 'wrap-md' : 'wrap-src'); }
+export function paneRoot(w) { return $(w === 'md' ? 'v-md' : 'v-src'); }
 /* Bề rộng thay đổi (cửa sổ, panel, thu gọn): xem lại Split và chiều cao hai khung.
    Muốn Split: hết chỗ thì lùi về Preview, đủ chỗ lại thì về Split (setView quyết). */
 export function refreshSplit() {

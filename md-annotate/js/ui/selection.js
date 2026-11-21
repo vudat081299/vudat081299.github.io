@@ -11,7 +11,7 @@ import { $, barBottom, dockTop, hasHL, paintHL, shown } from './dom.js';
 import { rangeAt, readSelection } from './anchor-dom.js';
 import { D } from './state.js';
 import { mdText } from './render.js';
-import { isSplit } from './views.js';
+import { isSplit, paneRoot, view } from './views.js';
 import { closePop, openEdit, openNew, pop, popDirty } from './popup.js';
 import { gutterLine, picking } from './picks.js';
 
@@ -104,11 +104,11 @@ function bgEnd() {
 }
 function bgStart(e) {
   if (!e.target.matches(BG)) return;
-  var mode = $('views').dataset.mode, root = null;
-  if (mode === 'split') { var d = $('divider').getBoundingClientRect(); root = $(e.clientX < d.left + d.width / 2 ? 'v-src' : 'v-md'); }
-  else if (mode === 'src' || mode === 'view') root = $(mode === 'src' ? 'v-src' : 'v-md');
+  var split = isSplit(), root = null;
+  if (split) { var d = $('divider').getBoundingClientRect(); root = paneRoot(e.clientX < d.left + d.width / 2 ? 'src' : 'md'); }
+  else if (view === 'src' || view === 'view') root = paneRoot(view === 'src' ? 'src' : 'md');
   if (!root || !shown(root)) return;
-  var g = { root: root, scroller: mode === 'split' ? root.parentNode : null, x: e.clientX, y: e.clientY, moved: false, raf: 0 };
+  var g = { root: root, scroller: split ? root.parentNode : null, x: e.clientX, y: e.clientY, moved: false, raf: 0 };
   var c = bgCaret(g), sel = window.getSelection();
   if (!c) { bgEnd(); return; }
   g.anchor = e.shiftKey && sel.rangeCount && root.contains(sel.anchorNode) ? [sel.anchorNode, sel.anchorOffset] : c;
