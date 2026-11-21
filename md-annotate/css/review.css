@@ -20,13 +20,17 @@
 }
 .ma-lane__b.is-head.sec-changed::after, .ma-rvs.is-changed .ma-rvs__ic::after, .ma-lane__b.is-changed::after { border-color: var(--ink-3); }
 .ma-lane__b.is-changed::after { background-color: var(--surface); }
-/* Gợi ý theo thời gian đọc (.is-sug, MDAN-077): ✓ mờ trong vòng đứt --ink-3 trên nền xanh nhạt --hl-2, vạch đứt suốt
-   khối (ảnh nền, dưới); là đơn vị hiện tại (.is-cur, đã có dấu) thì nền --surface, thêm vòng ngoài --edge-on. Đơn vị
-   hiện tại không gợi ý: không vẽ gì (MDAN-078). Rê khối chưa đọc: ✓ mờ viền đứt. */
+/* NÉT ĐỨT (MDAN-079): đơn vị hiện tại (.is-cur) xám --ink-3, gợi ý theo thời gian đọc (.is-sug) xanh --done-edge, cả hai
+   thì xanh: vòng đứt quanh ✓ mờ và vạch đứt suốt khối (luật vạch ở dưới, sau các vạch theo trạng thái). Đã đọc (✓, cả
+   section) không đổi. Màu là --dash, đặt bằng lớp trên vài nút đang mang lớp (không biến riêng mỗi nút). Gợi ý thêm
+   nền xanh nhạt --hl-2; rê thì vòng liền. Rê khối chưa đọc: ✓ mờ viền đứt mảnh. Tất cả ≥ 3:1 ở hai theme. */
 @media (hover: hover) { .ma-lane__b.is-todo:not(.is-head):hover::after { border: 1px dashed var(--ink-4); background-image: var(--ic-check-hint); } }
-.ma-lane .ma-lane__b.is-sug:not(.is-head)::after { border: 1.5px dashed var(--ink-3); background-color: var(--hl-2); background-image: var(--ic-check-hint); }
-@media (hover: hover) { .ma-lane__b.is-sug:not(.is-head):hover::after { border-style: solid; } }
-html.ma-reviewing .ma-lane__b.is-sug.is-cur::after { background-color: var(--surface); box-shadow: 0 0 0 2px var(--surface), 0 0 0 3px var(--edge-on); }
+.ma-lane__b.is-cur { --dash: var(--ink-3); }
+.ma-lane__b.is-sug { --dash: var(--done-edge); }
+.ma-lane .ma-lane__b:is(.is-cur, .is-sug):not(.is-done, .sec-done)::after { border: 1.5px dashed var(--dash); }
+.ma-lane .ma-lane__b:is(.is-cur, .is-sug):not(.is-done, .is-head)::after { background-image: var(--ic-check-hint); }
+.ma-lane .ma-lane__b.is-sug::after { background-color: var(--hl-2); }
+@media (hover: hover) { .ma-lane .ma-lane__b.is-sug:hover::after { border-style: solid; } }
 /* LÀN: lớp phủ trong #wrap-*, một cột tuyệt đối (ui/review.js đặt left); không chữ, không chọn được. Nút trong cột nằm
    trong dòng chảy, xếp bằng lề trên (khoảng cách tới nút trước) và cao, JS tính: không định vị từng nút, vì mỗi phần tử
    định vị là một lớp vẽ, hàng nghìn lớp làm cuộn, rê chuột, đổi bề rộng chậm hẳn. Không đặt biến CSS riêng cho từng nút:
@@ -64,8 +68,8 @@ html:not(.ma-reviewing) .ma-lane__b.is-head:not(:hover)::after { visibility: hid
 @media (hover: hover) { .ma-lane__b:hover { background-color: var(--chip); } }
 /* Màn cảm ứng chưa có dấu: tắt làn, để chạm sát mép không đánh dấu nhầm (bắt đầu bằng hộp nhận xét hay tab Review). */
 @media (hover: none) { html:not(.ma-reviewing) .ma-lane { display: none; } }
-/* Gợi ý (MDAN-016): thêm vạch đứt suốt khối. Màn cảm ứng chưa có dấu: có gợi ý thì chỉ hiện nút của đơn vị được gợi ý. */
-.ma-lane .ma-lane__b.is-sug:not(.is-head) { background-image: repeating-linear-gradient(to bottom, var(--accent-line) 0 3px, transparent 3px 6px); }
+/* Vạch đứt của đơn vị hiện tại / gợi ý (MDAN-079). Màn cảm ứng chưa có dấu: có gợi ý thì chỉ hiện nút của đơn vị được gợi ý. */
+.ma-lane .ma-lane__b:is(.is-cur, .is-sug):not(.is-done, .is-head) { background-image: repeating-linear-gradient(to bottom, var(--dash) 0 3px, transparent 3px 6px); }
 @media (hover: none) {
   html:not(.ma-reviewing) .ma-lane:has(.is-sug) { display: block; }
   html:not(.ma-reviewing) .ma-lane:has(.is-sug) .ma-lane__b:not(.is-sug) { visibility: hidden; }   /* giữ chỗ trong cột */

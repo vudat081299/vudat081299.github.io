@@ -1,6 +1,6 @@
 /* Gợi ý đã đọc theo thời gian đọc (MDAN-016): đo thời gian mỗi đơn vị chạm dải đọc (cùng luật dải của Focus band, chạy
-   cả khi Focus tắt), đơn vị rời dải đi lên sau đủ thời gian thành "gợi ý": ✓ mờ viền đứt trên làn (.is-sug), nút
-   "Accept N suggested" ở tab Review và, ở màn cảm ứng, "Accept N" trên viên thuốc (MDAN-077). Không bao giờ tự đánh dấu:
+   cả khi Focus tắt), đơn vị rời dải đi lên sau đủ thời gian thành "gợi ý": ✓ mờ viền đứt xanh trên làn (.is-sug), nút
+   "Accept N suggested" ở tab Review và, ở màn cảm ứng, "Accept N" trên viên thuốc (MDAN-079). Không bao giờ tự đánh dấu:
    chấp nhận bằng X, bấm làn (ui/review.js) hay nút (acceptSug).
    Chỉ đếm khi tab hiện, cửa sổ có focus, người dùng không rảnh tay quá 60 s; cuộn do trang (J / K / X, dải tiến độ, cuộn
    theo nhau, setByPage) không tính là đọc; đơn vị chỉ được gợi ý khi rời dải lúc người dùng tự cuộn (bánh xe, chạm,

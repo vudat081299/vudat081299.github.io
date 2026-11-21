@@ -1708,7 +1708,7 @@ const cornerClash = (page) => page.evaluate(() => {
     await mp.click('#ptab-review'); await tick();
     check('gợi ý: đơn vị đọc đủ lâu rồi cuộn qua có dấu ✓ gợi ý, không thành dấu', sg.includes(u6) && (await nDone()) === done0 && (await mp.$$eval(`.ma-lane__b[data-u="${u6}"].is-sug`, (b) => b.length)) === 2, JSON.stringify(sg) + ' u6=' + u6);
     check('gợi ý: tab Review có "Accept N suggested"', (await mp.isVisible('#rv-sug')) && (await mp.textContent('#rv-sug-ok')) === `Accept ${sg.length} suggested`, await mp.textContent('#rv-sug-ok'));
-    // MDAN-077: gợi ý là ✓ mờ trong vòng đứt trên nền xanh nhạt, vạch đứt suốt khối.
+    // MDAN-079: gợi ý là ✓ mờ trong vòng đứt xanh trên nền xanh nhạt, vạch đứt suốt khối.
     const sugLook = await mp.$eval(`#wrap-md .ma-lane__b[data-u="${u6}"]`, (b) => {
       const { parse, over, ratio } = __c, a = getComputedStyle(b, '::after'), surf = parse(getComputedStyle(document.getElementById('doc')).backgroundColor);
       return [a.borderTopStyle, ratio(over(parse(a.backgroundColor), surf), surf) > 1.05, a.backgroundImage.includes('svg'), getComputedStyle(b).backgroundImage.startsWith('repeating-linear-gradient')];
@@ -3361,8 +3361,8 @@ const cornerClash = (page) => page.evaluate(() => {
   // ── end mob:touch-bar ──
 
   // ── mob:touch-review ──
-  /* ---------- Hai dấu tách bạch (MDAN-077): gợi ý = ✓ mờ trong vòng đứt trên nền xanh nhạt, vạch đứt suốt khối (là đơn vị
-     hiện tại: thêm vòng ngoài, không vạch đặc); đơn vị hiện tại khác không vẽ gì (MDAN-078); ≥ 3:1, hai theme. Màn cảm ứng có gợi ý: viên thuốc "Accept N", chạm thì đánh dấu, có Undo ---------- */
+  /* ---------- Nét đứt (MDAN-079): đơn vị hiện tại = vòng đứt + vạch đứt xám, gợi ý = cùng kiểu màu xanh (cả hai: xanh),
+     không vạch đặc, ≥ 3:1, hai theme; khối thường, đã đọc không đổi. Màn cảm ứng có gợi ý: viên thuốc "Accept N", chạm thì đánh dấu, có Undo ---------- */
   for (const scheme of ['light', 'dark']) {
     const d = Object.assign({}, pw.devices['iPhone 15 Pro'], { deviceScaleFactor: 1, colorScheme: scheme, reducedMotion: 'reduce' }); delete d.defaultBrowserType;
     const c = await browser.newContext(d), p = await c.newPage(); watch(p);
@@ -3388,35 +3388,43 @@ const cornerClash = (page) => page.evaluate(() => {
     const look = await p.evaluate(() => {
       const { parse, over, ratio } = __c;
       const surf = parse(getComputedStyle(document.getElementById('doc')).backgroundColor);
+      const tok = (n) => { const e = document.createElement('i'); e.style.color = `var(${n})`; document.body.append(e); const c = getComputedStyle(e).color; e.remove(); return c; };
+      const green = tok('--done-edge'), gray = tok('--ink-3');
       const dark = document.documentElement.classList.contains('dark'), hint = dark ? [0x8d, 0x98, 0x91] : [0x5b, 0x64, 0x5e];   // nét ✓ của --ic-check-hint
-      const s = document.querySelector('#wrap-md .ma-lane__b.is-sug'), sa = getComputedStyle(s, '::after');
-      const fill = over(parse(sa.backgroundColor), surf);
-      const sug = { border: sa.borderTopStyle, ring: ratio(parse(sa.borderTopColor), fill), img: sa.backgroundImage.includes('svg'), pale: ratio(fill, surf) > 1.05, glyph: ratio(hint, fill),
-        line: getComputedStyle(s).backgroundImage.startsWith('repeating-linear-gradient') };
-      document.documentElement.classList.add('ma-reviewing');   // vòng ngoài của gợi ý hiện tại chỉ vẽ khi đã có dấu
-      s.classList.add('is-cur');
-      const sc = getComputedStyle(s), sca = getComputedStyle(s, '::after'), halo = sca.boxShadow.match(/(rgba?|color)\([^)]*\)/g) || [];
-      const sugCur = { bar: sc.boxShadow, border: sca.borderTopStyle, halo: halo.length === 2 ? ratio(parse(halo[1]), surf) : 0, line: sc.backgroundImage.startsWith('repeating-linear-gradient') };
-      s.classList.remove('is-cur');
-      // Đơn vị hiện tại không gợi ý (tiêu đề, chưa đọc, đã đọc): không vạch, không vòng (MDAN-078).
-      const lanes = [...document.querySelectorAll('#wrap-md .ma-lane__b')];
-      const head = lanes.find((b) => b.classList.contains('is-head')), todo = lanes.find((b) => !b.classList.contains('is-sug') && !b.classList.contains('is-head'));
-      const curLook = (b, cls) => {
-        const was = b.className; b.className = cls;
-        const r = [getComputedStyle(b).boxShadow, getComputedStyle(b, '::after').boxShadow, getComputedStyle(b, '::after').backgroundImage];
+      // Kiểu của nút b khi mang lớp cls: vòng (kiểu, màu, tương phản), vạch (đứt? màu), bóng của nút và ::after, nền ::after.
+      const lk = (b, cls) => {
+        const was = b.className; if (cls) b.className = cls;
+        const bs = getComputedStyle(b), a = getComputedStyle(b, '::after'), fill = over(parse(a.backgroundColor), surf), lc = bs.backgroundImage.match(/(rgba?|color)\([^)]*\)/);
+        const r = { border: a.borderTopStyle, color: a.borderTopColor, ring: ratio(parse(a.borderTopColor), fill), dashLine: bs.backgroundImage.startsWith('repeating-linear-gradient'),
+          lineColor: lc ? lc[0] : '', line: lc ? ratio(parse(lc[0]), surf) : 0, img: a.backgroundImage, fill, shadows: bs.boxShadow + ' / ' + a.boxShadow };
         b.className = was; return r;
       };
-      const plain = { head: curLook(head, head.className + ' is-cur'), todo: curLook(todo, todo.className + ' is-cur'), done: curLook(todo, 'ma-lane__b is-done is-cur') };
-      const out = { sug, sugCur, plain };
+      const lanes = [...document.querySelectorAll('#wrap-md .ma-lane__b')];
+      const s = lanes.find((b) => b.classList.contains('is-sug')), todo = lanes.find((b) => !b.classList.contains('is-sug') && !b.classList.contains('is-head')), head = lanes.find((b) => b.classList.contains('is-head'));
+      document.documentElement.classList.add('ma-reviewing');
+      const sug = lk(s), sa = getComputedStyle(s, '::after');
+      const out = {
+        green, gray,
+        sug: Object.assign(sug, { glyph: ratio(hint, sug.fill), pale: ratio(sug.fill, surf) > 1.05, svg: sa.backgroundImage.includes('svg') }),
+        sugCur: lk(s, s.className + ' is-cur'),
+        cur: lk(todo, 'ma-lane__b is-todo is-cur'), headCur: lk(head, head.className + ' is-cur'),
+        plain: lk(todo, 'ma-lane__b is-todo'), done: lk(todo, 'ma-lane__b is-done'), doneCur: lk(todo, 'ma-lane__b is-done is-cur')
+      };
       document.documentElement.classList.remove('ma-reviewing');
       return out;
     });
-    check(`dấu gợi ý (${scheme}): ✓ mờ (≥ 3:1) trong vòng đứt (≥ 3:1) trên nền xanh nhạt, vạch đứt suốt khối`,
-      look.sug.border === 'dashed' && look.sug.ring >= 3 && look.sug.img && look.sug.pale && look.sug.glyph >= 3 && look.sug.line, JSON.stringify(look.sug));
-    check(`dấu gợi ý là đơn vị hiện tại (${scheme}): vẫn viền đứt, vạch đứt, không vạch đặc; vòng ngoài ≥ 3:1`,
-      look.sugCur.bar === 'none' && look.sugCur.border === 'dashed' && look.sugCur.line && look.sugCur.halo >= 3, JSON.stringify(look.sugCur));
-    check(`đơn vị hiện tại không gợi ý (${scheme}): tiêu đề, chưa đọc, đã đọc đều không có vạch đặc hay vòng ngoài; chưa đọc không ✓`,
-      Object.values(look.plain).every((x) => x[0] === 'none' && x[1] === 'none') && look.plain.todo[2] === 'none', JSON.stringify(look.plain));
+    const noBar = (x) => !/px/.test(x.shadows.replace(/none/g, ''));
+    check(`gợi ý (${scheme}): vòng đứt và vạch đứt xanh (≥ 3:1), ✓ mờ ≥ 3:1 trên nền xanh nhạt, không vạch đặc`,
+      look.sug.border === 'dashed' && look.sug.color === look.green && look.sug.ring >= 3 && look.sug.dashLine && look.sug.lineColor === look.green && look.sug.line >= 3 &&
+      look.sug.svg && look.sug.pale && look.sug.glyph >= 3 && noBar(look.sug), JSON.stringify(look.sug));
+    check(`gợi ý là đơn vị hiện tại (${scheme}): vẫn xanh đứt (gợi ý thắng), không vạch đặc`,
+      look.sugCur.border === 'dashed' && look.sugCur.color === look.green && look.sugCur.dashLine && look.sugCur.lineColor === look.green && noBar(look.sugCur), JSON.stringify(look.sugCur));
+    check(`đơn vị hiện tại (${scheme}): vòng đứt và vạch đứt xám --ink-3 (≥ 3:1), ✓ mờ, không vạch đặc; tiêu đề hiện tại: vòng đứt xám`,
+      look.cur.border === 'dashed' && look.cur.color === look.gray && look.cur.ring >= 3 && look.cur.dashLine && look.cur.lineColor === look.gray && look.cur.line >= 3 && look.cur.img.includes('svg') && noBar(look.cur) &&
+      look.headCur.border === 'dashed' && look.headCur.color === look.gray && !look.headCur.dashLine && noBar(look.headCur), JSON.stringify([look.cur, look.headCur]));
+    check(`khối thường, đã đọc (${scheme}): không nét đứt; đã đọc là hiện tại vẫn như đã đọc`,
+      look.plain.border !== 'dashed' && !look.plain.dashLine && look.plain.img === 'none' && look.done.border === 'solid' && !look.done.dashLine &&
+      JSON.stringify(Object.assign({}, look.doneCur, { shadows: 0 })) === JSON.stringify(Object.assign({}, look.done, { shadows: 0 })) && noBar(look.doneCur), JSON.stringify([look.plain, look.done, look.doneCur]));
     const b = await p.locator('#rv-pill').boundingBox();
     await p.touchscreen.tap(b.x + b.width / 2, b.y + b.height / 2); await p.clock.runFor(300);
     const after = await p.evaluate(() => [[...document.querySelectorAll('#wrap-md .ma-lane__b.is-done')].map((x) => x.dataset.u), document.querySelectorAll('#wrap-md .ma-lane__b.is-sug').length,
