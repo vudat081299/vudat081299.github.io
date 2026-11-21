@@ -74,8 +74,9 @@
   --r-sm: 8px;                         /* nút, ô nhập, nhóm tab, hàng */
   --r:    12px;                        /* thẻ, khối trong panel, toast */
   --r-lg: 16px;                        /* bề mặt: văn bản, panel, hộp thoại, hộp nhận xét, tấm trượt */
-  --r-pill: 999px;
+  --r-pill: 999px;                     /* viên thuốc; nút vuông thì tròn */
   --h-sm: 32px;                        /* nhỏ: mục trong nhóm tab, chip, nút trong thẻ */
+  --h-md: 36px;                        /* vừa: hàng cây file, nút đầu cây */
   --h:    40px;                        /* mặc định: nút, ô nhập, nhóm tab */
   --h-touch: 44px;                     /* màn cảm ứng, điện thoại */
   --dur: .16s; --ease: cubic-bezier(.2, .7, .2, 1);

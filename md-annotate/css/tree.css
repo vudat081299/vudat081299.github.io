@@ -3,7 +3,7 @@
    thụt, huy hiệu, ô đổi tên, chỗ thả, gợi ý khi trống, danh sách folder của Move to… (menu .ma-menu ở base.css). Nạp sau
    panel.css, trước mobile.css. */
 .ma-tree {
-  --row-h: var(--h-sm);                /* hàng, nút đầu cây ở máy có chuột (32px); cảm ứng: --h-touch */
+  --row-h: var(--h-md);                /* hàng, nút đầu cây ở máy có chuột; cảm ứng: --h-touch */
   --name-fs: var(--fs-sm);             /* chữ tên hàng và ô đổi tên; cảm ứng --fs-lg (iOS không phóng to ô nhập ≥ 16px) */
   /* Hình học một hàng, mọi luật dưới đây tính từ đây: ô chevron + khe, biểu tượng + khe, cột ⋯ và nút ⋯ (theo --row-h: tâm
      ⋯ của hàng thẳng tâm nút đầu cây, cùng cỡ --row-h), đệm phải. */
@@ -79,6 +79,7 @@ html.ma-tree-on body > .ma-tree {
 .ma-tree__n { min-width: 0; overflow: hidden; text-overflow: ellipsis; font: 600 var(--fs-md)/var(--lh-tight) var(--sans); color: var(--ink); }
 .ma-tree__head .ma-icbtn { flex: none; width: var(--row-h); height: var(--row-h); color: var(--ink-3); }
 @media (hover: hover) { .ma-tree__head .ma-icbtn:hover { color: var(--ink); } }
+#tree-more { border-radius: var(--r-pill); }   /* ⋯ tròn như ⋯ của hàng */
 #tree-more[aria-expanded="true"] { background: var(--chip); color: var(--ink); }
 .ma-tree__close { display: none; }
 
@@ -187,7 +188,7 @@ html.ma-tree-on body > .ma-tree {
 .ma-trow__meta { display: flex; align-items: center; gap: var(--s1); }
 .ma-trow__more.ma-icbtn {
   flex: none; width: var(--more-b); height: var(--more-b); margin: 0 calc((var(--more-w) - var(--more-b)) / 2);
-  border-radius: var(--r-xs); color: var(--ink-3);
+  border-radius: var(--r-pill); color: var(--ink-3);
 }
 .ma-trow:focus-within .ma-trow__more, .ma-trow.is-menu .ma-trow__more { color: var(--ink-2); }
 @media (hover: hover) {

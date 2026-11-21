@@ -2085,7 +2085,7 @@ const cornerClash = (page) => page.evaluate(() => {
         order: b.every((r, i) => r.left >= (i ? b[i - 1].right : Math.max(k.right, t.right)) - 0.5), close: !!document.querySelector('#tree .ma-tree__close').getClientRects().length,
         btn: Math.round(b[0].width), moreDx: Math.abs((b[2].left + b[2].width / 2) - (rm.left + rm.width / 2) - (bd.offsetWidth - bd.clientWidth)) };   // trừ thanh cuộn dọc nếu nó chiếm chỗ
     });
-    check('cây: đầu cây một hàng cao 48px: FILES trên tên, rồi New file, New folder, ⋯; nút 32px (--row-h), ⋯ thẳng ⋯ của hàng; không có Close', head.h === 48 && head.row && head.stack && head.order && !head.close && head.btn === 32 && head.moreDx <= 0.5, JSON.stringify(head));
+    check('cây: đầu cây một hàng cao 48px: FILES trên tên, rồi New file, New folder, ⋯; nút 36px (--row-h), ⋯ thẳng ⋯ của hàng; không có Close', head.h === 48 && head.row && head.stack && head.order && !head.close && head.btn === 36 && head.moreDx <= 0.5, JSON.stringify(head));
     // Menu ⋯: bấm mở (Import folder…, Download .zip, Collapse all), Esc đóng và trả focus; ↓ trên nút mở và vào mục đầu.
     await tp.click('#tree-more'); await tp.waitForTimeout(80);
     const hm = await tp.evaluate(() => ({ open: document.getElementById('tree-head-menu').classList.contains('is-open'), exp: document.getElementById('tree-more').getAttribute('aria-expanded'),
