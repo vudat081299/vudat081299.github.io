@@ -17,7 +17,7 @@
   width: 100%; min-width: 0; padding: calc(var(--s3) - var(--r-sm)) var(--s3); resize: vertical;
   background: var(--bg); border: solid transparent; border-width: var(--r-sm) 1px; border-radius: var(--r-sm);
   outline: 1px solid var(--line); outline-offset: -1px;
-  font: 500 var(--fs-sm)/var(--lh-code) var(--mono); tab-size: 4;
+  tab-size: 4;
   transition: outline-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
 }
 .ma-ta:focus { outline: 1px solid var(--ring); outline-offset: -1px; border-color: transparent; }
@@ -69,7 +69,7 @@
 @property --ln-pad { syntax: '<length>'; inherits: true; initial-value: 0px; }
 .ma-src {
   margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; word-break: normal;
-  font: 500 var(--fs-sm)/var(--lh-code) var(--mono); color: var(--ink);
+  color: var(--ink);
   counter-reset: ln; tab-size: 4;
   --ln-pad: calc(var(--gw, 2ch) + 20px + var(--lane-w));   /* lề trái mỗi dòng: số, vạch nhận xét, làn */
 }

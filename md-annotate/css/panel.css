@@ -130,7 +130,7 @@ html.ma-railed .ma-grid > .ma-panel .ma-rail { display: flex; flex-direction: co
 .ma-out {
   margin: 0; padding: 0 var(--s3); min-height: 96px;
   white-space: pre-wrap; overflow-wrap: anywhere;
-  font: 500 var(--fs-sm)/var(--lh-code) var(--mono); background: var(--bg); border-radius: var(--r);
+  background: var(--bg); border-radius: var(--r);
   border: solid transparent; border-width: var(--r) 1px; outline: 1px solid var(--line-2); outline-offset: -1px;
 }
 .ma-out:empty::before { content: attr(data-ph); color: var(--ink-3); font-family: var(--sans); }

@@ -3661,6 +3661,15 @@ const cornerClash = (page) => page.evaluate(() => {
     check('D1: kéo trong hộp prompt bôi đen chữ của nó (không mở hộp nhận xét), bấm vào thì focus', sel.inOut && sel.t.length > 3 && !sel.pop && focused === 'out' && us === 'text', JSON.stringify([sel, focused, us]));
     await c.close();
   }
+  {
+    // Chữ code không ligature (JetBrains Mono vẽ <!-- -> == thành mũi tên): Source, ô Edit, hộp prompt; cỡ / font như cũ.
+    const c = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+    const p = await c.newPage(); watch(p);
+    await p.goto(BASE); await p.waitForFunction(() => window.marked && window.DOMPurify);
+    const lig = await p.evaluate(() => ['v-src', 'src-input', 'out'].map((id) => { const cs = getComputedStyle(document.getElementById(id)); return [cs.fontVariantLigatures, cs.fontSize, cs.fontFamily.split(',')[0]].join(' '); }));
+    check('chữ code (Source, Edit, prompt) tắt ligature, mono 13px', lig.every((x) => x === 'none 13px "JetBrains Mono"'), JSON.stringify(lig));
+    await c.close();
+  }
   // ── end sửa sau rà soát ──
 
   check('không lỗi console', !errors.length, errors.join(' | '));

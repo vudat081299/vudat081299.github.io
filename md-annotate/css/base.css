@@ -158,6 +158,9 @@ html.dark .ma-to-dark, html:not(.dark) .ma-to-light { display: none; }
 .ma-docname::placeholder { color: var(--ink-2); }
 @media (hover: hover) { .ma-docname:hover { border-color: var(--line); } }
 .ma-docname:focus { background: var(--bg); }
+/* Chữ code: Source, ô Edit, hộp prompt. Không ligature: JetBrains Mono vẽ <!--, ->, ==, != thành mũi tên / dấu gộp, chữ
+   thấy khác chữ thật (none tắt cả calt, nơi JetBrains Mono để các ligature ấy). */
+.ma-src, .ma-ta, .ma-out { font: 500 var(--fs-sm)/var(--lh-code) var(--mono); font-variant-ligatures: none; }
 .ma-label { font: 500 var(--fs-xs)/var(--lh-tight) var(--mono); color: var(--ink-3); letter-spacing: .04em; text-transform: uppercase; }
 .ma-notice {
   margin: 0 0 var(--s4); padding: var(--s2) var(--s3); border: 1px solid var(--line); border-radius: var(--r);
