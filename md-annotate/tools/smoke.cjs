@@ -2153,6 +2153,43 @@ const cornerClash = (page) => page.evaluate(() => {
     dp = await deep();
     check('cây: 248px, hàng cấp 9 thụt vào mà vẫn thấy ≥ 8 ký tự tên', dp.w >= dp.need && dp.indent >= 60, JSON.stringify(dp));
 
+    /* Hàng chật (.is-cramp): 180px, hàng sâu có huy hiệu mà tên bị cắt dưới --name-min thì ẩn huy hiệu, tên thấy ≥ 8 ký tự khi
+       cuộn hết sang phải; rê hiện lại, cột ⋯ không xê dịch; hàng nông giữ huy hiệu; file mở luôn hiện (cả màn cảm ứng). */
+    {
+      const crampModel = () => {
+        const nodes = []; let parent = null;
+        for (let d = 0; d < 8; d++) { nodes.push({ id: 'k' + d, parent, kind: 'dir', name: 'level-' + d }); parent = 'k' + d; }
+        nodes.push({ id: 'kf', parent, kind: 'file', name: 'deep-file-with-a-long-name.md' }, { id: 'ko', parent, kind: 'file', name: 'open-file-with-a-long-name.md' },
+          { id: 'kt', parent: null, kind: 'file', name: 'top.md' });
+        return { sid: 'cramp', nodes, open: 'ko', collapsed: [], counts: { kf: { c: 3, rv: 40 }, ko: { c: 2, rv: 10 }, kt: { c: 5, rv: 50 } }, title: 'Cramp' };
+      };
+      const cramp = (p, id) => p.evaluate(async (id) => {
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+        const b = document.getElementById('tree-body'); b.scrollLeft = b.scrollWidth;
+        const li = document.querySelector(`#tree-list .ma-trow[data-id="${id}"]`), nm = li.querySelector('.ma-trow__name'), meta = li.querySelector('.ma-trow__meta');
+        const c = document.createElement('canvas').getContext('2d'); c.font = getComputedStyle(nm).font;
+        return { cramp: li.classList.contains('is-cramp'), badges: !!meta && meta.getClientRects().length > 0, w: Math.round(nm.getBoundingClientRect().width),
+          need: Math.round(c.measureText('deep-fil').width), more: Math.round(li.querySelector('.ma-trow__more').getBoundingClientRect().right) };
+      }, id);
+      await tp.evaluate(() => document.documentElement.style.setProperty('--tree', '180px'));
+      await renderModel(tp, crampModel());
+      const kf = await cramp(tp, 'kf'), ko = await cramp(tp, 'ko'), kt = await cramp(tp, 'kt');
+      await tp.hover('#tree-list .ma-trow[data-id="kf"] .ma-trow__name');
+      const kfh = await cramp(tp, 'kf');
+      await tp.mouse.move(0, 0);
+      check('cây 180px: hàng sâu chật ẩn huy hiệu, tên thấy ≥ 8 ký tự; rê thì hiện, ⋯ không xê dịch; hàng nông giữ huy hiệu; file mở hiện',
+        kf.cramp && !kf.badges && kf.w >= kf.need && kfh.badges && kfh.more === kf.more && !kt.cramp && kt.badges && ko.badges, JSON.stringify({ kf, kfh, kt, ko }));
+      await tp.evaluate(() => document.documentElement.style.setProperty('--tree', '248px'));
+      const cc = await treeContext({ viewport: { width: 1000, height: 800 }, colorScheme: 'light', hasTouch: true });
+      const cp = await openPage(cc);
+      await cp.click('#btn-sample'); await cp.waitForTimeout(150);
+      await cp.evaluate(() => document.documentElement.style.setProperty('--tree', '180px'));
+      await renderModel(cp, crampModel());
+      const tf = await cramp(cp, 'kf'), to = await cramp(cp, 'ko');
+      check('cây 180px, màn cảm ứng: hàng chật ẩn huy hiệu, file mở vẫn hiện', tf.cramp && !tf.badges && to.badges, JSON.stringify({ tf, to }));
+      await cc.close();
+    }
+
     /* Cây 25 cấp (MDAN-060): thụt mỗi cấp bằng nhau (--tree-step), mỗi folder đang mở có đúng một vạch dưới tâm chevron (±0,5px,
        trùng điểm ảnh), dài đúng các hàng con cháu; tên hàng sâu nhất vẫn ≥ 96px; thân cây cuộn ngang, trang không; file mở ở
        cấp sâu nhất được cuộn ngang tới tên (đầu tên trong thân, trước đuôi ⋯); không lớp mờ nào ở mép phải (MDAN-080). */

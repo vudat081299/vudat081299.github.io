@@ -14,8 +14,8 @@
    hiện tại thành hàng vào chỗ nó. Đầu cây một hàng (MDAN-060): New file, New folder, ⋯ (#tree-head-menu: Import folder,
    Download .zip, Collapse all, theo mẫu menu button), dưới là ô lọc file (ui/tree-find.js: đang lọc thì chỉ hiện file khớp và
    folder tổ tiên, folder nào cũng mở, bấm folder không gập); phiên ≤ 1 mục thì #tree.is-sparse hiện gợi ý thả / nạp folder. Thụt
-   đều mọi cấp: vạch thụt là phần tử riêng (#tree-guides), cây sâu thì thân cuộn ngang (--dmax), tự cuộn tới tên hàng hiện tại; đổi tên là ô nhập trong suốt
-   đúng chỗ tên.
+   đều mọi cấp: vạch thụt là phần tử riêng (#tree-guides), cây sâu thì thân cuộn ngang (--dmax), tự cuộn tới tên hàng hiện tại; hàng
+   chật thì ẩn huy hiệu (.is-cramp); đổi tên là ô nhập trong suốt đúng chỗ tên.
    Xuất: editName, focusRow, initTree, renderTree, revealTree.
    Dùng: core/tree.js, core/place.js, core/text.js, ui/store.js, ui/dom.js, ui/views.js, ui/tree-find.js. */
 import { canMove, moveTargets, visibleRows } from '../core/tree.js';
@@ -204,6 +204,16 @@ function syncTall() {
   var b = $('tree-body'), last = $('tree-list').lastElementChild;
   b.classList.toggle('is-tall', !!last && last.offsetTop + last.offsetHeight > b.clientHeight - parseFloat(getComputedStyle(b).paddingTop));
 }
+/* Hàng chật (css/tree.css .is-cramp): huy hiệu đẩy tên xuống dưới --name-min và tên bị cắt thì ẩn huy hiệu của hàng ấy.
+   Đo khi huy hiệu đang hiện: gỡ lớp ở mọi hàng, đọc bề rộng tên một lượt, gắn lại. Gọi cùng syncTall (vẽ cây, thân đổi cỡ). */
+function syncCramp() {
+  if (!$('tree-body').clientWidth) return;   // cây đang ẩn: không đo được
+  var min = parseFloat(getComputedStyle($('tree')).getPropertyValue('--name-min'));
+  var lis = Array.prototype.map.call($('tree-list').querySelectorAll('.ma-trow__meta'), function (m) { return m.closest('.ma-trow'); });
+  lis.forEach(function (li) { li.classList.remove('is-cramp'); });
+  var cut = lis.map(function (li) { var nm = li.querySelector('.ma-trow__name'); return !!nm && nm.clientWidth < min && nm.scrollWidth > nm.clientWidth; });
+  lis.forEach(function (li, i) { if (cut[i]) li.classList.add('is-cramp'); });
+}
 /* Vạch đậm: folder đang mở là hàng hiện tại thì vạch của nó, không thì vạch của folder chứa hàng hiện tại (như VS Code). */
 function markGuide() {
   var i = at[cur], on = null;
@@ -249,7 +259,7 @@ export function renderTree(m, actions) {
   curAt = cur in at ? at[cur] : 0;
   rows.forEach(function (r) { els[r.node.id].tabIndex = r.node.id === cur ? 0 : -1; });
   var dmoved = paintGuides();
-  markGuide(); syncTall();
+  markGuide(); syncTall(); syncCramp();
   if (hadFocus && cur != null && !editing) els[cur].focus({ preventScroll: true });
   var shownOpen = null;
   if (!same || m.open !== lastOpen) {
@@ -589,7 +599,7 @@ export function initTree() {
   $('tree-new-dir').addEventListener('click', function () { call('newDir', targetDir()); });
   initHead();
   initTreeFind(function () { if (model) renderTree(model, act); }, function () { if (rows.length) { kbd(); setCur(rows[0].node.id, true); } });
-  if (window.ResizeObserver) new ResizeObserver(syncTall).observe($('tree-body'));
+  if (window.ResizeObserver) new ResizeObserver(function () { syncTall(); syncCramp(); }).observe($('tree-body'));
   $('tree-dir-in').addEventListener('change', function (e) {
     if (e.target.files && e.target.files.length) call('importDir', e.target.files, null);
     e.target.value = '';
