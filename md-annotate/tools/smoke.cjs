@@ -3863,6 +3863,20 @@ const cornerClash = (page) => page.evaluate(() => {
     check('rê vách Split, mép cây, mép panel: cùng màu --edge-on', col.every((x) => x === edge), JSON.stringify([col, edge]));
     await c.close();
   }
+  {
+    // Dòng báo của ô lọc (mẫu hỏng, không khớp): cùng cỡ --fs-sm, cùng lề, thẳng chữ trong ô (±1px viền) lọc.
+    const c = await treeContext({ viewport: { width: 1440, height: 900 }, colorScheme: 'light' });
+    const p = await c.newPage(); watch(p);
+    await p.goto(BASE); await p.waitForFunction(() => window.marked && window.DOMPurify);
+    await pasteText(p, DOC);
+    await p.setInputFiles('#file-in', { name: 'main.rs', mimeType: 'text/plain', buffer: Buffer.from('fn main() {}\n') });
+    await p.waitForTimeout(200);
+    await p.fill('#tree-q', 'a(b'); await p.waitForTimeout(250);
+    const m = await p.evaluate(() => { const q = document.getElementById('tree-q'), x0 = q.getBoundingClientRect().left + parseFloat(getComputedStyle(q).paddingLeft);
+      return ['tree-q-note', 'tree-none'].map((id) => { const e = document.getElementById(id); return Math.round(e.getBoundingClientRect().left - x0) + ' ' + getComputedStyle(e).fontSize; }); });
+    check('ô lọc: hai dòng báo cùng cỡ 13px, thẳng chữ trong ô (±1px viền)', m.join() === '0 13px,0 13px', JSON.stringify(m));
+    await c.close();
+  }
   // ── end sửa sau rà soát ──
 
   check('không lỗi console', !errors.length, errors.join(' | '));

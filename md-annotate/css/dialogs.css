@@ -40,7 +40,7 @@
 .ma-keys__l { display: grid; grid-template-columns: 15em minmax(0, 1fr); gap: var(--s2) var(--s4); margin: 0; padding-top: var(--s1); border-top: 1px solid var(--line-2); }
 .ma-keys__l dt { padding-top: var(--s1); line-height: 1.9; }
 .ma-keys__l dd { margin: 0; padding-top: var(--s1); font-size: var(--fs-sm); line-height: var(--lh); color: var(--ink-2); }
-.ma-keys__or { font-size: var(--fs-xs); color: var(--ink-3); }
+.ma-keys__or { font-size: var(--fs-sm); color: var(--ink-3); }
 .ma-keys__c, .ma-keys .ma-key { white-space: nowrap; }
 /* Hẹp: phím trên, việc dưới. */
 @media (max-width: 520px) {
