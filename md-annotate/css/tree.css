@@ -16,6 +16,7 @@
   --fit-d: 2;                          /* thụt tới chừng này cấp thì không bao giờ cuộn ngang, ở mọi bề rộng */
   --guide: var(--line-2);              /* vạch thụt; của folder chứa hàng hiện tại: --guide-on */
   --guide-on: color-mix(in srgb, var(--ink-4) 45%, var(--line-2));
+  --open-a: 18%;                       /* nền thẻ file mở: --accent pha bấy nhiêu (thẻ trong suốt và đuôi đặc khi cuộn ngang) */
 }
 html.dark .ma-tree { --guide: var(--line); --guide-on: color-mix(in srgb, var(--ink-4) 55%, var(--line)); }
 
@@ -77,7 +78,6 @@ html.ma-tree-on body > .ma-tree {
 .ma-tree__k { font: 500 var(--fs-xs)/var(--lh-tight) var(--mono); color: var(--ink-3); letter-spacing: .06em; text-transform: uppercase; }
 .ma-tree__n { min-width: 0; overflow: hidden; text-overflow: ellipsis; font: 600 var(--fs-md)/var(--lh-tight) var(--sans); color: var(--ink); }
 .ma-tree__head .ma-icbtn { flex: none; width: var(--row-h); height: var(--row-h); color: var(--ink-3); }
-.ma-tree__head .ma-icbtn svg { width: 16px; height: 16px; }
 @media (hover: hover) { .ma-tree__head .ma-icbtn:hover { color: var(--ink); } }
 #tree-more[aria-expanded="true"] { background: var(--chip); color: var(--ink); }
 .ma-tree__close { display: none; }
@@ -146,8 +146,8 @@ html.ma-tree-on body > .ma-tree {
   .ma-trow:hover { color: var(--ink); --row-solid: var(--chip-solid); }
   .ma-trow:hover::before { background: var(--chip); }
 }
-.ma-trow[aria-selected="true"] { color: var(--ink); --name-w: 600; --row-solid: color-mix(in srgb, var(--accent) 18%, var(--surface)); }
-.ma-trow[aria-selected="true"]::before { background: color-mix(in srgb, var(--accent) 18%, transparent); }
+.ma-trow[aria-selected="true"] { color: var(--ink); --name-w: 600; --row-solid: color-mix(in srgb, var(--accent) var(--open-a), var(--surface)); }
+.ma-trow[aria-selected="true"]::before { background: color-mix(in srgb, var(--accent) var(--open-a), transparent); }
 /* Nền thẻ đậm hơn: % review dùng --ink-2 để giữ ≥ 4,5:1 ở theme tối. */
 .ma-trow[aria-selected="true"] .ma-trow__ic, .ma-trow[aria-selected="true"] .ma-trow__rv { color: var(--ink-2); }
 .ma-trow[aria-selected="true"] .ma-trow__c { background: var(--surface); }
@@ -185,17 +185,10 @@ html.ma-tree-on body > .ma-tree {
 .ma-tree__body.is-x .ma-trow.is-drop .ma-trow__end::before { background-color: transparent; }
 .ma-tree__body.is-x.is-drop .ma-trow__end::after { box-shadow: none; }
 .ma-trow__meta { display: flex; align-items: center; gap: var(--s1); }
-.ma-trow__c {
-  display: inline-grid; place-items: center; min-width: 18px; height: 18px; padding: 0 5px;
-  border-radius: var(--r-pill); background: var(--chip); color: var(--ink-2);
-  font: 500 var(--fs-xs)/1 var(--mono); font-variant-numeric: tabular-nums;
-}
-.ma-trow__rv { font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-3); font-variant-numeric: tabular-nums; }
 .ma-trow__more.ma-icbtn {
   flex: none; width: var(--more-b); height: var(--more-b); margin: 0 calc((var(--more-w) - var(--more-b)) / 2);
   border-radius: var(--r-xs); color: var(--ink-3);
 }
-.ma-trow__more.ma-icbtn svg { width: 16px; height: 16px; }
 .ma-trow:focus-within .ma-trow__more, .ma-trow.is-menu .ma-trow__more { color: var(--ink-2); }
 @media (hover: hover) {
   .ma-trow__more.ma-icbtn { opacity: 0; }

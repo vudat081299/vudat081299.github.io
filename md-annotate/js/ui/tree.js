@@ -124,10 +124,10 @@ function fill(li, r) {
   li._sig = sig;
   var meta = h('span', { class: 'ma-trow__meta' },
     c && c.c ? h('span', { class: 'ma-trow__c' }, String(c.c)) : null,
-    c && typeof c.rv === 'number' && c.rv > 0 ? h('span', { class: 'ma-trow__rv' }, c.rv + '%') : null);
+    c && typeof c.rv === 'number' && c.rv > 0 ? h('span', { class: 'ma-badge ma-trow__rv' }, c.rv + '%') : null);
   /* Đuôi: huy hiệu rồi ⋯ (css/tree.css: chuột thì ⋯ đè chỗ huy hiệu khi rê). */
   var end = h('span', { class: 'ma-trow__end' }, meta.childNodes.length ? meta : null,
-    h('button', { class: 'ma-icbtn ma-icbtn--bare ma-trow__more', type: 'button', tabindex: '-1', 'aria-haspopup': 'menu',
+    h('button', { class: 'ma-icbtn ma-icbtn--bare ma-icbtn--sm ma-trow__more', type: 'button', tabindex: '-1', 'aria-haspopup': 'menu',
       'aria-label': 'Actions for ' + n.name, title: 'More actions' }, icon('dots')));
   li.replaceChildren(
     h('span', { class: 'ma-trow__chev', 'aria-hidden': 'true' }, dir ? icon('chev') : null),

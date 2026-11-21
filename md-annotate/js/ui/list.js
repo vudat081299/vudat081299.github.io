@@ -39,9 +39,9 @@ function fillList(ol) {
         quotes(c, orphan),
         orphan ? h('span', { class: 'ma-item__warn' }, 'This quote is no longer in the text, so it is left out of the prompt. Fix the text or delete the comment.') : null),
       h('span', { class: 'ma-item__act' },
-        h('button', { class: 'ma-icbtn ma-icbtn--bare', type: 'button', 'aria-label': 'Edit comment', title: 'Edit',
+        h('button', { class: 'ma-icbtn ma-icbtn--bare ma-icbtn--sm', type: 'button', 'aria-label': 'Edit comment', title: 'Edit',
           onclick: leaveSheet(function () { editFromList(c.id); }) }, icon('pencil')),
-        h('button', { class: 'ma-icbtn ma-icbtn--bare', type: 'button', 'aria-label': 'Delete comment', title: 'Delete',
+        h('button', { class: 'ma-icbtn ma-icbtn--bare ma-icbtn--sm', type: 'button', 'aria-label': 'Delete comment', title: 'Delete',
           onclick: function () { removeComment(c.id); } }, icon('x'))));
     /* Rê lên thẻ thì tô đoạn của nó, và ngược lại (xem onViewHover). */
     li.addEventListener('mouseenter', function () { hoverMarks(c.id, true); });

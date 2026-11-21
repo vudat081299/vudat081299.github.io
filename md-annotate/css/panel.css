@@ -88,7 +88,6 @@ html.ma-railed .ma-grid > .ma-panel .ma-rail { display: flex; flex-direction: co
 .ma-item:hover .ma-item__act, .ma-item:focus-within .ma-item__act, .ma-item.is-active .ma-item__act { opacity: 1; }
 @media (hover: none) { .ma-item__act { opacity: 1; } }
 .ma-item__act .ma-icbtn { width: var(--h-sm); height: var(--h-sm); }
-.ma-item__act .ma-icbtn svg { width: 16px; height: 16px; }
 
 /* Nhóm tab kiểu trích (radio): hình như .ma-tabs (base.css); mỗi nhãn chia đều. */
 .ma-fmt { margin-bottom: var(--s2); }

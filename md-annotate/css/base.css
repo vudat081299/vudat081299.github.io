@@ -75,6 +75,7 @@ svg.ma-i { width: 16px; height: 16px; flex: none; }
 }
 .ma-icbtn { width: var(--h); height: var(--h); min-height: 0; padding: 0; }
 .ma-icbtn svg { width: 18px; height: 18px; }
+.ma-icbtn--sm svg { width: 16px; height: 16px; }   /* nút biểu tượng nhỏ: đầu cây, ⋯ của hàng cây, sửa / xoá nhận xét */
 .ma-btn--quiet, .ma-icbtn--bare, .ma-bar .ma-btn, .ma-bar .ma-icbtn { background: transparent; border-color: transparent; }
 .ma-btn--go { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
 .ma-btn--danger { color: var(--danger); }
@@ -94,16 +95,17 @@ html:not(.dark) .ma-moon, html.dark .ma-sun { display: none; }
 /* Mục theme của menu More: biểu tượng của theme sẽ chuyển sang. */
 html.dark .ma-to-dark, html:not(.dark) .ma-to-light { display: none; }
 
-/* HUY HIỆU — số đếm (trung tính, viên thuốc) và số thứ tự nhận xét (nền --accent, bo --r-xs). Mono --fs-xs, cao 20px. */
+/* HUY HIỆU — số đếm (trung tính, viên thuốc: tab panel, hàng cây) và số thứ tự nhận xét (nền --accent, bo --r-xs). Mono
+   --fs-xs, cao 20px. Chữ số trơn (% đã đọc ở cây): .ma-badge. */
 .ma-badge {
   font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-3);
   font-variant-numeric: tabular-nums;
 }
-.ma-ptab__n, .ma-item__n, .ma-steps__n {
+.ma-ptab__n, .ma-trow__c, .ma-item__n, .ma-steps__n {
   display: inline-grid; place-items: center; flex: none; min-width: 20px; height: 20px; padding: 0 var(--s1);
   font: 500 var(--fs-xs)/1 var(--mono); font-variant-numeric: tabular-nums;
 }
-.ma-ptab__n { border-radius: var(--r-pill); background: var(--chip); color: var(--ink-2); }
+.ma-ptab__n, .ma-trow__c { border-radius: var(--r-pill); background: var(--chip); color: var(--ink-2); }
 .ma-ptab__n:empty { display: none; }
 .ma-item__n, .ma-steps__n { border-radius: var(--r-xs); background: var(--accent); color: var(--on-accent); }
 /* Phím (hộp nhận xét, tab Review, Help): viền đủ bốn cạnh, đáy dày hơn. Trong nút chính (.ma-kbd) thì nền pha từ
