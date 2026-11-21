@@ -2789,7 +2789,7 @@ const cornerClash = (page) => page.evaluate(() => {
       const R = (q) => document.querySelector(q).getBoundingClientRect(), bin = document.querySelector('.ma-bar__in'), cs = getComputedStyle(bin);
       const tg = R('#btn-tree'), br = R('.ma-brand'), m = R('main'), t = document.getElementById('tree'), on = document.documentElement.classList.contains('ma-tree-on');
       const pad = parseFloat(cs.paddingRight), gap = parseFloat(cs.columnGap);
-      const padTok = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--pad'));   // lề phải còn gồm vùng an toàn phải (mobile.css)
+      const padTok = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--pad'));   // lề phải còn gồm vùng an toàn phải (.ma-wrap, css/base.css)
       const inset = (() => { const x = document.createElement('i'); x.style.cssText = 'position:fixed;padding-left:env(safe-area-inset-left)'; document.body.append(x); const v = parseFloat(getComputedStyle(x).paddingLeft); x.remove(); return v; })();
       const want = Math.max(m.left + pad, tg.right + gap), tr = on ? t.getBoundingClientRect() : null;
       return { tgL: tg.left, pad, padTok, inset, brL: br.left, want, mL: m.left, gap, overlap: tg.right > br.left, on,

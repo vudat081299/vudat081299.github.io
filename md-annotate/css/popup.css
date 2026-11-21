@@ -1,4 +1,6 @@
-/* Hộp nhận xét nổi, chip gợi ý, nút nổi Comment on selection, thanh đáy (dock), toast. */
+/* Hộp nhận xét (nổi, hay tấm đáy ở máy hẹp / cảm ứng), chip gợi ý, nút nổi Comment on selection, thanh đáy (dock), toast.
+   Mỗi component một đoạn liền, kể cả luật của màn cảm ứng / điện thoại cho nó. */
+
 /* HỘP NHẬN XÉT: khung soạn nổi — trích dẫn 2 dòng mờ dần, gợi ý nhẹ, nút Save sáng. */
 .ma-pop {
   position: absolute; z-index: 60; width: min(440px, calc(100vw - 2 * var(--s4)));
@@ -26,10 +28,56 @@
 .ma-pop.is-moving .ma-pop__grip { cursor: grabbing; color: var(--ink); background: var(--chip); }
 .ma-pop.is-moving { user-select: none; -webkit-user-select: none; }
 @media (hover: hover) { .ma-pop__grip:hover { color: var(--ink); background: var(--chip); } }
-@media (max-width: 720px), (pointer: coarse) { .ma-pop__grip { width: var(--h-touch); height: var(--h-touch); } }
 .ma-pop__q.is-lines { white-space: pre-line; }
 .ma-pop__warn { margin: 0 0 var(--s2); font-size: var(--fs-sm); color: var(--danger); }
-/* CHIP GỢI Ý: viên thuốc cao --h-sm, nền --chip, không viền; rê: nền --accent-soft. */
+#pop-text { min-height: 64px; font: 400 var(--fs-md)/var(--lh) var(--sans); background: var(--bg); }
+#pop-text:not(:focus) { outline-color: var(--line-2); }
+.ma-pop__bar { display: flex; align-items: center; justify-content: flex-end; gap: var(--s1); margin-top: var(--s3); }
+/* Nút trong hộp nổi: cỡ nhỏ (--h-sm), như nút trong thẻ; tấm trượt đáy thì về --h-touch. */
+.ma-pop__bar .ma-btn { min-height: var(--h-sm); padding: 0 var(--s3); font-size: var(--fs-sm); }
+.ma-pop__keys { flex: 1 1 auto; min-width: 0; margin-right: auto; font-size: var(--fs-xs); line-height: 1.8; color: var(--ink-3); }
+/* Nút ✓ Reviewed (ui/review.js) kèm nhãn dòng (mono, mờ), đầu hàng nút; có nó thì dòng phím tắt lên một hàng riêng. */
+.ma-pop__rv { gap: var(--s1); margin-right: auto; }
+.ma-pop__bar:has(> .ma-pop__rv:not([hidden])) { flex-wrap: wrap; }
+.ma-pop__bar:has(> .ma-pop__rv:not([hidden])) .ma-pop__keys { flex-basis: 100%; }
+.ma-pop__rvl { font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-3); }
+@media (max-width: 720px), (pointer: coarse) {
+  .ma-pop__done { min-height: var(--h-touch); }
+  .ma-pop__grip { width: var(--h-touch); height: var(--h-touch); }
+  #pop-text { font-size: var(--fs-lg); }
+}
+/* TẤM ĐÁY: máy hẹp hoặc màn cảm ứng (ui/popup.js gắn .is-sheet). Tay nắm, trượt lên khi mở (như mọi tấm đáy); chip gợi ý một
+   hàng cuộn ngang. Nền mờ phía sau là #pop-scrim (lớp fixed riêng, như hộp thoại: dialogs.css), nhẹ hơn hộp thoại
+   (--scrim-live, vì không chặn chạm: chạm ra ngoài vẫn tới trang và đóng hộp); ui/popup.js chỉ hiện nó khi không chọn nhiều
+   dòng (MDAN-026). Lớp hiện ngay, không mờ dần. Bàn phím ảo mở (--kb, ui/dom.js): tấm nằm trên nó. */
+.ma-scrim { position: fixed; inset: 0; z-index: 59; pointer-events: none; background-color: var(--scrim-live); }   /* ngay dưới .ma-pop (60) */
+.ma-pop.is-sheet {
+  position: fixed; left: 0; right: 0; bottom: var(--kb); top: auto; width: auto; overflow: auto; overscroll-behavior: contain;
+  max-height: min(82vh, calc(var(--vvh, 100vh) - var(--s4)));   /* --vvh: khung nhìn còn lại khi bàn phím mở (ui/dom.js) */
+  border: 0; border-radius: var(--r-lg) var(--r-lg) 0 0; box-shadow: var(--shadow-pop);
+  border-top: var(--r-lg) solid transparent;   /* tấm cuộn được: thanh cuộn dừng cách góc bo một bán kính (như .ma-dlg__b) */
+  padding: calc(var(--s4) + var(--s2) - var(--r-lg)) max(var(--s4), var(--sa-r)) calc(var(--s4) + var(--sa-b)) max(var(--s4), var(--sa-l));
+  background: var(--grip), var(--surface);
+}
+@media (prefers-reduced-motion: no-preference) { .ma-pop.is-sheet:not([hidden]) { animation: ma-sheet-in var(--dur-sheet) var(--ease); } }
+/* Đáy trang thêm chỗ bằng tấm khi tấm mở (ui/popup.js), để dòng cuối văn bản cuộn lên được trên tấm. */
+html.ma-sheet-sp body { padding-bottom: max(calc(var(--dock-h, 0px) + var(--sa-b)), var(--sheet-h)); }
+.ma-pop.is-sheet .ma-chips {
+  flex-wrap: nowrap; overflow-x: auto; margin-inline: calc(-1 * var(--s4)); padding-inline: var(--s4);
+  scroll-padding-inline: var(--s4); scrollbar-width: none; overscroll-behavior-x: contain;
+}
+.ma-pop.is-sheet .ma-chips::-webkit-scrollbar { display: none; }
+.ma-pop.is-sheet .ma-chip { flex: none; min-height: var(--h-touch); }
+.ma-pop.is-sheet #pop-text { resize: none; }
+.ma-pop.is-sheet .ma-btn { min-height: var(--h-touch); flex: 1; }
+.ma-pop.is-sheet .ma-pop__keys { display: none; }
+/* Chọn dòng ở điện thoại nằm ngang: tấm gọn (bỏ trích dẫn, chip; dòng đã chọn tô ngay trên trang), để còn thấy lề số. */
+@media (max-height: 500px) {
+  .ma-pop.is-sheet:has(#pop-head:not([hidden])) :is(.ma-pop__q, .ma-chips) { display: none; }
+  .ma-pop.is-sheet:has(#pop-head:not([hidden])) #pop-text { height: var(--h-touch); min-height: var(--h-touch); }
+}
+
+/* CHIP GỢI Ý: viên thuốc cao --h-sm (cảm ứng --h-touch), nền --chip, không viền; rê: nền --accent-soft. */
 .ma-chips { display: flex; flex-wrap: wrap; gap: var(--s2); margin-bottom: var(--s3); }
 .ma-chip {
   display: inline-flex; align-items: center; gap: var(--s2); min-height: var(--h-sm); max-width: 100%;
@@ -41,14 +89,9 @@
 .ma-chip__t { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ma-chip__p { font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-3); }
 .ma-chip--more { font: 500 var(--fs-xs)/1 var(--mono); min-width: var(--h); justify-content: center; }
-#pop-text { min-height: 64px; font: 400 var(--fs-md)/var(--lh) var(--sans); background: var(--bg); }
-#pop-text:not(:focus) { outline-color: var(--line-2); }
-.ma-pop__bar { display: flex; align-items: center; justify-content: flex-end; gap: var(--s1); margin-top: var(--s3); }
-/* Nút trong hộp nổi: cỡ nhỏ (--h-sm), như nút trong thẻ; tấm trượt đáy thì về --h-touch (mobile.css). */
-.ma-pop__bar .ma-btn { min-height: var(--h-sm); padding: 0 var(--s3); font-size: var(--fs-sm); }
-.ma-pop__keys { flex: 1 1 auto; min-width: 0; margin-right: auto; font-size: var(--fs-xs); line-height: 1.8; color: var(--ink-3); }
+@media (max-width: 720px), (pointer: coarse) { .ma-chip { min-height: var(--h-touch); } }
 
-/* Nút nổi khi có vùng chọn (điện thoại, bàn phím), thanh đáy ở điện thoại, toast */
+/* NÚT NỔI khi có vùng chọn (cảm ứng, bàn phím). ≤ 1080px: trên thanh đáy. */
 .ma-fab {
   position: fixed; z-index: 55; left: 50%; transform: translateX(-50%);
   bottom: calc(var(--s5) + var(--sa-b));
@@ -56,9 +99,34 @@
 }
 /* Đoạn chọn ở nửa dưới: nút lên đỉnh, ngay dưới thanh trên (--fab-top: đáy thanh trên, ui/selection.js). */
 .ma-fab.is-top { top: calc(max(var(--fab-top, 0px), var(--sa-t)) + var(--s3)); bottom: auto; }
+@media (max-width: 1080px) { .ma-fab { bottom: calc(var(--dock-h) + var(--dock-gap) + var(--sa-b)); } }
+
+/* THANH ĐÁY (≤ 1080px, cao --dock-h ở tokens.css): số nhận xét (mở panel trong tấm trượt), ✓ % đã đọc, nút chép. Trang
+   chừa đáy cho nó. Điện thoại, thẻ bắt đầu đang hiện: không thanh đáy (nút chép chưa có gì để chép mà che bước 3). */
 .ma-dock { display: none; }
+@media (max-width: 1080px) {
+  body { padding-bottom: calc(var(--dock-h) + var(--sa-b)); }
+  .ma-dock {
+    display: flex; align-items: center; gap: var(--s2); position: fixed; z-index: 40; left: 0; right: 0; bottom: 0;
+    height: calc(var(--dock-h) + var(--sa-b));
+    padding: 0 max(var(--s4), calc((100vw - 720px) / 2), var(--sa-r)) var(--sa-b) max(var(--s4), calc((100vw - 720px) / 2), var(--sa-l));
+    background: color-mix(in srgb, var(--surface) 92%, transparent);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid var(--line);
+  }
+  .ma-dock .ma-copy { flex: 0 1 220px; }
+  .ma-dock__list { margin-right: auto; padding: 0 var(--s3) 0 var(--s2); }
+  .ma-dock__list::after { content: ''; width: 7px; height: 7px; margin-left: 2px; border: solid currentColor; border-width: 2px 2px 0 0; transform: translateY(2px) rotate(-45deg); }
+}
+.ma-dock__rv { flex: none; padding: 0 var(--s3); font: 500 var(--fs-xs)/1 var(--mono); }
+@media (max-width: 720px) {
+  body:has(#start:not([hidden])) { padding-bottom: var(--sa-b); }
+  body:has(#start:not([hidden])) .ma-dock { display: none; }
+}
+
 /* TOAST: nền đảo (mực), chữ nền, một dòng nếu đủ chỗ. width: max-content: left 50% không được bóp hộp còn nửa khung nhìn.
-   Nút Undo: chữ đậm trên nền mờ của chính màu chữ, đọc được ở cả hai theme. Điện thoại: rộng hết, trừ lề (mobile.css). */
+   Nút Undo: chữ đậm trên nền mờ của chính màu chữ, đọc được ở cả hai theme. ≤ 1080px: trên thanh đáy; điện thoại: rộng hết,
+   trừ lề. Bàn phím ảo mở (--kb): nằm trên nó. */
 .ma-toast {
   position: fixed; z-index: 80; left: 50%; transform: translateX(-50%);
   bottom: calc(var(--s5) + var(--sa-b) + var(--kb));
@@ -81,3 +149,6 @@
   .ma-toast:not([hidden]) { animation: ma-toast-in var(--dur) var(--ease); }
 }
 @keyframes ma-toast-in { from { opacity: 0; translate: 0 8px; } to { opacity: 1; translate: 0 0; } }
+@media (max-width: 1080px) { .ma-toast { bottom: calc(var(--dock-h) + var(--dock-gap) + var(--sa-b) + var(--kb)); } }
+@media (max-width: 720px) { .ma-toast { left: max(var(--s4), var(--sa-l)); right: max(var(--s4), var(--sa-r)); transform: none; width: auto; max-width: none; } }
+@media (max-width: 720px), (pointer: coarse) { .ma-toast__btn { min-height: var(--h-touch); } }

@@ -176,7 +176,7 @@ export function placeToast() {
 }
 
 /* Bàn phím ảo: Chrome Android co khung nhìn (interactive-widget=resizes-content ở thẻ viewport), iOS Safari thì không, chỉ
-   visualViewport co lại. --kb: phần khung nhìn bàn phím che (px), --vvh: chiều cao còn lại; mobile.css nâng tấm đáy, hộp thoại,
+   visualViewport co lại. --kb: phần khung nhìn bàn phím che (px), --vvh: chiều cao còn lại; CSS nâng tấm đáy, hộp thoại,
    toast lên trên bàn phím. Đang phóng to (scale ≠ 1) thì visualViewport co vì phóng to, không phải vì bàn phím: bỏ qua. */
 export function trackKeyboard() {
   var vv = window.visualViewport;
@@ -225,7 +225,7 @@ export function syncBar() {
   if (c) $('theme-color').setAttribute('content', c);
   lockScroll(layers.length > 0);
 }
-/* Có lớp mờ thì trang sau nó không cuộn (html.ma-lock, mobile.css); chỗ cuộn giữ nguyên nên đóng lớp không nhảy. Trang đang có
+/* Có lớp mờ thì trang sau nó không cuộn (html.ma-lock, css/base.css); chỗ cuộn giữ nguyên nên đóng lớp không nhảy. Trang đang có
    thanh cuộn chiếm chỗ (máy tính) thì giữ rãnh của nó (ma-lock-g), để chữ không xô ngang. */
 function lockScroll(on) {
   var de = document.documentElement;

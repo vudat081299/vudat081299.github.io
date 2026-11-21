@@ -1,7 +1,7 @@
 /* Dải tiến độ (MDAN-016): một dải dọc mảnh sát mép phải mỗi khung đang hiện (Source, Preview; cả hai ở Split), ngay
    trái thanh cuộn. Mỗi đơn vị một đoạn theo vị trí / chiều cao của nó trong khung: đặc --accent đã đọc, rỗng viền đã đổi
    chữ (○), nhạt chưa đọc, viền đứt được gợi ý (ui/dwell.js). Trái dải là thanh cuộn tự vẽ: con trượt xám theo khung nhìn,
-   chấm ở chỗ có nhận xét; ở Split nó thay thanh cuộn hệ thống của khung (css/reading.css ẩn thanh ấy), để không có hai thanh.
+   chấm ở chỗ có nhận xét; ở Split nó thay thanh cuộn hệ thống của khung (css/views.css ẩn thanh ấy), để không có hai thanh.
    Bề rộng, lề, khe, mép trái làm tròn theo điểm ảnh thật (devicePixelRatio), để hai khung vẽ cột rộng như nhau ở mọi mức thu phóng.
    Hai đầu dải cách mép khung có góc bo ít nhất bằng bán kính góc (cornerLimits). Bấm / kéo trên dải
    thì cuộn tới đó như thanh cuộn hệ thống (cuộn do trang, không tính là đọc). Không có đơn vị thì ẩn.

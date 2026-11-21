@@ -82,12 +82,6 @@ html:not(.ma-reviewing) .ma-lane__b.is-head:not(:hover)::after { visibility: hid
 /* LÀM MỜ khối đã đọc (Dim reviewed): chỉ mờ, không gập — gập làm lệch cuộn theo nhau và dải đọc. Luật ở css/focus.css
    (gộp với Focus mode). */
 
-/* HỘP NHẬN XÉT: nút ✓ Reviewed kèm nhãn dòng (mono, mờ), đầu hàng nút; có nó thì dòng phím tắt lên một hàng riêng. */
-.ma-pop__rv { gap: var(--s1); margin-right: auto; }
-.ma-pop__bar:has(> .ma-pop__rv:not([hidden])) { flex-wrap: wrap; }
-.ma-pop__bar:has(> .ma-pop__rv:not([hidden])) .ma-pop__keys { flex-basis: 100%; }
-.ma-pop__rvl { font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-3); }
-
 /* VIÊN THUỐC "✓ Done · next ↓": máy hẹp / cảm ứng, góc phải dưới, trên thanh đáy. Ẩn khi nút nổi hay hộp nhận xét hiện. */
 .ma-rvpill { display: none; }
 @media (max-width: 1080px), (pointer: coarse) {
@@ -98,7 +92,6 @@ html:not(.ma-reviewing) .ma-lane__b.is-head:not(:hover)::after { visibility: hid
 }
 @media (max-width: 1080px) { .ma-rvpill { bottom: calc(var(--dock-h) + var(--dock-gap) + var(--sa-b)); } }
 .ma-pop:not([hidden]) ~ .ma-rvpill, .ma-fab:not([hidden]) ~ .ma-rvpill { display: none; }
-.ma-dock__rv { flex: none; padding: 0 var(--s3); font: 500 var(--fs-xs)/1 var(--mono); }
 
 /* TAB REVIEW */
 .ma-rv { display: flex; flex-direction: column; gap: var(--s3); }

@@ -1,10 +1,13 @@
-/* Hộp thoại: khung chung, hộp Settings (.ma-set), hàng của History / Hints (.ma-row). */
+/* Hộp thoại: khung chung (hộp giữa màn hình, tấm đáy ở điện thoại), Settings (.ma-set), Help (.ma-help, .ma-keys), hàng
+   của History / Hints (.ma-row). Mỗi component một đoạn liền, kể cả luật của màn cảm ứng / điện thoại cho nó. */
+
 /* HỘP THOẠI. <dialog> là lớp phủ trọn khung nhìn, nền của nó là lớp mờ (::backdrop trong suốt): iOS 26 Safari tô vùng
    thanh trạng thái theo nền của phần tử fixed ở mép màn hình, không theo ::backdrop. Thẻ nhìn thấy là con: .ma-dlg__in,
-   hay .ma-panel / .ma-tree dời vào tấm trượt (mobile.css, tree.css). Lớp hiện ngay, không mờ dần; chuyển động chỉ ở thẻ. */
+   hay .ma-panel / .ma-tree dời vào tấm trượt (panel.css, tree.css). Lớp hiện ngay, không mờ dần; chuyển động chỉ ở thẻ.
+   Bàn phím ảo (iOS không co khung nhìn; ui/dom.js đặt --kb): hộp thoại kết thúc ở mép bàn phím. */
 .ma-dlg {
-  position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none;
-  margin: 0; padding: 0; border: 0; overflow: hidden;
+  position: fixed; inset: 0; width: 100%; height: calc(100% - var(--kb)); max-width: none; max-height: none;
+  margin: 0; padding: 0; border: 0; overflow: hidden; overscroll-behavior: contain;
   background-color: var(--scrim); color: var(--ink);
 }
 .ma-dlg::backdrop { background: transparent; }
@@ -22,15 +25,26 @@
 /* Góc bo: thân sát đáy hộp bo --r-lg, thanh cuộn hệ thống chạm vào đường cong. Đệm đáy đổi thành viền trong suốt cùng
    bề dày: thanh cuộn nằm trong viền nên dừng cách đáy một bán kính; chữ trông như cũ. */
 .ma-dlg__b { padding-bottom: 0; border-bottom: var(--r-lg) solid transparent; }
-/* Hộp giữa màn hình (Settings, Shortcuts): giữa cả ở điện thoại (mobile.css), nền sau mờ. Settings (--live) hẹp và
+/* Hộp giữa màn hình (Settings, Help): giữa cả ở điện thoại, nền sau mờ. Settings (--live) hẹp và
    mờ nhẹ (--scrim-live) để vẫn thấy thay đổi đang kéo ở hai bên hộp (MDAN-015). */
 .ma-dlg--live { background-color: var(--scrim-live); }
 .ma-dlg--live .ma-dlg__in { width: min(420px, calc(100vw - 2 * var(--s4))); }
-@media (max-width: 720px) { .ma-set.ma-set--wrap, .ma-set.ma-set--sync { display: none; } }   /* điện thoại: không bề rộng, không Split */
-/* Nút phụ ở đầu hộp (Shortcuts trong Settings): nhỏ như nút trong thẻ. */
+/* Nút phụ ở đầu hộp (Help trong Settings): nhỏ như nút trong thẻ. */
 .ma-dlg__act { min-height: var(--h-sm); padding: 0 var(--s2); font-size: var(--fs-sm); }
 @media (max-width: 720px), (pointer: coarse) { .ma-dlg__act { min-height: var(--h-touch); } }
-/* Help (#dlg-keys): các phần nối nhau, tách bằng một vạch trên (không bo, REPO-025); mỗi phần một nhãn (.ma-label, nhỏ
+/* Điện thoại: tấm đáy (History, Hints) có tay nắm, thân chừa thanh home, trượt lên khi mở; hộp giữa (Settings, Help) không. */
+@media (max-width: 720px) {
+  .ma-dlg__in {
+    width: 100vw; max-width: 100vw; margin: auto 0 0; max-height: min(85vh, calc(var(--vvh, 100vh) - var(--s4))); border-radius: var(--r-lg) var(--r-lg) 0 0;
+    padding: var(--s3) var(--sa-r) 0 var(--sa-l); background: var(--grip), var(--surface);
+  }
+  .ma-dlg:not(.ma-dlg--center) .ma-dlg__b { border-bottom-width: calc(var(--r-lg) + var(--sa-b)); }
+  .ma-dlg--center .ma-dlg__in { width: calc(100vw - 2 * var(--s4)); margin: auto; padding: 0; border-radius: var(--r-lg); background: var(--surface); }
+}
+@media (prefers-reduced-motion: no-preference) and (max-width: 720px) {
+  .ma-dlg[open]:not(.ma-dlg--center) .ma-dlg__in { animation: ma-sheet-in var(--dur-sheet) var(--ease); }
+}
+/* HELP (#dlg-keys): các phần nối nhau, tách bằng một vạch trên (không bo, REPO-025); mỗi phần một nhãn (.ma-label, nhỏ
    hơn tiêu đề hộp), rồi các bảng. */
 .ma-help { display: flex; flex-direction: column; gap: var(--s2); }
 .ma-help + .ma-help { margin-top: var(--s5); padding-top: var(--s4); border-top: 1px solid var(--line); }
@@ -50,7 +64,7 @@
   .ma-keys__l { grid-template-columns: minmax(0, 1fr); row-gap: 0; }
   .ma-keys__l dd { padding: 0 0 var(--s2); }
 }
-/* Mục của hộp Settings: nhãn --fs-md 600, giá trị mono --fs-xs; ngăn bằng đường kẻ. */
+/* SETTINGS: mỗi mục nhãn --fs-md 600, giá trị mono --fs-xs; ngăn bằng đường kẻ. Điện thoại: không bề rộng, không Split. */
 .ma-set { display: flex; flex-direction: column; gap: var(--s2); padding-bottom: var(--s3); border-bottom: 1px solid var(--line-2); }
 .ma-set:last-of-type { border-bottom: 0; padding-bottom: 0; }
 .ma-set__h { display: flex; align-items: center; justify-content: space-between; gap: var(--s3); min-height: var(--h-sm); }
@@ -74,7 +88,14 @@
   width: 14px; height: 14px; border: 2px solid var(--surface); border-radius: var(--r-pill); background: var(--accent); box-shadow: 0 0 0 1px var(--ink-4);
 }
 .ma-set input[type="range"]:disabled { opacity: .5; cursor: default; }
-/* Hàng của History / Hints: viền đủ bốn cạnh, bo --r, đệm --s1; phần bấm được bo --r-sm. */
+@media (max-width: 720px) { .ma-set.ma-set--wrap, .ma-set.ma-set--sync { display: none; } }
+/* Cảm ứng: hàng ô đánh dấu và thanh trượt cao --h-touch; thanh trượt chừa một dải bên phải để vuốt dọc cuộn hộp mà không
+   đổi giá trị. */
+@media (max-width: 720px), (pointer: coarse) {
+  .ma-set__h .ma-check { min-height: var(--h-touch); }
+  .ma-set input[type="range"] { height: var(--h-touch); width: calc(100% - var(--h-touch)); }
+}
+/* HÀNG của History / Hints: viền đủ bốn cạnh, bo --r, đệm --s1; phần bấm được bo --r-sm. */
 .ma-rows { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--s2); }
 .ma-row { display: flex; align-items: center; gap: var(--s1); border: 1px solid var(--line); border-radius: var(--r); padding: var(--s1); }
 .ma-row.is-cur { border-color: var(--edge-on); background: var(--accent-soft); }

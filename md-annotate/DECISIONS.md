@@ -19,19 +19,19 @@
 - MDAN-022 · Một phiên là một cây folder + file, lưu trong trình duyệt · `md-annotate/`
 - MDAN-024 · Mở file từ đĩa thêm vào cây cạnh file đang mở · `md-annotate/`
 - MDAN-025 · Prompt cho mọi file là một tuỳ chọn, mặc định chỉ file đang mở · `md-annotate/`
-- MDAN-026 · Không nền mờ sau tấm nhận xét khi chọn nhiều dòng · `md-annotate/js/ui/popup.js`, `md-annotate/css/mobile.css`
+- MDAN-026 · Không nền mờ sau tấm nhận xét khi chọn nhiều dòng · `md-annotate/js/ui/popup.js`, `md-annotate/css/popup.css`
 - MDAN-027 · Tên phiên tự đặt không đổi theo file đang mở · `md-annotate/js/core/session.js`
 - MDAN-028 · Undo của xoá / chuyển chỉ trả lại đúng mục ấy · `md-annotate/js/core/session.js`, `md-annotate/js/ui/files.js`
 - MDAN-029 · Một file chưa có tên thật thì prompt không ghi tên tệp · `md-annotate/js/core/session.js`
 - MDAN-030 · Nạp folder: file chữ xét theo đuôi · `md-annotate/js/core/text.js`
 - MDAN-031 · Nạp folder vào phiên trống mở file nông nhất · `md-annotate/js/core/tree.js`
 - MDAN-032 · Nạp folder hiện cây mà không ghi lựa chọn ẩn / hiện · `md-annotate/js/ui/tree.js`, `md-annotate/js/ui/files.js`
-- MDAN-036 · Thanh trên ở điện thoại giữ nút chính, còn lại trong menu More · `md-annotate/index.html`, `md-annotate/js/ui/bar.js`, `md-annotate/css/mobile.css`
+- MDAN-036 · Thanh trên ở điện thoại giữ nút chính, còn lại trong menu More · `md-annotate/index.html`, `md-annotate/js/ui/bar.js`, `md-annotate/css/base.css`
 - MDAN-037 · Cây file docked nằm sát mép trái màn hình, vùng làm việc căn giữa phần còn lại · `md-annotate/css/tree.css`, `md-annotate/css/base.css`, `md-annotate/js/ui/tree.js`, `md-annotate/js/core/panes.js`
 - MDAN-045 · Focus mode và Dim reviewed gộp bằng số mờ hơn, dòng dưới chuột luôn sáng · `md-annotate/`
 - MDAN-060 · Thanh bên cây file: thụt đều mọi cấp, đổi tên ngay trên tên, nút Files ở mép trái · `md-annotate/css/tree.css`, `md-annotate/index.html`, `md-annotate/js/ui/tree.js`
 - MDAN-050 · Chọn dòng bằng chạm: nhấn giữ số dòng · `md-annotate/js/ui/picks.js`, `md-annotate/js/ui/popup.js`, `md-annotate/data/shortcuts.json`
-- MDAN-051 · Thanh trên ở điện thoại tự ẩn khi cuộn xuống · `md-annotate/js/ui/bar.js`, `md-annotate/css/mobile.css`
+- MDAN-051 · Thanh trên ở điện thoại tự ẩn khi cuộn xuống · `md-annotate/js/ui/bar.js`, `md-annotate/css/base.css`
 - MDAN-053 · Mở tấm nhận xét thì đoạn đang nhận xét nằm ngay trên tấm · `md-annotate/js/ui/popup.js`, `md-annotate/js/ui/selection.js`, `md-annotate/js/core/place.js`
 - MDAN-054 · Màn cảm ứng: Return trong ô nhận xét là xuống dòng · `md-annotate/js/ui/popup.js`
 - MDAN-061 · Cây file không tự ẩn khi chật; chỉ điện thoại là tấm trượt, đóng sẵn · thay cho MDAN-035 · `md-annotate/js/ui/tree.js`, `md-annotate/js/ui/views.js`, `md-annotate/js/core/panes.js`, `md-annotate/css/tree.css`
@@ -197,7 +197,7 @@ Bật: một prompt gom nhận xét của mọi file theo thứ tự cây, mỗi
 *Comments* luôn chỉ liệt kê file đang mở.
 
 ## MDAN-026 · Không nền mờ sau tấm nhận xét khi chọn nhiều dòng
-20/11/2026 · `md-annotate/js/ui/popup.js`, `md-annotate/css/mobile.css`
+20/11/2026 · `md-annotate/js/ui/popup.js`, `md-annotate/css/popup.css`
 
 Trên điện thoại, hộp nhận xét của các dòng chọn ở lề số là tấm đáy không có nền mờ phía sau: người dùng vẫn chạm lề số
 các dòng khác để thêm / bỏ dòng, nền mờ khiến trông như trang bị khoá. Tấm của đoạn bôi đen và tấm sửa nhận xét vẫn có nền mờ nhẹ.
@@ -242,7 +242,7 @@ Nạp folder xong thì cây hiện cho phiên ấy. Lựa chọn ẩn / hiện c
 phiên khác vẫn theo lựa chọn ấy (chưa chọn thì hiện khi phiên có từ hai mục).
 
 ## MDAN-036 · Thanh trên ở điện thoại giữ nút chính, còn lại trong menu More
-20/11/2026 · `md-annotate/index.html`, `md-annotate/js/ui/bar.js`, `md-annotate/css/mobile.css`
+20/11/2026 · `md-annotate/index.html`, `md-annotate/js/ui/bar.js`, `md-annotate/css/base.css`
 
 Điện thoại (≤ 720px): trái là nút *Files* rồi tên gọn; phải là *History*, *Settings* và *More* (⋯).
 *New session*, đổi theme sáng / tối và *Shortcuts* nằm trong *More*. *History* (đổi phiên) và *Settings* (cỡ chữ, khổ
@@ -282,7 +282,7 @@ mở lại hộp, không bỏ dòng ấy. Đáy trang có thêm chỗ để dòn
 dòng: "long-press a line number to pick lines".
 
 ## MDAN-051 · Thanh trên ở điện thoại tự ẩn khi cuộn xuống
-20/11/2026 · `md-annotate/js/ui/bar.js`, `md-annotate/css/mobile.css`
+20/11/2026 · `md-annotate/js/ui/bar.js`, `md-annotate/css/base.css`
 
 Điện thoại dọc (≤ 720px) và nằm ngang thấp (cao ≤ 500px): thanh trên trượt lên khuất khi cuộn xuống, cuộn lên một chút thì
 trượt về, như Safari hay app đọc báo. Luôn hiện ở đầu trang, khi menu More hay một hộp thoại mở. Người dùng chọn giảm
