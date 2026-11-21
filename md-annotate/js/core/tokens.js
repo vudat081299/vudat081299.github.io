@@ -10,7 +10,8 @@ var INLINE = [
   ['link', /(!?\[)([^\]\n]*)(\]\()([^)\s]*)((?:\s+"[^"\n]*")?)(\))/g, ['sx-punct', 'sx-link', 'sx-punct', 'sx-url', 'sx-string', 'sx-punct']],
   ['ref', /(!?\[)([^\]\n]+)(\]\[)([^\]\n]*)(\])/g, ['sx-punct', 'sx-link', 'sx-punct', 'sx-url', 'sx-punct']],
   ['auto', /(<(?:https?:\/\/|mailto:)[^>\s]+>)/g, ['sx-url']],
-  ['tag', /(<!--.*?-->|<\/?[A-Za-z][\w-]*(?:\s[^<>\n]*)?\/?>)/g, ['sx-tag']],
+  ['comment', /(<!--.*?-->)/g, ['sx-comment']],   // chú thích HTML: cùng màu chú thích của file code
+  ['tag', /(<\/?[A-Za-z][\w-]*(?:\s[^<>\n]*)?\/?>)/g, ['sx-tag']],
   ['url', /(\bhttps?:\/\/[^\s<>()\[\]"']*[^\s<>()\[\]"'.,;:!?])/g, ['sx-url']],
   ['strong', /(\*\*|__)(?=\S)([^\n]*?\S)(\1)/g, ['sx-punct', 'sx-strong', 'sx-punct']],
   /* _nhấn_ không bắt đầu giữa từ (snake_case): lookbehind loại ngay trong regex, khỏi thử lại từng dấu _ giữa từ */

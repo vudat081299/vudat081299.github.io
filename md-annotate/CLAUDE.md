@@ -94,7 +94,7 @@
 
 - Loại file theo tên (`fileType`): markdown (md, markdown, mdx, không đuôi) tô bằng `tokens()`; đuôi / tên của một ngôn ngữ trong `LANGS` tô bằng highlight.js (`codeTokens`: lớp `hljs-*` → `sx-*`, `.sx-comment`); còn lại chữ trơn.
 - highlight.js chỉ tải khi cần: lõi và module ES của từng ngôn ngữ trên cdnjs, `fetch` có integrity rồi `import()` từ blob; mở trang không tải gì, file mặc định là markdown nên không preload. Chữ trơn trước, ngôn ngữ sẵn thì `renderAll()` (đang bôi đen trong khung thì chờ bỏ chọn); hỏng thì chữ trơn, một cảnh báo console, lần vẽ sau tải lại. Thêm ngôn ngữ: một dòng trong `LANGS` (`js/core/langs.js`), in bằng `node md-annotate/tools/hl-lang.mjs <id>`; `--check` tải lại cả sổ và so integrity (cần mạng).
-- `tokens()` tách token theo dòng (khối rào, đầu mục, kẻ ngang, phân cách bảng, trích khối, dấu danh sách), rồi `inlineToks()` trong dòng (mã, link, thẻ HTML, URL, đậm, nghiêng, gạch, chuỗi, `|` của bảng).
+- `tokens()` tách token theo dòng (khối rào, đầu mục, kẻ ngang, phân cách bảng, trích khối, dấu danh sách), rồi `inlineToks()` trong dòng (mã, link, chú thích HTML `.sx-comment`, thẻ HTML, URL, đậm, nghiêng, gạch, chuỗi, `|` của bảng).
 - Token không chồng nhau, theo thứ tự. `paintSrc()` cắt nguồn theo mép token, mép highlight và đầu dòng; `<mark>` bọc ngoài `<span class="sx-*">`.
 - Text của `#v-src` phải đúng bằng nguồn: vùng chọn, neo, số dòng đều đếm trên nó (smoke kiểm). `#doc-meta` đếm dòng bằng `lineCount()` như lề. Tìm token không quét lại cả dòng sau mỗi token (dòng dài vẫn tuyến tính).
 - Màu chỉ ở token `--sx-*`; mỗi màu ≥ 4,5:1 trên nền thẻ và trên `--hl` / `--hl-2`, cả hai theme. *Syntax colors* (`prefs.syntax`) tắt: chữ trơn.

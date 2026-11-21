@@ -207,6 +207,8 @@ import { sourceLines } from '../js/core/runs.js';
   // Một dòng dài toàn snake_case (JSON một dòng): mỗi dấu _ giữa từ từng làm regex nghiêng quét lại tới cuối dòng (≈ 2,7 s).
   const snake = 'x_y '.repeat(20000), t1 = performance.now(), ks = tokens(snake), ms1 = performance.now() - t1;
   check('tokens: 80 000 ký tự snake_case, dưới 300 ms, không nghiêng', ms1 < 300 && ks.length === 0, Math.round(ms1) + ' ms, ' + ks.length + ' token');
+  { const t = 'a <!-- ghi chú <b> --> <b>x</b>', k = tokens(t).map((x) => t.slice(x.s, x.e) + '=' + x.c);
+    check('tokens: chú thích HTML là sx-comment (cả thẻ trong nó), thẻ là sx-tag', eq(k, ['<!-- ghi chú <b> -->=sx-comment', '<b>=sx-tag', '</b>=sx-tag']), JSON.stringify(k)); }
   check('tokens: _nhấn_ vẫn nhận ở đầu từ, bỏ giữa từ', eq(tokens('a _b_ c_d_ e').map((x) => x.c), ['sx-punct', 'sx-em', 'sx-punct']));
 }
 import { lineCount } from '../js/core/runs.js';
