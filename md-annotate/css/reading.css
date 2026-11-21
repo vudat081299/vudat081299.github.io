@@ -1,4 +1,4 @@
-/* Dải tiến độ (MDAN-016; ui/minimap.js) và hàng gợi ý của tab Review (ui/dwell.js); dấu gợi ý trên làn ở review.css. Nạp sau review.css, trước mobile.css.
+/* Dải tiến độ (MDAN-016; ui/minimap.js). Dấu gợi ý trên làn và hàng gợi ý của tab Review: review.css. Nạp sau review.css.
    Đã đọc là --accent đặc; đã đổi chữ rỗng viền --ink-3 (≥ 3:1); chưa đọc nhạt --line; gợi ý nền --hl-2 viền đứt. */
 
 /* DẢI TIẾN ĐỘ: fixed, JS đặt left / top / height sát mép phải khung. Hai cột: thanh cuộn tự vẽ (.ma-mm__col: con trượt
@@ -31,10 +31,3 @@
 }
 /* Màn cảm ứng: chỉ để xem (vạch mảnh không đạt --h-touch, lại nằm chỗ ngón tay vuốt). Điện thoại: ui/minimap.js ẩn. */
 @media (pointer: coarse) { .ma-mm { pointer-events: none; } }
-
-/* TAB REVIEW: hàng gợi ý (chữ, Accept N suggested, Dismiss). */
-.ma-rv__sug {
-  display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2) var(--s3); padding: var(--s2) var(--s3);
-  border-radius: var(--r); background: var(--accent-soft);
-}
-.ma-rv__sugt { flex: 1 1 100%; min-width: 0; font-size: var(--fs-sm); color: var(--ink-2); }

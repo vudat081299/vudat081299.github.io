@@ -1,5 +1,6 @@
 /* Đánh dấu đã đọc (MDAN-013, ui/review.js, ui/review-panel.js): làn dấu cạnh khối, làm mờ khối đã đọc, nút ✓ Reviewed
-   của hộp nhận xét, viên thuốc ở máy hẹp, tab Review của panel. Nạp sau focus.css, trước mobile.css.
+   của hộp nhận xét (css/popup.css), viên thuốc ở máy hẹp, tab Review của panel. Làm mờ khối đã đọc: css/focus.css.
+   Nạp sau focus.css.
    ✓ là ảnh --ic-check (--on-accent trên --accent, 6,5:1), viền --done-edge; ○ (đã đổi chữ) là vòng --ink-3 (≥ 3:1), không dùng xanh làm chữ. */
 
 /* BỘ DẤU ĐÃ ĐỌC: một hình, một bộ trạng thái, khai báo ở đây, dùng chung cho làn (.ma-lane__b::after) và dàn ý tab Review
@@ -79,10 +80,8 @@ html:not(.ma-reviewing) .ma-lane__b.is-head:not(:hover)::after { visibility: hid
 /* Điện thoại: Preview chừa lề trái cho làn khi đang đánh dấu. */
 @media (max-width: 720px) { html.ma-reviewing #wrap-md { padding-left: calc(var(--lane-w) + var(--s3)); } }
 
-/* LÀM MỜ khối đã đọc (Dim reviewed): chỉ mờ, không gập — gập làm lệch cuộn theo nhau và dải đọc. Luật ở css/focus.css
-   (gộp với Focus mode). */
-
-/* VIÊN THUỐC "✓ Done · next ↓": máy hẹp / cảm ứng, góc phải dưới, trên thanh đáy. Ẩn khi nút nổi hay hộp nhận xét hiện. */
+/* VIÊN THUỐC "✓ Done · next ↓": máy hẹp / cảm ứng, góc phải dưới, trên thanh đáy. Ẩn khi nút nổi hay hộp nhận xét hiện.
+   Nút ✓ % ở thanh đáy (.ma-dock__rv): css/popup.css. */
 .ma-rvpill { display: none; }
 @media (max-width: 1080px), (pointer: coarse) {
   .ma-rvpill {
@@ -103,6 +102,12 @@ html:not(.ma-reviewing) .ma-lane__b.is-head:not(:hover)::after { visibility: hid
 .ma-rv__bar > span { display: block; height: 100%; width: 0; border-radius: var(--r-pill); background: var(--accent); transition: width var(--dur) var(--ease); }
 .ma-rv__acts { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2) var(--s3); }
 .ma-rv__lost { margin: 0; font-size: var(--fs-sm); color: var(--danger); }
+/* Hàng gợi ý (ui/dwell.js): chữ, Accept N suggested, Dismiss. */
+.ma-rv__sug {
+  display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2) var(--s3); padding: var(--s2) var(--s3);
+  border-radius: var(--r); background: var(--accent-soft);
+}
+.ma-rv__sugt { flex: 1 1 100%; min-width: 0; font-size: var(--fs-sm); color: var(--ink-2); }
 /* Dàn ý: mỗi section một hàng — nút trạng thái (bấm: cả section) và tên (bấm: tới chỗ chưa đọc đầu tiên). */
 .ma-rvs-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
 .ma-rvs { display: flex; align-items: flex-start; gap: var(--s1); padding-left: calc(var(--d, 0) * var(--s3)); }
