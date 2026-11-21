@@ -3642,6 +3642,25 @@ const cornerClash = (page) => page.evaluate(() => {
     }
     await c.close();
   }
+  {
+    // D1: hộp prompt (#out) bôi đen được chữ của nó, bấm vào thì nhận focus; không thành kéo từ nền.
+    const c = await browser.newContext({ viewport: { width: 1440, height: 900 }, colorScheme: 'light' });
+    const p = await c.newPage(); watch(p);
+    await p.goto(BASE); await p.waitForFunction(() => window.marked && window.DOMPurify);
+    await pasteText(p, DOC); await p.waitForTimeout(100);
+    await dragSelect(p, '#v-md', 'chữ đậm ở đây'); await p.keyboard.type('Ghi chú dài để có chữ'); await p.keyboard.press('Enter'); await p.waitForTimeout(150);
+    await p.click('#ptab-prompt'); await p.waitForTimeout(100);
+    const b = await p.locator('#out').boundingBox();
+    await p.mouse.click(b.x + 30, b.y + 12); await p.waitForTimeout(50);
+    const focused = await p.evaluate(() => document.activeElement.id);
+    await p.mouse.move(b.x + 8, b.y + 10); await p.mouse.down();
+    await p.mouse.move(b.x + 120, b.y + 12, { steps: 5 }); await p.mouse.move(b.x + 200, b.y + 30, { steps: 5 }); await p.mouse.up();
+    await p.waitForTimeout(200);
+    const sel = await p.evaluate(() => { const s = getSelection(); return { t: String(s), inOut: !!s.anchorNode && document.getElementById('out').contains(s.anchorNode), pop: !document.getElementById('pop').hidden }; });
+    const us = await p.$eval('#out', (e) => getComputedStyle(e).userSelect);
+    check('D1: kéo trong hộp prompt bôi đen chữ của nó (không mở hộp nhận xét), bấm vào thì focus', sel.inOut && sel.t.length > 3 && !sel.pop && focused === 'out' && us === 'text', JSON.stringify([sel, focused, us]));
+    await c.close();
+  }
   // ── end sửa sau rà soát ──
 
   check('không lỗi console', !errors.length, errors.join(' | '));

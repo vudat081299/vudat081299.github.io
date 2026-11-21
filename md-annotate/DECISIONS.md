@@ -49,6 +49,7 @@
 - MDAN-069 · Hộp Shortcuts thành Help, thêm phần tìm file · `md-annotate/index.html`, `md-annotate/js/ui/help.js`, `md-annotate/data/shortcuts.json`, `md-annotate/data/search-help.json`
 - MDAN-070 · Code đơn giản nhất mà dễ đọc; giao diện, logic, luật tách nhau; thứ dùng chung ở một chỗ · `md-annotate/`
 - MDAN-071 · Văn bản dài: đổi bề rộng vùng chữ không đứng hình · `md-annotate/`
+- MDAN-072 · Hộp prompt bôi đen được chữ của nó · `md-annotate/css/base.css`, `md-annotate/js/ui/selection.js`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Nguồn tô màu cú pháp kiểu VS Code
@@ -419,3 +420,9 @@ không chép thành biến thể; chỉ dùng một chỗ thì không tách ra.
 Với văn bản khoảng 10.000 dòng, kéo vách giữa *Split*, ẩn / hiện cây file, thu gọn / mở panel nhận xét không được làm
 trang đứng hình nửa giây. Đổi bề rộng chỉ dàn lại chữ, không dựng lại hay tính lại phần khác. Văn bản dài thì khi kéo
 vách (cả mép cây, mép panel) chỉ vạch đi theo chuột, thả ra mới dàn lại.
+
+## MDAN-072 · Hộp prompt bôi đen được chữ của nó
+21/11/2026 · `md-annotate/css/base.css`, `md-annotate/js/ui/selection.js`
+
+Hộp prompt ở tab Prompt là chữ để chép ra: kéo chuột trong hộp bôi đen chữ của chính nó, không thành kéo từ nền bôi đen
+văn bản; bấm vào thì hộp nhận focus (phím mũi tên cuộn, Ctrl/⌘ + A chọn hết). Phần khác của panel vẫn không bôi đen được.

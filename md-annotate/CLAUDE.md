@@ -41,7 +41,7 @@
 - Xanh không làm chữ trên nền sáng (~2,3:1): chữ là mực, nhấn bằng vạch / nền nhạt / huy hiệu. Chữ trên `--accent`: `--on-accent`. Chữ ≥ 4,5:1; chỉ báo trạng thái ≥ 3:1 (focus `--ring`, hàng đang chọn `--edge-on`; thẻ file mở trong cây chỉ có nền), cả hai theme. Vòng focus chỉ sau Tab, hay mũi tên / Home / End trong cây, menu của nó và menu *More* (MDAN-020).
 - Token ở `css/tokens.css` (chữ `--fs-*` + `--lh*`, bo `--r-*`, vật lồng trong bo nhỏ hơn; cao `--h-*`, khoảng `--s*`, `--dur`). Biến đổi lúc chạy mà văn bản không dùng (cây, vách): `@property … inherits: false`, đặt lên phần tử dùng nó; lớp ở `html` không kết bộ chọn bằng `:not()` / `*`. Không thì mỗi lần đổi tính lại kiểu mọi nút của văn bản (10.000 dòng: ~0,6 s).
 - Họ component chung luật ở `css/base.css` (nút, nhóm tab `.ma-tabs` / `.ma-seg` / `.ma-fmt`, ô nhập, huy hiệu, phím): thêm biến thể vào họ.
-- Theme: khoá chung `hub-theme`, đặt trước lần vẽ đầu; chưa chọn thì theo hệ điều hành (REPO-024). `html` và `body` có nền `--bg` đặt rõ. Thanh trên, cây, panel, thanh đáy không bôi đen được trừ ô gõ chữ: một luật ở `css/base.css` (MDAN-064), đừng đặt `user-select` từng phần tử.
+- Theme: khoá chung `hub-theme`, đặt trước lần vẽ đầu; chưa chọn thì theo hệ điều hành (REPO-024). `html` và `body` có nền `--bg` đặt rõ. Thanh trên, cây, panel, thanh đáy không bôi đen được trừ ô gõ chữ và hộp prompt `.ma-out` (MDAN-072): một luật ở `css/base.css` (MDAN-064), đừng đặt `user-select` từng phần tử.
 - Lớp mờ: phần tử fixed trọn khung nhìn, không `::backdrop` / bóng (iOS 26 Safari tô vùng thanh trạng thái theo nền phần tử fixed ở mép). Hộp thoại: chính `<dialog>`, nền `--scrim`, thẻ là con; tấm nhận xét: `#pop-scrim`, `--scrim-live` (nhẹ hơn: không chặn chạm), không có khi chọn dòng (MDAN-026).
   Hiện / ẩn lớp: `syncBar()`: `theme-color` = nền trộn lớp, và `html.ma-lock` (trang sau lớp không cuộn, đóng không nhảy); thẻ, tấm `overscroll-behavior: contain`.
 - Bề rộng (MDAN-005): `.ma-wrap` rộng `max(70%, 1280px)` của khung nhìn trừ cây docked (`--wrap-f`, `--wrap-min`), không quá chỗ ấy, căn giữa trong nó, lề `--pad`. Panel rộng `--side` (kéo `#panel-grip`,
@@ -84,7 +84,7 @@
 ## Hộp nhận xét
 
 - Trích dẫn tối đa 2 dòng, dài hơn thì mờ dần (`.is-long`, mask theo `--ink`). Chuyển động mở tắt khi `prefers-reduced-motion`. Highlight của nhận xét là `<mark class="ma-hl" data-ids>`; số thứ tự hiện bằng `::after`, không lọt vào chữ của khung. Đoạn đang chọn tô bằng `::highlight(ma-pending)`, không sửa DOM (sửa giữa lúc kéo chuột làm mất vùng chọn); mọi Highlight tô qua `paintHL()`.
-- Chuột / bút thì mở ngay khi thả. Kéo bắt đầu ở vùng nền (`BG` ở `ui/selection.js`: lề trang hai bên, nền thẻ, nền panel; không nút, ô nhập, thẻ nhận xét, hộp thoại, vách kéo, thanh cuộn) bôi đen khung đích (MDAN-064):
+- Chuột / bút thì mở ngay khi thả. Kéo bắt đầu ở vùng nền (`BG` ở `ui/selection.js`: lề trang hai bên, nền thẻ, nền panel; không nút, ô nhập, hộp prompt, thẻ nhận xét, hộp thoại, vách kéo, thanh cuộn) bôi đen khung đích (MDAN-064):
   điểm kéo vào hộp chữ (`clampInto`), sát mép thì cuộn (`edgeScroll`); Split: trái tâm vách là Source, phải là Preview. Cảm ứng và bàn phím thì hiện nút nổi *Comment on selection* (đoạn ở nửa dưới thì nút lên đỉnh, `fabSide`).
   Hộp dưới đoạn chọn (Split: ở khung đã bôi đen), thiếu chỗ thì lên trên, trọn khung nhìn (`popPlace`). Máy hẹp hoặc màn cảm ứng: tấm trượt đáy;
   mở thì trang (khung *Split*) cuộn ngay để đoạn nằm trên tấm (MDAN-053, `sheetReveal`), đáy trang thêm chỗ bằng tấm (`html.ma-sheet-sp`, bỏ khi không làm trang nhảy).

@@ -114,11 +114,11 @@ function bgStart(e) {
 
 export function initSelection() {
   /* Chuột / bút: thả ra mà vùng chọn nằm trong văn bản thì mở hộp nhận xét, dù kéo bắt đầu ở đâu (nền: bgStart). Bỏ qua
-     nút, ô nhập, hộp thoại, thanh trên, cây, vách kéo, và bấm trên thanh cuộn (offsetX/Y vượt clientWidth/Height). */
+     nút, ô nhập, hộp prompt (chữ của nó bôi đen được), hộp thoại, thanh trên, cây, vách kéo, và bấm trên thanh cuộn (offsetX/Y vượt clientWidth/Height). */
   document.addEventListener('pointerdown', function (e) {
     if (e.pointerType === 'touch' || e.button !== 0) return;
     var t = e.target;
-    if (!t || !t.closest || t.closest('button, input, textarea, select, label, a, summary, [contenteditable], .ma-pop, dialog, .ma-bar, .ma-tree, .ma-divider, #panel-grip, .ma-dock, #fab, .ma-mm')) return;
+    if (!t || !t.closest || t.closest('button, input, textarea, select, label, a, summary, [contenteditable], .ma-out, .ma-pop, dialog, .ma-bar, .ma-tree, .ma-divider, #panel-grip, .ma-dock, #fab, .ma-mm')) return;
     if (t.nodeType === 1 && t !== document.documentElement && (e.offsetX > t.clientWidth || e.offsetY > t.clientHeight)) return;
     dragging = true;
     bgStart(e);
