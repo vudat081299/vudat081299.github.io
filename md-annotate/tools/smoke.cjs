@@ -2718,6 +2718,14 @@ const cornerClash = (page) => page.evaluate(() => {
       const g = await geo(p);
       check(`cây docked ${w}: Split, panel mở — cột ở mép trái (x = 0), từ đáy thanh trên tới đáy khung nhìn; vùng làm việc căn giữa phần còn lại; thanh trên thẳng hàng; không đè panel, dải tiến độ`,
         docked(s) && s.mode === 'split' && s.doc === (w === 1920 ? 854 : 1192) && edgeOK(g), JSON.stringify({ s, g }));
+      // Kéo mép cây khi vùng làm việc chạm trần: khung dời ngang mà không đổi cỡ; dải tiến độ theo mép phải khung, không cần cuộn.
+      const mmGap = () => p.evaluate(() => ['src', 'md'].map((x) => { const m = document.querySelector(`.ma-mm[data-w="${x}"]`);
+        return m.hidden ? null : Math.round(document.getElementById('wrap-' + x).getBoundingClientRect().right - m.getBoundingClientRect().right); }));
+      const gap0 = await mmGap(), tg = await p.$eval('#tree-grip', (el) => { const r = el.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; });
+      await p.mouse.move(tg.x, tg.y); await p.mouse.down(); await p.mouse.move(tg.x + 100, tg.y, { steps: 5 }); await p.mouse.up(); await p.waitForTimeout(150);
+      const gap1 = await mmGap();
+      check(`cây docked ${w}: kéo mép cây — dải tiến độ dời theo mép phải khung, không cần cuộn`, gap0.every((x) => x !== null) && gap0.every((x, i) => Math.abs(x - gap1[i]) <= 1), JSON.stringify({ gap0, gap1 }));
+      await p.mouse.move(tg.x + 100, tg.y); await p.mouse.down(); await p.mouse.move(tg.x, tg.y, { steps: 5 }); await p.mouse.up(); await p.waitForTimeout(150);
       await p.click('.ma-tab[data-view="view"]'); await p.waitForTimeout(200);
       const gv = await geo(p);
       check(`cây docked ${w}: Preview (trang cuộn) — vẫn ở mép trái, trọn chiều cao, dải tiến độ không chạm cây`, edgeOK(gv) && gv.mm.length > 0, JSON.stringify(gv));

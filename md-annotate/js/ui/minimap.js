@@ -6,7 +6,7 @@
    Hai đầu dải cách mép khung có góc bo ít nhất bằng bán kính góc (cornerLimits). Bấm / kéo trên dải
    thì cuộn tới đó như thanh cuộn hệ thống (cuộn do trang, không tính là đọc). Không có đơn vị thì ẩn.
    Dải là phần tử position: fixed ngoài #v-src / #v-md (text của khung không đổi), đặt theo khung bằng JS. Vẽ lại đoạn
-   khi ui/review.js xếp làn (vẽ, đánh dấu, đổi cỡ); khi cuộn chỉ dời hộp khung nhìn (và khung, ở chế độ cuộn cửa sổ).
+   khi ui/review.js xếp làn (vẽ, đánh dấu, đổi cỡ); khi cuộn hay khung dời ngang chỉ dời hộp khung nhìn và dải (follow).
    Điện thoại (≤ 720px): ẩn — lề chỉ 12px, dải sẽ đè chữ, thanh đáy đã có ✓ N%. Màn cảm ứng: chỉ để xem, không nhận chạm
    (dải 14px không đạt --h-touch, lại nằm đúng chỗ ngón tay vuốt cuộn).
    Toán ở core/minimap.js.
@@ -113,10 +113,10 @@ export function drawMinimap() {
     placeView(w, f);
   });
 }
-/* Cuộn: dời hộp khung nhìn và đặt lại dải theo khung (đỉnh khung trượt dưới thanh trên khi trang cuộn, cả ở Split khi
-   khung chưa vừa màn hình); cao đổi thì vẽ lại. */
+/* Cuộn hay khung dời: dời hộp khung nhìn và đặt lại dải theo khung (đỉnh khung trượt dưới thanh trên khi trang cuộn, cả ở
+   Split khi khung chưa vừa màn hình; mép phải dời khi cây đổi bề rộng); cao đổi thì vẽ lại. */
 var raf = 0;
-function onScroll() {
+function follow() {
   if (raf) return;
   raf = requestAnimationFrame(function () {
     raf = 0;
@@ -125,7 +125,7 @@ function onScroll() {
       var f = frames[w];
       if (!f || strips[w].hidden) return;
       var nf = frameOf(w);   // Split cũng vậy: khung chưa vừa màn hình thì trang cuộn, khung dời theo
-      if (!nf || Math.abs(nf.H - f.H) > 0.5 || Math.abs(nf.left - f.left) > 0.5) { redraw = true; return; }
+      if (!nf || Math.abs(nf.H - f.H) > 0.5) { redraw = true; return; }
       frames[w] = f = nf; place(w, f);
       placeView(w, f);
     });
@@ -175,8 +175,10 @@ export function initMinimap() {
     function end(e) { if (el.hasPointerCapture(e.pointerId)) el.releasePointerCapture(e.pointerId); el.classList.remove('is-drag'); }
     el.addEventListener('pointerup', end);
     el.addEventListener('pointercancel', end);
-    paneWrap(w).addEventListener('scroll', onScroll, { passive: true });
+    paneWrap(w).addEventListener('scroll', follow, { passive: true });
   });
-  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('scroll', follow, { passive: true });
+  /* Kéo mép cây, Ctrl+B khi vùng làm việc chạm trần: khung dời ngang mà không khung nào đổi cỡ, chỉ đệm trái của body. */
+  if (window.ResizeObserver) new ResizeObserver(follow).observe(document.body);
   mqPhone.addEventListener('change', drawMinimap);
 }

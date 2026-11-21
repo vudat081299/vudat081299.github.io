@@ -462,6 +462,8 @@ export function initReview() {
   if (window.ResizeObserver) {
     var ro = new ResizeObserver(scheduleLayout);
     ro.observe($('v-src')); ro.observe($('v-md'));
+    /* Khung đổi cỡ mà #v-* giữ cỡ (khổ chữ Preview giới hạn): x của làn đo theo khung. */
+    ro.observe($('wrap-src')); ro.observe($('wrap-md'));
   }
   window.addEventListener('resize', scheduleLayout);
   window.addEventListener('scroll', scheduleCur, { passive: true });
