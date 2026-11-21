@@ -1,7 +1,6 @@
 /* Cây folder + file (ui/tree.js), kiểu thanh bên của trình soạn mã (MDAN-060): cột fixed sát mép trái màn hình, điện thoại
-   (≤ 720px) thì tấm trượt trái #dlg-tree; nút #btn-tree ở mép trái thanh trên; đầu cây một hàng, hàng, vạch
-   thụt, huy hiệu, ô đổi tên, chỗ thả, gợi ý khi trống, danh sách folder của Move to… (menu .ma-menu ở base.css). Nạp sau
-   panel.css, trước mobile.css. */
+   (≤ 720px) thì tấm trượt trái #dlg-tree; đầu cây một hàng, ô lọc, hàng, vạch thụt, huy hiệu, ô đổi tên, chỗ thả, gợi ý khi
+   trống. Nút #btn-tree và menu (.ma-menu, cả danh sách Move to…): base.css. Nạp sau panel.css. */
 .ma-tree {
   --row-h: var(--h-md);                /* hàng, nút đầu cây ở máy có chuột; cảm ứng: --h-touch */
   --name-fs: var(--fs-sm);             /* chữ tên hàng và ô đổi tên; cảm ứng --fs-lg (iOS không phóng to ô nhập ≥ 16px) */
@@ -19,19 +18,6 @@
   --open-a: 18%;                       /* nền thẻ file mở: --accent pha bấy nhiêu (thẻ trong suốt, đuôi đặc) */
 }
 html.dark .ma-tree { --guide: var(--line); --guide-on: color-mix(in srgb, var(--ink-4) 55%, var(--line)); }
-
-/* NÚT FILES (#btn-tree) > 720px: luôn ở mép trái thanh trên (lề --pad + vùng an toàn), dù cây là cột, tấm trượt hay ẩn.
-   Tên trang giữ thẳng hàng vùng làm việc; hẹp tới mức chạm nút thì đứng sau nút một khoảng --s2. Lề trái của
-   .ma-bar__in = max(--pad, chỗ nút cần − lề ngoài của vùng làm việc); lề ngoài tính như .ma-wrap (base.css), 100% của
-   padding là bề rộng thanh. ≤ 720px: nút nằm trong hàng (MDAN-036). */
-@media (min-width: 721px) {
-  .ma-bar { --tg: var(--h); }          /* cỡ nút; cảm ứng --h-touch (mobile.css) */
-  .ma-bar #btn-tree { position: absolute; z-index: 1; left: calc(var(--pad) + env(safe-area-inset-left)); top: calc((var(--bar-h) - var(--tg)) / 2); width: var(--tg); height: var(--tg); }
-  .ma-bar .ma-bar__in {
-    padding-left: max(var(--pad), calc(var(--pad) + env(safe-area-inset-left) + var(--tg) + var(--s2) - var(--tree-off, 0px)
-      - (100% - min(100%, max(calc(var(--wrap-f) * (100vw - var(--tree-off, 0px))), var(--wrap-min)))) / 2));
-  }
-}
 
 /* CỘT TRÁI (MDAN-037): chỉ khi html.ma-tree-on (ui/tree.js: cây có dữ liệu, đang hiện, không phải điện thoại). Cây là con của body,
    fixed từ đáy thanh trên tới đáy khung nhìn, cuộn riêng, chỉ viền phải. Bề rộng --tree, kéo 180–420 (prefs.treeW). Trang dời
@@ -224,9 +210,6 @@ html.ma-tree-on body > .ma-tree {
 @media (hover: hover) and (pointer: fine) { .ma-tree__hint-p { display: inline; } .ma-tree__hint-c { display: none; } }
 .ma-tree__hint-b.ma-btn { min-height: var(--h-sm); padding: 0 var(--s3); font-size: var(--fs-sm); }
 
-/* Danh sách folder của "Move to…": thụt theo cấp, có trần. */
-.ma-menu__i[data-depth] { padding-left: calc(var(--s2) + min(calc(var(--depth, 0) * var(--tree-step)), 96px)); }
-
 /* TẤM TRƯỢT: điện thoại (≤ 720px), cây vào #dlg-tree (lớp mờ trọn khung nhìn, dialogs.css). Thẻ sát mép
    trái, rộng min(320px, 85vw) cộng vùng an toàn trái; đệm vùng an toàn trên / trái / dưới; góc phải bo --r-lg, không
    viền (viền một cạnh không đi với góc bo), nổi bằng --shadow-pop. Đệm đáy thân = --r-lg: thanh cuộn không chạm góc. */
@@ -248,7 +231,6 @@ html.ma-tree-on body > .ma-tree {
 /* Màn cảm ứng và điện thoại: hàng, nút cao --h-touch; thụt 14px; chữ tên --fs-lg. */
 @media (max-width: 720px), (pointer: coarse) {
   .ma-tree { --row-h: var(--h-touch); --tree-step: 14px; --name-fs: var(--fs-lg); --row-end: 0px; }
-  .ma-bar { --tg: var(--h-touch); }
   .ma-tree__head { min-height: calc(var(--h-touch) + var(--s2)); }
   .ma-trow { --card-y: 4px; }
   .ma-tree__hint-b.ma-btn { min-height: var(--h-touch); }

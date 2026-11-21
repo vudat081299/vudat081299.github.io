@@ -1,5 +1,7 @@
-/* NỀN, thanh trên, nút, menu, ô nhập, nhóm tab, huy hiệu, đầu trang, lưới hai cột. Nạp sau tokens.css.
-   Mọi giá trị lấy từ token (css/tokens.css); file này không khai màu, cỡ chữ hay bán kính thô. */
+/* NỀN và các họ component dùng chung: thanh trên, nút, huy hiệu, phím, menu, nhóm tab, đầu trang, ô nhập, ô đánh dấu,
+   chữ phụ, lưới hai cột. Nạp sau tokens.css. Mọi giá trị lấy từ token (css/tokens.css); mỗi component một đoạn liền,
+   kể cả luật của màn cảm ứng / điện thoại cho nó. */
+
 /* NỀN */
 *, *::before, *::after { box-sizing: border-box; }
 [hidden] { display: none !important; }
@@ -8,6 +10,10 @@
 html { -webkit-text-size-adjust: 100%; background-color: var(--bg); overscroll-behavior-y: none; }
 /* Split vừa khít khung nhìn: khoá cuộn trang, để thanh cuộn chính không chập chờn khi trang dư hay thiếu 1px. */
 html.ma-fit { overflow: hidden; }
+/* KHOÁ CUỘN: có lớp mờ (hộp thoại mở, #pop-scrim hiện) thì trang sau nó đứng yên (ui/dom.js syncBar gắn html.ma-lock);
+   giữ chỗ thanh cuộn (ma-lock-g, chỉ khi trang đang có thanh) để không xô ngang. */
+html.ma-lock { overflow: hidden; }
+html.ma-lock.ma-lock-g { scrollbar-gutter: stable; }
 body {
   margin: 0; min-height: 100vh;
   background: var(--bg); color: var(--ink);
@@ -35,13 +41,23 @@ a { color: inherit; }
 * { scrollbar-width: thin; scrollbar-color: var(--sb-thumb) transparent; }
 .ma-panel__body, .ma-dlg__b, .ma-out, .ma-opts__in, .ma-view { scrollbar-gutter: stable; }
 /* Vùng làm việc: --wrap-f của khung nhìn còn lại (trừ cây docked), không hẹp hơn --wrap-min, không quá chỗ có; căn giữa (MDAN-005,
-   MDAN-037). core/panes.js wrapWidth tính y như vậy. */
-.ma-wrap { width: min(100%, max(calc(var(--wrap-f) * (100vw - var(--tree-off, 0px))), var(--wrap-min))); margin-inline: auto; padding: 0 var(--pad); }
+   MDAN-037). core/panes.js wrapWidth tính y như vậy. Lề không nhỏ hơn vùng an toàn (tai thỏ, góc bo màn hình). */
+.ma-wrap {
+  width: min(100%, max(calc(var(--wrap-f) * (100vw - var(--tree-off, 0px))), var(--wrap-min))); margin-inline: auto;
+  padding: 0 max(var(--pad), var(--sa-r)) 0 max(var(--pad), var(--sa-l));
+}
 svg.ma-i { width: var(--icon); height: var(--icon); flex: none; }
+.ma-sr { position: absolute; top: 0; left: 0; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+/* Chữ chỉ cho màn cảm ứng (gợi ý nhấn giữ, cách dùng viên thuốc) và chỉ cho chuột / bàn phím. */
+.ma-only-touch { display: none; }
+@media (pointer: coarse) { .ma-only-touch { display: revert; } .ma-only-mouse { display: none; } }
+/* Tấm trượt đáy mở ra (hộp nhận xét, panel ≤ 1080px, History / Hints ≤ 720px). */
+@keyframes ma-sheet-in { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { *, ::before, ::after { transition: none !important; } }
 
 /* THANH TRÊN */
 .ma-bar {
-  position: sticky; top: 0; z-index: 30;
+  position: sticky; top: 0; z-index: 30; padding-top: var(--sa-t);
   background: color-mix(in srgb, var(--bg) 84%, transparent);
   backdrop-filter: saturate(160%) blur(12px);
   -webkit-backdrop-filter: saturate(160%) blur(12px);
@@ -61,11 +77,47 @@ svg.ma-i { width: var(--icon); height: var(--icon); flex: none; }
 .ma-brand b { font-weight: 500; color: var(--ink); }
 .ma-brand__txt { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .ma-bar__sp { flex: 1; }
-/* Nút More: chỉ ở điện thoại (mobile.css), thay các nút .ma-bar__opt. */
+/* Nút More: chỉ ở điện thoại, thay các nút .ma-bar__opt. */
 .ma-bar .ma-bar__more { display: none; }
+/* NÚT FILES (#btn-tree) > 720px: luôn ở mép trái thanh trên (lề --pad + vùng an toàn), dù cây là cột, tấm trượt hay ẩn
+   (MDAN-060). Tên trang giữ thẳng hàng vùng làm việc; hẹp tới mức chạm nút thì đứng sau nút một khoảng --s2. Lề trái của
+   .ma-bar__in = max(--pad, chỗ nút cần − lề ngoài của vùng làm việc); lề ngoài tính như .ma-wrap, 100% của padding là
+   bề rộng thanh. ≤ 720px: nút nằm trong hàng (MDAN-036). Phần thanh trên phía trên cột cây: css/tree.css. */
+@media (min-width: 721px) {
+  .ma-bar { --tg: var(--h); }          /* cỡ nút; cảm ứng --h-touch */
+  .ma-bar #btn-tree {
+    position: absolute; z-index: 1; left: calc(var(--pad) + env(safe-area-inset-left)); top: calc((var(--bar-h) - var(--tg)) / 2);
+    width: var(--tg); height: var(--tg); margin-top: var(--sa-t);
+  }
+  .ma-bar .ma-bar__in {
+    padding-left: max(var(--pad), calc(var(--pad) + env(safe-area-inset-left) + var(--tg) + var(--s2) - var(--tree-off, 0px)
+      - (100% - min(100%, max(calc(var(--wrap-f) * (100vw - var(--tree-off, 0px))), var(--wrap-min)))) / 2));
+  }
+}
+@media (max-width: 720px), (pointer: coarse) { .ma-bar { --tg: var(--h-touch); } }
+/* Điện thoại: Files, tên, History, Settings, More (New session, theme, Help trong menu #bar-menu, ui/bar.js).
+   360px: đủ chỗ cho tên md-annotate cạnh bốn nút. */
+@media (max-width: 720px) {
+  .ma-bar__in { gap: var(--s1); }
+  .ma-bar .ma-btn__lbl, .ma-bar .ma-bar__opt { display: none; }
+  .ma-bar .ma-bar__more { display: inline-flex; }
+  .ma-bar .ma-btn { width: var(--h-touch); padding: 0; flex: none; }
+  .ma-brand__own { display: none; }   /* bị cắt cụt thì vô nghĩa */
+}
+/* Điện thoại (dọc, hay nằm ngang thấp): cuộn xuống thì thanh trượt lên khuất, cuộn lên một chút thì trượt về
+   (ui/bar.js gắn .is-away, MDAN-051). Giảm chuyển động: hiện / ẩn ngay. */
+@media (max-width: 720px), (max-height: 500px) and (pointer: coarse) {
+  .ma-bar { transition: transform .2s var(--ease); }
+  .ma-bar.is-away { transform: translateY(-100%); }
+}
+/* Máy 320px: thanh trên chỉ đủ chỗ cho biểu tượng và bốn nút; tên trang có ở tiêu đề ngay dưới. */
+@media (max-width: 359px) {
+  .ma-brand__txt { display: none; }
+  .ma-brand { min-width: var(--h-touch); justify-content: center; }
+}
 
 /* NÚT — một họ: chính (--go), phụ (mặc định), trơn (--quiet, --bare, thanh trên), chỉ biểu tượng (.ma-icbtn).
-   Cao --h (trong thẻ: --h-sm), bo --r-sm, chữ --fs-md 600. Rê: nền --chip; tắt: mờ 50%, nút chính tắt thì xám. */
+   Cao --h (trong thẻ: --h-sm; cảm ứng --h-touch), bo --r-sm, chữ --fs-md 600. Rê: nền --chip; tắt: mờ 50%, nút chính tắt thì xám. */
 .ma-btn, .ma-icbtn {
   display: inline-flex; align-items: center; justify-content: center; gap: var(--s2); flex: none;
   min-height: var(--h); padding: 0 var(--s4);
@@ -94,6 +146,20 @@ svg.ma-i { width: var(--icon); height: var(--icon); flex: none; }
 html:not(.dark) .ma-moon, html.dark .ma-sun { display: none; }
 /* Mục theme của menu More: biểu tượng của theme sẽ chuyển sang. */
 html.dark .ma-to-dark, html:not(.dark) .ma-to-light { display: none; }
+@media (max-width: 720px), (pointer: coarse) {
+  .ma-btn { min-height: var(--h-touch); }
+  .ma-icbtn { width: var(--h-touch); height: var(--h-touch); }
+}
+/* Nút chữ (gạch chân, trong dòng): Dismiss, mẫu lời dẫn. Cảm ứng: vùng chạm nới bằng lớp giả, không đổi bố cục. */
+.ma-link {
+  border: 0; background: none; padding: 0; min-height: 0; font-size: var(--fs-sm); color: var(--ink-3);
+  text-decoration: underline; text-underline-offset: 2px;
+}
+@media (hover: hover) { .ma-link:hover { color: var(--ink); } }
+@media (max-width: 720px), (pointer: coarse) {
+  .ma-link { position: relative; }
+  .ma-link::after { content: ''; position: absolute; inset: calc((var(--h-touch) - 100%) / -2) calc(-1 * var(--s1)); }
+}
 
 /* HUY HIỆU — số đếm (trung tính, viên thuốc: tab panel, hàng cây) và số thứ tự nhận xét (nền --accent, bo --r-xs). Mono
    --fs-xs, cao --h-xs. Chữ số trơn (% đã đọc ở cây): .ma-badge. */
@@ -108,7 +174,7 @@ html.dark .ma-to-dark, html:not(.dark) .ma-to-light { display: none; }
 .ma-ptab__n, .ma-trow__c { border-radius: var(--r-pill); background: var(--chip); color: var(--ink-2); }
 .ma-ptab__n:empty { display: none; }
 .ma-item__n, .ma-steps__n { border-radius: var(--r-xs); background: var(--accent); color: var(--on-accent); }
-/* Phím (hộp nhận xét, tab Review, Help): viền đủ bốn cạnh, đáy dày hơn. Trong nút chính (.ma-kbd) thì nền pha từ
+/* PHÍM (hộp nhận xét, tab Review, Help): viền đủ bốn cạnh, đáy dày hơn. Trong nút chính (.ma-kbd) thì nền pha từ
    --on-accent, không viền. */
 .ma-pop__keys kbd, .ma-rv__keys kbd, .ma-key, .ma-kbd {
   display: inline-block; padding: 0 var(--s1); border-radius: var(--r-xs);
@@ -142,9 +208,13 @@ html.dark .ma-to-dark, html:not(.dark) .ma-to-light { display: none; }
 .ma-menu__i:disabled { opacity: .5; cursor: default; background: transparent; }
 .ma-menu__i--danger, .ma-menu__i--danger svg { color: var(--danger); }
 .ma-menu__sep { height: 1px; margin: var(--s1) 0; background: var(--line-2); }
+/* Danh sách folder của "Move to…" (cây): thụt theo cấp, có trần. */
+.ma-menu__i[data-depth] { padding-left: calc(var(--s2) + min(calc(var(--depth, 0) * var(--tree-step)), 96px)); }
+@media (max-width: 720px), (pointer: coarse) { .ma-menu__i { min-height: var(--h-touch); } }
+@media (max-width: 720px) { .ma-menu:focus { outline: none; } }   /* mở bằng chạm: focus ở khung menu, không vòng */
 
 /* NHÓM TAB — một họ: chế độ xem (.ma-tabs), panel (.ma-seg), kiểu trích (.ma-fmt). Rãnh cao --h, đệm --s1;
-   mục cao --h-sm, bo --r-xs (rãnh bo --r-sm = --r-xs + đệm). Mục chọn: nền --tab-on, viền --tab-ring, mực đậm. */
+   mục cao --h-sm (cảm ứng --h-touch), bo --r-xs (rãnh bo --r-sm = --r-xs + đệm). Mục chọn: nền --tab-on, viền --tab-ring, mực đậm. */
 .ma-tabs, .ma-seg, .ma-fmt { display: flex; gap: 0; padding: var(--s1); background: var(--surface-2); border-radius: var(--r-sm); }
 .ma-tab, .ma-ptab, .ma-fmt span {
   display: inline-flex; align-items: center; justify-content: center; gap: var(--s2);
@@ -165,19 +235,40 @@ html.dark .ma-to-dark, html:not(.dark) .ma-to-light { display: none; }
 .ma-tabs--line .ma-tab[aria-selected="true"] { background: none; box-shadow: none; color: var(--ink); }
 .ma-tabs--line .ma-tab[aria-selected="true"]::after { background: var(--accent); }
 @media (hover: hover) { .ma-tabs--line .ma-tab:not([aria-selected="true"]):hover::after { background: var(--line-2); } }
+@media (max-width: 720px), (pointer: coarse) { .ma-tab, .ma-ptab, .ma-fmt span { min-height: var(--h-touch); } }
 
-/* ĐẦU TRANG */
+/* ĐẦU TRANG: tiêu đề; điện thoại nhỏ hơn, nằm ngang thấp thì bỏ. */
 .ma-head { display: flex; align-items: baseline; gap: var(--s3); min-width: 0; padding: 0 0 var(--s3); }
 .ma-head h1 { flex: none; margin: 0; font: 600 var(--fs-xl)/var(--lh-tight) var(--display); letter-spacing: -.01em; }
+@media (max-width: 1080px) and (max-height: 500px) { .ma-head { display: none; } }
+@media (max-width: 720px) {
+  .ma-head { padding: 0 0 var(--s2); }
+  .ma-head h1 { font-size: var(--fs-lg); }
+}
+
+/* CHỮ CODE: Source, ô Edit, hộp prompt, mẫu ở Help. Không ligature: JetBrains Mono vẽ <!--, ->, ==, != thành mũi tên / dấu
+   gộp, chữ thấy khác chữ thật (none tắt cả calt, nơi JetBrains Mono để các ligature ấy). */
+.ma-src, .ma-ta, .ma-out, .ma-keys code { font: 500 var(--fs-sm)/var(--lh-code) var(--mono); font-variant-ligatures: none; }
 
 /* Ô NHẬP — một họ: .ma-input (một dòng), .ma-ta (nhiều dòng), tên phiên. Bo --r-sm, chữ --fs-md;
-   gõ: viền --ring + quầng --accent-soft (.ma-ta vẽ viền bằng outline: css/views.css). */
+   gõ: viền --ring + quầng --accent-soft. Cảm ứng: cao --h-touch, chữ --fs-lg (Safari iOS phóng to trang khi focus ô chữ
+   nhỏ hơn 16px, và không thu lại). */
 .ma-input {
   width: 100%; min-width: 0; height: var(--h); padding: 0 var(--s3);
   background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-sm);
   transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
 }
 .ma-input:focus, .ma-ta:focus, .ma-docname:focus { outline: none; border-color: var(--ring); box-shadow: 0 0 0 3px var(--accent-soft); }
+/* .ma-ta: góc bo --r-sm, viền trên / dưới trong suốt dày bằng bán kính để thanh cuộn không chạm đường cong; nét viền là
+   outline (theo góc bo), gõ thì outline --ring; đệm dọc trừ phần viền ấy. */
+.ma-ta {
+  width: 100%; min-width: 0; padding: calc(var(--s3) - var(--r-sm)) var(--s3); resize: vertical;
+  background: var(--bg); border: solid transparent; border-width: var(--r-sm) 1px; border-radius: var(--r-sm);
+  outline: 1px solid var(--line); outline-offset: -1px;
+  tab-size: 4;
+  transition: outline-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+.ma-ta:focus { outline: 1px solid var(--ring); outline-offset: -1px; border-color: transparent; }
 /* Tên phiên: sửa tại chỗ, trông như chữ cho tới khi rê hoặc bấm vào. */
 .ma-docname {
   flex: 1 1 180px; min-width: 0; height: var(--h); padding: 0 var(--s2);
@@ -188,21 +279,15 @@ html.dark .ma-to-dark, html:not(.dark) .ma-to-light { display: none; }
 .ma-docname::placeholder { color: var(--ink-2); }
 @media (hover: hover) { .ma-docname:hover { border-color: var(--line); } }
 .ma-docname:focus { background: var(--bg); }
-/* Chữ code: Source, ô Edit, hộp prompt, mẫu ở Help. Không ligature: JetBrains Mono vẽ <!--, ->, ==, != thành mũi tên / dấu
-   gộp, chữ thấy khác chữ thật (none tắt cả calt, nơi JetBrains Mono để các ligature ấy). */
-.ma-src, .ma-ta, .ma-out, .ma-keys code { font: 500 var(--fs-sm)/var(--lh-code) var(--mono); font-variant-ligatures: none; }
-.ma-label { font: 500 var(--fs-xs)/var(--lh-tight) var(--mono); color: var(--ink-3); letter-spacing: .04em; text-transform: uppercase; }
-.ma-notice {
-  margin: 0 0 var(--s4); padding: var(--s2) var(--s3); border: 1px solid var(--line); border-radius: var(--r);
-  background: var(--surface); color: var(--ink-2); font-size: var(--fs-md);
+@media (max-width: 720px), (pointer: coarse) {
+  .ma-input, .ma-docname { height: var(--h-touch); }
+  .ma-input, .ma-ta, .ma-docname { font-size: var(--fs-lg); }
 }
-.ma-notice code { font: 500 var(--fs-sm) var(--mono); color: var(--ink); }
 
-/* LƯỚI */
-.ma-grid { display: grid; grid-template-columns: minmax(0, 1fr) var(--side); gap: var(--s4); align-items: start; padding-top: var(--s4); padding-bottom: var(--s5); }
-.ma-left { min-width: 0; }
-/* Ô đánh dấu vẽ tay: Chrome tự làm tối accent-color khi màu sáng (thành xanh đậm), nên không dùng accent-color.
-   Đang chọn: nền --accent, dấu --on-accent. Ô trong bản dựng (.ma-md, task list kiểu GitHub) giữ mặc định. */
+/* Ô ĐÁNH DẤU vẽ tay: Chrome tự làm tối accent-color khi màu sáng (thành xanh đậm), nên không dùng accent-color.
+   Đang chọn: nền --accent, dấu --on-accent. Ô trong bản dựng (.ma-md, task list kiểu GitHub) giữ mặc định.
+   Hàng .ma-check (Options, Settings): cao --h (cảm ứng --h-touch), ô --ic-box cách chữ --s3. */
+.ma-check { display: flex; align-items: center; gap: var(--s3); min-height: var(--h); font-size: var(--fs-md); color: var(--ink-2); cursor: pointer; }
 .ma-check input[type="checkbox"], .ma-syn input[type="checkbox"] {
   -webkit-appearance: none; appearance: none; flex: none; position: relative; width: var(--ic-box); height: var(--ic-box); margin: 0;
   border: var(--ic-edge) solid var(--ink-4); border-radius: var(--r-xs); background: var(--surface); cursor: pointer;
@@ -214,3 +299,26 @@ html.dark .ma-to-dark, html:not(.dark) .ma-to-light { display: none; }
 }
 .ma-tabbing .ma-check input[type="checkbox"]:focus-visible, .ma-tabbing .ma-syn input[type="checkbox"]:focus-visible { outline: var(--ring-w) solid var(--ring); outline-offset: 2px; }
 .ma-check input[type="checkbox"]:disabled, .ma-syn input[type="checkbox"]:disabled { opacity: .5; cursor: default; }
+@media (max-width: 720px), (pointer: coarse) { .ma-check { min-height: var(--h-touch); } }
+
+/* CHỮ PHỤ VÀ KHỐI BÁO: nhãn mono hoa, câu phụ, báo file://, trạng thái trống của tab panel. */
+.ma-label { font: 500 var(--fs-xs)/var(--lh-tight) var(--mono); color: var(--ink-3); letter-spacing: .04em; text-transform: uppercase; }
+.ma-sub { margin: 0; font-size: var(--fs-sm); color: var(--ink-3); }
+.ma-notice {
+  margin: 0 0 var(--s4); padding: var(--s2) var(--s3); border: 1px solid var(--line); border-radius: var(--r);
+  background: var(--surface); color: var(--ink-2); font-size: var(--fs-md);
+}
+.ma-notice code { font: 500 var(--fs-sm) var(--mono); color: var(--ink); }
+.ma-blank { display: flex; flex-direction: column; align-items: center; gap: var(--s2); padding: var(--s6) var(--s4); text-align: center; color: var(--ink-3); }
+.ma-blank svg { width: 28px; height: 28px; color: var(--ink-4); }
+.ma-blank p { margin: 0; font-size: var(--fs-sm); max-width: 30ch; }
+.ma-blank b { display: block; margin-bottom: var(--s1); font-weight: 600; font-size: var(--fs-md); color: var(--ink-2); }
+
+/* LƯỚI: văn bản | panel (--side; thu gọn: --rail). Máy rộng: đáy lưới bằng khoảng hở dưới panel, để tới cuối trang panel
+   không trượt vào dưới thanh trên. ≤ 1080px: một cột (panel vào tấm trượt, css/panel.css), cả khi panel đang thu gọn. */
+.ma-grid { display: grid; grid-template-columns: minmax(0, 1fr) var(--side); gap: var(--s4); align-items: start; padding-top: var(--s4); padding-bottom: var(--s5); }
+.ma-left { min-width: 0; }
+html.ma-railed .ma-grid { grid-template-columns: minmax(0, 1fr) var(--rail); }
+@media (min-width: 1081px) { .ma-grid { padding-bottom: var(--s4); } }
+@media (max-width: 1080px) { .ma-grid, html.ma-railed .ma-grid { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 720px) { .ma-grid { padding-top: var(--s2); } }

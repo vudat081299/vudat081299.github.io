@@ -9,19 +9,10 @@
 }
 .ma-tabs { order: 2; align-self: stretch; margin-block: calc(-1 * var(--s2)); }   /* nhóm tab: base.css; cao hết thanh */
 .ma-doc__edit { order: 2; min-height: var(--h-sm); padding: 0 var(--s2); font-size: var(--fs-sm); }   /* sau tab Source */
+@media (max-width: 720px), (pointer: coarse) { .ma-doc__edit { min-height: var(--h-touch); } }
 .ma-doc__meta { order: 1; margin-left: auto; flex: none; font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-3); font-variant-numeric: tabular-nums; }
 
 .ma-edit { padding: var(--s4); display: flex; flex-direction: column; gap: var(--s3); }
-/* Góc bo --r-sm: viền trên / dưới trong suốt dày bằng bán kính để thanh cuộn không chạm đường cong; nét viền
-   là outline (theo góc bo), gõ thì outline --ring; đệm dọc trừ phần viền ấy. */
-.ma-ta {
-  width: 100%; min-width: 0; padding: calc(var(--s3) - var(--r-sm)) var(--s3); resize: vertical;
-  background: var(--bg); border: solid transparent; border-width: var(--r-sm) 1px; border-radius: var(--r-sm);
-  outline: 1px solid var(--line); outline-offset: -1px;
-  tab-size: 4;
-  transition: outline-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
-}
-.ma-ta:focus { outline: 1px solid var(--ring); outline-offset: -1px; border-color: transparent; }
 #src-input { min-height: 52vh; }
 #src-input.is-empty { min-height: 140px; }
 .ma-edit__tools { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); }

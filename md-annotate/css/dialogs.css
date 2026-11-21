@@ -29,6 +29,7 @@
 @media (max-width: 720px) { .ma-set.ma-set--wrap, .ma-set.ma-set--sync { display: none; } }   /* điện thoại: không bề rộng, không Split */
 /* Nút phụ ở đầu hộp (Shortcuts trong Settings): nhỏ như nút trong thẻ. */
 .ma-dlg__act { min-height: var(--h-sm); padding: 0 var(--s2); font-size: var(--fs-sm); }
+@media (max-width: 720px), (pointer: coarse) { .ma-dlg__act { min-height: var(--h-touch); } }
 /* Help (#dlg-keys): các phần nối nhau, tách bằng một vạch trên (không bo, REPO-025); mỗi phần một nhãn (.ma-label, nhỏ
    hơn tiêu đề hộp), rồi các bảng. */
 .ma-help { display: flex; flex-direction: column; gap: var(--s2); }

@@ -1,18 +1,9 @@
 /* Máy hẹp: ≤ 1080px (panel thành tấm trượt, thanh đáy), ≤ 720px (điện thoại), màn cảm ứng (vùng chạm
    --h-touch), hộp nhận xét thành tấm đáy, vùng an toàn, khoá cuộn sau lớp mờ, prefers-reduced-motion. Nạp cuối cùng. */
-/* VÙNG AN TOÀN (--sa-*, tokens.css): chữ và nút không nằm dưới tai thỏ, góc bo màn hình, thanh home. */
-.ma-wrap { padding-left: max(var(--pad), var(--sa-l)); padding-right: max(var(--pad), var(--sa-r)); }
-.ma-bar { padding-top: var(--sa-t); }
-@media (min-width: 721px) { .ma-bar #btn-tree { margin-top: var(--sa-t); } }   /* nút Files đặt tuyệt đối (tree.css): xuống cùng hàng */
-/* KHOÁ CUỘN: có lớp mờ (hộp thoại mở, #pop-scrim hiện) thì trang sau nó đứng yên (ui/dom.js syncBar gắn html.ma-lock);
-   giữ chỗ thanh cuộn (ma-lock-g, chỉ khi trang đang có thanh) để không xô ngang. Thẻ, tấm cuộn không lan ra trang. */
-html.ma-lock { overflow: hidden; }
-html.ma-lock.ma-lock-g { scrollbar-gutter: stable; }
+/* Thẻ, tấm cuộn không lan ra trang. */
 .ma-dlg, .ma-pop.is-sheet { overscroll-behavior: contain; }
 /* ĐIỆN THOẠI */
 @media (max-width: 1080px) {
-  /* Kèm html.ma-railed: panel thu gọn ở máy rộng không được để lại cột 56px trống khi cửa sổ hẹp lại. */
-  .ma-grid, html.ma-railed .ma-grid { grid-template-columns: minmax(0, 1fr); }
   .ma-grid > .ma-panel { display: none; }
   /* Thanh đáy: số nhận xét (mở panel trong tấm trượt) và nút chép; cao --dock-h (tokens.css). */
   body { padding-bottom: calc(var(--dock-h) + var(--sa-b)); }
@@ -41,41 +32,19 @@ html.ma-lock.ma-lock-g { scrollbar-gutter: stable; }
   .ma-dlg--panel .ma-panel__grip, .ma-dlg--panel #btn-rail { display: none; }
   .ma-dlg--panel .ma-kbd { display: none; }
 }
-/* Điện thoại nằm ngang (thấp): thanh đáy gọn, bỏ dòng tiêu đề trang. */
-@media (max-width: 1080px) and (max-height: 500px) {
-  .ma-head { display: none; }
-}
-/* Chữ chỉ cho màn cảm ứng (gợi ý nhấn giữ, cách dùng viên thuốc) và chỉ cho chuột / bàn phím. */
-.ma-only-touch { display: none; }
-@media (pointer: coarse) { .ma-only-touch { display: revert; } .ma-only-mouse { display: none; } }
 /* Màn cảm ứng và điện thoại: mọi điều khiển cao ít nhất --h-touch. */
 @media (max-width: 720px), (pointer: coarse) {
-  .ma-btn, .ma-pop__done, .ma-tab, .ma-ptab, .ma-chip, .ma-fmt span, .ma-opts summary, .ma-check, .ma-syn, .ma-rail__n, .ma-toast__btn, .ma-menu__i { min-height: var(--h-touch); }
-  .ma-icbtn, .ma-item__act .ma-icbtn, .ma-rail .ma-rail__copy { width: var(--h-touch); height: var(--h-touch); }
-  .ma-input, .ma-docname { height: var(--h-touch); }
+  .ma-pop__done, .ma-chip, .ma-opts summary, .ma-syn, .ma-rail__n, .ma-toast__btn { min-height: var(--h-touch); }
+  .ma-item__act .ma-icbtn, .ma-rail .ma-rail__copy { width: var(--h-touch); height: var(--h-touch); }
   .ma-pathrow .ma-input { height: var(--h-touch); }
   /* Safari iOS phóng to trang khi focus ô chữ nhỏ hơn 16px, và không thu lại. */
-  .ma-input, .ma-ta, .ma-docname, #pop-text, .ma-pathrow .ma-input { font-size: var(--fs-lg); }
+  #pop-text, .ma-pathrow .ma-input { font-size: var(--fs-lg); }
   /* Settings: hàng ô đánh dấu (dialogs.css đặt --h-sm cùng độ đặc hiệu) và thanh trượt cao --h-touch; thanh trượt chừa
      một dải bên phải để vuốt dọc cuộn hộp mà không đổi giá trị. */
   .ma-set__h .ma-check { min-height: var(--h-touch); }
   .ma-set input[type="range"] { height: var(--h-touch); width: calc(100% - var(--h-touch)); }
-  /* Nút chữ (.ma-link) nằm trong dòng: vùng chạm nới bằng lớp giả, không đổi bố cục. */
-  .ma-link { position: relative; }
-  .ma-link::after { content: ''; position: absolute; inset: calc((var(--h-touch) - 100%) / -2) calc(-1 * var(--s1)); }
 }
 @media (max-width: 720px) {
-  /* Thanh trên: Files, tên, History, Settings, More (New session, theme, Shortcuts trong menu #bar-menu, ui/bar.js).
-     360px: đủ chỗ cho tên md-annotate cạnh bốn nút. */
-  .ma-bar__in { gap: var(--s1); }
-  .ma-bar .ma-btn__lbl, .ma-bar .ma-bar__opt { display: none; }
-  .ma-bar .ma-bar__more { display: inline-flex; }
-  .ma-bar .ma-btn { width: var(--h-touch); padding: 0; flex: none; }
-  .ma-menu:focus { outline: none; }   /* mở bằng chạm: focus ở khung menu, không vòng */
-  .ma-grid { padding-top: var(--s2); }
-  .ma-head { padding: 0 0 var(--s2); }
-  .ma-head h1 { font-size: var(--fs-lg); }
-  .ma-brand__own { display: none; }   /* bị cắt cụt thì vô nghĩa */
   .ma-docname { flex-basis: 100%; }
   .ma-doc__meta { display: none; }
   .ma-doc__bar { padding: var(--s2); }
@@ -101,16 +70,8 @@ html.ma-lock.ma-lock-g { scrollbar-gutter: stable; }
   body:has(#start:not([hidden])) { padding-bottom: var(--sa-b); }
   body:has(#start:not([hidden])) .ma-dock { display: none; }
 }
-/* Thanh trên ở điện thoại (dọc, hay nằm ngang thấp): cuộn xuống thì trượt lên khuất, cuộn lên một chút thì trượt về
-   (ui/bar.js gắn .is-away, MDAN-051). Giảm chuyển động: hiện / ẩn ngay (luật cuối file). */
-@media (max-width: 720px), (max-height: 500px) and (pointer: coarse) {
-  .ma-bar { transition: transform .2s var(--ease); }
-  .ma-bar.is-away { transform: translateY(-100%); }
-}
-/* Máy 320px: thanh trên chỉ đủ chỗ cho biểu tượng và bốn nút; tên trang có ở tiêu đề ngay dưới. Nhóm tab xuống dòng. */
+/* Máy 320px: nhóm tab xuống dòng. */
 @media (max-width: 359px) {
-  .ma-brand__txt { display: none; }
-  .ma-brand { min-width: var(--h-touch); justify-content: center; }
   .ma-fmt span { white-space: normal; text-align: center; line-height: var(--lh-tight); padding-block: var(--s1); }
 }
 /* Hộp nhận xét thành tấm trượt đáy ở máy hẹp hoặc màn cảm ứng: tay nắm, trượt lên khi mở (như mọi tấm đáy); chip gợi ý một
@@ -133,7 +94,6 @@ html.ma-lock.ma-lock-g { scrollbar-gutter: stable; }
 @media (prefers-reduced-motion: no-preference) and (max-width: 720px) {
   .ma-dlg[open]:not(.ma-dlg--center) .ma-dlg__in { animation: ma-sheet-in var(--dur-sheet) var(--ease); }
 }
-@keyframes ma-sheet-in { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
 /* Đáy trang thêm chỗ bằng tấm khi tấm mở (ui/popup.js), để dòng cuối văn bản cuộn lên được trên tấm. */
 html.ma-sheet-sp body { padding-bottom: max(calc(var(--dock-h, 0px) + var(--sa-b)), var(--sheet-h)); }
 /* Bàn phím ảo (iOS không co khung nhìn; ui/dom.js đặt --kb): hộp thoại kết thúc ở mép bàn phím, tấm đáy và toast nằm trên nó. */
@@ -152,4 +112,3 @@ html.ma-sheet-sp body { padding-bottom: max(calc(var(--dock-h, 0px) + var(--sa-b
   .ma-pop.is-sheet:has(#pop-head:not([hidden])) :is(.ma-pop__q, .ma-chips) { display: none; }
   .ma-pop.is-sheet:has(#pop-head:not([hidden])) #pop-text { height: var(--h-touch); min-height: var(--h-touch); }
 }
-@media (prefers-reduced-motion: reduce) { *, ::before, ::after { transition: none !important; } }

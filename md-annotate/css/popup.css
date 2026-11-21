@@ -26,6 +26,7 @@
 .ma-pop.is-moving .ma-pop__grip { cursor: grabbing; color: var(--ink); background: var(--chip); }
 .ma-pop.is-moving { user-select: none; -webkit-user-select: none; }
 @media (hover: hover) { .ma-pop__grip:hover { color: var(--ink); background: var(--chip); } }
+@media (max-width: 720px), (pointer: coarse) { .ma-pop__grip { width: var(--h-touch); height: var(--h-touch); } }
 .ma-pop__q.is-lines { white-space: pre-line; }
 .ma-pop__warn { margin: 0 0 var(--s2); font-size: var(--fs-sm); color: var(--danger); }
 /* CHIP GỢI Ý: viên thuốc cao --h-sm, nền --chip, không viền; rê: nền --accent-soft. */
@@ -46,11 +47,6 @@
 /* Nút trong hộp nổi: cỡ nhỏ (--h-sm), như nút trong thẻ; tấm trượt đáy thì về --h-touch (mobile.css). */
 .ma-pop__bar .ma-btn { min-height: var(--h-sm); padding: 0 var(--s3); font-size: var(--fs-sm); }
 .ma-pop__keys { flex: 1 1 auto; min-width: 0; margin-right: auto; font-size: var(--fs-xs); line-height: 1.8; color: var(--ink-3); }
-.ma-link {
-  border: 0; background: none; padding: 0; min-height: 0; font-size: var(--fs-sm); color: var(--ink-3);
-  text-decoration: underline; text-underline-offset: 2px;
-}
-@media (hover: hover) { .ma-link:hover { color: var(--ink); } }
 
 /* Nút nổi khi có vùng chọn (điện thoại, bàn phím), thanh đáy ở điện thoại, toast */
 .ma-fab {
