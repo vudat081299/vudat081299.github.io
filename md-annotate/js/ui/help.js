@@ -5,7 +5,7 @@
    Xuất: initHelp.
    Dùng: core/shortcuts.js, ui/dom.js. */
 import { normShortcuts } from '../core/shortcuts.js';
-import { $, h, typing } from './dom.js';
+import { $, getJSON, h, typing } from './dom.js';
 
 var PARTS = [['keys-list', 'data/shortcuts.json'], ['find-help-list', 'data/search-help.json']];   // [chỗ vẽ, dữ liệu]
 var loaded = {};   // id chỗ vẽ → promise nạp: nạp một lần, lỗi thì lần mở sau thử lại
@@ -39,8 +39,7 @@ function load(id, url) {
   if (loaded[id]) return;
   var box = $(id);
   box.replaceChildren(h('p', { class: 'ma-sub' }, 'Loading…'));
-  loaded[id] = fetch(url, { cache: 'no-cache' })
-    .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+  loaded[id] = getJSON(url)
     .then(function (d) { render(box, normShortcuts(d)); })
     .catch(function () {
       loaded[id] = null;

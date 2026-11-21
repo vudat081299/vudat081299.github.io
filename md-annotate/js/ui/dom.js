@@ -1,14 +1,18 @@
-/* Tiện ích DOM: $(id), h() dựng phần tử, icon(), textNodes(), media query dùng chung, shown(), typing() (phím tắt
+/* Tiện ích DOM: $(id), getJSON() (data/*.json), h() dựng phần tử, icon(), textNodes(), media query dùng chung, shown(), typing() (phím tắt
    một chữ), dragBar() (kéo vách), toast(), paintHL() (tô CSS Highlight), saveFile() (tải một Blob về máy),
    droppedItems() (mục thả từ máy), syncBar() (màu thanh trình duyệt khi có lớp mờ).
    trackKeyboard() (bàn phím ảo che bao nhiêu: --kb, --vvh), barBottom() / dockTop() (phần thấy của trang giữa
    thanh trên và thanh đáy).
-   Xuất: $, barBottom, dockTop, dragBar, droppedItems, h, hasHL, icon, mqSheet, mqSide, mqTouch, paintHL, placeToast, reduceMotion, saveFile, shown,
+   Xuất: $, barBottom, dockTop, dragBar, droppedItems, getJSON, h, hasHL, icon, mqSheet, mqSide, mqTouch, paintHL, placeToast, reduceMotion, saveFile, shown,
      syncBar, textNodes, toast, trackKeyboard, typing.
    Dùng: core/color.js. */
 import { barColor } from '../core/color.js';
 
 export function $(id) { return document.getElementById(id); }
+/* JSON của trang (data/*.json): luôn hỏi lại máy chủ (no-cache: sửa dữ liệu thì thấy ngay), lỗi HTTP thì promise hỏng. */
+export function getJSON(url) {
+  return fetch(url, { cache: 'no-cache' }).then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); });
+}
 export function h(tag, props) {
   var n = document.createElement(tag);
   if (props) Object.keys(props).forEach(function (k) {

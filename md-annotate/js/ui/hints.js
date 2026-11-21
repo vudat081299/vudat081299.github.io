@@ -5,7 +5,7 @@
 import { plural } from '../core/text.js';
 import { countUse, hideHint, migrateHints, MIN_PCT, normStats, pct, pinHint, rankedHints, resetHints, seedHints } from '../core/hints.js';
 import { KEY, store } from './store.js';
-import { $, h, icon } from './dom.js';
+import { $, getJSON, h, icon } from './dom.js';
 
 export var stats = normStats(store.get(KEY.stats, null));
 export var seedState = 'loading';
@@ -15,8 +15,7 @@ export function recordUse(t) { if (countUse(stats, t)) saveStats(); }
 
 /* Nạp gợi ý mặc định (đổi chữ theo renamed, rồi gieo); lỗi mạng thì seedState = 'fail'. Trả promise để người gọi vẽ lại. */
 export function loadDefaultHints() {
-  return fetch('data/hints.json', { cache: 'no-cache' })
-    .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+  return getJSON('data/hints.json')
     .then(function (d) {
       if (d && d.renamed && typeof d.renamed === 'object') migrateHints(stats, d.renamed);
       seedHints(stats, Array.isArray(d && d.hints) ? d.hints.filter(function (x) { return typeof x === 'string' && x.trim(); }) : []);
