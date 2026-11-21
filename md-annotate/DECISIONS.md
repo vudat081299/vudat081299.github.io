@@ -450,7 +450,7 @@ chính quy chỉ so với 200 ký tự đầu của tên file (tìm chữ thư�
 21/11/2026 · `md-annotate/tools/`
 
 Chủ trang tạm thôi sửa md-annotate. `check.sh` không chạy `test-core.mjs`; agent không chạy `smoke.cjs`. Hai file giữ
-nguyên. Khi sửa lớn thì bật lại cả hai (HANDOFF). Commit qua cổng thì push ngay; không amend hay force-push commit đã push.
+nguyên. Khi sửa lớn thì bật lại cả hai (ghi chú ở `tools/check.sh`). Commit qua cổng thì push ngay; không amend hay force-push commit đã push.
 
 ## MDAN-079 · Nét đứt theo khối đang đọc: xám là khối hiện tại, xanh là gợi ý; viên thuốc Accept N · thay cho MDAN-077, MDAN-078
 21/11/2026 · `md-annotate/css/review.css`, `md-annotate/js/ui/review.js`, `md-annotate/js/ui/dwell.js`, `md-annotate/index.html`, `md-annotate/data/shortcuts.json`

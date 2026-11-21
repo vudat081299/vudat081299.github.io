@@ -196,5 +196,5 @@
 
 ## Cổng: `sh md-annotate/tools/check.sh`
 
-- `tools/lint.py` (luật kiểm ghi ở đầu file). Tạm dừng (MDAN-083): `tools/test-core.mjs` (bài thử `js/core/`) không chạy trong `check.sh`; đừng chạy `tools/smoke.cjs`. Chỉ bật lại khi chủ trang yêu cầu hoặc khi sửa lớn (HANDOFF).
+- `tools/lint.py` (luật kiểm ghi ở đầu file). Tạm dừng (MDAN-083): `tools/test-core.mjs` (bài thử `js/core/`) không chạy trong `check.sh`; đừng chạy `tools/smoke.cjs`. Chỉ bật lại khi chủ trang yêu cầu hoặc khi sửa lớn (cách bật: đầu `tools/check.sh`).
 - Cổng `check.sh` xanh thì push ngay; không amend hay force-push commit đã push.

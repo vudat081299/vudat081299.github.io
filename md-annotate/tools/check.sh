@@ -1,5 +1,5 @@
 #!/bin/sh
-# Cổng của md-annotate/. test-core.mjs và smoke.cjs đang tạm dừng (MDAN-083); sửa lớn thì bật lại (HANDOFF).
+# Cổng của md-annotate/. test-core.mjs và smoke.cjs đang tạm dừng (MDAN-083); sửa lớn thì bật lại cả hai.
 set -u
 cd "$(git rev-parse --show-toplevel)"
 python3 md-annotate/tools/lint.py || exit 1
