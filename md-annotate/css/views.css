@@ -1,17 +1,28 @@
-/* Khung văn bản: ô nhập, trạng thái trống, Split + vách, lề số dòng, màu cú pháp (--sx-*),
-   Preview kiểu GitHub (MDAN-006), highlight.js (--hl-*), đoạn đã nhận xét (mark.ma-hl). */
-/* VĂN BẢN */
+/* Khung văn bản: thẻ văn bản và thanh của nó, khung Edit, trạng thái trống, khung xem (Split, vách), Source (lề số dòng,
+   chọn dòng, màu cú pháp --sx-*), Preview kiểu GitHub (MDAN-006, highlight.js --hl-*), đoạn đã nhận xét (mark.ma-hl).
+   Mỗi component một đoạn liền, kể cả luật của màn cảm ứng / điện thoại cho nó. */
+
+/* THẺ VĂN BẢN và thanh trên của nó: tên phiên, nhóm tab chế độ xem (base.css), nút Edit của file code, số đếm. */
 .ma-doc { min-width: 0; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--shadow-1); }
 .ma-doc.is-drop { border-color: var(--edge-on); box-shadow: 0 0 0 3px var(--accent-soft); }
 .ma-doc__bar {
   display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2) var(--s3);
   padding: var(--s2) var(--s2) var(--s2) var(--s2); border-bottom: 1px solid var(--line-2);
 }
-.ma-tabs { order: 2; align-self: stretch; margin-block: calc(-1 * var(--s2)); }   /* nhóm tab: base.css; cao hết thanh */
+.ma-tabs { order: 2; align-self: stretch; margin-block: calc(-1 * var(--s2)); }   /* cao hết thanh */
 .ma-doc__edit { order: 2; min-height: var(--h-sm); padding: 0 var(--s2); font-size: var(--fs-sm); }   /* sau tab Source */
-@media (max-width: 720px), (pointer: coarse) { .ma-doc__edit { min-height: var(--h-touch); } }
 .ma-doc__meta { order: 1; margin-left: auto; flex: none; font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-3); font-variant-numeric: tabular-nums; }
+@media (max-width: 720px), (pointer: coarse) { .ma-doc__edit { min-height: var(--h-touch); } }
+@media (max-width: 720px) {
+  .ma-docname { flex-basis: 100%; }
+  .ma-doc__meta { display: none; }
+  .ma-doc__bar { padding: var(--s2); }
+  .ma-tabs { flex: 1; margin-top: 0; }
+  .ma-tab { flex: 1; padding: 0 var(--s2); }
+  .ma-doc__meta { margin-left: 0; width: 100%; }
+}
 
+/* KHUNG EDIT: ô dán / sửa chữ (.ma-ta, base.css) và hàng công cụ. */
 .ma-edit { padding: var(--s4); display: flex; flex-direction: column; gap: var(--s3); }
 #src-input { min-height: 52vh; }
 #src-input.is-empty { min-height: 140px; }
@@ -19,7 +30,13 @@
 .ma-edit__tools .ma-hint { font-size: var(--fs-sm); color: var(--ink-3); }
 .ma-edit__note { margin: 0; font-size: var(--fs-sm); color: var(--ink-2); }
 .ma-edit__note b { color: var(--danger); font-weight: 600; }
-/* Trạng thái trống: vùng thả file, ba bước, nút bắt đầu. */
+@media (max-width: 720px) {
+  .ma-edit { padding: var(--s2); }
+  #src-input { min-height: 46vh; }
+  #src-input.is-empty { min-height: 120px; }
+}
+
+/* TRẠNG THÁI TRỐNG: vùng thả file, ba bước, nút bắt đầu. */
 .ma-start {
   display: flex; flex-direction: column; align-items: center; gap: var(--s5); text-align: center;
   padding: var(--s6) var(--s5); border: 1px dashed var(--ink-4); border-radius: var(--r);
@@ -38,26 +55,47 @@
 .ma-steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s4); width: 100%; max-width: 640px; text-align: left; }
 .ma-steps li { display: flex; gap: var(--s2); align-items: flex-start; font-size: var(--fs-sm); color: var(--ink-2); }
 .ma-steps b { color: var(--ink); font-weight: 600; }
+@media (max-width: 720px) {
+  .ma-start { padding: var(--s5) var(--s4); gap: var(--s4); }
+  .ma-start__acts { flex-direction: column; align-items: stretch; width: min(100%, 280px); }   /* ba nút cùng bề rộng */
+  .ma-steps { grid-template-columns: 1fr; gap: var(--s2); }
+}
 
+/* KHUNG XEM: Source, Preview, hay cả hai (Split) cạnh nhau. Split: hai khung cao bằng phần còn lại của khung nhìn (--pane-h,
+   JS tính), cuộn riêng, thanh cuộn hệ thống ẩn (thanh tự vẽ của dải tiến độ thay, css/reading.css; ẩn theo dải thì khung đổi
+   bề rộng sau khi vẽ); vách giữa kéo được. */
 .ma-views { display: grid; grid-template-columns: minmax(0, 1fr); }
-/* Song song: hai khung cao bằng phần còn lại của khung nhìn (--pane-h, JS tính), cuộn riêng; vách giữa kéo được. */
 /* --ra / --rb (tỉ lệ vách, ui/views.js đặt khi kéo) không kế thừa: biến kế thừa đổi ở #views thì mọi nút của hai khung
    tính lại kiểu mỗi bước kéo. */
 @property --ra { syntax: '*'; inherits: false; }
 @property --rb { syntax: '*'; inherits: false; }
 .ma-views[data-mode="split"] { grid-template-columns: minmax(0, var(--ra, 1fr)) 9px minmax(0, var(--rb, 1fr)); }   /* vách 9px: DIVIDER của core/panes.js */
 .ma-views[data-mode="split"] .ma-view { height: var(--pane-h, 70vh); overflow: auto; overscroll-behavior: contain; }
+.ma-views[data-mode="split"] .ma-view { scrollbar-width: none; }
+.ma-views[data-mode="split"] .ma-view::-webkit-scrollbar { display: none; }
+/* Vách: vạch 1px giữa ô 9px; rê / kéo thì --drag-bar --edge-on, focus --ring (như mép cây, mép panel). */
 .ma-divider { position: relative; cursor: col-resize; touch-action: none; }
 .ma-divider::before { content: ''; position: absolute; top: 0; bottom: 0; left: 4px; width: 1px; background: var(--line); transition: background var(--dur) var(--ease), width var(--dur) var(--ease), left var(--dur) var(--ease); }
 .ma-divider:hover::before, .ma-tabbing .ma-divider:focus-visible::before, .ma-divider.is-drag::before { left: 3px; width: var(--drag-bar); background: var(--edge-on); }
-.ma-tabbing .ma-divider:focus-visible::before { background: var(--ring); }   /* như mép cây, mép panel: rê / kéo --edge-on, focus --ring */
+.ma-tabbing .ma-divider:focus-visible::before { background: var(--ring); }
 .ma-divider:focus-visible { outline: none; }
-/* Vạch thay vách khi kéo trên văn bản dài (ui/dom.js dragBar): fixed, dời bằng transform, khung không dàn lại tới khi thả. */
+/* Vạch thay vách (cả mép cây, mép panel) khi kéo trên văn bản dài (ui/dom.js dragBar): fixed, dời bằng transform, khung không
+   dàn lại tới khi thả. */
 .ma-ghost { position: fixed; z-index: 70; width: var(--drag-bar); margin-left: -1px; background: var(--edge-on); pointer-events: none; }
-.ma-view { min-width: 0; padding: var(--s5) var(--s6) var(--s6); }
+/* Khung: đệm quanh chữ; làn đã đọc (css/review.css) định vị theo nó. */
+.ma-view { position: relative; min-width: 0; padding: var(--s5) var(--s6) var(--s6); }
 #wrap-src { padding-left: var(--s4); }
 .ma-view__lbl { display: none; margin-bottom: var(--s2); }
 .ma-views[data-mode="split"] .ma-view__lbl { display: block; }
+.ma-view__head { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); margin: calc(-1 * var(--s2)) 0 var(--s2); }
+.ma-view__head .ma-view__lbl { margin: 0; }
+.ma-syn { margin-left: auto; display: inline-flex; align-items: center; gap: var(--s2); min-height: var(--h-sm); font-size: var(--fs-sm); color: var(--ink-3); cursor: pointer; }
+.ma-empty { display: flex; flex-direction: column; align-items: center; gap: var(--s3); padding: calc(2 * var(--s6)) var(--s5); color: var(--ink-3); }
+.ma-empty p { margin: 0; }
+@media (max-width: 720px), (pointer: coarse) { .ma-syn { min-height: var(--h-touch); } }
+@media (max-width: 720px) { .ma-view, #wrap-src { padding: var(--s3) var(--s3) var(--s4); } }
+
+/* SOURCE: lề số dòng kiểu VS Code, chọn nhiều dòng, màu cú pháp. */
 /* --ln-pad tính ra px ở #v-src (cỡ chữ của dòng), số dòng (::before, chữ nhỏ hơn) dùng lại đúng giá trị ấy. */
 @property --ln-pad { syntax: '<length>'; inherits: true; initial-value: 0px; }
 .ma-src {
@@ -95,9 +133,6 @@
   margin: 0 calc(var(--ln-pad) - var(--gw, 2ch) - var(--s1)) 0 calc(-1 * var(--ln-pad) - var(--s1));   /* rộng 0 như ::before thường (border-box) */
   border-radius: var(--r-xs); background: var(--accent); color: var(--on-accent); font-weight: 600;
 }
-.ma-view__head { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); margin: calc(-1 * var(--s2)) 0 var(--s2); }
-.ma-view__head .ma-view__lbl { margin: 0; }
-.ma-syn { margin-left: auto; display: inline-flex; align-items: center; gap: var(--s2); min-height: var(--h-sm); font-size: var(--fs-sm); color: var(--ink-3); cursor: pointer; }
 /* Màu cú pháp: chỉ đổi màu và kiểu chữ, không đổi chữ — text của khung vẫn đúng bằng nguồn. */
 .sx-head { color: var(--sx-head); font-weight: 600; }
 .sx-punct, .sx-quote { color: var(--sx-punct); }
@@ -110,8 +145,6 @@
 .sx-strong { font-weight: 600; }
 .sx-em { font-style: italic; }
 .sx-strike { text-decoration: line-through; }
-.ma-empty { display: flex; flex-direction: column; align-items: center; gap: var(--s3); padding: calc(2 * var(--s6)) var(--s5); color: var(--ink-3); }
-.ma-empty p { margin: 0; }
 
 /* Markdown đã dựng: giống GitHub (MDAN-006) — font hệ thống, tiêu đề có gạch dưới, khối code xám tô màu theo
    ngôn ngữ, bảng kẻ ô sọc, hộp Note/Tip/…; màu ở token --gh-* / --hl-*. Cỡ chữ theo --md-fs, mọi khoảng cách bằng em. */

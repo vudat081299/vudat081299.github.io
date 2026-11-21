@@ -2,10 +2,8 @@
    Đã đọc là --accent đặc; đã đổi chữ rỗng viền --ink-3 (≥ 3:1); chưa đọc nhạt --line; gợi ý nền --hl-2 viền đứt. */
 
 /* DẢI TIẾN ĐỘ: fixed, JS đặt left / top / height sát mép phải khung. Hai cột: thanh cuộn tự vẽ (.ma-mm__col: con trượt
-   xám, chấm nhận xét) rồi dải đơn vị (.ma-mm__in). Ở Split thanh cuộn hệ thống của khung luôn ẩn (ẩn theo dải thì khung đổi bề rộng sau khi vẽ), thanh tự vẽ thay.
+   xám, chấm nhận xét) rồi dải đơn vị (.ma-mm__in). Ở Split thanh tự vẽ thay thanh cuộn hệ thống của khung (ẩn ở views.css).
    Vùng bấm chỉ rộng bằng hai cột: phần lề phải còn lại vẫn là nền để kéo bôi đen (MDAN-016). */
-.ma-views[data-mode="split"] .ma-view { scrollbar-width: none; }
-.ma-views[data-mode="split"] .ma-view::-webkit-scrollbar { display: none; }
 .ma-mm {
   position: fixed; z-index: 20; width: calc(var(--mm-p) * 2 + var(--mm-w) * 2 + var(--mm-gap)); cursor: pointer; touch-action: none;
   -webkit-user-select: none; user-select: none;

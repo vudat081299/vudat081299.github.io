@@ -34,8 +34,7 @@
 /* LÀN: lớp phủ trong #wrap-*, một cột tuyệt đối (ui/review.js đặt left); không chữ, không chọn được. Nút trong cột nằm
    trong dòng chảy, xếp bằng lề trên (khoảng cách tới nút trước) và cao, JS tính: không định vị từng nút, vì mỗi phần tử
    định vị là một lớp vẽ, hàng nghìn lớp làm cuộn, rê chuột, đổi bề rộng chậm hẳn. Không đặt biến CSS riêng cho từng nút:
-   tính kiểu chậm ~3 lần. */
-.ma-view { position: relative; }
+   tính kiểu chậm ~3 lần. Khung (.ma-view) định vị: css/views.css. */
 .ma-lane { position: absolute; z-index: 1; left: 0; top: 0; width: var(--lane-w); -webkit-user-select: none; user-select: none; }
 /* Đang kéo từ vùng nền (ui/selection.js): nút làn không chắn chỗ con trỏ chữ ở mép hộp chữ (máy hẹp, làn đè lên chữ). */
 html.ma-bgdrag .ma-lane { pointer-events: none; }

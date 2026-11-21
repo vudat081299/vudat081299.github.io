@@ -34,7 +34,7 @@
 }
 /* Màn cảm ứng và điện thoại: mọi điều khiển cao ít nhất --h-touch. */
 @media (max-width: 720px), (pointer: coarse) {
-  .ma-pop__done, .ma-chip, .ma-opts summary, .ma-syn, .ma-rail__n, .ma-toast__btn { min-height: var(--h-touch); }
+  .ma-pop__done, .ma-chip, .ma-opts summary, .ma-rail__n, .ma-toast__btn { min-height: var(--h-touch); }
   .ma-item__act .ma-icbtn, .ma-rail .ma-rail__copy { width: var(--h-touch); height: var(--h-touch); }
   .ma-pathrow .ma-input { height: var(--h-touch); }
   /* Safari iOS phóng to trang khi focus ô chữ nhỏ hơn 16px, và không thu lại. */
@@ -45,19 +45,6 @@
   .ma-set input[type="range"] { height: var(--h-touch); width: calc(100% - var(--h-touch)); }
 }
 @media (max-width: 720px) {
-  .ma-docname { flex-basis: 100%; }
-  .ma-doc__meta { display: none; }
-  .ma-doc__bar { padding: var(--s2); }
-  .ma-start { padding: var(--s5) var(--s4); gap: var(--s4); }
-  .ma-start__acts { flex-direction: column; align-items: stretch; width: min(100%, 280px); }   /* ba nút cùng bề rộng */
-  .ma-steps { grid-template-columns: 1fr; gap: var(--s2); }
-  .ma-tabs { flex: 1; margin-top: 0; }
-  .ma-tab { flex: 1; padding: 0 var(--s2); }
-  .ma-doc__meta { margin-left: 0; width: 100%; }
-  .ma-view, #wrap-src { padding: var(--s3) var(--s3) var(--s4); }
-  .ma-edit { padding: var(--s2); }
-  #src-input { min-height: 46vh; }
-  #src-input.is-empty { min-height: 120px; }
   /* Tấm đáy (History, Hints): tay nắm, thân chừa thanh home; hộp giữa (Settings, Shortcuts) không. */
   .ma-dlg__in {
     width: 100vw; max-width: 100vw; margin: auto 0 0; max-height: min(85vh, calc(var(--vvh, 100vh) - var(--s4))); border-radius: var(--r-lg) var(--r-lg) 0 0;
