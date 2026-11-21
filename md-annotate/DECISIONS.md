@@ -52,7 +52,7 @@
 - MDAN-073 · File code không có Focus mode và đánh dấu đã đọc · `md-annotate/`
 - MDAN-074 · File không phải markdown: một tab Source, Edit là nút bật / tắt · `md-annotate/index.html`, `md-annotate/js/ui/views.js`, `md-annotate/css/views.css`
 - MDAN-075 · Ô lọc file: chờ gõ xong, mẫu chỉ thử phần đầu tên · `md-annotate/js/ui/tree-find.js`, `md-annotate/js/core/tree-find.js`
-- MDAN-076 · Cổng xanh thì push main ngay, smoke chạy sau · `md-annotate/`
+- MDAN-083 · Tạm dừng test-core và smoke · thay cho MDAN-076 · `md-annotate/tools/`
 - MDAN-079 · Nét đứt theo khối đang đọc: xám là khối hiện tại, xanh là gợi ý; viên thuốc Accept N · thay cho MDAN-077, MDAN-078 · `md-annotate/css/review.css`, `md-annotate/js/ui/review.js`, `md-annotate/js/ui/dwell.js`, `md-annotate/index.html`, `md-annotate/data/shortcuts.json`
 - MDAN-080 · Cây sâu cuộn ngang, tự cuộn tới tên file đang mở · `md-annotate/js/ui/tree.js`, `md-annotate/js/core/place.js`
 - MDAN-081 · Tab Review và dòng đã đọc trong prompt chỉ ở file markdown · `md-annotate/js/ui/panel.js`, `md-annotate/js/ui/prompt.js`, `md-annotate/js/core/file-type.js`, `md-annotate/js/core/prompt.js`
@@ -446,11 +446,11 @@ sẵn có), tắt hay bấm Source thì về Source. Phím mũi tên ở tab Sou
 Ô lọc của cây lọc khi ngừng gõ khoảng 150 ms, không sau từng phím; Enter / ↓ thì lọc ngay rồi vào hàng đầu. Mẫu biểu thức
 chính quy chỉ so với 200 ký tự đầu của tên file (tìm chữ thường thì cả tên): chặn nhẹ mẫu gõ dở làm trang chậm.
 
-## MDAN-076 · Cổng xanh thì push main ngay, smoke chạy sau
-21/11/2026 · `md-annotate/`
+## MDAN-083 · Tạm dừng test-core và smoke · thay cho MDAN-076
+21/11/2026 · `md-annotate/tools/`
 
-Commit qua cổng (check.sh của md-annotate và của gốc, hook pre-commit) thì push lên main ngay, không chờ smoke. Smoke
-chạy sau; đỏ thì sửa bằng commit mới rồi push tiếp, không amend hay force-push commit đã push. Chỉ push nhánh main.
+Chủ trang tạm thôi sửa md-annotate. `check.sh` không chạy `test-core.mjs`; agent không chạy `smoke.cjs`. Hai file giữ
+nguyên. Khi sửa lớn thì bật lại cả hai (HANDOFF). Commit qua cổng thì push ngay; không amend hay force-push commit đã push.
 
 ## MDAN-079 · Nét đứt theo khối đang đọc: xám là khối hiện tại, xanh là gợi ý; viên thuốc Accept N · thay cho MDAN-077, MDAN-078
 21/11/2026 · `md-annotate/css/review.css`, `md-annotate/js/ui/review.js`, `md-annotate/js/ui/dwell.js`, `md-annotate/index.html`, `md-annotate/data/shortcuts.json`

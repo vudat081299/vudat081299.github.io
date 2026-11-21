@@ -4,6 +4,8 @@ Làm xong mục nào thì xoá mục ấy.
 
 ## CHƯA LÀM
 
+- Sửa lớn md-annotate thì bật lại hai bài thử đang tạm dừng (MDAN-083): bỏ dấu `#` ở hai dòng `test-core.mjs` trong
+  `tools/check.sh`, và chạy `tools/smoke.cjs` (cách chạy ở đầu file). Sửa luôn mục *Cổng* trong `CLAUDE.md`.
 - Cây lớn: `localStorage` chứa khoảng 5 triệu ký tự cho cả trang; nạp folder vượt mức thì hoàn lại và báo. Chuyển lưu phiên
   sang IndexedDB (chỉ đổi `ui/state.js` / `ui/store.js`, MDAN-022) khi cần folder vài MB.
 - Chế độ folder thật (File System Access, ghi ngược ra đĩa): lớp lưu mới, nghiệp vụ ở `core/` giữ nguyên.

@@ -196,5 +196,5 @@
 
 ## Cổng: `sh md-annotate/tools/check.sh`
 
-- `tools/lint.py` (luật kiểm ghi ở đầu file) và `tools/test-core.mjs` (bài thử `js/core/`; logic thuần mới thêm bài ở đây).
-- Sửa sự kiện, neo, giao diện: chạy `tools/smoke.cjs` (cách chạy ở đầu file) sau khi push. Cổng `check.sh` xanh thì push `main` ngay; smoke đỏ thì sửa bằng commit mới rồi push tiếp (MDAN-076).
+- `tools/lint.py` (luật kiểm ghi ở đầu file). Tạm dừng (MDAN-083): `tools/test-core.mjs` (bài thử `js/core/`) không chạy trong `check.sh`; đừng chạy `tools/smoke.cjs`. Chỉ bật lại khi chủ trang yêu cầu hoặc khi sửa lớn (HANDOFF).
+- Cổng `check.sh` xanh thì push ngay; không amend hay force-push commit đã push.
