@@ -5,12 +5,12 @@
 .ma-tree {
   --row-h: var(--h-md);                /* hàng, nút đầu cây ở máy có chuột; cảm ứng: --h-touch */
   --name-fs: var(--fs-sm);             /* chữ tên hàng và ô đổi tên; cảm ứng --fs-lg (iOS không phóng to ô nhập ≥ 16px) */
-  /* Hình học một hàng, mọi luật dưới đây tính từ đây: ô chevron + khe, biểu tượng + khe, cột ⋯ và nút ⋯ (theo --row-h: tâm
-     ⋯ của hàng thẳng tâm nút đầu cây, cùng cỡ --row-h), đệm phải. */
+  /* Hình học một hàng, mọi luật dưới đây tính từ đây: ô chevron + khe, biểu tượng + khe, cột ⋯ (theo --row-h: tâm ⋯ của
+     hàng thẳng tâm nút đầu cây) và nút ⋯, đệm phải. */
   --chev-w: 15px; --chev-gap: 3px; --ic-w: 16px; --ic-gap: 6px;
   --row-end: 2px;                      /* đệm phải của hàng sau cột ⋯; cảm ứng 0 */
   --more-w: calc(var(--row-h) - 2 * var(--row-end));   /* cột ⋯ ở mép phải hàng */
-  --more-b: calc(var(--more-w) - 2 * var(--row-end));  /* nút ⋯: lùi --row-end khỏi mép thẻ mọi phía */
+  --more-b: calc(var(--ic-w) + var(--s2));            /* nút ⋯ (vòng tròn): biểu tượng + --s1 mỗi bên; vùng bấm trọn cột ⋯ */
   --row-fixed: calc(var(--s1) + var(--chev-w) + var(--chev-gap) + var(--ic-w) + var(--ic-gap) + var(--s1) + var(--more-w) + var(--row-end));
   --name-min: 96px;                    /* tên ngắn nhất trước khi thụt đẩy thân cuộn ngang */
   --fit-d: 2;                          /* thụt tới chừng này cấp thì không bao giờ cuộn ngang, ở mọi bề rộng */
@@ -79,7 +79,6 @@ html.ma-tree-on body > .ma-tree {
 .ma-tree__n { min-width: 0; overflow: hidden; text-overflow: ellipsis; font: 600 var(--fs-md)/var(--lh-tight) var(--sans); color: var(--ink); }
 .ma-tree__head .ma-icbtn { flex: none; width: var(--row-h); height: var(--row-h); color: var(--ink-3); }
 @media (hover: hover) { .ma-tree__head .ma-icbtn:hover { color: var(--ink); } }
-#tree-more { border-radius: var(--r-pill); }   /* ⋯ tròn như ⋯ của hàng */
 #tree-more[aria-expanded="true"] { background: var(--chip); color: var(--ink); }
 .ma-tree__close { display: none; }
 
@@ -190,9 +189,11 @@ html.ma-tree-on body > .ma-tree {
 .ma-tree__body.is-drop .ma-trow__end::after { box-shadow: none; }
 .ma-trow__meta { display: flex; align-items: center; gap: var(--s1); }
 .ma-trow__more.ma-icbtn {
-  flex: none; width: var(--more-b); height: var(--more-b); margin: 0 calc((var(--more-w) - var(--more-b)) / 2);
+  position: relative; flex: none; width: var(--more-b); height: var(--more-b); margin: 0 calc((var(--more-w) - var(--more-b)) / 2);
   border-radius: var(--r-pill); color: var(--ink-3);
 }
+/* Vùng bấm của ⋯: trọn cột ⋯ và trọn cao hàng (cảm ứng: 44 × 44px), vòng tròn nhìn thấy vẫn nhỏ. */
+.ma-trow__more::after { content: ''; position: absolute; inset: calc((var(--more-b) - var(--row-h)) / 2) calc((var(--more-b) - var(--more-w)) / 2); }
 .ma-trow:focus-within .ma-trow__more, .ma-trow.is-menu .ma-trow__more { color: var(--ink-2); }
 @media (hover: hover) {
   .ma-trow__more.ma-icbtn { opacity: 0; }

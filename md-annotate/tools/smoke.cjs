@@ -2444,8 +2444,9 @@ const cornerClash = (page) => page.evaluate(() => {
     check('cây 390: cột không hiện, nút có, không tràn ngang', !(await tstate(mp2)).shown && (await tstate(mp2)).btn && (await overflow(mp2)) === 0, String(await overflow(mp2)));
     await mp2.tap('#btn-tree'); await mp2.waitForTimeout(300);
     const sh = await mp2.evaluate(() => { const d = document.getElementById('dlg-tree'), r = document.getElementById('tree').getBoundingClientRect(), row = document.querySelector('#tree-list .ma-trow').getBoundingClientRect(), more = document.querySelector('#tree-list .ma-trow__more').getBoundingClientRect();
-      return { open: d.open, inDlg: d.contains(document.getElementById('tree')), left: Math.round(r.left), w: Math.round(r.width), rowH: Math.round(row.height), more: Math.round(more.width), exp: document.getElementById('btn-tree').getAttribute('aria-expanded') }; });
-    check('cây 390: nút mở tấm trượt từ mép trái, hàng ≥ 44px, ⋯ luôn hiện', sh.open && sh.inDlg && sh.left === 0 && sh.w <= 390 && sh.rowH >= 44 && sh.more >= 44 && sh.exp === 'true', JSON.stringify(sh));
+      return { open: d.open, inDlg: d.contains(document.getElementById('tree')), left: Math.round(r.left), w: Math.round(r.width), rowH: Math.round(row.height), dot: Math.round(more.width),
+        hit: [[-20, 0], [20, 0], [0, -20], [0, 20]].every(([dx, dy]) => { const e = document.elementFromPoint(more.left + more.width / 2 + dx, more.top + more.height / 2 + dy); return !!e && e.closest('.ma-trow__more') === document.querySelector('#tree-list .ma-trow__more'); }), exp: document.getElementById('btn-tree').getAttribute('aria-expanded') }; });
+    check('cây 390: nút mở tấm trượt từ mép trái, hàng ≥ 44px, ⋯ luôn hiện: vòng tròn nhỏ, vùng chạm 44 × 44px', sh.open && sh.inDlg && sh.left === 0 && sh.w <= 390 && sh.rowH >= 44 && sh.dot <= 28 && sh.hit && sh.exp === 'true', JSON.stringify(sh));
     check('cây 390: tấm không tràn ngang', (await overflow(mp2)) === 0 && (await mp2.$eval('#dlg-tree', (d) => Math.max(d.scrollWidth - d.clientWidth, document.getElementById('tree').scrollWidth - document.getElementById('tree').clientWidth))) <= 0);
     const mtail = await tailState(mp2);
     check('cây 390: tấm trượt cuộn hết thì tâm hàng cuối ở tâm thân (±2px)', mtail.scroll > 0 && Math.abs(mtail.dc) <= 2, JSON.stringify(mtail));
