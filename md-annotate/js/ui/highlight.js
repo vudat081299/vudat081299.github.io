@@ -1,6 +1,6 @@
 /* Tô màu code bằng highlight.js, nạp khi cần (MDAN-066): lõi và mỗi ngôn ngữ (sổ ở core/langs.js) là một module ES trên
    cdnjs, tải bằng fetch có integrity (import() không kiểm được integrity) rồi import từ blob. Mỗi file tải một lần, các
-   lời gọi cùng lúc chung một promise; hỏng thì giữ chữ trơn, báo ở console một lần tới khi tải lại được, và quên lần hỏng:
+   lời gọi cùng lúc chung một promise; hỏng thì giữ chữ trơn, báo ở console một lần (cả phiên trang), và quên lần hỏng:
    lần vẽ sau (mở lại file) tải lại. Ngôn ngữ vừa sẵn thì vẽ lại
    (renderAll); đang bôi đen trong khung thì chờ bỏ chọn, để không mất vùng chọn.
    Xuất: codeTokens, paintFences.
@@ -35,7 +35,7 @@ function highlighter(id) {
   if (!langState.has(id)) {
     langState.set(id, 'loading');
     var ids = [id].concat(LANGS[id][2] ? LANGS[id][2].split(' ') : []);
-    Promise.all(ids.map(register)).then(function () { langState.set(id, 'ready'); warned = false; repaint(); }, function (err) {
+    Promise.all(ids.map(register)).then(function () { langState.set(id, 'ready'); repaint(); }, function (err) {
       langState.delete(id);
       if (!warned) console.warn('md-annotate: code colors could not load (' + err.message + '); showing plain text.');
       warned = true;
