@@ -1,6 +1,7 @@
 /* Tô màu code bằng highlight.js, nạp khi cần (MDAN-066): lõi và mỗi ngôn ngữ (sổ ở core/langs.js) là một module ES trên
    cdnjs, tải bằng fetch có integrity (import() không kiểm được integrity) rồi import từ blob. Mỗi file tải một lần, các
-   lời gọi cùng lúc chung một promise; hỏng thì giữ chữ trơn, báo một lần ở console. Ngôn ngữ vừa sẵn thì vẽ lại
+   lời gọi cùng lúc chung một promise; hỏng thì giữ chữ trơn, báo ở console một lần tới khi tải lại được, và quên lần hỏng:
+   lần vẽ sau (mở lại file) tải lại. Ngôn ngữ vừa sẵn thì vẽ lại
    (renderAll); đang bôi đen trong khung thì chờ bỏ chọn, để không mất vùng chọn.
    Xuất: codeTokens, paintFences.
    Dùng: core/langs.js, core/file-type.js, core/code-tokens.js, ui/dom.js, ui/render.js. */
@@ -11,10 +12,10 @@ import { $, h } from './dom.js';
 import { renderAll } from './render.js';
 
 var mods = new Map();    // đường dẫn → Promise của export default
-var state = new Map();   // id → 'loading' | 'ready' | 'failed' (ngôn ngữ cùng ngôn ngữ nạp kèm)
+var state = new Map();   // id → 'loading' | 'ready' (ngôn ngữ cùng ngôn ngữ nạp kèm); hỏng thì xoá
 var hljs = null, warned = false;
 
-/* Module ES ở HLJS + path, kiểm integrity; một promise cho mọi lời gọi. */
+/* Module ES ở HLJS + path, kiểm integrity; một promise cho mọi lời gọi, hỏng thì bỏ để lần sau tải lại. */
 function loadModule(path, integrity) {
   if (!mods.has(path)) mods.set(path, fetch(HLJS + path, { integrity: integrity })
     .then(function (r) { if (!r.ok) throw new Error(path + ': HTTP ' + r.status); return r.blob(); })
@@ -22,7 +23,7 @@ function loadModule(path, integrity) {
       var url = URL.createObjectURL(new Blob([b], { type: 'text/javascript' }));
       return import(url).finally(function () { URL.revokeObjectURL(url); });
     })
-    .then(function (m) { return m.default; }));
+    .then(function (m) { return m.default; }, function (err) { mods.delete(path); throw err; }));
   return mods.get(path);
 }
 function register(id) {
@@ -34,8 +35,8 @@ function highlighter(id) {
   if (!state.has(id)) {
     state.set(id, 'loading');
     var ids = [id].concat(LANGS[id][2] ? LANGS[id][2].split(' ') : []);
-    Promise.all(ids.map(register)).then(function () { state.set(id, 'ready'); repaint(); }, function (err) {
-      state.set(id, 'failed');
+    Promise.all(ids.map(register)).then(function () { state.set(id, 'ready'); warned = false; repaint(); }, function (err) {
+      state.delete(id);
       if (!warned) console.warn('md-annotate: code colors could not load (' + err.message + '); showing plain text.');
       warned = true;
     });

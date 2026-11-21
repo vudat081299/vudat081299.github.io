@@ -3782,6 +3782,29 @@ const cornerClash = (page) => page.evaluate(() => {
     check('kéo từ nền: cửa sổ mất focus giữa chừng thì thôi tự cuộn', t0 > 0 && t2 === t1, JSON.stringify([t0, t1, t2]));
     await c.close();
   }
+  {
+    // highlight.js tải hỏng một lần (mất mạng): chữ trơn, một cảnh báo; mở lại file thì tải lại và lên màu.
+    const c = await treeContext({ viewport: { width: 1440, height: 900 }, colorScheme: 'light' });
+    let block = true, warns = 0;
+    await c.route('**/highlight.js/**', (r) => (block ? r.abort() : r.continue()));
+    const p = await c.newPage();   // không watch: lần tải bị chặn ghi lỗi mạng ở console, đó là điều đang thử
+    p.on('pageerror', (e) => errors.push(String(e)));
+    p.on('console', (m) => { if (m.type() === 'warning' && /code colors/.test(m.text())) warns++; });
+    await p.goto(BASE); await p.waitForFunction(() => window.marked && window.DOMPurify);
+    await pasteText(p, DOC);
+    await p.setInputFiles('#file-in', { name: 'a.py', mimeType: 'text/plain', buffer: Buffer.from('def f(x):\n    return "s"\n') });
+    await p.waitForTimeout(600);
+    const sx = () => p.$$eval('#v-src [class^="sx-"]', (e) => e.length);
+    const n0 = await sx();
+    block = false;
+    const rowOf = (name) => `#tree-list .ma-trow:has(> .ma-trow__name:text-is("${name}"))`;
+    await p.click(rowOf('untitled.md')); await p.waitForTimeout(150);
+    await p.click(rowOf('a.py'));
+    await p.waitForFunction(() => document.querySelectorAll('#v-src [class^="sx-"]').length > 0, null, { timeout: 8000 }).catch(() => {});
+    const n1 = await sx();
+    check('highlight.js hỏng một lần: chữ trơn, một cảnh báo; mở lại file thì tải lại, lên màu', n0 === 0 && warns === 1 && n1 > 0, JSON.stringify([n0, warns, n1]));
+    await c.close();
+  }
   // ── end sửa sau rà soát ──
 
   check('không lỗi console', !errors.length, errors.join(' | '));
