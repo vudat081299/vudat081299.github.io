@@ -59,7 +59,11 @@ function mirrorSel() {
    trái là đầu dòng, ngoài phải là cuối dòng), lấy chỗ con trỏ chữ ở đó; vùng chọn từ điểm bấm (Shift: từ đầu vùng chọn cũ
    trong khung) tới điểm hiện tại. Kéo quá mép trên / dưới phần thấy thì khung cuộn (edgeScroll). Thả ra vào cùng luồng với
    kéo trên chữ (pointerup). */
+/* Ba danh sách đi cùng nhau, sửa một thì xem hai cái kia: BG (nơi kéo từ nền được bắt đầu), SKIP (cú bấm chuột không thuộc
+   việc bôi đen: nút, ô gõ chữ, hộp prompt, hộp thoại, thanh trên, cây, vách, thanh đáy, nút nổi, dải tiến độ) và luật
+   user-select ở css/base.css (khung trang không bôi đen được, trừ ô gõ chữ và hộp prompt). */
 var BG = 'html, body, .ma-grid, .ma-left, .ma-head, .ma-doc, .ma-doc__bar, .ma-views, .ma-view, .ma-view__head, .ma-panel, .ma-panel *';
+var SKIP = 'button, input, textarea, select, label, a, summary, [contenteditable], .ma-out, .ma-pop, dialog, .ma-bar, .ma-tree, .ma-divider, #panel-grip, .ma-dock, #fab, .ma-mm';
 var bg = null;   // { root, scroller, anchor, x, y, moved, raf }
 function caretAt(x, y) {
   var p = document.caretPositionFromPoint ? document.caretPositionFromPoint(x, y) : null;
@@ -120,11 +124,11 @@ function cancelDrag() { if (bg) bgEnd(); dragging = false; }
 
 export function initSelection() {
   /* Chuột / bút: thả ra mà vùng chọn nằm trong văn bản thì mở hộp nhận xét, dù kéo bắt đầu ở đâu (nền: bgStart). Bỏ qua
-     nút, ô nhập, hộp prompt (chữ của nó bôi đen được), hộp thoại, thanh trên, cây, vách kéo, và bấm trên thanh cuộn (offsetX/Y vượt clientWidth/Height). */
+     SKIP và bấm trên thanh cuộn (offsetX/Y vượt clientWidth/Height). */
   document.addEventListener('pointerdown', function (e) {
     if (e.pointerType === 'touch' || e.button !== 0) return;
     var t = e.target;
-    if (!t || !t.closest || t.closest('button, input, textarea, select, label, a, summary, [contenteditable], .ma-out, .ma-pop, dialog, .ma-bar, .ma-tree, .ma-divider, #panel-grip, .ma-dock, #fab, .ma-mm')) return;
+    if (!t || !t.closest || t.closest(SKIP)) return;
     if (t.nodeType === 1 && t !== document.documentElement && (e.offsetX > t.clientWidth || e.offsetY > t.clientHeight)) return;
     dragging = true;
     bgStart(e);

@@ -23,8 +23,8 @@ a { color: inherit; }
 /* Vùng chọn phản chiếu sang khung kia ở Split: cùng màu vùng chọn, nhạt hơn. */
 ::highlight(ma-mirror) { background-color: var(--hl-mirror); }
 /* Khung trang (thanh trên, cây file, panel nhận xét và thanh đáy thay nó ở máy hẹp) không bôi đen được, trừ ô gõ chữ và
-   hộp prompt (.ma-out: chữ để chép ra) (MDAN-064). Kéo bắt đầu ở nền panel là bôi đen văn bản (ui/selection.js; hai chỗ
-   ấy bỏ qua). */
+   hộp prompt (.ma-out: chữ để chép ra) (MDAN-064, MDAN-072). Kéo bắt đầu ở nền panel là bôi đen văn bản: BG / SKIP ở
+   ui/selection.js, đi cùng luật này. */
 .ma-bar, .ma-tree, .ma-panel, .ma-dock { -webkit-user-select: none; user-select: none; }
 :is(.ma-bar, .ma-tree, .ma-panel) :is(input, textarea, [contenteditable], .ma-out) { -webkit-user-select: text; user-select: text; }
 :focus-visible { outline: none; }
