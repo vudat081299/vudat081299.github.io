@@ -27,8 +27,8 @@ html.dark .ma-tree { --guide: var(--line); --guide-on: color-mix(in srgb, var(--
   .ma-bar { --tg: var(--h); }          /* cỡ nút; cảm ứng --h-touch (mobile.css) */
   .ma-bar #btn-tree { position: absolute; z-index: 1; left: calc(var(--pad) + env(safe-area-inset-left)); top: calc((var(--bar-h) - var(--tg)) / 2); width: var(--tg); height: var(--tg); }
   .ma-bar .ma-bar__in {
-    padding-left: max(var(--pad), calc(var(--pad) + env(safe-area-inset-left) + var(--tg) + var(--s2) - var(--tree-off)
-      - (100% - min(100%, max(calc(var(--wrap-f) * (100vw - var(--tree-off))), var(--wrap-min)))) / 2));
+    padding-left: max(var(--pad), calc(var(--pad) + env(safe-area-inset-left) + var(--tg) + var(--s2) - var(--tree-off, 0px)
+      - (100% - min(100%, max(calc(var(--wrap-f) * (100vw - var(--tree-off, 0px))), var(--wrap-min)))) / 2));
   }
 }
 
@@ -38,7 +38,8 @@ html.dark .ma-tree { --guide: var(--line); --guide-on: color-mix(in srgb, var(--
    phần trên cột cùng nền --surface và viền phải với cột: cây đọc như một cột từ đỉnh tới đáy. */
 body > .ma-tree { display: none; }
 /* --tree-off: cây docked chiếm mép trái bao nhiêu. Không kế thừa, đặt thẳng lên hai phần tử dùng nó: biến kế thừa đổi ở html
-   thì trình duyệt tính lại kiểu mọi nút của văn bản (10.000 dòng: ~0,6 s mỗi lần ẩn / hiện cây). */
+   thì trình duyệt tính lại kiểu mọi nút của văn bản (10.000 dòng: ~0,6 s mỗi lần ẩn / hiện cây). Trình duyệt chưa có
+   @property (Firefox < 128, Safari < 16.4) bỏ initial-value: mọi chỗ đọc ghi var(--tree-off, 0px). */
 @property --tree-off { syntax: '<length>'; inherits: false; initial-value: 0px; }
 html.ma-tree-on :is(.ma-wrap, .ma-bar__in) { --tree-off: var(--tree); }
 html.ma-tree-on body { padding-left: var(--tree); }
@@ -51,9 +52,9 @@ html.ma-tree-on body > .ma-tree {
   display: flex; position: fixed; z-index: 25; left: 0; top: calc(var(--bar-h) + 1px); bottom: 0; width: var(--tree);
   padding: 0 0 env(safe-area-inset-bottom) env(safe-area-inset-left); border-right: 1px solid var(--line);
 }
-/* ≤ 1080px: thanh đáy (mobile.css) cao 76px: cây dừng trên nó. */
+/* ≤ 1080px: cây dừng trên thanh đáy (cao --dock-h, mobile.css). */
 @media (max-width: 1080px) {
-  html.ma-tree-on body > .ma-tree { bottom: calc(76px + env(safe-area-inset-bottom)); padding-bottom: 0; }
+  html.ma-tree-on body > .ma-tree { bottom: calc(var(--dock-h) + var(--sa-b)); padding-bottom: 0; }
 }
 .ma-tree { flex-direction: column; min-width: 0; overflow: hidden; background: var(--surface); }
 /* Kéo mép phải để đổi bề rộng. */

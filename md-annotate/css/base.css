@@ -36,7 +36,7 @@ a { color: inherit; }
 .ma-panel__body, .ma-dlg__b, .ma-out, .ma-opts__in, .ma-view { scrollbar-gutter: stable; }
 /* Vùng làm việc: --wrap-f của khung nhìn còn lại (trừ cây docked), không hẹp hơn --wrap-min, không quá chỗ có; căn giữa (MDAN-005,
    MDAN-037). core/panes.js wrapWidth tính y như vậy. */
-.ma-wrap { width: min(100%, max(calc(var(--wrap-f) * (100vw - var(--tree-off))), var(--wrap-min))); margin-inline: auto; padding: 0 var(--pad); }
+.ma-wrap { width: min(100%, max(calc(var(--wrap-f) * (100vw - var(--tree-off, 0px))), var(--wrap-min))); margin-inline: auto; padding: 0 var(--pad); }
 svg.ma-i { width: 16px; height: 16px; flex: none; }
 
 /* THANH TRÊN */

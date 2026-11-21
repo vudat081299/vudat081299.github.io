@@ -15,11 +15,14 @@ html.ma-lock.ma-lock-g { scrollbar-gutter: stable; }
   .ma-grid, html.ma-railed .ma-grid { grid-template-columns: minmax(0, 1fr); }
   .ma-grid > .ma-panel { display: none; }
   /* Thanh đáy: số nhận xét (mở panel trong tấm trượt) và nút chép. */
-  :root { --dock-h: 76px; }   /* cao thanh đáy, chưa kể vùng an toàn: đệm đáy trang, chỗ của nút nổi / viên thuốc / toast */
+  /* Cao thanh đáy (cả viền trên, chưa kể vùng an toàn); .ma-dock cao đúng chừng ấy: đệm đáy trang, đáy cột cây (tree.css),
+     chỗ của nút nổi / viên thuốc / toast đều đo từ nó. */
+  :root { --dock-h: calc(var(--h) + 2 * var(--s3) + 1px); }
   body { padding-bottom: calc(var(--dock-h) + var(--sa-b)); }
   .ma-dock {
     display: flex; align-items: center; gap: var(--s2); position: fixed; z-index: 40; left: 0; right: 0; bottom: 0;
-    padding: var(--s3) max(var(--s4), calc((100vw - 720px) / 2), var(--sa-r)) calc(var(--s3) + var(--sa-b)) max(var(--s4), calc((100vw - 720px) / 2), var(--sa-l));
+    height: calc(var(--dock-h) + var(--sa-b));
+    padding: 0 max(var(--s4), calc((100vw - 720px) / 2), var(--sa-r)) var(--sa-b) max(var(--s4), calc((100vw - 720px) / 2), var(--sa-l));
     background: color-mix(in srgb, var(--surface) 92%, transparent);
     backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
     border-top: 1px solid var(--line);
@@ -44,7 +47,6 @@ html.ma-lock.ma-lock-g { scrollbar-gutter: stable; }
 /* Điện thoại nằm ngang (thấp): thanh đáy gọn, bỏ dòng tiêu đề trang. */
 @media (max-width: 1080px) and (max-height: 500px) {
   :root { --dock-h: calc(var(--h-touch) + 2 * var(--s1)); }
-  .ma-dock { padding-top: var(--s1); padding-bottom: calc(var(--s1) + var(--sa-b)); }
   .ma-head { display: none; }
 }
 /* Chữ chỉ cho màn cảm ứng (gợi ý nhấn giữ, cách dùng viên thuốc) và chỉ cho chuột / bàn phím. */

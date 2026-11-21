@@ -3722,6 +3722,38 @@ const cornerClash = (page) => page.evaluate(() => {
     check('D3: file .py không chạy marked.parse / marked.lexer (vẽ lại, rê, cuộn, X, J)', st.mk === 0, String(st.mk));
     await c.close();
   }
+  {
+    // ≤ 1080px: thanh đáy cao đúng --dock-h; cột cây dừng sát đỉnh nó; toast cách nó 10px (cả màn thấp: --dock-h nhỏ hơn).
+    for (const [w, h] of [[1000, 800], [1000, 450]]) {
+      const c = await treeContext({ viewport: { width: w, height: h }, colorScheme: 'light' });
+      const p = await c.newPage(); watch(p);
+      await p.goto(BASE); await p.waitForFunction(() => window.marked && window.DOMPurify);
+      await pasteText(p, DOC); await p.waitForTimeout(150);
+      await p.evaluate(() => { const t = document.getElementById('toast'); t.hidden = false; t.textContent = 'Thử'; });
+      const m = await p.evaluate(() => {
+        const r = (id) => document.getElementById(id).getBoundingClientRect(), dock = r('dock'), tree = document.querySelector('body > .ma-tree').getBoundingClientRect();
+        return { dockH: dock.height,
+          gapTree: Math.round(dock.top - tree.bottom), gapToast: Math.round(parseFloat(getComputedStyle(document.getElementById('toast')).bottom) - dock.height), treeOn: document.documentElement.classList.contains('ma-tree-on') };
+      });
+      const dh = await p.evaluate(() => { const d = document.createElement('div'); d.style.height = 'var(--dock-h)'; document.body.append(d); const v = d.getBoundingClientRect().height; d.remove(); return v; });
+      check(`${w}×${h}: thanh đáy cao đúng --dock-h, cây dừng sát nó, toast cách 10px`, m.treeOn && Math.abs(m.dockH - dh) < 0.5 && m.gapTree === 0 && m.gapToast === 10, JSON.stringify([m, dh]));
+      await c.close();
+    }
+    // Trình duyệt chưa có @property: --tree-off không có giá trị đầu, vùng làm việc vẫn đúng bề rộng khi ẩn cây.
+    const c = await treeContext({ viewport: { width: 1440, height: 900 }, colorScheme: 'light' });
+    const p = await c.newPage(); watch(p);
+    await p.goto(BASE); await p.waitForFunction(() => window.marked && window.DOMPurify);
+    await pasteText(p, DOC); await p.waitForTimeout(100);
+    if (await p.evaluate(() => document.documentElement.classList.contains('ma-tree-on'))) { await p.click('#btn-tree'); await p.waitForTimeout(100); }
+    const w0 = await p.$eval('.ma-wrap', (e) => e.getBoundingClientRect().width);
+    const w1 = await p.evaluate(() => {
+      for (const sh of document.styleSheets) { let rs; try { rs = sh.cssRules; } catch (e) { continue; }
+        for (let i = rs.length - 1; i >= 0; i--) if (rs[i].type === 7 || /^@property/.test(rs[i].cssText)) sh.deleteRule(i); }
+      return document.querySelector('.ma-wrap').getBoundingClientRect().width;
+    });
+    check('không @property: --tree-off rơi về 0px, vùng làm việc giữ bề rộng', w0 > 900 && Math.abs(w1 - w0) < 1, JSON.stringify([w0, w1]));
+    await c.close();
+  }
   // ── end sửa sau rà soát ──
 
   check('không lỗi console', !errors.length, errors.join(' | '));
