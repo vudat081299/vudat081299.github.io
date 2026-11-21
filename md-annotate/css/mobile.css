@@ -157,4 +157,4 @@ html.ma-sheet-sp body { padding-bottom: max(calc(var(--dock-h, 0px) + var(--sa-b
   .ma-pop.is-sheet:has(#pop-head:not([hidden])) :is(.ma-pop__q, .ma-chips) { display: none; }
   .ma-pop.is-sheet:has(#pop-head:not([hidden])) #pop-text { height: var(--h-touch); min-height: var(--h-touch); }
 }
-@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+@media (prefers-reduced-motion: reduce) { *, ::before, ::after { transition: none !important; } }

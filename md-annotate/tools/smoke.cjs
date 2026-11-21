@@ -547,7 +547,7 @@ const cornerClash = (page) => page.evaluate(() => {
   });
   await vp.goto(BASE);
   await vp.waitForFunction(() => window.marked && window.DOMPurify);
-  await vp.waitForTimeout(300);
+  await vp.waitForFunction(() => { try { return !!JSON.parse(localStorage.getItem('md-annotate:stats:v1')).items['viết gọn lại']; } catch (e) { return false; } });   // data/hints.json đã nạp, đã chuyển
   const mig = await vp.evaluate(() => JSON.parse(localStorage.getItem('md-annotate:stats:v1')).items);
   check('chuyển gợi ý: số đếm từ khoá tiếng Anh về tiếng Việt, giữ ẩn, giữ gợi ý tự gõ',
     mig['viết gọn lại'] && mig['viết gọn lại'].n === 7 && !mig['make it shorter'] && mig['xoá đoạn này'] && mig['xoá đoạn này'].hidden && mig['ý riêng của tôi'].n === 3, JSON.stringify(mig));
@@ -560,6 +560,9 @@ const cornerClash = (page) => page.evaluate(() => {
   const dpage = await dctx.newPage(); watch(dpage);
   await dpage.goto(BASE);
   check('máy tối thì trang tối', await dpage.evaluate(() => document.documentElement.classList.contains('dark')));
+  await dpage.waitForFunction(() => window.marked && window.DOMPurify);
+  /* Vạch của tab chọn chuyển màu (transition, cả ::after): đo màu cuối, không đo giữa chừng. */
+  await dpage.evaluate(() => document.getAnimations().forEach((a) => a.finish()));
   const tab = await dpage.evaluate(() => {
     const lum = (c) => { const v = c.match(/[\d.]+/g).slice(0, 3).map((x) => { x /= 255; return x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4; }); return 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2]; };
     const t = document.querySelector('.ma-ptab[aria-selected="true"]');
@@ -3879,6 +3882,15 @@ const cornerClash = (page) => page.evaluate(() => {
     const m = await p.evaluate(() => { const q = document.getElementById('tree-q'), x0 = q.getBoundingClientRect().left + parseFloat(getComputedStyle(q).paddingLeft);
       return ['tree-q-note', 'tree-none'].map((id) => { const e = document.getElementById(id); return Math.round(e.getBoundingClientRect().left - x0) + ' ' + getComputedStyle(e).fontSize; }); });
     check('ô lọc: hai dòng báo cùng cỡ 13px, thẳng chữ trong ô (±1px viền)', m.join() === '0 13px,0 13px', JSON.stringify(m));
+    await c.close();
+  }
+  {
+    // Giảm chuyển động: cả lớp giả (vạch tab ::after) cũng không có transition.
+    const c = await browser.newContext({ viewport: { width: 1280, height: 900 }, reducedMotion: 'reduce' });
+    const p = await c.newPage(); watch(p);
+    await p.goto(BASE); await p.waitForFunction(() => window.marked && window.DOMPurify);
+    const d = await p.evaluate(() => [getComputedStyle(document.querySelector('.ma-tab'), '::after').transitionDuration, getComputedStyle(document.querySelector('.ma-tab')).transitionDuration]);
+    check('giảm chuyển động: phần tử và lớp giả không transition', d.every((x) => /^0s(, 0s)*$/.test(x)), JSON.stringify(d));
     await c.close();
   }
   // ── end sửa sau rà soát ──
