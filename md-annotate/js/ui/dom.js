@@ -95,10 +95,16 @@ export function typing(t) {
 /* Kéo một vách (chuột / bút / chạm) theo trục ngang: onMove(clientX) khi kéo, onDone() khi thả. ghostly() đúng lúc bấm
    (văn bản dài: dàn lại mỗi bước kéo mất hàng trăm ms) thì chỉ vạch .ma-ghost đi theo con trỏ; thả ra mới gọi onMove một lần.
    edge(clientX): mép sẽ nằm ở đâu khi con trỏ ở clientX (đã chặn trong giới hạn của vách, cùng hàm chặn onMove dùng): vạch
-   đứng đúng chỗ mép dừng khi thả. */
+   đứng đúng chỗ mép dừng khi thả.
+   Kéo kết thúc ở chỗ cuối cùng vạch / mép đã tới, dù kết thúc bằng gì: pointerup, pointercancel, mất pointer capture
+   không kèm pointerup (thả chuột ở cửa sổ / tab khác: Chrome chỉ gửi lostpointercapture khi chuột quay lại), cửa sổ mất
+   focus, chuột về mà không còn giữ nút, hay một cú bấm vách mới. */
+var dragEnd = null;   // kéo đang dở (một con trỏ, một vách): hàm kết thúc nó
+var DRAG_END = ['pointerup', 'pointercancel', 'lostpointercapture'];
 export function dragBar(el, onMove, onDone, ghostly, edge) {
   el.addEventListener('pointerdown', function (e) {
     if (e.button !== 0) return;
+    if (dragEnd) dragEnd();
     e.preventDefault(); el.setPointerCapture(e.pointerId); el.classList.add('is-drag');
     var ghost = null, last = null, x0 = 0;
     if (ghostly && ghostly()) {
@@ -109,17 +115,28 @@ export function dragBar(el, onMove, onDone, ghostly, edge) {
       document.body.append(ghost);
     }
     var move = function (ev) {
-      if (!ghost) { onMove(ev.clientX); return; }
+      if (!(ev.buttons & 1)) { end(); return; }
+      var x = edge(ev.clientX);
+      if (!isFinite(x)) return;   // khung vừa bị ẩn (rộng 0): bỏ bước này, giữ chỗ cũ
       last = ev.clientX;
-      ghost.style.transform = 'translateX(' + (edge(last) - x0) + 'px)';
+      if (ghost) ghost.style.transform = 'translateX(' + (x - x0) + 'px)'; else onMove(last);
     };
-    var up = function () {
+    /* Dọn trước, gọi onMove / onDone sau: lỗi trong chúng không để lại vạch hay is-drag. */
+    var end = function () {
+      if (dragEnd !== end) return;
+      dragEnd = null;
       el.classList.remove('is-drag');
-      el.removeEventListener('pointermove', move); el.removeEventListener('pointerup', up); el.removeEventListener('pointercancel', up);
+      el.removeEventListener('pointermove', move);
+      DRAG_END.forEach(function (t) { el.removeEventListener(t, end); });
+      window.removeEventListener('blur', end);
+      if (el.hasPointerCapture(e.pointerId)) el.releasePointerCapture(e.pointerId);
       if (ghost) { ghost.remove(); if (last != null) onMove(last); }
       onDone();
     };
-    el.addEventListener('pointermove', move); el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up);
+    dragEnd = end;
+    el.addEventListener('pointermove', move);
+    DRAG_END.forEach(function (t) { el.addEventListener(t, end); });
+    window.addEventListener('blur', end);
   });
 }
 

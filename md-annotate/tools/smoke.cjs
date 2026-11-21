@@ -3675,6 +3675,21 @@ const cornerClash = (page) => page.evaluate(() => {
     await p.mouse.up(); await p.waitForTimeout(200);
     const end = [await ra(), await p.evaluate(() => !document.querySelector('.ma-ghost'))];
     check('văn bản dài: kéo vách chỉ dời vạch .ma-ghost, thả ra mới đổi tỉ lệ', mid && raMid === ra0 && end[0] !== ra0 && end[1], JSON.stringify([ra0, raMid, end]));
+    /* Thả chuột ở tab khác (như Alt+Tab giữa lúc kéo): trang không nhận pointerup; chuột về không giữ nút thì Chrome chỉ gửi
+       lostpointercapture. Kéo phải kết thúc: không còn vạch, vách hết is-drag, tỉ lệ đặt đúng chỗ vạch đứng. */
+    const d2 = await p.locator('#divider').boundingBox(), y2 = d2.y + 200;
+    await p.mouse.move(d2.x + d2.width / 2, y2); await p.mouse.down();
+    for (let i = 1; i <= 4; i++) await p.mouse.move(d2.x + d2.width / 2 + i * 30, y2);
+    const gAt = await p.evaluate(() => { const r = document.querySelector('.ma-ghost').getBoundingClientRect(); return r.left + r.width / 2; });
+    const other = await c.newPage(); await other.bringToFront(); await other.mouse.up(); await other.close(); await p.bringToFront();
+    const ses = await c.newCDPSession(p);
+    for (const mx of [300, 250]) await ses.send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: mx, y: y2, button: 'none', buttons: 0 });
+    await p.waitForTimeout(300);
+    const lost = await p.evaluate(() => { const v = document.getElementById('views').getBoundingClientRect();
+      return [document.querySelectorAll('.ma-ghost').length, document.getElementById('divider').classList.contains('is-drag'),
+        v.left + parseFloat(document.getElementById('views').style.getPropertyValue('--ra')) * v.width]; });
+    check('văn bản dài: thả chuột ở tab khác giữa lúc kéo vách — hết vạch, hết is-drag, tỉ lệ đặt ở chỗ vạch (±2px)',
+      lost[0] === 0 && !lost[1] && Math.abs(lost[2] - gAt) <= 2, JSON.stringify([gAt, lost]));
     await c.close();
   }
   // ── end văn bản dài ──
