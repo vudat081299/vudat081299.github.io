@@ -3805,6 +3805,33 @@ const cornerClash = (page) => page.evaluate(() => {
     check('highlight.js hỏng một lần: chữ trơn, một cảnh báo; mở lại file thì tải lại, lên màu', n0 === 0 && warns === 1 && n1 > 0, JSON.stringify([n0, warns, n1]));
     await c.close();
   }
+  {
+    // Văn bản dài: vạch .ma-ghost dừng ở giới hạn của vách (Split 25–75%, cây 180–420px, panel 320–560px) và ở mép thật;
+    // thả ra mép nằm đúng chỗ vạch.
+    const c = await treeContext({ viewport: { width: 1700, height: 900 }, colorScheme: 'light' });
+    const p = await c.newPage(); watch(p);
+    await p.goto(BASE); await p.waitForFunction(() => window.marked && window.DOMPurify);
+    await pasteText(p, Array.from({ length: 1700 }, (_, i) => 'Line ' + i).join('\n'));
+    await p.click('.ma-tab[data-view="split"]'); await p.waitForTimeout(300);
+    const ghostX = () => p.evaluate(() => { const g = document.querySelector('.ma-ghost'); if (!g) return null; const r = g.getBoundingClientRect(); return r.left + r.width / 2; });
+    const cases = [
+      ['vách Split', '#divider', -2000, () => p.evaluate(() => { const r = document.getElementById('views').getBoundingClientRect(); return r.left + 0.25 * r.width; }),
+        () => p.evaluate(() => { const r = document.getElementById('views').getBoundingClientRect(); return r.left + parseFloat(document.getElementById('views').style.getPropertyValue('--ra')) * r.width; })],
+      ['mép cây', '#tree-grip', 2000, () => p.evaluate(() => document.getElementById('tree').getBoundingClientRect().left + 420),
+        () => p.evaluate(() => document.getElementById('tree').getBoundingClientRect().right)],
+      ['mép panel', '#panel-grip', -2000, () => p.evaluate(() => document.getElementById('panel').getBoundingClientRect().right - 560),
+        () => p.evaluate(() => document.getElementById('panel').getBoundingClientRect().left)]];
+    for (const [name, sel, dx, want, after] of cases) {
+      const b = await p.locator(sel).boundingBox(), x = b.x + b.width / 2, y = b.y + Math.min(200, b.height / 2);
+      await p.mouse.move(x, y); await p.mouse.down();
+      await p.mouse.move(x + dx / 4, y); await p.mouse.move(x + dx, y);
+      const g = await ghostX(), w = await want();
+      await p.mouse.up(); await p.waitForTimeout(250);
+      const a = await after();
+      check(`văn bản dài, kéo ${name} quá giới hạn: vạch dừng ở giới hạn, thả ra mép đúng chỗ vạch (±2px)`, g != null && Math.abs(g - w) <= 2 && Math.abs(a - g) <= 2, JSON.stringify([g, w, a]));
+    }
+    await c.close();
+  }
   // ── end sửa sau rà soát ──
 
   check('không lỗi console', !errors.length, errors.join(' | '));

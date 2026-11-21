@@ -75,9 +75,10 @@ export function sizePanes() {
 var LIVE_MAX = 1500;
 export function longText() { return lineCount(D.text) > LIVE_MAX; }
 var rafSplit = 0;
-/* Vách giữa hai khung: kéo hoặc phím mũi tên; tỉ lệ lưu ở prefs.split. */
+/* Vách giữa hai khung: kéo hoặc phím mũi tên; tỉ lệ (0,25–0,75) lưu ở prefs.split. */
+function clampSplit(r) { return Math.max(0.25, Math.min(0.75, r)); }
 function applySplit(r) {
-  r = Math.max(0.25, Math.min(0.75, r));
+  r = clampSplit(r);
   $('views').style.setProperty('--ra', r + 'fr'); $('views').style.setProperty('--rb', (1 - r) + 'fr');
   $('divider').setAttribute('aria-valuenow', String(Math.round(r * 100)));
   return r;
@@ -111,7 +112,10 @@ export function initViews() {
   dragBar($('divider'), function (x) {
     var r = $('views').getBoundingClientRect();
     splitR = applySplit((x - r.left) / r.width);
-  }, function () { prefs.split = splitR; savePrefs(); }, longText);
+  }, function () { prefs.split = splitR; savePrefs(); }, longText, function (x) {
+    var r = $('views').getBoundingClientRect();
+    return r.left + r.width * clampSplit((x - r.left) / r.width);
+  });
   $('divider').addEventListener('keydown', function (e) {
     var d = e.key === 'ArrowLeft' ? -0.02 : e.key === 'ArrowRight' ? 0.02 : 0;
     if (!d) return;

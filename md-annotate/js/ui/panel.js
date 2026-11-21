@@ -16,8 +16,9 @@ export function setPane(name) {
 
 /* Panel: kéo mép trái đổi bề rộng (320–560), hoặc thu gọn thành thanh dọc. Lưu ở prefs.side, prefs.rail. */
 var SIDE_MIN = 320, SIDE_MAX = 560;
+function clampSide(w) { return Math.max(SIDE_MIN, Math.min(SIDE_MAX, Math.round(w))); }
 function applySide(w) {
-  w = Math.max(SIDE_MIN, Math.min(SIDE_MAX, Math.round(w)));
+  w = clampSide(w);
   document.documentElement.style.setProperty('--side', w + 'px');
   return w;
 }
@@ -29,8 +30,9 @@ function setRail(on) {
 
 export function initPanel() {
   sideW = typeof prefs.side === 'number' ? applySide(prefs.side) : 360;
-  dragBar($('panel-grip'), function (x) { sideW = applySide($('panel').getBoundingClientRect().right - x); },
-    function () { prefs.side = sideW; savePrefs(); }, longText);
+  var right = function () { return $('panel').getBoundingClientRect().right; };
+  dragBar($('panel-grip'), function (x) { sideW = applySide(right() - x); }, function () { prefs.side = sideW; savePrefs(); }, longText,
+    function (x) { return right() - clampSide(right() - x); });
   $('panel-grip').addEventListener('keydown', function (e) {
     var d = e.key === 'ArrowLeft' ? 16 : e.key === 'ArrowRight' ? -16 : 0;
     if (!d) return;

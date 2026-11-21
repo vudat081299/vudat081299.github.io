@@ -89,22 +89,25 @@ export function typing(t) {
 }
 
 /* Kéo một vách (chuột / bút / chạm) theo trục ngang: onMove(clientX) khi kéo, onDone() khi thả. ghostly() đúng lúc bấm
-   (văn bản dài: dàn lại mỗi bước kéo mất hàng trăm ms) thì chỉ vạch .ma-ghost đi theo con trỏ; thả ra mới gọi onMove một lần. */
-export function dragBar(el, onMove, onDone, ghostly) {
+   (văn bản dài: dàn lại mỗi bước kéo mất hàng trăm ms) thì chỉ vạch .ma-ghost đi theo con trỏ; thả ra mới gọi onMove một lần.
+   edge(clientX): mép sẽ nằm ở đâu khi con trỏ ở clientX (đã chặn trong giới hạn của vách, cùng hàm chặn onMove dùng): vạch
+   đứng đúng chỗ mép dừng khi thả. */
+export function dragBar(el, onMove, onDone, ghostly, edge) {
   el.addEventListener('pointerdown', function (e) {
     if (e.button !== 0) return;
     e.preventDefault(); el.setPointerCapture(e.pointerId); el.classList.add('is-drag');
-    var ghost = null, last = null;
+    var ghost = null, last = null, x0 = 0;
     if (ghostly && ghostly()) {
       var r = el.getBoundingClientRect();
+      x0 = edge(e.clientX);
       ghost = h('div', { class: 'ma-ghost' });
-      ghost.style.cssText = 'left:' + e.clientX + 'px;top:' + r.top + 'px;height:' + r.height + 'px';
+      ghost.style.cssText = 'left:' + x0 + 'px;top:' + r.top + 'px;height:' + r.height + 'px';
       document.body.append(ghost);
     }
     var move = function (ev) {
       if (!ghost) { onMove(ev.clientX); return; }
       last = ev.clientX;
-      ghost.style.transform = 'translateX(' + (last - e.clientX) + 'px)';
+      ghost.style.transform = 'translateX(' + (edge(last) - x0) + 'px)';
     };
     var up = function () {
       el.classList.remove('is-drag');

@@ -99,8 +99,9 @@ function closeSheet() { if ($('dlg-tree').open) $('dlg-tree').close(); }
 function goHome() { if ($('tree').parentNode !== home) home.insertBefore($('tree'), homeNext); }
 
 /* BỀ RỘNG */
+function clampW(w) { return Math.max(W_MIN, Math.min(W_MAX, Math.round(w))); }
 function applyW(w) {
-  w = Math.max(W_MIN, Math.min(W_MAX, Math.round(w)));
+  w = clampW(w);
   document.documentElement.style.setProperty('--tree', w + 'px');
   $('tree-grip').setAttribute('aria-valuenow', String(w));
   return w;
@@ -589,8 +590,9 @@ export function initTree() {
   treeW = applyW(typeof prefs.treeW === 'number' ? prefs.treeW : W_DEF);
   var grab = 0;   // chỗ bấm cách mép phải cây bao nhiêu: kéo không làm cây nhảy
   g.addEventListener('pointerdown', function (e) { grab = $('tree').getBoundingClientRect().right - e.clientX; });
-  dragBar(g, function (x) { treeW = applyW(x + grab - $('tree').getBoundingClientRect().left); },
-    function () { prefs.treeW = treeW; savePrefs(); }, longText);
+  var left = function () { return $('tree').getBoundingClientRect().left; };
+  dragBar(g, function (x) { treeW = applyW(x + grab - left()); }, function () { prefs.treeW = treeW; savePrefs(); }, longText,
+    function (x) { return left() + clampW(x + grab - left()); });   // vạch ở mép phải cây, không ở con trỏ
   g.addEventListener('keydown', function (e) {
     var d = e.key === 'ArrowRight' ? 16 : e.key === 'ArrowLeft' ? -16 : 0;
     if (!d) return;
