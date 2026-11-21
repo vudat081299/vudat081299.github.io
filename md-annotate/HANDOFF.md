@@ -16,8 +16,6 @@ Làm xong mục nào thì xoá mục ấy.
   nhưng đo làn mất 2 s). Làm khi làn / bản đồ cuộn chỉ đo phần đang thấy.
 - *Focus mode*, *Dim reviewed* đặt `opacity` lên từng dòng mờ: mỗi dòng mờ là một lớp vẽ, văn bản dài có thể cuộn giật
   lại khi bật. Chưa đo.
-
-- Gợi ý đã đọc (MDAN-016) và chỗ cuộn mỗi file chỉ ở bộ nhớ: đổi file là mất gợi ý của file trước.
 - Hai tab mở cùng một phiên: mỗi lần lưu ghi đè cả cây (`s:<id>`), việc của tab kia mất. Cần khoá theo tab hay gộp khi lưu.
 - *All files*: lần vẽ đầu sau khi tải trang neo mọi file một lần (~400 ms ở 200 file); sau đó nhớ theo doc.
 - Chưa thử trên iPhone thật (Chromium giả lập không làm được): `overflow: hidden` ở `html` chặn vuốt trang sau lớp mờ (iOS ≥ 16);
