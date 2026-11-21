@@ -2,6 +2,7 @@
   "groups": [
     {
       "title": "Patterns",
+      "code": true,
       "note": "Type in the filter box above the file list (shown with 2 or more files). It matches file names, in any case.",
       "rows": [
         { "keys": [["notes"]], "action": "Plain text: names that contain it (my-notes.md, Notes.txt)" },

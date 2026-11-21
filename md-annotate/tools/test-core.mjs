@@ -517,7 +517,8 @@ check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi
     { rows: [{ keys: [['X']], action: 'no title' }] }
   ] };
   const g = normShortcuts(d);
-  check('normShortcuts: giữ hàng hợp lệ, cắt khoảng trắng, bỏ hàng / nhóm hỏng', eq(g, [{ title: 'Multi', note: 'n', rows: [{ keys: [['Shift', 'X'], ['J']], action: 'Go' }] }]), JSON.stringify(g));
+  check('normShortcuts: giữ hàng hợp lệ, cắt khoảng trắng, bỏ hàng / nhóm hỏng', eq(g, [{ title: 'Multi', note: 'n', code: false, rows: [{ keys: [['Shift', 'X'], ['J']], action: 'Go' }] }]), JSON.stringify(g));
+  check('normShortcuts: nhóm "code": true (mẫu để gõ) giữ cờ, giá trị khác thì không', normShortcuts({ groups: [{ title: 'P', code: true, rows: [{ keys: [['a.c']], action: 'x' }] }, { title: 'Q', code: 'yes', rows: [{ keys: [['b']], action: 'y' }] }] }).map((x) => x.code).join() === 'true,false');
   check('normShortcuts: dữ liệu rỗng hay sai kiểu thì danh sách rỗng', eq(normShortcuts(null), []) && eq(normShortcuts({ groups: 'x' }), []));
 }
 // ── end bảng phím tắt ──
