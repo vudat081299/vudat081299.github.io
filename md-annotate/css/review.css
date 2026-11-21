@@ -106,10 +106,6 @@ html:not(.ma-reviewing) .ma-lane__b.is-head:not(:hover)::after { visibility: hid
 .ma-rv__bar > span { display: block; height: 100%; width: 0; border-radius: var(--r-pill); background: var(--accent); transition: width var(--dur) var(--ease); }
 .ma-rv__acts { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2) var(--s3); }
 .ma-rv__lost { margin: 0; font-size: var(--fs-sm); color: var(--danger); }
-.ma-rv__keys kbd {
-  display: inline-block; padding: 0 var(--s1); border: 1px solid var(--line); border-bottom-width: 2px; border-radius: var(--r-xs);
-  font: 500 var(--fs-xs)/var(--lh) var(--mono); color: var(--ink-2); background: var(--surface);
-}
 /* Dàn ý: mỗi section một hàng — nút trạng thái (bấm: cả section) và tên (bấm: tới chỗ chưa đọc đầu tiên). */
 .ma-rvs-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
 .ma-rvs { display: flex; align-items: flex-start; gap: var(--s1); padding-left: calc(var(--d, 0) * var(--s3)); }
