@@ -1,6 +1,6 @@
 /* Đánh dấu đã đọc (MDAN-013): làn dấu cạnh từng đơn vị ở Source (bên phải vạch nhận xét) và Preview (lề trái), phím
    X / Shift+X / J / K, nút ✓ Reviewed của hộp nhận xét, viên thuốc "✓ Done · next ↓" ở máy hẹp / cảm ứng (có gợi ý ở màn
-   cảm ứng thì "Accept N", MDAN-052), làm mờ đơn vị
+   cảm ứng thì "Accept N", MDAN-077), làm mờ đơn vị
    đã đọc (.is-rv, html.ma-rvdim). Đơn vị, neo dấu, tiến độ ở core/review.js; tab Review ở ui/review-panel.js.
    Làn là lớp phủ .ma-lane trong #wrap-src / #wrap-md (ngoài #v-src / #v-md: text của khung không đổi). Vẽ lại sau mỗi
    renderAll() (applyReview) và khi khung đổi cỡ (ResizeObserver); đánh dấu (setReviews) chỉ tô lại nút có sẵn.

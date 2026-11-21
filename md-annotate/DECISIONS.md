@@ -35,7 +35,6 @@
 - MDAN-060 · Thanh bên cây file: thụt đều mọi cấp, thẻ cho file mở, đổi tên ngay trên tên, nút Files ở mép trái · `md-annotate/css/tree.css`, `md-annotate/index.html`, `md-annotate/js/ui/tree.js`
 - MDAN-050 · Chọn dòng bằng chạm: nhấn giữ số dòng · `md-annotate/js/ui/picks.js`, `md-annotate/js/ui/popup.js`, `md-annotate/data/shortcuts.json`
 - MDAN-051 · Thanh trên ở điện thoại tự ẩn khi cuộn xuống · `md-annotate/js/ui/bar.js`, `md-annotate/css/mobile.css`
-- MDAN-052 · Gợi ý đã đọc và khối hiện tại là hai dấu khác nhau; viên thuốc Accept N · `md-annotate/css/review.css`, `md-annotate/js/ui/review.js`, `md-annotate/js/ui/dwell.js`
 - MDAN-053 · Mở tấm nhận xét thì đoạn đang nhận xét nằm ngay trên tấm · `md-annotate/js/ui/popup.js`, `md-annotate/js/ui/selection.js`, `md-annotate/js/core/place.js`
 - MDAN-054 · Màn cảm ứng: Return trong ô nhận xét là xuống dòng · `md-annotate/js/ui/popup.js`
 - MDAN-061 · Cây file không tự ẩn khi chật; chỉ điện thoại là tấm trượt, đóng sẵn · thay cho MDAN-035 · `md-annotate/js/ui/tree.js`, `md-annotate/js/ui/views.js`, `md-annotate/js/core/panes.js`, `md-annotate/css/tree.css`
@@ -54,6 +53,7 @@
 - MDAN-074 · File không phải markdown: một tab Source, Edit là nút bật / tắt · `md-annotate/index.html`, `md-annotate/js/ui/views.js`, `md-annotate/css/views.css`
 - MDAN-075 · Ô lọc file: chờ gõ xong, mẫu chỉ thử phần đầu tên · `md-annotate/js/ui/tree-find.js`, `md-annotate/js/core/tree-find.js`
 - MDAN-076 · Cổng xanh thì push main ngay, smoke chạy sau · `md-annotate/`
+- MDAN-077 · Gợi ý đã đọc viền đứt, khối hiện tại là vạch; viên thuốc Accept N · thay cho MDAN-052 · `md-annotate/css/review.css`, `md-annotate/js/ui/review.js`, `md-annotate/js/ui/dwell.js`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Nguồn tô màu cú pháp kiểu VS Code
@@ -164,7 +164,7 @@ chữ, nhạt là chưa đọc. Bên trái dải là thanh cuộn tự vẽ: con
 thống của khung, để không có hai thanh song song. Hai cột cùng bề rộng, bằng con trượt của thanh cuộn hệ thống, ở cả hai
 khung; cùng chiều cao, cách nhau một khe nhỏ. Bấm / kéo thì cuộn tới. Điện thoại ẩn dải; màn cảm ứng chỉ xem. Khối nằm ở dải đọc
 đủ lâu (khoảng 40% số từ ở 230 từ/phút, 4–60 giây) rồi người đọc tự cuộn qua thì được gợi ý (nút "Accept N
-suggested"; dấu gợi ý là đĩa ✓ xanh nhạt, MDAN-052); gợi ý không bao giờ tự thành dấu. Mặc định bật, tắt được ở tab Review; gợi ý không lưu, chỉ trong phiên đang
+suggested"; dấu gợi ý là ✓ mờ viền đứt trên nền xanh nhạt, MDAN-077); gợi ý không bao giờ tự thành dấu. Mặc định bật, tắt được ở tab Review; gợi ý không lưu, chỉ trong phiên đang
 mở. Tab ẩn, cửa sổ mất focus, rảnh tay, cuộn do trang (J / K / X, dải tiến độ) không tính.
 
 ## MDAN-017 · Một bộ dấu đã đọc, khai báo một chỗ
@@ -325,14 +325,6 @@ dòng: "long-press a line number to pick lines".
 trượt về, như Safari hay app đọc báo. Luôn hiện ở đầu trang, khi menu More hay một hộp thoại mở. Người dùng chọn giảm
 chuyển động thì hiện / ẩn ngay, không trượt. Máy rộng giữ thanh dính như cũ.
 
-## MDAN-052 · Gợi ý đã đọc và khối hiện tại là hai dấu khác nhau; viên thuốc Accept N
-20/11/2026 · `md-annotate/css/review.css`, `md-annotate/js/ui/review.js`, `md-annotate/js/ui/dwell.js`
-
-Hai dấu cũ (✓ viền đứt) trông như nhau, chủ trang không phân biệt được. Gợi ý theo thời gian đọc là đĩa ✓ xanh nhạt đặc,
-không viền đứt (giữ vạch chấm suốt khối). Khối hiện tại (khối X hay viên thuốc sẽ đánh dấu) là một vạch dọc mảnh cạnh khối,
-không có ✓. Cả hai là chỉ báo ≥ 3:1 ở hai theme. Màn cảm ứng có gợi ý thì viên thuốc đổi thành "Accept N": chạm là đánh
-dấu mọi gợi ý, có Undo như thường. Tab Review ở màn cảm ứng nói về viên thuốc, không nói phím X / J / K hay làn.
-
 ## MDAN-053 · Mở tấm nhận xét thì đoạn đang nhận xét nằm ngay trên tấm
 20/11/2026 · `md-annotate/js/ui/popup.js`, `md-annotate/js/ui/selection.js`, `md-annotate/js/core/place.js`
 
@@ -456,3 +448,12 @@ chính quy chỉ so với 200 ký tự đầu của tên file (tìm chữ thư�
 
 Commit qua cổng (check.sh của md-annotate và của gốc, hook pre-commit) thì push lên main ngay, không chờ smoke. Smoke
 chạy sau; đỏ thì sửa bằng commit mới rồi push tiếp, không amend hay force-push commit đã push. Chỉ push nhánh main.
+
+## MDAN-077 · Gợi ý đã đọc viền đứt, khối hiện tại là vạch; viên thuốc Accept N · thay cho MDAN-052
+21/11/2026 · `md-annotate/css/review.css`, `md-annotate/js/ui/review.js`, `md-annotate/js/ui/dwell.js`
+
+Gợi ý theo thời gian đọc giữ kiểu viền đứt: ✓ mờ trong vòng đứt trên nền xanh nhạt, vạch đứt suốt khối (chủ trang thích
+hơn đĩa đặc). Khối hiện tại (khối X hay viên thuốc sẽ đánh dấu) là một vạch dọc mảnh cạnh khối, không có ✓; khối hiện
+tại mà đang được gợi ý thì không có vạch đặc: dấu gợi ý mất nền xanh, thêm vòng ngoài. Dấu đã đọc (✓ đặc) không đổi. Các
+chỉ báo ≥ 3:1 ở hai theme. Màn cảm ứng có gợi ý thì viên thuốc đổi thành "Accept N": chạm là đánh dấu mọi gợi ý, có
+Undo như thường. Tab Review ở màn cảm ứng nói về viên thuốc, không nói phím X / J / K hay làn.

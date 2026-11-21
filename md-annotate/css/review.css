@@ -20,12 +20,15 @@
 }
 .ma-lane__b.is-head.sec-changed::after, .ma-rvs.is-changed .ma-rvs__ic::after, .ma-lane__b.is-changed::after { border-color: var(--ink-3); }
 .ma-lane__b.is-changed::after { background-color: var(--surface); }
-/* Hai dấu tách bạch (MDAN-052). Gợi ý theo thời gian đọc (.is-sug): đĩa xanh nhạt đặc --sug-fill, ✓ mờ (--ic-check-hint
-   ≥ 3:1 trên nó), không viền. Đơn vị hiện tại (.is-cur: X, viên thuốc sẽ đánh dấu nó): vạch dọc mảnh --edge-on sát mép phải
-   làn, suốt khối, không ✓ (bóng ngoài lệch phải: không đổi bố cục, không đụng ::after / ::before). Rê khối chưa đọc: ✓ mờ viền đứt. */
+/* Hai dấu tách bạch (MDAN-077). Gợi ý theo thời gian đọc (.is-sug): ✓ mờ trong vòng đứt --ink-3 trên nền xanh nhạt --hl-2,
+   vạch đứt suốt khối (ảnh nền, dưới); là đơn vị hiện tại (đã có dấu) thì nền --surface, thêm vòng ngoài --edge-on, vạch
+   vẫn đứt. Đơn vị hiện tại khác (.is-cur: X, viên thuốc sẽ đánh dấu nó): vạch dọc mảnh --edge-on sát mép phải làn, suốt
+   khối, không ✓ (bóng ngoài lệch phải: không đổi bố cục, không đụng ::after / ::before). Rê khối chưa đọc: ✓ mờ viền đứt. */
 @media (hover: hover) { .ma-lane__b.is-todo:not(.is-head):hover::after { border: 1px dashed var(--ink-4); background-image: var(--ic-check-hint); } }
-.ma-lane .ma-lane__b.is-sug:not(.is-head)::after { border-color: var(--sug-fill); background-color: var(--sug-fill); background-image: var(--ic-check-hint); }
-html.ma-reviewing .ma-lane__b.is-cur, .ma-lane .ma-lane__b.is-cur.is-sug { box-shadow: 3px 0 0 -1px var(--edge-on); }
+.ma-lane .ma-lane__b.is-sug:not(.is-head)::after { border: 1.5px dashed var(--ink-3); background-color: var(--hl-2); background-image: var(--ic-check-hint); }
+@media (hover: hover) { .ma-lane__b.is-sug:not(.is-head):hover::after { border-style: solid; } }
+html.ma-reviewing .ma-lane__b.is-sug.is-cur::after { background-color: var(--surface); box-shadow: 0 0 0 2px var(--surface), 0 0 0 3px var(--edge-on); }
+html.ma-reviewing .ma-lane__b.is-cur:not(.is-sug) { box-shadow: 3px 0 0 -1px var(--edge-on); }
 /* LÀN: lớp phủ trong #wrap-*, một cột tuyệt đối (ui/review.js đặt left); không chữ, không chọn được. Nút trong cột nằm
    trong dòng chảy, xếp bằng lề trên (khoảng cách tới nút trước) và cao, JS tính: không định vị từng nút, vì mỗi phần tử
    định vị là một lớp vẽ, hàng nghìn lớp làm cuộn, rê chuột, đổi bề rộng chậm hẳn. Không đặt biến CSS riêng cho từng nút:

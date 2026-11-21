@@ -25,7 +25,6 @@
   /* Chỉ báo trạng thái không phải chữ cần ≥ 3:1: nền sáng dùng mực, nền tối dùng --accent. */
   --ring:      var(--ink);           /* vòng focus, viền ô nhập đang gõ */
   --edge-on:   var(--ink-4);         /* viền của thẻ / hàng đang chọn */
-  --sug-fill:  color-mix(in srgb, var(--accent) 34%, var(--surface));   /* đĩa gợi ý đã đọc (css/review.css): ✓ mờ trên nó ≥ 3:1 */
   --done-edge: #15803d;              /* viền dấu ✓ đã đọc, ô đánh dấu đã chọn: --accent trên nền sáng chỉ ~2,3:1 */
 
   --sb-thumb:    color-mix(in srgb, var(--ink) 26%, transparent);   /* con trượt thanh cuộn, cả thanh tự vẽ */
@@ -137,7 +136,6 @@ html.dark {
   --ring:      var(--accent);
   --edge-on:   var(--accent);
   --done-edge: var(--accent);
-  --sug-fill:  color-mix(in srgb, var(--accent) 24%, var(--surface));
 
   --scrim:     rgba(0, 0, 0, .62);
   --scrim-live: rgba(0, 0, 0, .42);

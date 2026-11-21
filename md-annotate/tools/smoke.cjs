@@ -1697,7 +1697,7 @@ const cornerClash = (page) => page.evaluate(() => {
       await zc.close();
     }
 
-    // Gợi ý: đọc P6 ở dải (đồng hồ giả 15 s), rồi tự cuộn qua thì hiện đĩa ✓ gợi ý; không tự đánh dấu.
+    // Gợi ý: đọc P6 ở dải (đồng hồ giả 15 s), rồi tự cuộn qua thì hiện dấu ✓ gợi ý; không tự đánh dấu.
     await mp.mouse.move(md.x, md.y);
     const u6 = await laneOf('Para P6 ');
     const done0 = await nDone();
@@ -1706,18 +1706,22 @@ const cornerClash = (page) => page.evaluate(() => {
     await wheel(120, 5); await tick(600);
     let sg = await sugs();
     await mp.click('#ptab-review'); await tick();
-    check('gợi ý: đơn vị đọc đủ lâu rồi cuộn qua có đĩa ✓ gợi ý, không thành dấu', sg.includes(u6) && (await nDone()) === done0 && (await mp.$$eval(`.ma-lane__b[data-u="${u6}"].is-sug`, (b) => b.length)) === 2, JSON.stringify(sg) + ' u6=' + u6);
+    check('gợi ý: đơn vị đọc đủ lâu rồi cuộn qua có dấu ✓ gợi ý, không thành dấu', sg.includes(u6) && (await nDone()) === done0 && (await mp.$$eval(`.ma-lane__b[data-u="${u6}"].is-sug`, (b) => b.length)) === 2, JSON.stringify(sg) + ' u6=' + u6);
     check('gợi ý: tab Review có "Accept N suggested"', (await mp.isVisible('#rv-sug')) && (await mp.textContent('#rv-sug-ok')) === `Accept ${sg.length} suggested`, await mp.textContent('#rv-sug-ok'));
-    // MDAN-052 (thay luật cũ "viền đứt"): gợi ý là đĩa xanh nhạt đặc có ✓, không viền đứt; đơn vị hiện tại là vạch, không ✓.
-    check('gợi ý: đĩa ✓ xanh nhạt đặc, không viền đứt, khác đơn vị hiện tại (.is-cur)', await mp.$eval(`#wrap-md .ma-lane__b[data-u="${u6}"]`, (b) => { const a = getComputedStyle(b, '::after'); return a.backgroundColor !== 'rgb(255, 255, 255)' && a.borderStyle !== 'dashed' && a.backgroundImage.includes('svg'); }));
+    // MDAN-077: gợi ý là ✓ mờ trong vòng đứt trên nền xanh nhạt, vạch đứt suốt khối; đơn vị hiện tại là vạch, không ✓.
+    const sugLook = await mp.$eval(`#wrap-md .ma-lane__b[data-u="${u6}"]`, (b) => {
+      const { parse, over, ratio } = __c, a = getComputedStyle(b, '::after'), surf = parse(getComputedStyle(document.getElementById('doc')).backgroundColor);
+      return [a.borderTopStyle, ratio(over(parse(a.backgroundColor), surf), surf) > 1.05, a.backgroundImage.includes('svg'), getComputedStyle(b).backgroundImage.startsWith('repeating-linear-gradient')];
+    });
+    check('gợi ý: ✓ mờ viền đứt trên nền xanh nhạt, vạch đứt suốt khối', sugLook[0] === 'dashed' && sugLook[1] && sugLook[2] && sugLook[3], JSON.stringify(sugLook));
     check('gợi ý: dải tiến độ có đoạn được gợi ý', (await strip('md')).segs.some((x) => x.startsWith('sug')));
     await mp.click('#rv-sug-ok'); await tick();
     check('gợi ý: Accept đánh dấu mọi đơn vị được gợi ý', (await nDone()) === done0 + sg.length && !(await sugs()).length && !(await mp.isVisible('#rv-sug')), String(await nDone()));
     await mp.click('.ma-toast__btn'); await tick();
-    check('gợi ý: Undo trả dấu và đĩa ✓ gợi ý', (await nDone()) === done0 && (await sugs()).length === sg.length);
+    check('gợi ý: Undo trả dấu và dấu ✓ gợi ý', (await nDone()) === done0 && (await sugs()).length === sg.length);
     await mp.$eval(`#wrap-md .ma-lane__b[data-u="${u6}"]`, (b) => b.scrollIntoView({ block: 'center' })); await tick();
     await mp.click(`#wrap-md .ma-lane__b[data-u="${u6}"]`); await tick();
-    check('gợi ý: bấm làn của nó thì chấp nhận (đánh dấu), đĩa ✓ gợi ý mất', (await nDone()) === done0 + 1 && !(await sugs()).includes(u6));
+    check('gợi ý: bấm làn của nó thì chấp nhận (đánh dấu), dấu ✓ gợi ý mất', (await nDone()) === done0 + 1 && !(await sugs()).includes(u6));
     await mp.click('#rv-sug-x'); await tick();
     check('gợi ý: Dismiss bỏ các gợi ý còn lại', !(await sugs()).length && !(await mp.isVisible('#rv-sug')));
 
@@ -3357,8 +3361,8 @@ const cornerClash = (page) => page.evaluate(() => {
   // ── end mob:touch-bar ──
 
   // ── mob:touch-review ──
-  /* ---------- Hai dấu tách bạch (MDAN-052): gợi ý = đĩa ✓ xanh nhạt đặc, không viền đứt; đơn vị hiện tại = vạch dọc mảnh
-     cạnh khối, không ✓; cả hai ≥ 3:1, hai theme. Màn cảm ứng có gợi ý: viên thuốc "Accept N", chạm thì đánh dấu, có Undo ---------- */
+  /* ---------- Hai dấu tách bạch (MDAN-077): gợi ý = ✓ mờ trong vòng đứt trên nền xanh nhạt, vạch đứt suốt khối (là đơn vị
+     hiện tại: thêm vòng ngoài, không vạch đặc); đơn vị hiện tại khác = vạch dọc mảnh cạnh khối, không ✓; ≥ 3:1, hai theme. Màn cảm ứng có gợi ý: viên thuốc "Accept N", chạm thì đánh dấu, có Undo ---------- */
   for (const scheme of ['light', 'dark']) {
     const d = Object.assign({}, pw.devices['iPhone 15 Pro'], { deviceScaleFactor: 1, colorScheme: scheme, reducedMotion: 'reduce' }); delete d.defaultBrowserType;
     const c = await browser.newContext(d), p = await c.newPage(); watch(p);
@@ -3382,23 +3386,30 @@ const cornerClash = (page) => page.evaluate(() => {
     check(`cảm ứng (${scheme}): có gợi ý thì viên thuốc hiện "Accept N" (chưa có dấu nào)`, sg.length > 0 && pill[0] && pill[1] === 'Accept ' + sg.length, JSON.stringify([sg, pill]));
     // Kiểu hai dấu.
     const look = await p.evaluate(() => {
-      const rgb = (c) => c.match(/[\d.]+/g).slice(0, 3).map(Number);
-      const { lum, ratio } = __c;
-      const surf = rgb(getComputedStyle(document.getElementById('doc')).backgroundColor);
+      const { parse, over, ratio } = __c;
+      const surf = parse(getComputedStyle(document.getElementById('doc')).backgroundColor);
       const dark = document.documentElement.classList.contains('dark'), hint = dark ? [0x8d, 0x98, 0x91] : [0x5b, 0x64, 0x5e];   // nét ✓ của --ic-check-hint
       const s = document.querySelector('#wrap-md .ma-lane__b.is-sug'), sa = getComputedStyle(s, '::after');
-      const fill = rgb(sa.backgroundColor);
+      const fill = over(parse(sa.backgroundColor), surf);
+      const sug = { border: sa.borderTopStyle, ring: ratio(parse(sa.borderTopColor), fill), img: sa.backgroundImage.includes('svg'), pale: ratio(fill, surf) > 1.05, glyph: ratio(hint, fill),
+        line: getComputedStyle(s).backgroundImage.startsWith('repeating-linear-gradient') };
       document.documentElement.classList.add('ma-reviewing');   // vạch đơn vị hiện tại chỉ vẽ khi đã có dấu
+      s.classList.add('is-cur');
+      const sc = getComputedStyle(s), sca = getComputedStyle(s, '::after'), halo = sca.boxShadow.match(/(rgba?|color)\([^)]*\)/g) || [];
+      const sugCur = { bar: sc.boxShadow, border: sca.borderTopStyle, halo: halo.length === 2 ? ratio(parse(halo[1]), surf) : 0, line: sc.backgroundImage.startsWith('repeating-linear-gradient') };
+      s.classList.remove('is-cur');
       const cur = [...document.querySelectorAll('#wrap-md .ma-lane__b')].find((b) => !b.classList.contains('is-sug') && !b.classList.contains('is-head'));
       cur.classList.add('is-cur');
-      const cs = getComputedStyle(cur), ca = getComputedStyle(cur, '::after'), bar = cs.boxShadow.match(/rgba?\([^)]*\)/);
-      const out = { sugBorder: sa.borderTopStyle, sugImg: sa.backgroundImage.includes('svg'), sugFill: ratio(fill, surf) > 1.05, glyph: ratio(hint, fill),
-        curImg: ca.backgroundImage, curBar: bar ? ratio(rgb(bar[0]), surf) : 0, curShadow: cs.boxShadow };
+      const cs = getComputedStyle(cur), ca = getComputedStyle(cur, '::after'), bar = cs.boxShadow.match(/(rgba?|color)\([^)]*\)/);
+      const out = { sug, sugCur, curImg: ca.backgroundImage, curBar: bar ? ratio(parse(bar[0]), surf) : 0 };
       cur.classList.remove('is-cur'); document.documentElement.classList.remove('ma-reviewing');
       return out;
     });
-    check(`dấu gợi ý vs đơn vị hiện tại (${scheme}): gợi ý là đĩa đặc có ✓ (≥ 3:1), không viền đứt; hiện tại là vạch ≥ 3:1, không ✓`,
-      look.sugBorder !== 'dashed' && look.sugImg && look.sugFill && look.glyph >= 3 && look.curImg === 'none' && look.curBar >= 3, JSON.stringify(look));
+    check(`dấu gợi ý (${scheme}): ✓ mờ (≥ 3:1) trong vòng đứt (≥ 3:1) trên nền xanh nhạt, vạch đứt suốt khối`,
+      look.sug.border === 'dashed' && look.sug.ring >= 3 && look.sug.img && look.sug.pale && look.sug.glyph >= 3 && look.sug.line, JSON.stringify(look.sug));
+    check(`dấu gợi ý là đơn vị hiện tại (${scheme}): vẫn viền đứt, vạch đứt, không vạch đặc; vòng ngoài ≥ 3:1`,
+      look.sugCur.bar === 'none' && look.sugCur.border === 'dashed' && look.sugCur.line && look.sugCur.halo >= 3, JSON.stringify(look.sugCur));
+    check(`đơn vị hiện tại không gợi ý (${scheme}): vạch ≥ 3:1, không ✓`, look.curImg === 'none' && look.curBar >= 3, JSON.stringify(look));
     const b = await p.locator('#rv-pill').boundingBox();
     await p.touchscreen.tap(b.x + b.width / 2, b.y + b.height / 2); await p.clock.runFor(300);
     const after = await p.evaluate(() => [[...document.querySelectorAll('#wrap-md .ma-lane__b.is-done')].map((x) => x.dataset.u), document.querySelectorAll('#wrap-md .ma-lane__b.is-sug').length,
