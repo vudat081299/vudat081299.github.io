@@ -1,10 +1,10 @@
 /* Hộp Help (#dlg-keys): hai phần, mỗi phần một bảng hàng { cách bấm / mẫu, nghĩa } đọc từ data/ (REPO-001) lần mở đầu và
    vẽ bằng cùng một vòng lặp, cách bấm là chip <kbd class="ma-key">, mẫu để gõ (nhóm "code") là <code>: phím tắt và cú bấm
    mới (data/shortcuts.json), tìm file ở cây (data/search-help.json, mẫu của ô lọc). Mở bằng nút #btn-keys ở hộp Settings, hoặc phím ? khi không gõ trong ô
-   nhập và không có hộp thoại nào mở. Logic chuẩn hoá dữ liệu ở core/shortcuts.js.
+   nhập và không có hộp thoại nào mở. Logic chuẩn hoá dữ liệu ở core/help.js.
    Xuất: initHelp.
-   Dùng: core/shortcuts.js, ui/dom.js. */
-import { normShortcuts } from '../core/shortcuts.js';
+   Dùng: core/help.js, ui/dom.js. */
+import { normHelp } from '../core/help.js';
 import { $, getJSON, h, typing } from './dom.js';
 
 var PARTS = [['keys-list', 'data/shortcuts.json'], ['find-help-list', 'data/search-help.json']];   // [chỗ vẽ, dữ liệu]
@@ -40,7 +40,7 @@ function load(id, url) {
   var box = $(id);
   box.replaceChildren(h('p', { class: 'ma-sub' }, 'Loading…'));
   loaded[id] = getJSON(url)
-    .then(function (d) { render(box, normShortcuts(d)); })
+    .then(function (d) { render(box, normHelp(d)); })
     .catch(function () {
       loaded[id] = null;
       box.replaceChildren(h('p', { class: 'ma-sub' }, 'This part could not load. Check the connection and open Help again.'));

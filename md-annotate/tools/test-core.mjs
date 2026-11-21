@@ -4,7 +4,7 @@ import { lexSpans, pairBlocks } from '../js/core/blocks.js';
 import { numberSections, lineSections, bandBounds, bandPick, spanAt } from '../js/core/sections.js';
 import { syncCurves, followTop } from '../js/core/sync-math.js';
 import { paneHeight, splitFits } from '../js/core/panes.js';
-import { normShortcuts } from '../js/core/shortcuts.js';
+import { normHelp } from '../js/core/help.js';
 
 let fails = 0;
 const check = (name, ok, detail = '') => {
@@ -518,10 +518,10 @@ check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi
     { title: 'Empty', rows: [{ keys: 'X', action: 'a' }] },
     { rows: [{ keys: [['X']], action: 'no title' }] }
   ] };
-  const g = normShortcuts(d);
-  check('normShortcuts: giữ hàng hợp lệ, cắt khoảng trắng, bỏ hàng / nhóm hỏng', eq(g, [{ title: 'Multi', note: 'n', code: false, rows: [{ keys: [['Shift', 'X'], ['J']], action: 'Go' }] }]), JSON.stringify(g));
-  check('normShortcuts: nhóm "code": true (mẫu để gõ) giữ cờ, giá trị khác thì không', normShortcuts({ groups: [{ title: 'P', code: true, rows: [{ keys: [['a.c']], action: 'x' }] }, { title: 'Q', code: 'yes', rows: [{ keys: [['b']], action: 'y' }] }] }).map((x) => x.code).join() === 'true,false');
-  check('normShortcuts: dữ liệu rỗng hay sai kiểu thì danh sách rỗng', eq(normShortcuts(null), []) && eq(normShortcuts({ groups: 'x' }), []));
+  const g = normHelp(d);
+  check('normHelp: giữ hàng hợp lệ, cắt khoảng trắng, bỏ hàng / nhóm hỏng', eq(g, [{ title: 'Multi', note: 'n', code: false, rows: [{ keys: [['Shift', 'X'], ['J']], action: 'Go' }] }]), JSON.stringify(g));
+  check('normHelp: nhóm "code": true (mẫu để gõ) giữ cờ, giá trị khác thì không', normHelp({ groups: [{ title: 'P', code: true, rows: [{ keys: [['a.c']], action: 'x' }] }, { title: 'Q', code: 'yes', rows: [{ keys: [['b']], action: 'y' }] }] }).map((x) => x.code).join() === 'true,false');
+  check('normHelp: dữ liệu rỗng hay sai kiểu thì danh sách rỗng', eq(normHelp(null), []) && eq(normHelp({ groups: 'x' }), []));
 }
 // ── end bảng phím tắt ──
 
