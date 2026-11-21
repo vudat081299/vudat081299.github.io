@@ -8,7 +8,7 @@
    hasNul, skipEntry, importCheck); đọc xong mà đã chuyển phiên thì ghi vào phiên đã lưu, phiên ấy mất thì bỏ và báo.
    Bộ nhớ đầy thì hoàn lại. Nạp xong thì cây hiện cho phiên ấy, không ghi prefs.tree (MDAN-032).
    Xuất: importItems, openDiskFile, refreshTree, setTree.
-   Dùng: core/session.js, core/tree.js, core/text.js, ui/dom.js, ui/state.js, ui/prompt.js, ui/views.js, ui/tree.js. */
+   Dùng: core/session.js, core/tree.js, core/text.js, ui/dom.js, ui/state.js, ui/prompt.js, ui/views.js, ui/tree.js, ui/tree-find.js. */
 import { addDir, addFile, applyUndo, collapseAll, dirOf, docOf, downloadOf, importPaths, moveIn, openFile, openFromDisk,
   removeNodes, renameIn, sessionTitle, toggleDir, UNTITLED, zipOf } from '../core/session.js';
 import { byId } from '../core/tree.js';
@@ -18,6 +18,7 @@ import { canLeave, loadSession, openFileId, putSession, S, saveClosed, saveNow, 
 import { renderPrompt } from './prompt.js';
 import { lastRead, setView } from './views.js';
 import { editName, focusRow, renderTree, revealTree } from './tree.js';
+import { clearFind } from './tree-find.js';
 
 /* VẼ CÂY. last: mô hình vừa vẽ (mảng của S so theo tham chiếu, số đếm và tiêu đề theo chữ). */
 var last = null;
@@ -79,11 +80,13 @@ var ACTIONS = {
   open: function (id) { openFileId(id); },
   toggle: function (id) { setTree(toggleDir(S, id)); },
   newFile: function (parentId) {
+    clearFind();
     var r = addFile(S, parentId, UNTITLED, '', false);
     if (r.error) { toast(r.error); return; }
     if (setTree(openFile(r.s, r.id))) editName(r.id);
   },
   newDir: function (parentId) {
+    clearFind();
     var r = addDir(S, parentId, 'folder');
     if (r.error) { toast(r.error); return; }
     if (setTree(r.s)) editName(r.id);
@@ -107,7 +110,7 @@ var ACTIONS = {
     var r = removeNodes(S, [id]), files = r.removed.filter(function (x) { return nodeOf(x).kind === 'file'; }).length;
     setTree(r.s, n.kind === 'dir' ? 'Deleted folder ' + n.name + ' (' + fileWord(files) + ').' : 'Deleted ' + n.name + '.', { undo: r.undo });
   },
-  importDir: function (list, parentId) { importItems(list, parentId); },
+  importDir: function (list, parentId) { clearFind(); importItems(list, parentId); },
   download: download,
   collapseAll: function () { setTree(collapseAll(S)); }
 };

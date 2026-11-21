@@ -3623,6 +3623,25 @@ const cornerClash = (page) => page.evaluate(() => {
       py.mode === 'src' && !py.view && md.mode === 'split' && md.view && md.md > 0, JSON.stringify([py, md]));
     await c.close();
   }
+  {
+    // Ô lọc đang lọc: New file / New folder xoá mẫu, ô đổi tên của mục mới hiện ra (không tạo untitled-2.md khi Enter).
+    const c = await treeContext({ viewport: { width: 1600, height: 900 }, colorScheme: 'light' });
+    const p = await c.newPage(); watch(p);
+    await p.goto(BASE); await p.waitForFunction(() => window.marked && window.DOMPurify);
+    await pasteText(p, DOC);
+    await p.setInputFiles('#file-in', { name: 'main.rs', mimeType: 'text/plain', buffer: Buffer.from('fn main() {}\n') });
+    await p.waitForTimeout(200);
+    const names = () => p.$$eval('#tree-list .ma-trow__name', (ns) => ns.map((n) => n.textContent).join());
+    for (const [btn, name] of [['#tree-new-file', 'new.md'], ['#tree-new-dir', 'box']]) {
+      await p.fill('#tree-q', 'main'); await p.waitForTimeout(250);
+      await p.click(btn); await p.waitForTimeout(100);
+      const st = await p.evaluate(() => ({ q: document.getElementById('tree-q').value, ren: document.activeElement.classList.contains('ma-trow__ren') }));
+      await p.keyboard.press('Control+A'); await p.keyboard.type(name); await p.keyboard.press('Enter'); await p.waitForTimeout(150);
+      const ns = await names();
+      check(`ô lọc đang lọc: ${btn} xoá mẫu, đổi tên mục mới ngay (${name})`, st.q === '' && st.ren && ns.includes(name) && !ns.includes('untitled-2'), JSON.stringify([st, ns]));
+    }
+    await c.close();
+  }
   // ── end sửa sau rà soát ──
 
   check('không lỗi console', !errors.length, errors.join(' | '));
