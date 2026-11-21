@@ -100,9 +100,6 @@ export function initViews() {
     });
   });
   $('btn-edit').addEventListener('click', toggleEdit);
-  if (window.ResizeObserver) new ResizeObserver(function () {
-    cancelAnimationFrame(rafSplit); rafSplit = requestAnimationFrame(refreshSplit);
-  }).observe($('doc'));
   var later = function () { cancelAnimationFrame(rafSplit); rafSplit = requestAnimationFrame(refreshSplit); };
   window.addEventListener('resize', later);
   /* #doc đổi bề rộng mà cửa sổ không đổi (ẩn / hiện cột cây, kéo mép cây, thanh dọc): xét lại Split. */
