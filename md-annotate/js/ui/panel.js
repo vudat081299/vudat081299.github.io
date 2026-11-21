@@ -1,14 +1,24 @@
-/* Panel bên phải: ba tab Comments / Prompt / Review (setPane; thân của tab là #pane-<data-pane>), kéo mép trái đổi bề rộng (prefs.side), thu gọn thành thanh dọc
-   (prefs.rail), tấm trượt #dlg-panel ở máy ≤ 1080px.
+/* Panel bên phải: ba tab Comments / Prompt / Review (setPane; thân của tab là #pane-<data-pane>; Review chỉ ở file
+   markdown), kéo mép trái đổi bề rộng (prefs.side), thu gọn thành thanh dọc (prefs.rail), tấm trượt #dlg-panel ở máy ≤ 1080px.
    Xuất: initPanel, setPane.
-   Dùng: ui/store.js, ui/dom.js, ui/views.js. */
+   Dùng: core/file-type.js, ui/store.js, ui/dom.js, ui/state.js, ui/views.js. */
+import { paneFor } from '../core/file-type.js';
 import { prefs, savePrefs } from './store.js';
 import { $, dragBar, mqSide } from './dom.js';
+import { openType } from './state.js';
 import { longText } from './views.js';
 
+/* pane: tab người dùng chọn gần nhất. Tab nào có ở file đang mở là luật paneFor (Review chỉ ở markdown, MDAN-081):
+   tab không có thì ẩn, hiện tab paneFor trả; pane vẫn nhớ Review nên mở lại file .md thì về Review. setPane() không tên:
+   vẽ lại theo file đang mở (setView gọi mỗi khi đổi file). */
+var pane = 'list';
 export function setPane(name) {
+  var t = openType();
+  if (name) pane = name;
+  var cur = paneFor(t, pane);
   document.querySelectorAll('.ma-ptab').forEach(function (b) {
-    var on = b.dataset.pane === name;
+    var on = b.dataset.pane === cur;
+    b.hidden = paneFor(t, b.dataset.pane) !== b.dataset.pane;
     b.setAttribute('aria-selected', String(on)); b.tabIndex = on ? 0 : -1;
     $('pane-' + b.dataset.pane).hidden = !on;
   });
@@ -46,7 +56,7 @@ export function initPanel() {
     b.addEventListener('click', function () { setPane(b.dataset.pane); });
     b.addEventListener('keydown', function (e) {
       if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
-      var tabs = Array.prototype.slice.call(document.querySelectorAll('.ma-ptab'));
+      var tabs = Array.prototype.filter.call(document.querySelectorAll('.ma-ptab'), function (x) { return !x.hidden; });
       var t = tabs[(tabs.indexOf(b) + (e.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length];
       setPane(t.dataset.pane); t.focus();
     });

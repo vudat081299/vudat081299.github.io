@@ -3,7 +3,8 @@
    (sizePanes, html.ma-fit), vách giữa (prefs.split), nút Syntax colors.
    longText(): kéo vách / mép cây / mép panel có dàn lại ngay không (dragBar).
    Xuất: initViews, isSplit, lastRead, longText, paneRoot, paneWrap, refreshSplit, setView, sizePanes, view.
-   Dùng: core/panes.js, core/file-type.js, core/runs.js, ui/store.js, ui/dom.js, ui/state.js, ui/render.js, ui/popup.js, ui/picks.js. */
+   Dùng: core/panes.js, core/file-type.js, core/runs.js, ui/store.js, ui/dom.js, ui/state.js, ui/render.js, ui/popup.js, ui/picks.js,
+     ui/panel.js. */
 import { paneHeight, splitFits } from '../core/panes.js';
 import { viewFor } from '../core/file-type.js';
 import { lineCount } from '../core/runs.js';
@@ -13,6 +14,7 @@ import { D, openType } from './state.js';
 import { renderAll, renderMeta } from './render.js';
 import { closePop, pop } from './popup.js';
 import { clearPicks, repaintPicks } from './picks.js';
+import { setPane } from './panel.js';
 
 /* Split chỉ khi mỗi khung được ≥ 420px. Muốn Split mà chưa đủ chỗ (kể cả vì cột cây) thì hiện Preview, prefs.view vẫn nhớ
    'split'; ẩn cây hay kéo hẹp cây thì Split về. */
@@ -48,6 +50,7 @@ export function setView(v) {
   $('tab-view').hidden = !t.md;
   $('tab-split').hidden = !splitShown();
   $('divider').hidden = v !== 'split';
+  setPane();   // tab Review của panel cũng chỉ ở file markdown
   renderMeta(); // gọi sizePanes(): bật / tắt khoá cuộn trang (ma-fit) theo chế độ
   if (v !== 'edit' && pop.mode) closePop(true);
   /* Chọn dòng chỉ có ở nơi có lề số dòng (Source, Split): sang Edit / Preview thì thoát. */

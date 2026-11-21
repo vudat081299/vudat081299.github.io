@@ -1041,7 +1041,11 @@ check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi
     check('downloadOf: kiểu theo fileType — Makefile / Dockerfile giữ tên, chữ trơn; .mdx là markdown; .py chữ trơn',
       eq(['Makefile', 'Dockerfile', 'p.mdx', 'a.py'].map(dt), ['Makefile text/plain', 'Dockerfile text/plain', 'p.mdx text/markdown', 'a.py text/plain']), JSON.stringify(['Makefile', 'Dockerfile', 'p.mdx', 'a.py'].map(dt)));
     const one = S.createSession('x', {});
-    check('wantsReview / allFilesOffered', P.wantsReview({ rvPrompt: true, lineNums: true }) && !P.wantsReview({ rvPrompt: true, lineNums: false }) && !P.wantsReview({ rvPrompt: false, lineNums: true }) && P.allFilesOffered(s) && !P.allFilesOffered(one) && !P.promptsAll(Object.assign({}, one, { promptAll: true })));
+    const on = Object.assign({}, one, { rvPrompt: true }), py = Object.assign(S.renameIn(on, on.open, 'a.py').s, { rvPrompt: true });
+    check('wantsReview / allFilesOffered', P.wantsReview(on) && !P.wantsReview(Object.assign({}, on, { lineNums: false })) && !P.wantsReview(one) && P.allFilesOffered(s) && !P.allFilesOffered(one) && !P.promptsAll(Object.assign({}, one, { promptAll: true })));
+    const mix = Object.assign(S.addPaths(py, null, [{ path: 'b.md', text: 'B' }]).s, { open: py.open });
+    check('reviewOffered: file code thì không (ô ẩn, rvPrompt giữ); All files có file .md thì có',
+      !P.reviewOffered(py) && !P.wantsReview(py) && py.rvPrompt === true && !P.reviewOffered(mix) && P.reviewOffered(Object.assign({}, mix, { promptAll: true })) && P.wantsReview(Object.assign({}, mix, { promptAll: true })));
   }
 }
 // ── end cây folder + file ──
@@ -1065,7 +1069,7 @@ check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi
 // ── end màu thanh ──
 
 // ── loại file, sổ ngôn ngữ, token code (MDAN-066) ──
-import { fileType, langOf, viewFor } from '../js/core/file-type.js';
+import { fileType, langOf, paneFor, viewFor } from '../js/core/file-type.js';
 import { LANGS, CORE_SRI } from '../js/core/langs.js';
 import { hlRuns, sxTokens } from '../js/core/code-tokens.js';
 {
@@ -1077,6 +1081,7 @@ import { hlRuns, sxTokens } from '../js/core/code-tokens.js';
   const md = fileType('a.md'), py = fileType('a.py');
   check('viewFor: markdown giữ mọi chế độ', ['edit', 'src', 'view', 'split'].every((v) => viewFor(md, v) === v));
   check('viewFor: file không có Preview — Preview / Split về Source, Edit / Source giữ', ['edit', 'src', 'src', 'src'].join() === ['edit', 'src', 'view', 'split'].map((v) => viewFor(py, v)).join());
+  check('paneFor: markdown có mọi tab; file khác không có Review (về Comments) (MDAN-081)', ['list', 'prompt', 'review'].map((v) => paneFor(md, v)).join() === 'list,prompt,review' && ['list', 'prompt', 'review'].map((v) => paneFor(py, v)).join() === 'list,prompt,list');
   check('langOf: khối rào theo alias, chữ hoa, ký tự lạ', langOf('JS') === 'javascript' && langOf('c++') === 'cpp' && langOf('c#') === 'csharp' && langOf('text') === null && langOf('') === null);
   const sri = /^sha384-[A-Za-z0-9+/]{64}$/;
   const bad = Object.keys(LANGS).filter((id) => !sri.test(LANGS[id][1]) || (LANGS[id][2] || '').split(' ').some((d) => d && !LANGS[d]));

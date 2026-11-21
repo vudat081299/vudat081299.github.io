@@ -284,7 +284,7 @@ export function applyReview(marksOnly) {
   /* Không có đơn vị mà văn bản có chữ: file không phải markdown (không đánh dấu đã đọc, MDAN-073; dấu cũ của nó, VD đổi
      tên a.md → a.py, giữ lại) hay chưa tách được khối (thiếu mạng, Preview không dựng): dấu chưa neo được, không phải
      mất. Giữ % đã lưu, không báo mất. */
-  var code = !openType().md, blind = code || (!r.units.length && /\S/.test(D.text || ''));
+  var blind = !openType().md || (!r.units.length && /\S/.test(D.text || ''));
   if (!D.reviews.length) delete D.rvPct; else if (!blind) D.rvPct = p.pct;
   if (de.classList.contains('ma-reviewing') !== D.reviews.length > 0) marksOnly = false;   // điện thoại: lề trái Preview đổi
   de.classList.toggle('ma-reviewing', D.reviews.length > 0);
@@ -299,7 +299,7 @@ export function applyReview(marksOnly) {
   }
   paintDone(r);
   if (marksOnly && laneUnits === r.units) restyleLanes(r); else layoutLanes();
-  renderReviewPanel(r, p, blind ? (code ? 'code' : 'offline') : '');
+  renderReviewPanel(r, p, blind);
   syncSug(r);   // trước viên thuốc: bỏ gợi ý của đơn vị vừa đánh dấu
   syncPill(r, p);
   syncPopRv();

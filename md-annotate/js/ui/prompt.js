@@ -7,7 +7,7 @@
      ui/state.js, ui/render.js, ui/review.js. */
 import { plural } from '../core/text.js';
 import { anchorAll } from '../core/comments.js';
-import { allFilesOffered, buildPrompt, buildPromptAll, exportName, included, locLabel, optionsSummary, promptsAll, promptSize } from '../core/prompt.js';
+import { allFilesOffered, buildPrompt, buildPromptAll, exportName, included, locLabel, optionsSummary, promptsAll, promptSize, reviewOffered } from '../core/prompt.js';
 import { byId, filesInOrder } from '../core/tree.js';
 import { fileType } from '../core/file-type.js';
 import { prefs, savePrefs } from './store.js';
@@ -42,6 +42,7 @@ export function renderPrompt() {
   ['btn-copy', 'btn-export', 'dock-copy', 'rail-copy', 'rail-export'].forEach(function (id) { $(id).disabled = !r.p; });
   $('opts-sum').textContent = optionsSummary(S);
   $('all-row').hidden = !allFilesOffered(S);
+  $('rv-prompt-row').hidden = !reviewOffered(S);   // theo file mở, All files, số dòng: vẽ lại cùng prompt
 }
 /* Đổ tuỳ chọn của S vào các ô của Options. */
 export function syncOptions() {
@@ -52,7 +53,7 @@ export function syncOptions() {
   $('line-nums').checked = S.lineNums;
   $('p-all').checked = S.promptAll;
   $('p-path').value = S.path;
-  $('path-row').hidden = $('rv-prompt-row').hidden = !S.lineNums;
+  $('path-row').hidden = !S.lineNums;
   $('all-row').hidden = !allFilesOffered(S);
   document.querySelectorAll('input[name="fmt"]').forEach(function (r) { r.checked = r.value === S.fmt; });
 }
@@ -104,7 +105,7 @@ export function initPrompt() {
   $('rv-prompt').addEventListener('change', function (e) { S.rvPrompt = e.target.checked; scheduleSave(); renderPrompt(); });
   $('p-all').addEventListener('change', function (e) { S.promptAll = e.target.checked; scheduleSave(); renderPrompt(); });
   $('line-nums').addEventListener('change', function (e) {
-    S.lineNums = e.target.checked; $('path-row').hidden = $('rv-prompt-row').hidden = !S.lineNums;
+    S.lineNums = e.target.checked; $('path-row').hidden = !S.lineNums;
     scheduleSave(); renderPrompt();
   });
   $('p-path').addEventListener('input', function (e) { S.path = e.target.value.trim(); scheduleSave(); renderPrompt(); });

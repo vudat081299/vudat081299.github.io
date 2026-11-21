@@ -14,7 +14,7 @@
 | `js/core/anchor.js`, `js/core/comments.js` | neo đoạn trích (`locate`, `quoteFrom`); thêm / sửa / xoá, neo, xếp, đánh số nhận xét, `partsOf` |
 | `js/core/session.js`, `js/core/tree.js`, `js/core/tree-find.js`, `js/core/zip.js`, `js/core/prompt.js` | phiên là cây file (thêm, xoá, nạp, mở file từ đĩa, Undo), index, tên tự đặt; cây phẳng (thứ tự, tên, chuyển); lọc file theo mẫu (`findFiles`); ghi `.zip`; prompt một / mọi file, nhãn L12 |
 | `js/core/hints.js`, `js/core/place.js`, `js/core/tokens.js`, `js/core/runs.js`, `js/core/color.js` | đếm, xếp hạng gợi ý, chip; chỗ đặt hộp nổi (`popPlace`), tấm đáy cuộn bao nhiêu (`sheetReveal`), nút nổi (`fabSide`), cây cuộn ngang tới tên (`nameReveal`); token của *Source*; cắt chữ theo token / highlight / dòng, `lineCount`; trộn lớp mờ lên nền (`barColor`) |
-| `js/core/langs.js`, `js/core/file-type.js`, `js/core/code-tokens.js`, `js/ui/highlight.js` | sổ loại file và ngôn ngữ highlight.js (chỉ dữ liệu); tên file → loại (`fileType`), chế độ xem có được (`viewFor`), tên khối rào → ngôn ngữ (`langOf`); HTML của highlight.js → token; nạp highlight.js khi cần, tô khối code ở *Preview* (`paintFences`), token *Source* của file code (`codeTokens`) |
+| `js/core/langs.js`, `js/core/file-type.js`, `js/core/code-tokens.js`, `js/ui/highlight.js` | sổ loại file và ngôn ngữ highlight.js (chỉ dữ liệu); tên file → loại (`fileType`), chế độ xem, tab panel có được (`viewFor`, `paneFor`), tên khối rào → ngôn ngữ (`langOf`); HTML của highlight.js → token; nạp highlight.js khi cần, tô khối code ở *Preview* (`paintFences`), token *Source* của file code (`codeTokens`) |
 | `js/core/blocks.js`, `js/core/sections.js`, `js/core/panes.js`, `js/core/picks.js`, `js/core/sync-math.js`, `js/core/text.js`, `js/core/help.js` | `lexSpans`, `pairBlocks` (khối nguồn ↔ Preview); đánh số section, dải đọc; `splitFits`, cao hai khung; nhiều dòng (`pickInfo`); cuộn theo nhau; `plural`, `lineOf`, `slug`, `importCheck`; `normHelp` |
 | `js/{core,ui}/review.js`, `js/ui/review-panel.js`, `js/{core,ui}/minimap.js`, `js/{core,ui}/dwell.js` | đã đọc: đơn vị, neo dấu, tiến độ; làn, phím, nút hộp nhận xét, viên thuốc; tab *Review*; dải tiến độ; gợi ý theo thời gian đọc (MDAN-016) |
 | `js/ui/store.js`, `js/ui/dom.js`, `js/ui/state.js`, `js/ui/render.js` | `localStorage`, khoá, `prefs`; `$`, `getJSON()`, `h()`, `icon()`, `toast()` / `placeToast()`, `dragBar()`, `saveFile()`, `syncBar()` (cả khoá cuộn), `trackKeyboard()`, `barBottom()` / `dockTop()`; phiên `S`, file mở `D`, lưu, chuyển phiên / file; `renderAll()`, kết quả neo `mdText`, `anchors`…, `anchorsOf(doc)` |
@@ -71,7 +71,7 @@
 
 ## Panel bên phải
 
-- Một panel (`#panel`): đầu có ba tab *Comments · N* / *Prompt* / *Review* và nút biểu tượng *Hints*, thân cuộn, đáy ghim trạng thái,
+- Một panel (`#panel`): đầu có ba tab *Comments · N* / *Prompt* / *Review* (*Review* chỉ ở file markdown: `paneFor`; file khác hiện *Comments*, tab đã chọn vẫn nhớ; MDAN-081) và nút biểu tượng *Hints*, thân cuộn, đáy ghim trạng thái,
   *Download .md* và *Copy prompt*. Nút chép luôn trong khung nhìn (smoke đo với 32 nhận xét). Panel hẹp thì bỏ huy hiệu tab (container query).
 - Máy rộng (≥ 1081px): panel dính từ đỉnh vùng nội dung tới đáy khung nhìn; `top`, `height` của panel và đệm dọc lưới cùng `--s4`. Tuỳ chọn prompt (kiểu, mọi file, số dòng, folder, dòng đã đọc, toàn văn, lời dẫn) gập trong *Options* ở tab Prompt; dòng tóm tắt cho biết đang bật gì.
 - ⌘/Ctrl + Shift + C chép ở mọi chỗ; chép xong nút thành *Copied ✓* một lúc, báo qua `#sr-live`, toast chỉ khi hỏng. Chép / tải neo lại lúc bấm (`freshDoc()`).
@@ -118,7 +118,7 @@
 
 ## Đánh dấu đã đọc (MDAN-013)
 
-- Chỉ file markdown (MDAN-073); file khác: tab *Review* báo, dấu cũ giữ, không báo mất. Đơn vị: khối của `lexSpans`; danh sách ≥ 2 mục thì mỗi mục cấp cao một đơn vị (mục con thuộc mục cha); bảng, khối code là
+- Chỉ file markdown (MDAN-073); file khác: không có tab *Review* (MDAN-081), dấu cũ giữ, không báo mất. Đơn vị: khối của `lexSpans`; danh sách ≥ 2 mục thì mỗi mục cấp cao một đơn vị (mục con thuộc mục cha); bảng, khối code là
   một đơn vị; khối không chữ / số / emoji (kẻ ngang), khối chỉ có chú thích HTML không tính. Tiến độ theo số dòng, làm tròn xuống.
 - Dấu ở `D.reviews` (`{ h, p, n, q, r }`, không số dòng): băm chữ chuẩn hoá (bỏ dấu mục), băm hai hàng xóm (mép văn bản: rỗng), 80 ký tự
   đầu. Chuyển chỗ, chữ giữ nguyên: ✓. Chữ đổi: ○, tính là chưa đọc. Không tìm lại được: mất, báo toast lúc mất và ở tab *Review*.
@@ -129,7 +129,7 @@
   *Preview*: lề trái. Bấm: bật / tắt; Shift + bấm: cả dải (mốc mất khi văn bản đổi); làn của tiêu đề (hình vuông) bật cả section.
 - Phím X / Shift+X / J / K: bỏ qua khi đang gõ chữ, khi hộp thoại hay hộp nhận xét mở, khi có phím bổ trợ khác Shift. Đơn vị hiện tại: chạm
   dải đọc (dưới con trỏ khi Focus theo chuột; khung không cuộn được: đơn vị đầu), làn `.is-cur` (vòng đứt quanh ✓ mờ và vạch đứt, xám; MDAN-079); vừa nhảy tới thì là nó (`pin`, người dùng tự cuộn thì bỏ).
-- Nút ✓ Reviewed của hộp nhận xét (nới ra trọn khối, cả dòng chọn ở lề số): `ui/review.js` theo dõi hộp (MutationObserver). Prompt: *Say which lines I reviewed* (`rvPrompt`, mặc định tắt, ẩn khi tắt số dòng) thêm `Đã đọc kỹ: … Chưa đọc: …`; tắt thì y hệt từng byte.
+- Nút ✓ Reviewed của hộp nhận xét (nới ra trọn khối, cả dòng chọn ở lề số): `ui/review.js` theo dõi hộp (MutationObserver). Prompt: *Say which lines I reviewed* (`rvPrompt`, mặc định tắt; ẩn khi tắt số dòng hay prompt không có file markdown: `reviewOffered`) thêm `Đã đọc kỹ: … Chưa đọc: …`; tắt thì y hệt từng byte.
 - Bộ dấu (MDAN-017): tròn là khối, vuông là section, ✓ là ảnh `--ic-check`, cỡ `--ic-box`; khai báo một lần ở `css/review.css` (cả gợi ý), ô đánh dấu
   của form dùng cùng ảnh, cùng cỡ; dấu căn giữa dòng đầu khối (đệm trên của nút). Máy hẹp / cảm ứng: `#rv-pill` chỉ đánh dấu, không bỏ dấu (cảm ứng có gợi ý: *Accept N*); chưa có dấu thì tắt làn. Viền ✓ `--done-edge` (≥ 3:1).
 - Dải tiến độ (MDAN-016): `.ma-mm` fixed, mép phải khung; mỗi đơn vị một đoạn (đặc ✓, rỗng ○, nhạt, viền đứt gợi ý) trên rãnh `--line-2` cao hết dải. Trái dải,

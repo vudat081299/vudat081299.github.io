@@ -3759,19 +3759,65 @@ const cornerClash = (page) => page.evaluate(() => {
     await p.hover('#v-src .ma-ln:nth-child(5)'); await p.waitForTimeout(150);
     await p.mouse.wheel(0, 400); await p.waitForTimeout(150);
     await p.keyboard.press('x'); await p.keyboard.press('j'); await p.waitForTimeout(150);
-    await p.click('#ptab-review'); await p.waitForTimeout(100);
     await p.evaluate(() => { const ta = document.getElementById('src-input'); ta.value += '\n# more'; ta.dispatchEvent(new Event('input')); });
     await p.waitForTimeout(400);
     const st = await p.evaluate(() => ({
       mk: window.__mk, focusing: document.getElementById('v-src').classList.contains('is-focusing'),
       dim: [...document.querySelectorAll('#v-src .ma-ln')].filter((l) => getComputedStyle(l).opacity !== '1').length,
       lanes: document.querySelectorAll('.ma-lane__b').length, md: document.getElementById('v-md').children.length,
-      rv: document.getElementById('rv-empty').textContent.trim().slice(0, 35), marks: JSON.parse(localStorage.getItem('md-annotate:s:' + JSON.parse(localStorage.getItem('md-annotate:current')))).docs
+      rv: document.getElementById('ptab-review').hidden, marks: JSON.parse(localStorage.getItem('md-annotate:s:' + JSON.parse(localStorage.getItem('md-annotate:current')))).docs
     }));
     const nMarks = Object.values(st.marks).reduce((n, d) => n + (d.reviews || []).length, 0);
-    check('D3: file .py — md có Focus, .py không (không mờ dòng nào), không làn, không đánh dấu (X), Preview rỗng, tab Review báo chỉ cho markdown',
-      mdFocus && !st.focusing && st.dim === 0 && st.lanes === 0 && st.md === 0 && nMarks === 0 && st.rv === 'Review marks are for markdown files', JSON.stringify(Object.assign({ mdFocus }, st, { marks: nMarks })));
+    check('D3: file .py — md có Focus, .py không (không mờ dòng nào), không làn, không đánh dấu (X), Preview rỗng, không có tab Review',
+      mdFocus && !st.focusing && st.dim === 0 && st.lanes === 0 && st.md === 0 && nMarks === 0 && st.rv === true, JSON.stringify(Object.assign({ mdFocus }, st, { marks: nMarks })));
     check('D3: file .py không chạy marked.parse / marked.lexer (vẽ lại, rê, cuộn, X, J)', st.mk === 0, String(st.mk));
+    await c.close();
+  }
+  for (const [w, h, scheme] of [[1600, 900, 'light'], [390, 800, 'dark']]) {
+    // D4: tab Review và ô "Say which lines I reviewed" chỉ ở file markdown (MDAN-081); tab đã chọn và ô đã bật được nhớ.
+    const phone = w < 500;
+    const c = await treeContext({ viewport: { width: w, height: h }, colorScheme: scheme, hasTouch: phone, isMobile: phone });
+    const p = await openPage(c);
+    await pasteText(p, DOC); await p.waitForTimeout(150);
+    const panel = async (open) => {
+      if ((await p.evaluate(() => document.getElementById('dlg-panel').open)) === open || !phone) return;
+      if (open) await p.$eval('#dock-n', (e) => e.click()); else await p.$eval('#dlg-panel', (e) => e.close());
+      await p.waitForTimeout(150);
+    };
+    const openFile = async (name) => {
+      await p.evaluate((name) => [...document.querySelectorAll('#tree-list .ma-trow')].find((x) => x.querySelector('.ma-trow__name').textContent === name).click(), name);
+      await p.waitForTimeout(300);
+    };
+    const st = async () => { await panel(true); const r = await p.evaluate(() => ({
+      tabs: [...document.querySelectorAll('.ma-ptab')].filter((x) => x.getClientRects().length).map((x) => x.dataset.pane).join(),
+      sel: document.querySelector('.ma-ptab[aria-selected="true"]').dataset.pane,
+      panes: [...document.querySelectorAll('.ma-pane')].filter((x) => !x.hidden).map((x) => x.id).join(),
+      row: !document.getElementById('rv-prompt-row').hidden, rvOn: document.getElementById('rv-prompt').checked,
+      sum: /reviewed/.test(document.getElementById('opts-sum').textContent)
+    })); await panel(false); return r; };
+    await panel(true);
+    await p.click('#ptab-prompt'); await p.click('#opts summary'); await p.click('#rv-prompt'); await p.waitForTimeout(100);
+    await p.click('#ptab-review'); await p.waitForTimeout(100);
+    const md = await st();
+    await p.setInputFiles('#file-in', { name: 'main.py', mimeType: 'text/plain', buffer: Buffer.from('def f(x):\n    return x\n') });
+    await p.waitForTimeout(300);
+    const py = await st();
+    await openFile('untitled.md');
+    const back = await st();
+    await openFile('main.py');
+    await panel(true);
+    await p.focus('#ptab-prompt'); await p.keyboard.press('ArrowRight'); const k1 = await p.evaluate(() => document.activeElement.id);
+    await p.keyboard.press('ArrowLeft'); const k2 = await p.evaluate(() => document.activeElement.id);
+    const pyKeys = await p.evaluate(() => { for (const k of ['x', 'X', 'j', 'k']) document.dispatchEvent(new KeyboardEvent('keydown', { key: k, shiftKey: k === 'X', bubbles: true })); return document.querySelectorAll('.ma-lane__b').length; });
+    await panel(false);
+    await p.reload(); await p.waitForFunction(() => window.marked && window.DOMPurify); await p.waitForTimeout(300);
+    const re = await st();
+    check(`D4 ${w}px ${scheme}: .md có tab Review và ô dòng đã đọc`, md.tabs === 'list,prompt,review' && md.sel === 'review' && md.panes === 'pane-review' && md.row && md.rvOn && md.sum, JSON.stringify(md));
+    check(`D4 ${w}px: Review đang mở → .py: không tab Review, hiện Comments; ô dòng đã đọc ẩn (vẫn bật), tóm tắt Options không "reviewed"`,
+      py.tabs === 'list,prompt' && py.sel === 'list' && py.panes === 'pane-list' && !py.row && py.rvOn && !py.sum, JSON.stringify(py));
+    check(`D4 ${w}px: mũi tên ở tab panel bỏ qua tab ẩn; X / J / K ở .py không làm gì`, k1 === 'ptab-list' && k2 === 'ptab-prompt' && pyKeys === 0, JSON.stringify([k1, k2, pyKeys]));
+    check(`D4 ${w}px: về .md thì lại tab Review đã chọn, ô dòng đã đọc vẫn bật`, back.tabs === 'list,prompt,review' && back.sel === 'review' && back.panes === 'pane-review' && back.row && back.rvOn, JSON.stringify(back));
+    check(`D4 ${w}px: tải lại với .py mở vẫn không có tab Review`, re.tabs === 'list,prompt' && re.panes === 'pane-list' && !re.row, JSON.stringify(re));
     await c.close();
   }
   {

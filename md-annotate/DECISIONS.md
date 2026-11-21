@@ -55,6 +55,7 @@
 - MDAN-076 · Cổng xanh thì push main ngay, smoke chạy sau · `md-annotate/`
 - MDAN-079 · Nét đứt theo khối đang đọc: xám là khối hiện tại, xanh là gợi ý; viên thuốc Accept N · thay cho MDAN-077, MDAN-078 · `md-annotate/css/review.css`, `md-annotate/js/ui/review.js`, `md-annotate/js/ui/dwell.js`, `md-annotate/index.html`, `md-annotate/data/shortcuts.json`
 - MDAN-080 · Cây sâu cuộn ngang, tự cuộn tới tên file đang mở · `md-annotate/js/ui/tree.js`, `md-annotate/js/core/place.js`
+- MDAN-081 · Tab Review và dòng đã đọc trong prompt chỉ ở file markdown · `md-annotate/js/ui/panel.js`, `md-annotate/js/ui/prompt.js`, `md-annotate/js/core/file-type.js`, `md-annotate/js/core/prompt.js`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Nguồn tô màu cú pháp kiểu VS Code
@@ -465,3 +466,10 @@ có Undo như thường. Tab Review ở màn cảm ứng nói về viên thuốc
 Sửa MDAN-063: cây sâu vẫn cuộn ngang trong thanh bên (MDAN-060). Mở file, chọn hàng (bàn phím hay bấm), hiện cây, đổi bề rộng
 cây, mở / gập làm đổi độ sâu: cây tự cuộn ngang vừa đủ để thấy đầu tên hàng ấy, như VS Code. Người dùng tự cuộn ngang thì
 không bị kéo lại.
+
+## MDAN-081 · Tab Review và dòng đã đọc trong prompt chỉ ở file markdown
+21/11/2026 · `md-annotate/js/ui/panel.js`, `md-annotate/js/ui/prompt.js`, `md-annotate/js/core/file-type.js`, `md-annotate/js/core/prompt.js`
+
+Sửa MDAN-073: file không phải markdown không có tab Review, thay vì tab báo rằng đánh dấu chỉ dành cho markdown. Đang ở
+Review mà mở file khác thì panel hiện Comments; quay lại file markdown thì về Review. Ô "Say which lines I reviewed" ẩn
+khi prompt không có file markdown nào; lựa chọn của người dùng giữ nguyên cho lần sau.

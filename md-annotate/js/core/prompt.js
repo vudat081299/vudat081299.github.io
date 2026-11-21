@@ -5,12 +5,13 @@
    Nhãn tệp của một file là session.js fileLabel (tiền tố path + đường dẫn trong cây; '' thì ghi L12).
    Một file: buildPrompt. Gom mọi file (s.promptAll, phiên ≥ 2 file, xem promptsAll): buildPromptAll.
    Xuất: allFilesOffered, buildPrompt, buildPromptAll, exportName, included, locLabel, optionsSummary, promptsAll, promptSize,
-     rangeLabel, wantsReview.
-   Dùng: core/text.js, core/session.js, core/comments.js, core/tree.js. */
+     rangeLabel, reviewOffered, wantsReview.
+   Dùng: core/text.js, core/session.js, core/comments.js, core/tree.js, core/file-type.js. */
 import { lineOf, oneLine, slug } from './text.js';
 import { autoName, fileCount, fileLabel } from './session.js';
 import { partsOf } from './comments.js';
-import { filesInOrder } from './tree.js';
+import { byId, filesInOrder } from './tree.js';
+import { fileType } from './file-type.js';
 
 /* Nhận xét vào prompt: theo thứ tự trong văn bản, bỏ nhận xét mất neo. */
 export function included(d) { return d.ordered.filter(function (c) { return !d.orphans[c.id]; }); }
@@ -43,9 +44,15 @@ function reviewLine(r, label) {
   var f = function (rs) { return rs.map(function (x) { return rangeLabel(x[0], x[1], label); }).join(', '); };
   return 'Đã đọc kỹ: ' + f(r.done) + '; chỗ nào không có nhận xét là ổn.' + (r.todo.length ? ' Chưa đọc: ' + f(r.todo) + '.' : '');
 }
-/* Dòng đã đọc vào prompt khi bật *Say which lines I reviewed* và bật số dòng (dòng đã đọc là số dòng). Nơi dựng dải dòng
+/* Ô *Say which lines I reviewed* có nghĩa không: bật số dòng (dòng đã đọc là số dòng) và prompt có file markdown (file
+   khác không có dấu đã đọc, MDAN-073): file đang mở, hay một file của phiên khi gom mọi file. */
+export function reviewOffered(s) {
+  if (s.lineNums === false) return false;
+  return (promptsAll(s) ? filesInOrder(s.nodes) : [s.open]).some(function (id) { return fileType(byId(s.nodes, id).name).md; });
+}
+/* Dòng đã đọc vào prompt khi bật ô ấy và nó có nghĩa; tắt ô chỉ vì file code thì s.rvPrompt vẫn giữ. Nơi dựng dải dòng
    đã đọc (ui/review.js) hỏi đây trước khi tính. */
-export function wantsReview(s) { return s.rvPrompt === true && s.lineNums !== false; }
+export function wantsReview(s) { return s.rvPrompt === true && reviewOffered(s); }
 var NOTE_L = 'Số dòng (L) tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.';
 var NOTE_FILE = 'Vị trí ghi dạng tệp:dòng, tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.';
 /* Phần của một file: nhận xét vào prompt, các phần tìm thấy (tắt số dòng thì không nhãn), dòng đã đọc. */

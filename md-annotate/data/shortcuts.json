@@ -18,7 +18,7 @@
     },
     {
       "title": "Review",
-      "note": "Mark the blocks you have read. Keys work when you are not typing and no box is open.",
+      "note": "Markdown files only: mark the blocks you have read. Keys work when you are not typing and no box is open.",
       "rows": [
         { "keys": [["X"]], "action": "Mark or unmark the block in the reading band, shown by a gray dashed ✓ beside it (under the pointer in pointer Focus mode); after marking, go to the next unreviewed block" },
         { "keys": [["Shift", "X"]], "action": "Mark or unmark the whole section of that block" },
