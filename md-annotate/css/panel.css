@@ -20,15 +20,15 @@
 @container (max-width: 345px) { .ma-ptab__n { display: none; } .ma-panel__head { padding-inline: var(--s2); } }
 .ma-panel__close { display: none; }
 /* Kéo mép trái để đổi bề rộng panel. */
-.ma-panel__grip { position: absolute; z-index: 2; left: 0; top: 0; bottom: 0; width: 8px; cursor: col-resize; touch-action: none; }
-.ma-panel__grip::before { content: ''; position: absolute; top: var(--s3); bottom: var(--s3); left: 0; width: 3px; border-radius: var(--r-pill); background: transparent; transition: background var(--dur) var(--ease); }
+.ma-panel__grip { position: absolute; z-index: 2; left: 0; top: 0; bottom: 0; width: var(--drag-w); cursor: col-resize; touch-action: none; }
+.ma-panel__grip::before { content: ''; position: absolute; top: var(--s3); bottom: var(--s3); left: 0; width: var(--drag-bar); border-radius: var(--r-pill); background: transparent; transition: background var(--dur) var(--ease); }
 /* Vạch là chỉ báo trạng thái (≥ 3:1): rê / kéo --edge-on, focus --ring; --accent chỉ ~2,3:1 trên nền sáng. */
 .ma-panel__grip:hover::before, .ma-panel__grip.is-drag::before { background: var(--edge-on); }
 .ma-tabbing .ma-panel__grip:focus-visible::before { background: var(--ring); }
 .ma-panel__grip:focus-visible { outline: none; }
 /* Thu gọn thành thanh dọc: còn nút mở, số nhận xét, tải và chép. */
 .ma-rail { display: none; }
-html.ma-railed .ma-grid { grid-template-columns: minmax(0, 1fr) 56px; }
+html.ma-railed .ma-grid { grid-template-columns: minmax(0, 1fr) var(--rail); }
 html.ma-railed .ma-panel > :is(.ma-panel__grip, .ma-panel__head, .ma-panel__body, .ma-panel__foot) { display: none; }
 html.ma-railed .ma-grid > .ma-panel .ma-rail { display: flex; flex-direction: column; align-items: center; gap: var(--s2); height: 100%; padding: var(--s2) 0; }
 .ma-rail__n {
@@ -70,7 +70,7 @@ html.ma-railed .ma-grid > .ma-panel .ma-rail { display: flex; flex-direction: co
   flex: 1; min-width: 0; display: flex; flex-direction: column; gap: var(--s2); text-align: left;
   padding: var(--s3) var(--s1) var(--s3) var(--s3); border: 0; background: transparent; border-radius: var(--r);
 }
-.ma-item__top { display: flex; align-items: center; gap: var(--s2); min-height: 20px; }
+.ma-item__top { display: flex; align-items: center; gap: var(--s2); min-height: var(--h-xs); }
 .ma-item.is-orphan .ma-item__n { background: var(--danger); color: var(--surface); }
 .ma-item__loc { font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-3); overflow-wrap: anywhere; }
 .ma-item__c { font: 600 var(--fs-md)/var(--lh) var(--sans); color: var(--ink); overflow-wrap: anywhere; white-space: pre-wrap; }
@@ -94,7 +94,7 @@ html.ma-railed .ma-grid > .ma-panel .ma-rail { display: flex; flex-direction: co
 .ma-fmt label { flex: 1; position: relative; display: flex; }
 .ma-fmt input { position: absolute; opacity: 0; pointer-events: none; }
 .ma-fmt span { flex: 1; cursor: pointer; }
-.ma-tabbing .ma-fmt input:focus-visible + span { outline: 2px solid var(--ring); outline-offset: 1px; }
+.ma-tabbing .ma-fmt input:focus-visible + span { outline: var(--ring-w) solid var(--ring); outline-offset: 1px; }
 .ma-opts { margin-bottom: var(--s3); border: 1px solid var(--line); border-radius: var(--r); }
 .ma-opts summary {
   display: flex; align-items: center; gap: var(--s2); min-height: var(--h); padding: 0 var(--s3);
@@ -102,7 +102,7 @@ html.ma-railed .ma-grid > .ma-panel .ma-rail { display: flex; flex-direction: co
   border-radius: var(--r);
 }
 .ma-opts summary::-webkit-details-marker { display: none; }
-.ma-opts__chev { flex: none; width: 16px; height: 16px; margin-left: auto; color: var(--ink-3); transition: transform var(--dur) var(--ease); }
+.ma-opts__chev { flex: none; width: var(--icon); height: var(--icon); margin-left: auto; color: var(--ink-3); transition: transform var(--dur) var(--ease); }
 .ma-opts[open] .ma-opts__chev { transform: rotate(180deg); }
 @media (hover: hover) { .ma-opts summary:hover { color: var(--ink); } }
 .ma-opts__sum { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-3); }

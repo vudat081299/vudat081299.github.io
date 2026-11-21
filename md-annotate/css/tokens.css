@@ -75,16 +75,23 @@
   --r:    12px;                        /* thẻ, khối trong panel, toast */
   --r-lg: 16px;                        /* bề mặt: văn bản, panel, hộp thoại, hộp nhận xét, tấm trượt */
   --r-pill: 999px;                     /* viên thuốc; nút vuông thì tròn */
+  --h-xs: 20px;                        /* huy hiệu, số thứ tự nhận xét */
   --h-sm: 32px;                        /* nhỏ: mục trong nhóm tab, chip, nút trong thẻ */
   --h-md: 36px;                        /* vừa: hàng cây file, nút đầu cây */
   --h:    40px;                        /* mặc định: nút, ô nhập, nhóm tab */
   --h-touch: 44px;                     /* màn cảm ứng, điện thoại */
   --dur: .16s; --ease: cubic-bezier(.2, .7, .2, 1);
+  --dur-sheet: .22s;                   /* tấm trượt mở ra (đáy, trái) */
+  --icon: 16px; --icon-lg: 18px;       /* biểu tượng svg; trong nút biểu tượng cỡ thường */
+  --ring-w: 2px;                       /* vòng focus bàn phím */
 
   --pad: 24px;                         /* lề trang trong vùng làm việc */
   --wrap-f: .7; --wrap-min: 1280px;    /* vùng làm việc: phần khung nhìn còn lại, sàn (MDAN-005; ui/layout.js đổi, ui/tree.js đọc) */
   --bar-h: 60px;
   --side: 360px;                       /* bề rộng panel; người dùng kéo được 320–560, lưu ở prefs.side */
+  --rail: 56px;                        /* panel thu gọn thành thanh dọc */
+  --drag-w: 8px; --drag-bar: 3px;      /* mép kéo (panel, cây, vách Split): vùng bấm, vạch khi rê / kéo */
+  --dock-gap: 10px;                    /* nút nổi, viên thuốc, toast nằm trên thanh đáy cách chừng này */
   --tree: 248px;                       /* bề rộng cây file (css/tree.css); kéo được 180–420, lưu ở prefs.treeW */
   --tree-step: 12px;                   /* thụt mỗi cấp của cây file, đều mọi độ sâu; cảm ứng 14px (css/tree.css) */
   /* Vùng an toàn (tai thỏ, thanh home; viewport-fit=cover) và bàn phím ảo che đáy khung nhìn (--kb, ui/dom.js đặt). */
@@ -97,6 +104,7 @@
           linear-gradient(var(--ink-4), var(--ink-4)) center var(--s2) / 32px 4px no-repeat border-box;
   --lane-w: 16px;                      /* làn dấu đã đọc cạnh khối (css/review.css, MDAN-013) */
   --ic-box: 14px;                      /* mọi ô đánh dấu: dấu đã đọc (bộ dấu ở đầu css/review.css), ô đánh dấu của form */
+  --ic-edge: 1.5px;                    /* viền ô đánh dấu */
   /* Dấu ✓ là ảnh, không phải ký tự (ký tự lệch theo font): một chỗ khai báo, mọi ô đánh dấu dùng lại. Màu nằm trong ảnh:
      --ic-check là --on-accent (trên --accent), --ic-check-hint là --ink-3 (✓ mờ, gợi ý); đổi token màu thì đổi cả đây. */
   --ic-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4.5 8.3l2.4 2.4 4.6-5' fill='none' stroke='%23052e16' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
@@ -165,3 +173,10 @@ html.dark {
   --hl-keyword: #ff7b72; --hl-title: #d2a8ff; --hl-string: #a5d6ff; --hl-number: #79c0ff; --hl-comment: #9198a1;
   --hl-builtin: #ffa657; --hl-name: #7ee787; --hl-add-bg: #033a16; --hl-add: #aff5b4; --hl-del-bg: #67060c; --hl-del: #ffdcd7;
 }
+
+/* Theo khổ màn: thanh đáy (≤ 1080px; nằm ngang thấp thì gọn), lề trang và thanh trên của điện thoại (≤ 720px).
+   --dock-h: cao thanh đáy kể cả viền trên, chưa kể vùng an toàn; đệm đáy trang, đáy cột cây, chỗ của nút nổi / viên thuốc /
+   toast đều đo từ nó. */
+@media (max-width: 1080px) { :root { --dock-h: calc(var(--h) + 2 * var(--s3) + 1px); } }
+@media (max-width: 1080px) and (max-height: 500px) { :root { --dock-h: calc(var(--h-touch) + 2 * var(--s1)); } }
+@media (max-width: 720px) { :root { --pad: var(--s4); --bar-h: 56px; } }

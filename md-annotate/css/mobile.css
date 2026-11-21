@@ -14,10 +14,7 @@ html.ma-lock.ma-lock-g { scrollbar-gutter: stable; }
   /* Kèm html.ma-railed: panel thu gọn ở máy rộng không được để lại cột 56px trống khi cửa sổ hẹp lại. */
   .ma-grid, html.ma-railed .ma-grid { grid-template-columns: minmax(0, 1fr); }
   .ma-grid > .ma-panel { display: none; }
-  /* Thanh đáy: số nhận xét (mở panel trong tấm trượt) và nút chép. */
-  /* Cao thanh đáy (cả viền trên, chưa kể vùng an toàn); .ma-dock cao đúng chừng ấy: đệm đáy trang, đáy cột cây (tree.css),
-     chỗ của nút nổi / viên thuốc / toast đều đo từ nó. */
-  :root { --dock-h: calc(var(--h) + 2 * var(--s3) + 1px); }
+  /* Thanh đáy: số nhận xét (mở panel trong tấm trượt) và nút chép; cao --dock-h (tokens.css). */
   body { padding-bottom: calc(var(--dock-h) + var(--sa-b)); }
   .ma-dock {
     display: flex; align-items: center; gap: var(--s2); position: fixed; z-index: 40; left: 0; right: 0; bottom: 0;
@@ -30,8 +27,8 @@ html.ma-lock.ma-lock-g { scrollbar-gutter: stable; }
   .ma-dock .ma-copy { flex: 0 1 220px; }
   .ma-dock__list { margin-right: auto; padding: 0 var(--s3) 0 var(--s2); }
   .ma-dock__list::after { content: ''; width: 7px; height: 7px; margin-left: 2px; border: solid currentColor; border-width: 2px 2px 0 0; transform: translateY(2px) rotate(-45deg); }
-  .ma-fab { bottom: calc(var(--dock-h) + 10px + var(--sa-b)); }
-  .ma-toast { bottom: calc(var(--dock-h) + 10px + var(--sa-b) + var(--kb)); }
+  .ma-fab { bottom: calc(var(--dock-h) + var(--dock-gap) + var(--sa-b)); }
+  .ma-toast { bottom: calc(var(--dock-h) + var(--dock-gap) + var(--sa-b) + var(--kb)); }
   /* Tấm panel: thẻ là .ma-panel (tự cuộn thân; thẻ không cuộn, không có thanh ở góc bo). Cao min(86vh, 760px) cộng viền trên. */
   .ma-dlg--panel .ma-panel {
     position: static; width: min(640px, calc(100vw - var(--sa-l) - var(--sa-r))); max-width: 100vw; margin: auto auto 0;
@@ -46,7 +43,6 @@ html.ma-lock.ma-lock-g { scrollbar-gutter: stable; }
 }
 /* Điện thoại nằm ngang (thấp): thanh đáy gọn, bỏ dòng tiêu đề trang. */
 @media (max-width: 1080px) and (max-height: 500px) {
-  :root { --dock-h: calc(var(--h-touch) + 2 * var(--s1)); }
   .ma-head { display: none; }
 }
 /* Chữ chỉ cho màn cảm ứng (gợi ý nhấn giữ, cách dùng viên thuốc) và chỉ cho chuột / bàn phím. */
@@ -69,7 +65,6 @@ html.ma-lock.ma-lock-g { scrollbar-gutter: stable; }
   .ma-link::after { content: ''; position: absolute; inset: calc((var(--h-touch) - 100%) / -2) calc(-1 * var(--s1)); }
 }
 @media (max-width: 720px) {
-  :root { --pad: var(--s4); --bar-h: 56px; }
   /* Thanh trên: Files, tên, History, Settings, More (New session, theme, Shortcuts trong menu #bar-menu, ui/bar.js).
      360px: đủ chỗ cho tên md-annotate cạnh bốn nút. */
   .ma-bar__in { gap: var(--s1); }
@@ -133,10 +128,10 @@ html.ma-lock.ma-lock-g { scrollbar-gutter: stable; }
 }
 /* Mọi tấm đáy trượt lên khi mở: hộp nhận xét, panel (≤ 1080px), History / Hints (≤ 720px). */
 @media (prefers-reduced-motion: no-preference) {
-  .ma-pop.is-sheet:not([hidden]), .ma-dlg--panel[open] .ma-panel { animation: ma-sheet-in .22s var(--ease); }
+  .ma-pop.is-sheet:not([hidden]), .ma-dlg--panel[open] .ma-panel { animation: ma-sheet-in var(--dur-sheet) var(--ease); }
 }
 @media (prefers-reduced-motion: no-preference) and (max-width: 720px) {
-  .ma-dlg[open]:not(.ma-dlg--center) .ma-dlg__in { animation: ma-sheet-in .22s var(--ease); }
+  .ma-dlg[open]:not(.ma-dlg--center) .ma-dlg__in { animation: ma-sheet-in var(--dur-sheet) var(--ease); }
 }
 @keyframes ma-sheet-in { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
 /* Đáy trang thêm chỗ bằng tấm khi tấm mở (ui/popup.js), để dòng cuối văn bản cuộn lên được trên tấm. */

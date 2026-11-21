@@ -7,7 +7,7 @@
    Cỡ --ic-box; ảnh phủ trọn ô kể cả viền (border-box) nên viền dày / mỏng / đứt không xê dịch ✓. */
 .ma-lane__b::after, .ma-rvs__ic::after {
   content: ''; position: absolute; left: 50%; width: var(--ic-box); height: var(--ic-box); margin-left: calc(var(--ic-box) / -2);
-  box-sizing: border-box; border: 1.5px solid transparent; border-radius: var(--r-pill);
+  box-sizing: border-box; border: var(--ic-edge) solid transparent; border-radius: var(--r-pill);
   background: transparent center / 100% no-repeat border-box;
 }
 .ma-lane__b.is-head::after, .ma-rvs__ic::after { border-color: var(--ink-4); border-radius: var(--r-xs); background-color: var(--surface); }
@@ -27,7 +27,7 @@
 @media (hover: hover) { .ma-lane__b.is-todo:not(.is-head):hover::after { border: 1px dashed var(--ink-4); background-image: var(--ic-check-hint); } }
 .ma-lane__b.is-cur { --dash: var(--ink-3); }
 .ma-lane__b.is-sug { --dash: var(--done-edge); }
-.ma-lane .ma-lane__b:is(.is-cur, .is-sug):not(.is-done, .sec-done)::after { border: 1.5px dashed var(--dash); }
+.ma-lane .ma-lane__b:is(.is-cur, .is-sug):not(.is-done, .sec-done)::after { border: var(--ic-edge) dashed var(--dash); }
 .ma-lane .ma-lane__b:is(.is-cur, .is-sug):not(.is-done, .is-head)::after { background-image: var(--ic-check-hint); }
 .ma-lane .ma-lane__b.is-sug::after { background-color: var(--hl-2); }
 @media (hover: hover) { .ma-lane .ma-lane__b.is-sug:hover::after { border-style: solid; } }
@@ -97,7 +97,7 @@ html:not(.ma-reviewing) .ma-lane__b.is-head:not(:hover)::after { visibility: hid
     min-height: var(--h-touch); padding: 0 var(--s4); border-radius: var(--r-pill); box-shadow: var(--shadow-pop);
   }
 }
-@media (max-width: 1080px) { .ma-rvpill { bottom: calc(var(--dock-h) + 10px + var(--sa-b)); } }
+@media (max-width: 1080px) { .ma-rvpill { bottom: calc(var(--dock-h) + var(--dock-gap) + var(--sa-b)); } }
 .ma-pop:not([hidden]) ~ .ma-rvpill, .ma-fab:not([hidden]) ~ .ma-rvpill { display: none; }
 .ma-dock__rv { flex: none; padding: 0 var(--s3); font: 500 var(--fs-xs)/1 var(--mono); }
 

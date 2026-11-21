@@ -7,7 +7,7 @@
   --name-fs: var(--fs-sm);             /* chữ tên hàng và ô đổi tên; cảm ứng --fs-lg (iOS không phóng to ô nhập ≥ 16px) */
   /* Hình học một hàng, mọi luật dưới đây tính từ đây: ô chevron + khe, biểu tượng + khe, cột ⋯ (theo --row-h: tâm ⋯ của
      hàng thẳng tâm nút đầu cây) và nút ⋯, đệm phải. */
-  --chev-w: 15px; --chev-gap: 3px; --ic-w: 16px; --ic-gap: 6px;
+  --chev-w: 15px; --chev-gap: 3px; --ic-w: var(--icon); --ic-gap: 6px;
   --row-end: 2px;                      /* đệm phải của hàng sau cột ⋯; cảm ứng 0 */
   --more-w: calc(var(--row-h) - 2 * var(--row-end));   /* cột ⋯ ở mép phải hàng */
   --more-b: calc(var(--ic-w) + var(--s2));            /* nút ⋯ (vòng tròn): biểu tượng + --s1 mỗi bên; vùng bấm trọn cột ⋯ */
@@ -53,14 +53,14 @@ html.ma-tree-on body > .ma-tree {
   display: flex; position: fixed; z-index: 25; left: 0; top: calc(var(--bar-h) + 1px); bottom: 0; width: var(--tree);
   padding: 0 0 env(safe-area-inset-bottom) env(safe-area-inset-left); border-right: 1px solid var(--line);
 }
-/* ≤ 1080px: cây dừng trên thanh đáy (cao --dock-h, mobile.css). */
+/* ≤ 1080px: cây dừng trên thanh đáy (cao --dock-h, tokens.css). */
 @media (max-width: 1080px) {
   html.ma-tree-on body > .ma-tree { bottom: calc(var(--dock-h) + var(--sa-b)); padding-bottom: 0; }
 }
 .ma-tree { flex-direction: column; min-width: 0; overflow: hidden; background: var(--surface); }
 /* Kéo mép phải để đổi bề rộng. */
-.ma-tree__grip { position: absolute; z-index: 2; right: 0; top: 0; bottom: 0; width: 8px; cursor: col-resize; touch-action: none; }
-.ma-tree__grip::before { content: ''; position: absolute; top: var(--s3); bottom: var(--s3); right: 0; width: 3px; border-radius: var(--r-pill); background: transparent; transition: background var(--dur) var(--ease); }
+.ma-tree__grip { position: absolute; z-index: 2; right: 0; top: 0; bottom: 0; width: var(--drag-w); cursor: col-resize; touch-action: none; }
+.ma-tree__grip::before { content: ''; position: absolute; top: var(--s3); bottom: var(--s3); right: 0; width: var(--drag-bar); border-radius: var(--r-pill); background: transparent; transition: background var(--dur) var(--ease); }
 /* Như #panel-grip: rê / kéo --edge-on, focus --ring (≥ 3:1). */
 .ma-tree__grip.is-drag::before { background: var(--edge-on); }
 @media (hover: hover) { .ma-tree__grip:hover::before { background: var(--edge-on); } }
@@ -241,7 +241,7 @@ html.ma-tree-on body > .ma-tree {
 .ma-dlg--tree .ma-tree__close::before { content: ''; position: absolute; left: calc(-1 * var(--s1) - 1px); top: 25%; bottom: 25%; width: 1px; background: var(--line); }
 .ma-dlg--tree .ma-tree__grip { display: none; }
 @media (prefers-reduced-motion: no-preference) {
-  .ma-dlg--tree[open] .ma-tree { animation: ma-tree-in .22s var(--ease); }
+  .ma-dlg--tree[open] .ma-tree { animation: ma-tree-in var(--dur-sheet) var(--ease); }
 }
 @keyframes ma-tree-in { from { transform: translateX(-100%); } to { transform: none; } }
 
