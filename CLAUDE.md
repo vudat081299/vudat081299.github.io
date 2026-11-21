@@ -35,6 +35,7 @@ Thư mục mới thì thêm một dòng ở đây; `tools/lint-structure.py` đ�
 
 - `CLAUDE.md` (bắt buộc): luật đang áp dụng. Tối đa 200 dòng, không ngày tháng, không nhật ký.
 - `DECISIONS.md`: quyết định chủ trang đã chốt, mỗi mục ba dòng — khuôn ở đầu `tools/decisions.py`.
+  Chỉ ghi nghiệp vụ và hành vi: app làm gì, luật, dữ liệu, luồng việc. Không ghi giao diện (REPO-028).
 - `HANDOFF.md`: việc dở, chỉ bốn mục `ĐANG LÀM`, `CHƯA LÀM`, `NỢ`, `CHỜ CHỦ TRANG`. Hết việc thì xoá file.
 - `HISTORY.md` (tuỳ chọn): nhật ký phiên, mới nhất trên đầu.
 - `tools/check.sh` (nếu có cổng): mọi cổng của project, một lệnh.
@@ -70,6 +71,14 @@ quyết định và việc dở ở `DECISIONS.md` / `HANDOFF.md` gốc. Luật 
 - `fetch` cần HTTP: trang đọc data phải báo rõ khi mở bằng `file://` (chạy `python3 -m http.server`).
 - Chỉ trường có tên kết thúc bằng `_html` được đưa vào `innerHTML`.
 - Số suy ra được thì tính, đừng ghi tay.
+
+## Giao diện và CSS (REPO-028)
+
+- Chi tiết giao diện (màu, cỡ, bo góc, hình, khoảng cách, nét đứt hay liền, cao hàng) không ghi thành văn ở đâu.
+- Nguồn duy nhất là token khai chung (màu theme, cao, rộng, bo, khoảng cách) và CSS. Đang đẹp thì đừng đổi.
+- CSS gom theo component cha: mọi luật của một khối UI lớn nằm liền một đoạn trong một file, mở bằng một dòng chú thích.
+- Component dùng token, không số thô.
+- Project chưa theo luật này: dọn khi có phiên làm việc ở project ấy.
 
 ## Cổng (REPO-017)
 

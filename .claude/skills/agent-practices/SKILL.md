@@ -60,6 +60,10 @@ Mỗi mục từng làm mất thời gian hoặc sinh lỗi thật. Luật của
 
 Phép này chỉ chứng minh hành vi không đổi, không chứng minh hành vi đúng.
 
+Gom lại CSS theo component (REPO-028) mà không đổi hình: dời luật giữa các file thì giữ thứ tự cascade (thứ tự
+`<link>`, độ đặc hiệu, luật cùng độ đặc hiệu đứng sau thắng). Chụp ảnh trước / sau ở hai theme, hai khổ, các trạng thái
+chính (menu, hộp thoại mở), rồi so từng điểm ảnh.
+
 ## Vẽ giao diện và sơ đồ
 
 - Viền một hoặc hai cạnh (kể cả `box-shadow: inset` một bên) không đi cùng `border-radius`: góc bo làm vạch

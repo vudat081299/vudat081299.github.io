@@ -15,6 +15,7 @@ Một mục trong DECISIONS.md:
 Dòng thứ hai là ngày rồi phạm vi. Phạm vi là glob tính từ gốc repo: `*` không qua `/`, `**` qua
 được, `repo` là cả repo. Quyết định bị thay thì xoá mục cũ, mục mới ghi thêm `· thay cho <mã>`.
 Mỗi file một tiền tố mã; mã không trùng trong cả repo.
+Chỉ ghi nghiệp vụ và hành vi; chi tiết giao diện nằm ở token và CSS, không ghi ở đây (REPO-028).
 """
 import re
 import subprocess

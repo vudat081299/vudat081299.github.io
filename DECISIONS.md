@@ -27,6 +27,7 @@ Tra theo file: `python3 tools/decisions.py find <file>`.
 - REPO-025 · Viền một hoặc hai cạnh thì không bo góc · `repo`
 - REPO-026 · Trang dạy học đọc được ở hai độ sâu: khung xương và Đọc liền · `masters-degree/**`, `pages/*.html`
 - REPO-027 · Khung xương đúng và đủ; tỉ lệ chữ chỉ là chỉ báo · `masters-degree/**`, `pages/*.html`
+- REPO-028 · Sổ quyết định chỉ ghi hành vi; giao diện sống ở token và CSS · `repo`
 
 Sổ của từng project: [`cashy/DECISIONS.md`](cashy/DECISIONS.md), [`facts/DECISIONS.md`](facts/DECISIONS.md), [`masters-degree/big-data-storage-processing/DECISIONS.md`](masters-degree/big-data-storage-processing/DECISIONS.md), [`masters-degree/class-schedule/DECISIONS.md`](masters-degree/class-schedule/DECISIONS.md), [`masters-degree/data-management-visualization/DECISIONS.md`](masters-degree/data-management-visualization/DECISIONS.md), [`masters-degree/data-science-roadmap/DECISIONS.md`](masters-degree/data-science-roadmap/DECISIONS.md), [`masters-degree/thesis-topic-selector/DECISIONS.md`](masters-degree/thesis-topic-selector/DECISIONS.md), [`md-annotate/DECISIONS.md`](md-annotate/DECISIONS.md), [`pages/DECISIONS.md`](pages/DECISIONS.md).
 <!-- index:end -->
@@ -166,3 +167,11 @@ như một bài viết. Luật chi tiết và cách rà: `masters-degree/big-dat
 Khung xương giữ mọi thứ cần để hiểu bài: cơ chế, các bước, con số và ví dụ mà lời giải thích dựa vào.
 Chỉ chuyển vào khối gập thứ thật sự là chi tiết. Tỉ lệ chữ khung xương / cả bài chỉ để phát hiện bài lệch xa;
 không cắt khung xương cho đạt con số, và bài vượt chỉ báo mà vẫn đúng, đủ, gọn thì giữ nguyên.
+
+## REPO-028 · Sổ quyết định chỉ ghi hành vi; giao diện sống ở token và CSS
+21/11/2026 · `repo`
+
+`DECISIONS.md` chỉ ghi điều chủ trang chốt về nghiệp vụ, hành vi: app làm gì, luật, dữ liệu, luồng việc. Chi tiết
+giao diện (màu, cỡ, bo góc, hình, khoảng cách, nét đứt hay liền, cao hàng) không ghi thành văn ở đâu: token và CSS là
+nguồn duy nhất; đang đẹp thì đừng đổi. CSS gom theo component cha, dùng token thay số thô. Project khác md-annotate dọn
+khi có phiên làm việc ở đó.
