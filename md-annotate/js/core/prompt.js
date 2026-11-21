@@ -1,7 +1,7 @@
 /* Prompt, thuần: dựng chữ prompt từ tuỳ chọn của phiên s, doc của file (text, comments) và kết quả neo d của file ấy
    (core/comments.js anchorAll: ordered, orphans, anchors), nhãn vị trí L12 / tệp:12-14, tóm tắt Options, tên file tải về.
    Câu vào prompt bằng tiếng Việt (MDAN-007). Nhận xét nhiều phần: mỗi phần tìm thấy một nhãn và một trích dẫn; phần mất
-   neo bị bỏ. d.review (tuỳ chọn): dải dòng đã đọc / chưa đọc (core/review.js reviewRanges); chỉ vào prompt khi s.rvPrompt.
+   neo bị bỏ. d.review (tuỳ chọn): dải dòng đã đọc (core/review.js reviewRanges); chỉ vào prompt khi wantsReview.
    Nhãn tệp của một file là session.js fileLabel (tiền tố path + đường dẫn trong cây; '' thì ghi L12).
    Một file: buildPrompt. Gom mọi file (s.promptAll, phiên ≥ 2 file, xem promptsAll): buildPromptAll.
    Xuất: allFilesOffered, buildPrompt, buildPromptAll, exportName, included, locLabel, optionsSummary, promptsAll, promptSize,
@@ -38,11 +38,14 @@ export function locLabel(doc, d, c, label) {
 function blockQuote(q) {
   return q.trim().replace(/\n{3,}/g, '\n\n').split('\n').map(function (l) { return l.trim() ? '> ' + l : '>'; }).join('\n');
 }
-/* Dòng đã đọc (MDAN-013): báo AI chỗ nào đã đọc kỹ mà không có nhận xét là ổn. Chưa đánh dấu gì thì ''. */
-function reviewLine(r, label) {
-  if (!r || !r.done.length) return '';
-  var f = function (rs) { return rs.map(function (x) { return rangeLabel(x[0], x[1], label); }).join(', '); };
-  return 'Đã đọc kỹ: ' + f(r.done) + '; chỗ nào không có nhận xét là ổn.' + (r.todo.length ? ' Chưa đọc: ' + f(r.todo) + '.' : '');
+/* Dải đã đọc của một file (MDAN-082): "L1-20, L30", có nhãn tệp thì "docs/a.md L1-20, L30"; chưa đánh dấu gì thì ''. */
+function reviewed(r, label) {
+  if (!r || !r.length) return '';
+  return (label ? label + ' ' : '') + r.map(function (x) { return rangeLabel(x[0], x[1], ''); }).join(', ');
+}
+/* Dòng đã đọc (MDAN-013): dải đã đọc của từng file (reviewed), mỗi tệp ghi tên một lần; không file nào có thì ''. */
+function reviewLine(groups) {
+  return groups.length ? 'Đã đọc kỹ: ' + groups.join('; ') + '. Trong các đoạn này, chỗ nào không có nhận xét là ổn.' : '';
 }
 /* Ô *Say which lines I reviewed* có nghĩa không: bật số dòng (dòng đã đọc là số dòng) và prompt có file markdown (file
    khác không có dấu đã đọc, MDAN-073): file đang mở, hay một file của phiên khi gom mọi file. */
@@ -55,13 +58,13 @@ export function reviewOffered(s) {
 export function wantsReview(s) { return s.rvPrompt === true && reviewOffered(s); }
 var NOTE_L = 'Số dòng (L) tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.';
 var NOTE_FILE = 'Vị trí ghi dạng tệp:dòng, tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.';
-/* Phần của một file: nhận xét vào prompt, các phần tìm thấy (tắt số dòng thì không nhãn), dòng đã đọc. */
+/* Phần của một file: nhận xét vào prompt, các phần tìm thấy (tắt số dòng thì không nhãn), dải đã đọc (reviewed). */
 function fileParts(s, doc, d, label) {
   var items = included(d);
   var fs = items.map(function (c) {
     return found(doc, d, c, label).map(function (f) { return { quote: f.quote, loc: s.lineNums ? f.loc : '' }; });
   });
-  var rv = wantsReview(s) ? reviewLine(d.review, label) : '';
+  var rv = wantsReview(s) ? reviewed(d.review, label) : '';
   return { items: items, fs: fs, rv: rv, hasLoc: fs.some(function (f) { return f.some(function (x) { return x.loc; }); }) };
 }
 /* Các nhận xét của một file, đánh số từ start + 1. */
@@ -94,7 +97,7 @@ export function buildPrompt(s, doc, d, fileId) {
   var label = fileLabel(s, fileId === undefined ? s.open : fileId), p = fileParts(s, doc, d, label), parts = [];
   var head = s.header.trim();
   if (p.hasLoc || p.rv) head = head ? head + '\n' + (label ? NOTE_FILE : NOTE_L) : label ? NOTE_FILE : NOTE_L;
-  if (p.rv) head += '\n' + p.rv;
+  if (p.rv) head += '\n' + reviewLine([p.rv]);
   if (head) parts.push(head);
   if (p.items.length) parts.push(itemsText(s, p, 0));
   if (s.footer.trim()) parts.push(s.footer.trim());
@@ -109,8 +112,8 @@ export function promptsAll(s) { return s.promptAll === true && allFilesOffered(s
    Phiên chỉ một file thì y hệt buildPrompt của file ấy. Dạng (các khối cách nhau dòng trống):
      [lời dẫn đầu]
      [Vị trí ghi dạng tệp:dòng, … — khi có nhãn dòng hay dòng đã đọc]
-     ## Tệp docs/a.md                      ← mỗi file có nhận xét vào prompt hoặc có dòng đã đọc, theo thứ tự cây
-     [Đã đọc kỹ: docs/a.md:1-3; …]          ← dòng đã đọc của file (s.rvPrompt)
+     [Đã đọc kỹ: docs/a.md L1-3, L9; c.md L1. …]   ← wantsReview: mỗi file có dấu đã đọc, theo thứ tự cây
+     ## Tệp docs/a.md                      ← mỗi file có nhận xét vào prompt, theo thứ tự cây
      1. docs/a.md:3 "trích" — nhận xét      ← số chạy tiếp qua các file; khối: ### 1 · docs/a.md:3
      ## Tệp docs/b.md
      2. docs/b.md:7-9 "trích" — nhận xét
@@ -123,19 +126,18 @@ export function buildPromptAll(s, files) {
   var list = files.filter(function (f) { return rank.has(f.fileId); })
     .sort(function (a, b) { return rank.get(a.fileId) - rank.get(b.fileId); });
   if (fileCount(s) < 2) return list.length ? buildPrompt(s, list[0].doc, list[0].d, list[0].fileId) : '';
-  var n = 0, loc = false, secs = [], parts = [];
+  var n = 0, loc = false, rvs = [], secs = [], parts = [];
   list.forEach(function (f) {
     var label = fileLabel(s, f.fileId), p = fileParts(s, f.doc, f.d, label);
-    if (!p.items.length && !p.rv) return;
     loc = loc || p.hasLoc || !!p.rv;
-    var sec = ['## Tệp ' + label];
-    if (p.rv) sec.push(p.rv);
-    if (p.items.length) sec.push(itemsText(s, p, n));
+    if (p.rv) rvs.push(p.rv);
+    if (!p.items.length) return;
+    secs.push('## Tệp ' + label + '\n\n' + itemsText(s, p, n));
     n += p.items.length;
-    secs.push(sec.join('\n\n'));
   });
   var head = s.header.trim();
   if (loc) head = head ? head + '\n' + NOTE_FILE : NOTE_FILE;
+  if (rvs.length) head += '\n' + reviewLine(rvs);
   if (head) parts.push(head);
   parts = parts.concat(secs);
   if (s.footer.trim()) parts.push(s.footer.trim());

@@ -1310,7 +1310,7 @@ const cornerClash = (page) => page.evaluate(() => {
     await openOpts(rv);
     check('prompt: mặc định không có dòng đã đọc', !/Đã đọc kỹ/.test(await out(rv)));
     await rv.check('#rv-prompt');
-    check('prompt: bật thì có dòng đã đọc / chưa đọc', /\nĐã đọc kỹ: L\d+-\d+.*; chỗ nào không có nhận xét là ổn\. Chưa đọc: L/.test(await out(rv)) && /reviewed/.test(await rv.textContent('#opts-sum')), await out(rv));
+    check('prompt: bật thì có dòng đã đọc, không nói chỗ chưa đọc', /\nĐã đọc kỹ: L\d+(-\d+)?(, L\d+(-\d+)?)*\. Trong các đoạn này, chỗ nào không có nhận xét là ổn\.\n/.test(await out(rv)) && !/Chưa đọc/.test(await out(rv)) && /reviewed/.test(await rv.textContent('#opts-sum')), await out(rv));
     // Sửa chữ một khối đã đọc: changed (○), bấm xác nhận lại. Xoá một khối đã đọc: báo mất. Chuyển chỗ: vẫn ✓.
     const t1 = (await rv.inputValue('#src-input')).replace('Para A7 chữ', 'Para A7 đã sửa chữ');
     await rv.click('.ma-tab[data-view="edit"]'); await setText(t1); await rv.waitForTimeout(400); await rv.click('.ma-tab[data-view="split"]'); await rv.waitForTimeout(250);
@@ -2469,7 +2469,7 @@ const cornerClash = (page) => page.evaluate(() => {
     const toastText = (p) => p.$eval('#toast', (t) => (t.hidden ? '' : t.textContent));
 
     // 1. Phiên cũ (chữ ở gốc, path là tên file): nâng tại chỗ thành một file; prompt y hệt từng byte như bản trước
-    //    (chuỗi dưới đây chép từ bản trước khi có cây, cùng phiên này).
+    //    (chuỗi dưới đây chép từ bản trước khi có cây, cùng phiên này; dòng đã đọc theo MDAN-082).
     const lc = await treeContext({ viewport: { width: 1440, height: 900 }, colorScheme: 'light' });
     const lp = await lc.newPage(); watch(lp);
     await lp.goto(BASE); await ready(lp);
@@ -2485,7 +2485,7 @@ const cornerClash = (page) => page.evaluate(() => {
       localStorage.setItem('md-annotate:current', JSON.stringify('leg1'));
     });
     await lp.goto(BASE); await ready(lp); await lp.waitForTimeout(400);
-    const OLD = 'Vị trí ghi dạng tệp:dòng, tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.\nĐã đọc kỹ: notes/a.md:3; chỗ nào không có nhận xét là ổn. Chưa đọc: notes/a.md:1, notes/a.md:5.\n\n1. notes/a.md:3 "Một câu cũ." — Viết gọn lại';
+    const OLD = 'Vị trí ghi dạng tệp:dòng, tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.\nĐã đọc kỹ: notes/a.md L3. Trong các đoạn này, chỗ nào không có nhận xét là ổn.\n\n1. notes/a.md:3 "Một câu cũ." — Viết gọn lại';
     check('phiên cũ: prompt y hệt từng byte sau khi nâng', (await out(lp)) === OLD, JSON.stringify(await out(lp)));
     await openOpts(lp); await lp.check('#inc-doc'); await lp.uncheck('#inc-doc'); await lp.waitForTimeout(500);   // một lần lưu
     const up = await lp.evaluate(() => { const s = JSON.parse(localStorage.getItem('md-annotate:s:leg1')); const d = s.docs && s.docs[s.open];

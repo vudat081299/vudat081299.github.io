@@ -257,14 +257,14 @@ export function reviewSections(units, state, cLines) {
   });
   return secs;
 }
-/* Dải dòng đã đọc / chưa đọc cho prompt, đếm từ 1: { done: [[a, b]], todo: [[a, b]] }. Đơn vị liền nhau cùng loại gộp
-   một dải (gồm cả dòng trống giữa chúng); 'changed' tính là chưa đọc. */
+/* Dải dòng đã đọc cho prompt, đếm từ 1: [[a, b]]. Đơn vị đã đọc liền nhau gộp một dải (gồm cả dòng trống giữa chúng);
+   'changed' tính là chưa đọc. */
 export function reviewRanges(units, state) {
-  var out = { done: [], todo: [] }, last = null;
+  var out = [];
   units.forEach(function (u, i) {
-    var k = state[i] === 'done' ? 'done' : 'todo';
-    if (last && last.k === k) last.r[1] = u.b + 1;
-    else { last = { k: k, r: [u.a + 1, u.b + 1] }; out[k].push(last.r); }
+    if (state[i] !== 'done') return;
+    if (i && state[i - 1] === 'done') out[out.length - 1][1] = u.b + 1;
+    else out.push([u.a + 1, u.b + 1]);
   });
   return out;
 }

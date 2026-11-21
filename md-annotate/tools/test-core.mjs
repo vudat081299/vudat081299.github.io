@@ -476,9 +476,9 @@ check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi
   const ss = R.reviewSections(u0, ['done', 'done', 'done', 'done', 'done', 'changed', 'todo', 'todo', 'todo'], [2, 12, 12]);
   check('reviewSections: tiêu đề, trạng thái, số nhận xét', eq(ss.map((x) => [x.title, x.state, x.done, x.total, x.comments]), [['Đầu', 'done', 4, 4, 1], ['Hai', 'changed', 1, 5, 2]]), JSON.stringify(ss));
   check('reviewSections: một phần là part', R.reviewSections(u0, ['done', 'todo', 'todo', 'todo', 'todo', 'todo', 'todo', 'todo', 'todo'], [])[0].state === 'part');
-  // Dải dòng cho prompt: gộp đơn vị liền nhau cùng loại, changed là chưa đọc.
+  // Dải dòng đã đọc cho prompt: gộp đơn vị đã đọc liền nhau, changed là chưa đọc.
   const rg = R.reviewRanges(u0, ['done', 'done', 'done', 'todo', 'changed', 'done', 'done', 'todo', 'done']);
-  check('reviewRanges: gộp dải, changed là chưa đọc', eq(rg, { done: [[1, 6], [13, 15], [18, 18]], todo: [[7, 11], [17, 17]] }), JSON.stringify(rg));
+  check('reviewRanges: gộp dải, changed là chưa đọc', eq(rg, [[1, 6], [13, 15], [18, 18]]) && eq(R.reviewRanges(u0, u0.map(() => 'todo')), []), JSON.stringify(rg));
   // Prompt: tắt thì y hệt từng byte; bật thì thêm dòng tiếng Việt; chưa đánh dấu gì thì không thêm.
   const text = 'Dòng một.\n\nDòng ba.\n';
   const cm = { id: 'a', quote: 'Dòng ba.', comment: 'Sửa', origin: 'src', prefix: 'Dòng một.\n\n', suffix: '\n', rel: 0.5, created: 1 };
@@ -486,13 +486,13 @@ check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi
   docOf(s).comments.push(cm);
   const d = anchorAll(docOf(s).comments, text, '');
   const base = buildPrompt(s, d);
-  const dR = Object.assign({}, d, { review: { done: [[1, 1]], todo: [[3, 3]] } });
+  const dR = Object.assign({}, d, { review: [[1, 1]] });
   check('buildPrompt: tắt dòng đã đọc thì y hệt từng byte', buildPrompt(s, dR) === base && base === 'Số dòng (L) tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.\n\n1. L3 "Dòng ba." — Sửa', JSON.stringify(base));
   s.rvPrompt = true;
-  check('buildPrompt: bật dòng đã đọc', buildPrompt(s, dR) === 'Số dòng (L) tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.\nĐã đọc kỹ: L1; chỗ nào không có nhận xét là ổn. Chưa đọc: L3.\n\n1. L3 "Dòng ba." — Sửa', JSON.stringify(buildPrompt(s, dR)));
-  check('buildPrompt: bật mà chưa đánh dấu gì thì y hệt', buildPrompt(s, Object.assign({}, d, { review: { done: [], todo: [[1, 3]] } })) === base && buildPrompt(s, d) === base);
-  check('buildPrompt: đọc hết thì không có "Chưa đọc", có tệp thì tệp:dòng', buildPrompt(Object.assign(renameIn(s, s.open, 'a.md').s, { header: 'Đầu' }), Object.assign({}, d, { review: { done: [[1, 3]], todo: [] } })) ===
-    'Đầu\nVị trí ghi dạng tệp:dòng, tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.\nĐã đọc kỹ: a.md:1-3; chỗ nào không có nhận xét là ổn.\n\n1. a.md:3 "Dòng ba." — Sửa');
+  check('buildPrompt: bật dòng đã đọc, một dải, không có chỗ chưa đọc', buildPrompt(s, dR) === 'Số dòng (L) tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.\nĐã đọc kỹ: L1. Trong các đoạn này, chỗ nào không có nhận xét là ổn.\n\n1. L3 "Dòng ba." — Sửa', JSON.stringify(buildPrompt(s, dR)));
+  check('buildPrompt: bật mà chưa đánh dấu gì thì y hệt', buildPrompt(s, Object.assign({}, d, { review: [] })) === base && buildPrompt(s, d) === base);
+  check('buildPrompt: có tệp thì tên tệp một lần rồi các dải', buildPrompt(Object.assign(renameIn(s, s.open, 'a.md').s, { header: 'Đầu' }), Object.assign({}, d, { review: [[1, 3], [7, 9], [12, 12]] })) ===
+    'Đầu\nVị trí ghi dạng tệp:dòng, tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.\nĐã đọc kỹ: a.md L1-3, L7-9, L12. Trong các đoạn này, chỗ nào không có nhận xét là ổn.\n\n1. a.md:3 "Dòng ba." — Sửa');
   check('buildPrompt: tắt số dòng thì không có dòng đã đọc', buildPrompt(Object.assign({}, s, { lineNums: false }), dR) === buildPrompt(Object.assign({}, s, { lineNums: false, rvPrompt: false }), dR) && optionsSummary(Object.assign({}, s, { lineNums: false })) === 'compact');
   check('optionsSummary: có "reviewed" khi bật', optionsSummary(s) === 'compact · line numbers · reviewed' && optionsSummary(Object.assign({}, s, { rvPrompt: false })) === 'compact · line numbers');
   // Phiên: reviews là trường thêm; thiếu hay hỏng thì mặc định, phiên cũ vẫn đọc được.
@@ -789,9 +789,9 @@ check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi
     check('buildPromptAll: gọn', got === note + '\n\n## Tệp repo/docs/a.md\n\n1. repo/docs/a.md:4 "Hai dòng." — Sửa A\n\n## Tệp repo/docs/B.md\n\n2. repo/docs/B.md:1 "Đầu B." — Sửa B1\n3. repo/docs/B.md:3 "Cuối B." — Sửa B2', JSON.stringify(got));
     const blk = P.buildPromptAll(Object.assign({}, s, { fmt: 'block', header: 'Đầu', footer: 'Cuối' }), list());
     check('buildPromptAll: khối, lời dẫn', blk === 'Đầu\n' + note + '\n\n## Tệp repo/docs/a.md\n\n### 1 · repo/docs/a.md:4\n> Hai dòng.\n\nSửa A\n\n## Tệp repo/docs/B.md\n\n### 2 · repo/docs/B.md:1\n> Đầu B.\n\nSửa B1\n\n### 3 · repo/docs/B.md:3\n> Cuối B.\n\nSửa B2\n\nCuối', JSON.stringify(blk));
-    const rv = P.buildPromptAll(Object.assign({}, s, { rvPrompt: true }), list({ a: { done: [[1, 2]], todo: [[4, 4]] }, c: { done: [[1, 1]], todo: [] } }));
-    check('buildPromptAll: dòng đã đọc theo file, file chỉ có dòng đã đọc vẫn vào', rv === note + '\n\n## Tệp repo/docs/a.md\n\nĐã đọc kỹ: repo/docs/a.md:1-2; chỗ nào không có nhận xét là ổn. Chưa đọc: repo/docs/a.md:4.\n\n1. repo/docs/a.md:4 "Hai dòng." — Sửa A\n\n## Tệp repo/docs/B.md\n\n2. repo/docs/B.md:1 "Đầu B." — Sửa B1\n3. repo/docs/B.md:3 "Cuối B." — Sửa B2\n\n## Tệp repo/c.md\n\nĐã đọc kỹ: repo/c.md:1; chỗ nào không có nhận xét là ổn.', JSON.stringify(rv));
-    const off = P.buildPromptAll(Object.assign({}, s, { lineNums: false, rvPrompt: true }), list({ c: { done: [[1, 1]], todo: [] } }));
+    const rv = P.buildPromptAll(Object.assign({}, s, { rvPrompt: true }), list({ a: [[1, 2], [4, 4]], c: [[1, 1]] }));
+    check('buildPromptAll: một dòng đã đọc, mỗi tệp một lần theo thứ tự cây, file chỉ có dấu đã đọc không thành mục', rv === note + '\nĐã đọc kỹ: repo/docs/a.md L1-2, L4; repo/c.md L1. Trong các đoạn này, chỗ nào không có nhận xét là ổn.\n\n## Tệp repo/docs/a.md\n\n1. repo/docs/a.md:4 "Hai dòng." — Sửa A\n\n## Tệp repo/docs/B.md\n\n2. repo/docs/B.md:1 "Đầu B." — Sửa B1\n3. repo/docs/B.md:3 "Cuối B." — Sửa B2', JSON.stringify(rv));
+    const off = P.buildPromptAll(Object.assign({}, s, { lineNums: false, rvPrompt: true }), list({ c: [[1, 1]] }));
     check('buildPromptAll: tắt số dòng thì không nhãn, không câu dẫn, vẫn có tên tệp', off === '## Tệp repo/docs/a.md\n\n1. "Hai dòng." — Sửa A\n\n## Tệp repo/docs/B.md\n\n2. "Đầu B." — Sửa B1\n3. "Cuối B." — Sửa B2', JSON.stringify(off));
     const full = P.buildPromptAll(Object.assign({}, s, { includeDoc: true }), list());
     check('buildPromptAll: kèm toàn văn mọi file có chữ, theo thứ tự cây', full.endsWith('3. repo/docs/B.md:3 "Cuối B." — Sửa B2\n\nVăn bản gốc của repo/docs/a.md:\n```markdown\n# A\n\nMột dòng.\nHai dòng.\n```\n\nVăn bản gốc của repo/docs/B.md:\n```markdown\nĐầu B.\n\nCuối B.\n```\n\nVăn bản gốc của repo/c.md:\n```markdown\nKhông nhận xét.\n```'), JSON.stringify(full));
@@ -804,9 +804,9 @@ check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi
     check('buildPromptAll: phiên một file y hệt buildPrompt', !P.promptsAll(one) && P.buildPromptAll(one, [{ fileId: one.open, doc: S.docOf(one), d: d1 }]) === P.buildPrompt(one, S.docOf(one), d1) && P.buildPrompt(one, S.docOf(one), d1) === 'Vị trí ghi dạng tệp:dòng, tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.\n\n1. x/a.md:4 "Hai dòng." — Sửa A');
     // Phiên cũ đủ mọi tuỳ chọn: prompt sau khi nâng y hệt từng byte (chuỗi chép từ bản trước khi có cây).
     const legacy = { text: TA, comments: [cm('a1', TA, 'Hai dòng.', 'Sửa A')], path: ' C:\\x\\a.md ', fmt: 'block', header: 'H', footer: 'F', includeDoc: true, rvPrompt: true, lineNums: true, name: 'Tên', named: true };
-    const dl = Object.assign(anchorAll(legacy.comments, TA, ''), { review: { done: [[1, 1]], todo: [[3, 4]] } });
+    const dl = Object.assign(anchorAll(legacy.comments, TA, ''), { review: [[1, 1]] });
     const ul = S.normSession(JSON.parse(JSON.stringify(legacy)), 'l');
-    check('phiên cũ nâng lên: prompt, tóm tắt, tên tải về y hệt', P.buildPrompt(ul, S.docOf(ul), dl) === 'H\nVị trí ghi dạng tệp:dòng, tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.\nĐã đọc kỹ: C:\\x\\a.md:1; chỗ nào không có nhận xét là ổn. Chưa đọc: C:\\x\\a.md:3-4.\n\n### 1 · C:\\x\\a.md:4\n> Hai dòng.\n\nSửa A\n\nF\n\nVăn bản gốc:\n```markdown\n# A\n\nMột dòng.\nHai dòng.\n```' &&
+    check('phiên cũ nâng lên: prompt, tóm tắt, tên tải về y hệt (dòng đã đọc theo MDAN-082)', P.buildPrompt(ul, S.docOf(ul), dl) === 'H\nVị trí ghi dạng tệp:dòng, tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.\nĐã đọc kỹ: C:\\x\\a.md L1. Trong các đoạn này, chỗ nào không có nhận xét là ổn.\n\n### 1 · C:\\x\\a.md:4\n> Hai dòng.\n\nSửa A\n\nF\n\nVăn bản gốc:\n```markdown\n# A\n\nMột dòng.\nHai dòng.\n```' &&
       P.optionsSummary(ul) === 'block · C:\\x\\a.md · full text · reviewed · header' && P.exportName(ul) === 'ten-comments.md', JSON.stringify(P.buildPrompt(ul, S.docOf(ul), dl)));
   }
 

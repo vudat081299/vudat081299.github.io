@@ -56,6 +56,7 @@
 - MDAN-079 · Nét đứt theo khối đang đọc: xám là khối hiện tại, xanh là gợi ý; viên thuốc Accept N · thay cho MDAN-077, MDAN-078 · `md-annotate/css/review.css`, `md-annotate/js/ui/review.js`, `md-annotate/js/ui/dwell.js`, `md-annotate/index.html`, `md-annotate/data/shortcuts.json`
 - MDAN-080 · Cây sâu cuộn ngang, tự cuộn tới tên file đang mở · `md-annotate/js/ui/tree.js`, `md-annotate/js/core/place.js`
 - MDAN-081 · Tab Review và dòng đã đọc trong prompt chỉ ở file markdown · `md-annotate/js/ui/panel.js`, `md-annotate/js/ui/prompt.js`, `md-annotate/js/core/file-type.js`, `md-annotate/js/core/prompt.js`
+- MDAN-082 · Prompt chỉ kể dòng đã đọc, mỗi tệp ghi tên một lần · `md-annotate/js/core/prompt.js`, `md-annotate/js/core/review.js`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Nguồn tô màu cú pháp kiểu VS Code
@@ -473,3 +474,10 @@ không bị kéo lại.
 Sửa MDAN-073: file không phải markdown không có tab Review, thay vì tab báo rằng đánh dấu chỉ dành cho markdown. Đang ở
 Review mà mở file khác thì panel hiện Comments; quay lại file markdown thì về Review. Ô "Say which lines I reviewed" ẩn
 khi prompt không có file markdown nào; lựa chọn của người dùng giữ nguyên cho lần sau.
+
+## MDAN-082 · Prompt chỉ kể dòng đã đọc, mỗi tệp ghi tên một lần
+21/11/2026 · `md-annotate/js/core/prompt.js`, `md-annotate/js/core/review.js`
+
+Sửa MDAN-013: dòng đã đọc trong prompt chỉ kể dải đã đọc, không kể chỗ chưa đọc. Mỗi tệp ghi tên một lần rồi các dải
+(`Đã đọc kỹ: a.md L1-20, L30; b.md L5.`), không có tên tệp thì chỉ `L1-20`. Câu "ổn" nói rõ chỉ trong các đoạn đã kể.
+Gom mọi file thì một dòng ở đầu prompt cho mọi tệp; tệp chỉ có dấu đã đọc không thành mục `## Tệp`.

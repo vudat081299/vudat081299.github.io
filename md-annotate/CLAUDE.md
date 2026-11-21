@@ -129,7 +129,7 @@
   *Preview*: lề trái. Bấm: bật / tắt; Shift + bấm: cả dải (mốc mất khi văn bản đổi); làn của tiêu đề (hình vuông) bật cả section.
 - Phím X / Shift+X / J / K: bỏ qua khi đang gõ chữ, khi hộp thoại hay hộp nhận xét mở, khi có phím bổ trợ khác Shift. Đơn vị hiện tại: chạm
   dải đọc (dưới con trỏ khi Focus theo chuột; khung không cuộn được: đơn vị đầu), làn `.is-cur` (vòng đứt quanh ✓ mờ và vạch đứt, xám; MDAN-079); vừa nhảy tới thì là nó (`pin`, người dùng tự cuộn thì bỏ).
-- Nút ✓ Reviewed của hộp nhận xét (nới ra trọn khối, cả dòng chọn ở lề số): `ui/review.js` theo dõi hộp (MutationObserver). Prompt: *Say which lines I reviewed* (`rvPrompt`, mặc định tắt; ẩn khi tắt số dòng hay prompt không có file markdown: `reviewOffered`) thêm `Đã đọc kỹ: … Chưa đọc: …`; tắt thì y hệt từng byte.
+- Nút ✓ Reviewed của hộp nhận xét (nới ra trọn khối, cả dòng chọn ở lề số): `ui/review.js` theo dõi hộp (MutationObserver). Prompt: *Say which lines I reviewed* (`rvPrompt`, mặc định tắt; ẩn khi tắt số dòng hay prompt không có file markdown: `reviewOffered`) thêm một dòng dưới câu số dòng, chỉ dải đã đọc, mỗi tệp ghi tên một lần: `Đã đọc kỹ: a.md L1-20, L30; b.md L5. …` (MDAN-082); tắt thì y hệt từng byte.
 - Bộ dấu (MDAN-017): tròn là khối, vuông là section, ✓ là ảnh `--ic-check`, cỡ `--ic-box`; khai báo một lần ở `css/review.css` (cả gợi ý), ô đánh dấu
   của form dùng cùng ảnh, cùng cỡ; dấu căn giữa dòng đầu khối (đệm trên của nút). Máy hẹp / cảm ứng: `#rv-pill` chỉ đánh dấu, không bỏ dấu (cảm ứng có gợi ý: *Accept N*); chưa có dấu thì tắt làn. Viền ✓ `--done-edge` (≥ 3:1).
 - Dải tiến độ (MDAN-016): `.ma-mm` fixed, mép phải khung; mỗi đơn vị một đoạn (đặc ✓, rỗng ○, nhạt, viền đứt gợi ý) trên rãnh `--line-2` cao hết dải. Trái dải,
