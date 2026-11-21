@@ -54,6 +54,7 @@
 - MDAN-075 · Ô lọc file: chờ gõ xong, mẫu chỉ thử phần đầu tên · `md-annotate/js/ui/tree-find.js`, `md-annotate/js/core/tree-find.js`
 - MDAN-076 · Cổng xanh thì push main ngay, smoke chạy sau · `md-annotate/`
 - MDAN-077 · Gợi ý đã đọc viền đứt, khối hiện tại là vạch; viên thuốc Accept N · thay cho MDAN-052 · `md-annotate/css/review.css`, `md-annotate/js/ui/review.js`, `md-annotate/js/ui/dwell.js`
+- MDAN-078 · Bỏ vạch của khối hiện tại · `md-annotate/css/review.css`, `md-annotate/index.html`, `md-annotate/data/shortcuts.json`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Nguồn tô màu cú pháp kiểu VS Code
@@ -453,7 +454,14 @@ chạy sau; đỏ thì sửa bằng commit mới rồi push tiếp, không amend
 21/11/2026 · `md-annotate/css/review.css`, `md-annotate/js/ui/review.js`, `md-annotate/js/ui/dwell.js`
 
 Gợi ý theo thời gian đọc giữ kiểu viền đứt: ✓ mờ trong vòng đứt trên nền xanh nhạt, vạch đứt suốt khối (chủ trang thích
-hơn đĩa đặc). Khối hiện tại (khối X hay viên thuốc sẽ đánh dấu) là một vạch dọc mảnh cạnh khối, không có ✓; khối hiện
-tại mà đang được gợi ý thì không có vạch đặc: dấu gợi ý mất nền xanh, thêm vòng ngoài. Dấu đã đọc (✓ đặc) không đổi. Các
-chỉ báo ≥ 3:1 ở hai theme. Màn cảm ứng có gợi ý thì viên thuốc đổi thành "Accept N": chạm là đánh dấu mọi gợi ý, có
-Undo như thường. Tab Review ở màn cảm ứng nói về viên thuốc, không nói phím X / J / K hay làn.
+hơn đĩa đặc). Khối hiện tại (khối X hay viên thuốc sẽ đánh dấu) là một vạch dọc mảnh cạnh khối, không có ✓ (vạch bỏ ở
+MDAN-078); khối hiện tại mà đang được gợi ý thì không có vạch đặc: dấu gợi ý mất nền xanh, thêm vòng ngoài. Dấu đã đọc
+(✓ đặc) không đổi. Các chỉ báo ≥ 3:1 ở hai theme. Màn cảm ứng có gợi ý thì viên thuốc đổi thành "Accept N": chạm là đánh
+dấu mọi gợi ý, có Undo như thường. Tab Review ở màn cảm ứng nói về viên thuốc, không nói phím X / J / K hay làn.
+
+## MDAN-078 · Bỏ vạch của khối hiện tại
+21/11/2026 · `md-annotate/css/review.css`, `md-annotate/index.html`, `md-annotate/data/shortcuts.json`
+
+Sửa MDAN-077: khối hiện tại (khối X hay viên thuốc sẽ đánh dấu) không còn vạch xanh đặc cạnh làn, ở mọi trạng thái (tiêu
+đề, khối chưa đọc, đã đọc). Chỉ khi khối hiện tại đang được gợi ý thì dấu gợi ý có vòng ngoài như MDAN-077. Chữ hướng
+dẫn không nhắc vạch nữa.

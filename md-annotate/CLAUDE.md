@@ -128,7 +128,7 @@
 - Làn: lớp phủ `.ma-lane` trong `#wrap-*`, ngoài `#v-src` / `#v-md`; nút là `<span>` trong dòng chảy của cột (không định vị), dùng lại qua các lần xếp, chỉ ghi lề trên / cao đã đổi, không biến CSS riêng mỗi nút. *Source*: giữa vạch nhận xét và chữ, không phải lề số;
   *Preview*: lề trái. Bấm: bật / tắt; Shift + bấm: cả dải (mốc mất khi văn bản đổi); làn của tiêu đề (hình vuông) bật cả section.
 - Phím X / Shift+X / J / K: bỏ qua khi đang gõ chữ, khi hộp thoại hay hộp nhận xét mở, khi có phím bổ trợ khác Shift. Đơn vị hiện tại: chạm
-  dải đọc (dưới con trỏ khi Focus theo chuột; khung không cuộn được: đơn vị đầu), làn `.is-cur` (vạch dọc mảnh, không ✓, MDAN-077); vừa nhảy tới thì là nó (`pin`, người dùng tự cuộn thì bỏ).
+  dải đọc (dưới con trỏ khi Focus theo chuột; khung không cuộn được: đơn vị đầu), làn `.is-cur` (không vẽ gì, trừ vòng ngoài của dấu gợi ý; MDAN-078); vừa nhảy tới thì là nó (`pin`, người dùng tự cuộn thì bỏ).
 - Nút ✓ Reviewed của hộp nhận xét (nới ra trọn khối, cả dòng chọn ở lề số): `ui/review.js` theo dõi hộp (MutationObserver). Prompt: *Say which lines I reviewed* (`rvPrompt`, mặc định tắt, ẩn khi tắt số dòng) thêm `Đã đọc kỹ: … Chưa đọc: …`; tắt thì y hệt từng byte.
 - Bộ dấu (MDAN-017): tròn là khối, vuông là section, ✓ là ảnh `--ic-check`, cỡ `--ic-box`; khai báo một lần ở `css/review.css` (cả gợi ý), ô đánh dấu
   của form dùng cùng ảnh, cùng cỡ; dấu căn giữa dòng đầu khối (đệm trên của nút). Máy hẹp / cảm ứng: `#rv-pill` chỉ đánh dấu, không bỏ dấu (cảm ứng có gợi ý: *Accept N*); chưa có dấu thì tắt làn. Viền ✓ `--done-edge` (≥ 3:1).
