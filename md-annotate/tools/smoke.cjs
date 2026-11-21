@@ -2210,14 +2210,21 @@ const cornerClash = (page) => page.evaluate(() => {
       note: !!document.getElementById('tree-q-note').getClientRects().length, none: !!document.getElementById('tree-none').getClientRects().length, focus: document.activeElement.id || document.activeElement.className }));
     await findModel(false);
     const f0 = await fst();
-    await tp.fill('#tree-q', '^a.b.*\\.text$'); const f1 = await fst();
-    await tp.fill('#tree-q', 'a(b'); const f2 = await fst();
-    await tp.fill('#tree-q', 'zzz'); const f3 = await fst();
+    const settle = () => tp.waitForTimeout(200);   // ô lọc chờ 150 ms sau phím cuối (D4)
+    await tp.fill('#tree-q', '^a.b.*\\.text$'); await settle(); const f1 = await fst();
+    await tp.fill('#tree-q', 'a(b'); await settle(); const f2 = await fst();
+    await tp.fill('#tree-q', 'zzz'); const f3a = await fst(); await settle(); const f3 = await fst();
     await tp.fill('#tree-q', 'NOTES'); await tp.press('#tree-q', 'ArrowDown'); const f4 = await fst();
     await tp.keyboard.press('/'); const f5 = await fst();
     await tp.keyboard.press('Escape'); const f6 = await fst();
     check('lọc file: ^a.b.*\\.text$ hiện axb-notes.text, AXB-plan.text và folder tổ tiên, mở', f0.shown && f1.rows === '1:docs 2:deep 3:AXB-plan.text 2:axb-notes.text' && !f1.note, JSON.stringify([f0, f1]));
     check('lọc file: mẫu hỏng a(b tìm chữ thường, có dòng báo; zzz thì báo không khớp', f2.rows === '1:a(b.md' && f2.note && f3.rows === '' && f3.none, JSON.stringify([f2, f3]));
+    check('lọc file: chờ gõ xong mới lọc (ngay sau phím: chưa đổi)', f3a.rows === f2.rows, JSON.stringify(f3a));
+    // Bộ gõ (IME) đang ghép chữ: Enter / Esc là của bộ gõ, không vào hàng, không xoá mẫu.
+    await tp.fill('#tree-q', 'zzz'); await settle();
+    for (const key of ['Enter', 'Escape']) await tp.dispatchEvent('#tree-q', 'keydown', { key, isComposing: true, bubbles: true });
+    const ime = await fst();
+    check('lọc file: Enter / Esc khi bộ gõ đang ghép chữ không đổi gì', ime.focus === 'tree-q' && (await tp.inputValue('#tree-q')) === 'zzz', JSON.stringify(ime));
     check('lọc file: ↓ vào hàng đầu, / về ô lọc, Esc xoá mẫu và trả lại gập / mở cũ', f4.rows === '1:docs 2:axb-notes.text 1:notes.md' && /ma-trow/.test(f4.focus) && f5.focus === 'tree-q' && f6.rows === f0.rows && f0.rows === '1:docs 1:a(b.md 1:notes.md', JSON.stringify([f4, f5, f6]));
     await findModel(true);
     check('lọc file: phiên 1 file thì không có ô lọc', !(await fst()).shown);

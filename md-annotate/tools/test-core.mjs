@@ -648,6 +648,8 @@ check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi
     check('findFiles: chữ thường là chuỗi con; rỗng là null', eq(shownBy('notes'), ['0:docs', '1:axb-notes.text', '0:notes.md']) && findFiles(fn, '') === null && findFiles(fn, '  ') === null);
     const bad = findFiles(fn, 'a(b');
     check('findFiles: mẫu không hợp lệ thì tìm chuỗi con, không ném', bad.literal && bad.files === 1 && !findFiles(fn, 'a.b').literal);
+    const long = [{ id: 'L', parent: null, kind: 'file', name: 'a'.repeat(210) + 'zq(.md' }];
+    check('findFiles: RegExp chỉ thử 200 ký tự đầu của tên, chuỗi con thì cả tên', findFiles(long, 'a{150}').files === 1 && findFiles(long, 'zq\\(').files === 0 && findFiles(long, 'aZQ(').files === 1);
     check('findFiles: không khớp gì thì 0 file, không hàng nào; NFC', findFiles(fn, 'zzz').files === 0 && findFiles(fn, 'zzz').keep.size === 0 && findFiles(fn, 'tie\u0302\u0301ng').files === 1);
     const rm = T.removeNode(nodes, c.id);
     check('removeNode: xoá cả cây con', rm.removed.length === 6 && rm.nodes.length === 3 && nodes.length === 9);

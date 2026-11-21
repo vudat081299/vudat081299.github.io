@@ -52,6 +52,7 @@
 - MDAN-072 · Hộp prompt bôi đen được chữ của nó · `md-annotate/css/base.css`, `md-annotate/js/ui/selection.js`
 - MDAN-073 · File code không có Focus mode và đánh dấu đã đọc · `md-annotate/`
 - MDAN-074 · File không phải markdown: một tab Source, Edit là nút bật / tắt · `md-annotate/index.html`, `md-annotate/js/ui/views.js`, `md-annotate/css/views.css`
+- MDAN-075 · Ô lọc file: chờ gõ xong, mẫu chỉ thử phần đầu tên · `md-annotate/js/ui/tree-find.js`, `md-annotate/js/core/tree-find.js`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Nguồn tô màu cú pháp kiểu VS Code
@@ -442,3 +443,9 @@ File không phải markdown không bị dựng hay tách khối như markdown (k
 File code và chữ trơn chỉ có tab Source; cạnh nó là nút Edit bật / tắt, bật thì chính khung ấy thành ô sửa chữ (ô Edit
 sẵn có), tắt hay bấm Source thì về Source. Phím mũi tên ở tab Source cũng bật / tắt Edit. File markdown giữ bốn tab. Chế
 độ đã chọn cho markdown (Preview, Split) vẫn được nhớ qua Edit / Source ở file code, kể cả sau khi tải lại trang.
+
+## MDAN-075 · Ô lọc file: chờ gõ xong, mẫu chỉ thử phần đầu tên
+21/11/2026 · `md-annotate/js/ui/tree-find.js`, `md-annotate/js/core/tree-find.js`
+
+Ô lọc của cây lọc khi ngừng gõ khoảng 150 ms, không sau từng phím; Enter / ↓ thì lọc ngay rồi vào hàng đầu. Mẫu biểu thức
+chính quy chỉ so với 200 ký tự đầu của tên file (tìm chữ thường thì cả tên): chặn nhẹ mẫu gõ dở làm trang chậm.
