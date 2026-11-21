@@ -3601,6 +3601,30 @@ const cornerClash = (page) => page.evaluate(() => {
   }
   // ── end văn bản dài ──
 
+  // ── sửa sau rà soát: mỗi lỗi một bài ──
+  {
+    const rowOf = (name) => `#tree-list .ma-trow:has(> .ma-trow__name:text-is("${name}"))`;
+    const c = await treeContext({ viewport: { width: 1920, height: 900 }, colorScheme: 'light' });
+    const p = await c.newPage(); watch(p);
+    await p.goto(BASE); await p.waitForFunction(() => window.marked && window.DOMPurify);
+    await pasteText(p, DOC);
+    await p.click('.ma-tab[data-view="split"]'); await p.waitForTimeout(150);
+    const mode = () => p.evaluate(() => ({ mode: document.getElementById('views').dataset.mode, view: !document.getElementById('tab-view').hidden,
+      md: document.querySelectorAll('#v-md > *').length }));
+    const rename = async (from, to) => {
+      await p.click(rowOf(from)); await p.keyboard.press('F2'); await p.keyboard.press('Control+A');
+      await p.keyboard.type(to); await p.keyboard.press('Enter'); await p.waitForTimeout(200);
+    };
+    await rename('untitled.md', 'a.py');
+    const py = await mode();
+    await rename('a.py', 'a.md');
+    const md = await mode();
+    check('đổi tên file mở sang loại khác: tab, chế độ xem đổi ngay (a.md → a.py: Source; về a.md: Split)',
+      py.mode === 'src' && !py.view && md.mode === 'split' && md.view && md.md > 0, JSON.stringify([py, md]));
+    await c.close();
+  }
+  // ── end sửa sau rà soát ──
+
   check('không lỗi console', !errors.length, errors.join(' | '));
   await browser.close();
   console.log(fails ? `md-annotate smoke: ${fails} LỖI` : 'md-annotate smoke: OK');

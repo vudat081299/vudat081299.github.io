@@ -33,7 +33,7 @@ export var S = (function () {
 })();
 export var D = docOf(S);
 export function docKey() { return S.id + '/' + S.open; }
-export function openType() { return fileType(byId(S.nodes, S.open).name); }
+export function openType(s) { s = s || S; return fileType(byId(s.nodes, s.open).name); }
 
 /* LƯU PHIÊN */
 var saveTimer = null, warnedQuota = false;
@@ -118,13 +118,15 @@ function enterDoc() {
   restoreScroll();
 }
 /* Thay S bằng next, cùng phiên (cây đổi; next dựng bằng core/session.js). Chỉ ui/files.js gọi. File mở đổi thì rời file
-   cũ (đóng hộp nhận xét, thoát chọn dòng, nhớ chỗ cuộn) rồi vẽ file mới; doc của file mở bị thay (điền chữ) thì vẽ lại.
-   Trả false (S giữ nguyên) khi file mở đổi mà không rời được (canLeave). */
+   cũ (đóng hộp nhận xét, thoát chọn dòng, nhớ chỗ cuộn) rồi vẽ file mới; doc của file mở bị thay (điền chữ) hay đổi tên
+   sang loại khác (a.md → a.py: tab, tô màu khác) thì vẽ lại. Trả false (S giữ nguyên) khi file mở đổi mà không rời được
+   (canLeave). */
 export function putSession(next) {
   var moved = next.open !== S.open;
   if (moved && !canLeave()) return false;
   if (moved) leaveDoc();
-  var changed = moved || docOf(next) !== D;
+  var was = openType(), now = openType(next);
+  var changed = moved || docOf(next) !== D || was.kind !== now.kind || was.lang !== now.lang;
   S = next; D = docOf(S);
   if (changed) enterDoc();
   return true;
