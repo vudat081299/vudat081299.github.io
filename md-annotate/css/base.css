@@ -78,6 +78,8 @@ svg.ma-i { width: 16px; height: 16px; flex: none; }
 .ma-btn--quiet, .ma-icbtn--bare, .ma-bar .ma-btn, .ma-bar .ma-icbtn { background: transparent; border-color: transparent; }
 .ma-btn--go { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
 .ma-btn--danger { color: var(--danger); }
+/* Nút bật / tắt (aria-pressed) đang bật: như mục chọn của nhóm tab. */
+.ma-btn[aria-pressed="true"] { background: var(--tab-on); color: var(--ink); box-shadow: var(--tab-ring); }
 @media (hover: hover) {
   .ma-btn:hover, .ma-icbtn:hover { color: var(--ink); background: var(--surface-2); }
   .ma-btn--quiet:hover, .ma-icbtn--bare:hover, .ma-bar .ma-btn:hover, .ma-bar .ma-icbtn:hover { background: var(--chip); }

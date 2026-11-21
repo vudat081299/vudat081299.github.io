@@ -24,10 +24,3 @@ Làm xong mục nào thì xoá mục ấy.
 - *All files*: lần vẽ đầu sau khi tải trang neo mọi file một lần (~400 ms ở 200 file); sau đó nhớ theo doc.
 - Chưa thử trên iPhone thật (Chromium giả lập không làm được): `overflow: hidden` ở `html` chặn vuốt trang sau lớp mờ (iOS ≥ 16);
   nhấn giữ số dòng không bôi đen / không hiện kính lúp; `visualViewport` khi bàn phím mở (`--kb`); vùng an toàn khi thêm vào màn hình chính.
-
-## CHỜ CHỦ TRANG
-
-- Gộp *Source* và *Edit* thành một tab cho file không phải markdown: chưa làm. *Source* là `<pre>` chỉ đọc mà mọi thứ dựa vào
-  (bôi đen → nhận xét, `<mark>`, lề số dòng, chọn nhiều dòng, làn đã đọc); *Edit* là `<textarea>`. Gộp thật cần một trình sửa
-  vừa tô màu vừa nhận xét được (contenteditable, hay textarea phủ lên `<pre>`): viết lại lớn, dễ hỏng neo. Cách nhẹ: giữ hai tab
-  như hiện tại, hoặc thay hai tab bằng khung Source có nút *Edit* bật / tắt. Chủ trang chọn.

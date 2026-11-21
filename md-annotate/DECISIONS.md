@@ -51,6 +51,7 @@
 - MDAN-071 · Văn bản dài: đổi bề rộng vùng chữ không đứng hình · `md-annotate/`
 - MDAN-072 · Hộp prompt bôi đen được chữ của nó · `md-annotate/css/base.css`, `md-annotate/js/ui/selection.js`
 - MDAN-073 · File code không có Focus mode và đánh dấu đã đọc · `md-annotate/`
+- MDAN-074 · File không phải markdown: một tab Source, Edit là nút bật / tắt · `md-annotate/index.html`, `md-annotate/js/ui/views.js`, `md-annotate/css/views.css`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Nguồn tô màu cú pháp kiểu VS Code
@@ -434,3 +435,10 @@ văn bản; bấm vào thì hộp nhận focus (phím mũi tên cuộn, Ctrl/⌘
 Focus mode và đánh dấu đã đọc (làn, phím X / J / K, tab Review, dải tiến độ, gợi ý theo thời gian đọc) chỉ có ở file
 markdown. File code và chữ trơn không chia section, không có làn; tab Review nói rằng đánh dấu chỉ dành cho markdown.
 File không phải markdown không bị dựng hay tách khối như markdown (không tốn công, không sai).
+
+## MDAN-074 · File không phải markdown: một tab Source, Edit là nút bật / tắt
+21/11/2026 · `md-annotate/index.html`, `md-annotate/js/ui/views.js`, `md-annotate/css/views.css`
+
+File code và chữ trơn chỉ có tab Source; cạnh nó là nút Edit bật / tắt, bật thì chính khung ấy thành ô sửa chữ (ô Edit
+sẵn có), tắt hay bấm Source thì về Source. Phím mũi tên ở tab Source cũng bật / tắt Edit. File markdown giữ bốn tab. Chế
+độ đã chọn cho markdown (Preview, Split) vẫn được nhớ qua Edit / Source ở file code, kể cả sau khi tải lại trang.
