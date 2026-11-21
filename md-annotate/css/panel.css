@@ -40,7 +40,7 @@ html.ma-railed .ma-grid > .ma-panel .ma-rail { display: flex; flex-direction: co
 .ma-rail .ma-rail__copy { flex: none; width: var(--h); height: var(--h); padding: 0; }
 .ma-rail__copy.is-done svg { display: none; }
 .ma-rail__copy.is-done::after { content: '✓'; font-weight: 600; }
-.ma-panel__body { flex: 1 1 auto; min-height: 0; overflow: auto; overscroll-behavior: contain; padding: var(--s3); scrollbar-width: thin; }
+.ma-panel__body { flex: 1 1 auto; min-height: 0; overflow: auto; overscroll-behavior: contain; padding: var(--s3); }
 .ma-panel__foot {
   flex: none; display: flex; flex-direction: column; gap: var(--s2);
   padding: var(--s3); border-top: 1px solid var(--line-2); background: var(--surface);
@@ -112,10 +112,9 @@ html.ma-railed .ma-grid > .ma-panel .ma-rail { display: flex; flex-direction: co
 .ma-opts__field { display: flex; flex-direction: column; gap: var(--s2); margin-top: var(--s2); }
 .ma-opts__lbl { display: flex; align-items: center; justify-content: space-between; }
 .ma-opts .ma-ta { min-height: 56px; font: 400 var(--fs-md)/var(--lh) var(--sans); background: var(--surface); }
-/* Ô chọn: hàng cao --h, ô 16px cách chữ --s3. */
+/* Ô chọn: hàng cao --h, ô --ic-box (base.css) cách chữ --s3; ô Folder thẳng chữ của ô chọn trên nó. */
 .ma-check { display: flex; align-items: center; gap: var(--s3); min-height: var(--h); font-size: var(--fs-md); color: var(--ink-2); cursor: pointer; }
-.ma-check input { width: 16px; height: 16px; margin: 0; }
-.ma-pathrow { display: flex; align-items: center; gap: var(--s2); margin: 0 0 var(--s2) 28px; }
+.ma-pathrow { display: flex; align-items: center; gap: var(--s2); margin: 0 0 var(--s2) calc(var(--ic-box) + var(--s3)); }
 .ma-pathrow .ma-input { height: var(--h-sm); padding: 0 var(--s2); font: 500 var(--fs-xs) var(--mono); }
 /* Tab Prompt: thân panel không cuộn; Options (mở) cuộn riêng, tối đa ~38% chiều cao; khung prompt lấp phần còn lại
    và tự cuộn. Hai vùng cuộn đứng cạnh nhau, không lồng nhau. */

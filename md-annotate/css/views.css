@@ -55,7 +55,7 @@
 @property --ra { syntax: '*'; inherits: false; }
 @property --rb { syntax: '*'; inherits: false; }
 .ma-views[data-mode="split"] { grid-template-columns: minmax(0, var(--ra, 1fr)) 9px minmax(0, var(--rb, 1fr)); }
-.ma-views[data-mode="split"] .ma-view { height: var(--pane-h, 70vh); overflow: auto; overscroll-behavior: contain; scrollbar-width: thin; }
+.ma-views[data-mode="split"] .ma-view { height: var(--pane-h, 70vh); overflow: auto; overscroll-behavior: contain; }
 .ma-divider { position: relative; cursor: col-resize; touch-action: none; }
 .ma-divider::before { content: ''; position: absolute; top: 0; bottom: 0; left: 4px; width: 1px; background: var(--line); transition: background var(--dur) var(--ease), width var(--dur) var(--ease), left var(--dur) var(--ease); }
 .ma-divider:hover::before, .ma-tabbing .ma-divider:focus-visible::before, .ma-divider.is-drag::before { left: 3px; width: 3px; background: var(--edge-on); }
@@ -107,7 +107,6 @@
 .ma-view__head { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); margin: calc(-1 * var(--s2)) 0 var(--s2); }
 .ma-view__head .ma-view__lbl { margin: 0; }
 .ma-syn { margin-left: auto; display: inline-flex; align-items: center; gap: var(--s2); min-height: var(--h-sm); font-size: var(--fs-sm); color: var(--ink-3); cursor: pointer; }
-.ma-syn input { width: 16px; height: 16px; margin: 0; }
 /* Màu cú pháp: chỉ đổi màu và kiểu chữ, không đổi chữ — text của khung vẫn đúng bằng nguồn. */
 .sx-head { color: var(--sx-head); font-weight: 600; }
 .sx-punct, .sx-quote { color: var(--sx-punct); }
