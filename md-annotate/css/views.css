@@ -54,7 +54,7 @@
    tính lại kiểu mỗi bước kéo. */
 @property --ra { syntax: '*'; inherits: false; }
 @property --rb { syntax: '*'; inherits: false; }
-.ma-views[data-mode="split"] { grid-template-columns: minmax(0, var(--ra, 1fr)) 9px minmax(0, var(--rb, 1fr)); }
+.ma-views[data-mode="split"] { grid-template-columns: minmax(0, var(--ra, 1fr)) 9px minmax(0, var(--rb, 1fr)); }   /* vách 9px: DIVIDER của core/panes.js */
 .ma-views[data-mode="split"] .ma-view { height: var(--pane-h, 70vh); overflow: auto; overscroll-behavior: contain; }
 .ma-divider { position: relative; cursor: col-resize; touch-action: none; }
 .ma-divider::before { content: ''; position: absolute; top: 0; bottom: 0; left: 4px; width: 1px; background: var(--line); transition: background var(--dur) var(--ease), width var(--dur) var(--ease), left var(--dur) var(--ease); }
@@ -76,7 +76,7 @@
   --ln-pad: calc(var(--gw, 2ch) + 20px + var(--lane-w));   /* lề trái mỗi dòng: số, vạch nhận xét, làn */
 }
 /* Lề số dòng kiểu VS Code. Số là ::before ở đầu khối dòng, nên dòng dài xuống hàng vẫn thẳng hàng đầu. */
-/* Lề: số [0, gw], vạch nhận xét [gw + 8, gw + 11], làn dấu đã đọc (--lane-w, css/review.css) trước chữ 6px.
+/* Lề: số [0, gw], vạch nhận xét [gw + 8, gw + 11], làn dấu đã đọc (--lane-w, css/review.css) trước chữ 6px (LANE_GAP của ui/review.js).
    Dòng không định vị (position), số là inline-block rộng 0 (lề âm bằng --ln-pad) ở đỉnh dòng: mỗi phần tử định vị là một
    lớp vẽ, hàng nghìn dòng thành hàng nghìn lớp làm cuộn, rê chuột, đổi bề rộng chậm hẳn (float cũng chậm). Chỉ dòng có
    nhận xét định vị (vạch ::after). */

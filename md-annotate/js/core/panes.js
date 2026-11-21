@@ -4,7 +4,7 @@
    Dùng: không module nào. */
 
 var PANE_MIN = 420;   // bề rộng tối thiểu của mỗi khung ở Split
-var DIVIDER = 9;      // bề rộng vách giữa
+var DIVIDER = 9;      // bề rộng vách giữa: cột 9px của .ma-views[data-mode="split"] (css/views.css)
 var PANE_FLOOR = 320; // chiều cao tối thiểu của khung; thấp hơn thì trang cuộn
 var BOTTOM_GAP = 17;  // khoảng chừa dưới đáy khung
 /* #doc rộng docWidth có đủ cho hai khung ≥ 420px và vách giữa không. */

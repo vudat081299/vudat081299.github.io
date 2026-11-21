@@ -148,16 +148,17 @@ function firstLineC(el, cache) {
 }
 /* Đo làn của một khung, chỉ đọc DOM: { x, items: [{ i, top, bottom, pad }] } (toạ độ nội dung của #wrap-*; pad: đệm trên
    để dấu căn giữa dòng đầu, css/review.css), hoặc null khi khung ẩn hay không có đơn vị. */
+var LANE_GAP = 6;   // khe giữa làn và chữ: phần cuối của lề --ln-pad ở Source (css/views.css); Preview cũng vậy
 function measureLane(w, r) {
   var wrap = paneWrap(w), root = paneRoot(w), out = [];
   if (!shown(root) || !r.units.length) return null;
   var wr = wrap.getBoundingClientRect(), off = wr.top - wrap.scrollTop, x;
-  var cs = getComputedStyle(lanes[w]), laneW = parseFloat(cs.getPropertyValue('--lane-w')) || 16, icBox = parseFloat(cs.getPropertyValue('--ic-box')) || 14;
+  var cs = getComputedStyle(lanes[w]), laneW = parseFloat(cs.getPropertyValue('--lane-w')), icBox = parseFloat(cs.getPropertyValue('--ic-box'));
   if (w === 'src') {
     var l0 = root.firstElementChild;
     if (!l0) return null;
-    x = l0.getBoundingClientRect().left - wr.left + parseFloat(getComputedStyle(l0).paddingLeft) - laneW - 6;
-  } else x = Math.max(0, root.getBoundingClientRect().left - wr.left - laneW - 6);
+    x = l0.getBoundingClientRect().left - wr.left + parseFloat(getComputedStyle(l0).paddingLeft) - laneW - LANE_GAP;
+  } else x = Math.max(0, root.getBoundingClientRect().left - wr.left - laneW - LANE_GAP);
   var cache = {};
   r.units.forEach(function (u, i) {
     var top, bottom, c;
