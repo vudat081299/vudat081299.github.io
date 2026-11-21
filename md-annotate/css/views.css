@@ -58,7 +58,8 @@
 .ma-views[data-mode="split"] .ma-view { height: var(--pane-h, 70vh); overflow: auto; overscroll-behavior: contain; scrollbar-width: thin; }
 .ma-divider { position: relative; cursor: col-resize; touch-action: none; }
 .ma-divider::before { content: ''; position: absolute; top: 0; bottom: 0; left: 4px; width: 1px; background: var(--line); transition: background var(--dur) var(--ease), width var(--dur) var(--ease), left var(--dur) var(--ease); }
-.ma-divider:hover::before, .ma-tabbing .ma-divider:focus-visible::before, .ma-divider.is-drag::before { left: 3px; width: 3px; background: var(--accent); }
+.ma-divider:hover::before, .ma-tabbing .ma-divider:focus-visible::before, .ma-divider.is-drag::before { left: 3px; width: 3px; background: var(--edge-on); }
+.ma-tabbing .ma-divider:focus-visible::before { background: var(--ring); }   /* như mép cây, mép panel: rê / kéo --edge-on, focus --ring */
 .ma-divider:focus-visible { outline: none; }
 /* Vạch thay vách khi kéo trên văn bản dài (ui/dom.js dragBar): fixed, dời bằng transform, khung không dàn lại tới khi thả. */
 .ma-ghost { position: fixed; z-index: 70; width: 3px; margin-left: -1px; background: var(--edge-on); pointer-events: none; }

@@ -3848,6 +3848,21 @@ const cornerClash = (page) => page.evaluate(() => {
     check('ô lọc: nút × vẽ lại (appearance none, nền --ink-3), bấm thì xoá mẫu', rule && rule[0] === 'none' && rule[1] === 'var(--ink-3)' && v === '', JSON.stringify([rule, v]));
     await c.close();
   }
+  {
+    // Vách Split, mép cây, mép panel, vạch .ma-ghost: rê cùng một màu --edge-on (không phải --accent, ~2,3:1 ở nền sáng).
+    const c = await treeContext({ viewport: { width: 1800, height: 900 }, colorScheme: 'light' });
+    const p = await c.newPage(); watch(p);
+    await p.goto(BASE); await p.waitForFunction(() => window.marked && window.DOMPurify);
+    await pasteText(p, DOC); await p.click('.ma-tab[data-view="split"]'); await p.waitForTimeout(200);
+    const col = [];
+    for (const sel of ['#divider', '#tree-grip', '#panel-grip']) {
+      await p.hover(sel); await p.waitForTimeout(250);
+      col.push(await p.$eval(sel, (e) => getComputedStyle(e, '::before').backgroundColor));
+    }
+    const edge = await p.evaluate(() => { const d = document.createElement('i'); d.style.color = 'var(--edge-on)'; document.body.append(d); const v = getComputedStyle(d).color; d.remove(); return v; });
+    check('rê vách Split, mép cây, mép panel: cùng màu --edge-on', col.every((x) => x === edge), JSON.stringify([col, edge]));
+    await c.close();
+  }
   // ── end sửa sau rà soát ──
 
   check('không lỗi console', !errors.length, errors.join(' | '));
