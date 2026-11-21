@@ -53,6 +53,7 @@
 - MDAN-073 · File code không có Focus mode và đánh dấu đã đọc · `md-annotate/`
 - MDAN-074 · File không phải markdown: một tab Source, Edit là nút bật / tắt · `md-annotate/index.html`, `md-annotate/js/ui/views.js`, `md-annotate/css/views.css`
 - MDAN-075 · Ô lọc file: chờ gõ xong, mẫu chỉ thử phần đầu tên · `md-annotate/js/ui/tree-find.js`, `md-annotate/js/core/tree-find.js`
+- MDAN-076 · Cổng xanh thì push main ngay, smoke chạy sau · `md-annotate/`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Nguồn tô màu cú pháp kiểu VS Code
@@ -449,3 +450,9 @@ sẵn có), tắt hay bấm Source thì về Source. Phím mũi tên ở tab Sou
 
 Ô lọc của cây lọc khi ngừng gõ khoảng 150 ms, không sau từng phím; Enter / ↓ thì lọc ngay rồi vào hàng đầu. Mẫu biểu thức
 chính quy chỉ so với 200 ký tự đầu của tên file (tìm chữ thường thì cả tên): chặn nhẹ mẫu gõ dở làm trang chậm.
+
+## MDAN-076 · Cổng xanh thì push main ngay, smoke chạy sau
+21/11/2026 · `md-annotate/`
+
+Commit qua cổng (check.sh của md-annotate và của gốc, hook pre-commit) thì push lên main ngay, không chờ smoke. Smoke
+chạy sau; đỏ thì sửa bằng commit mới rồi push tiếp, không amend hay force-push commit đã push. Chỉ push nhánh main.
