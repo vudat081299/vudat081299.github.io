@@ -3670,6 +3670,38 @@ const cornerClash = (page) => page.evaluate(() => {
     check('chữ code (Source, Edit, prompt) tắt ligature, mono 13px', lig.every((x) => x === 'none 13px "JetBrains Mono"'), JSON.stringify(lig));
     await c.close();
   }
+  {
+    // D3: file code không có Focus mode, đánh dấu đã đọc; không chạy marked (parse, lexer) cho nó.
+    const c = await treeContext({ viewport: { width: 1600, height: 900 }, colorScheme: 'light' });
+    await c.addInitScript(() => localStorage.setItem('md-annotate:prefs:v1', JSON.stringify({ focus: true, focusBy: 'pointer' })));
+    const p = await c.newPage(); watch(p);
+    await p.goto(BASE); await p.waitForFunction(() => window.marked && window.DOMPurify);
+    await pasteText(p, DOC); await p.waitForTimeout(100);
+    await p.click('.ma-tab[data-view="src"]'); await p.waitForTimeout(100);
+    await p.hover('#v-src .ma-ln:nth-child(3)'); await p.waitForTimeout(150);
+    const mdFocus = await p.evaluate(() => document.getElementById('v-src').classList.contains('is-focusing'));
+    const code = Array.from({ length: 40 }, (_, i) => `# heading-like comment ${i}\ndef f${i}(x):\n    return x -> 1  # <!-- c -->\n`).join('\n');
+    await p.setInputFiles('#file-in', { name: 'main.py', mimeType: 'text/plain', buffer: Buffer.from(code) });
+    await p.waitForTimeout(300);
+    await p.evaluate(() => { window.__mk = 0; for (const k of ['lexer', 'parse']) { const f = window.marked[k]; window.marked[k] = function () { window.__mk++; return f.apply(this, arguments); }; } });
+    await p.hover('#v-src .ma-ln:nth-child(5)'); await p.waitForTimeout(150);
+    await p.mouse.wheel(0, 400); await p.waitForTimeout(150);
+    await p.keyboard.press('x'); await p.keyboard.press('j'); await p.waitForTimeout(150);
+    await p.click('#ptab-review'); await p.waitForTimeout(100);
+    await p.evaluate(() => { const ta = document.getElementById('src-input'); ta.value += '\n# more'; ta.dispatchEvent(new Event('input')); });
+    await p.waitForTimeout(400);
+    const st = await p.evaluate(() => ({
+      mk: window.__mk, focusing: document.getElementById('v-src').classList.contains('is-focusing'),
+      dim: [...document.querySelectorAll('#v-src .ma-ln')].filter((l) => getComputedStyle(l).opacity !== '1').length,
+      lanes: document.querySelectorAll('.ma-lane__b').length, md: document.getElementById('v-md').children.length,
+      rv: document.getElementById('rv-empty').textContent.trim().slice(0, 35), marks: JSON.parse(localStorage.getItem('md-annotate:s:' + JSON.parse(localStorage.getItem('md-annotate:current')))).docs
+    }));
+    const nMarks = Object.values(st.marks).reduce((n, d) => n + (d.reviews || []).length, 0);
+    check('D3: file .py — md có Focus, .py không (không mờ dòng nào), không làn, không đánh dấu (X), Preview rỗng, tab Review báo chỉ cho markdown',
+      mdFocus && !st.focusing && st.dim === 0 && st.lanes === 0 && st.md === 0 && nMarks === 0 && st.rv === 'Review marks are for markdown files', JSON.stringify(Object.assign({ mdFocus }, st, { marks: nMarks })));
+    check('D3: file .py không chạy marked.parse / marked.lexer (vẽ lại, rê, cuộn, X, J)', st.mk === 0, String(st.mk));
+    await c.close();
+  }
   // ── end sửa sau rà soát ──
 
   check('không lỗi console', !errors.length, errors.join(' | '));

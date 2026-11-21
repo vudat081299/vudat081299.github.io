@@ -50,6 +50,7 @@
 - MDAN-070 · Code đơn giản nhất mà dễ đọc; giao diện, logic, luật tách nhau; thứ dùng chung ở một chỗ · `md-annotate/`
 - MDAN-071 · Văn bản dài: đổi bề rộng vùng chữ không đứng hình · `md-annotate/`
 - MDAN-072 · Hộp prompt bôi đen được chữ của nó · `md-annotate/css/base.css`, `md-annotate/js/ui/selection.js`
+- MDAN-073 · File code không có Focus mode và đánh dấu đã đọc · `md-annotate/`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Nguồn tô màu cú pháp kiểu VS Code
@@ -426,3 +427,10 @@ vách (cả mép cây, mép panel) chỉ vạch đi theo chuột, thả ra mới
 
 Hộp prompt ở tab Prompt là chữ để chép ra: kéo chuột trong hộp bôi đen chữ của chính nó, không thành kéo từ nền bôi đen
 văn bản; bấm vào thì hộp nhận focus (phím mũi tên cuộn, Ctrl/⌘ + A chọn hết). Phần khác của panel vẫn không bôi đen được.
+
+## MDAN-073 · File code không có Focus mode và đánh dấu đã đọc
+21/11/2026 · `md-annotate/`
+
+Focus mode và đánh dấu đã đọc (làn, phím X / J / K, tab Review, dải tiến độ, gợi ý theo thời gian đọc) chỉ có ở file
+markdown. File code và chữ trơn không chia section, không có làn; tab Review nói rằng đánh dấu chỉ dành cho markdown.
+File không phải markdown không bị dựng hay tách khối như markdown (không tốn công, không sai).

@@ -17,7 +17,7 @@ import { clearPicks, repaintPicks } from './picks.js';
    'split'; ẩn cây hay kéo hẹp cây thì Split về. */
 function splitOK() { return splitFits($('doc').clientWidth); }
 /* Nút Split hiện khi file có Preview và đủ chỗ. */
-function splitShown() { return openType().preview && splitOK(); }
+function splitShown() { return openType().md && splitOK(); }
 export var view = prefs.view || 'view';
 export var lastRead = view === 'edit' ? 'view' : view;
 export function setView(v) {
@@ -26,7 +26,7 @@ export function setView(v) {
   if (v === 'split' && !splitOK()) v = 'view';
   view = v;
   /* Chế độ đọc chỉ nhớ ở file có đủ chế độ: Source ở file code không ghi đè Preview / Split đã chọn cho markdown. */
-  if (want !== 'edit' && t.preview) lastRead = want;
+  if (want !== 'edit' && t.md) lastRead = want;
   prefs.view = want === 'edit' ? want : lastRead; savePrefs();
   document.querySelectorAll('.ma-tab').forEach(function (b) {
     b.setAttribute('aria-selected', String(b.dataset.view === v));
@@ -37,7 +37,7 @@ export function setView(v) {
   $('wrap-src').hidden = !(v === 'src' || v === 'split');
   $('syn').checked = prefs.syntax !== false;
   $('wrap-md').hidden = !(v === 'view' || v === 'split');
-  $('tab-view').hidden = !t.preview;
+  $('tab-view').hidden = !t.md;
   $('tab-split').hidden = !splitShown();
   $('divider').hidden = v !== 'split';
   renderMeta(); // gọi sizePanes(): bật / tắt khoá cuộn trang (ma-fit) theo chế độ

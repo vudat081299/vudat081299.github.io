@@ -47,7 +47,7 @@
 - Bề rộng (MDAN-005): `.ma-wrap` rộng `max(70%, 1280px)` của khung nhìn trừ cây docked (`--wrap-f`, `--wrap-min`), không quá chỗ ấy, căn giữa trong nó, lề `--pad`. Panel rộng `--side` (kéo `#panel-grip`,
   320–560, `prefs.side`), thu gọn thành `.ma-rail` 56px (`html.ma-railed`, `prefs.rail`); thanh dọc giữ nút chép.
 - *Split* khi `#doc` đủ cho hai khung ≥ 420px (`splitFits()`), không theo media query; chưa đủ thì hiện *Preview*, `prefs.view` vẫn nhớ `split`. Hai khung cao `--pane-h` (`paneHeight`), cuộn riêng; trang không cuộn. Vách `#divider` lưu `prefs.split`. Văn bản > 1.500 dòng (`longText()`): kéo vách, mép cây, mép panel chỉ dời vạch `.ma-ghost`, thả ra mới dàn lại (`dragBar`).
-  *Preview* và *Split* chỉ ở file markdown (`KINDS`, `viewFor`, MDAN-067): file khác chỉ có *Edit* / *Source*; chọn *Source* ở đó không ghi `prefs.view` / `lastRead`.
+  Phần của markdown (*Preview*, *Split*, *Focus mode*, đã đọc) chỉ ở file markdown: một cờ `fileType(tên).md` (MDAN-067, MDAN-073); file khác không chạy `marked` (`renderAll`, `blockPairs`, `anchorsOf` / `reviewDocOf` nhận cờ). File khác chỉ có *Edit* / *Source*; chọn *Source* ở đó không ghi `prefs.view` / `lastRead`.
 - Split vừa khung nhìn (khung ≥ 320px): `sizePanes()` gắn `html.ma-fit` (khoá cuộn trang), để thanh cuộn chính không
   chập chờn khi trang dư 1px. Rời Split thì bỏ. Đừng thêm `scrollbar-gutter` cho `html`: nó ăn bề rộng, mất Split ở 1280px.
 - Hộp *Settings* (`#dlg-layout`): `prefs.wrap` (bề rộng vùng làm việc, `auto` / 50–100%, sàn 720px; điện thoại ẩn), `prefs.measure` (khổ chữ
@@ -118,7 +118,7 @@
 
 ## Đánh dấu đã đọc (MDAN-013)
 
-- Đơn vị: khối của `lexSpans`; danh sách ≥ 2 mục thì mỗi mục cấp cao một đơn vị (mục con thuộc mục cha); bảng, khối code là
+- Chỉ file markdown (MDAN-073); file khác: tab *Review* báo, dấu cũ giữ, không báo mất. Đơn vị: khối của `lexSpans`; danh sách ≥ 2 mục thì mỗi mục cấp cao một đơn vị (mục con thuộc mục cha); bảng, khối code là
   một đơn vị; khối không chữ / số / emoji (kẻ ngang), khối chỉ có chú thích HTML không tính. Tiến độ theo số dòng, làm tròn xuống.
 - Dấu ở `D.reviews` (`{ h, p, n, q, r }`, không số dòng): băm chữ chuẩn hoá (bỏ dấu mục), băm hai hàng xóm (mép văn bản: rỗng), 80 ký tự
   đầu. Chuyển chỗ, chữ giữ nguyên: ✓. Chữ đổi: ○, tính là chưa đọc. Không tìm lại được: mất, báo toast lúc mất và ở tab *Review*.

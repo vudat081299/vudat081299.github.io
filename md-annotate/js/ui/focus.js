@@ -1,9 +1,10 @@
 /* Focus mode: mờ mọi thứ ngoài một section; chọn section theo chuột (pointer) hoặc dải đọc 25–50% (band). Dòng dưới
    chuột luôn sáng (.is-line), cả khi đã đọc (Dim reviewed); cách gộp hai lớp mờ ở css/focus.css (MDAN-045).
    Xuất: initFocus, refreshBand, refreshFocus.
-   Dùng: core/sections.js, ui/dom.js, ui/views.js, ui/sync-scroll.js, ui/layout.js. */
+   Dùng: core/sections.js, ui/dom.js, ui/state.js, ui/views.js, ui/sync-scroll.js, ui/layout.js. */
 import { bandBounds, bandPick, lineSections, numberSections, partAt, partCount, partLines, spanAt, subItems } from '../core/sections.js';
 import { $, shown } from './dom.js';
+import { openType } from './state.js';
 import { isSplit } from './views.js';
 import { blockPairs, setByPage } from './sync-scroll.js';
 import { layoutVal } from './layout.js';
@@ -46,7 +47,8 @@ function clearFocus(root) {
   litSec[root.id] = null;
 }
 function otherRoot(root) { return root.id === 'v-src' ? $('v-md') : $('v-src'); }
-function focusOn() { return document.documentElement.classList.contains('ma-focus'); }
+/* Focus mode chỉ ở file markdown (MDAN-073): file khác không có section. */
+function focusOn() { return document.documentElement.classList.contains('ma-focus') && openType().md; }
 function focusBoth(root, sec) {
   applySec(root, sec);
   var o = otherRoot(root);
@@ -71,7 +73,10 @@ export function refreshBand(from) {
   if (bandRaf) return;
   bandRaf = requestAnimationFrame(function () {
     bandRaf = 0;
-    if (!focusOn()) return;
+    if (!focusOn()) {   // vừa tắt, hay vừa sang file không phải markdown: bỏ lớp của section đang sáng
+      if (litSec['v-src'] != null || litSec['v-md'] != null) refreshFocus();
+      return;
+    }
     // Theo chuột: khung vẽ lại mất .is-sec; đặt lại section đang sáng, không thì cả khung mờ tới lần rê kế tiếp. Cuộn
     // khi chuột đứng yên: section và dòng theo chữ dưới chuột (trừ khi hộp nhận xét mở: giữ section đang ghi).
     if (layoutVal('focusBy') !== 'band') {

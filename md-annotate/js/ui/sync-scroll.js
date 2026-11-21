@@ -7,20 +7,21 @@
 import { lexSpans, pairBlocks } from '../core/blocks.js';
 import { followTop, syncCurves } from '../core/sync-math.js';
 import { $ } from './dom.js';
-import { D } from './state.js';
+import { D, openType } from './state.js';
 import { mdLex } from './markdown.js';
 import { layoutVal } from './layout.js';
 import { isSplit } from './views.js';
 
 /* Khối nguồn (lexSpans) và khối cấp cao của Preview, ghép bằng pairBlocks: { spans, blocks, toMd, toSrc }. Nhớ theo
-   văn bản và lần vẽ Preview (renderAll thay mọi con của #v-md). */
-var pairMemo = { text: null, first: undefined, val: null };
+   văn bản, loại file và lần vẽ Preview (renderAll thay mọi con của #v-md). File không phải markdown: không khối nào (không
+   chạy marked.lexer), nên không có section (Focus mode), đơn vị đã đọc, cuộn theo nhau. */
+var pairMemo = { text: null, md: null, first: undefined, val: null };
 export function blockPairs() {
-  var first = $('v-md').firstElementChild;
-  if (pairMemo.text !== D.text || pairMemo.first !== first) {
-    var spans = lexSpans(D.text, mdLex), blocks = Array.prototype.slice.call($('v-md').children);
+  var first = $('v-md').firstElementChild, md = openType().md;
+  if (pairMemo.text !== D.text || pairMemo.md !== md || pairMemo.first !== first) {
+    var spans = md ? lexSpans(D.text, mdLex) : [], blocks = Array.prototype.slice.call($('v-md').children);
     var p = pairBlocks(spans.map(function (sp) { return sp.tag; }), blocks.map(function (el) { return el.tagName; }));
-    pairMemo = { text: D.text, first: first, val: { spans: spans, blocks: blocks, toMd: p.md, toSrc: p.src } };
+    pairMemo = { text: D.text, md: md, first: first, val: { spans: spans, blocks: blocks, toMd: p.md, toSrc: p.src } };
   }
   return pairMemo.val;
 }

@@ -3,12 +3,13 @@
    file khi bật All files (promptsAll → buildPromptAll; file không mở neo qua render.js anchorsOf, dấu đã đọc qua
    review.js reviewDocOf). Dải dòng đã đọc của file đang mở từ ui/review.js.
    Xuất: copyPrompt, initPrompt, locText, renderPrompt, syncOptions.
-   Dùng: core/text.js, core/comments.js, core/prompt.js, core/tree.js, ui/store.js, ui/dom.js,
+   Dùng: core/text.js, core/comments.js, core/prompt.js, core/tree.js, core/file-type.js, ui/store.js, ui/dom.js,
      ui/state.js, ui/render.js, ui/review.js. */
 import { plural } from '../core/text.js';
 import { anchorAll } from '../core/comments.js';
 import { allFilesOffered, buildPrompt, buildPromptAll, exportName, included, locLabel, optionsSummary, promptsAll, promptSize } from '../core/prompt.js';
-import { filesInOrder } from '../core/tree.js';
+import { byId, filesInOrder } from '../core/tree.js';
+import { fileType } from '../core/file-type.js';
 import { prefs, savePrefs } from './store.js';
 import { $, h, saveFile, toast } from './dom.js';
 import { D, S, scheduleSave } from './state.js';
@@ -24,8 +25,8 @@ function freshDoc() { var d = anchorAll(D.comments, D.text, mdText); d.review = 
 function current(d) {
   if (!promptsAll(S)) return { p: buildPrompt(S, D, d), n: included(d).length };
   var n = 0, files = filesInOrder(S.nodes).map(function (id) {
-    var doc = S.docs[id], r = id === S.open ? d : anchorsOf(doc);
-    if (id !== S.open) r.review = reviewDocOf(doc);
+    var doc = S.docs[id], md = fileType(byId(S.nodes, id).name).md, r = id === S.open ? d : anchorsOf(doc, md);
+    if (id !== S.open) r.review = reviewDocOf(doc, md);
     n += included(r).length;
     return { fileId: id, doc: doc, d: r };
   });

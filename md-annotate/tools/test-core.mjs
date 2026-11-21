@@ -1063,7 +1063,7 @@ import { hlRuns, sxTokens } from '../js/core/code-tokens.js';
   check('loại file: markdown theo đuôi, không đuôi là markdown', ['a.md', 'B.MARKDOWN', 'x.mdx', 'README', 'notes/LICENSE'].every((n) => k(n) === 'markdown:null'));
   check('loại file: code theo đuôi hay tên', k('a.py') === 'code:python' && k('App.TSX') === 'code:typescript' && k('Makefile') === 'code:makefile' && k('Dockerfile') === 'code:dockerfile' && k('i.htm') === 'code:xml');
   check('loại file: đuôi lạ là chữ trơn', ['a.txt', 'data.csv', 'x.log', 'a.', '.env'].every((n) => k(n) === 'plain:null'));
-  check('loại file: chỉ markdown có Preview / Split', fileType('a.md').preview && fileType('README').preview && !fileType('a.py').preview && !fileType('a.txt').preview);
+  check('loại file: chỉ markdown có phần của markdown (md)', fileType('a.md').md && fileType('README').md && !fileType('a.py').md && !fileType('a.txt').md);
   const md = fileType('a.md'), py = fileType('a.py');
   check('viewFor: markdown giữ mọi chế độ', ['edit', 'src', 'view', 'split'].every((v) => viewFor(md, v) === v));
   check('viewFor: file không có Preview — Preview / Split về Source, Edit / Source giữ', ['edit', 'src', 'src', 'src'].join() === ['edit', 'src', 'view', 'split'].map((v) => viewFor(py, v)).join());

@@ -35,9 +35,14 @@ function toText(fn) {
 }
 
 var emptyP = null;   // chữ gốc của #rv-empty
-/* blind: chưa tách được khối (thiếu mạng): không có % để hiện, dấu vẫn giữ. */
-export function renderReviewPanel(r, p, blind) {
-  var has = r.units.length > 0, marked = D.reviews.length > 0 && !blind, pct = p.pct + '%';
+/* why: '' (có đơn vị), 'code' (file không phải markdown: không đánh dấu đã đọc), 'offline' (chưa tách được khối, thiếu
+   mạng): không có % để hiện, dấu vẫn giữ. */
+var WHY = {
+  code: ['Review marks are for markdown files', 'Open a markdown file to mark the blocks you have read.'],
+  offline: ['Preview could not load', 'Your review marks are kept and come back once it loads.']
+};
+export function renderReviewPanel(r, p, why) {
+  var has = r.units.length > 0, marked = D.reviews.length > 0 && !why, pct = p.pct + '%';
   $('n-review').textContent = marked ? pct : '';
   $('rail-rv').hidden = !marked; $('rail-rv').textContent = pct;
   $('rail-rv').setAttribute('aria-label', 'Review: ' + pct + ' reviewed');
@@ -46,7 +51,7 @@ export function renderReviewPanel(r, p, blind) {
   $('rv-empty').hidden = has; $('rv-body').hidden = !has;
   var ep = $('rv-empty').querySelector('p');
   emptyP = emptyP || ep.cloneNode(true);
-  ep.replaceChildren.apply(ep, blind ? [h('b', null, 'Preview could not load'), 'Your review marks are kept and come back once it loads.']
+  ep.replaceChildren.apply(ep, why ? [h('b', null, WHY[why][0]), WHY[why][1]]
     : Array.prototype.map.call(emptyP.childNodes, function (n) { return n.cloneNode(true); }));
   if (!has) return;
   $('rv-pct').textContent = pct;

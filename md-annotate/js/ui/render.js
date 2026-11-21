@@ -10,7 +10,7 @@ import { plural } from '../core/text.js';
 import { anchorAll, markRanges } from '../core/comments.js';
 import { lineCount } from '../core/runs.js';
 import { $, h, textNodes } from './dom.js';
-import { D } from './state.js';
+import { D, openType } from './state.js';
 import { ghExtras, mdHtml, unlink } from './markdown.js';
 import { markActive, paintMd } from './marks.js';
 import { paintSrc } from './source-view.js';
@@ -56,22 +56,23 @@ function mdTextOf(text) {
   offMd.set(text, t);
   return t;
 }
-/* Kết quả neo của một doc không mở ({ ordered, orphans, anchors, numbers }), neo như khi nó đang mở (không nhận xét thì
-   khỏi dựng Preview). Nhớ theo doc: dùng lại khi chữ, mảng nhận xét và số nhận xét không đổi (neo không đọc chữ nhận
-   xét); chưa có thư viện markdown thì không nhớ. Vẽ lại với All files ở 200 file không neo lại 200 file. */
+/* Kết quả neo của một doc không mở ({ ordered, orphans, anchors, numbers }), neo như khi nó đang mở (không nhận xét hay
+   không phải markdown, isMd: fileType(tên).md, thì khỏi dựng Preview). Nhớ theo doc: dùng lại khi chữ, mảng nhận xét, số
+   nhận xét và loại không đổi (neo không đọc chữ nhận xét); chưa có thư viện markdown thì không nhớ. Vẽ lại với All files
+   ở 200 file không neo lại 200 file. */
 var offAnchors = new WeakMap();
-export function anchorsOf(doc) {
+export function anchorsOf(doc, isMd) {
   var c = offAnchors.get(doc);
-  if (c && c.text === doc.text && c.comments === doc.comments && c.n === doc.comments.length) return c.val;
-  var md = doc.comments.length ? mdTextOf(doc.text) : '';
+  if (c && c.text === doc.text && c.comments === doc.comments && c.n === doc.comments.length && c.isMd === isMd) return c.val;
+  var md = isMd && doc.comments.length ? mdTextOf(doc.text) : '';
   var val = anchorAll(doc.comments, doc.text, md || '');
-  if (md != null) offAnchors.set(doc, { text: doc.text, comments: doc.comments, n: doc.comments.length, val: val });
+  if (md != null) offAnchors.set(doc, { text: doc.text, comments: doc.comments, n: doc.comments.length, isMd: isMd, val: val });
   return val;
 }
 
 export function renderAll() {
   var text = D.text, mdRoot = $('v-md');
-  var html = mdHtml(text);
+  var html = openType().md ? mdHtml(text) : '';   // file không phải markdown: Preview rỗng, không chạy marked
   if (html == null) {
     mdRoot.replaceChildren(h('p', { class: 'ma-note' },
       mdReady === false ? 'The markdown renderer could not load (needs a network). Select in the Source view instead.' : 'Loading the markdown renderer…'));

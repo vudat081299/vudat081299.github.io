@@ -2,7 +2,7 @@
    với loại ấy (MDAN-067).
    Xuất: fileType, langOf, viewFor.
    Dùng: core/langs.js. */
-import { KINDS, LANGS } from './langs.js';
+import { LANGS } from './langs.js';
 
 var NAMES = new Map();   // id hay tên khác (chữ thường) → id
 Object.keys(LANGS).forEach(function (id) {
@@ -13,16 +13,17 @@ Object.keys(LANGS).forEach(function (id) {
 /* Tên ngôn ngữ (khối rào ```js, đuôi file, tên file không đuôi) → id trong LANGS, hoặc null. */
 export function langOf(name) { return NAMES.get(String(name).toLowerCase()) || null; }
 
-/* Loại file theo tên: { kind, lang, preview }. 'markdown': đuôi của markdown (md, markdown…), hay không đuôi mà tên không
+/* Loại file theo tên: { kind, lang, md }. 'markdown': đuôi của markdown (md, markdown…), hay không đuôi mà tên không
    phải ngôn ngữ (như tải về: README, LICENSE); 'code': đuôi hay tên của một ngôn ngữ trong LANGS (lang là id); còn lại
-   (txt, csv, log…) 'plain'. preview: có Preview và Split (KINDS). */
+   (txt, csv, log…) 'plain'. md: có phần riêng của markdown — Preview, Split, Focus mode, đánh dấu đã đọc (MDAN-067,
+   MDAN-073); file khác chỉ có Source, không chạy bộ tách markdown. */
 export function fileType(name) {
   var n = String(name).toLowerCase(), dot = n.lastIndexOf('.');
   var lang = langOf(dot >= 0 ? n.slice(dot + 1) : n);
   var kind = lang === 'markdown' || (!lang && dot < 0) ? 'markdown' : lang ? 'code' : 'plain';
-  return { kind: kind, lang: kind === 'code' ? lang : null, preview: KINDS[kind].preview };
+  return { kind: kind, lang: kind === 'code' ? lang : null, md: kind === 'markdown' };
 }
 
 /* Chế độ xem hiện được khi muốn want ('edit' | 'src' | 'view' | 'split') với loại file t: không có Preview thì Preview
    và Split về Source. Đủ chỗ cho Split hay không là việc của ui/views.js. */
-export function viewFor(t, want) { return !t.preview && (want === 'view' || want === 'split') ? 'src' : want; }
+export function viewFor(t, want) { return !t.md && (want === 'view' || want === 'split') ? 'src' : want; }

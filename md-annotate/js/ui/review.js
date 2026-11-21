@@ -23,7 +23,7 @@ import { lexSpans } from '../core/blocks.js';
 import { docOf } from '../core/session.js';
 import { wantsReview } from '../core/prompt.js';
 import { $, h, mqSheet, mqSide, mqTouch, reduceMotion, shown, toast, typing } from './dom.js';
-import { D, docKey, S, saveClosed, scheduleSave, sessionFor } from './state.js';
+import { D, docKey, openType, S, saveClosed, scheduleSave, sessionFor } from './state.js';
 import { mdLex } from './markdown.js';
 import { refreshTree } from './files.js';
 import { blockPairs, setByPage } from './sync-scroll.js';
@@ -47,16 +47,17 @@ export function rvState() {
   }
   return memo;
 }
-/* Dải dòng cho prompt (core/prompt.js d.review), hoặc null khi tắt. */
+/* Dải dòng cho prompt (core/prompt.js d.review), hoặc null khi tắt hay file không phải markdown. */
 export function reviewDoc() {
-  if (!wantsReview(S)) return null;
+  if (!wantsReview(S) || !openType().md) return null;
   var r = rvState();
   return reviewRanges(r.units, r.res.state);
 }
-/* Như reviewDoc cho một file không mở: đơn vị từ marked.lexer như khi nó mở; nhớ theo doc, chữ và mảng dấu. */
+/* Như reviewDoc cho một file không mở (isMd: fileType(tên).md): đơn vị từ marked.lexer như khi nó mở; nhớ theo doc, chữ
+   và mảng dấu. */
 var offRv = new WeakMap();
-export function reviewDocOf(doc) {
-  if (!wantsReview(S) || !doc.reviews.length) return null;
+export function reviewDocOf(doc, isMd) {
+  if (!wantsReview(S) || !isMd || !doc.reviews.length) return null;
   var m = offRv.get(doc);
   if (m && m.text === doc.text && m.marks === doc.reviews) return m.val;
   var val = null;
@@ -281,9 +282,10 @@ function paintDone(r) {
 var lostSeen = { sid: null, n: 0 };
 export function applyReview(marksOnly) {
   var r = rvState(), p = progress(r.units, r.res.state), nl = r.res.lost.length, de = document.documentElement;
-  /* Không có đơn vị mà văn bản có chữ: chưa tách được khối (thiếu mạng, Preview không dựng): dấu chưa neo được, không
-     phải mất. Giữ % đã lưu, không báo mất. */
-  var blind = !r.units.length && /\S/.test(D.text || '');
+  /* Không có đơn vị mà văn bản có chữ: file không phải markdown (không đánh dấu đã đọc, MDAN-073; dấu cũ của nó, VD đổi
+     tên a.md → a.py, giữ lại) hay chưa tách được khối (thiếu mạng, Preview không dựng): dấu chưa neo được, không phải
+     mất. Giữ % đã lưu, không báo mất. */
+  var code = !openType().md, blind = code || (!r.units.length && /\S/.test(D.text || ''));
   if (!D.reviews.length) delete D.rvPct; else if (!blind) D.rvPct = p.pct;
   if (de.classList.contains('ma-reviewing') !== D.reviews.length > 0) marksOnly = false;   // điện thoại: lề trái Preview đổi
   de.classList.toggle('ma-reviewing', D.reviews.length > 0);
@@ -298,7 +300,7 @@ export function applyReview(marksOnly) {
   }
   paintDone(r);
   if (marksOnly && laneUnits === r.units) restyleLanes(r); else layoutLanes();
-  renderReviewPanel(r, p, blind);
+  renderReviewPanel(r, p, blind ? (code ? 'code' : 'offline') : '');
   syncSug(r);   // trước viên thuốc: bỏ gợi ý của đơn vị vừa đánh dấu
   syncPill(r, p);
   syncPopRv();
