@@ -832,7 +832,8 @@ const cornerClash = (page) => page.evaluate(() => {
   await sp.click('.ma-tab[data-view="split"]'); await sp.waitForTimeout(200);
   await sp.click('#btn-layout'); await sp.check('#set-focus'); await sp.keyboard.press('Escape');
   await sp.evaluate(() => [...document.querySelectorAll('#v-md > p')].find((e) => e.textContent.startsWith('The killer feature')).scrollIntoView({ block: 'center' }));
-  await sp.waitForTimeout(200);
+  /* Chờ hai khung đứng yên (khung kia cuộn theo, rồi có thể chỉnh lại khung này) rồi mới rê: rê lúc còn trôi thì trúng khối khác. */
+  await sp.waitForFunction(() => new Promise((ok) => { const k = () => document.getElementById('wrap-md').scrollTop + ':' + document.getElementById('wrap-src').scrollTop, a = k(); setTimeout(() => ok(k() === a), 150); }));
   await sp.hover('#v-md > p:has-text("The killer feature")'); await sp.waitForTimeout(350);
   const lit = await sp.evaluate(() => [...document.querySelectorAll('#v-src .ma-ln.is-sec')].map((l) => l.textContent.replace(/\n$/, '')).filter((t) => t.trim()));
   check('Focus ở Split, văn bản có [id]: url: Source sáng đúng section Plugins',
