@@ -123,7 +123,7 @@ const mixHex = (bg, ...layers) => {
   for (const l of layers) { const v = l.match(/[\d.]+/g).map(Number); c = c.map((x, i) => v[i] * v[3] + x * (1 - v[3])); }
   return '#' + c.map((x) => Math.round(x).toString(16).padStart(2, '0')).join('');
 };
-/* MDAN-018: mọi vùng cuộn đang hiện (dọc, hoặc ngang khi đang tràn): thanh cuộn không chạy vào góc bo của chính nó hay
+/* Mọi vùng cuộn đang hiện (dọc, hoặc ngang khi đang tràn): thanh cuộn không chạy vào góc bo của chính nó hay
    khung chứa nó (khoảng từ mép tới vùng thanh cuộn ≥ bán kính góc ấy). Trả danh sách chỗ vi phạm. */
 const cornerClash = (page) => page.evaluate(() => {
   const out = [], px = (v) => parseFloat(v) || 0;
@@ -673,7 +673,7 @@ const cornerClash = (page) => page.evaluate(() => {
   check('điện thoại: tab Prompt trong tấm, có nút chép', await m.isVisible('#dlg-panel #out') && await inView(m, '#dlg-panel #btn-copy'));
   await m.tap('#dlg-panel #opts summary'); await m.waitForTimeout(150);
   const mclash = await cornerClash(m);
-  check('điện thoại: tấm panel, Options: thanh cuộn không chạy vào góc bo (MDAN-018)', !mclash.length, mclash.join(', '));
+  check('điện thoại: tấm panel, Options: thanh cuộn không chạy vào góc bo', !mclash.length, mclash.join(', '));
   await m.tap('#dlg-panel #opts summary');
   await m.tap('#dlg-panel #ptab-list');
   check('điện thoại: tấm danh sách không tràn ngang', (await overflow(m)) === 0);
@@ -880,7 +880,7 @@ const cornerClash = (page) => page.evaluate(() => {
   await sp.waitForTimeout(400);
   await openOpts(sp); await sp.click('#btn-layout'); await sp.click('#btn-keys'); await sp.waitForTimeout(200);
   const clash = await cornerClash(sp);
-  check('vùng cuộn (khung, khối code dài, Options, hộp thoại): thanh cuộn không chạy vào góc bo (MDAN-018)', !clash.length, clash.join(', '));
+  check('vùng cuộn (khung, khối code dài, Options, hộp thoại): thanh cuộn không chạy vào góc bo', !clash.length, clash.join(', '));
   await sp.keyboard.press('Escape'); await sp.keyboard.press('Escape');
   await sctx.close();
 
@@ -1399,7 +1399,7 @@ const cornerClash = (page) => page.evaluate(() => {
   }
   // ── end hộp dòng không đóng ──
 
-  // ── hộp Settings giữa màn hình, nền sau mờ (MDAN-015) ──
+  // ── hộp Settings giữa màn hình, nền sau mờ nhẹ để vẫn thấy văn bản (MDAN-015) ──
   for (const [vw, vh, scheme] of [[1440, 900, 'light'], [1440, 900, 'dark'], [390, 844, 'light']]) {
     const gctx = await browser.newContext({ viewport: { width: vw, height: vh }, colorScheme: scheme, hasTouch: vw < 700, isMobile: vw < 700 });
     const gp = await openPage(gctx);
@@ -1717,7 +1717,7 @@ const cornerClash = (page) => page.evaluate(() => {
     await mp.click('#ptab-review'); await tick();
     check('gợi ý: đơn vị đọc đủ lâu rồi cuộn qua có dấu ✓ gợi ý, không thành dấu', sg.includes(u6) && (await nDone()) === done0 && (await mp.$$eval(`.ma-lane__b[data-u="${u6}"].is-sug`, (b) => b.length)) === 2, JSON.stringify(sg) + ' u6=' + u6);
     check('gợi ý: tab Review có "Accept N suggested"', (await mp.isVisible('#rv-sug')) && (await mp.textContent('#rv-sug-ok')) === `Accept ${sg.length} suggested`, await mp.textContent('#rv-sug-ok'));
-    // MDAN-079: gợi ý là ✓ mờ trong vòng đứt xanh trên nền xanh nhạt, vạch đứt suốt khối.
+    // Gợi ý (MDAN-079): ✓ mờ trong vòng đứt xanh trên nền xanh nhạt, vạch đứt suốt khối.
     const sugLook = await mp.$eval(`#wrap-md .ma-lane__b[data-u="${u6}"]`, (b) => {
       const { parse, over, ratio } = __c, a = getComputedStyle(b, '::after'), surf = parse(getComputedStyle(document.getElementById('doc')).backgroundColor);
       return [a.borderTopStyle, ratio(over(parse(a.backgroundColor), surf), surf) > 1.05, a.backgroundImage.includes('svg'), getComputedStyle(b).backgroundImage.startsWith('repeating-linear-gradient')];
@@ -2326,7 +2326,7 @@ const cornerClash = (page) => page.evaluate(() => {
         border: [a.borderTopWidth, a.borderRightWidth, a.borderBottomWidth, a.borderLeftWidth, a.borderTopStyle].join(' '), insetL: +(ic.left - L).toFixed(1), w: +(R - L).toFixed(1), rowW: r.width,
         bodyL: document.getElementById('tree-body').getBoundingClientRect().left, L, after: getComputedStyle(l, '::after').content, shadow: getComputedStyle(l).boxShadow, outline: [a.outlineStyle, a.boxShadow].join(' '), moreIn };
     });
-    check('cây: Enter mở file, hàng thành thẻ chọn: bo, không viền, không vòng, nền nhạt, lùi vào trong (bắt đầu trước biểu tượng, không trọn hàng), hàng không tô, không vạch riêng, ⋯ gọn trong thẻ (lùi ≥ 2px mọi cạnh) (MDAN-060)',
+    check('cây: Enter mở file, hàng thành thẻ chọn: bo, không viền, không vòng, nền nhạt, lùi vào trong (bắt đầu trước biểu tượng, không trọn hàng), hàng không tô, không vạch riêng, ⋯ gọn trong thẻ (lùi ≥ 2px mọi cạnh)',
       JSON.stringify(await tl()) === JSON.stringify(['open', ids['README.md']]) && sel.sel === 'true' && /rgba\(0, 0, 0, 0\)|transparent/.test(sel.rowBg) && !/, 0\)$|transparent/.test(sel.fill)
       && sel.radius >= 4 && sel.border === '0px 0px 0px 0px none' && / none$/.test(sel.outline) && sel.insetL > 0 && sel.insetL <= 12 && sel.w < sel.rowW - 8 && sel.L - sel.bodyL >= 8 && sel.after === 'none' && sel.shadow === 'none' && sel.moreIn.every((v) => v >= 2), JSON.stringify(sel));
     /* Tương phản trên hàng đang chọn (nền pha nhiều lớp): chữ ≥ 4,5:1, nền thẻ tách khỏi nền thân, cả hai theme. */
@@ -2398,7 +2398,7 @@ const cornerClash = (page) => page.evaluate(() => {
     const m1 = await mi();
     check('cây: menu folder có New file here, Rename, Move to…, Delete; focus mục đầu', m1.join('|') === 'New file here|New folder here|Rename|Move to…|Download .zip|Delete' && (await tp.evaluate(() => document.activeElement.textContent)) === 'New file here', m1.join('|'));
     const cc = (await cornerClash(tp)).filter((x) => /tree|menu/.test(x));
-    check('cây: thân cây và menu cuộn không chạm góc bo (MDAN-018)', !cc.length, cc.join(', '));
+    check('cây: thân cây và menu cuộn không chạm góc bo', !cc.length, cc.join(', '));
     await tp.click('#tree-menu >> text=Move to…'); await tp.waitForTimeout(50);
     const m2 = await mi();
     check('cây: Move to… liệt kê folder trừ chính nó và hậu duệ, folder hiện tại tắt', m2.join('|') === 'Back|Top level|archive|level-1|level-2(x)', m2.join('|'));
@@ -2825,7 +2825,7 @@ const cornerClash = (page) => page.evaluate(() => {
         });
         check('tấm trượt iPhone (an toàn 59 / 34): rộng 320, sát trái; đầu dưới vùng an toàn trên; thân dừng trên vùng an toàn dưới; góc phải bo, có bóng, không viền một cạnh; đầu một hàng, 4 nút ≥ 44px',
           d.w === 320 && d.left === 0 && d.headTop >= 59 && d.bodyB <= d.vh - 34 && d.rr === '16px' && d.rb === '16px' && d.rl === '0px' && d.shadow && d.bl === '0px' && d.btns === 4 && d.row && d.headH <= 53, JSON.stringify(d));
-        check('tấm trượt iPhone: thân cây không chạm góc bo (MDAN-018)', !(await cornerClash(p)).filter((x) => /tree/.test(x)).length, (await cornerClash(p)).join());
+        check('tấm trượt iPhone: thân cây không chạm góc bo', !(await cornerClash(p)).filter((x) => /tree/.test(x)).length, (await cornerClash(p)).join());
       }
       await c.close();
     }

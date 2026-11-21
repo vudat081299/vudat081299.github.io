@@ -37,15 +37,15 @@
 
 ## Giao diện
 
-- Nền, mực, font chép từ `index.html` gốc. Một màu xanh: `--accent` (MDAN-009); nền nhạt, highlight, vạch pha từ nó.
-- Xanh không làm chữ trên nền sáng (~2,3:1): chữ là mực, nhấn bằng vạch / nền nhạt / huy hiệu. Chữ trên `--accent`: `--on-accent`. Chữ ≥ 4,5:1; chỉ báo trạng thái ≥ 3:1 (focus `--ring`, hàng đang chọn `--edge-on`; thẻ file mở trong cây chỉ có nền), cả hai theme. Vòng focus chỉ sau Tab, hay mũi tên / Home / End trong cây, menu của nó và menu *More* (MDAN-020).
-- Token ở `css/tokens.css` (chữ `--fs-*` + `--lh*`, bo `--r-*`, vật lồng trong bo nhỏ hơn; cao `--h-*`, khoảng `--s*`, `--dur`). Biến đổi lúc chạy mà văn bản không dùng (cây, vách): `@property … inherits: false`, đặt lên phần tử dùng nó; lớp ở `html` không kết bộ chọn bằng `:not()` / `*`. Không thì mỗi lần đổi tính lại kiểu mọi nút của văn bản (10.000 dòng: ~0,6 s).
+- Giao diện không ghi thành văn (REPO-028): màu, cỡ, bo, khoảng cách là token ở `css/tokens.css`, dáng là CSS. Đang đẹp thì đừng đổi.
+- Chữ ≥ 4,5:1, chỉ báo trạng thái ≥ 3:1, cả hai theme; `--accent` không làm chữ trên nền sáng (chữ trên nó: `--on-accent`). Vòng focus chỉ sau Tab, hay mũi tên / Home / End trong cây, menu của nó và menu *More* (MDAN-020).
+- Token ở `css/tokens.css` (chữ `--fs-*` + `--lh*`, bo `--r-*`, vật lồng trong bo nhỏ hơn; cao `--h-*`, khoảng `--s*`, `--dur`). Mỗi file CSS gom luật theo component, mỗi component một đoạn liền có chú thích đầu; component dùng token, không số thô. Biến đổi lúc chạy mà văn bản không dùng (cây, vách): `@property … inherits: false`, đặt lên phần tử dùng nó; lớp ở `html` không kết bộ chọn bằng `:not()` / `*`. Không thì mỗi lần đổi tính lại kiểu mọi nút của văn bản (10.000 dòng: ~0,6 s).
 - Họ component chung luật ở `css/base.css` (nút, menu, nhóm tab `.ma-tabs` / `.ma-seg` / `.ma-fmt`, ô nhập, huy hiệu, phím): thêm biến thể vào họ.
 - Theme: khoá chung `hub-theme`, đặt trước lần vẽ đầu; chưa chọn thì theo hệ điều hành (REPO-024). `html` và `body` có nền `--bg` đặt rõ. Thanh trên, cây, panel, thanh đáy không bôi đen được trừ ô gõ chữ và hộp prompt `.ma-out` (MDAN-072): một luật ở `css/base.css` (MDAN-064), đừng đặt `user-select` từng phần tử.
 - Lớp mờ: phần tử fixed trọn khung nhìn, không `::backdrop` / bóng (iOS 26 Safari tô vùng thanh trạng thái theo nền phần tử fixed ở mép). Hộp thoại: chính `<dialog>`, nền `--scrim`, thẻ là con; tấm nhận xét: `#pop-scrim`, `--scrim-live` (nhẹ hơn: không chặn chạm), không có khi chọn dòng (MDAN-026).
   Hiện / ẩn lớp: `syncBar()`: `theme-color` = nền trộn lớp, và `html.ma-lock` (trang sau lớp không cuộn, đóng không nhảy); thẻ, tấm `overscroll-behavior: contain`.
-- Bề rộng (MDAN-005): `.ma-wrap` rộng `max(70%, 1280px)` của khung nhìn trừ cây docked (`--wrap-f`, `--wrap-min`), không quá chỗ ấy, căn giữa trong nó, lề `--pad`. Panel rộng `--side` (kéo `#panel-grip`,
-  320–560, `prefs.side`), thu gọn thành `.ma-rail` 56px (`html.ma-railed`, `prefs.rail`); thanh dọc giữ nút chép.
+- Bề rộng (MDAN-005): `.ma-wrap` theo `--wrap-f`, `--wrap-min` của khung nhìn trừ cây docked, không quá chỗ ấy, căn giữa trong nó, lề `--pad`. Panel rộng `--side` (kéo `#panel-grip`,
+  `prefs.side`), thu gọn thành `.ma-rail` (`html.ma-railed`, `prefs.rail`); thanh dọc giữ nút chép.
 - *Split* khi `#doc` đủ cho hai khung ≥ 420px (`splitFits()`), không theo media query; chưa đủ thì hiện *Preview*, `prefs.view` vẫn nhớ `split`. Hai khung cao `--pane-h` (`paneHeight`), cuộn riêng; trang không cuộn. Vách `#divider` lưu `prefs.split`. Văn bản > 1.500 dòng (`longText()`): kéo vách, mép cây, mép panel chỉ dời vạch `.ma-ghost` (dừng ở giới hạn, cùng hàm chặn khi thả), thả ra mới dàn lại (`dragBar`); kéo kết thúc thế nào (thả, mất pointer capture, cửa sổ mất focus, chuột về không giữ nút) cũng áp chỗ cuối, dọn vạch.
   Phần của markdown (*Preview*, *Split*, *Focus mode*, đã đọc) chỉ ở file markdown: một cờ `fileType(tên).md` (MDAN-067, MDAN-073); file khác không chạy `marked` (`renderAll`, `blockPairs`, `anchorsOf` / `reviewDocOf` nhận cờ). File khác chỉ có tab *Source*, *Edit* là nút bật / tắt trong nó (`#btn-edit`, mũi tên ở tab cũng bật / tắt; MDAN-074); ở đó không ghi chế độ đọc đã nhớ (`lastRead`, lưu riêng `prefs.read`).
 - Split vừa khung nhìn (khung ≥ 320px): `sizePanes()` gắn `html.ma-fit` (khoá cuộn trang), để thanh cuộn chính không
@@ -64,10 +64,10 @@
 - Hai lớp mờ (Focus, *Dim reviewed*) gộp bằng min, không nhân; dòng dưới chuột = 1 (MDAN-045). Lớp chỉ đặt biến `--o-f` / `--o-r`; `opacity` chỉ ở phần tử mang, không ở tổ tiên của phần tử mang khác (`css/focus.css`).
 - Khối nguồn (`lexSpans`) neo vào văn bản gốc, không cộng dồn `raw`: marked bỏ khối `[id]: url` và đổi tab đầu dòng. Bôi đen ở *Split*: đoạn tương ứng ở khung kia tô bằng Highlight `ma-mirror` (`mirrorSel`, `locate`); hộp nhận xét mở thì `ma-pending` thay.
 - *Preview* giống GitHub (MDAN-006): màu `--gh-*`, code tô bằng highlight.js (`--hl-*`) khi khối rào ghi ngôn ngữ có trong sổ (`langOf`); `ghExtras()` đổi
-  `> [!NOTE|TIP|…]` thành `.ma-alert`. Cỡ chữ trong `.ma-md` bằng `em` theo `--md-fs`. Rộng hết khung; trích khối vạch trái, bảng viền bo góc.
+  `> [!NOTE|TIP|…]` thành `.ma-alert`. Cỡ chữ trong `.ma-md` bằng `em` theo `--md-fs`.
 - Cuộn theo nhau ở *Split* (`prefs.sync`, mặc định bật, điện thoại ẩn ở *Settings*): mốc là đỉnh các cặp khối của `blockPairs()` (thêm đáy làm giật), nội suy Hermite
   đơn điệu; tham chiếu giữa khung, sát mép trượt về mép. Khung theo đặt ngay trong sự kiện cuộn (không rAF); bỏ qua `syncExpect`.
-- Trống văn bản: thẻ `#start`; có chữ thì hiện hàng công cụ. Ctrl/⌘ + V ngoài ô nhập cũng dán khi trống. Một `#file-in` ẩn cho mọi `.js-open`. Rê chuột bọc trong `@media (hover: hover)`. `.ma-sr` đặt `top: 0`, không thì trang dài thêm 1px. Chỉ `.ma-dlg__b` của hộp thoại cuộn; *Options* (tab *Prompt*) cuộn riêng ≤ 38vh; không lồng vùng cuộn. Góc bo x: thanh cuộn cách góc ≥ x (MDAN-018).
+- Trống văn bản: thẻ `#start`; có chữ thì hiện hàng công cụ. Ctrl/⌘ + V ngoài ô nhập cũng dán khi trống. Một `#file-in` ẩn cho mọi `.js-open`. Rê chuột bọc trong `@media (hover: hover)`. `.ma-sr` đặt `top: 0`, không thì trang dài thêm 1px. Chỉ `.ma-dlg__b` của hộp thoại cuộn; *Options* (tab *Prompt*) cuộn riêng ≤ 38vh; không lồng vùng cuộn. Vùng cuộn có góc bo x thì thanh cuộn cách góc ≥ x (smoke đo; dải tiến độ: `cornerLimits`).
 
 ## Panel bên phải
 
@@ -76,7 +76,7 @@
 - Máy rộng (≥ 1081px): panel dính từ đỉnh vùng nội dung tới đáy khung nhìn; `top`, `height` của panel và đệm dọc lưới cùng `--s4`. Tuỳ chọn prompt (kiểu, mọi file, số dòng, folder, dòng đã đọc, toàn văn, lời dẫn) gập trong *Options* ở tab Prompt; dòng tóm tắt cho biết đang bật gì.
 - ⌘/Ctrl + Shift + C chép ở mọi chỗ; chép xong nút thành *Copied ✓* một lúc, báo qua `#sr-live`, toast chỉ khi hỏng. Chép / tải neo lại lúc bấm (`freshDoc()`).
 - ≤ 1080px: panel ra khỏi lưới; thanh đáy: *Comments · N* (panel vào tấm trượt `#dlg-panel`, đóng thì về chỗ), `✓ N%`, nút chép; một cột cả khi `ma-railed`.
-- Thẻ nhận xét: không viền; số, L12, nhận xét, trích dẫn mờ vạch trái (không bo, REPO-025). Sửa / xoá hiện khi rê / focus (cảm ứng: luôn); rê thẻ tô đoạn và ngược lại.
+- Thẻ nhận xét: số, L12, nhận xét, trích dẫn. Sửa / xoá hiện khi rê / focus (cảm ứng: luôn); rê thẻ tô đoạn và ngược lại.
 - Điện thoại (≤ 720px): một cột, không có *Split*; vùng chạm ≥ `--h-touch` (cả màn cảm ứng; vật nhỏ trong dòng nới bằng lớp giả). Lưu nhận xét không cuộn trang. Vùng an toàn: lề vùng làm việc, mọi phần tử fixed / sticky dùng `--sa-*`.
 - Thanh trên điện thoại (MDAN-036): dính, cuộn xuống thì khuất, cuộn lên chút thì về (MDAN-051, `.is-away`, cả nằm ngang thấp); *Files*, tên gọn, *History*, *Settings*, *More*; `.ma-bar__opt` (*New session*, theme) ẩn, vào `#bar-menu` cùng *Help*;
   mỗi mục bấm nút thật của nó (`data-for`); kiểu `.ma-menu` chung với cây (`css/base.css`), phím theo mẫu menu button WAI-ARIA. Toast không nhận chuột (trừ *Undo*); có hộp thoại mở thì toast nằm trong nó; không thì nằm trên tấm nhận xét, nút nổi, viên thuốc (`placeToast()`).
@@ -98,8 +98,8 @@
 - Token không chồng nhau, theo thứ tự. `paintSrc()` cắt nguồn theo mép token, mép highlight và đầu dòng; `<mark>` bọc ngoài `<span class="sx-*">`.
 - Text của `#v-src` phải đúng bằng nguồn: vùng chọn, neo, số dòng đều đếm trên nó (smoke kiểm). `#doc-meta` đếm dòng bằng `lineCount()` như lề. Tìm token không quét lại cả dòng sau mỗi token (dòng dài vẫn tuyến tính).
 - Màu chỉ ở token `--sx-*`; mỗi màu ≥ 4,5:1 trên nền thẻ và trên `--hl` / `--hl-2`, cả hai theme. *Syntax colors* (`prefs.syntax`) tắt: chữ trơn.
-- Lề số dòng: mỗi dòng một `<span class="ma-ln">` (block, giữ cả ký tự xuống dòng), số là `::before` + counter (inline-block rộng 0; dòng không định vị trừ `.has-c`: mỗi phần tử định vị là một lớp vẽ, cuộn văn bản dài giật), `user-select: none`. Không chèn số dòng thành chữ. Dòng có nhận xét: `.has-c` + `data-c` (id), vạch `--accent`;
-  bấm vào lề mở nhận xét đầu của dòng, bấm đúp thì chọn nhiều dòng. Sau vạch là làn đã đọc (`--lane-w`; cảm ứng: vùng chạm 44px bằng `::before`), rồi chữ; lề (`gutterLine`) dừng trước làn.
+- Lề số dòng: mỗi dòng một `<span class="ma-ln">` (block, giữ cả ký tự xuống dòng), số là `::before` + counter (inline-block rộng 0; dòng không định vị trừ `.has-c`: mỗi phần tử định vị là một lớp vẽ, cuộn văn bản dài giật), `user-select: none`. Không chèn số dòng thành chữ. Dòng có nhận xét: `.has-c` + `data-c` (id), có vạch;
+  bấm vào lề mở nhận xét đầu của dòng, bấm đúp thì chọn nhiều dòng. Sau vạch là làn đã đọc (`--lane-w`; cảm ứng: vùng chạm `--h-touch` bằng `::before`), rồi chữ; lề (`gutterLine`) dừng trước làn.
 
 ## Nhận xét nhiều dòng (MDAN-012)
 
@@ -128,14 +128,13 @@
 - Làn: lớp phủ `.ma-lane` trong `#wrap-*`, ngoài `#v-src` / `#v-md`; nút là `<span>` trong dòng chảy của cột (không định vị), dùng lại qua các lần xếp, chỉ ghi lề trên / cao đã đổi, không biến CSS riêng mỗi nút. *Source*: giữa vạch nhận xét và chữ, không phải lề số;
   *Preview*: lề trái. Bấm: bật / tắt; Shift + bấm: cả dải (mốc mất khi văn bản đổi); làn của tiêu đề (hình vuông) bật cả section.
 - Phím X / Shift+X / J / K: bỏ qua khi đang gõ chữ, khi hộp thoại hay hộp nhận xét mở, khi có phím bổ trợ khác Shift. Đơn vị hiện tại: chạm
-  dải đọc (dưới con trỏ khi Focus theo chuột; khung không cuộn được: đơn vị đầu), làn `.is-cur` (vòng đứt quanh ✓ mờ và vạch đứt, xám; MDAN-079); vừa nhảy tới thì là nó (`pin`, người dùng tự cuộn thì bỏ).
+  dải đọc (dưới con trỏ khi Focus theo chuột; khung không cuộn được: đơn vị đầu), làn `.is-cur` (MDAN-079); vừa nhảy tới thì là nó (`pin`, người dùng tự cuộn thì bỏ).
 - Nút ✓ Reviewed của hộp nhận xét (nới ra trọn khối, cả dòng chọn ở lề số): `ui/review.js` theo dõi hộp (MutationObserver). Prompt: *Say which lines I reviewed* (`rvPrompt`, mặc định tắt; ẩn khi tắt số dòng hay prompt không có file markdown: `reviewOffered`) thêm một dòng dưới câu số dòng, chỉ dải đã đọc, mỗi tệp ghi tên một lần: `Đã đọc kỹ: a.md L1-20, L30; b.md L5. …` (MDAN-082); tắt thì y hệt từng byte.
-- Bộ dấu (MDAN-017): tròn là khối, vuông là section, ✓ là ảnh `--ic-check`, cỡ `--ic-box`; khai báo một lần ở `css/review.css` (cả gợi ý), ô đánh dấu
-  của form dùng cùng ảnh, cùng cỡ; dấu căn giữa dòng đầu khối (đệm trên của nút). Máy hẹp / cảm ứng: `#rv-pill` chỉ đánh dấu, không bỏ dấu (cảm ứng có gợi ý: *Accept N*); chưa có dấu thì tắt làn. Viền ✓ `--done-edge` (≥ 3:1).
-- Dải tiến độ (MDAN-016): `.ma-mm` fixed, mép phải khung; mỗi đơn vị một đoạn (đặc ✓, rỗng ○, nhạt, viền đứt gợi ý) trên rãnh `--line-2` cao hết dải. Trái dải,
-  cách `--mm-gap`, là thanh cuộn tự vẽ (con trượt `--sb-thumb`, chấm nhận xét), ở *Split* thay thanh của khung; hai đầu tránh góc bo (`cornerLimits`). ≤ 720px ẩn; cảm ứng chỉ xem.
+- Bộ dấu: khối, section, gợi ý khai một lần ở `css/review.css`; ô đánh dấu của form dùng cùng bộ. Máy hẹp / cảm ứng: `#rv-pill` chỉ đánh dấu, không bỏ dấu (cảm ứng có gợi ý: *Accept N*); chưa có dấu thì tắt làn.
+- Dải tiến độ (MDAN-016): `.ma-mm` fixed, mép phải khung; mỗi đơn vị một đoạn theo trạng thái (✓, ○, chưa đọc, gợi ý). Trái dải
+  là thanh cuộn tự vẽ (chấm nhận xét), ở *Split* thay thanh của khung; hai đầu tránh góc bo (`cornerLimits`). ≤ 720px ẩn; cảm ứng chỉ xem.
 - Gợi ý (`prefs.rvSuggest`, mặc định bật): đơn vị chạm dải đọc (luật của Focus band, cả khi Focus tắt) cộng thời gian; rời dải đi lên sau
-  `dwellNeed` (40% số từ ÷ 230 wpm, 4–60 s) thì `.is-sug`: cùng kiểu đứt của đơn vị hiện tại nhưng xanh `--done-edge` (thắng khi cả hai), nền xanh nhạt (MDAN-079) và nút *Accept N suggested* ở tab *Review*. Tiêu đề không được gợi ý. Không tự đánh dấu.
+  `dwellNeed` (40% số từ ÷ 230 wpm, 4–60 s) thì `.is-sug` (thắng `.is-cur` khi trùng, MDAN-079) và nút *Accept N suggested* ở tab *Review*. Tiêu đề không được gợi ý. Không tự đánh dấu.
 - Chỉ đếm khi tab hiện, cửa sổ có focus, có thao tác trong 60 s; rời dải chỉ tính lúc người dùng tự cuộn; J / K / X, dải tiến độ gọi `noteJump()`.
   Gợi ý chỉ ở bộ nhớ, theo file đang mở; khoá là băm chữ, chữ đổi thì rơi. Chấp nhận: X, bấm làn, nút (Undo trả cả gợi ý).
 
@@ -174,7 +173,7 @@
   nó (MDAN-032). Kéo mép 180–420px tự do; *Split* theo bề rộng `#doc` thật (cột cây chiếm chỗ thì *Split* lùi về *Preview*, ẩn cây thì về lại).
 - Dáng (MDAN-060): `#btn-tree` > 720px ở mép trái thanh trên (`--pad` + vùng an toàn), tên trang thẳng vùng làm việc, hẹp thì sau nút. Đầu cây: FILES nhỏ trên tên phiên, New file, New folder, ⋯ (tấm trượt: Close sau một vạch).
   Hàng cao đúng `--row-h`; thụt đều `--tree-step` mọi cấp, không trần. `#tree-body` chỉ cuộn ngang khi phần thụt đẩy tên hàng sâu nhất dưới `--name-min` (`--dmax`, MDAN-063); thụt ≤ `--fit-d` cấp thì không bao giờ, tên dài cắt …; trang không. Không gì trong hàng vẽ ra ngoài khối hàng, trừ bóng (không tính vào vùng cuộn): lố 1px là thanh cuộn ngang. Mỗi folder mở một vạch `#tree-guides` dưới tâm chevron, dài đúng các hàng con.
-  Rê, file mở, thả, focus: cùng một thẻ bo (`::before`); file mở không viền, nền xanh 18%; bắt đầu trước biểu tượng, không tô cả hàng. ⋯ là cột `--more-w` sát mép phải hàng, huy hiệu đứng trước nó; chuột: cột giữ chỗ, ⋯ hiện khi rê / focus / file mở / menu mở; cảm ứng: luôn. Đuôi dính mép phải thân khi cuộn ngang. `reveal()` cuộn ngang tới đầu tên (`nameReveal`) chỉ khi mở file, chọn hàng, hiện cây, đổi bề rộng, `--dmax` đổi; không theo cuộn tay (MDAN-080). Đổi tên: ô nhập trong suốt đúng chỗ tên. Tấm trượt: vùng an toàn, góc phải bo, không viền. Danh sách cao hơn thân thì cuộn hết, hàng cuối ở giữa thân (`.is-tall`); thấp hơn thì không cuộn. Ô lọc (MDAN-068, ≥ 2 file, `/` ở hàng): `findFiles` RegExp không phân biệt hoa thường trên 200 ký tự đầu của tên, hỏng thì chuỗi con (`#tree-q-note`); lọc sau phím cuối 150 ms, phím của bộ gõ đang ghép chữ bỏ qua (MDAN-075); hiện file khớp và folder tổ tiên (mở, bấm không gập); không khớp: `#tree-none`; Esc xoá, gập / mở cũ giữ nguyên.
+  Rê, file mở, thả, focus: cùng một thẻ (`::before`), bắt đầu trước biểu tượng, không tô cả hàng. ⋯ là cột `--more-w` sát mép phải hàng, huy hiệu đứng trước nó; chuột: cột giữ chỗ, ⋯ hiện khi rê / focus / file mở / menu mở; cảm ứng: luôn. Đuôi dính mép phải thân khi cuộn ngang. `reveal()` cuộn ngang tới đầu tên (`nameReveal`) chỉ khi mở file, chọn hàng, hiện cây, đổi bề rộng, `--dmax` đổi; không theo cuộn tay (MDAN-080). Đổi tên: ô nhập trong suốt đúng chỗ tên. Tấm trượt tránh vùng an toàn. Danh sách cao hơn thân thì cuộn hết, hàng cuối ở giữa thân (`.is-tall`); thấp hơn thì không cuộn. Ô lọc (MDAN-068, ≥ 2 file, `/` ở hàng): `findFiles` RegExp không phân biệt hoa thường trên 200 ký tự đầu của tên, hỏng thì chuỗi con (`#tree-q-note`); lọc sau phím cuối 150 ms, phím của bộ gõ đang ghép chữ bỏ qua (MDAN-075); hiện file khớp và folder tổ tiên (mở, bấm không gập); không khớp: `#tree-none`; Esc xoá, gập / mở cũ giữ nguyên.
 - Mở file từ đĩa: file mở trống, chưa có tên thật thì điền, không thì thêm cạnh nó (MDAN-024). Nạp folder là bản sao, bộ nhớ đầy thì hoàn lại: bỏ `skipEntry`
   (không đọc vào), không phải chữ (`isTextFile`, MDAN-030), có NUL, > 1 MB; phiên trống thì mở `firstFile` (MDAN-031); xong mà đã đổi phiên thì vào phiên ấy.
 - Xoá không hỏi, toast có Undo (cả chuyển): `applyUndo` chỉ trả lại mục ấy (MDAN-028), cả khi đã đổi phiên (`sessionFor`). Tải: `downloadOf`, `zipOf`. *All files* (`S.promptAll`, `allFilesOffered`, MDAN-025): `buildPromptAll`; file không mở neo qua `anchorsOf()` (nhớ theo doc). Tab *Comments* chỉ có file mở.

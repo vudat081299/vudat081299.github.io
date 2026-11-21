@@ -1,6 +1,6 @@
 /* TOKEN: màu, chữ, khoảng cách, bo góc, chiều cao, chuyển động; theme sáng ở :root, tối ở html.dark.
    Mã màu, cỡ chữ và bán kính chỉ khai ở file này (tools/lint.py kiểm). Nền, mực, font chép từ trang chủ.
-   Một màu xanh: --accent, sáng (MDAN-009). Mọi sắc xanh khác pha từ nó; chữ không bao giờ màu xanh trên nền sáng. */
+   Một màu xanh: --accent, sáng. Mọi sắc xanh khác pha từ nó; chữ không bao giờ màu xanh trên nền sáng. */
 :root {
   --bg:        #f5f6f3;
   --surface:   #ffffff;
@@ -41,7 +41,7 @@
   --tab-on:    var(--surface);       /* nền mục đang chọn của nhóm tab */
   --tab-ring:  var(--lift);
 
-  /* Tô màu tab Source, theo tinh thần VS Code Light+; ≥ 4,5:1 trên nền và trên highlight (MDAN-001). */
+  /* Tô màu tab Source, theo tinh thần VS Code Light+; ≥ 4,5:1 trên nền và trên highlight. */
   --sx-head:   #800000;
   --sx-punct:  #9000c0;
   --sx-link:   #0451a5;
@@ -81,7 +81,7 @@
   --h-touch: 44px;                     /* màn cảm ứng, điện thoại */
   --dur: .16s; --ease: cubic-bezier(.2, .7, .2, 1);
 
-  --pad: 24px;                         /* lề trang trong vùng làm việc (MDAN-005) */
+  --pad: 24px;                         /* lề trang trong vùng làm việc */
   --wrap-f: .7; --wrap-min: 1280px;    /* vùng làm việc: phần khung nhìn còn lại, sàn (MDAN-005; ui/layout.js đổi, ui/tree.js đọc) */
   --bar-h: 60px;
   --side: 360px;                       /* bề rộng panel; người dùng kéo được 320–560, lưu ở prefs.side */
@@ -104,7 +104,7 @@
   /* × của ô tìm: chỉ là hình (mask), màu do nơi dùng tô. */
   --ic-x: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 4l8 8M12 4l-8 8' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E");
   --mm-w: 6px;                         /* thanh cuộn tự vẽ và dải tiến độ cạnh phải khung, bằng con trượt của thanh cuộn
-                                          mảnh (scrollbar-width: thin: con trượt 6px trong rãnh 10px; css/reading.css, MDAN-016) */
+                                          mảnh (scrollbar-width: thin: con trượt 6px trong rãnh 10px; css/reading.css) */
   --mm-p: 1px;                         /* lề ngoài hai cột */
   --mm-gap: 4px;                       /* khe giữa thanh cuộn tự vẽ và dải; ui/minimap.js làm tròn ba số theo điểm ảnh thật */
 

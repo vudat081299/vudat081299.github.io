@@ -1,21 +1,18 @@
 # Quyết định — md-annotate
 
 <!-- index:start -->
-- MDAN-001 · Tab Nguồn tô màu cú pháp kiểu VS Code · `md-annotate/`
-- MDAN-005 · Vùng làm việc khoảng 70% màn hình, ở giữa · thay cho MDAN-003 · `md-annotate/`
+- MDAN-001 · Tab Source tô màu cú pháp markdown kiểu VS Code · `md-annotate/`
+- MDAN-005 · Vùng làm việc ở giữa, bề rộng chỉnh được · thay cho MDAN-003 · `md-annotate/`
 - MDAN-006 · Preview giống GitHub, cuộn theo nhau ở Split · `md-annotate/`
 - MDAN-007 · Giao diện tiếng Anh, gợi ý và prompt tiếng Việt · thay cho MDAN-004 · `md-annotate/`
 - MDAN-008 · Code tách theo tính năng, logic tách khỏi giao diện, không build · `md-annotate/`
-- MDAN-009 · Một màu xanh sáng, thang token cho chữ, bo góc, chiều cao · thay cho MDAN-002 · `md-annotate/`
 - MDAN-010 · Dải đọc: chữ của mục cha vẫn sáng khi rê vào mục con · `md-annotate/js/ui/focus.js`, `md-annotate/css/focus.css`
 - MDAN-011 · Cảnh báo trùng đoạn theo chữ, không theo chỗ · `md-annotate/js/core/comments.js`
 - MDAN-012 · Nhận xét nhiều dòng chọn theo số dòng · `md-annotate/`
 - MDAN-013 · Đánh dấu đoạn đã đọc kỹ, xem còn lại bao nhiêu · `md-annotate/`
 - MDAN-014 · Hộp của các dòng đã chọn không đóng khi bấm ra ngoài · `md-annotate/js/ui/popup.js`, `md-annotate/js/ui/picks.js`
-- MDAN-015 · Hộp Settings giữa màn hình, nền mờ; bảng phím tắt mới · `md-annotate/`
+- MDAN-015 · Hộp Settings áp ngay khi kéo, đóng bằng Esc; bảng phím tắt mới · `md-annotate/`
 - MDAN-016 · Dải tiến độ cạnh khung, gợi ý đã đọc theo thời gian đọc · `md-annotate/`
-- MDAN-017 · Một bộ dấu đã đọc, khai báo một chỗ · `md-annotate/css/**`
-- MDAN-018 · Thanh cuộn không chạm góc bo · `md-annotate/css/**`, `md-annotate/js/ui/minimap.js`
 - MDAN-019 · Chọn một dải dòng bằng Shift + bấm hoặc kéo trên lề số · `md-annotate/js/ui/picks.js`
 - MDAN-020 · Vòng focus chỉ hiện sau phím Tab · `md-annotate/css/**`, `md-annotate/js/main.js`, `md-annotate/js/ui/tree.js`, `md-annotate/js/ui/bar.js`
 - MDAN-021 · Độ sáng của khối đã đọc chỉnh ở Settings · `md-annotate/`
@@ -32,19 +29,18 @@
 - MDAN-036 · Thanh trên ở điện thoại giữ nút chính, còn lại trong menu More · `md-annotate/index.html`, `md-annotate/js/ui/bar.js`, `md-annotate/css/mobile.css`
 - MDAN-037 · Cây file docked nằm sát mép trái màn hình, vùng làm việc căn giữa phần còn lại · `md-annotate/css/tree.css`, `md-annotate/css/base.css`, `md-annotate/js/ui/tree.js`, `md-annotate/js/core/panes.js`
 - MDAN-045 · Focus mode và Dim reviewed gộp bằng số mờ hơn, dòng dưới chuột luôn sáng · `md-annotate/`
-- MDAN-060 · Thanh bên cây file: thụt đều mọi cấp, thẻ cho file mở, đổi tên ngay trên tên, nút Files ở mép trái · `md-annotate/css/tree.css`, `md-annotate/index.html`, `md-annotate/js/ui/tree.js`
+- MDAN-060 · Thanh bên cây file: thụt đều mọi cấp, đổi tên ngay trên tên, nút Files ở mép trái · `md-annotate/css/tree.css`, `md-annotate/index.html`, `md-annotate/js/ui/tree.js`
 - MDAN-050 · Chọn dòng bằng chạm: nhấn giữ số dòng · `md-annotate/js/ui/picks.js`, `md-annotate/js/ui/popup.js`, `md-annotate/data/shortcuts.json`
 - MDAN-051 · Thanh trên ở điện thoại tự ẩn khi cuộn xuống · `md-annotate/js/ui/bar.js`, `md-annotate/css/mobile.css`
 - MDAN-053 · Mở tấm nhận xét thì đoạn đang nhận xét nằm ngay trên tấm · `md-annotate/js/ui/popup.js`, `md-annotate/js/ui/selection.js`, `md-annotate/js/core/place.js`
 - MDAN-054 · Màn cảm ứng: Return trong ô nhận xét là xuống dòng · `md-annotate/js/ui/popup.js`
 - MDAN-061 · Cây file không tự ẩn khi chật; chỉ điện thoại là tấm trượt, đóng sẵn · thay cho MDAN-035 · `md-annotate/js/ui/tree.js`, `md-annotate/js/ui/views.js`, `md-annotate/js/core/panes.js`, `md-annotate/css/tree.css`
 - MDAN-062 · Không có dòng mô tả dưới tên trang · `md-annotate/index.html`, `md-annotate/css/base.css`
-- MDAN-063 · Cây file nông không cuộn ngang; ⋯ một cột cố định ở mép phải hàng · `md-annotate/css/tree.css`, `md-annotate/js/ui/tree.js`
+- MDAN-063 · Cây file nông không cuộn ngang; ⋯ một cột ở mép phải hàng · `md-annotate/css/tree.css`, `md-annotate/js/ui/tree.js`
 - MDAN-064 · Kéo từ nền hai bên văn bản là bôi đen văn bản; thanh trên và panel không bôi đen được · `md-annotate/js/ui/selection.js`, `md-annotate/css/base.css`
-- MDAN-065 · Hàng cây file cao hơn: 32px · `md-annotate/css/tree.css`
 - MDAN-066 · Tô màu code theo loại file, chỉ tải khi cần · `md-annotate/js/core/langs.js`, `md-annotate/js/core/file-type.js`, `md-annotate/js/ui/highlight.js`
 - MDAN-067 · Preview và Split chỉ cho file markdown · `md-annotate/js/core/langs.js`, `md-annotate/js/core/file-type.js`, `md-annotate/js/ui/views.js`
-- MDAN-068 · Cây file: đệm đáy, ô lọc file theo mẫu · `md-annotate/css/tree.css`, `md-annotate/js/ui/tree.js`, `md-annotate/js/ui/tree-find.js`, `md-annotate/js/core/tree-find.js`
+- MDAN-068 · Cây file: ô lọc file theo mẫu · `md-annotate/css/tree.css`, `md-annotate/js/ui/tree.js`, `md-annotate/js/ui/tree-find.js`, `md-annotate/js/core/tree-find.js`
 - MDAN-069 · Hộp Shortcuts thành Help, thêm phần tìm file · `md-annotate/index.html`, `md-annotate/js/ui/help.js`, `md-annotate/data/shortcuts.json`, `md-annotate/data/search-help.json`
 - MDAN-070 · Code đơn giản nhất mà dễ đọc; giao diện, logic, luật tách nhau; thứ dùng chung ở một chỗ · `md-annotate/`
 - MDAN-071 · Văn bản dài: đổi bề rộng vùng chữ không đứng hình · `md-annotate/`
@@ -53,35 +49,33 @@
 - MDAN-074 · File không phải markdown: một tab Source, Edit là nút bật / tắt · `md-annotate/index.html`, `md-annotate/js/ui/views.js`, `md-annotate/css/views.css`
 - MDAN-075 · Ô lọc file: chờ gõ xong, mẫu chỉ thử phần đầu tên · `md-annotate/js/ui/tree-find.js`, `md-annotate/js/core/tree-find.js`
 - MDAN-076 · Cổng xanh thì push main ngay, smoke chạy sau · `md-annotate/`
-- MDAN-079 · Nét đứt theo khối đang đọc: xám là khối hiện tại, xanh là gợi ý; viên thuốc Accept N · thay cho MDAN-077, MDAN-078 · `md-annotate/css/review.css`, `md-annotate/js/ui/review.js`, `md-annotate/js/ui/dwell.js`, `md-annotate/index.html`, `md-annotate/data/shortcuts.json`
+- MDAN-079 · Làn đánh dấu khối hiện tại và khối gợi ý, gợi ý thắng; viên thuốc Accept N · thay cho MDAN-077, MDAN-078 · `md-annotate/css/review.css`, `md-annotate/js/ui/review.js`, `md-annotate/js/ui/dwell.js`, `md-annotate/index.html`, `md-annotate/data/shortcuts.json`
 - MDAN-080 · Cây sâu cuộn ngang, tự cuộn tới tên file đang mở · `md-annotate/js/ui/tree.js`, `md-annotate/js/core/place.js`
 - MDAN-081 · Tab Review và dòng đã đọc trong prompt chỉ ở file markdown · `md-annotate/js/ui/panel.js`, `md-annotate/js/ui/prompt.js`, `md-annotate/js/core/file-type.js`, `md-annotate/js/core/prompt.js`
 - MDAN-082 · Prompt chỉ kể dòng đã đọc, mỗi tệp ghi tên một lần · `md-annotate/js/core/prompt.js`, `md-annotate/js/core/review.js`
 <!-- index:end -->
 
-## MDAN-001 · Tab Nguồn tô màu cú pháp kiểu VS Code
+## MDAN-001 · Tab Source tô màu cú pháp markdown kiểu VS Code
 19/11/2026 · `md-annotate/`
 
-Tab *Nguồn* tô màu markdown như trình soạn VS Code: đầu mục, dấu nhấn, chữ link và URL (xanh dương), mã, trích
-khối, dấu danh sách, bảng, đường kẻ, thẻ HTML, chuỗi trong ngoặc kép. Bộ tách token tự viết, theo dòng, không
-thư viện; chỉ bọc chữ trong `<span>`, nên text của khung đúng bằng nguồn. Màu là token `--sx-*`, ≥ 4,5:1 trên nền
-và trên highlight. Nút *Tô màu* (mặc định bật, nhớ trong trình duyệt) trả về chữ trơn.
+Tab *Source* tô màu markdown như trình soạn VS Code: đầu mục, dấu nhấn, chữ link và URL, mã, trích khối, dấu danh
+sách, bảng, đường kẻ, thẻ HTML, chuỗi trong ngoặc kép. Bộ tách token tự viết, theo dòng, không thư viện; chỉ bọc chữ
+trong `<span>`, nên text của khung đúng bằng nguồn. Nút *Syntax colors* (mặc định bật, nhớ trong trình duyệt) trả về chữ trơn.
 
-## MDAN-005 · Vùng làm việc khoảng 70% màn hình, ở giữa · thay cho MDAN-003
+## MDAN-005 · Vùng làm việc ở giữa, bề rộng chỉnh được · thay cho MDAN-003
 19/11/2026 · `md-annotate/`
 
-Vùng làm việc rộng 70% khung nhìn, căn giữa, không hẹp hơn 1280px (màn nhỏ hơn thì tràn hết, lề 24px; điện thoại
-16px). Panel rộng 360px, kéo mép trái được (320–560px) hoặc thu thành thanh dọc 56px vẫn giữ nút chép; cả hai nhớ
-trong trình duyệt. *Song song* có khi mỗi khung được ≥ 420px: hai khung cao trọn khung nhìn, cuộn riêng, vách giữa
-kéo được và nhớ tỉ lệ. Chữ ở *Preview* mặc định rộng hết khung. Người dùng chỉnh bề rộng vùng làm việc, khổ chữ và cỡ chữ *Preview*
-trong hộp *Layout*; mặc định là các số trên.
+Vùng làm việc căn giữa khung nhìn; người dùng chỉnh bề rộng của nó, khổ chữ và cỡ chữ *Preview* trong hộp *Settings*.
+Panel kéo mép trái để đổi bề rộng hoặc thu thành thanh dọc vẫn giữ nút chép; cả hai nhớ trong trình duyệt. *Split* có
+khi mỗi khung đủ chỗ: hai khung cao trọn khung nhìn, cuộn riêng, vách giữa kéo được và nhớ tỉ lệ. Chữ ở *Preview*
+mặc định rộng hết khung.
 
 ## MDAN-006 · Preview giống GitHub, cuộn theo nhau ở Split
 19/11/2026 · `md-annotate/`
 
-*Preview* dựng markdown theo kiểu GitHub: font hệ thống, màu Primer sáng / tối, tiêu đề h1–h2 có gạch dưới, khối
-code xám có tô màu theo ngôn ngữ, bảng sọc, hộp `[!NOTE]` / `[!TIP]` / `[!IMPORTANT]` / `[!WARNING]` / `[!CAUTION]`.
-Ở *Split*, cuộn một khung thì khung kia cuộn theo để cùng một đoạn nằm giữa cả hai; tắt được trong *Layout*.
+*Preview* dựng markdown theo kiểu GitHub: bảng, khối code tô màu theo ngôn ngữ, hộp `[!NOTE]` / `[!TIP]` /
+`[!IMPORTANT]` / `[!WARNING]` / `[!CAUTION]`. Ở *Split*, cuộn một khung thì khung kia cuộn theo để cùng một đoạn nằm
+giữa cả hai; tắt được trong *Settings*.
 
 ## MDAN-007 · Giao diện tiếng Anh, gợi ý và prompt tiếng Việt · thay cho MDAN-004
 19/11/2026 · `md-annotate/`
@@ -99,15 +93,6 @@ logic (cũng như ngược lại). `index.html` chỉ còn markup; CSS tách the
 thuần trong `js/core/` (dữ liệu vào, dữ liệu ra, không DOM, không `localStorage`), giao diện trong `js/ui/` (đọc DOM,
 gọi logic, ghi DOM, sự kiện trong `init…` của chính module), `js/main.js` gọi theo thứ tự. Vẫn không có bước build.
 Đổi lại, trang không chạy qua `file://`: mở bằng `file://` chỉ thấy lời báo cách mở qua HTTP.
-
-## MDAN-009 · Một màu xanh sáng, thang token cho chữ, bo góc, chiều cao · thay cho MDAN-002
-19/11/2026 · `md-annotate/`
-
-Chủ trang thấy trang dùng quá nhiều sắc xanh: chỉ giữ xanh sáng `--accent` (`#22c55e` sáng, `#4ade80` tối). Nền nhạt,
-highlight, gạch chân, vùng chọn phản chiếu pha từ chính nó; không còn xanh đậm. Xanh sáng trên nền trắng chỉ ~2,3:1 nên
-không làm chữ: chữ từng xanh thành mực, nhấn bằng vạch, nền nhạt hoặc huy hiệu; chữ trên nền xanh là `--on-accent`.
-Cỡ chữ, bo góc, chiều cao điều khiển và khoảng cách theo thang token ở `css/tokens.css`; mỗi họ component (nút, nhóm tab,
-ô nhập, chip, huy hiệu, thẻ, hộp thoại) cùng cao, cùng bo, cùng chữ, cùng trạng thái. Nền, mực và font vẫn chép từ trang chủ.
 
 ## MDAN-010 · Dải đọc: chữ của mục cha vẫn sáng khi rê vào mục con
 19/11/2026 · `md-annotate/js/ui/focus.js`, `md-annotate/css/focus.css`
@@ -148,40 +133,24 @@ nói dòng nào đã đọc kỹ; mặc định tắt.
 Save (lưu, thoát), Done (thoát) và Cancel (ẩn hộp, giữ các dòng; màn cảm ứng thì thoát, MDAN-050) đóng nó. Sau Cancel, bấm một số dòng thì hộp hiện lại với các dòng
 đang chọn. Hộp của đoạn bôi đen và hộp sửa vẫn đóng khi bấm ra ngoài như cũ.
 
-## MDAN-015 · Hộp Settings giữa màn hình, nền mờ; bảng phím tắt mới
+## MDAN-015 · Hộp Settings áp ngay khi kéo, đóng bằng Esc; bảng phím tắt mới
 19/11/2026 · `md-annotate/`
 
-Hộp chỉnh giao diện (nút thanh trượt ở thanh trên) đổi tên thành *Settings*, mở giữa màn hình, nền sau mờ, cả ở điện
-thoại; Esc hoặc bấm nền mờ thì đóng. Hộp vẫn áp thay đổi ngay khi kéo: nền chỉ mờ nhẹ và hộp hẹp, để vẫn thấy chữ ở hai
-bên thay đổi theo. Nút *Shortcuts* ở đầu hộp Settings (hoặc phím `?` khi không gõ trong ô nhập) mở bảng phím tắt cùng
-kiểu giữa màn hình, nền mờ. Bảng chỉ liệt kê phím và cú bấm mới thêm (cú bấm chuột, chạm cũng tính là phím tắt), chữ
-ở `data/shortcuts.json`: nhận xét nhiều dòng, đánh dấu đã đọc.
-
+Hộp chỉnh giao diện (nút thanh trượt ở thanh trên) tên là *Settings*; Esc hoặc bấm ra ngoài thì đóng. Hộp áp thay
+đổi ngay khi kéo, và không che văn bản: người dùng thấy chữ đổi theo. Nút ở đầu hộp (hoặc phím `?` khi không gõ trong
+ô nhập) mở bảng phím tắt (nay là *Help*, MDAN-069). Bảng chỉ liệt kê phím và cú bấm mới thêm (cú bấm chuột, chạm cũng
+tính là phím tắt), chữ ở `data/shortcuts.json`: nhận xét nhiều dòng, đánh dấu đã đọc.
 
 ## MDAN-016 · Dải tiến độ cạnh khung, gợi ý đã đọc theo thời gian đọc
 19/11/2026 · `md-annotate/`
 
-Chủ trang soát Tech Design không theo thứ tự rồi đọc từ trên xuống, nên cần thấy cả văn bản đã đọc tới đâu. Mỗi khung có
-một dải mảnh ở mép phải (trái thanh cuộn), hai đầu bo tròn: đoạn theo vị trí từng khối, đặc là đã đọc, rỗng là đã đổi
-chữ, nhạt là chưa đọc. Bên trái dải là thanh cuộn tự vẽ: con trượt xám, chấm ở nhận xét; ở Split nó thay thanh cuộn hệ
-thống của khung, để không có hai thanh song song. Hai cột cùng bề rộng, bằng con trượt của thanh cuộn hệ thống, ở cả hai
-khung; cùng chiều cao, cách nhau một khe nhỏ. Bấm / kéo thì cuộn tới. Điện thoại ẩn dải; màn cảm ứng chỉ xem. Khối nằm ở dải đọc
-đủ lâu (khoảng 40% số từ ở 230 từ/phút, 4–60 giây) rồi người đọc tự cuộn qua thì được gợi ý (nút "Accept N
-suggested"; dấu gợi ý là ✓ mờ viền đứt xanh trên nền xanh nhạt, MDAN-079); gợi ý không bao giờ tự thành dấu. Mặc định bật, tắt được ở tab Review; gợi ý không lưu, chỉ trong phiên đang
-mở. Tab ẩn, cửa sổ mất focus, rảnh tay, cuộn do trang (J / K / X, dải tiến độ) không tính.
-
-## MDAN-017 · Một bộ dấu đã đọc, khai báo một chỗ
-20/11/2026 · `md-annotate/css/**`
-
-Mọi dấu đã đọc (làn cạnh khối, dàn ý tab Review) và ô đánh dấu của form dùng chung một bộ: cùng cỡ, cùng ảnh ✓, cùng
-màu cho từng trạng thái, khai báo một lần rồi dùng lại. ✓ là ảnh, không phải ký tự, để luôn nằm giữa ô. Dấu căn giữa
-dòng đầu của khối.
-
-## MDAN-018 · Thanh cuộn không chạm góc bo
-20/11/2026 · `md-annotate/css/**`, `md-annotate/js/ui/minimap.js`
-
-Vùng nào có góc bo x thì thanh cuộn (tự vẽ hay của hệ thống) cách mép trên / dưới ở góc ấy ít nhất x, để khi cuộn tới
-đầu hoặc cuối con trượt không bị góc bo cắt hay dính vào đường cong. Áp cho mọi vùng cuộn của trang.
+Chủ trang soát Tech Design không theo thứ tự rồi đọc từ trên xuống, nên cần thấy cả văn bản đã đọc tới đâu. Mỗi khung
+có một dải tiến độ: mỗi khối một đoạn theo vị trí, cho thấy đã đọc, đã đổi chữ hay chưa đọc. Cạnh nó là thanh cuộn tự
+vẽ có chấm ở nhận xét; ở Split nó thay thanh cuộn hệ thống của khung, để không có hai thanh song song. Bấm / kéo thì
+cuộn tới. Điện thoại ẩn dải; màn cảm ứng chỉ xem. Khối nằm ở dải đọc đủ lâu (khoảng 40% số từ ở 230 từ/phút, 4–60
+giây) rồi người đọc tự cuộn qua thì được gợi ý (nút "Accept N suggested", MDAN-079); gợi ý không bao giờ tự thành dấu.
+Mặc định bật, tắt được ở tab Review; gợi ý không lưu, chỉ trong phiên đang mở. Tab ẩn, cửa sổ mất focus, rảnh tay,
+cuộn do trang (J / K / X, dải tiến độ) không tính.
 
 ## MDAN-019 · Chọn một dải dòng bằng Shift + bấm hoặc kéo trên lề số
 20/11/2026 · `md-annotate/js/ui/picks.js`
@@ -193,7 +162,7 @@ hoặc bỏ cả dải (bắt đầu ở dòng đã chọn).
 ## MDAN-020 · Vòng focus chỉ hiện sau phím Tab
 20/11/2026 · `md-annotate/css/**`, `md-annotate/js/main.js`, `md-annotate/js/ui/tree.js`, `md-annotate/js/ui/bar.js`
 
-Điều khiển bằng Tab / Space giữ nguyên, nhưng vòng focus (viền đậm quanh nút) chỉ hiện từ lần bấm Tab đầu. Mở hộp
+Điều khiển bằng Tab / Space giữ nguyên, nhưng vòng focus chỉ hiện từ lần bấm Tab đầu. Mở hộp
 thoại, đóng hộp, chạm hay bấm chuột thì không có vòng; bấm chuột / chạm tắt nó tới lần Tab sau. Áp cả máy tính và
 điện thoại. Mũi tên, Home, End trong cây file, menu của nó và menu *More* của thanh trên cũng là dùng bàn phím: bật vòng như Tab.
 
@@ -275,16 +244,16 @@ phiên khác vẫn theo lựa chọn ấy (chưa chọn thì hiện khi phiên c
 ## MDAN-036 · Thanh trên ở điện thoại giữ nút chính, còn lại trong menu More
 20/11/2026 · `md-annotate/index.html`, `md-annotate/js/ui/bar.js`, `md-annotate/css/mobile.css`
 
-Điện thoại (≤ 720px): trái là nút *Files* (biểu tượng sidebar) rồi tên gọn; phải là *History*, *Settings* và *More* (⋯).
+Điện thoại (≤ 720px): trái là nút *Files* rồi tên gọn; phải là *History*, *Settings* và *More* (⋯).
 *New session*, đổi theme sáng / tối và *Shortcuts* nằm trong *More*. *History* (đổi phiên) và *Settings* (cỡ chữ, khổ
 chữ, Focus) là việc dùng thường khi đọc trên điện thoại; mở phiên mới, đổi theme ít dùng. Máy rộng giữ nguyên các nút.
 
 ## MDAN-037 · Cây file docked nằm sát mép trái màn hình, vùng làm việc căn giữa phần còn lại
 20/11/2026 · `md-annotate/css/tree.css`, `md-annotate/css/base.css`, `md-annotate/js/ui/tree.js`, `md-annotate/js/core/panes.js`
 
-Khi là cột (MDAN-035), cây là thanh bên kiểu trình soạn mã: sát mép trái màn hình, từ dưới thanh trên tới đáy màn hình,
-cuộn riêng, chỉ có viền phải. Thanh trên vẫn trọn bề ngang. Vùng làm việc (MDAN-005: 70%, không hẹp hơn 1280px) tính
-trên phần màn hình còn lại và căn giữa trong đó; nút, tên trang trên thanh trên thẳng hàng với vùng làm việc.
+Khi là cột (MDAN-061), cây là thanh bên kiểu trình soạn mã: sát mép trái màn hình, từ dưới thanh trên tới đáy màn
+hình, cuộn riêng. Thanh trên vẫn trọn bề ngang. Vùng làm việc (MDAN-005) tính trên phần màn hình còn lại và căn giữa
+trong đó; tên trang và các nút trên thanh trên thẳng hàng với vùng làm việc, trừ nút Files (MDAN-060).
 
 ## MDAN-045 · Focus mode và Dim reviewed gộp bằng số mờ hơn, dòng dưới chuột luôn sáng
 20/11/2026 · `md-annotate/`
@@ -293,24 +262,15 @@ Bật cả Focus mode và *Dim reviewed*: độ sáng thấy được của mỗ
 sáng: `--dim`; đã đọc: `--rv-dim`), không nhân với nhau, và như nhau ở Source, Preview, hai khung Split. Dòng / khối
 dưới chuột (theo chuột lẫn dải đọc, cùng phần ghép ở khung kia) luôn sáng hẳn, đã đọc hay chưa; khối đã đọc khác trong
 section đang sáng vẫn mờ theo *Dim reviewed*. Dòng trống ở Source mờ theo dòng ngay trên nó.
-trên phần màn hình còn lại và căn giữa trong đó; tên trang và các nút trên thanh trên thẳng hàng với vùng làm việc, trừ nút
-Files (MDAN-060).
 
-## MDAN-060 · Thanh bên cây file: thụt đều mọi cấp, thẻ cho file mở, đổi tên ngay trên tên, nút Files ở mép trái
+## MDAN-060 · Thanh bên cây file: thụt đều mọi cấp, đổi tên ngay trên tên, nút Files ở mép trái
 20/11/2026 · `md-annotate/css/tree.css`, `md-annotate/index.html`, `md-annotate/js/ui/tree.js`
 
-Cây file trông như thanh bên của trình soạn mã. Nút Files luôn ở mép trái thanh trên (lề trang cộng vùng an toàn), dù cây
-là cột, tấm trượt hay đang ẩn; tên trang vẫn thẳng hàng vùng làm việc, cửa sổ hẹp thì đứng ngay sau nút, không chồng, không
-nhảy. Khi là cột, phần thanh trên phía trên cột cùng nền với cột. Đầu cây một hàng: nhãn Files nhỏ trên tên phiên, New
-file, New folder và ⋯ (Import folder, Download .zip, Collapse all); tấm trượt thêm nút đóng, tách bằng một vạch. Hàng thấp
-(32px theo MDAN-065, cảm ứng 44px). Mỗi cấp thụt bằng nhau, ở mọi độ sâu, không nén: tên sắp hẹp hơn ~96px thì danh sách cuộn ngang
-trong thanh bên, trang không cuộn ngang, file đang mở được cuộn vào tầm nhìn. Mỗi folder đang mở có một vạch mảnh, nhạt,
-dưới tâm chevron của nó, chỉ dài qua các hàng con; vạch của folder chứa hàng hiện tại đậm hơn. File đang mở là một thẻ bo
-góc chỉ có nền xanh nhạt, không viền, không vòng, ôm phần biểu tượng và tên, không tô cả hàng, không vạch trái riêng; rê
-chuột dùng cùng dáng thẻ. Nút ⋯ nhỏ, nằm gọn trong thẻ; cây cuộn ngang thì ⋯ mọi hàng đứng một cột ở mép phải thân. Đổi
-tên ngay trên tên: không ô nhập nhìn thấy (không viền, không vòng, không nền), chữ không xê dịch, chỉ có con trỏ và màu
-vùng chọn chung. Phiên chỉ một file thì có gợi ý thả file hay nạp folder. Tấm trượt rộng tối đa 320px, tránh vùng an toàn
-trên, trái, dưới, góc phải bo, nổi bằng bóng.
+Cây file làm việc như thanh bên của trình soạn mã. Nút Files luôn ở mép trái thanh trên, dù cây là cột, tấm trượt hay
+đang ẩn; tên trang vẫn thẳng hàng vùng làm việc, cửa sổ hẹp thì đứng ngay sau nút, không chồng, không nhảy. Đầu cây:
+nhãn Files trên tên phiên, New file, New folder và ⋯ (Import folder, Download .zip, Collapse all); tấm trượt thêm nút
+đóng. Mỗi cấp thụt bằng nhau ở mọi độ sâu, không nén; cây sâu thì danh sách cuộn ngang trong thanh bên, trang không
+cuộn ngang. Đổi tên ngay trên tên, chữ không xê dịch. Phiên chỉ một file thì có gợi ý thả file hay nạp folder.
 
 ## MDAN-050 · Chọn dòng bằng chạm: nhấn giữ số dòng
 20/11/2026 · `md-annotate/js/ui/picks.js`, `md-annotate/js/ui/popup.js`, `md-annotate/data/shortcuts.json`
@@ -355,13 +315,13 @@ văn bản: cột cây chiếm chỗ thì *Split* lùi về *Preview*, ẩn cây
 
 Dưới tiêu đề Markdown Annotate không có câu giới thiệu.
 
-## MDAN-063 · Cây file nông không cuộn ngang; ⋯ một cột cố định ở mép phải hàng
+## MDAN-063 · Cây file nông không cuộn ngang; ⋯ một cột ở mép phải hàng
 20/11/2026 · `md-annotate/css/tree.css`, `md-annotate/js/ui/tree.js`
 
-Thanh bên cây file không có thanh cuộn ngang trong trường hợp thường: tên dài cắt bằng …, tên đầy đủ ở tooltip. Chỉ cây
-sâu, khi phần thụt đẩy tên hàng sâu nhất xuống dưới ~96px, mới cuộn ngang như MDAN-060; cây không thụt thì không bao giờ,
-kể cả khi kéo hẹp. Nút ⋯ mọi hàng đứng một cột cố định ở mép phải: cùng cỡ, giữa hàng, thẳng nút ⋯ của đầu cây; huy hiệu
-đứng trước nó, không bị ẩn khi rê.
+Thanh bên cây file không cuộn ngang trong trường hợp thường: tên dài cắt bằng …, tên đầy đủ ở tooltip. Chỉ cây sâu, khi
+phần thụt đẩy tên hàng sâu nhất xuống dưới mức tối thiểu (`--name-min`), mới cuộn ngang như MDAN-060; cây không thụt
+thì không bao giờ, kể cả khi kéo hẹp. Nút ⋯ mọi hàng đứng một cột ở mép phải, thẳng nút ⋯ của đầu cây; huy hiệu đứng
+trước nó, không bị ẩn khi rê.
 
 ## MDAN-064 · Kéo từ nền hai bên văn bản là bôi đen văn bản; thanh trên và panel không bôi đen được
 20/11/2026 · `md-annotate/js/ui/selection.js`, `md-annotate/css/base.css`
@@ -370,12 +330,6 @@ Bấm giữ rồi kéo ở nền bên phải văn bản (lề trang, nền panel
 bên trái; không còn bôi đen chữ của panel. Ở Split, kéo bắt đầu ở nền phía trước (trái) bôi đen Source, ở nền phía sau
 (phải, cả panel) bôi đen Preview. Thanh trên, panel nhận xét (cả thẻ nhận xét) và cây file không bôi đen được chữ nào,
 trừ ô gõ chữ. Chỉ chuột và bút; màn cảm ứng kéo vẫn là cuộn.
-
-## MDAN-065 · Hàng cây file cao hơn: 32px
-20/11/2026 · `md-annotate/css/tree.css`
-
-Hàng của cây file (file và folder như nhau) cao 32px thay cho 28px ở máy có chuột; màn cảm ứng giữ 44px. Nút ⋯, chevron,
-biểu tượng, huy hiệu, vạch thụt và thẻ rê / chọn theo cùng chiều cao, giữa hàng.
 
 ## MDAN-066 · Tô màu code theo loại file, chỉ tải khi cần
 20/11/2026 · `md-annotate/js/core/langs.js`, `md-annotate/js/core/file-type.js`, `md-annotate/js/ui/highlight.js`
@@ -390,13 +344,14 @@ hiện chữ trơn, tải xong tự lên màu.
 
 Preview và Split chỉ có nghĩa với markdown: file khác (code, chữ trơn) ẩn hai tab ấy và mở ở Source. Chế độ đã chọn cho
 markdown vẫn được nhớ: mở file code rồi quay lại file .md thì về đúng Preview / Split cũ, kể cả sau khi tải lại trang.
-## MDAN-068 · Cây file: đệm đáy, ô lọc file theo mẫu
+
+## MDAN-068 · Cây file: ô lọc file theo mẫu
 20/11/2026 · `md-annotate/css/tree.css`, `md-annotate/js/ui/tree.js`, `md-annotate/js/ui/tree-find.js`, `md-annotate/js/core/tree-find.js`
 
-Cuộn cây tới cuối thì hàng cuối vẫn cách mép dưới một khoảng, cả ở tấm trượt điện thoại. Cây có từ hai file thì có ô lọc
-dưới đầu cây: gõ là lọc ngay theo tên file, không phân biệt hoa thường; chữ thường tìm tên chứa nó, biểu thức chính quy
-cũng được (^a.b.*\.text$ tìm axb-notes.text); biểu thức hỏng thì tìm như chữ thường và báo nhỏ dưới ô. Chỉ hiện file khớp
-và folder chứa chúng, mở sẵn; không khớp thì báo. Esc xoá, cây về gập / mở như trước; phím / ở hàng của cây vào ô lọc.
+Cây có từ hai file thì có ô lọc dưới đầu cây: gõ là lọc theo tên file, không phân biệt hoa thường; chữ thường tìm tên
+chứa nó, biểu thức chính quy cũng được (^a.b.*\.text$ tìm axb-notes.text); biểu thức hỏng thì tìm như chữ thường và
+báo nhỏ dưới ô. Chỉ hiện file khớp và folder chứa chúng, mở sẵn; không khớp thì báo. Esc xoá, cây về gập / mở như
+trước; phím / ở hàng của cây vào ô lọc.
 
 ## MDAN-069 · Hộp Shortcuts thành Help, thêm phần tìm file
 20/11/2026 · `md-annotate/index.html`, `md-annotate/js/ui/help.js`, `md-annotate/data/shortcuts.json`, `md-annotate/data/search-help.json`
@@ -452,14 +407,13 @@ chính quy chỉ so với 200 ký tự đầu của tên file (tìm chữ thư�
 Commit qua cổng (check.sh của md-annotate và của gốc, hook pre-commit) thì push lên main ngay, không chờ smoke. Smoke
 chạy sau; đỏ thì sửa bằng commit mới rồi push tiếp, không amend hay force-push commit đã push. Chỉ push nhánh main.
 
-## MDAN-079 · Nét đứt theo khối đang đọc: xám là khối hiện tại, xanh là gợi ý; viên thuốc Accept N · thay cho MDAN-077, MDAN-078
+## MDAN-079 · Làn đánh dấu khối hiện tại và khối gợi ý, gợi ý thắng; viên thuốc Accept N · thay cho MDAN-077, MDAN-078
 21/11/2026 · `md-annotate/css/review.css`, `md-annotate/js/ui/review.js`, `md-annotate/js/ui/dwell.js`, `md-annotate/index.html`, `md-annotate/data/shortcuts.json`
 
-Không còn vạch đặc nào cạnh làn. Khối hiện tại (khối X hay viên thuốc sẽ đánh dấu) có ô dấu viền đứt quanh ✓ mờ và vạch
-đứt suốt khối, màu xám; kiểu đứt đi theo chỗ đang đọc. Khối được gợi ý đã đọc (theo thời gian đọc) có cùng kiểu ấy màu
-xanh, nền ô xanh nhạt; vừa hiện tại vừa gợi ý thì xanh. Khối khác, tiêu đề chưa tới, khối đã đọc (✓ đặc) giữ như cũ.
-Nét đứt và ✓ mờ ≥ 3:1 ở hai theme. Màn cảm ứng có gợi ý thì viên thuốc đổi thành "Accept N": chạm là đánh dấu mọi gợi ý,
-có Undo như thường. Tab Review ở màn cảm ứng nói về viên thuốc, không nói phím X / J / K hay làn.
+Làn đánh dấu khối hiện tại (khối X hay viên thuốc sẽ đánh dấu); dấu ấy đi theo chỗ đang đọc. Khối được gợi ý đã đọc
+(theo thời gian đọc) cũng được đánh dấu trên làn; khối vừa hiện tại vừa gợi ý thì hiện như gợi ý. Khối khác, tiêu đề
+chưa tới, khối đã đọc giữ như cũ. Màn cảm ứng có gợi ý thì viên thuốc đổi thành "Accept N": chạm là đánh dấu mọi gợi
+ý, có Undo như thường. Tab Review ở màn cảm ứng nói về viên thuốc, không nói phím X / J / K hay làn.
 
 ## MDAN-080 · Cây sâu cuộn ngang, tự cuộn tới tên file đang mở
 21/11/2026 · `md-annotate/js/ui/tree.js`, `md-annotate/js/core/place.js`

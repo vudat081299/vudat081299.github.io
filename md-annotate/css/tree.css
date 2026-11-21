@@ -96,7 +96,7 @@ html.ma-tree-on body > .ma-tree {
 .ma-tree__q[aria-invalid="true"] + .ma-tree__find-n { display: block; }
 .ma-tree.is-none .ma-tree__none { display: block; }
 
-/* THÂN: chỗ cuộn duy nhất, dọc và ngang; viền trong suốt dưới nó là chỗ thanh cuộn dừng (không chạm góc bo, MDAN-018).
+/* THÂN: chỗ cuộn duy nhất, dọc và ngang; viền trong suốt dưới nó là chỗ thanh cuộn dừng (không chạm góc bo).
    Cỡ theo cột (container-type: size, cao không theo nội dung): 100cqh là cao phần nội dung của thân. */
 .ma-tree__body {
   position: relative; flex: 1 1 auto; min-height: 0; overflow: auto; overscroll-behavior: contain;

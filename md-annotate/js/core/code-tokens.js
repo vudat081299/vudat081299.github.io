@@ -29,7 +29,7 @@ export function hlRuns(html) {
   return out;
 }
 
-/* Lớp của highlight.js (từ đầu, bỏ hljs-) → màu sx-* của Source, đã đủ tương phản (MDAN-001). Lớp khác: chữ thường. */
+/* Lớp của highlight.js (từ đầu, bỏ hljs-) → màu sx-* của Source, đã đủ tương phản (css/tokens.css). Lớp khác: chữ thường. */
 var SX = {
   keyword: 'sx-punct', doctag: 'sx-punct', 'selector-tag': 'sx-punct',
   built_in: 'sx-tag', type: 'sx-tag', name: 'sx-tag', addition: 'sx-tag',

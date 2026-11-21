@@ -124,7 +124,7 @@ html.dark .ma-to-dark, html:not(.dark) .ma-to-light { display: none; }
   max-height: min(60vh, 420px); overflow: auto; overscroll-behavior: contain; padding: 0 var(--s1);
   display: none; flex-direction: column; gap: 1px;
   background: var(--surface); color: var(--ink); border-radius: var(--r); box-shadow: var(--shadow-pop);
-  /* viền trên / dưới trong suốt dày bằng góc bo: thanh cuộn không chạm đường cong (MDAN-018); nét viền là outline */
+  /* viền trên / dưới trong suốt dày bằng góc bo: thanh cuộn không chạm đường cong; nét viền là outline */
   border: solid transparent; border-width: var(--r) 1px; outline: 1px solid var(--line); outline-offset: -1px;
 }
 .ma-menu.is-open { display: flex; }
@@ -171,7 +171,7 @@ html.dark .ma-to-dark, html:not(.dark) .ma-to-light { display: none; }
 .ma-head h1 { flex: none; margin: 0; font: 600 var(--fs-xl)/var(--lh-tight) var(--display); letter-spacing: -.01em; }
 
 /* Ô NHẬP — một họ: .ma-input (một dòng), .ma-ta (nhiều dòng), tên phiên. Bo --r-sm, chữ --fs-md;
-   gõ: viền --ring + quầng --accent-soft (.ma-ta vẽ viền bằng outline: css/views.css, MDAN-018). */
+   gõ: viền --ring + quầng --accent-soft (.ma-ta vẽ viền bằng outline: css/views.css). */
 .ma-input {
   width: 100%; min-width: 0; height: var(--h); padding: 0 var(--s3);
   background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-sm);

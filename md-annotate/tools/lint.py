@@ -11,7 +11,7 @@
      import; mọi link / import trỏ tới file có thật.
   6. js/core/ là logic thuần: code (bỏ chú thích) không nhắc document, window, localStorage, querySelector,
      classList, getBoundingClientRect, và không import từ js/ui/ hay js/main.js.
-  7. Token (MDAN-009): css/*.css ngoài tokens.css không có mã màu (hex, rgb, hsl, white, black), không cỡ chữ px
+  7. Token (REPO-028): css/*.css ngoài tokens.css không có mã màu (hex, rgb, hsl, white, black), không cỡ chữ px
      (font-size, font), không bán kính px trừ 0 / 1px / 999px. Token xanh đã bỏ (--green*, --toast-act) không
      xuất hiện ở css/, js/, index.html.
   8. data/shortcuts.json, data/search-help.json (bảng của Help): `groups` không rỗng; mỗi nhóm có `title` và `rows` không rỗng; mỗi hàng có `action` là chuỗi
@@ -139,7 +139,7 @@ for f, text in js_src.items():
         if not m.startswith('core/'):
             errors.append(f'js/{f}: module thuần import js/{m} — js/core/ chỉ import js/core/')
 
-# 7. Token (MDAN-009): màu, cỡ chữ, bán kính chỉ khai ở css/tokens.css; tên xanh cũ không quay lại.
+# 7. Token (REPO-028): màu, cỡ chữ, bán kính chỉ khai ở css/tokens.css; tên xanh cũ không quay lại.
 COLOR = re.compile(r'#[0-9a-fA-F]{3,8}\b|\b(?:rgba?|hsla?)\(|\b(?:white|black)\b')
 RAW_PX = re.compile(r'(?<![\w.-])(\d*\.?\d+)px\b')
 RADIUS_OK = {'0', '1', '999'}
@@ -148,7 +148,7 @@ for f in css_files:
     text = open(os.path.join(CSS_DIR, f), encoding='utf-8').read()
     code = re.sub(r'/\*.*?\*/', lambda m: '\n' * m.group(0).count('\n'), text, flags=re.S)
     for m in OLD_GREEN.finditer(code):
-        errors.append(f'css/{f}:{code.count(chr(10), 0, m.start()) + 1}: token đã bỏ {m.group(0)} — dùng --accent (MDAN-009)')
+        errors.append(f'css/{f}:{code.count(chr(10), 0, m.start()) + 1}: token đã bỏ {m.group(0)} — dùng --accent')
     if f == 'tokens.css':
         continue
     for m in re.finditer(r'([^{};]+)\{([^{}]*)\}', code):
@@ -168,7 +168,7 @@ for f in css_files:
                 errors.append(f'{where} — bán kính px thô "{val}"; dùng --r-xs / --r-sm / --r / --r-lg / --r-pill')
 for name, text in [('index.html', html)] + [('js/' + f, t) for f, t in js_src.items()]:
     for m in OLD_GREEN.finditer(text):
-        errors.append(f'{name}: token đã bỏ {m.group(0)} — dùng --accent (MDAN-009)')
+        errors.append(f'{name}: token đã bỏ {m.group(0)} — dùng --accent')
 
 # 8. Bảng hàng của Help (phím tắt, mẫu tìm file): cùng một dạng; data/*.json không mồ côi.
 for name in ('data/shortcuts.json', 'data/search-help.json'):
