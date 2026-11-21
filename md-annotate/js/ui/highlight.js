@@ -12,7 +12,7 @@ import { $, h } from './dom.js';
 import { renderAll } from './render.js';
 
 var mods = new Map();    // đường dẫn → Promise của export default
-var state = new Map();   // id → 'loading' | 'ready' (ngôn ngữ cùng ngôn ngữ nạp kèm); hỏng thì xoá
+var langState = new Map();   // id → 'loading' | 'ready' (ngôn ngữ cùng ngôn ngữ nạp kèm); hỏng thì xoá
 var hljs = null, warned = false;
 
 /* Module ES ở HLJS + path, kiểm integrity; một promise cho mọi lời gọi, hỏng thì bỏ để lần sau tải lại. */
@@ -32,16 +32,16 @@ function register(id) {
 }
 /* hljs khi ngôn ngữ id và ngôn ngữ nạp kèm đã sẵn; chưa thì null và bắt đầu nạp (một lần cho mỗi id). */
 function highlighter(id) {
-  if (!state.has(id)) {
-    state.set(id, 'loading');
+  if (!langState.has(id)) {
+    langState.set(id, 'loading');
     var ids = [id].concat(LANGS[id][2] ? LANGS[id][2].split(' ') : []);
-    Promise.all(ids.map(register)).then(function () { state.set(id, 'ready'); warned = false; repaint(); }, function (err) {
-      state.delete(id);
+    Promise.all(ids.map(register)).then(function () { langState.set(id, 'ready'); warned = false; repaint(); }, function (err) {
+      langState.delete(id);
       if (!warned) console.warn('md-annotate: code colors could not load (' + err.message + '); showing plain text.');
       warned = true;
     });
   }
-  return state.get(id) === 'ready' ? hljs : null;
+  return langState.get(id) === 'ready' ? hljs : null;
 }
 
 /* Vẽ lại một lần sau khi ngôn ngữ sẵn. Vẽ lại dựng lại khung, nên đang có vùng chọn trong khung thì chờ bỏ chọn. */
@@ -60,13 +60,16 @@ function repaint() {
   });
 }
 
+/* Đoạn tô màu (core/code-tokens.js) của text theo ngôn ngữ id; hl: hljs đã sẵn ngôn ngữ ấy. */
+function runsOf(hl, text, id) { return hlRuns(hl.highlight(text, { language: id, ignoreIllegals: true }).value); }
+
 /* Token sx-* cho Source của file code ngôn ngữ id (nhớ lần gần nhất); chưa sẵn thì [] (chữ trơn) tới khi vẽ lại. */
 var codeCache = { text: null, id: null, toks: null };
 export function codeTokens(text, id) {
   var hl = highlighter(id);
   if (!hl) return [];
   if (codeCache.text !== text || codeCache.id !== id) {
-    codeCache = { text: text, id: id, toks: sxTokens(hlRuns(hl.highlight(text, { language: id, ignoreIllegals: true }).value)) };
+    codeCache = { text: text, id: id, toks: sxTokens(runsOf(hl, text, id)) };
   }
   return codeCache.toks;
 }
@@ -77,7 +80,7 @@ export function paintFences(root) {
     var m = /(?:^|\s)language-([\w+#.-]+)/.exec(code.className), id = m && langOf(m[1]), hl = id && highlighter(id);
     if (!hl) return;
     var text = code.textContent, frag = document.createDocumentFragment(), p = 0;
-    hlRuns(hl.highlight(text, { language: id, ignoreIllegals: true }).value).forEach(function (r) {
+    runsOf(hl, text, id).forEach(function (r) {
       if (r.s > p) frag.append(text.slice(p, r.s));
       frag.append(h('span', { class: r.c }, text.slice(r.s, r.e)));
       p = r.e;

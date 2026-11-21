@@ -8,7 +8,7 @@ import { paneHeight, splitFits } from '../core/panes.js';
 import { viewFor } from '../core/file-type.js';
 import { lineCount } from '../core/runs.js';
 import { prefs, savePrefs } from './store.js';
-import { $, dragBar, mqSide, shown } from './dom.js';
+import { $, dockTop, dragBar, shown } from './dom.js';
 import { D, openType } from './state.js';
 import { renderAll, renderMeta } from './render.js';
 import { closePop, pop } from './popup.js';
@@ -68,7 +68,7 @@ export function sizePanes() {
   var v = $('views'), de = document.documentElement;
   if (!isSplit() || v.hidden) { de.classList.remove('ma-fit'); return; }
   var top = v.getBoundingClientRect().top + window.scrollY;
-  var ph = paneHeight(window.innerHeight, top, mqSide.matches ? 0 : $('dock').offsetHeight);
+  var ph = paneHeight(window.innerHeight, top, window.innerHeight - dockTop());   // dưới đỉnh thanh đáy (≤ 1080px) là của nó
   v.style.setProperty('--pane-h', ph.h + 'px');
   if (ph.fit && !de.classList.contains('ma-fit')) window.scrollTo(0, 0);
   de.classList.toggle('ma-fit', ph.fit);
