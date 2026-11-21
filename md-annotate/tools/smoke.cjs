@@ -3832,6 +3832,22 @@ const cornerClash = (page) => page.evaluate(() => {
     }
     await c.close();
   }
+  {
+    // Nút × của ô lọc: vẽ lại bằng mask màu --ink-3 (nút gốc của Chrome xanh / trắng), bấm vẫn xoá mẫu.
+    const c = await treeContext({ viewport: { width: 1440, height: 900 }, colorScheme: 'light' });
+    const p = await c.newPage(); watch(p);
+    await p.goto(BASE); await p.waitForFunction(() => window.marked && window.DOMPurify);
+    await pasteText(p, DOC);
+    await p.setInputFiles('#file-in', { name: 'main.rs', mimeType: 'text/plain', buffer: Buffer.from('fn main() {}\n') });
+    await p.waitForTimeout(200);
+    await p.fill('#tree-q', 'main'); await p.waitForTimeout(250);
+    const rule = await p.evaluate(() => { for (const sh of document.styleSheets) { let rs = []; try { rs = sh.cssRules; } catch (e) {} for (const r of rs) if (/#?\.?ma-tree__q::-webkit-search-cancel-button/.test(r.selectorText || '')) return [r.style.appearance || r.style.webkitAppearance, r.style.background]; } return null; });
+    const b = await p.locator('#tree-q').boundingBox();
+    await p.mouse.click(b.x + b.width - 15, b.y + b.height / 2); await p.waitForTimeout(250);
+    const v = await p.inputValue('#tree-q');
+    check('ô lọc: nút × vẽ lại (appearance none, nền --ink-3), bấm thì xoá mẫu', rule && rule[0] === 'none' && rule[1] === 'var(--ink-3)' && v === '', JSON.stringify([rule, v]));
+    await c.close();
+  }
   // ── end sửa sau rà soát ──
 
   check('không lỗi console', !errors.length, errors.join(' | '));
