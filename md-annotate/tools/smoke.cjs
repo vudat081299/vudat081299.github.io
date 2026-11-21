@@ -96,6 +96,15 @@ const renderModel = (page, model) => page.evaluate(async (m) => {
   const T = await import('./js/ui/tree.js'), noop = () => '';
   T.renderTree(m, { open: noop, toggle: noop, newFile: noop, newDir: noop, rename: noop, move: noop, remove: noop, importDir: noop, download: noop, collapseAll: noop });
 }, model);
+/* Đuôi cuộn của thân cây: cuộn hết thì tâm hàng cuối lệch tâm thân bao nhiêu (px); scroll: thân cuộn dọc được bao nhiêu. */
+const tailState = (page) => page.evaluate(async () => {
+  await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+  const b = document.getElementById('tree-body'), keep = b.scrollTop, rows = document.querySelectorAll('#tree-list .ma-trow');
+  b.scrollTop = b.scrollHeight;
+  const q = b.getBoundingClientRect(), l = rows[rows.length - 1].getBoundingClientRect();
+  const out = { scroll: b.scrollHeight - b.clientHeight, dc: +((l.top + l.height / 2) - (q.top + b.clientTop + b.clientHeight / 2)).toFixed(1) };
+  b.scrollTop = keep; return out;
+});
 const DBL_MS = 700;   // quá ngưỡng bấm đúp: kéo ngay sau một cú bấm thành chọn theo từ
 /* Dán chữ vào ô Edit như người dùng dán (sự kiện paste rồi input). */
 const pasteText = (page, t) => page.evaluate((t) => { const ta = document.getElementById('src-input'); ta.focus(); ta.dispatchEvent(new Event('paste')); ta.value = t; ta.dispatchEvent(new Event('input')); }, t);
@@ -2242,6 +2251,14 @@ const cornerClash = (page) => page.evaluate(() => {
     check('cây nông: rê hàng có huy hiệu — ⋯ hiện, huy hiệu vẫn hiện, đứng trước ⋯', hv.more === '1' && hv.badge === 'visible' && hv.cR <= hv.mL, JSON.stringify(hv));
     await tp.mouse.move(600, 600);
     await tp.evaluate(() => document.documentElement.style.setProperty('--tree', '248px'));
+    /* Đuôi cuộn: danh sách cao hơn thân thì cuộn hết, tâm hàng cuối ở tâm thân; thấp hơn (3 file, 12 file) thì không cuộn dọc. */
+    {
+      const files = (n) => renderModel(tp, { sid: 'tail' + n, nodes: Array.from({ length: n }, (_, i) => ({ id: 't' + i, parent: null, kind: 'file', name: 'file-' + i + '.md' })), open: 't0', collapsed: [], counts: {}, title: 'Tail' });
+      await files(40); const tall = await tailState(tp);
+      await files(3); const short = await tailState(tp);
+      await files(12); const mid = await tailState(tp);
+      check('cây 248px: cuộn hết thì tâm hàng cuối ở tâm thân (±2px); 3 và 12 file thì không cuộn dọc', tall.scroll > 0 && Math.abs(tall.dc) <= 2 && short.scroll === 0 && mid.scroll === 0, JSON.stringify({ tall, short, mid }));
+    }
 
     /* Lọc file (MDAN-068): mẫu RegExp không phân biệt hoa thường trên tên, hiện file khớp và folder tổ tiên (mở); mẫu hỏng thì tìm
        chữ thường, có dòng báo; không khớp thì báo; ↓ vào hàng đầu, / ở hàng về ô lọc, Esc xoá và trả lại gập / mở cũ; 1 file thì ẩn ô. */
@@ -2430,6 +2447,8 @@ const cornerClash = (page) => page.evaluate(() => {
       return { open: d.open, inDlg: d.contains(document.getElementById('tree')), left: Math.round(r.left), w: Math.round(r.width), rowH: Math.round(row.height), more: Math.round(more.width), exp: document.getElementById('btn-tree').getAttribute('aria-expanded') }; });
     check('cây 390: nút mở tấm trượt từ mép trái, hàng ≥ 44px, ⋯ luôn hiện', sh.open && sh.inDlg && sh.left === 0 && sh.w <= 390 && sh.rowH >= 44 && sh.more >= 44 && sh.exp === 'true', JSON.stringify(sh));
     check('cây 390: tấm không tràn ngang', (await overflow(mp2)) === 0 && (await mp2.$eval('#dlg-tree', (d) => Math.max(d.scrollWidth - d.clientWidth, document.getElementById('tree').scrollWidth - document.getElementById('tree').clientWidth))) <= 0);
+    const mtail = await tailState(mp2);
+    check('cây 390: tấm trượt cuộn hết thì tâm hàng cuối ở tâm thân (±2px)', mtail.scroll > 0 && Math.abs(mtail.dc) <= 2, JSON.stringify(mtail));
     await mp2.tap(row('README.md')); await mp2.waitForTimeout(300);
     const after = await mp2.evaluate(() => ({ open: document.getElementById('dlg-tree').open, home: document.getElementById('tree').parentNode === document.body, last: window.__tree.log.slice(-1)[0][0] }));
     check('cây 390: chạm file thì mở file, đóng tấm, cây về chỗ cũ (con của body)', !after.open && after.home && after.last === 'open', JSON.stringify(after));

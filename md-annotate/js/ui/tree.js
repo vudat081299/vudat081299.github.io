@@ -199,6 +199,11 @@ function paintGuides() {
   $('tree-rows').style.setProperty('--dmax', String(dmax));
   return was !== String(dmax);
 }
+/* Danh sách cao hơn phần nội dung của thân thì thân có đuôi cuộn (css/tree.css .is-tall). Gọi khi vẽ cây và khi thân đổi cỡ. */
+function syncTall() {
+  var b = $('tree-body'), last = $('tree-list').lastElementChild;
+  b.classList.toggle('is-tall', !!last && last.offsetTop + last.offsetHeight > b.clientHeight - parseFloat(getComputedStyle(b).paddingTop));
+}
 /* Vạch đậm: folder đang mở là hàng hiện tại thì vạch của nó, không thì vạch của folder chứa hàng hiện tại (như VS Code). */
 function markGuide() {
   var i = at[cur], on = null;
@@ -244,7 +249,7 @@ export function renderTree(m, actions) {
   curAt = cur in at ? at[cur] : 0;
   rows.forEach(function (r) { els[r.node.id].tabIndex = r.node.id === cur ? 0 : -1; });
   var dmoved = paintGuides();
-  markGuide();
+  markGuide(); syncTall();
   if (hadFocus && cur != null && !editing) els[cur].focus({ preventScroll: true });
   var shownOpen = null;
   if (!same || m.open !== lastOpen) {
@@ -584,6 +589,7 @@ export function initTree() {
   $('tree-new-dir').addEventListener('click', function () { call('newDir', targetDir()); });
   initHead();
   initTreeFind(function () { if (model) renderTree(model, act); }, function () { if (rows.length) { kbd(); setCur(rows[0].node.id, true); } });
+  if (window.ResizeObserver) new ResizeObserver(syncTall).observe($('tree-body'));
   $('tree-dir-in').addEventListener('change', function (e) {
     if (e.target.files && e.target.files.length) call('importDir', e.target.files, null);
     e.target.value = '';
