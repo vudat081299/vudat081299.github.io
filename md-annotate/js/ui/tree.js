@@ -14,7 +14,7 @@
    hiện tại thành hàng vào chỗ nó. Đầu cây một hàng (MDAN-060): New file, New folder, ⋯ (#tree-head-menu: Import folder,
    Download .zip, Collapse all, theo mẫu menu button), dưới là ô lọc file (ui/tree-find.js: đang lọc thì chỉ hiện file khớp và
    folder tổ tiên, folder nào cũng mở, bấm folder không gập); phiên ≤ 1 mục thì #tree.is-sparse hiện gợi ý thả / nạp folder. Thụt
-   đều mọi cấp: vạch thụt là phần tử riêng (#tree-guides), cây sâu thì thân cuộn ngang (--dmax, .is-x); đổi tên là ô nhập trong suốt
+   đều mọi cấp: vạch thụt là phần tử riêng (#tree-guides), cây sâu thì thân cuộn ngang (--dmax), tự cuộn tới tên hàng hiện tại; đổi tên là ô nhập trong suốt
    đúng chỗ tên.
    Xuất: editName, focusRow, initTree, renderTree, revealTree.
    Dùng: core/tree.js, core/text.js, ui/store.js, ui/dom.js, ui/views.js, ui/tree-find.js. */
@@ -69,6 +69,7 @@ function applyShown() {
   if (!on && $('tree').parentNode === home && $('tree').contains(document.activeElement)) $('btn-tree').focus();
   document.documentElement.classList.toggle('ma-tree-on', on);
   refreshSplit();   // #doc đổi bề rộng: Split hiện / ẩn ngay
+  if (on) revealCur();
 }
 /* Người dùng bật / tắt khi docked (nút, Ctrl/⌘ + B): ghi prefs.tree. */
 function setTreeShown(on) { prefs.tree = !!on; shownFor = null; savePrefs(); applyShown(); }
@@ -163,21 +164,27 @@ function reconcile(list, want) {
   });
   while (ref) { var nx = ref.nextSibling; list.removeChild(ref); ref = nx; }
 }
-/* Cuộn thân cây vừa đủ để thấy hàng (không cuộn trang): dọc cả hàng; ngang (cây sâu rộng hơn thân) từ ô chevron về phía mép
-   phải hàng, ô chevron luôn trong tầm nhìn. */
+/* Cuộn thân cây vừa đủ để thấy hàng (không cuộn trang). Dọc: cả hàng. Ngang (cây sâu): chỉ khi đầu tên khuất (qua mép trái,
+   hay dưới đuôi ⋯ dính mép phải, chừa NAME_SEEN px tên); lúc ấy ô chevron về mép trái nếu tên vẫn đủ chỗ, không thì đầu tên.
+   Chỉ gọi khi mở file, chọn hàng, hiện cây, đổi bề rộng cây, thụt sâu nhất đổi: người dùng tự cuộn ngang thì không bị kéo lại. */
+var EDGE = 4, NAME_SEEN = 64;   // px: khe ở mép trái; phần tên ít nhất phải thấy trước đuôi
 function reveal(li) {
   var b = $('tree-body'), r = li.getBoundingClientRect(), q = b.getBoundingClientRect();
+  if (!b.clientWidth) return;   // cây đang ẩn: không đo được
   if (r.top < q.top) b.scrollTop -= q.top - r.top + 4;
   else if (r.bottom > q.top + b.clientHeight) b.scrollTop += r.bottom - (q.top + b.clientHeight) + 4;
-  var ch = li.querySelector('.ma-trow__chev');
-  if (!ch || b.scrollWidth <= b.clientWidth) return;
-  var off = b.scrollLeft - q.left - b.clientLeft;   // đổi toạ độ màn hình sang toạ độ trong vùng cuộn
-  var x0 = Math.max(0, ch.getBoundingClientRect().left + off - 12), x1 = r.right + off;
-  if (x0 < b.scrollLeft) b.scrollLeft = x0;
-  else if (x1 > b.scrollLeft + b.clientWidth) b.scrollLeft = Math.min(x0, x1 - b.clientWidth);
+  var x0 = q.left + b.clientLeft + parseFloat(getComputedStyle(b).paddingLeft) + EDGE;   // mép trái chỗ thấy được
+  var x = function (el) { return el.getBoundingClientRect().left - x0; };
+  var nm = li.querySelector('.ma-trow__name, .ma-trow__ren'), name = x(nm);
+  var room = x(li.querySelector('.ma-trow__end')) - Math.min(nm.scrollWidth, NAME_SEEN);   // đầu tên không được quá chỗ này
+  if (name >= 0 && name <= room) return;
+  var chev = x(li.querySelector('.ma-trow__chev'));
+  b.scrollLeft += name - chev <= room ? chev : name;
 }
+function revealCur() { if (cur != null && els[cur]) reveal(els[cur]); }
 /* VẠCH THỤT: một vạch cho mỗi folder đang hiện con, dài đúng các hàng con cháu (vị trí, độ dài: css/tree.css theo --d, --i,
-   --n). --dmax (cấp sâu nhất đang hiện) cho khối hàng bề rộng tối thiểu: thụt không bị nén, thân cuộn ngang. */
+   --n). --dmax (cấp sâu nhất đang hiện) cho khối hàng bề rộng tối thiểu: thụt không bị nén, thân cuộn ngang. Trả
+   true khi --dmax đổi. */
 function paintGuides() {
   var out = [], dmax = 0;
   rows.forEach(function (r, i) {
@@ -190,12 +197,10 @@ function paintGuides() {
     out.push(g);
   });
   $('tree-guides').replaceChildren.apply($('tree-guides'), out);
+  var was = $('tree-rows').style.getPropertyValue('--dmax');
   $('tree-rows').style.setProperty('--dmax', String(dmax));
-  syncX();
+  return was !== String(dmax);
 }
-/* Thân tràn ngang (cây sâu) thì đuôi dính mép phải có nền che phần tên cuộn dưới nó (css/tree.css .is-x); không tràn thì
-   đuôi không vẽ gì ngoài nút. Gọi khi vẽ cây và khi thân đổi cỡ (kéo mép, thanh cuộn dọc hiện / ẩn). */
-function syncX() { var b = $('tree-body'); b.classList.toggle('is-x', b.scrollWidth > b.clientWidth); }
 /* Vạch đậm: folder đang mở là hàng hiện tại thì vạch của nó, không thì vạch của folder chứa hàng hiện tại (như VS Code). */
 function markGuide() {
   var i = at[cur], on = null;
@@ -240,17 +245,20 @@ export function renderTree(m, actions) {
   if (cur == null || !(cur in at)) cur = m.open in at ? m.open : (rows[0] ? rows[0].node.id : null);
   curAt = cur in at ? at[cur] : 0;
   rows.forEach(function (r) { els[r.node.id].tabIndex = r.node.id === cur ? 0 : -1; });
-  paintGuides(); markGuide();
+  var dmoved = paintGuides();
+  markGuide();
   if (hadFocus && cur != null && !editing) els[cur].focus({ preventScroll: true });
   var shownOpen = null;
-  if (m.open !== lastOpen) {
+  if (!same || m.open !== lastOpen) {
     lastOpen = m.open;
     if (m.open in at) { if (!hadFocus) setCur(m.open, false); shownOpen = els[m.open]; }
   }
   if (menuFor && !(menuFor in at)) closeMenu(false);
   applyShown();
-  /* Cuộn tới file mở sau khi cây đã hiện (ẩn thì thân rộng 0, không đo được). */
+  /* Cuộn tới file mở sau khi cây đã hiện (ẩn thì thân rộng 0, không đo được); thụt sâu nhất đổi (mở / gập folder sâu) thì
+     tới hàng hiện tại. */
   if (shownOpen) reveal(shownOpen);
+  else if (dmoved) revealCur();
 }
 function setCur(id, focus) {
   if (!(id in at)) return;
@@ -578,7 +586,6 @@ export function initTree() {
   $('tree-new-dir').addEventListener('click', function () { call('newDir', targetDir()); });
   initHead();
   initTreeFind(function () { if (model) renderTree(model, act); }, function () { if (rows.length) { kbd(); setCur(rows[0].node.id, true); } });
-  if (window.ResizeObserver) new ResizeObserver(syncX).observe($('tree-body'));
   $('tree-dir-in').addEventListener('change', function (e) {
     if (e.target.files && e.target.files.length) call('importDir', e.target.files, null);
     e.target.value = '';
@@ -591,12 +598,12 @@ export function initTree() {
   var grab = 0;   // chỗ bấm cách mép phải cây bao nhiêu: kéo không làm cây nhảy
   g.addEventListener('pointerdown', function (e) { grab = $('tree').getBoundingClientRect().right - e.clientX; });
   var left = function () { return $('tree').getBoundingClientRect().left; };
-  dragBar(g, function (x) { treeW = applyW(x + grab - left()); }, function () { prefs.treeW = treeW; savePrefs(); }, longText,
+  dragBar(g, function (x) { treeW = applyW(x + grab - left()); }, function () { prefs.treeW = treeW; savePrefs(); revealCur(); }, longText,
     function (x) { return left() + clampW(x + grab - left()); });   // vạch ở mép phải cây, không ở con trỏ
   g.addEventListener('keydown', function (e) {
     var d = e.key === 'ArrowRight' ? 16 : e.key === 'ArrowLeft' ? -16 : 0;
     if (!d) return;
-    e.preventDefault(); treeW = applyW(treeW + d); prefs.treeW = treeW; savePrefs();
+    e.preventDefault(); treeW = applyW(treeW + d); prefs.treeW = treeW; savePrefs(); revealCur();
   });
 
   /* Hàng: bấm mở / gập, bấm đúp đổi tên (file và folder), ⋯ và chuột phải mở menu. */

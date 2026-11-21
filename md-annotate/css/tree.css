@@ -16,7 +16,7 @@
   --fit-d: 2;                          /* thụt tới chừng này cấp thì không bao giờ cuộn ngang, ở mọi bề rộng */
   --guide: var(--line-2);              /* vạch thụt; của folder chứa hàng hiện tại: --guide-on */
   --guide-on: color-mix(in srgb, var(--ink-4) 45%, var(--line-2));
-  --open-a: 18%;                       /* nền thẻ file mở: --accent pha bấy nhiêu (thẻ trong suốt và đuôi đặc khi cuộn ngang) */
+  --open-a: 18%;                       /* nền thẻ file mở: --accent pha bấy nhiêu (thẻ trong suốt, đuôi đặc) */
 }
 html.dark .ma-tree { --guide: var(--line); --guide-on: color-mix(in srgb, var(--ink-4) 55%, var(--line)); }
 
@@ -132,7 +132,7 @@ html.ma-tree-on body > .ma-tree {
 /* THẺ của hàng (::before, dưới chữ nhờ isolation): bo --r-sm, lùi --card-y trên / dưới, tới mép phải hàng; mép trái ngay trước
    nội dung (file: trước biểu tượng, ô chevron trống bỏ ngoài; folder: trước chevron). Mọi trạng thái vẽ lên cùng một thẻ:
    rê --chip, file đang mở nền xanh 18% (không viền, tên 600), thả vào nền nhạt + viền, focus bàn phím vòng 1px --ring.
-   --row-solid: màu đặc của thẻ trên --surface, làm nền cho đuôi khi nó dính mép phải và đè lên tên. */
+   --row-solid: màu đặc của thẻ trên --surface, làm nền cho đuôi (đè lên tên khi cây cuộn ngang). */
 .ma-trow { isolation: isolate; --card-l: calc(var(--chev-w) + var(--chev-gap) - var(--ic-gap)); --card-y: 2px; --row-solid: var(--surface); }
 .ma-trow[aria-expanded] { --card-l: -2px; }
 .ma-trow::before {
@@ -170,20 +170,20 @@ html.ma-tree-on body > .ma-tree {
   flex: none; align-self: stretch; display: flex; align-items: center; gap: var(--s1); margin-left: var(--s1);
   position: sticky; right: var(--row-end); z-index: 1;
 }
-/* Nền đuôi, chỉ khi thân tràn ngang (#tree-body.is-x, ui/tree.js): đuôi dính mép, đè lên tên đang cuộn dưới nó. ::before
-   màu thẻ đặc tới mép thẻ (mép trái mờ dần --s3 bằng mask, góc phải bo như thẻ, thấp hơn thẻ 1px mỗi bên chừa vòng focus),
-   đổi màu cùng nhịp với thẻ; ::after phủ khe đệm phải của thân bằng bóng (bóng không tính vào vùng cuộn). Không tràn thì
-   không vẽ gì: không có gì trong hàng lố ra ngoài khối hàng. */
-.ma-tree__body.is-x .ma-trow__end::before, .ma-tree__body.is-x .ma-trow__end::after { content: ''; position: absolute; z-index: -1; }
-.ma-tree__body.is-x .ma-trow__end::before {
-  left: calc(-1 * var(--s3)); right: calc(-1 * var(--row-end)); top: 50%; height: calc(var(--row-h) - 2 * var(--card-y) - 2px); transform: translateY(-50%);
+/* Nền đuôi: đúng phần phải của thẻ (cùng cao, góc phải bo, tới mép phải hàng), màu thẻ đặc, mép trái cắt thẳng sau khe --s1
+   trước huy hiệu; đổi màu cùng nhịp với thẻ. Cây cuộn ngang thì đuôi dính mép phải đè lên tên đang cuộn dưới nó, tên dừng
+   gọn trước đuôi; không cuộn thì trùng màu thẻ, không thấy. Vòng focus của thẻ vẽ lại trên nó. ::after phủ khe đệm phải của
+   thân bằng bóng (bóng không tính vào vùng cuộn). Thả vào hàng: đuôi trong suốt, viền thả của thẻ còn nguyên. */
+.ma-trow__end::before, .ma-trow__end::after { content: ''; position: absolute; z-index: -1; }
+.ma-trow__end::before {
+  left: calc(-1 * var(--s1)); right: calc(-1 * var(--row-end)); top: var(--card-y); bottom: var(--card-y);
   border-radius: 0 var(--r-sm) var(--r-sm) 0; background-color: var(--row-solid);
-  -webkit-mask-image: linear-gradient(to right, transparent, var(--ink) var(--s3)); mask-image: linear-gradient(to right, transparent, var(--ink) var(--s3));
 }
-@media (prefers-reduced-motion: no-preference) { .ma-tree__body.is-x .ma-trow__end::before { transition: background-color var(--dur) var(--ease); } }
-.ma-tree__body.is-x .ma-trow__end::after { top: 0; bottom: 0; right: calc(-1 * var(--row-end)); width: var(--s2); box-shadow: var(--s2) 0 0 var(--surface); }
-.ma-tree__body.is-x .ma-trow.is-drop .ma-trow__end::before { background-color: transparent; }
-.ma-tree__body.is-x.is-drop .ma-trow__end::after { box-shadow: none; }
+@media (prefers-reduced-motion: no-preference) { .ma-trow__end::before { transition: background-color var(--dur) var(--ease); } }
+.ma-tabbing .ma-trow:focus-visible .ma-trow__end::before { box-shadow: inset 0 1px var(--ring), inset -1px 0 var(--ring), inset 0 -1px var(--ring); }
+.ma-trow__end::after { top: 0; bottom: 0; right: calc(-1 * var(--row-end)); width: var(--s2); box-shadow: var(--s2) 0 0 var(--surface); }
+.ma-trow.is-drop .ma-trow__end::before { background-color: transparent; }
+.ma-tree__body.is-drop .ma-trow__end::after { box-shadow: none; }
 .ma-trow__meta { display: flex; align-items: center; gap: var(--s1); }
 .ma-trow__more.ma-icbtn {
   flex: none; width: var(--more-b); height: var(--more-b); margin: 0 calc((var(--more-w) - var(--more-b)) / 2);

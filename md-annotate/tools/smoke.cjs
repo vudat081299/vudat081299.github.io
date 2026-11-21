@@ -2146,7 +2146,7 @@ const cornerClash = (page) => page.evaluate(() => {
 
     /* Cây 25 cấp (MDAN-060): thụt mỗi cấp bằng nhau (--tree-step), mỗi folder đang mở có đúng một vạch dưới tâm chevron (±0,5px,
        trùng điểm ảnh), dài đúng các hàng con cháu; tên hàng sâu nhất vẫn ≥ 96px; thân cây cuộn ngang, trang không; file mở ở
-       cấp sâu nhất được cuộn ngang vào tầm nhìn. */
+       cấp sâu nhất được cuộn ngang tới tên (đầu tên trong thân, trước đuôi ⋯); không lớp mờ nào ở mép phải (MDAN-080). */
     {
       const nodes = [];
       let parent = null;
@@ -2167,11 +2167,12 @@ const cornerClash = (page) => page.evaluate(() => {
         let k = 0; while (rows[i + 1 + k] && +rows[i + 1 + k].getAttribute('aria-level') > +li.getAttribute('aria-level')) k++;
         span = Math.max(span, Math.abs(r.top - rows[i + 1].getBoundingClientRect().top), Math.abs(r.bottom - rows[i + k].getBoundingClientRect().bottom)); n++;
       }
-      const b = document.getElementById('tree-body'), q = b.getBoundingClientRect(), nm = by.zf.querySelector('.ma-trow__name').getBoundingClientRect();
+      const b = document.getElementById('tree-body'), q = b.getBoundingClientRect(), nm = by.zf.querySelector('.ma-trow__name').getBoundingClientRect(), endL = by.zf.querySelector('.ma-trow__end').getBoundingClientRect().left;
       const top = by.zr.getBoundingClientRect(), sel = getComputedStyle(by.zf, '::before');
       return { steps: [...steps], step: parseFloat(getComputedStyle(by.z0).getPropertyValue('--tree-step')), guides: n, delta, px, span, nameW: Math.round(nm.width),
-        bodyX: b.scrollWidth - b.clientWidth, isX: b.classList.contains('is-x'), sl: b.scrollLeft, page: document.documentElement.scrollWidth - document.documentElement.clientWidth,
-        seen: nm.left >= q.left - 0.5 && nm.left + 96 <= q.left + b.clientWidth + 0.5, topW: Math.round(top.width), bodyW: b.clientWidth, cardR: sel.right, ends: ends() };
+        bodyX: b.scrollWidth - b.clientWidth, sl: b.scrollLeft, page: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+        seen: nm.left >= q.left + b.clientLeft - 0.5 && nm.left + 64 <= endL + 0.5, topW: Math.round(top.width), bodyW: b.clientWidth, cardR: sel.right, ends: ends(),
+        fade: rows.filter((r) => [r.querySelector('.ma-trow__end'), r].some((e) => ['::before', '::after'].some((p) => getComputedStyle(e, p).maskImage !== 'none'))).length + document.querySelectorAll('.is-x').length };
       /* Đuôi ⋯ của mọi hàng: một cột, trong tầm nhìn của thân, ở cả hai đầu cuộn ngang (sticky). */
       function ends() {
         const edge = (sl) => { b.scrollLeft = sl; const xs = rows.map((r) => Math.round(r.querySelector('.ma-trow__end').getBoundingClientRect().right));
@@ -2181,8 +2182,33 @@ const cornerClash = (page) => page.evaluate(() => {
     });
     check('cây 25 cấp: thụt đều 12px mọi cấp, 25 vạch dưới tâm chevron (±0,5px, 1px trùng điểm ảnh), dài đúng các hàng con cháu',
       deep25.steps.length === 1 && deep25.steps[0] === deep25.step && deep25.step === 12 && deep25.guides === 25 && deep25.delta <= 0.5 && deep25.px === 0 && deep25.span <= 0.5, JSON.stringify(deep25));
-    check('cây 25 cấp: tên sâu nhất ≥ 96px; thân cuộn ngang, trang không; file mở được cuộn ngang vào tầm nhìn', deep25.nameW >= 96 && deep25.bodyX > 0 && deep25.isX && deep25.sl > 0 && deep25.page === 0 && deep25.seen, JSON.stringify(deep25));
+    check('cây 25 cấp: tên sâu nhất ≥ 96px; thân cuộn ngang, trang không; file mở được cuộn ngang tới tên; không lớp mờ ở mép phải', deep25.nameW >= 96 && deep25.bodyX > 0 && deep25.sl > 0 && deep25.page === 0 && deep25.seen && deep25.fade === 0, JSON.stringify(deep25));
     check('cây 25 cấp: ⋯ mọi hàng một cột, dính mép phải thân khi cuộn ngang (không trôi giữa tấm, không bị cắt)', deep25.ends.every((e) => e.one && e.inView), JSON.stringify(deep25.ends));
+    /* Cuộn ngang tự động (MDAN-080): ↓ từ hàng đầu (cuộn về 0) xuống tận file sâu nhất — đầu tên hàng đang focus luôn trong thân,
+       trước đuôi ⋯; tự cuộn ngang rồi vẽ lại (số đếm đổi) thì không bị kéo về. */
+    {
+      const nameSeen = () => tp.evaluate(() => {
+        const b = document.getElementById('tree-body'), li = document.activeElement, q = b.getBoundingClientRect();
+        const nm = li.querySelector('.ma-trow__name').getBoundingClientRect().left, endL = li.querySelector('.ma-trow__end').getBoundingClientRect().left;
+        return nm >= q.left + b.clientLeft - 0.5 && nm + 40 <= endL + 0.5 ? '' : li.dataset.id + ':' + Math.round(nm - q.left) + '/' + Math.round(endL - q.left);
+      });
+      await tp.evaluate(() => { document.getElementById('tree-body').scrollLeft = 0; });
+      await tp.focus('#tree-list .ma-trow[data-id="z0"]');
+      const miss = [];
+      for (let i = 0; i < 25; i++) { await tp.keyboard.press('ArrowDown'); const m = await nameSeen(); if (m) miss.push(m); }
+      const last = await tp.evaluate(() => document.activeElement.dataset.id);
+      await tp.evaluate(() => { document.getElementById('tree-body').scrollLeft = 40; });
+      const keep = await tp.evaluate(async () => {
+        const T = await import('./js/ui/tree.js'), noop = () => '';
+        const nodes = []; let parent = null;
+        for (let d = 0; d < 25; d++) { nodes.push({ id: 'z' + d, parent, kind: 'dir', name: d % 3 ? 'folder' : 'folder-' + d }); parent = 'z' + d; }
+        nodes.push({ id: 'zf', parent, kind: 'file', name: 'deepest-note.md' }, { id: 'zr', parent: null, kind: 'file', name: 'top.md' });
+        T.renderTree({ sid: 'deep25', nodes, open: 'zf', collapsed: [], counts: { zr: { c: 1 } }, title: 'Deep' }, { open: noop, toggle: noop });
+        return document.getElementById('tree-body').scrollLeft;
+      });
+      check('cây 25 cấp: ↓ từ hàng đầu tới file sâu nhất, đầu tên hàng focus luôn thấy; tự cuộn ngang rồi vẽ lại thì giữ nguyên chỗ cuộn',
+        miss.length === 0 && last === 'zf' && keep === 40, JSON.stringify({ miss, last, keep }));
+    }
 
     /* Cây nông (3 cấp, tên dài, 30 file: thanh cuộn dọc) ở 248px và 180px: thân không tràn ngang (cả 1px), tên dài cắt … ;
        ⋯ một cột cố định: cùng x, cùng cỡ, giữa hàng; chuột: ẩn ở hàng thường, hiện ở file mở và khi rê, huy hiệu vẫn hiện khi rê. */
@@ -2199,7 +2225,7 @@ const cornerClash = (page) => page.evaluate(() => {
           return [+m.left.toFixed(1), m.width, +((m.top + m.height / 2) - (q.top + q.height / 2)).toFixed(1)]; });
         const sf = rows.find((r) => r.dataset.id === 'sf'), nm = sf.querySelector('.ma-trow__name');
         b.scrollTop = b.scrollHeight; const endGap = b.getBoundingClientRect().top + b.clientTop + b.clientHeight - rows[rows.length - 1].getBoundingClientRect().bottom; b.scrollTop = 0;
-        return { bodyX: b.scrollWidth - b.clientWidth, isX: b.classList.contains('is-x'), vbar: b.scrollHeight > b.clientHeight, xs: new Set(mores.map((m) => m[0])).size, ws: new Set(mores.map((m) => m[1])).size,
+        return { bodyX: b.scrollWidth - b.clientWidth, vbar: b.scrollHeight > b.clientHeight, xs: new Set(mores.map((m) => m[0])).size, ws: new Set(mores.map((m) => m[1])).size,
           dy: Math.max(...mores.map((m) => Math.abs(m[2]))), cut: nm.scrollWidth > nm.clientWidth && getComputedStyle(nm).textOverflow === 'ellipsis',
           endGap, selMore: getComputedStyle(sf.querySelector('.ma-trow__more')).opacity, idle: getComputedStyle(rows.find((r) => r.dataset.id === 's2').querySelector('.ma-trow__more')).opacity };
       });
@@ -2207,7 +2233,7 @@ const cornerClash = (page) => page.evaluate(() => {
     for (const w of [248, 180]) {
       const sh = await shallow(w);
       check(`cây nông ${w}px: thân không tràn ngang, tên dài cắt …, ⋯ một cột cùng cỡ giữa hàng, hiện ở file mở, ẩn ở hàng thường; cuộn tới cuối, hàng cuối cách mép ≥ 12px`,
-        sh.bodyX === 0 && !sh.isX && sh.vbar && sh.endGap >= 12 && sh.cut && sh.xs === 1 && sh.ws === 1 && sh.dy <= 0.5 && sh.selMore === '1' && sh.idle === '0', JSON.stringify(sh));
+        sh.bodyX === 0 && sh.vbar && sh.endGap >= 12 && sh.cut && sh.xs === 1 && sh.ws === 1 && sh.dy <= 0.5 && sh.selMore === '1' && sh.idle === '0', JSON.stringify(sh));
     }
     const hov = await tp.evaluate(() => { const r = [...document.querySelectorAll('#tree-list .ma-trow')].find((l) => l.dataset.id === 's1'); r.scrollIntoView({ block: 'center' }); const q = r.getBoundingClientRect(); return { x: q.left + 30, y: q.top + q.height / 2 }; });
     await tp.mouse.move(hov.x, hov.y); await tp.waitForTimeout(250);
