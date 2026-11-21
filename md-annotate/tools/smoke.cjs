@@ -3597,11 +3597,15 @@ const cornerClash = (page) => page.evaluate(() => {
     const layered = await p.evaluate(() => [...document.querySelectorAll('#v-src .ma-ln:not(.has-c), .ma-lane__b')]
       .filter((e) => getComputedStyle(e).position !== 'static' || getComputedStyle(e, '::before').position !== 'static' || getComputedStyle(e, '::after').position !== 'static').length);
     check('văn bản 2.000 dòng: dòng nguồn và nút làn không định vị', layered === 0, String(layered));
-    const steps = [['ẩn / hiện cây', () => p.click('#btn-tree')], ['thu gọn / mở panel', async () => { await p.click('#btn-rail'); await p.click('#btn-unrail'); }],
+    const hd = await p.locator('#wrap-src .ma-view__head').boundingBox();
+    /* Bấm nền: làn chỉ tắt (html.ma-bgdrag) khi điểm kéo rơi trên nó, cú bấm thường không đổi lớp ở html. Đo trước các bước
+       đổi bề rộng: làn còn xếp lại sau chúng. */
+    const steps = [['bấm nền (đầu khung Source)', () => p.mouse.click(hd.x + hd.width / 2, hd.y + hd.height / 2), 100],
+      ['ẩn / hiện cây', () => p.click('#btn-tree')], ['thu gọn / mở panel', async () => { await p.click('#btn-rail'); await p.click('#btn-unrail'); }],
       ['đổi tỉ lệ vách bằng phím', async () => { await p.focus('#divider'); await p.keyboard.press('ArrowLeft'); }]];
-    for (const [name, fn] of steps) {
+    for (const [name, fn, max = nText / 2] of steps) {
       const n = await restyled(fn);
-      check(`văn bản 2.000 dòng, ${name}: không tính lại kiểu mọi nút của văn bản`, n < nText / 2, n + ' / ' + nText);
+      check(`văn bản 2.000 dòng, ${name}: không tính lại kiểu mọi nút của văn bản`, n < max, n + ' / ' + nText);
     }
     // Làn dùng lại nút cũ khi chỉ đổi bề rộng.
     await p.evaluate(() => { window.__lane = document.querySelector('#wrap-md .ma-lane__b:last-child'); window.__h = window.__lane.parentNode.offsetHeight; });
@@ -3752,6 +3756,23 @@ const cornerClash = (page) => page.evaluate(() => {
       return document.querySelector('.ma-wrap').getBoundingClientRect().width;
     });
     check('không @property: --tree-off rơi về 0px, vùng làm việc giữ bề rộng', w0 > 900 && Math.abs(w1 - w0) < 1, JSON.stringify([w0, w1]));
+    await c.close();
+  }
+  {
+    // Kéo từ nền bị cắt ngang (cửa sổ mất focus, không có pointerup): khung thôi tự cuộn sát mép.
+    const c = await browser.newContext({ viewport: { width: 1440, height: 800 }, colorScheme: 'light' });
+    const p = await c.newPage(); watch(p);
+    await p.goto(BASE); await p.waitForFunction(() => window.marked && window.DOMPurify);
+    await pasteText(p, Array.from({ length: 120 }, (_, i) => 'Paragraph number ' + i + ' of the long text.').join('\n\n'));
+    await p.click('.ma-tab[data-view="split"]'); await p.waitForTimeout(200);
+    const g = await p.evaluate(() => { const pn = document.getElementById('panel').getBoundingClientRect(), w = document.getElementById('wrap-md').getBoundingClientRect(); return { x: pn.left + pn.width / 2, y: w.top + 100, bottom: w.bottom }; });
+    await p.mouse.move(g.x, g.y); await p.mouse.down(); await p.mouse.move(g.x, g.bottom + 40, { steps: 6 }); await p.waitForTimeout(250);
+    const top = () => p.evaluate(() => document.getElementById('wrap-md').scrollTop);
+    const t0 = await top();
+    await p.evaluate(() => window.dispatchEvent(new Event('blur')));
+    const t1 = await top(); await p.waitForTimeout(400); const t2 = await top();
+    await p.mouse.up();
+    check('kéo từ nền: cửa sổ mất focus giữa chừng thì thôi tự cuộn', t0 > 0 && t2 === t1, JSON.stringify([t0, t1, t2]));
     await c.close();
   }
   // ── end sửa sau rà soát ──

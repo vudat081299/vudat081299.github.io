@@ -76,8 +76,13 @@ function textBox(g) {
   return { left: r.left + parseFloat(cs.paddingLeft), right: r.right - parseFloat(cs.paddingRight),
     top: Math.max(vt, r.top), bottom: Math.min(vb, r.bottom), vt: vt, vb: vb };
 }
+/* Làn đã đọc nằm trên chữ: điểm rơi trên nó thì tắt nó cho tới hết lần kéo (html.ma-bgdrag, css/review.css), để con trỏ
+   chữ tìm được dòng. Chỉ khi ấy: đổi lớp ở html tính lại kiểu mọi nút làn (văn bản dài: 0,1–0,2 s), cú bấm nền thường
+   không trả giá ấy. */
 function bgCaret(g) {
-  var p = clampInto(g.x, g.y, textBox(g)), c = caretAt(p.x, p.y);
+  var p = clampInto(g.x, g.y, textBox(g)), hit = document.elementFromPoint(p.x, p.y);
+  if (hit && hit.closest('.ma-lane')) document.documentElement.classList.add('ma-bgdrag');
+  var c = caretAt(p.x, p.y);
   return c && g.root.contains(c[0]) ? c : null;
 }
 function bgExtend() {
@@ -103,7 +108,6 @@ function bgStart(e) {
   if (mode === 'split') { var d = $('divider').getBoundingClientRect(); root = $(e.clientX < d.left + d.width / 2 ? 'v-src' : 'v-md'); }
   else if (mode === 'src' || mode === 'view') root = $(mode === 'src' ? 'v-src' : 'v-md');
   if (!root || !shown(root)) return;
-  document.documentElement.classList.add('ma-bgdrag');   // làn đã đọc không chắn chỗ con trỏ chữ (css/review.css)
   var g = { root: root, scroller: mode === 'split' ? root.parentNode : null, x: e.clientX, y: e.clientY, moved: false, raf: 0 };
   var c = bgCaret(g), sel = window.getSelection();
   if (!c) { bgEnd(); return; }
@@ -111,6 +115,8 @@ function bgStart(e) {
   bg = g;
   if (e.shiftKey) { g.moved = true; bgExtend(); } else sel.removeAllRanges();   // bấm nền bỏ vùng chọn cũ, như trình duyệt
 }
+
+function cancelDrag() { if (bg) bgEnd(); dragging = false; }
 
 export function initSelection() {
   /* Chuột / bút: thả ra mà vùng chọn nằm trong văn bản thì mở hộp nhận xét, dù kéo bắt đầu ở đâu (nền: bgStart). Bỏ qua
@@ -163,6 +169,9 @@ export function initSelection() {
       if (info) { if (pop.mode) closePop(true); openNew(info); }
     }, 0);
   });
+  /* Kéo bị cắt ngang (Alt+Tab, hệ thống giành con trỏ): không còn pointerup; dừng cuộn sát mép, thôi kéo. */
+  document.addEventListener('pointercancel', cancelDrag);
+  window.addEventListener('blur', cancelDrag);
   document.addEventListener('selectionchange', function () {
     clearTimeout(selTimer); selTimer = setTimeout(onSelChange, 120);
     mirrorSel();
