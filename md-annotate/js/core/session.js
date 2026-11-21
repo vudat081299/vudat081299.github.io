@@ -16,10 +16,11 @@
      fileLabel, importPaths, indexWith, indexWithout, isEmpty, moveIn, normIndex, normSession, openFile, openFromDisk,
      removeNodes, renameIn, renameIndex, renameSession, reveal, sessionTitle, textTitle, toggleDir, touchSession, treeFiles,
      uid, UNTITLED, zipOf.
-   Dùng: core/tree.js, core/text.js, core/zip.js. */
+   Dùng: core/tree.js, core/text.js, core/file-type.js, core/zip.js. */
 import { addNode, afterRemove, byId, filesInOrder, firstFile, fromPaths, kids, moveNode, nameError, pathOf, removeNode, renameNode,
   subtree, uniqueName, visibleRows } from './tree.js';
 import { slug } from './text.js';
+import { fileType } from './file-type.js';
 import { zipFiles } from './zip.js';
 
 export var UNTITLED = 'untitled.md';
@@ -232,14 +233,14 @@ export function treeFiles(s, rootId) {
 }
 /* Cả cây (hoặc cây con của folder rootId) thành file .zip (Uint8Array), date là giờ ghi vào các mục. */
 export function zipOf(s, date, rootId) { return zipFiles(treeFiles(s, rootId), date); }
-/* Tải một nút (id) hay cả phiên (null): { name, type, zip }. File: tên của nó (thiếu đuôi thì thêm .md), kiểu
-   text/markdown khi đuôi .md / .markdown hay thiếu đuôi, không thì text/plain. Folder: <tên>.zip; cả phiên: <slug tên phiên>.zip
-   (zip: true, nội dung là zipOf). */
+/* Tải một nút (id) hay cả phiên (null): { name, type, zip }. File: kiểu text/markdown khi là markdown (core/file-type.js
+   fileType: .md, .mdx, không đuôi mà không phải tên ngôn ngữ), không thì text/plain; tên của nó, markdown thiếu đuôi thì
+   thêm .md (Makefile giữ nguyên). Folder: <tên>.zip; cả phiên: <slug tên phiên>.zip (zip: true, nội dung là zipOf). */
 export function downloadOf(s, id) {
   var n = id == null ? null : byId(s.nodes, id);
   if (n && n.kind === 'file') {
-    var ext = /\.[^.]+$/.test(n.name), md = !ext || /\.(md|markdown)$/i.test(n.name);
-    return { name: ext ? n.name : n.name + '.md', type: (md ? 'text/markdown' : 'text/plain') + ';charset=utf-8', zip: false };
+    var md = fileType(n.name).kind === 'markdown', ext = /\.[^.]+$/.test(n.name);
+    return { name: md && !ext ? n.name + '.md' : n.name, type: (md ? 'text/markdown' : 'text/plain') + ';charset=utf-8', zip: false };
   }
   return { name: (n ? n.name : slug(s.name || autoName(s))) + '.zip', type: 'application/zip', zip: true };
 }

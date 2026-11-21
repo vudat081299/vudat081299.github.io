@@ -988,6 +988,8 @@ check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi
     check('isTextFile: theo đuôi trước kiểu (.ts dù video/mp2t), tên quen không đuôi, text/*; nhị phân không rõ kiểu thì không',
       X.isTextFile('app.ts', 'video/mp2t') && X.isTextFile('a.PY', '') && X.isTextFile('Makefile', '') && X.isTextFile('x.weird', 'text/x-weird') &&
       !X.isTextFile('blob.dat', '') && !X.isTextFile('logo.png', 'image/png') && !X.isTextFile('noext', ''));
+    check('isTextFile: theo sổ ngôn ngữ (langOf) — mọi đuôi được tô màu cũng nạp được (.gemspec, .plist, .xsd, .edn, .h++, Dockerfile)',
+      ['a.gemspec', 'Info.plist', 's.xsd', 'deps.edn', 'x.h++', 'Dockerfile', 'notes.mdx', 'a.csv'].every((n) => X.isTextFile(n, '')));
     check('hasNul: NUL trong 8 KB đầu', X.hasNul('\u0000\u0001PK') && !X.hasNul('chữ') && !X.hasNul('x'.repeat(9000) + '\u0000'));
     check('importCheck: .ts nạp, .dat không rõ kiểu bỏ có đếm, file tên node_modules không phải folder', X.importCheck('r/app.ts', 'video/mp2t', 1) === '' && X.importCheck('r/blob.dat', '', 1) === 'skip' && X.importCheck('r/node_modules', 'text/plain', 1) === '');
     check('skipEntry: tên ẩn, folder node_modules', X.skipEntry('.git', true) && X.skipEntry('.DS_Store', false) && X.skipEntry('node_modules', true) && !X.skipEntry('src', true));
@@ -1024,6 +1026,10 @@ check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi
     const dn = (nm) => S.downloadOf(s, nm == null ? null : byName(s, nm).id);
     check('downloadOf: file giữ tên (thiếu đuôi thêm .md), kiểu theo đuôi; folder / cả phiên .zip', eq(dn('a.md'), { name: 'a.md', type: 'text/markdown;charset=utf-8', zip: false }) && dn('NOTES').name === 'NOTES.md' && /markdown/.test(dn('NOTES').type) && /^text\/plain/.test(dn('x.txt').type) &&
       eq(dn('d'), { name: 'd.zip', type: 'application/zip', zip: true }) && dn(null).name === 'ten-phien.zip', JSON.stringify([dn('NOTES'), dn(null)]));
+    const t = S.addPaths(S.createSession('', {}), null, [{ path: 'Makefile', text: 'all:' }, { path: 'Dockerfile', text: 'FROM x' }, { path: 'p.mdx', text: '# P' }, { path: 'a.py', text: '' }]).s;
+    const dt = (nm) => { const f = S.downloadOf(t, byName(t, nm).id); return f.name + ' ' + f.type.split(';')[0]; };
+    check('downloadOf: kiểu theo fileType — Makefile / Dockerfile giữ tên, chữ trơn; .mdx là markdown; .py chữ trơn',
+      eq(['Makefile', 'Dockerfile', 'p.mdx', 'a.py'].map(dt), ['Makefile text/plain', 'Dockerfile text/plain', 'p.mdx text/markdown', 'a.py text/plain']), JSON.stringify(['Makefile', 'Dockerfile', 'p.mdx', 'a.py'].map(dt)));
     const one = S.createSession('x', {});
     check('wantsReview / allFilesOffered', P.wantsReview({ rvPrompt: true, lineNums: true }) && !P.wantsReview({ rvPrompt: true, lineNums: false }) && !P.wantsReview({ rvPrompt: false, lineNums: true }) && P.allFilesOffered(s) && !P.allFilesOffered(one) && !P.promptsAll(Object.assign({}, one, { promptAll: true })));
   }
