@@ -215,7 +215,7 @@ import { lineCount } from '../js/core/runs.js';
 // Số dòng ở thanh trên (#doc-meta) phải bằng số dòng ở lề Source: xuống dòng cuối không mở dòng mới.
 check('lineCount: như lề số dòng', eq(['', 'a', 'a\n', 'a\nb', 'a\n\n', '\n'].map(lineCount), [0, 1, 1, 2, 2, 1]));
 check('lineCount = số dòng của sourceLines', ['a\nb\n', 'x', '\n\nq'].every((t) => lineCount(t) === sourceLines(t, [], []).lines.length));
-import { clampInto, edgeScroll, fabSide, popPlace, sheetReveal } from '../js/core/place.js';
+import { clampInto, edgeScroll, fabSide, nameReveal, popPlace, sheetReveal } from '../js/core/place.js';
 {
   // Khung nhìn 1280×560, hộp 400×264. Dưới đoạn đủ chỗ: ngay dưới; chỉ trên đủ: lên trên; không bên nào đủ: vẫn trọn
   // trong khung nhìn; mép phải: lùi vào.
@@ -231,6 +231,11 @@ import { clampInto, edgeScroll, fabSide, popPlace, sheetReveal } from '../js/cor
   check('sheetReveal: đoạn đã nằm gọn thì không cuộn', R(100, 380) === 0 && R(68, 120) === 0);
   check('sheetReveal: đoạn dưới thanh trên thì cuộn lên, không đẩy đáy xuống dưới tấm', R(30, 60) === -38 && R(20, 380) === -8);
   check('sheetReveal: đoạn cao hơn chỗ trống thì đáy sát tấm', R(10, 900) === 512);
+  // nameReveal: thân thấy 200px, đuôi ⋯ ở 160, khe 4, tên cần thấy ≤ 64px; chevron cách tên 40px.
+  const N = (name, w) => nameReveal(name - 40, name, 160, w, 4, 64);
+  check('nameReveal: đầu tên đã thấy (đủ chỗ trước đuôi) thì không cuộn', N(4, 200) === 0 && N(92, 200) === 0 && N(130, 20) === 0);
+  check('nameReveal: tên khuất bên trái hay dưới đuôi thì chevron về mép trái', N(-50, 200) === -94 && N(150, 200) === 106);
+  check('nameReveal: chỗ hẹp, chevron về mép trái thì tên không đủ chỗ: đầu tên về mép trái', nameReveal(60, 100, 90, 200, 4, 64) === 96);
   check('fabSide: đoạn ở nửa dưới hay chạm nút thì nút lên trên', fabSide(500, 520, 529, 659) === 'top' && fabSide(100, 130, 529, 659) === 'bottom' && fabSide(200, 525, 529, 659) === 'top');
   const box = { left: 100, right: 500, top: 50, bottom: 650 };
   check('clampInto: trái hộp là đầu dòng, phải hộp là cuối dòng, trên / dưới về dòng đầu / cuối đang thấy, trong hộp giữ nguyên',

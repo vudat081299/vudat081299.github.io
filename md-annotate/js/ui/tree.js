@@ -17,8 +17,9 @@
    đều mọi cấp: vạch thụt là phần tử riêng (#tree-guides), cây sâu thì thân cuộn ngang (--dmax), tự cuộn tới tên hàng hiện tại; đổi tên là ô nhập trong suốt
    đúng chỗ tên.
    Xuất: editName, focusRow, initTree, renderTree, revealTree.
-   Dùng: core/tree.js, core/text.js, ui/store.js, ui/dom.js, ui/views.js, ui/tree-find.js. */
+   Dùng: core/tree.js, core/place.js, core/text.js, ui/store.js, ui/dom.js, ui/views.js, ui/tree-find.js. */
 import { canMove, moveTargets, visibleRows } from '../core/tree.js';
+import { nameReveal } from '../core/place.js';
 import { plural } from '../core/text.js';
 import { prefs, savePrefs } from './store.js';
 import { $, dragBar, droppedItems, h, icon, mqHandset, toast, typing } from './dom.js';
@@ -26,6 +27,7 @@ import { longText, refreshSplit } from './views.js';
 import { findInTree, focusFind, initTreeFind } from './tree-find.js';
 
 var W_MIN = 180, W_MAX = 420, W_DEF = 248;
+var X_EDGE = 4, X_SEEN = 64;          // cuộn ngang tới tên: khe ở mép trái; phần tên ít nhất phải thấy trước đuôi ⋯ (px)
 var model = null, act = {};
 var rows = [], at = {}, byId = {};   // hàng đang hiện; id → chỉ số trong rows; id → node
 var found = null;                    // kết quả lọc (core/tree-find.js findFiles) hay null khi không lọc
@@ -164,22 +166,18 @@ function reconcile(list, want) {
   });
   while (ref) { var nx = ref.nextSibling; list.removeChild(ref); ref = nx; }
 }
-/* Cuộn thân cây vừa đủ để thấy hàng (không cuộn trang). Dọc: cả hàng. Ngang (cây sâu): chỉ khi đầu tên khuất (qua mép trái,
-   hay dưới đuôi ⋯ dính mép phải, chừa NAME_SEEN px tên); lúc ấy ô chevron về mép trái nếu tên vẫn đủ chỗ, không thì đầu tên.
-   Chỉ gọi khi mở file, chọn hàng, hiện cây, đổi bề rộng cây, thụt sâu nhất đổi: người dùng tự cuộn ngang thì không bị kéo lại. */
-var EDGE = 4, NAME_SEEN = 64;   // px: khe ở mép trái; phần tên ít nhất phải thấy trước đuôi
+/* Cuộn thân cây vừa đủ để thấy hàng (không cuộn trang). Dọc: cả hàng. Ngang (cây sâu): tới đầu tên (core/place.js
+   nameReveal). Chỉ gọi khi mở file, chọn hàng, hiện cây, đổi bề rộng cây, thụt sâu nhất đổi: người dùng tự cuộn ngang thì
+   không bị kéo lại. */
 function reveal(li) {
   var b = $('tree-body'), r = li.getBoundingClientRect(), q = b.getBoundingClientRect();
   if (!b.clientWidth) return;   // cây đang ẩn: không đo được
   if (r.top < q.top) b.scrollTop -= q.top - r.top + 4;
   else if (r.bottom > q.top + b.clientHeight) b.scrollTop += r.bottom - (q.top + b.clientHeight) + 4;
-  var x0 = q.left + b.clientLeft + parseFloat(getComputedStyle(b).paddingLeft) + EDGE;   // mép trái chỗ thấy được
-  var x = function (el) { return el.getBoundingClientRect().left - x0; };
-  var nm = li.querySelector('.ma-trow__name, .ma-trow__ren'), name = x(nm);
-  var room = x(li.querySelector('.ma-trow__end')) - Math.min(nm.scrollWidth, NAME_SEEN);   // đầu tên không được quá chỗ này
-  if (name >= 0 && name <= room) return;
-  var chev = x(li.querySelector('.ma-trow__chev'));
-  b.scrollLeft += name - chev <= room ? chev : name;
+  var x0 = q.left + b.clientLeft + parseFloat(getComputedStyle(b).paddingLeft);   // mép trái chỗ thấy được
+  var x = function (sel) { return li.querySelector(sel).getBoundingClientRect().left - x0; };
+  var nm = li.querySelector('.ma-trow__name, .ma-trow__ren');
+  b.scrollLeft += nameReveal(x('.ma-trow__chev'), x('.ma-trow__name, .ma-trow__ren'), x('.ma-trow__end'), nm.scrollWidth, X_EDGE, X_SEEN);
 }
 function revealCur() { if (cur != null && els[cur]) reveal(els[cur]); }
 /* VẠCH THỤT: một vạch cho mỗi folder đang hiện con, dài đúng các hàng con cháu (vị trí, độ dài: css/tree.css theo --d, --i,

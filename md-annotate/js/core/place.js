@@ -2,8 +2,8 @@
    trong khung nhìn (hộp có thể che đoạn, còn hơn nút Save nằm ngoài màn hình khi trang khoá cuộn ở Split).
    Tấm đáy (điện thoại, cảm ứng) thì không đặt chỗ mà cuộn trang để đoạn nằm ngay trên tấm (sheetReveal); nút nổi
    Comment on selection ở phía không có đoạn chọn (fabSide). Kéo từ vùng nền: điểm chuột kéo vào hộp chữ (clampInto), cuộn
-   khi kéo quá mép (edgeScroll).
-   Xuất: clampInto, edgeScroll, fabSide, popPlace, sheetReveal.
+   khi kéo quá mép (edgeScroll). Cây file cuộn ngang bao nhiêu để thấy đầu tên một hàng (nameReveal).
+   Xuất: clampInto, edgeScroll, fabSide, nameReveal, popPlace, sheetReveal.
    Dùng: không module nào. */
 
 /* rect: { top, bottom, left } của đoạn trong khung nhìn, hoặc null (giữa màn hình); pw, ph: cỡ hộp; vw, vh: cỡ khung
@@ -17,6 +17,15 @@ export function popPlace(rect, pw, ph, vw, vh) {
   left = Math.max(16, Math.min(left, vw - pw - 16));
   top = Math.max(8, Math.min(top, vh - ph - 8));
   return { top: top, left: left };
+}
+/* Cây file cuộn ngang bao nhiêu (px, dương là sang phải) để thấy đầu tên một hàng. chev, name, end: mép trái ô chevron, tên,
+   đuôi ⋯ (dính mép phải) tính từ mép trái chỗ thấy được của thân; nameW: bề rộng chữ của tên; edge: khe ở mép trái; seen: phần
+   tên ít nhất phải thấy trước đuôi. Đầu tên đã thấy thì 0; không thì ô chevron về mép trái nếu tên vẫn đủ chỗ, không nữa thì
+   đầu tên. */
+export function nameReveal(chev, name, end, nameW, edge, seen) {
+  var room = end - edge - Math.min(nameW, seen);   // đầu tên không được quá chỗ này
+  if (name - edge >= 0 && name - edge <= room) return 0;
+  return name - chev <= room ? chev - edge : name - edge;
 }
 /* Cuộn bao nhiêu (px, dương là xuống) để đoạn [top, bottom] (toạ độ khung nhìn) nằm ngay trên đỉnh tấm đáy sheetTop, cách gap,
    và không dưới thanh trên (đáy head). Đã nằm gọn thì 0. Đoạn cao hơn chỗ trống: ưu tiên đáy (chữ chọn cuối nằm sát tấm). */

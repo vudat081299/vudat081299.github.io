@@ -54,7 +54,7 @@
 - MDAN-075 · Ô lọc file: chờ gõ xong, mẫu chỉ thử phần đầu tên · `md-annotate/js/ui/tree-find.js`, `md-annotate/js/core/tree-find.js`
 - MDAN-076 · Cổng xanh thì push main ngay, smoke chạy sau · `md-annotate/`
 - MDAN-079 · Nét đứt theo khối đang đọc: xám là khối hiện tại, xanh là gợi ý; viên thuốc Accept N · thay cho MDAN-077, MDAN-078 · `md-annotate/css/review.css`, `md-annotate/js/ui/review.js`, `md-annotate/js/ui/dwell.js`, `md-annotate/index.html`, `md-annotate/data/shortcuts.json`
-- MDAN-080 · Cây sâu: không lớp mờ ở mép phải, tự cuộn ngang tới tên file đang mở · `md-annotate/css/tree.css`, `md-annotate/js/ui/tree.js`
+- MDAN-080 · Cây sâu cuộn ngang, tự cuộn tới tên file đang mở · `md-annotate/js/ui/tree.js`, `md-annotate/js/core/place.js`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Nguồn tô màu cú pháp kiểu VS Code
@@ -459,10 +459,9 @@ xanh, nền ô xanh nhạt; vừa hiện tại vừa gợi ý thì xanh. Khối 
 Nét đứt và ✓ mờ ≥ 3:1 ở hai theme. Màn cảm ứng có gợi ý thì viên thuốc đổi thành "Accept N": chạm là đánh dấu mọi gợi ý,
 có Undo như thường. Tab Review ở màn cảm ứng nói về viên thuốc, không nói phím X / J / K hay làn.
 
-## MDAN-080 · Cây sâu: không lớp mờ ở mép phải, tự cuộn ngang tới tên file đang mở
-21/11/2026 · `md-annotate/css/tree.css`, `md-annotate/js/ui/tree.js`
+## MDAN-080 · Cây sâu cuộn ngang, tự cuộn tới tên file đang mở
+21/11/2026 · `md-annotate/js/ui/tree.js`, `md-annotate/js/core/place.js`
 
-Sửa MDAN-063: cây sâu vẫn cuộn ngang trong thanh bên (MDAN-060 giữ nguyên), nhưng không còn lớp mờ dần nào ở mép phải, ở mọi
-trạng thái. Cột ⋯ dính mép phải có nền đặc cùng màu hàng: tên cuộn dưới nó dừng gọn, không lộ qua nút. Mở file, chọn hàng
-bằng bàn phím hay bấm, hiện cây, đổi bề rộng cây, mở / gập làm đổi độ sâu: cây tự cuộn ngang vừa đủ để thấy đầu tên hàng ấy
-(như VS Code). Người dùng tự cuộn ngang thì không bị kéo lại.
+Sửa MDAN-063: cây sâu vẫn cuộn ngang trong thanh bên (MDAN-060). Mở file, chọn hàng (bàn phím hay bấm), hiện cây, đổi bề rộng
+cây, mở / gập làm đổi độ sâu: cây tự cuộn ngang vừa đủ để thấy đầu tên hàng ấy, như VS Code. Người dùng tự cuộn ngang thì
+không bị kéo lại.
