@@ -4,7 +4,6 @@
 .ma-dlg, .ma-pop.is-sheet { overscroll-behavior: contain; }
 /* ĐIỆN THOẠI */
 @media (max-width: 1080px) {
-  .ma-grid > .ma-panel { display: none; }
   /* Thanh đáy: số nhận xét (mở panel trong tấm trượt) và nút chép; cao --dock-h (tokens.css). */
   body { padding-bottom: calc(var(--dock-h) + var(--sa-b)); }
   .ma-dock {
@@ -20,25 +19,12 @@
   .ma-dock__list::after { content: ''; width: 7px; height: 7px; margin-left: 2px; border: solid currentColor; border-width: 2px 2px 0 0; transform: translateY(2px) rotate(-45deg); }
   .ma-fab { bottom: calc(var(--dock-h) + var(--dock-gap) + var(--sa-b)); }
   .ma-toast { bottom: calc(var(--dock-h) + var(--dock-gap) + var(--sa-b) + var(--kb)); }
-  /* Tấm panel: thẻ là .ma-panel (tự cuộn thân; thẻ không cuộn, không có thanh ở góc bo). Cao min(86vh, 760px) cộng viền trên. */
-  .ma-dlg--panel .ma-panel {
-    position: static; width: min(640px, calc(100vw - var(--sa-l) - var(--sa-r))); max-width: 100vw; margin: auto auto 0;
-    height: calc(min(86vh, 760px) + 1px); min-height: 0; padding-top: var(--s3);
-    border: 1px solid var(--line); border-bottom: 0; border-radius: var(--r-lg) var(--r-lg) 0 0; box-shadow: var(--shadow);
-    background: var(--grip), var(--surface);
-  }
-  .ma-dlg--panel .ma-panel__foot { padding-bottom: calc(var(--s3) + var(--sa-b)); }
-  .ma-dlg--panel .ma-panel__close { display: inline-flex; }
-  .ma-dlg--panel .ma-panel__grip, .ma-dlg--panel #btn-rail { display: none; }
-  .ma-dlg--panel .ma-kbd { display: none; }
 }
 /* Màn cảm ứng và điện thoại: mọi điều khiển cao ít nhất --h-touch. */
 @media (max-width: 720px), (pointer: coarse) {
-  .ma-pop__done, .ma-chip, .ma-opts summary, .ma-rail__n, .ma-toast__btn { min-height: var(--h-touch); }
-  .ma-item__act .ma-icbtn, .ma-rail .ma-rail__copy { width: var(--h-touch); height: var(--h-touch); }
-  .ma-pathrow .ma-input { height: var(--h-touch); }
+  .ma-pop__done, .ma-chip, .ma-toast__btn { min-height: var(--h-touch); }
   /* Safari iOS phóng to trang khi focus ô chữ nhỏ hơn 16px, và không thu lại. */
-  #pop-text, .ma-pathrow .ma-input { font-size: var(--fs-lg); }
+  #pop-text { font-size: var(--fs-lg); }
   /* Settings: hàng ô đánh dấu (dialogs.css đặt --h-sm cùng độ đặc hiệu) và thanh trượt cao --h-touch; thanh trượt chừa
      một dải bên phải để vuốt dọc cuộn hộp mà không đổi giá trị. */
   .ma-set__h .ma-check { min-height: var(--h-touch); }
@@ -57,10 +43,6 @@
   body:has(#start:not([hidden])) { padding-bottom: var(--sa-b); }
   body:has(#start:not([hidden])) .ma-dock { display: none; }
 }
-/* Máy 320px: nhóm tab xuống dòng. */
-@media (max-width: 359px) {
-  .ma-fmt span { white-space: normal; text-align: center; line-height: var(--lh-tight); padding-block: var(--s1); }
-}
 /* Hộp nhận xét thành tấm trượt đáy ở máy hẹp hoặc màn cảm ứng: tay nắm, trượt lên khi mở (như mọi tấm đáy); chip gợi ý một
    hàng cuộn ngang. Nền mờ phía sau là #pop-scrim (lớp fixed riêng, như hộp thoại: dialogs.css), nhẹ hơn hộp thoại
    (--scrim-live, vì không chặn chạm: chạm ra ngoài vẫn tới trang và đóng hộp); ui/popup.js chỉ hiện nó khi không chọn nhiều
@@ -76,7 +58,7 @@
 }
 /* Mọi tấm đáy trượt lên khi mở: hộp nhận xét, panel (≤ 1080px), History / Hints (≤ 720px). */
 @media (prefers-reduced-motion: no-preference) {
-  .ma-pop.is-sheet:not([hidden]), .ma-dlg--panel[open] .ma-panel { animation: ma-sheet-in var(--dur-sheet) var(--ease); }
+  .ma-pop.is-sheet:not([hidden]) { animation: ma-sheet-in var(--dur-sheet) var(--ease); }
 }
 @media (prefers-reduced-motion: no-preference) and (max-width: 720px) {
   .ma-dlg[open]:not(.ma-dlg--center) .ma-dlg__in { animation: ma-sheet-in var(--dur-sheet) var(--ease); }

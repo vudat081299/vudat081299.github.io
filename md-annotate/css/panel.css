@@ -1,28 +1,57 @@
-/* Panel bên phải: tab, mép kéo, thanh dọc thu gọn, thẻ nhận xét, tab Prompt và Options. */
-/* CỘT PHẢI: một panel — đầu (tab), thân (chỗ cuộn duy nhất), đáy (nút chép, luôn thấy). */
+/* Panel bên phải: khung, mép kéo, thanh dọc thu gọn, tấm trượt ≤ 1080px, thẻ nhận xét, tab Prompt và Options.
+   Mỗi component một đoạn liền, kể cả luật của màn cảm ứng / điện thoại cho nó. Tab Review: css/review.css. */
+
+/* PANEL: một khung — đầu (tab), thân (chỗ cuộn duy nhất), đáy (nút chép, luôn thấy). Chạy từ đỉnh vùng nội dung tới đáy
+   khung nhìn: lúc chưa cuộn và lúc đã dính đều trọn trong màn hình. */
 .ma-panel {
-  /* Panel chạy từ đỉnh vùng nội dung tới đáy khung nhìn: lúc chưa cuộn và lúc đã dính đều trọn trong màn hình. */
   position: sticky; top: calc(var(--bar-h) + 1px + var(--s4));
   height: calc(100vh - var(--bar-h) - 1px - 2 * var(--s4)); min-height: 360px;
   display: flex; flex-direction: column; min-width: 0; overflow: hidden;
   background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--shadow-1);
+  container-type: inline-size;
 }
 .ma-panel__head { flex: none; display: flex; align-items: center; gap: var(--s1); padding: var(--s3); border-bottom: 1px solid var(--line-2); }
 .ma-seg { flex: 1; min-width: 0; }   /* nhóm tab: base.css */
 /* Ba tab trong panel 320–560px: đệm hẹp; panel hẹp thì bỏ huy hiệu (số vẫn ở thanh đáy, thanh dọc, tab Review). */
-.ma-panel { container-type: inline-size; }
 .ma-ptab { flex: 1 1 auto; min-width: 0; padding: 0 calc(1.5 * var(--s1)); gap: var(--s1); }
 @container (max-width: 389px) { #n-review { display: none; } }
 @container (max-width: 345px) { .ma-ptab__n { display: none; } .ma-panel__head { padding-inline: var(--s2); } }
 .ma-panel__close { display: none; }
-/* Kéo mép trái để đổi bề rộng panel. */
+/* Kéo mép trái để đổi bề rộng panel. Vạch là chỉ báo trạng thái (≥ 3:1): rê / kéo --edge-on, focus --ring; --accent chỉ
+   ~2,3:1 trên nền sáng. */
 .ma-panel__grip { position: absolute; z-index: 2; left: 0; top: 0; bottom: 0; width: var(--drag-w); cursor: col-resize; touch-action: none; }
 .ma-panel__grip::before { content: ''; position: absolute; top: var(--s3); bottom: var(--s3); left: 0; width: var(--drag-bar); border-radius: var(--r-pill); background: transparent; transition: background var(--dur) var(--ease); }
-/* Vạch là chỉ báo trạng thái (≥ 3:1): rê / kéo --edge-on, focus --ring; --accent chỉ ~2,3:1 trên nền sáng. */
 .ma-panel__grip:hover::before, .ma-panel__grip.is-drag::before { background: var(--edge-on); }
 .ma-tabbing .ma-panel__grip:focus-visible::before { background: var(--ring); }
 .ma-panel__grip:focus-visible { outline: none; }
-/* Thu gọn thành thanh dọc: còn nút mở, số nhận xét, tải và chép. */
+.ma-panel__body { flex: 1 1 auto; min-height: 0; overflow: auto; overscroll-behavior: contain; padding: var(--s3); }
+.ma-panel__foot {
+  flex: none; display: flex; flex-direction: column; gap: var(--s2);
+  padding: var(--s3); border-top: 1px solid var(--line-2); background: var(--surface);
+}
+.ma-foot__stat { display: flex; justify-content: space-between; gap: var(--s2); font: 500 var(--fs-xs)/var(--lh-tight) var(--mono); color: var(--ink-3); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ma-foot__stat > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.ma-foot__row { display: flex; gap: var(--s2); }
+.ma-copy { flex: 1; }
+.ma-copy.is-done { filter: none; }
+/* TẤM TRƯỢT (≤ 1080px): panel ra khỏi lưới; thanh đáy (css/popup.css) mở nó trong #dlg-panel. Thẻ là .ma-panel (tự cuộn
+   thân; thẻ không cuộn, không có thanh ở góc bo). Cao min(86vh, 760px) cộng viền trên. */
+@media (max-width: 1080px) {
+  .ma-grid > .ma-panel { display: none; }
+  .ma-dlg--panel .ma-panel {
+    position: static; width: min(640px, calc(100vw - var(--sa-l) - var(--sa-r))); max-width: 100vw; margin: auto auto 0;
+    height: calc(min(86vh, 760px) + 1px); min-height: 0; padding-top: var(--s3);
+    border: 1px solid var(--line); border-bottom: 0; border-radius: var(--r-lg) var(--r-lg) 0 0; box-shadow: var(--shadow);
+    background: var(--grip), var(--surface);
+  }
+  .ma-dlg--panel .ma-panel__foot { padding-bottom: calc(var(--s3) + var(--sa-b)); }
+  .ma-dlg--panel .ma-panel__close { display: inline-flex; }
+  .ma-dlg--panel .ma-panel__grip, .ma-dlg--panel #btn-rail { display: none; }
+  .ma-dlg--panel .ma-kbd { display: none; }
+}
+@media (prefers-reduced-motion: no-preference) { .ma-dlg--panel[open] .ma-panel { animation: ma-sheet-in var(--dur-sheet) var(--ease); } }
+
+/* THANH DỌC (panel thu gọn, html.ma-railed; cột lưới --rail ở base.css): còn nút mở, số nhận xét, tải và chép. */
 .ma-rail { display: none; }
 html.ma-railed .ma-panel > :is(.ma-panel__grip, .ma-panel__head, .ma-panel__body, .ma-panel__foot) { display: none; }
 html.ma-railed .ma-grid > .ma-panel .ma-rail { display: flex; flex-direction: column; align-items: center; gap: var(--s2); height: 100%; padding: var(--s2) 0; }
@@ -35,18 +64,12 @@ html.ma-railed .ma-grid > .ma-panel .ma-rail { display: flex; flex-direction: co
 .ma-rail .ma-rail__copy { flex: none; width: var(--h); height: var(--h); padding: 0; }
 .ma-rail__copy.is-done svg { display: none; }
 .ma-rail__copy.is-done::after { content: '✓'; font-weight: 600; }
-.ma-panel__body { flex: 1 1 auto; min-height: 0; overflow: auto; overscroll-behavior: contain; padding: var(--s3); }
-.ma-panel__foot {
-  flex: none; display: flex; flex-direction: column; gap: var(--s2);
-  padding: var(--s3); border-top: 1px solid var(--line-2); background: var(--surface);
+@media (max-width: 720px), (pointer: coarse) {
+  .ma-rail__n { min-height: var(--h-touch); }
+  .ma-rail .ma-rail__copy { width: var(--h-touch); height: var(--h-touch); }
 }
-.ma-foot__stat { display: flex; justify-content: space-between; gap: var(--s2); font: 500 var(--fs-xs)/var(--lh-tight) var(--mono); color: var(--ink-3); font-variant-numeric: tabular-nums; white-space: nowrap; }
-.ma-foot__stat > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
-.ma-foot__row { display: flex; gap: var(--s2); }
-.ma-copy { flex: 1; }
-.ma-copy.is-done { filter: none; }
 
-/* Thẻ nhận xét: không viền; nhận xét nổi bật, trích dẫn mờ có vạch trái (một cạnh nên không bo, REPO-025). */
+/* THẺ NHẬN XÉT: nhận xét nổi bật, trích dẫn mờ có vạch trái (một cạnh nên không bo, REPO-025). */
 .ma-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--s1); }
 .ma-item {
   position: relative; display: flex; align-items: flex-start; border-radius: var(--r);
@@ -77,13 +100,16 @@ html.ma-railed .ma-grid > .ma-panel .ma-rail { display: flex; flex-direction: co
 .ma-item:hover .ma-item__act, .ma-item:focus-within .ma-item__act, .ma-item.is-active .ma-item__act { opacity: 1; }
 @media (hover: none) { .ma-item__act { opacity: 1; } }
 .ma-item__act .ma-icbtn { width: var(--h-sm); height: var(--h-sm); }
+@media (max-width: 720px), (pointer: coarse) { .ma-item__act .ma-icbtn { width: var(--h-touch); height: var(--h-touch); } }
 
-/* Nhóm tab kiểu trích (radio): hình như .ma-tabs (base.css); mỗi nhãn chia đều. */
+/* TAB PROMPT: kiểu trích, Options (gập), hộp prompt. */
+/* Nhóm tab kiểu trích (radio): hình như .ma-tabs (base.css); mỗi nhãn chia đều. Máy 320px: chữ xuống dòng. */
 .ma-fmt { margin-bottom: var(--s2); }
 .ma-fmt label { flex: 1; position: relative; display: flex; }
 .ma-fmt input { position: absolute; opacity: 0; pointer-events: none; }
 .ma-fmt span { flex: 1; cursor: pointer; }
 .ma-tabbing .ma-fmt input:focus-visible + span { outline: var(--ring-w) solid var(--ring); outline-offset: 1px; }
+@media (max-width: 359px) { .ma-fmt span { white-space: normal; text-align: center; line-height: var(--lh-tight); padding-block: var(--s1); } }
 .ma-opts { margin-bottom: var(--s3); border: 1px solid var(--line); border-radius: var(--r); }
 .ma-opts summary {
   display: flex; align-items: center; gap: var(--s2); min-height: var(--h); padding: 0 var(--s3);
@@ -103,16 +129,20 @@ html.ma-railed .ma-grid > .ma-panel .ma-rail { display: flex; flex-direction: co
 /* Ô Folder thẳng chữ của ô đánh dấu trên nó (.ma-check, base.css). */
 .ma-pathrow { display: flex; align-items: center; gap: var(--s2); margin: 0 0 var(--s2) calc(var(--ic-box) + var(--s3)); }
 .ma-pathrow .ma-input { height: var(--h-sm); padding: 0 var(--s2); font: 500 var(--fs-xs) var(--mono); }
-/* Tab Prompt: thân panel không cuộn; Options (mở) cuộn riêng, tối đa ~38% chiều cao; khung prompt lấp phần còn lại
-   và tự cuộn. Hai vùng cuộn đứng cạnh nhau, không lồng nhau. */
-/* :where() giữ độ ưu tiên thấp, để luật thu gọn panel (html.ma-railed …) vẫn ẩn được thân panel. */
+@media (max-width: 720px), (pointer: coarse) {
+  .ma-opts summary { min-height: var(--h-touch); }
+  .ma-pathrow .ma-input { height: var(--h-touch); font-size: var(--fs-lg); }
+}
+/* Thân panel không cuộn; Options (mở) cuộn riêng, tối đa ~38% chiều cao; khung prompt lấp phần còn lại và tự cuộn. Hai
+   vùng cuộn đứng cạnh nhau, không lồng nhau. :where() giữ độ ưu tiên thấp, để luật thu gọn panel (html.ma-railed …) vẫn
+   ẩn được thân panel. */
 .ma-panel__body:has(> :where(#pane-prompt):not([hidden])) { overflow: hidden; display: flex; flex-direction: column; }
 #pane-prompt:not([hidden]) { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
 #pane-prompt .ma-opts { flex: none; }
 #pane-prompt .ma-opts[open] .ma-opts__in { max-height: min(38vh, 360px); overflow: auto; overscroll-behavior: contain; }
 #pane-prompt .ma-out { flex: 1 1 auto; min-height: 120px; overflow: auto; overscroll-behavior: contain; }
-/* Góc bo --r: viền trên / dưới trong suốt dày bằng bán kính để thanh cuộn hệ thống không chạm đường cong; nét viền vẽ
-   bằng outline (theo góc bo), đệm dọc trừ đi phần viền ấy. */
+/* Hộp prompt. Góc bo --r: viền trên / dưới trong suốt dày bằng bán kính để thanh cuộn hệ thống không chạm đường cong; nét
+   viền vẽ bằng outline (theo góc bo), đệm dọc trừ đi phần viền ấy. */
 .ma-out {
   margin: 0; padding: 0 var(--s3); min-height: 96px;
   white-space: pre-wrap; overflow-wrap: anywhere;
