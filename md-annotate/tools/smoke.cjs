@@ -80,10 +80,27 @@ async function openOpts(page) {
 const inView = (page, sel) => page.$eval(sel, (el) => { const r = el.getBoundingClientRect(); return r.width > 0 && r.top >= 0 && r.bottom <= innerHeight; });
 const out = (page) => page.$eval('#out', (el) => el.textContent);
 const items = (page) => page.$$eval('#list .ma-item', (els) => els.map((e) => e.textContent));
+/* Hàm màu trong trang, tiêm vào mọi context (addInitScript): parse('rgb(…)' | 'color(srgb …)') → [r, g, b, a] (0–255),
+   over(trên, dưới) trộn alpha, lum(chuỗi màu | [r, g, b]) độ sáng tương đối, ratio(a, b) tương phản (2 số lẻ). */
+const pageColors = () => {
+  const parse = (c) => { const m = c.match(/[\d.]+/g).map(Number); return c.startsWith('color(') ? [m[0] * 255, m[1] * 255, m[2] * 255, m.length > 3 ? m[3] : 1] : [m[0], m[1], m[2], m.length > 3 ? m[3] : 1]; };
+  const over = (t, u) => [0, 1, 2].map((i) => t[i] * t[3] + u[i] * (1 - t[3])).concat(1);
+  const lum = (c) => { const x = (typeof c === 'string' ? parse(c) : c).slice(0, 3).map((n) => { n /= 255; return n <= 0.03928 ? n / 12.92 : ((n + 0.055) / 1.055) ** 2.4; }); return 0.2126 * x[0] + 0.7152 * x[1] + 0.0722 * x[2]; };
+  const ratio = (a, b) => { const x = lum(a), y = lum(b); return +((Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05)).toFixed(2); };
+  window.__c = { parse, over, lum, ratio };
+};
+/* Hàng của cây theo tên. */
+const rowSel = (name) => `#tree-list .ma-trow:has(> .ma-trow__name:text-is("${name}"))`;
+/* Vẽ cây bằng mô hình giả (ui/tree.js renderTree), actions không làm gì. */
+const renderModel = (page, model) => page.evaluate(async (m) => {
+  const T = await import('./js/ui/tree.js'), noop = () => '';
+  T.renderTree(m, { open: noop, toggle: noop, newFile: noop, newDir: noop, rename: noop, move: noop, remove: noop, importDir: noop, download: noop, collapseAll: noop });
+}, model);
+const DBL_MS = 700;   // quá ngưỡng bấm đúp: kéo ngay sau một cú bấm thành chọn theo từ
 /* Dán chữ vào ô Edit như người dùng dán (sự kiện paste rồi input). */
 const pasteText = (page, t) => page.evaluate((t) => { const ta = document.getElementById('src-input'); ta.focus(); ta.dispatchEvent(new Event('paste')); ta.value = t; ta.dispatchEvent(new Event('input')); }, t);
 const accentCheck = (page) => page.evaluate(() => {
-  const lum = (c) => { const x = c.match(/[\d.]+/g).slice(0, 3).map((n) => { n /= 255; return n <= 0.03928 ? n / 12.92 : ((n + 0.055) / 1.055) ** 2.4; }); return 0.2126 * x[0] + 0.7152 * x[1] + 0.0722 * x[2]; };
+  const { lum } = __c;
   const b = document.getElementById('btn-copy'), was = b.disabled;
   b.disabled = false;   // màu của nút chính khi bật; nút tắt thì xám
   const cs = getComputedStyle(b), bg = lum(cs.backgroundColor), fg = lum(cs.color);
@@ -124,7 +141,14 @@ const cornerClash = (page) => page.evaluate(() => {
   const browser = await chromium.launch();
   /* Cây hiện sẵn ở mọi khổ > 720px (MDAN-061) làm hẹp #doc. Phần không thử cây: tắt cây sẵn (prefs.tree = false khi phiên chưa
      chọn), để số đo bề rộng như cũ. Phần thử cây mở context bằng treeContext (không vá). */
-  const treeContext = browser.newContext.bind(browser);
+  const rawContext = browser.newContext.bind(browser);
+  /* Mọi context: hàm màu trong trang (window.__c, pageColors) và giảm chuyển động (đo trạng thái cuối, không giữa chuyển
+     động); bài thử chuyển động truyền reducedMotion: 'no-preference'. */
+  const treeContext = async (o) => {
+    const c = await rawContext(Object.assign({ reducedMotion: 'reduce' }, o));
+    await c.addInitScript(pageColors);
+    return c;
+  };
   browser.newContext = async (o) => {
     const c = await treeContext(o);
     await c.addInitScript(() => {
@@ -142,6 +166,12 @@ const cornerClash = (page) => page.evaluate(() => {
     page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
     page.on('pageerror', (e) => errors.push(String(e)));
   };
+  /* Trang mới của context c, đã mở và nạp xong marked / DOMPurify. */
+  const openPage = async (c) => {
+    const p = await c.newPage(); watch(p);
+    await p.goto(BASE); await p.waitForFunction(() => window.marked && window.DOMPurify);
+    return p;
+  };
 
   /* ---------- Máy rộng ---------- */
   const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 }, colorScheme: 'light' });
@@ -155,10 +185,7 @@ const cornerClash = (page) => page.evaluate(() => {
   check('đầu trang gọn: văn bản bắt đầu ≤ 130px', docTop <= 130, Math.round(docTop) + 'px');
   check('nền sáng theo hệ điều hành', !(await page.evaluate(() => document.documentElement.classList.contains('dark'))));
 
-  await page.evaluate((t) => {
-    const ta = document.getElementById('src-input');
-    ta.focus(); ta.dispatchEvent(new Event('paste')); ta.value = t; ta.dispatchEvent(new Event('input'));
-  }, DOC);
+  await pasteText(page, DOC);
   await page.waitForTimeout(100);
   check('dán vào ô trống thì sang tab Hiển thị', await page.isVisible('#v-md h1'));
 
@@ -167,7 +194,7 @@ const cornerClash = (page) => page.evaluate(() => {
   check('link ở bản dựng thành chữ, không còn <a>', lk.a === 0 && lk.span === 'liên kết tới ví dụ' && lk.title === 'https://example.com/path', JSON.stringify(lk));
   await page.click('#v-md .ma-a');
   check('bấm link không rời trang', page.url() === BASE || page.url().startsWith(BASE), page.url());
-  await page.waitForTimeout(700);   // quá ngưỡng bấm đúp: kéo ngay sau cú bấm trên thành chọn theo từ
+  await page.waitForTimeout(DBL_MS);
   await dragSelect(page, '#v-md', 'liên kết tới ví dụ');
   check('kéo trên link mở hộp nhận xét', await page.isVisible('#pop') && (await page.textContent('#pop-q')) === 'liên kết tới ví dụ', await page.textContent('#pop-q'));
   await page.keyboard.press('Escape');
@@ -199,7 +226,7 @@ const cornerClash = (page) => page.evaluate(() => {
   // 2b. Tô màu nguồn: text vẫn đúng bằng nguồn, có token, highlight vẫn nằm đúng chỗ, tương phản, nút tắt.
   const syn = await page.evaluate(() => {
     const v = document.getElementById('v-src');
-    const lum = (c) => { const x = c.match(/[\d.]+/g).slice(0, 3).map((n) => { n /= 255; return n <= 0.03928 ? n / 12.92 : ((n + 0.055) / 1.055) ** 2.4; }); return 0.2126 * x[0] + 0.7152 * x[1] + 0.0722 * x[2]; };
+    const { lum } = __c;
     const bg = lum(getComputedStyle(document.getElementById('doc')).backgroundColor);
     const low = [...v.querySelectorAll('span')].map((sp) => { const l = lum(getComputedStyle(sp).color); return [sp.className, (Math.max(l, bg) + 0.05) / (Math.min(l, bg) + 0.05)]; }).filter((x) => x[1] < 4.5);
     const pick = (c) => [...v.querySelectorAll('.' + c)].map((e) => e.textContent);
@@ -391,7 +418,7 @@ const cornerClash = (page) => page.evaluate(() => {
   // 10b. Văn bản dài, hơn 30 nhận xét: nút chép luôn trong khung nhìn, không cần cuộn (máy rộng và 1024px).
   await page.click('#btn-new');
   const LONG = Array.from({ length: 120 }, (_, i) => `Đoạn số ${i + 1} của một văn bản dài dùng để thử cột phải.`).join('\n\n');
-  await page.evaluate((t) => { const ta = document.getElementById('src-input'); ta.focus(); ta.dispatchEvent(new Event('paste')); ta.value = t; ta.dispatchEvent(new Event('input')); }, LONG);
+  await pasteText(page, LONG);
   await page.waitForTimeout(150);
   await page.click('.ma-tab[data-view="view"]');
   for (let i = 1; i <= 32; i++) {
@@ -564,7 +591,7 @@ const cornerClash = (page) => page.evaluate(() => {
   /* Vạch của tab chọn chuyển màu (transition, cả ::after): đo màu cuối, không đo giữa chừng. */
   await dpage.evaluate(() => document.getAnimations().forEach((a) => a.finish()));
   const tab = await dpage.evaluate(() => {
-    const lum = (c) => { const v = c.match(/[\d.]+/g).slice(0, 3).map((x) => { x /= 255; return x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4; }); return 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2]; };
+    const { lum } = __c;
     const t = document.querySelector('.ma-ptab[aria-selected="true"]');
     const a = lum(getComputedStyle(t).backgroundColor), b = lum(getComputedStyle(t.parentElement).backgroundColor);
     const v = document.querySelector('.ma-tab[aria-selected="true"]'), u = lum(getComputedStyle(v, '::after').backgroundColor), d = lum(getComputedStyle(document.getElementById('doc')).backgroundColor);
@@ -573,7 +600,7 @@ const cornerClash = (page) => page.evaluate(() => {
   await dpage.click('#btn-sample');
   await dpage.click('.ma-tab[data-view="src"]');
   const dlow = await dpage.evaluate(() => {
-    const lum = (c) => { const x = c.match(/[\d.]+/g).slice(0, 3).map((n) => { n /= 255; return n <= 0.03928 ? n / 12.92 : ((n + 0.055) / 1.055) ** 2.4; }); return 0.2126 * x[0] + 0.7152 * x[1] + 0.0722 * x[2]; };
+    const { lum } = __c;
     const bg = lum(getComputedStyle(document.getElementById('doc')).backgroundColor);
     const sp = [...document.querySelectorAll('#v-src span')];
     return { n: sp.length, low: sp.map((e) => { const l = lum(getComputedStyle(e).color); return [e.className, (Math.max(l, bg) + 0.05) / (Math.min(l, bg) + 0.05)]; }).filter((x) => x[1] < 4.5) };
@@ -665,10 +692,9 @@ const cornerClash = (page) => page.evaluate(() => {
   /* ---------- Focus mode theo section ---------- */
   const fctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
   await fctx.addInitScript(() => { try { if (!sessionStorage.getItem('f')) { localStorage.setItem('md-annotate:prefs:v1', JSON.stringify({ focus: true, dim: 20 })); sessionStorage.setItem('f', '1'); } } catch (e) {} });
-  const f = await fctx.newPage(); watch(f);
-  await f.goto(BASE); await f.waitForFunction(() => window.marked && window.DOMPurify);
+  const f = await openPage(fctx);
   const FDOC = ['# Title', '', 'Intro paragraph.', '', '## Alpha', '', 'Alpha one.', '', 'Alpha two.', '', '```', '# not a heading', '```', '', '## Beta', '', 'Beta one.', ''].join('\n');
-  await f.evaluate((t) => { const ta = document.getElementById('src-input'); ta.focus(); ta.dispatchEvent(new Event('paste')); ta.value = t; ta.dispatchEvent(new Event('input')); }, FDOC);
+  await pasteText(f, FDOC);
   await f.waitForTimeout(150);
   await f.click('.ma-tab[data-view="view"]');
   await f.hover('#v-md p:has-text("Alpha two")'); await f.waitForTimeout(350);
@@ -687,8 +713,7 @@ const cornerClash = (page) => page.evaluate(() => {
   /* ---------- Cuộn theo nhau ở Song song: cùng một đoạn ở giữa hai khung ---------- */
   const sctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   await sctx.addInitScript(() => { try { if (!sessionStorage.getItem('s')) { localStorage.setItem('md-annotate:prefs:v1', JSON.stringify({ view: 'split' })); sessionStorage.setItem('s', '1'); } } catch (e) {} });
-  const sp = await sctx.newPage(); watch(sp);
-  await sp.goto(BASE); await sp.waitForFunction(() => window.marked && window.DOMPurify);
+  const sp = await openPage(sctx);
   const parts = [];
   for (let i = 1; i <= 24; i++) {
     parts.push(`## Section ${i}`, '', 'Short paragraph number ' + i + '.', '');
@@ -696,7 +721,7 @@ const cornerClash = (page) => page.evaluate(() => {
     if (i % 4 === 0) parts.push('- one', '- two', '- three', '');
     if (i % 5 === 0) parts.push('| a | b |', '|---|---|', '| 1 | 2 |', '| 3 | 4 |', '');
   }
-  await sp.evaluate((t) => { const ta = document.getElementById('src-input'); ta.focus(); ta.dispatchEvent(new Event('paste')); ta.value = t; ta.dispatchEvent(new Event('input')); }, parts.join('\n'));
+  await pasteText(sp, parts.join('\n'));
   await sp.waitForTimeout(200);
   await sp.click('.ma-tab[data-view="split"]'); await sp.waitForTimeout(200);
   const centerOf = (pane, sel) => sp.evaluate(([pane, sel]) => {
@@ -854,8 +879,7 @@ const cornerClash = (page) => page.evaluate(() => {
   {
     const dctx = await browser.newContext({ viewport: { width: 1280, height: 900 }, colorScheme: 'light' });
     await dctx.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: new URL(BASE).origin });
-    const dp = await dctx.newPage(); watch(dp);
-    await dp.goto(BASE); await dp.waitForFunction(() => window.marked && window.DOMPurify);
+    const dp = await openPage(dctx);
     const setText = (t) => dp.evaluate((t) => { const ta = document.getElementById('src-input'); ta.value = t; ta.dispatchEvent(new Event('input')); }, t);
     const clip = () => dp.evaluate(() => navigator.clipboard.readText());
     await setText('# Doc A\n\nalpha line\n\nTarget sentence here.\n'); await dp.waitForTimeout(400);
@@ -904,10 +928,9 @@ const cornerClash = (page) => page.evaluate(() => {
   // ── review: render & select ──
   {
     const rctx = await browser.newContext({ viewport: { width: 1280, height: 560 }, colorScheme: 'light' });
-    const rp = await rctx.newPage(); watch(rp);
-    await rp.goto(BASE); await rp.waitForFunction(() => window.marked && window.DOMPurify);
+    const rp = await openPage(rctx);
     const fill = async (t) => {
-      await rp.evaluate((t) => { const ta = document.getElementById('src-input'); ta.dispatchEvent(new Event('paste')); ta.value = t; ta.dispatchEvent(new Event('input')); }, t);
+      await pasteText(rp, t);
       await rp.waitForTimeout(350);
     };
     // Markdown dán vào không được thoát khỏi khung Preview: <style> đè CSS cả trang, id trùng id giao diện, lớp phủ cố định,
@@ -948,8 +971,7 @@ const cornerClash = (page) => page.evaluate(() => {
   // ── review: layout & scroll ──
   const rctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   await rctx.addInitScript(() => { try { if (!sessionStorage.getItem('r')) { localStorage.setItem('md-annotate:prefs:v1', JSON.stringify({ view: 'split', focus: true })); sessionStorage.setItem('r', '1'); } } catch (e) {} });
-  const rv = await rctx.newPage(); watch(rv);
-  await rv.goto(BASE); await rv.waitForFunction(() => window.marked && window.DOMPurify);
+  const rv = await openPage(rctx);
   const rvLoad = async (t) => {
     await rv.click('.ma-tab[data-view="edit"]');
     await rv.evaluate((t) => { const ta = document.getElementById('src-input'); ta.value = t; ta.dispatchEvent(new Event('input')); }, t);
@@ -1018,11 +1040,10 @@ const cornerClash = (page) => page.evaluate(() => {
   // ── nhận xét nhiều dòng: chọn bằng lề số dòng ──
   {
     const mctx2 = await browser.newContext({ viewport: { width: 1280, height: 900 }, colorScheme: 'light' });
-    const ml = await mctx2.newPage(); watch(ml);
-    await ml.goto(BASE); await ml.waitForFunction(() => window.marked && window.DOMPurify);
+    const ml = await openPage(mctx2);
     const ML = ['# Multi', '', 'Alpha line one.', 'Beta line two.', '', '- [ ] same item', 'Gamma middle.', '- [ ] same item', 'Delta end.',
       '```js', 'const x = 1;', '```', 'Long ' + 'word '.repeat(240), ''].join('\r\n');   // CRLF: ô nhập đổi thành \n
-    await ml.evaluate((t) => { const ta = document.getElementById('src-input'); ta.focus(); ta.dispatchEvent(new Event('paste')); ta.value = t; ta.dispatchEvent(new Event('input')); }, ML);
+    await pasteText(ml, ML);
     await ml.waitForTimeout(150);
     await ml.click('.ma-tab[data-view="src"]'); await ml.waitForTimeout(100);
     const gut = (n) => ml.$eval(`#v-src .ma-ln:nth-child(${n})`, (el) => { el.scrollIntoView({ block: 'nearest' }); const r = el.getBoundingClientRect(); return { x: r.left + 4, y: r.top + 8 }; });
@@ -1145,12 +1166,11 @@ const cornerClash = (page) => page.evaluate(() => {
   {
     const rctx = await browser.newContext({ viewport: { width: 1280, height: 900 }, colorScheme: 'light' });
     await rctx.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: new URL(BASE).origin });
-    const rv = await rctx.newPage(); watch(rv);
-    await rv.goto(BASE); await rv.waitForFunction(() => window.marked && window.DOMPurify);
+    const rv = await openPage(rctx);
     const paras = Array.from({ length: 12 }, (_, i) => `Para A${i + 1} ` + 'chữ '.repeat(40).trim() + '.');
     const RV = ['# Review doc', '', 'Intro para one.', '', '## Part A', '', ...paras.flatMap((x) => [x, '']), '## Part B', '', '- item one', '- item two', '  - nested two', '- item three', '', 'Last para here.', ''].join('\n');
     const setText = (t) => rv.evaluate((t) => { const ta = document.getElementById('src-input'); ta.value = t; ta.dispatchEvent(new Event('input')); }, t);
-    await rv.evaluate((t) => { const ta = document.getElementById('src-input'); ta.focus(); ta.dispatchEvent(new Event('paste')); ta.value = t; ta.dispatchEvent(new Event('input')); }, RV);
+    await pasteText(rv, RV);
     await rv.waitForTimeout(200);
     await rv.click('.ma-tab[data-view="split"]'); await rv.waitForTimeout(250);
     // Đơn vị của chữ `n` ở Preview (khối hay mục), tìm làn cùng đỉnh; trạng thái của đơn vị ở hai khung.
@@ -1335,10 +1355,9 @@ const cornerClash = (page) => page.evaluate(() => {
   // ── hộp của các dòng đã chọn không đóng khi bấm ra ngoài (MDAN-014) ──
   {
     const sctx = await browser.newContext({ viewport: { width: 1280, height: 900 }, colorScheme: 'light' });
-    const st = await sctx.newPage(); watch(st);
-    await st.goto(BASE); await st.waitForFunction(() => window.marked && window.DOMPurify);
+    const st = await openPage(sctx);
     const SL = ['# Sticky', '', 'Alpha line one.', 'Beta line two.', '', 'Gamma middle.', 'Delta end.', ''].concat(Array.from({ length: 60 }, (_, i) => 'Filler line ' + (i + 1) + '.')).join('\n');
-    await st.evaluate((t) => { const ta = document.getElementById('src-input'); ta.focus(); ta.dispatchEvent(new Event('paste')); ta.value = t; ta.dispatchEvent(new Event('input')); }, SL);
+    await pasteText(st, SL);
     await st.waitForTimeout(150);
     await st.click('.ma-tab[data-view="src"]'); await st.waitForTimeout(100);
     const gut = (n) => st.$eval(`#v-src .ma-ln:nth-child(${n})`, (el) => { el.scrollIntoView({ block: 'center' }); const r = el.getBoundingClientRect(); return { x: r.left + 4, y: r.top + 8 }; });
@@ -1374,8 +1393,7 @@ const cornerClash = (page) => page.evaluate(() => {
   // ── hộp Settings giữa màn hình, nền sau mờ (MDAN-015) ──
   for (const [vw, vh, scheme] of [[1440, 900, 'light'], [1440, 900, 'dark'], [390, 844, 'light']]) {
     const gctx = await browser.newContext({ viewport: { width: vw, height: vh }, colorScheme: scheme, hasTouch: vw < 700, isMobile: vw < 700 });
-    const gp = await gctx.newPage(); watch(gp);
-    await gp.goto(BASE); await gp.waitForFunction(() => window.marked && window.DOMPurify);
+    const gp = await openPage(gctx);
     await gp.click('#btn-sample'); await gp.waitForTimeout(150);
     await gp.click('#btn-layout'); await gp.waitForTimeout(250);
     const g = await gp.$eval('#dlg-layout', (d) => { const r = d.querySelector('.ma-dlg__in').getBoundingClientRect(), l = d.getBoundingClientRect(); return { cx: r.left + r.width / 2, cy: r.top + r.height / 2, w: innerWidth, h: innerHeight, layer: [l.left, l.top, l.width, l.height], bg: getComputedStyle(d).backgroundColor, bd: getComputedStyle(d, '::backdrop').backgroundColor }; });
@@ -1393,8 +1411,7 @@ const cornerClash = (page) => page.evaluate(() => {
   // ── hộp Help: mở từ Settings, hai phần vẽ từ data/shortcuts.json và data/search-help.json (MDAN-015, MDAN-069) ──
   {
     const kctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, colorScheme: 'light' });
-    const kp = await kctx.newPage(); watch(kp);
-    await kp.goto(BASE); await kp.waitForFunction(() => window.marked && window.DOMPurify);
+    const kp = await openPage(kctx);
     await kp.click('#btn-sample'); await kp.waitForTimeout(150);
     await kp.click('#btn-layout'); await kp.click('#btn-keys');
     await kp.waitForSelector('#keys-list dl'); await kp.waitForTimeout(250);
@@ -1432,15 +1449,13 @@ const cornerClash = (page) => page.evaluate(() => {
   for (const [vw, vh, scheme] of [[390, 844, 'light'], [390, 844, 'dark'], [1280, 800, 'light'], [1280, 800, 'dark']]) {
     const touch = vw < 700;
     const lctx = await browser.newContext({ viewport: { width: vw, height: vh }, colorScheme: scheme, hasTouch: touch, isMobile: touch, deviceScaleFactor: touch ? 2 : 1 });
-    const lp = await lctx.newPage(); watch(lp);
-    await lp.goto(BASE); await lp.waitForFunction(() => window.marked && window.DOMPurify);
+    const lp = await openPage(lctx);
     await lp.click('#btn-sample'); await lp.waitForTimeout(150);
-    await lp.evaluate(async () => {   // cây vài file, để #btn-tree mở tấm trượt ở máy hẹp
-      const T = await import('./js/ui/tree.js'), nodes = [{ id: 'd', parent: null, kind: 'dir', name: 'docs' }];
+    {   // cây vài file, để #btn-tree mở tấm trượt ở máy hẹp
+      const nodes = [{ id: 'd', parent: null, kind: 'dir', name: 'docs' }];
       for (let i = 0; i < 6; i++) nodes.push({ id: 'f' + i, parent: i % 2 ? 'd' : null, kind: 'file', name: 'note-' + i + '.md' });
-      const noop = () => '';
-      T.renderTree({ nodes, open: 'f0', collapsed: [], counts: {}, title: 'Demo' }, { open: noop, toggle: noop, newFile: noop, newDir: noop, rename: noop, move: noop, remove: noop, importDir: noop, download: noop, collapseAll: noop });
-    });
+      await renderModel(lp, { nodes, open: 'f0', collapsed: [], counts: {}, title: 'Demo' });
+    }
     const tag = `${vw}×${vh} ${scheme}`, bg = scheme === 'dark' ? '#090b0a' : '#f5f6f3';
     const tc = () => lp.$eval('#theme-color', (x) => x.content);
     check(`lớp mờ ${tag}: theme-color lúc đầu là nền trang, html có nền đặt rõ`, (await tc()) === bg && (await lp.evaluate(() => getComputedStyle(document.documentElement).backgroundColor === getComputedStyle(document.body).backgroundColor)), await tc());
@@ -1478,8 +1493,7 @@ const cornerClash = (page) => page.evaluate(() => {
   //    không có nền mờ, vẫn chạm được lề số các dòng khác (MDAN-026) ──
   for (const scheme of ['light', 'dark']) {
     const sctx2 = await browser.newContext({ viewport: { width: 390, height: 844 }, colorScheme: scheme, hasTouch: true, isMobile: true, deviceScaleFactor: 2 });
-    const sp = await sctx2.newPage(); watch(sp);
-    await sp.goto(BASE); await sp.waitForFunction(() => window.marked && window.DOMPurify);
+    const sp = await openPage(sctx2);
     await sp.tap('#btn-sample'); await sp.waitForTimeout(150);
     const bg = scheme === 'dark' ? '#090b0a' : '#f5f6f3';
     const dim = () => sp.evaluate(() => {
@@ -1520,9 +1534,8 @@ const cornerClash = (page) => page.evaluate(() => {
   // ── đã đọc: J / K / X tiến lên được cả khi trang không cuộn được, cả khi bấm nhanh lúc đang cuộn mượt ──
   {
     const actx = await browser.newContext({ viewport: { width: 1280, height: 900 }, colorScheme: 'light' });
-    const ap = await actx.newPage(); watch(ap);
-    await ap.goto(BASE); await ap.waitForFunction(() => window.marked && window.DOMPurify);
-    const put = (t) => ap.evaluate((t) => { const ta = document.getElementById('src-input'); ta.focus(); ta.dispatchEvent(new Event('paste')); ta.value = t; ta.dispatchEvent(new Event('input')); }, t);
+    const ap = await openPage(actx);
+    const put = (t) => pasteText(ap, t);
     const lanes = (w) => ap.$$eval(`#wrap-${w} .ma-lane__b`, (bs) => bs.map((b) => (b.classList.contains('is-cur') ? '*' : '') + b.className.match(/is-(done|todo|changed)/)[1][0]).join(''));
     await put(['# Short', '', 'One para.', '', 'Two para.', '', 'Three para.', ''].join('\n')); await ap.waitForTimeout(250);
     for (const v of ['src', 'split']) {
@@ -1594,7 +1607,7 @@ const cornerClash = (page) => page.evaluate(() => {
     const paras = Array.from({ length: 24 }, (_, i) => `Para P${i + 1} ` + 'chữ đọc thử '.repeat(8 + (i % 3) * 4).trim() + '.');
     const MD = ['# Dwell doc', '', ...paras.flatMap((x) => [x, '']), '## Tail', '', 'Last para here.', ''].join('\n');
     const tick = async (ms = 120) => { await mp.waitForTimeout(60); await mp.clock.runFor(ms); };
-    await mp.evaluate((t) => { const ta = document.getElementById('src-input'); ta.focus(); ta.dispatchEvent(new Event('paste')); ta.value = t; ta.dispatchEvent(new Event('input')); }, MD);
+    await pasteText(mp, MD);
     await tick(400);
     await mp.click('.ma-tab[data-view="split"]'); await tick(300);
     await mp.click('#ptab-review'); await tick();
@@ -1670,8 +1683,7 @@ const cornerClash = (page) => page.evaluate(() => {
     {   // Bấm lặp lại một chỗ, thu phóng 150% (toạ độ lẻ điểm ảnh): cuộn đứng yên ở Split, Preview, Source.
       const zc = await browser.newContext({ viewport: { width: 1280, height: 800 }, deviceScaleFactor: 1.5 }), zp = await zc.newPage(); watch(zp);
       await zp.goto(BASE); await zp.waitForFunction(() => window.marked && window.DOMPurify);
-      await zp.evaluate((t) => { const ta = document.getElementById('src-input'); ta.focus(); ta.dispatchEvent(new Event('paste')); ta.value = t; ta.dispatchEvent(new Event('input')); },
-        Array.from({ length: 60 }, (_, i) => `## Section ${i}\n\nParagraph ${i} with some words to read and review here.\n`).join('\n'));
+      await pasteText(zp, Array.from({ length: 60 }, (_, i) => `## Section ${i}\n\nParagraph ${i} with some words to read and review here.\n`).join('\n'));
       await zp.waitForTimeout(400);
       const drift = {};
       for (const mode of ['split', 'view', 'src']) {
@@ -1775,13 +1787,12 @@ const cornerClash = (page) => page.evaluate(() => {
     const DIM = 0.3, RVD = 0.4;
     const xctx = await browser.newContext({ viewport: { width: 1920, height: 1300 }, colorScheme: 'light' });
     await xctx.addInitScript(() => { try { if (!sessionStorage.getItem('x')) { localStorage.setItem('md-annotate:prefs:v1', JSON.stringify({ view: 'split', focus: true, rvDim: true, tree: true })); sessionStorage.setItem('x', '1'); } } catch (e) {} });
-    const mx = await xctx.newPage(); watch(mx);
-    await mx.goto(BASE); await mx.waitForFunction(() => window.marked && window.DOMPurify);
+    const mx = await openPage(xctx);
     const sec = (X) => [`## Sec ${X}`, '', `Para ${X}1 reviewed text.`, '', `Para ${X}2 plain text.`, '', `- Item ${X}1 plain`, `- Item ${X}2 reviewed`, `- Item ${X}3 plain`, '',
       '| Col | Val |', '|---|---|', `| T${X}1 row1 | r |`, `| T${X}1 row2 | r |`, '', '| Col | Val |', '|---|---|', `| T${X}2 row1 | p |`, '',
       '```', `C${X}1 reviewed code`, '```', '', '```', `C${X}2 plain code`, '```', ''];
     const XDOC = ['# Doc', '', 'Intro line.', '', ...sec('A'), ...sec('B')].join('\n');
-    await mx.evaluate((t) => { const ta = document.getElementById('src-input'); ta.focus(); ta.dispatchEvent(new Event('paste')); ta.value = t; ta.dispatchEvent(new Event('input')); }, XDOC);
+    await pasteText(mx, XDOC);
     await mx.waitForTimeout(250);
     await mx.click('.ma-tab[data-view="split"]'); await mx.waitForTimeout(250);
     // Đơn vị: 0 # Doc, 1 Intro, 2 ## Sec A, 3–11 section A, 12 ## Sec B, 13–21 section B. Đã đọc: đoạn 1, mục 2, bảng 1, code 1.
@@ -2034,8 +2045,7 @@ const cornerClash = (page) => page.evaluate(() => {
 
     // 2560: cột cây vừa cạnh Split, kéo mép tới 420px vẫn còn chỗ (docked / tấm trượt theo chỗ: khối "cây docked" cuối file).
     const tctx = await treeContext({ viewport: { width: 2560, height: 900 }, colorScheme: 'light' });
-    const tp = await tctx.newPage(); watch(tp);
-    await tp.goto(BASE); await tp.waitForFunction(() => window.marked && window.DOMPurify);
+    const tp = await openPage(tctx);
     await tp.click('#btn-sample'); await tp.waitForTimeout(150);
     const t0 = await tstate(tp);
     check('cây: phiên một file của trang — có nút, cột hiện sẵn (MDAN-061)', t0.shown && t0.btn && t0.exp === 'true', JSON.stringify(t0));
@@ -2133,13 +2143,14 @@ const cornerClash = (page) => page.evaluate(() => {
     /* Cây 25 cấp (MDAN-060): thụt mỗi cấp bằng nhau (--tree-step), mỗi folder đang mở có đúng một vạch dưới tâm chevron (±0,5px,
        trùng điểm ảnh), dài đúng các hàng con cháu; tên hàng sâu nhất vẫn ≥ 96px; thân cây cuộn ngang, trang không; file mở ở
        cấp sâu nhất được cuộn ngang vào tầm nhìn. */
-    const deep25 = await tp.evaluate(async () => {
-      const T = await import('./js/ui/tree.js'), noop = () => '', nodes = [];
+    {
+      const nodes = [];
       let parent = null;
       for (let d = 0; d < 25; d++) { nodes.push({ id: 'z' + d, parent, kind: 'dir', name: d % 3 ? 'folder' : 'folder-' + d }); parent = 'z' + d; }
       nodes.push({ id: 'zf', parent, kind: 'file', name: 'deepest-note.md' }, { id: 'zr', parent: null, kind: 'file', name: 'top.md' });
-      T.renderTree({ sid: 'deep25', nodes, open: 'zf', collapsed: [], counts: {}, title: 'Deep' },
-        { open: noop, toggle: noop, newFile: noop, newDir: noop, rename: noop, move: noop, remove: noop, importDir: noop, download: noop, collapseAll: noop });
+      await renderModel(tp, { sid: 'deep25', nodes, open: 'zf', collapsed: [], counts: {}, title: 'Deep' });
+    }
+    const deep25 = await tp.evaluate(async () => {
       await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
       const rows = [...document.querySelectorAll('#tree-list .ma-trow')], by = Object.fromEntries(rows.map((r) => [r.dataset.id, r]));
       const chevX = (li) => { const s = li.querySelector('.ma-trow__chev').getBoundingClientRect(); return s.left + s.width / 2; };
@@ -2173,13 +2184,11 @@ const cornerClash = (page) => page.evaluate(() => {
        ⋯ một cột cố định: cùng x, cùng cỡ, giữa hàng; chuột: ẩn ở hàng thường, hiện ở file mở và khi rê, huy hiệu vẫn hiện khi rê. */
     const shallow = async (w) => {
       await tp.evaluate((w) => document.documentElement.style.setProperty('--tree', w + 'px'), w);
+      const nodes = [{ id: 'sd', parent: null, kind: 'dir', name: 'docs' }, { id: 'sg', parent: 'sd', kind: 'dir', name: 'guides' },
+        { id: 'sf', parent: 'sg', kind: 'file', name: 'a-very-long-file-name-that-must-truncate-with-an-ellipsis.md' }];
+      for (let i = 0; i < 30; i++) nodes.push({ id: 's' + i, parent: null, kind: 'file', name: 'file-' + i + (i % 4 ? '' : '-with-a-long-descriptive-name') + '.md' });
+      await renderModel(tp, { sid: 'shallow', nodes, open: 'sf', collapsed: [], counts: { sf: { c: 12, rv: 40 }, s1: { c: 3 } }, title: 'Shallow' });
       return tp.evaluate(async () => {
-        const T = await import('./js/ui/tree.js'), noop = () => '';
-        const nodes = [{ id: 'sd', parent: null, kind: 'dir', name: 'docs' }, { id: 'sg', parent: 'sd', kind: 'dir', name: 'guides' },
-          { id: 'sf', parent: 'sg', kind: 'file', name: 'a-very-long-file-name-that-must-truncate-with-an-ellipsis.md' }];
-        for (let i = 0; i < 30; i++) nodes.push({ id: 's' + i, parent: null, kind: 'file', name: 'file-' + i + (i % 4 ? '' : '-with-a-long-descriptive-name') + '.md' });
-        T.renderTree({ sid: 'shallow', nodes, open: 'sf', collapsed: [], counts: { sf: { c: 12, rv: 40 }, s1: { c: 3 } }, title: 'Shallow' },
-          { open: noop, toggle: noop, newFile: noop, newDir: noop, rename: noop, move: noop, remove: noop, importDir: noop, download: noop, collapseAll: noop });
         await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
         const b = document.getElementById('tree-body'), rows = [...document.querySelectorAll('#tree-list .ma-trow')];
         const mores = rows.map((r) => { const m = r.querySelector('.ma-trow__more').getBoundingClientRect(), q = r.getBoundingClientRect();
@@ -2206,13 +2215,12 @@ const cornerClash = (page) => page.evaluate(() => {
 
     /* Lọc file (MDAN-068): mẫu RegExp không phân biệt hoa thường trên tên, hiện file khớp và folder tổ tiên (mở); mẫu hỏng thì tìm
        chữ thường, có dòng báo; không khớp thì báo; ↓ vào hàng đầu, / ở hàng về ô lọc, Esc xoá và trả lại gập / mở cũ; 1 file thì ẩn ô. */
-    const findModel = (one) => tp.evaluate(async (one) => {
-      const T = await import('./js/ui/tree.js'), noop = () => '', N = (id, parent, kind, name) => ({ id, parent, kind, name });
+    const findModel = (one) => {
+      const N = (id, parent, kind, name) => ({ id, parent, kind, name });
       const nodes = one ? [N('q1', null, 'file', 'only.md')] : [N('qd', null, 'dir', 'docs'), N('qe', 'qd', 'dir', 'deep'), N('q1', 'qd', 'file', 'axb-notes.text'), N('q2', 'qd', 'file', 'abc.text'),
         N('q3', 'qe', 'file', 'AXB-plan.text'), N('q4', null, 'file', 'notes.md'), N('q5', null, 'file', 'a(b.md')];
-      T.renderTree({ sid: 'find', nodes, open: 'q4', collapsed: one ? [] : ['qd'], counts: {}, title: 'Find' },
-        { open: noop, toggle: noop, newFile: noop, newDir: noop, rename: noop, move: noop, remove: noop, importDir: noop, download: noop, collapseAll: noop });
-    }, one);
+      return renderModel(tp, { sid: 'find', nodes, open: 'q4', collapsed: one ? [] : ['qd'], counts: {}, title: 'Find' });
+    };
     const fst = () => tp.evaluate(() => ({ shown: !document.getElementById('tree-find').hidden, rows: [...document.querySelectorAll('#tree-list .ma-trow')].map((r) => r.getAttribute('aria-level') + ':' + r.querySelector('.ma-trow__name').textContent).join(' '),
       note: !!document.getElementById('tree-q-note').getClientRects().length, none: !!document.getElementById('tree-none').getClientRects().length, focus: document.activeElement.id || document.activeElement.className }));
     await findModel(false);
@@ -2276,11 +2284,8 @@ const cornerClash = (page) => page.evaluate(() => {
       && sel.radius >= 4 && sel.border === '0px 0px 0px 0px none' && / none$/.test(sel.outline) && sel.insetL > 0 && sel.insetL <= 12 && sel.w < sel.rowW - 8 && sel.L - sel.bodyL >= 8 && sel.after === 'none' && sel.shadow === 'none' && sel.moreIn.every((v) => v >= 2), JSON.stringify(sel));
     /* Tương phản trên hàng đang chọn (nền pha nhiều lớp): chữ ≥ 4,5:1, nền thẻ tách khỏi nền thân, cả hai theme. */
     const treeContrast = () => tp.evaluate(() => {
-      const parse = (c) => { const m = c.match(/[\d.]+/g).map(Number); return c.startsWith('color(') ? [m[0] * 255, m[1] * 255, m[2] * 255, m.length > 3 ? m[3] : 1] : [m[0], m[1], m[2], m.length > 3 ? m[3] : 1]; };
-      const over = (t, u) => [0, 1, 2].map((i) => t[i] * t[3] + u[i] * (1 - t[3])).concat(1);
+      const { parse, over, lum, ratio } = __c;
       const bgOf = (el) => { const ch = []; for (let n = el; n; n = n.parentElement) ch.push(getComputedStyle(n).backgroundColor); let c = [255, 255, 255, 1]; ch.reverse().forEach((x) => { const v = parse(x); if (v[3] > 0) c = over(v, c); }); return c; };
-      const lum = (c) => { const x = c.slice(0, 3).map((n) => { n /= 255; return n <= 0.03928 ? n / 12.92 : ((n + 0.055) / 1.055) ** 2.4; }); return 0.2126 * x[0] + 0.7152 * x[1] + 0.0722 * x[2]; };
-      const ratio = (a, b) => { const x = lum(a), y = lum(b); return +((Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05)).toFixed(2); };
       const sel = document.querySelector('#tree-list .ma-trow[aria-selected="true"]'), out = {};
       /* Nền thẻ chọn (::before) trên nền thân; chữ trên nền thẻ; vạch thụt trên nền thân (trang trí, chỉ ghi số). */
       const cb = getComputedStyle(sel, '::before'), base = bgOf(sel), fill = over(parse(cb.backgroundColor), base);
@@ -2386,8 +2391,7 @@ const cornerClash = (page) => page.evaluate(() => {
 
     // Điện thoại 390: tấm trượt từ trái, chọn file thì đóng, cây về lưới.
     const tm = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true, deviceScaleFactor: 2 });
-    const mp2 = await tm.newPage(); watch(mp2);
-    await mp2.goto(BASE); await mp2.waitForFunction(() => window.marked && window.DOMPurify);
+    const mp2 = await openPage(tm);
     await mp2.tap('#btn-sample'); await mp2.waitForTimeout(150);
     await mp2.evaluate(treeDemo, false); await mp2.waitForTimeout(150);
     check('cây 390: cột không hiện, nút có, không tràn ngang', !(await tstate(mp2)).shown && (await tstate(mp2)).btn && (await overflow(mp2)) === 0, String(await overflow(mp2)));
@@ -2408,9 +2412,7 @@ const cornerClash = (page) => page.evaluate(() => {
     const fs = require('fs'), os = require('os'), path = require('path'), { spawnSync } = require('child_process');
     const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'ma-tree-'));
     const ready = (p) => p.waitForFunction(() => window.marked && window.DOMPurify);
-    const paste = (p, t) => p.evaluate((t) => { const ta = document.getElementById('src-input'); ta.focus(); ta.dispatchEvent(new Event('paste')); ta.value = t; ta.dispatchEvent(new Event('input')); }, t);
     const rows = (p) => p.$$eval('#tree-list .ma-trow', (ls) => ls.map((l) => l.getAttribute('aria-level') + ':' + (l.querySelector('.ma-trow__name') || {}).textContent + (l.getAttribute('aria-selected') === 'true' ? '*' : '')));
-    const rowOf = (name) => `#tree-list .ma-trow:has(> .ma-trow__name:text-is("${name}"))`;
     const comment = async (p, needle, text) => { await dragSelect(p, '#v-md', needle); await p.keyboard.type(text); await p.keyboard.press('Enter'); await p.waitForTimeout(150); };
     const marks = (p) => p.$$eval('#v-md mark.ma-hl', (ms) => ms.map((m) => m.textContent).join('|'));
     const treeOn = (p) => p.evaluate(() => !!document.getElementById('tree').getClientRects().length);
@@ -2447,7 +2449,7 @@ const cornerClash = (page) => page.evaluate(() => {
     const fc = await treeContext({ viewport: { width: 1440, height: 900 }, colorScheme: 'light', acceptDownloads: true });
     const fp = await fc.newPage(); watch(fp);
     await fp.goto(BASE); await ready(fp);
-    await paste(fp, '# Tệp A\n\nCâu riêng của A.\n'); await fp.waitForTimeout(200);
+    await pasteText(fp, '# Tệp A\n\nCâu riêng của A.\n'); await fp.waitForTimeout(200);
     await fp.click('.ma-tab[data-view="view"]');
     await comment(fp, 'Câu riêng của A.', 'sửa A');
     await fp.evaluate(() => document.activeElement && document.activeElement.blur());
@@ -2460,14 +2462,14 @@ const cornerClash = (page) => page.evaluate(() => {
     const ren = await fp.evaluate(() => { const i = document.querySelector('#tree-list .ma-trow__ren'); return i && document.activeElement === i ? i.value : null; });
     await fp.keyboard.press('Control+A'); await fp.keyboard.type('b.md'); await fp.keyboard.press('Enter'); await fp.waitForTimeout(150);
     check('cây thật: New file tạo untitled-2.md, mở nó, đổi tên tại chỗ thành b.md', ren === 'untitled-2.md' && (await rows(fp)).join() === '1:b.md*,1:untitled.md' && (await fp.inputValue('#src-input')) === '' && (await fp.isVisible('#start')), JSON.stringify([ren, await rows(fp)]));
-    await paste(fp, '# Tệp B\n\nCâu riêng của B.\n'); await fp.waitForTimeout(200);
+    await pasteText(fp, '# Tệp B\n\nCâu riêng của B.\n'); await fp.waitForTimeout(200);
     await comment(fp, 'Câu riêng của B.', 'sửa B');
     check('cây thật: file B có nhận xét của nó', (await items(fp)).length === 1 && /sửa B/.test((await items(fp))[0]) && (await marks(fp)) === 'Câu riêng của B.', JSON.stringify([await items(fp), await marks(fp)]));
     await fp.click('.ma-tab[data-view="src"]');
-    await fp.click(rowOf('untitled.md')); await fp.waitForTimeout(200);
-    const swA = { items: await items(fp), mode: await fp.$eval('#views', (v) => v.dataset.mode), src: await fp.$eval('#v-src', (e) => e.textContent), cnt: await fp.$eval(rowOf('b.md'), (l) => l.getAttribute('aria-label')) };
+    await fp.click(rowSel('untitled.md')); await fp.waitForTimeout(200);
+    const swA = { items: await items(fp), mode: await fp.$eval('#views', (v) => v.dataset.mode), src: await fp.$eval('#v-src', (e) => e.textContent), cnt: await fp.$eval(rowSel('b.md'), (l) => l.getAttribute('aria-label')) };
     check('cây thật: sang file A — chỉ nhận xét của A, vẫn ở Source, cây đếm nhận xét của B', swA.items.length === 1 && /sửa A/.test(swA.items[0]) && swA.mode === 'src' && swA.src.startsWith('# Tệp A') && /1 comment/.test(swA.cnt), JSON.stringify(swA));
-    await fp.click('.ma-tab[data-view="view"]'); await fp.click(rowOf('b.md')); await fp.waitForTimeout(200);
+    await fp.click('.ma-tab[data-view="view"]'); await fp.click(rowSel('b.md')); await fp.waitForTimeout(200);
     check('cây thật: về file B — highlight của B, không của A', (await marks(fp)) === 'Câu riêng của B.' && (await items(fp)).length === 1, await marks(fp));
     await openOpts(fp);
     check('cây thật: hai file thì có ô All files', await fp.isVisible('#all-row'));
@@ -2478,34 +2480,34 @@ const cornerClash = (page) => page.evaluate(() => {
     check('cây thật: Comments chỉ liệt kê file đang mở, chân panel đếm cả hai', (await items(fp)).length === 1 && /2 comments/.test(await fp.textContent('#foot-n')));
 
     // Folder mới, kéo b.md vào folder, nhãn prompt theo đường dẫn mới; xoá folder rồi Undo.
-    await fp.click(rowOf('untitled.md')); await fp.waitForTimeout(150);
+    await fp.click(rowSel('untitled.md')); await fp.waitForTimeout(150);
     await fp.click('#tree-new-dir'); await fp.waitForTimeout(150);
     await fp.keyboard.press('Control+A'); await fp.keyboard.type('docs'); await fp.keyboard.press('Enter'); await fp.waitForTimeout(150);
-    await fp.dragAndDrop(rowOf('b.md'), rowOf('docs')); await fp.waitForTimeout(250);
+    await fp.dragAndDrop(rowSel('b.md'), rowSel('docs')); await fp.waitForTimeout(250);
     check('cây thật: kéo b.md thả lên docs — chuyển vào folder, prompt ghi docs/b.md', (await rows(fp)).join() === '1:docs,2:b.md,1:untitled.md*' && /## Tệp docs\/b\.md\n\n1\. docs\/b\.md:3/.test(await out(fp)) && /Moved b\.md to docs/.test(await toastText(fp)), JSON.stringify([await rows(fp), await toastText(fp)]));
-    await fp.click(rowOf('b.md')); await fp.waitForTimeout(150);
-    await fp.focus(rowOf('docs')); await fp.keyboard.press('Delete'); await fp.waitForTimeout(200);
+    await fp.click(rowSel('b.md')); await fp.waitForTimeout(150);
+    await fp.focus(rowSel('docs')); await fp.keyboard.press('Delete'); await fp.waitForTimeout(200);
     const del = { rows: await rows(fp), toast: await toastText(fp), items: await items(fp) };
     check('cây thật: xoá folder đang chứa file mở — không hỏi, mở file kế bên, toast có Undo', del.rows.join() === '1:untitled.md*' && del.toast.startsWith('Deleted folder docs (1 file).') && /sửa A/.test(del.items.join()) && await fp.isVisible('.ma-toast__btn'), JSON.stringify(del));
     await fp.click('.ma-toast__btn'); await fp.waitForTimeout(250);
     check('cây thật: Undo trả folder, file và nhận xét, mở lại file cũ', (await rows(fp)).join() === '1:docs,2:b.md*,1:untitled.md' && /sửa B/.test((await items(fp)).join()) && /docs\/b\.md:3 "Câu riêng của B\." — sửa B/.test(await out(fp)), JSON.stringify(await rows(fp)));
-    await fp.click(rowOf('untitled.md')); await fp.waitForTimeout(150);
+    await fp.click(rowSel('untitled.md')); await fp.waitForTimeout(150);
     await fp.fill('#p-path', 'repo/'); await fp.waitForTimeout(100);
     check('cây thật: ô Folder là tiền tố của mọi nhãn', /## Tệp repo\/docs\/b\.md/.test(await out(fp)) && /repo\/untitled\.md:3/.test(await out(fp)));
     await fp.fill('#p-path', '');
 
     // Mở file từ đĩa khi file đang mở có chữ: thêm cạnh nó (cùng folder) và mở; không ghi ô Folder.
-    await fp.click(rowOf('b.md')); await fp.waitForTimeout(150);
+    await fp.click(rowSel('b.md')); await fp.waitForTimeout(150);
     await fp.setInputFiles('#file-in', { name: 'c.md', mimeType: 'text/markdown', buffer: Buffer.from('# C\n\nCâu của C.\n') });
     await fp.waitForTimeout(300);
     check('cây thật: mở file từ đĩa thêm vào cùng folder với file đang mở', (await rows(fp)).join() === '1:docs,2:b.md,2:c.md*,1:untitled.md' && (await fp.inputValue('#p-path')) === '' && (await items(fp)).length === 0, JSON.stringify(await rows(fp)));
 
     // Tải: một file .md, folder .zip, cả phiên .zip (đọc bằng Python zipfile).
     const dl = async (fn) => { const [d] = await Promise.all([fp.waitForEvent('download'), fn()]); const f = path.join(tmp, d.suggestedFilename()); await d.saveAs(f); return f; };
-    const fmd = await dl(async () => { await fp.click(rowOf('c.md'), { button: 'right' }); await fp.click('#tree-menu >> text=Download'); });
+    const fmd = await dl(async () => { await fp.click(rowSel('c.md'), { button: 'right' }); await fp.click('#tree-menu >> text=Download'); });
     check('cây thật: Download một file — tên và chữ của nó', path.basename(fmd) === 'c.md' && fs.readFileSync(fmd, 'utf8') === '# C\n\nCâu của C.\n');
     const zipCheck = (f) => { const r = spawnSync('python3', ['-I', '-c', 'import sys, json, zipfile\nz = zipfile.ZipFile(sys.argv[1])\nprint(json.dumps({"bad": z.testzip(), "names": z.namelist(), "b": z.read(z.namelist()[0]).decode()}))', f]); try { return JSON.parse(r.stdout.toString()); } catch (e) { return { err: r.stderr.toString() }; } };
-    const fz = await dl(async () => { await fp.click(rowOf('docs'), { button: 'right' }); await fp.click('#tree-menu >> text=Download .zip'); });
+    const fz = await dl(async () => { await fp.click(rowSel('docs'), { button: 'right' }); await fp.click('#tree-menu >> text=Download .zip'); });
     const zd = zipCheck(fz);
     check('cây thật: Download .zip của folder — zip hợp lệ, chỉ cây con', path.basename(fz) === 'docs.zip' && zd.bad === null && zd.names.join() === 'docs/b.md,docs/c.md' && zd.b === '# Tệp B\n\nCâu riêng của B.\n', JSON.stringify([path.basename(fz), zd]));
     const fa = await dl(async () => { await fp.click('#tree-more'); await fp.click('#tree-zip'); });
@@ -2548,7 +2550,7 @@ const cornerClash = (page) => page.evaluate(() => {
     const msh = await mp3.evaluate(() => ({ open: document.getElementById('dlg-tree').open, n: document.querySelectorAll('#dlg-tree .ma-trow').length }));
     check('điện thoại: tấm trượt có cây thật', msh.open && msh.n === 4, JSON.stringify(msh));
     await mp3.evaluate(() => { const r = [...document.querySelectorAll('#tree-list .ma-trow')].find((l) => l.textContent.includes('deep.md')); r.scrollIntoView(); });
-    await mp3.tap(rowOf('deep.md')); await mp3.waitForTimeout(300);
+    await mp3.tap(rowSel('deep.md')); await mp3.waitForTimeout(300);
     check('điện thoại: chạm file thì mở nó, đóng tấm', !(await mp3.evaluate(() => document.getElementById('dlg-tree').open)) && /Câu ở tầng bảy/.test(await mp3.textContent('#v-md')));
     await mc.close();
     fs.rmSync(tmp, { recursive: true, force: true });
@@ -2798,14 +2800,9 @@ const cornerClash = (page) => page.evaluate(() => {
   /* ---------- Thanh trên ở điện thoại: Files, tên, History, Settings, More; New session, theme, Help trong menu More ---------- */
   for (const [w, scheme] of [[320, 'light'], [360, 'dark'], [390, 'light']]) {
     const hc = await browser.newContext({ viewport: { width: w, height: 760 }, colorScheme: scheme, hasTouch: true, isMobile: true, deviceScaleFactor: 2 });
-    const hp = await hc.newPage(); watch(hp);
-    await hp.goto(BASE); await hp.waitForFunction(() => window.marked && window.DOMPurify);
+    const hp = await openPage(hc);
     await hp.tap('#btn-sample'); await hp.waitForTimeout(150);
-    await hp.evaluate(async () => {   // cây vài file: nút Files hiện
-      const T = await import('./js/ui/tree.js'), noop = () => '';
-      T.renderTree({ nodes: [{ id: 'f1', parent: null, kind: 'file', name: 'a.md' }, { id: 'f2', parent: null, kind: 'file', name: 'b.md' }], open: 'f1', collapsed: [], counts: {}, title: 'Demo' },
-        { open: noop, toggle: noop, newFile: noop, newDir: noop, rename: noop, move: noop, remove: noop, importDir: noop, download: noop, collapseAll: noop });
-    });
+    await renderModel(hp, { nodes: [{ id: 'f1', parent: null, kind: 'file', name: 'a.md' }, { id: 'f2', parent: null, kind: 'file', name: 'b.md' }], open: 'f1', collapsed: [], counts: {}, title: 'Demo' });   // cây vài file: nút Files hiện
     const bar = await hp.evaluate(() => {
       const ids = ['btn-tree', 'btn-hist', 'btn-layout', 'btn-more'], rs = ids.map((id) => document.getElementById(id).getBoundingClientRect());
       const brand = document.querySelector('.ma-brand').getBoundingClientRect();
@@ -2861,8 +2858,7 @@ const cornerClash = (page) => page.evaluate(() => {
   }
   {
     const dc = await browser.newContext({ viewport: { width: 1280, height: 800 } });
-    const dp2 = await dc.newPage(); watch(dp2);
-    await dp2.goto(BASE); await dp2.waitForFunction(() => window.marked && window.DOMPurify);
+    const dp2 = await openPage(dc);
     check('thanh trên 1280: không có More, New session và theme hiện', !(await dp2.isVisible('#btn-more')) && (await dp2.isVisible('#btn-new')) && (await dp2.isVisible('#theme')));
     await dc.close();
   }
@@ -2993,11 +2989,8 @@ const cornerClash = (page) => page.evaluate(() => {
     for (const dark of [false, true]) {
       await p.evaluate((d) => document.documentElement.classList.toggle('dark', d), dark); await p.waitForTimeout(250);
       const gc = await p.evaluate(() => {
-        const parse = (c) => { const m = c.match(/[\d.]+/g).map(Number); return c.startsWith('color(') ? [m[0] * 255, m[1] * 255, m[2] * 255, m.length > 3 ? m[3] : 1] : [m[0], m[1], m[2], m.length > 3 ? m[3] : 1]; };
-        const over = (t, u) => [0, 1, 2].map((i) => t[i] * t[3] + u[i] * (1 - t[3])).concat(1);
+        const { parse, over, lum, ratio } = __c;
         const bgOf = (el) => { const ch = []; for (let n = el; n; n = n.parentElement) ch.push(getComputedStyle(n).backgroundColor); let c = [255, 255, 255, 1]; ch.reverse().forEach((x) => { const v = parse(x); if (v[3] > 0) c = over(v, c); }); return c; };
-        const lum = (c) => { const x = c.slice(0, 3).map((n) => { n /= 255; return n <= 0.03928 ? n / 12.92 : ((n + 0.055) / 1.055) ** 2.4; }); return 0.2126 * x[0] + 0.7152 * x[1] + 0.0722 * x[2]; };
-        const ratio = (a, b) => { const x = lum(a), y = lum(b); return +((Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05)).toFixed(2); };
         const out = {}, still = document.createElement('style');
         still.textContent = '*, *::before { transition: none !important; }';   // đọc màu cuối, không giữa chuyển động
         document.head.append(still);
@@ -3027,7 +3020,7 @@ const cornerClash = (page) => page.evaluate(() => {
       const d = Object.assign({}, name ? devices[name] : {}, { deviceScaleFactor: 1, colorScheme: scheme });
       delete d.defaultBrowserType;
       if (o.viewport) Object.assign(d, { viewport: o.viewport, hasTouch: true, isMobile: true });
-      if (o.reduced) d.reducedMotion = 'reduce';
+      d.reducedMotion = o.reduced ? 'reduce' : 'no-preference';   // bài ở đây thử cả chuyển động (tấm đáy trượt lên)
       const c = await browser.newContext(d), p = await c.newPage(); watch(p);
       const cdp = await c.newCDPSession(p);
       if (o.safe) await cdp.send('Emulation.setSafeAreaInsetsOverride', { insets: o.safe });
@@ -3166,7 +3159,7 @@ const cornerClash = (page) => page.evaluate(() => {
       const ring = await p.evaluate(() => {
         const b = document.querySelector('#wrap-md .ma-lane__b.is-done'), cs = getComputedStyle(b, '::after');
         const rgb = (c) => c.match(/[\d.]+/g).slice(0, 3).map(Number);
-        const lum = (c) => { const x = c.map((n) => { n /= 255; return n <= 0.03928 ? n / 12.92 : ((n + 0.055) / 1.055) ** 2.4; }); return 0.2126 * x[0] + 0.7152 * x[1] + 0.0722 * x[2]; };
+        const { lum } = __c;
         const a = lum(rgb(cs.borderTopColor)), s = lum(rgb(getComputedStyle(document.getElementById('doc')).backgroundColor));
         return +((Math.max(a, s) + 0.05) / (Math.min(a, s) + 0.05)).toFixed(2);
       });
@@ -3390,8 +3383,7 @@ const cornerClash = (page) => page.evaluate(() => {
     // Kiểu hai dấu.
     const look = await p.evaluate(() => {
       const rgb = (c) => c.match(/[\d.]+/g).slice(0, 3).map(Number);
-      const lum = (c) => { const x = c.map((n) => { n /= 255; return n <= 0.03928 ? n / 12.92 : ((n + 0.055) / 1.055) ** 2.4; }); return 0.2126 * x[0] + 0.7152 * x[1] + 0.0722 * x[2]; };
-      const ratio = (a, b) => { const x = lum(a), y = lum(b); return +((Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05)).toFixed(2); };
+      const { lum, ratio } = __c;
       const surf = rgb(getComputedStyle(document.getElementById('doc')).backgroundColor);
       const dark = document.documentElement.classList.contains('dark'), hint = dark ? [0x8d, 0x98, 0x91] : [0x5b, 0x64, 0x5e];   // nét ✓ của --ic-check-hint
       const s = document.querySelector('#wrap-md .ma-lane__b.is-sug'), sa = getComputedStyle(s, '::after');
@@ -3427,7 +3419,6 @@ const cornerClash = (page) => page.evaluate(() => {
   // ── hl: tô màu nạp khi cần (MDAN-066) ──
   {
     const hlRows = (p) => p.$$eval('#tree-list .ma-trow', (ls) => ls.map((l) => (l.querySelector('.ma-trow__name') || {}).textContent));
-    const hlRow = (name) => `#tree-list .ma-trow:has(> .ma-trow__name:text-is("${name}"))`;
     const PY = 'def f(x):\n    return "hi"  # note\n';
     const MD = '# Code\n\nMở đầu có chữ.\n\n```python\n' + PY + '```\n\nCuối.\n';
     const RS = 'fn main() {\n    let n = 42; // số\n    println!("{}", n);\n}\n';
@@ -3437,7 +3428,7 @@ const cornerClash = (page) => page.evaluate(() => {
     hp.on('request', (r) => { const m = /\/highlight\.js\/11\.9\.0\/(.+)$/.exec(r.url()); if (m) hlReq.push(m[1]); });
     await hp.goto(BASE); await hp.waitForFunction(() => window.marked && window.DOMPurify); await hp.waitForTimeout(300);
     check('tô màu nạp khi cần: mở trang không tải highlight.js', hlReq.length === 0, hlReq.join());
-    const plain = await hp.evaluate((t) => {
+    const plain = await hp.evaluate((t) => {   // dán và đo trong cùng một lượt: chữ trơn trước khi highlight.js kịp nạp
       const ta = document.getElementById('src-input');
       ta.focus(); ta.dispatchEvent(new Event('paste')); ta.value = t; ta.dispatchEvent(new Event('input'));
       const c = document.querySelector('#v-md pre code');
@@ -3452,7 +3443,7 @@ const cornerClash = (page) => page.evaluate(() => {
     const light = await kwColor();
 
     // Nhận xét trong khối đã tô: mark bọc trong span màu, màu còn nguyên.
-    await hp.waitForTimeout(700);
+    await hp.waitForTimeout(DBL_MS);
     await dragSelect(hp, '#v-md', 'return "hi"');
     check('tô màu nạp khi cần: bôi đen trong khối đã tô mở hộp nhận xét', await hp.isVisible('#pop') && (await hp.textContent('#pop-q')) === 'return "hi"', await hp.textContent('#pop-q'));
     await hp.keyboard.type('Sửa chữ'); await hp.keyboard.press('Enter');
@@ -3469,7 +3460,7 @@ const cornerClash = (page) => page.evaluate(() => {
     check('tô màu nạp khi cần: Source của .rs có token màu, text đúng bằng nguồn', rs.text === RS && rs.kw.includes('fn') && rs.kw.includes('let') && rs.cm.join() === '// số' && rs.lines === 4, JSON.stringify(rs));
 
     // Về file markdown: Source tô bằng bộ tách markdown như cũ, khối code ở Preview còn màu; không tải lại gì.
-    await hp.click(hlRow('untitled.md')); await hp.waitForTimeout(200);
+    await hp.click(rowSel('untitled.md')); await hp.waitForTimeout(200);
     const back = await hp.evaluate(() => ({ head: !!document.querySelector('#v-src .sx-head'), md: document.querySelectorAll('#v-md pre code .hljs-keyword').length }));
     check('tô màu nạp khi cần: về file .md — Source tô markdown, Preview vẫn tô code, không tải lại', back.head && back.md === 2 && hlReq.length === 3, JSON.stringify([back, hlReq]));
 
@@ -3485,8 +3476,7 @@ const cornerClash = (page) => page.evaluate(() => {
 
     // Điện thoại: khối code lên màu, không tràn ngang.
     const pc = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, colorScheme: 'dark' });
-    const pp = await pc.newPage(); watch(pp);
-    await pp.goto(BASE); await pp.waitForFunction(() => window.marked && window.DOMPurify);
+    const pp = await openPage(pc);
     await pasteText(pp, MD);
     await pp.waitForSelector('#v-md pre code span.hljs-keyword');
     check('tô màu nạp khi cần: điện thoại tô khối code, không tràn ngang', (await overflow(pp)) === 0);
@@ -3513,7 +3503,6 @@ const cornerClash = (page) => page.evaluate(() => {
 
   // ── modes: Preview / Split chỉ cho markdown (MDAN-067) ──
   {
-    const mRow = (name) => `#tree-list .ma-trow:has(> .ma-trow__name:text-is("${name}"))`;
     const mc = await treeContext({ viewport: { width: 1920, height: 900 }, colorScheme: 'light' });
     const mp = await mc.newPage(); watch(mp);
     const state = () => mp.evaluate(() => ({
@@ -3540,7 +3529,7 @@ const cornerClash = (page) => page.evaluate(() => {
     check('chế độ xem: bấm Source ở file .rs không ghi đè Split đã nhớ', (await state()).pref === 'split', JSON.stringify(await state()));
 
     // Hộp nhận xét mở ở file .rs: đổi cỡ cửa sổ không đóng nó (Split không "về lại" ở file không có Preview).
-    await mp.waitForTimeout(700);
+    await mp.waitForTimeout(DBL_MS);
     await dragSelect(mp, '#v-src', 'let n = 1;');
     await mp.keyboard.type('Ghi chú');
     await mp.setViewportSize({ width: 1800, height: 900 }); await mp.waitForTimeout(300);
@@ -3548,19 +3537,19 @@ const cornerClash = (page) => page.evaluate(() => {
     await mp.keyboard.press('Escape'); await mp.waitForTimeout(100);
     if (await mp.isVisible('#pop')) { await mp.click('#pop-cancel').catch(() => {}); await mp.waitForTimeout(100); }
 
-    await mp.click(mRow('untitled.md')); await mp.waitForTimeout(200);
+    await mp.click(rowSel('untitled.md')); await mp.waitForTimeout(200);
     const back = await state();
     check('chế độ xem: về file .md thì Split trở lại', back.tabs === 'edit,src,view,split' && back.mode === 'split', JSON.stringify(back));
 
     // Tải lại khi file .rs đang mở: Source; sang .md: Split.
-    await mp.click(mRow('main.rs')); await mp.waitForTimeout(200);
+    await mp.click(rowSel('main.rs')); await mp.waitForTimeout(200);
     await mp.reload(); await mp.waitForFunction(() => window.marked && window.DOMPurify); await mp.waitForTimeout(200);
     const re = await state();
-    await mp.click(mRow('untitled.md')); await mp.waitForTimeout(200);
+    await mp.click(rowSel('untitled.md')); await mp.waitForTimeout(200);
     const re2 = await state();
     check('chế độ xem: tải lại với file .rs mở — Source; sang .md — Split', re.mode === 'src' && re.tabs === 'src' && re2.mode === 'split', JSON.stringify([re, re2]));
     // D2: file .rs — nút Edit bật / tắt Edit trong tab Source (tab Source vẫn chọn); bấm tab Source cũng ra khỏi Edit.
-    await mp.click(mRow('main.rs')); await mp.waitForTimeout(200);
+    await mp.click(rowSel('main.rs')); await mp.waitForTimeout(200);
     const ed = () => mp.evaluate(() => ({ edit: !document.getElementById('pane-edit').hidden, pressed: document.getElementById('btn-edit').getAttribute('aria-pressed'),
       src: document.querySelector('.ma-tab[data-view="src"]').getAttribute('aria-selected'), btn: !document.getElementById('btn-edit').hidden }));
     await mp.click('#btn-edit'); await mp.waitForTimeout(100);
@@ -3576,7 +3565,7 @@ const cornerClash = (page) => page.evaluate(() => {
     await mp.reload(); await mp.waitForFunction(() => window.marked && window.DOMPurify); await mp.waitForTimeout(200);
     const r1 = await ed();
     await mp.click('#btn-edit'); await mp.waitForTimeout(100);
-    await mp.click(mRow('untitled.md')); await mp.waitForTimeout(200);
+    await mp.click(rowSel('untitled.md')); await mp.waitForTimeout(200);
     const r2 = await state();
     check('chế độ xem: .rs ở Edit, tải lại, về Source rồi sang .md — vẫn Split (prefs.read)', r1.edit && r2.mode === 'split' && r2.tabs === 'edit,src,view,split', JSON.stringify([r1, r2]));
     await mc.close();
@@ -3586,8 +3575,7 @@ const cornerClash = (page) => page.evaluate(() => {
   // ── văn bản dài: đổi bề rộng (MDAN-071) ──
   {
     const c = await treeContext({ viewport: { width: 1600, height: 900 }, colorScheme: 'light' });   // cây hiện sẵn: thử ẩn / hiện
-    const p = await c.newPage(); watch(p);
-    await p.goto(BASE); await p.waitForFunction(() => window.marked && window.DOMPurify);
+    const p = await openPage(c);
     const lines = [];
     for (let s = 0; lines.length < 2000; s++) {
       lines.push('## Section ' + s, '', 'Paragraph ' + s + ' with **bold** and `code`, long enough to wrap when the pane is narrow, more words.', '',
@@ -3641,16 +3629,14 @@ const cornerClash = (page) => page.evaluate(() => {
 
   // ── sửa sau rà soát: mỗi lỗi một bài ──
   {
-    const rowOf = (name) => `#tree-list .ma-trow:has(> .ma-trow__name:text-is("${name}"))`;
     const c = await treeContext({ viewport: { width: 1920, height: 900 }, colorScheme: 'light' });
-    const p = await c.newPage(); watch(p);
-    await p.goto(BASE); await p.waitForFunction(() => window.marked && window.DOMPurify);
+    const p = await openPage(c);
     await pasteText(p, DOC);
     await p.click('.ma-tab[data-view="split"]'); await p.waitForTimeout(150);
     const mode = () => p.evaluate(() => ({ mode: document.getElementById('views').dataset.mode, view: !document.getElementById('tab-view').hidden,
       md: document.querySelectorAll('#v-md > *').length }));
     const rename = async (from, to) => {
-      await p.click(rowOf(from)); await p.keyboard.press('F2'); await p.keyboard.press('Control+A');
+      await p.click(rowSel(from)); await p.keyboard.press('F2'); await p.keyboard.press('Control+A');
       await p.keyboard.type(to); await p.keyboard.press('Enter'); await p.waitForTimeout(200);
     };
     await rename('untitled.md', 'a.py');
@@ -3664,8 +3650,7 @@ const cornerClash = (page) => page.evaluate(() => {
   {
     // Ô lọc đang lọc: New file / New folder xoá mẫu, ô đổi tên của mục mới hiện ra (không tạo untitled-2.md khi Enter).
     const c = await treeContext({ viewport: { width: 1600, height: 900 }, colorScheme: 'light' });
-    const p = await c.newPage(); watch(p);
-    await p.goto(BASE); await p.waitForFunction(() => window.marked && window.DOMPurify);
+    const p = await openPage(c);
     await pasteText(p, DOC);
     await p.setInputFiles('#file-in', { name: 'main.rs', mimeType: 'text/plain', buffer: Buffer.from('fn main() {}\n') });
     await p.waitForTimeout(200);
@@ -3683,8 +3668,7 @@ const cornerClash = (page) => page.evaluate(() => {
   {
     // D1: hộp prompt (#out) bôi đen được chữ của nó, bấm vào thì nhận focus; không thành kéo từ nền.
     const c = await browser.newContext({ viewport: { width: 1440, height: 900 }, colorScheme: 'light' });
-    const p = await c.newPage(); watch(p);
-    await p.goto(BASE); await p.waitForFunction(() => window.marked && window.DOMPurify);
+    const p = await openPage(c);
     await pasteText(p, DOC); await p.waitForTimeout(100);
     await dragSelect(p, '#v-md', 'chữ đậm ở đây'); await p.keyboard.type('Ghi chú dài để có chữ'); await p.keyboard.press('Enter'); await p.waitForTimeout(150);
     await p.click('#ptab-prompt'); await p.waitForTimeout(100);
@@ -3702,8 +3686,7 @@ const cornerClash = (page) => page.evaluate(() => {
   {
     // Chữ code không ligature (JetBrains Mono vẽ <!-- -> == thành mũi tên): Source, ô Edit, hộp prompt; cỡ / font như cũ.
     const c = await browser.newContext({ viewport: { width: 1280, height: 900 } });
-    const p = await c.newPage(); watch(p);
-    await p.goto(BASE); await p.waitForFunction(() => window.marked && window.DOMPurify);
+    const p = await openPage(c);
     const lig = await p.evaluate(() => ['v-src', 'src-input', 'out'].map((id) => { const cs = getComputedStyle(document.getElementById(id)); return [cs.fontVariantLigatures, cs.fontSize, cs.fontFamily.split(',')[0]].join(' '); }));
     check('chữ code (Source, Edit, prompt) tắt ligature, mono 13px', lig.every((x) => x === 'none 13px "JetBrains Mono"'), JSON.stringify(lig));
     await c.close();
@@ -3712,8 +3695,7 @@ const cornerClash = (page) => page.evaluate(() => {
     // D3: file code không có Focus mode, đánh dấu đã đọc; không chạy marked (parse, lexer) cho nó.
     const c = await treeContext({ viewport: { width: 1600, height: 900 }, colorScheme: 'light' });
     await c.addInitScript(() => localStorage.setItem('md-annotate:prefs:v1', JSON.stringify({ focus: true, focusBy: 'pointer' })));
-    const p = await c.newPage(); watch(p);
-    await p.goto(BASE); await p.waitForFunction(() => window.marked && window.DOMPurify);
+    const p = await openPage(c);
     await pasteText(p, DOC); await p.waitForTimeout(100);
     await p.click('.ma-tab[data-view="src"]'); await p.waitForTimeout(100);
     await p.hover('#v-src .ma-ln:nth-child(3)'); await p.waitForTimeout(150);
@@ -3744,8 +3726,7 @@ const cornerClash = (page) => page.evaluate(() => {
     // ≤ 1080px: thanh đáy cao đúng --dock-h; cột cây dừng sát đỉnh nó; toast cách nó 10px (cả màn thấp: --dock-h nhỏ hơn).
     for (const [w, h] of [[1000, 800], [1000, 450]]) {
       const c = await treeContext({ viewport: { width: w, height: h }, colorScheme: 'light' });
-      const p = await c.newPage(); watch(p);
-      await p.goto(BASE); await p.waitForFunction(() => window.marked && window.DOMPurify);
+      const p = await openPage(c);
       await pasteText(p, DOC); await p.waitForTimeout(150);
       await p.evaluate(() => { const t = document.getElementById('toast'); t.hidden = false; t.textContent = 'Thử'; });
       const m = await p.evaluate(() => {
@@ -3759,8 +3740,7 @@ const cornerClash = (page) => page.evaluate(() => {
     }
     // Trình duyệt chưa có @property: --tree-off không có giá trị đầu, vùng làm việc vẫn đúng bề rộng khi ẩn cây.
     const c = await treeContext({ viewport: { width: 1440, height: 900 }, colorScheme: 'light' });
-    const p = await c.newPage(); watch(p);
-    await p.goto(BASE); await p.waitForFunction(() => window.marked && window.DOMPurify);
+    const p = await openPage(c);
     await pasteText(p, DOC); await p.waitForTimeout(100);
     if (await p.evaluate(() => document.documentElement.classList.contains('ma-tree-on'))) { await p.click('#btn-tree'); await p.waitForTimeout(100); }
     const w0 = await p.$eval('.ma-wrap', (e) => e.getBoundingClientRect().width);
@@ -3775,8 +3755,7 @@ const cornerClash = (page) => page.evaluate(() => {
   {
     // Kéo từ nền bị cắt ngang (cửa sổ mất focus, không có pointerup): khung thôi tự cuộn sát mép.
     const c = await browser.newContext({ viewport: { width: 1440, height: 800 }, colorScheme: 'light' });
-    const p = await c.newPage(); watch(p);
-    await p.goto(BASE); await p.waitForFunction(() => window.marked && window.DOMPurify);
+    const p = await openPage(c);
     await pasteText(p, Array.from({ length: 120 }, (_, i) => 'Paragraph number ' + i + ' of the long text.').join('\n\n'));
     await p.click('.ma-tab[data-view="split"]'); await p.waitForTimeout(200);
     const g = await p.evaluate(() => { const pn = document.getElementById('panel').getBoundingClientRect(), w = document.getElementById('wrap-md').getBoundingClientRect(); return { x: pn.left + pn.width / 2, y: w.top + 100, bottom: w.bottom }; });
@@ -3804,9 +3783,8 @@ const cornerClash = (page) => page.evaluate(() => {
     const sx = () => p.$$eval('#v-src [class^="sx-"]', (e) => e.length);
     const n0 = await sx();
     block = false;
-    const rowOf = (name) => `#tree-list .ma-trow:has(> .ma-trow__name:text-is("${name}"))`;
-    await p.click(rowOf('untitled.md')); await p.waitForTimeout(150);
-    await p.click(rowOf('a.py'));
+    await p.click(rowSel('untitled.md')); await p.waitForTimeout(150);
+    await p.click(rowSel('a.py'));
     await p.waitForFunction(() => document.querySelectorAll('#v-src [class^="sx-"]').length > 0, null, { timeout: 8000 }).catch(() => {});
     const n1 = await sx();
     check('highlight.js hỏng một lần: chữ trơn, một cảnh báo; mở lại file thì tải lại, lên màu', n0 === 0 && warns === 1 && n1 > 0, JSON.stringify([n0, warns, n1]));
@@ -3816,8 +3794,7 @@ const cornerClash = (page) => page.evaluate(() => {
     // Văn bản dài: vạch .ma-ghost dừng ở giới hạn của vách (Split 25–75%, cây 180–420px, panel 320–560px) và ở mép thật;
     // thả ra mép nằm đúng chỗ vạch.
     const c = await treeContext({ viewport: { width: 1700, height: 900 }, colorScheme: 'light' });
-    const p = await c.newPage(); watch(p);
-    await p.goto(BASE); await p.waitForFunction(() => window.marked && window.DOMPurify);
+    const p = await openPage(c);
     await pasteText(p, Array.from({ length: 1700 }, (_, i) => 'Line ' + i).join('\n'));
     await p.click('.ma-tab[data-view="split"]'); await p.waitForTimeout(300);
     const ghostX = () => p.evaluate(() => { const g = document.querySelector('.ma-ghost'); if (!g) return null; const r = g.getBoundingClientRect(); return r.left + r.width / 2; });
@@ -3842,8 +3819,7 @@ const cornerClash = (page) => page.evaluate(() => {
   {
     // Nút × của ô lọc: vẽ lại bằng mask màu --ink-3 (nút gốc của Chrome xanh / trắng), bấm vẫn xoá mẫu.
     const c = await treeContext({ viewport: { width: 1440, height: 900 }, colorScheme: 'light' });
-    const p = await c.newPage(); watch(p);
-    await p.goto(BASE); await p.waitForFunction(() => window.marked && window.DOMPurify);
+    const p = await openPage(c);
     await pasteText(p, DOC);
     await p.setInputFiles('#file-in', { name: 'main.rs', mimeType: 'text/plain', buffer: Buffer.from('fn main() {}\n') });
     await p.waitForTimeout(200);
@@ -3858,8 +3834,7 @@ const cornerClash = (page) => page.evaluate(() => {
   {
     // Vách Split, mép cây, mép panel, vạch .ma-ghost: rê cùng một màu --edge-on (không phải --accent, ~2,3:1 ở nền sáng).
     const c = await treeContext({ viewport: { width: 1800, height: 900 }, colorScheme: 'light' });
-    const p = await c.newPage(); watch(p);
-    await p.goto(BASE); await p.waitForFunction(() => window.marked && window.DOMPurify);
+    const p = await openPage(c);
     await pasteText(p, DOC); await p.click('.ma-tab[data-view="split"]'); await p.waitForTimeout(200);
     const col = [];
     for (const sel of ['#divider', '#tree-grip', '#panel-grip']) {
@@ -3873,8 +3848,7 @@ const cornerClash = (page) => page.evaluate(() => {
   {
     // Dòng báo của ô lọc (mẫu hỏng, không khớp): cùng cỡ --fs-sm, cùng lề, thẳng chữ trong ô (±1px viền) lọc.
     const c = await treeContext({ viewport: { width: 1440, height: 900 }, colorScheme: 'light' });
-    const p = await c.newPage(); watch(p);
-    await p.goto(BASE); await p.waitForFunction(() => window.marked && window.DOMPurify);
+    const p = await openPage(c);
     await pasteText(p, DOC);
     await p.setInputFiles('#file-in', { name: 'main.rs', mimeType: 'text/plain', buffer: Buffer.from('fn main() {}\n') });
     await p.waitForTimeout(200);
@@ -3887,8 +3861,7 @@ const cornerClash = (page) => page.evaluate(() => {
   {
     // Giảm chuyển động: cả lớp giả (vạch tab ::after) cũng không có transition.
     const c = await browser.newContext({ viewport: { width: 1280, height: 900 }, reducedMotion: 'reduce' });
-    const p = await c.newPage(); watch(p);
-    await p.goto(BASE); await p.waitForFunction(() => window.marked && window.DOMPurify);
+    const p = await openPage(c);
     const d = await p.evaluate(() => [getComputedStyle(document.querySelector('.ma-tab'), '::after').transitionDuration, getComputedStyle(document.querySelector('.ma-tab')).transitionDuration]);
     check('giảm chuyển động: phần tử và lớp giả không transition', d.every((x) => /^0s(, 0s)*$/.test(x)), JSON.stringify(d));
     await c.close();
