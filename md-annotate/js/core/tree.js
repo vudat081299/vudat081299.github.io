@@ -6,7 +6,7 @@
    Tên: không rỗng, không dấu cách ở đầu / cuối, không chứa / hay \, không phải . / .., tối đa 255 ký tự, không trùng anh em
    (không phân biệt hoa thường, NFC).
    Nút có cha mất hay vòng cha – con không tới được từ gốc: các hàm duyệt bỏ qua, không treo (session.js sửa lúc đọc).
-   Xuất: addNode, afterRemove, canMove, filesInOrder, firstFile, fromPaths, kids, MAX_NAME, moveNode, moveTargets, nameError,
+   Xuất: addNode, afterRemove, byId, canMove, filesInOrder, firstFile, fromPaths, kids, MAX_NAME, moveNode, moveTargets, nameError,
      nameKey, pathOf, removeNode, renameNode, subtree, uniqueName, visibleRows.
    Dùng: không module nào. */
 
@@ -16,7 +16,8 @@ export var MAX_NAME = 255;
 export function nameKey(name) { return String(name).normalize('NFC').toLowerCase(); }
 
 function parentOf(n) { return n.parent == null ? null : n.parent; }
-function byId(nodes, id) { for (var i = 0; i < nodes.length; i++) if (nodes[i].id === id) return nodes[i]; return null; }
+/* Nút có id, hoặc null. */
+export function byId(nodes, id) { for (var i = 0; i < nodes.length; i++) if (nodes[i].id === id) return nodes[i]; return null; }
 function order(a, b) {
   if (a.kind !== b.kind) return a.kind === 'dir' ? -1 : 1;
   return a.name.localeCompare(b.name, 'en', { numeric: true, sensitivity: 'base' }) || (a.name < b.name ? -1 : a.name > b.name ? 1 : 0);

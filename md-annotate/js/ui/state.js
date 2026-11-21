@@ -8,9 +8,10 @@
    Mỗi file nhớ chỗ cuộn trong bộ nhớ của lần nạp trang. Mô hình phiên (tạo, chuẩn hoá, tên tự đặt) ở core/session.js.
    Xuất: canLeave, D, docKey, flushSave, initState, loadIndex, loadSession, newSession, openFileId, openType, putSession,
      replaceDeleted, S, saveClosed, saveNow, scheduleSave, sessionFor, switchTo.
-   Dùng: core/session.js, core/file-type.js, ui/store.js, ui/dom.js, ui/render.js, ui/views.js, ui/popup.js, ui/picks.js,
+   Dùng: core/session.js, core/tree.js, core/file-type.js, ui/store.js, ui/dom.js, ui/render.js, ui/views.js, ui/popup.js, ui/picks.js,
      ui/history.js, ui/editor.js, ui/files.js. */
 import { createSession, docOf, indexWith, isEmpty, normIndex, normSession, openFile, touchSession } from '../core/session.js';
+import { byId } from '../core/tree.js';
 import { fileType } from '../core/file-type.js';
 import { KEY, prefs, store } from './store.js';
 import { $, toast } from './dom.js';
@@ -32,9 +33,7 @@ export var S = (function () {
 })();
 export var D = docOf(S);
 export function docKey() { return S.id + '/' + S.open; }
-export function openType() {
-  return fileType(S.nodes.filter(function (n) { return n.id === S.open; })[0].name);
-}
+export function openType() { return fileType(byId(S.nodes, S.open).name); }
 
 /* LƯU PHIÊN */
 var saveTimer = null, warnedQuota = false;

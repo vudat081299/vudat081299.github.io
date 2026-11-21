@@ -8,9 +8,10 @@
    hasNul, skipEntry, importCheck); đọc xong mà đã chuyển phiên thì ghi vào phiên đã lưu, phiên ấy mất thì bỏ và báo.
    Bộ nhớ đầy thì hoàn lại. Nạp xong thì cây hiện cho phiên ấy, không ghi prefs.tree (MDAN-032).
    Xuất: importItems, openDiskFile, refreshTree, setTree.
-   Dùng: core/session.js, core/text.js, ui/dom.js, ui/state.js, ui/prompt.js, ui/views.js, ui/tree.js. */
+   Dùng: core/session.js, core/tree.js, core/text.js, ui/dom.js, ui/state.js, ui/prompt.js, ui/views.js, ui/tree.js. */
 import { addDir, addFile, applyUndo, collapseAll, dirOf, docOf, downloadOf, importPaths, moveIn, openFile, openFromDisk,
   removeNodes, renameIn, sessionTitle, toggleDir, UNTITLED, zipOf } from '../core/session.js';
+import { byId } from '../core/tree.js';
 import { hasNul, importCheck, isTextFile, normNewlines, plural, skipEntry } from '../core/text.js';
 import { saveFile, toast } from './dom.js';
 import { canLeave, loadSession, openFileId, putSession, S, saveClosed, saveNow, scheduleSave, sessionFor } from './state.js';
@@ -70,7 +71,7 @@ function undoTree(sid, after, u) {
   if (s && !saveClosed(applyUndo(s, u).s)) toast('Could not save to browser storage (full or blocked).');
 }
 
-function nodeOf(id) { return S.nodes.filter(function (n) { return n.id === id; })[0]; }
+function nodeOf(id) { return byId(S.nodes, id); }
 function fileWord(n) { return plural(n, 'file'); }
 
 /* VIỆC CỦA CÂY (actions của renderTree). */

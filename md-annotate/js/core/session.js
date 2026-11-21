@@ -17,7 +17,7 @@
      removeNodes, renameIn, renameIndex, renameSession, reveal, sessionTitle, textTitle, toggleDir, touchSession, treeFiles,
      uid, UNTITLED, zipOf.
    Dùng: core/tree.js, core/text.js, core/zip.js. */
-import { addNode, afterRemove, filesInOrder, firstFile, fromPaths, kids, moveNode, nameError, pathOf, removeNode, renameNode,
+import { addNode, afterRemove, byId, filesInOrder, firstFile, fromPaths, kids, moveNode, nameError, pathOf, removeNode, renameNode,
   subtree, uniqueName, visibleRows } from './tree.js';
 import { slug } from './text.js';
 import { zipFiles } from './zip.js';
@@ -214,7 +214,7 @@ export function isEmpty(s) {
 }
 /* Folder chứa nút id (null = gốc, hay id không có). */
 export function dirOf(s, id) {
-  var n = s.nodes.filter(function (x) { return x.id === id; })[0];
+  var n = byId(s.nodes, id);
   return n && n.parent != null ? n.parent : null;
 }
 /* Mọi file theo thứ tự hiển thị, đường dẫn trong cây (không tiền tố); folder rỗng thành 'a/b/' để .zip giữ nó.
@@ -236,7 +236,7 @@ export function zipOf(s, date, rootId) { return zipFiles(treeFiles(s, rootId), d
    text/markdown khi đuôi .md / .markdown hay thiếu đuôi, không thì text/plain. Folder: <tên>.zip; cả phiên: <slug tên phiên>.zip
    (zip: true, nội dung là zipOf). */
 export function downloadOf(s, id) {
-  var n = id == null ? null : s.nodes.filter(function (x) { return x.id === id; })[0];
+  var n = id == null ? null : byId(s.nodes, id);
   if (n && n.kind === 'file') {
     var ext = /\.[^.]+$/.test(n.name), md = !ext || /\.(md|markdown)$/i.test(n.name);
     return { name: ext ? n.name : n.name + '.md', type: (md ? 'text/markdown' : 'text/plain') + ';charset=utf-8', zip: false };
@@ -351,11 +351,11 @@ export function openFile(s, id) {
 }
 /* Mở ra (bỏ khỏi collapsed) mọi folder chứa nút id; self: cả chính nó nếu là folder. */
 export function reveal(s, id, self) {
-  var up = new Set(), n = s.nodes.filter(function (x) { return x.id === id; })[0];
+  var up = new Set(), n = byId(s.nodes, id);
   if (self && n && n.kind === 'dir') up.add(n.id);
   while (n && n.parent != null && !up.has(n.parent)) {
     up.add(n.parent);
-    n = s.nodes.filter(function (x) { return x.id === n.parent; })[0];
+    n = byId(s.nodes, n.parent);
   }
   var o = withTree(s, s.nodes);
   o.collapsed = o.collapsed.filter(function (d) { return !up.has(d); });
@@ -379,7 +379,7 @@ export function applyUndo(cur, u) {
     var p = u.parent != null && cur.nodes.some(function (n) { return n.id === u.parent && n.kind === 'dir'; }) &&
       subtree(cur.nodes, u.id).indexOf(u.parent) < 0 ? u.parent : null;
     if (dirOf(cur, u.id) === p) return { s: reveal(cur, u.id), id: u.id };
-    var me = cur.nodes.filter(function (n) { return n.id === u.id; })[0];
+    var me = byId(cur.nodes, u.id);
     var nm = uniqueName(cur.nodes.filter(function (n) { return n.id !== u.id; }), p, me.name);
     var mv = cur.nodes.map(function (n) { return n.id === u.id ? { id: n.id, parent: p, kind: n.kind, name: nm } : n; });
     return { s: reveal(withTree(cur, mv), u.id), id: u.id };

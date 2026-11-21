@@ -638,6 +638,7 @@ check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi
     check('visibleRows: depth từ 0, folder trước file', eq(rows.map((x) => x.depth + ':' + x.node.name), ['0:a', '1:b', '2:c', '3:d', '4:e', '5:f', '6:g.md', '6:h.md', '1:top.md']), JSON.stringify(rows.map((x) => x.depth + ':' + x.node.name)));
     const c = nodes.find((n) => n.name === 'c');
     check('visibleRows: con của folder gập bị ẩn, filesInOrder thì không', eq(T.visibleRows(nodes, [c.id]).map((x) => x.node.name), ['a', 'b', 'c', 'top.md']) && eq(names(nodes, T.filesInOrder(nodes)), ['g.md', 'h.md', 'top.md']));
+    check('byId: nút theo id, không có thì null', T.byId(nodes, c.id) === c && T.byId(nodes, 'x') === null);
     check('subtree: id và mọi hậu duệ', T.subtree(nodes, c.id).length === 6 && T.subtree(nodes, 'x').length === 0);
     // Tìm file theo mẫu (MDAN-068): RegExp không phân biệt hoa thường trên tên; không hợp lệ thì chuỗi con; giữ folder tổ tiên.
     const fr = T.fromPaths([], null, ['docs/axb-notes.text', 'docs/abc.text', 'docs/deep/AXB-plan.text', 'notes.md', 'a(b.md', 'Tiếng.md'], mk), fn = freeze(fr.nodes);
