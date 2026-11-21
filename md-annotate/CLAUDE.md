@@ -40,7 +40,7 @@
 - Nền, mực, font chép từ `index.html` gốc. Một màu xanh: `--accent` (MDAN-009); nền nhạt, highlight, vạch pha từ nó.
 - Xanh không làm chữ trên nền sáng (~2,3:1): chữ là mực, nhấn bằng vạch / nền nhạt / huy hiệu. Chữ trên `--accent`: `--on-accent`. Chữ ≥ 4,5:1; chỉ báo trạng thái ≥ 3:1 (focus `--ring`, hàng đang chọn `--edge-on`; thẻ file mở trong cây chỉ có nền), cả hai theme. Vòng focus chỉ sau Tab, hay mũi tên / Home / End trong cây, menu của nó và menu *More* (MDAN-020).
 - Token ở `css/tokens.css` (chữ `--fs-*` + `--lh*`, bo `--r-*`, vật lồng trong bo nhỏ hơn; cao `--h-*`, khoảng `--s*`, `--dur`). Biến đổi lúc chạy mà văn bản không dùng (cây, vách): `@property … inherits: false`, đặt lên phần tử dùng nó; lớp ở `html` không kết bộ chọn bằng `:not()` / `*`. Không thì mỗi lần đổi tính lại kiểu mọi nút của văn bản (10.000 dòng: ~0,6 s).
-- Họ component chung luật ở `css/base.css` (nút, nhóm tab `.ma-tabs` / `.ma-seg` / `.ma-fmt`, ô nhập, huy hiệu, phím): thêm biến thể vào họ.
+- Họ component chung luật ở `css/base.css` (nút, menu, nhóm tab `.ma-tabs` / `.ma-seg` / `.ma-fmt`, ô nhập, huy hiệu, phím): thêm biến thể vào họ.
 - Theme: khoá chung `hub-theme`, đặt trước lần vẽ đầu; chưa chọn thì theo hệ điều hành (REPO-024). `html` và `body` có nền `--bg` đặt rõ. Thanh trên, cây, panel, thanh đáy không bôi đen được trừ ô gõ chữ và hộp prompt `.ma-out` (MDAN-072): một luật ở `css/base.css` (MDAN-064), đừng đặt `user-select` từng phần tử.
 - Lớp mờ: phần tử fixed trọn khung nhìn, không `::backdrop` / bóng (iOS 26 Safari tô vùng thanh trạng thái theo nền phần tử fixed ở mép). Hộp thoại: chính `<dialog>`, nền `--scrim`, thẻ là con; tấm nhận xét: `#pop-scrim`, `--scrim-live` (nhẹ hơn: không chặn chạm), không có khi chọn dòng (MDAN-026).
   Hiện / ẩn lớp: `syncBar()`: `theme-color` = nền trộn lớp, và `html.ma-lock` (trang sau lớp không cuộn, đóng không nhảy); thẻ, tấm `overscroll-behavior: contain`.
@@ -79,7 +79,7 @@
 - Thẻ nhận xét: không viền; số, L12, nhận xét, trích dẫn mờ vạch trái (không bo, REPO-025). Sửa / xoá hiện khi rê / focus (cảm ứng: luôn); rê thẻ tô đoạn và ngược lại.
 - Điện thoại (≤ 720px): một cột, không có *Split*; vùng chạm ≥ `--h-touch` (cả màn cảm ứng; vật nhỏ trong dòng nới bằng lớp giả). Lưu nhận xét không cuộn trang. Vùng an toàn: lề vùng làm việc, mọi phần tử fixed / sticky dùng `--sa-*`.
 - Thanh trên điện thoại (MDAN-036): dính, cuộn xuống thì khuất, cuộn lên chút thì về (MDAN-051, `.is-away`, cả nằm ngang thấp); *Files*, tên gọn, *History*, *Settings*, *More*; `.ma-bar__opt` (*New session*, theme) ẩn, vào `#bar-menu` cùng *Help*;
-  mỗi mục bấm nút thật của nó (`data-for`); kiểu `.ma-menu` của cây, phím theo mẫu menu button WAI-ARIA. Toast không nhận chuột (trừ *Undo*); có hộp thoại mở thì toast nằm trong nó; không thì nằm trên tấm nhận xét, nút nổi, viên thuốc (`placeToast()`).
+  mỗi mục bấm nút thật của nó (`data-for`); kiểu `.ma-menu` chung với cây (`css/base.css`), phím theo mẫu menu button WAI-ARIA. Toast không nhận chuột (trừ *Undo*); có hộp thoại mở thì toast nằm trong nó; không thì nằm trên tấm nhận xét, nút nổi, viên thuốc (`placeToast()`).
 
 ## Hộp nhận xét
 
