@@ -117,6 +117,13 @@
                   "title": "Course Notes",
                   "sub": "HDFS, tiền xử lý, EDA, mã hoá thị giác, chọn biểu đồ, kể chuyện",
                   "tags": "Data governance · file system · HDFS · data integration · NiFi · data quality · OpenRefine · EDA · feature engineering · visual encoding · marks & channels · biểu đồ · heatmap · graph · text visualization · storytelling with data"
+                },
+                {
+                  "icon": "query_stats",
+                  "href": "masters-degree/data-management-visualization/sports-monitoring-project.html",
+                  "title": "Sports Monitoring — Project",
+                  "sub": "Đồ án nhóm: ngoại lai, ANOM, CUSUM, SPRT trên dữ liệu thể thao",
+                  "tags": "Group project · outlier detection · Grubbs · analysis of means · ANOM · CUSUM · SPRT · Wald · sports analytics · football-data · Formula 1 · data lineage · provenance · source review"
                 }
               ]
             },
