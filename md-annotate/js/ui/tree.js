@@ -8,7 +8,9 @@
    Docked hay tấm trượt: chỉ theo khổ màn (MDAN-061): điện thoại (mqHandset: ≤ 720px, hay màn cảm ứng thấp ≤ 500px khi xoay ngang) là tấm trượt, đóng sẵn; mọi khổ khác là cột, không
    tự ẩn khi chật (vùng làm việc hẹp lại, người dùng tự ẩn hay kéo hẹp cây). prefs.tree (chưa chọn: hiện; chỉ nút và
    Ctrl/⌘ + B ghi) là "muốn thấy cây": docked thì nút #btn-tree / Ctrl/⌘ + B đổi nó (html.ma-tree-on);
-   tấm trượt thì chỉ mở tấm. revealTree(): hiện cho phiên đang vẽ, không ghi prefs (MDAN-032); đổi phiên thì thôi. Bề rộng:
+   tấm trượt thì chỉ mở tấm. Mở phiên ≤ 1 file thì cột ẩn cho phiên ấy tới khi phiên có ≥ 2 file; ở phiên ≤ 1 file, nút và
+   Ctrl/⌘ + B chỉ ẩn / hiện cho phiên ấy, không ghi prefs (MDAN-083). revealTree(): hiện cho phiên đang vẽ, không ghi prefs
+   (MDAN-032). Đổi phiên thì hai lựa chọn theo phiên thôi. Bề rộng:
    --tree, kéo #tree-grip 180–420, prefs.treeW. Bàn phím theo mẫu tree của WAI-ARIA (mũi
    tên, Home, End bật vòng focus như Tab, MDAN-020); kéo thả bằng chuột, chỗ thả được theo core canMove. Hàng bị xoá: hàng
    hiện tại thành hàng vào chỗ nó. Đầu cây một hàng (MDAN-060): New file, New folder, ⋯ (#tree-head-menu: Import folder,
@@ -17,8 +19,9 @@
    đều mọi cấp: vạch thụt là phần tử riêng (#tree-guides), cây sâu thì thân cuộn ngang (--dmax), tự cuộn tới tên hàng hiện tại; hàng
    chật thì ẩn huy hiệu (.is-cramp); đổi tên là ô nhập trong suốt đúng chỗ tên.
    Xuất: editName, focusRow, initTree, renderTree, revealTree.
-   Dùng: core/tree.js, core/place.js, core/text.js, ui/store.js, ui/dom.js, ui/views.js, ui/tree-find.js. */
+   Dùng: core/tree.js, core/session.js, core/place.js, core/text.js, ui/store.js, ui/dom.js, ui/views.js, ui/tree-find.js. */
 import { canMove, moveTargets, visibleRows } from '../core/tree.js';
+import { fileCount } from '../core/session.js';
 import { nameReveal } from '../core/place.js';
 import { plural } from '../core/text.js';
 import { prefs, savePrefs } from './store.js';
@@ -35,7 +38,8 @@ var els = {};                        // id → <li>, giữ qua các lần vẽ (
 var cur = null;                      // hàng giữ tabindex 0 (roving tabindex)
 var editing = null;                  // { id, input, orig } khi đang đổi tên
 var lastOpen = null, wasOn = null, docked = false, treeW = W_DEF, curAt = 0;   // curAt: chỉ số của hàng hiện tại ở lần vẽ trước
-var shownFor = null;                 // id phiên mà revealTree() hiện cây cho
+var shownFor = null;                 // id phiên mà cây hiện cho, bất kể prefs.tree (revealTree(), nút ở phiên ≤ 1 file)
+var hiddenFor = null;                // id phiên mà cây ẩn cho, bất kể prefs.tree (mở phiên ≤ 1 file, nút ở phiên ≤ 1 file)
 var hmenu = null;                    // menu ⋯ của đầu cây
 var menu = null, menuFor = null, menuSub = false, menuAt = null;   // menuSub: đang ở Move to…; menuAt: chỗ neo của place()
 var dragId = null, dropAt, hoverDir = null, hoverTimer = 0;
@@ -51,6 +55,7 @@ function parentOf(id) { var n = byId[id]; return n && n.parent != null ? n.paren
 /* ẨN / HIỆN. docked: cây được là cột trái (chưa chắc đang hiện); không thì nút mở tấm trượt. */
 function wantShown() {
   if (model && shownFor === model.sid) return true;
+  if (model && hiddenFor === model.sid) return false;
   return typeof prefs.tree === 'boolean' ? prefs.tree : true;
 }
 function treeShown() { return !!model && docked && wantShown(); }
@@ -73,8 +78,13 @@ function applyShown() {
   refreshSplit();   // #doc đổi bề rộng: Split hiện / ẩn ngay
   if (on) revealCur();
 }
-/* Người dùng bật / tắt khi docked (nút, Ctrl/⌘ + B): ghi prefs.tree. */
-function setTreeShown(on) { prefs.tree = !!on; shownFor = null; savePrefs(); applyShown(); }
+/* Người dùng bật / tắt khi docked (nút, Ctrl/⌘ + B): phiên ≥ 2 file thì ghi prefs.tree; phiên ≤ 1 file thì chỉ cho phiên
+   ấy (cây ở đó vốn ẩn sẵn, MDAN-083). */
+function setTreeShown(on) {
+  if (fileCount(model) <= 1) { shownFor = on ? model.sid : null; hiddenFor = on ? null : model.sid; }
+  else { prefs.tree = !!on; shownFor = hiddenFor = null; savePrefs(); }
+  applyShown();
+}
 /* Hiện cây cho phiên đang vẽ (nạp folder xong), không ghi lựa chọn: phiên khác theo prefs.tree như cũ. Tấm trượt: không tự mở. */
 export function revealTree() { if (model) { shownFor = model.sid; applyShown(); } }
 /* Focus hàng id khi cây đang hiện (cột hay tấm trượt), VD sau Undo: focus không rơi về body. */
@@ -224,8 +234,10 @@ function markGuide() {
 export function renderTree(m, actions) {
   var ae = document.activeElement;
   var hadFocus = !!(ae && ae.classList && ae.classList.contains('ma-trow') && $('tree').contains(ae));
-  var same = !!model && model.sid === m.sid;
-  if (!same) shownFor = null;
+  var same = !!model && model.sid === m.sid, nf = fileCount(m);
+  /* Mở phiên ≤ 1 file: cột ẩn cho phiên ấy; phiên lên ≥ 2 file thì theo prefs.tree. Xoá về 1 file không ẩn lại (MDAN-083). */
+  if (!same) { shownFor = null; hiddenFor = nf <= 1 ? m.sid : null; }
+  else if (nf >= 2) hiddenFor = null;
   model = m; act = actions || {};
   byId = {};
   m.nodes.forEach(function (n) { byId[n.id] = n; });
@@ -247,7 +259,6 @@ export function renderTree(m, actions) {
   Object.keys(els).forEach(function (id) { if (!(id in byId)) delete els[id]; });
   if (editing && !(editing.id in at)) editing = null;
   reconcile($('tree-list'), want);
-  var nf = m.nodes.filter(function (n) { return n.kind === 'file'; }).length;
   /* Phiên trống chưa có tên: không lặp chữ "Files" dưới nhãn FILES. */
   $('tree-title').textContent = m.title || 'Untitled session';
   $('tree-title').title = (m.title || 'Untitled session') + ' · ' + plural(nf, 'file');

@@ -2061,18 +2061,20 @@ const cornerClash = (page) => page.evaluate(() => {
     const tp = await openPage(tctx);
     await tp.click('#btn-sample'); await tp.waitForTimeout(150);
     const t0 = await tstate(tp);
-    check('cây: phiên một file của trang — có nút, cột hiện sẵn (MDAN-061)', t0.shown && t0.btn && t0.exp === 'true', JSON.stringify(t0));
-    // Phiên một file: cột hiện sẵn, một hàng đang chọn, Split còn (2560); nút ẩn rồi hiện lại, ghi prefs.tree.
+    check('cây: phiên một file của trang — có nút, cột ẩn sẵn (MDAN-083)', !t0.shown && t0.btn && t0.exp === 'false' && t0.lbl === 'Show files', JSON.stringify(t0));
+    // Phiên một file (MDAN-083): cột ẩn sẵn; nút hiện cột cho phiên ấy, một hàng đang chọn, Split còn (2560); bấm lại ẩn; không ghi prefs.tree.
     await tp.evaluate(treeDemo, true); await tp.waitForTimeout(150);
+    const tHid = await tstate(tp);
+    await tp.click('#btn-tree'); await tp.waitForTimeout(150);
     let ts = await tstate(tp);
     const one = await tp.$$eval('#tree-list .ma-trow', (ls) => ls.map((l) => [l.getAttribute('aria-selected'), l.getAttribute('aria-level'), l.querySelector('.ma-trow__name').textContent]));
-    check('cây: phiên một file — cột hiện, một hàng đang chọn, Split còn', ts.btn && ts.shown && ts.split && ts.rows === 1 && one[0][0] === 'true' && one[0][1] === '1' && one[0][2] === 'untitled.md'
-      && ts.exp === 'true' && ts.lbl === 'Hide files', JSON.stringify([ts, one]));
+    check('cây: phiên một file — cột ẩn sẵn; nút hiện cột, một hàng đang chọn, Split còn', !tHid.shown && ts.btn && ts.shown && ts.split && ts.rows === 1 && one[0][0] === 'true' && one[0][1] === '1' && one[0][2] === 'untitled.md'
+      && ts.exp === 'true' && ts.lbl === 'Hide files', JSON.stringify([tHid, ts, one]));
     await tp.click('#btn-tree'); await tp.waitForTimeout(150);
     const tOff = await tstate(tp);
     await tp.click('#btn-tree'); await tp.waitForTimeout(150);
     ts = await tstate(tp);
-    check('cây: phiên một file — nút ẩn cột (prefs.tree = false), bấm lại hiện (true)', !tOff.shown && tOff.pref === false && tOff.lbl === 'Show files' && ts.shown && ts.pref === true, JSON.stringify([tOff, ts]));
+    check('cây: phiên một file — nút ẩn cột, bấm lại hiện, chỉ cho phiên ấy (không ghi prefs.tree)', !tOff.shown && tOff.pref === undefined && tOff.lbl === 'Show files' && ts.shown && ts.pref === undefined, JSON.stringify([tOff, ts]));
     const hint = () => tp.evaluate(() => { const x = document.getElementById('tree-hint'); return { on: !!x.getClientRects().length, t: x.querySelector('.ma-tree__hint-t').innerText.trim() }; });
     const h1 = await hint();
     check('cây: phiên một file — gợi ý "Drop files or a folder here" dưới danh sách (MDAN-060)', h1.on && h1.t === 'Drop files or a folder here', JSON.stringify(h1));
@@ -2529,7 +2531,7 @@ const cornerClash = (page) => page.evaluate(() => {
       return { nodes: s.nodes && s.nodes.map((n) => n.name), path: s.path, text: d && d.text, nc: d && d.comments.length, nrv: d && d.reviews.length, legacy: 'text' in s }; });
     check('phiên cũ: một file a.md, ô Folder là notes/, chữ, nhận xét, dấu đã đọc còn', up.nodes && up.nodes.join() === 'a.md' && up.path === 'notes/' && up.text === '# Cũ\n\nMột câu cũ.\n\nCâu hai còn đây.\n' && up.nc === 1 && up.nrv === 1
       && (await lp.inputValue('#p-path')) === 'notes/' && (await items(lp)).length === 1 && (await lp.textContent('#n-review')) === '33%', JSON.stringify([up, await lp.textContent('#n-review')]));
-    check('phiên cũ: một file thì cây vẫn hiện sẵn (MDAN-061), nút có', (await treeOn(lp)) && (await lp.isVisible('#btn-tree')));
+    check('phiên cũ: một file thì cây ẩn sẵn (MDAN-083), nút có', !(await treeOn(lp)) && (await lp.isVisible('#btn-tree')));
     await lc.close();
 
     // 2. Hai file: file mới, đổi tên, nhận xét tách theo file, chuyển file giữ chế độ xem, prompt All files.
@@ -2540,11 +2542,14 @@ const cornerClash = (page) => page.evaluate(() => {
     await fp.click('.ma-tab[data-view="view"]');
     await comment(fp, 'Câu riêng của A.', 'sửa A');
     await fp.evaluate(() => document.activeElement && document.activeElement.blur());
-    const on0 = await treeOn(fp), r0 = (await rows(fp)).join();
+    const on0 = await treeOn(fp), r0 = (await rows(fp)).join(), pref = () => fp.evaluate(() => JSON.parse(localStorage.getItem('md-annotate:prefs:v1') || '{}').tree);
     await fp.keyboard.press('Control+B'); await fp.waitForTimeout(150);
-    const off = !(await treeOn(fp));
+    const on1 = await treeOn(fp);
     await fp.keyboard.press('Control+B'); await fp.waitForTimeout(150);
-    check('cây thật: cây một file hiện sẵn; Ctrl+B ẩn, lần nữa hiện', on0 && r0 === '1:untitled.md*' && off && (await treeOn(fp)), JSON.stringify([on0, r0, off]));
+    const off = !(await treeOn(fp)), p1 = await pref();
+    await fp.keyboard.press('Control+B'); await fp.waitForTimeout(150);
+    check('cây thật: dán vào phiên trống (một file) thì cây ẩn (MDAN-083); Ctrl+B hiện, ẩn, hiện chỉ cho phiên ấy, không ghi prefs.tree',
+      !on0 && r0 === '1:untitled.md*' && on1 && off && (await treeOn(fp)) && p1 === undefined && (await pref()) === undefined, JSON.stringify([on0, r0, on1, off, p1]));
     await fp.click('#tree-new-file'); await fp.waitForTimeout(150);
     const ren = await fp.evaluate(() => { const i = document.querySelector('#tree-list .ma-trow__ren'); return i && document.activeElement === i ? i.value : null; });
     await fp.keyboard.press('Control+A'); await fp.keyboard.type('b.md'); await fp.keyboard.press('Enter'); await fp.waitForTimeout(150);
@@ -2763,12 +2768,35 @@ const cornerClash = (page) => page.evaluate(() => {
     }
     await c.close();
 
-    // Phiên một file, prefs.tree chưa chọn: vẫn hiện sẵn.
-    ({ c, p } = await at(1440, 'view', false));
-    await p.evaluate(() => { const k = 'md-annotate:s:dk1', s = JSON.parse(localStorage.getItem(k)); s.nodes = s.nodes.slice(0, 1); delete s.docs.b; localStorage.setItem(k, JSON.stringify(s)); });
-    await p.reload(); await p.waitForFunction(() => window.marked && window.DOMPurify); await p.waitForTimeout(250);
+    /* Phiên một file (MDAN-083), prefs.tree chưa chọn: cột ẩn sẵn, không chớp lúc nạp; Ctrl+B hiện / ẩn chỉ cho phiên ấy; mở file
+       thứ hai từ đĩa thì cột hiện; xoá về một file không ẩn lại; tải lại thì ẩn. prefs.tree = false: lên hai file vẫn ẩn. */
+    const oneFile = () => p.evaluate(() => { const k = 'md-annotate:s:dk1', s = JSON.parse(localStorage.getItem(k)); s.nodes = s.nodes.slice(0, 1); delete s.docs.b; localStorage.setItem(k, JSON.stringify(s)); });
+    const reload1 = async () => { await p.reload(); await p.waitForFunction(() => window.marked && window.DOMPurify); await p.waitForTimeout(250); };
+    const seen = () => p.evaluate(() => window.__seen);
+    const addDisk = async () => { await p.setInputFiles('#file-in', { name: 'c.md', mimeType: 'text/markdown', buffer: Buffer.from('# C\n\nThird.\n') }); await p.waitForTimeout(400); };
+    ({ c, p } = await at(1440, 'view', false, null, spy));
+    await oneFile(); await reload1();
     s = await dst(p);
-    check('cây docked: phiên một file, chưa chọn ẩn / hiện — cây hiện sẵn', docked(s) && s.pref === undefined, JSON.stringify(s));
+    check('cây docked: phiên một file — cột ẩn sẵn, không chớp lúc nạp, #doc 854, nút "Show files"', !s.dock && s.lbl === 'Show files' && s.exp === 'false' && s.doc === 854 && s.pref === undefined && (await seen()) === false, JSON.stringify(s));
+    await p.keyboard.press('Control+B'); await p.waitForTimeout(200);
+    const s1 = await dst(p);
+    await p.keyboard.press('Control+B'); await p.waitForTimeout(200);
+    s = await dst(p);
+    check('cây docked: phiên một file — Ctrl+B hiện cột (#doc 766), lần nữa ẩn; không ghi prefs.tree', docked(s1) && s1.doc === 766 && s1.pref === undefined && !s.dock && s.exp === 'false' && s.doc === 854 && s.pref === undefined, JSON.stringify([s1, s]));
+    await addDisk();
+    s = await dst(p);
+    check('cây docked: phiên một file mở thêm file từ đĩa — cột tự hiện, #doc 766', docked(s) && s.doc === 766 && s.pref === undefined, JSON.stringify(s));
+    await p.click('#tree-list .ma-trow:has-text("c.md")', { button: 'right' }); await p.click('#tree-menu .ma-menu__i:has-text("Delete")'); await p.waitForTimeout(200);
+    s = await dst(p);
+    check('cây docked: xoá về một file — cột không ẩn lại', docked(s) && (await p.$$eval('#tree-list .ma-trow', (x) => x.length)) === 1, JSON.stringify(s));
+    await reload1();
+    s = await dst(p);
+    check('cây docked: tải lại phiên một file — ẩn, không chớp', !s.dock && (await seen()) === false, JSON.stringify(s));
+    await c.close();
+    ({ c, p } = await at(1440, 'view', false, { tree: false }));
+    await oneFile(); await reload1(); await addDisk();
+    s = await dst(p);
+    check('cây docked: prefs.tree = false — phiên một file lên hai file vẫn ẩn', !s.dock && s.pref === false && (await p.$$eval('#tree-list .ma-trow', (x) => x.length)) === 2, JSON.stringify(s));
     await c.close();
 
     ({ c, p } = await at(1440, 'view', false));
@@ -2996,6 +3024,7 @@ const cornerClash = (page) => page.evaluate(() => {
 
     // Xoá file cuối của phiên rồi mở phiên khác (phiên trống bị bỏ khi chuyển); Undo dựng lại phiên ấy.
     p = await seed(ctx, [mk('U2', [{ id: 'fo', name: 'only.md', text: '# Only\n\nprecious text\n', comments: [C('co', 'precious text', 'c')] }]), mk('U3', [{ id: 'fz', name: 'other.md', text: '# Other\n\nz\n' }])], 'U2', { tree: true });
+    await p.keyboard.press('Control+B'); await p.waitForTimeout(100);   // phiên một file: cây ẩn sẵn (MDAN-083)
     await menuDo(p, 'fo', 'Delete');
     await p.evaluate(async () => { const S = await import('./js/ui/state.js'); S.switchTo(S.loadSession('U3')); });
     await p.waitForTimeout(200);
@@ -3691,7 +3720,7 @@ const cornerClash = (page) => page.evaluate(() => {
 
   // ── văn bản dài: đổi bề rộng (MDAN-071) ──
   {
-    const c = await treeContext({ viewport: { width: 1600, height: 900 }, colorScheme: 'light' });   // cây hiện sẵn: thử ẩn / hiện
+    const c = await treeContext({ viewport: { width: 1600, height: 900 }, colorScheme: 'light' });   // cây: thử ẩn / hiện
     const p = await openPage(c);
     const lines = [];
     for (let s = 0; lines.length < 2000; s++) {
@@ -3764,6 +3793,7 @@ const cornerClash = (page) => page.evaluate(() => {
     const c = await treeContext({ viewport: { width: 1920, height: 900 }, colorScheme: 'light' });
     const p = await openPage(c);
     await pasteText(p, DOC);
+    await p.click('#btn-tree');   // phiên một file: cây ẩn sẵn (MDAN-083)
     await p.click('.ma-tab[data-view="split"]'); await p.waitForTimeout(150);
     const mode = () => p.evaluate(() => ({ mode: document.getElementById('views').dataset.mode, view: !document.getElementById('tab-view').hidden,
       md: document.querySelectorAll('#v-md > *').length }));
@@ -3906,6 +3936,7 @@ const cornerClash = (page) => page.evaluate(() => {
       const c = await treeContext({ viewport: { width: w, height: h }, colorScheme: 'light' });
       const p = await openPage(c);
       await pasteText(p, DOC); await p.waitForTimeout(150);
+      await p.click('#btn-tree');   // phiên một file: cây ẩn sẵn (MDAN-083)
       await p.evaluate(() => { const t = document.getElementById('toast'); t.hidden = false; t.textContent = 'Thử'; });
       const m = await p.evaluate(() => {
         const r = (id) => document.getElementById(id).getBoundingClientRect(), dock = r('dock'), tree = document.querySelector('body > .ma-tree').getBoundingClientRect();
@@ -3974,6 +4005,7 @@ const cornerClash = (page) => page.evaluate(() => {
     const c = await treeContext({ viewport: { width: 1700, height: 900 }, colorScheme: 'light' });
     const p = await openPage(c);
     await pasteText(p, Array.from({ length: 1700 }, (_, i) => 'Line ' + i).join('\n'));
+    await p.click('#btn-tree');   // phiên một file: cây ẩn sẵn (MDAN-083)
     await p.click('.ma-tab[data-view="split"]'); await p.waitForTimeout(300);
     const ghostX = () => p.evaluate(() => { const g = document.querySelector('.ma-ghost'); if (!g) return null; const r = g.getBoundingClientRect(); return r.left + r.width / 2; });
     const cases = [
@@ -4013,7 +4045,7 @@ const cornerClash = (page) => page.evaluate(() => {
     // Vách Split, mép cây, mép panel, vạch .ma-ghost: rê cùng một màu --edge-on (không phải --accent, ~2,3:1 ở nền sáng).
     const c = await treeContext({ viewport: { width: 1800, height: 900 }, colorScheme: 'light' });
     const p = await openPage(c);
-    await pasteText(p, DOC); await p.click('.ma-tab[data-view="split"]'); await p.waitForTimeout(200);
+    await pasteText(p, DOC); await p.click('#btn-tree'); await p.click('.ma-tab[data-view="split"]'); await p.waitForTimeout(200);
     const col = [];
     for (const sel of ['#divider', '#tree-grip', '#panel-grip']) {
       await p.hover(sel); await p.waitForTimeout(250);
