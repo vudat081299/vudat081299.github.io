@@ -542,10 +542,10 @@
     }
   ],
   "methods": [
-    {"id": "outlier", "q": "ai", "name": "Kiểm định ngoại lai", "what_html": "Tìm giá trị xa hẳn phần còn lại: <span class=\"term\">z-score</span>, rào <span class=\"term\">IQR</span> trên <span class=\"term\">box plot</span>, hay kiểm định <span class=\"term\">Grubbs</span>.", "example": "Trận nhiều bàn nằm ngoài rào: chuyện lạ thật hay lỗi nhập liệu?"},
-    {"id": "anom", "q": "ai", "name": "Phân tích trung bình (ANOM)", "what_html": "So trung bình từng nhóm với trung bình chung; nhóm nằm ngoài <span class=\"term\">UDL / LDL</span> là khác thường.", "example": "Trọng tài nào rút thẻ vàng mỗi trận nhiều hay ít khác hẳn trung bình giải?"},
-    {"id": "cusum", "q": "khi", "name": "CUSUM", "what_html": "Cộng dồn phần lệch của từng trận so với mức cũ; tổng vượt ngưỡng <span class=\"term\">h</span> là báo đổi.", "example": "Từ trận nào hiệu số bàn thắng của một đội đổi hẳn?"},
-    {"id": "sprt", "q": "khi", "name": "SPRT", "what_html": "Sau mỗi trận cộng thêm bằng chứng (<span class=\"term\">LLR</span>); chạm ngưỡng trên hay dưới thì dừng và kết luận.", "example": "Sau bao nhiêu trận thì đủ bằng chứng huấn luyện viên mới nâng tỉ lệ thắng?"}
+    {"id": "outlier", "q": "ai", "name": "Kiểm định ngoại lai", "what_html": "Tìm giá trị xa hẳn phần còn lại: <span class=\"term\">z-score</span>, rào <span class=\"term\">IQR</span> trên <span class=\"term\">box plot</span>, hay kiểm định <span class=\"term\">Grubbs</span>.", "example": "Trận nhiều bàn nằm ngoài rào: chuyện lạ thật hay lỗi nhập liệu?", "familiar_html": "một máy mở app mất 30 giây giữa hàng nghìn máy mất 2 giây."},
+    {"id": "anom", "q": "ai", "name": "Phân tích trung bình (ANOM)", "what_html": "So trung bình từng nhóm với trung bình chung; nhóm nằm ngoài <span class=\"term\">UDL / LDL</span> là khác thường.", "example": "Giải nào có tỉ lệ thắng sân nhà cao hay thấp khác hẳn trung bình chung?", "familiar_html": "so tỉ lệ crash của từng dòng máy với trung bình mọi máy: dòng nào vượt hẳn vạch quyết định?"},
+    {"id": "cusum", "q": "khi", "name": "CUSUM", "what_html": "Cộng dồn phần lệch của từng trận so với mức cũ; tổng vượt ngưỡng <span class=\"term\">h</span> là báo đổi.", "example": "Từ trận nào phong độ của một câu lạc bộ đổi hẳn?", "familiar_html": "sau bản phát hành mới, cộng dồn phần crash vượt mức thường; tổng vượt ngưỡng thì báo — bắt được thay đổi nhỏ nhưng kéo dài."},
+    {"id": "sprt", "q": "khi", "name": "SPRT", "what_html": "Sau mỗi trận cộng thêm bằng chứng (<span class=\"term\">LLR</span>); chạm ngưỡng trên hay dưới thì dừng và kết luận.", "example": "Mùa 2020/21 vắng khán giả: sau bao nhiêu trận thì đủ bằng chứng lợi thế sân nhà đã mất?", "familiar_html": "phát hành theo giai đoạn (<span class=\"term\">staged rollout</span>): xem từng phiên, đủ bằng chứng tốt hay xấu thì dừng sớm, khỏi chờ đủ mẫu cố định."}
   ],
   "plan_a": [
     {
@@ -576,31 +576,14 @@
       "notes_html": "<ul><li>Số đã kiểm trên CSV: tỉ lệ thắng sân nhà 2016/17 0,492; 2017/18 0,455; 2018/19 0,476; 2020/21 là 144/380 = 0,379, còn tỉ lệ thắng sân khách 0,403. Phép z hai tỉ lệ: z = −3,24.</li><li>Mùa này không hoàn toàn vắng khán giả: khán giả giới hạn trở lại vào tháng 12/2020 và tháng 5/2021.</li><li>Đoạn đá lại không khán giả cuối mùa 2019/20 không thấy giảm: 0,467 trên 92 trận.</li><li>Mùa có khán giả cũng có lúc thấp: 2015/16 0,413; 2024/25 0,408. Muốn biết 2020/21 là cá biệt hay xu hướng, chạy CUSUM qua mọi mùa.</li><li>Đừng lấy p1 = tỉ lệ thắng sân khách cũ (0,303): tỉ lệ thật nằm giữa H0 và H1, phép kiểm thành tung đồng xu.</li><li>Câu nối cho slide: CUSUM là một SPRT cứ chạm đáy thì bắt đầu lại từ 0.</li><li>Bỏ câu \"huấn luyện viên mới\": cần dữ liệu ngoài, và dính <span class=\"term\">hồi quy về trung bình</span> vì huấn luyện viên thường bị sa thải sau chuỗi trận tệ.</li></ul>"
     }
   ],
-  "fit": [
-    {"label": "Ngoại lai", "a": 3, "a_note": "Tỉ số, thẻ, cú sút bất thường; cả lỗi dữ liệu.", "b": 3, "b_note": "Thời gian vòng; vòng vào pit, vòng xe an toàn."},
-    {"label": "ANOM", "a": 3, "a_note": "Tỉ lệ thắng sân nhà theo giải; biến thể: thẻ theo trọng tài.", "b": 3, "b_note": "Thời gian dừng pit theo đội đua."},
-    {"label": "CUSUM", "a": 3, "a_note": "Phần dư so với tỉ lệ cược, từng câu lạc bộ.", "b": 3, "b_note": "Điểm mỗi chặng, hoặc thời gian vòng đã khử xu hướng."},
-    {"label": "SPRT", "a": 3, "a_note": "Mùa 2020/21: thắng sân nhà hay không.", "b": 2, "b_note": "Tay đua có thắng đồng đội từng chặng."},
-    {"label": "Giấy phép", "a": 1, "a_note": "Chỉ cho cá nhân, chỉ để dự đoán; không đưa CSV gốc lên repo công khai.", "b": 2, "b_note": "CC BY-NC-SA: repo công khai phi thương mại được, phải ghi nguồn."},
-    {"label": "Dữ liệu mới", "a": 3, "a_note": "Có tới mùa gần nhất.", "b": 1, "b_note": "Dừng ở 2024; bù bằng FastF1 + Jolpica-F1."},
-    {"label": "Khán giả Việt", "a": 3, "a_note": "Quen bóng đá Anh.", "b": 2, "b_note": "Ít người theo F1."}
-  ],
-  "pipeline": [
-    {"title": "Nguồn & lineage", "lessons": ["b1"], "detail_html": "Ghi nguồn, giấy phép, ngày tải từng file vào <span class=\"term\">data card</span>; vẽ sơ đồ <span class=\"term\">lineage</span>."},
-    {"title": "Gom & làm sạch", "lessons": ["b3"], "detail_html": "Ghép các file CSV mỗi mùa (số cột tăng từ 45 lên 132). Đọc cả hai kiểu ngày. Chuẩn hoá tên đội; gộp tên trọng tài trước khi chạy ANOM."},
-    {"title": "EDA", "lessons": ["b4"], "detail_html": "<span class=\"term\">Box plot</span>, <span class=\"term\">run-sequence plot</span>; tìm ngoại lai và lỗi dữ liệu."},
-    {"title": "Bốn phương pháp", "lessons": [], "detail_html": "Khoá tham số trước, rồi chạy ngoại lai, ANOM, CUSUM, SPRT bằng code tự viết."},
-    {"title": "Hình", "lessons": ["b7", "b8", "b9"], "detail_html": "Biểu đồ quyết định ANOM, biểu đồ CUSUM, hình ngưỡng SPRT."},
-    {"title": "Kể chuyện", "lessons": ["b12"], "detail_html": "Mỗi phương pháp một câu hỏi, một hình, một kết luận."}
-  ],
   "team": [
-    {"role": "Trưởng nhóm & kể chuyện", "lessons": ["b12"], "does_html": "Điều phối, mạch chuyện của slide, biên tập báo cáo."},
-    {"role": "Dữ liệu & lineage", "lessons": ["b1", "b3"], "does_html": "Tải, ghép, làm sạch; viết <span class=\"term\">data card</span>, vẽ sơ đồ <span class=\"term\">lineage</span>."},
-    {"role": "EDA & ngoại lai", "lessons": ["b4"], "does_html": "Box plot, run-sequence plot, kiểm định ngoại lai, lỗi dữ liệu."},
-    {"role": "ANOM", "lessons": [], "does_html": "Tự viết ANOM cho tỉ lệ thắng sân nhà theo giải; biến thể thẻ theo trọng tài; vẽ <span class=\"term\">biểu đồ quyết định</span>."},
-    {"role": "CUSUM", "lessons": [], "does_html": "CUSUM trên phần dư so với tỉ lệ cược; chọn <span class=\"term\">k</span> và <span class=\"term\">h</span> bằng mô phỏng ARL; đối chiếu với giobbu/CUSUM."},
-    {"role": "SPRT", "lessons": [], "does_html": "SPRT cho mùa 2020/21: chọn p0, p1, α, β trước khi xem dữ liệu; vẽ hình ngưỡng. Làm cặp với người làm CUSUM: CUSUM là chuỗi SPRT."},
-    {"role": "Demo Streamlit & tích hợp", "lessons": [], "does_html": "Gói bốn phần vào một app <span class=\"term\">Streamlit</span>; ghép code, giữ repo chạy được từ đầu tới cuối."}
+    {"role": "Trưởng nhóm & kể chuyện", "does_html": "Điều phối, hỏi giảng viên, mạch chuyện của slide, biên tập báo cáo."},
+    {"role": "Dữ liệu & lineage", "does_html": "Tải, ghép, làm sạch, <span class=\"term\">DuckDB</span>; viết <span class=\"term\">data card</span>, <span class=\"term\">lineage</span>, data dictionary."},
+    {"role": "EDA & ngoại lai", "does_html": "Thống kê mô tả, box plot, run-sequence plot, ngoại lai và lỗi dữ liệu."},
+    {"role": "ANOM", "does_html": "<span class=\"term\">ANOM cho tỉ lệ</span> thắng sân nhà theo giải; biến thể trọng tài; <span class=\"term\">biểu đồ quyết định</span>."},
+    {"role": "CUSUM", "does_html": "CUSUM trên <span class=\"term\">phần dư</span> so với tỉ lệ cược; chọn <span class=\"term\">k</span> và <span class=\"term\">h</span> bằng mô phỏng ARL; đối chiếu giobbu/CUSUM."},
+    {"role": "SPRT", "does_html": "SPRT mùa 2020/21; hình hai ngưỡng. Làm cặp với vai 5: CUSUM là chuỗi SPRT."},
+    {"role": "Demo & tích hợp", "does_html": "App <span class=\"term\">Streamlit</span>, gom code, giữ repo chạy lại từ đầu bằng một lệnh."}
   ],
   "refs": [
     {"name": "W3C PROV Overview (W3C Note, 30/04/2013)", "url": "https://www.w3.org/TR/prov-overview/"},
@@ -712,7 +695,20 @@
     {"id": "schema-contract", "term": "Schema contract", "aliases": ["schema contract"], "def": "Bản cam kết về cấu trúc bảng: cột nào, kiểu gì, được trống hay không. Dữ liệu sai cam kết thì bị chặn trước khi phân tích."},
     {"id": "rate-limit", "term": "Giới hạn tần suất", "full": "rate limit", "aliases": ["giới hạn tần suất"], "def": "Số lần gọi API tối đa trong một khoảng thời gian; gọi quá thì bị chặn tạm."},
     {"id": "sidak", "term": "Šidák", "full": "hiệu chỉnh Šidák", "aliases": ["sidak"], "def": "Cách nới mức ý nghĩa khi làm nhiều phép so sánh cùng lúc, để xác suất báo nhầm chung vẫn quanh α. Hơi bảo thủ."},
-    {"id": "bonferroni", "term": "Bonferroni", "def": "Làm m phép kiểm thì dùng ngưỡng α/m cho từng phép, để xác suất có ít nhất một báo nhầm không vượt α. Đơn giản, hơi bảo thủ."}
+    {"id": "bonferroni", "term": "Bonferroni", "def": "Làm m phép kiểm thì dùng ngưỡng α/m cho từng phép, để xác suất có ít nhất một báo nhầm không vượt α. Đơn giản, hơi bảo thủ."},
+    {"id": "staged-rollout", "term": "Staged rollout", "full": "phát hành theo giai đoạn", "aliases": ["staged rollout"], "def": "Đưa bản app mới cho một phần nhỏ người dùng trước, rồi mở rộng dần nếu số liệu ổn."},
+    {"id": "duckdb", "term": "DuckDB", "def": "Cơ sở dữ liệu SQL chạy ngay trong một file trên máy, không cần máy chủ; đọc thẳng Parquet và CSV, rất nhanh cho phân tích."},
+    {"id": "erd", "term": "ERD", "full": "entity-relationship diagram", "def": "Sơ đồ các bảng và cách chúng nối với nhau bằng khoá. Bài 3 của môn có mô hình ER."},
+    {"id": "join", "term": "Join", "aliases": ["join"], "def": "Ghép hai bảng theo một cột chung, ví dụ ghép bảng vòng đua với bảng tay đua theo driverId."},
+    {"id": "venv", "term": "venv", "full": "môi trường ảo Python", "def": "Một thư mục chứa riêng các thư viện của dự án, để máy mỗi người cài đúng cùng phiên bản."},
+    {"id": "git", "term": "git", "def": "Công cụ lưu lịch sử thay đổi của code; GitHub là nơi để repo git trên mạng cho cả nhóm."},
+    {"id": "vscode", "term": "VS Code", "def": "Trình soạn code miễn phí, chạy được notebook Python."},
+    {"id": "colab", "term": "Colab", "full": "Google Colaboratory", "def": "Notebook Python chạy trên máy của Google qua trình duyệt, không cần cài gì."},
+    {"id": "unit-test", "term": "Unit test", "aliases": ["unit test"], "def": "Đoạn code nhỏ kiểm một hàm cho ra đúng kết quả đã biết. Đổi code mà test đỏ là biết ngay hỏng chỗ nào."},
+    {"id": "data-dictionary", "term": "Data dictionary", "aliases": ["data dictionary"], "def": "Bảng giải nghĩa từng cột: tên, kiểu, đơn vị, ý nghĩa, ví dụ."},
+    {"id": "histogram", "term": "Histogram", "def": "Biểu đồ cột đếm số giá trị rơi vào từng khoảng; cho thấy hình dạng phân phối."},
+    {"id": "strip-plot", "term": "Strip plot", "aliases": ["strip plot"], "def": "Vẽ từng điểm dữ liệu trên một trục, thường đặt cạnh box plot để thấy cả điểm lẻ."},
+    {"id": "small-multiples", "term": "Small multiples", "aliases": ["small multiples"], "def": "Nhiều hình nhỏ cùng kiểu, cùng trục, mỗi hình một nhóm, đặt cạnh nhau để so."}
   ],
   "sprt_check": {
     "note": "Kết quả nhóm soát đã chạy trên CSV Premier League (football-data.co.uk); p1, a, b do JS tính.",
@@ -737,5 +733,431 @@
     {"item": "Câu hỏi SPRT", "r1": "Huấn luyện viên mới có nâng tỉ lệ thắng không.", "r2": "2020/21 không khán giả; p1 = tỉ lệ thắng sân khách cũ 0,303.", "check": "Với p1 = 0,303, tỉ lệ thật 0,379 nằm giữa H0 và H1: xác suất chọn H1 khoảng 0,5.", "final": "Giữ câu hỏi vòng 2, đổi p1 = 0,389 (hết lợi thế sân nhà)."},
     {"item": "Phương pháp Beggs & Bond", "r1": "CUSUM dạng bảng.", "r2": "Không nêu.", "check": "Tổng lệch hồi cứu so với trung bình 874 trận, kiểm định hoán vị, e.divisive; 1995/96–2017/18.", "final": "Là bài liên quan, không phải công thức để chép.", "src": "C2"},
     {"item": "\"Chưa có ai làm\"", "r1": "Chưa có dự án nào.", "r2": "Không chứng minh được là không có.", "check": "Không kiểm được sự vắng mặt.", "final": "Viết \"chúng tôi không tìm thấy\"."}
+  ],
+  "fit_rows": [
+    {"id": "outlier", "label": "Ngoại lai"},
+    {"id": "anom", "label": "ANOM"},
+    {"id": "cusum", "label": "CUSUM"},
+    {"id": "sprt", "label": "SPRT"},
+    {"id": "dm", "label": "Nửa quản lý dữ liệu"},
+    {"id": "license", "label": "Giấy phép an toàn"},
+    {"id": "effort", "label": "Công sức nhẹ"},
+    {"id": "audience", "label": "Khán giả Việt quen"},
+    {"id": "fresh", "label": "Dữ liệu mới"}
+  ],
+  "options": [
+    {
+      "id": "A",
+      "name": "Bóng đá Premier League",
+      "data": "football-data.co.uk",
+      "src": "C1",
+      "pick": true,
+      "fit": {
+        "outlier": 3,
+        "anom": 3,
+        "cusum": 3,
+        "sprt": 3,
+        "dm": 3,
+        "license": 1,
+        "effort": 2,
+        "audience": 3,
+        "fresh": 3
+      },
+      "pros_html": [
+        "Cả bốn phương pháp trên một bộ dữ liệu.",
+        "File <span class=\"term\">CSV</span> nhẹ, nhiều cột: cú sút, thẻ, trọng tài, tỉ lệ cược.",
+        "Cột đổi theo mùa và tên trọng tài trôi cho nửa quản lý dữ liệu một câu chuyện làm sạch thật.",
+        "Có bài liên quan đã <span class=\"term\">bình duyệt</span> (Beggs &amp; Bond 2020).",
+        "Nhiều giải để chạy ANOM theo giải.",
+        "Khán giả Việt quen bóng đá."
+      ],
+      "cons_html": [
+        "Điều khoản chặt: không đưa CSV gốc lên repo công khai; hỏi giảng viên.",
+        "So trọng tài bị nhiễu: ai được giao trận nào, thời kỳ nào.",
+        "Cần tỉ lệ cược để bỏ sức mạnh đối thủ (<span class=\"term\">phần dư</span>).",
+        "Ngày đổi huấn luyện viên phải lấy từ ngoài."
+      ],
+      "best_html": "Giảng viên chấp nhận điều khoản của football-data, và repo có thể để riêng tư hoặc chỉ chứa script tải."
+    },
+    {
+      "id": "B",
+      "name": "Formula 1",
+      "data": "Kaggle + FastF1/Jolpica",
+      "src": "A1",
+      "pick": false,
+      "fit": {
+        "outlier": 3,
+        "anom": 3,
+        "cusum": 3,
+        "sprt": 2,
+        "dm": 3,
+        "license": 2,
+        "effort": 1,
+        "audience": 2,
+        "fresh": 2
+      },
+      "pros_html": [
+        "14 bảng quan hệ: mạnh nhất cho nửa quản lý dữ liệu (<span class=\"term\">ERD</span>, <span class=\"term\">join</span>, <span class=\"term\">DuckDB</span>).",
+        "Thời gian từng vòng dày đặc cho CUSUM và ngoại lai.",
+        "Thời gian dừng pit theo đội đua cho ANOM.",
+        "Đấu đồng đội từng chặng cho SPRT.",
+        "<span class=\"term\">CC BY-NC-SA</span> cho phép repo công khai, phi thương mại."
+      ],
+      "cons_html": [
+        "Thời gian vòng có xu hướng, phải <span class=\"term\">khử xu hướng</span>.",
+        "Kaggle cần đăng nhập để tải.",
+        "Dừng ở 2024 nếu không lấy thêm từ Jolpica.",
+        "Khán giả ít quen hơn."
+      ],
+      "best_html": "Giảng viên đòi dữ liệu công bố được, nhóm muốn phần quản lý dữ liệu nặng hơn, hoặc nhóm mê F1.",
+      "questions_html": [
+        "Ngoại lai: thời gian vòng; giải thích được vòng vào pit, vòng xe an toàn.",
+        "ANOM: thời gian dừng pit theo đội đua.",
+        "CUSUM: điểm mỗi chặng của một tay đua hay đội, hoặc thời gian vòng đã khử xu hướng.",
+        "SPRT: tay đua X có thắng đồng đội từng chặng không?"
+      ]
+    },
+    {
+      "id": "C",
+      "name": "Bóng đá quốc tế",
+      "data": "martj42, CC0, có Việt Nam",
+      "src": "C10",
+      "pick": false,
+      "fit": {
+        "outlier": 1,
+        "anom": 1,
+        "cusum": 2,
+        "sprt": 2,
+        "dm": 1,
+        "license": 3,
+        "effort": 2,
+        "audience": 3,
+        "fresh": 3
+      },
+      "pros_html": [
+        "Không rủi ro giấy phép (<span class=\"term\">CC0</span>).",
+        "Có góc Việt Nam.",
+        "Dài từ 1872 tới 2026."
+      ],
+      "cons_html": [
+        "Chỉ có tỉ số: ngoại lai và ANOM mỏng.",
+        "Phải tự tính <span class=\"term\">Elo</span> để bỏ sức mạnh đối thủ.",
+        "Việt Nam chỉ đá 10–17 trận mỗi năm."
+      ],
+      "best_html": "Làm phần mở rộng cho A, ví dụ một slide cuối chạy CUSUM hoặc SPRT cho đội tuyển Việt Nam."
+    }
+  ],
+  "phases": [
+    {
+      "id": "P0",
+      "name": "Khởi động",
+      "start": 0,
+      "len": 8,
+      "roles": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "tasks_html": [
+        "Gửi giảng viên các câu hỏi ở mục <a href=\"#can-xac-nhan\">Cần xác nhận</a>.",
+        "Chốt phương án (A, B hay C).",
+        "Tạo repo theo cây Repo mẫu bên dưới.",
+        "Cài Python, <span class=\"term\">VS Code</span> (hoặc dùng <span class=\"term\">Colab</span>), <span class=\"term\">git</span>; tạo <span class=\"term\">venv</span> rồi cài <code>requirements.txt</code>.",
+        "Giao bảy vai.",
+        "Hẹn một buổi họp mỗi tuần."
+      ],
+      "io_html": "Đề bài, trang này → repo có <code>README.md</code>, <code>requirements.txt</code>, <code>.gitignore</code>; bảng phân vai.",
+      "tools": "git, GitHub, Python 3, VS Code hoặc Colab",
+      "done_html": "Cả bảy người clone được repo và chạy được <code>python -c \"import pandas\"</code>.",
+      "lessons": [],
+      "tip_html": "Mỗi người làm trên một nhánh git riêng, đẩy lên thường xuyên; trưởng nhóm gộp."
+    },
+    {
+      "id": "P1",
+      "name": "Tìm hiểu và thu thập",
+      "start": 5,
+      "len": 15,
+      "roles": [
+        2
+      ],
+      "tasks_html": [
+        "Đọc <code>notes.txt</code> để biết nghĩa từng cột.",
+        "Viết <code>src/download.py</code>: tải Premier League (file <code>E0</code>) từ 2000/01 tới 2025/26, cộng các giải khác cho ANOM.",
+        "Ghi URL, ngày tải và mã <span class=\"term\">SHA-256</span> của từng file vào <code>data/manifest.csv</code>.",
+        "Viết <code>docs/data-card.md</code>: nguồn, điều khoản, cột, giai đoạn.",
+        "Mở <code>docs/lineage.md</code>.",
+        "File gốc để ở <code>data/raw/</code>, có tên trong <code>.gitignore</code>."
+      ],
+      "io_html": "football-data.co.uk, <code>notes.txt</code> → <code>data/raw/*.csv</code> (không commit), <code>data/manifest.csv</code>, <code>docs/data-card.md</code>, <code>docs/lineage.md</code>.",
+      "tools": "Python: requests, hashlib",
+      "done_html": "Chạy <code>python src/download.py</code> trên máy trống thì tải lại đúng các file, mã SHA-256 khớp manifest.",
+      "lessons": [
+        "b1"
+      ],
+      "tip_html": "<code>E0</code> là mã của Premier League trong tên file; mỗi mùa một file."
+    },
+    {
+      "id": "P2",
+      "name": "Làm sạch và tích hợp",
+      "start": 15,
+      "len": 20,
+      "roles": [
+        2,
+        3
+      ],
+      "tasks_html": [
+        "Gộp các mùa thành một bảng; số cột tăng từ 45 lên 132, chỉ giữ cột cần.",
+        "Đọc cả hai kiểu ngày dd/mm/yy và dd/mm/yyyy.",
+        "Chuẩn hoá tên đội và tên trọng tài bằng một bảng ánh xạ (\"Mike Dean\" = \"M. L. Dean\" = \"Dean, M. L\" = \"M Dean\").",
+        "Viết luật <span class=\"term\">chất lượng dữ liệu</span>: <code>HST ≤ HS</code>, số thẻ ≥ 0, <code>FTR</code> khớp số bàn; xuất báo cáo chất lượng.",
+        "Lưu bảng sạch ra <span class=\"term\">Parquet</span> và nạp vào <span class=\"term\">DuckDB</span> (<code>data/clean/</code>).",
+        "Viết <code>docs/data-dictionary.md</code> (<span class=\"term\">data dictionary</span>)."
+      ],
+      "io_html": "<code>data/raw/*.csv</code> → <code>data/clean/*.parquet</code>, file DuckDB, báo cáo chất lượng, <code>docs/data-dictionary.md</code>.",
+      "tools": "pandas, DuckDB; src/clean.py, src/quality.py",
+      "done_html": "Báo cáo chất lượng không còn lỗi chặn; mỗi trọng tài chỉ còn một tên.",
+      "lessons": [
+        "b1",
+        "b2-2",
+        "b3"
+      ],
+      "tip_html": "Ghi mọi quyết định (bỏ cột nào, gộp tên nào) vào <code>lineage.md</code>: đó là phần quản lý dữ liệu đáng điểm nhất."
+    },
+    {
+      "id": "P3",
+      "name": "EDA",
+      "start": 30,
+      "len": 15,
+      "roles": [
+        3,
+        4,
+        5,
+        6
+      ],
+      "tasks_html": [
+        "Thống kê mô tả: trung bình, trung vị, độ lệch chuẩn của bàn, thẻ, cú sút.",
+        "<span class=\"term\">Box plot</span> số bàn và số thẻ theo mùa.",
+        "<span class=\"term\">Run-sequence plot</span> tỉ lệ thắng sân nhà theo mùa.",
+        "<span class=\"term\">Histogram</span> số bàn mỗi trận.",
+        "Chọn các mùa làm mức bình thường (<span class=\"term\">Phase I / Phase II</span>)."
+      ],
+      "io_html": "<code>data/clean/</code> → <code>notebooks/01_eda.ipynb</code>, hình EDA, danh sách mùa Phase I.",
+      "tools": "pandas, matplotlib, Jupyter",
+      "done_html": "Có một trang tóm tắt EDA và đã chốt các mùa Phase I.",
+      "lessons": [
+        "b4"
+      ],
+      "tip_html": "Nhìn hình trước khi kiểm định: nhiều lỗi dữ liệu lộ ra ngay trên box plot."
+    },
+    {
+      "id": "P4",
+      "name": "Thiết kế phân tích, khoá tham số",
+      "start": 40,
+      "len": 10,
+      "roles": [
+        1,
+        4,
+        5,
+        6
+      ],
+      "tasks_html": [
+        "Viết <code>docs/analysis-plan.md</code> trước khi xem dữ liệu Phase II: câu hỏi, H0/H1, α, β, k, h.",
+        "Mô phỏng <span class=\"term\">ARL</span> để chọn k và h.",
+        "Viết <span class=\"term\">unit test</span> so với ví dụ có lời giải, chẳng hạn ví dụ CUSUM của NIST."
+      ],
+      "io_html": "Kết quả EDA, mùa Phase I → <code>docs/analysis-plan.md</code>, <code>tests/</code>.",
+      "tools": "numpy, pytest",
+      "done_html": "Tham số đã ghi và commit trước khi chạy Phase II; test xanh.",
+      "lessons": [],
+      "tip_html": "Commit analysis-plan.md trước: lịch sử git chứng minh nhóm không chỉnh tham số sau khi thấy kết quả."
+    },
+    {
+      "id": "P5",
+      "name": "Chạy bốn phương pháp",
+      "start": 45,
+      "len": 25,
+      "roles": [
+        3,
+        4,
+        5,
+        6
+      ],
+      "tasks_html": [
+        "<code>src/outliers.py</code>, <code>anom.py</code>, <code>cusum.py</code>, <code>sprt.py</code>: mỗi file khoảng 20–60 dòng, tự viết.",
+        "Đối chiếu CUSUM với giobbu/CUSUM.",
+        "Ghi kết quả ra <code>results/*.csv</code>.",
+        "Ghi vào <code>lineage.md</code>: script nào, đọc gì, ra file nào."
+      ],
+      "io_html": "<code>data/clean/</code>, <code>docs/analysis-plan.md</code> → <code>results/*.csv</code>.",
+      "tools": "numpy, scipy.stats, pandas",
+      "done_html": "Chạy lại từ đầu ra đúng <code>results/</code>; số khớp test.",
+      "lessons": [],
+      "tip_html": "Mỗi hàm nhận một bảng, trả một bảng: dễ test, dễ gọi từ Streamlit."
+    },
+    {
+      "id": "P6",
+      "name": "Trực quan hoá",
+      "start": 60,
+      "len": 20,
+      "roles": [
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "tasks_html": [
+        "<span class=\"term\">Biểu đồ quyết định</span> ANOM.",
+        "Biểu đồ CUSUM có vạch h.",
+        "Đường SPRT đi giữa hai ngưỡng.",
+        "Box plot và <span class=\"term\">strip plot</span> cho ngoại lai.",
+        "<span class=\"term\">Small multiples</span>: mỗi câu lạc bộ một ô nhỏ.",
+        "Ghi chú sự kiện lên hình: đổi huấn luyện viên, mùa không khán giả."
+      ],
+      "io_html": "<code>results/*.csv</code> → <code>src/charts.py</code>, hình PNG hoặc SVG.",
+      "tools": "matplotlib hoặc plotly",
+      "done_html": "Mỗi hình có tiêu đề, trục và nguồn dữ liệu.",
+      "lessons": [
+        "b7",
+        "b8",
+        "b9"
+      ],
+      "tip_html": "Một hình trả lời một câu hỏi; tiêu đề hình nên là câu trả lời."
+    },
+    {
+      "id": "P7",
+      "name": "Demo",
+      "start": 65,
+      "len": 23,
+      "roles": [
+        7
+      ],
+      "tasks_html": [
+        "<code>app/streamlit_app.py</code> đọc dữ liệu sạch, chạy được khi không có mạng.",
+        "Tab \"Dữ liệu\": báo cáo chất lượng và nút chạy lại đường ống.",
+        "Mỗi phương pháp một tab có thanh trượt: ngưỡng ngoại lai; α cho ANOM; k, h cho CUSUM; p0, p1, α, β cho SPRT. Hình cập nhật ngay.",
+        "Kịch bản demo 3 phút."
+      ],
+      "io_html": "<code>data/clean/</code>, <code>src/</code>, <code>results/</code> → <code>app/streamlit_app.py</code>, kịch bản demo.",
+      "tools": "Streamlit",
+      "done_html": "Demo chạy trơn 3 phút trên máy trình chiếu, không cần mạng.",
+      "lessons": [],
+      "tip_html": "Streamlit chạy lại cả script mỗi lần kéo thanh trượt: đọc dữ liệu một lần bằng <code>st.cache_data</code>."
+    },
+    {
+      "id": "P8",
+      "name": "Kể chuyện: báo cáo, slide, tập dượt",
+      "start": 75,
+      "len": 25,
+      "roles": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "tasks_html": [
+        "Viết báo cáo theo dàn ý bên dưới; mỗi người viết chương của mình.",
+        "Làm slide theo dàn ý bên dưới.",
+        "Tập dượt hai lần, bấm giờ.",
+        "Đi qua danh sách Xong khi nào."
+      ],
+      "io_html": "Hình, <code>results/</code>, <code>docs/</code> → <code>report/</code>, <code>slides/</code>.",
+      "tools": "Word hoặc LaTeX; PowerPoint hoặc Google Slides",
+      "done_html": "Mọi mục trong Xong khi nào đã đánh dấu.",
+      "lessons": [
+        "b12"
+      ],
+      "tip_html": "Mở đầu bằng câu hỏi, không bằng phương pháp."
+    }
+  ],
+  "flow": [
+    {"label": "football-data.co.uk", "sub": "mỗi mùa một file CSV", "phase": "P1"},
+    {"label": "src/download.py", "sub": "tải về, tính SHA-256", "doc": "manifest.csv, data-card.md", "phase": "P1"},
+    {"label": "data/raw/", "sub": "file gốc, không commit", "phase": "P1"},
+    {"label": "src/clean.py + quality.py", "sub": "gộp mùa, chuẩn tên, luật chất lượng", "doc": "lineage.md", "phase": "P2"},
+    {"label": "data/clean/", "sub": "Parquet + DuckDB", "phase": "P2"},
+    {"label": "outliers · anom · cusum · sprt", "sub": "tham số khoá ở analysis-plan.md", "doc": "lineage.md", "phase": "P5"},
+    {"label": "results/", "sub": "CSV kết quả", "phase": "P5"},
+    {"label": "src/charts.py", "sub": "hình", "phase": "P6"}
+  ],
+  "flow_out": [
+    {
+      "label": "Demo",
+      "phase": "P7"
+    },
+    {
+      "label": "Slide",
+      "phase": "P8"
+    },
+    {
+      "label": "Báo cáo",
+      "phase": "P8"
+    }
+  ],
+  "repo_tree": [
+    {"path": "README.md", "depth": 0, "note": "cách chạy, nguồn, điều khoản"},
+    {"path": "requirements.txt", "depth": 0, "note": "thư viện và phiên bản"},
+    {"path": ".gitignore", "depth": 0, "note": "chặn data/raw/"},
+    {"path": "data/", "depth": 0, "note": ""},
+    {"path": "raw/", "depth": 1, "note": "file tải về, không commit"},
+    {"path": "clean/", "depth": 1, "note": "Parquet và DuckDB sau khi làm sạch"},
+    {"path": "manifest.csv", "depth": 1, "note": "URL, ngày tải, SHA-256 từng file"},
+    {"path": "docs/", "depth": 0, "note": ""},
+    {"path": "data-card.md", "depth": 1, "note": "nguồn, điều khoản, cột, giai đoạn"},
+    {"path": "lineage.md", "depth": 1, "note": "mỗi bước: đọc gì, script nào, ra gì"},
+    {"path": "data-dictionary.md", "depth": 1, "note": "nghĩa từng cột sau khi làm sạch"},
+    {"path": "analysis-plan.md", "depth": 1, "note": "câu hỏi và tham số, khoá trước khi chạy"},
+    {"path": "notebooks/", "depth": 0, "note": "01_eda.ipynb … 05_sprt.ipynb"},
+    {"path": "src/", "depth": 0, "note": ""},
+    {"path": "download.py", "depth": 1, "note": "tải dữ liệu, ghi manifest"},
+    {"path": "clean.py", "depth": 1, "note": "gộp mùa, chuẩn hoá tên và ngày"},
+    {"path": "quality.py", "depth": 1, "note": "luật chất lượng, báo cáo"},
+    {"path": "outliers.py", "depth": 1, "note": "rào IQR, đuôi Poisson, z đã sửa"},
+    {"path": "anom.py", "depth": 1, "note": "ANOM cho tỉ lệ và cho trung bình"},
+    {"path": "cusum.py", "depth": 1, "note": "CUSUM dạng bảng"},
+    {"path": "sprt.py", "depth": 1, "note": "SPRT Bernoulli"},
+    {"path": "charts.py", "depth": 1, "note": "mọi hình của báo cáo và demo"},
+    {"path": "tests/", "depth": 0, "note": "so với ví dụ có lời giải"},
+    {"path": "app/", "depth": 0, "note": ""},
+    {"path": "streamlit_app.py", "depth": 1, "note": "demo"},
+    {"path": "results/", "depth": 0, "note": "CSV kết quả"},
+    {"path": "report/", "depth": 0, "note": "báo cáo"},
+    {"path": "slides/", "depth": 0, "note": "slide"}
+  ],
+  "report": [
+    {"ch": "1", "title": "Giới thiệu và câu hỏi", "content": "Đề bài, hai câu hỏi, bốn câu hỏi nghiên cứu.", "who": [1], "lessons": [], "pages": 2},
+    {"ch": "2", "title": "Dữ liệu và quản trị", "content": "Nguồn, điều khoản, data card, lineage.", "who": [2], "lessons": ["b1"], "pages": 3},
+    {"ch": "3", "title": "Làm sạch và tích hợp", "content": "Gộp mùa, chuẩn tên, luật chất lượng, DuckDB.", "who": [2], "lessons": ["b2-2", "b3"], "pages": 4},
+    {"ch": "4", "title": "EDA", "content": "Thống kê mô tả, box plot, run-sequence, chọn Phase I.", "who": [3], "lessons": ["b4"], "pages": 3},
+    {"ch": "5", "title": "Phương pháp", "content": "Bốn mục con: ý tưởng, công thức, tham số, kiểm chứng.", "who": [3, 4, 5, 6], "lessons": [], "pages": 6},
+    {"ch": "6", "title": "Kết quả và hình", "content": "Mỗi phương pháp một hình và một kết luận.", "who": [3, 4, 5, 6], "lessons": ["b7", "b8", "b9"], "pages": 5},
+    {"ch": "7", "title": "Thảo luận", "content": "Giới hạn, bẫy phương pháp, điều khoản dữ liệu.", "who": [1], "lessons": [], "pages": 2},
+    {"ch": "8", "title": "Kết luận", "content": "Trả lời bốn câu hỏi trong vài dòng.", "who": [1], "lessons": ["b12"], "pages": 1},
+    {"ch": "9", "title": "Phụ lục", "content": "Code, cách chạy demo, manifest.", "who": [7], "lessons": [], "pages": 3}
+  ],
+  "slides": [
+    {"title": "Câu hỏi mở đầu: mùa 2020/21 sân vắng, lợi thế sân nhà còn không?", "min": 1, "who": [1]},
+    {"title": "Đề tài: bốn phương pháp, hai câu hỏi", "min": 1, "who": [1]},
+    {"title": "Nguồn gốc: giám sát chất lượng y tế sang thể thao", "min": 1, "who": [1]},
+    {"title": "Dữ liệu: football-data.co.uk, điều khoản, data card", "min": 1, "who": [2]},
+    {"title": "Đường ống và lineage", "min": 1.5, "who": [2]},
+    {"title": "Làm sạch: tên trọng tài, cột đổi theo mùa, báo cáo chất lượng", "min": 1, "who": [2]},
+    {"title": "EDA: box plot, run-sequence", "min": 1, "who": [3]},
+    {"title": "Ngoại lai: trận bất thường và lỗi ghi chép", "min": 1, "who": [3]},
+    {"title": "ANOM: tỉ lệ thắng sân nhà theo giải", "min": 1.5, "who": [4]},
+    {"title": "CUSUM: phong độ câu lạc bộ so với ngày đổi huấn luyện viên", "min": 1.5, "who": [5]},
+    {"title": "SPRT: mùa 2020/21 cần bao nhiêu trận", "min": 1.5, "who": [6]},
+    {"title": "CUSUM là chuỗi SPRT bắt đầu lại từ 0", "min": 0.5, "who": [6]},
+    {"title": "Demo trực tiếp", "min": 3, "who": [7]},
+    {"title": "Giới hạn và bẫy phương pháp", "min": 1, "who": [1]},
+    {"title": "Kết luận", "min": 0.5, "who": [1]},
+    {"title": "Hỏi đáp", "min": 0, "who": [1, 2, 3, 4, 5, 6, 7]}
   ]
 }
