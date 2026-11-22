@@ -100,6 +100,7 @@ main{max-width:calc(var(--read) + 2 * var(--gutter));margin:0 auto;padding:0 var
 .op-q,.op-w1{margin:var(--s1) 0 0;padding-left:1.4em}
 .op-q li,.op-w1 li{margin:var(--s1) 0}
 .op-w1 b{font-weight:600}
+.op-submit .lab{display:inline;margin-right:var(--s2)}
 .op-links{display:flex;flex-wrap:wrap;gap:var(--s2);margin:0}
 .op-links a{display:inline-flex;align-items:center;min-height:var(--tap);padding:0 var(--s4);border:1px solid var(--stroke);border-radius:var(--r-pill);text-decoration:none;font-weight:600}
 .op-links a:hover{border-color:var(--ink)}
@@ -128,6 +129,7 @@ main{max-width:calc(var(--read) + 2 * var(--gutter));margin:0 auto;padding:0 var
 .kw-line{font-size:var(--fs-sm);line-height:1.8}
 .kw-line .lab{display:inline;margin-right:var(--s2)}
 .les-links a{display:inline-flex;align-items:center;justify-content:center;min-height:var(--tap);min-width:var(--tap);padding:0 var(--s1)}
+table.stack .les-links a{align-items:flex-start;vertical-align:top}
 @media (max-width:720px){.cols{grid-template-columns:minmax(0,1fr)}}
 
 /* ═══ HÌNH HAI CÂU HỎI ═══ */
@@ -202,7 +204,8 @@ details.fold[open]>summary::before{transform:rotate(90deg)}
 details.fold>.fold-body{padding:0 var(--s4) var(--s4)}
 
 /* ═══ THẺ NGUỒN: gập mặc định, một dòng tên · kết luận · điểm ═══ */
-.cards-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--s2);margin-top:var(--s5)}
+.cards-box{margin-top:var(--s5)}
+.cards-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--s2)}
 .cards-head .sub{margin:0;font-size:var(--fs-sm)}
 .cards{display:grid;gap:var(--s2);margin-top:var(--s3)}
 .src{border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
@@ -402,7 +405,8 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
 /* ═══ CÂU HỎI CHỜ ═══ */
 .gaps{padding-left:1.4em}
 .msg-box{border:1px solid var(--stroke);border-radius:var(--r);background:var(--surface)}
-.msg{padding:var(--s4);white-space:pre-wrap;font-size:var(--fs-sm);line-height:1.6;max-height:28em;overflow-y:auto}
+.msg{padding:var(--s4);white-space:pre-wrap;font-size:var(--fs-sm);line-height:1.6}
+.msg-box+h3{margin-top:var(--s5)}
 .msg-act{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s3);padding:var(--s2) var(--s4);border-top:1px solid var(--line)}
 .msg-status{font-size:var(--fs-xs);color:var(--ink-2)}
 .gaps li{margin:var(--s2) 0}
@@ -491,6 +495,7 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
       <div><span class="lab">Bốn câu hỏi</span><ol class="op-q" id="planQ"></ol></div>
       <div><span class="lab">Tuần 1: mỗi vai một việc</span><ol class="op-w1" id="planW1"></ol></div>
     </div>
+    <p class="op-submit" id="planSubmit"></p>
     <p class="op-links"><a href="#lo-trinh">Kế hoạch đầy đủ</a><a href="#top-3">Vì sao chọn A, phương án khác</a><a href="#can-xac-nhan">Hỏi gì trước</a></p>
   </div>
   <p class="brief">Đề bài: <q lang="en">Outlier detection, analysis of means, CUSUM and sequential probability ratio testing. Applications in sports.</q> Nhóm 7 người nộp slide, báo cáo và demo.</p>
@@ -604,11 +609,16 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
     </div>
   </details>
 
-  <div class="cards-head">
-    <p class="sub">Mỗi thẻ gập còn một dòng: tên · kết luận · điểm. Bấm để mở.</p>
-    <button class="chip" type="button" id="cardsAll" aria-pressed="false">Mở tất cả thẻ</button>
-  </div>
-  <div class="cards" id="cards"></div>
+  <details class="fold cards-box" id="cardsBox">
+    <summary id="cardsBoxSum">Xem thẻ nguồn</summary>
+    <div class="fold-body">
+      <div class="cards-head">
+        <p class="sub">Mỗi thẻ gập còn một dòng: tên · kết luận · điểm. Bấm để mở.</p>
+        <button class="chip" type="button" id="cardsAll" aria-pressed="false">Mở tất cả thẻ</button>
+      </div>
+      <div class="cards" id="cards"></div>
+    </div>
+  </details>
 </section>
 
 <!-- ═══════════════ BA PHƯƠNG ÁN ═══════════════ -->
@@ -737,7 +747,7 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
 
       <h4>ANOM cho tỉ lệ (tỉ lệ thắng)</h4>
       <div class="fx"><div><span class="ov">p</span> = Σ p<sub>i</sub> / k,  s = √(<span class="ov">p</span> (1 − <span class="ov">p</span>) / n)</div><div>UDL, LDL = <span class="ov">p</span> ± h<sub>α</sub> · s · √((k − 1) / k)</div><div>h<sub>α</sub>: phân vị chuẩn tại 1 − α / (2k)</div></div>
-      <p>Tỉ lệ thắng là tỉ lệ, nên dùng <span class="term">ANOM cho tỉ lệ</span>. Trang Minitab chỉ cho trường hợp k nhóm cùng cỡ n. Các giải có số trận khác nhau: so cùng số trận mỗi giải, hoặc tìm công thức khác cỡ ở nguồn khác.</p>
+      <p>Tỉ lệ thắng là tỉ lệ, nên dùng <span class="term">ANOM cho tỉ lệ</span>. Trang Minitab chỉ cho trường hợp k nhóm cùng cỡ n, đúng với câu chính (mỗi mùa Premier League 380 trận). Phần mở rộng theo giải (khác cỡ): dùng giới hạn riêng từng nhóm, hiệu chỉnh <span class="term">Šidák</span> (xấp xỉ); xem thẻ ANOM ở mục Bốn câu hỏi nghiên cứu.</p>
       <p class="fx-src">Nguồn: <a href="https://support.minitab.com/en-us/minitab/help-and-how-to/statistical-modeling/anova/how-to/analysis-of-means/methods-and-formulas/binomial-data/">Minitab, ANOM với dữ liệu nhị thức</a>.</p>
 
       <h4>CUSUM dạng bảng</h4>
@@ -823,6 +833,30 @@ Em cảm ơn thầy/cô.
     <div class="msg-act">
       <button class="chip" type="button" id="copyMsg">Chép tin nhắn</button>
       <span class="msg-status" id="copyStatus" role="status" aria-live="polite"></span>
+    </div>
+  </div>
+
+  <h3 id="email-fd">Email gửi football-data.co.uk</h3>
+  <p class="sub">Thư tiếng Anh soạn sẵn, xin phép dùng dữ liệu cho đồ án; thay chữ trong ngoặc vuông rồi gửi qua trang liên hệ của họ.</p>
+  <div class="msg-box">
+    <div class="msg" id="fdMsg" tabindex="0" lang="en" aria-label="Thư gửi football-data.co.uk">Subject: Permission to use your data in a university course project
+
+Dear Football-Data team,
+
+We are a team of master's students at [University]. For a non-commercial course project, we would like to analyse Premier League results from your CSV files with statistical quality-control methods (outlier tests, analysis of means, CUSUM and sequential probability ratio tests).
+
+We will not redistribute the raw CSV files. We will publish only charts and aggregate figures, with full credit to football-data.co.uk.
+
+Could you let us know whether this use is acceptable?
+
+Thank you for maintaining the data.
+
+Kind regards,
+[Name]
+[University]</div>
+    <div class="msg-act">
+      <button class="chip" type="button" id="copyFd">Chép thư</button>
+      <span class="msg-status" id="copyFdStatus" role="status" aria-live="polite"></span>
     </div>
   </div>
 
@@ -1235,6 +1269,7 @@ Em cảm ơn thầy/cô.
     var card = document.getElementById('src-' + id.toLowerCase());
     if (!card) return;
     hideTip();
+    $('#cardsBox').open = true;
     card.open = true;
     card.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
     card.focus({ preventScroll: true });
@@ -1329,6 +1364,7 @@ Em cảm ơn thầy/cô.
       if (allOpen) c.open = true;
       box.appendChild(c);
     });
+    $('#cardsBoxSum').textContent = 'Xem ' + box.children.length + ' thẻ nguồn';
     upgradeTerms(box);
   }
   /* Mở hay gập mọi thẻ đang hiện. */
@@ -1361,6 +1397,16 @@ Em cảm ơn thầy/cô.
       li.appendChild(html(el('span'), x, 'task_html'));
       w.appendChild(li);
     });
+    /* Dòng "Nộp": số tab, slide, phút, chương, trang tính từ plan_a, slides, report. */
+    var sub = $('#planSubmit');
+    sub.textContent = '';
+    sub.appendChild(el('span', 'lab', 'Nộp'));
+    var mins = D.slides.reduce(function (a, x) { return a + x.min; }, 0);
+    var pages = D.report.reduce(function (a, x) { return a + x.pages; }, 0);
+    sub.appendChild(document.createTextNode('app Streamlit (tab dữ liệu + ' + D.plan_a.length + ' tab phương pháp) · '));
+    var a1 = el('a', null, D.slides.length + ' slide (~' + fmt(mins) + ' phút)'); a1.href = '#lt-slide'; sub.appendChild(a1);
+    sub.appendChild(document.createTextNode(' · '));
+    var a2 = el('a', null, 'báo cáo ' + D.report.length + ' chương (~' + pages + ' trang)'); a2.href = '#lt-bao-cao'; sub.appendChild(a2);
     upgradeTerms($('#ke-hoach'));
   }
 
@@ -1797,17 +1843,20 @@ Em cảm ơn thầy/cô.
 
   /* ═══ TIN NHẮN GỬI GIẢNG VIÊN: chép vào bộ nhớ tạm; không được thì chọn sẵn chữ. */
   function initCopy() {
-    var btn = $('#copyMsg'), msg = $('#gvMsg'), st = $('#copyStatus');
-    var selectAll = function () {
-      var r = document.createRange(); r.selectNodeContents(msg);
-      var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
-      st.textContent = 'Không chép tự động được: tin nhắn đã được chọn sẵn, bấm Ctrl+C (trên điện thoại: giữ rồi chọn Sao chép).';
-    };
-    btn.addEventListener('click', function () {
-      var text = msg.innerText;
-      if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(text).then(function () { st.textContent = 'Đã chép. Dán vào email hay tin nhắn gửi giảng viên.'; }, selectAll);
-      } else selectAll();
+    [['#copyMsg', '#gvMsg', '#copyStatus', 'Đã chép. Dán vào email hay tin nhắn gửi giảng viên.'],
+     ['#copyFd', '#fdMsg', '#copyFdStatus', 'Đã chép. Dán vào trang liên hệ của football-data.co.uk.']].forEach(function (c) {
+      var btn = $(c[0]), msg = $(c[1]), st = $(c[2]);
+      var selectAll = function () {
+        var r = document.createRange(); r.selectNodeContents(msg);
+        var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+        st.textContent = 'Không chép tự động được: chữ đã được chọn sẵn, bấm Ctrl+C (trên điện thoại: giữ rồi chọn Sao chép).';
+      };
+      btn.addEventListener('click', function () {
+        var text = msg.innerText;
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(text).then(function () { st.textContent = c[3]; }, selectAll);
+        } else selectAll();
+      });
     });
   }
 
@@ -1985,7 +2034,7 @@ Em cảm ơn thầy/cô.
       upgradeTerms(document);
       if (/^#src-/.test(location.hash)) {
         var c = document.querySelector(location.hash);
-        if (c) { c.open = true; c.scrollIntoView({ block: 'start' }); }
+        if (c) { $('#cardsBox').open = true; c.open = true; c.scrollIntoView({ block: 'start' }); }
       }
     })
     .catch(function (err) { console.error(err); fail(); upgradeTerms(document); });

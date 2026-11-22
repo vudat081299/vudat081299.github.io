@@ -101,9 +101,12 @@
 ### Các khối
 
 - `#ke-hoach`: bốn câu hỏi lấy từ `plan_a[].q`, việc tuần 1 từ `week1` (mỗi vai một dòng). Sửa câu hỏi ở `plan_a`.
-- Thẻ nguồn là `details`, gập mặc định thành một dòng; bấm thanh biểu đồ hay link `#src-…` thì mở thẻ ấy.
+  Dòng "Nộp" tính số tab, slide, phút, chương, trang từ `plan_a`, `slides`, `report`.
+- Danh sách thẻ nguồn nằm trong `#cardsBox` (gập); mỗi thẻ là `details` một dòng. Bấm thanh biểu đồ hay link `#src-…`
+  thì mở danh sách, mở thẻ ấy rồi cuộn tới.
 - `#de-tai`: hình SPRT dùng tham số chung chung, không phải tham số của đồ án.
 - `#can-xac-nhan`: `#gvMsg` là tin nhắn gửi giảng viên, đánh số câu; bẫy 6 trỏ "câu 5". Đổi thứ tự câu thì sửa chỗ trỏ.
+  `#fdMsg` là thư tiếng Anh xin phép football-data.co.uk, không tên người, không tên trường; P0 và `week1` trỏ tới nó.
 - `#thuat-ngu`: thuật ngữ dùng ở hero, `#de-tai`, `#top-3`, `#lo-trinh` (kể cả mọi pha) hiện sẵn; còn lại trong
   `#glossMore`.
 - `options[].fit` chấm 1–3 theo `fit_rows`; nhiều chấm là tốt hơn ở tiêu chí ấy.

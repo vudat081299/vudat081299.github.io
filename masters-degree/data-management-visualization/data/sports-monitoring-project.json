@@ -557,7 +557,7 @@
     {
       "method": "ANOM",
       "q": "Mùa Premier League nào có tỉ lệ thắng sân nhà khác hẳn trung bình chung?",
-      "data_html": "Kết quả trận (<code>FTR</code>) của mọi mùa Premier League từ 1995/96. Mỗi mùa 20 đội, 380 trận (mọi file từ 1997/98 đã kiểm đủ 380 dòng), nên các nhóm cùng cỡ.",
+      "data_html": "Kết quả trận (<code>FTR</code>) của mọi mùa Premier League từ 1997/98 (đã kiểm: mỗi mùa đủ 380 trận), nên các nhóm cùng cỡ.",
       "how_html": "<span class=\"term\">ANOM cho tỉ lệ</span>, mỗi mùa một nhóm, dùng đúng công thức nhị thức của Minitab (cùng cỡ n = 380). ANOM nhìn lại mọi mùa cùng lúc; <span class=\"term\">Phase I / Phase II</span> chỉ dùng để đặt tham số cho CUSUM và SPRT.",
       "notes_html": "<ul><li>Câu chuyện nối ba phương pháp: ANOM chỉ ra mùa nào nổi bật; CUSUM qua mọi mùa tách một mùa cá biệt khỏi một xu hướng; SPRT hỏi nếu theo dõi trong mùa thì bắt được sau bao lâu.</li><li>Mở rộng 1, so giữa các giải: <code>E0</code> Premier League, <code>SP1</code> La Liga, <code>D1</code> Bundesliga, <code>I1</code> Serie A, <code>F1</code> Ligue 1, cùng mẫu đường dẫn <code>…/mmz4281/2021/SP1.csv</code>. Bundesliga chỉ có 306 trận một mùa, nên cỡ nhóm khác nhau: công thức cùng cỡ không dùng thẳng được, cần giới hạn riêng từng nhóm và hiệu chỉnh <span class=\"term\">Šidák</span> (xấp xỉ). Kiểm số trận từng giải trước khi gộp.</li><li>Mở rộng 2, trọng tài Premier League: chuẩn hoá tên trước. Trọng tài nằm ngoài vạch chỉ là cờ cần xem, không phải bằng chứng thiên vị: trọng tài giỏi được giao trận lớn, và mức thẻ đổi theo thời kỳ.</li></ul>"
     },
@@ -865,7 +865,7 @@
       ],
       "tasks_html": [
         "Gửi giảng viên các câu hỏi ở mục <a href=\"#can-xac-nhan\">Cần xác nhận</a>.",
-        "Email football-data.co.uk xin phép dùng dữ liệu cho đồ án (trang dữ liệu mời liên hệ khi có câu hỏi về cách dùng).",
+        "Email football-data.co.uk xin phép dùng dữ liệu cho đồ án, theo <a href=\"#email-fd\">thư soạn sẵn</a> (trang dữ liệu mời liên hệ khi có câu hỏi về cách dùng).",
         "Chốt phương án (A, B hay C).",
         "Tạo repo theo cây Repo mẫu bên dưới.",
         "Cài Python, <span class=\"term\">VS Code</span> (hoặc dùng <span class=\"term\">Colab</span>), <span class=\"term\">git</span>; tạo <span class=\"term\">venv</span> rồi cài <code>requirements.txt</code>.",
@@ -888,7 +888,7 @@
       ],
       "tasks_html": [
         "Đọc <code>notes.txt</code> để biết nghĩa từng cột.",
-        "Viết <code>src/download.py</code>: tải Premier League (file <code>E0</code>) mọi mùa từ 1995/96 tới 2025/26, theo mẫu <code>…/mmz4281/2021/E0.csv</code>. Các giải khác chỉ tải khi làm phần mở rộng ANOM.",
+        "Viết <code>src/download.py</code>: tải Premier League (file <code>E0</code>) mọi mùa từ 1997/98 (đã kiểm: mỗi mùa đủ 380 trận) tới 2025/26, theo mẫu <code>…/mmz4281/2021/E0.csv</code>. Các giải khác chỉ tải khi làm phần mở rộng ANOM.",
         "Ghi URL, ngày tải và mã <span class=\"term\">SHA-256</span> của từng file vào <code>data/manifest.csv</code>.",
         "Viết <code>docs/data-card.md</code>: nguồn, điều khoản, cột, giai đoạn.",
         "Mở <code>docs/lineage.md</code>.",
@@ -1180,12 +1180,12 @@
     {"title": "Hỏi đáp", "min": 0, "who": [1, 2, 3, 4, 5, 6, 7]}
   ],
   "week1": [
-    {"role": 1, "task_html": "Gửi giảng viên tin nhắn ở mục <a href=\"#can-xac-nhan\">Cần xác nhận</a>; email football-data.co.uk xin phép; hẹn họp hằng tuần."},
+    {"role": 1, "task_html": "Gửi giảng viên tin nhắn ở mục <a href=\"#gui-giang-vien\">Cần xác nhận</a>; gửi football-data.co.uk <a href=\"#email-fd\">thư xin phép soạn sẵn</a>; hẹn họp hằng tuần."},
     {"role": 2, "task_html": "Viết <code>src/download.py</code>, ghi <code>data/manifest.csv</code>; mở <code>docs/data-card.md</code>."},
-    {"role": 3, "task_html": "Viết rào IQR, z đã sửa, Grubbs; thử trên ví dụ của NIST (pha P1b)."},
-    {"role": 4, "task_html": "Viết ANOM cho tỉ lệ; thử trên tỉ lệ giả lập (pha P1b)."},
-    {"role": 5, "task_html": "Viết CUSUM dạng bảng; thử trên ví dụ của NIST (pha P1b)."},
-    {"role": 6, "task_html": "Viết SPRT Bernoulli; thử trên chuỗi giả lập (pha P1b)."},
+    {"role": 3, "task_html": "Viết rào IQR, z đã sửa, Grubbs; thử trên ví dụ của NIST (<a href=\"#lt-lich\">pha P1b — học và viết phương pháp</a>)."},
+    {"role": 4, "task_html": "Viết ANOM cho tỉ lệ; thử trên tỉ lệ giả lập (<a href=\"#lt-lich\">pha P1b — học và viết phương pháp</a>)."},
+    {"role": 5, "task_html": "Viết CUSUM dạng bảng; thử trên ví dụ của NIST (<a href=\"#lt-lich\">pha P1b — học và viết phương pháp</a>)."},
+    {"role": 6, "task_html": "Viết SPRT Bernoulli; thử trên chuỗi giả lập (<a href=\"#lt-lich\">pha P1b — học và viết phương pháp</a>)."},
     {"role": 7, "task_html": "Tạo repo theo cây mẫu, venv, <code>requirements.txt</code>; dựng khung app Streamlit."}
   ]
 }
