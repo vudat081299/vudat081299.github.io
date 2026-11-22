@@ -1,8 +1,11 @@
 # `masters-degree/data-management-visualization/` — môn IT5425
 
-- Một trang tự chứa, `data-management-visualization.html`: dạy lại môn Data Management and Visualization theo
-  đúng thứ tự mười ba file slide (1, 2.1, 2.2, 3 … 12).
-- Chỉ nạp font Google. Không build, mở thẳng là chạy. Có mục trên trang chủ (section Master's Degree).
+- `data-management-visualization.html` (trang môn): tự chứa, dạy lại môn Data Management and Visualization theo
+  đúng thứ tự mười ba file slide (1, 2.1, 2.2, 3 … 12). Mở thẳng là chạy.
+- `sports-monitoring-project.html` (trang đồ án): đồ án nhóm ngoại lai, ANOM, CUSUM, SPRT trên dữ liệu thể thao;
+  chấm điểm nguồn, phương án, chia việc. Chữ lặp ở `data/sports-monitoring-project.json`.
+- Chỉ nạp font Google. Không build. Cả hai trang có mục trên trang chủ (section Master's Degree); hero trang môn
+  có nút sang trang đồ án.
 - Không có cổng riêng. Cổng tĩnh của `pages/` chạy tay được, với đường dẫn tuyệt đối:
   `python3 pages/tools/lint-pages.py "$PWD/masters-degree/data-management-visualization/<file>"`.
 - Đo hai chế độ đọc (chạy tay, không phải cổng):
@@ -17,7 +20,7 @@
 - Hình, `.demo`, `summary` đóng và `.f-bg` nằm trong thẻ trắng nên tô `--inset` (trắng ở theme sáng);
   không đặt `--bg` xám trong thẻ trắng.
 
-## Cấu trúc trang
+## Cấu trúc trang môn
 
 - Thứ tự: thanh trên → `#tong-quan` (hero, cách đọc, lộ trình gợi ý, thẻ câu hỏi từng bài, bản đồ môn) →
   Phần A (bài 1–5) → Phần B (bài 6–12) → `#nguon`.
@@ -72,3 +75,24 @@
 - Slide chỉ có hình mà mang kiến thức thì vẽ lại bằng SVG, không nhúng ảnh.
 - Kiến thức đề cương có mà slide không dạy: mục ngắn trong bài gần nhất, `p.slide-note` ghi theo đề cương nằm trong khối
   gập của mục ấy.
+
+## Trang đồ án `sports-monitoring-project.html`
+
+- Chữ lặp ở JSON: nguồn, tiêu chí và trọng số, ngưỡng kết luận, bảng khớp hai phương án, bốn câu hỏi, đường ống,
+  chia việc, nguồn thêm, thuật ngữ. Văn xuôi độc nhất ở HTML (REPO-001).
+- Trang đọc JSON bằng `fetch`: chạy `python3 -m http.server` ở gốc repo. Mở bằng `file://` thì `#notice` hiện.
+- Điểm tổng, kết luận, thứ tự thanh, số trên chip và số đếm ở hero do JS tính từ `scores`, `criteria[].weight`,
+  `verdicts[].min`; đừng ghi tay.
+- `scores` theo đúng thứ tự `criteria`. Đổi điểm thì sửa luôn "Vì sao điểm này" (`why_html`) cho khớp.
+- Chỉ trường tên kết thúc bằng `_html` vào `innerHTML`; JS ném lỗi nếu trường khác bị đưa vào.
+- Thuật ngữ: bọc chữ bằng `<span class="term">…</span>`, trong HTML hay trong trường `_html`. Khoá tra là `data-t`
+  hoặc chính chữ, khớp `id`, `term` hoặc `aliases` của `glossary`; thiếu thì console báo "Thiếu thuật ngữ".
+- Chú giải hiện khi rê chuột, khi focus bàn phím và khi chạm; Esc đóng; luôn nằm trong khung nhìn.
+- `#thuat-ngu` dựng từ toàn bộ `glossary`, cho khi in và khi đọc trên điện thoại.
+- Kết luận trên biểu đồ có nhãn chữ ở mỗi thanh, không chỉ bằng màu.
+- Bốn hình nhỏ ở `#de-tai` dùng số giả lập, luôn kèm nhãn "minh hoạ, số giả lập".
+- Link sang trang môn dùng id bài (`b1`, `b3`…) hoặc id mục (`b1-quy-trinh`, `b3-nifi`). Đổi id bên trang môn thì
+  sửa `lessons` trong JSON và link trong HTML.
+- Câu hỏi chờ chủ trang nằm ở `#can-xac-nhan` và trong `HANDOFF.md`; có câu trả lời thì sửa cả hai.
+- Không ghi tên chủ trang, thành viên nhóm hay giảng viên; tên tác giả bài báo thì được.
+- Ngày kiểm link ở trường `checked` của JSON.
