@@ -1807,6 +1807,7 @@ const cornerClash = (page) => page.evaluate(() => {
     const XDOC = ['# Doc', '', 'Intro line.', '', ...sec('A'), ...sec('B')].join('\n');
     await pasteText(mx, XDOC);
     await mx.waitForTimeout(250);
+    await mx.click('#btn-tree');   // phiên một file: cây ẩn sẵn (MDAN-083); bài này đo khi có cột cây
     await mx.click('.ma-tab[data-view="split"]'); await mx.waitForTimeout(250);
     // Đơn vị: 0 # Doc, 1 Intro, 2 ## Sec A, 3–11 section A, 12 ## Sec B, 13–21 section B. Đã đọc: đoạn 1, mục 2, bảng 1, code 1.
     for (const u of [3, 6, 8, 10, 13, 16, 18, 20]) await mx.$eval(`#wrap-md .ma-lane__b[data-u="${u}"]`, (b) => b.click());
