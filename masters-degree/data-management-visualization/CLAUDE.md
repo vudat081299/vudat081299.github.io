@@ -78,21 +78,44 @@
 
 ## Trang đồ án `sports-monitoring-project.html`
 
-- Chữ lặp ở JSON: nguồn, tiêu chí và trọng số, ngưỡng kết luận, bảng khớp hai phương án, bốn câu hỏi, đường ống,
-  chia việc, nguồn thêm, thuật ngữ. Văn xuôi độc nhất ở HTML (REPO-001).
+- Thứ tự: hero → `#de-tai` → `#lineage` → `#cham-diem` (biểu đồ, `#hai-vong`, thẻ nguồn) → `#top-3` → `#lo-trinh`
+  → `#can-xac-nhan` → `#thuat-ngu` → `#nguon`. Thêm mục thì sửa luôn chip `.jump` ở hero.
+- Chữ lặp ở `data/sports-monitoring-project.json`; văn xuôi độc nhất ở HTML (REPO-001).
 - Trang đọc JSON bằng `fetch`: chạy `python3 -m http.server` ở gốc repo. Mở bằng `file://` thì `#notice` hiện.
-- Điểm tổng, kết luận, thứ tự thanh, số trên chip và số đếm ở hero do JS tính từ `scores`, `criteria[].weight`,
-  `verdicts[].min`; đừng ghi tay.
-- `scores` theo đúng thứ tự `criteria`. Đổi điểm thì sửa luôn "Vì sao điểm này" (`why_html`) cho khớp.
-- Chỉ trường tên kết thúc bằng `_html` vào `innerHTML`; JS ném lỗi nếu trường khác bị đưa vào.
-- Thuật ngữ: bọc chữ bằng `<span class="term">…</span>`, trong HTML hay trong trường `_html`. Khoá tra là `data-t`
-  hoặc chính chữ, khớp `id`, `term` hoặc `aliases` của `glossary`; thiếu thì console báo "Thiếu thuật ngữ".
+- Chỉ trường tên kết thúc bằng `_html` vào `innerHTML`, kể cả mảng (`pros_html`, `tasks_html`: từng phần tử); JS ném
+  lỗi nếu trường khác bị đưa vào.
+
+### Số do JS tính, đừng ghi tay
+
+- Điểm tổng, kết luận, thứ tự thanh, số trên chip, số đếm ở hero: từ `scores`, `criteria[].weight`, `verdicts[].min`.
+- `scores` theo đúng thứ tự `criteria`. Đổi điểm thì sửa `why_html` cho khớp; điểm vòng trước để ở `scores_r1`.
+- `rounds[].src` trỏ tới một nguồn có `scores_r1`: bảng hai vòng tự in "điểm cũ → điểm mới".
+- `options[].src`: điểm của phương án là điểm tổng của nguồn ấy; `[data-total="<id>"]` trong HTML cũng lấy từ đó.
+- `sprt_check`: p1, a, b tính từ p0, draw, alpha, beta; chèn bằng `<span data-calc>`. Số đã kiểm trên CSV
+  (`stop`, các tỉ lệ trong `notes_html`) chỉ sửa khi chạy lại trên dữ liệu.
+- Tổng trang (`report`), tổng phút (`slides`), pha của mỗi vai (suy từ `phases[].roles`), nhãn tuần trên lịch.
+
+### Các khối
+
+- `options[].fit` chấm 1–3 theo `fit_rows`; nhiều chấm là tốt hơn ở tiêu chí ấy.
+- `phases`: `start`, `len` là phần trăm tổng thời gian; nút 4/6/8/10 tuần (mặc định 6) chỉ đổi nhãn tuần và số ngày.
+- Bấm một pha, hoặc Tab rồi Enter, mở khung chi tiết; mũi tên lên xuống chuyển pha. Ở ≤ 600px lịch thành danh sách.
+- Rê, focus hay bấm một vai thì tô các pha của vai ấy; bấm lần nữa thì bỏ.
+- `flow`, `flow_out`: mỗi ô có `phase`, bấm thì mở pha ấy. SVG vẽ theo bề rộng thật, theo luật mũi tên ở mục Giao diện.
+- "Ví dụ quen thuộc" (`methods[].familiar_html`) so với việc theo dõi một app di động; không nhắc tới chủ trang.
+- Bốn hình nhỏ ở `#de-tai` dùng số giả lập, luôn kèm nhãn "minh hoạ, số giả lập".
+
+### Thuật ngữ, link, nội dung
+
+- Bọc thuật ngữ bằng `<span class="term">…</span>`, trong HTML hay trong trường `_html`. Khoá tra là `data-t` hoặc chính
+  chữ, khớp `id`, `term` hoặc `aliases` của `glossary`; thiếu thì console báo "Thiếu thuật ngữ".
 - Chú giải hiện khi rê chuột, khi focus bàn phím và khi chạm; Esc đóng; luôn nằm trong khung nhìn.
 - `#thuat-ngu` dựng từ toàn bộ `glossary`, cho khi in và khi đọc trên điện thoại.
 - Kết luận trên biểu đồ có nhãn chữ ở mỗi thanh, không chỉ bằng màu.
-- Bốn hình nhỏ ở `#de-tai` dùng số giả lập, luôn kèm nhãn "minh hoạ, số giả lập".
-- Link sang trang môn dùng id bài (`b1`, `b3`…) hoặc id mục (`b1-quy-trinh`, `b3-nifi`). Đổi id bên trang môn thì
-  sửa `lessons` trong JSON và link trong HTML.
+- Link sang trang môn dùng id bài (`b1`, `b2-2`, `b3`…) hoặc id mục (`b1-quy-trinh`, `b3-nifi`). Đổi id bên trang môn
+  thì sửa `lessons` trong JSON và link trong HTML.
+- Viết cho người mới: câu ngắn, mỗi thuật ngữ có chú giải.
+- "Chưa ai làm" thì viết "chúng tôi không tìm thấy", không khẳng định là không có.
 - Câu hỏi chờ chủ trang nằm ở `#can-xac-nhan` và trong `HANDOFF.md`; có câu trả lời thì sửa cả hai.
 - Không ghi tên chủ trang, thành viên nhóm hay giảng viên; tên tác giả bài báo thì được.
 - Ngày kiểm link ở trường `checked` của JSON.
