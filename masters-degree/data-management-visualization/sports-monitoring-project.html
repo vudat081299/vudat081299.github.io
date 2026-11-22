@@ -303,6 +303,8 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
 .traps-box ol{margin-bottom:0}
 .traps-box li{font-size:var(--fs-sm)}
 .qa-notes{margin-top:var(--s2);font-size:var(--fs-sm);line-height:1.55}
+.qa-check{margin-top:var(--s3);padding:var(--s2) var(--s3);border:1px solid var(--stroke);border-radius:var(--r-sm);background:var(--sunk);font-size:var(--fs-sm)}
+.qa-check p{margin:var(--s1) 0 0!important}
 .qa-notes ul{margin:var(--s1) 0 0;padding-left:1.1em}
 
 /* ═══ LỊCH (GANTT) ═══ */
@@ -583,7 +585,7 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
     <div class="chips" id="chips" role="group" aria-label="Lọc theo nhóm nguồn"></div>
     <div class="legend" id="legend"></div>
     <div id="chart"></div>
-    <p class="chart-note">Bấm một thanh để tới thẻ của nguồn ấy. Vạch đứng ở 4 và 7 là hai ngưỡng kết luận.</p>
+    <p class="chart-note">Bấm một thanh để mở thẻ của nguồn ấy. Vạch đứng ở 4 và 7 là hai ngưỡng kết luận. Điểm tổng hiện một chữ số thập phân, làm tròn xuống để con số không vượt ngưỡng.</p>
     <details class="fold">
       <summary>Xem điểm dạng bảng</summary>
       <div class="fold-body"><div class="tbl-wrap" id="scoreTbl"></div></div>
@@ -618,7 +620,7 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
 
   <h3>Chọn thế nào</h3>
   <ul class="dtree">
-    <li><span class="dq">Hỏi giảng viên: dùng football-data.co.uk được không?</span>
+    <li><span class="dq">Hỏi giảng viên và email football-data.co.uk (trang dữ liệu mời liên hệ): dùng được không?</span>
       <ul>
         <li><span class="da">Có</span> <span class="dr">Phương án A, thêm C làm phần mở rộng.</span></li>
         <li><span class="da">Không</span> <span class="dq">Giảng viên cần dữ liệu công bố được?</span>
@@ -630,7 +632,7 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
       </ul>
     </li>
   </ul>
-  <p class="verdict-line"><b>Chốt: A.</b> Nguồn chính có điểm cao nhất (<span data-total="C1"></span>/10), chạy được cả bốn phương pháp trên một bộ dữ liệu, và cho nửa làm sạch nhiều việc thật nhất. Điều kiện: giảng viên chấp nhận điều khoản của football-data.</p>
+  <p class="verdict-line"><b>Chốt: A, hơn B không nhiều</b> (<span data-total="C1"></span> so với <span data-total="A1"></span>). Nguồn dữ liệu của A có điểm cao nhất trong các bộ dữ liệu (thẻ C4 cao hơn nhưng là bộ công thức). Lý do: một bộ dữ liệu quen thuộc làm được cả bốn phương pháp, các mùa sạch và cùng cỡ. B là phương án an toàn nếu chưa rõ có được dùng football-data không.</p>
 </section>
 
 <!-- ═══════════════ LỘ TRÌNH ═══════════════ -->
@@ -661,7 +663,7 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
       <li>Đừng ước mức “bình thường” từ chính đoạn dữ liệu đang kiểm. Tách <span class="term">Phase I / Phase II</span>.</li>
       <li>Khoá tham số (<span class="term">α</span>, <span class="term">β</span>, <span class="term">k</span>, <span class="term">h</span>) trước khi xem kết quả.</li>
       <li>Nhiều câu lạc bộ nhân nhiều phép kiểm thì sẽ có báo động giả. Ghi rõ đã chạy bao nhiêu phép kiểm, và giữ sai số chung (<span class="term">ARL</span> hoặc <span class="term">Bonferroni</span>).</li>
-      <li>Các trận không độc lập, đối thủ mạnh yếu khác nhau: dùng <span class="term">phần dư</span> so với tỉ lệ cược.</li>
+      <li>Đối thủ mạnh yếu khác nhau, nên hiệu số từng trận nhiễu: đọc CUSUM theo xu hướng dài. <span class="term">Phần dư</span> so với tỉ lệ cược bỏ được sức đối thủ, nhưng cũng bỏ luôn phong độ mà nhà cái đã thấy; vì thế chỉ là phần mở rộng.</li>
       <li>Số đếm (bàn, thẻ) không theo phân phối chuẩn.</li>
       <li>Đừng để phần thống kê nuốt nửa quản lý dữ liệu: nửa ấy là một nửa số điểm.</li>
     </ol>
@@ -738,6 +740,10 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
       <div class="fx"><div>S<sub>hi</sub>(i) = max(0, S<sub>hi</sub>(i−1) + x<sub>i</sub> − μ<sub>0</sub> − k)</div><div>S<sub>lo</sub>(i) = max(0, S<sub>lo</sub>(i−1) + μ<sub>0</sub> − k − x<sub>i</sub>)</div><div>bắt đầu S(0) = 0; báo khi S<sub>hi</sub> hoặc S<sub>lo</sub> vượt h</div></div>
       <p>Quy tắc nhanh: <span class="term">k</span> = δσ/2, với δ là độ lệch muốn bắt tính bằng số σ; <span class="term">h</span> khoảng 4–5σ. Minitab mặc định k = 0,5 và h = 4 (tính theo σ). Chọn k và h theo <span class="term">ARL</span> mong muốn, trước khi xem kết quả.</p>
       <p class="fx-src">Nguồn: <a href="https://www.itl.nist.gov/div898/handbook/pmc/section3/pmc323.htm">NIST/SEMATECH e-Handbook 6.3.2.3</a>; <a href="https://support.minitab.com/en-us/minitab/help-and-how-to/quality-and-process-improvement/control-charts/how-to/time-weighted-charts/cusum-chart/methods-and-formulas/methods-and-formulas/">Minitab, CUSUM</a>; bài gốc <a href="https://doi.org/10.1093/biomet/41.1-2.100">Page (1954), Biometrika 41:100–115</a>.</p>
+
+      <h4>Tỉ lệ cược → xác suất, điểm kỳ vọng (phần mở rộng CUSUM)</h4>
+      <div class="fx"><div>P(kết quả j) = (1/o<sub>j</sub>) / [ (1/o<sub>thắng</sub>) + (1/o<sub>hoà</sub>) + (1/o<sub>thua</sub>) ]</div><div>điểm kỳ vọng = 3 · P(thắng) + 1 · P(hoà)</div><div>phần dư = điểm thật − điểm kỳ vọng</div></div>
+      <p>o<sub>j</sub> là tỉ lệ cược thập phân. Tổng ba giá trị 1/o lớn hơn 1 vì nhà cái cộng phần lời (overround); chia cho tổng ấy để ba xác suất cộng lại bằng 1.</p>
 
       <h4>SPRT: hai ngưỡng và bước cộng</h4>
       <div class="fx"><div>a = ln(β / (1 − α)),  b = ln((1 − β) / α)</div><div>Bernoulli: LLR<sub>i</sub> = x<sub>i</sub> · ln(p<sub>1</sub>/p<sub>0</sub>) + (1 − x<sub>i</sub>) · ln((1 − p<sub>1</sub>)/(1 − p<sub>0</sub>))</div><div>Λ<sub>n</sub> = Σ LLR<sub>i</sub>: Λ ≤ a chấp nhận H0, Λ ≥ b chấp nhận H1, còn lại xem tiếp</div></div>
@@ -976,14 +982,14 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
       return { svg: s, key: 'Hộp lam than: nửa giữa của dữ liệu, vạch là trung vị. Chấm mận: trận nằm ngoài rào.' };
     },
     anom: function () {
-      var m = [0.46, 0.44, 0.47, 0.53, 0.45, 0.38, 0.43, 0.46];  // tỉ lệ thắng sân nhà của 8 giải, giả lập
+      var m = [0.46, 0.44, 0.47, 0.53, 0.45, 0.38, 0.43, 0.46];  // tỉ lệ thắng sân nhà của 8 mùa, giả lập
       var n = 380, k = m.length, h = 2.73;                       // h ≈ phân vị chuẩn tại 1 − α/(2k), α = 0,05, k = 8
       var pbar = m.reduce(function (a, b) { return a + b; }, 0) / k;
       var hw = h * Math.sqrt(pbar * (1 - pbar) / n) * Math.sqrt((k - 1) / k);
       var udl = pbar + hw, ldl = pbar - hw;
       var y = function (v) { return 128 - (v - 0.34) * 500; };
       var x = function (i) { return 34 + i * 32; };
-      var s = miniFrame('Biểu đồ quyết định ANOM: tỉ lệ thắng sân nhà theo giải');
+      var s = miniFrame('Biểu đồ quyết định ANOM: tỉ lệ thắng sân nhà theo mùa');
       [[udl, 'UDL'], [pbar, 'chung'], [ldl, 'LDL']].forEach(function (L, j) {
         svg('line', { x1: 20, x2: W0 - 44, y1: y(L[0]), y2: y(L[0]), 'class': j === 1 ? 's-grid' : 's-thr' }, s);
         stext(s, W0 - 40, y(L[0]) + 4, 't-tick', L[1], 'start');
@@ -992,11 +998,11 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
       m.forEach(function (v, i) {
         var out = v > udl || v < ldl;
         svg('circle', { cx: x(i), cy: y(v), r: 4.5, 'class': out ? 'f-c4' : 'f-c2', stroke: 'var(--inset)', 'stroke-width': 2 }, s);
-        stext(s, x(i), 144, 't-tick', 'G' + (i + 1), 'middle');
+        stext(s, x(i), 144, 't-tick', 'M' + (i + 1), 'middle');
         if (out) stext(s, x(i) + 8, y(v) + (v > udl ? -6 : 14), 't-val', fmt(v, 2), 'start');
       });
       stext(s, 6, 14, 't-tick', 'tỉ lệ thắng sân nhà', 'start');
-      return { svg: s, key: 'Chấm lam than: giải trong giới hạn. Chấm mận: vượt UDL hoặc LDL.' };
+      return { svg: s, key: 'M1–M8: tám mùa. Chấm lam than: mùa trong giới hạn. Chấm mận: vượt UDL hoặc LDL.' };
     },
     cusum: function () {
       var xs = [0, 1, -1, 0, 2, -1, 0, -2, 1, 0, -1, 1, 0, -1, 1,   // hiệu số 15 trận đầu, quanh 0
@@ -1022,9 +1028,9 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
       return { svg: s, key: 'Đường lam than: tổng S_hi. Chấm mận: lần đầu vượt h.' };
     },
     sprt: function () {
-      var p0 = 0.475, p1 = 0.389, al = 0.05, be = 0.10;          // tham số như câu hỏi SPRT của phương án A
+      var p0 = 0.5, p1 = 0.3, al = 0.05, be = 0.2;                // tham số chung chung, không phải của đồ án
       var a = Math.log(be / (1 - al)), b = Math.log((1 - be) / al);
-      var seed = 11;                                             // chuỗi trận giả lập, tỉ lệ thắng sân nhà khoảng 0,3
+      var seed = 7;                                              // chuỗi giả lập, tỉ lệ thật khoảng 0,3
       var rnd = function () { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
       var L = [0], stop = 0;
       for (var i = 0; i < 400 && !stop; i++) {
@@ -1169,10 +1175,10 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
     rows.forEach(function (r, i) {
       var y = padT + i * rowH;
       var a = svg('a', { href: '#src-' + r.id.toLowerCase(), 'class': 'bar-row', 'data-id': r.id,
-        'aria-label': r.id + ' ' + r.short + ': ' + fmt(r.total) + ' điểm, ' + r.verdict.name }, s);
+        'aria-label': r.id + ' ' + r.short + ': ' + fmt1(r) + ' điểm, ' + r.verdict.name }, s);
       svg('rect', { x: 0, y: y + 1, width: W, height: rowH - 2, rx: 6, 'class': 'hit' }, a);
       var label = r.id + ' · ' + r.short;
-      var val = fmt(r.total);
+      var val = fmt1(r);
       var by;
       if (narrow) {
         var vt = stext(a, W - 2, y + 18, 't-val', '', 'end');
@@ -1225,7 +1231,7 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
       var th = el('td', null, r.id + ' · ' + r.short);
       tr.appendChild(th);
       r.scores.forEach(function (v) { tr.appendChild(el('td', null, String(v))); });
-      tr.appendChild(el('td', null, fmt(r.total)));
+      tr.appendChild(el('td', null, fmt1(r)));
       tr.appendChild(el('td', null, r.verdict.name));
       tb.appendChild(tr);
     });
@@ -1364,7 +1370,7 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
       h.appendChild(el('h3', null, o.name));
       h.appendChild(el('p', 'opt-data', o.data));
       var sc = el('p', 'opt-score');
-      sc.appendChild(el('b', null, fmt(src.total)));
+      sc.appendChild(el('b', null, fmt1(src)));
       sc.appendChild(document.createTextNode(' / 10 · điểm của ' + src.id));
       var vd = el('span', 'verdict');
       var sw = el('i', 'sw ' + src.verdict.color); sw.setAttribute('aria-hidden', 'true');
@@ -1394,7 +1400,7 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
       box.appendChild(c);
     });
     Array.prototype.forEach.call(document.querySelectorAll('[data-total]'), function (n) {
-      n.textContent = fmt(srcById(n.getAttribute('data-total')).total);
+      n.textContent = fmt1(srcById(n.getAttribute('data-total')));
     });
     upgradeTerms(box);
   }
@@ -1408,6 +1414,12 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
       var p1 = el('p'); p1.appendChild(el('span', 'lab', 'Dữ liệu')); var s1 = html(el('span'), q, 'data_html'); p1.appendChild(s1);
       var p2 = el('p'); p2.appendChild(el('span', 'lab', 'Cách làm')); var s2 = html(el('span'), q, 'how_html'); p2.appendChild(s2);
       b.appendChild(p1); b.appendChild(p2);
+      if (q.check_html) {
+        var ck = el('div', 'qa-check');
+        ck.appendChild(el('span', 'lab', 'Kiểm tra khả thi (nhìn lại, chúng tôi đã chạy thử)'));
+        ck.appendChild(html(el('p'), q, 'check_html'));
+        b.appendChild(ck);
+      }
       if (q.notes_html) {
         var n = el('div', 'qa-notes');
         n.appendChild(el('span', 'lab', 'Lưu ý'));
@@ -1451,7 +1463,7 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
           var s = D.sources.filter(function (x) { return x.id === r.src; })[0];
           if (s && s.scores_r1) {
             var t1 = 0; D.criteria.forEach(function (cr, k) { t1 += s.scores_r1[k] * cr.weight; });
-            cell.appendChild(el('span', 'rd-score', s.id + ': ' + fmt(t1 / 100) + ' → ' + fmt(s.total)));
+            cell.appendChild(el('span', 'rd-score', s.id + ': ' + fmt1({ t100: t1 }) + ' → ' + fmt1(s)));
           }
         }
         tr.appendChild(cell);
@@ -1774,7 +1786,7 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
     var r = D.sources.filter(function (s) { return s.id === node.getAttribute('data-id'); })[0];
     if (!r) return false;
     tip.appendChild(el('b', null, r.id + ' · ' + r.short));
-    tip.appendChild(el('p', null, fmt(r.total) + ' / 10 · ' + r.verdict.name));
+    tip.appendChild(el('p', null, fmt1(r) + ' / 10 · ' + r.verdict.name));
     tip.appendChild(el('p', null, D.criteria.map(function (c, i) { return c.name + ' ' + r.scores[i]; }).join(' · ')));
     return true;
   }
