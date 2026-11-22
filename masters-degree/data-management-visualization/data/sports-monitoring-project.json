@@ -2,362 +2,740 @@
   "note": "Dữ liệu của sports-monitoring-project.html. Điểm tổng, kết luận và mọi số đếm do JS tính từ scores, criteria, verdicts; đừng ghi tay. Chỉ trường tên kết thúc bằng _html được đưa vào innerHTML. Thuật ngữ trong chữ: <span class=\"term\">CUSUM</span>, khoá tra là data-t hoặc chính chữ, khớp id, term hoặc aliases của glossary.",
   "checked": "22/11/2026",
   "criteria": [
-    { "id": "de", "name": "Đúng đề", "weight": 35, "desc": "Có bốn phương pháp và/hoặc có thể thao." },
-    { "id": "ngay", "name": "Dùng được ngay", "weight": 25, "desc": "Code, dữ liệu hay câu chuyện dùng nguyên được; giấy phép và ngôn ngữ ổn." },
-    { "id": "tin", "name": "Tin cậy", "weight": 20, "desc": "Đã bình duyệt, còn bảo trì, hoặc dữ liệu thật." },
-    { "id": "mon", "name": "Hợp môn", "weight": 20, "desc": "Giúp phần quản lý dữ liệu và phần trực quan hoá của bài nộp." }
+    {"id": "de", "name": "Đúng đề", "weight": 35, "desc": "Có bốn phương pháp và/hoặc có thể thao."},
+    {"id": "ngay", "name": "Dùng được ngay", "weight": 25, "desc": "Code, dữ liệu hay câu chuyện dùng nguyên được; giấy phép và ngôn ngữ ổn."},
+    {"id": "tin", "name": "Tin cậy", "weight": 20, "desc": "Đã bình duyệt, còn bảo trì, hoặc dữ liệu thật."},
+    {"id": "mon", "name": "Hợp môn", "weight": 20, "desc": "Giúp phần quản lý dữ liệu và phần trực quan hoá của bài nộp."}
   ],
   "verdicts": [
-    { "id": "dung", "name": "Dùng", "min": 7, "color": "c1" },
-    { "id": "mot-phan", "name": "Dùng một phần", "min": 4, "color": "c3" },
-    { "id": "bo", "name": "Bỏ", "min": 0, "color": "c5" }
+    {"id": "dung", "name": "Dùng", "min": 7, "color": "c1"},
+    {"id": "mot-phan", "name": "Dùng một phần", "min": 4, "color": "c3"},
+    {"id": "bo", "name": "Bỏ", "min": 0, "color": "c5"}
   ],
   "groups": [
-    { "id": "A", "name": "Nhóm tìm", "desc": "Bốn link nhóm gửi." },
-    { "id": "B", "name": "Bảng tổng hợp", "desc": "Sáu tham chiếu trong bảng do chatbot soạn; cả sáu có thật." },
-    { "id": "C", "name": "Tìm thêm", "desc": "Nguồn tra thêm khi đánh giá." }
+    {"id": "A", "name": "Nhóm tìm", "desc": "Bốn link nhóm gửi."},
+    {"id": "B", "name": "Bảng tổng hợp", "desc": "Sáu tham chiếu trong bảng do chatbot soạn; cả sáu có thật."},
+    {"id": "C", "name": "Tìm thêm", "desc": "Nguồn tra thêm khi đánh giá."}
   ],
   "sources": [
     {
-      "id": "A1", "group": "A", "role": "dữ liệu",
-      "name": "Formula 1 World Championship (1950–2024)", "short": "Kaggle F1 1950–2024",
+      "id": "A1",
+      "group": "A",
+      "role": "dữ liệu",
+      "name": "Formula 1 World Championship (1950–2024)",
+      "short": "Kaggle F1 1950–2024",
       "url": "https://www.kaggle.com/datasets/rohanrao/formula-1-world-championship-1950-2020",
-      "scores": [7, 9, 8, 8],
-      "what_html": "Bộ 14 file <span class=\"term\">CSV</span> (khoảng 22 MB) trên <span class=\"term\">Kaggle</span>, lấy từ <span class=\"term\">Ergast</span>, giấy phép <span class=\"term\">CC0</span>. Có <code>lap_times</code> (thời gian từng vòng, từ 1996), <code>pit_stops</code> (từ 2011) và <code>results</code> (đội đua, vị trí xuất phát, điểm, vòng nhanh nhất).",
-      "why_html": "Hợp <span class=\"term\">CUSUM</span> trên thời gian vòng, <span class=\"term\">ANOM</span> theo đội đua, trường đua hay thời gian dừng pit, và ngoại lai là vòng vào pit, vòng xe an toàn, vòng 1. <span class=\"term\">SPRT</span> yếu vì không có chuỗi có/không tự nhiên. Dữ liệu thật, gọn, giấy phép thoáng.",
-      "use_html": "Phương án B: <code>lap_times</code> cho CUSUM, <code>pit_stops</code> nối với <code>results</code> cho ANOM theo đội đua.",
-      "warn_html": "Cập nhật cuối 29/01/2025, ghi \"Final Update\": dữ liệu dừng ở mùa 2024. API Ergast đã đóng cuối 2024; bản kế tiếp là <span class=\"term\">Jolpica-F1</span> (api.jolpi.ca), dữ liệu mới hơn lấy bằng <span class=\"term\">FastF1</span> (<span class=\"term\">MIT</span>). Tên miền ergast.com nay chứa nội dung không liên quan: đừng trích."
+      "scores": [
+        7,
+        8,
+        8,
+        8
+      ],
+      "what_html": "Bộ 14 file <span class=\"term\">CSV</span> (file zip khoảng 6,3 MB) trên <span class=\"term\">Kaggle</span>, gom từ <span class=\"term\">Ergast</span>. Có <code>lap_times</code> (thời gian từng vòng, từ 1996), <code>pit_stops</code> (từ 2011) và <code>results</code> (đội đua, vị trí xuất phát, điểm, vòng nhanh nhất). Các bảng nối với nhau bằng mã như <code>raceId</code>, <code>driverId</code>, giống một cơ sở dữ liệu quan hệ.",
+      "why_html": "Hợp <span class=\"term\">CUSUM</span> trên thời gian vòng, <span class=\"term\">ANOM</span> trên thời gian dừng pit theo đội đua, ngoại lai là vòng vào pit, vòng xe an toàn, vòng 1. <span class=\"term\">SPRT</span> cũng làm được: mỗi chặng cho một kết quả có/không tự nhiên, tay đua có thắng đồng đội không. Trừ điểm dùng ngay vì giấy phép thật chặt hơn nhãn trên Kaggle và vì thời gian vòng phải xử lý trước.",
+      "use_html": "Phương án B: <code>lap_times</code> cho CUSUM và ngoại lai, <code>pit_stops</code> nối <code>results</code> cho ANOM theo đội đua, <code>results</code> cho chuỗi thắng đồng đội.",
+      "warn_html": "Kaggle ghi <span class=\"term\">CC0</span> nhưng dữ liệu gốc (Ergast, nay là Jolpica) là <span class=\"term\">CC BY-NC-SA</span> 4.0: chỉ dùng phi thương mại, phải ghi nguồn. Dữ liệu dừng ở mùa 2024 (cập nhật cuối 29/01/2025, ghi \"Final Update\"). API Ergast tắt đầu năm 2025; bản kế tiếp là <span class=\"term\">Jolpica-F1</span>, lấy qua <span class=\"term\">FastF1</span>. Thời gian vòng có xu hướng trong một chặng (xăng vơi dần, lốp mòn, vòng vào pit, vòng xe an toàn), nên phải <span class=\"term\">khử xu hướng</span> trước khi chạy CUSUM. Tên miền ergast.com nay chứa nội dung không liên quan: đừng trích.",
+      "scores_r1": [
+        7,
+        9,
+        8,
+        8
+      ]
     },
     {
-      "id": "A2", "group": "A", "role": "đọc thêm",
-      "name": "Building Enterprise Data Lineage & Provenance", "short": "Blog lineage doanh nghiệp",
+      "id": "A2",
+      "group": "A",
+      "role": "đọc thêm",
+      "name": "Building Enterprise Data Lineage & Provenance",
+      "short": "Blog lineage doanh nghiệp",
       "url": "https://tech-spaghetti.com/2024/04/27/building-enterprise-data-lineage-provenance/",
-      "scores": [1, 2, 4, 5],
+      "scores": [
+        1,
+        2,
+        3,
+        5
+      ],
       "what_html": "Bài blog trên tech-spaghetti.com ngày 27/04/2024 giới thiệu <span class=\"term\">lineage</span> trong doanh nghiệp: phân biệt lineage với <span class=\"term\">provenance</span>, lineage mức bảng với mức cột, kể tên công cụ (Collibra, Atlan, <span class=\"term\">OpenLineage</span>…).",
       "why_html": "Không code, không thể thao, không thống kê. Phần chính nằm sau <span class=\"term\">tường phí</span>. Là blog, không ai thẩm định.",
-      "use_html": "Tối đa mượn một định nghĩa. Muốn trích định nghĩa thì trích <span class=\"term\">W3C PROV</span>."
+      "use_html": "Tối đa mượn một định nghĩa. Muốn trích định nghĩa thì trích <span class=\"term\">W3C PROV</span>.",
+      "scores_r1": [
+        1,
+        2,
+        4,
+        5
+      ]
     },
     {
-      "id": "A3", "group": "A", "role": "đọc thêm",
-      "name": "Sports_Injury_Risk_Intelligence", "short": "App rủi ro chấn thương",
+      "id": "A3",
+      "group": "A",
+      "role": "đọc thêm",
+      "name": "Sports_Injury_Risk_Intelligence",
+      "short": "App rủi ro chấn thương",
       "url": "https://github.com/ivanrivasgr/Sports_Injury_Risk_Intelligence",
-      "scores": [2, 3, 2, 4],
-      "what_html": "App <span class=\"term\">Streamlit</span> bằng Python về rủi ro chấn thương cầu thủ bóng đá, làm portfolio cá nhân. Giấy phép <span class=\"term\">MIT</span>, 1 sao, 6 commit, một người làm.",
-      "why_html": "Không dùng phương pháp nào trong bốn; chỉ đo <span class=\"term\">drift</span> bằng <span class=\"term\">PSI</span>. Dữ liệu là 88 ca chấn thương nhập tay; lịch thi đấu và thời tiết sinh ngẫu nhiên bằng <code>np.random</code>, README tự ghi kết quả mô hình là <span class=\"term\">dữ liệu giả lập</span>.",
-      "use_html": "Chỉ để xem bố cục trang khi dựng demo Streamlit.",
-      "warn_html": "Đừng trích số liệu hay kết quả nào từ repo này: chúng là số giả lập."
+      "scores": [
+        3,
+        5,
+        3,
+        6
+      ],
+      "what_html": "App <span class=\"term\">Streamlit</span> bằng Python về rủi ro chấn thương cầu thủ bóng đá, làm portfolio cá nhân. Có file LICENSE <span class=\"term\">MIT</span>, 1 sao, một người làm.",
+      "why_html": "Không dùng phương pháp nào trong bốn, chỉ đo <span class=\"term\">drift</span> bằng <span class=\"term\">PSI</span>. Nhưng nửa quản lý dữ liệu dùng lại được: hàm <code>run_dq_checks()</code> kiểm <span class=\"term\">chất lượng dữ liệu</span> với ngưỡng tỉ lệ đạt và mức nghiêm trọng, các phép kiểm <span class=\"term\">schema contract</span>, và trang giới hạn <code>views/p09_limitations.py</code>. Dữ liệu thì không dùng được: lịch thi đấu và thời tiết sinh ngẫu nhiên bằng <code>np.random</code>, kết quả mô hình là <span class=\"term\">dữ liệu giả lập</span>.",
+      "use_html": "Mượn ý kiểm chất lượng dữ liệu và trang giới hạn cho bước làm sạch và cho chương thảo luận; xem bố cục trang khi dựng demo Streamlit.",
+      "warn_html": "Đừng trích số liệu hay kết quả nào từ repo này: chúng là số giả lập.",
+      "scores_r1": [
+        2,
+        3,
+        2,
+        4
+      ]
     },
     {
-      "id": "A4", "group": "A", "role": "đọc thêm",
-      "name": "mlops-2025-final_project", "short": "MLOps đoán kết quả EPL",
+      "id": "A4",
+      "group": "A",
+      "role": "đọc thêm",
+      "name": "mlops-2025-final_project",
+      "short": "MLOps đoán kết quả EPL",
       "url": "https://github.com/RuiFSP/mlops-2025-final_project",
-      "links": [{ "label": "Mục Architecture trong README", "url": "https://github.com/RuiFSP/mlops-2025-final_project#%EF%B8%8F-architecture" }],
-      "scores": [2, 3, 2, 3],
-      "what_html": "Đồ án cuối khoá MLOps Zoomcamp của DataTalks.Club: đoán kết quả trận Premier League bằng <span class=\"term\">Random Forest</span>, báo độ chính xác 61,84% trên 3.040 trận. Dữ liệu thật, định dạng football-data.co.uk. <span class=\"term\">MIT</span>, 3 sao, ngừng từ 07/2025.<ul><li>README dòng 191–263: sơ đồ kiến trúc <span class=\"term\">Mermaid</span> năm nhóm: Data, ML Pipeline, API, Monitoring &amp; Orchestration, Infrastructure.</li><li>Huấn luyện: <code>src/pipelines/training_pipeline.py</code> học Random Forest từ một file <span class=\"term\">parquet</span>, ghi vào <span class=\"term\">MLflow</span>, đăng ký mô hình nếu độ chính xác &gt; 0,6.</li><li>Phục vụ bằng <span class=\"term\">FastAPI</span>. Dự đoán ghi vào PostgreSQL, Grafana đọc ra để theo dõi. Lịch chạy bằng Prefect 2.</li></ul>",
-      "why_html": "Không phương pháp nào trong bốn; \"drift\" chỉ là phép so chênh trung bình. Tin cậy thấp vì <span class=\"term\">rò rỉ dữ liệu</span>: README nói đặc trưng là \"team form and head-to-head\", nhưng code (<code>training_pipeline.py</code> dòng 33–49) dùng tỉ lệ cược Bet365 và thống kê của chính trận đang đoán: cú sút, sút trúng đích, phạt góc, phạm lỗi, thẻ. Con số 61,84% vì thế không đáng tin.",
+      "links": [
+        {
+          "label": "Mục Architecture trong README",
+          "url": "https://github.com/RuiFSP/mlops-2025-final_project#%EF%B8%8F-architecture"
+        }
+      ],
+      "scores": [
+        2,
+        2,
+        2,
+        3
+      ],
+      "what_html": "Đồ án cuối khoá MLOps Zoomcamp của DataTalks.Club: đoán kết quả trận Premier League bằng <span class=\"term\">Random Forest</span>, báo độ chính xác 61,84% trên 3.040 trận. Dữ liệu định dạng football-data.co.uk. README ghi MIT nhưng repo không có file LICENSE, nên về luật coi như <span class=\"term\">không có giấy phép</span>. 3 sao, ngừng từ 07/2025.<ul><li>README dòng 191–263: sơ đồ kiến trúc <span class=\"term\">Mermaid</span> năm nhóm: Data, ML Pipeline, API, Monitoring &amp; Orchestration, Infrastructure.</li><li>Huấn luyện: <code>src/pipelines/training_pipeline.py</code> học Random Forest từ một file <span class=\"term\">parquet</span>, ghi vào <span class=\"term\">MLflow</span>, đăng ký mô hình nếu độ chính xác &gt; 0,6.</li><li>Phục vụ bằng <span class=\"term\">FastAPI</span>; dự đoán ghi vào PostgreSQL; lịch chạy bằng Prefect 2. Grafana có trong README nhưng không có trong <code>docker-compose</code>.</li></ul>",
+      "why_html": "Không phương pháp nào trong bốn; \"drift\" chỉ là phép so chênh trung bình. Tin cậy thấp vì <span class=\"term\">rò rỉ dữ liệu</span>: README nói đặc trưng là \"team form and head-to-head\", nhưng code (<code>training_pipeline.py</code> dòng 33–49) dùng tỉ lệ cược Bet365 và thống kê của chính trận đang đoán: cú sút, sút trúng đích, phạt góc, phạm lỗi, thẻ. Con số 61,84% vì thế không đáng tin. Thêm nữa, <code>prediction_pipeline.py</code> điền tỉ lệ cược và số cú sút bằng số ngẫu nhiên.",
       "use_html": "<ul><li>Nó dẫn tới bộ dữ liệu football-data.co.uk.</li><li>Khuôn cho sơ đồ đường ống ở phần quản lý dữ liệu: kiểu Mermaid, danh sách Data Flow bốn dòng. Có thể mượn cả ý chạy từng bước bằng Makefile.</li><li>Khối MLflow (README dòng 184–245) dùng làm ví dụ được nếu thêm mã băm của bộ dữ liệu.</li><li>Prefect, PostgreSQL, Grafana, Docker, cấu hình deploy và bộ giả lập cá cược là quá tay cho đồ án này. Demo thì Streamlit đơn giản hơn.</li></ul>",
-      "warn_html": "<span class=\"term\">Lineage</span> gần như không được ghi: <span class=\"term\">MLflow</span> chỉ lưu chuỗi <code>data_path</code>, không mã băm bộ dữ liệu, không <code>mlflow.log_input</code>; không có <span class=\"term\">DVC</span>; bảng dự đoán không ghi <code>run_id</code> hay phiên bản mô hình; không script nào dựng file parquet huấn luyện. Gói <code>evidently</code> khai trong <code>pyproject.toml</code> nhưng không được import ở đâu."
+      "warn_html": "<span class=\"term\">Lineage</span> gần như không được ghi: <span class=\"term\">MLflow</span> chỉ lưu chuỗi <code>data_path</code>, không mã băm bộ dữ liệu, không <code>mlflow.log_input</code>; không có <span class=\"term\">DVC</span>; bảng dự đoán không ghi <code>run_id</code> hay phiên bản mô hình; không script nào dựng file parquet huấn luyện. Gói <code>evidently</code> khai trong <code>pyproject.toml</code> nhưng không được import ở đâu.",
+      "scores_r1": [
+        2,
+        3,
+        2,
+        3
+      ]
     },
     {
-      "id": "B1", "group": "B", "role": "code",
-      "name": "giobbu/CUSUM", "short": "giobbu/CUSUM",
+      "id": "B1",
+      "group": "B",
+      "role": "code",
+      "name": "giobbu/CUSUM",
+      "short": "giobbu/CUSUM",
       "url": "https://github.com/giobbu/CUSUM",
-      "scores": [7, 6, 6, 5],
-      "what_html": "Thư viện Python 3.11+ gom nhiều bộ phát hiện điểm đổi: <span class=\"term\">CUSUM</span>, <span class=\"term\">Page-Hinkley</span>, ProbCUSUM, ChartCUSUM, KS-CUM, PC1-CUSUM. Mỗi bộ có <code>detection()</code> chạy theo luồng và <code>offline_detection()</code> chạy cả lô. <span class=\"term\">GPL</span>-3.0, 21 sao, commit cuối 25/10/2026.",
-      "why_html": "Đúng một trong bốn phương pháp và còn được bảo trì. Trừ điểm dùng ngay vì không có trên <span class=\"term\">PyPI</span> (phải clone repo) và vì giấy phép GPL.",
-      "use_html": "Tự viết CUSUM dạng bảng (khoảng 20 dòng), rồi chạy repo này trên cùng dữ liệu để đối chiếu.",
-      "warn_html": "GPL: chép code của nó vào repo của nhóm thì cả repo phải theo GPL. Chỉ chạy để đối chiếu, đừng chép."
+      "scores": [
+        6,
+        6,
+        5,
+        6
+      ],
+      "what_html": "Thư viện Python 3.11+ gom nhiều bộ phát hiện điểm đổi: <span class=\"term\">CUSUM</span>, <span class=\"term\">Page-Hinkley</span>, ProbCUSUM, ChartCUSUM, KS-CUM, PC1-CUSUM. Mỗi bộ có <code>detection()</code> chạy theo luồng và <code>offline_detection()</code> chạy cả lô. <span class=\"term\">GPL</span>-3.0, 21 sao, commit cuối 25/10/2026. Còn là <span class=\"term\" data-t=\"alpha-release\">bản alpha</span>, gần như một người bảo trì.",
+      "why_html": "Đúng một trong bốn phương pháp. Trừ điểm vì còn alpha, một người bảo trì, giấy phép GPL, và vì tham số mặc định (<code>delta=10</code>, <code>threshold=20</code>) phải chỉnh lại; Minitab mặc định <span class=\"term\">k</span> = 0,5 và <span class=\"term\">h</span> = 4, tính theo độ lệch chuẩn.",
+      "use_html": "Tự viết CUSUM dạng bảng, rồi chạy repo này trên cùng dữ liệu để đối chiếu. Cài bằng cách lấy thẳng từ GitHub (clone repo).",
+      "warn_html": "GPL: chép code của nó vào repo của nhóm thì cả repo phải theo GPL. Chỉ chạy để đối chiếu, đừng chép. Lệnh <code>pip install cusum</code> cài một gói xử lý ảnh radar vệ tinh không liên quan.",
+      "scores_r1": [
+        7,
+        6,
+        6,
+        5
+      ]
     },
     {
-      "id": "B2", "group": "B", "role": "code",
-      "name": "mahinanwar/CUSUM-Algorithm", "short": "CUSUM MATLAB (GNSS)",
+      "id": "B2",
+      "group": "B",
+      "role": "code",
+      "name": "mahinanwar/CUSUM-Algorithm",
+      "short": "CUSUM MATLAB (GNSS)",
       "url": "https://github.com/mahinanwar/CUSUM-Algorithm",
-      "scores": [3, 1, 2, 2],
+      "scores": [
+        3,
+        1,
+        1,
+        2
+      ],
       "what_html": "Code <span class=\"term\">MATLAB</span>, không phải Python, cho CUSUM trên lỗi đa đường của tín hiệu vệ tinh định vị (<span class=\"term\">GNSS</span>), không phải thể thao. 5 sao, mọi commit trong 12/2019.",
-      "why_html": "Sai ngôn ngữ, sai lĩnh vực, không bảo trì. <span class=\"term\">Không có giấy phép</span>, nên về luật không được chép dùng.",
-      "use_html": "Chỉ để xem một ví dụ <span class=\"term\">LLR</span> Gauss giữa <span class=\"term\">H0 / H1</span>. Không đưa vào báo cáo."
+      "why_html": "Sai ngôn ngữ, sai lĩnh vực, không bảo trì. Đọc code thấy lỗi: hàm LLR bỏ mất μ1, hàm <code>algoCUSUM</code> không bao giờ được gọi. <span class=\"term\">Không có giấy phép</span>, nên về luật cũng không được chép dùng.",
+      "use_html": "Không dùng, không chép. Muốn hiểu <span class=\"term\">LLR</span> giữa <span class=\"term\">H0 / H1</span> thì đọc Wald (1945) ở thẻ C4.",
+      "scores_r1": [
+        3,
+        1,
+        2,
+        2
+      ]
     },
     {
-      "id": "B3", "group": "B", "role": "code",
-      "name": "HSE-LAMBDA/roerich", "short": "roerich (điểm đổi)",
+      "id": "B3",
+      "group": "B",
+      "role": "code",
+      "name": "HSE-LAMBDA/roerich",
+      "short": "roerich (điểm đổi)",
       "url": "https://github.com/HSE-LAMBDA/roerich",
-      "scores": [3, 3, 5, 2],
+      "scores": [
+        3,
+        4,
+        5,
+        2
+      ],
       "what_html": "Thư viện Python phát hiện <span class=\"term\">điểm đổi</span> bằng <span class=\"term\">tỉ số mật độ</span> và bộ phân loại (RuLSIF, mạng nơ-ron), cho dữ liệu nhiều chiều. <span class=\"term\">BSD-2</span>, 71 sao.",
-      "why_html": "Không có CUSUM hay SPRT. Commit cuối 08/2023, bản PyPI cuối 0.6.0 (07/2023): đã ngừng bảo trì. Quá nặng so với môn.",
-      "use_html": "Tối đa một dòng ở mục \"hướng mở rộng\" của báo cáo."
+      "why_html": "Không có CUSUM hay SPRT. Commit cuối 08/2023, bản PyPI cuối 0.6.0 (07/2023): đã ngừng bảo trì. Kéo theo <span class=\"term\">PyTorch</span> nên cài nặng. Quá sức so với môn.",
+      "use_html": "Tối đa một dòng ở mục \"hướng mở rộng\" của báo cáo.",
+      "scores_r1": [
+        3,
+        3,
+        5,
+        2
+      ]
     },
     {
-      "id": "B4", "group": "B", "role": "trích dẫn",
-      "name": "Development of sequential winning-percentage prediction model for badminton competitions: applying the expert system sequential probability ratio test", "short": "EXSPRT cầu lông (2025)",
+      "id": "B4",
+      "group": "B",
+      "role": "trích dẫn",
+      "name": "Development of sequential winning-percentage prediction model for badminton competitions: applying the expert system sequential probability ratio test",
+      "short": "EXSPRT cầu lông (2025)",
       "url": "https://doi.org/10.1186/s13102-025-01078-6",
-      "scores": [8, 3, 8, 4],
-      "what_html": "Bài báo một tác giả trên BMC Sports Science, Medicine and Rehabilitation 17:48, ngày 13/03/2025, <span class=\"term\">truy cập mở</span>, giấy phép <span class=\"term\">CC BY-NC-ND</span> 4.0. Dùng 100 trận đơn nam <span class=\"term\">BWF</span> năm 2018 để chấm độ khó giải, lấy xác suất ban đầu từ <span class=\"term\">tỉ lệ cược</span> của 30 trận năm 2019, rồi so sáu mô hình; mô hình đặt 25% trọng số cho tỉ lệ cược tốt nhất.",
-      "why_html": "Ví dụ thật, đã <span class=\"term\">bình duyệt</span>, dùng <span class=\"term\">SPRT</span> trong thể thao. Trừ điểm dùng ngay vì mô hình <span class=\"term\">hệ chuyên gia</span> quá phức tạp để làm lại. Bảng tổng hợp gọi nó là theo dõi \"thay đổi phong độ trong trận\": đó là diễn giải lỏng.",
-      "use_html": "Trích làm ví dụ SPRT trong thể thao ở phần tổng quan tài liệu. Không làm lại."
+      "scores": [
+        6,
+        2,
+        6,
+        4
+      ],
+      "what_html": "Bài báo một tác giả trên BMC Sports Science, Medicine and Rehabilitation 17:48, ngày 13/03/2025, <span class=\"term\">truy cập mở</span>, giấy phép <span class=\"term\">CC BY-NC-ND</span> 4.0. Dùng <span class=\"term\">EXSPRT</span>, bản mở rộng SPRT của Welch &amp; Frick, không phải SPRT gốc của Wald. Dùng 100 trận đơn nam <span class=\"term\">BWF</span> năm 2018 để chấm độ khó từng sự kiện, lấy xác suất ban đầu từ <span class=\"term\">tỉ lệ cược</span> của 30 trận năm 2019, rồi so sáu mô hình; độ chính xác tốt nhất 0,730 (mô hình 3 và 6).",
+      "why_html": "Ví dụ thật, đã <span class=\"term\">bình duyệt</span>, về kiểm định tuần tự trong thể thao. Nhưng nó kiểm hồi cứu trên video trận đã ghi, không chạy trong lúc trận diễn ra. Bài ghi \"No datasets were generated or analysed\" và không chia sẻ code, nên không làm lại được.",
+      "use_html": "Trích làm ví dụ trong tổng quan tài liệu, ghi rõ là EXSPRT. Bản đọc miễn phí ở PubMed Central (link thêm).",
+      "scores_r1": [
+        8,
+        3,
+        8,
+        4
+      ],
+      "links": [
+        {
+          "label": "Bản đầy đủ trên PubMed Central",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11905516/"
+        }
+      ]
     },
     {
-      "id": "B5", "group": "B", "role": "case mẫu",
-      "name": "The Battle of the Baseball Parks with ANOVA vs. ANOM", "short": "Minitab: ANOM sân bóng chày",
+      "id": "B5",
+      "group": "B",
+      "role": "case mẫu",
+      "name": "The Battle of the Baseball Parks with ANOVA vs. ANOM",
+      "short": "Minitab: ANOM sân bóng chày",
       "url": "https://blog.minitab.com/en/blog/baseball-parks-with-anova-anom",
-      "links": [{ "label": "Bài cùng loạt năm 2013", "url": "https://blog.minitab.com/en/statistics-and-quality-improvement/use-analysis-of-means-to-classify-baseball-parks" }],
-      "scores": [8, 7, 6, 8],
-      "what_html": "Bài blog Minitab ngày 21/10/2021 dùng <span class=\"term\">park factor</span> về số điểm của ESPN cho các sân MLB từ 2001. <span class=\"term\">ANOM</span> so mỗi sân với trung bình chung: 7 sân làm giảm điểm (Petco, T-Mobile, Citi, Marlins, Dodger, Tropicana, Oracle) và 4 sân làm tăng điểm (Coors, Globe Life, Fenway, Chase).",
-      "why_html": "Đúng một phương pháp, đúng thể thao, câu chuyện rõ: <span class=\"term\">ANOVA</span> chỉ nói \"có khác\", ANOM chỉ ra sân nào khác. Là blog của hãng phần mềm, không bình duyệt; chính tác giả cảnh báo dữ liệu không phải mẫu ngẫu nhiên.",
-      "use_html": "Khuôn cho câu chuyện ANOM: thay sân bóng chày bằng trọng tài hay đội bóng, giữ cách đặt ANOVA cạnh ANOM."
+      "links": [
+        {
+          "label": "Bài cùng loạt năm 2013",
+          "url": "https://blog.minitab.com/en/statistics-and-quality-improvement/use-analysis-of-means-to-classify-baseball-parks"
+        }
+      ],
+      "scores": [
+        7,
+        6,
+        5,
+        8
+      ],
+      "what_html": "Bài blog Minitab ngày 21/10/2021 dùng <span class=\"term\">park factor</span> về số điểm của ESPN cho các sân MLB, giai đoạn 2001–2021. <span class=\"term\">ANOM</span> so mỗi sân với trung bình chung của mọi sân (\"the overall mean\"): 7 sân làm giảm điểm (Petco, T-Mobile, Citi, Marlins, Dodger, Tropicana, Oracle) và 4 sân làm tăng điểm (Coors, Globe Life, Fenway, Chase). Dữ liệu là file <code>.mpx</code> của Minitab.",
+      "why_html": "Đúng một phương pháp, đúng thể thao, câu chuyện rõ: <span class=\"term\">ANOVA</span> chỉ nói \"có khác\", ANOM chỉ ra sân nào khác. Là blog của hãng phần mềm; chính tác giả dặn \"don't take this analysis as serious inference\".",
+      "use_html": "Khuôn cho câu chuyện ANOM: thay sân bóng chày bằng giải đấu hay trọng tài, giữ cách đặt ANOVA cạnh ANOM.",
+      "scores_r1": [
+        8,
+        7,
+        6,
+        8
+      ]
     },
     {
-      "id": "B6", "group": "B", "role": "dữ liệu",
-      "name": "GitHub topics: sports-analytics, sport-analytics", "short": "GitHub topics thể thao",
-      "url": "https://github.com/topics/sports-analytics",
-      "links": [{ "label": "sport-analytics", "url": "https://github.com/topics/sport-analytics" }],
-      "scores": [3, 6, 5, 5],
-      "what_html": "Hai trang chủ đề trên GitHub: sports-analytics (4.825 repo) và sport-analytics (62 repo). Trong đó có vài repo dữ liệu tốt: theOehrly/Fast-F1 (<span class=\"term\">MIT</span>, khoảng 5,6 nghìn sao), swar/nba_api (MIT, khoảng 3,9 nghìn sao), statsbomb/open-data (khoảng 3,8 nghìn sao, phải ghi công StatsBomb).",
-      "why_html": "Là danh sách, không phải một nguồn: quá rộng nếu đứng một mình. Điểm dùng ngay đến từ ba repo dữ liệu kể trên.",
-      "use_html": "Chỗ tìm dữ liệu, không phải code mẫu."
+      "id": "B6",
+      "group": "B",
+      "role": "dữ liệu",
+      "name": "GitHub topic sport-analytics",
+      "short": "GitHub topic sport-analytics",
+      "url": "https://github.com/topics/sport-analytics",
+      "links": [
+        {
+          "label": "sports-analytics (chủ đề lớn)",
+          "url": "https://github.com/topics/sports-analytics"
+        }
+      ],
+      "scores": [
+        2,
+        2,
+        2,
+        3
+      ],
+      "what_html": "Trang chủ đề <code>sport-analytics</code> mà bảng tổng hợp nêu tên: 62 repo, phần lớn về video và thị giác máy tính, không repo nào dùng bốn phương pháp. Chủ đề lớn là <code>sports-analytics</code> (4.825 repo).",
+      "why_html": "Sai tên chủ đề nên lạc hướng. Vài repo dữ liệu tốt (theOehrly/Fast-F1, swar/nba_api, statsbomb/open-data) không mang chủ đề nào trong hai.",
+      "use_html": "Không cần. Tìm dữ liệu thì đi thẳng tới các repo dữ liệu kể trên.",
+      "scores_r1": [
+        3,
+        6,
+        5,
+        5
+      ]
     },
     {
-      "id": "C1", "group": "C", "role": "dữ liệu",
-      "name": "football-data.co.uk — Premier League", "short": "football-data.co.uk",
+      "id": "C1",
+      "group": "C",
+      "role": "dữ liệu",
+      "name": "football-data.co.uk — Premier League",
+      "short": "football-data.co.uk",
       "url": "https://www.football-data.co.uk/englandm.php",
-      "links": [{ "label": "notes.txt (nghĩa từng cột)", "url": "https://www.football-data.co.uk/notes.txt" }],
-      "scores": [9, 9, 7, 9],
-      "what_html": "Mỗi giải, mỗi mùa một file <span class=\"term\">CSV</span> miễn phí: tỉ số, cú sút, phạt góc, phạm lỗi, thẻ, trọng tài, <span class=\"term\">tỉ lệ cược</span> của nhà cái. Nhẹ, tải tay được.",
-      "why_html": "Hợp cả bốn phương pháp. Làm lại được một nghiên cứu đã <span class=\"term\">bình duyệt</span> (Beggs &amp; Bond 2020). Bóng đá gần với khán giả Việt. Trừ điểm tin cậy vì là trang cá nhân, không có điều khoản sử dụng rõ.",
-      "use_html": "Phương án A: mọi mùa Premier League từ 2000/01 tới mùa gần nhất đã đá xong. Cột <code>Referee</code> cho ANOM, hiệu số bàn thắng cho CUSUM, chuỗi thắng/không thắng cho SPRT.",
-      "warn_html": "Không có điều khoản sử dụng rõ: ghi nguồn trong báo cáo và trong <span class=\"term\">data card</span>. Cột khác nhau giữa các mùa: khi gom phải khớp tên cột."
+      "links": [
+        {
+          "label": "notes.txt (nghĩa từng cột)",
+          "url": "https://www.football-data.co.uk/notes.txt"
+        }
+      ],
+      "scores": [
+        9,
+        7,
+        7,
+        9
+      ],
+      "what_html": "Mỗi giải, mỗi mùa một file <span class=\"term\">CSV</span> miễn phí: tỉ số, cú sút, phạt góc, phạm lỗi, thẻ, trọng tài, <span class=\"term\">tỉ lệ cược</span>. Premier League: trọng tài, cú sút, phạm lỗi, phạt góc, thẻ có đủ ở 380/380 trận mỗi mùa từ 2000/01; file trước đó chỉ có kết quả. Tỉ lệ cược có từ 2000/01: Bet365 từ 2002/03, tỉ lệ đóng cửa của Pinnacle từ 2012/13, trung bình thị trường và tỉ lệ đóng cửa từ 2019/20.",
+      "why_html": "Hợp cả bốn phương pháp. Hỏi được câu giống một nghiên cứu đã <span class=\"term\">bình duyệt</span> (Beggs &amp; Bond 2020). Cột lộn xộn là việc thật cho nửa làm sạch: số cột tăng từ 45 lên 132, ngày lúc dạng dd/mm/yy lúc dd/mm/yyyy, tên trọng tài trôi (\"Mike Dean\", \"M. L. Dean\", \"Dean, M. L\", \"M Dean\"). Trừ điểm dùng ngay vì điều khoản chặt.",
+      "use_html": "Phương án A. Phân tích rồi công bố hình và số tổng hợp thì được, Beggs &amp; Bond đã làm vậy. Không đưa CSV gốc lên repo công khai: commit một script tải kèm URL, ngày tải và mã <span class=\"term\">SHA-256</span> của từng file. Hỏi giảng viên xác nhận.",
+      "warn_html": "Trang dữ liệu ghi: dùng \"for private individuals only, NOT commerical or data training products using automated bots/scrapers/AI\" và \"for the purposes of league match prediction only\"; chân trang ghi \"All Rights Reserved\". Theo notes.txt, kiểu đếm thẻ vàng của Anh bỏ thẻ vàng thứ nhất khi thẻ vàng thứ hai thành thẻ đỏ, kiểu châu Âu thì tính: so thẻ trong Premier League được, so giữa các giải thì không.",
+      "scores_r1": [
+        9,
+        9,
+        7,
+        9
+      ]
     },
     {
-      "id": "C2", "group": "C", "role": "case mẫu",
-      "name": "Beggs & Bond (2020): A CUSUM tool for retrospectively evaluating team performance: the case of the English Premier League", "short": "Beggs & Bond 2020",
+      "id": "C2",
+      "group": "C",
+      "role": "case mẫu",
+      "name": "Beggs & Bond (2020): A CUSUM tool for retrospectively evaluating team performance: the case of the English Premier League",
+      "short": "Beggs & Bond 2020",
       "url": "https://doi.org/10.1108/SBM-03-2019-0025",
-      "links": [{ "label": "Bản preprint miễn phí", "url": "https://eprints.leedsbeckett.ac.uk/6410" }],
-      "scores": [9, 7, 9, 6],
-      "what_html": "Bài báo trên Sport, Business and Management. Dùng <span class=\"term\">CUSUM</span> trên hiệu số bàn thắng của 6 câu lạc bộ qua 23 mùa (1995–2018). Thấy thay đổi cấu trúc ở 4 câu lạc bộ; ít lần trùng với lúc đổi huấn luyện viên.",
-      "why_html": "Đúng phương pháp, đúng bóng đá, đã <span class=\"term\">bình duyệt</span>, có bản <span class=\"term\">preprint</span> miễn phí. Chỉ có CUSUM nên hợp môn ở mức vừa.",
-      "use_html": "Làm lại cho phần CUSUM: cùng chỉ số, thêm các mùa sau 2018. So kết luận của nhóm với của bài báo."
+      "links": [
+        {
+          "label": "Bản preprint miễn phí",
+          "url": "https://eprints.leedsbeckett.ac.uk/6410"
+        }
+      ],
+      "scores": [
+        8,
+        7,
+        9,
+        6
+      ],
+      "what_html": "Bài báo trên Sport, Business and Management. Lấy hiệu số bàn thắng của 6 câu lạc bộ qua 23 mùa, 1995/96–2017/18. Không dùng <span class=\"term\">CUSUM dạng bảng</span>: cộng dồn độ lệch của từng trận so với trung bình cả 874 trận, rồi dùng <span class=\"term\">kiểm định hoán vị</span> và <span class=\"term\">e.divisive</span> để tìm <span class=\"term\">điểm đổi</span>. Thấy thay đổi cấu trúc ở 4 câu lạc bộ; ít lần trùng với lúc đổi huấn luyện viên.",
+      "why_html": "Đúng chủ đề, đúng bóng đá, đã <span class=\"term\">bình duyệt</span>, có bản <span class=\"term\">preprint</span> miễn phí. Phương pháp khác CUSUM dạng bảng của đề, nên đây là bài liên quan, không phải công thức để chép.",
+      "use_html": "Dẫn trong tổng quan tài liệu; so kết luận của nhóm với của bài ở phần CUSUM.",
+      "scores_r1": [
+        9,
+        7,
+        9,
+        6
+      ]
     },
     {
-      "id": "C3", "group": "C", "role": "trích dẫn",
-      "name": "Spiegelhalter, Grigg, Kinsman, Treasure (2003): Risk-adjusted sequential probability ratio tests: applications to Bristol, Shipman and adult cardiac surgery", "short": "Spiegelhalter và cs. 2003",
+      "id": "C3",
+      "group": "C",
+      "role": "trích dẫn",
+      "name": "Spiegelhalter, Grigg, Kinsman, Treasure (2003): Risk-adjusted sequential probability ratio tests: applications to Bristol, Shipman and adult cardiac surgery",
+      "short": "Spiegelhalter và cs. 2003",
       "url": "https://doi.org/10.1093/intqhc/15.1.7",
-      "scores": [7, 6, 10, 6],
-      "what_html": "Bài báo trên International Journal for Quality in Health Care 15(1):7–13. Dùng <span class=\"term\">SPRT</span> có <span class=\"term\">hiệu chỉnh rủi ro</span> để soi lại hai vụ y khoa ở Anh (Bristol, Shipman) và số liệu mổ tim người lớn.",
-      "why_html": "Gốc của chính bộ công cụ trong tên đề tài, đã <span class=\"term\">bình duyệt</span>. Nằm trong y tế nên nhóm phải tự chuyển sang thể thao.",
-      "use_html": "Khung lý thuyết, và câu chuyện mở đầu cho slide: theo dõi tuần tự giúp thấy bất thường như thế nào."
+      "scores": [
+        6,
+        5,
+        10,
+        5
+      ],
+      "what_html": "Bài báo trên International Journal for Quality in Health Care 15(1):7–13. Chỉ bàn về <span class=\"term\">SPRT</span> có <span class=\"term\">hiệu chỉnh rủi ro</span>, áp vào hai vụ y khoa ở Anh (Bristol, Shipman) và số liệu mổ tim người lớn.",
+      "why_html": "Đã <span class=\"term\">bình duyệt</span>, là gốc của SPRT có hiệu chỉnh rủi ro. Chỉ một trong bốn phương pháp, lại nằm trong y tế, nên nhóm phải tự chuyển sang thể thao.",
+      "use_html": "Câu chuyện mở đầu cho phần SPRT. Khung đủ bốn phương pháp thì trích Spiegelhalter và cs. 2012 (thẻ C9).",
+      "scores_r1": [
+        7,
+        6,
+        10,
+        6
+      ]
     },
     {
-      "id": "C4", "group": "C", "role": "công thức",
-      "name": "Bộ công thức chuẩn: NIST e-Handbook, Minitab, Wald (1945)", "short": "Bộ công thức chuẩn",
+      "id": "C4",
+      "group": "C",
+      "role": "công thức",
+      "name": "Bộ công thức chuẩn: NIST e-Handbook, Minitab, Page (1954), Wald (1945)",
+      "short": "Bộ công thức chuẩn",
       "url": "https://www.itl.nist.gov/div898/handbook/pmc/section3/pmc323.htm",
       "links": [
-        { "label": "Minitab: ANOM, methods and formulas", "url": "https://support.minitab.com/en-us/minitab/help-and-how-to/statistical-modeling/anova/how-to/analysis-of-means/methods-and-formulas/one-way-designs-with-normal-data" },
-        { "label": "Wald (1945)", "url": "https://doi.org/10.1214/aoms/1177731118" }
+        {
+          "label": "NIST 1.3.5.17: ngoại lai",
+          "url": "https://www.itl.nist.gov/div898/handbook/eda/section3/eda35h.htm"
+        },
+        {
+          "label": "Minitab: ANOM, dữ liệu chuẩn",
+          "url": "https://support.minitab.com/en-us/minitab/help-and-how-to/statistical-modeling/anova/how-to/analysis-of-means/methods-and-formulas/one-way-designs-with-normal-data"
+        },
+        {
+          "label": "Minitab: ANOM, dữ liệu nhị thức",
+          "url": "https://support.minitab.com/en-us/minitab/help-and-how-to/statistical-modeling/anova/how-to/analysis-of-means/methods-and-formulas/binomial-data/"
+        },
+        {
+          "label": "Minitab: CUSUM",
+          "url": "https://support.minitab.com/en-us/minitab/help-and-how-to/quality-and-process-improvement/control-charts/how-to/time-weighted-charts/cusum-chart/methods-and-formulas/methods-and-formulas/"
+        },
+        {
+          "label": "Page (1954)",
+          "url": "https://doi.org/10.1093/biomet/41.1-2.100"
+        },
+        {
+          "label": "Wald (1945)",
+          "url": "https://doi.org/10.1214/aoms/1177731118"
+        }
       ],
-      "scores": [9, 9, 10, 6],
-      "what_html": "Ba nguồn gốc cho công thức: NIST/SEMATECH e-Handbook mục 6.3.2.3 cho <span class=\"term\">CUSUM</span>; trang Methods and formulas của Minitab cho <span class=\"term\">ANOM</span> một chiều với dữ liệu chuẩn; bài báo gốc của Wald (1945), \"Sequential tests of statistical hypotheses\", Annals of Mathematical Statistics 16(2):117–186, cho <span class=\"term\">SPRT</span>.",
+      "scores": [
+        9,
+        9,
+        10,
+        6
+      ],
+      "what_html": "Nguồn gốc cho công thức: NIST/SEMATECH e-Handbook mục 6.3.2.3 cho <span class=\"term\">CUSUM</span> và mục 1.3.5.17 cho kiểm định ngoại lai; trang Methods and formulas của Minitab cho <span class=\"term\">ANOM</span> (dữ liệu chuẩn và dữ liệu nhị thức) và cho tham số mặc định của CUSUM; Page (1954), \"Continuous inspection schemes\", Biometrika 41:100–115, bài gốc của CUSUM; Wald (1945), \"Sequential tests of statistical hypotheses\", Annals of Mathematical Statistics 16(2):117–186, bài gốc của <span class=\"term\">SPRT</span>.",
       "why_html": "Chuẩn, ổn định, dùng ngay được. Không có thể thao, không có dữ liệu, nên hợp môn ở mức vừa.",
       "use_html": "Nguồn trích cho mọi công thức nhóm tự viết; xem khối \"Công thức cần tự viết là gì?\" ở phần phương án.",
       "warn_html": "NIST không có mục ANOM. Đừng trích NIST cho ANOM; trích Minitab."
     },
     {
-      "id": "C5", "group": "C", "role": "case mẫu",
-      "name": "SPRT trong thử engine cờ vua (Stockfish Fishtest)", "short": "SPRT cờ vua (Fishtest)",
+      "id": "C5",
+      "group": "C",
+      "role": "case mẫu",
+      "name": "SPRT trong thử engine cờ vua (Stockfish Fishtest)",
+      "short": "SPRT cờ vua (Fishtest)",
       "url": "https://www.chessprogramming.org/Sequential_Probability_Ratio_Test",
-      "links": [{ "label": "Fishtest Mathematics", "url": "https://official-stockfish.github.io/docs/fishtest-wiki/Fishtest-Mathematics.html" }],
-      "scores": [6, 6, 7, 5],
+      "links": [
+        {
+          "label": "Fishtest Mathematics",
+          "url": "https://official-stockfish.github.io/docs/fishtest-wiki/Fishtest-Mathematics.html"
+        }
+      ],
+      "scores": [
+        6,
+        6,
+        7,
+        5
+      ],
       "what_html": "Fishtest thử mỗi bản sửa của engine cờ Stockfish bằng <span class=\"term\">SPRT</span>: hai bản đấu nhau từng ván, dừng khi đủ bằng chứng bản mới mạnh hơn hay không. Tham số là <span class=\"term\">Elo</span> (elo0, elo1) cùng <span class=\"term\">α</span> và <span class=\"term\">β</span>.",
       "why_html": "Ứng dụng SPRT ngoài đời lâu năm và rộng nhất. Cờ vua, tài liệu dạng wiki, nên điểm đúng đề và tin cậy ở mức vừa.",
       "use_html": "Hình minh hoạ SPRT cho slide: đường bằng chứng đi giữa hai ngưỡng."
     },
     {
-      "id": "C6", "group": "C", "role": "case mẫu",
-      "name": "Hill & Schvaneveldt (2011): Using statistical process control charts to identify the steroids era in Major League Baseball: an educational exercise", "short": "Hill & Schvaneveldt 2011",
+      "id": "C6",
+      "group": "C",
+      "role": "case mẫu",
+      "name": "Hill & Schvaneveldt (2011): Using statistical process control charts to identify the steroids era in Major League Baseball: an educational exercise",
+      "short": "Hill & Schvaneveldt 2011",
       "url": "https://jse.amstat.org/v19n1/hill.pdf",
-      "scores": [6, 6, 8, 7],
+      "scores": [
+        6,
+        6,
+        8,
+        7
+      ],
       "what_html": "Bài tập giảng dạy trên Journal of Statistics Education 19(1), đã <span class=\"term\">bình duyệt</span>. Dùng <span class=\"term\">biểu đồ I-MR</span> trên số liệu MLB để tìm \"kỷ nguyên steroid\".",
       "why_html": "Đúng tinh thần <span class=\"term\">SPC</span> trong thể thao, viết để dạy nên dễ theo. Chưa có CUSUM, nhưng thêm vào dễ.",
       "use_html": "Mẫu cách kể chuyện \"tìm lúc quá trình đổi\" bằng <span class=\"term\">biểu đồ kiểm soát</span>; dẫn ở phần tổng quan tài liệu."
     },
     {
-      "id": "C7", "group": "C", "role": "trích dẫn",
-      "name": "Madukoma & Mitra (2026): Performance Anomaly Detection in Athletics", "short": "Điền kinh: điểm lạ (2026)",
+      "id": "C7",
+      "group": "C",
+      "role": "trích dẫn",
+      "name": "Madukoma & Mitra (2026): Performance Anomaly Detection in Athletics",
+      "short": "Điền kinh: điểm lạ (2026)",
       "url": "https://arxiv.org/abs/2604.21953",
-      "scores": [7, 3, 5, 5],
+      "scores": [
+        7,
+        3,
+        5,
+        5
+      ],
       "what_html": "<span class=\"term\">Preprint</span> trên <span class=\"term\">arXiv</span>. 1,58 triệu kết quả của World Athletics; các vận động viên từng bị kỷ luật là đáp án đúng. So <span class=\"term\">z-score</span>, <span class=\"term\">MAD</span>, <span class=\"term\">IQR</span>, <span class=\"term\">Isolation Forest</span> và vài cách khác.",
       "why_html": "Sát phần ngoại lai, đúng thể thao. Chưa bình duyệt và không có link code nên khó dùng ngay.",
       "use_html": "Tổng quan tài liệu cho phần ngoại lai: các cách phát hiện, cách kiểm bằng đáp án thật."
     },
     {
-      "id": "C8", "group": "C", "role": "dữ liệu",
-      "name": "nba_api: chuỗi ném phạt NBA", "short": "nba_api (ném phạt)",
+      "id": "C8",
+      "group": "C",
+      "role": "dữ liệu",
+      "name": "nba_api: chuỗi ném phạt NBA",
+      "short": "nba_api (ném phạt)",
       "url": "https://github.com/swar/nba_api",
-      "scores": [6, 6, 6, 5],
+      "scores": [
+        6,
+        4,
+        6,
+        5
+      ],
       "what_html": "Thư viện Python lấy dữ liệu NBA.com. Chuỗi ném phạt trúng/trượt của một cầu thủ là một chuỗi <span class=\"term\">Bernoulli</span> sạch, rất hợp <span class=\"term\">SPRT</span>.",
       "why_html": "Dữ liệu thật, khớp SPRT tự nhiên. Thư viện là <span class=\"term\">MIT</span>, còn dữ liệu theo điều khoản của NBA.com.",
-      "use_html": "Dữ liệu dự phòng cho phần SPRT nếu chuỗi trận của một huấn luyện viên quá ngắn.",
-      "warn_html": "NBA.com chặn hoặc làm chậm IP máy chủ đám mây: Colab có thể bị chặn. Tải trên máy cá nhân."
+      "use_html": "Về lý thuyết là dữ liệu dự phòng cho SPRT. Thực tế nên tránh.",
+      "warn_html": "NBA.com chặn hoặc làm chậm IP máy chủ đám mây, kể cả Colab.",
+      "scores_r1": [
+        6,
+        6,
+        6,
+        5
+      ]
+    },
+    {
+      "id": "C9",
+      "group": "C",
+      "role": "trích dẫn",
+      "name": "Spiegelhalter, Sherlaw-Johnson, Bardsley, Blunt, Wood, Grigg (2012): Statistical methods for healthcare regulation: rating, screening and surveillance",
+      "short": "Spiegelhalter và cs. 2012",
+      "url": "https://doi.org/10.1111/j.1467-985X.2011.01010.x",
+      "scores": [
+        7,
+        5,
+        10,
+        6
+      ],
+      "what_html": "Bài báo trên Journal of the Royal Statistical Society A 175(1):1–47. Gom việc giám sát chất lượng y tế thành ba phần: chấm hạng (rating); sàng lọc tìm đơn vị khác thường bằng <span class=\"term\">z-score</span> và ngoại lai (screening); giám sát tuần tự bằng <span class=\"term\">CUSUM</span> và <span class=\"term\">SPRT</span> (surveillance).",
+      "why_html": "Khung chuẩn, đã <span class=\"term\">bình duyệt</span>, cho đúng bộ công cụ của đề tài. Nằm trong y tế, dài và nặng toán, không có dữ liệu thể thao.",
+      "use_html": "Khung lý thuyết cho chương giới thiệu: hai câu hỏi \"ai khác thường\" và \"đổi từ lúc nào\" ứng với sàng lọc và giám sát."
+    },
+    {
+      "id": "C10",
+      "group": "C",
+      "role": "dữ liệu",
+      "name": "martj42/international_results: kết quả bóng đá đội tuyển quốc gia",
+      "short": "Bóng đá quốc tế (martj42)",
+      "url": "https://github.com/martj42/international_results",
+      "scores": [
+        6,
+        9,
+        7,
+        6
+      ],
+      "what_html": "Bộ CSV giấy phép <span class=\"term\">CC0</span>: 50.099 trận đội tuyển quốc gia từ 1872 tới 17/11/2026, trong đó 313 trận của Việt Nam. Cập nhật ngày 19/11/2026.",
+      "why_html": "Không rủi ro giấy phép, có góc Việt Nam, dữ liệu rất mới. Nhưng chỉ có tỉ số: không trọng tài, thẻ hay tỉ lệ cược. Sức đối thủ chênh lệch lớn nên nhóm phải tự tính <span class=\"term\">Elo</span>; Việt Nam chỉ đá 10–17 trận mỗi năm.",
+      "use_html": "Phần mở rộng cho phương án A: một slide cuối chạy CUSUM hoặc SPRT cho đội tuyển Việt Nam."
+    },
+    {
+      "id": "C11",
+      "group": "C",
+      "role": "dữ liệu",
+      "name": "FastF1 + Jolpica-F1",
+      "short": "FastF1 + Jolpica-F1",
+      "url": "https://docs.fastf1.dev/",
+      "links": [
+        {
+          "label": "jolpica/jolpica-f1",
+          "url": "https://github.com/jolpica/jolpica-f1"
+        }
+      ],
+      "scores": [
+        6,
+        6,
+        7,
+        7
+      ],
+      "what_html": "<span class=\"term\">FastF1</span> là thư viện Python giấy phép <span class=\"term\">MIT</span>, tải dữ liệu F1 tới từng vòng. Phần dữ liệu kiểu Ergast nó lấy từ <span class=\"term\">Jolpica-F1</span>, bản kế tiếp của Ergast. Dữ liệu Jolpica theo <span class=\"term\">CC BY-NC-SA</span> 4.0; API miễn phí nhưng có <span class=\"term\">giới hạn tần suất</span>.",
+      "why_html": "Bù phần sau 2024 cho bộ Kaggle, giấy phép rõ ràng cho dùng phi thương mại. Phải viết code gọi API và tôn trọng giới hạn.",
+      "use_html": "Phương án B: lấy mùa 2025 trở đi; ghi nguồn Jolpica trong data card."
     }
   ],
   "methods": [
-    {
-      "id": "outlier", "q": "ai", "name": "Kiểm định ngoại lai",
-      "what_html": "Tìm giá trị xa hẳn phần còn lại: <span class=\"term\">z-score</span>, rào <span class=\"term\">IQR</span> trên <span class=\"term\">box plot</span>, hay kiểm định <span class=\"term\">Grubbs</span>.",
-      "example": "Trận nhiều bàn nằm ngoài rào: chuyện lạ thật hay lỗi nhập liệu?"
-    },
-    {
-      "id": "anom", "q": "ai", "name": "Phân tích trung bình (ANOM)",
-      "what_html": "So trung bình từng nhóm với trung bình chung; nhóm nằm ngoài <span class=\"term\">UDL / LDL</span> là khác thường.",
-      "example": "Trọng tài nào rút thẻ vàng mỗi trận nhiều hay ít khác hẳn trung bình giải?"
-    },
-    {
-      "id": "cusum", "q": "khi", "name": "CUSUM",
-      "what_html": "Cộng dồn phần lệch của từng trận so với mức cũ; tổng vượt ngưỡng <span class=\"term\">h</span> là báo đổi.",
-      "example": "Từ trận nào hiệu số bàn thắng của một đội đổi hẳn?"
-    },
-    {
-      "id": "sprt", "q": "khi", "name": "SPRT",
-      "what_html": "Sau mỗi trận cộng thêm bằng chứng (<span class=\"term\">LLR</span>); chạm ngưỡng trên hay dưới thì dừng và kết luận.",
-      "example": "Sau bao nhiêu trận thì đủ bằng chứng huấn luyện viên mới nâng tỉ lệ thắng?"
-    }
+    {"id": "outlier", "q": "ai", "name": "Kiểm định ngoại lai", "what_html": "Tìm giá trị xa hẳn phần còn lại: <span class=\"term\">z-score</span>, rào <span class=\"term\">IQR</span> trên <span class=\"term\">box plot</span>, hay kiểm định <span class=\"term\">Grubbs</span>.", "example": "Trận nhiều bàn nằm ngoài rào: chuyện lạ thật hay lỗi nhập liệu?"},
+    {"id": "anom", "q": "ai", "name": "Phân tích trung bình (ANOM)", "what_html": "So trung bình từng nhóm với trung bình chung; nhóm nằm ngoài <span class=\"term\">UDL / LDL</span> là khác thường.", "example": "Trọng tài nào rút thẻ vàng mỗi trận nhiều hay ít khác hẳn trung bình giải?"},
+    {"id": "cusum", "q": "khi", "name": "CUSUM", "what_html": "Cộng dồn phần lệch của từng trận so với mức cũ; tổng vượt ngưỡng <span class=\"term\">h</span> là báo đổi.", "example": "Từ trận nào hiệu số bàn thắng của một đội đổi hẳn?"},
+    {"id": "sprt", "q": "khi", "name": "SPRT", "what_html": "Sau mỗi trận cộng thêm bằng chứng (<span class=\"term\">LLR</span>); chạm ngưỡng trên hay dưới thì dừng và kết luận.", "example": "Sau bao nhiêu trận thì đủ bằng chứng huấn luyện viên mới nâng tỉ lệ thắng?"}
   ],
   "plan_a": [
     {
       "method": "Ngoại lai",
-      "q": "Trận, đội, mùa nào bất thường?",
-      "data_html": "Tỉ số, tổng số thẻ, hiệu số bàn thắng mỗi trận.",
-      "how_html": "<span class=\"term\">z-score</span> và rào <span class=\"term\">IQR</span> trên box plot; <span class=\"term\">Grubbs</span> cho điểm xa nhất. Tách riêng ngoại lai do lỗi dữ liệu: ngày sai, tên đội viết khác, ô trống."
+      "q": "Trận nào có số liệu bất thường, và đâu là lỗi ghi chép?",
+      "data_html": "Bàn thắng, cú sút, thẻ, phạt góc mỗi trận.",
+      "how_html": "Đây là số đếm, nên dùng rào <span class=\"term\">IQR</span> hoặc <span class=\"term\">xác suất đuôi Poisson</span> thay cho <span class=\"term\">Grubbs</span>. Luật bắt lỗi: sút trúng đích (<code>HST</code>) nhiều hơn tổng cú sút (<code>HS</code>) là lỗi ghi chép. Tách cực trị thật khỏi lỗi."
     },
     {
       "method": "ANOM",
-      "q": "Trọng tài nào rút thẻ vàng mỗi trận nhiều hay ít khác hẳn trung bình giải?",
-      "data_html": "Cột <code>Referee</code>, thẻ vàng hai đội <code>HY</code> + <code>AY</code>.",
-      "how_html": "Mỗi trọng tài một nhóm, vẽ <span class=\"term\">biểu đồ quyết định</span>. Cách thứ hai: tỉ lệ thắng sân nhà của từng đội so với trung bình giải."
+      "q": "Giải nào có tỉ lệ thắng sân nhà cao hay thấp khác hẳn trung bình chung?",
+      "data_html": "Kết quả trận (<code>FTR</code>) của nhiều giải trong football-data.",
+      "how_html": "<span class=\"term\">ANOM cho tỉ lệ</span>. Phải gộp nhiều giải: thêm việc thật cho nửa quản lý dữ liệu.",
+      "notes_html": "<ul><li>Biến thể: thẻ vàng mỗi trận của trọng tài Premier League. Gộp tên trọng tài trước.</li><li>Trọng tài nằm ngoài vạch chỉ là cờ cần xem, không phải bằng chứng thiên vị: trọng tài giỏi được giao trận lớn, và mức thẻ đổi theo thời kỳ.</li></ul>"
     },
     {
       "method": "CUSUM",
-      "q": "Từ trận nào phong độ của một đội đổi?",
-      "data_html": "Hiệu số bàn thắng mỗi trận (<code>FTHG</code> − <code>FTAG</code>, đổi dấu khi đội đá sân khách).",
-      "how_html": "<span class=\"term\">CUSUM dạng bảng</span>, làm lại Beggs &amp; Bond 2020. Một câu hỏi đáng kiểm bằng dữ liệu, chưa phải điều đã biết: mùa 2020/21 đá không khán giả, <span class=\"term\">lợi thế sân nhà</span> có giảm không? Đó là một <span class=\"term\">thí nghiệm tự nhiên</span>."
+      "q": "Phong độ một câu lạc bộ đổi từ trận nào?",
+      "data_html": "Mỗi trận: điểm thật trừ điểm kỳ vọng tính từ tỉ lệ cược (<span class=\"term\">phần dư</span>). Cách này bỏ được sức mạnh đối thủ.",
+      "how_html": "Ước mức bình thường từ các mùa trước, rồi theo dõi các mùa sau (<span class=\"term\">Phase I / Phase II</span>). Chọn <span class=\"term\">k</span> và <span class=\"term\">h</span> bằng mô phỏng <span class=\"term\">ARL</span> trước khi xem kết quả. Rồi so cảnh báo với ngày đổi huấn luyện viên (CSV không có, lấy từ Wikipedia và ghi nguồn).",
+      "notes_html": "<ul><li>Beggs &amp; Bond 2020 là bài liên quan, không phải công thức để chép.</li></ul>"
     },
     {
       "method": "SPRT",
-      "q": "Sau bao nhiêu trận thì đủ bằng chứng huấn luyện viên mới nâng tỉ lệ thắng?",
-      "data_html": "Chuỗi thắng = 1, không thắng = 0 từ ngày huấn luyện viên mới nhận việc. Ngày đổi huấn luyện viên phải gom thêm, CSV không có.",
-      "how_html": "SPRT <span class=\"term\">Bernoulli</span>: chọn <span class=\"term\">p0 / p1</span>, <span class=\"term\">α</span>, <span class=\"term\">β</span> trước khi xem dữ liệu. Câu nối cho slide: CUSUM là một SPRT cứ chạm đáy thì bắt đầu lại từ 0."
+      "q": "Mùa 2020/21 (phần lớn không khán giả): sau bao nhiêu trận thì đủ bằng chứng nói lợi thế sân nhà đã mất?",
+      "data_html": "Các trận 2020/21 theo thứ tự ngày: thắng sân nhà = 1, còn lại = 0.",
+      "how_html": "<span class=\"term\">H0</span>: tỉ lệ thắng sân nhà p0 = <span data-calc=\"p0\"></span>, gộp ba mùa 2016/17–2018/19. <span class=\"term\">H1</span>: p1 = (1 − tỉ lệ hoà <span data-calc=\"draw\"></span>)/2 = <span data-calc=\"p1\"></span>, nghĩa là hết lợi thế sân nhà. <span class=\"term\">α</span> = <span data-calc=\"alpha\"></span>, <span class=\"term\">β</span> = <span data-calc=\"beta\"></span>, hai ngưỡng a = <span data-calc=\"a\"></span>, b = <span data-calc=\"b\"></span>. Chúng tôi chạy thử để chắc câu hỏi khả thi: trên thứ tự trận thật, SPRT chấp nhận H1 ở trận <span data-calc=\"stop\"></span>. Nhóm tự tính lại.",
+      "notes_html": "<ul><li>Số đã kiểm trên CSV: tỉ lệ thắng sân nhà 2016/17 0,492; 2017/18 0,455; 2018/19 0,476; 2020/21 là 144/380 = 0,379, còn tỉ lệ thắng sân khách 0,403. Phép z hai tỉ lệ: z = −3,24.</li><li>Mùa này không hoàn toàn vắng khán giả: khán giả giới hạn trở lại vào tháng 12/2020 và tháng 5/2021.</li><li>Đoạn đá lại không khán giả cuối mùa 2019/20 không thấy giảm: 0,467 trên 92 trận.</li><li>Mùa có khán giả cũng có lúc thấp: 2015/16 0,413; 2024/25 0,408. Muốn biết 2020/21 là cá biệt hay xu hướng, chạy CUSUM qua mọi mùa.</li><li>Đừng lấy p1 = tỉ lệ thắng sân khách cũ (0,303): tỉ lệ thật nằm giữa H0 và H1, phép kiểm thành tung đồng xu.</li><li>Câu nối cho slide: CUSUM là một SPRT cứ chạm đáy thì bắt đầu lại từ 0.</li><li>Bỏ câu \"huấn luyện viên mới\": cần dữ liệu ngoài, và dính <span class=\"term\">hồi quy về trung bình</span> vì huấn luyện viên thường bị sa thải sau chuỗi trận tệ.</li></ul>"
     }
   ],
   "fit": [
-    { "label": "Ngoại lai", "a": 3, "a_note": "Tỉ số, thẻ, hiệu số bất thường; cả lỗi dữ liệu.", "b": 3, "b_note": "Vòng vào pit, vòng xe an toàn, vòng 1." },
-    { "label": "ANOM", "a": 3, "a_note": "Thẻ vàng mỗi trận theo trọng tài; thắng sân nhà theo đội.", "b": 3, "b_note": "Thời gian dừng pit theo đội đua." },
-    { "label": "CUSUM", "a": 3, "a_note": "Hiệu số bàn thắng từng trận; có bài mẫu Beggs & Bond.", "b": 3, "b_note": "Thời gian từng vòng." },
-    { "label": "SPRT", "a": 3, "a_note": "Thắng/không thắng sau khi đổi huấn luyện viên.", "b": 1, "b_note": "Không có chuỗi có/không tự nhiên." },
-    { "label": "Dữ liệu mới", "a": 3, "a_note": "Có tới mùa gần nhất.", "b": 1, "b_note": "Dừng ở 2024; bù bằng FastF1 hoặc Jolpica." },
-    { "label": "Khán giả Việt", "a": 3, "a_note": "Quen bóng đá Anh.", "b": 2, "b_note": "Ít người theo F1." }
+    {"label": "Ngoại lai", "a": 3, "a_note": "Tỉ số, thẻ, cú sút bất thường; cả lỗi dữ liệu.", "b": 3, "b_note": "Thời gian vòng; vòng vào pit, vòng xe an toàn."},
+    {"label": "ANOM", "a": 3, "a_note": "Tỉ lệ thắng sân nhà theo giải; biến thể: thẻ theo trọng tài.", "b": 3, "b_note": "Thời gian dừng pit theo đội đua."},
+    {"label": "CUSUM", "a": 3, "a_note": "Phần dư so với tỉ lệ cược, từng câu lạc bộ.", "b": 3, "b_note": "Điểm mỗi chặng, hoặc thời gian vòng đã khử xu hướng."},
+    {"label": "SPRT", "a": 3, "a_note": "Mùa 2020/21: thắng sân nhà hay không.", "b": 2, "b_note": "Tay đua có thắng đồng đội từng chặng."},
+    {"label": "Giấy phép", "a": 1, "a_note": "Chỉ cho cá nhân, chỉ để dự đoán; không đưa CSV gốc lên repo công khai.", "b": 2, "b_note": "CC BY-NC-SA: repo công khai phi thương mại được, phải ghi nguồn."},
+    {"label": "Dữ liệu mới", "a": 3, "a_note": "Có tới mùa gần nhất.", "b": 1, "b_note": "Dừng ở 2024; bù bằng FastF1 + Jolpica-F1."},
+    {"label": "Khán giả Việt", "a": 3, "a_note": "Quen bóng đá Anh.", "b": 2, "b_note": "Ít người theo F1."}
   ],
   "pipeline": [
-    { "title": "Nguồn & lineage", "lessons": ["b1"], "detail_html": "Ghi nguồn, giấy phép, ngày tải từng file vào <span class=\"term\">data card</span>; vẽ sơ đồ <span class=\"term\">lineage</span>." },
-    { "title": "Gom & làm sạch", "lessons": ["b3"], "detail_html": "Ghép khoảng 25 file CSV, mỗi mùa một file, cột khác nhau theo mùa. Chuẩn hoá tên đội, tên trọng tài, định dạng ngày." },
-    { "title": "EDA", "lessons": ["b4"], "detail_html": "<span class=\"term\">Box plot</span>, <span class=\"term\">run-sequence plot</span>; tìm ngoại lai và lỗi dữ liệu." },
-    { "title": "Bốn phương pháp", "lessons": [], "detail_html": "Ngoại lai, ANOM, CUSUM, SPRT; công thức tự viết." },
-    { "title": "Hình", "lessons": ["b7", "b8", "b9"], "detail_html": "Biểu đồ quyết định ANOM, biểu đồ CUSUM, hình ngưỡng SPRT." },
-    { "title": "Kể chuyện", "lessons": ["b12"], "detail_html": "Mỗi phương pháp một câu hỏi, một hình, một kết luận." }
+    {"title": "Nguồn & lineage", "lessons": ["b1"], "detail_html": "Ghi nguồn, giấy phép, ngày tải từng file vào <span class=\"term\">data card</span>; vẽ sơ đồ <span class=\"term\">lineage</span>."},
+    {"title": "Gom & làm sạch", "lessons": ["b3"], "detail_html": "Ghép các file CSV mỗi mùa (số cột tăng từ 45 lên 132). Đọc cả hai kiểu ngày. Chuẩn hoá tên đội; gộp tên trọng tài trước khi chạy ANOM."},
+    {"title": "EDA", "lessons": ["b4"], "detail_html": "<span class=\"term\">Box plot</span>, <span class=\"term\">run-sequence plot</span>; tìm ngoại lai và lỗi dữ liệu."},
+    {"title": "Bốn phương pháp", "lessons": [], "detail_html": "Khoá tham số trước, rồi chạy ngoại lai, ANOM, CUSUM, SPRT bằng code tự viết."},
+    {"title": "Hình", "lessons": ["b7", "b8", "b9"], "detail_html": "Biểu đồ quyết định ANOM, biểu đồ CUSUM, hình ngưỡng SPRT."},
+    {"title": "Kể chuyện", "lessons": ["b12"], "detail_html": "Mỗi phương pháp một câu hỏi, một hình, một kết luận."}
   ],
   "team": [
-    { "role": "Trưởng nhóm & kể chuyện", "lessons": ["b12"], "does_html": "Điều phối, mạch chuyện của slide, biên tập báo cáo." },
-    { "role": "Dữ liệu & lineage", "lessons": ["b1", "b3"], "does_html": "Tải, ghép, làm sạch; viết <span class=\"term\">data card</span>, vẽ sơ đồ <span class=\"term\">lineage</span>." },
-    { "role": "EDA & ngoại lai", "lessons": ["b4"], "does_html": "Box plot, run-sequence plot, kiểm định ngoại lai, lỗi dữ liệu." },
-    { "role": "ANOM", "lessons": [], "does_html": "Tự viết ANOM, vẽ <span class=\"term\">biểu đồ quyết định</span> cho trọng tài và cho đội." },
-    { "role": "CUSUM", "lessons": [], "does_html": "<span class=\"term\">CUSUM dạng bảng</span>, chọn <span class=\"term\">k</span> và <span class=\"term\">h</span>, đối chiếu với giobbu/CUSUM, làm lại Beggs &amp; Bond." },
-    { "role": "SPRT", "lessons": [], "does_html": "SPRT Bernoulli cho huấn luyện viên mới: chọn p0, p1, α, β, vẽ hình ngưỡng." },
-    { "role": "Demo Streamlit & tích hợp", "lessons": [], "does_html": "Gói bốn phần vào một app <span class=\"term\">Streamlit</span>; ghép code, giữ repo chạy được từ đầu tới cuối." }
+    {"role": "Trưởng nhóm & kể chuyện", "lessons": ["b12"], "does_html": "Điều phối, mạch chuyện của slide, biên tập báo cáo."},
+    {"role": "Dữ liệu & lineage", "lessons": ["b1", "b3"], "does_html": "Tải, ghép, làm sạch; viết <span class=\"term\">data card</span>, vẽ sơ đồ <span class=\"term\">lineage</span>."},
+    {"role": "EDA & ngoại lai", "lessons": ["b4"], "does_html": "Box plot, run-sequence plot, kiểm định ngoại lai, lỗi dữ liệu."},
+    {"role": "ANOM", "lessons": [], "does_html": "Tự viết ANOM cho tỉ lệ thắng sân nhà theo giải; biến thể thẻ theo trọng tài; vẽ <span class=\"term\">biểu đồ quyết định</span>."},
+    {"role": "CUSUM", "lessons": [], "does_html": "CUSUM trên phần dư so với tỉ lệ cược; chọn <span class=\"term\">k</span> và <span class=\"term\">h</span> bằng mô phỏng ARL; đối chiếu với giobbu/CUSUM."},
+    {"role": "SPRT", "lessons": [], "does_html": "SPRT cho mùa 2020/21: chọn p0, p1, α, β trước khi xem dữ liệu; vẽ hình ngưỡng. Làm cặp với người làm CUSUM: CUSUM là chuỗi SPRT."},
+    {"role": "Demo Streamlit & tích hợp", "lessons": [], "does_html": "Gói bốn phần vào một app <span class=\"term\">Streamlit</span>; ghép code, giữ repo chạy được từ đầu tới cuối."}
   ],
   "refs": [
-    { "name": "W3C PROV Overview (W3C Note, 30/04/2013)", "url": "https://www.w3.org/TR/prov-overview/" },
-    { "name": "OpenLineage docs", "url": "https://openlineage.io/docs/" },
-    { "name": "Herschel, Diestelkämper, Ben Lahmar (2017): A survey on provenance: What for? What form? What from? VLDB Journal 26(6):881–906", "url": "https://doi.org/10.1007/s00778-017-0486-1" },
-    { "name": "Bracewell (1999): luận văn thạc sĩ, Đại học Massey, CUSUM/EWMA và ngoại lai trên điểm đánh bóng cricket", "url": "https://mro.massey.ac.nz/server/api/core/bitstreams/ca5c1f97-5a04-472b-a705-195cffb0ed29/content" }
+    {"name": "W3C PROV Overview (W3C Note, 30/04/2013)", "url": "https://www.w3.org/TR/prov-overview/"},
+    {"name": "OpenLineage docs", "url": "https://openlineage.io/docs/"},
+    {"name": "Herschel, Diestelkämper, Ben Lahmar (2017): A survey on provenance: What for? What form? What from? VLDB Journal 26(6):881–906", "url": "https://doi.org/10.1007/s00778-017-0486-1"},
+    {"name": "Coursera, Wesleyan University: Data Management and Visualization", "url": "https://www.coursera.org/learn/data-visualization"},
+    {"name": "Bracewell (1999): luận văn thạc sĩ, Đại học Massey, CUSUM/EWMA và ngoại lai trên điểm đánh bóng cricket", "url": "https://mro.massey.ac.nz/server/api/core/bitstreams/ca5c1f97-5a04-472b-a705-195cffb0ed29/content"},
+    {"name": "Montagna & Hopker (2018): A Bayesian approach for the use of athlete performance data within anti-doping. Frontiers in Physiology 9:884", "url": "https://doi.org/10.3389/fphys.2018.00884"},
+    {"name": "Miles (1984): Symmetric sequential analysis: the efficiencies of sports scoring systems (with particular reference to those of tennis). JRSS B 46(1):93–108", "url": "https://doi.org/10.1111/j.2517-6161.1984.tb01281.x"},
+    {"name": "NIST/SEMATECH e-Handbook 1.3.5.17.1: Grubbs' test", "url": "https://www.itl.nist.gov/div898/handbook/eda/section3/eda35h1.htm"},
+    {"name": "NIST/SEMATECH e-Handbook 1.3.5.17.3: Generalized ESD test", "url": "https://www.itl.nist.gov/div898/handbook/eda/section3/eda35h3.htm"}
   ],
   "glossary": [
-    { "id": "outlier", "term": "Ngoại lai", "full": "outlier", "aliases": ["outlier", "ngoại lai"], "def": "Giá trị nằm xa hẳn phần lớn dữ liệu. Có thể là chuyện lạ thật (một trận 9 bàn) hoặc lỗi nhập liệu." },
-    { "id": "grubbs", "term": "Grubbs", "full": "kiểm định Grubbs", "def": "Phép thử xem giá trị xa trung bình nhất có phải ngoại lai không, với giả định dữ liệu gần phân phối chuẩn. Mỗi lần chỉ xét một điểm." },
-    { "id": "z-score", "term": "z-score", "def": "Số độ lệch chuẩn mà một giá trị cách trung bình. Trị tuyệt đối lớn hơn 3 thường bị coi là lạ." },
-    { "id": "iqr", "term": "IQR", "full": "khoảng tứ phân vị", "def": "Q3 trừ Q1: độ rộng của nửa dữ liệu nằm giữa. Rào Tukey đặt ở Q1 − 1,5·IQR và Q3 + 1,5·IQR; điểm ngoài rào là ứng viên ngoại lai." },
-    { "id": "box-plot", "term": "Box plot", "full": "biểu đồ hộp", "aliases": ["box plot"], "def": "Hộp gói nửa dữ liệu nằm giữa, vạch ngang ở trung vị, râu kéo tới điểm xa nhất còn trong rào; chấm ngoài râu là ngoại lai." },
-    { "id": "mad", "term": "MAD", "full": "độ lệch tuyệt đối trung vị", "def": "Trung vị của khoảng cách từ mỗi điểm tới trung vị. Ít bị chính ngoại lai kéo lệch như độ lệch chuẩn." },
-    { "id": "isolation-forest", "term": "Isolation Forest", "def": "Thuật toán máy học cắt dữ liệu bằng các nhát ngẫu nhiên; điểm bị tách riêng sau ít nhát là điểm lạ. Không cần giả định phân phối." },
-    { "id": "anom", "term": "ANOM", "full": "analysis of means, phân tích trung bình", "def": "So trung bình của từng nhóm với trung bình chung. Nhóm nào nằm ngoài hai vạch giới hạn là khác thường, nhìn thẳng trên hình." },
-    { "id": "anova", "term": "ANOVA", "full": "phân tích phương sai", "def": "Chỉ trả lời \"các nhóm có khác nhau không\" bằng một giá trị p; không chỉ ra nhóm nào khác." },
-    { "id": "udl-ldl", "term": "UDL / LDL", "full": "giới hạn quyết định trên / dưới", "aliases": ["udl", "ldl"], "def": "Hai vạch của biểu đồ ANOM, đặt quanh trung bình chung. Trung bình của một nhóm nằm ngoài hai vạch là khác trung bình chung có ý nghĩa thống kê." },
-    { "id": "decision-chart", "term": "Biểu đồ quyết định", "full": "ANOM decision chart", "aliases": ["biểu đồ quyết định"], "def": "Hình của ANOM: mỗi nhóm một điểm, một vạch trung bình chung, hai vạch UDL và LDL." },
-    { "id": "spc", "term": "SPC", "full": "statistical process control, kiểm soát quá trình bằng thống kê", "def": "Bộ công cụ theo dõi một quá trình theo thời gian để biết khi nào nó lệch khỏi bình thường. Sinh ra trong nhà máy, nay dùng cả trong y tế và thể thao." },
-    { "id": "control-chart", "term": "Biểu đồ kiểm soát", "full": "control chart", "aliases": ["biểu đồ kiểm soát"], "def": "Đồ thị một chỉ số theo thời gian kèm vạch giới hạn; điểm vượt vạch báo quá trình có thể đã đổi." },
-    { "id": "i-mr", "term": "Biểu đồ I-MR", "full": "individuals / moving range", "aliases": ["biểu đồ i-mr", "i-mr"], "def": "Cặp biểu đồ kiểm soát: một cho từng giá trị đơn lẻ (I), một cho chênh lệch giữa hai giá trị liên tiếp (MR)." },
-    { "id": "cusum", "term": "CUSUM", "full": "cumulative sum, tổng tích luỹ", "def": "Cộng dồn phần lệch của từng quan sát so với mức mục tiêu. Lệch nhỏ mà kéo dài sẽ dồn lên và vượt ngưỡng h, nên CUSUM bắt được thay đổi nhỏ sớm hơn biểu đồ thường." },
-    { "id": "tabular-cusum", "term": "CUSUM dạng bảng", "full": "tabular CUSUM", "aliases": ["cusum dạng bảng"], "def": "Hai tổng S_hi và S_lo, không bao giờ xuống dưới 0: S_hi theo dõi lệch lên, S_lo theo dõi lệch xuống. Tổng nào vượt h thì báo." },
-    { "id": "k", "term": "k", "full": "độ chùng (allowance)", "def": "Phần lệch CUSUM bỏ qua ở mỗi bước, thường bằng nửa độ lệch muốn bắt (δσ/2). Nhờ nó, nhiễu nhỏ không dồn lên." },
-    { "id": "h", "term": "h", "full": "ngưỡng quyết định của CUSUM", "def": "Mức mà tổng CUSUM vượt qua thì báo động, thường 4–5 lần độ lệch chuẩn. h lớn thì ít báo nhầm nhưng báo chậm." },
-    { "id": "arl", "term": "ARL", "full": "average run length, độ dài chạy trung bình", "def": "Trung bình bao nhiêu quan sát thì biểu đồ báo động. Muốn ARL dài khi không có gì đổi (ít báo nhầm) và ngắn khi đã đổi (bắt nhanh); chọn k và h để cân hai điều ấy." },
-    { "id": "ewma", "term": "EWMA", "full": "exponentially weighted moving average", "def": "Trung bình trượt có trọng số mũ: quan sát mới nặng ký hơn quan sát cũ. Một loại biểu đồ kiểm soát họ hàng với CUSUM." },
-    { "id": "page-hinkley", "term": "Page-Hinkley", "def": "Một biến thể của CUSUM, phát hiện điểm đổi của trung bình trong luồng dữ liệu đang chảy." },
-    { "id": "change-point", "term": "Điểm đổi", "full": "change point", "aliases": ["điểm đổi", "change point", "change point detection"], "def": "Thời điểm tính chất của chuỗi số liệu (trung bình, phương sai) đổi. Phát hiện điểm đổi là đi tìm các thời điểm ấy." },
-    { "id": "structural-break", "term": "Gãy cấu trúc", "full": "structural break", "aliases": ["gãy cấu trúc"], "def": "Thời điểm quan hệ trong một mô hình hồi quy đổi hẳn. Hàm breaks_cusumolsresid của statsmodels kiểm điều này trên phần dư hồi quy, không phải biểu đồ kiểm soát." },
-    { "id": "sprt", "term": "SPRT", "full": "sequential probability ratio test, kiểm định tỉ số hợp lý tuần tự", "def": "Phép kiểm của Wald: sau mỗi quan sát mới, cộng thêm bằng chứng và hỏi \"đủ để kết luận chưa?\". Dừng ngay khi chạm một trong hai ngưỡng, nên thường cần ít dữ liệu hơn phép kiểm cỡ mẫu cố định." },
-    { "id": "llr", "term": "LLR", "full": "log-likelihood ratio, log tỉ số hợp lý", "def": "Một quan sát ủng hộ H1 hơn H0 bao nhiêu, đo bằng log. Dương là nghiêng về H1, âm là nghiêng về H0; cộng dồn qua các quan sát là đường đi của SPRT." },
-    { "id": "h0-h1", "term": "H0 / H1", "full": "giả thuyết không / giả thuyết đối", "aliases": ["h0", "h1"], "def": "Hai giả thuyết đặt cạnh nhau. Ví dụ H0: tỉ lệ thắng vẫn như cũ; H1: tỉ lệ thắng đã tăng." },
-    { "id": "p0-p1", "term": "p0 / p1", "aliases": ["p0", "p1"], "def": "Trong SPRT Bernoulli: tỉ lệ \"như cũ\" (p0) và tỉ lệ \"đã tốt lên\" (p1) cần phân biệt. Chọn trước khi xem dữ liệu." },
-    { "id": "alpha", "term": "α", "full": "alpha, sai lầm loại I", "aliases": ["alpha"], "def": "Xác suất báo nhầm: kết luận \"đã đổi\" trong khi thực ra không đổi. Thường đặt 0,05." },
-    { "id": "beta", "term": "β", "full": "beta, sai lầm loại II", "aliases": ["beta"], "def": "Xác suất bỏ sót: kết luận \"không đổi\" trong khi thực ra đã đổi. Thường đặt 0,1–0,2." },
-    { "id": "bernoulli", "term": "Bernoulli", "def": "Biến chỉ có hai kết quả, 1 hoặc 0: thắng hay không thắng, ném trúng hay trượt." },
-    { "id": "risk-adjusted", "term": "Hiệu chỉnh rủi ro", "full": "risk adjustment", "aliases": ["hiệu chỉnh rủi ro"], "def": "Tính đến độ khó của từng ca trước khi chấm: bệnh nhân nặng tử vong khác bệnh nhân nhẹ tử vong, thua đội mạnh khác thua đội yếu." },
-    { "id": "lineage", "term": "Data lineage", "full": "dòng dõi dữ liệu", "aliases": ["lineage", "data lineage"], "def": "Bản đồ dữ liệu đi từ đâu, qua những bước biến đổi nào, tới đâu. Trả lời câu hỏi: con số này tính từ bảng nào, bằng bước nào?" },
-    { "id": "provenance", "term": "Data provenance", "full": "nguồn gốc dữ liệu", "aliases": ["provenance", "data provenance"], "def": "Hồ sơ ai tạo ra dữ liệu, khi nào, bằng quy trình nào. Gần với lineage nhưng nặng về xuất xứ và bằng chứng." },
-    { "id": "w3c-prov", "term": "W3C PROV", "def": "Bộ chuẩn của W3C mô tả provenance bằng ba khái niệm: thực thể (entity), hoạt động (activity) và tác nhân (agent)." },
-    { "id": "openlineage", "term": "OpenLineage", "def": "Chuẩn mở để các công cụ dữ liệu như Airflow, Spark, dbt tự ghi lineage theo cùng một định dạng." },
-    { "id": "governance", "term": "Data governance", "full": "quản trị dữ liệu", "aliases": ["governance", "quản trị dữ liệu"], "def": "Bộ luật, vai trò và quy trình quyết định ai được làm gì với dữ liệu. Bài 1 của môn." },
-    { "id": "metadata", "term": "Quản lý metadata", "full": "metadata management", "aliases": ["metadata", "metadata management"], "def": "Quản lý \"dữ liệu về dữ liệu\": tên cột, nghĩa, nguồn, chủ sở hữu, lineage." },
-    { "id": "dmbok", "term": "DAMA-DMBOK", "def": "Khung kiến thức quản lý dữ liệu của hiệp hội DAMA. Chia nghề quản lý dữ liệu thành các mảng: governance, chất lượng, metadata, lưu trữ…" },
-    { "id": "data-card", "term": "Data card", "aliases": ["data card"], "def": "Một trang tóm tắt bộ dữ liệu: nguồn, giấy phép, giai đoạn, số dòng, nghĩa các cột, cách làm sạch, giới hạn." },
-    { "id": "nifi", "term": "Apache NiFi", "aliases": ["nifi"], "def": "Công cụ kéo thả để chuyển và biến đổi dữ liệu theo luồng; tự ghi provenance của từng gói dữ liệu. Bài 3 của môn." },
-    { "id": "gpl", "term": "GPL", "full": "GNU General Public License", "def": "Giấy phép mã nguồn mở có tính lây: chép code GPL vào dự án thì cả dự án phải phát hành theo GPL." },
-    { "id": "mit", "term": "MIT", "full": "giấy phép MIT", "def": "Giấy phép mã nguồn mở rất thoáng: được dùng, sửa, chép, chỉ cần giữ dòng ghi tác giả và giấy phép." },
-    { "id": "bsd", "term": "BSD-2", "full": "giấy phép BSD hai điều khoản", "aliases": ["bsd"], "def": "Giấy phép thoáng, gần giống MIT." },
-    { "id": "cc0", "term": "CC0", "full": "Creative Commons Zero", "def": "Tác giả từ bỏ mọi quyền, dữ liệu thành tài sản công: dùng tự do, không bắt ghi nguồn. Vẫn nên ghi." },
-    { "id": "cc-by-nc-nd", "term": "CC BY-NC-ND", "def": "Được chia sẻ nếu ghi tác giả; không dùng thương mại; không sửa rồi phát hành lại." },
-    { "id": "no-license", "term": "Không có giấy phép", "aliases": ["không có giấy phép"], "def": "Mặc định mọi quyền thuộc tác giả: xem được, nhưng về luật không được chép dùng." },
-    { "id": "preprint", "term": "Preprint", "full": "bản thảo đăng trước", "def": "Bản thảo bài báo đăng công khai trước hoặc ngoài quy trình bình duyệt. Đọc được, nhưng chưa ai thẩm định." },
-    { "id": "peer-review", "term": "Bình duyệt", "full": "peer review", "aliases": ["bình duyệt", "peer-reviewed"], "def": "Chuyên gia độc lập đọc và chấm bài trước khi tạp chí đăng. Bài đã bình duyệt đáng tin hơn bài chưa." },
-    { "id": "open-access", "term": "Truy cập mở", "full": "open access", "aliases": ["truy cập mở"], "def": "Bài báo đọc miễn phí, không cần mua hay đăng nhập." },
-    { "id": "arxiv", "term": "arXiv", "def": "Kho preprint miễn phí. Bài trên đó chưa chắc đã qua bình duyệt." },
-    { "id": "paywall", "term": "Tường phí", "full": "paywall", "aliases": ["tường phí"], "def": "Phần nội dung phải trả tiền hay đăng ký mới đọc được." },
-    { "id": "kaggle", "term": "Kaggle", "def": "Trang chia sẻ bộ dữ liệu và tổ chức cuộc thi máy học." },
-    { "id": "ergast", "term": "Ergast", "def": "API dữ liệu F1 miễn phí, đã đóng cuối 2024. Tên miền cũ nay chứa nội dung không liên quan." },
-    { "id": "jolpica", "term": "Jolpica-F1", "aliases": ["jolpica"], "def": "Dự án cộng đồng tiếp nối Ergast, cùng kiểu API, ở api.jolpi.ca." },
-    { "id": "fastf1", "term": "FastF1", "def": "Thư viện Python giấy phép MIT, tải dữ liệu F1 tới từng vòng, có cả các mùa mới." },
-    { "id": "csv", "term": "CSV", "def": "File bảng dạng chữ, các cột cách nhau bằng dấu phẩy; mở được bằng Excel và pandas." },
-    { "id": "parquet", "term": "Parquet", "aliases": ["parquet"], "def": "Định dạng file bảng lưu theo cột, nén tốt, đọc nhanh; hay dùng trong đường ống dữ liệu." },
-    { "id": "streamlit", "term": "Streamlit", "def": "Thư viện Python dựng web app dữ liệu chỉ bằng một script: ô chọn, thanh trượt, biểu đồ cập nhật ngay." },
-    { "id": "pypi", "term": "PyPI", "def": "Kho gói Python chính thức, nơi pip install tải về. Tên gói không bảo đảm nội dung đúng như tên." },
-    { "id": "cran", "term": "CRAN", "def": "Kho gói chính thức của R. Gói bị \"archived\" là đã bị gỡ khỏi kho, không cài thẳng bằng install.packages được nữa." },
-    { "id": "eda", "term": "EDA", "full": "exploratory data analysis, phân tích khám phá", "def": "Nhìn số tóm tắt và vẽ hình để hiểu dữ liệu trước khi kiểm định. Bài 4 của môn." },
-    { "id": "run-sequence", "term": "Run-sequence plot", "aliases": ["run-sequence plot"], "def": "Vẽ giá trị theo đúng thứ tự thời gian để thấy xu hướng, bước nhảy, chu kỳ." },
-    { "id": "natural-experiment", "term": "Thí nghiệm tự nhiên", "full": "natural experiment", "aliases": ["thí nghiệm tự nhiên"], "def": "Một biến cố bên ngoài tạo ra phép so sánh giống thí nghiệm mà không ai sắp đặt. Mùa 2020/21 đá không khán giả là một ví dụ." },
-    { "id": "home-advantage", "term": "Lợi thế sân nhà", "full": "home advantage", "aliases": ["lợi thế sân nhà"], "def": "Đội chủ nhà thắng nhiều hơn khi đá sân khách. Khán giả được cho là một phần lý do; đây là điều nhóm có thể kiểm." },
-    { "id": "park-factor", "term": "Park factor", "aliases": ["park factor"], "def": "Chỉ số bóng chày đo một sân làm tăng hay giảm số điểm ghi được so với sân trung bình." },
-    { "id": "elo", "term": "Elo", "def": "Hệ điểm sức mạnh tương đối. Trong thử engine cờ, elo0 và elo1 đóng vai p0 và p1 của SPRT." },
-    { "id": "odds", "term": "Tỉ lệ cược", "full": "odds", "aliases": ["tỉ lệ cược"], "def": "Giá nhà cái đưa ra cho từng kết quả; quy đổi được thành xác suất nhà cái ngầm tin." },
-    { "id": "bwf", "term": "BWF", "full": "Badminton World Federation", "def": "Liên đoàn cầu lông thế giới." },
-    { "id": "expert-system", "term": "Hệ chuyên gia", "full": "expert system", "aliases": ["hệ chuyên gia"], "def": "Chương trình ra quyết định theo luật và tri thức do con người đưa vào. EXSPRT ghép nó với SPRT." },
-    { "id": "matlab", "term": "MATLAB", "def": "Phần mềm tính toán trả phí, có ngôn ngữ riêng; code của nó không chạy được trong Python." },
-    { "id": "gnss", "term": "GNSS", "full": "hệ thống định vị vệ tinh toàn cầu", "def": "Tên chung của GPS, Galileo, GLONASS, BeiDou." },
-    { "id": "density-ratio", "term": "Tỉ số mật độ", "full": "density ratio", "aliases": ["tỉ số mật độ"], "def": "Ước lượng tỉ số giữa phân phối trước và sau một thời điểm để tìm điểm đổi. Mạnh, nhưng nặng so với môn này." },
-    { "id": "drift", "term": "Drift", "full": "trôi dữ liệu", "def": "Phân phối của dữ liệu mới khác dữ liệu lúc huấn luyện mô hình." },
-    { "id": "psi", "term": "PSI", "full": "population stability index", "def": "Chỉ số so hai phân phối theo từng khoảng giá trị, hay dùng để đo drift." },
-    { "id": "synthetic", "term": "Dữ liệu giả lập", "full": "synthetic data", "aliases": ["dữ liệu giả lập", "giả lập"], "def": "Số do máy sinh ra, không đo từ thực tế. Không dùng để kết luận điều gì về thế giới thật." },
-    { "id": "random-forest", "term": "Random Forest", "def": "Mô hình máy học gộp phiếu của nhiều cây quyết định." },
-    { "id": "data-leakage", "term": "Rò rỉ dữ liệu", "full": "data leakage", "aliases": ["rò rỉ dữ liệu", "data leakage"], "def": "Mô hình được học từ thông tin mà lúc dự đoán thật chưa có, ví dụ thống kê của chính trận đang đoán. Độ chính xác đo được vì thế đẹp giả." },
-    { "id": "mlflow", "term": "MLflow", "def": "Công cụ ghi lại mỗi lần huấn luyện: tham số, độ chính xác, file mô hình. Ghi thêm bộ dữ liệu đã dùng thì thành lineage của mô hình." },
-    { "id": "mermaid", "term": "Mermaid", "def": "Cú pháp chữ để vẽ sơ đồ; GitHub tự vẽ thành hình trong README." },
-    { "id": "dvc", "term": "DVC", "full": "Data Version Control", "def": "Công cụ quản lý phiên bản cho file dữ liệu như git làm với code, để biết mô hình nào học từ bản dữ liệu nào." },
-    { "id": "fastapi", "term": "FastAPI", "def": "Thư viện Python dựng API web; ở đây dùng để trả dự đoán của mô hình." }
+    {"id": "outlier", "term": "Ngoại lai", "full": "outlier", "aliases": ["outlier", "ngoại lai"], "def": "Giá trị nằm xa hẳn phần lớn dữ liệu. Có thể là chuyện lạ thật (một trận 9 bàn) hoặc lỗi nhập liệu."},
+    {"id": "grubbs", "term": "Grubbs", "full": "kiểm định Grubbs", "def": "Phép thử xem giá trị xa trung bình nhất có phải ngoại lai không. Giả định dữ liệu gần phân phối chuẩn, nên không hợp với số đếm như số bàn, số thẻ. Mỗi lần chỉ xét một điểm."},
+    {"id": "z-score", "term": "z-score", "def": "Số độ lệch chuẩn mà một giá trị cách trung bình. Trị tuyệt đối lớn hơn 3 thường bị coi là lạ. Bản sửa (modified z-score) dùng trung vị và MAD, ngưỡng 3,5."},
+    {"id": "iqr", "term": "IQR", "full": "khoảng tứ phân vị", "def": "Q3 trừ Q1: độ rộng của nửa dữ liệu nằm giữa. Rào Tukey đặt ở Q1 − 1,5·IQR và Q3 + 1,5·IQR; điểm ngoài rào là ứng viên ngoại lai."},
+    {"id": "box-plot", "term": "Box plot", "full": "biểu đồ hộp", "aliases": ["box plot"], "def": "Hộp gói nửa dữ liệu nằm giữa, vạch ngang ở trung vị, râu kéo tới điểm xa nhất còn trong rào; chấm ngoài râu là ngoại lai."},
+    {"id": "mad", "term": "MAD", "full": "độ lệch tuyệt đối trung vị", "def": "Trung vị của khoảng cách từ mỗi điểm tới trung vị. Ít bị chính ngoại lai kéo lệch như độ lệch chuẩn."},
+    {"id": "isolation-forest", "term": "Isolation Forest", "def": "Thuật toán máy học cắt dữ liệu bằng các nhát ngẫu nhiên; điểm bị tách riêng sau ít nhát là điểm lạ. Không cần giả định phân phối."},
+    {"id": "anom", "term": "ANOM", "full": "analysis of means, phân tích trung bình", "def": "So trung bình của từng nhóm với trung bình chung. Nhóm nào nằm ngoài hai vạch giới hạn là khác thường, nhìn thẳng trên hình."},
+    {"id": "anova", "term": "ANOVA", "full": "phân tích phương sai", "def": "Chỉ trả lời \"các nhóm có khác nhau không\" bằng một giá trị p; không chỉ ra nhóm nào khác."},
+    {"id": "udl-ldl", "term": "UDL / LDL", "full": "giới hạn quyết định trên / dưới", "aliases": ["udl", "ldl"], "def": "Hai vạch của biểu đồ ANOM, đặt quanh trung bình chung. Trung bình của một nhóm nằm ngoài hai vạch là khác trung bình chung có ý nghĩa thống kê."},
+    {"id": "decision-chart", "term": "Biểu đồ quyết định", "full": "ANOM decision chart", "aliases": ["biểu đồ quyết định"], "def": "Hình của ANOM: mỗi nhóm một điểm, một vạch trung bình chung, hai vạch UDL và LDL."},
+    {"id": "spc", "term": "SPC", "full": "statistical process control, kiểm soát quá trình bằng thống kê", "def": "Bộ công cụ theo dõi một quá trình theo thời gian để biết khi nào nó lệch khỏi bình thường. Sinh ra trong nhà máy, nay dùng cả trong y tế và thể thao."},
+    {"id": "control-chart", "term": "Biểu đồ kiểm soát", "full": "control chart", "aliases": ["biểu đồ kiểm soát"], "def": "Đồ thị một chỉ số theo thời gian kèm vạch giới hạn; điểm vượt vạch báo quá trình có thể đã đổi."},
+    {"id": "i-mr", "term": "Biểu đồ I-MR", "full": "individuals / moving range", "aliases": ["biểu đồ i-mr", "i-mr"], "def": "Cặp biểu đồ kiểm soát: một cho từng giá trị đơn lẻ (I), một cho chênh lệch giữa hai giá trị liên tiếp (MR)."},
+    {"id": "cusum", "term": "CUSUM", "full": "cumulative sum, tổng tích luỹ", "def": "Cộng dồn phần lệch của từng quan sát so với mức mục tiêu. Lệch nhỏ mà kéo dài sẽ dồn lên và vượt ngưỡng h, nên CUSUM bắt được thay đổi nhỏ sớm hơn biểu đồ thường."},
+    {"id": "tabular-cusum", "term": "CUSUM dạng bảng", "full": "tabular CUSUM", "aliases": ["cusum dạng bảng"], "def": "Hai tổng S_hi và S_lo, không bao giờ xuống dưới 0: S_hi theo dõi lệch lên, S_lo theo dõi lệch xuống. Tổng nào vượt h thì báo."},
+    {"id": "k", "term": "k", "full": "độ chùng (allowance)", "def": "Phần lệch CUSUM bỏ qua ở mỗi bước, thường bằng nửa độ lệch muốn bắt (δσ/2). Nhờ nó, nhiễu nhỏ không dồn lên."},
+    {"id": "h", "term": "h", "full": "ngưỡng quyết định của CUSUM", "def": "Mức mà tổng CUSUM vượt qua thì báo động, thường 4–5 lần độ lệch chuẩn. h lớn thì ít báo nhầm nhưng báo chậm."},
+    {"id": "arl", "term": "ARL", "full": "average run length, độ dài chạy trung bình", "def": "Trung bình bao nhiêu quan sát thì biểu đồ báo động. Muốn ARL dài khi không có gì đổi (ít báo nhầm) và ngắn khi đã đổi (bắt nhanh); chọn k và h để cân hai điều ấy."},
+    {"id": "ewma", "term": "EWMA", "full": "exponentially weighted moving average", "def": "Trung bình trượt có trọng số mũ: quan sát mới nặng ký hơn quan sát cũ. Một loại biểu đồ kiểm soát họ hàng với CUSUM."},
+    {"id": "page-hinkley", "term": "Page-Hinkley", "def": "Một biến thể của CUSUM, phát hiện điểm đổi của trung bình trong luồng dữ liệu đang chảy."},
+    {"id": "change-point", "term": "Điểm đổi", "full": "change point", "aliases": ["điểm đổi", "change point", "change point detection"], "def": "Thời điểm tính chất của chuỗi số liệu (trung bình, phương sai) đổi. Phát hiện điểm đổi là đi tìm các thời điểm ấy."},
+    {"id": "structural-break", "term": "Gãy cấu trúc", "full": "structural break", "aliases": ["gãy cấu trúc"], "def": "Thời điểm quan hệ trong một mô hình hồi quy đổi hẳn. Hàm breaks_cusumolsresid của statsmodels kiểm điều này trên phần dư hồi quy, không phải biểu đồ kiểm soát."},
+    {"id": "sprt", "term": "SPRT", "full": "sequential probability ratio test, kiểm định tỉ số hợp lý tuần tự", "def": "Phép kiểm của Wald: sau mỗi quan sát mới, cộng thêm bằng chứng và hỏi \"đủ để kết luận chưa?\". Dừng ngay khi chạm một trong hai ngưỡng, nên thường cần ít dữ liệu hơn phép kiểm cỡ mẫu cố định."},
+    {"id": "llr", "term": "LLR", "full": "log-likelihood ratio, log tỉ số hợp lý", "def": "Một quan sát ủng hộ H1 hơn H0 bao nhiêu, đo bằng log. Dương là nghiêng về H1, âm là nghiêng về H0; cộng dồn qua các quan sát là đường đi của SPRT."},
+    {"id": "h0-h1", "term": "H0 / H1", "full": "giả thuyết không / giả thuyết đối", "aliases": ["h0", "h1"], "def": "Hai giả thuyết đặt cạnh nhau. Ví dụ H0: tỉ lệ thắng vẫn như cũ; H1: tỉ lệ thắng đã tăng."},
+    {"id": "p0-p1", "term": "p0 / p1", "aliases": ["p0", "p1"], "def": "Trong SPRT Bernoulli: tỉ lệ \"như cũ\" (p0) và tỉ lệ \"đã tốt lên\" (p1) cần phân biệt. Chọn trước khi xem dữ liệu."},
+    {"id": "alpha", "term": "α", "full": "alpha, sai lầm loại I", "aliases": ["alpha"], "def": "Xác suất báo nhầm: kết luận \"đã đổi\" trong khi thực ra không đổi. Thường đặt 0,05."},
+    {"id": "beta", "term": "β", "full": "beta, sai lầm loại II", "aliases": ["beta"], "def": "Xác suất bỏ sót: kết luận \"không đổi\" trong khi thực ra đã đổi. Thường đặt 0,1–0,2."},
+    {"id": "bernoulli", "term": "Bernoulli", "def": "Biến chỉ có hai kết quả, 1 hoặc 0: thắng hay không thắng, ném trúng hay trượt."},
+    {"id": "risk-adjusted", "term": "Hiệu chỉnh rủi ro", "full": "risk adjustment", "aliases": ["hiệu chỉnh rủi ro"], "def": "Tính đến độ khó của từng ca trước khi chấm: bệnh nhân nặng tử vong khác bệnh nhân nhẹ tử vong, thua đội mạnh khác thua đội yếu."},
+    {"id": "lineage", "term": "Data lineage", "full": "dòng dõi dữ liệu", "aliases": ["lineage", "data lineage"], "def": "Bản đồ dữ liệu đi từ đâu, qua những bước biến đổi nào, tới đâu. Trả lời câu hỏi: con số này tính từ bảng nào, bằng bước nào?"},
+    {"id": "provenance", "term": "Data provenance", "full": "nguồn gốc dữ liệu", "aliases": ["provenance", "data provenance"], "def": "Hồ sơ ai tạo ra dữ liệu, khi nào, bằng quy trình nào. Gần với lineage nhưng nặng về xuất xứ và bằng chứng."},
+    {"id": "w3c-prov", "term": "W3C PROV", "def": "Bộ chuẩn của W3C mô tả provenance bằng ba khái niệm: thực thể (entity), hoạt động (activity) và tác nhân (agent)."},
+    {"id": "openlineage", "term": "OpenLineage", "def": "Chuẩn mở để các công cụ dữ liệu như Airflow, Spark, dbt tự ghi lineage theo cùng một định dạng."},
+    {"id": "governance", "term": "Data governance", "full": "quản trị dữ liệu", "aliases": ["governance", "quản trị dữ liệu"], "def": "Bộ luật, vai trò và quy trình quyết định ai được làm gì với dữ liệu. Bài 1 của môn."},
+    {"id": "metadata", "term": "Quản lý metadata", "full": "metadata management", "aliases": ["metadata", "metadata management"], "def": "Quản lý \"dữ liệu về dữ liệu\": tên cột, nghĩa, nguồn, chủ sở hữu, lineage."},
+    {"id": "dmbok", "term": "DAMA-DMBOK", "def": "Khung kiến thức quản lý dữ liệu của hiệp hội DAMA. Chia nghề quản lý dữ liệu thành các mảng: governance, chất lượng, metadata, lưu trữ…"},
+    {"id": "data-card", "term": "Data card", "aliases": ["data card"], "def": "Một trang tóm tắt bộ dữ liệu: nguồn, giấy phép, giai đoạn, số dòng, nghĩa các cột, cách làm sạch, giới hạn."},
+    {"id": "nifi", "term": "Apache NiFi", "aliases": ["nifi"], "def": "Công cụ kéo thả để chuyển và biến đổi dữ liệu theo luồng; tự ghi provenance của từng gói dữ liệu. Bài 3 của môn."},
+    {"id": "gpl", "term": "GPL", "full": "GNU General Public License", "def": "Giấy phép mã nguồn mở có tính lây: chép code GPL vào dự án thì cả dự án phải phát hành theo GPL."},
+    {"id": "mit", "term": "MIT", "full": "giấy phép MIT", "def": "Giấy phép mã nguồn mở rất thoáng: được dùng, sửa, chép, chỉ cần giữ dòng ghi tác giả và giấy phép."},
+    {"id": "bsd", "term": "BSD-2", "full": "giấy phép BSD hai điều khoản", "aliases": ["bsd"], "def": "Giấy phép thoáng, gần giống MIT."},
+    {"id": "cc0", "term": "CC0", "full": "Creative Commons Zero", "def": "Tác giả từ bỏ mọi quyền, dữ liệu thành tài sản công: dùng tự do, không bắt ghi nguồn. Vẫn nên ghi."},
+    {"id": "cc-by-nc-nd", "term": "CC BY-NC-ND", "def": "Được chia sẻ nếu ghi tác giả; không dùng thương mại; không sửa rồi phát hành lại."},
+    {"id": "no-license", "term": "Không có giấy phép", "aliases": ["không có giấy phép"], "def": "Mặc định mọi quyền thuộc tác giả: xem được, nhưng về luật không được chép dùng."},
+    {"id": "preprint", "term": "Preprint", "full": "bản thảo đăng trước", "def": "Bản thảo bài báo đăng công khai trước hoặc ngoài quy trình bình duyệt. Đọc được, nhưng chưa ai thẩm định."},
+    {"id": "peer-review", "term": "Bình duyệt", "full": "peer review", "aliases": ["bình duyệt", "peer-reviewed"], "def": "Chuyên gia độc lập đọc và chấm bài trước khi tạp chí đăng. Bài đã bình duyệt đáng tin hơn bài chưa."},
+    {"id": "open-access", "term": "Truy cập mở", "full": "open access", "aliases": ["truy cập mở"], "def": "Bài báo đọc miễn phí, không cần mua hay đăng nhập."},
+    {"id": "arxiv", "term": "arXiv", "def": "Kho preprint miễn phí. Bài trên đó chưa chắc đã qua bình duyệt."},
+    {"id": "paywall", "term": "Tường phí", "full": "paywall", "aliases": ["tường phí"], "def": "Phần nội dung phải trả tiền hay đăng ký mới đọc được."},
+    {"id": "kaggle", "term": "Kaggle", "def": "Trang chia sẻ bộ dữ liệu và tổ chức cuộc thi máy học."},
+    {"id": "ergast", "term": "Ergast", "def": "API dữ liệu F1 miễn phí, đã tắt đầu năm 2025 (theo tài liệu FastF1); Jolpica-F1 thay thế. Tên miền cũ nay chứa nội dung không liên quan."},
+    {"id": "jolpica", "term": "Jolpica-F1", "aliases": ["jolpica"], "def": "Dự án cộng đồng tiếp nối Ergast, cùng kiểu API, ở api.jolpi.ca. Dữ liệu theo CC BY-NC-SA 4.0, có giới hạn tần suất gọi."},
+    {"id": "fastf1", "term": "FastF1", "def": "Thư viện Python tải dữ liệu F1 tới từng vòng, có cả các mùa mới. Code là MIT, nhưng dữ liệu nó tải về thì không: phần lấy từ Jolpica theo CC BY-NC-SA."},
+    {"id": "csv", "term": "CSV", "def": "File bảng dạng chữ, các cột cách nhau bằng dấu phẩy; mở được bằng Excel và pandas."},
+    {"id": "parquet", "term": "Parquet", "aliases": ["parquet"], "def": "Định dạng file bảng lưu theo cột, nén tốt, đọc nhanh; hay dùng trong đường ống dữ liệu."},
+    {"id": "streamlit", "term": "Streamlit", "def": "Thư viện Python dựng web app dữ liệu chỉ bằng một script: ô chọn, thanh trượt, biểu đồ cập nhật ngay."},
+    {"id": "pypi", "term": "PyPI", "def": "Kho gói Python chính thức, nơi pip install tải về. Tên gói không bảo đảm nội dung đúng như tên."},
+    {"id": "cran", "term": "CRAN", "def": "Kho gói chính thức của R. Gói bị \"archived\" là đã bị gỡ khỏi kho, không cài thẳng bằng install.packages được nữa."},
+    {"id": "eda", "term": "EDA", "full": "exploratory data analysis, phân tích khám phá", "def": "Nhìn số tóm tắt và vẽ hình để hiểu dữ liệu trước khi kiểm định. Bài 4 của môn."},
+    {"id": "run-sequence", "term": "Run-sequence plot", "aliases": ["run-sequence plot"], "def": "Vẽ giá trị theo đúng thứ tự thời gian để thấy xu hướng, bước nhảy, chu kỳ."},
+    {"id": "natural-experiment", "term": "Thí nghiệm tự nhiên", "full": "natural experiment", "aliases": ["thí nghiệm tự nhiên"], "def": "Một biến cố bên ngoài tạo ra phép so sánh giống thí nghiệm mà không ai sắp đặt. Mùa 2020/21 phần lớn không khán giả là một ví dụ."},
+    {"id": "home-advantage", "term": "Lợi thế sân nhà", "full": "home advantage", "aliases": ["lợi thế sân nhà"], "def": "Đội đá trên sân nhà thắng nhiều hơn khi đá trên sân khách. Khán giả được cho là một phần lý do; mùa 2020/21 phần lớn không khán giả cho nhóm dịp kiểm điều ấy."},
+    {"id": "park-factor", "term": "Park factor", "aliases": ["park factor"], "def": "Chỉ số bóng chày đo một sân làm tăng hay giảm số điểm ghi được so với sân trung bình."},
+    {"id": "elo", "term": "Elo", "def": "Hệ điểm sức mạnh tương đối. Trong thử engine cờ, elo0 và elo1 đóng vai p0 và p1 của SPRT."},
+    {"id": "odds", "term": "Tỉ lệ cược", "full": "odds", "aliases": ["tỉ lệ cược"], "def": "Giá nhà cái đưa ra cho từng kết quả; quy đổi được thành xác suất nhà cái ngầm tin."},
+    {"id": "bwf", "term": "BWF", "full": "Badminton World Federation", "def": "Liên đoàn cầu lông thế giới."},
+    {"id": "expert-system", "term": "Hệ chuyên gia", "full": "expert system", "aliases": ["hệ chuyên gia"], "def": "Chương trình ra quyết định theo luật và tri thức do con người đưa vào. EXSPRT ghép nó với SPRT."},
+    {"id": "matlab", "term": "MATLAB", "def": "Phần mềm tính toán trả phí, có ngôn ngữ riêng; code của nó không chạy được trong Python."},
+    {"id": "gnss", "term": "GNSS", "full": "hệ thống định vị vệ tinh toàn cầu", "def": "Tên chung của GPS, Galileo, GLONASS, BeiDou."},
+    {"id": "density-ratio", "term": "Tỉ số mật độ", "full": "density ratio", "aliases": ["tỉ số mật độ"], "def": "Ước lượng tỉ số giữa phân phối trước và sau một thời điểm để tìm điểm đổi. Mạnh, nhưng nặng so với môn này."},
+    {"id": "drift", "term": "Drift", "full": "trôi dữ liệu", "def": "Phân phối của dữ liệu mới khác dữ liệu lúc huấn luyện mô hình."},
+    {"id": "psi", "term": "PSI", "full": "population stability index", "def": "Chỉ số so hai phân phối theo từng khoảng giá trị, hay dùng để đo drift."},
+    {"id": "synthetic", "term": "Dữ liệu giả lập", "full": "synthetic data", "aliases": ["dữ liệu giả lập", "giả lập"], "def": "Số do máy sinh ra, không đo từ thực tế. Không dùng để kết luận điều gì về thế giới thật."},
+    {"id": "random-forest", "term": "Random Forest", "def": "Mô hình máy học gộp phiếu của nhiều cây quyết định."},
+    {"id": "data-leakage", "term": "Rò rỉ dữ liệu", "full": "data leakage", "aliases": ["rò rỉ dữ liệu", "data leakage"], "def": "Mô hình được học từ thông tin mà lúc dự đoán thật chưa có, ví dụ thống kê của chính trận đang đoán. Độ chính xác đo được vì thế đẹp giả."},
+    {"id": "mlflow", "term": "MLflow", "def": "Công cụ ghi lại mỗi lần huấn luyện: tham số, độ chính xác, file mô hình. Ghi thêm bộ dữ liệu đã dùng thì thành lineage của mô hình."},
+    {"id": "mermaid", "term": "Mermaid", "def": "Cú pháp chữ để vẽ sơ đồ; GitHub tự vẽ thành hình trong README."},
+    {"id": "dvc", "term": "DVC", "full": "Data Version Control", "def": "Công cụ quản lý phiên bản cho file dữ liệu như git làm với code, để biết mô hình nào học từ bản dữ liệu nào."},
+    {"id": "fastapi", "term": "FastAPI", "def": "Thư viện Python dựng API web; ở đây dùng để trả dự đoán của mô hình."},
+    {"id": "cc-by-nc-sa", "term": "CC BY-NC-SA", "def": "Được dùng và chia sẻ nếu ghi tác giả, không dùng thương mại, và bản sửa phải theo cùng giấy phép."},
+    {"id": "sha256", "term": "SHA-256", "full": "mã băm", "aliases": ["sha256"], "def": "Một chuỗi 64 ký tự tính từ nội dung file. File đổi một byte thì mã đổi hẳn, nên ghi mã lại là chứng minh được đã dùng đúng file nào."},
+    {"id": "alpha-release", "term": "Bản alpha", "full": "bản thử sớm", "def": "Phiên bản phần mềm còn sớm, giao diện và hành vi có thể đổi bất cứ lúc nào."},
+    {"id": "pytorch", "term": "PyTorch", "aliases": ["torch"], "def": "Thư viện học sâu rất lớn; cài nó nặng và lâu so với một đồ án thống kê."},
+    {"id": "exsprt", "term": "EXSPRT", "full": "expert system SPRT", "def": "Bản mở rộng SPRT của Welch và Frick, ghép hệ chuyên gia với kiểm định tuần tự. Không phải SPRT gốc của Wald."},
+    {"id": "permutation-test", "term": "Kiểm định hoán vị", "full": "permutation test", "aliases": ["kiểm định hoán vị"], "def": "Xáo trộn thứ tự dữ liệu nhiều lần để xem kết quả thật có hiếm không. Không cần giả định phân phối."},
+    {"id": "e-divisive", "term": "e.divisive", "def": "Thuật toán tìm nhiều điểm đổi trong một chuỗi, chia đôi chuỗi dần dần theo khoảng cách giữa hai phân phối."},
+    {"id": "phase", "term": "Phase I / Phase II", "aliases": ["phase i", "phase ii"], "def": "Phase I: dùng dữ liệu cũ để ước mức \"bình thường\". Phase II: theo dõi dữ liệu mới so với mức ấy. Không được ước và kiểm trên cùng một đoạn dữ liệu."},
+    {"id": "poisson-tail", "term": "Xác suất đuôi Poisson", "aliases": ["xác suất đuôi poisson", "poisson"], "def": "Với số đếm (bàn, thẻ), phân phối Poisson cho biết khả năng gặp giá trị lớn chừng ấy trở lên. Rất nhỏ thì đáng nghi."},
+    {"id": "binomial-anom", "term": "ANOM cho tỉ lệ", "full": "ANOM dữ liệu nhị thức", "aliases": ["anom cho tỉ lệ"], "def": "ANOM khi số đo là tỉ lệ (thắng / không thắng). Giới hạn tính từ phân phối nhị thức thay cho phân phối chuẩn."},
+    {"id": "residual", "term": "Phần dư", "full": "residual", "aliases": ["phần dư"], "def": "Kết quả thật trừ kết quả kỳ vọng. Ở đây kỳ vọng lấy từ tỉ lệ cược, nên phần dư đã bỏ được chuyện đối thủ mạnh hay yếu."},
+    {"id": "regression-to-mean", "term": "Hồi quy về trung bình", "full": "regression to the mean", "aliases": ["hồi quy về trung bình"], "def": "Sau một chuỗi rất tệ, kết quả thường tự khá lên dù không ai làm gì. Đổi huấn luyện viên đúng lúc ấy dễ bị tưởng là có tác dụng."},
+    {"id": "detrend", "term": "Khử xu hướng", "full": "detrend", "aliases": ["khử xu hướng"], "def": "Trừ phần thay đổi đều đặn (như xe nhẹ dần vì vơi xăng) ra khỏi số liệu, để chỉ còn phần dao động cần soi."},
+    {"id": "data-quality", "term": "Chất lượng dữ liệu", "full": "data quality", "aliases": ["chất lượng dữ liệu"], "def": "Mức dữ liệu đúng, đủ, nhất quán. Kiểm bằng luật (vd. sút trúng đích không quá tổng cú sút) và báo tỉ lệ dòng đạt."},
+    {"id": "schema-contract", "term": "Schema contract", "aliases": ["schema contract"], "def": "Bản cam kết về cấu trúc bảng: cột nào, kiểu gì, được trống hay không. Dữ liệu sai cam kết thì bị chặn trước khi phân tích."},
+    {"id": "rate-limit", "term": "Giới hạn tần suất", "full": "rate limit", "aliases": ["giới hạn tần suất"], "def": "Số lần gọi API tối đa trong một khoảng thời gian; gọi quá thì bị chặn tạm."},
+    {"id": "sidak", "term": "Šidák", "full": "hiệu chỉnh Šidák", "aliases": ["sidak"], "def": "Cách nới mức ý nghĩa khi làm nhiều phép so sánh cùng lúc, để xác suất báo nhầm chung vẫn quanh α. Hơi bảo thủ."},
+    {"id": "bonferroni", "term": "Bonferroni", "def": "Làm m phép kiểm thì dùng ngưỡng α/m cho từng phép, để xác suất có ít nhất một báo nhầm không vượt α. Đơn giản, hơi bảo thủ."}
+  ],
+  "sprt_check": {
+    "note": "Kết quả nhóm soát đã chạy trên CSV Premier League (football-data.co.uk); p1, a, b do JS tính.",
+    "p0": 0.475,
+    "draw": 0.223,
+    "alpha": 0.05,
+    "beta": 0.1,
+    "stop": 129
+  },
+  "rounds": [
+    {"item": "Điều khoản football-data", "r1": "Không có điều khoản rõ.", "r2": "Chỉ cho cá nhân, chỉ để dự đoán.", "check": "Trang dữ liệu ghi \"private individuals only\", \"league match prediction only\"; chân trang \"All Rights Reserved\".", "final": "Vòng 2 đúng. Không đưa CSV gốc lên repo công khai; hỏi giảng viên.", "src": "C1"},
+    {"item": "Trọng tài và các cột", "r1": "Có từ 2000/01.", "r2": "Trọng tài chỉ \"khi có\".", "check": "Mọi file Premier League từ 2000/01: trọng tài, cú sút, phạm lỗi, phạt góc, thẻ đủ 380/380 trận; file trước đó chỉ có kết quả.", "final": "Dùng từ 2000/01; gộp tên trọng tài trước ANOM."},
+    {"item": "F1: giấy phép, cỡ, ngày Ergast", "r1": "CC0, 22 MB, Ergast đóng cuối 2024.", "r2": "Gốc là CC BY-NC-SA, zip 6,3 MB, tắt đầu 2025.", "check": "Kaggle ghi CC0 nhưng điều khoản Jolpica ghi CC BY-NC-SA 4.0; zip 6.585.538 byte; tài liệu FastF1: \"shutdown at the beginning of 2025\".", "final": "Vòng 2 đúng.", "src": "A1"},
+    {"item": "F1: SPRT", "r1": "Khớp yếu: không có chuỗi có/không.", "r2": "Thắng đồng đội từng chặng.", "check": "Mỗi chặng cho một kết quả 1/0 tự nhiên.", "final": "Vòng 2 đúng: khớp ●● thay vì ●."},
+    {"item": "Giấy phép repo mlops", "r1": "MIT.", "r2": "Không có file LICENSE.", "check": "README ghi MIT, link tới file không tồn tại; GitHub báo repo không có giấy phép.", "final": "Vòng 2 đúng.", "src": "A4"},
+    {"item": "Repo chấn thương", "r1": "Bỏ.", "r2": "Dùng một phần.", "check": "Có LICENSE MIT; run_dq_checks(), schema contract, trang giới hạn dùng lại được; dữ liệu vẫn giả lập.", "final": "Dùng một phần, cho nửa quản lý dữ liệu.", "src": "A3"},
+    {"item": "Minitab ANOM", "r1": "Dùng.", "r2": "Dùng một phần.", "check": "So với trung bình chung mọi sân; tác giả dặn đừng coi là suy diễn nghiêm túc; dữ liệu dạng .mpx.", "final": "Dùng một phần, sát ngưỡng.", "src": "B5"},
+    {"item": "Tên topic GitHub", "r1": "4.825 repo, có Fast-F1, nba_api…", "r2": "Topic bảng nêu là sport-analytics: 62 repo.", "check": "sport-analytics có 62 repo, phần lớn về video; Fast-F1, nba_api, statsbomb không mang topic nào.", "final": "Bỏ.", "src": "B6"},
+    {"item": "h của ANOM", "r1": "Tra từ phân phối t.", "r2": "Bảng Nelson khi các nhóm cùng cỡ.", "check": "Trang Minitab: cùng cỡ dùng giá trị chính xác (Nelson 1983); khác cỡ dùng t hiệu chỉnh Šidák. Mô phỏng k = 4, n = 5, α = 0,05: 2,74 so với 2,80.", "final": "t Šidák là xấp xỉ, hơi bảo thủ."},
+    {"item": "Nguồn gốc đề tài", "r1": "Môn Ljubljana liệt kê đúng bốn phương pháp.", "r2": "Không tìm thấy.", "check": "Hai trang môn trả 404, đường dẫn còn tên môn, chỉ mục tìm kiếm còn bốn phương pháp. Spiegelhalter và cs. 2012 xác nhận khung y tế.", "final": "Cả hai đúng một phần; hỏi giảng viên."},
+    {"item": "EXSPRT", "r1": "SPRT, theo thời gian thực.", "r2": "Mở rộng của Frick, hồi cứu, độ chính xác 0,716.", "check": "Welch & Frick; kiểm hồi cứu trên video; tốt nhất 0,730 (mô hình 3 và 6); không công bố dữ liệu, code.", "final": "Vòng 2 đúng, sửa thành 0,730.", "src": "B4"},
+    {"item": "Câu hỏi SPRT", "r1": "Huấn luyện viên mới có nâng tỉ lệ thắng không.", "r2": "2020/21 không khán giả; p1 = tỉ lệ thắng sân khách cũ 0,303.", "check": "Với p1 = 0,303, tỉ lệ thật 0,379 nằm giữa H0 và H1: xác suất chọn H1 khoảng 0,5.", "final": "Giữ câu hỏi vòng 2, đổi p1 = 0,389 (hết lợi thế sân nhà)."},
+    {"item": "Phương pháp Beggs & Bond", "r1": "CUSUM dạng bảng.", "r2": "Không nêu.", "check": "Tổng lệch hồi cứu so với trung bình 874 trận, kiểm định hoán vị, e.divisive; 1995/96–2017/18.", "final": "Là bài liên quan, không phải công thức để chép.", "src": "C2"},
+    {"item": "\"Chưa có ai làm\"", "r1": "Chưa có dự án nào.", "r2": "Không chứng minh được là không có.", "check": "Không kiểm được sự vắng mặt.", "final": "Viết \"chúng tôi không tìm thấy\"."}
   ]
 }

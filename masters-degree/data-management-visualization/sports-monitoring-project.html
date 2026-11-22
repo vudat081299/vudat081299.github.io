@@ -234,6 +234,28 @@ details.fold>.fold-body{padding:0 var(--s4) var(--s4)}
 .qa .lab{display:block;font:500 var(--fs-lab) var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
 @media (max-width:720px){.qa{grid-template-columns:minmax(0,1fr)}.fit th[scope="row"]{width:30%}}
 
+/* ═══ HAI VÒNG CHẤM ═══ */
+table.rounds{width:100%;border-collapse:collapse;font-size:var(--fs-xs);line-height:1.45}
+table.rounds th,table.rounds td{padding:var(--s2);border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.rounds thead th{font:500 var(--fs-lab) var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);background:var(--sunk)}
+table.rounds tbody th{font-weight:600;width:16%}
+.rd-score{display:block;margin-top:var(--s1);font:500 var(--fs-lab) var(--mono);color:var(--ink-2)}
+@media (max-width:720px){
+  table.rounds thead{display:none}
+  table.rounds,table.rounds tbody,table.rounds tr,table.rounds th,table.rounds td{display:block;width:auto}
+  table.rounds tr{padding:var(--s2) 0;border-bottom:1px solid var(--line)}
+  table.rounds th,table.rounds td{border:0;padding:var(--s1) 0}
+  table.rounds td::before{content:attr(data-l);display:block;font:500 var(--fs-lab) var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+}
+
+/* ═══ BẪY PHƯƠNG PHÁP ═══ */
+.traps-box{margin-top:var(--s4)}
+.traps-box h3{margin-top:0}
+.traps-box ol{margin-bottom:0}
+.traps-box li{font-size:var(--fs-sm)}
+.qa-notes{margin-top:var(--s2);font-size:var(--fs-sm);line-height:1.55}
+.qa-notes ul{margin:var(--s1) 0 0;padding-left:1.1em}
+
 /* ═══ ĐƯỜNG ỐNG ═══ */
 .pipe{list-style:none;padding:0;margin:var(--s3) 0 0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s3);counter-reset:p}
 .pipe li{margin:0;padding:var(--s3) var(--s4);border:1px solid var(--line);border-radius:var(--r);background:var(--surface);font-size:var(--fs-sm);line-height:1.55}
@@ -334,20 +356,23 @@ details.fold>.fold-body{padding:0 var(--s4) var(--s4)}
 <section id="tom-tat" class="hero">
   <div class="eyebrow">Đồ án nhóm · IT5425 Data Management and Visualization</div>
   <h1>Theo dõi bất thường trong thể thao: chọn nguồn và cách làm</h1>
-  <p class="lede">Chưa có dự án công khai nào làm đủ cả bốn phương pháp trên dữ liệu thể thao, nên nhóm tự ráp: bóng đá Premier League, dữ liệu football-data.co.uk, công thức tự viết theo nguồn chuẩn.</p>
+  <p class="lede">Chúng tôi không tìm thấy dự án công khai nào làm đủ cả bốn phương pháp trên dữ liệu thể thao (không chứng minh được là không có), nên nhóm tự ráp: bóng đá Premier League, dữ liệu football-data.co.uk, công thức tự viết theo nguồn chuẩn.</p>
   <p class="brief">Đề bài: <q lang="en">Outlier detection, analysis of means, CUSUM and sequential probability ratio testing. Applications in sports.</q> Nhóm 7 người nộp slide, báo cáo và demo.</p>
   <div class="stats" id="heroStats" aria-live="polite"></div>
 
   <div class="prior">
     <h2>Đã có ai làm đúng đề này chưa?</h2>
-    <p>Chưa. Không dự án công khai nào dùng cả bốn phương pháp trên dữ liệu thể thao. Gần nhất:</p>
+    <p>Chúng tôi không tìm thấy dự án công khai nào dùng cả bốn phương pháp trên dữ liệu thể thao; điều này không chứng minh được là không có. Gần nhất:</p>
     <ul>
+      <li>Spiegelhalter và cộng sự (2012): đúng bộ công cụ (chấm hạng, sàng lọc, giám sát tuần tự), nhưng trong y tế.</li>
+      <li>Spiegelhalter và cộng sự (2003): <span class="term">SPRT</span> có hiệu chỉnh rủi ro cho hai vụ y khoa Bristol và Shipman.</li>
       <li>Bracewell (1999), luận văn thạc sĩ ở Đại học Massey: <span class="term">CUSUM</span>, <span class="term">EWMA</span> và ngoại lai trên điểm đánh bóng cricket.</li>
       <li>Loạt bài park factor của Minitab: <span class="term">ANOM</span> và lọc ngoại lai trên các sân bóng chày.</li>
-      <li>Beggs &amp; Bond (2020): chỉ CUSUM, trên Premier League.</li>
-      <li>Spiegelhalter và cộng sự (2003): đúng bộ công cụ, nhưng trên bệnh viện.</li>
+      <li>Beggs &amp; Bond (2020): một tổng tích luỹ hồi cứu, họ hàng của CUSUM, trên Premier League.</li>
+      <li>Montagna &amp; Hopker (2018): ngoại lai trong thể thao, theo dõi thành tích cả sự nghiệp của vận động viên đẩy tạ để đánh dấu nghi doping.</li>
+      <li>Miles (1984): coi luật tính điểm quần vợt như một phép kiểm tuần tự, họ hàng của SPRT.</li>
     </ul>
-    <p>Vì vậy một đồ án ghép cả bốn trên một bộ dữ liệu bóng đá là mới ở mức môn học.</p>
+    <p>Vì vậy, theo những gì chúng tôi tìm được, một đồ án ghép cả bốn trên một bộ dữ liệu bóng đá là mới ở mức môn học.</p>
   </div>
 
   <nav aria-label="Các phần của trang">
@@ -385,8 +410,8 @@ details.fold>.fold-body{padding:0 var(--s4) var(--s4)}
   </figure>
 
   <h3>Đề tài từ đâu ra</h3>
-  <p>Tên đề tài khớp với một bộ công cụ theo dõi chất lượng trong y tế. Spiegelhalter và cộng sự (2003) dùng <span class="term">SPRT</span> có <span class="term">hiệu chỉnh rủi ro</span> để soi lại hai vụ y khoa ở Anh, Bristol và Shipman.</p>
-  <p>Một môn tự chọn bậc thạc sĩ ở Đại học Ljubljana về hỗ trợ thống kê cho chất lượng y tế liệt kê đúng bốn phương pháp này. Điều này chỉ kiểm được một phần: thấy qua đoạn trích của máy tìm kiếm, còn trang gốc nay trả lỗi 404.</p>
+  <p>Bốn phương pháp là bộ công cụ giám sát chất lượng y tế (Spiegelhalter và cs. 2012: chấm hạng, sàng lọc, giám sát tuần tự). Bài năm 2003 của cùng nhóm dùng <span class="term">SPRT</span> có <span class="term">hiệu chỉnh rủi ro</span> để soi lại hai vụ y khoa ở Anh, Bristol và Shipman.</p>
+  <p>Một môn thạc sĩ ở Đại học Ljubljana từng liệt kê đúng bốn phương pháp này (trang môn nay trả 404, chỉ còn thấy qua chỉ mục tìm kiếm). Không rõ đề của nhóm lấy từ đâu: hỏi giảng viên.</p>
   <p>Chuyển sang thể thao thì đổi vai như sau.</p>
   <table class="map-tbl">
     <thead><tr><th scope="col">Y tế</th><th scope="col">Thể thao</th></tr></thead>
@@ -402,7 +427,8 @@ details.fold>.fold-body{padding:0 var(--s4) var(--s4)}
 <!-- ═══════════════ LINEAGE ═══════════════ -->
 <section id="lineage" class="block">
   <h2>Từ khoá “Data Lineage &amp; Provenance” có đúng không?</h2>
-  <p><span class="pill"><span class="sw c3" aria-hidden="true"></span>Đúng một nửa</span></p>
+  <p><span class="pill"><span class="sw c5" aria-hidden="true"></span>Phần lớn là sai</span></p>
+  <p>Đúng ở chỗ lineage và provenance là chủ đề thật, có trong bài 1 và bài 3. Sai ở ý dùng chúng thay cho tên môn.</p>
   <div class="cols">
     <div class="box">
       <h3>Đúng ở đâu</h3>
@@ -413,9 +439,10 @@ details.fold>.fold-body{padding:0 var(--s4) var(--s4)}
       </ul>
     </div>
     <div class="box">
-      <h3>Lệch ở đâu</h3>
+      <h3>Sai ở đâu</h3>
       <p>Chúng là một mảng con của <span class="term">quản lý metadata</span> và quản trị dữ liệu trong <span class="term">DAMA-DMBOK</span>. Không đồng nghĩa với “quản lý dữ liệu và trực quan hoá”: không có phần hình.</p>
       <p>Chúng cũng không liên quan tới bốn phương pháp thống kê, nên tìm bằng chúng chỉ ra công cụ quản trị dữ liệu.</p>
+      <p>Tên môn tự nó đã là tên dùng quốc tế: Đại học Wesleyan có môn <a href="https://www.coursera.org/learn/data-visualization">Data Management and Visualization</a> trên Coursera, và đề cương không nhắc lineage.</p>
     </div>
   </div>
   <h3>Dùng thế nào trong đồ án</h3>
@@ -449,6 +476,14 @@ details.fold>.fold-body{padding:0 var(--s4) var(--s4)}
     </details>
   </div>
 
+  <details class="fold" id="hai-vong">
+    <summary>Vòng 1 và vòng 2 lệch nhau ở đâu, chốt thế nào?</summary>
+    <div class="fold-body">
+      <p class="sub">Chấm hai vòng. Vòng 2: ba trợ lý AI chấm độc lập, không xem vòng 1; rồi một trợ lý kiểm từng chỗ lệch tại nguồn. Kiểm ngày <span data-checked></span>. Điểm trong bảng là điểm tổng trên 10.</p>
+      <div id="rounds"></div>
+    </div>
+  </details>
+
   <div class="cards" id="cards"></div>
 </section>
 
@@ -459,13 +494,13 @@ details.fold>.fold-body{padding:0 var(--s4) var(--s4)}
     <div class="box plan rec">
       <span class="pill"><span class="sw c1" aria-hidden="true"></span>Đề xuất</span>
       <h3>A · Bóng đá Premier League</h3>
-      <p>Dữ liệu football-data.co.uk: mọi mùa từ 2000/01 tới mùa gần nhất đã đá xong. Mỗi phương pháp trả lời một câu hỏi bóng đá; có một bài báo mẫu để làm lại.</p>
+      <p>Dữ liệu football-data.co.uk: mọi mùa từ 2000/01 tới mùa gần nhất đã đá xong, cộng các giải khác cho ANOM. Mỗi phương pháp trả lời một câu hỏi bóng đá. Điều khoản chặt: không đưa CSV gốc lên repo công khai, hỏi giảng viên.</p>
     </div>
     <div class="box plan">
       <span class="pill"><span class="sw c3" aria-hidden="true"></span>Dự phòng</span>
       <h3>B · Formula 1 trên Kaggle</h3>
       <p>Bộ dữ liệu một bạn trong nhóm tìm được. <span class="term">CUSUM</span> trên thời gian từng vòng, <span class="term">ANOM</span> trên thời gian dừng pit theo đội đua, ngoại lai là vòng xe an toàn hay vòng vào pit.</p>
-      <p><span class="term">SPRT</span> khớp yếu vì không có chuỗi có/không tự nhiên. Dữ liệu dừng ở cuối 2024; muốn mới hơn thì lấy qua <span class="term">FastF1</span> hoặc <span class="term">Jolpica-F1</span>.</p>
+      <p><span class="term">SPRT</span>: tay đua có thắng đồng đội từng chặng không. Kaggle ghi <span class="term">CC0</span> nhưng gốc là <span class="term">CC BY-NC-SA</span>. Dữ liệu dừng ở 2024; muốn mới hơn thì lấy qua <span class="term">FastF1</span> và <span class="term">Jolpica-F1</span>.</p>
     </div>
   </div>
 
@@ -475,8 +510,20 @@ details.fold>.fold-body{padding:0 var(--s4) var(--s4)}
   <h3>Bốn câu hỏi của phương án A</h3>
   <div class="qa" id="planA"></div>
 
+  <div class="box traps-box">
+    <h3>Bẫy phương pháp</h3>
+    <ol>
+      <li>Đừng ước mức “bình thường” từ chính đoạn dữ liệu đang kiểm. Tách <span class="term">Phase I / Phase II</span>.</li>
+      <li>Khoá tham số (<span class="term">α</span>, <span class="term">β</span>, <span class="term">k</span>, <span class="term">h</span>) trước khi xem kết quả.</li>
+      <li>Nhiều câu lạc bộ nhân nhiều phép kiểm thì sẽ có báo động giả. Ghi rõ đã chạy bao nhiêu phép kiểm, và giữ sai số chung (<span class="term">ARL</span> hoặc <span class="term">Bonferroni</span>).</li>
+      <li>Các trận không độc lập, đối thủ mạnh yếu khác nhau: dùng <span class="term">phần dư</span> so với tỉ lệ cược.</li>
+      <li>Số đếm (bàn, thẻ) không theo phân phối chuẩn.</li>
+      <li>Đừng để phần thống kê nuốt nửa quản lý dữ liệu: nửa ấy là một nửa số điểm.</li>
+    </ol>
+  </div>
+
   <h3>Từ dữ liệu tới câu chuyện</h3>
-  <p class="sub">Mỗi bước dùng lại một bài của môn; bấm số bài để mở bài ấy.</p>
+  <p class="sub">Mỗi bước dùng lại một bài của môn; bấm số bài để mở bài ấy. Trang môn có ngoại lai (<a href="data-management-visualization.html#b3">bài 3</a>, <a href="data-management-visualization.html#b4">bài 4</a>: box plot, rào 1,5·IQR) nhưng không có ANOM, CUSUM, SPRT; ba phương pháp này học từ nguồn ngoài, xem khối công thức.</p>
   <ol class="pipe" id="pipe"></ol>
 
   <h3>Nộp gì</h3>
@@ -486,12 +533,12 @@ details.fold>.fold-body{padding:0 var(--s4) var(--s4)}
       <p>Một app <span class="term">Streamlit</span>: chọn đội hay trọng tài, kéo thanh trượt <span class="term">α</span>, <span class="term">β</span>, <span class="term">k</span>, <span class="term">h</span>, các hình cập nhật ngay.</p>
       <h4>Slide</h4>
       <ol>
-        <li>Mở đầu: theo dõi tuần tự trong y tế, và câu hỏi cho bóng đá.</li>
+        <li>Mở đầu: mùa 2020/21 sân vắng khán giả, lợi thế sân nhà còn không?</li>
         <li>Dữ liệu: nguồn, data card, sơ đồ lineage.</li>
         <li><span class="term">EDA</span> và ngoại lai.</li>
-        <li>ANOM: trọng tài.</li>
-        <li>CUSUM: phong độ đội, mùa không khán giả.</li>
-        <li>SPRT: huấn luyện viên mới; CUSUM là SPRT bắt đầu lại từ 0.</li>
+        <li>ANOM: tỉ lệ thắng sân nhà theo giải; trọng tài là cờ cần xem.</li>
+        <li>CUSUM: phong độ từng câu lạc bộ, so với ngày đổi huấn luyện viên.</li>
+        <li>SPRT: mùa 2020/21; CUSUM là SPRT bắt đầu lại từ 0.</li>
         <li>Demo.</li>
         <li>Kết luận và giới hạn.</li>
       </ol>
@@ -500,11 +547,11 @@ details.fold>.fold-body{padding:0 var(--s4) var(--s4)}
       <h4>Báo cáo</h4>
       <ol>
         <li>Giới thiệu: đề bài, hai câu hỏi.</li>
-        <li>Tổng quan tài liệu: Spiegelhalter 2003, Beggs &amp; Bond 2020, Minitab ANOM, EXSPRT 2025, Madukoma &amp; Mitra 2026.</li>
+        <li>Tổng quan tài liệu: Spiegelhalter 2012 và 2003, Beggs &amp; Bond 2020, Minitab ANOM, EXSPRT 2025, Montagna &amp; Hopker 2018, Miles 1984, Madukoma &amp; Mitra 2026.</li>
         <li>Dữ liệu: data card, lineage, làm sạch.</li>
         <li>Phương pháp: bốn công thức và tham số đã chọn.</li>
         <li>Kết quả: mỗi phương pháp một hình.</li>
-        <li>Thảo luận và giới hạn: dữ liệu không phải mẫu ngẫu nhiên, nhiều phép kiểm cùng lúc, cách chọn tham số.</li>
+        <li>Thảo luận và giới hạn: dữ liệu không phải mẫu ngẫu nhiên, nhiều phép kiểm cùng lúc, cách chọn tham số, điều khoản dữ liệu.</li>
         <li>Kết luận. Phụ lục: code, cách chạy demo.</li>
       </ol>
     </div>
@@ -513,27 +560,38 @@ details.fold>.fold-body{padding:0 var(--s4) var(--s4)}
   <details class="fold" id="cong-thuc">
     <summary>Công thức cần tự viết là gì?</summary>
     <div class="fold-body">
-      <h4>ANOM: giới hạn quyết định</h4>
-      <div class="fx"><div>UDL, LDL = ȳ ± h · s<sub>p</sub> · √((N − n<sub>i</sub>) / (N · n<sub>i</sub>))</div><div>h = t(1 − α<sub>2</sub>; N − r),  α<sub>2</sub> = (1 − (1 − α)<sup>1/r</sup>) / 2</div></div>
-      <p>ȳ là trung bình chung, s<sub>p</sub> là độ lệch chuẩn gộp, N là tổng số quan sát, n<sub>i</sub> là số quan sát của nhóm i, r là số nhóm. h tra từ phân phối t với N − r bậc tự do.</p>
-      <p class="fx-src">Nguồn: <a href="https://support.minitab.com/en-us/minitab/help-and-how-to/statistical-modeling/anova/how-to/analysis-of-means/methods-and-formulas/one-way-designs-with-normal-data">Minitab, Methods and formulas</a>.</p>
+      <h4>Ngoại lai</h4>
+      <div class="fx"><div>z<sub>i</sub> = (x<sub>i</sub> − x̄) / s</div><div>z đã sửa: M<sub>i</sub> = 0,6745 · (x<sub>i</sub> − x̃) / MAD, nghi khi |M<sub>i</sub>| &gt; 3,5</div><div>rào: dưới Q1 − 1,5·IQR hoặc trên Q3 + 1,5·IQR</div></div>
+      <p>x̃ là trung vị. <span class="term">Grubbs</span> và generalized ESD giả định dữ liệu gần chuẩn. Bàn thắng và thẻ là số đếm, nên dùng rào IQR hoặc <span class="term">xác suất đuôi Poisson</span>.</p>
+      <p class="fx-src">Nguồn: NIST/SEMATECH e-Handbook <a href="https://www.itl.nist.gov/div898/handbook/eda/section3/eda35h.htm">1.3.5.17</a>, <a href="https://www.itl.nist.gov/div898/handbook/eda/section3/eda35h1.htm">Grubbs</a>, <a href="https://www.itl.nist.gov/div898/handbook/eda/section3/eda35h3.htm">generalized ESD</a>.</p>
+
+      <h4>ANOM, dữ liệu chuẩn: giới hạn quyết định</h4>
+      <div class="fx"><div>UDL, LDL = ȳ ± h · s<sub>p</sub> · √((N − n<sub>i</sub>) / (N · n<sub>i</sub>))</div></div>
+      <p>ȳ là trung bình chung, s<sub>p</sub> là độ lệch chuẩn gộp, N là tổng số quan sát, n<sub>i</sub> là số quan sát của nhóm i, r là số nhóm.</p>
+      <p>Cách lấy h: các nhóm cùng cỡ và 0,001 ≤ α ≤ 0,1 thì Minitab lấy h chính xác từ bảng của Nelson (1983). Các nhóm khác cỡ thì dùng t hiệu chỉnh <span class="term">Šidák</span>: h = t(α<sub>2</sub>; N − r), α<sub>2</sub> = (1 − (1 − α)<sup>1/r</sup>) / 2. Cách này là xấp xỉ, hơi bảo thủ: với 4 nhóm, mỗi nhóm 5, α = 0,05, h đúng khoảng 2,74 còn Šidák cho 2,80.</p>
+      <p class="fx-src">Nguồn: <a href="https://support.minitab.com/en-us/minitab/help-and-how-to/statistical-modeling/anova/how-to/analysis-of-means/methods-and-formulas/one-way-designs-with-normal-data">Minitab, ANOM với dữ liệu chuẩn</a>.</p>
+
+      <h4>ANOM cho tỉ lệ (tỉ lệ thắng)</h4>
+      <div class="fx"><div>p̄ = Σ p<sub>i</sub> / k,  s = √(p̄ (1 − p̄) / n)</div><div>UDL, LDL = p̄ ± h<sub>α</sub> · s · √((k − 1) / k)</div><div>h<sub>α</sub>: phân vị chuẩn tại 1 − α / (2k)</div></div>
+      <p>Tỉ lệ thắng là tỉ lệ, nên dùng <span class="term">ANOM cho tỉ lệ</span>. Trang Minitab chỉ cho trường hợp k nhóm cùng cỡ n. Các giải có số trận khác nhau: so cùng số trận mỗi giải, hoặc tìm công thức khác cỡ ở nguồn khác.</p>
+      <p class="fx-src">Nguồn: <a href="https://support.minitab.com/en-us/minitab/help-and-how-to/statistical-modeling/anova/how-to/analysis-of-means/methods-and-formulas/binomial-data/">Minitab, ANOM với dữ liệu nhị thức</a>.</p>
 
       <h4>CUSUM dạng bảng</h4>
       <div class="fx"><div>S<sub>hi</sub>(i) = max(0, S<sub>hi</sub>(i−1) + x<sub>i</sub> − μ<sub>0</sub> − k)</div><div>S<sub>lo</sub>(i) = max(0, S<sub>lo</sub>(i−1) + μ<sub>0</sub> − k − x<sub>i</sub>)</div><div>bắt đầu S(0) = 0; báo khi S<sub>hi</sub> hoặc S<sub>lo</sub> vượt h</div></div>
-      <p>Quy tắc nhanh: <span class="term">k</span> = δσ/2, với δ là độ lệch muốn bắt tính bằng số σ; <span class="term">h</span> khoảng 4–5σ. Chọn k và h theo <span class="term">ARL</span> mong muốn.</p>
-      <p class="fx-src">Nguồn: <a href="https://www.itl.nist.gov/div898/handbook/pmc/section3/pmc323.htm">NIST/SEMATECH e-Handbook 6.3.2.3</a>.</p>
+      <p>Quy tắc nhanh: <span class="term">k</span> = δσ/2, với δ là độ lệch muốn bắt tính bằng số σ; <span class="term">h</span> khoảng 4–5σ. Minitab mặc định k = 0,5 và h = 4 (tính theo σ). Chọn k và h theo <span class="term">ARL</span> mong muốn, trước khi xem kết quả.</p>
+      <p class="fx-src">Nguồn: <a href="https://www.itl.nist.gov/div898/handbook/pmc/section3/pmc323.htm">NIST/SEMATECH e-Handbook 6.3.2.3</a>; <a href="https://support.minitab.com/en-us/minitab/help-and-how-to/quality-and-process-improvement/control-charts/how-to/time-weighted-charts/cusum-chart/methods-and-formulas/methods-and-formulas/">Minitab, CUSUM</a>; bài gốc <a href="https://doi.org/10.1093/biomet/41.1-2.100">Page (1954), Biometrika 41:100–115</a>.</p>
 
       <h4>SPRT: hai ngưỡng và bước cộng</h4>
-      <div class="fx"><div>a = ln(β / (1 − α)),  b = ln((1 − β) / α)</div><div>Bernoulli: LLR<sub>i</sub> = x<sub>i</sub> · ln(p<sub>1</sub>/p<sub>0</sub>) + (1 − x<sub>i</sub>) · ln((1 − p<sub>1</sub>)/(1 − p<sub>0</sub>))</div><div>Λ<sub>n</sub> = Σ LLR<sub>i</sub>: Λ ≤ a chấp nhận H0, Λ ≥ b chấp nhận H1, còn lại đá tiếp</div></div>
-      <p><span class="term">LLR</span> cộng dồn đi giữa hai ngưỡng; chạm ngưỡng nào thì dừng. x<sub>i</sub> = 1 nếu thắng, 0 nếu không thắng.</p>
+      <div class="fx"><div>a = ln(β / (1 − α)),  b = ln((1 − β) / α)</div><div>Bernoulli: LLR<sub>i</sub> = x<sub>i</sub> · ln(p<sub>1</sub>/p<sub>0</sub>) + (1 − x<sub>i</sub>) · ln((1 − p<sub>1</sub>)/(1 − p<sub>0</sub>))</div><div>Λ<sub>n</sub> = Σ LLR<sub>i</sub>: Λ ≤ a chấp nhận H0, Λ ≥ b chấp nhận H1, còn lại xem tiếp</div></div>
+      <p><span class="term">LLR</span> cộng dồn đi giữa hai ngưỡng; chạm ngưỡng nào thì dừng. x<sub>i</sub> = 1 nếu đội nhà thắng, 0 nếu không.</p>
       <p class="fx-src">Nguồn: <a href="https://doi.org/10.1214/aoms/1177731118">Wald (1945), Annals of Mathematical Statistics 16(2):117–186</a>.</p>
     </div>
   </details>
 
   <h3>Công cụ Python</h3>
   <ul>
-    <li><code>pandas</code> để gom và làm sạch; <code>scipy.stats</code> cho phân phối t và phân phối chuẩn.</li>
-    <li>Ngoại lai: <span class="term">z-score</span> và <span class="term">IQR</span> tự viết; <span class="term">Grubbs</span> bằng gói <code>outlier_utils</code> (<span class="term">MIT</span>). Tuỳ chọn: <code>IsolationForest</code> của scikit-learn hoặc PyOD (<span class="term">Isolation Forest</span>).</li>
+    <li><code>pandas</code> để gom và làm sạch; <code>scipy.stats</code> cho phân phối t, chuẩn, Poisson. <code>scipy.stats</code> không có ANOM.</li>
+    <li>Ngoại lai: rào <span class="term">IQR</span>, xác suất đuôi Poisson và z đã sửa, tự viết. <span class="term">Grubbs</span> có trong gói <code>outlier_utils</code> (<span class="term">MIT</span>), chỉ dùng khi dữ liệu gần chuẩn. Tuỳ chọn: <code>IsolationForest</code> của scikit-learn hoặc PyOD (<span class="term">Isolation Forest</span>).</li>
     <li>ANOM và SPRT: tự viết, khoảng 20 dòng mỗi cái.</li>
     <li>CUSUM: tự viết, rồi đối chiếu với giobbu/CUSUM; chỉ chạy, đừng chép vì <span class="term">GPL</span>.</li>
   </ul>
@@ -542,7 +600,9 @@ details.fold>.fold-body{padding:0 var(--s4) var(--s4)}
   <ul class="traps">
     <li><code>anom</code> trên <span class="term">PyPI</span> là bộ ánh xạ cho Google Datastore, không phải ANOM.</li>
     <li><code>pyanom</code> là phát hiện điểm lạ chung chung, không phải ANOM.</li>
-    <li><code>cusum</code> trên PyPI là đường ống xử lý ảnh radar vệ tinh.</li>
+    <li><code>scipy.stats.dunnett</code> so từng nhóm với một nhóm đối chứng, không phải ANOM.</li>
+    <li><code>pip install cusum</code> cài một công cụ xử lý ảnh radar vệ tinh, không phải giobbu/CUSUM.</li>
+    <li><code>qcc</code> trên PyPI là công cụ quản lý cấu hình Claude Code, không phải gói <code>qcc</code> của R.</li>
     <li><code>outliers</code> trên PyPI là gói rác; gói đúng là <code>outlier_utils</code>.</li>
     <li><code>sprt</code> 0.0.1 trên PyPI (2017) đã bị bỏ.</li>
     <li><code>breaks_cusumolsresid</code> của statsmodels là kiểm định <span class="term">gãy cấu trúc</span> trên phần dư hồi quy, không phải <span class="term">biểu đồ kiểm soát</span>.</li>
@@ -569,6 +629,11 @@ details.fold>.fold-body{padding:0 var(--s4) var(--s4)}
     <li>Nhóm dùng Python hay R? Đã ai dùng Streamlit chưa?</li>
     <li>Chọn bóng đá (phương án A) hay F1 (phương án B)?</li>
     <li>Có bắt buộc dữ liệu Việt Nam (V.League) không? Trang này chưa kiểm nguồn V.League.</li>
+    <li>Giảng viên có chấp nhận football-data.co.uk (điều khoản chỉ cho cá nhân, chỉ để dự đoán) không, và repo có được để công khai không?</li>
+    <li>Có bắt buộc dùng HDFS, Spark hay NiFi không, hay một đường ống DuckDB chạy trên máy là đủ?</li>
+    <li>Tỉ trọng điểm giữa phần phương pháp và phần quản lý dữ liệu cùng trực quan hoá là bao nhiêu?</li>
+    <li>Có bắt buộc một bộ dữ liệu cho cả bốn phương pháp không?</li>
+    <li>Chấm theo từng người hay cả nhóm?</li>
     <li>Ghi cho slide: tên đúng là “sequential probability <b>ratio</b> test”, không phải “ration”.</li>
   </ol>
 </section>
@@ -1096,9 +1161,58 @@ details.fold>.fold-body{padding:0 var(--s4) var(--s4)}
       var p1 = el('p'); p1.appendChild(el('span', 'lab', 'Dữ liệu')); var s1 = html(el('span'), q, 'data_html'); p1.appendChild(s1);
       var p2 = el('p'); p2.appendChild(el('span', 'lab', 'Cách làm')); var s2 = html(el('span'), q, 'how_html'); p2.appendChild(s2);
       b.appendChild(p1); b.appendChild(p2);
+      if (q.notes_html) {
+        var n = el('div', 'qa-notes');
+        n.appendChild(el('span', 'lab', 'Lưu ý'));
+        n.appendChild(html(el('div'), q, 'notes_html'));
+        b.appendChild(n);
+      }
       box.appendChild(b);
     });
+    fillCalc(box);
     upgradeTerms(box);
+  }
+  /* Số của câu hỏi SPRT: tham số lấy từ sprt_check, p1 và hai ngưỡng tính ở đây. */
+  function fillCalc(scope) {
+    var c = D.sprt_check;
+    var v = {
+      p0: fmt(c.p0, 3), draw: fmt(c.draw, 3), alpha: fmt(c.alpha), beta: fmt(c.beta), stop: String(c.stop),
+      p1: fmt((1 - c.draw) / 2, 3),
+      a: fmt(Math.log(c.beta / (1 - c.alpha)), 2),
+      b: fmt(Math.log((1 - c.beta) / c.alpha), 2)
+    };
+    Array.prototype.forEach.call(scope.querySelectorAll('[data-calc]'), function (n) { n.textContent = v[n.getAttribute('data-calc')]; });
+  }
+
+  /* ═══ HAI VÒNG CHẤM: bảng, điểm tổng hai vòng tính từ scores_r1 và scores. */
+  function renderRounds() {
+    var box = $('#rounds');
+    box.textContent = '';
+    var cols = [['item', 'Mục'], ['r1', 'Vòng 1'], ['r2', 'Vòng 2'], ['check', 'Kiểm tại nguồn'], ['final', 'Chốt']];
+    var t = el('table', 'rounds');
+    var hr = el('tr');
+    cols.forEach(function (c) { var th = el('th', null, c[1]); th.scope = 'col'; hr.appendChild(th); });
+    var thead = el('thead'); thead.appendChild(hr); t.appendChild(thead);
+    var tb = el('tbody');
+    D.rounds.forEach(function (r) {
+      var tr = el('tr');
+      cols.forEach(function (c, i) {
+        var cell = el(i ? 'td' : 'th', null, r[c[0]]);
+        if (!i) cell.scope = 'row';
+        cell.setAttribute('data-l', c[1]);
+        if (c[0] === 'final' && r.src) {
+          var s = D.sources.filter(function (x) { return x.id === r.src; })[0];
+          if (s && s.scores_r1) {
+            var t1 = 0; D.criteria.forEach(function (cr, k) { t1 += s.scores_r1[k] * cr.weight; });
+            cell.appendChild(el('span', 'rd-score', s.id + ': ' + fmt(t1 / 100) + ' → ' + fmt(s.total)));
+          }
+        }
+        tr.appendChild(cell);
+      });
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb);
+    box.appendChild(t);
   }
   function lessonLinks(ids, prefix) {
     var p = el('p', 'les');
@@ -1160,6 +1274,7 @@ details.fold>.fold-body{padding:0 var(--s4) var(--s4)}
   }
   function renderRefs() {
     $('#checked').textContent = D.checked;
+    Array.prototype.forEach.call(document.querySelectorAll('[data-checked]'), function (n) { n.textContent = D.checked; });
     var sl = $('#srcList'); sl.textContent = '';
     D.sources.forEach(function (s) {
       var li = refItem(s.id, s.name, s.url);
@@ -1308,6 +1423,7 @@ details.fold>.fold-body{padding:0 var(--s4) var(--s4)}
       renderTeam();
       renderGloss();
       renderRefs();
+      renderRounds();
       upgradeTerms(document);
       if (/^#src-/.test(location.hash)) {
         var c = document.querySelector(location.hash);
