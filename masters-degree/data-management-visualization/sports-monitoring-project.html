@@ -161,10 +161,9 @@ main{max-width:calc(var(--read) + 2 * var(--gutter));margin:0 auto;padding:0 var
 .t-lab{font:400 13px var(--font);fill:var(--ink)}
 .t-val{font:600 13px var(--font);fill:var(--ink)}
 .t-val tspan.v{fill:var(--ink-2);font-weight:400}
-#chart text,.mcard text{paint-order:stroke;stroke-width:4px;stroke-linejoin:round}
-#chart text{stroke:var(--surface)}
-.mcard text{stroke:var(--inset)}
-.bar-row:hover text,.bar-row:focus-visible text{stroke:var(--sunk)}
+#chart .tbg{fill:var(--surface)}
+.bar-row:hover .tbg,.bar-row:focus-visible .tbg{fill:var(--sunk)}
+.mcard text{paint-order:stroke;stroke:var(--inset);stroke-width:4px;stroke-linejoin:round}
 .s-grid{stroke:var(--line);stroke-width:1}
 .s-thr{stroke:var(--stroke);stroke-width:1}
 .bar-row{cursor:pointer;outline:none}
@@ -242,7 +241,7 @@ details.fold>.fold-body{padding:0 var(--s4) var(--s4)}
 .pipe b{font-family:var(--display)}
 .pipe p{margin:var(--s2) 0 0}
 .pipe .les{font-size:var(--fs-xs);color:var(--ink-2)}
-.les a,.src-links a{display:inline-flex;align-items:center;min-height:var(--tap);padding:0 var(--s1)}
+.les a,.src-links a{display:inline-flex;align-items:center;justify-content:center;min-height:var(--tap);min-width:var(--tap);padding:0 var(--s1)}
 @media (max-width:720px){.pipe{grid-template-columns:minmax(0,1fr)}}
 
 /* ═══ CÔNG THỨC ═══ */
@@ -890,6 +889,12 @@ details.fold>.fold-body{padding:0 var(--s4) var(--s4)}
     while (s.length > 1 && t.getComputedTextLength() > max) { s = s.slice(0, -1); t.textContent = s.trimEnd() + '…'; }
     var tt = svg('title', {}, t); tt.textContent = full;
   }
+  /* Nền chữ cùng màu thẻ: vạch lưới đi sau chữ thì bị che, chữ không bị gạch ngang. */
+  function textBg(t) {
+    var b = t.getBBox();
+    var r = svg('rect', { x: b.x - 3, y: b.y - 1, width: b.width + 6, height: b.height + 2, rx: 3, 'class': 'tbg' });
+    t.parentNode.insertBefore(r, t);
+  }
   function drawChart() {
     var box = $('#chart');
     var W = Math.floor(box.clientWidth);
@@ -923,6 +928,7 @@ details.fold>.fold-body{padding:0 var(--s4) var(--s4)}
         var vs = svg('tspan', { 'class': 'v' }, vt); vs.textContent = r.verdict.name;
         var lt = stext(a, 2, y + 18, 't-lab', label, 'start');
         fitText(lt, W - vt.getComputedTextLength() - 16);
+        textBg(vt); textBg(lt);
         by = y + 26;
       } else {
         var lt2 = stext(a, labW, y + rowH / 2 + 4.5, 't-lab', label, 'end');
@@ -931,6 +937,7 @@ details.fold>.fold-body{padding:0 var(--s4) var(--s4)}
         var vt2 = stext(a, X(r.total) + 8, y + rowH / 2 + 4.5, 't-val', '', 'start');
         vt2.appendChild(document.createTextNode(val + ' '));
         var vs2 = svg('tspan', { 'class': 'v' }, vt2); vs2.textContent = r.verdict.name;
+        textBg(vt2);
       }
       svg('path', { d: barPath(X(0), X(r.total), by, barH, 4), 'class': 'bar f-' + r.verdict.color }, a);
       a.addEventListener('click', function (e) {
