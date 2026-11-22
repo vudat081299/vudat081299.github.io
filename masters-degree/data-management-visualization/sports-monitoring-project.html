@@ -91,6 +91,20 @@ main{max-width:calc(var(--read) + 2 * var(--gutter));margin:0 auto;padding:0 var
 .prior p:last-child{margin:0}
 @media (max-width:640px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
+/* ═══ KẾ HOẠCH MỘT TRANG ═══ */
+.onepage{margin:var(--s4) 0 var(--s5);padding:var(--s4) var(--s5);border:1px solid var(--ink);border-radius:var(--r);background:var(--surface);box-shadow:var(--shadow);font-size:var(--fs-sm);line-height:1.55}
+.onepage h2{font-size:var(--fs-h3);margin-bottom:var(--s2)}
+.op-one{font-size:var(--fs);font-weight:600}
+.op-data .lab,.kw-line .lab{display:inline}
+.op-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s3) var(--s5);margin:var(--s3) 0}
+.op-q,.op-w1{margin:var(--s1) 0 0;padding-left:1.4em}
+.op-q li,.op-w1 li{margin:var(--s1) 0}
+.op-w1 b{font-weight:600}
+.op-links{display:flex;flex-wrap:wrap;gap:var(--s2);margin:0}
+.op-links a{display:inline-flex;align-items:center;min-height:var(--tap);padding:0 var(--s4);border:1px solid var(--stroke);border-radius:var(--r-pill);text-decoration:none;font-weight:600}
+.op-links a:hover{border-color:var(--ink)}
+@media (max-width:720px){.onepage{padding:var(--s4)}.op-grid{grid-template-columns:minmax(0,1fr)}}
+
 /* ═══ MỤC LỤC NHANH ═══ */
 .jump{display:flex;flex-wrap:wrap;gap:var(--s2);margin:0 0 var(--s2);padding:0;list-style:none}
 .jump li{margin:0}
@@ -111,8 +125,8 @@ main{max-width:calc(var(--read) + 2 * var(--gutter));margin:0 auto;padding:0 var
 .pill{display:inline-flex;align-items:center;gap:var(--s2);padding:var(--s1) var(--s3);border:1px solid var(--stroke);border-radius:var(--r-pill);font:500 var(--fs-lab) var(--mono);letter-spacing:.04em;text-transform:uppercase;color:var(--ink);background:var(--surface)}
 .sw{display:inline-block;flex:none;width:var(--dot);height:var(--dot);border-radius:50%}
 .sw.c1{background:var(--c1)} .sw.c2{background:var(--c2)} .sw.c3{background:var(--c3)} .sw.c4{background:var(--c4)} .sw.c5{background:var(--c5)} .sw.c6{background:var(--c6)}
-.kw{display:flex;flex-wrap:wrap;gap:var(--s2);list-style:none;padding:0}
-.kw li{margin:0}
+.kw-line{font-size:var(--fs-sm);line-height:1.8}
+.kw-line .lab{display:inline;margin-right:var(--s2)}
 .les-links a{display:inline-flex;align-items:center;justify-content:center;min-height:var(--tap);min-width:var(--tap);padding:0 var(--s1)}
 @media (max-width:720px){.cols{grid-template-columns:minmax(0,1fr)}}
 
@@ -187,21 +201,26 @@ details.fold>summary::before{content:"›";display:inline-block;width:1em;color:
 details.fold[open]>summary::before{transform:rotate(90deg)}
 details.fold>.fold-body{padding:0 var(--s4) var(--s4)}
 
-/* ═══ THẺ NGUỒN ═══ */
-.cards{display:grid;gap:var(--s3);margin-top:var(--s5)}
-.src{padding:var(--s4);border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+/* ═══ THẺ NGUỒN: gập mặc định, một dòng tên · kết luận · điểm ═══ */
+.cards-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--s2);margin-top:var(--s5)}
+.cards-head .sub{margin:0;font-size:var(--fs-sm)}
+.cards{display:grid;gap:var(--s2);margin-top:var(--s3)}
+.src{border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
 .src:focus{outline:none}
 .src.flash{border-color:var(--green)}
-.src-h{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:var(--s3);align-items:start}
-.src-id{display:inline-flex;align-items:center;justify-content:center;min-width:2.6em;padding:var(--s1) var(--s2);border-radius:var(--r-sm);background:var(--sunk);font:500 var(--fs-xs) var(--mono)}
-.src-h h3{margin:0;font-size:var(--fs-sm);line-height:1.4}
-.src-h h3 a{display:inline-flex;align-items:center;min-height:var(--tap)}
+.src-sum{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto auto;align-items:center;gap:var(--s3);min-height:var(--tap);padding:var(--s2) var(--s4);cursor:pointer;list-style:none;font-size:var(--fs-sm)}
+.src-sum::-webkit-details-marker{display:none}
+.src-sum::after{content:"›";color:var(--ink-3);transition:transform .15s}
+.src[open]>.src-sum::after{transform:rotate(90deg)}
+.src-id{display:inline-flex;align-items:center;justify-content:center;min-width:3.4em;padding:var(--s1) var(--s2);border-radius:var(--r-sm);background:var(--sunk);font:500 var(--fs-xs) var(--mono)}
+.src-name{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.src-tot{font:600 var(--fs-h3) var(--display);font-variant-numeric:tabular-nums}
+.verdict{display:inline-flex;align-items:center;gap:var(--s2);font-size:var(--fs-xs);font-weight:600;white-space:nowrap}
+.src-in{padding:0 var(--s4) var(--s4);border-top:1px solid var(--line)}
+.src-in h3{margin:var(--s2) 0 0;font-size:var(--fs-sm);line-height:1.4}
+.src-in h3 a{display:inline-flex;align-items:center;min-height:var(--tap)}
 .src-meta{display:flex;flex-wrap:wrap;gap:var(--s1);margin:0}
 .tag{display:inline-block;padding:0 var(--s2);border:1px solid var(--line);border-radius:var(--r-pill);font-size:var(--fs-lab);line-height:1.8;color:var(--ink-2)}
-.src-score{text-align:right}
-.src-score b{display:block;font:600 var(--fs-big)/1 var(--display)}
-.src-score small{display:block;font-size:var(--fs-lab);color:var(--ink-3)}
-.verdict{display:inline-flex;align-items:center;gap:var(--s2);margin-top:var(--s1);font-size:var(--fs-xs);font-weight:600;white-space:nowrap}
 .meters{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--s2) var(--s4);margin:var(--s4) 0 var(--s3)}
 .meter{font-size:var(--fs-lab);color:var(--ink-2)}
 .meter-top{display:flex;justify-content:space-between;gap:var(--s2)}
@@ -215,7 +234,12 @@ details.fold>.fold-body{padding:0 var(--s4) var(--s4)}
 .src-body dd.warn{padding:var(--s2) var(--s3);border:1px solid var(--stroke);border-radius:var(--r-sm);background:var(--sunk)}
 .src-links{font-size:var(--fs-xs);margin:var(--s2) 0 0;color:var(--ink-2)}
 .src-links a{display:inline-flex;align-items:center;justify-content:center;min-height:var(--tap);min-width:var(--tap);padding:0 var(--s1)}
-@media (max-width:720px){.meters{grid-template-columns:repeat(2,minmax(0,1fr))}.src-h{grid-template-columns:auto minmax(0,1fr)}.src-score{grid-column:1 / -1;display:flex;align-items:baseline;gap:var(--s3);text-align:left}}
+@media (max-width:720px){
+  .meters{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .src-sum{grid-template-columns:auto minmax(0,1fr) auto auto;gap:var(--s2);padding:var(--s2) var(--s3)}
+  .src-sum .verdict{grid-column:2;grid-row:2}
+  .src-in{padding:0 var(--s3) var(--s3)}
+}
 
 /* ═══ BA PHƯƠNG ÁN ═══ */
 .opts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s3);margin-top:var(--s3)}
@@ -453,6 +477,16 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
   <div class="eyebrow">Đồ án nhóm · IT5425 Data Management and Visualization</div>
   <h1>Theo dõi bất thường trong thể thao: chọn nguồn và cách làm</h1>
   <p class="lede">Chúng tôi không tìm thấy dự án công khai nào làm đủ cả bốn phương pháp trên dữ liệu thể thao (không chứng minh được là không có), nên nhóm tự ráp: bóng đá Premier League, dữ liệu football-data.co.uk, công thức tự viết theo nguồn chuẩn.</p>
+  <div class="onepage" id="ke-hoach">
+    <h2>Kế hoạch một trang</h2>
+    <p class="op-one">Giám sát Premier League như bệnh viện giám sát chất lượng: ai khác thường, và đổi từ lúc nào — bằng ngoại lai, <span class="term">ANOM</span>, <span class="term">CUSUM</span>, <span class="term">SPRT</span> trên dữ liệu football-data.co.uk.</p>
+    <p class="op-data"><span class="lab">Dữ liệu</span> Mỗi mùa một file <span class="term">CSV</span>, ví dụ <code>https://www.football-data.co.uk/mmz4281/2021/E0.csv</code>: <code>2021</code> là mùa 2020/21, <code>E0</code> là Premier League.</p>
+    <div class="op-grid">
+      <div><span class="lab">Bốn câu hỏi</span><ol class="op-q" id="planQ"></ol></div>
+      <div><span class="lab">Tuần 1: mỗi vai một việc</span><ol class="op-w1" id="planW1"></ol></div>
+    </div>
+    <p class="op-links"><a href="#lo-trinh">Kế hoạch đầy đủ</a><a href="#top-3">Vì sao chọn A, phương án khác</a><a href="#can-xac-nhan">Hỏi gì trước</a></p>
+  </div>
   <p class="brief">Đề bài: <q lang="en">Outlier detection, analysis of means, CUSUM and sequential probability ratio testing. Applications in sports.</q> Nhóm 7 người nộp slide, báo cáo và demo.</p>
   <div class="stats" id="heroStats" aria-live="polite"></div>
 
@@ -524,35 +558,19 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
 <section id="lineage" class="block">
   <h2>Từ khoá “Data Lineage &amp; Provenance” có đúng không?</h2>
   <p><span class="pill"><span class="sw c5" aria-hidden="true"></span>Phần lớn là sai</span></p>
-  <p>Đúng ở chỗ lineage và provenance là chủ đề thật, có trong bài 1 và bài 3. Sai ở ý dùng chúng thay cho tên môn.</p>
   <div class="cols">
     <div class="box">
       <h3>Đúng ở đâu</h3>
-      <p>Đây là thuật ngữ quốc tế có thật, và môn đã dạy cả hai.</p>
-      <ul>
-        <li><span class="term">Lineage</span>: bài 1, mục <a href="data-management-visualization.html#b1-quy-trinh">Quy trình và công cụ</a> của <span class="term">data governance</span>.</li>
-        <li><span class="term">Provenance</span> của <span class="term">Apache NiFi</span>: bài 3, mục <a href="data-management-visualization.html#b3-nifi">Apache NiFi</a>.</li>
-      </ul>
+      <p>Là thuật ngữ quốc tế có thật, và môn đã dạy: <span class="term">lineage</span> ở <a href="data-management-visualization.html#b1-quy-trinh">bài 1</a> (<span class="term">data governance</span>), <span class="term">provenance</span> của <span class="term">Apache NiFi</span> ở <a href="data-management-visualization.html#b3-nifi">bài 3</a>.</p>
     </div>
     <div class="box">
       <h3>Sai ở đâu</h3>
-      <p>Chúng là một mảng con của <span class="term">quản lý metadata</span> và quản trị dữ liệu trong <span class="term">DAMA-DMBOK</span>. Không đồng nghĩa với “quản lý dữ liệu và trực quan hoá”: không có phần hình.</p>
-      <p>Chúng cũng không liên quan tới bốn phương pháp thống kê, nên tìm bằng chúng chỉ ra công cụ quản trị dữ liệu.</p>
-      <p>Tên môn tự nó đã là tên dùng quốc tế: Đại học Wesleyan có môn <a href="https://www.coursera.org/learn/data-visualization">Data Management and Visualization</a> trên Coursera, và đề cương không nhắc lineage.</p>
+      <p>Chỉ là một mảng con của <span class="term">quản lý metadata</span> (<span class="term">DAMA-DMBOK</span>): không có phần hình, không liên quan bốn phương pháp. Tên môn tự nó đã là tên quốc tế: Wesleyan có môn <a href="https://www.coursera.org/learn/data-visualization">Data Management and Visualization</a> trên Coursera, đề cương không nhắc lineage.</p>
     </div>
   </div>
-  <h3>Dùng thế nào trong đồ án</h3>
-  <p>Làm một mục của báo cáo: một <span class="term">data card</span> và một sơ đồ lineage cho thấy dữ liệu đến từ đâu, qua những bước biến đổi nào.</p>
-  <p>Ví dụ ngược có sẵn: repo MLOps nhóm tìm (thẻ A4) không ghi bộ dữ liệu nào đã huấn luyện mô hình nào, nên không lần ngược được từ một dự đoán về dữ liệu gốc. Lineage chính là bản ghi ấy.</p>
-  <h3>Từ khoá tìm tốt hơn</h3>
-  <ul class="kw">
-    <li><code>statistical process control sports</code></li>
-    <li><code>CUSUM sports performance</code></li>
-    <li><code>sequential probability ratio test sports</code></li>
-    <li><code>analysis of means ANOM</code></li>
-    <li><code>change point detection sports</code></li>
-  </ul>
-  <p class="sub">Định nghĩa nên trích: <a href="https://www.w3.org/TR/prov-overview/">W3C PROV Overview</a> (W3C Note, 30/04/2013), <a href="https://openlineage.io/docs/">tài liệu OpenLineage</a>, và bài tổng quan của Herschel, Diestelkämper, Ben Lahmar (2017) trên VLDB Journal.</p>
+  <p>Dùng cho một mục của báo cáo: một <span class="term">data card</span> và một sơ đồ lineage cho thấy dữ liệu đến từ đâu, qua bước nào. Ví dụ ngược: repo MLOps ở thẻ A4 không ghi dữ liệu nào đã huấn luyện mô hình nào, nên không lần ngược được.</p>
+  <p class="kw-line"><span class="lab">Từ khoá tìm tốt hơn</span> <code>statistical process control sports</code> · <code>CUSUM sports performance</code> · <code>sequential probability ratio test sports</code> · <code>analysis of means ANOM</code> · <code>change point detection sports</code></p>
+  <p class="sub">Định nghĩa nên trích: <a href="https://www.w3.org/TR/prov-overview/">W3C PROV Overview</a>, <a href="https://openlineage.io/docs/">tài liệu OpenLineage</a>, bài tổng quan của Herschel và cs. (2017).</p>
 </section>
 
 <!-- ═══════════════ CHẤM ĐIỂM ═══════════════ -->
@@ -580,6 +598,10 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
     </div>
   </details>
 
+  <div class="cards-head">
+    <p class="sub">Mỗi thẻ gập còn một dòng: tên · kết luận · điểm. Bấm để mở.</p>
+    <button class="chip" type="button" id="cardsAll" aria-pressed="false">Mở tất cả thẻ</button>
+  </div>
   <div class="cards" id="cards"></div>
 </section>
 
@@ -853,6 +875,8 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
     return t;
   }
   function fmt(n, d) { return n.toLocaleString('vi-VN', { maximumFractionDigits: d == null ? 2 : d }); }
+  /* Điểm tổng hiện một chữ số, làm tròn xuống từ t100 để không bao giờ vượt ngưỡng kết luận. */
+  function fmt1(r) { return (Math.floor(r.t100 / 10) / 10).toLocaleString('vi-VN', { minimumFractionDigits: 1, maximumFractionDigits: 1 }); }
   function norm(s) { return String(s).normalize('NFC').toLowerCase().replace(/\s+/g, ' ').trim(); }
   function lessonLabel(id) { return 'Bài ' + id.slice(1).replace('-', '.'); }
   function srcById(id) { return D.sources.filter(function (x) { return x.id === id; })[0]; }
@@ -1179,6 +1203,7 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
     var card = document.getElementById('src-' + id.toLowerCase());
     if (!card) return;
     hideTip();
+    card.open = true;
     card.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
     card.focus({ preventScroll: true });
     card.classList.add('flash');
@@ -1213,30 +1238,27 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
     var box = $('#cards');
     box.textContent = '';
     sorted(shown()).forEach(function (r) {
-      var c = el('article', 'src');
+      var c = el('details', 'src');
       c.id = 'src-' + r.id.toLowerCase();
       c.tabIndex = -1;
-      var h = el('header', 'src-h');
-      h.appendChild(el('span', 'src-id', r.id));
-      var tt = el('div');
-      var h3 = el('h3');
-      var a = el('a', null, r.name); a.href = r.url;
-      h3.appendChild(a);
-      tt.appendChild(h3);
-      var meta = el('p', 'src-meta');
-      meta.appendChild(el('span', 'tag', groupName(r.group)));
-      meta.appendChild(el('span', 'tag', r.role));
-      tt.appendChild(meta);
-      h.appendChild(tt);
-      var sc = el('div', 'src-score');
-      sc.appendChild(el('b', null, fmt(r.total)));
-      sc.appendChild(el('small', null, 'trên 10'));
+      var sm = el('summary', 'src-sum');
+      sm.appendChild(el('span', 'src-id', r.id));
+      sm.appendChild(el('span', 'src-name', r.short));
       var vd = el('span', 'verdict');
       var sw = el('i', 'sw ' + r.verdict.color); sw.setAttribute('aria-hidden', 'true');
       vd.appendChild(sw); vd.appendChild(document.createTextNode(r.verdict.name));
-      sc.appendChild(vd);
-      h.appendChild(sc);
-      c.appendChild(h);
+      sm.appendChild(vd);
+      sm.appendChild(el('b', 'src-tot', fmt1(r)));
+      c.appendChild(sm);
+      var body = el('div', 'src-in');
+      var h3 = el('h3');
+      var a = el('a', null, r.name); a.href = r.url;
+      h3.appendChild(a);
+      body.appendChild(h3);
+      var meta = el('p', 'src-meta');
+      meta.appendChild(el('span', 'tag', groupName(r.group)));
+      meta.appendChild(el('span', 'tag', r.role));
+      body.appendChild(meta);
       var ms = el('div', 'meters');
       D.criteria.forEach(function (cr, i) {
         var m = el('div', 'meter');
@@ -1252,7 +1274,7 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
         m.appendChild(bar);
         ms.appendChild(m);
       });
-      c.appendChild(ms);
+      body.appendChild(ms);
       var dl = el('dl', 'src-body');
       [['Là gì', 'what_html'], ['Vì sao điểm này', 'why_html'], ['Dùng thế nào', 'use_html'], ['Cảnh báo', 'warn_html']].forEach(function (p) {
         if (!r[p[1]]) return;
@@ -1261,7 +1283,7 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
         if (p[1] === 'warn_html') dd.className = 'warn';
         dl.appendChild(dd);
       });
-      c.appendChild(dl);
+      body.appendChild(dl);
       if (r.links && r.links.length) {
         var lk = el('p', 'src-links');
         lk.appendChild(document.createTextNode('Link thêm: '));
@@ -1269,11 +1291,45 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
           if (i) lk.appendChild(document.createTextNode(' · '));
           var la = el('a', null, l.label); la.href = l.url; lk.appendChild(la);
         });
-        c.appendChild(lk);
+        body.appendChild(lk);
       }
+      c.appendChild(body);
+      if (allOpen) c.open = true;
       box.appendChild(c);
     });
     upgradeTerms(box);
+  }
+  /* Mở hay gập mọi thẻ đang hiện. */
+  var allOpen = false;
+  function initCardToggle() {
+    var b = $('#cardsAll');
+    b.addEventListener('click', function () {
+      allOpen = !allOpen;
+      b.setAttribute('aria-pressed', String(allOpen));
+      b.textContent = allOpen ? 'Gập tất cả thẻ' : 'Mở tất cả thẻ';
+      Array.prototype.forEach.call(document.querySelectorAll('#cards .src'), function (d) { d.open = allOpen; });
+    });
+  }
+
+  /* ═══ KẾ HOẠCH MỘT TRANG: câu hỏi lấy từ plan_a, việc tuần 1 từ week1. */
+  function renderPlanBox() {
+    var q = $('#planQ');
+    q.textContent = '';
+    D.plan_a.forEach(function (x) {
+      var li = el('li');
+      li.appendChild(el('b', null, x.method + ': '));
+      li.appendChild(document.createTextNode(x.q));
+      q.appendChild(li);
+    });
+    var w = $('#planW1');
+    w.textContent = '';
+    D.week1.forEach(function (x) {
+      var li = el('li');
+      li.appendChild(el('b', null, D.team[x.role - 1].role + ': '));
+      li.appendChild(html(el('span'), x, 'task_html'));
+      w.appendChild(li);
+    });
+    upgradeTerms($('#ke-hoach'));
   }
 
   /* ═══ BA PHƯƠNG ÁN: điểm lấy từ nguồn dữ liệu chính, chấm khớp từ options[].fit ═══ */
@@ -1815,6 +1871,8 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
       D.verdicts.sort(function (a, b) { return b.min - a.min; });
       D.sources.forEach(score);
       renderHero();
+      renderPlanBox();
+      initCardToggle();
       renderMethods();
       renderCriteria();
       renderChips();
@@ -1838,7 +1896,7 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
       upgradeTerms(document);
       if (/^#src-/.test(location.hash)) {
         var c = document.querySelector(location.hash);
-        if (c) c.scrollIntoView({ block: 'start' });
+        if (c) { c.open = true; c.scrollIntoView({ block: 'start' }); }
       }
     })
     .catch(function (err) { console.error(err); fail(); upgradeTerms(document); });

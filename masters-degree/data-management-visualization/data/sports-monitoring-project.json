@@ -1159,5 +1159,14 @@
     {"title": "Giới hạn và bẫy phương pháp", "min": 1, "who": [1]},
     {"title": "Kết luận", "min": 0.5, "who": [1]},
     {"title": "Hỏi đáp", "min": 0, "who": [1, 2, 3, 4, 5, 6, 7]}
+  ],
+  "week1": [
+    {"role": 1, "task_html": "Gửi giảng viên tin nhắn ở mục <a href=\"#can-xac-nhan\">Cần xác nhận</a>; email football-data.co.uk xin phép; hẹn họp hằng tuần."},
+    {"role": 2, "task_html": "Viết <code>src/download.py</code>, ghi <code>data/manifest.csv</code>; mở <code>docs/data-card.md</code>."},
+    {"role": 3, "task_html": "Viết rào IQR, z đã sửa, Grubbs; thử trên ví dụ của NIST."},
+    {"role": 4, "task_html": "Viết ANOM cho tỉ lệ; thử trên tỉ lệ giả lập."},
+    {"role": 5, "task_html": "Viết CUSUM dạng bảng; thử trên ví dụ của NIST."},
+    {"role": 6, "task_html": "Viết SPRT Bernoulli; thử trên chuỗi giả lập."},
+    {"role": 7, "task_html": "Tạo repo theo cây mẫu, venv, <code>requirements.txt</code>; dựng khung app Streamlit."}
   ]
 }
