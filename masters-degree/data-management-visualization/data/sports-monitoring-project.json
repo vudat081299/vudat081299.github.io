@@ -1106,19 +1106,19 @@
     }
   ],
   "flow": [
-    {"label": "football-data.co.uk", "sub": "mỗi mùa một file CSV", "phase": "P1"},
+    {"label": "football-data.co.uk", "sub": "E0, mỗi mùa một file CSV", "phase": "P1"},
     {"label": "src/download.py", "sub": "tải về, tính SHA-256", "doc": "manifest.csv, data-card.md", "phase": "P1"},
     {"label": "data/raw/", "sub": "file gốc, không commit", "phase": "P1"},
     {"label": "src/clean.py + quality.py", "sub": "gộp mùa, chuẩn tên, luật chất lượng", "doc": "lineage.md", "phase": "P2"},
-    {"label": "data/clean/", "sub": "Parquet + DuckDB", "phase": "P2"},
-    {"label": "outliers · anom · cusum · sprt", "sub": "tham số khoá ở analysis-plan.md", "doc": "lineage.md", "phase": "P5"},
-    {"label": "results/", "sub": "CSV kết quả", "phase": "P5"},
+    {"label": "data/clean/", "sub": "Parquet + DuckDB", "phase": "P2", "demo": true},
+    {"label": "outliers · anom · cusum · sprt", "sub": "tham số khoá ở analysis-plan.md", "doc": "lineage.md", "phase": "P5", "demo": true},
+    {"label": "results/", "sub": "CSV kết quả", "phase": "P5", "demo": true},
     {"label": "src/charts.py", "sub": "hình", "phase": "P6"}
   ],
   "flow_out": [
-    {"label": "Demo", "phase": "P7"},
     {"label": "Slide", "phase": "P8"},
-    {"label": "Báo cáo", "phase": "P8"}
+    {"label": "Báo cáo", "phase": "P8"},
+    {"label": "Demo", "phase": "P7", "demo": true}
   ],
   "repo_tree": [
     {"path": "README.md", "depth": 0, "note": "cách chạy, nguồn, điều khoản"},

@@ -282,7 +282,6 @@ details.fold>.fold-body{padding:0 var(--s4) var(--s4)}
 
 /* ═══ BẢNG XẾP CHỒNG: hai vòng chấm, dàn ý báo cáo; ≤ 720px mỗi dòng thành một khối có nhãn ═══ */
 table.stack{width:100%;border-collapse:collapse;font-size:var(--fs-xs);line-height:1.45}
-table.stack caption{caption-side:bottom;text-align:left;padding-top:var(--s2);color:var(--ink-3)}
 table.stack th,table.stack td{padding:var(--s2);border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
 table.stack thead th{font:500 var(--fs-lab) var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);background:var(--sunk)}
 table.stack tbody th{font-weight:600;width:18%}
@@ -293,6 +292,7 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
   table.stack,table.stack tbody,table.stack tr,table.stack th,table.stack td{display:block;width:auto}
   table.stack tr{padding:var(--s2) 0;border-bottom:1px solid var(--line)}
   table.stack th,table.stack td{border:0;padding:var(--s1) 0}
+  table.stack tbody th{width:auto}
   table.outline td:last-child{text-align:left}
   table.stack td::before{content:attr(data-l);display:block;font:500 var(--fs-lab) var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
 }
@@ -374,14 +374,14 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
 .slides{padding-left:1.6em;font-size:var(--fs-sm)}
 .slides li{margin:var(--s1) 0}
 .sl-m{display:block;font-size:var(--fs-xs);color:var(--ink-3)}
-.checklist{list-style:none;padding:0;margin:var(--s1) 0 0}
-.checklist li{position:relative;padding-left:1.6em;margin:var(--s1) 0}
-.checklist li::before{content:"";position:absolute;left:0;top:.35em;width:.9em;height:.9em;border:1.5px solid var(--ink-2);border-radius:3px}
+.checklist{padding-left:1.25em;margin:var(--s1) 0 0}
+.checklist li{margin:var(--s1) 0}
 
 /* ═══ CÔNG THỨC ═══ */
 .fx{margin:var(--s3) 0;padding:var(--s3) var(--s4);border:1px solid var(--line);border-radius:var(--r-sm);background:var(--inset);font:500 var(--fs-sm)/1.8 var(--mono);overflow-x:auto}
 .fx div{white-space:nowrap}
 .fx-src{font-size:var(--fs-xs);color:var(--ink-3)}
+.ov{text-decoration:overline;text-decoration-thickness:1px}
 
 /* ═══ BẪY ═══ */
 .traps{list-style:none;padding:0}
@@ -401,6 +401,10 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
 
 /* ═══ CÂU HỎI CHỜ ═══ */
 .gaps{padding-left:1.4em}
+.msg-box{border:1px solid var(--stroke);border-radius:var(--r);background:var(--surface)}
+.msg{padding:var(--s4);white-space:pre-wrap;font-size:var(--fs-sm);line-height:1.6;max-height:28em;overflow-y:auto}
+.msg-act{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s3);padding:var(--s2) var(--s4);border-top:1px solid var(--line)}
+.msg-status{font-size:var(--fs-xs);color:var(--ink-2)}
 .gaps li{margin:var(--s2) 0}
 
 /* ═══ THUẬT NGỮ: chữ có chú giải, bong bóng, danh sách ═══ */
@@ -665,7 +669,7 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
       <li>Nhiều câu lạc bộ nhân nhiều phép kiểm thì sẽ có báo động giả. Ghi rõ đã chạy bao nhiêu phép kiểm, và giữ sai số chung (<span class="term">ARL</span> hoặc <span class="term">Bonferroni</span>).</li>
       <li>Đối thủ mạnh yếu khác nhau, nên hiệu số từng trận nhiễu: đọc CUSUM theo xu hướng dài. <span class="term">Phần dư</span> so với tỉ lệ cược bỏ được sức đối thủ, nhưng cũng bỏ luôn phong độ mà nhà cái đã thấy; vì thế chỉ là phần mở rộng.</li>
       <li>Số đếm (bàn, thẻ) không theo phân phối chuẩn.</li>
-      <li>Đừng để phần thống kê nuốt nửa quản lý dữ liệu: nửa ấy là một nửa số điểm.</li>
+      <li>Đừng để phần thống kê nuốt nửa quản lý dữ liệu: nửa ấy có thể tới nửa số điểm. Hỏi giảng viên (<a href="#gui-giang-vien">câu 5</a> trong tin nhắn).</li>
     </ol>
   </div>
 
@@ -689,7 +693,7 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
   <div class="flow-wrap">
     <figure class="flow-fig">
       <div id="flow"></div>
-      <figcaption>Luồng dữ liệu của phương án A. Bấm một ô để mở pha của nó trên lịch.</figcaption>
+      <figcaption>Luồng dữ liệu của phương án A. Slide và báo cáo lấy hình từ <code>charts.py</code>; demo đọc thẳng <code>data/clean/</code> và <code>results/</code>, gọi lại các hàm trong <code>src/</code> khi kéo thanh trượt. Bấm một ô để mở pha của nó trên lịch.</figcaption>
     </figure>
     <div class="flow-note">
       <p>Dòng “ghi vào” là chỗ nhóm ghi <span class="term">lineage</span>:</p>
@@ -721,18 +725,18 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
     <summary>Công thức cần tự viết là gì?</summary>
     <div class="fold-body">
       <h4>Ngoại lai</h4>
-      <div class="fx"><div>z<sub>i</sub> = (x<sub>i</sub> − x̄) / s</div><div>z đã sửa: M<sub>i</sub> = 0,6745 · (x<sub>i</sub> − x̃) / MAD, nghi khi |M<sub>i</sub>| &gt; 3,5</div><div>rào: dưới Q1 − 1,5·IQR hoặc trên Q3 + 1,5·IQR</div></div>
-      <p>x̃ là trung vị. <span class="term">Grubbs</span> và generalized ESD giả định dữ liệu gần chuẩn. Bàn thắng và thẻ là số đếm, nên dùng rào IQR hoặc <span class="term">xác suất đuôi Poisson</span>.</p>
+      <div class="fx"><div>z<sub>i</sub> = (x<sub>i</sub> − <span class="ov">x</span>) / s</div><div>z đã sửa: M<sub>i</sub> = 0,6745 · (x<sub>i</sub> − m) / MAD, nghi khi |M<sub>i</sub>| &gt; 3,5</div><div>rào: dưới Q1 − 1,5·IQR hoặc trên Q3 + 1,5·IQR</div></div>
+      <p><span class="ov">x</span> là trung bình, m là trung vị, MAD là trung vị của |x<sub>i</sub> − m|. <span class="term">Grubbs</span> và generalized ESD giả định dữ liệu gần chuẩn. Bàn thắng và thẻ là số đếm, nên dùng rào IQR hoặc <span class="term">xác suất đuôi Poisson</span>.</p>
       <p class="fx-src">Nguồn: NIST/SEMATECH e-Handbook <a href="https://www.itl.nist.gov/div898/handbook/eda/section3/eda35h.htm">1.3.5.17</a>, <a href="https://www.itl.nist.gov/div898/handbook/eda/section3/eda35h1.htm">Grubbs</a>, <a href="https://www.itl.nist.gov/div898/handbook/eda/section3/eda35h3.htm">generalized ESD</a>.</p>
 
       <h4>ANOM, dữ liệu chuẩn: giới hạn quyết định</h4>
-      <div class="fx"><div>UDL, LDL = ȳ ± h · s<sub>p</sub> · √((N − n<sub>i</sub>) / (N · n<sub>i</sub>))</div></div>
-      <p>ȳ là trung bình chung, s<sub>p</sub> là độ lệch chuẩn gộp, N là tổng số quan sát, n<sub>i</sub> là số quan sát của nhóm i, r là số nhóm.</p>
+      <div class="fx"><div>UDL, LDL = <span class="ov">y</span> ± h · s<sub>p</sub> · √((N − n<sub>i</sub>) / (N · n<sub>i</sub>))</div></div>
+      <p><span class="ov">y</span> là trung bình chung, s<sub>p</sub> là độ lệch chuẩn gộp, N là tổng số quan sát, n<sub>i</sub> là số quan sát của nhóm i, r là số nhóm.</p>
       <p>Cách lấy h: các nhóm cùng cỡ và 0,001 ≤ α ≤ 0,1 thì Minitab lấy h chính xác từ bảng của Nelson (1983). Các nhóm khác cỡ thì dùng t hiệu chỉnh <span class="term">Šidák</span>: h = t(α<sub>2</sub>; N − r), α<sub>2</sub> = (1 − (1 − α)<sup>1/r</sup>) / 2. Cách này là xấp xỉ, hơi bảo thủ: với 4 nhóm, mỗi nhóm 5, α = 0,05, h đúng khoảng 2,74 còn Šidák cho 2,80.</p>
       <p class="fx-src">Nguồn: <a href="https://support.minitab.com/en-us/minitab/help-and-how-to/statistical-modeling/anova/how-to/analysis-of-means/methods-and-formulas/one-way-designs-with-normal-data">Minitab, ANOM với dữ liệu chuẩn</a>.</p>
 
       <h4>ANOM cho tỉ lệ (tỉ lệ thắng)</h4>
-      <div class="fx"><div>p̄ = Σ p<sub>i</sub> / k,  s = √(p̄ (1 − p̄) / n)</div><div>UDL, LDL = p̄ ± h<sub>α</sub> · s · √((k − 1) / k)</div><div>h<sub>α</sub>: phân vị chuẩn tại 1 − α / (2k)</div></div>
+      <div class="fx"><div><span class="ov">p</span> = Σ p<sub>i</sub> / k,  s = √(<span class="ov">p</span> (1 − <span class="ov">p</span>) / n)</div><div>UDL, LDL = <span class="ov">p</span> ± h<sub>α</sub> · s · √((k − 1) / k)</div><div>h<sub>α</sub>: phân vị chuẩn tại 1 − α / (2k)</div></div>
       <p>Tỉ lệ thắng là tỉ lệ, nên dùng <span class="term">ANOM cho tỉ lệ</span>. Trang Minitab chỉ cho trường hợp k nhóm cùng cỡ n. Các giải có số trận khác nhau: so cùng số trận mỗi giải, hoặc tìm công thức khác cỡ ở nguồn khác.</p>
       <p class="fx-src">Nguồn: <a href="https://support.minitab.com/en-us/minitab/help-and-how-to/statistical-modeling/anova/how-to/analysis-of-means/methods-and-formulas/binomial-data/">Minitab, ANOM với dữ liệu nhị thức</a>.</p>
 
@@ -796,22 +800,40 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
 <!-- ═══════════════ CẦN XÁC NHẬN ═══════════════ -->
 <section id="can-xac-nhan" class="block">
   <h2>Cần bạn xác nhận</h2>
-  <p class="sub">Những điều chỉ nhóm hoặc giảng viên biết. Có câu trả lời thì trang được sửa theo.</p>
-  <ol class="gaps">
-    <li>Đề bài chính xác và tiêu chí chấm của giảng viên. Đề có nằm trong một danh sách không? Nhóm có được tự chọn môn thể thao không?</li>
-    <li>Hạn nộp, thời lượng thuyết trình, độ dài báo cáo, ngôn ngữ (Anh hay Việt).</li>
-    <li>“Demo” là gì: app chạy trực tiếp, notebook hay video?</li>
-    <li>Giảng viên có chờ một phần quản lý dữ liệu (đường ống, lineage) không, hay chỉ phân tích và hình? Ai gợi ý từ khoá “Data Lineage &amp; Provenance”, trong bối cảnh nào?</li>
-    <li>Nhóm dùng Python hay R? Đã ai dùng Streamlit chưa?</li>
-    <li>Chọn A (bóng đá Premier League), B (F1) hay C (bóng đá quốc tế)? Trang đang chốt A.</li>
-    <li>Có bắt buộc dữ liệu Việt Nam (V.League) không? Trang này chưa kiểm nguồn V.League.</li>
-    <li>Giảng viên có chấp nhận football-data.co.uk (điều khoản chỉ cho cá nhân, chỉ để dự đoán) không, và repo có được để công khai không?</li>
-    <li>Có bắt buộc dùng HDFS, Spark hay NiFi không, hay một đường ống DuckDB chạy trên máy là đủ?</li>
-    <li>Tỉ trọng điểm giữa phần phương pháp và phần quản lý dữ liệu cùng trực quan hoá là bao nhiêu?</li>
-    <li>Có bắt buộc một bộ dữ liệu cho cả bốn phương pháp không?</li>
-    <li>Chấm theo từng người hay cả nhóm?</li>
+  <p class="sub">Hai phần: điều chỉ giảng viên trả lời được, và điều nhóm tự chốt. Có câu trả lời thì trang được sửa theo.</p>
+
+  <h3 id="gui-giang-vien">Gửi giảng viên</h3>
+  <p class="sub">Tin nhắn soạn sẵn; sửa chữ trong ngoặc vuông rồi gửi.</p>
+  <div class="msg-box">
+    <div class="msg" id="gvMsg" tabindex="0" aria-label="Tin nhắn gửi giảng viên">Kính gửi thầy/cô,
+
+Nhóm em đang chuẩn bị đồ án môn Data Management and Visualization (IT5425), đề tài “Outlier detection, analysis of means, CUSUM and sequential probability ratio testing. Applications in sports”. Để làm đúng yêu cầu, nhóm em xin hỏi thầy/cô mấy điều:
+
+1. Thầy/cô cho em xin đề bài đầy đủ và tiêu chí chấm. Đề có nằm trong một danh sách không, và nhóm có được tự chọn môn thể thao không?
+2. Hạn nộp, thời lượng thuyết trình, độ dài báo cáo là bao nhiêu, và báo cáo viết tiếng Anh hay tiếng Việt?
+3. “Demo” là app chạy trực tiếp, notebook hay video?
+4. Thầy/cô có muốn một phần quản lý dữ liệu (đường ống, lineage) không, hay chỉ phân tích và hình? Từ khoá “Data Lineage &amp; Provenance” có phải yêu cầu của thầy/cô không? Có bắt buộc dùng HDFS, Spark hay NiFi không, hay một đường ống DuckDB chạy trên máy là đủ?
+5. Tỉ trọng điểm giữa phần phương pháp và phần quản lý dữ liệu, trực quan hoá là bao nhiêu?
+6. Nhóm định dùng dữ liệu của football-data.co.uk. Trang ghi dữ liệu chỉ dành cho cá nhân và cho dự đoán kết quả trận. Thầy/cô có chấp nhận nguồn này không, và repo của nhóm có được để công khai không?
+7. Có bắt buộc một bộ dữ liệu cho cả bốn phương pháp không? Có cần dữ liệu Việt Nam không?
+8. Điểm chấm theo từng người hay cả nhóm?
+
+Em cảm ơn thầy/cô.
+[Tên nhóm, lớp]</div>
+    <div class="msg-act">
+      <button class="chip" type="button" id="copyMsg">Chép tin nhắn</button>
+      <span class="msg-status" id="copyStatus" role="status" aria-live="polite"></span>
+    </div>
+  </div>
+
+  <h3 id="nhom-tu-chot">Nhóm tự chốt</h3>
+  <ul class="gaps">
+    <li>Chọn A (bóng đá Premier League), B (F1) hay C (bóng đá quốc tế)? Trang đang chốt A; nếu giảng viên hay football-data.co.uk không đồng ý thì theo cây chọn ở <a href="#top-3">Ba phương án</a>.</li>
+    <li>Python hay R? Đã ai dùng Streamlit chưa?</li>
+    <li>Ai nhận vai nào trong bảy vai ở <a href="#lt-vai">Ai làm gì</a>.</li>
+    <li>Số tuần còn lại, để chọn trên <a href="#lt-lich">lịch</a>.</li>
     <li>Ghi cho slide: tên đúng là “sequential probability <b>ratio</b> test”, không phải “ration”.</li>
-  </ol>
+  </ul>
 </section>
 
 <!-- ═══════════════ THUẬT NGỮ ═══════════════ -->
@@ -819,6 +841,10 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
   <h2>Thuật ngữ</h2>
   <p class="sub">Chữ có gạch chấm xanh là thuật ngữ: rê chuột, bấm Tab tới hoặc chạm vào để xem nghĩa. Bản đầy đủ ở đây, cho khi in hay đọc trên điện thoại.</p>
   <dl class="gloss" id="gloss"></dl>
+  <details class="fold" id="glossMore">
+    <summary id="glossMoreSum">Thuật ngữ khác (trong thẻ nguồn)</summary>
+    <div class="fold-body"><dl class="gloss" id="gloss2"></dl></div>
+  </details>
 </section>
 
 <!-- ═══════════════ NGUỒN ═══════════════ -->
@@ -1638,11 +1664,13 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
     var W = Math.floor(box.clientWidth);
     if (!W) return;
     box.textContent = '';
-    var gut = 40, nw = Math.min(W - gut - 2, 440), x0 = gut, cx = x0 + nw / 2, gap = 26;
+    /* Cột chính ở giữa; lề phải 20 cho đường gom của demo (đọc data/clean, src/, results/). */
+    var gut = 40, bus = 20, nw = Math.min(W - gut - bus, 440), x0 = gut, cx = x0 + nw / 2, gap = 26;
+    var busX = x0 + nw + bus / 2;
     var pos = [], y = 2;
     D.flow.forEach(function (n) { var h = n.doc ? 64 : 48; pos.push({ y: y, h: h }); y += h + gap; });
-    var lastB = pos[pos.length - 1].y + pos[pos.length - 1].h;
-    var oy = lastB + 34, oh = 48, og = 10, ow = (nw - og * (D.flow_out.length - 1)) / D.flow_out.length;
+    var last = pos.length - 1, lastB = pos[last].y + pos[last].h;
+    var oy = lastB + 44, oh = 48, og = 10, ow = (nw - og * (D.flow_out.length - 1)) / D.flow_out.length;
     var H = oy + oh + 2;
     var s = svg('svg', { width: W, height: H, viewBox: '0 0 ' + W + ' ' + H, role: 'group', 'aria-label': 'Luồng dữ liệu từ nguồn tới demo, slide, báo cáo' }, box);
     function node(n, x, yy, w, h, center) {
@@ -1655,17 +1683,27 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
       if (n.doc) { var t3 = stext(a, tx, yy + 56, 'fn-d', 'ghi vào ' + n.doc, an); fitText(t3, w - 20); }
       a.addEventListener('click', function (e) { e.preventDefault(); selectPhase(n.phase, true); });
     }
+    var demoIn = [];
     D.flow.forEach(function (n, i) {
       var p = pos[i];
       node(n, x0, p.y, nw, p.h, false);
       stext(s, gut - 8, p.y + p.h / 2 + 4, 't-tick', n.phase, 'end');
       if (i) svg('path', { d: 'M' + cx + ',' + (pos[i - 1].y + pos[i - 1].h) + 'V' + (p.y - 6), 'class': 's-arr', 'marker-end': 'url(#arr)' }, s);
+      if (n.demo) demoIn.push(p.y + p.h / 2);
     });
+    var demoK = 0;
     D.flow_out.forEach(function (n, k) {
       var ox = x0 + k * (ow + og);
-      svg('path', { d: 'M' + cx + ',' + lastB + 'L' + (ox + ow / 2) + ',' + (oy - 6), 'class': 's-arr', 'marker-end': 'url(#arr)' }, s);
+      if (n.demo) demoK = k;
+      else svg('path', { d: 'M' + cx + ',' + lastB + 'L' + (ox + ow / 2) + ',' + (oy - 6), 'class': 's-arr', 'marker-end': 'url(#arr)' }, s);
       node(n, ox, oy, ow, oh, true);
     });
+    /* Đường gom: mỗi ô nguồn của demo có một nhánh ngang chạm mép phải, gom vào một đường dọc, mũi tên vào đỉnh ô demo. */
+    if (demoIn.length) {
+      var dcx = x0 + demoK * (ow + og) + ow / 2, turn = oy - 20;
+      demoIn.forEach(function (yy) { svg('path', { d: 'M' + (x0 + nw) + ',' + yy + 'H' + busX, 'class': 's-arr' }, s); });
+      svg('path', { d: 'M' + busX + ',' + demoIn[0] + 'V' + turn + 'H' + dcx + 'V' + (oy - 6), 'class': 's-arr', 'marker-end': 'url(#arr)' }, s);
+    }
   }
 
   /* ═══ REPO MẪU, DÀN Ý BÁO CÁO, DÀN Ý SLIDE ═══ */
@@ -1701,8 +1739,9 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
       tb.appendChild(tr);
     });
     t.appendChild(tb);
-    var cap = el('caption', null, 'Tổng khoảng ' + total + ' trang. Số ở cột Vai là số thứ tự vai ở mục Ai làm gì.');
-    t.insertBefore(cap, thead);
+    var old = t.nextElementSibling;
+    if (old && old.classList.contains('outline-note')) old.remove();
+    t.insertAdjacentElement('afterend', el('p', 'sub outline-note', 'Tổng khoảng ' + total + ' trang. Số ở cột Vai là số thứ tự vai ở mục Ai làm gì.'));
   }
   function renderSlides() {
     var box = $('#slides');
@@ -1721,17 +1760,54 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
   }
 
   /* ═══ THUẬT NGỮ: danh sách đầy đủ ═══ */
+  /* Thuật ngữ chính: dùng ở hero, #de-tai, #top-3, #lo-trinh (kể cả mọi pha, không chỉ pha đang mở). Còn lại gập lại. */
+  function coreTermIds() {
+    var set = {};
+    var add = function (n) { Array.prototype.forEach.call(n.querySelectorAll('.term'), function (t) { var g = lookup(t); if (g) set[g.id] = 1; }); };
+    ['#tom-tat', '#de-tai', '#top-3', '#lo-trinh'].forEach(function (sel) { add($(sel)); });
+    var tmp = el('div');
+    D.phases.forEach(function (ph) {
+      Object.keys(ph).forEach(function (k) {
+        if (!/_html$/.test(k)) return;
+        tmp.appendChild(Array.isArray(ph[k]) ? htmlList('ul', ph, k) : html(el('div'), ph, k));
+      });
+    });
+    add(tmp);
+    return set;
+  }
+  function glossItem(g) {
+    var d = el('div');
+    d.id = 'tn-' + g.id;
+    var dt = el('dt', null, g.term);
+    if (g.full) { dt.appendChild(document.createTextNode(' ')); dt.appendChild(el('small', null, g.full)); }
+    d.appendChild(dt);
+    d.appendChild(el('dd', null, g.def));
+    return d;
+  }
   function renderGloss() {
-    var box = $('#gloss');
-    box.textContent = '';
+    var core = coreTermIds();
+    var box = $('#gloss'), more = $('#gloss2'), nMore = 0;
+    box.textContent = ''; more.textContent = '';
     D.glossary.slice().sort(function (a, b) { return a.term.localeCompare(b.term, 'vi', { sensitivity: 'base' }); }).forEach(function (g) {
-      var d = el('div');
-      d.id = 'tn-' + g.id;
-      var dt = el('dt', null, g.term);
-      if (g.full) { dt.appendChild(document.createTextNode(' ')); dt.appendChild(el('small', null, g.full)); }
-      d.appendChild(dt);
-      d.appendChild(el('dd', null, g.def));
-      box.appendChild(d);
+      if (core[g.id]) box.appendChild(glossItem(g));
+      else { more.appendChild(glossItem(g)); nMore++; }
+    });
+    $('#glossMoreSum').textContent = 'Thuật ngữ khác (trong thẻ nguồn) · ' + nMore;
+  }
+
+  /* ═══ TIN NHẮN GỬI GIẢNG VIÊN: chép vào bộ nhớ tạm; không được thì chọn sẵn chữ. */
+  function initCopy() {
+    var btn = $('#copyMsg'), msg = $('#gvMsg'), st = $('#copyStatus');
+    var selectAll = function () {
+      var r = document.createRange(); r.selectNodeContents(msg);
+      var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+      st.textContent = 'Không chép tự động được: tin nhắn đã được chọn sẵn, bấm Ctrl+C (trên điện thoại: giữ rồi chọn Sao chép).';
+    };
+    btn.addEventListener('click', function () {
+      var text = msg.innerText;
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(function () { st.textContent = 'Đã chép. Dán vào email hay tin nhắn gửi giảng viên.'; }, selectAll);
+      } else selectAll();
     });
   }
 
@@ -1872,6 +1948,7 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
     }, 120);
   });
 
+  initCopy();
   if (location.protocol === 'file:') { fail(); upgradeTerms(document); return; }
   fetch(DATA_URL, { cache: 'no-cache' })
     .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
