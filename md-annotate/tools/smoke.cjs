@@ -743,7 +743,7 @@ const cornerClash = (page) => page.evaluate(() => {
 
     /* Hộp không hiện (đóng bằng Esc, đóng vì lưu): mọi tổ hợp tới trang như thường, không bị chặn (defaultPrevented ghi ở pha
        nổi của window, sau mọi nghe khác), không tạo nhận xét; giữ Ctrl không is-keys; Ctrl+B vẫn ẩn / hiện cây. */
-    await kp.evaluate(() => { window.__kd = []; window.addEventListener('keydown', (e) => { if (e.ctrlKey) window.__kd.push(e.code + ':' + e.defaultPrevented); }); });
+    await kp.evaluate(() => { window.__kd = []; window.addEventListener('keydown', (e) => { if (e.ctrlKey && e.key !== 'Control') window.__kd.push(e.code + ':' + e.defaultPrevented); }); });
     const COMBOS = ['KeyZ', 'KeyX', 'KeyC', 'KeyC', 'KeyV', 'KeyV', 'KeyB', 'KeyN', 'KeyM', 'Comma', 'Period', 'Slash', 'Digit1'];
     const closedKeys = async (how) => {
       await blur(kp);
