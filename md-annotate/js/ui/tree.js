@@ -672,7 +672,7 @@ export function initTree() {
   window.addEventListener('resize', function () { closeMenu(false); closeHead(false); });
   initDrag();
 
-  /* Nút thanh trên, Ctrl/⌘ + B (ngoài ô nhập; không khi hộp thoại khác đang mở). */
+  /* Nút thanh trên, Ctrl/⌘ + B (ngoài ô nhập; không khi hộp thoại khác đang mở; hộp nhận xét mở thì ui/popup.js chặn phím, MDAN-084). */
   $('btn-tree').addEventListener('click', toggle);
   document.addEventListener('keydown', function (e) {
     if (!(e.ctrlKey || e.metaKey) || e.shiftKey || e.altKey || e.code !== 'KeyB' || !model || typing(e.target)) return;

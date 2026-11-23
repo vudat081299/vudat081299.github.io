@@ -169,11 +169,24 @@ const bp = (o, d) => { const u = upS(o); return dpPrompt.buildPrompt(u, u.docs[u
     dpHints.migrateHints(own, renamed);
     check('migrateHints: nhận xét tự gõ trùng chữ gợi ý cũ không bị đổi', eq(Object.keys(own.items), ['add an example']) && own.items['add an example'].n === 2, JSON.stringify(own));
   }
+  // Chip trong hộp nhận xét: gọn 5 + "+N", mở rộng 12, giữ Mod mọi gợi ý (MDAN-084); cùng thứ tự, lọc theo chữ vẫn áp.
+  {
+    const st = { items: {} };
+    dpHints.seedHints(st, Array.from({ length: 15 }, (_, i) => 'Gợi ý ' + i));
+    const keys = (r) => r.list.map((x) => x.key);
+    const few = dpHints.chipHints(st, '', 'few'), more = dpHints.chipHints(st, '', 'more'), all = dpHints.chipHints(st, '', 'all');
+    check('chipHints: few 5 chip + "+10", more 12 chip, all 15 chip, không "+N" khi mở', few.list.length === 5 && few.more === 10 &&
+      more.list.length === 12 && more.more === 0 && all.list.length === 15 && all.more === 0, [few.list.length, few.more, more.list.length, all.list.length].join());
+    check('chipHints: cỡ lớn chỉ thêm chip ở cuối (hạng không đổi)', eq(keys(all).slice(0, 5), keys(few)) && eq(keys(all).slice(0, 12), keys(more)));
+    check('chipHints: size lạ như few', eq(dpHints.chipHints(st, '', undefined), few));
+    const f = dpHints.chipHints(st, 'ý 1', 'all');
+    check('chipHints: all vẫn lọc theo chữ đang gõ', eq(keys(f), ['gợi ý 1', 'gợi ý 10', 'gợi ý 11', 'gợi ý 12', 'gợi ý 13', 'gợi ý 14']), JSON.stringify(keys(f)));
+  }
   // Bộ nhớ hỏng: trang vẫn chạy.
   {
     const st = dpHints.normStats({ items: { a: null, b: { t: 'b', n: 2 }, c: 5, d: 'x' } });
     let ok = true;
-    try { dpHints.seedHints(st, ['c', 'Thêm ví dụ']); dpHints.countUse(st, 'b'); dpHints.rankedHints(st); dpHints.chipHints(st, '', false); } catch (e) { ok = false; }
+    try { dpHints.seedHints(st, ['c', 'Thêm ví dụ']); dpHints.countUse(st, 'b'); dpHints.rankedHints(st); dpHints.chipHints(st, '', 'few'); } catch (e) { ok = false; }
     check('normStats: mục hỏng trong số đếm gợi ý không làm vỡ trang', ok && st.items.b.n === 3 && st.items.c.seed === true);
     check('normStats: items là mảng thì bỏ', !Array.isArray(dpHints.normStats({ items: [] }).items));
     const idx = dpSession.normIndex([{ id: 'a' }, null, 'x', { id: 'b', updated: 'hỏng' }, { id: 'c', updated: 7 }]);
@@ -1103,6 +1116,32 @@ import { hlRuns, sxTokens } from '../js/core/code-tokens.js';
   check('sxTokens: lớp nhiều chữ lấy chữ đầu', eq(sxTokens([{ s: 0, e: 3, c: 'hljs-title function_' }, { s: 3, e: 5, c: 'hljs-title class_' }]), [{ s: 0, e: 5, c: 'sx-code' }]));
 }
 // ── end loại file ──
+
+// ── phím chọn gợi ý (MDAN-084) ──
+import * as hk from '../js/core/hint-keys.js';
+{
+  const codes = ['KeyZ', 'KeyX', 'KeyC', 'KeyV', 'KeyB', 'KeyN', 'KeyM', 'Comma', 'Period', 'Slash'];
+  check('hintRank: Z X C V B N M , . / là hạng 1–10, phím khác 0', eq(codes.map(hk.hintRank), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) &&
+    hk.hintRank('KeyA') === 0 && hk.hintRank('') === 0 && hk.HINT_KEYS === 10);
+  check('isDouble: chỉ C và V bấm hai lần', eq(codes.filter(hk.isDouble), ['KeyC', 'KeyV']));
+  check('hintPresses: một lần bấm, C / V hai lần, hạng ngoài 1–10 không có',
+    eq(hk.hintPresses(1), [['mod', 'Z']]) && eq(hk.hintPresses(3), [['mod', 'C'], ['mod', 'C']]) && eq(hk.hintPresses(10), [['mod', '/']]) &&
+    eq(hk.hintPresses(11), []) && eq(hk.hintPresses(0), []));
+  const lbl = (r, mac) => hk.hintPresses(r).map((k) => dpText.keyCombo(k, mac)).join(' ');
+  check('keyCombo: Mac ký hiệu viết liền, nơi khác chữ nối +', dpText.keyCombo(['mod', 'shift', 'C'], true) === '⌘⇧C' &&
+    dpText.keyCombo(['mod', 'shift', 'C'], false) === 'Ctrl+Shift+C' && dpText.keyCombo(['alt', 'X'], true) === '⌥X' && dpText.keyCombo(['alt', 'X'], false) === 'Alt+X');
+  check('nhãn chip: ⌘Z / Ctrl+Z, bấm hai lần ghi hai lần', lbl(1, true) === '⌘Z' && lbl(1, false) === 'Ctrl+Z' && lbl(3, true) === '⌘C ⌘C' &&
+    lbl(4, false) === 'Ctrl+V Ctrl+V' && lbl(10, true) === '⌘/' && lbl(11, true) === '');
+  check('isModKey: phím bổ trợ, không phải chữ', ['Meta', 'Control', 'Shift', 'Alt'].every(hk.isModKey) && !hk.isModKey('c') && !hk.isModKey('Escape'));
+  const a = hk.tapStep(null, 'KeyC', 1000);
+  check('tapStep: lần đầu chưa chọn, nhớ phím và giờ', !a.hit && eq(a.prev, { code: 'KeyC', t: 1000 }));
+  check('tapStep: lần hai cùng phím trong TAP_MS thì chọn, rồi quên', eq(hk.tapStep(a.prev, 'KeyC', 1000 + hk.TAP_MS), { hit: true, prev: null }));
+  check('tapStep: quá TAP_MS thì là lần đầu mới', eq(hk.tapStep(a.prev, 'KeyC', 1001 + hk.TAP_MS), { hit: false, prev: { code: 'KeyC', t: 1001 + hk.TAP_MS } }));
+  check('tapStep: phím khác xen giữa ngắt chuỗi', eq(hk.tapStep(a.prev, '', 1100), { hit: false, prev: null }) && !hk.tapStep(hk.tapStep(a.prev, 'KeyZ', 1100).prev, 'KeyC', 1200).hit);
+  check('tapStep: C rồi V không chọn', !hk.tapStep(a.prev, 'KeyV', 1100).hit);
+  check('tapStep: phím một lần không nhớ gì', eq(hk.tapStep(null, 'KeyZ', 5), { hit: false, prev: null }));
+}
+// ── end phím chọn gợi ý ──
 
 console.log(fails ? `md-annotate core: ${fails} LỖI` : 'md-annotate core: OK');
 process.exit(fails ? 1 : 0);

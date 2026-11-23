@@ -81,6 +81,7 @@
   --h:    40px;                        /* mặc định: nút, ô nhập, nhóm tab */
   --h-touch: 44px;                     /* màn cảm ứng, điện thoại */
   --dur: .16s; --ease: cubic-bezier(.2, .7, .2, 1);
+  --ease-io: cubic-bezier(.4, 0, .2, 1);   /* vào ra êm: hiện / ẩn tại chỗ, cao đổi theo nội dung */
   --dur-sheet: .22s;                   /* tấm trượt mở ra (đáy, trái) */
   --icon: 16px; --icon-lg: 18px;       /* biểu tượng svg; trong nút biểu tượng cỡ thường */
   --ring-w: 2px;                       /* vòng focus bàn phím */

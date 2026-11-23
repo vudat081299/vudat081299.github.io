@@ -54,6 +54,7 @@
 - MDAN-081 · Tab Review và dòng đã đọc trong prompt chỉ ở file markdown · `md-annotate/js/ui/panel.js`, `md-annotate/js/ui/prompt.js`, `md-annotate/js/core/file-type.js`, `md-annotate/js/core/prompt.js`
 - MDAN-082 · Prompt chỉ kể dòng đã đọc, mỗi tệp ghi tên một lần · `md-annotate/js/core/prompt.js`, `md-annotate/js/core/review.js`
 - MDAN-083 · Phiên một file thì cây file ẩn sẵn · `md-annotate/js/ui/tree.js`
+- MDAN-084 · Phím chọn gợi ý trong hộp nhận xét · `md-annotate/js/ui/popup.js`, `md-annotate/js/core/hint-keys.js`, `md-annotate/js/core/hints.js`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Source tô màu cú pháp markdown kiểu VS Code
@@ -444,3 +445,14 @@ Sửa MDAN-061: ngoài điện thoại, mở một phiên chỉ có một file (
 phiên trống, thì cây ẩn. Phiên lên từ hai file (New file, mở thêm file từ đĩa, nạp folder) thì cây hiện theo lựa chọn ẩn /
 hiện của người dùng; xoá về một file thì cây ở lại. Ở phiên một file, nút Files và Ctrl/⌘ + B chỉ ẩn / hiện cây cho phiên
 ấy, không đổi lựa chọn đã nhớ; ở phiên từ hai file thì đổi và nhớ lựa chọn như cũ.
+
+## MDAN-084 · Phím chọn gợi ý trong hộp nhận xét
+23/11/2026 · `md-annotate/js/ui/popup.js`, `md-annotate/js/core/hint-keys.js`, `md-annotate/js/core/hints.js`
+
+Khi hộp nhận xét mở (không hộp thoại nào mở), Mod (⌘ ở Mac, Ctrl nơi khác) + Z, X, B, N, M, `,`, `.`, `/` chọn gợi ý 1, 2,
+5–10; Mod + C bấm hai lần (trong 0,4 s, không phím khác xen giữa) chọn gợi ý 3, Mod + V hai lần chọn gợi ý 4, lần bấm đầu
+vẫn chép / dán. Chọn bằng phím như bấm chip: lưu gợi ý làm nhận xét, đóng hộp. Hạng tính trên mọi gợi ý (đã lọc theo chữ
+đang gõ); gợi ý sau hạng 10 không có phím; hạng không có gợi ý thì phím làm việc thường của nó. Có chữ đang chọn trong ô
+thì Mod + X vẫn là cắt. Bỏ qua khi giữ thêm Shift hay Alt, khi bộ gõ đang ghép chữ, khi phím tự lặp. Giữ Mod thì hộp hiện
+mọi gợi ý, mỗi gợi ý trong 10 hạng đầu có số; thả Mod, cửa sổ mất focus, tab ẩn, hộp đóng thì về danh sách cũ. Tấm đáy
+không hiện số. Hộp mở thì Ctrl/⌘ + B không ẩn / hiện cây file.

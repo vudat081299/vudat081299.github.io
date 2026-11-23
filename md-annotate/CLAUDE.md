@@ -13,7 +13,7 @@
 | `css/*.css` | `tokens` → `base` → `views` → `panel` → `tree` → `popup` → `dialogs` → `focus` → `review` → `reading`; thứ tự link là cascade |
 | `js/core/anchor.js`, `js/core/comments.js` | neo đoạn trích (`locate`, `quoteFrom`); thêm / sửa / xoá, neo, xếp, đánh số nhận xét, `partsOf` |
 | `js/core/session.js`, `js/core/tree.js`, `js/core/tree-find.js`, `js/core/zip.js`, `js/core/prompt.js` | phiên là cây file (thêm, xoá, nạp, mở file từ đĩa, Undo), index, tên tự đặt; cây phẳng (thứ tự, tên, chuyển); lọc file theo mẫu (`findFiles`); ghi `.zip`; prompt một / mọi file, nhãn L12 |
-| `js/core/hints.js`, `js/core/place.js`, `js/core/tokens.js`, `js/core/runs.js`, `js/core/color.js` | đếm, xếp hạng gợi ý, chip; chỗ đặt hộp nổi (`popPlace`), tấm đáy cuộn bao nhiêu (`sheetReveal`), nút nổi (`fabSide`), cây cuộn ngang tới tên (`nameReveal`); token của *Source*; cắt chữ theo token / highlight / dòng, `lineCount`; trộn lớp mờ lên nền (`barColor`) |
+| `js/core/hints.js`, `js/core/hint-keys.js`, `js/core/place.js`, `js/core/tokens.js`, `js/core/runs.js`, `js/core/color.js` | đếm, xếp hạng gợi ý, chip; phím chọn gợi ý (MDAN-084); chỗ đặt hộp nổi (`popPlace`), tấm đáy cuộn bao nhiêu (`sheetReveal`), nút nổi (`fabSide`), cây cuộn ngang tới tên (`nameReveal`); token của *Source*; cắt chữ theo token / highlight / dòng, `lineCount`; trộn lớp mờ lên nền (`barColor`) |
 | `js/core/langs.js`, `js/core/file-type.js`, `js/core/code-tokens.js`, `js/ui/highlight.js` | sổ loại file và ngôn ngữ highlight.js (chỉ dữ liệu); tên file → loại (`fileType`), chế độ xem, tab panel có được (`viewFor`, `paneFor`), tên khối rào → ngôn ngữ (`langOf`); HTML của highlight.js → token; nạp highlight.js khi cần, tô khối code ở *Preview* (`paintFences`), token *Source* của file code (`codeTokens`) |
 | `js/core/blocks.js`, `js/core/sections.js`, `js/core/panes.js`, `js/core/picks.js`, `js/core/sync-math.js`, `js/core/text.js`, `js/core/help.js` | `lexSpans`, `pairBlocks` (khối nguồn ↔ Preview); đánh số section, dải đọc; `splitFits`, cao hai khung; nhiều dòng (`pickInfo`); cuộn theo nhau; `plural`, `lineOf`, `slug`, `importCheck`; `normHelp` |
 | `js/{core,ui}/review.js`, `js/ui/review-panel.js`, `js/{core,ui}/minimap.js`, `js/{core,ui}/dwell.js` | đã đọc: đơn vị, neo dấu, tiến độ; làn, phím, nút hộp nhận xét, viên thuốc; tab *Review*; dải tiến độ; gợi ý theo thời gian đọc (MDAN-016) |
@@ -157,7 +157,7 @@
 ## Gợi ý nhận xét
 
 - Đếm theo khoá chuẩn hoá (`normKey`); xếp theo số lần, lần dùng gần nhất, thứ tự gốc. Tỉ lệ (số lần + 1) / (tổng + số gợi ý), hiện từ 5 lần (`MIN_PCT`).
-- Hộp nhận xét hiện 5 gợi ý đầu (`POP_CHIPS`), còn lại sau chip `+N`. Nhận xét gõ tay ≤ 80 ký tự được đếm; từ hai lần thì thành gợi ý.
+- Hộp nhận xét hiện 5 gợi ý đầu (`POP_CHIPS`), còn lại sau chip `+N`; Mod + phím chọn gợi ý 1–10, giữ Mod hiện mọi gợi ý (MDAN-084). Nhãn phím tắt chỉ qua `shortcut()` (`ui/dom.js`). Nhận xét gõ tay ≤ 80 ký tự được đếm; từ hai lần thì thành gợi ý.
 - Bỏ gợi ý là ẩn, không xoá số đếm (gợi ý mặc định không quay lại). Đổi chữ gợi ý mặc định: cặp cũ → mới vào `renamed` của `data/hints.json`;
   `migrateHints()` dồn số đếm, giữ trạng thái ẩn, chỉ cho khoá từng là gợi ý mặc định (`seed`).
 

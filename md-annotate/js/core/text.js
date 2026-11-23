@@ -1,9 +1,17 @@
 /* Tiện ích chữ, thuần (không DOM): số nhiều tiếng Anh, chuẩn hoá xuống dòng, số dòng của một vị trí, slug tên file,
-   luật file chữ khi mở / nạp từ đĩa.
-   Xuất: hasNul, importCheck, isTextFile, lineOf, lineStarts, MAX_IMPORT, normNewlines, oneLine, plural, skipEntry, slug.
+   luật file chữ khi mở / nạp từ đĩa, nhãn phím tắt (keyCombo).
+   Xuất: hasNul, importCheck, isTextFile, keyCombo, lineOf, lineStarts, MAX_IMPORT, normNewlines, oneLine, plural, skipEntry, slug.
    Dùng: core/file-type.js. */
 import { langOf } from './file-type.js';
 
+/* Nhãn một tổ hợp phím, mọi nhãn phím tắt của trang qua đây (ui/dom.js shortcut): keys như ['mod', 'shift', 'C'];
+   'mod' là ⌘ ở Mac, Ctrl nơi khác. Mac viết liền bằng ký hiệu Apple (⌘⇧C), nơi khác bằng chữ nối '+' (Ctrl+Shift+C). */
+var MAC_KEYS = { mod: '⌘', shift: '⇧', alt: '⌥', ctrl: '⌃' };
+var PC_KEYS = { mod: 'Ctrl', shift: 'Shift', alt: 'Alt', ctrl: 'Ctrl' };
+export function keyCombo(keys, mac) {
+  var names = mac ? MAC_KEYS : PC_KEYS;
+  return keys.map(function (k) { return names[k] || k; }).join(mac ? '' : '+');
+}
 export function plural(n, word) { return n + ' ' + word + (n === 1 ? '' : 's'); }
 export function oneLine(s) { return s.replace(/\s+/g, ' ').trim(); }
 export function normNewlines(t) { return t.replace(/\r\n?/g, '\n'); }

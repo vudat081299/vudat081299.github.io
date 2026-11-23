@@ -2,11 +2,12 @@
    một chữ), dragBar() (kéo vách), toast(), paintHL() (tô CSS Highlight), saveFile() (tải một Blob về máy),
    droppedItems() (mục thả từ máy), syncBar() (màu thanh trình duyệt khi có lớp mờ).
    trackKeyboard() (bàn phím ảo che bao nhiêu: --kb, --vvh), barBottom() / dockTop() (phần thấy của trang giữa
-   thanh trên và thanh đáy).
-   Xuất: $, barBottom, dockTop, dragBar, droppedItems, getJSON, h, hasHL, icon, mqSheet, mqSide, mqTouch, paintHL, placeToast, reduceMotion, saveFile, shown,
+   thanh trên và thanh đáy), isMac (phím bổ trợ của phím tắt: ⌘ hay Ctrl), shortcut() (nhãn phím tắt theo hệ điều hành).
+   Xuất: $, barBottom, dockTop, dragBar, droppedItems, getJSON, h, hasHL, icon, isMac, mqSheet, mqSide, mqTouch, paintHL, placeToast, reduceMotion, saveFile, shortcut, shown,
      syncBar, textNodes, toast, trackKeyboard, typing.
-   Dùng: core/color.js. */
+   Dùng: core/color.js, core/text.js. */
 import { barColor } from '../core/color.js';
+import { keyCombo } from '../core/text.js';
 
 export function $(id) { return document.getElementById(id); }
 /* JSON của trang (data/*.json): luôn hỏi lại máy chủ (no-cache: sửa dữ liệu thì thấy ngay), lỗi HTTP thì promise hỏng. */
@@ -68,6 +69,11 @@ export var mqHandset = window.matchMedia('(max-width: 720px), (pointer: coarse) 
 export var mqSheet = window.matchMedia('(max-width: 720px), (pointer: coarse)');
 export var mqSide = window.matchMedia('(min-width: 1081px)');
 export var mqTouch = window.matchMedia('(pointer: coarse)');   // màn cảm ứng (con trỏ chính là ngón tay)
+/* Máy Apple: phím tắt dùng ⌘ (metaKey), nơi khác Ctrl. Hỏi userAgentData.platform, rồi navigator.platform, rồi userAgent;
+   không phân biệt hoa thường (Chrome ở Mac trả 'macOS'). */
+export var isMac = /mac|iphone|ipad|ipod/i.test((navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || navigator.userAgent || '');
+/* Nhãn phím tắt theo máy này: shortcut(['mod', 'shift', 'C']) là '⌘⇧C' ở Mac, 'Ctrl+Shift+C' nơi khác (core/text.js keyCombo). */
+export function shortcut(keys) { return keyCombo(keys, isMac); }
 export var hasHL = !!(window.CSS && CSS.highlights && window.Highlight);
 /* Tô CSS Highlight `name` bằng các Range (rỗng: bỏ tô). Mỗi tên giữ một Highlight trong registry, chỉ thay range: Safari
    không vẽ lại khi xoá Highlight khỏi registry, vết tô còn trên chữ. Đừng gọi CSS.highlights.set / delete ở chỗ khác. */

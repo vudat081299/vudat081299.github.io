@@ -15,7 +15,7 @@
      ui/history.js, ui/editor.js, ui/review.js, ui/review-panel.js, ui/minimap.js, ui/dwell.js, ui/tree.js, ui/bar.js.
    ui/files.js (cây của phiên) không có init: renderAll() vẽ cây lần đầu. */
 import { KEY, store } from './ui/store.js';
-import { $, syncBar, trackKeyboard } from './ui/dom.js';
+import { $, shortcut, syncBar, trackKeyboard } from './ui/dom.js';
 import { D, initState, S } from './ui/state.js';
 import { initHints, loadDefaultHints, renderHintsDlg } from './ui/hints.js';
 import { checkRenderer, renderAll } from './ui/render.js';
@@ -40,9 +40,10 @@ import { initMinimap } from './ui/minimap.js';
 import { initDwell } from './ui/dwell.js';
 
 function initShortcuts() {
-  /* ⌘/Ctrl + Shift + C chép prompt, ở đâu cũng được. */
-  var isMac = /Mac|iPhone|iPad/.test((navigator.userAgentData && navigator.userAgentData.platform) || navigator.userAgent);
-  document.querySelectorAll('.js-copy-kbd').forEach(function (k) { k.textContent = isMac ? '⌘⇧C' : 'Ctrl⇧C'; });
+  /* ⌘/Ctrl + Shift + C chép prompt, ở đâu cũng được. Nhãn phím theo hệ điều hành, cả ở tooltip nút chép (chỗ <kbd> bị ẩn). */
+  var keys = shortcut(['mod', 'shift', 'C']);
+  document.querySelectorAll('.js-copy-kbd').forEach(function (k) { k.textContent = keys; });
+  ['btn-copy', 'rail-copy', 'dock-copy'].forEach(function (id) { $(id).title = 'Copy prompt (' + keys + ')'; });
   document.addEventListener('keydown', function (e) {
     if ((e.ctrlKey || e.metaKey) && e.shiftKey && !e.altKey && e.code === 'KeyC') { e.preventDefault(); copyPrompt(); }
   });

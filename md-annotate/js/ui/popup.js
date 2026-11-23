@@ -4,17 +4,20 @@
    ra ngoài (MDAN-014). Tấm đáy (máy hẹp / cảm ứng) có nền mờ #pop-scrim, trừ khi chọn nhiều dòng (MDAN-026); mở tấm thì
    trang cuộn để đoạn nằm ngay trên tấm (revealAbove), đáy trang có thêm chỗ bằng tấm (html.ma-sheet-sp), bỏ đi khi đóng mà
    không làm trang nhảy. Lưu không cuộn trang. Màn cảm ứng: Return trong ô chữ xuống dòng, lưu bằng nút Save.
+   Phím chọn gợi ý (MDAN-084, core/hint-keys.js): Mod (⌘ ở Mac, Ctrl nơi khác) + Z X C·C V·V B N M , . / chọn gợi ý 1–10;
+   giữ Mod thì #pop có lớp is-keys và hiện mọi gợi ý; hộp mở thì Ctrl/⌘ + B không ẩn / hiện cây.
    Xuất: closePop, initPopup, openEdit, openNew, paintPending, pending, pop, popDirty, renderPopHints, updateNew.
-   Dùng: core/text.js, core/anchor.js, core/hints.js, core/comments.js, core/place.js, core/picks.js, ui/dom.js,
+   Dùng: core/text.js, core/anchor.js, core/hints.js, core/hint-keys.js, core/comments.js, core/place.js, core/picks.js, ui/dom.js,
      ui/anchor-dom.js, ui/state.js, ui/hints.js, ui/marks.js, ui/render.js, ui/list.js, ui/views.js,
      ui/selection.js, ui/picks.js, ui/dwell.js. */
 import { plural } from '../core/text.js';
 import { locate } from '../core/anchor.js';
 import { chipHints, pct } from '../core/hints.js';
+import { HINT_KEYS, hintPresses, hintRank, isDouble, isModKey, tapStep } from '../core/hint-keys.js';
 import { addComment, editComment, findComment, overlapWarning, partsOf } from '../core/comments.js';
 import { popPlace, sheetReveal } from '../core/place.js';
 import { pickSummary } from '../core/picks.js';
-import { $, barBottom, h, mqSheet, mqTouch, paintHL, shown, syncBar, toast } from './dom.js';
+import { $, barBottom, h, isMac, mqSheet, mqTouch, paintHL, shortcut, shown, syncBar, toast } from './dom.js';
 import { rangeAt } from './anchor-dom.js';
 import { D, scheduleSave } from './state.js';
 import { recordUse, seedState, stats } from './hints.js';
@@ -28,6 +31,8 @@ import { noteJump } from './dwell.js';
 
 export var pop = { mode: null, id: null, orig: '' };
 var popExpanded = false;
+var held = false;   // đang giữ Mod: hiện mọi gợi ý (MDAN-084)
+var tap = null;     // lần bấm Mod + C / V trước: { code, t, hint } (hint: gợi ý ở hạng ấy lúc bấm, trước khi ⌘V dán chữ lọc lại)
 export var pending = null;   // đoạn đang chọn (kết quả quoteFrom, hoặc pickInfo khi chọn dòng) khi hộp mở cho nhận xét mới
 /* Vị trí của đoạn đang chọn trong nguồn (src) và chữ bản dựng (md): [a, b] hoặc null. Khung chọn thì lấy đúng vị trí
    đã chọn; khung kia tìm bằng locate, như neo nhận xét. */
@@ -136,6 +141,7 @@ function showPop(rect, span) {
   $('fab').hidden = true;
   $('pop-grip').hidden = sheet;   // tấm trượt đáy đứng yên
   markLong();
+  resetChips();
   renderPopHints();
   if (!sheet) {
     el.style.top = '0px'; el.style.left = '0px';
@@ -193,6 +199,7 @@ export function closePop(silent) {
   if (pop.id) markActive(pop.id, false);
   clearPending();
   pop.mode = null; pop.id = null; pop.orig = '';
+  endHold(); tap = null;
   $('pop').hidden = true;
   syncScrim();
   dropSpace();
@@ -219,20 +226,38 @@ function savePop(textOverride) {
   renderAll();
   if (id) flashItem(id);
 }
+/* Chip đang vẽ trong #pop-chips: dấu (khoá, số lần, tỉ lệ) theo thứ tự. Giữ / thả Mod hay đổi cỡ danh sách: chip đầu giống
+   hệt thì giữ nguyên nút (số phím mờ dần cả khi thả), chỉ thêm / bỏ chip cuối; chip thêm sau số chip cũ có is-new (hiện dần).
+   Mở hộp thì vẽ mới (resetChips): không chip nào hiện dần, vùng chip không trượt từ cao của lần mở trước. */
+var chipSigs = [];
+function resetChips() { chipSigs = []; $('pop-chips').replaceChildren(); $('pop-chips').hidden = true; }
+function chipSig(x, showPct) { return x.key + '\n' + x.n + '\n' + (showPct ? pct(x.p) : ''); }
+function hintChip(x, i, showPct) {
+  var k = hintPresses(i + 1).map(shortcut).join(' ');
+  /* 10 chip đầu luôn có số hạng (.ma-chip__k), mọi trạng thái; CSS chỉ cho thấy khi #pop.is-keys. */
+  return h('button', {
+    class: 'ma-chip', type: 'button', title: 'Used ' + plural(x.n, 'time') + (k ? ' · ' + k : ''),
+    onclick: function () { savePop(x.t); }
+  }, i < HINT_KEYS ? h('span', { class: 'ma-chip__k', 'aria-hidden': 'true' }, String(i + 1)) : null,
+  h('span', { class: 'ma-chip__t' }, x.t), showPct ? h('span', { class: 'ma-chip__p' }, pct(x.p)) : null);
+}
 export function renderPopHints() {
-  var box = $('pop-chips');
-  var ch = chipHints(stats, $('pop-text').value, popExpanded);
+  var box = $('pop-chips'), h0 = box.hidden ? 0 : box.offsetHeight;
+  var ch = chipHints(stats, $('pop-text').value, held ? 'all' : popExpanded ? 'more' : 'few');
   var q = ch.q, list = ch.list, more = ch.more, showPct = ch.showPct;
-  box.replaceChildren();
-  list.forEach(function (x) {
-    box.append(h('button', {
-      class: 'ma-chip', type: 'button', title: 'Used ' + plural(x.n, 'time'),
-      onclick: function () { savePop(x.t); }
-    }, h('span', { class: 'ma-chip__t' }, x.t), showPct ? h('span', { class: 'ma-chip__p' }, pct(x.p)) : null));
-  });
+  var sigs = list.map(function (x) { return chipSig(x, showPct); });
+  var had = chipSigs.length, hadMore = !!box.querySelector('.ma-chip--more'), keep = 0;
+  while (keep < had && keep < sigs.length && chipSigs[keep] === sigs[keep]) keep++;
+  while (box.childNodes.length > keep) box.lastChild.remove();   // chip sau phần giữ, "+N", dòng báo
+  for (var i = keep; i < list.length; i++) {
+    var b = hintChip(list[i], i, showPct);
+    if (had && i >= had) b.classList.add('is-new');
+    box.append(b);
+  }
+  chipSigs = sigs;
   if (more) {
     box.append(h('button', {
-      class: 'ma-chip ma-chip--more', type: 'button', 'aria-label': 'Show ' + more + ' more hints',
+      class: 'ma-chip ma-chip--more' + (had && !hadMore ? ' is-new' : ''), type: 'button', 'aria-label': 'Show ' + more + ' more hints',
       onclick: function () {
         popExpanded = true; renderPopHints();
         if (!$('pop').classList.contains('is-sheet')) $('pop-text').focus({ preventScroll: true });
@@ -243,11 +268,62 @@ export function renderPopHints() {
     box.append(h('span', { class: 'ma-sub' }, 'No hints yet: the default hints could not load.'));
   }
   box.hidden = !box.childNodes.length;
-  if (!$('pop').hidden && !$('pop').classList.contains('is-sheet')) {
-    /* giữ hộp trong khung nhìn khi số gợi ý đổi */
-    var r = $('pop').getBoundingClientRect();
-    if (r.bottom > window.innerHeight - 8 && r.top > 80) $('pop').style.top = Math.round(window.scrollY + Math.max(8, window.innerHeight - r.height - 8)) + 'px';
+  var el = $('pop');
+  if (el.hidden || el.classList.contains('is-sheet')) return;
+  /* giữ hộp trong khung nhìn khi số gợi ý đổi: đo cao cuối (chưa trượt), rồi mới cho chip trượt từ cao cũ */
+  var popH = el.offsetHeight, top = el.getBoundingClientRect().top;
+  easeHeight(box, h0);
+  if (top + popH > window.innerHeight - 8 && top > 80) el.style.top = Math.round(window.scrollY + Math.max(8, window.innerHeight - popH - 8)) + 'px';
+}
+/* Cao #pop-chips đổi theo nội dung (auto → auto) thì CSS không có điểm đầu để trượt: đặt cao cũ h0 trong một lần tính
+   kiểu rồi bỏ, CSS (css/popup.css) trượt từ đó tới cao mới. */
+function easeHeight(box, h0) {
+  if (!h0 || box.hidden || h0 === box.offsetHeight) return;
+  box.style.transition = 'none'; box.style.height = h0 + 'px';
+  void box.offsetHeight;
+  box.style.transition = ''; box.style.height = '';
+}
+
+/* PHÍM CHỌN GỢI Ý (MDAN-084): chỉ khi hộp hiện và không hộp thoại nào mở. */
+function modKey() { return isMac ? 'Meta' : 'Control'; }   // e.key của Mod
+function keysLive() { return !!pop.mode && !$('pop').hidden && !document.querySelector('dialog[open]'); }
+/* Giữ Mod: #pop.is-keys, hiện mọi gợi ý; thả ra về danh sách gọn (hay đã mở bằng "+N"). Tấm đáy thì không. */
+function startHold() {
+  if (held || !keysLive() || $('pop').classList.contains('is-sheet')) return;
+  held = true;
+  $('pop').classList.add('is-keys');
+  renderPopHints();
+}
+function endHold() {
+  if (!held) return;
+  held = false;
+  $('pop').classList.remove('is-keys');
+  if (pop.mode) renderPopHints();
+}
+/* Gợi ý ở hạng rank theo chữ đang gõ, trong cả danh sách (cùng thứ tự với chip đang hiện); không có thì null. */
+function hintAt(rank) { return chipHints(stats, $('pop-text').value, 'all').list[rank - 1] || null; }
+/* Pha bắt của window: chạy trước mọi nghe keydown khác. Phím đã dùng thì không tới ai nữa. */
+function hintKey(e) {
+  if (e.isComposing || e.repeat) return;
+  if (!keysLive()) { tap = null; return; }
+  if (isModKey(e.key)) {
+    if (e.key === modKey() && !e.shiftKey && !e.altKey) startHold(); else endHold();
+    return;
   }
+  /* Ctrl/⌘ + B (như ui/tree.js nhận) khi hộp mở: không ẩn / hiện cây, kể cả khi không có gợi ý 5 hay lưu xong hộp đã đóng. */
+  if ((e.ctrlKey || e.metaKey) && !e.shiftKey && !e.altKey && e.code === 'KeyB') e.stopPropagation();
+  var mod = (isMac ? e.metaKey && !e.ctrlKey : e.ctrlKey && !e.metaKey) && !e.shiftKey && !e.altKey;
+  var rank = mod ? hintRank(e.code) : 0, last = tap, step = tapStep(tap, mod ? e.code : '', e.timeStamp);
+  tap = step.prev;
+  if (!rank) return;
+  var x = hintAt(rank), ta = $('pop-text');
+  if (isDouble(e.code)) {   // lần đầu chép / dán như thường; lần thứ hai chọn gợi ý đã thấy lúc bấm lần đầu
+    if (tap) tap.hint = x;
+    if (!step.hit || !last.hint) return;
+    x = last.hint;
+  } else if (!x || (e.code === 'KeyX' && ta.selectionStart !== ta.selectionEnd)) return;   // có chữ đang chọn: ⌘X cắt
+  e.preventDefault(); e.stopPropagation();
+  savePop(x.t);
 }
 
 export function initPopup() {
@@ -270,6 +346,10 @@ export function initPopup() {
     e.preventDefault(); savePop();
   });
   window.addEventListener('scroll', dropSpace, { passive: true });
+  window.addEventListener('keydown', hintKey, true);
+  window.addEventListener('keyup', function (e) { if (e.key === modKey()) endHold(); }, true);
+  window.addEventListener('blur', function () { endHold(); tap = null; });
+  document.addEventListener('visibilitychange', function () { endHold(); tap = null; });
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' && pop.mode && !document.querySelector('dialog[open]')) { e.preventDefault(); closePop(); }
   });
@@ -284,6 +364,7 @@ export function initPopup() {
   }, true);
   window.addEventListener('resize', function () {
     if (pop.mode && !$('pop').classList.contains('is-sheet') && mqSheet.matches) {
+      endHold();
       $('pop').classList.add('is-sheet'); $('pop').style.top = ''; $('pop').style.left = ''; $('pop-grip').hidden = true;
       syncScrim();
     }

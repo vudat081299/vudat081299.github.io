@@ -1,6 +1,23 @@
 {
   "groups": [
     {
+      "title": "Comment box",
+      "note": "While the comment box is open. Ctrl on Windows and Linux, ⌘ on a Mac. A picked hint is saved as the comment and the box closes. Hints after the 10th have no key.",
+      "rows": [
+        { "keys": [["Hold Ctrl"], ["Hold ⌘"]], "action": "Show every hint, each with its number" },
+        { "keys": [["Ctrl", "Z"], ["⌘", "Z"]], "action": "Pick hint 1" },
+        { "keys": [["Ctrl", "X"], ["⌘", "X"]], "action": "Pick hint 2 (with text selected in the box: cut, as usual)" },
+        { "keys": [["Ctrl", "C twice"], ["⌘", "C twice"]], "action": "Pick hint 3 (the first press still copies)" },
+        { "keys": [["Ctrl", "V twice"], ["⌘", "V twice"]], "action": "Pick hint 4 (the first press still pastes)" },
+        { "keys": [["Ctrl", "B"], ["⌘", "B"]], "action": "Pick hint 5; the file list does not show or hide while the box is open" },
+        { "keys": [["Ctrl", "N"], ["⌘", "N"]], "action": "Pick hint 6" },
+        { "keys": [["Ctrl", "M"], ["⌘", "M"]], "action": "Pick hint 7" },
+        { "keys": [["Ctrl", ","], ["⌘", ","]], "action": "Pick hint 8" },
+        { "keys": [["Ctrl", "."], ["⌘", "."]], "action": "Pick hint 9" },
+        { "keys": [["Ctrl", "/"], ["⌘", "/"]], "action": "Pick hint 10" }
+      ]
+    },
+    {
       "title": "Multi-line comments",
       "note": "In Source, or the Source pane of Split.",
       "rows": [
@@ -38,7 +55,7 @@
       "title": "Files",
       "note": "The file list on the left. Keys work when a row has focus.",
       "rows": [
-        { "keys": [["Ctrl", "B"], ["⌘", "B"]], "action": "Show or hide the file list (not while typing in a box)" },
+        { "keys": [["Ctrl", "B"], ["⌘", "B"]], "action": "Show or hide the file list (not while typing in a box or while the comment box is open)" },
         { "keys": [["↑"], ["↓"], ["Home"], ["End"]], "action": "Move between rows" },
         { "keys": [["→"], ["←"]], "action": "Open or close a folder; go to its first file, or back to the parent folder" },
         { "keys": [["Enter"], ["Click"]], "action": "Open a file, or open or close a folder" },
