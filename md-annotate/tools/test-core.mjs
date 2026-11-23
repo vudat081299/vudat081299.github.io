@@ -169,15 +169,18 @@ const bp = (o, d) => { const u = upS(o); return dpPrompt.buildPrompt(u, u.docs[u
     dpHints.migrateHints(own, renamed);
     check('migrateHints: nhận xét tự gõ trùng chữ gợi ý cũ không bị đổi', eq(Object.keys(own.items), ['add an example']) && own.items['add an example'].n === 2, JSON.stringify(own));
   }
-  // Chip trong hộp nhận xét: mọi gợi ý, không trần số chip (MDAN-084); lọc theo chữ đang gõ, giữ thứ tự hạng.
+  // Chip trong hộp nhận xét: gọn 5 + "+N", 'all' mọi gợi ý không trần (MDAN-084); cùng thứ tự, lọc theo chữ vẫn áp.
   {
     const st = { items: {} };
     dpHints.seedHints(st, Array.from({ length: 15 }, (_, i) => 'Gợi ý ' + i));
     const keys = (r) => r.list.map((x) => x.key);
-    const all = dpHints.chipHints(st, '');
-    check('chipHints: mọi gợi ý (15 chip), cùng thứ tự với rankedHints', all.list.length === 15 && eq(keys(all), dpHints.rankedHints(st).map((x) => x.key)) && !('more' in all), all.list.length);
-    const f = dpHints.chipHints(st, 'ý 1');
-    check('chipHints: lọc theo chữ đang gõ', eq(keys(f), ['gợi ý 1', 'gợi ý 10', 'gợi ý 11', 'gợi ý 12', 'gợi ý 13', 'gợi ý 14']), JSON.stringify(keys(f)));
+    const few = dpHints.chipHints(st, ''), all = dpHints.chipHints(st, '', 'all');
+    check('chipHints: gọn 5 chip + "+10"', few.list.length === 5 && few.more === 10, [few.list.length, few.more].join());
+    check('chipHints: all mọi gợi ý (15 chip), không "+N", cùng thứ tự với rankedHints', all.list.length === 15 && all.more === 0 && eq(keys(all), dpHints.rankedHints(st).map((x) => x.key)), all.list.length);
+    check('chipHints: all chỉ thêm chip ở cuối (hạng không đổi); size lạ như few', eq(keys(all).slice(0, 5), keys(few)) && eq(dpHints.chipHints(st, '', 'more'), few));
+    const f = dpHints.chipHints(st, 'ý 1', 'all');
+    check('chipHints: lọc theo chữ đang gõ (all 6 chip; gọn 5 + "+1")', eq(keys(f), ['gợi ý 1', 'gợi ý 10', 'gợi ý 11', 'gợi ý 12', 'gợi ý 13', 'gợi ý 14']) &&
+      dpHints.chipHints(st, 'ý 1').more === 1, JSON.stringify(keys(f)));
     check('chipHints: chữ đã gõ trùng hẳn một gợi ý thì bỏ gợi ý ấy', !keys(dpHints.chipHints(st, 'Gợi ý 3')).includes('gợi ý 3'));
   }
   // Bộ nhớ hỏng: trang vẫn chạy.
