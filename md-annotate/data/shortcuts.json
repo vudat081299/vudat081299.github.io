@@ -14,7 +14,8 @@
         { "keys": [["Ctrl", "M"], ["⌘", "M"]], "action": "Pick hint 7" },
         { "keys": [["Ctrl", ","], ["⌘", ","]], "action": "Pick hint 8" },
         { "keys": [["Ctrl", "."], ["⌘", "."]], "action": "Pick hint 9" },
-        { "keys": [["Ctrl", "/"], ["⌘", "/"]], "action": "Pick hint 10" }
+        { "keys": [["Ctrl", "/"], ["⌘", "/"]], "action": "Pick hint 10" },
+        { "keys": [["Ctrl", "1"], ["⌘", "1"]], "action": "Save a comment asking to remove the selected passage" }
       ]
     },
     {

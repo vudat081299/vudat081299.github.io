@@ -1138,6 +1138,8 @@ import * as hk from '../js/core/hint-keys.js';
   check('tapStep: phím khác xen giữa ngắt chuỗi', eq(hk.tapStep(a.prev, '', 1100), { hit: false, prev: null }) && !hk.tapStep(hk.tapStep(a.prev, 'KeyZ', 1100).prev, 'KeyC', 1200).hit);
   check('tapStep: C rồi V không chọn', !hk.tapStep(a.prev, 'KeyV', 1100).hit);
   check('tapStep: phím một lần không nhớ gì', eq(hk.tapStep(null, 'KeyZ', 5), { hit: false, prev: null }));
+  check('REMOVE_KEY: Mod + 1, không phải hạng gợi ý nào, bấm một lần, ngắt chuỗi C / V', hk.REMOVE_KEY === 'Digit1' && hk.hintRank(hk.REMOVE_KEY) === 0 &&
+    !hk.isDouble(hk.REMOVE_KEY) && !hk.tapStep(hk.tapStep(a.prev, hk.REMOVE_KEY, 1100).prev, 'KeyC', 1200).hit);
 }
 // ── end phím chọn gợi ý ──
 

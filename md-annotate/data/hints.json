@@ -1,5 +1,5 @@
 {
-  "note": "Gợi ý mặc định của hộp nhận xét. Trang xếp lại theo số lần dùng thật, lưu trong trình duyệt; sửa file này chỉ đổi danh sách khởi đầu. Đổi chữ một gợi ý cũ thì thêm cặp cũ → mới vào \"renamed\" để số đếm đi theo.",
+  "note": "Gợi ý mặc định của hộp nhận xét. Trang xếp lại theo số lần dùng thật, lưu trong trình duyệt; sửa file này chỉ đổi danh sách khởi đầu. Đổi chữ một gợi ý cũ thì thêm cặp cũ → mới vào \"renamed\" để số đếm đi theo. \"remove\" là nhận xét Mod + 1 lưu: không thành chip, không đếm.",
   "hints": [
     "Sai, nói chưa rõ ràng",
     "Cần kiểm tra lại tính xác thực",
@@ -11,6 +11,7 @@
     "Sửa chính tả, ngữ pháp",
     "Diễn đạt lại cho trôi chảy"
   ],
+  "remove": "Bỏ đoạn này khỏi văn bản.",
   "renamed": {
     "Unclear or wrong — rewrite": "Sai, nói chưa rõ ràng",
     "Verify this is factually accurate": "Cần kiểm tra lại tính xác thực",

@@ -1,6 +1,6 @@
-/* Gợi ý nhận xét, phần trình duyệt: số đếm lưu ở localStorage, nạp gợi ý mặc định từ data/hints.json, hộp Hints.
-   Logic đếm và xếp hạng ở core/hints.js.
-   Xuất: initHints, loadDefaultHints, recordUse, renderHintsDlg, seedState, stats.
+/* Gợi ý nhận xét, phần trình duyệt: số đếm lưu ở localStorage, nạp gợi ý mặc định và chữ của gợi ý ẩn Mod + 1 (removeHint)
+   từ data/hints.json, hộp Hints. Logic đếm và xếp hạng ở core/hints.js.
+   Xuất: initHints, loadDefaultHints, recordUse, removeHint, renderHintsDlg, seedState, stats.
    Dùng: core/text.js, core/hints.js, ui/store.js, ui/dom.js. */
 import { plural } from '../core/text.js';
 import { countUse, hideHint, migrateHints, MIN_PCT, normStats, pct, pinHint, rankedHints, resetHints, seedHints } from '../core/hints.js';
@@ -9,17 +9,19 @@ import { $, getJSON, h, icon } from './dom.js';
 
 export var stats = normStats(store.get(KEY.stats, null));
 export var seedState = 'loading';
+export var removeHint = '';   // nhận xét Mod + 1 lưu (remove của data/hints.json); rỗng khi chưa nạp / nạp hỏng: phím không lưu gì
 function saveStats() { store.set(KEY.stats, stats); }
 /* Đếm một lần dùng nhận xét t và lưu. */
 export function recordUse(t) { if (countUse(stats, t)) saveStats(); }
 
-/* Nạp gợi ý mặc định (đổi chữ theo renamed, rồi gieo); lỗi mạng thì seedState = 'fail'. Trả promise để người gọi vẽ lại. */
+/* Nạp gợi ý mặc định (đổi chữ theo renamed, rồi gieo) và removeHint; lỗi mạng thì seedState = 'fail'. Trả promise để người gọi vẽ lại. */
 export function loadDefaultHints() {
   return getJSON('data/hints.json')
     .then(function (d) {
       if (d && d.renamed && typeof d.renamed === 'object') migrateHints(stats, d.renamed);
       seedHints(stats, Array.isArray(d && d.hints) ? d.hints.filter(function (x) { return typeof x === 'string' && x.trim(); }) : []);
       saveStats();
+      removeHint = typeof (d && d.remove) === 'string' ? d.remove.trim() : '';
       seedState = 'ok';
     })
     .catch(function () { seedState = 'fail'; });

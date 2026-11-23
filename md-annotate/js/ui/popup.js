@@ -5,8 +5,9 @@
    trang cuộn để đoạn nằm ngay trên tấm (revealAbove), đáy trang có thêm chỗ bằng tấm (html.ma-sheet-sp), bỏ đi khi đóng mà
    không làm trang nhảy. Lưu không cuộn trang. Màn cảm ứng: Return trong ô chữ xuống dòng, lưu bằng nút Save.
    Phím chọn gợi ý (MDAN-084, core/hint-keys.js): Mod (⌘ ở Mac, Ctrl nơi khác) + Z X C·C V·V B N M , . / chọn gợi ý 1–10;
-   giữ Mod thì #pop có lớp is-keys (số 1–10 trên chip); hộp mở thì Ctrl/⌘ + B không ẩn / hiện cây. Vùng chip luôn có mọi
-   gợi ý (lọc theo chữ đang gõ); hộp nổi cuộn dọc khi quá trần (css/popup.css), tấm đáy cuộn ngang một hàng.
+   Mod + 1 lưu gợi ý ẩn "bỏ đoạn này" (removeHint của ui/hints.js; không chip, không đếm). Giữ Mod thì #pop có lớp
+   is-keys (số 1–10 trên chip); hộp mở thì Ctrl/⌘ + B không ẩn / hiện cây. Vùng chip luôn có mọi gợi ý (lọc theo chữ
+   đang gõ); hộp nổi cuộn dọc khi quá trần (css/popup.css), tấm đáy cuộn ngang một hàng.
    Xuất: closePop, initPopup, openEdit, openNew, paintPending, pending, pop, popDirty, renderPopHints, updateNew.
    Dùng: core/text.js, core/anchor.js, core/hints.js, core/hint-keys.js, core/comments.js, core/place.js, core/picks.js, ui/dom.js,
      ui/anchor-dom.js, ui/state.js, ui/hints.js, ui/marks.js, ui/render.js, ui/list.js, ui/views.js,
@@ -14,14 +15,14 @@
 import { plural } from '../core/text.js';
 import { locate } from '../core/anchor.js';
 import { chipHints, pct } from '../core/hints.js';
-import { HINT_KEYS, hintPresses, hintRank, isDouble, isModKey, tapStep } from '../core/hint-keys.js';
+import { HINT_KEYS, hintPresses, hintRank, isDouble, isModKey, REMOVE_KEY, tapStep } from '../core/hint-keys.js';
 import { addComment, editComment, findComment, overlapWarning, partsOf } from '../core/comments.js';
 import { popPlace, sheetReveal } from '../core/place.js';
 import { pickSummary } from '../core/picks.js';
 import { $, barBottom, h, isMac, mqSheet, mqTouch, paintHL, shortcut, shown, syncBar, toast } from './dom.js';
 import { rangeAt } from './anchor-dom.js';
 import { D, scheduleSave } from './state.js';
-import { recordUse, seedState, stats } from './hints.js';
+import { recordUse, removeHint, seedState, stats } from './hints.js';
 import { markActive } from './marks.js';
 import { anchors, mdText, numbers, ordered, orphans, renderAll } from './render.js';
 import { flashItem, removeComment } from './list.js';
@@ -207,16 +208,17 @@ export function popDirty() {
   var v = $('pop-text').value.trim();
   return pop.mode === 'new' ? !!v : v !== pop.orig.trim();
 }
-function savePop(textOverride) {
+/* uncounted: không đếm vào số đếm gợi ý (gợi ý ẩn Mod + 1 không bao giờ thành chip). */
+function savePop(textOverride, uncounted) {
   var t = (textOverride != null ? textOverride : $('pop-text').value).trim();
   if (!t) { $('pop-text').focus(); toast('Type a comment or pick a hint.'); return; }
   var id, lines = pop.mode === 'new' && pending && pending.lines;
   if (pop.mode === 'new' && pending) {
     id = addComment(D, pending, t);
-    recordUse(t);
+    if (!uncounted) recordUse(t);
   } else if (pop.mode === 'edit') {
     id = pop.id;
-    if (editComment(D, id, t)) recordUse(t);
+    if (editComment(D, id, t) && !uncounted) recordUse(t);
   }
   closePop(true);
   if (lines) clearPicks();   // lưu xong thì thoát chế độ chọn dòng
@@ -289,6 +291,11 @@ function hintKey(e) {
   var mod = (isMac ? e.metaKey && !e.ctrlKey : e.ctrlKey && !e.metaKey) && !e.shiftKey && !e.altKey;
   var rank = mod ? hintRank(e.code) : 0, last = tap, step = tapStep(tap, mod ? e.code : '', e.timeStamp);
   tap = step.prev;
+  if (mod && e.code === REMOVE_KEY) {   // gợi ý ẩn: luôn chặn phím khi hộp mở; chưa nạp được chữ thì không lưu gì
+    e.preventDefault(); e.stopPropagation();
+    if (removeHint) savePop(removeHint, true);
+    return;
+  }
   if (!rank) return;
   var x = hintAt(rank), ta = $('pop-text');
   if (isDouble(e.code)) {   // lần đầu chép / dán như thường; lần thứ hai chọn gợi ý đã thấy lúc bấm lần đầu

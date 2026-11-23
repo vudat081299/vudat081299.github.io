@@ -568,7 +568,7 @@ const cornerClash = (page) => page.evaluate(() => {
 
   /* ---------- Phím chọn gợi ý trong hộp nhận xét (MDAN-084): Mod (Ctrl; ⌘ ở Mac) + Z X C·C V·V B N M , . / chọn gợi ý 1–10;
      hộp luôn có mọi gợi ý, vùng chip tối đa 5,5 hàng rồi cuộn; giữ Mod chỉ hiện số 1–10 (không vẽ lại, không chip nào dời);
-     Mod+B không đụng cây khi hộp mở;
+     Mod+B không đụng cây khi hộp mở; Mod+1 lưu nhận xét remove, không chip, không đếm (MDAN-085);
      nhãn phím chép theo hệ điều hành. Chuyển động thật (no-preference): đo khi chuyển động trong #pop đã xong. ---------- */
   {
     const KDOC = '# Phím gợi ý\n\n' + Array.from({ length: 12 }, (_, i) => `Câu thứ ${i + 1} để thử phím.`).join('\n\n') + '\n';
@@ -715,6 +715,25 @@ const cornerClash = (page) => page.evaluate(() => {
     const t1 = await treeOn(kp);
     await kp.keyboard.press('Control+KeyB'); await kp.waitForTimeout(200);
     check('đóng hộp: Ctrl+B ẩn / hiện cây như cũ', t1 === !t0 && (await treeOn(kp)) === t0, JSON.stringify([t0, t1]));
+
+    // Mod+1 (MDAN-085): lưu ngay nhận xét remove của data/hints.json; không chip, không đếm, không đổi hạng gợi ý.
+    const REMOVE = await kp.evaluate(() => fetch('data/hints.json').then((r) => r.json()).then((d) => d.remove));
+    const statsNow = (p) => p.evaluate(() => localStorage.getItem('md-annotate:stats:v1'));
+    const st0 = await statsNow(kp);
+    await openAt(kp, 10);
+    hs = await hintTexts(kp);
+    check('Ctrl+1: chữ remove không phải chip', typeof REMOVE === 'string' && REMOVE.length > 0 && !hs.includes(REMOVE), JSON.stringify([REMOVE, hs.length]));
+    await kp.keyboard.press('Control+Digit1'); await kp.waitForTimeout(100);
+    check('Ctrl+1: lưu nhận xét remove, hộp đóng', !(await popOpen(kp)) && (await said(kp, 10)) === REMOVE, JSON.stringify([REMOVE, await said(kp, 10)]));
+    await openAt(kp, 11);
+    const hs1 = await hintTexts(kp);
+    await kp.keyboard.press('Escape');
+    check('Ctrl+1: số đếm gợi ý (localStorage) không đổi, gợi ý cùng hạng, không chip remove', (await statsNow(kp)) === st0 && JSON.stringify(hs1) === JSON.stringify(hs) && !hs1.includes(REMOVE));
+    // Hộp sửa: Ctrl+1 thay chữ nhận xét, như chọn chip.
+    await kp.click('#list .ma-item:nth-child(1) [aria-label="Edit comment"]'); await settle(kp);
+    const wasEdit = await kp.isVisible('#pop-del');
+    await kp.keyboard.press('Control+Digit1'); await kp.waitForTimeout(100);
+    check('Ctrl+1 ở hộp sửa: thay chữ nhận xét bằng remove, hộp đóng, số đếm không đổi', wasEdit && !(await popOpen(kp)) && (await said(kp, 1)) === REMOVE && (await statsNow(kp)) === st0, JSON.stringify([wasEdit, await said(kp, 1)]));
     await kctx.close();
 
     // Mac (giả userAgentData / platform): nhãn ⌘⇧C, Mod là ⌘ (Meta); Ctrl + Z không chọn.
@@ -736,6 +755,11 @@ const cornerClash = (page) => page.evaluate(() => {
     const mKeys = await mp.evaluate(() => document.getElementById('pop').classList.contains('is-keys'));
     await mp.keyboard.press('KeyZ'); await mp.keyboard.up('Meta'); await mp.waitForTimeout(100);
     check('Mac: tooltip chip "⌘Z"; Ctrl+Z không chọn; giữ ⌘ có is-keys; ⌘Z lưu gợi ý 1', / · ⌘Z$/.test(mtip) && ctrlNo && mKeys && !(await popOpen(mp)) && (await said(mp, 1)) === hs[0], JSON.stringify([mtip, ctrlNo, mKeys, hs[0], await said(mp, 1)]));
+    await openAt(mp, 2);
+    await mp.keyboard.press('Control+Digit1'); await mp.waitForTimeout(100);
+    const ctrl1 = (await popOpen(mp)) && (await said(mp, 2)) === null;
+    await mp.keyboard.press('Meta+Digit1'); await mp.waitForTimeout(100);
+    check('Mac: Ctrl+1 không làm gì; ⌘1 lưu nhận xét remove', ctrl1 && !(await popOpen(mp)) && (await said(mp, 2)) === REMOVE, JSON.stringify([ctrl1, await said(mp, 2)]));
     await mctx.close();
   }
 

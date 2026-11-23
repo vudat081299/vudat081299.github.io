@@ -55,6 +55,7 @@
 - MDAN-082 · Prompt chỉ kể dòng đã đọc, mỗi tệp ghi tên một lần · `md-annotate/js/core/prompt.js`, `md-annotate/js/core/review.js`
 - MDAN-083 · Phiên một file thì cây file ẩn sẵn · `md-annotate/js/ui/tree.js`
 - MDAN-084 · Phím chọn gợi ý trong hộp nhận xét · `md-annotate/js/ui/popup.js`, `md-annotate/js/core/hint-keys.js`, `md-annotate/js/core/hints.js`
+- MDAN-085 · Mod + 1 lưu nhận xét "bỏ đoạn này" · `md-annotate/js/ui/popup.js`, `md-annotate/js/core/hint-keys.js`, `md-annotate/data/hints.json`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Source tô màu cú pháp markdown kiểu VS Code
@@ -457,3 +458,11 @@ thì Mod + X vẫn là cắt. Bỏ qua khi giữ thêm Shift hay Alt, khi bộ g
 mọi gợi ý (đã lọc theo chữ đang gõ), không gom bớt; nhiều thì vùng gợi ý cuộn, mở hộp thì ở đầu danh sách. Giữ Mod chỉ
 hiện số trên 10 gợi ý đầu, danh sách không đổi; thả Mod, cửa sổ mất focus, tab ẩn, hộp đóng thì số ẩn. Tấm đáy không hiện
 số. Hộp mở thì Ctrl/⌘ + B không ẩn / hiện cây file.
+
+## MDAN-085 · Mod + 1 lưu nhận xét "bỏ đoạn này"
+23/11/2026 · `md-annotate/js/ui/popup.js`, `md-annotate/js/core/hint-keys.js`, `md-annotate/data/hints.json`
+
+Khi hộp nhận xét mở (cùng điều kiện như MDAN-084), Mod + 1 bấm một lần lưu ngay nhận xét `remove` của `data/hints.json`
+(chủ trang muốn bỏ đoạn đã chọn khỏi văn bản) và đóng hộp; ở hộp sửa thì thay chữ nhận xét, như chọn một gợi ý. Đây là
+gợi ý ẩn: không thành chip, không được đếm nên không bao giờ thành gợi ý hiện, không đổi hạng của 10 phím gợi ý. Phím
+luôn bị chặn khi hộp mở; `data/hints.json` không nạp được thì phím không lưu gì.

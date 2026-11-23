@@ -3,7 +3,7 @@
 
   1. data/hints.json: có `hints` là danh sách chuỗi (và `renamed` cũ → mới trỏ đúng gợi ý), không rỗng, ≤ 80 ký tự (MAX_HINT trong trang),
      không trùng sau khi chuẩn hoá như trang làm (chữ thường, gộp khoảng trắng, bỏ dấu chấm cuối),
-     đủ 6 mục để hộp nhận xét có đủ gợi ý ở lần mở đầu.
+     đủ 6 mục để hộp nhận xét có đủ gợi ý ở lần mở đầu. `remove` (nhận xét của Mod + 1), nếu có, là chuỗi không rỗng.
   2. js/**/*.js + index.html: chỉ một chỗ gán innerHTML, và chỗ ấy nhận HTML đã qua DOMPurify.
   3. index.html: script ngoài ghim đúng phiên bản và có integrity; script cục bộ duy nhất là js/main.js (module).
   4. index.html chỉ là markup: không <style>, tối đa hai <script> inline (theme, báo file://).
@@ -67,6 +67,9 @@ if data is not None:
             errors.append(f'data/hints.json: renamed "{old}" → "{new}" không trỏ tới gợi ý nào trong "hints"')
         if norm(old) in seen:
             errors.append(f'data/hints.json: renamed "{old}" vẫn còn trong "hints"')
+    remove = data.get('remove', 'x') if isinstance(data, dict) else 'x'
+    if not isinstance(remove, str) or not remove.strip():
+        errors.append('data/hints.json: "remove" phải là chuỗi không rỗng')
     if len(seen) < 6:
         errors.append(f'data/hints.json: {len(seen)} gợi ý — cần ít nhất 6')
 
