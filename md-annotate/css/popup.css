@@ -80,10 +80,10 @@ html.ma-sheet-sp body { padding-bottom: max(calc(var(--dock-h, 0px) + var(--sa-b
 /* CHIP GỢI Ý: viên thuốc cao --chip-h (--h-sm, cảm ứng --h-touch), nền --chip, không viền; rê: nền --accent-soft. Luôn có
    mọi gợi ý. Hộp nổi: cao tối đa --chip-rows hàng (5 hàng trọn, nửa hàng thứ 6 báo còn nữa) rồi cuộn dọc; đệm bù bằng lề âm
    (vòng focus, số phím không bị cắt), rãnh thanh cuộn giữ sẵn (cuộn hay không, chip xếp hàng như nhau); cao đổi thì trượt
-   êm (calc-size). Giữ ⌘/Ctrl (.is-keys): số phím .ma-chip__k hiện ở góc trên trái chip, không chiếm chỗ, nên hiện / ẩn
+   êm (calc-size). Giữ ⌘/Ctrl (.is-keys): chữ phím .ma-chip__k (Z, CC…) hiện ở góc trên trái chip, không chiếm chỗ, nên hiện / ẩn
    không dời chip nào. Cao đổi theo nội dung (auto → auto) thì CSS không có điểm đầu: ui/popup.js đặt cao cũ một lần vẽ rồi bỏ. */
 .ma-chips {
-  --chip-h: var(--h-sm); --chip-k: calc(var(--h-xs) - var(--s1)); --chip-k-at: calc(-1.5 * var(--s1));   /* cỡ, chỗ của số phím */
+  --chip-h: var(--h-sm); --chip-k: calc(var(--h-xs) - var(--s1)); --chip-k-at: calc(-1.5 * var(--s1));   /* cỡ, chỗ của chữ phím */
   display: flex; flex-wrap: wrap; gap: var(--s2); margin-bottom: var(--s3);
 }
 .ma-pop:not(.is-sheet) .ma-chips {
@@ -109,14 +109,14 @@ html.ma-sheet-sp body { padding-bottom: max(calc(var(--dock-h, 0px) + var(--sa-b
   position: absolute; top: var(--chip-k-at); left: var(--chip-k-at); pointer-events: none;
   display: grid; place-items: center; min-width: var(--chip-k); height: var(--chip-k); padding: 0 var(--s1);
   border-radius: var(--r-pill); background: var(--ink-2); color: var(--surface); box-shadow: 0 0 0 var(--ring-w) var(--surface);
-  font: 500 var(--fs-xs)/1 var(--mono); font-variant-numeric: tabular-nums;
+  font: 500 var(--fs-xs)/1 var(--mono); white-space: nowrap;
   opacity: 0; scale: .8;
 }
 .ma-pop.is-keys .ma-chip__k { opacity: 1; scale: 1; }
 @media (prefers-reduced-motion: no-preference) {
   .ma-pop:not(.is-sheet) .ma-chips { transition: height var(--dur) var(--ease-io); }
   .ma-chip__k { transition: opacity var(--dur) var(--ease-io), scale var(--dur) var(--ease-io); }
-  @starting-style { .ma-pop.is-keys .ma-chip__k { opacity: 0; scale: .8; } }   /* chip vẽ lại lúc giữ phím (⌘V dán): số vẫn hiện dần */
+  @starting-style { .ma-pop.is-keys .ma-chip__k { opacity: 0; scale: .8; } }   /* chip vẽ lại lúc giữ phím (⌘V dán): chữ phím vẫn hiện dần */
 }
 @media (max-width: 720px), (pointer: coarse) { .ma-chips { --chip-h: var(--h-touch); } }
 

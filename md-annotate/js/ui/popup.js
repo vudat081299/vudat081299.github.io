@@ -6,7 +6,7 @@
    không làm trang nhảy. Lưu không cuộn trang. Màn cảm ứng: Return trong ô chữ xuống dòng, lưu bằng nút Save.
    Phím chọn gợi ý (MDAN-084, core/hint-keys.js): Mod (⌘ ở Mac, Ctrl nơi khác) + Z X C·C V·V B N M , . / chọn gợi ý 1–10;
    Mod + 1 lưu gợi ý ẩn "bỏ đoạn này" (removeHint của ui/hints.js; không chip, không đếm). Giữ Mod thì #pop có lớp
-   is-keys (số 1–10 trên chip); hộp mở thì Ctrl/⌘ + B không ẩn / hiện cây. Vùng chip luôn có mọi gợi ý (lọc theo chữ
+   is-keys (chữ phím trên 10 chip đầu, hintBadge); hộp mở thì Ctrl/⌘ + B không ẩn / hiện cây. Vùng chip luôn có mọi gợi ý (lọc theo chữ
    đang gõ); hộp nổi cuộn dọc khi quá trần (css/popup.css), tấm đáy cuộn ngang một hàng.
    Xuất: closePop, initPopup, openEdit, openNew, paintPending, pending, pop, popDirty, renderPopHints, updateNew.
    Dùng: core/text.js, core/anchor.js, core/hints.js, core/hint-keys.js, core/comments.js, core/place.js, core/picks.js, ui/dom.js,
@@ -15,7 +15,7 @@
 import { plural } from '../core/text.js';
 import { locate } from '../core/anchor.js';
 import { chipHints, pct } from '../core/hints.js';
-import { HINT_KEYS, hintPresses, hintRank, isDouble, isModKey, REMOVE_KEY, tapStep } from '../core/hint-keys.js';
+import { hintBadge, hintPresses, hintRank, isDouble, isModKey, REMOVE_KEY, tapStep } from '../core/hint-keys.js';
 import { addComment, editComment, findComment, overlapWarning, partsOf } from '../core/comments.js';
 import { popPlace, sheetReveal } from '../core/place.js';
 import { pickSummary } from '../core/picks.js';
@@ -227,12 +227,12 @@ function savePop(textOverride, uncounted) {
   if (id) flashItem(id);
 }
 function hintChip(x, i, showPct) {
-  var k = hintPresses(i + 1).map(shortcut).join(' ');
-  /* 10 chip đầu luôn có số hạng (.ma-chip__k), mọi trạng thái; CSS chỉ cho thấy khi #pop.is-keys. */
+  var k = hintPresses(i + 1).map(shortcut).join(' '), badge = hintBadge(i + 1);
+  /* 10 chip đầu luôn có chữ phím (.ma-chip__k: Z, CC…), mọi trạng thái; CSS chỉ cho thấy khi #pop.is-keys. */
   return h('button', {
     class: 'ma-chip', type: 'button', title: 'Used ' + plural(x.n, 'time') + (k ? ' · ' + k : ''),
     onclick: function () { savePop(x.t); }
-  }, i < HINT_KEYS ? h('span', { class: 'ma-chip__k', 'aria-hidden': 'true' }, String(i + 1)) : null,
+  }, badge ? h('span', { class: 'ma-chip__k', 'aria-hidden': 'true' }, badge) : null,
   h('span', { class: 'ma-chip__t' }, x.t), showPct ? h('span', { class: 'ma-chip__p' }, pct(x.p)) : null);
 }
 /* Vẽ lại mọi chip theo chữ đang gõ; vùng chip về đầu (hạng 1). */
@@ -265,7 +265,7 @@ function easeHeight(box, h0) {
 /* PHÍM CHỌN GỢI Ý (MDAN-084): chỉ khi hộp hiện và không hộp thoại nào mở. */
 function modKey() { return isMac ? 'Meta' : 'Control'; }   // e.key của Mod
 function keysLive() { return !!pop.mode && !$('pop').hidden && !document.querySelector('dialog[open]'); }
-/* Giữ Mod: #pop.is-keys, số 1–10 trên chip hiện dần; thả thì mờ đi. Chỉ đổi lớp, không vẽ lại chip. Tấm đáy thì không. */
+/* Giữ Mod: #pop.is-keys, chữ phím trên 10 chip đầu hiện dần; thả thì mờ đi. Chỉ đổi lớp, không vẽ lại chip. Tấm đáy thì không. */
 function startHold() {
   if (held || !keysLive() || $('pop').classList.contains('is-sheet')) return;
   held = true;

@@ -1125,6 +1125,8 @@ import * as hk from '../js/core/hint-keys.js';
   check('hintPresses: một lần bấm, C / V hai lần, hạng ngoài 1–10 không có',
     eq(hk.hintPresses(1), [['mod', 'Z']]) && eq(hk.hintPresses(3), [['mod', 'C'], ['mod', 'C']]) && eq(hk.hintPresses(10), [['mod', '/']]) &&
     eq(hk.hintPresses(11), []) && eq(hk.hintPresses(0), []));
+  check('hintBadge: chữ phím trên chip, C / V hai chữ, hạng ngoài 1–10 rỗng',
+    eq([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(hk.hintBadge), ['Z', 'X', 'CC', 'VV', 'B', 'N', 'M', ',', '.', '/']) && hk.hintBadge(11) === '' && hk.hintBadge(0) === '');
   const lbl = (r, mac) => hk.hintPresses(r).map((k) => dpText.keyCombo(k, mac)).join(' ');
   check('keyCombo: Mac ký hiệu viết liền, nơi khác chữ nối +', dpText.keyCombo(['mod', 'shift', 'C'], true) === '⌘⇧C' &&
     dpText.keyCombo(['mod', 'shift', 'C'], false) === 'Ctrl+Shift+C' && dpText.keyCombo(['alt', 'X'], true) === '⌥X' && dpText.keyCombo(['alt', 'X'], false) === 'Alt+X');

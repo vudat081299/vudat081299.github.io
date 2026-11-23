@@ -1,8 +1,8 @@
 /* Phím tắt chọn gợi ý trong hộp nhận xét (MDAN-084), thuần: phím (KeyboardEvent.code, không theo bố cục bàn phím) →
    hạng 1–10, phím nào phải bấm hai lần (C, V: lần đầu vẫn chép / dán như thường), các lần bấm của một hạng (hintPresses,
-   nhãn thì core/text.js keyCombo), luật lần bấm thứ hai. Gợi ý sau hạng 10 không có phím. Phím của gợi ý ẩn "bỏ đoạn này"
+   nhãn thì core/text.js keyCombo), chữ phím trên chip (hintBadge), luật lần bấm thứ hai. Gợi ý sau hạng 10 không có phím. Phím của gợi ý ẩn "bỏ đoạn này"
    (REMOVE_KEY): không phải hạng nào, không chip.
-   Xuất: HINT_KEYS, hintPresses, hintRank, isDouble, isModKey, REMOVE_KEY, TAP_MS, tapStep.
+   Xuất: HINT_KEYS, hintBadge, hintPresses, hintRank, isDouble, isModKey, REMOVE_KEY, TAP_MS, tapStep.
    Dùng: không module nào. */
 
 var KEYS = ['KeyZ', 'KeyX', 'KeyC', 'KeyV', 'KeyB', 'KeyN', 'KeyM', 'Comma', 'Period', 'Slash'];   // hạng 1..10
@@ -25,6 +25,8 @@ export function hintPresses(rank) {
   var one = ['mod', CHARS[rank - 1]];
   return isDouble(code) ? [one, one] : [one];
 }
+/* Chữ phím trên chip hạng rank, mỗi lần bấm một chữ: 'Z', 'CC', '/'; hạng không có phím: ''. */
+export function hintBadge(rank) { return hintPresses(rank).map(function (p) { return p[1]; }).join(''); }
 /* Một lần bấm phím không phải bổ trợ lúc now (ms). code: e.code khi chỉ giữ Mod, '' khi khác (phím khác ngắt chuỗi).
    prev: lần bấm C / V trước { code, t } hay null. Trả { hit, prev }: hit khi đây là lần thứ hai của cùng phím trong TAP_MS,
    không phím nào xen giữa; prev là thứ cần nhớ cho lần sau (lần thứ hai đã dùng thì null: bấm ba lần không chọn hai lần). */
