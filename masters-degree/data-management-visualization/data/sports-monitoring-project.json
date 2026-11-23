@@ -753,7 +753,7 @@
     {"item": "F1: giấy phép, cỡ, ngày Ergast", "r1": "CC0, 22 MB, Ergast đóng cuối 2024.", "r2": "Gốc là CC BY-NC-SA, zip 6,3 MB, tắt đầu 2025.", "check": "Kaggle ghi CC0 nhưng điều khoản Jolpica ghi CC BY-NC-SA 4.0; zip 6.585.538 byte; tài liệu FastF1: \"shutdown at the beginning of 2025\".", "final": "Vòng 2 đúng.", "src": "A1"},
     {"item": "F1: SPRT", "r1": "Khớp yếu: không có chuỗi có/không.", "r2": "Thắng đồng đội từng chặng.", "check": "Mỗi chặng cho một kết quả 1/0 tự nhiên.", "final": "Vòng 2 đúng: khớp ●● thay vì ●."},
     {"item": "Giấy phép repo mlops", "r1": "MIT.", "r2": "Không có file LICENSE.", "check": "README ghi MIT, link tới file không tồn tại; GitHub báo repo không có giấy phép.", "final": "Vòng 2 đúng.", "src": "A4"},
-    {"item": "Repo chấn thương", "r1": "Bỏ.", "r2": "Dùng một phần.", "check": "Có LICENSE MIT; run_dq_checks(), schema contract, trang giới hạn dùng lại được; dữ liệu vẫn giả lập.", "final": "Dùng một phần, cho nửa quản lý dữ liệu.", "src": "A3"},
+    {"item": "Repo chấn thương", "r1": "Bỏ.", "r2": "Dùng một phần.", "check": "Có LICENSE MIT; run_dq_checks(), schema contract, trang giới hạn dùng lại được; dữ liệu vẫn giả lập.", "final": "Dùng một phần, cho phần quản lý dữ liệu.", "src": "A3"},
     {"item": "Minitab ANOM", "r1": "Dùng.", "r2": "Dùng một phần.", "check": "So với trung bình chung mọi sân; tác giả dặn đừng coi là suy diễn nghiêm túc; dữ liệu dạng .mpx.", "final": "Dùng một phần, sát ngưỡng.", "src": "B5"},
     {"item": "Tên topic GitHub", "r1": "4.825 repo, có Fast-F1, nba_api…", "r2": "Topic bảng nêu là sport-analytics: 62 repo.", "check": "sport-analytics có 62 repo, phần lớn về video; Fast-F1, nba_api, statsbomb không mang topic nào.", "final": "Bỏ.", "src": "B6"},
     {"item": "h của ANOM", "r1": "Tra từ phân phối t.", "r2": "Bảng Nelson khi các nhóm cùng cỡ.", "check": "Trang Minitab: cùng cỡ dùng giá trị chính xác (Nelson 1983); khác cỡ dùng t hiệu chỉnh Šidák. Mô phỏng k = 4, n = 5, α = 0,05: 2,74 so với 2,80.", "final": "t Šidák là xấp xỉ, hơi bảo thủ."},
@@ -768,11 +768,11 @@
     {"id": "anom", "label": "ANOM"},
     {"id": "cusum", "label": "CUSUM"},
     {"id": "sprt", "label": "SPRT"},
-    {"id": "dm", "label": "Nửa quản lý dữ liệu"},
+    {"id": "dm", "label": "Phần quản lý dữ liệu"},
     {"id": "license", "label": "Giấy phép an toàn"},
-    {"id": "effort", "label": "Công sức nhẹ"},
+    {"id": "effort", "label": "Ít công sức"},
     {"id": "audience", "label": "Khán giả Việt quen"},
-    {"id": "fresh", "label": "Dữ liệu mới"}
+    {"id": "fresh", "label": "Dữ liệu tới mùa gần nhất"}
   ],
   "options": [
     {
@@ -796,7 +796,7 @@
         "Cả bốn phương pháp trên một bộ dữ liệu.",
         "File <span class=\"term\">CSV</span> nhẹ, nhiều cột: cú sút, thẻ, trọng tài, tỉ lệ cược.",
         "Mùa nào cũng 380 trận: ANOM cho tỉ lệ dùng đúng công thức cùng cỡ.",
-        "Cột đổi theo mùa và tên trọng tài trôi cho nửa quản lý dữ liệu một câu chuyện làm sạch thật.",
+        "Cột đổi theo mùa và tên trọng tài ghi không thống nhất cho phần quản lý dữ liệu một câu chuyện làm sạch thật.",
         "Có bài liên quan đã <span class=\"term\">bình duyệt</span> (Beggs &amp; Bond 2020).",
         "Khán giả Việt quen bóng đá."
       ],
@@ -825,7 +825,7 @@
         "fresh": 3
       },
       "pros_html": [
-        "14 bảng quan hệ: mạnh nhất cho nửa quản lý dữ liệu (<span class=\"term\">ERD</span>, <span class=\"term\">join</span>, <span class=\"term\">DuckDB</span>).",
+        "14 bảng quan hệ: mạnh nhất cho phần quản lý dữ liệu (<span class=\"term\">ERD</span>, <span class=\"term\">join</span>, <span class=\"term\">DuckDB</span>).",
         "Thời gian từng vòng dày đặc cho CUSUM và ngoại lai.",
         "Thời gian dừng pit theo đội đua cho ANOM.",
         "Đấu đồng đội từng chặng cho SPRT.",
@@ -1057,6 +1057,7 @@
       "start": 60,
       "len": 20,
       "roles": [
+        2,
         3,
         4,
         5,
@@ -1069,7 +1070,8 @@
         "Đường SPRT đi giữa hai ngưỡng.",
         "Box plot và <span class=\"term\">strip plot</span> cho ngoại lai.",
         "<span class=\"term\">Small multiples</span>: mỗi mùa một ô nhỏ; ở phần mở rộng, mỗi câu lạc bộ một ô.",
-        "Ghi chú sự kiện lên hình: mùa không khán giả, VAR từ 2019/20."
+        "Ghi chú sự kiện lên hình: mùa không khán giả, VAR từ 2019/20.",
+        "Vai 2: hình luồng dữ liệu (lineage) và bảng chất lượng dữ liệu cho báo cáo."
       ],
       "io_html": "<code>results/*.csv</code> → <code>src/charts.py</code>, hình PNG hoặc SVG.",
       "tools": "matplotlib hoặc plotly",
@@ -1087,11 +1089,12 @@
       "start": 65,
       "len": 23,
       "roles": [
+        2,
         7
       ],
       "tasks_html": [
         "<code>app/streamlit_app.py</code> đọc <code>data/clean/</code> và <code>results/</code>, gọi lại các hàm trong <code>src/</code> khi kéo thanh trượt; chạy được khi không có mạng.",
-        "Tab \"Dữ liệu\": báo cáo chất lượng và nút chạy lại đường ống.",
+        "Vai 2: tab \"Dữ liệu\" có báo cáo chất lượng, sơ đồ lineage và nút chạy lại đường ống.",
         "Mỗi phương pháp một tab có thanh trượt: ngưỡng ngoại lai; α cho ANOM; k, h cho CUSUM; p0, p1, α, β cho SPRT. Hình cập nhật ngay.",
         "Kịch bản demo 3 phút."
       ],
@@ -1188,7 +1191,7 @@
   ],
   "slides": [
     {"title": "Câu hỏi mở đầu: mùa 2020/21 sân vắng, lợi thế sân nhà còn không?", "min": 1, "who": [1]},
-    {"title": "Đề tài: bốn phương pháp, hai câu hỏi", "min": 1, "who": [1]},
+    {"title": "Đề tài: bốn phương pháp, hai câu hỏi (ghi đúng: sequential probability ratio test, không phải \"ration\")", "min": 1, "who": [1]},
     {"title": "Nguồn gốc: giám sát chất lượng y tế sang thể thao", "min": 1, "who": [1]},
     {"title": "Dữ liệu: football-data.co.uk, điều khoản, data card", "min": 1, "who": [2]},
     {"title": "Đường ống và lineage", "min": 1.5, "who": [2]},
@@ -1207,10 +1210,10 @@
   "week1": [
     {"role": 1, "task_html": "Gửi giảng viên tin nhắn ở mục <a href=\"#gui-giang-vien\">Cần xác nhận</a>; gửi football-data.co.uk <a href=\"#email-fd\">thư xin phép soạn sẵn</a>; hẹn họp hằng tuần."},
     {"role": 2, "task_html": "Viết <code>src/download.py</code>, ghi <code>data/manifest.csv</code>; mở <code>docs/data-card.md</code>."},
-    {"role": 3, "task_html": "Viết rào IQR, z-score hiệu chỉnh, Grubbs; thử trên ví dụ của NIST (<a href=\"#lt-lich\">pha P1b — học và viết phương pháp</a>)."},
-    {"role": 4, "task_html": "Viết ANOM cho tỉ lệ; thử trên tỉ lệ giả lập (<a href=\"#lt-lich\">pha P1b — học và viết phương pháp</a>)."},
-    {"role": 5, "task_html": "Viết CUSUM Bernoulli hai phía; thử trên chuỗi giả lập và ví dụ của NIST (<a href=\"#lt-lich\">pha P1b — học và viết phương pháp</a>)."},
-    {"role": 6, "task_html": "Viết SPRT Bernoulli; thử trên chuỗi giả lập (<a href=\"#lt-lich\">pha P1b — học và viết phương pháp</a>)."},
-    {"role": 7, "task_html": "Tạo repo theo cây mẫu, venv, <code>requirements.txt</code>; dựng khung app Streamlit."}
+    {"role": 3, "task_html": "Viết rào <span class=\"term\">IQR</span>, <span class=\"term\">z-score hiệu chỉnh</span>, <span class=\"term\">Grubbs</span>; thử trên ví dụ của NIST.", "label_html": "<span class=\"term\">EDA</span> &amp; <span class=\"term\">ngoại lai</span>"},
+    {"role": 4, "task_html": "Viết ANOM cho tỉ lệ; thử trên tỉ lệ giả lập."},
+    {"role": 5, "task_html": "Viết CUSUM Bernoulli hai phía; thử trên chuỗi giả lập và ví dụ của NIST."},
+    {"role": 6, "task_html": "Viết SPRT Bernoulli; thử trên chuỗi giả lập."},
+    {"role": 7, "task_html": "Tạo repo theo cây mẫu, <span class=\"term\">venv</span>, <code>requirements.txt</code>; dựng khung app <span class=\"term\">Streamlit</span>."}
   ]
 }

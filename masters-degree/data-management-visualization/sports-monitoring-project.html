@@ -10,7 +10,7 @@
   if(v!=='dark'&&v!=='light'){var mq=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)');v=mq&&mq.matches?'dark':'light';}
   document.documentElement.setAttribute('data-theme',v);})();
 </script>
-<title>Sports Monitoring Project — Source Review</title>
+<title>Sports Monitoring — Group Project Plan</title>
 <meta name="description" content="Đồ án nhóm IT5425: ngoại lai, ANOM, CUSUM, SPRT trên dữ liệu thể thao — chấm điểm nguồn, phương án, chia việc.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -81,15 +81,8 @@ main{max-width:calc(var(--read) + 2 * var(--gutter));margin:0 auto;padding:0 var
 .lede{font-size:var(--fs-lg);max-width:44em}
 .brief{color:var(--ink-2);font-size:var(--fs-sm)}
 .brief q{font-style:italic}
-.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--s2);margin:var(--s5) 0}
-.stat{padding:var(--s3) var(--s4);border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
-.stat b{display:block;font:600 var(--fs-big)/1.1 var(--display)}
-.stat span{display:flex;align-items:center;gap:var(--s2);font-size:var(--fs-xs);color:var(--ink-2);line-height:1.35}
-.prior{padding:var(--s4);border:1px solid var(--line);border-radius:var(--r);background:var(--surface);margin:0 0 var(--s5)}
-.prior h2{font-size:var(--fs-h3);margin-bottom:var(--s2)}
-.prior ul{margin-bottom:var(--s2)}
-.prior p:last-child{margin:0}
-@media (max-width:640px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.hero-line{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s1) var(--s3);font-size:var(--fs-sm);color:var(--ink-2);margin:var(--s3) 0 var(--s4)}
+.hero-line span{display:inline-flex;align-items:center;gap:var(--s2)}
 
 /* ═══ KẾ HOẠCH MỘT TRANG ═══ */
 .onepage{margin:var(--s4) 0 var(--s5);padding:var(--s4) var(--s5);border:1px solid var(--ink);border-radius:var(--r);background:var(--surface);box-shadow:var(--shadow);font-size:var(--fs-sm);line-height:1.55}
@@ -100,7 +93,8 @@ main{max-width:calc(var(--read) + 2 * var(--gutter));margin:0 auto;padding:0 var
 .op-q,.op-w1{margin:var(--s1) 0 0;padding-left:1.4em}
 .op-q li,.op-w1 li{margin:var(--s1) 0}
 .op-w1 b{font-weight:600}
-.op-submit .lab{display:inline;margin-right:var(--s2)}
+.op-submit .lab,.op-why .lab{display:inline;margin-right:var(--s2)}
+.op-p1b{margin:var(--s1) 0 0}
 .op-links{display:flex;flex-wrap:wrap;gap:var(--s2);margin:0}
 .op-links a{display:inline-flex;align-items:center;min-height:var(--tap);padding:0 var(--s4);border:1px solid var(--stroke);border-radius:var(--r-pill);text-decoration:none;font-weight:600}
 .op-links a:hover{border-color:var(--ink)}
@@ -170,6 +164,7 @@ table.stack .les-links a{align-items:flex-start;vertical-align:top}
 .chip:hover{border-color:var(--stroke)}
 .chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
 .chip small{font:500 var(--fs-lab) var(--mono);opacity:.85}
+.chips-desc{font-size:var(--fs-xs);color:var(--ink-2);margin:0 0 var(--s3)}
 .legend{display:flex;flex-wrap:wrap;gap:var(--s1) var(--s4);margin:0 0 var(--s3);font-size:var(--fs-xs);color:var(--ink-2)}
 .legend span{display:inline-flex;align-items:center;gap:var(--s2)}
 #chart{width:100%}
@@ -265,11 +260,9 @@ details.fold>.fold-body{padding:0 var(--s4) var(--s4)}
 .dots i.on{background:var(--ink)}
 .fit-key{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s1) var(--s4);font-size:var(--fs-xs);color:var(--ink-2);margin:var(--s2) 0 0}
 .fit-key span{display:inline-flex;align-items:center;gap:var(--s2)}
-.dtree,.dtree ul{list-style:none;margin:0;padding:0}
-.dtree ul{margin-left:var(--s4);padding-left:var(--s4);border-left:1px solid var(--stroke)}
-.dtree li{margin:var(--s2) 0;font-size:var(--fs-sm)}
-.dtree ul>li{position:relative}
-.dtree ul>li::before{content:"";position:absolute;left:calc(-1 * var(--s4));top:1.1em;width:var(--s3);border-top:1px solid var(--stroke)}
+.dtree3{list-style:none;margin:var(--s2) 0 var(--s3);padding:0 0 0 var(--s4);border-left:1px solid var(--stroke)}
+.dtree3 li{margin:var(--s2) 0;font-size:var(--fs-sm)}
+.switch-b{font-size:var(--fs-sm)}
 .dq{display:inline-block;padding:var(--s1) var(--s3);border:1px solid var(--stroke);border-radius:var(--r-sm);background:var(--surface);font-weight:600}
 .da{display:inline-block;min-width:4.5em;font:500 var(--fs-lab) var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
 .dr{font-weight:600}
@@ -324,7 +317,7 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
 .g-weeks span{padding-left:var(--s1);border-left:1px solid var(--line)}
 .g-row{width:100%;min-height:var(--tap);padding:var(--s1) var(--s2);margin:0;border:1px solid transparent;border-radius:var(--r-sm);background:none;color:var(--ink);font:inherit;font-size:var(--fs-xs);text-align:left;cursor:pointer}
 .g-row:hover{background:var(--sunk)}
-.g-row.hl{background:var(--a-soft)}
+.g-row.hl{background:var(--a-soft);border-color:var(--green)}
 .g-row[aria-pressed="true"]{border-color:var(--ink)}
 .g-name b{font-family:var(--mono);font-weight:500;color:var(--ink-3)}
 .g-when{margin-left:var(--s2);color:var(--ink-3);font-size:var(--fs-lab);white-space:nowrap}
@@ -486,34 +479,22 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
 <section id="tom-tat" class="hero">
   <div class="eyebrow">Đồ án nhóm · IT5425 Data Management and Visualization</div>
   <h1>Theo dõi bất thường trong thể thao: chọn nguồn và cách làm</h1>
-  <p class="lede">Chúng tôi không tìm thấy bài báo hay đồ án đã công bố nào làm đủ bốn phương pháp trên dữ liệu thể thao, nên nhóm tự ráp: bóng đá Premier League, dữ liệu football-data.co.uk, công thức tự viết theo nguồn chuẩn.</p>
+  <p class="lede">Kế hoạch đồ án: bốn phương pháp trên bóng đá Premier League, dữ liệu football-data.co.uk, công thức tự viết theo nguồn chuẩn. Trang gom kế hoạch, cách chọn nguồn và lộ trình từng tuần.</p>
   <div class="onepage" id="ke-hoach">
     <h2>Kế hoạch một trang</h2>
-    <p class="op-one">Giám sát Premier League như bệnh viện giám sát chất lượng: ai khác thường, và đổi từ lúc nào — bằng ngoại lai, <span class="term">ANOM</span>, <span class="term">CUSUM</span>, <span class="term">SPRT</span> trên dữ liệu football-data.co.uk.</p>
+    <p class="op-one">Giám sát Premier League như bệnh viện giám sát chất lượng: ai khác thường, và đổi từ lúc nào — bằng <span class="term">ngoại lai</span>, <span class="term">ANOM</span>, <span class="term">CUSUM</span>, <span class="term">SPRT</span> trên dữ liệu football-data.co.uk.</p>
     <p class="op-data"><span class="lab">Dữ liệu</span> Mỗi mùa một file <span class="term">CSV</span>, ví dụ <code>https://www.football-data.co.uk/mmz4281/2021/E0.csv</code>: <code>2021</code> là mùa 2020/21, <code>E0</code> là Premier League.</p>
     <div class="op-grid">
       <div><span class="lab">Bốn câu hỏi</span><ol class="op-q" id="planQ"></ol></div>
-      <div><span class="lab">Tuần 1: mỗi vai một việc</span><ol class="op-w1" id="planW1"></ol></div>
+      <div><span class="lab">Tuần 1: mỗi vai một việc</span><ol class="op-w1" id="planW1"></ol>
+        <p class="op-p1b">Vai 3–6: <a href="#lt-lich" data-ph="P1b">pha P1b</a> (học và viết phương pháp).</p></div>
     </div>
+    <p class="op-why"><span class="lab">Vì sao A</span> Một bộ dữ liệu làm đủ bốn phương pháp, mùa nào cũng 380 trận. Không được dùng football-data → chuyển <a href="#top-3">B (F1, dữ liệu Jolpica)</a>.</p>
     <p class="op-submit" id="planSubmit"></p>
     <p class="op-links"><a href="#lo-trinh">Kế hoạch đầy đủ</a><a href="#top-3">Vì sao chọn A, phương án khác</a><a href="#can-xac-nhan">Hỏi gì trước</a></p>
   </div>
   <p class="brief">Đề bài: <q lang="en">Outlier detection, analysis of means, CUSUM and sequential probability ratio testing. Applications in sports.</q> Nhóm 7 người nộp slide, báo cáo và demo.</p>
-  <div class="stats" id="heroStats" aria-live="polite"></div>
-
-  <div class="prior">
-    <h2>Đã có ai làm đúng đề này chưa?</h2>
-    <p>Chúng tôi không tìm thấy bài báo hay đồ án đã công bố nào làm đủ bốn phương pháp trên dữ liệu thể thao. Gần nhất:</p>
-    <ul>
-      <li>Spiegelhalter và cộng sự (2012): giám sát chất lượng y tế (funnel plot, CUSUM có hiệu chỉnh rủi ro), không có ANOM.</li>
-      <li>Spiegelhalter và cộng sự (2003): <span class="term">SPRT</span> có hiệu chỉnh rủi ro cho hai vụ y khoa Bristol và Shipman.</li>
-      <li>Bracewell (1999), luận văn thạc sĩ ở Đại học Massey: <span class="term">CUSUM</span>, <span class="term">EWMA</span> và ngoại lai trên điểm đánh bóng cricket.</li>
-      <li>Loạt bài park factor của Minitab: <span class="term">ANOM</span> và lọc ngoại lai trên các sân bóng chày.</li>
-      <li>Beggs &amp; Bond (2020): một tổng tích luỹ hồi cứu, họ hàng của CUSUM, trên Premier League.</li>
-      <li>Montagna &amp; Hopker (2018): ngoại lai trong thể thao, theo dõi thành tích cả sự nghiệp của vận động viên đẩy tạ để đánh dấu nghi doping.</li>
-      <li>Miles (1984): coi luật tính điểm quần vợt như một phép kiểm tuần tự, họ hàng của SPRT.</li>
-    </ul>
-  </div>
+  <p class="hero-line" id="heroStats"></p>
 
   <nav aria-label="Các phần của trang">
     <ul class="jump">
@@ -562,12 +543,24 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
       <tr><td>Độ nặng của bệnh nhân</td><td>Sức mạnh của đối thủ (hiệu chỉnh rủi ro)</td></tr>
     </tbody>
   </table>
+
+  <h3>Công trình gần nhất</h3>
+  <p>Chúng tôi không tìm thấy bài báo hay đồ án đã công bố nào làm đủ bốn phương pháp trên dữ liệu thể thao. Gần nhất:</p>
+  <ul>
+    <li>Spiegelhalter và cộng sự (2012): giám sát chất lượng y tế (funnel plot, CUSUM có hiệu chỉnh rủi ro), không có ANOM.</li>
+    <li>Spiegelhalter và cộng sự (2003): <span class="term">SPRT</span> có hiệu chỉnh rủi ro cho hai vụ y khoa Bristol và Shipman.</li>
+    <li>Bracewell (1999), luận văn thạc sĩ ở Đại học Massey: <span class="term">CUSUM</span>, <span class="term">EWMA</span> và ngoại lai trên điểm đánh bóng cricket.</li>
+    <li>Loạt bài park factor của Minitab: <span class="term">ANOM</span> và lọc ngoại lai trên các sân bóng chày.</li>
+    <li>Beggs &amp; Bond (2020): một tổng tích luỹ hồi cứu, họ hàng của CUSUM, trên Premier League.</li>
+    <li>Montagna &amp; Hopker (2018): ngoại lai trong thể thao, theo dõi thành tích cả sự nghiệp của vận động viên đẩy tạ để đánh dấu nghi doping.</li>
+    <li>Miles (1984): coi luật tính điểm quần vợt như một phép kiểm tuần tự, họ hàng của SPRT.</li>
+  </ul>
 </section>
 
 <!-- ═══════════════ LINEAGE ═══════════════ -->
 <section id="lineage" class="block">
-  <h2>Từ khoá “Data Lineage &amp; Provenance” có đúng không?</h2>
-  <p><span class="pill"><span class="sw c5" aria-hidden="true"></span>Phần lớn là sai</span></p>
+  <h2>Lineage không phải tên khác của môn, nhưng là một phần quản lý dữ liệu</h2>
+  <p>Nhóm được gợi ý dùng “Data Lineage &amp; Provenance” làm từ khoá quốc tế thay cho tên môn.</p>
   <div class="cols">
     <div class="box">
       <h3>Đúng ở đâu</h3>
@@ -575,10 +568,10 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
     </div>
     <div class="box">
       <h3>Sai ở đâu</h3>
-      <p>Chỉ là một mảng con của <span class="term">quản lý metadata</span> (<span class="term">DAMA-DMBOK</span>): không có phần hình, không liên quan bốn phương pháp. Tên môn tự nó đã là tên quốc tế: Wesleyan có môn <a href="https://www.coursera.org/learn/data-visualization">Data Management and Visualization</a> trên Coursera, đề cương không nhắc lineage.</p>
+      <p>Chỉ là một mảng con của <span class="term">quản lý metadata</span> (<span class="term">DAMA-DMBOK</span>): không có phần hình, không liên quan bốn phương pháp. Tên môn tự nó đã dùng quốc tế (ví dụ <a href="https://www.coursera.org/learn/data-visualization">môn cùng tên trên Coursera</a>).</p>
     </div>
   </div>
-  <p>Dùng cho một mục của báo cáo: một <span class="term">data card</span> và một sơ đồ lineage cho thấy dữ liệu đến từ đâu, qua bước nào. Ví dụ ngược: repo MLOps ở thẻ A4 không ghi dữ liệu nào đã huấn luyện mô hình nào, nên không lần ngược được.</p>
+  <p>Trong kế hoạch, lineage là việc của vai 2 “Dữ liệu &amp; lineage”: ba file <code>manifest.csv</code>, <code>data-card.md</code>, <code>lineage.md</code> (xem <a href="#lt-luong">luồng dữ liệu</a>), và một mục của báo cáo. Ví dụ ngược: repo MLOps ở thẻ A4 không ghi dữ liệu nào đã huấn luyện mô hình nào, nên không lần ngược được.</p>
   <p class="kw-line"><span class="lab">Từ khoá tìm tốt hơn</span> <code>statistical process control sports</code> · <code>CUSUM sports performance</code> · <code>sequential probability ratio test sports</code> · <code>analysis of means ANOM</code> · <code>change point detection sports</code></p>
   <p class="sub">Định nghĩa nên trích: <a href="https://www.w3.org/TR/prov-overview/">W3C PROV Overview</a>, <a href="https://openlineage.io/docs/">tài liệu OpenLineage</a>, bài tổng quan của Herschel và cs. (2017).</p>
 </section>
@@ -591,6 +584,7 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
 
   <div class="chart-box">
     <div class="chips" id="chips" role="group" aria-label="Lọc theo nhóm nguồn"></div>
+    <p class="chips-desc" id="chipsDesc"></p>
     <div class="legend" id="legend"></div>
     <div id="chart"></div>
     <p class="chart-note">Bấm một thanh để mở thẻ của nguồn ấy. Vạch đứng ở 4 và 7 là hai ngưỡng kết luận. Điểm tổng hiện một chữ số thập phân, làm tròn xuống để con số không vượt ngưỡng.</p>
@@ -628,22 +622,21 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
   <div class="opts" id="opts"></div>
 
   <h3>Vì sao ba phương án này</h3>
-  <p>Đây là những bộ dữ liệu đã kiểm duy nhất có đủ ba dạng mà bốn phương pháp cần: nhiều nhóm cùng lúc (ngoại lai, ANOM), một chuỗi dài theo thời gian cho từng đơn vị (CUSUM, SPRT), và đủ cột để làm sạch (nửa quản lý dữ liệu).</p>
+  <p>A và B là hai bộ dữ liệu đã kiểm có đủ ba dạng mà bốn phương pháp cần: nhiều nhóm cùng lúc (ngoại lai, ANOM), một chuỗi dài theo thời gian (CUSUM, SPRT), và đủ cột để làm sạch (phần quản lý dữ liệu). C giữ lại vì không rủi ro giấy phép và có đội tuyển Việt Nam, nhưng chỉ làm phần mở rộng.</p>
   <p>Các bộ khác rơi ra: chuỗi của StatsBomb quá ngắn; nba_api bị chặn trên máy chủ đám mây; repo quần vợt của Sackmann đã bị gỡ; Match Charting Project phải bóc tách nặng.</p>
 
   <h3>Chọn thế nào</h3>
-  <ul class="dtree">
-    <li><span class="dq">Hỏi giảng viên và email football-data.co.uk (trang dữ liệu mời liên hệ): dùng được không?</span>
-      <ul>
-        <li><span class="da">Có</span> <span class="dr">Phương án A, thêm C làm phần mở rộng.</span></li>
-        <li><span class="da">Không</span> <span class="dq">Giảng viên cần dữ liệu công bố được?</span>
-          <ul>
-            <li><span class="da">Có</span> <span class="dr">Phương án B.</span></li>
-            <li><span class="da">Không</span> <span class="dr">B hoặc C.</span></li>
-          </ul>
-        </li>
-      </ul>
-    </li>
+  <p class="dq">Hỏi giảng viên và email football-data.co.uk (trang dữ liệu mời liên hệ).</p>
+  <ul class="dtree3">
+    <li><span class="da">Nếu</span> giảng viên đồng ý, và football-data đồng ý hoặc repo để riêng tư <span class="dr">→ A</span></li>
+    <li><span class="da">Nếu</span> giảng viên không đồng ý, hoặc đòi repo công khai <span class="dr">→ B</span></li>
+    <li><span class="da">Nếu</span> hết tuần 1 chưa ai trả lời <span class="dr">→ làm tiếp A trong repo riêng tư, chuẩn bị sẵn B</span></li>
+  </ul>
+  <h4>Chuyển sang B thì đổi gì</h4>
+  <ul class="switch-b">
+    <li>Dữ liệu: bản dump CSV của Jolpica (hoặc bộ Kaggle).</li>
+    <li>Bốn câu hỏi theo F1:<ul id="switchB"></ul></li>
+    <li>Giữ nguyên: đường ống, bảy vai, lịch, các file lineage.</li>
   </ul>
   <p class="verdict-line"><b>Chốt: A, hơn B không nhiều</b> (<span data-total="C1"></span> so với <span data-total="C11"></span>). Nguồn dữ liệu của A có điểm cao nhất trong các bộ dữ liệu (thẻ C4 cao hơn nhưng là bộ công thức). Lý do: một bộ dữ liệu quen thuộc làm được cả bốn phương pháp, các mùa sạch và cùng cỡ. B là phương án an toàn nếu chưa rõ có được dùng football-data không.</p>
 </section>
@@ -679,12 +672,12 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
       <li>Nhiều phép kiểm thì sẽ có báo động giả. Ghi rõ đã chạy bao nhiêu phép kiểm. CUSUM: chọn h bằng mô phỏng <span class="term">ARL</span> cho cả chuỗi; phép kiểm một lần: <span class="term">Bonferroni</span>.</li>
       <li>Đối thủ mạnh yếu khác nhau nên kết quả từng trận nhiễu. <span class="term">Phần dư</span> so với tỉ lệ cược bỏ được sức đối thủ nhưng cũng bỏ luôn phong độ, nên chỉ dùng ở phần mở rộng.</li>
       <li>Số đếm (bàn, thẻ) không theo phân phối chuẩn.</li>
-      <li>Đừng để phần thống kê nuốt nửa quản lý dữ liệu: nửa ấy có thể tới nửa số điểm. Hỏi giảng viên (<a href="#gui-giang-vien">câu 5</a> trong tin nhắn).</li>
+      <li>Đừng để phần thống kê nuốt phần quản lý dữ liệu: phần ấy có thể tới nửa số điểm. Hỏi giảng viên (<a href="#gui-giang-vien">câu 5</a> trong tin nhắn).</li>
     </ol>
   </div>
 
   <h3 id="lt-lich">Lịch làm việc</h3>
-  <p class="sub">Chín pha, có pha chồng lên nhau. Bấm một pha (hoặc dùng Tab rồi Enter) để xem việc cụ thể.</p>
+  <p class="sub"><span data-count="phases"></span> pha, có pha chồng lên nhau. Bấm một pha (hoặc dùng Tab rồi Enter) để xem việc cụ thể.</p>
   <div class="gantt-box">
     <div class="gantt-head">
       <span id="weeksLabel">Số tuần còn lại</span>
@@ -781,14 +774,10 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
   <h3>Bẫy: gói không như tên</h3>
   <ul class="traps">
     <li><code>anom</code> trên <span class="term">PyPI</span> là bộ ánh xạ cho Google Datastore, không phải ANOM.</li>
-    <li><code>pyanom</code> là phát hiện điểm lạ chung chung, không phải ANOM.</li>
-    <li><code>scipy.stats.dunnett</code> so từng nhóm với một nhóm đối chứng, không phải ANOM.</li>
     <li><code>pip install cusum</code> cài một công cụ xử lý ảnh radar vệ tinh, không phải giobbu/CUSUM.</li>
     <li><code>qcc</code> trên PyPI là công cụ quản lý cấu hình Claude Code, không phải gói <code>qcc</code> của R.</li>
     <li><code>outliers</code> trên PyPI là gói rác; gói đúng là <code>outlier_utils</code>.</li>
-    <li><code>sprt</code> 0.0.1 trên PyPI (2017) đã bị bỏ.</li>
-    <li><code>breaks_cusumolsresid</code> của statsmodels là kiểm định <span class="term">gãy cấu trúc</span> trên phần dư hồi quy, không phải <span class="term">biểu đồ kiểm soát</span>.</li>
-    <li>Gói <code>ANOM</code> của R đã bị lưu trữ trên <span class="term">CRAN</span> ngày 30/04/2026.</li>
+    <li><code>scipy.stats</code> không có ANOM; <code>scipy.stats.dunnett</code> so từng nhóm với một nhóm đối chứng, không phải ANOM.</li>
   </ul>
 
   <h3 id="lt-bao-cao">Dàn ý báo cáo</h3>
@@ -814,7 +803,7 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
 <!-- ═══════════════ CẦN XÁC NHẬN ═══════════════ -->
 <section id="can-xac-nhan" class="block">
   <h2>Cần bạn xác nhận</h2>
-  <p class="sub">Hai phần: điều chỉ giảng viên trả lời được, và điều nhóm tự chốt. Có câu trả lời thì trang được sửa theo.</p>
+  <p class="sub">Ba phần: tin nhắn gửi giảng viên, thư gửi football-data.co.uk, và điều nhóm tự chốt. Có câu trả lời thì trang được sửa theo.</p>
 
   <h3 id="gui-giang-vien">Gửi giảng viên</h3>
   <p class="sub">Tin nhắn soạn sẵn; sửa chữ trong ngoặc vuông rồi gửi.</p>
@@ -867,10 +856,9 @@ Kind regards,
   <h3 id="nhom-tu-chot">Nhóm tự chốt</h3>
   <ul class="gaps">
     <li>Chọn A (bóng đá Premier League), B (F1) hay C (bóng đá quốc tế)? Trang đang chốt A; nếu giảng viên hay football-data.co.uk không đồng ý thì theo cây chọn ở <a href="#top-3">Ba phương án</a>.</li>
-    <li>Python hay R? Đã ai dùng Streamlit chưa?</li>
+    <li>Công cụ: mặc định Python (pandas, scipy, Streamlit). Ai chưa dùng Streamlit thì xem trước ở pha P0.</li>
     <li>Ai nhận vai nào trong bảy vai ở <a href="#lt-vai">Ai làm gì</a>.</li>
     <li>Số tuần còn lại, để chọn trên <a href="#lt-lich">lịch</a>.</li>
-    <li>Ghi cho slide: tên đúng là “sequential probability <b>ratio</b> test”, không phải “ration”.</li>
   </ul>
 </section>
 
@@ -943,11 +931,12 @@ Kind regards,
     t.textContent = str;
     return t;
   }
-  function fmt(n, d) { return n.toLocaleString('vi-VN', { maximumFractionDigits: d == null ? 2 : d }); }
+  function fmt(n, d) { return n.toLocaleString('vi-VN', { maximumFractionDigits: d == null ? 2 : d }).replace('-', '−'); }
   /* Điểm tổng hiện một chữ số, làm tròn xuống từ t100 để không bao giờ vượt ngưỡng kết luận. */
   function fmt1(r) { return (Math.floor(r.t100 / 10) / 10).toLocaleString('vi-VN', { minimumFractionDigits: 1, maximumFractionDigits: 1 }); }
   function norm(s) { return String(s).normalize('NFC').toLowerCase().replace(/\s+/g, ' ').trim(); }
   function lessonLabel(id) { return 'Bài ' + id.slice(1).replace('-', '.'); }
+  function roleName(n) { return n + ' · ' + D.team[n - 1].role; }
   function srcById(id) { return D.sources.filter(function (x) { return x.id === id; })[0]; }
   /* Mảng trường _html: từng phần tử vào innerHTML của một nút con. */
   function htmlList(tag, obj, key) {
@@ -990,19 +979,17 @@ Kind regards,
   function renderHero() {
     var box = $('#heroStats');
     box.textContent = '';
-    var tile = function (n, label, color) {
-      var t = el('div', 'stat');
-      t.appendChild(el('b', null, String(n)));
-      var s = el('span');
-      if (color) { var sw = el('i', 'sw ' + color); sw.setAttribute('aria-hidden', 'true'); s.appendChild(sw); }
-      s.appendChild(document.createTextNode(label));
-      t.appendChild(s);
-      box.appendChild(t);
-    };
-    tile(D.sources.length, 'nguồn đã kiểm');
+    box.appendChild(document.createTextNode(D.sources.length + ' nguồn đã kiểm:'));
     D.verdicts.forEach(function (v) {
-      tile(D.sources.filter(function (s) { return s.verdict === v; }).length, v.name, v.color);
+      var sp = el('span');
+      var sw = el('i', 'sw ' + v.color); sw.setAttribute('aria-hidden', 'true');
+      sp.appendChild(sw);
+      sp.appendChild(document.createTextNode(D.sources.filter(function (x) { return x.verdict === v; }).length + ' ' + v.name));
+      box.appendChild(sp);
     });
+    var g = D.groups[0], mine = D.sources.filter(function (x) { return x.group === g.id; });
+    var parts = D.verdicts.map(function (v) { var n = mine.filter(function (x) { return x.verdict === v; }).length; return n ? n + ' ' + v.name : ''; }).filter(Boolean);
+    box.appendChild(document.createTextNode('· ' + mine.length + ' link nhóm gửi: ' + parts.join(', ') + '.'));
   }
 
   /* ═══ HÌNH MINH HOẠ BỐN PHƯƠNG PHÁP (số giả lập) ═══ */
@@ -1166,6 +1153,7 @@ Kind regards,
   function renderChips() {
     var box = $('#chips');
     box.textContent = '';
+    $('#chipsDesc').textContent = D.groups.map(function (g) { return g.name + ': ' + g.desc; }).join(' · ');
     var opts = [{ id: 'all', name: 'Tất cả', n: D.sources.length }].concat(D.groups.map(function (g) {
       return { id: g.id, name: g.name, n: D.sources.filter(function (s) { return s.group === g.id; }).length };
     }));
@@ -1396,7 +1384,9 @@ Kind regards,
     w.textContent = '';
     D.week1.forEach(function (x) {
       var li = el('li');
-      li.appendChild(el('b', null, D.team[x.role - 1].role + ': '));
+      var lb = el('b');
+      if (x.label_html) { html(lb, x, 'label_html'); lb.appendChild(document.createTextNode(': ')); } else lb.textContent = D.team[x.role - 1].role + ': ';
+      li.appendChild(lb);
       li.appendChild(html(el('span'), x, 'task_html'));
       w.appendChild(li);
     });
@@ -1466,7 +1456,7 @@ Kind regards,
       c.appendChild(htmlList('ul', o, 'pros_html'));
       c.appendChild(el('h4', null, 'Thiếu'));
       c.appendChild(htmlList('ul', o, 'cons_html'));
-      c.appendChild(el('h4', null, 'Hợp nhất khi'));
+      c.appendChild(el('h4', null, 'Nên chọn khi'));
       c.appendChild(html(el('p'), o, 'best_html'));
       if (o.questions_html) {
         c.appendChild(el('h4', null, 'Bốn câu hỏi nếu chọn ' + o.id));
@@ -1474,6 +1464,9 @@ Kind regards,
       }
       box.appendChild(c);
     });
+    var sb = $('#switchB'), ob = D.options.filter(function (o) { return o.id === 'B'; })[0];
+    sb.textContent = '';
+    (ob.questions_html || []).forEach(function (h, k) { var li = el('li'); html(li, { q_html: h }, 'q_html'); sb.appendChild(li); });
     Array.prototype.forEach.call(document.querySelectorAll('[data-total]'), function (n) {
       n.textContent = fmt1(srcById(n.getAttribute('data-total')));
     });
@@ -1701,7 +1694,8 @@ Kind regards,
       b.addEventListener('click', function () {
         rolePinned = rolePinned === n ? 0 : n;
         Array.prototype.forEach.call(box.querySelectorAll('.role-h'), function (x) { x.setAttribute('aria-pressed', String(x === b && rolePinned === n)); });
-        highlightRole(rolePinned || n);
+        highlightRole(rolePinned);
+        if (rolePinned) $('.gantt-box').scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
       });
       box.appendChild(li);
     });
@@ -1778,7 +1772,7 @@ Kind regards,
     D.report.forEach(function (r) {
       var tr = el('tr');
       var th = el('th', null, r.ch + '. ' + r.title); th.scope = 'row'; th.setAttribute('data-l', cols[0]); tr.appendChild(th);
-      var cells = [r.content, r.who.join(', '), null, String(r.pages)];
+      var cells = [r.content, r.who.map(roleName).join('; '), null, String(r.pages)];
       cells.forEach(function (v, i) {
         var td = el('td', null, v);
         td.setAttribute('data-l', cols[i + 1]);
@@ -1791,7 +1785,7 @@ Kind regards,
     t.appendChild(tb);
     var old = t.nextElementSibling;
     if (old && old.classList.contains('outline-note')) old.remove();
-    t.insertAdjacentElement('afterend', el('p', 'sub outline-note', 'Tổng khoảng ' + total + ' trang. Số ở cột Vai là số thứ tự vai ở mục Ai làm gì.'));
+    t.insertAdjacentElement('afterend', el('p', 'sub outline-note', 'Tổng khoảng ' + total + ' trang.'));
   }
   function renderSlides() {
     var box = $('#slides');
@@ -1800,7 +1794,7 @@ Kind regards,
     D.slides.forEach(function (sl) {
       var li = el('li');
       li.appendChild(el('span', 'sl-t', sl.title));
-      var meta = (sl.min ? fmt(sl.min) + ' phút · ' : '') + 'vai ' + (sl.who.length > 6 ? 'cả nhóm' : sl.who.join(', '));
+      var meta = (sl.min ? fmt(sl.min) + ' phút · ' : '') + (sl.who.length > 6 ? 'cả nhóm' : sl.who.map(roleName).join('; '));
       li.appendChild(el('span', 'sl-m', meta));
       total += sl.min;
       box.appendChild(li);
@@ -1968,6 +1962,12 @@ Kind regards,
     }
     if (pinned) hideTip();
   });
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest ? e.target.closest('a[data-ph]:not(.fnode)') : null;
+    if (!a || !D) return;
+    e.preventDefault();
+    selectPhase(a.getAttribute('data-ph'), true);
+  });
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' && tipFor) hideTip();
     if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('term')) {
@@ -2027,6 +2027,7 @@ Kind regards,
       renderGantt();
       renderPanel();
       renderTeam();
+      Array.prototype.forEach.call(document.querySelectorAll('[data-count="phases"]'), function (n) { n.textContent = String(D.phases.length); });
       lastFlowW = $('#flow').clientWidth;
       drawFlow();
       renderTree();
