@@ -230,6 +230,8 @@ const cornerClash = (page) => page.evaluate(() => {
   await page.click('.ma-tab[data-view="src"]');
   check('nguồn có highlight của đoạn chọn ở bản dựng', await page.$eval('#v-src', (el) => [...el.querySelectorAll('mark')].map((m) => m.textContent).join('')) === 'chữ đậm ở đây** và kết thúc');
   await dragSelect(page, '#v-src', 'liên kết tới ví dụ](https://example.com/path) ở giữa');
+  const chips1 = await page.$$eval('#pop-chips .ma-chip .ma-chip__t', (els) => els.map((e) => e.textContent));
+  check('nhận xét vừa lưu một lần đã thành gợi ý đứng đầu (MDAN-086)', chips1[0] === 'Câu này sai', chips1.join(' | '));
   await page.click('#pop-chips .ma-chip:has-text("Cần kiểm tra lại tính xác thực")');
   const o2 = await out(page);
   check('gợi ý lưu ngay, xếp theo thứ tự văn bản', o2.includes('\n\n1. L3 "liên kết tới ví dụ](https://example.com/path) ở giữa" — Cần kiểm tra lại tính xác thực\n2. L5 "chữ đậm'), JSON.stringify(o2));
@@ -282,7 +284,7 @@ const cornerClash = (page) => page.evaluate(() => {
   await dragSelect(page, '#v-md', 'Câu lặp lại.', 1);
   check('cảnh báo trùng đoạn', /Same passage as comment #3/.test(await page.textContent('#pop-warn')));
   const chips2 = await page.$$eval('#pop-chips .ma-chip .ma-chip__t', (els) => els.map((e) => e.textContent));
-  check('nhận xét gõ hai lần thành gợi ý đứng đầu', chips2[0] === 'Câu này sai', chips2.join(' | '));
+  check('nhận xét đã dùng thành gợi ý đứng đầu', chips2[0] === 'Câu này sai', chips2.join(' | '));
   await page.keyboard.type('kỹ hơn');
   const chips3 = await page.$$eval('#pop-chips .ma-chip .ma-chip__t', (els) => els.map((e) => e.textContent));
   check('gõ thì lọc gợi ý', chips3.length >= 1 && chips3.every((t) => /kỹ hơn/i.test(t)), chips3.join(' | '));

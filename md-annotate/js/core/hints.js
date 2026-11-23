@@ -79,7 +79,7 @@ export function rankedHints(stats) {
     var v = stats.items[k];
     return { key: k, t: String(v.t || k), n: +v.n || 0, last: +v.last || 0, o: v.o == null ? 1e6 : +v.o, v: v };
   }).filter(function (x) {
-    return !x.v.hidden && x.t.length <= MAX_HINT && (x.v.seed || x.v.pin || x.n >= 2);
+    return !x.v.hidden && x.t.length <= MAX_HINT && (x.v.seed || x.v.pin || x.n >= 1);
   });
   var N = arr.reduce(function (s, x) { return s + x.n; }, 0), K = arr.length;
   arr.forEach(function (x) { x.p = (x.n + 1) / (N + K); });

@@ -169,6 +169,14 @@ const bp = (o, d) => { const u = upS(o); return dpPrompt.buildPrompt(u, u.docs[u
     dpHints.migrateHints(own, renamed);
     check('migrateHints: nhận xét tự gõ trùng chữ gợi ý cũ không bị đổi', eq(Object.keys(own.items), ['add an example']) && own.items['add an example'].n === 2, JSON.stringify(own));
   }
+  // Nhận xét đã dùng một lần thành gợi ý, đứng trên gợi ý mặc định chưa dùng; dài quá 80 ký tự thì không (MDAN-086).
+  {
+    const st = { items: {} };
+    dpHints.seedHints(st, ['Mặc định']);
+    dpHints.countUse(st, 'Câu này sai');
+    dpHints.countUse(st, 'x'.repeat(81));
+    check('rankedHints: nhận xét dùng một lần đã là gợi ý, đứng đầu', eq(dpHints.rankedHints(st).map((x) => x.key), ['câu này sai', 'mặc định']));
+  }
   // Chip trong hộp nhận xét: gọn 5 + "+N", 'all' mọi gợi ý không trần (MDAN-084); cùng thứ tự, lọc theo chữ vẫn áp.
   {
     const st = { items: {} };

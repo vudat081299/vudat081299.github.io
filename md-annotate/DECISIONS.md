@@ -56,6 +56,7 @@
 - MDAN-083 · Phiên một file thì cây file ẩn sẵn · `md-annotate/js/ui/tree.js`
 - MDAN-084 · Phím chọn gợi ý trong hộp nhận xét · `md-annotate/js/ui/popup.js`, `md-annotate/js/core/hint-keys.js`, `md-annotate/js/core/hints.js`
 - MDAN-085 · Mod + 1 lưu nhận xét "bỏ đoạn này" · `md-annotate/js/ui/popup.js`, `md-annotate/js/core/hint-keys.js`, `md-annotate/data/hints.json`
+- MDAN-086 · Nhận xét đã lưu thành gợi ý ngay lần đầu · `md-annotate/js/core/hints.js`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Source tô màu cú pháp markdown kiểu VS Code
@@ -468,3 +469,9 @@ Khi hộp nhận xét mở (cùng điều kiện như MDAN-084), Mod + 1 bấm m
 (chủ trang muốn bỏ đoạn đã chọn khỏi văn bản) và đóng hộp; ở hộp sửa thì thay chữ nhận xét, như chọn một gợi ý. Đây là
 gợi ý ẩn: không thành chip, không được đếm nên không bao giờ thành gợi ý hiện, không đổi hạng của 10 phím gợi ý. Phím
 luôn bị chặn khi hộp mở; `data/hints.json` không nạp được thì phím không lưu gì.
+
+## MDAN-086 · Nhận xét đã lưu thành gợi ý ngay lần đầu
+23/11/2026 · `md-annotate/js/core/hints.js`
+
+Mọi nhận xét gõ tay đã lưu (tối đa 80 ký tự) thành gợi ý ngay từ lần đầu, xếp hạng theo số lần dùng như mọi gợi ý; gợi ý
+mặc định chưa dùng đứng sau. Nhận xét dài hơn 80 ký tự không thành gợi ý. Gợi ý ẩn của MDAN-085 không được đếm.
