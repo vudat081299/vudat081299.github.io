@@ -67,7 +67,7 @@ main{max-width:calc(var(--read) + 2 * var(--gutter));margin:0 auto;padding:0 var
 .top-btn.boxed{border-color:var(--line);background:var(--surface)}
 .top-back{display:inline-flex;align-items:center;gap:var(--s1);flex:none;min-height:var(--tap);padding:0 var(--s3);border-radius:var(--r);color:var(--ink-2);font-size:var(--fs-xs);text-decoration:none}
 .top-back:hover{background:var(--sunk);color:var(--ink)}
-.top-name{flex:1;min-width:0;font:600 15px var(--display);letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top-name{flex:1;min-width:0;font:600 var(--fs-sm) var(--display);letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media (max-width:420px){.top-back span{display:none}.top-back{padding:0;width:var(--tap);justify-content:center}}
 
 /* ═══ THÔNG BÁO DỮ LIỆU ═══ */
@@ -204,7 +204,6 @@ details.fold>.fold-body{padding:0 var(--s4) var(--s4)}
 .cards-head .sub{margin:0;font-size:var(--fs-sm)}
 .cards{display:grid;gap:var(--s2);margin-top:var(--s3)}
 .src{border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
-.src:focus{outline:none}
 .src.flash{border-color:var(--green)}
 .src-sum{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto auto;align-items:center;gap:var(--s3);min-height:var(--tap);padding:var(--s2) var(--s4);cursor:pointer;list-style:none;font-size:var(--fs-sm)}
 .src-sum::-webkit-details-marker{display:none}
@@ -244,7 +243,7 @@ details.fold>.fold-body{padding:0 var(--s4) var(--s4)}
 .opt{padding:var(--s4);border:1px solid var(--line);border-radius:var(--r);background:var(--surface);font-size:var(--fs-sm);line-height:1.55}
 .opt.pick{border-color:var(--ink);box-shadow:var(--shadow)}
 .opt-top{display:flex;align-items:center;gap:var(--s2)}
-.opt-id{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:var(--ink);color:var(--bg);font:600 var(--fs-sm) var(--display)}
+.opt-id{display:inline-flex;align-items:center;justify-content:center;width:var(--s6);height:var(--s6);border-radius:50%;background:var(--ink);color:var(--bg);font:600 var(--fs-sm) var(--display)}
 .opt h3{margin:var(--s2) 0 0;font-size:var(--fs-h3)}
 .opt h4{margin:var(--s4) 0 var(--s1);font:500 var(--fs-lab) var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
 .opt ul{margin:0;padding-left:1.1em}
@@ -336,7 +335,7 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
   .g-axis{display:none}
   .g-row{display:block;padding:var(--s2)}
   .g-when{display:block;margin-left:0}
-  .g-track{height:8px;margin-top:var(--s1);border-radius:var(--r-pill);background:var(--sunk)}
+  .g-track{height:var(--meter);margin-top:var(--s1);border-radius:var(--r-pill);background:var(--sunk)}
   .g-bar{top:0;bottom:0}
   .pp-grid{grid-template-columns:minmax(0,1fr)}
   .pp-item:first-child{grid-row:auto}
@@ -353,7 +352,7 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
 .fnode:hover .fn-box,.fnode:focus-visible .fn-box{stroke:var(--green);stroke-width:2}
 .fnode.on .fn-box{fill:var(--a-soft);stroke:var(--ink)}
 .fn-t{font:600 13px var(--mono);fill:var(--ink)}
-.fn-s{font:400 12px var(--font);fill:var(--ink-2)}
+.fn-s{font:400 var(--fs-lab) var(--font);fill:var(--ink-2)}
 .fn-d{font:500 11.5px var(--mono);fill:var(--ink-3)}
 .s-arr{fill:none;stroke:var(--ink-3);stroke-width:1.5}
 .f-ink3{fill:var(--ink-3)}
@@ -390,7 +389,7 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
 .role.on{border-color:var(--ink)}
 .role h4{margin:0}
 .role-h{display:flex;align-items:center;gap:var(--s2);width:100%;min-height:var(--tap);padding:0;border:0;background:none;color:var(--ink);font:600 var(--fs-sm) var(--display);text-align:left;cursor:pointer}
-.role-n{display:inline-flex;align-items:center;justify-content:center;flex:none;width:24px;height:24px;border-radius:50%;background:var(--ink);color:var(--bg);font:500 var(--fs-lab) var(--mono)}
+.role-n{display:inline-flex;align-items:center;justify-content:center;flex:none;width:var(--s5);height:var(--s5);border-radius:50%;background:var(--ink);color:var(--bg);font:500 var(--fs-lab) var(--mono)}
 .role p{margin:0}
 .role-ph{margin-top:var(--s1)!important;font:500 var(--fs-lab) var(--mono);color:var(--ink-3)}
 @media (max-width:720px){.team{grid-template-columns:minmax(0,1fr)}}
@@ -587,7 +586,7 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
     <p class="chips-desc" id="chipsDesc"></p>
     <div class="legend" id="legend"></div>
     <div id="chart"></div>
-    <p class="chart-note">Bấm một thanh để mở thẻ của nguồn ấy. Vạch đứng ở 4 và 7 là hai ngưỡng kết luận. Điểm tổng hiện một chữ số thập phân, làm tròn xuống để con số không vượt ngưỡng.</p>
+    <p class="chart-note">Bấm một thanh để mở thẻ của nguồn ấy. Vạch đứng ở <span id="thrText"></span> là các ngưỡng kết luận. Điểm tổng hiện một chữ số thập phân, làm tròn xuống để con số không vượt ngưỡng.</p>
     <details class="fold">
       <summary>Xem điểm dạng bảng</summary>
       <div class="fold-body"><div class="tbl-wrap" id="scoreTbl"></div></div>
@@ -661,7 +660,7 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
   <p>Trang môn có ngoại lai (<a href="data-management-visualization.html#b3">bài 3</a>, <a href="data-management-visualization.html#b4">bài 4</a>: box plot, rào 1,5·IQR) nhưng không có ANOM, CUSUM, SPRT. Ba phương pháp này học từ nguồn ngoài, xem khối công thức.</p>
 
   <h3 id="lt-cau-hoi">Bốn câu hỏi nghiên cứu</h3>
-  <p>Ba câu ANOM, CUSUM, SPRT cùng hỏi một chuyện: lợi thế sân nhà có giảm không. ANOM so từng mùa, CUSUM theo dõi liên tục 26 mùa, SPRT trả lời nhanh trong một mùa. Câu ngoại lai lo phần dữ liệu: số liệu trận nào bất thường, dòng nào ghi sai.</p>
+  <p>Ba câu ANOM, CUSUM, SPRT cùng hỏi một chuyện: <span class="term">lợi thế sân nhà</span> có giảm không. ANOM so từng mùa, CUSUM theo dõi liên tục 26 mùa, SPRT trả lời nhanh trong một mùa. Câu ngoại lai lo phần dữ liệu: số liệu trận nào bất thường, dòng nào ghi sai.</p>
   <div class="qa" id="planA"></div>
 
   <div class="box traps-box">
@@ -796,7 +795,7 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
     <li>Có trích dẫn đủ.</li>
     <li>Đủ chương của từng thành viên.</li>
     <li>Demo chạy khi không có mạng, từ dữ liệu sạch.</li>
-    <li>Đã tập một lần đúng thời lượng.</li>
+    <li>Đã tập dượt hai lần, ít nhất một lần đúng thời lượng.</li>
   </ul>
 </section>
 
@@ -808,7 +807,7 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
   <h3 id="gui-giang-vien">Gửi giảng viên</h3>
   <p class="sub">Tin nhắn soạn sẵn; sửa chữ trong ngoặc vuông rồi gửi.</p>
   <div class="msg-box">
-    <div class="msg" id="gvMsg" tabindex="0" aria-label="Tin nhắn gửi giảng viên">Kính gửi thầy/cô,
+    <div class="msg" id="gvMsg" tabindex="0" role="region" aria-label="Tin nhắn gửi giảng viên">Kính gửi thầy/cô,
 
 Nhóm em đang chuẩn bị đồ án môn Data Management and Visualization (IT5425), đề tài “Outlier detection, analysis of means, CUSUM and sequential probability ratio testing. Applications in sports”. Để làm đúng yêu cầu, nhóm em xin hỏi thầy/cô mấy điều:
 
@@ -832,7 +831,7 @@ Em cảm ơn thầy/cô.
   <h3 id="email-fd">Email gửi football-data.co.uk</h3>
   <p class="sub">Thư tiếng Anh soạn sẵn, xin phép dùng dữ liệu cho đồ án; thay chữ trong ngoặc vuông rồi gửi qua trang liên hệ của họ.</p>
   <div class="msg-box">
-    <div class="msg" id="fdMsg" tabindex="0" lang="en" aria-label="Thư gửi football-data.co.uk">Subject: Permission to use your data in a university course project
+    <div class="msg" id="fdMsg" tabindex="0" role="region" lang="en" aria-label="Thư gửi football-data.co.uk">Subject: Permission to use your data in a university course project
 
 Dear Football-Data team,
 
@@ -876,7 +875,7 @@ Kind regards,
 <!-- ═══════════════ NGUỒN ═══════════════ -->
 <section id="nguon" class="block">
   <h2>Nguồn</h2>
-  <p class="sub">Mọi link kiểm ngày <span id="checked">22/11/2026</span>.</p>
+  <p class="sub">Mọi link kiểm ngày <span id="checked">—</span>.</p>
   <ol class="refs" id="srcList"></ol>
   <h3>Tham khảo thêm</h3>
   <ol class="refs" id="refList"></ol>
@@ -1153,6 +1152,7 @@ Kind regards,
   function renderChips() {
     var box = $('#chips');
     box.textContent = '';
+    $('#thrText').textContent = D.verdicts.map(function (v) { return v.min; }).filter(function (m) { return m > 0; }).sort(function (a, b) { return a - b; }).map(function (m) { return fmt(m); }).join(' và ');
     $('#chipsDesc').textContent = D.groups.map(function (g) { return g.name + ': ' + g.desc; }).join(' · ');
     var opts = [{ id: 'all', name: 'Tất cả', n: D.sources.length }].concat(D.groups.map(function (g) {
       return { id: g.id, name: g.name, n: D.sources.filter(function (s) { return s.group === g.id; }).length };
@@ -1263,7 +1263,7 @@ Kind regards,
     $('#cardsBox').open = true;
     card.open = true;
     card.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
-    card.focus({ preventScroll: true });
+    card.querySelector('summary').focus({ preventScroll: true });
     card.classList.add('flash');
     setTimeout(function () { card.classList.remove('flash'); }, 1600);
     try { history.replaceState(null, '', '#src-' + id.toLowerCase()); } catch (e) { /* file:// */ }
@@ -1298,7 +1298,6 @@ Kind regards,
     sorted(shown()).forEach(function (r) {
       var c = el('details', 'src');
       c.id = 'src-' + r.id.toLowerCase();
-      c.tabIndex = -1;
       var sm = el('summary', 'src-sum');
       sm.appendChild(el('span', 'src-id', r.id));
       sm.appendChild(el('span', 'src-name', r.short));
@@ -1804,11 +1803,11 @@ Kind regards,
   }
 
   /* ═══ THUẬT NGỮ: danh sách đầy đủ ═══ */
-  /* Thuật ngữ chính: dùng ở hero, #de-tai, #top-3, #lo-trinh (kể cả mọi pha, không chỉ pha đang mở). Còn lại gập lại. */
+  /* Thuật ngữ chính: dùng ở hero, #de-tai, #lineage, #top-3, #lo-trinh (kể cả mọi pha, không chỉ pha đang mở). Còn lại gập lại. */
   function coreTermIds() {
     var set = {};
     var add = function (n) { Array.prototype.forEach.call(n.querySelectorAll('.term'), function (t) { var g = lookup(t); if (g) set[g.id] = 1; }); };
-    ['#tom-tat', '#de-tai', '#top-3', '#lo-trinh'].forEach(function (sel) { add($(sel)); });
+    ['#tom-tat', '#de-tai', '#lineage', '#top-3', '#lo-trinh'].forEach(function (sel) { add($(sel)); });
     var tmp = el('div');
     D.phases.forEach(function (ph) {
       Object.keys(ph).forEach(function (k) {
@@ -1962,6 +1961,18 @@ Kind regards,
     }
     if (pinned) hideTip();
   });
+  /* Đích của link nằm trong (hoặc chính là) một <details> đang gập: mở mọi khối tổ tiên trước khi trình duyệt cuộn tới. */
+  function openTo(id) {
+    var t = id && document.getElementById(id);
+    if (!t) return;
+    if (t.tagName === 'DETAILS') t.open = true;
+    for (var p = t.parentElement; p; p = p.parentElement) if (p.tagName === 'DETAILS') p.open = true;
+  }
+  document.addEventListener('click', function (e) {
+    var h = e.target.closest ? e.target.closest('a[href^="#"]:not([data-ph])') : null;
+    if (h && h.getAttribute('href').length > 1) openTo(decodeURIComponent(h.getAttribute('href').slice(1)));
+  }, true);
+  window.addEventListener('hashchange', function () { openTo(decodeURIComponent(location.hash.slice(1))); });
   document.addEventListener('click', function (e) {
     var a = e.target.closest ? e.target.closest('a[data-ph]:not(.fnode)') : null;
     if (!a || !D) return;
@@ -2037,6 +2048,7 @@ Kind regards,
       renderRefs();
       renderRounds();
       upgradeTerms(document);
+      if (location.hash.length > 1) openTo(decodeURIComponent(location.hash.slice(1)));
       if (/^#src-/.test(location.hash)) {
         var c = document.querySelector(location.hash);
         if (c) { $('#cardsBox').open = true; c.open = true; c.scrollIntoView({ block: 'start' }); }
