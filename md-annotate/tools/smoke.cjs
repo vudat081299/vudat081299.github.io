@@ -606,7 +606,7 @@ const cornerClash = (page) => page.evaluate(() => {
       return {
         keys: document.getElementById('pop').classList.contains('is-keys'), n: chips.length, more: more ? more.textContent : null, st: box.scrollTop,
         rects: chips.slice(0, 5).map((c) => { const r = c.getBoundingClientRect(); return [r.left - b.left, r.top - b.top, r.width, r.height].map((v) => +v.toFixed(2)).join(' '); }).join('|'),
-        kept: chips.slice(0, 5).every((c) => c.__k === 1), fresh: chips.filter((c) => c.classList.contains('is-new')).length,
+        kept: chips.slice(0, 5).every((c) => c.__k === 1), fresh: chips.slice(5).filter((c) => c.classList.contains('is-new')).length,
         badges: chips.map((c) => { const k = c.querySelector('.ma-chip__k'); return k ? k.textContent : ''; }).join('|'),
         /* chữ phím nằm trọn trong vùng chip (không bị cắt) và không tràn khỏi viên của nó */
         fit: chips.length >= 10 && chips.slice(0, 10).map((c) => { const k = c.querySelector('.ma-chip__k'), r = k.getBoundingClientRect();
