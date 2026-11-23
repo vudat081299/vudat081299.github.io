@@ -216,7 +216,8 @@ const cornerClash = (page) => page.evaluate(() => {
   check('vùng chọn nới ra trọn từ (chữ Việt)', (await page.textContent('#pop-q')) === 'chữ đậm ở đây và kết thúc', await page.textContent('#pop-q'));
   const chips = await page.$$eval('#pop-chips .ma-chip', (els) => els.map((e) => e.textContent));
   check('hộp có 5 gợi ý, chưa có % khi chưa dùng, chip +4', chips.length === 6 && chips[5] === '+4' && chips.every((c) => !/%/.test(c)), chips.join(' | '));
-  check('gợi ý mặc định từ data/hints.json', chips[0] === 'Sai, nói chưa rõ ràng');
+  const chip0 = await page.$eval('#pop-chips .ma-chip .ma-chip__t', (e) => e.textContent);   // chip còn có số phím .ma-chip__k (MDAN-084)
+  check('gợi ý mặc định từ data/hints.json', chip0 === 'Sai, nói chưa rõ ràng', chip0);
   await page.click('#pop-chips .ma-chip--more');
   check('chip +N mở hết gợi ý', (await page.$$('#pop-chips .ma-chip')).length === 9 && !(await page.$('#pop-chips .ma-chip--more')));
   await page.keyboard.type('Câu này sai');
@@ -566,6 +567,164 @@ const cornerClash = (page) => page.evaluate(() => {
   await page.evaluate(() => localStorage.removeItem('hub-theme'));
   check('máy rộng không tràn ngang', (await overflow(page)) === 0);
   await ctx.close();
+
+  /* ---------- Phím chọn gợi ý trong hộp nhận xét (MDAN-084): Mod (Ctrl; ⌘ ở Mac) + Z X C·C V·V B N M , . / chọn gợi ý 1–10;
+     giữ Mod hiện mọi gợi ý kèm số (chip đầu không dời), vùng chip tối đa 5,5 hàng rồi cuộn; Mod+B không đụng cây khi hộp mở;
+     nhãn phím chép theo hệ điều hành. Chuyển động thật (no-preference): đo khi chuyển động trong #pop đã xong. ---------- */
+  {
+    const KDOC = '# Phím gợi ý\n\n' + Array.from({ length: 12 }, (_, i) => `Câu thứ ${i + 1} để thử phím.`).join('\n\n') + '\n';
+    const EXTRA = 21;   // gợi ý tự thêm: 9 mặc định + 21 = 30, đủ cho số 1..10 và vượt trần 5,5 hàng
+    const kctx = await browser.newContext({ viewport: { width: 1280, height: 900 }, colorScheme: 'light', reducedMotion: 'no-preference' });
+    await kctx.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: new URL(BASE).origin });
+    await kctx.addInitScript((n) => {
+      if (sessionStorage.getItem('hk')) return;
+      sessionStorage.setItem('hk', '1');
+      const items = {};
+      for (let i = 1; i <= n; i++) items['gợi ý thêm số ' + i] = { t: 'Gợi ý thêm số ' + i, n: 0, last: 0, o: 1e6 + i, pin: true };
+      localStorage.setItem('md-annotate:stats:v1', JSON.stringify({ items }));
+    }, EXTRA);
+    const kp = await openPage(kctx);
+    await pasteText(kp, KDOC);
+    await kp.waitForTimeout(150);
+    /* Chuyển động trong #pop (cao vùng chip, số phím, chip mới) đã xong. */
+    const settle = (p) => p.evaluate(async () => {
+      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      const all = document.getElementById('pop').getAnimations({ subtree: true }).map((a) => a.finished.catch(() => {}));
+      await Promise.race([Promise.all(all), new Promise((r) => setTimeout(r, 2000))]);
+    });
+    const openAt = async (p, n) => { await dragSelect(p, '#v-md', `Câu thứ ${n} để thử phím`); await settle(p); };
+    const hintTexts = (p) => p.$$eval('#pop-chips .ma-chip:not(.ma-chip--more) .ma-chip__t', (els) => els.map((e) => e.textContent));
+    /* Nhận xét đã lưu cho câu thứ n (theo prompt), chưa có thì null. */
+    const said = async (p, n) => { const l = (await out(p)).split('\n').find((x) => x.includes(`"Câu thứ ${n} để thử phím`)); return l ? l.slice(l.indexOf(' — ') + 3) : null; };
+    const popOpen = (p) => p.isVisible('#pop');
+    const chipGeo = (p) => p.evaluate(() => {
+      const box = document.getElementById('pop-chips'), b = box.getBoundingClientRect(), cs = getComputedStyle(box);
+      const chips = [...box.querySelectorAll('.ma-chip:not(.ma-chip--more)')], more = box.querySelector('.ma-chip--more'), k0 = chips[0].querySelector('.ma-chip__k');
+      return {
+        keys: document.getElementById('pop').classList.contains('is-keys'), n: chips.length, more: more ? more.textContent : null,
+        rects: chips.slice(0, 5).map((c) => { const r = c.getBoundingClientRect(); return [r.left - b.left, r.top - b.top, r.width, r.height].map((v) => +v.toFixed(2)).join(' '); }),
+        kept: chips.slice(0, 5).every((c) => c.__k === 1), fresh: chips.filter((c) => c.classList.contains('is-new')).length,
+        badges: chips.map((c) => { const k = c.querySelector('.ma-chip__k'); return k ? k.textContent : ''; }).join(),
+        k0: k0 ? { op: getComputedStyle(k0).opacity, pos: getComputedStyle(k0).position } : null,
+        h: +b.height.toFixed(2), sh: box.scrollHeight, ch: box.clientHeight, oy: cs.overflowY, row: chips[0].offsetHeight,
+        cap: +(parseFloat(cs.paddingTop) + 5.5 * chips[0].offsetHeight + 5 * parseFloat(cs.rowGap)).toFixed(2)
+      };
+    });
+    const treeOn = (p) => p.evaluate(() => document.documentElement.classList.contains('ma-tree-on'));
+    const blur = (p) => p.evaluate(() => document.activeElement && document.activeElement.blur());
+
+    // Nhãn phím ở máy không phải Mac (Linux của CI): chữ nối '+'.
+    const lbl = await kp.evaluate(() => ({ kbd: [...document.querySelectorAll('.js-copy-kbd')].map((k) => k.textContent), titles: ['btn-copy', 'rail-copy', 'dock-copy'].map((id) => document.getElementById(id).title) }));
+    check('phím gợi ý: nhãn chép ở Linux là "Ctrl+Shift+C" (kbd và tooltip mọi nút chép)', lbl.kbd.length > 0 && lbl.kbd.every((t) => t === 'Ctrl+Shift+C') && lbl.titles.every((t) => t === 'Copy prompt (Ctrl+Shift+C)'), JSON.stringify(lbl));
+
+    // Mod+Z: gợi ý 1; tooltip chip ghi phím.
+    await openAt(kp, 1);
+    let hs = await hintTexts(kp);
+    const tips = await kp.$$eval('#pop-chips .ma-chip:not(.ma-chip--more)', (els) => els.map((e) => e.title));
+    check('phím gợi ý: tooltip chip có phím (1: Ctrl+Z, 3: Ctrl+C Ctrl+C)', / · Ctrl\+Z$/.test(tips[0]) && / · Ctrl\+C Ctrl\+C$/.test(tips[2]), JSON.stringify(tips.slice(0, 3)));
+    await kp.keyboard.press('Control+KeyZ'); await kp.waitForTimeout(100);
+    check('phím gợi ý: Ctrl+Z lưu gợi ý 1, hộp đóng', !(await popOpen(kp)) && (await said(kp, 1)) === hs[0], JSON.stringify([hs[0], await said(kp, 1)]));
+
+    // Mod+C hai lần: gợi ý 3.
+    await openAt(kp, 2);
+    hs = await hintTexts(kp);
+    await kp.keyboard.press('Control+KeyC'); await kp.keyboard.press('Control+KeyC'); await kp.waitForTimeout(100);
+    check('phím gợi ý: Ctrl+C hai lần lưu gợi ý 3', !(await popOpen(kp)) && (await said(kp, 2)) === hs[2], JSON.stringify([hs[2], await said(kp, 2)]));
+
+    // Mod+V hai lần: lần đầu dán như thường, lần hai lưu gợi ý 4 thấy lúc bấm lần đầu (không phải chữ vừa dán).
+    await kp.evaluate(() => navigator.clipboard.writeText('chữ dán vào'));
+    await openAt(kp, 3);
+    hs = await hintTexts(kp);
+    await kp.evaluate(() => { window.__vals = []; const ta = document.getElementById('pop-text'); ta.addEventListener('input', () => window.__vals.push(ta.value)); });
+    await kp.keyboard.press('Control+KeyV'); await kp.keyboard.press('Control+KeyV'); await kp.waitForTimeout(100);
+    const vals = await kp.evaluate(() => window.__vals);
+    check('phím gợi ý: Ctrl+V lần đầu vẫn dán', vals.includes('chữ dán vào'), JSON.stringify(vals));
+    check('phím gợi ý: Ctrl+V hai lần lưu gợi ý 4, không lưu chữ đã dán', !(await popOpen(kp)) && (await said(kp, 3)) === hs[3], JSON.stringify([hs[3], await said(kp, 3)]));
+
+    // Bấm chậm (quá 400 ms) hai lần Ctrl+C: không chọn.
+    const n0 = (await items(kp)).length;
+    await openAt(kp, 4);
+    await kp.keyboard.press('Control+KeyC'); await kp.waitForTimeout(550); await kp.keyboard.press('Control+KeyC'); await kp.waitForTimeout(100);
+    check('phím gợi ý: Ctrl+C hai lần cách nhau 550 ms không chọn gợi ý', await popOpen(kp) && (await items(kp)).length === n0 && (await said(kp, 4)) === null);
+    await kp.keyboard.press('Escape');
+
+    // Mod+X khi ô chữ có vùng chọn: cắt như thường; không chọn thì gợi ý 2.
+    await openAt(kp, 5);
+    await kp.keyboard.type('chữ sẽ cắt'); await kp.keyboard.press('Control+KeyA'); await kp.keyboard.press('Control+KeyX'); await kp.waitForTimeout(100);
+    check('phím gợi ý: Ctrl+X có chữ chọn trong ô thì cắt, không chọn gợi ý', await popOpen(kp) && (await kp.inputValue('#pop-text')) === '' && (await items(kp)).length === n0);
+    await settle(kp);
+    hs = await hintTexts(kp);
+    await kp.keyboard.press('Control+KeyX'); await kp.waitForTimeout(100);
+    check('phím gợi ý: Ctrl+X không có chữ chọn thì lưu gợi ý 2', !(await popOpen(kp)) && (await said(kp, 5)) === hs[1], JSON.stringify([hs[1], await said(kp, 5)]));
+
+    // Giữ Ctrl: is-keys, mọi gợi ý, số 1..10, chip đầu giữ nguyên nút và chỗ; vùng chip tối đa 5,5 hàng rồi cuộn; thả: về gọn.
+    await openAt(kp, 6);
+    await kp.$$eval('#pop-chips .ma-chip', (els) => els.forEach((e) => { e.__k = 1; }));
+    const g0 = await chipGeo(kp);
+    await kp.keyboard.down('Control'); await settle(kp);
+    const g1 = await chipGeo(kp);
+    const total = 9 + EXTRA;
+    check('giữ Ctrl: #pop có is-keys, hiện mọi gợi ý, không còn chip "+N"', !g0.keys && g0.n === 5 && g0.more === '+' + (total - 5) && g1.keys && g1.n === total && g1.more === null, JSON.stringify({ g0: [g0.keys, g0.n, g0.more], g1: [g1.keys, g1.n, g1.more] }));
+    check('giữ Ctrl: 5 chip đầu giữ nguyên nút, chip thêm có is-new', g1.kept && g1.fresh === total - 5, JSON.stringify([g1.kept, g1.fresh]));
+    check('giữ Ctrl: số 1..10 trên 10 chip đầu, chip sau không có; số hiện (opacity 1), vị trí absolute', g1.badges === '1,2,3,4,5,6,7,8,9,10' + ','.repeat(total - 10) && g1.k0.op === '1' && g1.k0.pos === 'absolute' && g0.k0.op === '0', JSON.stringify([g1.badges, g0.k0, g1.k0]));
+    check('giữ Ctrl: chip đầu không dời (cùng rect với lúc chưa giữ)', g0.rects.join('|') === g1.rects.join('|'), JSON.stringify([g0.rects, g1.rects]));
+    check('giữ Ctrl: vùng chip cao đúng trần 5,5 hàng, cuộn dọc được', Math.abs(g1.h - g1.cap) <= 1 && /auto|scroll/.test(g1.oy) && g1.sh > g1.ch + g1.row, JSON.stringify({ h: g1.h, cap: g1.cap, sh: g1.sh, ch: g1.ch, oy: g1.oy }));
+    check('chưa giữ: vùng chip thấp hơn trần, không cuộn', g0.h < g0.cap && g0.sh <= g0.ch + 1, JSON.stringify({ h: g0.h, cap: g0.cap, sh: g0.sh, ch: g0.ch }));
+    await kp.keyboard.up('Control'); await settle(kp);
+    const g2 = await chipGeo(kp);
+    check('thả Ctrl: về gọn (5 chip + "+N"), số mờ hẳn, cao như trước, chip đầu không dời', !g2.keys && g2.n === 5 && g2.more === g0.more && g2.kept && g2.k0.op === '0' && Math.abs(g2.h - g0.h) <= 0.5 && g2.rects.join('|') === g0.rects.join('|'), JSON.stringify({ keys: g2.keys, n: g2.n, more: g2.more, kept: g2.kept, op: g2.k0.op, h: [g0.h, g2.h] }));
+    await kp.keyboard.down('Meta'); await settle(kp);
+    check('Linux: giữ Meta không phải Mod, không is-keys', !(await kp.evaluate(() => document.getElementById('pop').classList.contains('is-keys'))));
+    await kp.keyboard.up('Meta');
+    await kp.keyboard.press('Escape');
+
+    // Giữ Ctrl rồi bấm /: gợi ý 10 (chỉ thấy khi giữ).
+    await openAt(kp, 7);
+    await kp.keyboard.down('Control'); await settle(kp);
+    hs = await hintTexts(kp);
+    await kp.keyboard.press('Slash'); await kp.keyboard.up('Control'); await kp.waitForTimeout(100);
+    check('phím gợi ý: giữ Ctrl + / lưu gợi ý 10', !(await popOpen(kp)) && (await said(kp, 7)) === hs[9], JSON.stringify([hs[9], await said(kp, 7)]));
+
+    // Mod+B khi hộp mở không ẩn / hiện cây (focus ngoài ô chữ, như ui/tree.js nhận phím); có gợi ý 5 thì lưu nó.
+    const t0 = await treeOn(kp);
+    await openAt(kp, 8);
+    hs = await hintTexts(kp);
+    await blur(kp);
+    await kp.keyboard.press('Control+KeyB'); await kp.waitForTimeout(200);
+    check('Ctrl+B khi hộp mở: cây giữ nguyên, lưu gợi ý 5', (await treeOn(kp)) === t0 && !(await popOpen(kp)) && (await said(kp, 8)) === hs[4], JSON.stringify([t0, hs[4], await said(kp, 8)]));
+    await openAt(kp, 9);
+    await kp.keyboard.type('zzzz không khớp gợi ý nào'); await blur(kp);
+    await kp.keyboard.press('Control+KeyB'); await kp.waitForTimeout(200);
+    check('Ctrl+B khi hộp mở, không có gợi ý 5: cây giữ nguyên, hộp vẫn mở', (await treeOn(kp)) === t0 && await popOpen(kp));
+    await kp.keyboard.press('Escape');
+    await blur(kp);
+    await kp.keyboard.press('Control+KeyB'); await kp.waitForTimeout(200);
+    const t1 = await treeOn(kp);
+    await kp.keyboard.press('Control+KeyB'); await kp.waitForTimeout(200);
+    check('đóng hộp: Ctrl+B ẩn / hiện cây như cũ', t1 === !t0 && (await treeOn(kp)) === t0, JSON.stringify([t0, t1]));
+    await kctx.close();
+
+    // Mac (giả userAgentData / platform): nhãn ⌘⇧C, Mod là ⌘ (Meta); Ctrl + Z không chọn.
+    const mctx = await browser.newContext({ viewport: { width: 1280, height: 900 }, colorScheme: 'light' });
+    await mctx.addInitScript(() => {
+      Object.defineProperty(navigator, 'userAgentData', { get: () => ({ platform: 'macOS', mobile: false, brands: [] }) });
+      Object.defineProperty(navigator, 'platform', { get: () => 'MacIntel' });
+    });
+    const mp = await openPage(mctx);
+    const ml = await mp.evaluate(() => ({ kbd: [...document.querySelectorAll('.js-copy-kbd')].map((k) => k.textContent), titles: ['btn-copy', 'rail-copy', 'dock-copy'].map((id) => document.getElementById(id).title) }));
+    check('phím gợi ý: nhãn chép ở Mac là "⌘⇧C" (kbd và tooltip mọi nút chép)', ml.kbd.length > 0 && ml.kbd.every((t) => t === '⌘⇧C') && ml.titles.every((t) => t === 'Copy prompt (⌘⇧C)'), JSON.stringify(ml));
+    await pasteText(mp, KDOC); await mp.waitForTimeout(150);
+    await openAt(mp, 1);
+    hs = await hintTexts(mp);
+    const mtip = await mp.$eval('#pop-chips .ma-chip', (e) => e.title);
+    await mp.keyboard.press('Control+KeyZ'); await mp.waitForTimeout(100);
+    const ctrlNo = await popOpen(mp);
+    await mp.keyboard.down('Meta'); await settle(mp);
+    const mKeys = await mp.evaluate(() => document.getElementById('pop').classList.contains('is-keys'));
+    await mp.keyboard.press('KeyZ'); await mp.keyboard.up('Meta'); await mp.waitForTimeout(100);
+    check('Mac: tooltip chip "⌘Z"; Ctrl+Z không chọn; giữ ⌘ có is-keys; ⌘Z lưu gợi ý 1', / · ⌘Z$/.test(mtip) && ctrlNo && mKeys && !(await popOpen(mp)) && (await said(mp, 1)) === hs[0], JSON.stringify([mtip, ctrlNo, mKeys, hs[0], await said(mp, 1)]));
+    await mctx.close();
+  }
 
   /* ---------- Chuyển gợi ý tiếng Anh (bản trước) về tiếng Việt, giữ số đếm và phiên ---------- */
   const vctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
