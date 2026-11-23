@@ -668,15 +668,16 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
   <p>Trang môn có ngoại lai (<a href="data-management-visualization.html#b3">bài 3</a>, <a href="data-management-visualization.html#b4">bài 4</a>: box plot, rào 1,5·IQR) nhưng không có ANOM, CUSUM, SPRT. Ba phương pháp này học từ nguồn ngoài, xem khối công thức.</p>
 
   <h3 id="lt-cau-hoi">Bốn câu hỏi nghiên cứu</h3>
+  <p>Ba câu ANOM, CUSUM, SPRT cùng hỏi một chuyện: lợi thế sân nhà có giảm không. ANOM so từng mùa, CUSUM theo dõi liên tục 26 mùa, SPRT trả lời nhanh trong một mùa. Câu ngoại lai lo phần dữ liệu: số liệu trận nào bất thường, dòng nào ghi sai.</p>
   <div class="qa" id="planA"></div>
 
   <div class="box traps-box">
     <h3>Bẫy phương pháp</h3>
     <ol>
-      <li>Đừng ước mức “bình thường” từ chính đoạn dữ liệu đang kiểm. Tách <span class="term">Phase I / Phase II</span>.</li>
+      <li>Đừng ước mức “bình thường” từ chính đoạn dữ liệu đang kiểm. Tách <span class="term">Phase I / Phase II</span>. ANOM là ngoại lệ: nó so mỗi mùa với trung bình chung của chính các mùa ấy.</li>
       <li>Khoá tham số (<span class="term">α</span>, <span class="term">β</span>, <span class="term">k</span>, <span class="term">h</span>) trước khi xem kết quả.</li>
-      <li>Nhiều câu lạc bộ nhân nhiều phép kiểm thì sẽ có báo động giả. Ghi rõ đã chạy bao nhiêu phép kiểm, và giữ sai số chung (<span class="term">ARL</span> hoặc <span class="term">Bonferroni</span>).</li>
-      <li>Đối thủ mạnh yếu khác nhau, nên hiệu số từng trận nhiễu: đọc CUSUM theo xu hướng dài. <span class="term">Phần dư</span> so với tỉ lệ cược bỏ được sức đối thủ, nhưng cũng bỏ luôn phong độ mà nhà cái đã thấy; vì thế chỉ là phần mở rộng.</li>
+      <li>Nhiều phép kiểm thì sẽ có báo động giả. Ghi rõ đã chạy bao nhiêu phép kiểm. CUSUM: chọn h bằng mô phỏng <span class="term">ARL</span> cho cả chuỗi; phép kiểm một lần: <span class="term">Bonferroni</span>.</li>
+      <li>Đối thủ mạnh yếu khác nhau nên kết quả từng trận nhiễu. <span class="term">Phần dư</span> so với tỉ lệ cược bỏ được sức đối thủ nhưng cũng bỏ luôn phong độ, nên chỉ dùng ở phần mở rộng.</li>
       <li>Số đếm (bàn, thẻ) không theo phân phối chuẩn.</li>
       <li>Đừng để phần thống kê nuốt nửa quản lý dữ liệu: nửa ấy có thể tới nửa số điểm. Hỏi giảng viên (<a href="#gui-giang-vien">câu 5</a> trong tin nhắn).</li>
     </ol>
@@ -734,7 +735,7 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
     <summary>Công thức cần tự viết là gì?</summary>
     <div class="fold-body">
       <h4>Ngoại lai</h4>
-      <div class="fx"><div>z<sub>i</sub> = (x<sub>i</sub> − <span class="ov">x</span>) / s</div><div>z đã sửa: M<sub>i</sub> = 0,6745 · (x<sub>i</sub> − m) / MAD, nghi khi |M<sub>i</sub>| &gt; 3,5</div><div>rào: dưới Q1 − 1,5·IQR hoặc trên Q3 + 1,5·IQR</div></div>
+      <div class="fx"><div>z<sub>i</sub> = (x<sub>i</sub> − <span class="ov">x</span>) / s</div><div>z-score hiệu chỉnh: M<sub>i</sub> = 0,6745 · (x<sub>i</sub> − m) / MAD, nghi khi |M<sub>i</sub>| &gt; 3,5</div><div>rào: dưới Q1 − 1,5·IQR hoặc trên Q3 + 1,5·IQR</div></div>
       <p><span class="ov">x</span> là trung bình, m là trung vị, MAD là trung vị của |x<sub>i</sub> − m|. <span class="term">Grubbs</span> và generalized ESD giả định dữ liệu gần chuẩn. Bàn thắng và thẻ là số đếm, nên dùng rào IQR hoặc <span class="term">xác suất đuôi Poisson</span>.</p>
       <p class="fx-src">Nguồn: NIST/SEMATECH e-Handbook <a href="https://www.itl.nist.gov/div898/handbook/eda/section3/eda35h.htm">1.3.5.17</a>, <a href="https://www.itl.nist.gov/div898/handbook/eda/section3/eda35h1.htm">Grubbs</a>, <a href="https://www.itl.nist.gov/div898/handbook/eda/section3/eda35h3.htm">generalized ESD</a>.</p>
 
@@ -746,12 +747,16 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
 
       <h4>ANOM cho tỉ lệ (tỉ lệ thắng)</h4>
       <div class="fx"><div><span class="ov">p</span> = Σ p<sub>i</sub> / k,  s = √(<span class="ov">p</span> (1 − <span class="ov">p</span>) / n)</div><div>UDL, LDL = <span class="ov">p</span> ± h<sub>α</sub> · s · √((k − 1) / k)</div><div>h<sub>α</sub>: phân vị chuẩn tại 1 − α / (2k)</div></div>
-      <p>Tỉ lệ thắng là tỉ lệ, nên dùng <span class="term">ANOM cho tỉ lệ</span>. Trang Minitab chỉ cho trường hợp k nhóm cùng cỡ n, đúng với câu chính (mỗi mùa Premier League 380 trận). Phần mở rộng theo giải (khác cỡ): dùng giới hạn riêng từng nhóm, hiệu chỉnh <span class="term">Šidák</span> (xấp xỉ); xem thẻ ANOM ở mục Bốn câu hỏi nghiên cứu.</p>
+      <p>Tỉ lệ thắng là tỉ lệ, nên dùng <span class="term">ANOM cho tỉ lệ</span>. k ở đây là số nhóm, khác k của CUSUM. Trang Minitab chỉ cho trường hợp k nhóm cùng cỡ n, đúng với câu chính (mỗi mùa Premier League 380 trận). Phần mở rộng theo giải (khác cỡ): dùng giới hạn riêng từng nhóm, hiệu chỉnh <span class="term">Šidák</span> (xấp xỉ); xem thẻ ANOM ở mục Bốn câu hỏi nghiên cứu.</p>
       <p class="fx-src">Nguồn: <a href="https://support.minitab.com/en-us/minitab/help-and-how-to/statistical-modeling/anova/how-to/analysis-of-means/methods-and-formulas/binomial-data/">Minitab, ANOM với dữ liệu nhị thức</a>.</p>
 
-      <h4>CUSUM dạng bảng</h4>
+      <h4>CUSUM Bernoulli (câu hỏi 3)</h4>
+      <div class="fx"><div>S<sub>i</sub> = max(0, S<sub>i−1</sub> + x<sub>i</sub> · ln(p<sub>1</sub>/p<sub>0</sub>) + (1 − x<sub>i</sub>) · ln((1 − p<sub>1</sub>)/(1 − p<sub>0</sub>)))</div><div>bắt đầu S<sub>0</sub> = 0; báo khi S<sub>i</sub> &gt; h; nhánh giảm dùng p<sub>1</sub> &lt; p<sub>0</sub>, nhánh tăng dùng p<sub>1</sub> &gt; p<sub>0</sub></div></div>
+      <p>Bước cộng giống hệt LLR của SPRT bên dưới. CUSUM là một chuỗi SPRT có ngưỡng dưới bằng 0: tổng LLR rơi xuống 0 thì bắt đầu lại, vượt h thì báo. x<sub>i</sub> = 1 nếu đội nhà thắng.</p>
+
+      <h4>CUSUM dạng bảng (phần mở rộng: hiệu số câu lạc bộ)</h4>
       <div class="fx"><div>S<sub>hi</sub>(i) = max(0, S<sub>hi</sub>(i−1) + x<sub>i</sub> − μ<sub>0</sub> − k)</div><div>S<sub>lo</sub>(i) = max(0, S<sub>lo</sub>(i−1) + μ<sub>0</sub> − k − x<sub>i</sub>)</div><div>bắt đầu S(0) = 0; báo khi S<sub>hi</sub> hoặc S<sub>lo</sub> vượt h</div></div>
-      <p>Quy tắc nhanh: <span class="term">k</span> = δσ/2, với δ là độ lệch muốn bắt tính bằng số σ; <span class="term">h</span> khoảng 4–5σ. Minitab mặc định k = 0,5 và h = 4 (tính theo σ). Chọn k và h theo <span class="term">ARL</span> mong muốn, trước khi xem kết quả.</p>
+      <p>Quy tắc nhanh: <span class="term">k</span> = δσ/2, với δ là độ lệch muốn bắt tính bằng số σ; với k = 0,5σ thì <span class="term">h</span> khoảng 4–5σ. Minitab mặc định k = 0,5 và h = 4 (tính theo σ), <span class="term">ARL</span>0 hai phía khoảng 170 quan sát. Với hiệu số (σ khoảng 1,6–1,9 bàn mỗi trận), 26 mùa sau Phase I là 988 trận, nên mặc định này gần như chắc chắn báo động giả ở mọi câu lạc bộ. Phong độ cả mùa thường chỉ lệch 0,15–0,5σ: thử k = 0,25σ và h khoảng 8–10σ (ARL0 hai phía khoảng 360–1.000 trận). Chọn k và h bằng mô phỏng, lấy mẫu lại từ hiệu số Phase I, trước khi xem kết quả.</p>
       <p class="fx-src">Nguồn: <a href="https://www.itl.nist.gov/div898/handbook/pmc/section3/pmc323.htm">NIST/SEMATECH e-Handbook 6.3.2.3</a>; <a href="https://support.minitab.com/en-us/minitab/help-and-how-to/quality-and-process-improvement/control-charts/how-to/time-weighted-charts/cusum-chart/methods-and-formulas/methods-and-formulas/">Minitab, CUSUM</a>; bài gốc <a href="https://doi.org/10.1093/biomet/41.1-2.100">Page (1954), Biometrika 41:100–115</a>.</p>
 
       <h4>Tỉ lệ cược → xác suất, điểm kỳ vọng (phần mở rộng CUSUM)</h4>
@@ -760,7 +765,7 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
 
       <h4>SPRT: hai ngưỡng và bước cộng</h4>
       <div class="fx"><div>a = ln(β / (1 − α)),  b = ln((1 − β) / α)</div><div>Bernoulli: LLR<sub>i</sub> = x<sub>i</sub> · ln(p<sub>1</sub>/p<sub>0</sub>) + (1 − x<sub>i</sub>) · ln((1 − p<sub>1</sub>)/(1 − p<sub>0</sub>))</div><div>Λ<sub>n</sub> = Σ LLR<sub>i</sub>: Λ ≤ a chấp nhận H0, Λ ≥ b chấp nhận H1, còn lại xem tiếp</div></div>
-      <p><span class="term">LLR</span> cộng dồn đi giữa hai ngưỡng; chạm ngưỡng nào thì dừng. x<sub>i</sub> = 1 nếu đội nhà thắng, 0 nếu không.</p>
+      <p><span class="term">LLR</span> cộng dồn đi giữa hai ngưỡng; chạm ngưỡng nào thì dừng. x<sub>i</sub> = 1 nếu đội nhà thắng, 0 nếu không. CUSUM là một chuỗi SPRT có ngưỡng dưới bằng 0: tổng LLR rơi xuống 0 thì bắt đầu lại, vượt h thì báo.</p>
       <p class="fx-src">Nguồn: <a href="https://doi.org/10.1214/aoms/1177731118">Wald (1945), Annals of Mathematical Statistics 16(2):117–186</a>.</p>
     </div>
   </details>
@@ -768,7 +773,7 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
   <h3>Công cụ Python</h3>
   <ul>
     <li><code>pandas</code> để gom và làm sạch; <code>scipy.stats</code> cho phân phối t, chuẩn, Poisson. <code>scipy.stats</code> không có ANOM.</li>
-    <li>Ngoại lai: rào <span class="term">IQR</span>, xác suất đuôi Poisson và z đã sửa, tự viết. <span class="term">Grubbs</span> có trong gói <code>outlier_utils</code> (<span class="term">MIT</span>), chỉ dùng khi dữ liệu gần chuẩn. Tuỳ chọn: <code>IsolationForest</code> của scikit-learn hoặc PyOD (<span class="term">Isolation Forest</span>).</li>
+    <li>Ngoại lai: rào <span class="term">IQR</span>, xác suất đuôi Poisson và z-score hiệu chỉnh, tự viết. <span class="term">Grubbs</span> có trong gói <code>outlier_utils</code> (<span class="term">MIT</span>), chỉ dùng khi dữ liệu gần chuẩn. Tuỳ chọn: <code>IsolationForest</code> của scikit-learn hoặc PyOD (<span class="term">Isolation Forest</span>).</li>
     <li>ANOM và SPRT: tự viết, khoảng 20 dòng mỗi cái.</li>
     <li>CUSUM: tự viết, rồi đối chiếu với giobbu/CUSUM; chỉ chạy, đừng chép vì <span class="term">GPL</span>.</li>
   </ul>
