@@ -1820,7 +1820,7 @@ Kind regards,
   /* Thuật ngữ chính: dùng ở hero, #de-tai, #lineage, #top-3, #lo-trinh (kể cả mọi pha, không chỉ pha đang mở). Còn lại gập lại. */
   function coreTermIds() {
     var set = {};
-    var add = function (n) { Array.prototype.forEach.call(n.querySelectorAll('.term'), function (t) { var g = lookup(t); if (g) set[g.id] = 1; }); };
+    var add = function (n) { autoTerms(n); Array.prototype.forEach.call(n.querySelectorAll('.term'), function (t) { var g = lookup(t); if (g) set[g.id] = 1; }); };
     ['#tom-tat', '#de-tai', '#lineage', '#top-3', '#lo-trinh'].forEach(function (sel) { add($(sel)); });
     var tmp = el('div');
     D.phases.forEach(function (ph) {
@@ -1901,7 +1901,82 @@ Kind regards,
   function lookup(t) {
     return GLOSS[norm(t.getAttribute('data-t') || t.textContent)] || null;
   }
+  /* Tự bọc thuật ngữ: lần xuất hiện đầu của mỗi mục glossary trong mỗi đoạn (p, li, td…) chưa bọc thì bọc.
+     Bỏ qua tiêu đề, link, nút, summary, code, SVG, tin nhắn, danh sách thuật ngữ, nguồn.
+     Không tự bọc bốn phương pháp chính và lợi thế sân nhà (dùng khắp trang); α, β chỉ bọc tay. */
+  var AUTO_SKIP = 'a,button,summary,label,code,pre,script,style,svg,h1,h2,h3,h4,nav,select,textarea,.term,.tip,[role="button"],[role="tab"],[data-noterm],.msg,#thuat-ngu,#nguon';
+  var AUTO_NO = { outlier: 1, anom: 1, cusum: 1, sprt: 1, 'home-advantage': 1 };
+  var AUTO_BLOCK = 'p,li,td,th,dd,dt,figcaption,blockquote';
+  var autoRe = null;
+  /* Khoá có chữ hoa (IQR, VAR, Elo) phải khớp đúng hoa thường; khoá chữ thường khớp không phân biệt. */
+  function autoKeyOk(g, t) {
+    return [g.term].concat(g.aliases || []).some(function (k) {
+      k = String(k).normalize('NFC');
+      return /[A-Z]/.test(k) ? k === t : norm(k) === norm(t);
+    });
+  }
+  function buildAuto() {
+    var keys = [];
+    D.glossary.forEach(function (g) {
+      if (AUTO_NO[g.id]) return;
+      [g.term].concat(g.aliases || []).forEach(function (k) {
+        k = String(k).normalize('NFC');
+        if ((k.length >= 3 || (k.length === 2 && /[A-Z]/.test(k))) && k !== 'alpha' && k !== 'beta') keys.push(k);   // H0, Q1: hai ký tự thì phải có chữ hoa
+      });
+    });
+    keys.sort(function (a, b) { return b.length - a.length; });
+    var esc = keys.map(function (k) { return k.replace(/[.*+?^${}()|[\]\\\/]/g, '\\$&'); });
+    autoRe = new RegExp('(?<![\\p{L}\\p{N}_-])(?:' + esc.join('|') + ')(?![\\p{L}\\p{N}_-])', 'giu');
+  }
+  function autoMatch(s) {
+    autoRe.lastIndex = 0;
+    for (var m; (m = autoRe.exec(s));) {
+      var g = GLOSS[norm(m[0])];
+      if (g && !AUTO_NO[g.id] && autoKeyOk(g, m[0])) return { i: m.index, s: m[0], g: g };
+      autoRe.lastIndex = m.index + 1;
+    }
+    return null;
+  }
+  function autoTerms(scope) {
+    if (!D || !scope) return;
+    if (!autoRe) buildAuto();
+    var seen = new Map();
+    var blockOf = function (n) { return (n.parentElement && n.parentElement.closest(AUTO_BLOCK)) || n.parentElement; };
+    var seenIn = function (b) {
+      if (!seen.has(b)) {
+        var s = {};
+        Array.prototype.forEach.call(b.querySelectorAll('.term'), function (t) { var g = lookup(t); if (g) s[g.id] = 1; });
+        seen.set(b, s);
+      }
+      return seen.get(b);
+    };
+    var nodes = [], w = document.createTreeWalker(scope, NodeFilter.SHOW_TEXT);
+    while (w.nextNode()) {
+      var n = w.currentNode;
+      if (!n.nodeValue.trim() || !n.parentElement || n.parentElement.closest(AUTO_SKIP)) continue;
+      nodes.push(n);
+    }
+    nodes.forEach(function (n) {
+      var b = blockOf(n), s = seenIn(b), rest = n;
+      for (var guard = 0; rest && guard < 50; guard++) {
+        var text = rest.nodeValue, off = 0, hit = null;
+        while (off < text.length) {
+          var m = autoMatch(text.slice(off));
+          if (!m) break;
+          if (!s[m.g.id]) { hit = { i: off + m.i, s: m.s, g: m.g }; break; }
+          off += m.i + m.s.length;
+        }
+        if (!hit) break;
+        s[hit.g.id] = 1;
+        var mid = rest.splitText(hit.i);
+        rest = mid.splitText(hit.s.length);
+        var span = el('span', 'term', hit.s);
+        mid.parentNode.replaceChild(span, mid);
+      }
+    });
+  }
   function upgradeTerms(scope) {
+    autoTerms(scope || document.body);
     Array.prototype.forEach.call((scope || document).querySelectorAll('.term'), function (t) {
       if (t.hasAttribute('tabindex')) return;
       t.setAttribute('tabindex', '0');

@@ -123,6 +123,11 @@
 
 ### Thuật ngữ, link, nội dung
 
+- Mọi thuật ngữ, viết tắt, tên công cụ hay tổ chức lạ với người mới phải có mục trong `glossary` (DMV-003).
+- JS (`autoTerms`) tự bọc lần đầu mỗi mục glossary trong mỗi đoạn (`p`, `li`, `td`…). Khoá có chữ hoa khớp đúng hoa
+  thường; khoá chữ thường thì không phân biệt.
+- Không tự bọc: tiêu đề, link, nút, `summary`, `code`, SVG, `.msg`, `#thuat-ngu`, `#nguon`; bốn phương pháp chính,
+  lợi thế sân nhà, α, β. Chỗ ấy cần chú giải thì bọc tay.
 - Bọc thuật ngữ bằng `<span class="term">…</span>`, trong HTML hay trong trường `_html`. Khoá tra là `data-t` hoặc chính
   chữ, khớp `id`, `term` hoặc `aliases` của `glossary`; thiếu thì console báo "Thiếu thuật ngữ".
 - Chú giải hiện khi rê chuột, khi focus bàn phím và khi chạm; Esc đóng; luôn nằm trong khung nhìn.
