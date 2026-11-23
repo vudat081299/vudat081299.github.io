@@ -4,8 +4,9 @@ Chỉ việc còn dở. Xong việc nào thì xoá nó khỏi đây.
 
 ## CHỜ CHỦ TRANG
 
-Câu hỏi của trang đồ án `sports-monitoring-project.html`, mục `#can-xac-nhan`. Có câu trả lời thì sửa trang
-(và `data/sports-monitoring-project.json` nếu chạm dữ liệu), rồi xoá câu ấy ở trang và ở đây.
+Câu hỏi của trang đồ án `sports-monitoring-project.html`, mục `#can-xac-nhan` (ba phần: tin nhắn gửi giảng viên,
+thư gửi football-data.co.uk, việc nhóm tự chốt). Có câu trả lời thì sửa trang (và `data/sports-monitoring-project.json`
+nếu chạm dữ liệu), rồi xoá câu ấy ở trang và ở đây.
 
 ### Gửi giảng viên (tin nhắn `#gvMsg`, tám câu)
 
@@ -25,8 +26,8 @@ Câu hỏi của trang đồ án `sports-monitoring-project.html`, mục `#can-x
 
 ### Nhóm tự chốt
 
-- A (Premier League), B (F1) hay C (bóng đá quốc tế). Trang đang chốt A; đổi thì sửa câu "Chốt", `plan_a`, `flow`,
+- A (Premier League) hay B (F1). C chỉ là phần mở rộng. Trang đang chốt A; theo cây chọn ở `#top-3` (hết tuần 1 chưa
+  ai trả lời thì làm tiếp A trong repo riêng tư, chuẩn bị sẵn B). Đổi sang B thì sửa câu "Chốt", `plan_a`, `flow`,
   các pha P1–P2 và `#ke-hoach`.
-- Python hay R; đã ai dùng Streamlit chưa. Chọn R thì đổi công cụ, bẫy gói, repo mẫu, vai demo.
+- Công cụ mặc định Python; ai chưa dùng Streamlit thì xem trước ở P0.
 - Ai nhận vai nào; còn bao nhiêu tuần.
-- Nhắc khi làm slide: tên đúng là "sequential probability ratio test", không phải "ration".

@@ -90,29 +90,32 @@
 
 - Điểm tổng, kết luận, thứ tự thanh, số trên chip, số đếm ở hero: từ `scores`, `criteria[].weight`, `verdicts[].min`.
 - Điểm tổng hiện một chữ số, làm tròn xuống (`fmt1`), để con số không bao giờ vượt ngưỡng kết luận.
-- `scores` theo đúng thứ tự `criteria`. Đổi điểm thì sửa `why_html` cho khớp; điểm vòng trước để ở `scores_r1`.
-- `rounds[].src` trỏ tới một nguồn có `scores_r1`: bảng hai vòng tự in "điểm cũ → điểm mới".
+- `scores` theo đúng thứ tự `criteria`. Đổi điểm thì sửa `why_html` cho khớp.
+- Điểm các vòng trước để ở `scores_r1`, `scores_r2`. `rounds[].src` in điểm vòng 1 → vòng 2, `rounds3[].src` in vòng 2 → hiện tại.
 - `options[].src`: điểm của phương án là điểm tổng của nguồn ấy; `[data-total="<id>"]` trong HTML cũng lấy từ đó.
-- `sprt_check`: p1, a, b tính từ p0, draw, alpha, beta; chèn bằng `<span data-calc>`. Số đã kiểm trên CSV
-  (`stop`, các tỉ lệ trong `notes_html`) chỉ sửa khi chạy lại trên dữ liệu.
-- p0, p1 và mọi tham số khác chỉ lấy từ Phase I; kết quả chạy trên mùa được kiểm để ở `check_html` (nhãn "Kiểm tra khả thi").
+- `sprt_check` lưu p0, draw chưa làm tròn (541/1140, 254/1140); trang hiện 3 chữ số. p1, a, b tính bằng JS, chèn bằng
+  `<span data-calc>`. Số đã kiểm trên CSV (`stop`, các số trong `check_html`, `notes_html`) chỉ sửa khi chạy lại trên dữ liệu.
+- Tham số của câu hỏi chỉ lấy từ Phase I; kết quả đã chạy thử để ở `check_html` (nhãn "Kiểm tra khả thi").
 - Tổng trang (`report`), tổng phút (`slides`), pha của mỗi vai (suy từ `phases[].roles`), nhãn tuần trên lịch.
 
 ### Các khối
 
-- `#ke-hoach`: bốn câu hỏi lấy từ `plan_a[].q`, việc tuần 1 từ `week1` (mỗi vai một dòng). Sửa câu hỏi ở `plan_a`.
+- `#ke-hoach`: bốn câu hỏi lấy từ `plan_a[].q`, việc tuần 1 từ `week1` (mỗi vai một dòng, nhãn vai có thể là `label_html`).
+  Sửa câu hỏi ở `plan_a`. Câu 3 là CUSUM Bernoulli trên thắng sân nhà; phong độ câu lạc bộ chỉ là phần mở rộng.
   Dòng "Nộp" tính số tab, slide, phút, chương, trang từ `plan_a`, `slides`, `report`.
+- Link có `data-ph` chọn pha ấy trên lịch; link trong trang tới đích nằm trong khối gập thì mở khối.
 - Danh sách thẻ nguồn nằm trong `#cardsBox` (gập); mỗi thẻ là `details` một dòng. Bấm thanh biểu đồ hay link `#src-…`
   thì mở danh sách, mở thẻ ấy rồi cuộn tới.
 - `#de-tai`: hình SPRT dùng tham số chung chung, không phải tham số của đồ án.
-- `#can-xac-nhan`: `#gvMsg` là tin nhắn gửi giảng viên, đánh số câu; bẫy 6 trỏ "câu 5". Đổi thứ tự câu thì sửa chỗ trỏ.
+- `#can-xac-nhan` có ba phần: `#gvMsg` (tin nhắn gửi giảng viên, đánh số câu; bẫy 6 trỏ "câu 5", đổi thứ tự thì sửa chỗ
+  trỏ), `#fdMsg`, và việc nhóm tự chốt.
   `#fdMsg` là thư tiếng Anh xin phép football-data.co.uk, không tên người, không tên trường; P0 và `week1` trỏ tới nó.
-- `#thuat-ngu`: thuật ngữ dùng ở hero, `#de-tai`, `#top-3`, `#lo-trinh` (kể cả mọi pha) hiện sẵn; còn lại trong
+- `#thuat-ngu`: thuật ngữ dùng ở hero, `#de-tai`, `#lineage`, `#top-3`, `#lo-trinh` (kể cả mọi pha) hiện sẵn; còn lại trong
   `#glossMore`.
 - `options[].fit` chấm 1–3 theo `fit_rows`; nhiều chấm là tốt hơn ở tiêu chí ấy.
 - `phases`: `start`, `len` là phần trăm tổng thời gian; nút 4/6/8/10 tuần (mặc định 6) chỉ đổi nhãn tuần và số ngày.
 - Bấm một pha, hoặc Tab rồi Enter, mở khung chi tiết; mũi tên lên xuống chuyển pha. Ở ≤ 600px lịch thành danh sách.
-- Rê, focus hay bấm một vai thì tô các pha của vai ấy; bấm lần nữa thì bỏ.
+- Rê, focus hay bấm một vai thì tô các pha của vai ấy; bấm thì cuộn tới lịch, bấm lần nữa thì bỏ tô.
 - `flow`, `flow_out`: mỗi ô có `phase`, bấm thì mở pha ấy. Ô có `demo: true` nối vào ô Demo qua đường gom bên phải.
   SVG vẽ theo bề rộng thật, theo luật mũi tên ở mục Giao diện.
 - "Ví dụ quen thuộc" (`methods[].familiar_html`) so với việc theo dõi một app di động; không nhắc tới chủ trang.

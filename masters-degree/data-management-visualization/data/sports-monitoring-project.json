@@ -752,13 +752,13 @@
     {"item": "Giấy phép repo mlops", "r1": "MIT.", "r2": "Không có file LICENSE.", "check": "README ghi MIT, link tới file không tồn tại; GitHub báo repo không có giấy phép.", "final": "Vòng 2 đúng.", "src": "A4"},
     {"item": "Repo chấn thương", "r1": "Bỏ.", "r2": "Dùng một phần.", "check": "Có LICENSE MIT; run_dq_checks(), schema contract, trang giới hạn dùng lại được; dữ liệu vẫn giả lập.", "final": "Dùng một phần, cho phần quản lý dữ liệu.", "src": "A3"},
     {"item": "Minitab ANOM", "r1": "Dùng.", "r2": "Dùng một phần.", "check": "So với trung bình chung mọi sân; tác giả dặn đừng coi là suy diễn nghiêm túc; dữ liệu dạng .mpx.", "final": "Dùng một phần, sát ngưỡng.", "src": "B5"},
-    {"item": "Tên topic GitHub", "r1": "4.825 repo, có Fast-F1, nba_api…", "r2": "Topic bảng nêu là sport-analytics: 62 repo.", "check": "sport-analytics có 62 repo, phần lớn về video; Fast-F1, nba_api, statsbomb không mang topic nào.", "final": "Bỏ.", "src": "B6"},
+    {"item": "Tên topic GitHub", "r1": "4.825 repo, có Fast-F1, nba_api…", "r2": "Topic bảng nêu là sport-analytics: 62 repo.", "check": "sport-analytics có 62 repo, khoảng một phần tư về video; Fast-F1, nba_api, statsbomb không mang topic nào.", "final": "Bỏ.", "src": "B6"},
     {"item": "h của ANOM", "r1": "Tra từ phân phối t.", "r2": "Bảng Nelson khi các nhóm cùng cỡ.", "check": "Trang Minitab: cùng cỡ dùng giá trị chính xác (Nelson 1983); khác cỡ dùng t hiệu chỉnh Šidák. Mô phỏng k = 4, n = 5, α = 0,05: 2,74 so với 2,80.", "final": "t Šidák là xấp xỉ, hơi bảo thủ."},
-    {"item": "Nguồn gốc đề tài", "r1": "Môn Ljubljana liệt kê đúng bốn phương pháp.", "r2": "Không tìm thấy.", "check": "Hai trang môn trả 404, đường dẫn còn tên môn, chỉ mục tìm kiếm còn bốn phương pháp. Spiegelhalter và cs. 2012 xác nhận khung y tế.", "final": "Cả hai đúng một phần; hỏi giảng viên."},
+    {"item": "Nguồn gốc đề tài", "r1": "Môn Ljubljana liệt kê đúng bốn phương pháp.", "r2": "Không tìm thấy.", "check": "Vòng 3 tìm thấy bản lưu: tài liệu giới thiệu 2016/17 của chương trình, tr. 28, liệt kê đủ bốn phương pháp; môn vẫn có năm 2025/26.", "final": "Vòng 1 đúng; trỏ bản lưu. Hỏi giảng viên đề của nhóm lấy từ đâu."},
     {"item": "EXSPRT", "r1": "SPRT, theo thời gian thực.", "r2": "Mở rộng của Frick, hồi cứu, độ chính xác 0,716.", "check": "Welch & Frick; kiểm hồi cứu trên video; tốt nhất 0,730 (mô hình 3 và 6); không công bố dữ liệu, code.", "final": "Vòng 2 đúng, sửa thành 0,730.", "src": "B4"},
-    {"item": "Câu hỏi SPRT", "r1": "Huấn luyện viên mới có nâng tỉ lệ thắng không.", "r2": "2020/21 không khán giả; p1 = tỉ lệ thắng sân khách cũ 0,303.", "check": "Với p1 = 0,303, tỉ lệ thật 0,379 nằm giữa H0 và H1: xác suất chọn H1 khoảng 0,5.", "final": "Giữ câu hỏi vòng 2, đổi p1 = 0,389 (hết lợi thế sân nhà)."},
+    {"item": "Câu hỏi SPRT", "r1": "Huấn luyện viên mới có nâng tỉ lệ thắng không.", "r2": "2020/21 không khán giả; p1 = tỉ lệ thắng sân khách cũ 0,303.", "check": "Với p1 = 0,303, tỉ lệ thật 0,379 nằm giữa H0 và H1: xác suất chọn H1 khoảng 0,5.", "final": "Giữ câu hỏi vòng 2, đổi p1 thành (1 − tỉ lệ hoà)/2: hết lợi thế sân nhà."},
     {"item": "Phương pháp Beggs & Bond", "r1": "CUSUM dạng bảng.", "r2": "Không nêu.", "check": "Tổng lệch hồi cứu so với trung bình 874 trận, kiểm định hoán vị, e.divisive; 1995/96–2017/18.", "final": "Là bài liên quan, không phải công thức để chép.", "src": "C2"},
-    {"item": "\"Chưa có ai làm\"", "r1": "Chưa có dự án nào.", "r2": "Không chứng minh được là không có.", "check": "Không kiểm được sự vắng mặt.", "final": "Viết \"chúng tôi không tìm thấy\"."}
+    {"item": "\"Chưa có ai làm\"", "r1": "Chưa có dự án nào.", "r2": "Không chứng minh được là không có.", "check": "Không kiểm được sự vắng mặt.", "final": "Viết \"không tìm thấy bài báo hay đồ án đã công bố nào làm đủ bốn phương pháp\"; bỏ ý mới."}
   ],
   "fit_rows": [
     {"id": "outlier", "label": "Ngoại lai"},
@@ -1212,5 +1212,17 @@
     {"role": 5, "task_html": "Viết CUSUM Bernoulli hai phía; thử trên chuỗi giả lập và ví dụ của NIST."},
     {"role": 6, "task_html": "Viết SPRT Bernoulli; thử trên chuỗi giả lập."},
     {"role": 7, "task_html": "Tạo repo theo cây mẫu, <span class=\"term\">venv</span>, <code>requirements.txt</code>; dựng khung app <span class=\"term\">Streamlit</span>."}
+  ],
+  "rounds3": [
+    {"item": "Câu về công trình trước", "before": "Không dự án công khai nào làm đủ bốn phương pháp; đồ án mới ở mức môn học.", "check": "Không kiểm được sự vắng mặt; ý \"mới\" không có căn cứ.", "final": "Chỉ nói: không tìm thấy bài báo hay đồ án đã công bố nào làm đủ bốn phương pháp."},
+    {"item": "Nguồn gốc đề tài", "before": "Trang môn ở Ljubljana trả 404.", "check": "Bản lưu tài liệu giới thiệu 2016/17, tr. 28: môn liệt kê ngoại lai, ANOM, CUSUM, SPRT và trích Spiegelhalter và cs. 2003.", "final": "Trỏ bản lưu; bài 2012 chỉ là bối cảnh."},
+    {"item": "Trận dừng của SPRT", "before": "Trận 129.", "check": "Làm tròn p0, tỉ lệ hoà và thứ tự các trận cùng giờ làm trận dừng đổi trong 128–131.", "final": "Lưu số chưa làm tròn; ghi khoảng 128–131."},
+    {"item": "Đối chứng cho SPRT", "before": "Không có.", "check": "Chạy trên 28 mùa khác: H1 cũng được chấp nhận ở 2015/16, 2021/22 và 2024/25.", "final": "Ghi rõ cảnh báo 2020/21 không tự chứng minh khán giả là nguyên nhân."},
+    {"item": "Câu hỏi CUSUM", "before": "CUSUM dạng bảng trên hiệu số từng câu lạc bộ.", "check": "Mặc định k = 0,5, h = 4 trên hiệu số báo nhầm khoảng mỗi 4,5 mùa; ba câu ANOM, CUSUM, SPRT nên kể một chuyện.", "final": "CUSUM Bernoulli hai phía trên thắng sân nhà; phong độ câu lạc bộ thành phần mở rộng."},
+    {"item": "ANOM theo mùa", "before": "Chưa khoá α, chưa chạy thử.", "check": "α = 0,05: chỉ 2020/21 dưới LDL, cách chưa tới một trận thắng; α = 0,01: không mùa nào.", "final": "Khoá α trước khi chạy; báo cáo nói rõ kết quả sát ngưỡng."},
+    {"item": "Ngoại lai", "before": "Rào IQR hoặc đuôi Poisson cho mọi số đếm.", "check": "Bàn, thẻ vàng gần Poisson; cú sút, phạt góc phân tán hơn; thẻ đỏ có Q1 = Q3 = 0.", "final": "Chọn cách theo loại cột; lỗi ghi chép tìm bằng luật."},
+    {"item": "Repo chấn thương (A3)", "before": "Dùng một phần.", "check": "Không dùng phương pháp nào trong bốn; hai trong ba vòng chấm là Bỏ.", "final": "Bỏ.", "src": "A3"},
+    {"item": "FastF1 + Jolpica-F1 (C11)", "before": "Dùng một phần.", "check": "Jolpica có bản dump CSV miễn phí, không cần đăng nhập, có cả mùa đang đá.", "final": "Dùng; phương án B lấy dữ liệu này.", "src": "C11"},
+    {"item": "Giấy phép Ergast", "before": "CC BY-NC-SA 4.0.", "check": "Ergast theo CC BY-NC-SA 3.0 Unported; chỉ Jolpica là 4.0.", "final": "Sửa thẻ A1 và thuật ngữ."}
   ]
 }

@@ -594,10 +594,13 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
   </div>
 
   <details class="fold" id="hai-vong">
-    <summary>Vòng 1 và vòng 2 lệch nhau ở đâu, chốt thế nào?</summary>
+    <summary>Ba vòng kiểm</summary>
     <div class="fold-body">
-      <p class="sub">Chấm hai vòng. Vòng 2: ba trợ lý AI chấm độc lập, không xem vòng 1; rồi một trợ lý kiểm từng chỗ lệch tại nguồn. Kiểm ngày <span data-checked></span>. Điểm trong bảng là điểm tổng trên 10.</p>
+      <p class="sub">Vòng 2: ba trợ lý AI chấm độc lập, không xem vòng 1, rồi một trợ lý kiểm từng chỗ lệch tại nguồn. Vòng 3: bốn trợ lý kiểm lại sự kiện, thống kê, cách người mới đọc trang, và giao diện. Kiểm ngày <span data-checked></span>. Điểm trong bảng là điểm tổng trên 10.</p>
+      <h3>Vòng 1 và vòng 2</h3>
       <div id="rounds"></div>
+      <h3>Vòng 3</h3>
+      <div id="rounds3"></div>
     </div>
   </details>
 
@@ -1511,35 +1514,46 @@ Kind regards,
   }
 
   /* ═══ HAI VÒNG CHẤM: bảng, điểm tổng hai vòng tính từ scores_r1 và scores. */
-  function renderRounds() {
-    var box = $('#rounds');
-    box.textContent = '';
-    var cols = [['item', 'Mục'], ['r1', 'Vòng 1'], ['r2', 'Vòng 2'], ['check', 'Kiểm tại nguồn'], ['final', 'Chốt']];
+  function roundScore(s, from, to) {
+    var a = 0, b = 0;
+    D.criteria.forEach(function (cr, k) { a += from[k] * cr.weight; b += to[k] * cr.weight; });
+    return el('span', 'rd-score', s.id + ': ' + fmt1({ t100: a }) + ' → ' + fmt1({ t100: b }));
+  }
+  /* Vòng 1–2: điểm từ scores_r1 sang scores_r2 (hoặc scores). Vòng 3: từ scores_r2 sang scores. */
+  function roundTable(rows, cols, scoreOf) {
     var t = el('table', 'rounds stack');
     var hr = el('tr');
     cols.forEach(function (c) { var th = el('th', null, c[1]); th.scope = 'col'; hr.appendChild(th); });
     var thead = el('thead'); thead.appendChild(hr); t.appendChild(thead);
     var tb = el('tbody');
-    D.rounds.forEach(function (r) {
+    rows.forEach(function (r) {
       var tr = el('tr');
       cols.forEach(function (c, i) {
         var cell = el(i ? 'td' : 'th', null, r[c[0]]);
         if (!i) cell.scope = 'row';
         cell.setAttribute('data-l', c[1]);
         if (c[0] === 'final' && r.src) {
-          var s = D.sources.filter(function (x) { return x.id === r.src; })[0];
-          if (s && s.scores_r1) {
-            var t1 = 0, t2 = 0, sc2 = s.scores_r2 || s.scores;
-            D.criteria.forEach(function (cr, k) { t1 += s.scores_r1[k] * cr.weight; t2 += sc2[k] * cr.weight; });
-            cell.appendChild(el('span', 'rd-score', s.id + ': ' + fmt1({ t100: t1 }) + ' → ' + fmt1({ t100: t2 })));
-          }
+          var sc = scoreOf(srcById(r.src));
+          if (sc) cell.appendChild(sc);
         }
         tr.appendChild(cell);
       });
       tb.appendChild(tr);
     });
     t.appendChild(tb);
-    box.appendChild(t);
+    return t;
+  }
+  function renderRounds() {
+    var box = $('#rounds');
+    box.textContent = '';
+    box.appendChild(roundTable(D.rounds, [['item', 'Mục'], ['r1', 'Vòng 1'], ['r2', 'Vòng 2'], ['check', 'Kiểm tại nguồn'], ['final', 'Chốt']], function (s) {
+      return s.scores_r1 ? roundScore(s, s.scores_r1, s.scores_r2 || s.scores) : null;
+    }));
+    var b3 = $('#rounds3');
+    b3.textContent = '';
+    b3.appendChild(roundTable(D.rounds3, [['item', 'Mục'], ['before', 'Trang ghi trước'], ['check', 'Kiểm lại'], ['final', 'Chốt']], function (s) {
+      return s.scores_r2 ? roundScore(s, s.scores_r2, s.scores) : null;
+    }));
   }
   function lessonLinks(ids) {
     var f = el('span', 'les-links');
