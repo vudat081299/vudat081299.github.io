@@ -1,6 +1,6 @@
 {
   "note": "Dữ liệu của sports-monitoring-project.html. Điểm tổng, kết luận và mọi số đếm do JS tính từ scores, criteria, verdicts; đừng ghi tay. Chỉ trường tên kết thúc bằng _html được đưa vào innerHTML. Thuật ngữ trong chữ: <span class=\"term\">CUSUM</span>, khoá tra là data-t hoặc chính chữ, khớp id, term hoặc aliases của glossary.",
-  "checked": "22/11/2026",
+  "checked": "23/11/2026",
   "criteria": [
     {"id": "de", "name": "Đúng đề", "weight": 35, "desc": "Nguồn giúp trực tiếp làm được bao nhiêu phần của đề: bốn phương pháp, áp dụng vào thể thao."},
     {"id": "ngay", "name": "Dùng được ngay", "weight": 25, "desc": "Code, dữ liệu hay câu chuyện dùng nguyên được; giấy phép và ngôn ngữ ổn."},
@@ -34,7 +34,7 @@
       "what_html": "Bộ 14 file <span class=\"term\">CSV</span> (file zip khoảng 6,3 MB) trên <span class=\"term\">Kaggle</span>, gom từ <span class=\"term\">Ergast</span>. Có <code>lap_times</code> (thời gian từng vòng, từ 1996), <code>pit_stops</code> (từ 2011) và <code>results</code> (đội đua, vị trí xuất phát, điểm, vòng nhanh nhất). Các bảng nối với nhau bằng mã như <code>raceId</code>, <code>driverId</code>, giống một cơ sở dữ liệu quan hệ.",
       "why_html": "Hợp <span class=\"term\">CUSUM</span> trên thời gian vòng, <span class=\"term\">ANOM</span> trên thời gian dừng pit theo đội đua, ngoại lai là vòng vào pit, vòng xe an toàn, vòng 1. <span class=\"term\">SPRT</span> cũng làm được: mỗi chặng cho một kết quả có/không tự nhiên, tay đua có thắng đồng đội không. Trừ điểm dùng ngay vì giấy phép thật chặt hơn nhãn trên Kaggle và vì thời gian vòng phải xử lý trước.",
       "use_html": "Phương án B: <code>lap_times</code> cho CUSUM và ngoại lai, <code>pit_stops</code> nối <code>results</code> cho ANOM theo đội đua, <code>results</code> cho chuỗi thắng đồng đội.",
-      "warn_html": "Kaggle ghi <span class=\"term\">CC0</span> nhưng dữ liệu gốc (Ergast, nay là Jolpica) là <span class=\"term\">CC BY-NC-SA</span> 4.0: chỉ dùng phi thương mại, phải ghi nguồn. Dữ liệu dừng ở mùa 2024 (cập nhật cuối 29/01/2025, ghi \"Final Update\"). API Ergast tắt đầu năm 2025; bản kế tiếp là <span class=\"term\">Jolpica-F1</span>, lấy qua <span class=\"term\">FastF1</span>. Thời gian vòng có xu hướng trong một chặng (xăng vơi dần, lốp mòn, vòng vào pit, vòng xe an toàn), nên phải <span class=\"term\">khử xu hướng</span> trước khi chạy CUSUM. Tên miền ergast.com nay chứa nội dung không liên quan: đừng trích.",
+      "warn_html": "Kaggle ghi <span class=\"term\">CC0</span> nhưng dữ liệu gốc của Ergast theo <span class=\"term\">CC BY-NC-SA</span> 3.0 Unported (phần của Jolpica theo bản 4.0): chỉ dùng phi thương mại, phải ghi nguồn. Dữ liệu dừng ở mùa 2024 (cập nhật cuối 29/01/2025, ghi \"Final Update\"). API Ergast tắt đầu năm 2025; bản kế tiếp là <span class=\"term\">Jolpica-F1</span>, lấy qua <span class=\"term\">FastF1</span>. Thời gian vòng có xu hướng trong một chặng (xăng vơi dần, lốp mòn, vòng vào pit, vòng xe an toàn), nên phải <span class=\"term\">khử xu hướng</span> trước khi chạy CUSUM. Tên miền ergast.com nay chứa nội dung không liên quan: đừng trích.",
       "scores_r1": [
         7,
         9,
@@ -56,7 +56,7 @@
         5
       ],
       "what_html": "Bài blog trên tech-spaghetti.com ngày 27/04/2024 giới thiệu <span class=\"term\">lineage</span> trong doanh nghiệp: phân biệt lineage với <span class=\"term\">provenance</span>, lineage mức bảng với mức cột, kể tên công cụ (Collibra, Atlan, <span class=\"term\">OpenLineage</span>…).",
-      "why_html": "Không code, không thể thao, không thống kê. Phần chính nằm sau <span class=\"term\">tường phí</span>. Là blog, không ai thẩm định.",
+      "why_html": "Không code, không thể thao, không thống kê. Phần lớn bài đọc tự do; phần còn lại cần đăng ký email miễn phí. Là blog, không ai thẩm định.",
       "use_html": "Tối đa mượn một định nghĩa. Muốn trích định nghĩa thì trích <span class=\"term\">W3C PROV</span>.",
       "scores_r1": [
         1,
@@ -73,20 +73,26 @@
       "short": "App rủi ro chấn thương",
       "url": "https://github.com/ivanrivasgr/Sports_Injury_Risk_Intelligence",
       "scores": [
-        3,
+        2,
         5,
         3,
         6
       ],
-      "what_html": "App <span class=\"term\">Streamlit</span> bằng Python về rủi ro chấn thương cầu thủ bóng đá, làm portfolio cá nhân. Có file LICENSE <span class=\"term\">MIT</span>, 1 sao, một người làm.",
-      "why_html": "Không dùng phương pháp nào trong bốn, chỉ đo <span class=\"term\">drift</span> bằng <span class=\"term\">PSI</span>. Nhưng nửa quản lý dữ liệu dùng lại được: hàm <code>run_dq_checks()</code> kiểm <span class=\"term\">chất lượng dữ liệu</span> với ngưỡng tỉ lệ đạt và mức nghiêm trọng, các phép kiểm <span class=\"term\">schema contract</span>, và trang giới hạn <code>views/p09_limitations.py</code>. Dữ liệu thì không dùng được: lịch thi đấu và thời tiết sinh ngẫu nhiên bằng <code>np.random</code>, kết quả mô hình là <span class=\"term\">dữ liệu giả lập</span>.",
-      "use_html": "Mượn ý kiểm chất lượng dữ liệu và trang giới hạn cho bước làm sạch và cho chương thảo luận; xem bố cục trang khi dựng demo Streamlit.",
+      "what_html": "App <span class=\"term\">Streamlit</span> bằng Python về rủi ro chấn thương cầu thủ bóng đá, làm portfolio cá nhân. Có file LICENSE <span class=\"term\">MIT</span>, 1 sao, một người làm. Theo README, các ca chấn thương lấy từ Transfermarkt; lịch thi đấu, thời tiết và điểm của mô hình là số ngẫu nhiên.",
+      "why_html": "Không dùng phương pháp nào trong bốn, chỉ đo <span class=\"term\">drift</span> bằng <span class=\"term\">PSI</span>. Lịch thi đấu, thời tiết và điểm mô hình sinh bằng <code>np.random</code>: <span class=\"term\">dữ liệu giả lập</span>. Phần dùng lại được chỉ là mẫu kiểm <span class=\"term\">chất lượng dữ liệu</span> (<code>run_dq_checks()</code>, <span class=\"term\">schema contract</span>).",
+      "use_html": "Nếu muốn, chỉ xem mẫu kiểm chất lượng dữ liệu.",
       "warn_html": "Đừng trích số liệu hay kết quả nào từ repo này: chúng là số giả lập.",
       "scores_r1": [
         2,
         3,
         2,
         4
+      ],
+      "scores_r2": [
+        3,
+        5,
+        3,
+        6
       ]
     },
     {
@@ -108,10 +114,10 @@
         2,
         3
       ],
-      "what_html": "Đồ án cuối khoá MLOps Zoomcamp của DataTalks.Club: đoán kết quả trận Premier League bằng <span class=\"term\">Random Forest</span>, báo độ chính xác 61,84% trên 3.040 trận. Dữ liệu định dạng football-data.co.uk. README ghi MIT nhưng repo không có file LICENSE, nên về luật coi như <span class=\"term\">không có giấy phép</span>. 3 sao, ngừng từ 07/2025.<ul><li>README dòng 191–263: sơ đồ kiến trúc <span class=\"term\">Mermaid</span> năm nhóm: Data, ML Pipeline, API, Monitoring &amp; Orchestration, Infrastructure.</li><li>Huấn luyện: <code>src/pipelines/training_pipeline.py</code> học Random Forest từ một file <span class=\"term\">parquet</span>, ghi vào <span class=\"term\">MLflow</span>, đăng ký mô hình nếu độ chính xác &gt; 0,6.</li><li>Phục vụ bằng <span class=\"term\">FastAPI</span>; dự đoán ghi vào PostgreSQL; lịch chạy bằng Prefect 2. Grafana có trong README nhưng không có trong <code>docker-compose</code>.</li></ul>",
-      "why_html": "Không phương pháp nào trong bốn; \"drift\" chỉ là phép so chênh trung bình. Tin cậy thấp vì <span class=\"term\">rò rỉ dữ liệu</span>: README nói đặc trưng là \"team form and head-to-head\", nhưng code (<code>training_pipeline.py</code> dòng 33–49) dùng tỉ lệ cược Bet365 và thống kê của chính trận đang đoán: cú sút, sút trúng đích, phạt góc, phạm lỗi, thẻ. Con số 61,84% vì thế không đáng tin. Thêm nữa, <code>prediction_pipeline.py</code> điền tỉ lệ cược và số cú sút bằng số ngẫu nhiên.",
-      "use_html": "<ul><li>Nó dẫn tới bộ dữ liệu football-data.co.uk.</li><li>Khuôn cho sơ đồ đường ống ở phần quản lý dữ liệu: kiểu Mermaid, danh sách Data Flow bốn dòng. Có thể mượn cả ý chạy từng bước bằng Makefile.</li><li>Khối MLflow (README dòng 184–245) dùng làm ví dụ được nếu thêm mã băm của bộ dữ liệu.</li><li>Prefect, PostgreSQL, Grafana, Docker, cấu hình deploy và bộ giả lập cá cược là quá tay cho đồ án này. Demo thì Streamlit đơn giản hơn.</li></ul>",
-      "warn_html": "<span class=\"term\">Lineage</span> gần như không được ghi: <span class=\"term\">MLflow</span> chỉ lưu chuỗi <code>data_path</code>, không mã băm bộ dữ liệu, không <code>mlflow.log_input</code>; không có <span class=\"term\">DVC</span>; bảng dự đoán không ghi <code>run_id</code> hay phiên bản mô hình; không script nào dựng file parquet huấn luyện. Gói <code>evidently</code> khai trong <code>pyproject.toml</code> nhưng không được import ở đâu.",
+      "what_html": "Đồ án cuối khoá MLOps Zoomcamp của DataTalks.Club: đoán kết quả trận Premier League bằng <span class=\"term\">Random Forest</span>, báo độ chính xác 61,84% trên 3.040 trận. Dữ liệu định dạng football-data.co.uk. README ghi MIT nhưng repo không có file LICENSE, nên về luật coi như <span class=\"term\">không có giấy phép</span>. 3 sao, ngừng từ 07/2025.<ul><li>Sơ đồ <span class=\"term\">Mermaid</span> trong mục Architecture của README (<span class=\"term\">MLflow</span> là một nút trong sơ đồ).</li><li>Huấn luyện: <code>src/pipelines/training_pipeline.py</code> học Random Forest từ một file <span class=\"term\">parquet</span>, ghi vào <span class=\"term\">MLflow</span>, đăng ký mô hình nếu độ chính xác &gt; 0,6.</li><li>Phục vụ bằng <span class=\"term\">FastAPI</span>; dự đoán ghi vào PostgreSQL; lịch chạy bằng Prefect 2. Grafana có trong README nhưng không có trong <code>docker-compose</code>.</li></ul>",
+      "why_html": "Không phương pháp nào trong bốn; \"drift\" có hai phép: so chênh trung bình, và một điểm số trên phân phối kết quả H/D/A. Tin cậy thấp vì <span class=\"term\">rò rỉ dữ liệu</span>: README nói đặc trưng là \"team form and head-to-head\", nhưng code (<code>training_pipeline.py</code>) dùng tỉ lệ cược Bet365 và thống kê của chính trận đang đoán: cú sút, sút trúng đích, phạt góc, phạm lỗi, thẻ. Con số 61,84% vì thế không đáng tin. Thêm nữa, <code>prediction_pipeline.py</code> điền tỉ lệ cược và số cú sút bằng số ngẫu nhiên.",
+      "use_html": "<ul><li>Nó dẫn tới bộ dữ liệu football-data.co.uk.</li><li>Khuôn cho sơ đồ đường ống ở phần quản lý dữ liệu: kiểu Mermaid, danh sách Data Flow bốn dòng. Có thể mượn cả ý chạy từng bước bằng Makefile.</li><li>Phần MLflow trong README dùng làm ví dụ được nếu thêm mã băm của bộ dữ liệu.</li><li>Prefect, PostgreSQL, Grafana, Docker, cấu hình deploy và bộ giả lập cá cược là quá tay cho đồ án này. Demo thì Streamlit đơn giản hơn.</li></ul>",
+      "warn_html": "<span class=\"term\">Lineage</span> gần như không được ghi: <span class=\"term\">MLflow</span> chỉ lưu chuỗi <code>data_path</code>, không mã băm bộ dữ liệu, không <code>mlflow.log_input</code>; không có <span class=\"term\">DVC</span>; bảng dự đoán có cột <code>model_version</code> nhưng chỉ ghi chữ \"latest\", không có <code>run_id</code>; không script nào dựng file parquet huấn luyện. Gói <code>evidently</code> khai trong <code>pyproject.toml</code> nhưng không được import ở đâu.",
       "scores_r1": [
         2,
         3,
@@ -266,7 +272,7 @@
         2,
         3
       ],
-      "what_html": "Trang chủ đề <code>sport-analytics</code> mà bảng tổng hợp nêu tên: 62 repo, phần lớn về video và thị giác máy tính, không repo nào dùng bốn phương pháp. Chủ đề lớn là <code>sports-analytics</code> (4.825 repo).",
+      "what_html": "Trang chủ đề <code>sport-analytics</code> mà bảng tổng hợp nêu tên: 62 repo, khoảng một phần tư về video/thị giác máy tính, phần còn lại rải rác; không repo nào làm bốn phương pháp. Chủ đề lớn là <code>sports-analytics</code> (4.825 repo).",
       "why_html": "Sai tên chủ đề nên lạc hướng. Vài repo dữ liệu tốt (theOehrly/Fast-F1, swar/nba_api, statsbomb/open-data) không mang chủ đề nào trong hai.",
       "use_html": "Không cần. Tìm dữ liệu thì đi thẳng tới các repo dữ liệu kể trên.",
       "scores_r1": [
@@ -287,6 +293,10 @@
         {
           "label": "notes.txt (nghĩa từng cột)",
           "url": "https://www.football-data.co.uk/notes.txt"
+        },
+        {
+          "label": "Trang dữ liệu và điều khoản",
+          "url": "https://www.football-data.co.uk/data.php"
         }
       ],
       "scores": [
@@ -295,10 +305,10 @@
         7,
         9
       ],
-      "what_html": "Mỗi giải, mỗi mùa một file <span class=\"term\">CSV</span> miễn phí: tỉ số, cú sút, phạt góc, phạm lỗi, thẻ, trọng tài, <span class=\"term\">tỉ lệ cược</span>. Premier League: trọng tài, cú sút, phạm lỗi, phạt góc, thẻ có đủ ở 380/380 trận mỗi mùa từ 2000/01; file trước đó chỉ có kết quả. Tỉ lệ cược có từ 2000/01: Bet365 từ 2002/03, tỉ lệ đóng cửa của Pinnacle từ 2012/13, trung bình thị trường và tỉ lệ đóng cửa từ 2019/20.",
-      "why_html": "Hợp cả bốn phương pháp. Hỏi được câu giống một nghiên cứu đã <span class=\"term\">bình duyệt</span> (Beggs &amp; Bond 2020). Cột lộn xộn là việc thật cho nửa làm sạch: số cột tăng từ 45 lên 132, ngày lúc dạng dd/mm/yy lúc dd/mm/yyyy, tên trọng tài trôi (\"Mike Dean\", \"M. L. Dean\", \"Dean, M. L\", \"M Dean\"). Trừ điểm dùng ngay vì điều khoản chặt.",
-      "use_html": "Phương án A. Phân tích rồi công bố hình và số tổng hợp thì được, Beggs &amp; Bond đã làm vậy. Không đưa CSV gốc lên repo công khai: commit một script tải kèm URL, ngày tải và mã <span class=\"term\">SHA-256</span> của từng file. Hỏi giảng viên xác nhận.",
-      "warn_html": "Trang dữ liệu ghi: dùng \"for private individuals only, NOT commerical or data training products using automated bots/scrapers/AI\" và \"for the purposes of league match prediction only\"; chân trang ghi \"All Rights Reserved\". Theo notes.txt, kiểu đếm thẻ vàng của Anh bỏ thẻ vàng thứ nhất khi thẻ vàng thứ hai thành thẻ đỏ, kiểu châu Âu thì tính: so thẻ trong Premier League được, so giữa các giải thì không.",
+      "what_html": "Mỗi giải, mỗi mùa một file <span class=\"term\">CSV</span> miễn phí: tỉ số, cú sút, phạt góc, phạm lỗi, thẻ, trọng tài, <span class=\"term\">tỉ lệ cược</span>. Premier League: trọng tài, cú sút, phạm lỗi, phạt góc, thẻ có đủ ở 380/380 trận mỗi mùa từ 2000/01; file trước đó chỉ có kết quả. Tỉ lệ cược có từ 2000/01: Bet365 từ 2002/03, trung bình Betbrain (cột <code>BbAv…</code>) 2005/06–2018/19, cột trung bình <code>Avg…</code> từ 2019/20, tỉ lệ đóng cửa của Pinnacle từ 2012/13.",
+      "why_html": "Hợp cả bốn phương pháp. Hỏi được câu giống một nghiên cứu đã <span class=\"term\">bình duyệt</span> (Beggs &amp; Bond 2020). Cột lộn xộn là việc thật cho phần làm sạch: số cột đổi từ 21 (1997/98) tới 132 (2025/26), có mùa giảm; ngày lúc dạng dd/mm/yy lúc dd/mm/yyyy; cùng một trọng tài có tới năm cách ghi tên: đủ tên, viết tắt có hoặc không dấu chấm, họ đứng trước, có cả lỗi gõ. Trừ điểm dùng ngay vì điều khoản chặt.",
+      "use_html": "Phương án A. Đã có bài báo công bố hình và số tổng hợp từ dữ liệu này (Beggs &amp; Bond); đó là tiền lệ, không phải giấy phép — vẫn chờ trả lời. Không đưa CSV gốc lên repo công khai: commit một script tải kèm URL, ngày tải và mã <span class=\"term\">SHA-256</span> của từng file.",
+      "warn_html": "<a href=\"https://www.football-data.co.uk/data.php\">Trang dữ liệu</a> ghi: dùng \"for private individuals only, NOT commerical or data training products using automated bots/scrapers/AI\" và \"for the purposes of league match prediction only\". Chân trang của trang chủ ghi \"All Rights Reserved\". Theo notes.txt, kiểu đếm thẻ vàng của Anh bỏ thẻ vàng thứ nhất khi thẻ vàng thứ hai thành thẻ đỏ, kiểu châu Âu thì tính: so thẻ trong Premier League được, so giữa các giải thì không.",
       "scores_r1": [
         9,
         9,
@@ -468,17 +478,23 @@
       "url": "https://github.com/swar/nba_api",
       "scores": [
         6,
-        4,
+        6,
         6,
         5
       ],
       "what_html": "Thư viện Python lấy dữ liệu NBA.com. Chuỗi ném phạt trúng/trượt của một cầu thủ là một chuỗi <span class=\"term\">Bernoulli</span> sạch, rất hợp <span class=\"term\">SPRT</span>.",
       "why_html": "Dữ liệu thật, khớp SPRT tự nhiên. Thư viện là <span class=\"term\">MIT</span>, còn dữ liệu theo điều khoản của NBA.com.",
-      "use_html": "Về lý thuyết là dữ liệu dự phòng cho SPRT. Thực tế nên tránh.",
-      "warn_html": "NBA.com chặn hoặc làm chậm IP máy chủ đám mây, kể cả Colab.",
+      "use_html": "Dữ liệu dự phòng cho SPRT. Chạy trên laptop thì được; trên máy chủ đám mây thì bị chặn.",
+      "warn_html": "NBA.com chặn IP máy chủ đám mây, kể cả Colab. Chạy trên máy cá nhân thì không sao.",
       "scores_r1": [
         6,
         6,
+        6,
+        5
+      ],
+      "scores_r2": [
+        6,
+        4,
         6,
         5
       ]
@@ -496,9 +512,9 @@
         10,
         6
       ],
-      "what_html": "Bài báo trên Journal of the Royal Statistical Society A 175(1):1–47. Gom việc giám sát chất lượng y tế thành ba phần: chấm hạng (rating); sàng lọc tìm đơn vị khác thường bằng <span class=\"term\">z-score</span> và ngoại lai (screening); giám sát tuần tự bằng <span class=\"term\">CUSUM</span> và <span class=\"term\">SPRT</span> (surveillance).",
-      "why_html": "Khung khái niệm uy tín, đã <span class=\"term\">bình duyệt</span>, nhưng chỉ cho ba trong bốn phương pháp (sàng lọc ngoại lai, CUSUM, SPRT) và không có công thức ANOM; vì thế đúng đề 7 và dùng ngay 5, thấp hơn bộ công thức C4. Nằm trong y tế, dài và nặng toán.",
-      "use_html": "Khung lý thuyết cho chương giới thiệu: hai câu hỏi \"ai khác thường\" và \"đổi từ lúc nào\" ứng với sàng lọc và giám sát."
+      "what_html": "Bài báo trên Journal of the Royal Statistical Society A 175(1):1–47 về giám sát chất lượng y tế: chấm hạng, sàng lọc đơn vị khác thường (funnel plot, <span class=\"term\">z-score</span>), giám sát tuần tự (<span class=\"term\">CUSUM</span> có <span class=\"term\">hiệu chỉnh rủi ro</span>). Bài không nói ANOM.",
+      "why_html": "Khung khái niệm uy tín, đã <span class=\"term\">bình duyệt</span>, nhưng chỉ là bối cảnh: không có ANOM, không có công thức để dùng ngay; vì thế đúng đề 7 và dùng ngay 5, thấp hơn bộ công thức C4. Nằm trong y tế, dài và nặng toán.",
+      "use_html": "Bối cảnh cho chương giới thiệu: sàng lọc ứng với câu \"ai khác thường\", giám sát ứng với câu \"đổi từ lúc nào\"."
     },
     {
       "id": "C10",
@@ -514,7 +530,7 @@
         6
       ],
       "what_html": "Bộ CSV giấy phép <span class=\"term\">CC0</span>: 50.099 trận đội tuyển quốc gia từ 1872 tới 17/11/2026, trong đó 313 trận của Việt Nam. Cập nhật ngày 19/11/2026.",
-      "why_html": "Không rủi ro giấy phép, có góc Việt Nam, dữ liệu rất mới. Nhưng chỉ có tỉ số: không trọng tài, thẻ hay tỉ lệ cược. Sức đối thủ chênh lệch lớn nên nhóm phải tự tính <span class=\"term\">Elo</span>; Việt Nam chỉ đá 10–17 trận mỗi năm.",
+      "why_html": "Không rủi ro giấy phép, có góc Việt Nam, dữ liệu rất mới. Nhưng chỉ có tỉ số: không trọng tài, thẻ hay tỉ lệ cược. Sức đối thủ chênh lệch lớn nên nhóm phải tự tính <span class=\"term\">Elo</span>; Việt Nam đá 0–17 trận mỗi năm (năm 2005 và 2020 không trận nào).",
       "use_html": "Phần mở rộng cho phương án A: một slide cuối chạy CUSUM hoặc SPRT cho đội tuyển Việt Nam."
     },
     {
@@ -528,17 +544,27 @@
         {
           "label": "jolpica/jolpica-f1",
           "url": "https://github.com/jolpica/jolpica-f1"
+        },
+        {
+          "label": "Bản dump CSV của Jolpica",
+          "url": "https://github.com/jolpica/jolpica-f1/blob/main/docs/database_dumps.md"
         }
       ],
       "scores": [
+        7,
+        7,
+        8,
+        8
+      ],
+      "what_html": "<span class=\"term\">FastF1</span> là thư viện Python giấy phép <span class=\"term\">MIT</span>, tải dữ liệu F1 tới từng vòng. Phần dữ liệu kiểu Ergast nó lấy từ <span class=\"term\">Jolpica-F1</span>, bản kế tiếp của Ergast. Dữ liệu Jolpica theo <span class=\"term\">CC BY-NC-SA</span> 4.0; API miễn phí nhưng có <span class=\"term\">giới hạn tần suất</span>. Jolpica còn có bản dump CSV của cả cơ sở dữ liệu: miễn phí cho dùng phi thương mại, không cần đăng nhập, có sau 14 ngày kể từ khi tải lên, gồm cả mùa đang đá.",
+      "why_html": "Bản dump CSV thay được bộ Kaggle: dữ liệu tới mùa hiện tại, không cần đăng nhập, giấy phép rõ cho dùng phi thương mại.",
+      "use_html": "Phương án B: tải bản dump CSV của Jolpica; dùng FastF1 khi cần dữ liệu tới từng vòng của mùa mới. Ghi nguồn Jolpica trong data card.",
+      "scores_r2": [
         6,
         6,
         7,
         7
-      ],
-      "what_html": "<span class=\"term\">FastF1</span> là thư viện Python giấy phép <span class=\"term\">MIT</span>, tải dữ liệu F1 tới từng vòng. Phần dữ liệu kiểu Ergast nó lấy từ <span class=\"term\">Jolpica-F1</span>, bản kế tiếp của Ergast. Dữ liệu Jolpica theo <span class=\"term\">CC BY-NC-SA</span> 4.0; API miễn phí nhưng có <span class=\"term\">giới hạn tần suất</span>.",
-      "why_html": "Bù phần sau 2024 cho bộ Kaggle, giấy phép rõ ràng cho dùng phi thương mại. Phải viết code gọi API và tôn trọng giới hạn.",
-      "use_html": "Phương án B: lấy mùa 2025 trở đi; ghi nguồn Jolpica trong data card."
+      ]
     }
   ],
   "methods": [
@@ -591,6 +617,7 @@
     {"name": "OpenLineage docs", "url": "https://openlineage.io/docs/"},
     {"name": "Herschel, Diestelkämper, Ben Lahmar (2017): A survey on provenance: What for? What form? What from? VLDB Journal 26(6):881–906", "url": "https://doi.org/10.1007/s00778-017-0486-1"},
     {"name": "Coursera, Wesleyan University: Data Management and Visualization", "url": "https://www.coursera.org/learn/data-visualization"},
+    {"name": "Đại học Ljubljana, chương trình thạc sĩ liên ngành Thống kê: tài liệu giới thiệu 2016/17 (bản lưu Wayback Machine), tr. 28, môn Statistična podpora kakovosti in organizaciji v zdravstvu", "url": "https://web.archive.org/web/20161019174839/http://stat.uni-lj.si:80/files/Predstavitveni_zbornik_US_2016_2017_maj16_f98.pdf"},
     {"name": "Bracewell (1999): luận văn thạc sĩ, Đại học Massey, CUSUM/EWMA và ngoại lai trên điểm đánh bóng cricket", "url": "https://mro.massey.ac.nz/server/api/core/bitstreams/ca5c1f97-5a04-472b-a705-195cffb0ed29/content"},
     {"name": "Montagna & Hopker (2018): A Bayesian approach for the use of athlete performance data within anti-doping. Frontiers in Physiology 9:884", "url": "https://doi.org/10.3389/fphys.2018.00884"},
     {"name": "Miles (1984): Symmetric sequential analysis: the efficiencies of sports scoring systems (with particular reference to those of tennis). JRSS B 46(1):93–108", "url": "https://doi.org/10.1111/j.2517-6161.1984.tb01281.x"},
@@ -648,9 +675,8 @@
     {"id": "peer-review", "term": "Bình duyệt", "full": "peer review", "aliases": ["bình duyệt", "peer-reviewed"], "def": "Chuyên gia độc lập đọc và chấm bài trước khi tạp chí đăng. Bài đã bình duyệt đáng tin hơn bài chưa."},
     {"id": "open-access", "term": "Truy cập mở", "full": "open access", "aliases": ["truy cập mở"], "def": "Bài báo đọc miễn phí, không cần mua hay đăng nhập."},
     {"id": "arxiv", "term": "arXiv", "def": "Kho preprint miễn phí. Bài trên đó chưa chắc đã qua bình duyệt."},
-    {"id": "paywall", "term": "Tường phí", "full": "paywall", "aliases": ["tường phí"], "def": "Phần nội dung phải trả tiền hay đăng ký mới đọc được."},
     {"id": "kaggle", "term": "Kaggle", "def": "Trang chia sẻ bộ dữ liệu và tổ chức cuộc thi máy học."},
-    {"id": "ergast", "term": "Ergast", "def": "API dữ liệu F1 miễn phí, đã tắt đầu năm 2025 (theo tài liệu FastF1); Jolpica-F1 thay thế. Tên miền cũ nay chứa nội dung không liên quan."},
+    {"id": "ergast", "term": "Ergast", "def": "API dữ liệu F1 miễn phí, dữ liệu theo CC BY-NC-SA 3.0 Unported; đã tắt đầu năm 2025 (theo tài liệu FastF1), Jolpica-F1 thay thế. Tên miền cũ nay chứa nội dung không liên quan."},
     {"id": "jolpica", "term": "Jolpica-F1", "aliases": ["jolpica"], "def": "Dự án cộng đồng tiếp nối Ergast, cùng kiểu API, ở api.jolpi.ca. Dữ liệu theo CC BY-NC-SA 4.0, có giới hạn tần suất gọi."},
     {"id": "fastf1", "term": "FastF1", "def": "Thư viện Python tải dữ liệu F1 tới từng vòng, có cả các mùa mới. Code là MIT, nhưng dữ liệu nó tải về thì không: phần lấy từ Jolpica theo CC BY-NC-SA."},
     {"id": "csv", "term": "CSV", "def": "File bảng dạng chữ, các cột cách nhau bằng dấu phẩy; mở được bằng Excel và pandas."},
@@ -783,8 +809,8 @@
     {
       "id": "B",
       "name": "Formula 1",
-      "data": "Kaggle + FastF1/Jolpica",
-      "src": "A1",
+      "data": "Jolpica (dump CSV) hoặc Kaggle",
+      "src": "C11",
       "pick": false,
       "fit": {
         "outlier": 3,
@@ -793,9 +819,9 @@
         "sprt": 2,
         "dm": 3,
         "license": 2,
-        "effort": 1,
+        "effort": 2,
         "audience": 2,
-        "fresh": 2
+        "fresh": 3
       },
       "pros_html": [
         "14 bảng quan hệ: mạnh nhất cho nửa quản lý dữ liệu (<span class=\"term\">ERD</span>, <span class=\"term\">join</span>, <span class=\"term\">DuckDB</span>).",
@@ -806,8 +832,6 @@
       ],
       "cons_html": [
         "Thời gian vòng có xu hướng, phải <span class=\"term\">khử xu hướng</span>.",
-        "Kaggle cần đăng nhập để tải.",
-        "Dừng ở 2024 nếu không lấy thêm từ Jolpica.",
         "Khán giả ít quen hơn."
       ],
       "best_html": "Giảng viên đòi dữ liệu công bố được, nhóm muốn phần quản lý dữ liệu nặng hơn, hoặc nhóm mê F1.",
@@ -843,7 +867,7 @@
       "cons_html": [
         "Chỉ có tỉ số: ngoại lai và ANOM mỏng.",
         "Phải tự tính <span class=\"term\">Elo</span> để bỏ sức mạnh đối thủ.",
-        "Việt Nam chỉ đá 10–17 trận mỗi năm."
+        "Việt Nam đá 0–17 trận mỗi năm."
       ],
       "best_html": "Làm phần mở rộng cho A, ví dụ một slide cuối chạy CUSUM hoặc SPRT cho đội tuyển Việt Nam."
     }
@@ -937,9 +961,9 @@
         3
       ],
       "tasks_html": [
-        "Gộp các mùa thành một bảng; số cột tăng từ 45 lên 132, chỉ giữ cột cần.",
+        "Gộp các mùa thành một bảng; số cột đổi từ 21 (1997/98) tới 132 (2025/26), có mùa giảm; chỉ giữ cột cần.",
         "Đọc cả hai kiểu ngày dd/mm/yy và dd/mm/yyyy.",
-        "Chuẩn hoá tên đội, và tên trọng tài cho phần mở rộng, bằng một bảng ánh xạ (\"Mike Dean\" = \"M. L. Dean\" = \"Dean, M. L\" = \"M Dean\").",
+        "Chuẩn hoá tên đội, và tên trọng tài cho phần mở rộng, bằng một bảng ánh xạ: cùng một trọng tài có tới năm cách ghi tên: đủ tên, viết tắt có hoặc không dấu chấm, họ đứng trước, có cả lỗi gõ. Đừng gộp theo họ: hai trọng tài khác nhau có thể cùng họ.",
         "Viết luật <span class=\"term\">chất lượng dữ liệu</span>: <code>HST ≤ HS</code>, số thẻ ≥ 0, <code>FTR</code> khớp số bàn; xuất báo cáo chất lượng.",
         "Lưu bảng sạch ra <span class=\"term\">Parquet</span> và nạp vào <span class=\"term\">DuckDB</span> (<code>data/clean/</code>).",
         "Viết <code>docs/data-dictionary.md</code> (<span class=\"term\">data dictionary</span>)."

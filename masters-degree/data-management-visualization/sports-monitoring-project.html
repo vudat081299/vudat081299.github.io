@@ -486,7 +486,7 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
 <section id="tom-tat" class="hero">
   <div class="eyebrow">Đồ án nhóm · IT5425 Data Management and Visualization</div>
   <h1>Theo dõi bất thường trong thể thao: chọn nguồn và cách làm</h1>
-  <p class="lede">Chúng tôi không tìm thấy dự án công khai nào làm đủ cả bốn phương pháp trên dữ liệu thể thao (không chứng minh được là không có), nên nhóm tự ráp: bóng đá Premier League, dữ liệu football-data.co.uk, công thức tự viết theo nguồn chuẩn.</p>
+  <p class="lede">Chúng tôi không tìm thấy bài báo hay đồ án đã công bố nào làm đủ bốn phương pháp trên dữ liệu thể thao, nên nhóm tự ráp: bóng đá Premier League, dữ liệu football-data.co.uk, công thức tự viết theo nguồn chuẩn.</p>
   <div class="onepage" id="ke-hoach">
     <h2>Kế hoạch một trang</h2>
     <p class="op-one">Giám sát Premier League như bệnh viện giám sát chất lượng: ai khác thường, và đổi từ lúc nào — bằng ngoại lai, <span class="term">ANOM</span>, <span class="term">CUSUM</span>, <span class="term">SPRT</span> trên dữ liệu football-data.co.uk.</p>
@@ -503,9 +503,9 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
 
   <div class="prior">
     <h2>Đã có ai làm đúng đề này chưa?</h2>
-    <p>Chúng tôi không tìm thấy dự án công khai nào dùng cả bốn phương pháp trên dữ liệu thể thao; điều này không chứng minh được là không có. Gần nhất:</p>
+    <p>Chúng tôi không tìm thấy bài báo hay đồ án đã công bố nào làm đủ bốn phương pháp trên dữ liệu thể thao. Gần nhất:</p>
     <ul>
-      <li>Spiegelhalter và cộng sự (2012): đúng bộ công cụ (chấm hạng, sàng lọc, giám sát tuần tự), nhưng trong y tế.</li>
+      <li>Spiegelhalter và cộng sự (2012): giám sát chất lượng y tế (funnel plot, CUSUM có hiệu chỉnh rủi ro), không có ANOM.</li>
       <li>Spiegelhalter và cộng sự (2003): <span class="term">SPRT</span> có hiệu chỉnh rủi ro cho hai vụ y khoa Bristol và Shipman.</li>
       <li>Bracewell (1999), luận văn thạc sĩ ở Đại học Massey: <span class="term">CUSUM</span>, <span class="term">EWMA</span> và ngoại lai trên điểm đánh bóng cricket.</li>
       <li>Loạt bài park factor của Minitab: <span class="term">ANOM</span> và lọc ngoại lai trên các sân bóng chày.</li>
@@ -513,7 +513,6 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
       <li>Montagna &amp; Hopker (2018): ngoại lai trong thể thao, theo dõi thành tích cả sự nghiệp của vận động viên đẩy tạ để đánh dấu nghi doping.</li>
       <li>Miles (1984): coi luật tính điểm quần vợt như một phép kiểm tuần tự, họ hàng của SPRT.</li>
     </ul>
-    <p>Vì vậy, theo những gì chúng tôi tìm được, một đồ án ghép cả bốn trên một bộ dữ liệu bóng đá là mới ở mức môn học.</p>
   </div>
 
   <nav aria-label="Các phần của trang">
@@ -551,8 +550,8 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
   </figure>
 
   <h3>Đề tài từ đâu ra</h3>
-  <p>Bốn phương pháp là bộ công cụ giám sát chất lượng y tế (Spiegelhalter và cs. 2012: chấm hạng, sàng lọc, giám sát tuần tự). Bài năm 2003 của cùng nhóm dùng <span class="term">SPRT</span> có <span class="term">hiệu chỉnh rủi ro</span> để soi lại hai vụ y khoa ở Anh, Bristol và Shipman.</p>
-  <p>Một môn thạc sĩ ở Đại học Ljubljana từng liệt kê đúng bốn phương pháp này (trang môn nay trả 404, chỉ còn thấy qua chỉ mục tìm kiếm). Không rõ đề của nhóm lấy từ đâu: hỏi giảng viên.</p>
+  <p>Bốn phương pháp là công cụ kiểm soát chất lượng chung: CUSUM có từ Page (1954), SPRT từ Wald (1945). Cách đặt tên đề khớp với một môn về chất lượng y tế: môn <i lang="sl">Statistična podpora kakovosti in organizaciji v zdravstvu</i> (hỗ trợ thống kê cho chất lượng và tổ chức trong y tế) của chương trình thạc sĩ liên ngành Thống kê, Đại học Ljubljana.</p>
+  <p>Đề cương môn ấy (<a href="https://web.archive.org/web/20161019174839/http://stat.uni-lj.si:80/files/Predstavitveni_zbornik_US_2016_2017_maj16_f98.pdf">bản lưu</a>, tr. 28) liệt kê phát hiện ngoại lai, ANOM, CUSUM và <span class="term">SPRT</span>, và trích Spiegelhalter, Grigg &amp; Kinsman (2003), bài dùng SPRT có <span class="term">hiệu chỉnh rủi ro</span> cho hai vụ y khoa ở Anh. Môn vẫn có trong tài liệu giới thiệu năm 2025/26. Bài Spiegelhalter và cs. (2012) chỉ là bối cảnh: bài ấy nói funnel plot và CUSUM có hiệu chỉnh rủi ro, không nói ANOM. Không rõ đề của nhóm lấy từ đâu: hỏi giảng viên.</p>
   <p>Chuyển sang thể thao thì đổi vai như sau.</p>
   <table class="map-tbl">
     <thead><tr><th scope="col">Y tế</th><th scope="col">Thể thao</th></tr></thead>
@@ -646,7 +645,7 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
       </ul>
     </li>
   </ul>
-  <p class="verdict-line"><b>Chốt: A, hơn B không nhiều</b> (<span data-total="C1"></span> so với <span data-total="A1"></span>). Nguồn dữ liệu của A có điểm cao nhất trong các bộ dữ liệu (thẻ C4 cao hơn nhưng là bộ công thức). Lý do: một bộ dữ liệu quen thuộc làm được cả bốn phương pháp, các mùa sạch và cùng cỡ. B là phương án an toàn nếu chưa rõ có được dùng football-data không.</p>
+  <p class="verdict-line"><b>Chốt: A, hơn B không nhiều</b> (<span data-total="C1"></span> so với <span data-total="C11"></span>). Nguồn dữ liệu của A có điểm cao nhất trong các bộ dữ liệu (thẻ C4 cao hơn nhưng là bộ công thức). Lý do: một bộ dữ liệu quen thuộc làm được cả bốn phương pháp, các mùa sạch và cùng cỡ. B là phương án an toàn nếu chưa rõ có được dùng football-data không.</p>
 </section>
 
 <!-- ═══════════════ LỘ TRÌNH ═══════════════ -->
@@ -723,7 +722,7 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
       <h4>Mượn gì từ các repo đã chấm</h4>
       <ul>
         <li>giobbu/CUSUM (B1): chạy để đối chiếu CUSUM.</li>
-        <li>Sports_Injury_Risk_Intelligence (A3): ý của <code>run_dq_checks()</code> và trang giới hạn.</li>
+        <li>Sports_Injury_Risk_Intelligence (A3, đã bỏ): nếu muốn, chỉ xem mẫu kiểm chất lượng dữ liệu <code>run_dq_checks()</code>.</li>
         <li>README của RuiFSP (A4): kiểu sơ đồ <span class="term">Mermaid</span>.</li>
         <li>NIST e-Handbook: ví dụ có lời giải để viết test.</li>
         <li>Repo để công khai thì đừng chép code <span class="term">GPL</span> vào.</li>
@@ -888,7 +887,6 @@ Kind regards,
   <ol class="refs" id="srcList"></ol>
   <h3>Tham khảo thêm</h3>
   <ol class="refs" id="refList"></ol>
-  <p class="sub">Trang môn tự chọn của Đại học Ljubljana không có link: trang gốc trả lỗi 404, chỉ còn đoạn trích của máy tìm kiếm.</p>
 </section>
 
 <footer class="foot">
@@ -1534,8 +1532,9 @@ Kind regards,
         if (c[0] === 'final' && r.src) {
           var s = D.sources.filter(function (x) { return x.id === r.src; })[0];
           if (s && s.scores_r1) {
-            var t1 = 0; D.criteria.forEach(function (cr, k) { t1 += s.scores_r1[k] * cr.weight; });
-            cell.appendChild(el('span', 'rd-score', s.id + ': ' + fmt1({ t100: t1 }) + ' → ' + fmt1(s)));
+            var t1 = 0, t2 = 0, sc2 = s.scores_r2 || s.scores;
+            D.criteria.forEach(function (cr, k) { t1 += s.scores_r1[k] * cr.weight; t2 += sc2[k] * cr.weight; });
+            cell.appendChild(el('span', 'rd-score', s.id + ': ' + fmt1({ t100: t1 }) + ' → ' + fmt1({ t100: t2 })));
           }
         }
         tr.appendChild(cell);
