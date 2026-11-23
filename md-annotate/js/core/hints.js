@@ -6,8 +6,6 @@
 
 var MAX_HINT = 80;
 export var MIN_PCT = 5;          // chưa đủ số lần dùng thì tỉ lệ chỉ là nhiễu: không hiện
-var POP_CHIPS = 5;        // số gợi ý trong hộp trước khi gom vào chip "+N"
-var POP_MORE = 12;        // số gợi ý sau khi bấm "+N"
 
 /* stats đọc từ bộ nhớ (có thể hỏng hoặc chưa có): trả stats dùng được. */
 export function normStats(stats) {
@@ -90,15 +88,10 @@ export function rankedHints(stats) {
   return arr;
 }
 export function pct(p) { var v = p * 100; return (v < 1 ? '<1' : Math.round(v)) + '%'; }
-/* Gợi ý cho hộp nhận xét khi đang gõ text: lọc theo chữ đã gõ. size: 'few' (mặc định) POP_CHIPS chip đầu, số còn lại ở
-   "+N"; 'more' (bấm "+N") POP_MORE chip; 'all' (đang giữ Mod, MDAN-084) mọi gợi ý. Cùng một thứ tự: cỡ lớn hơn chỉ thêm
-   chip ở cuối, hạng của mỗi gợi ý không đổi. */
-export function chipHints(stats, text, size) {
+/* Gợi ý cho hộp nhận xét khi đang gõ text: mọi gợi ý, lọc theo chữ đã gõ (khớp đúng chữ đã gõ thì bỏ). */
+export function chipHints(stats, text) {
   var q = normKey(text);
   var all = rankedHints(stats), showPct = all.total >= MIN_PCT;
   var list = q ? all.filter(function (x) { return x.key.indexOf(q) >= 0 && x.key !== q; }) : all;
-  var few = size !== 'all' && size !== 'more';
-  var cap = few ? POP_CHIPS : size === 'more' ? POP_MORE : list.length;
-  var more = few ? Math.max(0, list.length - POP_CHIPS) : 0;
-  return { q: q, list: list.slice(0, cap), more: more, showPct: showPct };
+  return { q: q, list: list, showPct: showPct };
 }

@@ -453,6 +453,7 @@ Khi hộp nhận xét mở (không hộp thoại nào mở), Mod (⌘ ở Mac, C
 5–10; Mod + C bấm hai lần (trong 0,4 s, không phím khác xen giữa) chọn gợi ý 3, Mod + V hai lần chọn gợi ý 4, lần bấm đầu
 vẫn chép / dán. Chọn bằng phím như bấm chip: lưu gợi ý làm nhận xét, đóng hộp. Hạng tính trên mọi gợi ý (đã lọc theo chữ
 đang gõ); gợi ý sau hạng 10 không có phím; hạng không có gợi ý thì phím làm việc thường của nó. Có chữ đang chọn trong ô
-thì Mod + X vẫn là cắt. Bỏ qua khi giữ thêm Shift hay Alt, khi bộ gõ đang ghép chữ, khi phím tự lặp. Giữ Mod thì hộp hiện
-mọi gợi ý, mỗi gợi ý trong 10 hạng đầu có số; thả Mod, cửa sổ mất focus, tab ẩn, hộp đóng thì về danh sách cũ. Tấm đáy
-không hiện số. Hộp mở thì Ctrl/⌘ + B không ẩn / hiện cây file.
+thì Mod + X vẫn là cắt. Bỏ qua khi giữ thêm Shift hay Alt, khi bộ gõ đang ghép chữ, khi phím tự lặp. Hộp luôn liệt kê
+mọi gợi ý (đã lọc theo chữ đang gõ), không gom bớt; nhiều thì vùng gợi ý cuộn, mở hộp thì ở đầu danh sách. Giữ Mod chỉ
+hiện số trên 10 gợi ý đầu, danh sách không đổi; thả Mod, cửa sổ mất focus, tab ẩn, hộp đóng thì số ẩn. Tấm đáy không hiện
+số. Hộp mở thì Ctrl/⌘ + B không ẩn / hiện cây file.

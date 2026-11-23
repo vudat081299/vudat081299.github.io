@@ -5,7 +5,8 @@
    trang cuộn để đoạn nằm ngay trên tấm (revealAbove), đáy trang có thêm chỗ bằng tấm (html.ma-sheet-sp), bỏ đi khi đóng mà
    không làm trang nhảy. Lưu không cuộn trang. Màn cảm ứng: Return trong ô chữ xuống dòng, lưu bằng nút Save.
    Phím chọn gợi ý (MDAN-084, core/hint-keys.js): Mod (⌘ ở Mac, Ctrl nơi khác) + Z X C·C V·V B N M , . / chọn gợi ý 1–10;
-   giữ Mod thì #pop có lớp is-keys và hiện mọi gợi ý; hộp mở thì Ctrl/⌘ + B không ẩn / hiện cây.
+   giữ Mod thì #pop có lớp is-keys (số 1–10 trên chip); hộp mở thì Ctrl/⌘ + B không ẩn / hiện cây. Vùng chip luôn có mọi
+   gợi ý (lọc theo chữ đang gõ); hộp nổi cuộn dọc khi quá trần (css/popup.css), tấm đáy cuộn ngang một hàng.
    Xuất: closePop, initPopup, openEdit, openNew, paintPending, pending, pop, popDirty, renderPopHints, updateNew.
    Dùng: core/text.js, core/anchor.js, core/hints.js, core/hint-keys.js, core/comments.js, core/place.js, core/picks.js, ui/dom.js,
      ui/anchor-dom.js, ui/state.js, ui/hints.js, ui/marks.js, ui/render.js, ui/list.js, ui/views.js,
@@ -30,8 +31,7 @@ import { cancelPicks, clearPicks, gutterLine, picking } from './picks.js';
 import { noteJump } from './dwell.js';
 
 export var pop = { mode: null, id: null, orig: '' };
-var popExpanded = false;
-var held = false;   // đang giữ Mod: hiện mọi gợi ý (MDAN-084)
+var held = false;   // đang giữ Mod: #pop.is-keys (MDAN-084)
 var tap = null;     // lần bấm Mod + C / V trước: { code, t, hint } (hint: gợi ý ở hạng ấy lúc bấm, trước khi ⌘V dán chữ lọc lại)
 export var pending = null;   // đoạn đang chọn (kết quả quoteFrom, hoặc pickInfo khi chọn dòng) khi hộp mở cho nhận xét mới
 /* Vị trí của đoạn đang chọn trong nguồn (src) và chữ bản dựng (md): [a, b] hoặc null. Khung chọn thì lấy đúng vị trí
@@ -63,7 +63,6 @@ export function openNew(info, rect) {
   fillNew();
   $('pop-del').hidden = true;
   $('pop-text').value = '';
-  popExpanded = false;
   var own = rs.length ? ownRange(rs) : null;
   showPop(rect || (own ? lastRect(own) : null), rect ? null : spanRect(own));
 }
@@ -123,7 +122,6 @@ export function openEdit(id, anchorEl) {
   $('pop-warn').textContent = orphans[id] ? 'This quote is no longer in the text.' : '';
   $('pop-del').hidden = false;
   $('pop-text').value = c.comment;
-  popExpanded = false;
   showPop(lastRect(anchorEl), spanRect(anchorEl));
 }
 /* Khung chữ cuối của một phần tử hay Range (đoạn chọn qua nhiều dòng thì hộp đặt dưới dòng cuối). */
@@ -141,7 +139,7 @@ function showPop(rect, span) {
   $('fab').hidden = true;
   $('pop-grip').hidden = sheet;   // tấm trượt đáy đứng yên
   markLong();
-  resetChips();
+  $('pop-chips').hidden = true;   // vẽ mới: vùng chip không trượt từ cao của lần mở trước
   renderPopHints();
   if (!sheet) {
     el.style.top = '0px'; el.style.left = '0px';
@@ -226,12 +224,6 @@ function savePop(textOverride) {
   renderAll();
   if (id) flashItem(id);
 }
-/* Chip đang vẽ trong #pop-chips: dấu (khoá, số lần, tỉ lệ) theo thứ tự. Giữ / thả Mod hay đổi cỡ danh sách: chip đầu giống
-   hệt thì giữ nguyên nút (số phím mờ dần cả khi thả), chỉ thêm / bỏ chip cuối; chip thêm sau số chip cũ có is-new (hiện dần).
-   Mở hộp thì vẽ mới (resetChips): không chip nào hiện dần, vùng chip không trượt từ cao của lần mở trước. */
-var chipSigs = [];
-function resetChips() { chipSigs = []; $('pop-chips').replaceChildren(); $('pop-chips').hidden = true; }
-function chipSig(x, showPct) { return x.key + '\n' + x.n + '\n' + (showPct ? pct(x.p) : ''); }
 function hintChip(x, i, showPct) {
   var k = hintPresses(i + 1).map(shortcut).join(' ');
   /* 10 chip đầu luôn có số hạng (.ma-chip__k), mọi trạng thái; CSS chỉ cho thấy khi #pop.is-keys. */
@@ -241,33 +233,17 @@ function hintChip(x, i, showPct) {
   }, i < HINT_KEYS ? h('span', { class: 'ma-chip__k', 'aria-hidden': 'true' }, String(i + 1)) : null,
   h('span', { class: 'ma-chip__t' }, x.t), showPct ? h('span', { class: 'ma-chip__p' }, pct(x.p)) : null);
 }
+/* Vẽ lại mọi chip theo chữ đang gõ; vùng chip về đầu (hạng 1). */
 export function renderPopHints() {
   var box = $('pop-chips'), h0 = box.hidden ? 0 : box.offsetHeight;
-  var ch = chipHints(stats, $('pop-text').value, held ? 'all' : popExpanded ? 'more' : 'few');
-  var q = ch.q, list = ch.list, more = ch.more, showPct = ch.showPct;
-  var sigs = list.map(function (x) { return chipSig(x, showPct); });
-  var had = chipSigs.length, hadMore = !!box.querySelector('.ma-chip--more'), keep = 0;
-  while (keep < had && keep < sigs.length && chipSigs[keep] === sigs[keep]) keep++;
-  while (box.childNodes.length > keep) box.lastChild.remove();   // chip sau phần giữ, "+N", dòng báo
-  for (var i = keep; i < list.length; i++) {
-    var b = hintChip(list[i], i, showPct);
-    if (had && i >= had) b.classList.add('is-new');
-    box.append(b);
-  }
-  chipSigs = sigs;
-  if (more) {
-    box.append(h('button', {
-      class: 'ma-chip ma-chip--more' + (had && !hadMore ? ' is-new' : ''), type: 'button', 'aria-label': 'Show ' + more + ' more hints',
-      onclick: function () {
-        popExpanded = true; renderPopHints();
-        if (!$('pop').classList.contains('is-sheet')) $('pop-text').focus({ preventScroll: true });
-      }
-    }, '+' + more));
-  }
-  if (!list.length && !q && seedState === 'fail') {
+  var ch = chipHints(stats, $('pop-text').value);
+  box.replaceChildren();
+  ch.list.forEach(function (x, i) { box.append(hintChip(x, i, ch.showPct)); });
+  if (!ch.list.length && !ch.q && seedState === 'fail') {
     box.append(h('span', { class: 'ma-sub' }, 'No hints yet: the default hints could not load.'));
   }
   box.hidden = !box.childNodes.length;
+  box.scrollTop = 0; box.scrollLeft = 0;
   var el = $('pop');
   if (el.hidden || el.classList.contains('is-sheet')) return;
   /* giữ hộp trong khung nhìn khi số gợi ý đổi: đo cao cuối (chưa trượt), rồi mới cho chip trượt từ cao cũ */
@@ -275,8 +251,8 @@ export function renderPopHints() {
   easeHeight(box, h0);
   if (top + popH > window.innerHeight - 8 && top > 80) el.style.top = Math.round(window.scrollY + Math.max(8, window.innerHeight - popH - 8)) + 'px';
 }
-/* Cao #pop-chips đổi theo nội dung (auto → auto) thì CSS không có điểm đầu để trượt: đặt cao cũ h0 trong một lần tính
-   kiểu rồi bỏ, CSS (css/popup.css) trượt từ đó tới cao mới. */
+/* Cao #pop-chips đổi theo nội dung (gõ chữ lọc gợi ý; auto → auto) thì CSS không có điểm đầu để trượt: đặt cao cũ h0
+   trong một lần tính kiểu rồi bỏ, CSS (css/popup.css) trượt từ đó tới cao mới. */
 function easeHeight(box, h0) {
   if (!h0 || box.hidden || h0 === box.offsetHeight) return;
   box.style.transition = 'none'; box.style.height = h0 + 'px';
@@ -287,21 +263,19 @@ function easeHeight(box, h0) {
 /* PHÍM CHỌN GỢI Ý (MDAN-084): chỉ khi hộp hiện và không hộp thoại nào mở. */
 function modKey() { return isMac ? 'Meta' : 'Control'; }   // e.key của Mod
 function keysLive() { return !!pop.mode && !$('pop').hidden && !document.querySelector('dialog[open]'); }
-/* Giữ Mod: #pop.is-keys, hiện mọi gợi ý; thả ra về danh sách gọn (hay đã mở bằng "+N"). Tấm đáy thì không. */
+/* Giữ Mod: #pop.is-keys, số 1–10 trên chip hiện dần; thả thì mờ đi. Chỉ đổi lớp, không vẽ lại chip. Tấm đáy thì không. */
 function startHold() {
   if (held || !keysLive() || $('pop').classList.contains('is-sheet')) return;
   held = true;
   $('pop').classList.add('is-keys');
-  renderPopHints();
 }
 function endHold() {
   if (!held) return;
   held = false;
   $('pop').classList.remove('is-keys');
-  if (pop.mode) renderPopHints();
 }
-/* Gợi ý ở hạng rank theo chữ đang gõ, trong cả danh sách (cùng thứ tự với chip đang hiện); không có thì null. */
-function hintAt(rank) { return chipHints(stats, $('pop-text').value, 'all').list[rank - 1] || null; }
+/* Gợi ý ở hạng rank theo chữ đang gõ (cùng thứ tự với chip, kể cả chip đã cuộn khuất); không có thì null. */
+function hintAt(rank) { return chipHints(stats, $('pop-text').value).list[rank - 1] || null; }
 /* Pha bắt của window: chạy trước mọi nghe keydown khác. Phím đã dùng thì không tới ai nữa. */
 function hintKey(e) {
   if (e.isComposing || e.repeat) return;

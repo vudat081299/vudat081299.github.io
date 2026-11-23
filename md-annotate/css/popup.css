@@ -77,11 +77,11 @@ html.ma-sheet-sp body { padding-bottom: max(calc(var(--dock-h, 0px) + var(--sa-b
   .ma-pop.is-sheet:has(#pop-head:not([hidden])) #pop-text { height: var(--h-touch); min-height: var(--h-touch); }
 }
 
-/* CHIP GỢI Ý: viên thuốc cao --chip-h (--h-sm, cảm ứng --h-touch), nền --chip, không viền; rê: nền --accent-soft. Hộp nổi:
-   cao tối đa --chip-rows hàng (nửa hàng cuối báo còn nữa) rồi cuộn dọc; đệm bù bằng lề âm (vòng focus, số phím không bị
-   cắt), rãnh thanh cuộn giữ sẵn (thêm chip không xếp lại hàng); cao đổi thì trượt êm (calc-size). Giữ ⌘/Ctrl (.is-keys): số
-   phím .ma-chip__k hiện ở góc trên trái chip, không chiếm chỗ, nên hiện / ẩn không dời chip nào. Chip mới thêm (.is-new) hiện
-   dần. Cao đổi theo nội dung (auto → auto) thì CSS không có điểm đầu: ui/popup.js đặt cao cũ một lần vẽ rồi bỏ. */
+/* CHIP GỢI Ý: viên thuốc cao --chip-h (--h-sm, cảm ứng --h-touch), nền --chip, không viền; rê: nền --accent-soft. Luôn có
+   mọi gợi ý. Hộp nổi: cao tối đa --chip-rows hàng (5 hàng trọn, nửa hàng thứ 6 báo còn nữa) rồi cuộn dọc; đệm bù bằng lề âm
+   (vòng focus, số phím không bị cắt), rãnh thanh cuộn giữ sẵn (cuộn hay không, chip xếp hàng như nhau); cao đổi thì trượt
+   êm (calc-size). Giữ ⌘/Ctrl (.is-keys): số phím .ma-chip__k hiện ở góc trên trái chip, không chiếm chỗ, nên hiện / ẩn
+   không dời chip nào. Cao đổi theo nội dung (auto → auto) thì CSS không có điểm đầu: ui/popup.js đặt cao cũ một lần vẽ rồi bỏ. */
 .ma-chips {
   --chip-h: var(--h-sm); --chip-k: calc(var(--h-xs) - var(--s1)); --chip-k-at: calc(-1.5 * var(--s1));   /* cỡ, chỗ của số phím */
   display: flex; flex-wrap: wrap; gap: var(--s2); margin-bottom: var(--s3);
@@ -105,7 +105,6 @@ html.ma-sheet-sp body { padding-bottom: max(calc(var(--dock-h, 0px) + var(--sa-b
 @media (hover: hover) { .ma-chip:hover { background: var(--accent-soft); color: var(--ink); } }
 .ma-chip__t { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ma-chip__p { font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-3); }
-.ma-chip--more { font: 500 var(--fs-xs)/1 var(--mono); min-width: var(--h); justify-content: center; }
 .ma-chip__k {
   position: absolute; top: var(--chip-k-at); left: var(--chip-k-at); pointer-events: none;
   display: grid; place-items: center; min-width: var(--chip-k); height: var(--chip-k); padding: 0 var(--s1);
@@ -117,10 +116,8 @@ html.ma-sheet-sp body { padding-bottom: max(calc(var(--dock-h, 0px) + var(--sa-b
 @media (prefers-reduced-motion: no-preference) {
   .ma-pop:not(.is-sheet) .ma-chips { transition: height var(--dur) var(--ease-io); }
   .ma-chip__k { transition: opacity var(--dur) var(--ease-io), scale var(--dur) var(--ease-io); }
-  @starting-style { .ma-pop.is-keys .ma-chip__k { opacity: 0; scale: .8; } }   /* chip vẽ lại lúc giữ phím: số vẫn hiện dần */
-  .ma-chip.is-new { animation: ma-chip-in var(--dur) var(--ease-io) backwards; }
+  @starting-style { .ma-pop.is-keys .ma-chip__k { opacity: 0; scale: .8; } }   /* chip vẽ lại lúc giữ phím (⌘V dán): số vẫn hiện dần */
 }
-@keyframes ma-chip-in { from { opacity: 0; scale: .96; } }
 @media (max-width: 720px), (pointer: coarse) { .ma-chips { --chip-h: var(--h-touch); } }
 
 /* NÚT NỔI khi có vùng chọn (cảm ứng, bàn phím). ≤ 1080px: trên thanh đáy. */

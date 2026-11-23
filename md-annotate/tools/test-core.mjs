@@ -169,24 +169,22 @@ const bp = (o, d) => { const u = upS(o); return dpPrompt.buildPrompt(u, u.docs[u
     dpHints.migrateHints(own, renamed);
     check('migrateHints: nhận xét tự gõ trùng chữ gợi ý cũ không bị đổi', eq(Object.keys(own.items), ['add an example']) && own.items['add an example'].n === 2, JSON.stringify(own));
   }
-  // Chip trong hộp nhận xét: gọn 5 + "+N", mở rộng 12, giữ Mod mọi gợi ý (MDAN-084); cùng thứ tự, lọc theo chữ vẫn áp.
+  // Chip trong hộp nhận xét: mọi gợi ý, không trần số chip (MDAN-084); lọc theo chữ đang gõ, giữ thứ tự hạng.
   {
     const st = { items: {} };
     dpHints.seedHints(st, Array.from({ length: 15 }, (_, i) => 'Gợi ý ' + i));
     const keys = (r) => r.list.map((x) => x.key);
-    const few = dpHints.chipHints(st, '', 'few'), more = dpHints.chipHints(st, '', 'more'), all = dpHints.chipHints(st, '', 'all');
-    check('chipHints: few 5 chip + "+10", more 12 chip, all 15 chip, không "+N" khi mở', few.list.length === 5 && few.more === 10 &&
-      more.list.length === 12 && more.more === 0 && all.list.length === 15 && all.more === 0, [few.list.length, few.more, more.list.length, all.list.length].join());
-    check('chipHints: cỡ lớn chỉ thêm chip ở cuối (hạng không đổi)', eq(keys(all).slice(0, 5), keys(few)) && eq(keys(all).slice(0, 12), keys(more)));
-    check('chipHints: size lạ như few', eq(dpHints.chipHints(st, '', undefined), few));
-    const f = dpHints.chipHints(st, 'ý 1', 'all');
-    check('chipHints: all vẫn lọc theo chữ đang gõ', eq(keys(f), ['gợi ý 1', 'gợi ý 10', 'gợi ý 11', 'gợi ý 12', 'gợi ý 13', 'gợi ý 14']), JSON.stringify(keys(f)));
+    const all = dpHints.chipHints(st, '');
+    check('chipHints: mọi gợi ý (15 chip), cùng thứ tự với rankedHints', all.list.length === 15 && eq(keys(all), dpHints.rankedHints(st).map((x) => x.key)) && !('more' in all), all.list.length);
+    const f = dpHints.chipHints(st, 'ý 1');
+    check('chipHints: lọc theo chữ đang gõ', eq(keys(f), ['gợi ý 1', 'gợi ý 10', 'gợi ý 11', 'gợi ý 12', 'gợi ý 13', 'gợi ý 14']), JSON.stringify(keys(f)));
+    check('chipHints: chữ đã gõ trùng hẳn một gợi ý thì bỏ gợi ý ấy', !keys(dpHints.chipHints(st, 'Gợi ý 3')).includes('gợi ý 3'));
   }
   // Bộ nhớ hỏng: trang vẫn chạy.
   {
     const st = dpHints.normStats({ items: { a: null, b: { t: 'b', n: 2 }, c: 5, d: 'x' } });
     let ok = true;
-    try { dpHints.seedHints(st, ['c', 'Thêm ví dụ']); dpHints.countUse(st, 'b'); dpHints.rankedHints(st); dpHints.chipHints(st, '', 'few'); } catch (e) { ok = false; }
+    try { dpHints.seedHints(st, ['c', 'Thêm ví dụ']); dpHints.countUse(st, 'b'); dpHints.rankedHints(st); dpHints.chipHints(st, ''); } catch (e) { ok = false; }
     check('normStats: mục hỏng trong số đếm gợi ý không làm vỡ trang', ok && st.items.b.n === 3 && st.items.c.seed === true);
     check('normStats: items là mảng thì bỏ', !Array.isArray(dpHints.normStats({ items: [] }).items));
     const idx = dpSession.normIndex([{ id: 'a' }, null, 'x', { id: 'b', updated: 'hỏng' }, { id: 'c', updated: 7 }]);

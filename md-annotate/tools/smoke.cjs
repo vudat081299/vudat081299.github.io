@@ -215,11 +215,9 @@ const cornerClash = (page) => page.evaluate(() => {
   check('bôi đen bằng chuột mở hộp nhận xét', await page.isVisible('#pop'));
   check('vùng chọn nới ra trọn từ (chữ Việt)', (await page.textContent('#pop-q')) === 'chữ đậm ở đây và kết thúc', await page.textContent('#pop-q'));
   const chips = await page.$$eval('#pop-chips .ma-chip', (els) => els.map((e) => e.textContent));
-  check('hộp có 5 gợi ý, chưa có % khi chưa dùng, chip +4', chips.length === 6 && chips[5] === '+4' && chips.every((c) => !/%/.test(c)), chips.join(' | '));
+  check('hộp có cả 9 gợi ý mặc định, chưa có % khi chưa dùng', chips.length === 9 && chips.every((c) => !/%/.test(c)), chips.join(' | '));
   const chip0 = await page.$eval('#pop-chips .ma-chip .ma-chip__t', (e) => e.textContent);   // chip còn có số phím .ma-chip__k (MDAN-084)
   check('gợi ý mặc định từ data/hints.json', chip0 === 'Sai, nói chưa rõ ràng', chip0);
-  await page.click('#pop-chips .ma-chip--more');
-  check('chip +N mở hết gợi ý', (await page.$$('#pop-chips .ma-chip')).length === 9 && !(await page.$('#pop-chips .ma-chip--more')));
   await page.keyboard.type('Câu này sai');
   await page.keyboard.press('Enter');
   check('Enter lưu nhận xét', (await items(page)).length === 1 && !(await page.isVisible('#pop')));
@@ -569,7 +567,8 @@ const cornerClash = (page) => page.evaluate(() => {
   await ctx.close();
 
   /* ---------- Phím chọn gợi ý trong hộp nhận xét (MDAN-084): Mod (Ctrl; ⌘ ở Mac) + Z X C·C V·V B N M , . / chọn gợi ý 1–10;
-     giữ Mod hiện mọi gợi ý kèm số (chip đầu không dời), vùng chip tối đa 5,5 hàng rồi cuộn; Mod+B không đụng cây khi hộp mở;
+     hộp luôn có mọi gợi ý, vùng chip tối đa 5,5 hàng rồi cuộn; giữ Mod chỉ hiện số 1–10 (không vẽ lại, không chip nào dời);
+     Mod+B không đụng cây khi hộp mở;
      nhãn phím chép theo hệ điều hành. Chuyển động thật (no-preference): đo khi chuyển động trong #pop đã xong. ---------- */
   {
     const KDOC = '# Phím gợi ý\n\n' + Array.from({ length: 12 }, (_, i) => `Câu thứ ${i + 1} để thử phím.`).join('\n\n') + '\n';
@@ -586,24 +585,24 @@ const cornerClash = (page) => page.evaluate(() => {
     const kp = await openPage(kctx);
     await pasteText(kp, KDOC);
     await kp.waitForTimeout(150);
-    /* Chuyển động trong #pop (cao vùng chip, số phím, chip mới) đã xong. */
+    /* Chuyển động trong #pop (cao vùng chip, số phím) đã xong. */
     const settle = (p) => p.evaluate(async () => {
       await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
       const all = document.getElementById('pop').getAnimations({ subtree: true }).map((a) => a.finished.catch(() => {}));
       await Promise.race([Promise.all(all), new Promise((r) => setTimeout(r, 2000))]);
     });
     const openAt = async (p, n) => { await dragSelect(p, '#v-md', `Câu thứ ${n} để thử phím`); await settle(p); };
-    const hintTexts = (p) => p.$$eval('#pop-chips .ma-chip:not(.ma-chip--more) .ma-chip__t', (els) => els.map((e) => e.textContent));
+    const hintTexts = (p) => p.$$eval('#pop-chips .ma-chip .ma-chip__t', (els) => els.map((e) => e.textContent));
     /* Nhận xét đã lưu cho câu thứ n (theo prompt), chưa có thì null. */
     const said = async (p, n) => { const l = (await out(p)).split('\n').find((x) => x.includes(`"Câu thứ ${n} để thử phím`)); return l ? l.slice(l.indexOf(' — ') + 3) : null; };
     const popOpen = (p) => p.isVisible('#pop');
     const chipGeo = (p) => p.evaluate(() => {
       const box = document.getElementById('pop-chips'), b = box.getBoundingClientRect(), cs = getComputedStyle(box);
-      const chips = [...box.querySelectorAll('.ma-chip:not(.ma-chip--more)')], more = box.querySelector('.ma-chip--more'), k0 = chips[0].querySelector('.ma-chip__k');
+      const chips = [...box.querySelectorAll('.ma-chip')], k0 = chips[0].querySelector('.ma-chip__k');
       return {
-        keys: document.getElementById('pop').classList.contains('is-keys'), n: chips.length, more: more ? more.textContent : null,
-        rects: chips.slice(0, 5).map((c) => { const r = c.getBoundingClientRect(); return [r.left - b.left, r.top - b.top, r.width, r.height].map((v) => +v.toFixed(2)).join(' '); }),
-        kept: chips.slice(0, 5).every((c) => c.__k === 1), fresh: chips.filter((c) => c.classList.contains('is-new')).length,
+        keys: document.getElementById('pop').classList.contains('is-keys'), n: chips.length, st: box.scrollTop,
+        rects: chips.map((c) => { const r = c.getBoundingClientRect(); return [r.left - b.left, r.top - b.top, r.width, r.height].map((v) => +v.toFixed(2)).join(' '); }).join('|'),
+        kept: chips.every((c) => c.__k === 1),
         badges: chips.map((c) => { const k = c.querySelector('.ma-chip__k'); return k ? k.textContent : ''; }).join(),
         k0: k0 ? { op: getComputedStyle(k0).opacity, pos: getComputedStyle(k0).position } : null,
         h: +b.height.toFixed(2), sh: box.scrollHeight, ch: box.clientHeight, oy: cs.overflowY, row: chips[0].offsetHeight,
@@ -620,7 +619,7 @@ const cornerClash = (page) => page.evaluate(() => {
     // Mod+Z: gợi ý 1; tooltip chip ghi phím.
     await openAt(kp, 1);
     let hs = await hintTexts(kp);
-    const tips = await kp.$$eval('#pop-chips .ma-chip:not(.ma-chip--more)', (els) => els.map((e) => e.title));
+    const tips = await kp.$$eval('#pop-chips .ma-chip', (els) => els.map((e) => e.title));
     check('phím gợi ý: tooltip chip có phím (1: Ctrl+Z, 3: Ctrl+C Ctrl+C)', / · Ctrl\+Z$/.test(tips[0]) && / · Ctrl\+C Ctrl\+C$/.test(tips[2]), JSON.stringify(tips.slice(0, 3)));
     await kp.keyboard.press('Control+KeyZ'); await kp.waitForTimeout(100);
     check('phím gợi ý: Ctrl+Z lưu gợi ý 1, hộp đóng', !(await popOpen(kp)) && (await said(kp, 1)) === hs[0], JSON.stringify([hs[0], await said(kp, 1)]));
@@ -657,28 +656,42 @@ const cornerClash = (page) => page.evaluate(() => {
     await kp.keyboard.press('Control+KeyX'); await kp.waitForTimeout(100);
     check('phím gợi ý: Ctrl+X không có chữ chọn thì lưu gợi ý 2', !(await popOpen(kp)) && (await said(kp, 5)) === hs[1], JSON.stringify([hs[1], await said(kp, 5)]));
 
-    // Giữ Ctrl: is-keys, mọi gợi ý, số 1..10, chip đầu giữ nguyên nút và chỗ; vùng chip tối đa 5,5 hàng rồi cuộn; thả: về gọn.
+    // Không giữ phím: mọi gợi ý, vùng chip cao đúng trần 5,5 hàng, cuộn dọc, ở đầu. Gõ chữ lọc còn ít: thấp hơn, không cuộn.
     await openAt(kp, 6);
-    await kp.$$eval('#pop-chips .ma-chip', (els) => els.forEach((e) => { e.__k = 1; }));
+    const total = 9 + EXTRA;
     const g0 = await chipGeo(kp);
+    check('hộp mở: đủ ' + total + ' chip (không chip "+N"), chưa is-keys, cuộn ở đầu', !g0.keys && g0.n === total && g0.st === 0, JSON.stringify({ keys: g0.keys, n: g0.n, st: g0.st }));
+    check('hộp mở: vùng chip cao đúng trần 5,5 hàng (±1px), cuộn dọc được', Math.abs(g0.h - g0.cap) <= 1 && /auto|scroll/.test(g0.oy) && g0.sh > g0.ch + g0.row, JSON.stringify({ h: g0.h, cap: g0.cap, sh: g0.sh, ch: g0.ch, oy: g0.oy }));
+    await kp.keyboard.type('thêm số 2'); await settle(kp);
+    const gf = await chipGeo(kp);
+    check('gõ lọc còn 3 gợi ý: vùng chip thấp hơn trần, không cuộn', gf.n === 3 && gf.h < gf.cap - gf.row && gf.sh <= gf.ch + 1, JSON.stringify({ n: gf.n, h: gf.h, cap: gf.cap, sh: gf.sh, ch: gf.ch }));
+    await kp.keyboard.press('Control+KeyA'); await kp.keyboard.press('Backspace'); await settle(kp);
+    const gb = await chipGeo(kp);
+    check('xoá chữ lọc: lại đủ chip, cao đúng trần', gb.n === total && Math.abs(gb.h - gb.cap) <= 1, JSON.stringify({ n: gb.n, h: gb.h, cap: gb.cap }));
+
+    // Giữ Ctrl: chỉ is-keys và số 1..10 hiện; không vẽ lại chip (cùng nút), số chip và rect mọi chip không đổi; thả: số mờ hẳn.
+    await kp.$$eval('#pop-chips .ma-chip', (els) => els.forEach((e) => { e.__k = 1; }));
+    const g1a = await chipGeo(kp);
     await kp.keyboard.down('Control'); await settle(kp);
     const g1 = await chipGeo(kp);
-    const total = 9 + EXTRA;
-    check('giữ Ctrl: #pop có is-keys, hiện mọi gợi ý, không còn chip "+N"', !g0.keys && g0.n === 5 && g0.more === '+' + (total - 5) && g1.keys && g1.n === total && g1.more === null, JSON.stringify({ g0: [g0.keys, g0.n, g0.more], g1: [g1.keys, g1.n, g1.more] }));
-    check('giữ Ctrl: 5 chip đầu giữ nguyên nút, chip thêm có is-new', g1.kept && g1.fresh === total - 5, JSON.stringify([g1.kept, g1.fresh]));
-    check('giữ Ctrl: số 1..10 trên 10 chip đầu, chip sau không có; số hiện (opacity 1), vị trí absolute', g1.badges === '1,2,3,4,5,6,7,8,9,10' + ','.repeat(total - 10) && g1.k0.op === '1' && g1.k0.pos === 'absolute' && g0.k0.op === '0', JSON.stringify([g1.badges, g0.k0, g1.k0]));
-    check('giữ Ctrl: chip đầu không dời (cùng rect với lúc chưa giữ)', g0.rects.join('|') === g1.rects.join('|'), JSON.stringify([g0.rects, g1.rects]));
-    check('giữ Ctrl: vùng chip cao đúng trần 5,5 hàng, cuộn dọc được', Math.abs(g1.h - g1.cap) <= 1 && /auto|scroll/.test(g1.oy) && g1.sh > g1.ch + g1.row, JSON.stringify({ h: g1.h, cap: g1.cap, sh: g1.sh, ch: g1.ch, oy: g1.oy }));
-    check('chưa giữ: vùng chip thấp hơn trần, không cuộn', g0.h < g0.cap && g0.sh <= g0.ch + 1, JSON.stringify({ h: g0.h, cap: g0.cap, sh: g0.sh, ch: g0.ch }));
+    check('giữ Ctrl: #pop có is-keys, cùng số chip, cùng nút (không vẽ lại)', g1.keys && g1.n === total && g1.kept, JSON.stringify({ keys: g1.keys, n: g1.n, kept: g1.kept }));
+    check('giữ Ctrl: số 1..10 trên 10 chip đầu, chip sau không có; số hiện (opacity 1), vị trí absolute', g1.badges === '1,2,3,4,5,6,7,8,9,10' + ','.repeat(total - 10) && g1.k0.op === '1' && g1.k0.pos === 'absolute' && g1a.k0.op === '0', JSON.stringify([g1.badges, g1a.k0, g1.k0]));
+    check('giữ Ctrl: không chip nào dời, vùng chip cao như cũ', g1.rects === g1a.rects && g1.h === g1a.h, JSON.stringify({ h: [g1a.h, g1.h], same: g1.rects === g1a.rects }));
     await kp.keyboard.up('Control'); await settle(kp);
     const g2 = await chipGeo(kp);
-    check('thả Ctrl: về gọn (5 chip + "+N"), số mờ hẳn, cao như trước, chip đầu không dời', !g2.keys && g2.n === 5 && g2.more === g0.more && g2.kept && g2.k0.op === '0' && Math.abs(g2.h - g0.h) <= 0.5 && g2.rects.join('|') === g0.rects.join('|'), JSON.stringify({ keys: g2.keys, n: g2.n, more: g2.more, kept: g2.kept, op: g2.k0.op, h: [g0.h, g2.h] }));
+    check('thả Ctrl: bỏ is-keys, số mờ hẳn, cùng nút, cùng số chip, không chip nào dời', !g2.keys && g2.k0.op === '0' && g2.kept && g2.n === total && g2.rects === g1a.rects && g2.h === g1a.h, JSON.stringify({ keys: g2.keys, op: g2.k0.op, kept: g2.kept, n: g2.n }));
+    // Mở lại sau khi đã cuộn vùng chip: về đầu.
+    const scrolled = await kp.$eval('#pop-chips', (b) => { b.scrollTop = b.scrollHeight; return b.scrollTop; });
+    await kp.keyboard.press('Escape');
+    await openAt(kp, 6);
+    const g3 = await chipGeo(kp);
+    check('mở lại hộp sau khi cuộn vùng chip: cuộn ở đầu', scrolled > 0 && g3.st === 0 && g3.n === total, JSON.stringify({ scrolled, st: g3.st, n: g3.n }));
     await kp.keyboard.down('Meta'); await settle(kp);
     check('Linux: giữ Meta không phải Mod, không is-keys', !(await kp.evaluate(() => document.getElementById('pop').classList.contains('is-keys'))));
     await kp.keyboard.up('Meta');
     await kp.keyboard.press('Escape');
 
-    // Giữ Ctrl rồi bấm /: gợi ý 10 (chỉ thấy khi giữ).
+    // Giữ Ctrl rồi bấm /: gợi ý 10.
     await openAt(kp, 7);
     await kp.keyboard.down('Control'); await settle(kp);
     hs = await hintTexts(kp);

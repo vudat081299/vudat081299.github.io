@@ -4,7 +4,7 @@
       "title": "Comment box",
       "note": "While the comment box is open. Ctrl on Windows and Linux, ⌘ on a Mac. A picked hint is saved as the comment and the box closes. Hints after the 10th have no key.",
       "rows": [
-        { "keys": [["Hold Ctrl"], ["Hold ⌘"]], "action": "Show every hint, each with its number" },
+        { "keys": [["Hold Ctrl"], ["Hold ⌘"]], "action": "Show the numbers of hints 1–10" },
         { "keys": [["Ctrl", "Z"], ["⌘", "Z"]], "action": "Pick hint 1" },
         { "keys": [["Ctrl", "X"], ["⌘", "X"]], "action": "Pick hint 2 (with text selected in the box: cut, as usual)" },
         { "keys": [["Ctrl", "C twice"], ["⌘", "C twice"]], "action": "Pick hint 3 (the first press still copies)" },
