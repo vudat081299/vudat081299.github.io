@@ -488,9 +488,9 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
       <div><span class="lab">Tuần 1: mỗi vai một việc</span><ol class="op-w1" id="planW1"></ol>
         <p class="op-p1b">Vai 3–6: <a href="#lt-lich" data-ph="P1b">pha P1b</a> (học và viết phương pháp).</p></div>
     </div>
-    <p class="op-why"><span class="lab">Vì sao A</span> Một bộ dữ liệu làm đủ bốn phương pháp, mùa nào cũng 380 trận. Không được dùng football-data → chuyển <a href="#top-3">B (F1, dữ liệu Jolpica)</a>.</p>
+    <p class="op-why"><span class="lab">Ba phương án</span> Nhóm so ba bộ dữ liệu: <b>A</b> bóng đá Premier League, <b>B</b> đua xe F1, <b>C</b> bóng đá quốc tế. Chọn A vì một bộ dữ liệu làm đủ bốn phương pháp, mùa nào cũng 380 trận. Không được dùng football-data thì chuyển sang <a href="#top-3">B (dữ liệu Jolpica)</a>.</p>
     <p class="op-submit" id="planSubmit"></p>
-    <p class="op-links"><a href="#lo-trinh">Kế hoạch đầy đủ</a><a href="#top-3">Vì sao chọn A, phương án khác</a><a href="#can-xac-nhan">Hỏi gì trước</a></p>
+    <p class="op-links"><a href="#lo-trinh">Kế hoạch đầy đủ</a><a href="#top-3">So ba phương án</a><a href="#can-xac-nhan">Hỏi gì trước</a></p>
   </div>
   <p class="brief">Đề bài: <q lang="en">Outlier detection, analysis of means, CUSUM and sequential probability ratio testing. Applications in sports.</q> Nhóm 7 người nộp slide, báo cáo và demo.</p>
   <p class="hero-line" id="heroStats"></p>
@@ -578,7 +578,7 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
 <!-- ═══════════════ CHẤM ĐIỂM ═══════════════ -->
 <section id="cham-diem" class="block">
   <h2>Bảng chấm điểm</h2>
-  <p class="sub">Mỗi nguồn được chấm bốn tiêu chí, mỗi tiêu chí trên 10. Điểm tổng là trung bình có trọng số, cũng trên 10.</p>
+  <p class="sub">Mỗi nguồn được chấm bốn tiêu chí, mỗi tiêu chí trên 10. Điểm tổng là trung bình có trọng số, cũng trên 10. Mã thẻ như C1, A4: chữ là nhóm nguồn (A nhóm gửi, B bảng tổng hợp, C tìm thêm), số là thứ tự; không liên quan tới phương án A, B, C.</p>
   <div class="crits" id="crits"></div>
 
   <div class="chart-box">
@@ -624,7 +624,7 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
   <div class="opts" id="opts"></div>
 
   <h3>Vì sao ba phương án này</h3>
-  <p>A và B là hai bộ dữ liệu đã kiểm có đủ ba dạng mà bốn phương pháp cần: nhiều nhóm cùng lúc (ngoại lai, ANOM), một chuỗi dài theo thời gian (CUSUM, SPRT), và đủ cột để làm sạch (phần quản lý dữ liệu). C giữ lại vì không rủi ro giấy phép và có đội tuyển Việt Nam, nhưng chỉ làm phần mở rộng.</p>
+  <p>Phương án A và B dùng hai bộ dữ liệu đã kiểm, có đủ ba dạng mà bốn phương pháp cần: nhiều nhóm cùng lúc (ngoại lai, ANOM), một chuỗi dài theo thời gian (CUSUM, SPRT), và đủ cột để làm sạch (phần quản lý dữ liệu). C giữ lại vì không rủi ro giấy phép và có đội tuyển Việt Nam, nhưng chỉ làm phần mở rộng.</p>
   <p>Các bộ khác rơi ra: chuỗi của StatsBomb quá ngắn; nba_api bị chặn trên máy chủ đám mây; repo quần vợt của Sackmann đã bị gỡ; Match Charting Project phải bóc tách nặng.</p>
 
   <h3>Chọn thế nào</h3>
@@ -640,7 +640,7 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
     <li>Bốn câu hỏi theo F1:<ul id="switchB"></ul></li>
     <li>Giữ nguyên: đường ống, bảy vai, lịch, các file lineage.</li>
   </ul>
-  <p class="verdict-line"><b>Chốt: A, hơn B không nhiều</b> (<span data-total="C1"></span> so với <span data-total="C11"></span>). Nguồn dữ liệu của A có điểm cao nhất trong các bộ dữ liệu (thẻ C4 cao hơn nhưng là bộ công thức). Lý do: một bộ dữ liệu quen thuộc làm được cả bốn phương pháp, các mùa sạch và cùng cỡ. B là phương án an toàn nếu chưa rõ có được dùng football-data không.</p>
+  <p class="verdict-line"><b>Chốt: phương án A, hơn B không nhiều</b> (<span data-total="C1"></span> so với <span data-total="C11"></span>). Nguồn dữ liệu của A có điểm cao nhất trong các bộ dữ liệu (thẻ C4 cao hơn nhưng là bộ công thức). Lý do: một bộ dữ liệu quen thuộc làm được cả bốn phương pháp, các mùa sạch và cùng cỡ. B là phương án an toàn nếu chưa rõ có được dùng football-data không.</p>
 </section>
 
 <!-- ═══════════════ LỘ TRÌNH ═══════════════ -->
