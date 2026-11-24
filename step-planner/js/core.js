@@ -550,7 +550,8 @@ function skipped(w, warnings) {
 export function parseImport(text) {
   const t = String(text || '').trim();
   if (!t) throw new Error('Chưa có nội dung.');
-  if (t[0] === '{' || t[0] === '[') {
+  /* Mảng JSON mở bằng `[` rồi một giá trị; `[chữ](…)` hay `[ ] việc` của Markdown viết tay thì không. */
+  if (t[0] === '{' || /^\[\s*(?:[[{"\d-]|\]\s*$|true\b|false\b|null\b)/.test(t)) {
     let data;
     try { data = JSON.parse(t); } catch (e) { throw new Error('JSON hỏng: ' + /** @type {Error} */ (e).message); }
     /** @type {any[]} */ let items;

@@ -301,5 +301,15 @@ const under = (t) => inline(t).map((n) => n.t + ':' + (n.v ?? '')).join('|');
 check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x.__len và y.__len') === 'text:a = x.__len và y.__len'
   && under('__đậm__ thường') === 'strong:|text: thường' && under('ten_bien_dai') === 'text:ten_bien_dai', under('a = x.__len và y.__len'));
 
+/* Markdown viết tay mở đầu bằng link hay ô việc vẫn là Markdown; mảng JSON vẫn là JSON. */
+{
+  let r = null, msg = '';
+  try { r = parseImport('[Đề bài](https://a.example)\n\n## Bước\n- [ ] việc\n'); } catch (e) { msg = e.message; }
+  check('nhập: chữ mở đầu bằng [link](…) đọc là Markdown', r?.kind === 'md' && r.workspaces[0].steps[0]?.subs.length === 1, msg);
+  check('nhập: mảng JSON vẫn đọc là JSON', parseImport('[{"name":"a","steps":[]}]').kind === 'backup');
+  try { parseImport('[{"name":'); msg = ''; } catch (e) { msg = e.message; }
+  check('nhập: mảng JSON hỏng vẫn báo JSON hỏng', /^JSON hỏng/.test(msg), msg);
+}
+
 if (fails) { console.log(`test-core: ${fails} LỖI`); process.exit(1); }
 console.log('test-core: OK');

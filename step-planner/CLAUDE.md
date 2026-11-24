@@ -170,7 +170,8 @@ Nhập file cũ và Markdown viết tay (dễ dãi):
 - Một dự án: `{format: "step-planner", version: 2, exportedAt, workspace}`. Sao lưu: `{…, workspaces: [...]}`. Trang không
   dựa vào `version`: bản 1 (có người, không tài liệu) vẫn nhập.
 - Nhập nhận cả hai, mảng dự án, hoặc một dự án trần. Mục nào không phải object hay thiếu mảng `steps` thì bỏ, kèm cảnh
-  báo tiếng Việt; không còn dự án nào thì báo lỗi, không bao giờ lộ TypeError.
+  báo tiếng Việt; không còn dự án nào thì báo lỗi, không bao giờ lộ TypeError. Chữ mở bằng `{`, hay `[` rồi một giá trị
+  JSON, là JSON; còn lại (kể cả `[tên](url)`, `[ ] việc`) là Markdown.
 - Mặc định tạo dự án mới (id mới, trùng tên thì ` (nhập)`, ` (nhập 2)`…). "Thay dự án đang mở" (một dự án) có Hoàn tác.
 
 ## Giao diện
@@ -193,8 +194,7 @@ Nhập file cũ và Markdown viết tay (dễ dãi):
 ## Cổng: `sh step-planner/tools/check.sh`
 
 - `tools/lint.py`: khuôn mẫu, mẫu đồ án khớp nguồn và neo, không `innerHTML`, mã màu chỉ trong khối token.
-- `node --check` cho `js/*.js`; `tools/test-core.mjs`: logic thuần của `core.js` và `md.js` (Markdown, JSON đi rồi về,
-  viết tay, file cũ, sai khuôn); danh sách ở chính file.
+- `node --check` cho `js/*.js`; `tools/test-core.mjs`: logic thuần của `core.js`, `md.js`; danh sách ở chính file.
 - `tools/smoke.cjs` (cổng tự dựng máy chủ tạm; thiếu playwright thì bỏ qua, CI chạy ở job smoke): bấm thật các hành vi
   trên, hai tab, 390px, bộ nhớ bị chặn / hỏng / khoá cũ, lỗi console; số của mẫu đọc từ `templates.json`. Chạy tay:
   `node step-planner/tools/smoke.cjs http://127.0.0.1:8347/step-planner/`.
