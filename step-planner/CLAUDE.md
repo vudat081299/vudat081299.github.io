@@ -46,10 +46,11 @@
   không cần với dự án này. Cancelled: đã quyết không làm, giữ thẻ để nhớ vì sao.
 - Tiến độ = xong / (tổng − bỏ qua − huỷ), không đổi với ô song song. "Next" tô các thẻ còn mở (không xong, bỏ qua, huỷ)
   của ô đầu tiên còn việc, trong bước đầu tiên còn việc. Hạn đã qua thì báo "(overdue)", trừ thẻ xong, bỏ qua, huỷ.
-- Song song (PLAN-013): mỗi ô là một cột của hàng, bước con song song xếp chồng trong cột. Số trên thẻ là vị trí ô trong
-  hàng (`1`, `2`…), ô song song k thẻ thì `n.1` … `n.k`; bước số `1`, `2`…. Nút phụ "Add parallel" trên thẻ mở hộp thêm
-  đặt sẵn "Parallel with n"; ô "Vị trí" có "Position n" và "Parallel with n". Alt + ← →: đổi ô (thẻ ở ô song song thì tách
-  ra ô riêng ngay trước / sau); Alt + ↑ ↓: đổi thứ tự trong ô. Toast dời tả chỗ mới bằng tên hàng xóm, không bằng số.
+- Song song (PLAN-013): mỗi ô một cột của hàng, thẻ song song xếp chồng. Số thẻ là vị trí ô (`1`, `2`…), ô k thẻ thì `n.1`
+  … `n.k`. "Add parallel" trên thẻ, ô "Vị trí" ("Position n" / "Parallel with n"); Alt + ← →: đổi ô (thẻ ở ô song song thì
+  tách ra ô riêng), Alt + ↑ ↓: đổi thứ tự trong ô. Toast dời tả chỗ mới bằng tên hàng xóm, không bằng số.
+- Số đứng yên trong phiên (PLAN-014): chụp số khi dự án hiện lần đầu sau khi mở trang (và sau nhập thay nội dung); dời,
+  xoá không đổi số (hàng đọc "1 3 2"); cái thêm trong phiên hiện chấm thay số. Số lệch thì nút "Renumber" hiện.
 - Bấm chip: New → In progress → Done. Chip Done, Blocked, Skipped, Cancelled bấm là mở danh sách sáu trạng thái (chấm,
   một dòng gợi ý, đánh dấu cái hiện tại); Shift + bấm hay Alt + ↓ luôn mở. Chọn Cancelled: mở hộp sửa, trạng thái đặt sẵn,
   focus ô lý do; Lưu mới huỷ. Rời Cancelled thì bỏ lý do. Thẻ huỷ: tên gạch, lý do trong thân thẻ (cắt như ghi chú).
@@ -65,15 +66,14 @@
   ghi nhật ký "Reopened: tên bước (iteration N)"; một Hoàn tác trả hết. Băng "Reopened · Iteration N · ngày · lý do" (bấm
   để sửa lý do), nút "Close iteration" (vòng giữ để lần sau tăng tiếp).
 - Mẹo tắt bằng ×; "Compact" ẩn "Done when", ghi chú, lý do huỷ (cả hai nhớ ở máy này). "Log (N)" cuộn tới nhật ký, focus.
-- Tìm không phân biệt hoa thường và dấu, khớp cả tên tài liệu. Tên, mục tiêu, ghi chú hay tài liệu của bước khớp thì
-  hiện cả hàng. Đang tìm thì tắt sắp xếp và nút thêm bước; thẻ mới bị lọc ẩn thì toast "Added — hidden by the search filter".
+- Tìm bỏ dấu, không phân biệt hoa thường, khớp cả tài liệu; bước khớp thì hiện cả hàng; đang tìm thì tắt sắp xếp, thêm bước.
 - Xoá bước con, quyết định, tài liệu: một bấm. Xoá bước còn bước con, xoá dự án (không hoàn tác): hỏi lại. Sau khi xoá,
   focus nhảy vào Hoàn tác của toast (15 giây); Ctrl/Cmd + Z cũng hoàn tác khi không gõ chữ và không có hộp thoại mở. Hoàn
   tác tìm lại dự án và bước theo id (tab khác có thể đã thay `state`).
 - Hộp sửa: mở thì focus ô đầu; tên là textarea tự cao, Enter lưu. Esc, ×, Đóng hay Nhân bản khi chữ đã đổi thì hỏi "Bỏ
   thay đổi?". Nút đóng không lưu của mọi hộp ghi "Đóng", không "Huỷ" (trùng tên trạng thái).
-- Ghi chú bước gập dưới tên bước. Thẻ cao theo nội dung (`--card-min` … `--card-max`); vượt max thì thân bị cắt, mờ dần,
-  "Xem thêm" mở cả thẻ. Link http(s) trong ghi chú bấm được. Vẽ lại giữ ghi chú đang mở, thẻ đã mở, chỗ cuộn ngang.
+- Ghi chú bước gập dưới tên. Thẻ cao theo nội dung, quá `--card-max` thì cắt, "Show more" mở cả thẻ; link trong ghi chú
+  bấm được. Vẽ lại giữ ghi chú đang mở, thẻ đã mở, chỗ cuộn ngang.
 - Tài liệu (PLAN-011): tài liệu của bước là dải chip rộng cả hàng ngay dưới băng Reopened (không băng thì ở chỗ ấy), trên
   hàng thẻ; nút phụ "Doc" ở cuối dải (bước chưa có tài liệu: ở cột tên bước). Thẻ chỉ có nhãn kẹp + số ở hàng đầu; bấm là
   mở hộp sửa bước con ở phần tài liệu. Thêm / sửa / xoá trong hộp sửa, lưu ngay; xoá khi hộp đang mở thì Hoàn tác là một

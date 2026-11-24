@@ -229,9 +229,9 @@ function renderBoard(/** @type {any} */ ws) {
     const done = prog.total > 0 && prog.done === prog.total;
     const head = h('div', { class: 'step-head', draggable: filtering ? null : 'true' },
       h('div', { class: 'step-top' },
-        h('span', { class: 'step-num', 'aria-hidden': 'true' }, labels.get(step.id)),
+        numTag('step-num', labels.get(step.id)),
         h('h2', { class: 'step-title', id: 'st-' + step.id },
-          h('button', { type: 'button', class: 'link', 'data-act': 'edit-step', 'aria-label': `Step ${labels.get(step.id)}: ${step.title}. Edit`, 'aria-keyshortcuts': 'Alt+ArrowUp Alt+ArrowDown' }, step.title))),
+          h('button', { type: 'button', class: 'link', 'data-act': 'edit-step', 'aria-label': `Step ${labels.get(step.id) ?? '(added this session)'}: ${step.title}. Edit`, 'aria-keyshortcuts': 'Alt+ArrowUp Alt+ArrowDown' }, step.title))),
       step.goal && h('p', { class: 'step-goal' }, step.goal),
       step.doneWhen && h('p', { class: 'step-done' }, h('span', { class: 'lbl' }, 'Done when '), step.doneWhen),
       step.notes && h('details', { class: 'step-notes', open: keep.notes.has(step.id) }, h('summary', {}, icon('chev'), 'Notes'), h('p', { class: 'notes-text' }, withLinks(step.notes))),
@@ -259,7 +259,7 @@ function renderBoard(/** @type {any} */ ws) {
       const isNext = nextIds.has(x.id);
       return h('div', { class: `card st-${x.status}${isNext ? ' next' : ''}`, 'data-sub': x.id, draggable: filtering ? null : 'true' },
         h('div', { class: 'card-top' },
-          h('span', { class: 'num' }, labels.get(x.id)),
+          numTag('num', labels.get(x.id)),
           isNext && h('span', { class: 'next-tag' }, 'Next'),
           x.docs.length > 0 && h('button', { type: 'button', class: 'doc-tag', 'data-act': 'sub-docs', tabindex: '-1',
             'aria-label': `${C.plural(x.docs.length, 'doc')}. Open the list`, title: x.docs.map((/** @type {any} */ d) => d.title).join('\n') },
@@ -297,12 +297,13 @@ function renderBoard(/** @type {any} */ ws) {
       band,
       docs,
       head,
-      h('div', { class: 'cards-scroll' }, h('ol', { class: 'cards', 'aria-label': `Sub-steps of step ${labels.get(step.id)}` }, slots))));
+      h('div', { class: 'cards-scroll' }, h('ol', { class: 'cards', 'aria-label': `Sub-steps of step ${labels.get(step.id) ?? step.title}` }, slots))));
   });
   if (!ws.steps.length) rows.push(h('p', { class: 'empty' }, 'No steps yet. Click "Add step" below.'));
   else if (!rows.length) rows.push(h('p', { class: 'empty' }, 'No sub-step matches. ',
     h('button', { type: 'button', class: 'btn', 'data-act': 'clear-filter' }, 'Clear search')));
   board.replaceChildren(...rows);
+  $('renumber-btn').hidden = !labelsStale(ws);
   $('filter-note').textContent = filtering ? `${C.plural(shown, 'sub-step')} match · reordering is off while searching` : '';
   $('add-step').hidden = filtering;
   markCutCards(keep.open);
@@ -313,10 +314,35 @@ function renderBoard(/** @type {any} */ ws) {
   updateScrollCues();
 }
 
-/** Số hiện của bước và bước con (xem C.liveLabels). @param {any} ws @returns {Map<string, string>} */
+/* ── Số đứng yên trong phiên: chụp số của mọi bước, bước con khi dự án hiện lần đầu trong lần mở trang này (và sau khi nhập
+ * thay nội dung). Dời chỗ không đổi số, nên hàng đọc được "1 3 2" và người dùng thấy vừa đổi chỗ những gì; tải lại trang
+ * hay bấm "Renumber" mới đánh số lại. Cái thêm trong phiên chưa có số: hiện dấu chấm "added this session". ── */
+/** @type {Map<string, Map<string, string>>} */
+const frozen = new Map();
+/** @param {any} ws @returns {Map<string, string>} */
 function labelsOf(ws) {
-  return C.liveLabels(ws);
+  let m = frozen.get(ws.id);
+  if (!m) { m = C.liveLabels(ws); frozen.set(ws.id, m); }
+  return m;
 }
+/** Số đang hiện khác số thật (đã dời, thêm, xoá)? @param {any} ws */
+function labelsStale(ws) {
+  const m = labelsOf(ws);
+  const live = C.liveLabels(ws);
+  return [...live].some(([id, l]) => m.get(id) !== l);
+}
+/** @param {string} cls @param {string|undefined} label */
+const numTag = (cls, label) => (label != null
+  ? h('span', { class: cls, 'aria-hidden': cls === 'step-num' ? 'true' : null }, label)
+  : h('span', { class: cls + ' fresh', title: 'Added this session. Renumber (or reload) to number it' }, h('span', { class: 'sr' }, 'added this session')));
+$('renumber-btn').addEventListener('click', () => {
+  const ws = cur();
+  if (!ws) return;
+  frozen.delete(ws.id);
+  render();
+  toast('Numbers updated to the current order.');
+  refocus('.step .step-title .link');
+});
 
 /** Chip trạng thái: New, In progress bấm là sang trạng thái kế; Done và các trạng thái khác bấm là mở danh sách.
  * Shift + bấm hoặc Alt + ↓ luôn mở danh sách. @param {any} x */
@@ -892,7 +918,8 @@ function openSub(step, sub, opt = {}) {
   subCtx = { wsId: ws.id, stepId: step.id, subId: sub ? sub.id : null, pos: opt.pos };
   $('dlg-sub-title').textContent = sub ? 'Edit sub-step' : 'Add sub-step';
   field(f, 'status').replaceChildren(...C.STATUSES.map((s) => h('option', { value: s, 'data-dot': s, 'data-hint': C.STATUS_HINT[s] }, C.STATUS_LABEL[s])));
-  field(f, 'step').replaceChildren(...ws.steps.map((/** @type {any} */ s, /** @type {number} */ i) => h('option', { value: s.id }, `${i + 1}. ${s.title}`)));
+  const labels = labelsOf(ws);
+  field(f, 'step').replaceChildren(...ws.steps.map((/** @type {any} */ s) => h('option', { value: s.id }, (labels.has(s.id) ? `${labels.get(s.id)}. ` : '') + s.title)));
   const x = sub || C.normSub({ title: '' });
   field(f, 'title').value = sub ? x.title : '';
   field(f, 'status').value = opt.status || x.status;
@@ -1039,9 +1066,9 @@ function docWhere(ctx) {
   if (i < 0) return '';
   const step = ws.steps[i];
   const labels = labelsOf(ws);
-  if (!ctx.subId) return `Step ${labels.get(step.id)} · ${step.title}`;
+  if (!ctx.subId) return `Step ${labels.get(step.id) ?? ''} · ${step.title}`;
   const sub = step.subs.find((/** @type {any} */ x) => x.id === ctx.subId);
-  return sub ? `Step ${labels.get(step.id)} · sub-step ${labels.get(sub.id)} · ${sub.title}` : '';
+  return sub ? `Step ${labels.get(step.id) ?? ''} · sub-step ${labels.get(sub.id) ?? '(added)'} · ${sub.title}` : '';
 }
 /** Hộp sửa đang mở ('sub' / 'step') và ngữ cảnh tài liệu của nó. */
 function hostCtx(/** @type {'sub'|'step'} */ where) {
@@ -1289,7 +1316,7 @@ function openRevisit(/** @type {any} */ step) {
   $('revisit-list').replaceChildren(...step.subs.map((/** @type {any} */ x) => h('li', {},
     h('label', { class: 'reset-item' },
       h('input', { type: 'checkbox', name: 'reset', value: x.id, 'data-status': x.status, disabled: x.status === 'todo' }),
-      h('span', { class: 'num' }, labels.get(x.id)), h('span', { class: 'reset-title' }, x.title),
+      numTag('num', labels.get(x.id)), h('span', { class: 'reset-title' }, x.title),
       h('span', { class: `chip st-${x.status}` }, C.STATUS_LABEL[x.status])))));
   $('revisit-clear').hidden = !step.revisit;
   /** @type {any} */ ($('revisit-form').querySelector('button[type="submit"]')).textContent = step.revisit ? 'Save reason' : 'Reopen step';
@@ -1540,12 +1567,14 @@ $('import-go').addEventListener('click', () => {
     const before = JSON.parse(JSON.stringify(ws));
     const nu = parsed.workspaces[0];
     Object.assign(ws, { ...nu, id: ws.id, createdAt: ws.createdAt });
+    frozen.delete(ws.id);
     commit();
     afterOpen();
     toast(`Replaced the content of "${before.name}".`, () => {
       const i = state.workspaces.findIndex((x) => x.id === before.id);
       if (i < 0) { toast('Cannot undo: the project was deleted.'); return; }
       state.workspaces[i] = before;
+      frozen.delete(before.id);
       if (curId !== before.id) switchTo(before.id);
       commit();
       afterOpen();

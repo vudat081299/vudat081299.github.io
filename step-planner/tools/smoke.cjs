@@ -283,7 +283,9 @@ const check = (name, ok, detail = '') => {
   ws = await cur(page);
   check('hoàn tác xoá bước con: về đúng chỗ', ws.steps[1].subs.length === n2 + 2 && ws.steps[1].subs[n2 + 1].id === dupId);
 
-  // Sắp xếp bằng bàn phím (Alt + mũi tên trên tên thẻ).
+  // Sắp xếp bằng bàn phím (Alt + mũi tên trên tên thẻ). Thêm, xoá ở trên làm số lệch: Renumber trước cho sạch.
+  check('đã thêm / xoá trong phiên: nút Renumber hiện', await page.isVisible('#renumber-btn'));
+  await page.click('#renumber-btn');
   const order = async () => (await cur(page)).steps[1].subs.map((x) => x.id);
   const before = await order();
   const titleOf = async (id) => (await cur(page)).steps.flatMap((x) => x.subs).find((x) => x.id === id).title;
@@ -292,6 +294,10 @@ const check = (name, ok, detail = '') => {
   const afterLeft = await order();
   check('Alt + ←: sang trái một ô', afterLeft[0] === before[1] && afterLeft[1] === before[0]);
   check('focus ở lại thẻ vừa dời', await page.evaluate((id) => document.activeElement?.closest('.card')?.dataset.sub === id, before[1]));
+  // Số đứng yên trong phiên: thẻ vừa dời giữ số cũ (hàng đọc "2 1 3"), nút Renumber hiện.
+  const rowNums = () => page.evaluate((id) => [...document.querySelector(`.step[data-step="${id}"]`).querySelectorAll('.card .num')].slice(0, 3)
+    .map((n) => n.textContent || 'dot').join(','), ws.steps[1].id);
+  check('số đứng yên sau khi dời: hàng đọc 2,1,3; nút Renumber hiện', (await rowNums()) === '2,1,3' && await page.isVisible('#renumber-btn'), await rowNums());
   const marks = () => page.evaluate(() => ({
     moved: [...document.querySelectorAll('.moved')].map((e) => e.dataset.sub || e.dataset.step),
     swapped: [...document.querySelectorAll('.swapped')].map((e) => e.dataset.sub || e.dataset.step),
@@ -308,8 +314,10 @@ const check = (name, ok, detail = '') => {
     (await order())[2] === before[1] && mk.moved.join() === before[1] && mk.swapped.join() === before[2]
     && mk.toast.includes(` after "${(await titleOf(before[2])).slice(0, 20)}`)
     && await page.evaluate((id) => document.activeElement?.closest('.card')?.dataset.sub === id, before[1]), JSON.stringify(mk));
+  check('số đứng yên: sau hai lần Alt + → hàng đọc 1,3,2', (await rowNums()) === '1,3,2', await rowNums());
   await page.keyboard.press('Control+z');
-  check('hoàn tác dời (Ctrl+Z): về chỗ cũ', JSON.stringify(await order()) === JSON.stringify(before));
+  check('hoàn tác dời (Ctrl+Z): về chỗ cũ, số khớp lại, Renumber ẩn', JSON.stringify(await order()) === JSON.stringify(before)
+    && (await rowNums()) === '1,2,3' && !(await page.isVisible('#renumber-btn')));
   await page.waitForFunction(() => !document.querySelector('.moved, .swapped'), null, { timeout: 6000 }).catch(() => {});
   check('đánh dấu vừa dời tự tắt sau vài giây', !(await page.$('.moved, .swapped')));
 
@@ -325,12 +333,16 @@ const check = (name, ok, detail = '') => {
   const stack = await page.evaluate((id) => {
     const c = document.querySelector(`.card[data-sub="${id}"]`), slot = c.closest('.slot');
     const cs = [...slot.querySelectorAll('.card')];
-    return { n: cs.length, par: slot.classList.contains('par'), nums: cs.map((x) => x.querySelector('.num').textContent).join(','),
+    return { n: cs.length, par: slot.classList.contains('par'), nums: cs.map((x) => (x.querySelector('.num.fresh') ? '' : x.querySelector('.num').textContent)).join(','),
       under: cs[1].getBoundingClientRect().top > cs[0].getBoundingClientRect().bottom - 1, sameX: Math.abs(cs[1].getBoundingClientRect().left - cs[0].getBoundingClientRect().left) < 1,
       nextSlot: slot.nextElementSibling?.querySelector('.num')?.textContent };
   }, parId);
-  check('ô song song: hai thẻ xếp chồng một cột, số 3.1, 3.2, ô sau vẫn là 4', stack.n === 2 && stack.par && stack.nums === '3.1,3.2' && stack.under && stack.sameX
-    && stack.nextSlot === '4' && ws2.subs[3].id === parId && ws2.subs[3].par === true, JSON.stringify(stack));
+  check('ô song song: hai thẻ xếp chồng một cột; thẻ cũ giữ số 3, thẻ mới chưa có số (chấm); ô sau vẫn là 4', stack.n === 2 && stack.par
+    && stack.nums === '3,' && stack.under && stack.sameX && stack.nextSlot === '4' && ws2.subs[3].id === parId && ws2.subs[3].par === true
+    && !!(await page.$(`.card[data-sub="${parId}"] .num.fresh`)), JSON.stringify(stack));
+  await page.click('#renumber-btn');
+  const renum = await page.evaluate((id) => [...document.querySelector(`.card[data-sub="${id}"]`).closest('.slot').querySelectorAll('.num')].map((n) => n.textContent).join(','), parId);
+  check('Renumber: đánh số lại theo thứ tự hiện tại (3.1, 3.2), nút ẩn', renum === '3.1,3.2' && !(await page.isVisible('#renumber-btn')), renum);
   await page.focus(subSel(parId, 'edit-sub'));
   await page.keyboard.press('Alt+ArrowUp');
   check('Alt + ↑: lên đầu ô song song', (await cur(page)).steps[1].subs[2].id === parId && (await cur(page)).steps[1].subs[3].par === true
@@ -610,6 +622,7 @@ const check = (name, ok, detail = '') => {
   await page.reload();
   await page.waitForSelector('#app:not([hidden]) .step');
   check('tắt mẹo: vẫn ẩn sau khi tải lại', !(await page.isVisible('#hint')));
+  check('tải lại: đánh số lại theo thứ tự hiện tại, không còn chấm, Renumber ẩn', !(await page.isVisible('#renumber-btn')) && !(await page.$('.num.fresh, .step-num.fresh')));
   check('Gọn: vẫn bật sau khi tải lại', (await page.getAttribute('#compact-btn', 'aria-pressed')) === 'true' && (await shown('.card-done')) === 0);
   await page.click('#compact-btn');
   check('tắt Gọn: Xong khi hiện lại', (await page.getAttribute('#compact-btn', 'aria-pressed')) === 'false' && (await shown('.card-done')) > 0);

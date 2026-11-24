@@ -526,6 +526,9 @@ svg.i {
 .card-top { flex: none; display: flex; flex-wrap: wrap; align-items: center; gap: var(--s1) var(--s2); min-height: var(--h-sm); }
 .card-top > * { white-space: nowrap; }
 .num { font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-3); }
+/* Thêm trong phiên, chưa đánh số (số đứng yên tới khi tải lại hay "Renumber"): một chấm thay cho số. */
+.num.fresh, .step-num.fresh { display: inline-grid; place-items: center; min-width: var(--h-xs); min-height: var(--fs-xs); }
+.num.fresh::before, .step-num.fresh::before { content: ''; width: var(--dot); height: var(--dot); border-radius: var(--r-pill); background: var(--accent); }
 .next-tag { font: 600 var(--fs-xs)/1 var(--sans); color: var(--green); }
 .card-top .chip { margin-left: auto; }
 /* Thân thẻ co lại khi thẻ chạm --card-max; chữ thừa mờ dần, nút "Xem thêm" mở cả thẻ. */

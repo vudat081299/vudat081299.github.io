@@ -14,6 +14,7 @@
 - PLAN-011 · Bước và bước con có tài liệu: link hoặc văn bản Markdown · `step-planner/`
 - PLAN-012 · Giao diện tiếng Anh; Markdown xuất nhãn tiếng Anh, file cũ vẫn nhập · `step-planner/`
 - PLAN-013 · Bước con chạy song song · `step-planner/`
+- PLAN-014 · Số thứ tự đứng yên tới khi tải lại trang · `step-planner/`
 <!-- index:end -->
 
 ## PLAN-001 · Dự án là các bước có thứ tự, mỗi bước có bước con có thứ tự
@@ -80,3 +81,8 @@ Mọi chữ trên giao diện là tiếng Anh: nút, trạng thái, thông báo,
 24/11/2026 · `step-planner/`
 
 Trong một bước, nhiều bước con có thể chạy song song rồi mới tới bước con kế tiếp (ví dụ ba việc song song rồi mới tới việc sau). Các bước con song song chiếm chung một vị trí trong hàng và mang số con của vị trí ấy (3.1, 3.2, 3.3). Bước con tạo song song được, nhập vào nhóm song song hay tách ra được, bằng kéo thả, bàn phím hay hộp sửa. "Việc tiếp theo" là mọi việc còn mở của vị trí đầu tiên còn việc; tiến độ không đổi. Nhóm song song đi theo khi xuất / nhập Markdown và JSON.
+
+## PLAN-014 · Số thứ tự đứng yên tới khi tải lại trang
+24/11/2026 · `step-planner/`
+
+Trong một lần mở trang, số của bước và bước con không đổi khi đổi chỗ: cái vừa dời giữ số cũ, nên người dùng nhìn hàng là biết mình vừa hoán đổi những gì. Số chỉ đánh lại khi tải lại trang, hoặc khi người dùng tự bấm đánh số lại. Cái mới thêm trong lần mở trang ấy chưa có số, có dấu riêng (không dùng chữ "New", trùng tên trạng thái).
