@@ -532,9 +532,14 @@ document.addEventListener('submit', (/** @type {any} */ e) => { if (e.target.clo
 window.addEventListener('keydown', (e) => { if (NAV_KEYS.includes(e.key)) document.documentElement.classList.remove('quiet-focus'); }, true);
 window.addEventListener('pointerdown', () => document.documentElement.classList.remove('quiet-focus'), true);
 
+/** Hộp dùng lại cho mục khác: thân về đầu, không giữ chỗ cuộn của lần mở trước. @param {any} dlg */
+function showDlg(dlg) {
+  dlg.showModal(); // hộp đóng không cuộn được: đặt lại sau khi mở
+  for (const b of dlg.querySelectorAll('.dlg-body')) b.scrollTop = 0;
+}
 /** @param {any} dlg @param {any} [focusEl] */
 function openDlg(dlg, focusEl) {
-  dlg.showModal();
+  showDlg(dlg);
   dlg.querySelectorAll('textarea.grow-title').forEach(autosize);
   const form = dlg.querySelector('form');
   if (form && GUARDED.includes(dlg.id)) snaps.set(dlg, snapshot(form));
@@ -658,7 +663,7 @@ function openWs() {
       h('span', { class: 'tpl-check', 'aria-hidden': 'true' }, icon('check')))));
   $('ws-new-name').value = '';
   setWsTab(state.workspaces.length ? 'open' : 'new');
-  $('dlg-ws').showModal();
+  showDlg($('dlg-ws'));
 }
 function renderWsList() {
   $('ws-count').textContent = String(state.workspaces.length);
@@ -1679,7 +1684,7 @@ function openExport() {
   $('export-text').value = exportText().text;
   $('export-status').textContent = '';
   renderNudge();
-  $('dlg-export').showModal();
+  showDlg($('dlg-export'));
 }
 $('export-btn').addEventListener('click', openExport);
 $('backup-nudge').addEventListener('click', () => {
@@ -1718,7 +1723,7 @@ function openImport() {
   $('import-text').value = '';
   /** @type {any} */ (document.querySelector('input[name="import-mode"][value="new"]')).checked = true;
   previewImport();
-  $('dlg-import').showModal();
+  showDlg($('dlg-import'));
 }
 function previewImport() {
   const p = $('import-preview');

@@ -1283,6 +1283,14 @@ const check = (name, ok, detail = '') => {
   }
   // Tấm đáy thấp, thân cuộn: phần tử con của thân không bị co lại (chữ "Nothing to import yet." từng đè lên viền ô).
   await m.page.setViewportSize({ width: 390, height: 664 });
+  // Hộp dùng lại cho thẻ khác: thân về đầu, không mở ra ở chỗ cuộn của lần trước (cảm ứng không focus ô đầu để kéo về).
+  await m.page.click('.step:nth-child(1) [data-act="edit-sub"]');
+  const dsc0 = await m.page.$eval('#dlg-sub .dlg-body', (b) => { b.scrollTop = 9999; return b.scrollTop; });
+  await m.page.keyboard.press('Escape');
+  await m.page.click('.step:nth-child(2) [data-act="edit-sub"]');
+  const dsc1 = await m.page.$eval('#dlg-sub .dlg-body', (b) => b.scrollTop);
+  check('390px: mở lại hộp sửa cho thẻ khác thì thân ở đầu', dsc0 > 0 && dsc1 === 0, `${dsc0} → ${dsc1}`);
+  await m.page.keyboard.press('Escape');
   await m.page.click('#import-btn');
   const squeezed = await m.page.$eval('#dlg-import', (dl) => [...dl.querySelectorAll('.dlg-body > :not([hidden])')]
     .filter((el) => el.tagName !== 'TEXTAREA' && el.scrollHeight > el.clientHeight + 1).map((el) => `${el.className || el.tagName} ${el.clientHeight}<${el.scrollHeight}`));
