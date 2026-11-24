@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="vi">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>Data Science Step Planner</title>
-<meta name="description" content="Data Science Step Planner: chia dự án dữ liệu thành bước và bước con, theo dõi tiến độ, ghi quyết định, xuất Markdown.">
+<meta name="description" content="Data Science Step Planner: split a data project into steps and sub-steps, track progress, log decisions, export Markdown.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600&family=Be+Vietnam+Pro:wght@400;600&family=JetBrains+Mono:wght@500&display=swap">
@@ -46,17 +46,17 @@
   <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.8 6.8 0 0 0 10.5 10.5Z"/></symbol>
 </svg>
 
-<a class="skip" href="#board">Bỏ qua tới bảng</a>
-<a class="skip" href="#log">Tới nhật ký</a>
+<a class="skip" href="#board">Skip to the board</a>
+<a class="skip" href="#log">Skip to the log</a>
 
 <header class="bar">
   <div class="wrap bar-in">
-    <a class="brand" href="../" aria-label="Về trang chủ">
+    <a class="brand" href="../" aria-label="Back to the home page">
       <span class="brand-mark" aria-hidden="true"></span>
       <span class="brand-txt"><span class="brand-own">vudat081299 / </span><b>Data Science Step Planner</b></span>
     </a>
     <span class="bar-sp"></span>
-    <button type="button" class="icon-btn" id="theme-btn" aria-label="Đổi giao diện sáng/tối" title="Sáng / tối">
+    <button type="button" class="icon-btn" id="theme-btn" aria-label="Switch light / dark theme" title="Light / dark">
       <svg class="i theme-moon" aria-hidden="true"><use href="#i-moon"/></svg>
       <svg class="i theme-sun" aria-hidden="true"><use href="#i-sun"/></svg>
     </button>
@@ -64,8 +64,8 @@
 </header>
 
 <div class="banner" id="file-note" hidden>
-  Trang đang mở bằng <code>file://</code> nên không chạy được. Chạy <code>python3 -m http.server</code> ở gốc repo,
-  rồi mở <code>http://localhost:8000/step-planner/</code>.
+  This page is open over <code>file://</code>, so it cannot run. Run <code>python3 -m http.server</code> at the repo root,
+  then open <code>http://localhost:8000/step-planner/</code>.
 </div>
 <script>
   if (location.protocol === 'file:') document.getElementById('file-note').hidden = false;
@@ -77,9 +77,9 @@
     <div class="proj-name">
       <p class="proj-k">Data Science Step Planner</p>
       <h1 class="top-name">
-        <button type="button" class="ws-btn" id="ws-btn" aria-haspopup="dialog" title="Đổi, tạo, đổi tên dự án">
-          <span class="ws-name" id="ws-name">Chưa có dự án</span>
-          <span class="sr">— đổi dự án</span>
+        <button type="button" class="ws-btn" id="ws-btn" aria-haspopup="dialog" title="Switch, create or rename projects">
+          <span class="ws-name" id="ws-name">No project</span>
+          <span class="sr">— switch project</span>
           <svg class="i" aria-hidden="true"><use href="#i-chev"/></svg>
         </button>
       </h1>
@@ -89,53 +89,53 @@
         <span class="overall-text" id="overall-text"></span>
         <span class="bar-prog" aria-hidden="true"><i id="overall-bar"></i></span>
       </div>
-      <ul class="legend" id="legend" aria-label="Số bước con theo trạng thái"></ul>
+      <ul class="legend" id="legend" aria-label="Sub-steps by status"></ul>
     </div>
   </header>
 
   <div class="hint" id="hint" hidden>
     <svg class="i" aria-hidden="true"><use href="#i-hint"/></svg>
-    <p><b>Mẹo:</b> bấm thẻ để sửa · bấm chip trạng thái để đổi
-      <span class="only-mouse">· kéo thẻ, hoặc Alt + ← → trên tên thẻ, để dời</span><span class="only-touch">· dời bằng nút mũi tên trên thẻ</span></p>
-    <button type="button" class="icon-btn" id="hint-off" aria-label="Ẩn mẹo" title="Ẩn mẹo">
+    <p><b>Tip:</b> click a card to edit it · click the status chip to change it
+      <span class="only-mouse">· drag a card, or press Alt + ← → on its title, to move it</span><span class="only-touch">· move a card with the arrow buttons on it</span></p>
+    <button type="button" class="icon-btn" id="hint-off" aria-label="Hide tip" title="Hide tip">
       <svg class="i" aria-hidden="true"><use href="#i-x"/></svg>
     </button>
   </div>
 
-  <section class="tools" aria-label="Lọc và công cụ">
+  <section class="tools" aria-label="Search and tools">
     <label class="search">
       <svg class="i" aria-hidden="true"><use href="#i-search"/></svg>
-      <span class="sr">Tìm</span>
-      <input type="search" class="input" id="q" placeholder="Tìm bước, bước con, ghi chú" autocomplete="off">
+      <span class="sr">Search</span>
+      <input type="search" class="input" id="q" placeholder="Search steps, sub-steps, notes" autocomplete="off">
     </label>
     <span class="filter-note" id="filter-note" role="status"></span>
     <span class="tools-gap"></span>
     <div class="tool-btns">
-      <button type="button" class="btn quiet" id="compact-btn" aria-pressed="false" title="Ẩn Xong khi và ghi chú trên thẻ, cột bước"><svg class="i" aria-hidden="true"><use href="#i-compact"/></svg>Gọn</button>
-      <button type="button" class="btn quiet" id="log-btn" title="Tới nhật ký quyết định"><svg class="i" aria-hidden="true"><use href="#i-log"/></svg><span id="log-btn-text">Nhật ký</span></button>
-      <button type="button" class="btn quiet" id="import-btn"><svg class="i" aria-hidden="true"><use href="#i-upload"/></svg>Nhập</button>
+      <button type="button" class="btn quiet" id="compact-btn" aria-pressed="false" title="Hide Done when and notes on cards and steps"><svg class="i" aria-hidden="true"><use href="#i-compact"/></svg>Compact</button>
+      <button type="button" class="btn quiet" id="log-btn" title="Go to the decision log"><svg class="i" aria-hidden="true"><use href="#i-log"/></svg><span id="log-btn-text">Log</span></button>
+      <button type="button" class="btn quiet" id="import-btn"><svg class="i" aria-hidden="true"><use href="#i-upload"/></svg>Import</button>
       <button type="button" class="btn warn" id="backup-nudge" hidden></button>
-      <button type="button" class="btn go" id="export-btn"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Xuất</button>
+      <button type="button" class="btn go" id="export-btn"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Export</button>
     </div>
   </section>
 
   <details class="ws-notes" id="ws-notes">
-    <summary><svg class="i" aria-hidden="true"><use href="#i-chev"/></svg>Ghi chú dự án <span class="muted" id="ws-notes-hint"></span></summary>
+    <summary><svg class="i" aria-hidden="true"><use href="#i-chev"/></svg>Project notes <span class="muted" id="ws-notes-hint"></span></summary>
     <p class="notes-text" id="ws-notes-text"></p>
-    <button type="button" class="btn small" id="ws-notes-edit">Sửa ghi chú</button>
+    <button type="button" class="btn small" id="ws-notes-edit">Edit notes</button>
   </details>
 
   <div class="board" id="board" tabindex="-1"></div>
-  <button type="button" class="add-step" id="add-step"><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg>Thêm bước</button>
+  <button type="button" class="add-step" id="add-step"><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg>Add step</button>
 
   <section class="log" id="log" tabindex="-1" aria-labelledby="log-title">
-    <h2 id="log-title">Nhật ký quyết định</h2>
-    <p class="muted">Ghi điều đã chốt và vì sao, để sau này không phải nhớ.</p>
+    <h2 id="log-title">Decision log</h2>
+    <p class="muted">Write down what was settled and why, so nobody has to remember it later.</p>
     <form class="log-form" id="log-form">
-      <label class="field"><span>Ngày</span><input type="date" id="log-date" required></label>
-      <label class="field grow"><span>Quyết định</span><input type="text" id="log-decision" required maxlength="300"></label>
-      <label class="field full"><span>Vì sao</span><textarea id="log-why" rows="2"></textarea></label>
-      <button type="submit" class="btn go">Ghi</button>
+      <label class="field"><span>Date</span><input type="date" id="log-date" required></label>
+      <label class="field grow"><span>Decision</span><input type="text" id="log-decision" required maxlength="300"></label>
+      <label class="field full"><span>Why</span><textarea id="log-why" rows="2"></textarea></label>
+      <button type="submit" class="btn go">Log it</button>
     </form>
     <ol class="log-list" id="log-list"></ol>
   </section>
@@ -145,25 +145,25 @@
   <h1 class="page-h" id="start-title">Data Science Step Planner</h1>
   <div class="start-card">
     <span class="start-icon" aria-hidden="true"><svg class="i"><use href="#i-board"/></svg></span>
-    <h2>Chia dự án thành bước và bước con</h2>
-    <p>Mỗi bước là một hàng, mỗi bước con là một thẻ. Theo dõi trạng thái, hạn; ghi quyết định; xuất Markdown.</p>
-    <ol class="how" aria-label="Cách dùng">
-      <li><span class="how-n">1</span><span><b>Chọn mẫu</b> bên dưới, hoặc nhập file</span></li>
-      <li><span class="how-n">2</span><span><b>Bấm thẻ</b> để sửa, <b>bấm chip</b> để đổi trạng thái</span></li>
-      <li><span class="how-n">3</span><span><b>Xuất</b> Markdown để chia sẻ, sao lưu JSON để giữ</span></li>
+    <h2>Split a project into steps and sub-steps</h2>
+    <p>Each step is a row, each sub-step is a card. Track status and due dates, log decisions, export Markdown.</p>
+    <ol class="how" aria-label="How it works">
+      <li><span class="how-n">1</span><span><b>Pick a template</b> below, or import a file</span></li>
+      <li><span class="how-n">2</span><span><b>Click a card</b> to edit it, <b>click the chip</b> to change its status</span></li>
+      <li><span class="how-n">3</span><span><b>Export</b> Markdown to share, back up as JSON to keep</span></li>
     </ol>
   </div>
-  <h2 class="sec-h">Chọn mẫu</h2>
+  <h2 class="sec-h">Pick a template</h2>
   <div class="tpl-list" id="start-templates"></div>
   <div class="start-foot">
-    <button type="button" class="btn" id="start-import"><svg class="i" aria-hidden="true"><use href="#i-upload"/></svg>Nhập từ file</button>
-    <span class="muted">Dữ liệu lưu trong trình duyệt này; sao lưu JSON để giữ hoặc chuyển máy.</span>
+    <button type="button" class="btn" id="start-import"><svg class="i" aria-hidden="true"><use href="#i-upload"/></svg>Import a file</button>
+    <span class="muted">Data stays in this browser; back up as JSON to keep it or move to another device.</span>
   </div>
 </section>
 
 <div class="toast" id="toast" role="status" aria-live="polite" hidden>
   <span id="toast-text"></span>
-  <button type="button" class="toast-btn" id="toast-undo" aria-keyshortcuts="Control+Z Meta+Z">Hoàn tác</button>
+  <button type="button" class="toast-btn" id="toast-undo" aria-keyshortcuts="Control+Z Meta+Z">Undo</button>
 </div>
 
 <!-- Dự án: danh sách, mở, đổi tên, nhân bản, xoá, tạo mới -->

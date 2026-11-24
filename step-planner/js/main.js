@@ -63,7 +63,9 @@ const banners = new Map();
 
 const findWs = (/** @type {string} */ id) => state.workspaces.find((w) => w.id === id) || null;
 const cur = () => findWs(curId);
-const fmtDate = (/** @type {string} */ d) => (d ? d.split('-').reverse().join('/') : '');
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+/** YYYY-MM-DD → "24 Nov 2026" (không phụ thuộc locale của máy). */
+const fmtDate = (/** @type {string} */ d) => (d ? `${+d.slice(8, 10)} ${MONTHS[+d.slice(5, 7) - 1]} ${d.slice(0, 4)}` : '');
 /** @param {any} ws @param {string} stepId */
 const stepOf = (ws, stepId) => (ws ? ws.steps.find((/** @type {any} */ s) => s.id === stepId) : null);
 
@@ -82,7 +84,7 @@ function setBanner(/** @type {string} */ key, /** @type {string} */ msg) {
 
 function persist() {
   if (!storageOK) return;
-  setBanner('save', S.save(state) ? '' : 'Không ghi được vào bộ nhớ trình duyệt (đầy hoặc bị chặn). Thay đổi mới chưa được lưu — sao lưu JSON để giữ.');
+  setBanner('save', S.save(state) ? '' : 'Could not write to browser storage (full or blocked). New changes are not saved — back up as JSON to keep them.');
 }
 
 /** Ghi lại, vẽ lại, rồi đưa focus về phần tử vừa thao tác. @param {string} [focusSel] @param {{preventScroll?:boolean}} [opt] */
@@ -153,13 +155,13 @@ function render() {
   const ws = cur();
   $('app').hidden = !ws;
   $('start').hidden = !!ws;
-  $('ws-name').textContent = ws ? ws.name : 'Chưa có dự án';
+  $('ws-name').textContent = ws ? ws.name : 'No project';
   document.title = ws ? `${ws.name} — Data Science Step Planner` : 'Data Science Step Planner';
   $('overall').hidden = !ws;
   renderNudge();
   if (!ws) { renderStart(); return; }
   const o = C.overall(ws);
-  $('overall-text').textContent = `${o.done}/${o.total} xong · ${o.pct}%`;
+  $('overall-text').textContent = `${o.done}/${o.total} done · ${o.pct}%`;
   $('overall-bar').style.width = o.pct + '%';
   renderLegend(ws);
   $('hint').hidden = S.hintHidden();
@@ -167,7 +169,7 @@ function render() {
   const compact = S.compactOn();
   $('board').classList.toggle('compact', compact);
   $('compact-btn').setAttribute('aria-pressed', String(compact));
-  $('log-btn-text').textContent = `Nhật ký (${ws.log.length})`;
+  $('log-btn-text').textContent = `Log (${ws.log.length})`;
   renderBoard(ws);
   renderLog(ws);
 }
@@ -183,7 +185,7 @@ function renderLegend(ws) {
 function renderWsNotes(/** @type {any} */ ws) {
   $('ws-notes-text').replaceChildren(...withLinks(ws.notes));
   $('ws-notes-text').hidden = !ws.notes;
-  $('ws-notes-hint').textContent = ws.notes ? `(${ws.notes.split('\n').length} dòng)` : '(trống)';
+  $('ws-notes-hint').textContent = ws.notes ? `(${C.plural(ws.notes.split('\n').length, 'line')})` : '(empty)';
 }
 
 /** Nhắc sao lưu: có thay đổi chưa sao lưu từ ≥ 3 ngày. */
@@ -192,10 +194,10 @@ function renderNudge() {
   const since = state.dirtySince ? Date.now() - Date.parse(state.dirtySince) : 0;
   b.hidden = !state.workspaces.length || since < BACKUP_NUDGE_DAYS * DAY;
   b.textContent = state.lastBackup
-    ? `Chưa sao lưu ${Math.floor((Date.now() - Date.parse(state.lastBackup)) / DAY)} ngày`
-    : 'Chưa sao lưu lần nào';
-  b.title = 'Tải bản sao lưu JSON của mọi dự án';
-  $('backup-when').textContent = state.lastBackup ? `Lần cuối: ${fmtDate(state.lastBackup.slice(0, 10))}` : 'Chưa sao lưu lần nào.';
+    ? `Not backed up for ${C.plural(Math.floor((Date.now() - Date.parse(state.lastBackup)) / DAY), 'day')}`
+    : 'Never backed up';
+  b.title = 'Download a JSON backup of every project';
+  $('backup-when').textContent = state.lastBackup ? `Last backup: ${fmtDate(state.lastBackup.slice(0, 10))}` : 'Never backed up.';
 }
 
 function renderBoard(/** @type {any} */ ws) {
@@ -228,30 +230,30 @@ function renderBoard(/** @type {any} */ ws) {
       h('div', { class: 'step-top' },
         h('span', { class: 'step-num', 'aria-hidden': 'true' }, String(i + 1)),
         h('h2', { class: 'step-title', id: 'st-' + step.id },
-          h('button', { type: 'button', class: 'link', 'data-act': 'edit-step', 'aria-label': `Bước ${i + 1}: ${step.title}. Sửa`, 'aria-keyshortcuts': 'Alt+ArrowUp Alt+ArrowDown' }, step.title))),
-      step.docs.length > 0 && h('ul', { class: 'step-docs', 'aria-label': `Tài liệu của bước ${i + 1}` }, step.docs.map(docLink)),
+          h('button', { type: 'button', class: 'link', 'data-act': 'edit-step', 'aria-label': `Step ${i + 1}: ${step.title}. Edit`, 'aria-keyshortcuts': 'Alt+ArrowUp Alt+ArrowDown' }, step.title))),
+      step.docs.length > 0 && h('ul', { class: 'step-docs', 'aria-label': `Docs of step ${i + 1}` }, step.docs.map(docLink)),
       step.goal && h('p', { class: 'step-goal' }, step.goal),
-      step.doneWhen && h('p', { class: 'step-done' }, h('span', { class: 'lbl' }, 'Xong khi '), step.doneWhen),
-      step.notes && h('details', { class: 'step-notes', open: keep.notes.has(step.id) }, h('summary', {}, icon('chev'), 'Ghi chú'), h('p', { class: 'notes-text' }, withLinks(step.notes))),
+      step.doneWhen && h('p', { class: 'step-done' }, h('span', { class: 'lbl' }, 'Done when '), step.doneWhen),
+      step.notes && h('details', { class: 'step-notes', open: keep.notes.has(step.id) }, h('summary', {}, icon('chev'), 'Notes'), h('p', { class: 'notes-text' }, withLinks(step.notes))),
       h('div', { class: 'prog' },
-        h('span', {}, `${prog.done}/${prog.total}`, h('span', { class: 'sr' }, ' bước con xong')),
+        h('span', {}, `${prog.done}/${prog.total}`, h('span', { class: 'sr' }, ' sub-steps done')),
         h('span', { class: 'bar-prog', 'aria-hidden': 'true' }, barFill(prog.pct))),
       h('div', { class: 'acts' },
-        h('button', { type: 'button', class: 'btn small', 'data-act': 'add-sub' }, icon('plus'), 'Bước con'),
-        !step.revisit && h('button', { type: 'button', class: 'btn small quiet aux', 'data-act': 'revisit', tabindex: '-1', title: 'Đánh dấu bước này cần làm lại' }, icon('redo'), 'Cần làm lại'),
-        h('button', { type: 'button', class: 'btn small quiet aux', 'data-act': 'add-doc', tabindex: '-1', title: 'Thêm link hoặc văn bản cho cả bước' }, icon('plus'), 'Tài liệu'),
-        !filtering && iconBtn('up', 'Đưa bước lên', 'step-up', i === 0),
-        !filtering && iconBtn('down', 'Đưa bước xuống', 'step-down', i === ws.steps.length - 1),
-        iconBtn('trash', 'Xoá bước', 'del-step')));
-    /* Băng "Đang làm lại": ngày đánh dấu, lý do (bấm để sửa), nút bỏ đánh dấu. */
+        h('button', { type: 'button', class: 'btn small', 'data-act': 'add-sub' }, icon('plus'), 'Sub-step'),
+        !step.revisit && h('button', { type: 'button', class: 'btn small quiet aux', 'data-act': 'revisit', tabindex: '-1', title: 'A later step showed this one must be redone' }, icon('redo'), 'Reopen'),
+        h('button', { type: 'button', class: 'btn small quiet aux', 'data-act': 'add-doc', tabindex: '-1', title: 'Add a link or a Markdown note for the whole step' }, icon('plus'), 'Doc'),
+        !filtering && iconBtn('up', 'Move step up', 'step-up', i === 0),
+        !filtering && iconBtn('down', 'Move step down', 'step-down', i === ws.steps.length - 1),
+        iconBtn('trash', 'Delete step', 'del-step')));
+    /* Băng "Reopened": ngày mở lại, lý do (bấm để sửa), nút đóng vòng. */
     const band = step.revisit && h('div', { class: 'revisit-band' },
       icon('redo'),
-      h('button', { type: 'button', class: 'badge', 'data-act': 'revisit', title: 'Sửa lý do' },
-        h('b', {}, 'Đang làm lại'),
-        ' · Vòng ' + step.revisit.round,
+      h('button', { type: 'button', class: 'badge', 'data-act': 'revisit', title: 'Edit the reason' },
+        h('b', {}, 'Reopened'),
+        ' · Iteration ' + step.revisit.round,
         step.revisit.date ? ' · ' + fmtDate(step.revisit.date) : '',
         step.revisit.reason ? ' · ' + step.revisit.reason : ''),
-      h('button', { type: 'button', class: 'btn small', 'data-act': 'revisit-clear' }, 'Xong, bỏ đánh dấu'));
+      h('button', { type: 'button', class: 'btn small', 'data-act': 'revisit-clear' }, 'Close iteration'));
     const cards = visible.map((/** @type {any} */ x) => {
       const j = step.subs.indexOf(x);
       const label = C.STATUS_LABEL[x.status];
@@ -260,35 +262,35 @@ function renderBoard(/** @type {any} */ ws) {
       return h('li', { class: `card st-${x.status}${isNext ? ' next' : ''}`, 'data-sub': x.id, draggable: filtering ? null : 'true' },
         h('div', { class: 'card-top' },
           h('span', { class: 'num' }, `${i + 1}.${j + 1}`),
-          isNext && h('span', { class: 'next-tag' }, 'Tiếp theo'),
+          isNext && h('span', { class: 'next-tag' }, 'Next'),
           x.docs.length > 0 && h('button', { type: 'button', class: 'doc-tag', 'data-act': 'sub-docs', tabindex: '-1',
-            'aria-label': `${x.docs.length} tài liệu. Mở danh sách`, title: x.docs.map((/** @type {any} */ d) => d.title).join('\n') },
+            'aria-label': `${C.plural(x.docs.length, 'doc')}. Open the list`, title: x.docs.map((/** @type {any} */ d) => d.title).join('\n') },
           icon('clip'), String(x.docs.length)),
-          h('button', { type: 'button', class: `chip st-${x.status}`, 'data-act': 'cycle', 'aria-label': `Trạng thái: ${label}. Bấm để đổi`, title: 'Bấm để đổi trạng thái' }, label)),
+          h('button', { type: 'button', class: `chip st-${x.status}`, 'data-act': 'cycle', 'aria-label': `Status: ${label}. Click to change`, title: 'Click to change the status' }, label)),
         h('div', { class: 'card-body' },
           h('h3', { class: 'card-title' }, h('button', { type: 'button', class: 'link', 'data-act': 'edit-sub', 'aria-keyshortcuts': 'Alt+ArrowLeft Alt+ArrowRight' }, x.title)),
           x.due && h('p', { class: 'meta' },
-            h('span', { class: 'due' + (overdue ? ' overdue' : '') }, 'hạn ' + fmtDate(x.due) + (overdue ? ' (trễ)' : ''))),
-          x.status === 'cancel' && x.cancelReason && h('p', { class: 'card-cancel' }, h('span', { class: 'lbl' }, 'Huỷ vì '), withLinks(x.cancelReason)),
-          x.doneWhen && h('p', { class: 'card-done' }, h('span', { class: 'lbl' }, 'Xong khi '), x.doneWhen),
+            h('span', { class: 'due' + (overdue ? ' overdue' : '') }, 'due ' + fmtDate(x.due) + (overdue ? ' (overdue)' : ''))),
+          x.status === 'cancel' && x.cancelReason && h('p', { class: 'card-cancel' }, h('span', { class: 'lbl' }, 'Cancelled because '), withLinks(x.cancelReason)),
+          x.doneWhen && h('p', { class: 'card-done' }, h('span', { class: 'lbl' }, 'Done when '), x.doneWhen),
           x.notes && h('p', { class: 'card-notes' }, withLinks(x.notes))),
         h('div', { class: 'acts' },
-          !filtering && iconBtn('left', 'Sang trái', 'sub-left', j === 0),
-          !filtering && iconBtn('right', 'Sang phải', 'sub-right', j === last),
-          iconBtn('copy', 'Nhân bản', 'sub-dup'),
-          iconBtn('trash', 'Xoá', 'sub-del')));
+          !filtering && iconBtn('left', 'Move left', 'sub-left', j === 0),
+          !filtering && iconBtn('right', 'Move right', 'sub-right', j === last),
+          iconBtn('copy', 'Duplicate', 'sub-dup'),
+          iconBtn('trash', 'Delete', 'sub-del')));
     });
-    cards.push(h('li', { class: 'card add' }, h('button', { type: 'button', class: 'add-sub', 'data-act': 'add-sub', tabindex: '-1' }, icon('plus'), 'Bước con')));
+    cards.push(h('li', { class: 'card add' }, h('button', { type: 'button', class: 'add-sub', 'data-act': 'add-sub', tabindex: '-1' }, icon('plus'), 'Sub-step')));
     rows.push(h('section', { class: 'step' + (step.revisit ? ' revisit' : '') + (done ? ' is-done' : ''), 'data-step': step.id, 'aria-labelledby': 'st-' + step.id },
       band,
       head,
-      h('div', { class: 'cards-scroll' }, h('ol', { class: 'cards', 'aria-label': `Bước con của bước ${i + 1}` }, cards))));
+      h('div', { class: 'cards-scroll' }, h('ol', { class: 'cards', 'aria-label': `Sub-steps of step ${i + 1}` }, cards))));
   });
-  if (!ws.steps.length) rows.push(h('p', { class: 'empty' }, 'Chưa có bước nào. Bấm "Thêm bước" bên dưới.'));
-  else if (!rows.length) rows.push(h('p', { class: 'empty' }, 'Không có bước con nào khớp. ',
-    h('button', { type: 'button', class: 'btn', 'data-act': 'clear-filter' }, 'Bỏ lọc')));
+  if (!ws.steps.length) rows.push(h('p', { class: 'empty' }, 'No steps yet. Click "Add step" below.'));
+  else if (!rows.length) rows.push(h('p', { class: 'empty' }, 'No sub-step matches. ',
+    h('button', { type: 'button', class: 'btn', 'data-act': 'clear-filter' }, 'Clear search')));
   board.replaceChildren(...rows);
-  $('filter-note').textContent = filtering ? `${shown} bước con khớp · sắp xếp tắt khi lọc` : '';
+  $('filter-note').textContent = filtering ? `${C.plural(shown, 'sub-step')} match · reordering is off while searching` : '';
   $('add-step').hidden = filtering;
   markCutCards(keep.open);
   for (const [id, left] of keep.left) {
@@ -315,7 +317,7 @@ function markCutCards(keepOpen = new Set()) {
       card.classList.add('cut');
       const open = keepOpen.has(card.dataset.sub);
       if (open) card.classList.add('open');
-      body.after(h('button', { type: 'button', class: 'more', 'data-act': 'more', 'aria-expanded': String(open), tabindex: '-1' }, open ? 'Thu gọn' : 'Xem thêm'));
+      body.after(h('button', { type: 'button', class: 'more', 'data-act': 'more', 'aria-expanded': String(open), tabindex: '-1' }, open ? 'Show less' : 'Show more'));
     }
   }
 }
@@ -346,16 +348,16 @@ function renderLog(/** @type {any} */ ws) {
   $('log-list').replaceChildren(...sorted.map((/** @type {any} */ l) => h('li', { class: 'log-item', 'data-log': l.id },
     h('span', { class: 'log-date' }, fmtDate(l.date)),
     h('button', { type: 'button', class: 'link log-decision', 'data-act': 'edit-log' }, l.decision),
-    h('button', { type: 'button', class: 'icon-btn', 'data-act': 'del-log', 'aria-label': 'Xoá quyết định', title: 'Xoá quyết định' }, icon('trash')),
+    h('button', { type: 'button', class: 'icon-btn', 'data-act': 'del-log', 'aria-label': 'Delete decision', title: 'Delete decision' }, icon('trash')),
     l.why && h('p', { class: 'log-why' }, withLinks(l.why)))));
 }
 
-const BLANK_TPL = { id: 'blank', name: 'Trống', description: '', steps: [] };
+const BLANK_TPL = { id: 'blank', name: 'Blank', description: '', steps: [] };
 /** Tên, mô tả và số bước / bước con của một mẫu (đếm từ templates.json). @param {any} t */
 function tplInfo(t) {
   const subs = t.steps.reduce((/** @type {number} */ n, /** @type {any} */ s) => n + (s.subs || []).length, 0);
   return h('span', {}, h('b', {}, t.name), t.description && h('small', {}, t.description),
-    t.steps.length > 0 && h('span', { class: 'tpl-n' }, `${t.steps.length} bước · ${subs} bước con`));
+    t.steps.length > 0 && h('span', { class: 'tpl-n' }, `${C.plural(t.steps.length, 'step')} · ${C.plural(subs, 'sub-step')}`));
 }
 function renderStart() {
   const list = templates.length ? templates : [BLANK_TPL];
@@ -393,7 +395,7 @@ function openDlg(dlg, focusEl) {
 async function tryClose(dlg) {
   const form = dlg.querySelector('form');
   if (form && snaps.has(dlg) && snapshot(form) !== snaps.get(dlg)) {
-    const ok = await ask({ title: 'Bỏ thay đổi?', text: 'Chữ vừa sửa trong hộp này chưa lưu sẽ mất.', ok: 'Bỏ thay đổi', danger: true });
+    const ok = await ask({ title: 'Discard changes?', text: 'Unsaved edits in this dialog will be lost.', ok: 'Discard', danger: true });
     if (ok === null) return false;
   }
   snaps.delete(dlg);
@@ -449,7 +451,7 @@ function afterOpen() {
   refocus('#ws-btn', { preventScroll: true });
 }
 function createFrom(/** @type {string} */ tplId, /** @type {string} */ name = '') {
-  const tpl = templates.find((t) => t.id === tplId) || { id: 'blank', name: 'Dự án mới', steps: [] };
+  const tpl = templates.find((t) => t.id === tplId) || { id: 'blank', name: 'Untitled project', steps: [] };
   addWorkspace(C.fromTemplate(tpl, name));
   commit();
   afterOpen();
@@ -471,7 +473,7 @@ $('start-import').addEventListener('click', () => openImport());
 function openWs() {
   renderWsList();
   const fs = $('ws-new-templates');
-  fs.replaceChildren(h('legend', {}, 'Mẫu'), ...(templates.length ? templates : [BLANK_TPL]).map((t, i) =>
+  fs.replaceChildren(h('legend', {}, 'Template'), ...(templates.length ? templates : [BLANK_TPL]).map((t, i) =>
     h('label', { class: 'tpl' }, h('input', { type: 'radio', name: 'tpl', value: t.id, checked: i === 0 }), tplInfo(t))));
   $('ws-new-name').value = '';
   $('dlg-ws').showModal();
@@ -481,12 +483,12 @@ function renderWsList() {
     const o = C.overall(w);
     return h('li', { class: 'ws-item', 'data-ws': w.id },
       h('button', { type: 'button', class: 'ws-open', 'data-act': 'ws-open', 'aria-current': w.id === curId ? 'true' : null },
-        h('b', {}, w.name), h('small', {}, `${w.steps.length} bước · ${o.done}/${o.total} xong · sửa ${fmtDate(w.updatedAt.slice(0, 10))}`)),
-      h('button', { type: 'button', class: 'btn', 'data-act': 'ws-rename' }, 'Đổi tên'),
-      h('button', { type: 'button', class: 'btn', 'data-act': 'ws-dup' }, 'Nhân bản'),
-      h('button', { type: 'button', class: 'btn danger', 'data-act': 'ws-del' }, 'Xoá'));
+        h('b', {}, w.name), h('small', {}, `${C.plural(w.steps.length, 'step')} · ${o.done}/${o.total} done · edited ${fmtDate(w.updatedAt.slice(0, 10))}`)),
+      h('button', { type: 'button', class: 'btn', 'data-act': 'ws-rename' }, 'Rename'),
+      h('button', { type: 'button', class: 'btn', 'data-act': 'ws-dup' }, 'Duplicate'),
+      h('button', { type: 'button', class: 'btn danger', 'data-act': 'ws-del' }, 'Delete'));
   }));
-  if (!state.workspaces.length) $('ws-list').append(h('li', { class: 'muted' }, 'Chưa có dự án.'));
+  if (!state.workspaces.length) $('ws-list').append(h('li', { class: 'muted' }, 'No projects yet.'));
 }
 $('ws-btn').addEventListener('click', openWs);
 $('ws-list').addEventListener('click', async (/** @type {any} */ e) => {
@@ -498,19 +500,19 @@ $('ws-list').addEventListener('click', async (/** @type {any} */ e) => {
   if (act === 'ws-open') { $('dlg-ws').close(); switchTo(id); afterOpen(); return; }
   if (act === 'ws-rename') {
     const w = findWs(id);
-    const name = w && await ask({ title: 'Đổi tên dự án', label: 'Tên', value: w.name, ok: 'Đổi tên' });
+    const name = w && await ask({ title: 'Rename project', label: 'Name', value: w.name, ok: 'Rename' });
     const w2 = findWs(id);
     if (w2 && name && C.oneLine(name)) { w2.name = C.oneLine(name); w2.updatedAt = new Date().toISOString(); persist(); render(); }
   } else if (act === 'ws-dup') {
     const w = findWs(id);
     if (!w) return;
     const c = C.freshCopy(w);
-    c.name = C.uniqueName(w.name, state.workspaces.map((x) => x.name), 'bản sao');
+    c.name = C.uniqueName(w.name, state.workspaces.map((x) => x.name), 'copy');
     state.workspaces.splice(state.workspaces.indexOf(w) + 1, 0, c);
     persist(); render();
   } else if (act === 'ws-del') {
     const w = findWs(id);
-    const ok = w && await ask({ title: 'Xoá dự án?', text: `"${w.name}" sẽ bị xoá khỏi trình duyệt này, không hoàn tác được. Sao lưu JSON trước nếu cần giữ.`, ok: 'Xoá', danger: true });
+    const ok = w && await ask({ title: 'Delete project?', text: `"${w.name}" will be deleted from this browser and cannot be undone. Back up as JSON first if you need it.`, ok: 'Delete', danger: true });
     if (ok === null) return;
     state.workspaces = state.workspaces.filter((x) => x.id !== id);
     hideToast(false);
@@ -579,7 +581,7 @@ $('board').addEventListener('click', (/** @type {any} */ e) => {
   if (act === 'clear-filter') { clearFilter(); return; }
   if (act === 'more') {
     const open = b.closest('.card').classList.toggle('open');
-    b.textContent = open ? 'Thu gọn' : 'Xem thêm';
+    b.textContent = open ? 'Show less' : 'Show more';
     b.setAttribute('aria-expanded', String(open));
     return;
   }
@@ -683,22 +685,22 @@ function endMove(m, swapId, focusSel) {
     return;
   }
   m.undo = () => undoMove(m);
-  toast(`Đã dời ${m.kind === 'step' ? 'bước ' : ''}${m.fromLabel} → ${p.label} · ${p.title}`, m.undo, focusSel, false);
+  toast(`Moved ${m.kind === 'step' ? 'step ' : ''}${m.fromLabel} → ${p.label} · ${p.title}`, m.undo, focusSel, false);
 }
 function undoMove(/** @type {any} */ m) {
   lastMove = null;
   const w = findWs(m.wsId);
-  if (!w) { toast('Không hoàn tác được: dự án đã bị xoá.'); return; }
+  if (!w) { toast('Cannot undo: the project was deleted.'); return; }
   if (m.kind === 'step') {
     const step = stepOf(w, m.id);
-    if (!step) { toast('Không hoàn tác được: bước đã bị xoá.'); return; }
+    if (!step) { toast('Cannot undo: the step was deleted.'); return; }
     w.steps.splice(w.steps.indexOf(step), 1);
     w.steps.splice(Math.min(m.from.index, w.steps.length), 0, step);
   } else {
     const from = w.steps.find((/** @type {any} */ s) => s.subs.some((/** @type {any} */ x) => x.id === m.id));
     const back = stepOf(w, m.from.stepId);
-    if (!from) { toast('Không hoàn tác được: bước con đã bị xoá.'); return; }
-    if (!back) { toast('Không hoàn tác được: bước chứa nó đã bị xoá.'); return; }
+    if (!from) { toast('Cannot undo: the sub-step was deleted.'); return; }
+    if (!back) { toast('Cannot undo: its step was deleted.'); return; }
     const sub = from.subs.find((/** @type {any} */ x) => x.id === m.id);
     from.subs.splice(from.subs.indexOf(sub), 1);
     back.subs.splice(Math.min(m.from.index, back.subs.length), 0, sub);
@@ -733,7 +735,7 @@ function flash(kind, id, swapId) {
 }
 
 function duplicateSub(/** @type {any} */ step, /** @type {any} */ sub) {
-  const c = C.normSub({ ...sub, id: '', title: sub.title + ' (bản sao)', docs: sub.docs.map((/** @type {any} */ d) => ({ ...d, id: '' })) });
+  const c = C.normSub({ ...sub, id: '', title: sub.title + ' (copy)', docs: sub.docs.map((/** @type {any} */ d) => ({ ...d, id: '' })) });
   step.subs.splice(step.subs.indexOf(sub) + 1, 0, c);
   commit(subSel(c.id, 'edit-sub'));
 }
@@ -746,11 +748,11 @@ function deleteSub(/** @type {string} */ wsId, /** @type {string} */ stepId, /**
   const [sub] = step.subs.splice(j, 1);
   commit();
   const back = `${subSel(step.subs[Math.min(j, step.subs.length - 1)]?.id, 'edit-sub')} || ${stepSel(stepId, 'add-sub')}`;
-  toast(`Đã xoá "${sub.title}".`, () => {
+  toast(`Deleted "${sub.title}".`, () => {
     const w = findWs(wsId);
     const s = stepOf(w, stepId);
-    if (!w) { toast('Không hoàn tác được: dự án đã bị xoá.'); return; }
-    if (!s) { toast('Không hoàn tác được: bước chứa nó đã bị xoá.'); return; }
+    if (!w) { toast('Cannot undo: the project was deleted.'); return; }
+    if (!s) { toast('Cannot undo: its step was deleted.'); return; }
     if (!s.subs.some((/** @type {any} */ x) => x.id === sub.id)) s.subs.splice(Math.min(j, s.subs.length), 0, sub);
     if (curId !== wsId) switchTo(wsId);
     commit(subSel(sub.id, 'edit-sub'));
@@ -761,7 +763,7 @@ async function deleteStep(/** @type {string} */ wsId, /** @type {string} */ step
   let step = stepOf(findWs(wsId), stepId);
   if (!step) return;
   if (step.subs.length) {
-    const ok = await ask({ title: 'Xoá bước?', text: `"${step.title}" và ${step.subs.length} bước con của nó sẽ bị xoá (hoàn tác được ngay sau đó).`, ok: 'Xoá bước', danger: true });
+    const ok = await ask({ title: 'Delete step?', text: `"${step.title}" and its ${C.plural(step.subs.length, 'sub-step')} will be deleted (you can undo right after).`, ok: 'Delete step', danger: true });
     if (ok === null) return;
   }
   const ws = findWs(wsId);
@@ -771,9 +773,9 @@ async function deleteStep(/** @type {string} */ wsId, /** @type {string} */ step
   ws.steps.splice(i, 1);
   commit();
   const near = ws.steps[Math.min(i, ws.steps.length - 1)];
-  toast(`Đã xoá bước "${step.title}" (${step.subs.length} bước con).`, () => {
+  toast(`Deleted step "${step.title}" (${C.plural(step.subs.length, 'sub-step')}).`, () => {
     const w = findWs(wsId);
-    if (!w) { toast('Không hoàn tác được: dự án đã bị xoá.'); return; }
+    if (!w) { toast('Cannot undo: the project was deleted.'); return; }
     if (!stepOf(w, step.id)) w.steps.splice(Math.min(i, w.steps.length), 0, step);
     if (curId !== wsId) switchTo(wsId);
     commit(stepSel(step.id, 'edit-step'));
@@ -804,7 +806,7 @@ function openSub(/** @type {any} */ step, /** @type {any} */ sub, toDocs = false
   const ws = cur();
   const f = $('sub-form');
   subCtx = { wsId: ws.id, stepId: step.id, subId: sub ? sub.id : null };
-  $('dlg-sub-title').textContent = sub ? 'Sửa bước con' : 'Thêm bước con';
+  $('dlg-sub-title').textContent = sub ? 'Edit sub-step' : 'Add sub-step';
   field(f, 'status').replaceChildren(...C.STATUSES.map((s) => h('option', { value: s }, C.STATUS_LABEL[s])));
   field(f, 'step').replaceChildren(...ws.steps.map((/** @type {any} */ s, /** @type {number} */ i) => h('option', { value: s.id }, `${i + 1}. ${s.title}`)));
   const x = sub || C.normSub({ title: '' });
@@ -845,7 +847,7 @@ $('sub-form').addEventListener('submit', (/** @type {any} */ e) => {
   const f = $('sub-form');
   const { ws, step, sub } = subFromCtx();
   closeSaved($('dlg-sub'));
-  if (!ws || !step || (subCtx.subId && !sub)) { toast('Không lưu được: bước đã bị xoá ở nơi khác.'); return; }
+  if (!ws || !step || (subCtx.subId && !sub)) { toast('Not saved: the step was deleted elsewhere.'); return; }
   const data = C.normSub({
     id: sub ? sub.id : '', docs: sub ? sub.docs : [],
     title: field(f, 'title').value, status: field(f, 'status').value,
@@ -863,7 +865,7 @@ $('sub-form').addEventListener('submit', (/** @type {any} */ e) => {
   const focusSel = `${subSel(item.id, 'edit-sub')} || ${stepSel(target.id, 'add-sub')} || #q`;
   if (m && (target !== step || k !== j)) endMove(m, (target === step && k > j ? target.subs[k - 1] : target.subs[k + 1])?.id, focusSel);
   else commit(focusSel);
-  if (!document.querySelector(`.card[data-sub="${item.id}"]`)) toast(sub ? 'Đã lưu — đang bị bộ lọc ẩn.' : 'Đã thêm — đang bị bộ lọc ẩn.');
+  if (!document.querySelector(`.card[data-sub="${item.id}"]`)) toast(sub ? 'Saved — hidden by the search filter.' : 'Added — hidden by the search filter.');
 });
 /* Nhân bản bản đã lưu; chữ đang sửa chưa lưu thì hỏi lại như Đóng. */
 $('sub-dup').addEventListener('click', async () => {
@@ -885,7 +887,7 @@ function openStep(/** @type {any} */ step) {
   const f = $('step-form');
   const ws = cur();
   stepCtx = { wsId: ws.id, stepId: step ? step.id : null };
-  $('dlg-step-title').textContent = step ? 'Sửa bước' : 'Thêm bước';
+  $('dlg-step-title').textContent = step ? 'Edit step' : 'Add step';
   field(f, 'title').value = step ? step.title : '';
   field(f, 'goal').value = step ? step.goal : '';
   field(f, 'doneWhen').value = step ? step.doneWhen : '';
@@ -907,7 +909,7 @@ $('step-form').addEventListener('submit', (/** @type {any} */ e) => {
   if (!ws) return;
   const vals = { title: field(f, 'title').value, goal: field(f, 'goal').value, doneWhen: field(f, 'doneWhen').value, notes: field(f, 'notes').value };
   let step = stepCtx.stepId ? stepOf(ws, stepCtx.stepId) : null;
-  if (stepCtx.stepId && !step) { toast('Không lưu được: bước đã bị xoá ở nơi khác.'); return; }
+  if (stepCtx.stepId && !step) { toast('Not saved: the step was deleted elsewhere.'); return; }
   const m = step && curId === ws.id ? beginMove('step', step.id) : null;
   const i = step ? ws.steps.indexOf(step) : -1;
   if (step) {
@@ -950,9 +952,9 @@ function docWhere(ctx) {
   const i = ws ? ws.steps.findIndex((/** @type {any} */ s) => s.id === ctx.stepId) : -1;
   if (i < 0) return '';
   const step = ws.steps[i];
-  if (!ctx.subId) return `Bước ${i + 1} · ${step.title}`;
+  if (!ctx.subId) return `Step ${i + 1} · ${step.title}`;
   const j = step.subs.findIndex((/** @type {any} */ x) => x.id === ctx.subId);
-  return j < 0 ? '' : `Bước con ${i + 1}.${j + 1} · ${step.subs[j].title}`;
+  return j < 0 ? '' : `Sub-step ${i + 1}.${j + 1} · ${step.subs[j].title}`;
 }
 /** Hộp sửa đang mở ('sub' / 'step') và ngữ cảnh tài liệu của nó. */
 function hostCtx(/** @type {'sub'|'step'} */ where) {
@@ -970,15 +972,15 @@ function renderDocsEdit(where) {
   const list = /** @type {any} */ (sec.querySelector('[data-doc-list]'));
   /** @type {any} */ (sec.querySelector('[data-doc-add]')).hidden = !owner;
   const note = /** @type {any} */ (sec.querySelector('[data-doc-note]'));
-  note.textContent = !owner ? (where === 'sub' ? 'Lưu bước con trước, rồi thêm tài liệu.' : 'Lưu bước trước, rồi thêm tài liệu.')
-    : owner.docs.length ? 'Thêm, sửa, xoá tài liệu được lưu ngay.' : 'Chưa có. Link (đề bài, data card, repo…) hoặc văn bản Markdown.';
+  note.textContent = !owner ? (where === 'sub' ? 'Save the sub-step first, then add docs.' : 'Save the step first, then add docs.')
+    : owner.docs.length ? 'Adding, editing and deleting docs saves right away.' : 'None yet. A link (brief, data card, repo…) or a Markdown note.';
   const rows = owner ? owner.docs.map((/** @type {any} */ d) => h('li', { class: 'doc-row', 'data-doc': d.id },
     h('button', { type: 'button', class: 'doc-link', 'data-doc-act': 'open' }, icon(d.kind === 'link' ? 'link' : 'doc'), h('span', {}, d.title),
       d.kind === 'link' && h('small', {}, d.url.replace(/^https?:\/\/(www\.)?/i, '').split(/[/?#]/)[0])),
-    h('button', { type: 'button', class: 'icon-btn', 'data-doc-act': 'del', 'aria-label': `Xoá tài liệu ${d.title}`, title: 'Xoá tài liệu' }, icon('trash')))) : [];
+    h('button', { type: 'button', class: 'icon-btn', 'data-doc-act': 'del', 'aria-label': `Delete doc ${d.title}`, title: 'Delete doc' }, icon('trash')))) : [];
   if (docUndo && docUndo.where === where) {
-    rows.push(h('li', { class: 'doc-row undo' }, h('span', {}, `Đã xoá "${docUndo.title}".`),
-      h('button', { type: 'button', class: 'btn small', 'data-doc-act': 'undo' }, 'Hoàn tác')));
+    rows.push(h('li', { class: 'doc-row undo' }, h('span', {}, `Deleted "${docUndo.title}".`),
+      h('button', { type: 'button', class: 'btn small', 'data-doc-act': 'undo' }, 'Undo')));
   }
   list.replaceChildren(...rows);
 }
@@ -1022,9 +1024,9 @@ function deleteDoc(ctx) {
   const undo = () => {
     docUndo = null;
     hideToast(false);
-    if (!findWs(ctx.wsId)) { toast('Không hoàn tác được: dự án đã bị xoá.'); return; }
+    if (!findWs(ctx.wsId)) { toast('Cannot undo: the project was deleted.'); return; }
     const o = docOwner(ctx);
-    if (!o) { toast('Không hoàn tác được: bước chứa nó đã bị xoá.'); return; }
+    if (!o) { toast('Cannot undo: its step was deleted.'); return; }
     if (!o.docs.some((/** @type {any} */ d) => d.id === doc.id)) o.docs.splice(Math.min(k, o.docs.length), 0, doc);
     if (curId !== ctx.wsId) switchTo(ctx.wsId);
     commit();
@@ -1036,8 +1038,8 @@ function deleteDoc(ctx) {
     docUndo = { where: host, title: doc.title, run: undo };
     refreshDocLists();
     refocus(`#${host}-docs [data-doc-act="undo"]`);
-    toast(`Đã xoá tài liệu "${doc.title}".`, undo, docFocus(ctx, ''), false);
-  } else toast(`Đã xoá tài liệu "${doc.title}".`, undo, `${stepSel(ctx.stepId, 'edit-step')}`);
+    toast(`Deleted doc "${doc.title}".`, undo, docFocus(ctx, ''), false);
+  } else toast(`Deleted doc "${doc.title}".`, undo, `${stepSel(ctx.stepId, 'edit-step')}`);
 }
 
 /* Hộp nhỏ: thêm tài liệu (chọn Link hay Văn bản), sửa link. */
@@ -1048,14 +1050,14 @@ function paintDocKind() {
   const link = docKind() === 'link';
   $('doc-url-field').hidden = !link;
   field($('doc-form'), 'url').disabled = !link;
-  $('doc-save').textContent = link || docCtx?.docId ? 'Lưu' : 'Tiếp: viết văn bản';
+  $('doc-save').textContent = link || docCtx?.docId ? 'Save' : 'Next: write the note';
 }
 $('doc-kind').addEventListener('change', paintDocKind);
 /** @param {DocCtx} ctx */
 function openDocNew(ctx) {
   const f = $('doc-form');
   docCtx = { ...ctx, docId: null };
-  $('dlg-doc-title').textContent = 'Thêm tài liệu';
+  $('dlg-doc-title').textContent = 'Add doc';
   $('doc-where').textContent = docWhere(ctx);
   $('doc-kind').hidden = false;
   /** @type {any} */ (f.querySelector('input[name="kind"][value="link"]')).checked = true;
@@ -1070,7 +1072,7 @@ function openDocNew(ctx) {
 function openLinkEdit(ctx, doc) {
   const f = $('doc-form');
   docCtx = ctx;
-  $('dlg-doc-title').textContent = 'Sửa link';
+  $('dlg-doc-title').textContent = 'Edit link';
   $('doc-where').textContent = docWhere(ctx);
   $('doc-kind').hidden = true;
   /** @type {any} */ (f.querySelector('input[name="kind"][value="link"]')).checked = true;
@@ -1094,10 +1096,10 @@ $('doc-form').addEventListener('submit', (/** @type {any} */ e) => {
     return;
   }
   const url = C.safeUrl(field(f, 'url').value);
-  if (!url) { field(f, 'url').setCustomValidity('Link phải bắt đầu bằng http:// hoặc https://'); field(f, 'url').reportValidity(); return; }
+  if (!url) { field(f, 'url').setCustomValidity('The link must start with http:// or https://'); field(f, 'url').reportValidity(); return; }
   const owner = docOwner(ctx);
   closeSaved($('dlg-doc'));
-  if (!owner) { toast('Không lưu được: bước đã bị xoá ở nơi khác.'); return; }
+  if (!owner) { toast('Not saved: the step was deleted elsewhere.'); return; }
   const old = ctx.docId ? owner.docs.find((/** @type {any} */ d) => d.id === ctx.docId) : null;
   const doc = C.normDoc({ id: old ? old.id : '', kind: 'link', title, url });
   if (old) Object.assign(old, doc); else owner.docs.push(doc);
@@ -1118,7 +1120,7 @@ let mdCtx = null;
 let mdTimer = 0;
 function paintMdView() {
   const body = field($('md-form'), 'body').value;
-  $('md-view').replaceChildren(body.trim() ? renderMd(body) : h('p', { class: 'muted' }, 'Chưa có nội dung. Chọn "Sửa" để viết.'));
+  $('md-view').replaceChildren(body.trim() ? renderMd(body) : h('p', { class: 'muted' }, 'Nothing here yet. Choose "Edit" to write.'));
 }
 /** @param {'edit'|'view'|'split'} mode */
 function setMdMode(mode) {
@@ -1151,7 +1153,7 @@ field($('md-form'), 'body').addEventListener('input', () => {
 function openMd(ctx, newTitle = '') {
   const owner = docOwner(ctx);
   const doc = owner && ctx.docId ? owner.docs.find((/** @type {any} */ d) => d.id === ctx.docId) : null;
-  if (!owner || (ctx.docId && !doc)) { toast('Không mở được: tài liệu đã bị xoá ở nơi khác.'); return; }
+  if (!owner || (ctx.docId && !doc)) { toast('Cannot open: the doc was deleted elsewhere.'); return; }
   const f = $('md-form');
   mdCtx = ctx;
   field(f, 'title').value = doc ? doc.title : newTitle;
@@ -1171,7 +1173,7 @@ $('md-form').addEventListener('submit', (/** @type {any} */ e) => {
   if (!ctx) return;
   const owner = docOwner(ctx);
   closeSaved($('dlg-md'));
-  if (!owner) { toast('Không lưu được: bước đã bị xoá ở nơi khác.'); return; }
+  if (!owner) { toast('Not saved: the step was deleted elsewhere.'); return; }
   const old = ctx.docId ? owner.docs.find((/** @type {any} */ d) => d.id === ctx.docId) : null;
   const doc = C.normDoc({ id: old ? old.id : '', kind: 'md', title: field(f, 'title').value, body: field(f, 'body').value });
   if (old) Object.assign(old, doc); else owner.docs.push(doc);
@@ -1191,18 +1193,18 @@ let revisitCtx = { wsId: '', stepId: '' };
 function openRevisit(/** @type {any} */ step) {
   revisitCtx = { wsId: cur().id, stepId: step.id };
   const i = cur().steps.indexOf(step);
-  $('revisit-step').textContent = `Bước ${i + 1} · ${step.title}`;
+  $('revisit-step').textContent = `Step ${i + 1} · ${step.title}`;
   field($('revisit-form'), 'reason').value = step.revisit ? step.revisit.reason : '';
   /* Đánh dấu mới: chọn bước con đưa về "Chưa làm" (mặc định không chọn). Sửa lý do: không có danh sách. */
   $('revisit-subs').hidden = !!step.revisit || !step.subs.length;
-  $('revisit-round').textContent = `Lần này là vòng ${(step.round || 1) + 1}.`;
+  $('revisit-round').textContent = `This opens iteration ${(step.round || 1) + 1}.`;
   $('revisit-list').replaceChildren(...step.subs.map((/** @type {any} */ x, /** @type {number} */ j) => h('li', {},
     h('label', { class: 'reset-item' },
       h('input', { type: 'checkbox', name: 'reset', value: x.id, 'data-status': x.status, disabled: x.status === 'todo' }),
       h('span', { class: 'num' }, `${i + 1}.${j + 1}`), h('span', { class: 'reset-title' }, x.title),
       h('span', { class: `chip st-${x.status}` }, C.STATUS_LABEL[x.status])))));
   $('revisit-clear').hidden = !step.revisit;
-  /** @type {any} */ ($('revisit-form').querySelector('button[type="submit"]')).textContent = step.revisit ? 'Lưu lý do' : 'Đánh dấu cần làm lại';
+  /** @type {any} */ ($('revisit-form').querySelector('button[type="submit"]')).textContent = step.revisit ? 'Save reason' : 'Reopen step';
   openDlg($('dlg-revisit'), field($('revisit-form'), 'reason'));
 }
 const revisitStep = () => stepOf(findWs(revisitCtx.wsId), revisitCtx.stepId);
@@ -1230,14 +1232,14 @@ $('revisit-form').addEventListener('submit', (/** @type {any} */ e) => {
     before.statuses.set(x.id, x.status);
     x.status = 'todo';
   }
-  const entry = C.normLog({ date: C.today(), decision: `Làm lại: ${step.title} (vòng ${round})`, why: reason });
+  const entry = C.normLog({ date: C.today(), decision: `Reopened: ${step.title} (iteration ${round})`, why: reason });
   ws.log.push(entry);
   commit(focusSel);
   const n = before.statuses.size;
-  toast(`Đã đánh dấu làm lại · vòng ${round}${n ? ` · ${n} bước con về Chưa làm` : ''} · ghi nhật ký.`, () => {
+  toast(`Step reopened · iteration ${round}${n ? ` · ${C.plural(n, 'sub-step')} back to ${C.STATUS_LABEL.todo}` : ''} · logged.`, () => {
     const w = findWs(wsId);
     const s = stepOf(w, stepId);
-    if (!w) { toast('Không hoàn tác được: dự án đã bị xoá.'); return; }
+    if (!w) { toast('Cannot undo: the project was deleted.'); return; }
     if (s) {
       s.revisit = null;
       s.round = before.round;
@@ -1300,7 +1302,7 @@ $('log-edit-form').addEventListener('submit', (/** @type {any} */ e) => {
   const f = $('log-edit-form');
   closeSaved($('dlg-log'));
   const entry = findWs(logCtx.wsId)?.log.find((/** @type {any} */ l) => l.id === logCtx.id);
-  if (!entry) { toast('Không lưu được: quyết định đã bị xoá ở nơi khác.'); return; }
+  if (!entry) { toast('Not saved: the decision was deleted elsewhere.'); return; }
   Object.assign(entry, C.normLog({ id: entry.id, date: field(f, 'date').value, decision: field(f, 'decision').value, why: field(f, 'why').value }));
   commit(`[data-log="${entry.id}"] [data-act="edit-log"]`);
 });
@@ -1314,9 +1316,9 @@ function deleteLog(/** @type {string} */ wsId, /** @type {string} */ id) {
   if (k < 0) return;
   const [entry] = ws.log.splice(k, 1);
   commit();
-  toast(`Đã xoá quyết định "${entry.decision}".`, () => {
+  toast(`Deleted decision "${entry.decision}".`, () => {
     const w = findWs(wsId);
-    if (!w) { toast('Không hoàn tác được: dự án đã bị xoá.'); return; }
+    if (!w) { toast('Cannot undo: the project was deleted.'); return; }
     if (!w.log.some((/** @type {any} */ l) => l.id === entry.id)) w.log.splice(Math.min(k, w.log.length), 0, entry);
     if (curId !== wsId) switchTo(wsId);
     commit(`[data-log="${entry.id}"] [data-act="edit-log"]`);
@@ -1330,7 +1332,7 @@ function exportText(kind = exportKind()) {
   const ws = cur();
   if (kind === 'md') return { text: C.toMarkdown(ws), file: C.slug(ws.name) + '.md', type: 'text/markdown' };
   if (kind === 'json') return { text: C.toJSON(ws), file: C.slug(ws.name) + '.json', type: 'application/json' };
-  return { text: C.toBackup(state.workspaces), file: `step-planner-sao-luu-${C.today()}.json`, type: 'application/json' };
+  return { text: C.toBackup(state.workspaces), file: `step-planner-backup-${C.today()}.json`, type: 'application/json' };
 }
 function download(/** @type {{text:string, file:string, type:string}} */ x) {
   const url = URL.createObjectURL(new Blob([x.text], { type: x.type + ';charset=utf-8' }));
@@ -1362,16 +1364,16 @@ function openExport() {
 $('export-btn').addEventListener('click', openExport);
 $('backup-nudge').addEventListener('click', () => {
   const file = backupAll();
-  toast('Đã tải bản sao lưu ' + file);
+  toast('Downloaded backup ' + file);
   refocus('#export-btn');
 });
-$('backup-all').addEventListener('click', () => { $('export-status').textContent = 'Đã tải ' + backupAll(); });
+$('backup-all').addEventListener('click', () => { $('export-status').textContent = 'Downloaded ' + backupAll(); });
 $('export-kind').addEventListener('change', () => { $('export-text').value = exportText().text; $('export-status').textContent = ''; });
 $('export-download').addEventListener('click', () => {
   const x = exportText();
   download(x);
   if (exportKind() === 'backup') markBackup();
-  $('export-status').textContent = 'Đã tải ' + x.file;
+  $('export-status').textContent = 'Downloaded ' + x.file;
 });
 $('export-copy').addEventListener('click', async () => {
   const text = exportText().text;
@@ -1384,7 +1386,7 @@ $('export-copy').addEventListener('click', async () => {
     ok = !!(document.execCommand && document.execCommand('copy'));
   }
   if (ok && exportKind() === 'backup') markBackup();
-  $('export-status').textContent = ok ? 'Đã chép.' : 'Không chép được — chọn chữ rồi chép tay.';
+  $('export-status').textContent = ok ? 'Copied.' : 'Could not copy — select the text and copy it by hand.';
 });
 
 /* ── Nhập ── */
@@ -1408,20 +1410,20 @@ function previewImport() {
     replace.disabled = !on;
     if (!on) /** @type {any} */ (document.querySelector('input[name="import-mode"][value="new"]')).checked = true;
   };
-  if (!text.trim()) { p.replaceChildren('Chưa có nội dung.'); $('import-go').disabled = true; setReplace(false); return; }
+  if (!text.trim()) { p.replaceChildren('Nothing to import yet.'); $('import-go').disabled = true; setReplace(false); return; }
   try {
     importParsed = C.parseImport(text);
     const c = C.counts(importParsed.workspaces);
-    const kind = { md: 'Markdown', json: 'JSON một dự án', backup: 'JSON sao lưu' }[importParsed.kind];
+    const kind = { md: 'Markdown', json: 'JSON (one project)', backup: 'JSON backup' }[importParsed.kind];
     const w = importParsed.warnings;
-    p.replaceChildren(h('p', {}, `${kind}: ${c.workspaces} dự án · ${c.steps} bước · ${c.subs} bước con · ${c.log} quyết định`
-      + (c.docs ? ` · ${c.docs} tài liệu` : '')
-      + (w.length ? ` · ${w.length} cảnh báo:` : '')),
+    p.replaceChildren(h('p', {}, `${kind}: ${C.plural(c.workspaces, 'project')} · ${C.plural(c.steps, 'step')} · ${C.plural(c.subs, 'sub-step')} · ${C.plural(c.log, 'decision')}`
+      + (c.docs ? ` · ${C.plural(c.docs, 'doc')}` : '')
+      + (w.length ? ` · ${C.plural(w.length, 'warning')}:` : '')),
     w.length ? h('ul', { class: 'warn-list' }, w.map((x) => h('li', {}, x))) : '');
     $('import-go').disabled = false;
     setReplace(!!cur() && importParsed.workspaces.length === 1);
   } catch (e) {
-    p.replaceChildren('Không đọc được: ' + /** @type {Error} */ (e).message);
+    p.replaceChildren('Cannot read: ' + /** @type {Error} */ (e).message);
     p.classList.add('bad');
     $('import-go').disabled = true;
     setReplace(false);
@@ -1452,9 +1454,9 @@ $('import-go').addEventListener('click', () => {
     Object.assign(ws, { ...nu, id: ws.id, createdAt: ws.createdAt });
     commit();
     afterOpen();
-    toast(`Đã thay nội dung "${before.name}".`, () => {
+    toast(`Replaced the content of "${before.name}".`, () => {
       const i = state.workspaces.findIndex((x) => x.id === before.id);
-      if (i < 0) { toast('Không hoàn tác được: dự án đã bị xoá.'); return; }
+      if (i < 0) { toast('Cannot undo: the project was deleted.'); return; }
       state.workspaces[i] = before;
       if (curId !== before.id) switchTo(before.id);
       commit();
@@ -1469,7 +1471,7 @@ $('import-go').addEventListener('click', () => {
   setCur(parsed.workspaces[0].id);
   commit();
   afterOpen();
-  toast(`Đã nhập ${parsed.workspaces.length} dự án mới.`);
+  toast(`Imported ${C.plural(parsed.workspaces.length, 'new project')}.`);
 });
 
 /* ── Kéo thả (máy tính) — bàn phím dùng Alt + mũi tên hoặc ô Vị trí trong hộp sửa ── */
@@ -1554,7 +1556,7 @@ $('board').addEventListener('dragend', () => { drag = null; clearDrop(); });
 const darkMq = matchMedia('(prefers-color-scheme: dark)');
 const effectiveTheme = () => document.documentElement.dataset.theme || (darkMq.matches ? 'dark' : 'light');
 function paintThemeBtn() {
-  $('theme-btn').setAttribute('aria-label', effectiveTheme() === 'dark' ? 'Đổi sang giao diện sáng' : 'Đổi sang giao diện tối');
+  $('theme-btn').setAttribute('aria-label', effectiveTheme() === 'dark' ? 'Switch to the light theme' : 'Switch to the dark theme');
 }
 $('theme-btn').addEventListener('click', () => {
   const next = effectiveTheme() === 'dark' ? 'light' : 'dark';
@@ -1578,15 +1580,15 @@ window.addEventListener('storage', (e) => {
 async function boot() {
   paintThemeBtn();
   S.askPersist();
-  if (!storageOK) setBanner('storage', 'Trình duyệt chặn bộ nhớ: thay đổi chỉ giữ tới khi đóng trang. Sao lưu JSON để giữ.');
-  else if (loaded.problem === 'corrupt') setBanner('storage', `Dữ liệu đã lưu bị hỏng, không đọc được. Bản cũ giữ ở khoá ${S.KEY}.corrupt; trang bắt đầu trống.`);
+  if (!storageOK) setBanner('storage', 'This browser blocks storage: changes last only until you close the page. Back up as JSON to keep them.');
+  else if (loaded.problem === 'corrupt') setBanner('storage', `Saved data is corrupt and could not be read. The old copy is kept under the key ${S.KEY}.corrupt; starting empty.`);
   try {
     const res = await fetch('data/templates.json');
     if (!res.ok) throw new Error('HTTP ' + res.status);
     templates = (await res.json()).templates || [];
   } catch (e) {
-    setBanner('fetch', 'Không tải được data/templates.json nên chưa có mẫu. Trang đọc mẫu bằng fetch, phải mở qua HTTP: '
-      + 'chạy python3 -m http.server ở gốc repo rồi mở http://localhost:8000/step-planner/.');
+    setBanner('fetch', 'Could not load data/templates.json, so there are no templates. The page reads them with fetch and must be '
+      + 'opened over HTTP: run python3 -m http.server at the repo root, then open http://localhost:8000/step-planner/.');
   }
   const tab = S.tabProject();
   curId = findWs(tab) ? tab : findWs(state.lastId) ? state.lastId : state.workspaces[0]?.id || '';

@@ -5,7 +5,7 @@
 /* Sáu trạng thái. Bỏ qua: việc không cần với dự án này. Huỷ: đã quyết không làm, giữ thẻ để nhớ vì sao (cancelReason).
  * Tiến độ và "Tiếp theo" không tính cả hai. */
 export const STATUSES = ['todo', 'doing', 'done', 'blocked', 'skip', 'cancel'];
-export const STATUS_LABEL = { todo: 'Chưa làm', doing: 'Đang làm', done: 'Xong', blocked: 'Bị chặn', skip: 'Bỏ qua', cancel: 'Huỷ' };
+export const STATUS_LABEL = { todo: 'New', doing: 'In progress', done: 'Done', blocked: 'Blocked', skip: 'Skipped', cancel: 'Cancelled' };
 const MARK = { todo: ' ', doing: '~', done: 'x', blocked: '!', skip: '-', cancel: '/' };
 const FROM_MARK = { ' ': 'todo', '': 'todo', '~': 'doing', x: 'done', X: 'done', '!': 'blocked', '-': 'skip', '/': 'cancel' };
 /* Bấm chip: chưa làm → đang làm → xong → chưa làm. Bị chặn → đang làm; bỏ qua, huỷ → chưa làm. */
@@ -16,10 +16,10 @@ export const nextStatus = (/** @type {string} */ s) => NEXT[s] || 'todo';
 
 export const FORMAT = 'step-planner';
 export const VERSION = 2;
-export const MD_VERSION = 2;
+export const MD_VERSION = 3;
 export const APP_NAME = 'Data Science Step Planner';
-export const LOG_HEADING = 'Nhật ký quyết định';
-export const LOOSE_STEP = 'Việc chung';
+export const LOG_HEADING = 'Decision log';
+export const LOOSE_STEP = 'General';
 
 let seq = 0;
 export function uid(prefix = 'x') {
@@ -71,7 +71,7 @@ export function normDoc(o) {
     const url = safeUrl(o.url);
     return url ? { id: idOr(o.id, 'd'), kind, title: oneLine(o.title) || url, url } : null;
   }
-  return { id: idOr(o.id, 'd'), kind, title: oneLine(o.title) || 'Tài liệu', body: mdBody(o.body) };
+  return { id: idOr(o.id, 'd'), kind, title: oneLine(o.title) || 'Document', body: mdBody(o.body) };
 }
 const docsOf = (/** @type {any} */ a) => (Array.isArray(a) ? a.map(normDoc).filter(Boolean) : []);
 
@@ -81,7 +81,7 @@ export function normSub(o) {
   const status = STATUSES.includes(x.status) ? x.status : 'todo';
   return {
     id: idOr(x.id, 's'),
-    title: oneLine(x.title) || 'Bước con',
+    title: oneLine(x.title) || 'Sub-step',
     status,
     cancelReason: status === 'cancel' ? multiLine(x.cancelReason) : '',
     due: parseDate(x.due),
@@ -103,7 +103,7 @@ export function normStep(o) {
   const rv = isObj(r) ? { reason: oneLine(r.reason), date: parseDate(r.date) || today(), round: Math.max(2, posInt(r.round), posInt(x.round)) } : null;
   return {
     id: idOr(x.id, 't'),
-    title: oneLine(x.title) || 'Bước',
+    title: oneLine(x.title) || 'Step',
     goal: oneLine(x.goal),
     doneWhen: oneLine(x.doneWhen),
     notes: multiLine(x.notes),
@@ -120,7 +120,7 @@ export function normLog(o) {
   return {
     id: idOr(x.id, 'l'),
     date: parseDate(x.date) || today(),
-    decision: oneLine(x.decision) || '(không ghi)',
+    decision: oneLine(x.decision) || '(empty)',
     why: multiLine(x.why),
   };
 }
@@ -130,7 +130,7 @@ export function normWorkspace(o) {
   const x = isObj(o) ? o : {};
   return {
     id: idOr(x.id, 'w'),
-    name: oneLine(x.name) || 'Dự án',
+    name: oneLine(x.name) || 'Project',
     templateId: oneLine(x.templateId),
     createdAt: isoOr(x.createdAt),
     updatedAt: isoOr(x.updatedAt),
@@ -159,8 +159,8 @@ export function freshCopy(ws) {
   return c;
 }
 
-/** Tên chưa trùng: tên, rồi "tên (nhập)", "tên (nhập 2)"… @param {string} name @param {Iterable<string>} taken */
-export function uniqueName(name, taken, tag = 'nhập') {
+/** Tên chưa trùng: tên, rồi "tên (imported)", "tên (imported 2)"… @param {string} name @param {Iterable<string>} taken */
+export function uniqueName(name, taken, tag = 'imported') {
   const set = new Set(taken);
   if (!set.has(name)) return name;
   for (let i = 1; ; i++) {
@@ -174,7 +174,7 @@ export function fromTemplate(tpl, name) {
   const t = isObj(tpl) ? tpl : {};
   const now = new Date().toISOString();
   return normWorkspace({
-    name: oneLine(name) || t.name || 'Dự án',
+    name: oneLine(name) || t.name || 'Project',
     templateId: t.id || '',
     createdAt: now,
     updatedAt: now,
@@ -233,9 +233,25 @@ const escInline = (/** @type {string} */ s) => s.replace(/\\/g, '\\\\').replace(
 /** Tách theo ` · ` chưa thoát, đồng thời bỏ thoát. @param {string} line */
 export const splitInline = (line) => splitDots(protect(line)).map(restore);
 
+/* Nhãn Markdown: xuất nhãn tiếng Anh (định dạng 3); nhập nhận cả nhãn tiếng Việt của định dạng 2, không phân biệt hoa
+ * thường. */
+const LABELS = {
+  goal: ['Goal', 'Mục tiêu'], doneWhen: ['Done when', 'Xong khi'], reopened: ['Reopened', 'Quay lại'], iteration: ['Iteration', 'Vòng'],
+  notes: ['Notes', 'Ghi chú'], docs: ['Docs', 'Tài liệu'], cancel: ['Cancelled because', 'Huỷ vì'], why: ['Why', 'Vì sao'],
+};
+const labelRe = (/** @type {string[]} */ names) => names.join('|');
+const ANY_LABEL = labelRe(Object.values(LABELS).flat());
+/** Khoá của một nhãn (`Goal` / `Mục tiêu` → goal). @param {string} name */
+const labelKey = (name) => Object.keys(LABELS).find((k) => LABELS[k].some((n) => n.toLowerCase() === name.toLowerCase())) || '';
+/** Dòng mở bằng nhãn `k` rồi `:`; trả phần sau nhãn. @param {string} line @param {keyof typeof LABELS} k */
+const after = (line, k) => {
+  const m = new RegExp(`^(?:${labelRe(LABELS[k])}):[ \\t]?(.*)$`, 'i').exec(line);
+  return m ? m[1] : null;
+};
+
 /* Dòng ghi chú: dòng trống viết `\`; dòng có thể bị đọc nhầm (nhãn, đầu mục danh sách, tiêu đề, trích dẫn, `\`)
  * thêm `\` phía trước. */
-const RISKY = /^(\\|#|>|\s|([-*+]|\d+[.)])(\s|$)|\*\*|(Xong khi|Huỷ vì|Vì sao|Mục tiêu|Quay lại|Vòng|Ghi chú|Tài liệu):)/;
+const RISKY = new RegExp(`^(\\\\|#|>|\\s|([-*+]|\\d+[.)])(\\s|$)|\\*\\*|(${ANY_LABEL}):)`, 'i');
 const escBlock = (/** @type {string} */ s) => (s === '' ? '\\' : RISKY.test(s) ? '\\' + s : s);
 const unescBlock = (/** @type {string} */ s) => (s.startsWith('\\') ? s.slice(1) : s);
 /** Khối dòng: mỗi dòng trừ dòng cuối có hai dấu cách cuối (xuống dòng khi xem trên GitHub, VS Code). */
@@ -293,7 +309,7 @@ function readDocs(lines, i, docs, warnings, min) {
     if (lk) {
       const title = unescDoc(lk[1]), url = lk[2] ?? lk[3];
       const d = normDoc({ kind: 'link', title, url });
-      if (d) docs.push(d); else warnings.push(`Link không phải http(s), bỏ: ${title || url}`);
+      if (d) docs.push(d); else warnings.push(`Link is not http(s), skipped: ${title || url}`);
       i++;
       continue;
     }
@@ -303,7 +319,7 @@ function readDocs(lines, i, docs, warnings, min) {
     let k = i + 2;
     while (k < lines.length && !close.test(lines[k])) body.push(dedent(lines[k++], f[1].length));
     const title = unescDoc(text);
-    if (k >= lines.length) warnings.push(`Tài liệu "${title}" thiếu rào đóng, đọc tới hết file.`);
+    if (k >= lines.length) warnings.push(`Document "${title}" has no closing fence; read to the end of the file.`);
     docs.push(normDoc({ kind: 'md', title, body: body.join('\n') }));
     i = k + 1;
   }
@@ -312,29 +328,29 @@ function readDocs(lines, i, docs, warnings, min) {
 
 /** @param {any} ws @returns {string} */
 export function toMarkdown(ws) {
-  const out = [`# ${ws.name}`, '', `> ${APP_NAME} · định dạng ${MD_VERSION}`];
-  if (ws.templateId) out.push('>', `> Mẫu: ${ws.templateId}`);
+  const out = [`# ${ws.name}`, '', `> ${APP_NAME} · format ${MD_VERSION}`];
+  if (ws.templateId) out.push('>', `> Template: ${ws.templateId}`);
   if (ws.notes) out.push('', ...hardBreaks(ws.notes.split('\n').map(escBlock)));
   ws.steps.forEach((/** @type {any} */ s, /** @type {number} */ i) => {
     out.push('', `## ${i + 1}. ${s.title}`);
-    if (s.goal) out.push('', `Mục tiêu: ${s.goal}`);
-    if (s.doneWhen) out.push('', `Xong khi: ${s.doneWhen}`);
-    if (s.revisit) out.push('', `Quay lại: ${s.revisit.date} · vòng ${s.revisit.round}` + (s.revisit.reason ? ` · ${s.revisit.reason}` : ''));
-    else if (s.round > 1) out.push('', `Vòng: ${s.round}`);
-    if (s.notes) out.push('', ...hardBreaks(['Ghi chú:', ...s.notes.split('\n').map((l) => '  ' + escBlock(l))]));
-    if (s.docs.length) out.push('', 'Tài liệu:', ...docLines(s.docs, ''));
+    if (s.goal) out.push('', `Goal: ${s.goal}`);
+    if (s.doneWhen) out.push('', `Done when: ${s.doneWhen}`);
+    if (s.revisit) out.push('', `Reopened: ${s.revisit.date} · iteration ${s.revisit.round}` + (s.revisit.reason ? ` · ${s.revisit.reason}` : ''));
+    else if (s.round > 1) out.push('', `Iteration: ${s.round}`);
+    if (s.notes) out.push('', ...hardBreaks(['Notes:', ...s.notes.split('\n').map((l) => '  ' + escBlock(l))]));
+    if (s.docs.length) out.push('', 'Docs:', ...docLines(s.docs, ''));
     if (s.subs.length) out.push('');
     for (const x of s.subs) {
       let line = `- [${MARK[x.status]}] ${escInline(x.title)}`;
-      if (x.due) line += ` · hạn ${x.due}`;
+      if (x.due) line += ` · due ${x.due}`;
       const more = [];
-      if (x.doneWhen) more.push(`  Xong khi: ${x.doneWhen}`);
+      if (x.doneWhen) more.push(`  Done when: ${x.doneWhen}`);
       if (x.status === 'cancel' && x.cancelReason) {
         const [first, ...rest] = x.cancelReason.split('\n');
-        more.push(`  Huỷ vì: ${first}`, ...rest.map((l) => '    ' + escBlock(l)));
+        more.push(`  Cancelled because: ${first}`, ...rest.map((l) => '    ' + escBlock(l)));
       }
       if (x.notes) more.push(...x.notes.split('\n').map((l) => '  ' + escBlock(l)));
-      if (x.docs.length) more.push('  Tài liệu:');
+      if (x.docs.length) more.push('  Docs:');
       out.push(...hardBreaks([line, ...more]), ...docLines(x.docs, '  '));
     }
   });
@@ -342,7 +358,7 @@ export function toMarkdown(ws) {
     out.push('', `## ${LOG_HEADING}`, '');
     for (const l of ws.log) {
       const why = l.why ? l.why.split('\n') : [];
-      out.push(...hardBreaks([`- ${l.date} · ${l.decision}`, ...why.map((w, k) => (k ? '  ' + escBlock(w) : `  Vì sao: ${w}`))]));
+      out.push(...hardBreaks([`- ${l.date} · ${l.decision}`, ...why.map((w, k) => (k ? '  ' + escBlock(w) : `  Why: ${w}`))]));
     }
   }
   return out.join('\n') + '\n';
@@ -370,7 +386,7 @@ function parseSubText(raw, warnings) {
     if (/^`@[^`]+`$/.test(t) || /^@.+$/.test(t)) continue; // người làm của file cũ: bỏ
     if ((m = META_DUE.exec(restore(t))) && parseDate(m[1]) && !due) due = parseDate(m[1]);
     else {
-      if (/^(?:hạn|due)\b/i.test(restore(t))) warnings.push(`Hạn không đọc được, để lại trong tên: ${restore(t)}`);
+      if (/^(?:hạn|due)\b/i.test(restore(t))) warnings.push(`Due date not readable, kept in the title: ${restore(t)}`);
       title += ' · ' + part;
     }
   }
@@ -379,7 +395,7 @@ function parseSubText(raw, warnings) {
   title = title.replace(/(^|[\s(\[,;])@[^\s,;()[\]`]+/g, (_, pre) => { changed = true; return pre; });
   title = title.replace(TITLE_DUE, (all, pre, d) => {
     const v = parseDate(d);
-    if (!v) { warnings.push(`Hạn không đọc được: ${d}`); return all; }
+    if (!v) { warnings.push(`Due date not readable: ${d}`); return all; }
     if (!due) due = v;
     changed = true;
     return pre;
@@ -415,7 +431,7 @@ export function fromMarkdown(text) {
     if (!step) { step = { title: LOOSE_STEP, subs: [] }; ws.steps.push(step); }
     const p = parseSubText(rest, warnings);
     sub = { title: p.title, status: FROM_MARK[mark ?? ' '] || 'todo', due: p.due };
-    if (mark != null && !(mark in FROM_MARK)) warnings.push(`Dấu [${mark}] lạ, đọc là chưa làm: ${p.title}`);
+    if (mark != null && !(mark in FROM_MARK)) warnings.push(`Unknown mark [${mark}], read as New: ${p.title}`);
     step.subs.push(sub);
     block = 'sub'; blockFirst = true;
   };
@@ -434,13 +450,13 @@ export function fromMarkdown(text) {
       continue;
     }
     cancelCont = false;
-    if (ind && block === 'sub' && /^Huỷ vì:/.test(ind[2])) {
-      sub.cancelReason = ind[2].replace(/^Huỷ vì: ?/, '');
+    if (ind && block === 'sub' && after(ind[2], 'cancel') !== null) {
+      sub.cancelReason = /** @type {string} */ (after(ind[2], 'cancel'));
       cancelCont = true;
       blockFirst = false;
       continue;
     }
-    if (ind && block === 'sub' && /^Tài liệu:\s*$/.test(ind[2])) {
+    if (ind && block === 'sub' && /^\s*$/.test(after(ind[2], 'docs') ?? 'x')) {
       sub.docs = sub.docs || [];
       i = readDocs(lines, i + 1, sub.docs, warnings, 2) - 1;
       blockFirst = false;
@@ -451,10 +467,10 @@ export function fromMarkdown(text) {
       const item = ITEM.exec(l.trimStart());
       if (block === 'sub' && item && !/^\s*\\/.test(l)) { newSub(item[1], item[2]); continue; }
       if (block === 'sub') {
-        if (blockFirst && l.startsWith('Xong khi: ')) sub.doneWhen = l.slice(10);
+        if (blockFirst && after(l, 'doneWhen') !== null) sub.doneWhen = /** @type {string} */ (after(l, 'doneWhen'));
         else addNote(sub, 'notes', unescBlock(l));
       } else if (block === 'step') addNote(step, 'notes', unescBlock(l));
-      else if (block === 'why') addNote(entry, 'why', blockFirst && l.startsWith('Vì sao: ') ? l.slice(8) : unescBlock(l));
+      else if (block === 'why') addNote(entry, 'why', blockFirst && after(l, 'why') !== null ? /** @type {string} */ (after(l, 'why')) : unescBlock(l));
       blockFirst = false;
       continue;
     }
@@ -479,7 +495,7 @@ export function fromMarkdown(text) {
     if (!started) {
       if ((m = /^# (.+)$/.exec(raw)) && !ws.name) { ws.name = m[1]; continue; }
       if ((m = /^>\s?(.*)$/.exec(raw))) {
-        const kv = /^Mẫu:\s*(.*)$/.exec(m[1]);
+        const kv = /^(?:Template|Mẫu):\s*(.*)$/i.exec(m[1]);
         if (kv) ws.templateId = kv[1]; // dòng `Người:` của file cũ: bỏ qua
         continue;
       }
@@ -493,24 +509,26 @@ export function fromMarkdown(text) {
     const it = ITEM.exec(raw);
     if (it) { newSub(it[1], it[2]); continue; }
     sub = null;
-    const meta = /^\**(Mục tiêu|Xong khi|Quay lại|Vòng|Ghi chú|Tài liệu):\**\s?(.*)$/.exec(raw);
-    if (meta && meta[1] === 'Mục tiêu') step.goal = meta[2];
-    else if (meta && meta[1] === 'Xong khi') step.doneWhen = meta[2];
-    else if (meta && meta[1] === 'Quay lại') {
-      /* `ngày · vòng N · lý do`; dòng cũ `ngày · lý do` (không vòng) vẫn đọc: vòng 2. */
-      const d = /^(\S+)(?: · vòng (\d+)(?= · |$))?(?: · (.*))?$/.exec(meta[2]);
+    const mm = new RegExp(`^\\**(${ANY_LABEL}):\\**\\s?(.*)$`, 'i').exec(raw);
+    const key = mm ? labelKey(mm[1]) : '';
+    const meta = mm && ['goal', 'doneWhen', 'reopened', 'iteration', 'notes', 'docs'].includes(key) ? [mm[0], key, mm[2]] : null;
+    if (meta && meta[1] === 'goal') step.goal = meta[2];
+    else if (meta && meta[1] === 'doneWhen') step.doneWhen = meta[2];
+    else if (meta && meta[1] === 'reopened') {
+      /* `ngày · iteration N · lý do` (định dạng 2: `vòng N`); dòng cũ `ngày · lý do` (không vòng) vẫn đọc: vòng 2. */
+      const d = /^(\S+)(?: · (?:iteration|vòng) (\d+)(?= · |$))?(?: · (.*))?$/i.exec(meta[2]);
       step.revisit = d && parseDate(d[1]) ? { date: parseDate(d[1]), round: d[2] ? +d[2] : 0, reason: d[3] || '' } : { reason: meta[2] };
-    } else if (meta && meta[1] === 'Vòng') {
+    } else if (meta && meta[1] === 'iteration') {
       const n = /^\s*(\d+)\s*$/.exec(meta[2]);
       if (n) step.round = +n[1]; else addNote(step, 'notes', raw);
-    } else if (meta && meta[1] === 'Ghi chú' && !meta[2].trim()) { block = 'step'; blockFirst = true; }
-    else if (meta && meta[1] === 'Tài liệu' && !meta[2].trim()) {
+    } else if (meta && meta[1] === 'notes' && !meta[2].trim()) { block = 'step'; blockFirst = true; }
+    else if (meta && meta[1] === 'docs' && !meta[2].trim()) {
       step.docs = step.docs || [];
       i = readDocs(lines, i + 1, step.docs, warnings, 0) - 1;
     }
     else addNote(step, 'notes', raw);
   }
-  if (!ws.name && !ws.steps.length) throw new Error('Không thấy tiêu đề "# …", bước "## …" hay việc "- [ ] …" nào.');
+  if (!ws.name && !ws.steps.length) throw new Error('No "# …" title, "## …" step or "- [ ] …" task found.');
   return { workspace: normWorkspace(ws), warnings };
 }
 
@@ -534,11 +552,11 @@ function skipped(w, warnings) {
     for (const x of Array.isArray(s.subs) ? s.subs : []) if (isObj(x)) n.docs += badDocs(x.docs);
   }
   const parts = [];
-  if (n.steps) parts.push(`${n.steps} bước`);
-  if (n.subs) parts.push(`${n.subs} bước con`);
-  if (n.log) parts.push(`${n.log} quyết định`);
-  if (n.docs) parts.push(`${n.docs} tài liệu (link không phải http(s))`);
-  if (parts.length) warnings.push(`"${oneLine(w.name) || 'Dự án'}": bỏ qua ${parts.join(', ')} không đúng khuôn.`);
+  if (n.steps) parts.push(plural(n.steps, 'step'));
+  if (n.subs) parts.push(plural(n.subs, 'sub-step'));
+  if (n.log) parts.push(plural(n.log, 'decision'));
+  if (n.docs) parts.push(plural(n.docs, 'document') + ' (link not http(s))');
+  if (parts.length) warnings.push(`"${oneLine(w.name) || 'Project'}": skipped ${parts.join(', ')} that did not fit the format.`);
 }
 
 /**
@@ -549,27 +567,27 @@ function skipped(w, warnings) {
  */
 export function parseImport(text) {
   const t = String(text || '').trim();
-  if (!t) throw new Error('Chưa có nội dung.');
+  if (!t) throw new Error('Nothing to import yet.');
   /* Mảng JSON mở bằng `[` rồi một giá trị; `[chữ](…)` hay `[ ] việc` của Markdown viết tay thì không. */
   if (t[0] === '{' || /^\[\s*(?:[[{"\d-]|\]\s*$|true\b|false\b|null\b)/.test(t)) {
     let data;
-    try { data = JSON.parse(t); } catch (e) { throw new Error('JSON hỏng: ' + /** @type {Error} */ (e).message); }
+    try { data = JSON.parse(t); } catch (e) { throw new Error('Broken JSON: ' + /** @type {Error} */ (e).message); }
     /** @type {any[]} */ let items;
     let kind = /** @type {'json' | 'backup'} */ ('json');
     if (Array.isArray(data)) { items = data; kind = 'backup'; }
     else if (isObj(data) && Array.isArray(data.workspaces)) { items = data.workspaces; kind = 'backup'; }
     else if (isObj(data) && isObj(data.workspace)) items = [data.workspace];
     else if (isObj(data) && Array.isArray(data.steps)) items = [data];
-    else throw new Error('JSON không phải dự án Step Planner (thiếu `workspace`, `workspaces` hay `steps`).');
+    else throw new Error('This JSON is not a Step Planner project (no `workspace`, `workspaces` or `steps`).');
     /** @type {string[]} */
     const warnings = [];
     const out = [];
     items.forEach((w, i) => {
-      if (!isObj(w) || !Array.isArray(w.steps)) { warnings.push(`Bỏ qua mục ${i + 1}: không phải dự án (thiếu danh sách steps).`); return; }
+      if (!isObj(w) || !Array.isArray(w.steps)) { warnings.push(`Skipped item ${i + 1}: not a project (no steps list).`); return; }
       skipped(w, warnings);
       out.push(freshCopy(w));
     });
-    if (!out.length) throw new Error('Không có dự án hợp lệ nào trong JSON. ' + warnings.slice(0, 3).join(' '));
+    if (!out.length) throw new Error('No valid project in this JSON. ' + warnings.slice(0, 3).join(' '));
     return { kind, workspaces: out, warnings };
   }
   const { workspace, warnings } = fromMarkdown(t);
@@ -590,9 +608,12 @@ export function counts(wss) {
   return { workspaces: wss.length, steps, subs, log, docs };
 }
 
+/** "1 step", "2 steps". @param {number} n @param {string} word */
+export const plural = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`;
+
 /** Tên file an toàn từ tên dự án. */
 export function slug(/** @type {string} */ s) {
-  return fold(s).replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60) || 'du-an';
+  return fold(s).replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60) || 'project';
 }
 
 const docShape = (/** @type {any} */ d) => (d.kind === 'link' ? { kind: d.kind, title: d.title, url: d.url } : { kind: d.kind, title: d.title, body: d.body });

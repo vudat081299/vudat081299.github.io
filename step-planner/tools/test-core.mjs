@@ -64,13 +64,13 @@ check('dự án khó: Markdown đi rồi về giữ nguyên', eq(shape(hard), sh
 check('dự án khó: không cảnh báo', back.warnings.length === 0, back.warnings.join(' | '));
 check('dấu trạng thái', /- \[ \] A/.test(md) && /- \[~\] B/.test(md) && /- \[x\] C/.test(md) && /- \[!\] D/.test(md) && /- \[-\] E/.test(md)
   && /- \[\/\] F huỷ/.test(md));
-check('huỷ: lý do nhiều dòng ghi dưới "Huỷ vì:", dòng sau thụt bốn có thoát', md.includes('\n  Huỷ vì: lý do · có chấm `@x` [a](b)  \n    \\  \n    \\- gạch  \n')
+check('huỷ: lý do nhiều dòng ghi dưới "Cancelled because:", dòng sau thụt bốn có thoát', md.includes('\n  Cancelled because: lý do · có chấm `@x` [a](b)  \n    \\  \n    \\- gạch  \n')
   && md.includes('\n    \\Huỷ vì: lặp  \n') && hard.steps[0].subs[6].cancelReason === '' && !/bị bỏ vì/.test(md));
 check('không có người làm: không dòng Người:, @ trong tên được thoát', !md.includes('Người:') && md.includes('- [ ] A \\· \\@giả')
   && !md.split('\n').some((l) => /^- \[/.test(l) && /(^|[^\\])@/.test(l)));
-check('đầu file: tên công cụ', md.split('\n')[2] === '> Data Science Step Planner · định dạng 2');
+check('đầu file: tên công cụ, định dạng 3', md.split('\n')[2] === '> Data Science Step Planner · format 3' && md.includes('\n> Template: crisp-dm\n'));
 check('xem đẹp trên GitHub: nhãn cách dòng trống, khối có xuống dòng cứng',
-  /\nMục tiêu: [^\n]*\n\nXong khi:/.test(md) && /Ghi chú: {2}\n/.test(md));
+  /\nGoal: [^\n]*\n\nDone when:/.test(md) && /Notes: {2}\n/.test(md));
 
 const bk = parseImport(toBackup([hard, fromTemplate(templates[0])]));
 check('sao lưu: hai dự án, id mới', bk.kind === 'backup' && bk.workspaces.length === 2 && bk.workspaces[0].id !== hard.id);
@@ -109,7 +109,7 @@ Dòng thường trong nhật ký
 const w = hand.workspace;
 const s0 = w.steps[1].subs;
 check('viết tay: dòng đầu không # là tên, chữ trước bước đầu là ghi chú dự án', w.name === 'Nhóm 7 — đồ án' && w.notes === 'Ghi chú đầu');
-check('viết tay: việc trước bước đầu vào bước "Việc chung"', w.steps[0].title === 'Việc chung' && w.steps[0].subs[0].title === 'việc trước bước đầu');
+check('viết tay: việc trước bước đầu vào bước "General"', w.steps[0].title === 'General' && w.steps[0].subs[0].title === 'việc trước bước đầu');
 check('viết tay: "## 1)" và "## Bước 2:" đọc gọn', w.steps[1].title === 'Chuẩn bị' && w.steps[2].title === 'Phân tích');
 check('viết tay: @tên bị bỏ khỏi tên, hạn dd/mm/yyyy trong ngoặc', s0[0].title === 'Tạo repo' && s0[0].status === 'done'
   && s0[1].title === 'Viết data card' && s0[1].due === '2026-12-01' && !('owner' in s0[0]));
@@ -176,7 +176,7 @@ check('tài liệu: đếm', counts([withDocs]).docs === 8);
 const jd = parseImport(JSON.stringify({ steps: [{ title: 't', docs: [{ kind: 'link', title: 'bad', url: 'javascript:x' }, 5, { kind: 'md', title: 'ok' }],
   subs: [{ title: 's', docs: [{ url: 'file:///etc' }] }] }] }));
 check('tài liệu: JSON có link sai, cảnh báo và bỏ', jd.workspaces[0].steps[0].docs.length === 1 && jd.workspaces[0].steps[0].subs[0].docs.length === 0
-  && jd.warnings.some((w) => /3 tài liệu/.test(w)), jd.warnings.join(' | '));
+  && jd.warnings.some((w) => /3 documents/.test(w)), jd.warnings.join(' | '));
 const handD = fromMarkdown(`# Viết tay
 
 ## 1. Một
@@ -221,24 +221,40 @@ const rounds = normWorkspace({ steps: [
 const mdr = toMarkdown(rounds);
 check('vòng: Markdown đi rồi về (Vòng:, Quay lại có vòng, lý do có chữ "vòng")', eq(shape(rounds), shape(fromMarkdown(mdr).workspace)),
   firstDiff(shape(rounds), shape(fromMarkdown(mdr).workspace)));
-check('vòng: khuôn dòng', mdr.includes('\nVòng: 3\n') && mdr.includes('\nQuay lại: 2026-11-01 · vòng 4 · vòng 5 · lạ\n')
-  && mdr.includes('\nQuay lại: 2026-11-02 · vòng 2\n') && rounds.steps[3].round === 1 && !/\nVòng: 1/.test(mdr));
+check('vòng: khuôn dòng', mdr.includes('\nIteration: 3\n') && mdr.includes('\nReopened: 2026-11-01 · iteration 4 · vòng 5 · lạ\n')
+  && mdr.includes('\nReopened: 2026-11-02 · iteration 2\n') && rounds.steps[3].round === 1 && !/\nIteration: 1/.test(mdr));
 const oldR = fromMarkdown('# A\n## 1. S\nQuay lại: 2026-11-20 · lý do cũ\n').workspace.steps[0];
 check('vòng: dòng cũ "Quay lại: ngày · lý do" đọc là vòng 2', oldR.revisit.round === 2 && oldR.round === 2 && oldR.revisit.reason === 'lý do cũ');
 
+/* File định dạng 2 (nhãn tiếng Việt) do bản cũ xuất: nhập ra đủ cấu trúc. */
+{
+  const v2 = ['# Cũ', '', '> Data Science Step Planner · định dạng 2', '>', '> Mẫu: crisp-dm', '', 'ghi chú dự án', '',
+    '## 1. Bước', '', 'Mục tiêu: mt', '', 'Xong khi: xk', '', 'Quay lại: 2026-11-20 · vòng 3 · lý do', '', 'Ghi chú:  ', '  dòng 1  ', '  \\Tài liệu: giả', '',
+    'Tài liệu:', '  - [L](https://l.example)', '',
+    '- [/] Việc · hạn 2026-12-01  ', '  Xong khi: x  ', '  Huỷ vì: không cần  ', '    dòng hai  ', '  ghi chú  ', '  Tài liệu:', '    - [R](https://r.example)',
+    '- [~] Hai', '', '## 2. Sau', '', 'Vòng: 2', '', '- [x] Ba', '', '## Nhật ký quyết định', '', '- 2026-11-21 · Chọn A  ', '  Vì sao: vì B', ''].join('\n');
+  const r = fromMarkdown(v2);
+  const ws2 = r.workspace, st = ws2.steps[0], x = st.subs[0];
+  check('nhập file định dạng 2 tiếng Việt: đủ trường, không cảnh báo', !r.warnings.length && ws2.templateId === 'crisp-dm' && ws2.notes === 'ghi chú dự án'
+    && st.goal === 'mt' && st.doneWhen === 'xk' && st.revisit.round === 3 && st.revisit.reason === 'lý do' && st.notes === 'dòng 1\nTài liệu: giả'
+    && st.docs[0].url === 'https://l.example' && x.status === 'cancel' && x.due === '2026-12-01' && x.doneWhen === 'x'
+    && x.cancelReason === 'không cần\ndòng hai' && x.notes === 'ghi chú' && x.docs[0].url === 'https://r.example' && st.subs[1].status === 'doing'
+    && ws2.steps[1].round === 2 && ws2.log[0].why === 'vì B', JSON.stringify(ws2).slice(0, 400) + r.warnings.join('|'));
+}
+
 let threw = '';
 try { parseImport('   '); } catch (e) { threw = e.message; }
-check('chữ rỗng thì báo lỗi', /Chưa có nội dung/.test(threw));
+check('chữ rỗng thì báo lỗi', /Nothing to import/.test(threw));
 
 /* JSON hỏng hoặc sai khuôn: không bao giờ TypeError, thông báo tiếng Việt. */
 const bad = {
-  '[1,2,3]': /Không có dự án hợp lệ/, '{}': /không phải dự án/, '{"workspace":{"steps":"abc"}}': /không phải dự án|Không có dự án/,
-  '{ not json': /JSON hỏng/, '[[[]]]': /Không có dự án hợp lệ/,
+  '[1,2,3]': /No valid project/, '{}': /not a Step Planner project/, '{"workspace":{"steps":"abc"}}': /not a project|No valid project/,
+  '{ not json': /Broken JSON/, '[[[]]]': /No valid project/,
 };
 for (const [src, re] of Object.entries(bad)) {
   let msg = '';
   try { parseImport(src); msg = 'không báo lỗi'; } catch (e) { msg = e.message; }
-  check(`JSON sai khuôn ${src.slice(0, 24)}: báo bằng tiếng Việt`, re.test(msg) && !/TypeError|Cannot read/.test(msg), msg);
+  check(`JSON sai khuôn ${src.slice(0, 24)}: báo rõ, không TypeError`, re.test(msg) && !/TypeError|Cannot read/.test(msg), msg);
 }
 const skip = parseImport('{"workspaces":[{"name":"a","steps":[null,{"title":"t","subs":[null,5,{"title":"s"}],"revisit":[]}],"log":[null]},7,{"x":1}]}');
 check('JSON: bỏ mục không đúng khuôn, có cảnh báo', skip.workspaces.length === 1 && skip.workspaces[0].steps.length === 1
@@ -248,7 +264,7 @@ check('JSON cũ có people / owner: nhập được, bỏ thông tin người, k
   && !('owner' in oldJ.workspaces[0].steps[0].subs[0]) && oldJ.workspaces[0].steps[0].subs[0].title === 's' && oldJ.warnings.length === 0);
 check('ngày: kiểm bằng đi rồi về', parseDate('2026-02-31') === '' && parseDate('0000-00-00') === '' && parseDate('9999-99-99') === ''
   && parseDate('2024-02-29') === '2024-02-29' && parseDate('1/2/2026') === '2026-02-01' && normSub({ due: '2026-02-31' }).due === '');
-check('tên trùng: (nhập), (nhập 2)', uniqueName('A', ['A']) === 'A (nhập)' && uniqueName('A', ['A', 'A (nhập)']) === 'A (nhập 2)' && uniqueName('B', ['A']) === 'B');
+check('tên trùng: (imported), (imported 2)', uniqueName('A', ['A']) === 'A (imported)' && uniqueName('A', ['A', 'A (imported)']) === 'A (imported 2)' && uniqueName('B', ['A']) === 'B');
 
 check('tiến độ không tính bỏ qua và huỷ', eq(progress(hard.steps[0].subs), { done: 1, total: 5, pct: 20 }));
 check('việc tiếp theo bỏ qua thẻ huỷ', nextActionId({ subs: [{ id: 'a', status: 'cancel' }, { id: 'b', status: 'skip' }, { id: 'c', status: 'todo' }] }) === 'c');
@@ -274,7 +290,8 @@ check('bước con có ghi chú mở bằng rào, ngay sau tài liệu của bư
 {
   const atoms = ['a', ' ', '·', ' · ', '\\', '@x', '`', '```', '~~~', '#', '## ', '- ', '[ ]', '[x]', ']', '[', '(', ')', 'hạn 2026-01-01',
     'due', 'Xong khi: ', 'Tài liệu:', 'Vì sao: ', '> ', '1. ', '*', '**', '\n', '\n\n', '  ', 'https://e.com/a(b)', 'Huỷ vì: ',
-    'Mục tiêu: ', 'Vòng: 3', 'Quay lại: x'];
+    'Mục tiêu: ', 'Vòng: 3', 'Quay lại: x', 'Done when: ', 'Docs:', 'Why: ', 'Cancelled because: ', 'Goal: ', 'Iteration: 3',
+    'Reopened: x', 'notes:', 'DOCS:', 'Template: ', 'iteration 2'];
   let seed = 7;
   const rnd = (n) => { seed = (seed + 0x6D2B79F5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t ^= t + Math.imul(t ^ (t >>> 7), 61 | t); return ((t ^ (t >>> 14)) >>> 0) % n; };
   const str = (n) => Array.from({ length: 1 + rnd(n) }, () => atoms[rnd(atoms.length)]).join('');
@@ -308,7 +325,7 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   check('nhập: chữ mở đầu bằng [link](…) đọc là Markdown', r?.kind === 'md' && r.workspaces[0].steps[0]?.subs.length === 1, msg);
   check('nhập: mảng JSON vẫn đọc là JSON', parseImport('[{"name":"a","steps":[]}]').kind === 'backup');
   try { parseImport('[{"name":'); msg = ''; } catch (e) { msg = e.message; }
-  check('nhập: mảng JSON hỏng vẫn báo JSON hỏng', /^JSON hỏng/.test(msg), msg);
+  check('nhập: mảng JSON hỏng vẫn báo JSON hỏng', /^Broken JSON/.test(msg), msg);
 }
 
 if (fails) { console.log(`test-core: ${fails} LỖI`); process.exit(1); }

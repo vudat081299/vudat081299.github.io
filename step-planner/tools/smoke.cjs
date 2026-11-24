@@ -63,7 +63,7 @@ const check = (name, ok, detail = '') => {
       && w.steps.every((st, i) => st.subs.length === t.steps[i].subs.length && st.title === t.steps[i].title);
   });
   check('tạo từ mỗi mẫu: đúng bước và bước con', s0.workspaces.length === 5 && okTpl);
-  check('dự án trống: báo chưa có bước', /Chưa có bước nào/.test(await page.textContent('#board')));
+  check('dự án trống: báo chưa có bước', /No steps yet/.test(await page.textContent('#board')));
   // Số bước / bước con của CRISP-DM đọc từ templates.json, không ghi tay (mẫu đổi thì smoke theo).
   const crisp = tplData.find((t) => t.id === 'crisp-dm');
   const nSteps = crisp.steps.length, n1 = crisp.steps[0].subs.length, n2 = crisp.steps[1].subs.length;
@@ -107,7 +107,7 @@ const check = (name, ok, detail = '') => {
     return { notes: row.querySelector('.step-notes').open, open: c2.classList.contains('open'), more: c2.querySelector('.more')?.textContent,
       expanded: c2.querySelector('.more')?.getAttribute('aria-expanded'), left: row.querySelector('.cards-scroll').scrollLeft };
   });
-  check('vẽ lại giữ ghi chú bước đang mở, thẻ đã "Xem thêm", chỗ cuộn ngang của hàng', keep.notes && keep.open && keep.more === 'Thu gọn'
+  check('vẽ lại giữ ghi chú bước đang mở, thẻ đã "Xem thêm", chỗ cuộn ngang của hàng', keep.notes && keep.open && keep.more === 'Show less'
     && keep.expanded === 'true' && keepBefore > 0 && Math.abs(keep.left - keepBefore) < 2, `${keepBefore} ${JSON.stringify(keep)}`);
   for (let k = 0; k < 2; k++) await page.click('.step:nth-child(1) .card[data-sub]:nth-child(4) [data-act="cycle"]');
   await page.click('.step:nth-child(1) .card[data-sub]:nth-child(2) .more');
@@ -136,12 +136,12 @@ const check = (name, ok, detail = '') => {
   // Chip trạng thái: bấm hai lần → xong; việc tiếp theo dời sang 1.2; tiến độ.
   const chip = '.step:nth-child(1) .card[data-sub]:nth-child(1) [data-act="cycle"]';
   await page.click(chip);
-  check('chip: chưa làm → đang làm', (await page.textContent(chip)).trim() === 'Đang làm');
+  check('chip: New → In progress', (await page.textContent(chip)).trim() === 'In progress');
   const chipLook = (sel) => page.$eval(sel, (el) => { const c = getComputedStyle(el); return [c.color, c.backgroundColor, c.borderColor].join('|'); });
   const doingLook = await chipLook(chip), todoLook = await chipLook('.step:nth-child(1) .card[data-sub]:nth-child(2) [data-act="cycle"]');
   check('chip Đang làm có màu riêng (chữ, nền, viền khác Chưa làm)', doingLook.split('|').every((v, k) => v !== todoLook.split('|')[k]), `${doingLook} / ${todoLook}`);
   await page.click(chip);
-  check(`chip: → xong, tiến độ 1/${n1}`, (await page.textContent(chip)).trim() === 'Xong'
+  check(`chip: → xong, tiến độ 1/${n1}`, (await page.textContent(chip)).trim() === 'Done'
     && (await page.textContent('.step:nth-child(1) .prog')).includes(`1/${n1}`));
   check('việc tiếp theo dời sang 1.2', (await page.textContent('.step:nth-child(1) .card.next .num')) === '1.2');
   check('chip giữ focus sau khi bấm', await page.evaluate(() => document.activeElement?.dataset.act === 'cycle'));
@@ -150,7 +150,7 @@ const check = (name, ok, detail = '') => {
   // chú giải có Huỷ; bấm chip Huỷ → Chưa làm.
   const c12 = '.step:nth-child(1) .card[data-sub]:nth-child(2)';
   await page.click(`${c12} [data-act="edit-sub"]`);
-  check('hộp sửa: có Huỷ trong trạng thái, ô "Vì sao huỷ" ẩn khi chưa chọn', (await page.$$eval('#sub-form [name="status"] option', (o) => o.map((x) => x.textContent))).includes('Huỷ')
+  check('hộp sửa: có Huỷ trong trạng thái, ô "Vì sao huỷ" ẩn khi chưa chọn', (await page.$$eval('#sub-form [name="status"] option', (o) => o.map((x) => x.textContent))).includes('Cancelled')
     && !(await page.isVisible('#sub-cancel')));
   await page.selectOption('#sub-form [name="status"]', 'cancel');
   check('chọn Huỷ: hiện ô "Vì sao huỷ"', await page.isVisible('#sub-cancel'));
@@ -162,18 +162,18 @@ const check = (name, ok, detail = '') => {
     const c = document.querySelector(sel);
     return { due: c.querySelector('.due')?.textContent, overdue: !!c.querySelector('.overdue') };
   }, c12);
-  check('Huỷ: hạn đã qua không báo trễ', cxl.due === 'hạn 02/01/2020' && !cxl.overdue, JSON.stringify(cxl));
+  check('Huỷ: hạn đã qua không báo trễ', cxl.due === 'due 2 Jan 2020' && !cxl.overdue, JSON.stringify(cxl));
   const cx = await page.evaluate((sel) => {
     const c = document.querySelector(sel);
     return { chip: c.querySelector('.chip').textContent, reason: c.querySelector('.card-cancel')?.textContent, line: getComputedStyle(c.querySelector('.card-title .link')).textDecorationLine,
       prog: document.querySelector('.step:nth-child(1) .prog').textContent, next: document.querySelector('.card.next .num')?.textContent,
       legend: [...document.querySelectorAll('#legend li')].map((li) => li.textContent).join(',') };
   }, c12);
-  check('Huỷ: chip, lý do trên thẻ, tên gạch ngang', cx.chip === 'Huỷ' && /^Huỷ vì Đã có số liệu từ nguồn khác\nkhông cần làm lại$/.test(cx.reason) && cx.line === 'line-through', JSON.stringify(cx));
-  check(`Huỷ: tiến độ 1/${n1 - 1}, "Tiếp theo" sang 1.3, chú giải có Huỷ 1`, cx.prog.startsWith(`1/${n1 - 1}`) && cx.next === '1.3' && cx.legend.includes('Huỷ1'), JSON.stringify(cx));
+  check('Huỷ: chip, lý do trên thẻ, tên gạch ngang', cx.chip === 'Cancelled' && /^Cancelled because Đã có số liệu từ nguồn khác\nkhông cần làm lại$/.test(cx.reason) && cx.line === 'line-through', JSON.stringify(cx));
+  check(`Huỷ: tiến độ 1/${n1 - 1}, "Tiếp theo" sang 1.3, chú giải có Huỷ 1`, cx.prog.startsWith(`1/${n1 - 1}`) && cx.next === '1.3' && cx.legend.includes('Cancelled1'), JSON.stringify(cx));
   check('Huỷ: lưu lý do', (await cur(page)).steps[0].subs[1].cancelReason === 'Đã có số liệu từ nguồn khác\nkhông cần làm lại');
   await page.click(`${c12} [data-act="cycle"]`);
-  check('bấm chip Huỷ → Chưa làm, lý do bỏ', (await page.textContent(`${c12} .chip`)).trim() === 'Chưa làm' && (await cur(page)).steps[0].subs[1].cancelReason === '');
+  check('bấm chip Huỷ → Chưa làm, lý do bỏ', (await page.textContent(`${c12} .chip`)).trim() === 'New' && (await cur(page)).steps[0].subs[1].cancelReason === '');
   check('về Chưa làm: hạn đã qua báo trễ', !!(await page.$(`${c12} .due.overdue`)));
   await page.click(`${c12} [data-act="edit-sub"]`);
   await page.fill('#sub-form [name="due"]', '');
@@ -204,7 +204,7 @@ const check = (name, ok, detail = '') => {
   // Nhân bản, rồi xoá + hoàn tác.
   await page.click(`.card[data-sub="${added.id}"] [data-act="sub-dup"]`);
   ws = await cur(page);
-  check('nhân bản bước con', ws.steps[1].subs.length === n2 + 2 && /bản sao/.test(ws.steps[1].subs[n2 + 1].title));
+  check('nhân bản bước con', ws.steps[1].subs.length === n2 + 2 && /\(copy\)/.test(ws.steps[1].subs[n2 + 1].title));
   const dupId = ws.steps[1].subs[n2 + 1].id;
   await page.click(`.card[data-sub="${dupId}"] [data-act="sub-del"]`);
   check('xoá: toast có Hoàn tác, focus ở nút Hoàn tác', await page.isVisible('#toast-undo') && (await cur(page)).steps[1].subs.length === n2 + 1
@@ -227,13 +227,13 @@ const check = (name, ok, detail = '') => {
   }));
   let mk = await marks();
   check('dời bằng nút: thẻ vừa dời tô nổi, thẻ bị đổi chỗ tô nhẹ, toast "Đã dời 2.2 → 2.1"',
-    mk.moved.join() === before[1] && mk.swapped.join() === before[0] && /^Đã dời 2\.2 → 2\.1 · /.test(mk.toast), JSON.stringify(mk));
+    mk.moved.join() === before[1] && mk.swapped.join() === before[0] && /^Moved 2\.2 → 2\.1 · /.test(mk.toast), JSON.stringify(mk));
   await page.focus(subSel(before[1], 'edit-sub'));
   await page.keyboard.press('Alt+ArrowRight');
   await page.keyboard.press('Alt+ArrowRight');
   mk = await marks();
   check('Alt + →: tô thẻ vừa dời, toast nói chỗ cũ → chỗ mới, focus giữ trên thẻ',
-    (await order())[2] === before[1] && mk.moved.join() === before[1] && mk.swapped.join() === before[2] && /^Đã dời 2\.2 → 2\.3 · /.test(mk.toast)
+    (await order())[2] === before[1] && mk.moved.join() === before[1] && mk.swapped.join() === before[2] && /^Moved 2\.2 → 2\.3 · /.test(mk.toast)
     && await page.evaluate((id) => document.activeElement?.closest('.card')?.dataset.sub === id, before[1]), JSON.stringify(mk));
   await page.keyboard.press('Control+z');
   check('hoàn tác dời (Ctrl+Z): về chỗ cũ', JSON.stringify(await order()) === JSON.stringify(before));
@@ -247,7 +247,7 @@ const check = (name, ok, detail = '') => {
   check('nút đưa bước lên', stepsAfter[0] === stepsBefore[1] && stepsAfter[1] === stepsBefore[0]);
   mk = await marks();
   check('dời bước: hàng vừa dời tô nổi, hàng bị đổi chỗ tô nhẹ, toast "Đã dời bước 2 → 1"',
-    mk.moved.join() === stepsBefore[1] && mk.swapped.join() === stepsBefore[0] && /^Đã dời bước 2 → 1 · /.test(mk.toast), JSON.stringify(mk));
+    mk.moved.join() === stepsBefore[1] && mk.swapped.join() === stepsBefore[0] && /^Moved step 2 → 1 · /.test(mk.toast), JSON.stringify(mk));
   await page.click(`.step[data-step="${stepsBefore[1]}"] [data-act="step-down"]`);
 
   // Kéo thả: bước con cuối của hàng 1 lên đầu hàng 1; bước 3 lên trên bước 1. Khung cao để nguồn và đích cùng
@@ -267,7 +267,7 @@ const check = (name, ok, detail = '') => {
   const mkd = await marks();
   check('kéo thả bước con sang bước khác', (await cur(page)).steps[0].subs.at(-1).id === r2[0]);
   check('kéo thả: thẻ vừa thả tô nổi, toast "Đã dời 3.1 → 1.N"', mkd.moved.join() === r2[0]
-    && new RegExp(`^Đã dời 3\\.1 → 1\\.${(await cur(page)).steps[0].subs.length} · `).test(mkd.toast), JSON.stringify(mkd));
+    && new RegExp(`^Moved 3\\.1 → 1\\.${(await cur(page)).steps[0].subs.length} · `).test(mkd.toast), JSON.stringify(mkd));
   await page.setViewportSize({ width: 1280, height: 900 });
 
   // Thêm, sửa, xoá bước + hoàn tác.
@@ -294,7 +294,7 @@ const check = (name, ok, detail = '') => {
   // Cần làm lại bước này (step.revisit): nút có chữ, hộp có câu giải thích, danh sách bước con đưa về Chưa làm,
   // băng "Đang làm lại · Vòng N · ngày · lý do", dòng nhật ký tự ghi, Hoàn tác cả thao tác, bỏ đánh dấu, vòng tăng tiếp.
   const revBtn = `.step[data-step="${s2id}"] .acts [data-act="revisit"]`;
-  check('cần làm lại: nút có chữ', (await page.textContent(revBtn)).trim() === 'Cần làm lại');
+  check('cần làm lại: nút có chữ', (await page.textContent(revBtn)).trim() === 'Reopen');
   const r0 = (await cur(page)).steps[1];
   const doneId = r0.subs[0].id;
   for (let k = 0; k < 3 && (await cur(page)).steps[1].subs[0].status !== 'done'; k++) await page.click(subSel(doneId, 'cycle'));
@@ -308,7 +308,7 @@ const check = (name, ok, detail = '') => {
     checked: document.querySelectorAll('#revisit-list input:checked').length, round: document.getElementById('revisit-round').textContent,
   }));
   check('cần làm lại: danh sách mọi bước con, mặc định không chọn, báo vòng 2', rl.n === r0.subs.length && rl.checked === 0
-    && /vòng 2/.test(rl.round), JSON.stringify(rl));
+    && /iteration 2/.test(rl.round), JSON.stringify(rl));
   await page.click('#revisit-all-done');
   const picked = await page.$$eval('#revisit-list input:checked', (c) => c.map((x) => x.value));
   check('"Chọn tất cả đã xong": chọn đúng các bước con đã xong', picked.join() === (await cur(page)).steps[1].subs.filter((x) => x.status === 'done').map((x) => x.id).join()
@@ -319,30 +319,30 @@ const check = (name, ok, detail = '') => {
   const autoLog = rs.log.at(-1);
   check('cần làm lại: bước con đã chọn về Chưa làm, vòng 2, nhật ký tự ghi',
     rs.steps[1].subs.find((x) => x.id === doneId).status === 'todo' && rs.steps[1].revisit.round === 2 && rs.steps[1].round === 2
-    && rs.log.length === nLogR + 1 && autoLog.decision === `Làm lại: ${r0.title} (vòng 2)` && autoLog.why === 'EDA lộ cột thiếu'
-    && /Làm lại: /.test(await page.textContent('#log-list')), JSON.stringify(autoLog));
+    && rs.log.length === nLogR + 1 && autoLog.decision === `Reopened: ${r0.title} (iteration 2)` && autoLog.why === 'EDA lộ cột thiếu'
+    && /Reopened: /.test(await page.textContent('#log-list')), JSON.stringify(autoLog));
   check('cần làm lại: toast có Hoàn tác, focus không bị lấy', await page.isVisible('#toast-undo')
     && await page.evaluate(() => document.activeElement?.id !== 'toast-undo'));
   await page.keyboard.press('Control+z');
   rs = await cur(page);
   check('hoàn tác cần làm lại: trạng thái thẻ, nhật ký, đánh dấu, vòng đều về như cũ', rs.steps[1].revisit === null && rs.steps[1].round === 1
-    && rs.steps[1].subs.map((x) => x.status).join() === statuses0 && rs.log.length === nLogR && !/Làm lại: /.test(await page.textContent('#log-list')));
+    && rs.steps[1].subs.map((x) => x.status).join() === statuses0 && rs.log.length === nLogR && !/Reopened: /.test(await page.textContent('#log-list')));
   await page.click(revBtn);
   await page.fill('#revisit-form [name="reason"]', 'EDA lộ cột thiếu');
   await page.click('#revisit-form button[type="submit"]');
   const band = `.step[data-step="${s2id}"] .revisit-band`;
   check('cần làm lại: băng "Đang làm lại · Vòng 2 · ngày · lý do", nút bỏ đánh dấu',
-    /^Đang làm lại · Vòng 2 · \d\d\/\d\d\/\d{4} · EDA lộ cột thiếu$/.test((await page.textContent(`${band} .badge`)).trim())
-    && /Xong, bỏ đánh dấu/.test(await page.textContent(band))
+    /^Reopened · Iteration 2 · \d{1,2} \w{3} \d{4} · EDA lộ cột thiếu$/.test((await page.textContent(`${band} .badge`)).trim())
+    && /Close iteration/.test(await page.textContent(band))
     && (await cur(page)).steps[1].revisit.reason === 'EDA lộ cột thiếu');
   await page.click(`${band} [data-act="revisit-clear"]`);
   check('cần làm lại: "Xong, bỏ đánh dấu" xoá đánh dấu và băng', (await cur(page)).steps[1].revisit === null && !(await page.$(band)));
   await page.click(revBtn);
-  check('đánh dấu lại sau khi bỏ: báo vòng 3', /vòng 3/.test(await page.textContent('#revisit-round')));
+  check('đánh dấu lại sau khi bỏ: báo vòng 3', /iteration 3/.test(await page.textContent('#revisit-round')));
   await page.fill('#revisit-form [name="reason"]', 'EDA lộ cột thiếu');
   await page.click('#revisit-form button[type="submit"]');
-  check('đánh dấu lại: băng "Vòng 3", nhật ký "(vòng 3)"', /^Đang làm lại · Vòng 3 · /.test((await page.textContent(`${band} .badge`)).trim())
-    && (await cur(page)).log.at(-1).decision.endsWith('(vòng 3)'));
+  check('đánh dấu lại: băng "Vòng 3", nhật ký "(vòng 3)"', /^Reopened · Iteration 3 · /.test((await page.textContent(`${band} .badge`)).trim())
+    && (await cur(page)).log.at(-1).decision.endsWith('(iteration 3)'));
   await page.click(`${band} .badge`);
   check('sửa lý do khi đang làm lại: không có danh sách bước con', !(await page.isVisible('#revisit-subs')));
   await page.keyboard.press('Escape');
@@ -480,7 +480,7 @@ const check = (name, ok, detail = '') => {
     && (await shown('.card .num')) > 0 && (await shown('.card-title')) > 0 && (await shown('.card .chip')) > 0 && (await shown('.doc-tag')) > 0, full.join());
   // Nút "Nhật ký (N)": đúng số, bấm thì cuộn tới khung nhật ký và focus vào đó.
   const nLogNow = (await cur(page)).log.length;
-  check('nút Nhật ký có số mục', (await page.textContent('#log-btn')).trim() === `Nhật ký (${nLogNow})`);
+  check('nút Nhật ký có số mục', (await page.textContent('#log-btn')).trim() === `Log (${nLogNow})`);
   await page.click('#log-btn');
   check('nút Nhật ký: cuộn tới nhật ký, focus ở đó', await page.evaluate(() => document.activeElement?.id === 'log'
     && document.getElementById('log').getBoundingClientRect().top < innerHeight / 2 && document.getElementById('log').getBoundingClientRect().top >= 0));
@@ -502,17 +502,17 @@ const check = (name, ok, detail = '') => {
   const [dl] = await Promise.all([page.waitForEvent('download'), page.click('#export-download')]);
   const md = fs.readFileSync(await dl.path(), 'utf8');
   check('xuất Markdown: tải file .md', /\.md$/.test(dl.suggestedFilename()) && md.startsWith('# Dự án Data Science'));
-  check('Markdown có dấu trạng thái, hạn, không người làm', /- \[x\] /.test(md) && /- \[!\] .* · hạn 2026-12-01/.test(md) && !/`@|Người:/.test(md) && /## Nhật ký quyết định/.test(md));
-  check('Markdown có tài liệu: nhãn, link, rào văn bản', /\nTài liệu:\n {2}- \[Data card\]\(https:\/\/example\.com\/card\)\n {2}- Ghi chép EDA\n {4}`{5}markdown\n/.test(md)
-    && / {2}Tài liệu:\n {4}- \[Repo\]\(https:\/\/git\.example\/repo\)/.test(md));
-  check('Markdown giữ dòng "Quay lại:" của bước cần làm lại', /\nQuay lại: \d{4}-\d\d-\d\d · vòng 3 · EDA lộ cột thiếu\n/.test(md));
+  check('Markdown có dấu trạng thái, hạn, không người làm', /- \[x\] /.test(md) && /- \[!\] .* · due 2026-12-01/.test(md) && !/`@|Người:/.test(md) && /## Decision log/.test(md));
+  check('Markdown có tài liệu: nhãn, link, rào văn bản', /\nDocs:\n {2}- \[Data card\]\(https:\/\/example\.com\/card\)\n {2}- Ghi chép EDA\n {4}`{5}markdown\n/.test(md)
+    && / {2}Docs:\n {4}- \[Repo\]\(https:\/\/git\.example\/repo\)/.test(md));
+  check('Markdown giữ dòng "Quay lại:" của bước cần làm lại', /\nReopened: \d{4}-\d\d-\d\d · iteration 3 · EDA lộ cột thiếu\n/.test(md));
   await page.click('#export-copy');
   const clip = await page.evaluate(() => navigator.clipboard.readText());
   check('chép Markdown vào clipboard', clip === md);
   await page.click('#dlg-export [data-close]');
   const nBefore = (await stored(page)).workspaces.length;
   const nDocs = afterReload.steps.reduce((n, x) => n + x.docs.length + x.subs.reduce((k, y) => k + y.docs.length, 0), 0);
-  const want = `Markdown: 1 dự án · ${afterReload.steps.length} bước · ${afterReload.steps.reduce((n, x) => n + x.subs.length, 0)} bước con · ${afterReload.log.length} quyết định · ${nDocs} tài liệu`;
+  const want = `Markdown: 1 project · ${afterReload.steps.length} steps · ${afterReload.steps.reduce((n, x) => n + x.subs.length, 0)} sub-steps · ${afterReload.log.length} decisions · ${nDocs} docs`;
   await page.click('#import-btn');
   await page.fill('#import-text', md);
   check('nhập: xem trước có số đếm', (await page.textContent('#import-preview')) === want,
@@ -522,7 +522,7 @@ const check = (name, ok, detail = '') => {
   const imported = s.workspaces.find((w) => w.id === s.lastId);
   const a = await shape(page, afterReload), b = await shape(page, imported);
   check('Markdown đi rồi về: dự án mới, cùng cấu trúc', s.workspaces.length === nBefore + 1 && imported.id !== afterReload.id
-    && imported.name === afterReload.name + ' (nhập)'
+    && imported.name === afterReload.name + ' (imported)'
     && JSON.stringify({ ...a, name: '' }) === JSON.stringify({ ...b, name: '' }));
 
   // JSON một dự án qua file; sao lưu tất cả qua dán.
@@ -533,7 +533,7 @@ const check = (name, ok, detail = '') => {
   await page.click('#dlg-export [data-close]');
   await page.click('#import-btn');
   await page.setInputFiles('#import-file', { name: 'p.json', mimeType: 'application/json', buffer: fs.readFileSync(jsonPath) });
-  await page.waitForFunction(() => /JSON một dự án/.test(document.getElementById('import-preview').textContent));
+  await page.waitForFunction(() => /JSON \(one project\)/.test(document.getElementById('import-preview').textContent));
   await page.click('#import-go');
   s = await stored(page);
   const j = s.workspaces.find((w) => w.id === s.lastId);
@@ -544,12 +544,13 @@ const check = (name, ok, detail = '') => {
   await page.click('#dlg-export [data-close]');
   const nb = s.workspaces.length;
   await page.click('#import-btn');
-  await page.fill('#import-text', backup);
+  // Dán bằng một lần đặt value + sự kiện input: fill() gõ từng khối, chậm với ~100 KB khi máy bận.
+  await page.$eval('#import-text', (el, v) => { el.value = v; el.dispatchEvent(new Event('input', { bubbles: true })); }, backup);
   await page.click('#import-go');
   check('nhập sao lưu: thêm đủ dự án, không ghi đè', (await stored(page)).workspaces.length === nb * 2);
   await page.click('#import-btn');
   await page.fill('#import-text', '{"x":1}');
-  check('nhập chữ lạ: báo lỗi, nút tắt', /Không đọc được/.test(await page.textContent('#import-preview')) && await page.isDisabled('#import-go'));
+  check('nhập chữ lạ: báo lỗi, nút tắt', /Cannot read/.test(await page.textContent('#import-preview')) && await page.isDisabled('#import-go'));
   await page.click('#dlg-import [data-close]');
 
   // Đổi tên, nhân bản, xoá dự án.
@@ -612,7 +613,7 @@ const check = (name, ok, detail = '') => {
   await page.click('.step:first-child .step-head [data-act="add-sub"]');
   await page.fill('#sub-form [name="title"]', 'Không khớp tìm');
   await page.click('#sub-form button[type="submit"]');
-  check('thêm mà bộ lọc ẩn: báo, focus không về body', /đang bị bộ lọc ẩn/.test(await page.textContent('#toast-text'))
+  check('thêm mà bộ lọc ẩn: báo, focus không về body', /hidden by the search filter/.test(await page.textContent('#toast-text'))
     && await page.evaluate(() => document.activeElement !== document.body));
   await page.fill('#q', '');
 
@@ -620,7 +621,7 @@ const check = (name, ok, detail = '') => {
   await page.click('#import-btn');
   await page.fill('#import-text', '# Cũ\n\n> Data Science Step Planner · định dạng 1\n>\n> Người: `@An` · `@Bình`\n\n## 1. Một\n\n'
     + '- [x] Việc cũ · `@An` · hạn 2026-01-02\n- [ ] Viết tay @Bình hạn 03/01/2026\n');
-  check('nhập file cũ có người: xem trước không cảnh báo', /^Markdown: 1 dự án · 1 bước · 2 bước con · 0 quyết định$/.test(await page.textContent('#import-preview')),
+  check('nhập file cũ có người: xem trước không cảnh báo', /^Markdown: 1 project · 1 step · 2 sub-steps · 0 decisions$/.test(await page.textContent('#import-preview')),
     await page.textContent('#import-preview'));
   await page.click('#import-go');
   const oldMd = await cur(page);
@@ -647,7 +648,7 @@ const check = (name, ok, detail = '') => {
   // JSON sai khuôn trong trang: cảnh báo tiếng Việt, không lỗi JS.
   await page.click('#import-btn');
   await page.fill('#import-text', '{"steps":[null,{"title":"t","subs":[5]}]}');
-  check('JSON sai khuôn: liệt kê cảnh báo', /bỏ qua 1 bước, 1 bước con/.test(await page.textContent('#import-preview')));
+  check('JSON sai khuôn: liệt kê cảnh báo', /skipped 1 step, 1 sub-step/.test(await page.textContent('#import-preview')));
   await page.fill('#import-text', '[1,2]');
   check('JSON không có dự án: nút nhập tắt', await page.isDisabled('#import-go'));
   await page.click('#dlg-import [data-close]');
@@ -661,9 +662,9 @@ const check = (name, ok, detail = '') => {
   });
   await page.reload();
   await page.waitForSelector('#app:not([hidden])');
-  check('nhắc sao lưu: "Chưa sao lưu lần nào"', await page.isVisible('#backup-nudge') && /Chưa sao lưu lần nào/.test(await page.textContent('#backup-nudge')));
+  check('nhắc sao lưu: "Chưa sao lưu lần nào"', await page.isVisible('#backup-nudge') && /Never backed up/.test(await page.textContent('#backup-nudge')));
   const [bdl] = await Promise.all([page.waitForEvent('download'), page.click('#backup-nudge')]);
-  check('bấm nhắc: tải bản sao lưu, nhắc tắt', /sao-luu.*\.json$/.test(bdl.suggestedFilename()) && !(await page.isVisible('#backup-nudge'))
+  check('bấm nhắc: tải bản sao lưu, nhắc tắt', /backup.*\.json$/.test(bdl.suggestedFilename()) && !(await page.isVisible('#backup-nudge'))
     && !!(await stored(page)).lastBackup);
 
   // Theme: nút thắng hệ điều hành và được nhớ.
@@ -710,7 +711,7 @@ const check = (name, ok, detail = '') => {
   await A.click('#toast-undo');
   await A.waitForTimeout(100);
   check('hai tab: hoàn tác xoá bước sau khi tab kia ghi', (await stored(A)).workspaces.find((w) => w.id === w2.id).steps[1].id === w2step.id
-    && !/đã bị xoá/.test(await A.textContent('#toast-text')));
+    && !/was deleted/.test(await A.textContent('#toast-text')));
   await B.close();
   await A.click(subSel(w2sub.id, 'sub-del'));
   await A.click('#ws-btn');
@@ -806,7 +807,7 @@ const check = (name, ok, detail = '') => {
   await bp.goto(BASE);
   await bp.waitForSelector('#start:not([hidden]) .tpl');
   await bp.click('#start .tpl[data-tpl="crisp-dm"]');
-  check('bộ nhớ bị chặn: banner, vẫn dùng được', /chặn bộ nhớ/.test(await bp.textContent('#banner')) && await bp.isVisible('#banner')
+  check('bộ nhớ bị chặn: banner, vẫn dùng được', /blocks storage/.test(await bp.textContent('#banner')) && await bp.isVisible('#banner')
     && (await bp.$$('.step')).length === nSteps && !bErr.length, bErr.join(' | '));
   await blocked.close();
 
@@ -857,7 +858,7 @@ const check = (name, ok, detail = '') => {
   const badp = await bad.newPage();
   await badp.goto(BASE);
   await badp.waitForSelector('#start:not([hidden])');
-  check('dữ liệu hỏng: báo và giữ bản cũ', /bị hỏng/.test(await badp.textContent('#banner'))
+  check('dữ liệu hỏng: báo và giữ bản cũ', /corrupt/.test(await badp.textContent('#banner'))
     && (await badp.evaluate(() => localStorage.getItem('stepPlanner.v2.corrupt'))) === '{hỏng');
   await bad.close();
 
