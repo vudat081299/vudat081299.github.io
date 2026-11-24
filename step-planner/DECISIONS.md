@@ -45,7 +45,7 @@ Mỗi dự án giữ danh sách quyết định: ngày, quyết định, vì sao
 ## PLAN-006 · Xoá hoàn tác được; sắp xếp lại được; tìm theo chữ
 24/11/2026 · `step-planner/`
 
-Xoá bước, bước con hay quyết định đều hoàn tác được, trả về đúng chỗ; xoá một bước còn bước con thì hỏi lại trước. Bước và bước con sắp xếp lại được, kể cả chỉ dùng bàn phím, và bước con chuyển được sang bước khác; bước con nhân bản được. Tìm theo chữ, không phân biệt hoa thường và dấu.
+Xoá bước, bước con hay quyết định đều hoàn tác được, trả về đúng chỗ; xoá một bước còn bước con thì hỏi lại trước. Bước và bước con sắp xếp lại bằng kéo thả (chuột và chạm, thấy trước chỗ sẽ thả) hoặc chỉ bằng bàn phím, và bước con chuyển được sang bước khác; bước không có nút lên xuống. Bước con nhân bản được. Tìm theo chữ, không phân biệt hoa thường và dấu.
 
 ## PLAN-007 · Markdown xuất ra đọc được và nhập lại được; nhập không ghi đè ngầm
 24/11/2026 · `step-planner/`

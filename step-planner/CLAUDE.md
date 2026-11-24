@@ -18,6 +18,7 @@
 | `js/md.js` | Markdown của tài liệu văn bản → cây khối (`parseMd`, thuần) → DOM (`renderMd`, chỉ createElement / text node) |
 | `js/store.js` | `localStorage` (dữ liệu, mẹo `stepPlanner.hintOff`, Compact `stepPlanner.compact`, theme `hub-theme`), `sessionStorage` (dự án của tab); mọi truy cập bọc try/catch |
 | `js/dropdown.js` | danh sách chọn tự dựng: `enhanceSelect` (thay giao diện `<select>`, giữ nó làm nguồn value và `change`), `openList` |
+| `js/drag.js` | kéo thả bằng pointer events (chuột, chạm, bút): bóng, ô "Drop here", FLIP, tự cuộn, Esc |
 | `js/main.js` | vẽ bảng, sự kiện, hộp thoại, kéo thả, toast Hoàn tác, nhắc sao lưu |
 | `data/templates.json` | mẫu dự án, trang đọc bằng vòng lặp (REPO-001) |
 
@@ -59,9 +60,11 @@
 - Bấm vào thẻ (ngoài nút) là mở hộp sửa; mỗi thẻ chỉ hai điểm dừng Tab: tên và chip. Nút phụ (song song, nhân bản, xoá,
   mở lại, tài liệu, nhãn kẹp, "Show more", vạch chia) có `tabindex=-1`; bàn phím làm cùng việc: Alt + mũi tên trên tên bước
   con, Alt + ↑ ↓ trên tên bước, ô bước / vị trí và các nút trong hộp sửa.
-- Đổi chỗ (nút dời, Alt + mũi tên, kéo thả, ô bước / vị trí; cả bước): cái vừa dời có lớp `moved`, cái bị đổi chỗ có
-  `swapped`, tự gỡ sau `--flash-dur`; toast "Moved …" có Hoàn tác, không lấy focus; hàng thẻ cuộn để thẻ trong tầm nhìn.
-  Dời liền nhiều lần khi toast còn hiện: Hoàn tác về chỗ trước lần đầu; dời về đúng chỗ cũ thì toast tắt.
+- Kéo thả: chuột kéo thẻ (trừ nút, link) hay đầu bước; chạm thì giữ thẻ rồi kéo, bước kéo bằng tay nắm. Đang kéo: chỗ thả
+  là ô viền đứt "Drop here" cỡ thẻ, thẻ khác trượt nhường chỗ, không vẽ lại bảng. Nửa trái / phải một ô: chen ô mới trước /
+  sau nó; phần dưới thẻ hay giữa ô song song: nhập ô ấy. Gần mép thì hàng / trang tự cuộn; Esc huỷ. Bước không có nút lên xuống.
+- Đổi chỗ (mọi cách): cái vừa dời có lớp `moved`, cái bị đổi chỗ có `swapped` (tự gỡ sau `--flash-dur`); toast "Moved …"
+  có Hoàn tác, không lấy focus. Dời liền nhiều lần khi toast còn hiện: Hoàn tác về chỗ trước lần đầu.
 - "Reopen" (PLAN-004): hộp có giải thích, ô lý do, danh sách bước con đưa về New (mặc định không chọn). Mở vòng `round + 1`,
   ghi nhật ký "Reopened: tên bước (iteration N)"; một Hoàn tác trả hết. Băng "Reopened · Iteration N · ngày · lý do" (bấm
   để sửa lý do), nút "Close iteration" (vòng giữ để lần sau tăng tiếp).
@@ -101,8 +104,8 @@
 
 ## Markdown
 
-Xuất rồi nhập lại ra đúng cấu trúc cũ (tên, trạng thái, hạn, ghi chú, quay lại, tài liệu, nhật ký, ghi chú dự án).
-Xem trên GitHub / VS Code: nhãn và khối cách nhau một dòng trống (khuôn dưới bỏ bớt), dòng trong khối có hai dấu cách cuối.
+Xuất rồi nhập lại ra đúng cấu trúc cũ. Nhãn và khối cách nhau một dòng trống (khuôn dưới bỏ bớt), dòng trong khối có hai
+dấu cách cuối (xuống dòng khi xem trên GitHub / VS Code).
 
 ```
 # Tên dự án
@@ -176,16 +179,13 @@ Nhập file cũ và Markdown viết tay (dễ dãi):
 
 ## Giao diện
 
-- Màu, cỡ, khoảng cách chỉ ở token đầu `css/planner.css` (REPO-028); bảng màu theo trang chủ (REPO-023).
-- Dáng chung chép từ `md-annotate/` (token, thanh trên, nút, nhóm chọn, ô nhập, màn đầu, hộp thoại, toast, bản xem
-  Markdown `.ma-md`): chép vào file của project này, không link sang project khác. Sửa dáng thì so ảnh với md-annotate.
+- Màu, cỡ, khoảng cách chỉ ở token đầu `css/planner.css` (REPO-028, REPO-023); dáng chung chép từ `md-annotate/`.
 - Theme theo hệ điều hành tới khi bấm nút (REPO-024), khoá `hub-theme`. Thanh trên ghi đủ tên, không cắt "…".
 - Biểu tượng: một bộ `<symbol id="i-…">` trong `index.html`, dùng qua `<use>`; không dùng ký tự unicode làm biểu tượng;
   nút chỉ có biểu tượng có `aria-label` và `title`.
-- Đầu dự án: tên (bấm để đổi dự án), tiến độ chung, chú giải trạng thái kèm số bước con (đếm, không ghi tay). Chip
-  trạng thái có chữ và chấm khác hình, không chỉ khác màu. Thanh công cụ: lọc bên trái, Export là nút chính.
-- Cột tên bước rộng cố định, thẻ cùng bề rộng (các hàng thẳng cột), không bị kéo cao theo thẻ cao nhất hàng. Hàng thẻ
-  cuộn ngang bên trong, không hiện thanh cuộn, mép mờ báo còn chỗ cuộn (`more-left` / `more-right`). ≤ 640px: tên bước nằm trên hàng thẻ.
+- Đầu dự án: tên (bấm để đổi dự án), tiến độ chung, chú giải trạng thái kèm số đếm. Chip trạng thái có chữ và chấm khác hình.
+- Cột tên bước rộng cố định, thẻ cùng bề rộng (các hàng thẳng cột). Hàng thẻ cuộn ngang bên trong, không hiện thanh cuộn,
+  mép mờ báo còn chỗ cuộn. ≤ 640px: tên bước nằm trên hàng thẻ.
 - Hộp văn bản Markdown gần toàn màn, ≤ 640px toàn màn; Chia đôi xếp trên / dưới khi hẹp.
 - Mọi `<select>` chọn thứ có nghĩa dùng danh sách tự dựng (nổi ở lớp trên cùng, không đẩy bố cục; phím ↑ ↓, gõ chữ đầu,
   Enter, Esc trả focus); ô chỉ chọn số giữ `<select>` gốc (`data-native`). Option có `data-dot`, `data-hint` thì hiện thêm.

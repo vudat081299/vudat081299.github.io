@@ -101,6 +101,9 @@
   --search-w: 300px;
   --chip-max: 280px;                   /* chip tài liệu của bước: tên dài thì cắt "…" */
   --gap-add: 16px;                     /* vùng rê chuột trên vạch chia hai bước */
+  --step-ph: 64px;                     /* chỗ thả khi kéo cả bước */
+  --drag-tilt: 1.5deg;
+  --drag-scale: .92;                   /* bóng thẻ nhỏ hơn thẻ để thấy ô "Drop here" dưới nó */
   --dd-min: 180px;                     /* danh sách chọn tự dựng */
   --dd-max: 420px;
   --tpl-min: 250px;
@@ -391,14 +394,8 @@ svg.i {
   padding: var(--s4) 0 var(--s6); border-top: var(--line-w) solid var(--line); position: relative;
 }
 .step:last-child { border-bottom: var(--line-w) solid var(--line); }
-.step.drop-before::before, .step.drop-after::after {
-  content: ''; position: absolute; left: 0; right: 0; height: var(--mark-w); background: var(--accent);
-}
-.step.drop-before::before { top: calc(-1 * var(--mark-w)); }
-.step.drop-after::after { bottom: calc(-1 * var(--mark-w)); }
-.step.dragging { opacity: .5; }
 .step-head { min-width: 0; display: flex; flex-direction: column; gap: var(--s2); }
-.step-head[draggable="true"] { cursor: grab; }
+@media (hover: hover) { .board:not(.filtering) .step-head { cursor: grab; } }
 .step-top { display: flex; gap: var(--s2); align-items: flex-start; }
 .step-num {
   display: inline-grid; place-items: center; flex: none; min-width: var(--h-xs); height: var(--h-xs); padding: 0 var(--s1); margin-top: 1px;
@@ -465,7 +462,6 @@ svg.i {
 }
 .gap-add-btn svg.i { width: var(--fs-sm); height: var(--fs-sm); }
 .gap-add:hover::before, .gap-add:hover .gap-add-btn, .gap-add-btn:focus-visible { opacity: 1; }
-.dragging-any .gap-add { display: none; }
 @media (hover: none) {
   .step { padding-top: var(--s5); }
   .gap-add-btn { opacity: .7; width: var(--h-xs); padding: 0; justify-content: center; color: var(--ink-3); background: var(--surface); border: var(--line-w) solid var(--line); box-shadow: none; }
@@ -518,9 +514,6 @@ svg.i {
 }
 @media (hover: hover) { .card[data-sub]:hover { border-color: var(--ink-4); } }
 .card.open { max-height: none; }
-.card[draggable="true"] { cursor: grab; }
-.card.dragging { opacity: .5; }
-.card.drop-before { box-shadow: calc(-1 * var(--s2)) 0 0 calc(-1 * var(--s1)) var(--accent); }
 .card.next { border-color: var(--accent-line); box-shadow: inset 0 0 0 var(--line-w) var(--accent-line), var(--shadow-1); }
 /* Hàng đầu chật (số, "Tiếp theo", nhãn kẹp, chip dài) thì chip xuống dòng, không bẻ chữ. */
 .card-top { flex: none; display: flex; flex-wrap: wrap; align-items: center; gap: var(--s1) var(--s2); min-height: var(--h-sm); }
@@ -585,6 +578,35 @@ svg.i {
 .chip.st-cancel::before, .st-dot.st-cancel { border-color: var(--danger); background: linear-gradient(135deg, transparent 38%, var(--danger) 38% 62%, transparent 62%); }
 span.chip { cursor: default; }
 span.chip::after { content: none; }
+
+/* ── Kéo thả (js/drag.js): bóng đi theo con trỏ; chỗ thả là ô viền đứt cỡ thẻ đang kéo, chữ mờ ở giữa; tay nắm của bước ── */
+body.dragging-any { -webkit-user-select: none; user-select: none; cursor: grabbing; }
+body.dragging-any .board * { cursor: grabbing; }
+.dragging-any .gap-add { display: none; }
+.drag-src { display: none !important; }
+.drag-ghost {
+  position: fixed; left: 0; top: 0; z-index: 95; margin: 0; pointer-events: none; will-change: transform;
+  box-shadow: var(--shadow-pop); rotate: var(--drag-tilt); scale: var(--drag-scale); transform-origin: top left; opacity: .9;
+}
+.step-head.drag-ghost { padding: var(--s3); background: var(--surface); border: var(--line-w) solid var(--line); border-radius: var(--r); }
+.drop-ph, .step-ph {
+  display: flex; align-items: center; justify-content: center; text-align: center; padding: var(--s3);
+  border: var(--mark-w) dashed var(--ink-4); border-radius: var(--r); background: var(--chip);
+  font: 600 var(--fs-sm)/var(--lh-tight) var(--sans); color: var(--ink-3);
+}
+.drop-ph span, .step-ph span { opacity: .75; }
+.drop-ph.join { border-color: var(--accent-line); background: var(--accent-soft); color: var(--green); }
+.step-ph { min-height: var(--step-ph); margin: var(--s2) 0; }
+@media (prefers-reduced-motion: no-preference) { .drop-ph, .step-ph { animation: ph-in var(--dur) var(--ease); } }
+@keyframes ph-in { from { opacity: 0; } to { opacity: 1; } }
+/* Tay nắm kéo bước (chạm: kéo ngay, không cần giữ); thẻ chạm giữ để kéo nên không bôi chữ, không hiện menu chạm giữ. */
+.step-grip {
+  position: relative; display: inline-grid; place-items: center; flex: none; width: var(--h-xs); height: var(--h-xs); margin-top: 1px;
+  color: var(--ink-4); cursor: grab; touch-action: none; border-radius: var(--r-xs);
+}
+.step-grip::after { content: ''; position: absolute; left: 50%; top: 50%; width: var(--hit); height: var(--hit); transform: translate(-50%, -50%); }
+@media (hover: hover) { .step-grip:hover { color: var(--ink-2); background: var(--chip); } }
+@media (pointer: coarse) { .card[data-sub] { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; } }
 
 /* ── Vừa dời: thẻ / hàng vừa di chuyển nổi lên rồi mờ dần; thẻ bị đổi chỗ với nó nhạt hơn ── */
 @keyframes moved-card {

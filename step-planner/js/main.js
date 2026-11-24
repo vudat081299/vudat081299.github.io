@@ -5,6 +5,7 @@ import * as C from './core.js';
 import * as S from './store.js';
 import { renderMd } from './md.js';
 import { enhanceSelect, openList, consumeJustClosed } from './dropdown.js';
+import { initDrag } from './drag.js';
 
 /** @param {string} id @returns {any} */
 const $ = (id) => document.getElementById(id);
@@ -58,8 +59,6 @@ let curId = '';
 /** @type {any[]} */
 let templates = [];
 const ui = { q: '' };
-/** @type {{kind:'sub'|'step', id:string} | null} */
-let drag = null;
 const banners = new Map();
 
 const findWs = (/** @type {string} */ id) => state.workspaces.find((w) => w.id === id) || null;
@@ -227,8 +226,9 @@ function renderBoard(/** @type {any} */ ws) {
     shown += visible.length;
     const prog = C.progress(step.subs);
     const done = prog.total > 0 && prog.done === prog.total;
-    const head = h('div', { class: 'step-head', draggable: filtering ? null : 'true' },
+    const head = h('div', { class: 'step-head' },
       h('div', { class: 'step-top' },
+        !filtering && h('span', { class: 'step-grip', title: 'Drag to move the step (keyboard: Alt + ↑ ↓ on its name)', 'aria-hidden': 'true' }, icon('grip')),
         numTag('step-num', labels.get(step.id)),
         h('h2', { class: 'step-title', id: 'st-' + step.id },
           h('button', { type: 'button', class: 'link', 'data-act': 'edit-step', 'aria-label': `Step ${labels.get(step.id) ?? '(added this session)'}: ${step.title}. Edit`, 'aria-keyshortcuts': 'Alt+ArrowUp Alt+ArrowDown' }, step.title))),
@@ -242,8 +242,6 @@ function renderBoard(/** @type {any} */ ws) {
         h('button', { type: 'button', class: 'btn small', 'data-act': 'add-sub' }, icon('plus'), 'Sub-step'),
         !step.revisit && h('button', { type: 'button', class: 'btn small quiet aux', 'data-act': 'revisit', tabindex: '-1', title: 'A later step showed this one must be redone' }, icon('redo'), 'Reopen'),
         !step.docs.length && h('button', { type: 'button', class: 'btn small quiet aux', 'data-act': 'add-doc', tabindex: '-1', title: 'Add a link or a Markdown note for the whole step' }, icon('plus'), 'Doc'),
-        !filtering && iconBtn('up', 'Move step up', 'step-up', i === 0),
-        !filtering && iconBtn('down', 'Move step down', 'step-down', i === ws.steps.length - 1),
         iconBtn('trash', 'Delete step', 'del-step')));
     /* Băng "Reopened": ngày mở lại, lý do (bấm để sửa), nút đóng vòng. */
     const band = step.revisit && h('div', { class: 'revisit-band' },
@@ -257,7 +255,7 @@ function renderBoard(/** @type {any} */ ws) {
     const card = (/** @type {any} */ x) => {
       const overdue = x.due && x.due < todayStr && x.status !== 'done' && !C.outOfScope(x.status);
       const isNext = nextIds.has(x.id);
-      return h('div', { class: `card st-${x.status}${isNext ? ' next' : ''}`, 'data-sub': x.id, draggable: filtering ? null : 'true' },
+      return h('div', { class: `card st-${x.status}${isNext ? ' next' : ''}`, 'data-sub': x.id },
         h('div', { class: 'card-top' },
           numTag('num', labels.get(x.id)),
           isNext && h('span', { class: 'next-tag' }, 'Next'),
@@ -656,8 +654,6 @@ $('board').addEventListener('click', (/** @type {any} */ e) => {
     case 'sub-docs': openSub(step, sub, { toDocs: true }); break;
     case 'revisit': openRevisit(step); break;
     case 'revisit-clear': step.revisit = null; commit(stepSel(step.id, 'edit-step')); break;
-    case 'step-up': moveStep(ws, step, -1, act); break;
-    case 'step-down': moveStep(ws, step, 1, act); break;
     case 'del-step': deleteStep(ws.id, step.id); break;
     case 'add-sub': openSub(step, null); break;
     case 'add-par': { const p = C.subPlace(ws, sub.id); openSub(step, null, { pos: `j:${p ? p.slot : 0}` }); break; }
@@ -714,12 +710,17 @@ $('board').addEventListener('keydown', (/** @type {any} */ e) => {
 });
 
 function moveStep(/** @type {any} */ ws, /** @type {any} */ step, /** @type {number} */ d, /** @type {string} */ act) {
+  const k = ws.steps.indexOf(step) + d;
+  if (k >= 0 && k < ws.steps.length) moveStepTo(ws, step, k, `${stepSel(step.id, act)} || ${stepSel(step.id, 'edit-step')}`);
+}
+/** Đặt bước vào chỉ số k (tính khi đã nhấc nó ra). @param {any} ws @param {any} step @param {number} k */
+function moveStepTo(ws, step, k, focusSel = stepSel(step.id, 'edit-step')) {
   const i = ws.steps.indexOf(step);
-  const k = i + d;
-  if (k < 0 || k >= ws.steps.length) return;
   const m = beginMove('step', step.id);
-  ws.steps.splice(i, 1); ws.steps.splice(k, 0, step);
-  endMove(m, ws.steps[k - d].id, `${stepSel(step.id, act)} || ${stepSel(step.id, 'edit-step')}`);
+  ws.steps.splice(i, 1);
+  ws.steps.splice(Math.max(0, Math.min(k, ws.steps.length)), 0, step);
+  const j = ws.steps.indexOf(step);
+  endMove(m, (j > i ? ws.steps[j - 1] : ws.steps[j + 1])?.id, focusSel);
 }
 /** Đặt bước con vào chỗ `to` (C.Place): lưu, vẽ, tô, toast có Hoàn tác. @param {any} ws @param {any} sub @param {C.Place} to */
 function moveSubTo(ws, sub, to, focusSel = subSel(sub.id, 'edit-sub')) {
@@ -755,9 +756,10 @@ function movedText(ws, kind, id, fromStepId) {
   const step = stepOf(ws, p.stepId);
   const sub = step.subs.find((/** @type {any} */ x) => x.id === id);
   const slots = C.slotsOf(step.subs.filter((/** @type {any} */ x) => x !== sub));
-  const where = p.join ? `parallel with ${quote(slots[p.slot].find((x) => x !== sub).title)}`
-    : p.slot === 0 ? 'to the start of the row' : `after ${quote(slots[p.slot - 1].at(-1).title)}`;
-  return `Moved ${quote(sub.title)} ` + (p.stepId === fromStepId ? where : `to step ${quote(step.title)}, ${where.replace(/^to /, '')}`);
+  const where = p.join ? `in parallel with ${quote(slots[p.slot].find((x) => x !== sub).title)}`
+    : p.slot === 0 ? 'the start of the row' : `after ${quote(slots[p.slot - 1].at(-1).title)}`;
+  if (p.stepId !== fromStepId) return `Moved ${quote(sub.title)} to step ${quote(step.title)}, ${where}`;
+  return `Moved ${quote(sub.title)} ` + (p.join ? `to run ${where}` : p.slot === 0 ? `to ${where}` : where);
 }
 /** Gọi trước khi đổi chỗ. @param {'sub'|'step'} kind @param {string} id */
 function beginMove(kind, id) {
@@ -1591,80 +1593,23 @@ $('import-go').addEventListener('click', () => {
   toast(`Imported ${C.plural(parsed.workspaces.length, 'new project')}.`);
 });
 
-/* ── Kéo thả (máy tính) — bàn phím dùng Alt + mũi tên hoặc ô Vị trí trong hộp sửa ── */
+/* ── Kéo thả (js/drag.js): chuột, chạm (giữ rồi kéo), bút. Bàn phím: Alt + mũi tên, ô Vị trí trong hộp sửa ── */
 
-const clearDrop = () => document.querySelectorAll('.drop-before, .drop-after, .drop-end, .dragging')
-  .forEach((el) => el.classList.remove('drop-before', 'drop-after', 'drop-end', 'dragging'));
-
-/** Chỗ thả bước con: ô đứng ngay sau điểm thả (thẻ đang kéo không tính), hoặc null là cuối hàng. @param {any} ol @param {number} x */
-function subDropBefore(ol, x) {
-  const cards = [...ol.querySelectorAll('.card[data-sub]:not(.dragging)')];
-  return cards.find((c) => { const r = c.getBoundingClientRect(); return x < r.left + r.width / 2; }) || null;
-}
-/** Thẻ đứng trước điểm thả → chỗ (ô mới) trên hàng đích khi đã nhấc thẻ đang kéo ra. @param {any} ws @param {any} target @param {any} beforeEl @param {string} dragId */
-function slotBefore(ws, target, beforeEl, dragId) {
-  const slots = C.slotsOf(target.subs.filter((/** @type {any} */ x) => x.id !== dragId));
-  const i = beforeEl ? slots.findIndex((sl) => sl.some((x) => x.id === beforeEl.dataset.sub)) : -1;
-  return { stepId: target.id, slot: i < 0 ? slots.length : i, join: false, at: 0 };
-}
-/** @param {any} row @param {number} y */
-const stepDropAfter = (row, y) => { const r = row.getBoundingClientRect(); return y > r.top + r.height / 2; };
-
-$('board').addEventListener('dragstart', (/** @type {any} */ e) => {
-  const card = e.target.closest && e.target.closest('.card[data-sub]');
-  const head = !card && e.target.closest && e.target.closest('.step-head');
-  if (card) { drag = { kind: 'sub', id: card.dataset.sub }; card.classList.add('dragging'); }
-  else if (head) { drag = { kind: 'step', id: head.closest('[data-step]').dataset.step }; head.closest('.step').classList.add('dragging'); }
-  else return;
-  e.dataTransfer.effectAllowed = 'move';
-  e.dataTransfer.setData('text/plain', drag.id);
+initDrag($('board'), {
+  enabled: () => !!cur() && !ui.q.trim(),
+  placeOf: (id) => C.subPlace(cur(), id),
+  onSub: (id, to) => {
+    const ws = cur();
+    const sub = ws && ws.steps.flatMap((/** @type {any} */ s) => s.subs).find((/** @type {any} */ x) => x.id === id);
+    if (sub) moveSubTo(ws, sub, to); else render();
+  },
+  onStep: (id, k) => {
+    const ws = cur();
+    const step = stepOf(ws, id);
+    if (step) moveStepTo(ws, step, k); else render();
+  },
+  onEnd: () => render(),
 });
-$('board').addEventListener('dragover', (/** @type {any} */ e) => {
-  if (!drag) return;
-  document.querySelectorAll('.drop-before, .drop-after, .drop-end').forEach((el) => el.classList.remove('drop-before', 'drop-after', 'drop-end'));
-  if (drag.kind === 'sub') {
-    const ol = e.target.closest('.step') && e.target.closest('.step').querySelector('.cards');
-    if (!ol) return;
-    e.preventDefault();
-    const before = subDropBefore(ol, e.clientX);
-    if (before) before.classList.add('drop-before'); else ol.classList.add('drop-end');
-  } else {
-    const row = e.target.closest('.step');
-    if (!row) return;
-    e.preventDefault();
-    row.classList.add(stepDropAfter(row, e.clientY) ? 'drop-after' : 'drop-before');
-  }
-});
-$('board').addEventListener('drop', (/** @type {any} */ e) => {
-  const ws = cur();
-  const d = drag;
-  const row = e.target.closest('.step');
-  if (!ws || !d || !row) return;
-  e.preventDefault();
-  const target = stepOf(ws, row.dataset.step);
-  if (d.kind === 'sub') {
-    const from = ws.steps.find((/** @type {any} */ s) => s.subs.some((/** @type {any} */ x) => x.id === d.id));
-    if (!from || !target) return;
-    const before = subDropBefore(row.querySelector('.cards'), e.clientX);
-    const sub = from.subs.find((/** @type {any} */ x) => x.id === d.id);
-    drag = null;
-    clearDrop();
-    moveSubTo(ws, sub, slotBefore(ws, target, before, sub.id));
-  } else {
-    const step = stepOf(ws, d.id);
-    if (!step || step === target) return;
-    const after = stepDropAfter(row, e.clientY);
-    const m = beginMove('step', step.id);
-    const i = ws.steps.indexOf(step);
-    ws.steps.splice(i, 1);
-    const k = ws.steps.indexOf(target) + (after ? 1 : 0);
-    ws.steps.splice(k, 0, step);
-    drag = null;
-    clearDrop();
-    endMove(m, (k > i ? ws.steps[k - 1] : ws.steps[k + 1])?.id, stepSel(step.id, 'edit-step'));
-  }
-});
-$('board').addEventListener('dragend', () => { drag = null; clearDrop(); });
 
 /* ── Theme (REPO-024): theo hệ điều hành tới khi người dùng bấm ── */
 

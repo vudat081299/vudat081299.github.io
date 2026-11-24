@@ -346,7 +346,7 @@ const check = (name, ok, detail = '') => {
   await page.focus(subSel(parId, 'edit-sub'));
   await page.keyboard.press('Alt+ArrowUp');
   check('Alt + ↑: lên đầu ô song song', (await cur(page)).steps[1].subs[2].id === parId && (await cur(page)).steps[1].subs[3].par === true
-    && / parallel with "/.test((await marks()).toast), (await marks()).toast);
+    && / to run in parallel with "/.test((await marks()).toast), (await marks()).toast);
   await page.keyboard.press('Alt+ArrowRight');
   ws2 = (await cur(page)).steps[1];
   check('Alt + →: tách khỏi ô song song thành ô riêng ngay sau', ws2.subs.every((x) => !x.par) && ws2.subs[3].id === parId, ws2.subs.map((x) => x.par).join());
@@ -365,31 +365,97 @@ const check = (name, ok, detail = '') => {
   await page.click(subSel(parId, 'sub-del'), { force: true });
 
   const stepsBefore = (await cur(page)).steps.map((s) => s.id);
-  await page.click(`.step[data-step="${stepsBefore[1]}"] [data-act="step-up"]`);
+  check('bước không còn nút lên / xuống, có tay nắm kéo', !(await page.$('[data-act="step-up"], [data-act="step-down"]')) && !!(await page.$('.step .step-grip')));
+  await page.focus(`.step[data-step="${stepsBefore[1]}"] [data-act="edit-step"]`);
+  await page.keyboard.press('Alt+ArrowUp');
   const stepsAfter = (await cur(page)).steps.map((s) => s.id);
-  check('nút đưa bước lên', stepsAfter[0] === stepsBefore[1] && stepsAfter[1] === stepsBefore[0]);
+  check('Alt + ↑ trên tên bước: đưa bước lên', stepsAfter[0] === stepsBefore[1] && stepsAfter[1] === stepsBefore[0]);
   mk = await marks();
   check('dời bước: hàng vừa dời tô nổi, hàng bị đổi chỗ tô nhẹ, toast "Moved step … to the top"',
     mk.moved.join() === stepsBefore[1] && mk.swapped.join() === stepsBefore[0] && /^Moved step ".*" to the top$/.test(mk.toast), JSON.stringify(mk));
-  await page.click(`.step[data-step="${stepsBefore[1]}"] [data-act="step-down"]`);
+  await page.keyboard.press('Alt+ArrowDown');
+  check('Alt + ↓: về chỗ cũ', (await cur(page)).steps.map((s) => s.id).join() === stepsBefore.join());
 
-  // Kéo thả: bước con cuối của hàng 1 lên đầu hàng 1; bước 3 lên trên bước 1. Khung cao để nguồn và đích cùng
-  // trong tầm nhìn (kéo HTML5 của Playwright không cuộn trang giữa chừng); hàng của mẫu dài thì 900px không đủ.
+  // Kéo thả bằng chuột (pointer events). Khung cao để nguồn và đích cùng trong tầm nhìn.
   await page.setViewportSize({ width: 1280, height: 2400 });
-  await page.evaluate(() => document.querySelectorAll('.cards-scroll').forEach((sc) => { sc.scrollLeft = 0; })); // vẽ lại giữ chỗ cuộn
-  const r1 = (await cur(page)).steps[0].subs.map((x) => x.id);
-  await page.dragAndDrop(`.card[data-sub="${r1[2]}"]`, `.card[data-sub="${r1[0]}"]`, { targetPosition: { x: 5, y: 20 } });
-  const r1b = (await cur(page)).steps[0].subs.map((x) => x.id);
+  await page.evaluate(() => document.querySelectorAll('.cards-scroll').forEach((sc) => { sc.scrollLeft = 0; }));
+  /* Nhấn trên `from`, kéo từng bước tới điểm `to` (hàm trả {x, y}), chạy `mid` khi chưa thả, rồi thả (hay Esc). */
+  const dragTo = async (from, to, { mid = null, esc = false, hold = 0 } = {}) => {
+    const a = await page.locator(from).boundingBox();
+    await page.mouse.move(a.x + 24, a.y + 24);
+    await page.mouse.down();
+    await page.mouse.move(a.x + 34, a.y + 30, { steps: 2 });
+    const p = await to();
+    await page.mouse.move(p.x, p.y, { steps: 8 });
+    if (hold) await page.waitForTimeout(hold);
+    const seen = mid ? await mid() : null;
+    if (esc) await page.keyboard.press('Escape');
+    await page.mouse.up();
+    await page.waitForFunction(() => !document.querySelector('.drag-ghost') && !document.body.classList.contains('dragging-any'), null, { timeout: 3000 }).catch(() => {});
+    await page.waitForTimeout(60);
+    return seen;
+  };
+  const box = (sel) => page.locator(sel).boundingBox();
+  const cardSel = (id) => `.card[data-sub="${id}"]`;
+  const ids0 = async () => (await cur(page)).steps[0].subs.map((x) => x.id);
+  const pars0 = async () => (await cur(page)).steps[0].subs.map((x) => (x.par ? 'p' : '-')).join('');
+  const r1 = await ids0();
+  // 1. Trong hàng: thẻ 3 lên đầu. Lúc chưa thả: ô viền đứt "Drop here" ở ô đầu, thẻ gốc ẩn, bảng không bị vẽ lại.
+  await page.evaluate((id) => { window.__keep = document.querySelector(`.card[data-sub="${id}"]`); }, r1[1]);
+  const mid1 = await dragTo(cardSel(r1[2]), async () => { const b = await box(cardSel(r1[0])); return { x: b.x + 12, y: b.y + 30 }; }, {
+    mid: () => page.evaluate((ids) => {
+      const ph = document.querySelector('.drop-ph');
+      const first = ph?.closest('.cards')?.firstElementChild;
+      return { ph: !!ph, text: ph?.textContent, first: !!first && first.contains(ph), dashed: ph && getComputedStyle(ph).borderStyle,
+        hidden: !!document.querySelector(`.card[data-sub="${ids[2]}"]`)?.closest('.drag-src'), same: window.__keep === document.querySelector(`.card[data-sub="${ids[1]}"]`),
+        ghost: !!document.querySelector('.drag-ghost'), w: ph && Math.round(ph.getBoundingClientRect().width), cw: Math.round(document.querySelector(`.card[data-sub="${ids[1]}"]`).getBoundingClientRect().width) };
+    }, r1),
+  });
+  check('kéo thẻ: chưa thả đã thấy ô viền đứt "Drop here" ở chỗ sẽ thả, cỡ thẻ; thẻ gốc ẩn; bảng không vẽ lại giữa chừng',
+    mid1.ph && mid1.text === 'Drop here' && mid1.first && mid1.dashed === 'dashed' && mid1.hidden && mid1.same && mid1.ghost && mid1.w === mid1.cw, JSON.stringify(mid1));
+  const r1b = await ids0();
   check('kéo thả bước con trong hàng', r1b[0] === r1[2] && r1b.length === n1, r1b.indexOf(r1[2]) + '');
+  check('kéo thả: không mở hộp sửa sau khi thả', !(await page.isVisible('#dlg-sub')));
+  // 2. Thả vào phần dưới một thẻ: nhập ô của nó, chạy song song.
+  const mid2 = await dragTo(cardSel(r1[3]), async () => { const b = await box(cardSel(r1[0])); return { x: b.x + b.width / 2, y: b.y + b.height - 8 }; }, {
+    mid: () => page.evaluate(() => { const ph = document.querySelector('.drop-ph'); return { join: ph?.classList.contains('join'), text: ph?.textContent, par: !!ph?.closest('.slot.par') }; }),
+  });
+  let r1c = await ids0();
+  check('kéo vào phần dưới thẻ: ô viền đứt báo chạy song song, thả thì nhập ô ấy', mid2.join && /parallel/.test(mid2.text) && mid2.par
+    && r1c[2] === r1[3] && r1c[1] === r1[0] && (await pars0()).startsWith('--p'), JSON.stringify(mid2) + (await pars0()));
+  // 3. Kéo ra khỏi ô song song: thả vào nửa trái thẻ đầu hàng → ô riêng ở đầu.
+  await dragTo(cardSel(r1[3]), async () => { const b = await box(cardSel(r1[2])); return { x: b.x + 12, y: b.y + 30 }; });
+  r1c = await ids0();
+  check('kéo ra khỏi ô song song: thành ô riêng', r1c[0] === r1[3] && !(await pars0()).includes('p'), (await pars0()));
+  // 4. Esc huỷ: không đổi gì, ô viền đứt biến mất, thẻ gốc hiện lại.
+  const before4 = await ids0();
+  await dragTo(cardSel(r1[0]), async () => { const b = await box(cardSel(before4[0])); return { x: b.x + 12, y: b.y + 30 }; }, { esc: true });
+  check('Esc khi đang kéo: huỷ, không đổi gì', (await ids0()).join() === before4.join() && !(await page.$('.drop-ph, .drag-src, .drag-ghost')));
+  // 5. Tự cuộn ngang: giữ gần mép phải hàng thẻ thì hàng cuộn.
+  const sc0 = await page.evaluate(() => document.querySelector('.step .cards-scroll').scrollLeft);
+  await dragTo(cardSel(before4[1]), async () => { const b = await box('.step:first-child .cards-scroll'); return { x: b.x + b.width - 10, y: b.y + 40 }; }, {
+    hold: 600, esc: true, mid: () => page.evaluate(() => document.querySelector('.step .cards-scroll').scrollLeft),
+  }).then((v) => check('kéo gần mép phải hàng: hàng tự cuộn ngang', v > sc0 + 20, `${sc0} → ${v}`));
+  await page.evaluate(() => document.querySelectorAll('.cards-scroll').forEach((sc) => { sc.scrollLeft = 0; }));
+  // 6. Kéo cả bước bằng tay nắm: lúc chưa thả có chỗ thả "Drop the step here".
   const st = (await cur(page)).steps.map((s) => s.id);
-  await page.dragAndDrop(`.step[data-step="${st[2]}"] .step-head`, `.step[data-step="${st[0]}"] .step-head`, { targetPosition: { x: 10, y: 5 } });
+  const mid6 = await dragTo(`.step[data-step="${st[2]}"] .step-grip`, async () => { const b = await box(`.step[data-step="${st[0]}"]`); return { x: b.x + 40, y: b.y + 10 }; }, {
+    mid: () => page.evaluate(() => ({ ph: document.querySelector('.step-ph')?.textContent, first: document.querySelector('#board').firstElementChild?.classList.contains('step-ph') })),
+  });
   const st2 = (await cur(page)).steps.map((s) => s.id);
-  check('kéo thả bước', st2[0] === st[2] && st2[1] === st[0], st2.indexOf(st[2]) + '');
+  check('kéo thả bước: chỗ thả hiện trước khi thả, bước lên đầu', mid6.ph === 'Drop the step here' && mid6.first && st2[0] === st[2] && st2[1] === st[0],
+    JSON.stringify(mid6) + st2.indexOf(st[2]));
+  // 7. Sang bước khác: thẻ đầu của hàng 3 về cuối hàng 1.
   const r2 = (await cur(page)).steps[2].subs.map((x) => x.id);
   await page.evaluate((id) => { const sc = document.querySelector(`.step[data-step="${id}"] .cards-scroll`); sc.scrollLeft = sc.scrollWidth; }, st2[0]);
-  await page.dragAndDrop(`.card[data-sub="${r2[0]}"]`, `.step[data-step="${st2[0]}"] .slot:last-child > .card`, { targetPosition: { x: 220, y: 20 } });
+  const lastSel = `.step[data-step="${st2[0]}"] .slot:last-child > .card`;
+  // Thả ở mép phải hàng đích: hàng tự cuộn tới cuối, ô viền đứt về sau thẻ cuối.
+  await dragTo(cardSel(r2[0]), async () => {
+    const b = await box(lastSel), r = await box(`.step[data-step="${st2[0]}"] .cards-scroll`);
+    return { x: r.x + r.width - 16, y: b.y + 30 };
+  }, { hold: 1200 });
   const mkd = await marks();
-  check('kéo thả bước con sang bước khác', (await cur(page)).steps[0].subs.at(-1).id === r2[0]);
+  check('kéo thả bước con sang bước khác', (await cur(page)).steps[0].subs.at(-1).id === r2[0], JSON.stringify((await cur(page)).steps.slice(0, 3).map((x) => x.subs.map((y) => y.id.slice(-4) + (y.par ? 'p' : '')))) + ' ' + r2[0].slice(-4));
   check('kéo thả: thẻ vừa thả tô nổi, toast "Moved … to step …, after …"', mkd.moved.join() === r2[0]
     && /^Moved ".*" to step ".*", after ".*"$/.test(mkd.toast), JSON.stringify(mkd));
   await page.setViewportSize({ width: 1280, height: 900 });
@@ -573,7 +639,7 @@ const check = (name, ok, detail = '') => {
   // Tìm kiếm.
   await page.fill('#q', 'kiem chat');
   check('tìm không dấu: một bước con', (await page.$$eval('.card[data-sub]', (c) => c.length)) === 1);
-  check('lọc: tắt sắp xếp', (await page.$$('[data-act="step-up"], [draggable="true"]')).length === 0);
+  check('lọc: tắt sắp xếp (không tay nắm kéo bước)', (await page.$$('.step-grip')).length === 0);
   await page.fill('#q', 'hieu nghiep vu');
   check('tìm không dấu theo tên bước: cả hàng hiện', (await page.$$eval('.step', (r) => r.length)) === 1);
   await page.fill('#q', '');
@@ -869,6 +935,36 @@ const check = (name, ok, detail = '') => {
     return { stacked: head.bottom <= sc.getBoundingClientRect().top + 1, scrolls: sc.scrollWidth > sc.clientWidth, left: head.left,
       whole: sc.clientHeight >= card.offsetHeight };
   });
+  // Chạm: giữ thẻ rồi kéo (pointer events kiểu touch); vuốt nhanh thì là cuộn, không kéo.
+  const touch = await m.page.evaluate(async () => {
+    const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+    const frame = () => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    const ev = (type, x, y, target = document) => target.dispatchEvent(new PointerEvent(type, { bubbles: true, cancelable: true, pointerId: 7,
+      pointerType: 'touch', isPrimary: true, clientX: x, clientY: y, button: 0, buttons: type === 'pointerup' ? 0 : 1 }));
+    const cards = [...document.querySelectorAll('.step:first-child .card[data-sub]')];
+    const [a, b] = cards;
+    const ids = cards.map((c) => c.dataset.sub);
+    const ra = a.getBoundingClientRect(), rb = b.getBoundingClientRect();
+    ev('pointerdown', rb.left + 20, rb.top + 20, b);
+    ev('pointermove', rb.left + 60, rb.top + 24);
+    await wait(500);
+    const swipe = document.body.classList.contains('dragging-any');
+    ev('pointerup', rb.left + 60, rb.top + 24);
+    ev('pointerdown', rb.left + 20, rb.top + 20, b);
+    await wait(500);
+    const started = document.body.classList.contains('dragging-any');
+    ev('pointermove', ra.left + 10, ra.top + 30);
+    await frame();
+    const ph = !!document.querySelector('.cards > .slot:first-child .drop-ph');
+    ev('pointerup', ra.left + 10, ra.top + 30);
+    return { swipe, started, ph, ids };
+  });
+  await m.page.waitForFunction(() => !document.querySelector('.drag-ghost'), null, { timeout: 3000 }).catch(() => {});
+  await m.page.waitForTimeout(60);
+  const tIds = (await cur(m.page)).steps[0].subs.map((x) => x.id);
+  check('chạm: vuốt nhanh không kéo; giữ rồi kéo thì có ô viền đứt, thả là dời', !touch.swipe && touch.started && touch.ph
+    && tIds[0] === touch.ids[1] && tIds[1] === touch.ids[0], JSON.stringify(touch));
+  await m.page.keyboard.press('Control+z');
   await m.page.click('.step:first-child [data-act="add-doc"]');
   await m.page.check('#doc-form input[name="kind"][value="md"]', { force: true });
   await m.page.fill('#doc-form [name="title"]', 'Ghi chép');
