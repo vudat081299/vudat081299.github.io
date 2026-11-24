@@ -36,7 +36,7 @@ export function load() {
   if (!raw) return { state: empty, problem: '', migrated };
   try {
     const d = JSON.parse(raw);
-    if (!d || !Array.isArray(d.workspaces)) throw new Error('khuôn lạ');
+    if (!d || !Array.isArray(d.workspaces)) throw new Error('unexpected shape');
     return {
       state: {
         version: 2,
