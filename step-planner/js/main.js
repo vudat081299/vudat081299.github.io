@@ -439,6 +439,17 @@ document.querySelectorAll('textarea.grow-title').forEach((ta) => {
   });
 });
 
+/* Đóng hộp (Esc, Đóng, Lưu, Enter): focus về nút mở hay chỗ vừa sửa. Phím vừa bấm khiến trình duyệt vẽ vòng
+ * focus-visible quanh chỗ ấy; lớp quiet-focus ẩn vòng tới lần bấm Tab / mũi tên kế tiếp, chuột hay chạm cũng gỡ lớp.
+ * Đặt lớp ngay lúc bắt đầu đóng (Esc, submit, nút Đóng, closeSaved, tryClose), không chờ sự kiện close: sự kiện ấy tới
+ * sau, có thể sau cả lần bấm Tab kế tiếp. */
+const NAV_KEYS = ['Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Home', 'End', 'PageUp', 'PageDown'];
+const quietFocus = () => document.documentElement.classList.add('quiet-focus');
+document.addEventListener('cancel', (/** @type {any} */ e) => { if (e.target instanceof HTMLDialogElement) quietFocus(); }, true);
+document.addEventListener('submit', (/** @type {any} */ e) => { if (e.target.closest('dialog')) quietFocus(); }, true);
+window.addEventListener('keydown', (e) => { if (NAV_KEYS.includes(e.key)) document.documentElement.classList.remove('quiet-focus'); }, true);
+window.addEventListener('pointerdown', () => document.documentElement.classList.remove('quiet-focus'), true);
+
 /** @param {any} dlg @param {any} [focusEl] */
 function openDlg(dlg, focusEl) {
   dlg.showModal();
@@ -455,12 +466,14 @@ async function tryClose(dlg) {
     if (ok === null) return false;
   }
   snaps.delete(dlg);
+  quietFocus();
   dlg.close();
   return true;
 }
 /** Lưu xong: đóng hộp không hỏi. @param {any} dlg */
 function closeSaved(dlg) {
   snaps.delete(dlg);
+  quietFocus();
   dlg.close();
 }
 for (const id of GUARDED) {
@@ -470,6 +483,7 @@ document.addEventListener('click', (/** @type {any} */ e) => {
   const b = e.target.closest && e.target.closest('[data-close]');
   if (!b) return;
   const dlg = b.closest('dialog');
+  quietFocus();
   if (GUARDED.includes(dlg.id)) tryClose(dlg); else dlg.close();
 });
 

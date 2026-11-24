@@ -74,7 +74,7 @@
   focus nhảy vào Hoàn tác của toast (15 giây); Ctrl/Cmd + Z cũng hoàn tác khi không gõ chữ và không có hộp thoại mở. Hoàn
   tác tìm lại dự án và bước theo id (tab khác có thể đã thay `state`).
 - Hộp sửa: mở thì focus ô đầu; tên là textarea tự cao, Enter lưu. Esc, ×, Đóng hay Nhân bản khi chữ đã đổi thì hỏi "Bỏ
-  thay đổi?". Nút đóng không lưu của mọi hộp ghi "Đóng", không "Huỷ" (trùng tên trạng thái).
+  thay đổi?". Nút đóng không lưu ghi "Đóng", không "Huỷ". Đóng hộp: focus về chỗ mở, không vòng tới lần Tab / mũi tên kế.
 - Ghi chú bước gập dưới tên. Thẻ cao theo nội dung, quá `--card-max` thì cắt, "Show more" mở cả thẻ; link trong ghi chú
   bấm được. Vẽ lại giữ ghi chú đang mở, thẻ đã mở, chỗ cuộn ngang.
 - Tài liệu (PLAN-011): tài liệu của bước là dải chip rộng cả hàng ngay dưới băng Reopened (không băng thì ở chỗ ấy), trên

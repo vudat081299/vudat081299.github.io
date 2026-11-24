@@ -617,8 +617,18 @@ const check = (name, ok, detail = '') => {
   await page.click('#dlg-ask [data-close]');
   await page.click('#dlg-md .md-foot [data-close]');
   await page.click('#ask-ok');
-  await page.waitForTimeout(50);
+  await page.waitForFunction(() => !document.getElementById('dlg-md').open, null, { timeout: 3000 }).catch(() => {});
   check('tài liệu văn bản: chọn bỏ thì không lưu', !(await mdState()).open && /lồng/.test((await cur(page)).steps[1].docs[1].body));
+  // Đóng bằng Esc: focus về tài liệu ở cột bước, không vẽ vòng focus; bấm Tab thì vòng hiện lại.
+  await page.click(`${docStep} [data-act="open-doc"]`);
+  await page.keyboard.press('Escape');
+  const ring = () => page.evaluate(() => { const a = document.activeElement; const cs = getComputedStyle(a);
+    return { el: a.dataset.act || a.id || a.tagName, fv: a.matches(':focus-visible'), quiet: document.documentElement.classList.contains('quiet-focus'), oc: cs.outlineColor, w: cs.outlineStyle === 'none' ? 0 : parseFloat(cs.outlineWidth) }; });
+  const rg1 = await ring();
+  check('Esc đóng tài liệu: focus về tài liệu, không có vòng focus', !(await mdState()).open && rg1.el === 'open-doc' && rg1.w === 0, JSON.stringify(rg1));
+  await page.keyboard.press('Tab');
+  const rg2 = await ring();
+  check('sau Esc, bấm Tab: vòng focus hiện lại', rg2.fv && rg2.w > 0, JSON.stringify(rg2));
 
   // Tài liệu của bước con: nhãn kẹp trên thẻ, sửa trong hộp bước con; xoá có Hoàn tác ngay trong hộp.
   const dsub = (await cur(page)).steps[1].subs[0];
