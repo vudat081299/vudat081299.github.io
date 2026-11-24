@@ -15,7 +15,7 @@
      ui/selection.js, ui/picks.js, ui/dwell.js. */
 import { plural } from '../core/text.js';
 import { locate } from '../core/anchor.js';
-import { chipHints, pct } from '../core/hints.js';
+import { chipHints, hintTip, pct } from '../core/hints.js';
 import { hintBadge, hintPresses, hintRank, isDouble, isModKey, REMOVE_KEY, tapStep } from '../core/hint-keys.js';
 import { addComment, editComment, findComment, overlapWarning, partsOf } from '../core/comments.js';
 import { popPlace, sheetReveal } from '../core/place.js';
@@ -236,10 +236,10 @@ function resetChips() { chipSigs = []; $('pop-chips').replaceChildren(); $('pop-
 function chipSig(x, showPct) { return x.key + '\n' + x.n + '\n' + (showPct ? pct(x.p) : ''); }
 function hintChip(x, i, showPct) {
   var k = hintPresses(i + 1).map(shortcut).join(' '), badge = hintBadge(i + 1), t = hintSpan(x.t, 'ma-chip__t');
-  var cut = t.classList.contains('is-cut');   // gợi ý dài: chip hiện 80 ký tự đầu, title có chữ trọn (MDAN-087)
+  var cut = t.classList.contains('is-cut');   // gợi ý dài: chip hiện 80 ký tự đầu, title có chữ trọn, tối đa 400 ký tự (MDAN-087)
   /* 10 chip đầu luôn có chữ phím (.ma-chip__k: Z, CC…), mọi trạng thái; CSS chỉ cho thấy khi #pop.is-keys. */
   return h('button', {
-    class: 'ma-chip', type: 'button', title: (cut ? x.t + '\n' : '') + 'Used ' + plural(x.n, 'time') + (k ? ' · ' + k : ''),
+    class: 'ma-chip', type: 'button', title: (cut ? hintTip(x.t) + '\n' : '') + 'Used ' + plural(x.n, 'time') + (k ? ' · ' + k : ''),
     onclick: function () { savePop(x.t); }
   }, badge ? h('span', { class: 'ma-chip__k', 'aria-hidden': 'true' }, badge) : null,
   t, showPct ? h('span', { class: 'ma-chip__p' }, pct(x.p)) : null);

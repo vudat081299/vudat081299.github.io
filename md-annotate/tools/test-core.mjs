@@ -187,6 +187,9 @@ const bp = (o, d) => { const u = upS(o); return dpPrompt.buildPrompt(u, u.docs[u
     const s80 = 'a'.repeat(80), c = dpHints.hintShown(long);
     check('hintShown: dài hơn 80 thì 80 ký tự đầu, cut', dpHints.HINT_SHOW === 80 && c.cut && c.text === long.slice(0, 80) && c.text.length === 80, JSON.stringify(c));
     check('hintShown: đúng 80 hay ngắn hơn thì giữ nguyên, không cut', eq(dpHints.hintShown(s80), { text: s80, cut: false }) && eq(dpHints.hintShown('Ngắn'), { text: 'Ngắn', cut: false }));
+    const t401 = 'b'.repeat(401), t400 = 'b'.repeat(400);
+    check('hintTip: tới 400 ký tự giữ nguyên, dài hơn thì 400 ký tự đầu và "…"', dpHints.HINT_TIP === 400 && dpHints.hintTip(t400) === t400 &&
+      dpHints.hintTip(t401) === t400 + '…' && dpHints.hintTip(long) === long);
     const emo = '😀'.repeat(81), e = dpHints.hintShown(emo);
     check('hintShown: đếm theo ký tự, không cắt đôi emoji', e.cut && Array.from(e.text).length === 80 && e.text === '😀'.repeat(80), e.text.length);
   }

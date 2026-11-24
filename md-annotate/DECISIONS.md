@@ -483,7 +483,7 @@ mặc định chưa dùng đứng sau. Nhận xét dài hơn 80 ký tự không 
 
 Sửa MDAN-086: mọi nhận xét gõ tay đã lưu, dài bao nhiêu cũng vậy, được đếm và thành gợi ý ngay lần đầu; gợi ý tự thêm ở
 hộp *Hints* cũng không giới hạn độ dài. Gợi ý dài hơn 80 ký tự chỉ hiện 80 ký tự đầu, ở hộp nhận xét và ở hộp *Hints*;
-rê chuột thì thấy chữ trọn. Chọn gợi ý (bấm hay phím của MDAN-084) vẫn lưu chữ trọn, lọc theo chữ đang gõ tính trên chữ trọn.
+rê chuột thì thấy chữ trọn, dài hơn 400 ký tự thì 400 ký tự đầu. Chọn gợi ý (bấm hay phím của MDAN-084) vẫn lưu chữ trọn, lọc theo chữ đang gõ tính trên chữ trọn.
 
 ## MDAN-088 · Gợi ý nhận xét riêng cho từng phiên
 24/11/2026 · `md-annotate/js/core/hints.js`, `md-annotate/js/core/session.js`, `md-annotate/js/ui/hints.js`

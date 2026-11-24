@@ -5,7 +5,7 @@
    Xuất: hintSpan, hintStats, initHints, loadDefaultHints, markOver, recordUse, removeHint, renderHintsDlg, seedState.
    Dùng: core/text.js, core/hints.js, ui/store.js, ui/dom.js, ui/state.js. */
 import { plural } from '../core/text.js';
-import { countUse, dropBuilt, hideHint, hintShown, migrateHints, MIN_PCT, pct, pinHint, rankedHints, resetHints, seedHints } from '../core/hints.js';
+import { countUse, dropBuilt, hideHint, hintShown, hintTip, migrateHints, MIN_PCT, pct, pinHint, rankedHints, resetHints, seedHints } from '../core/hints.js';
 import { KEY, store } from './store.js';
 import { $, getJSON, h, icon } from './dom.js';
 import { S, scheduleSave } from './state.js';
@@ -28,10 +28,10 @@ export function hintStats() {
 /* Đếm một lần dùng nhận xét t vào phiên đang mở. */
 export function recordUse(t) { if (countUse(hintStats(), t)) scheduleSave(); }
 /* Chữ của gợi ý t trong span lớp cls: tối đa 80 ký tự đầu; đã cắt thì thêm is-cut (CSS cho đuôi mờ dần), title chữ trọn
-   khi tip (chip đặt chữ trọn vào title của nút, cạnh số lần dùng). */
+   (tối đa 400 ký tự, hintTip) khi tip (chip đặt chữ trọn vào title của nút, cạnh số lần dùng). */
 export function hintSpan(t, cls, tip) {
   var s = hintShown(t);
-  return h('span', { class: cls + (s.cut ? ' is-cut' : ''), title: s.cut && tip ? t : null }, s.text);
+  return h('span', { class: cls + (s.cut ? ' is-cut' : ''), title: s.cut && tip ? hintTip(t) : null }, s.text);
 }
 /* Chữ gợi ý (sel) trong box tràn khỏi hộp của nó: is-over (CSS: đuôi mờ dần như is-cut). Đo ngay, và lại khi box đổi bề rộng
    (khung nhìn đổi, box từ ẩn thành hiện như hộp Hints vừa mở); cao đổi (vùng chip trượt) không đo lại. */

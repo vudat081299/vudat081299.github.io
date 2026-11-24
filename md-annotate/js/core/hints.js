@@ -2,11 +2,12 @@
    hạng, tỉ lệ, gợi ý mặc định, gợi ý cho hộp nhận xét, chữ hiện của gợi ý dài. Hàm nhận stats và sửa tại chỗ. Mỗi phiên
    một stats (s.hints, MDAN-088): core/session.js giữ, ui/hints.js đọc stats của phiên đang mở. Gợi ý không giới hạn độ
    dài (MDAN-087).
-   Xuất: chipHints, countUse, dropBuilt, HINT_SHOW, hideHint, hintShown, migrateHints, MIN_PCT, normKey, normStats, pct,
+   Xuất: chipHints, countUse, dropBuilt, HINT_SHOW, HINT_TIP, hideHint, hintShown, hintTip, migrateHints, MIN_PCT, normKey, normStats, pct,
      pinHint, rankedHints, resetHints, seedHints, statsFromDocs.
    Dùng: không module nào. */
 
 export var HINT_SHOW = 80;      // gợi ý dài hơn chỉ hiện chừng này ký tự đầu, đuôi mờ dần (MDAN-087)
+export var HINT_TIP = 400;      // tooltip của gợi ý dài hơn chỉ chừng này ký tự đầu và "…", không tràn màn hình (MDAN-087)
 export var MIN_PCT = 5;          // chưa đủ số lần dùng thì tỉ lệ chỉ là nhiễu: không hiện
 var POP_CHIPS = 5;               // số gợi ý của hộp gọn, còn lại gom vào chip "+N"
 
@@ -95,6 +96,11 @@ export function rankedHints(stats) {
 export function hintShown(t) {
   var cs = Array.from(String(t));
   return cs.length > HINT_SHOW ? { text: cs.slice(0, HINT_SHOW).join(''), cut: true } : { text: String(t), cut: false };
+}
+/* Chữ tooltip của gợi ý t: chữ trọn, dài hơn HINT_TIP ký tự thì HINT_TIP ký tự đầu và "…". */
+export function hintTip(t) {
+  var cs = Array.from(String(t));
+  return cs.length > HINT_TIP ? cs.slice(0, HINT_TIP).join('') + '…' : String(t);
 }
 export function pct(p) { var v = p * 100; return (v < 1 ? '<1' : Math.round(v)) + '%'; }
 /* Gợi ý cho hộp nhận xét khi đang gõ text: lọc theo chữ đã gõ (khớp đúng chữ đã gõ thì bỏ). size: 'few' (mặc định)
