@@ -26,7 +26,7 @@ export function setStatus(sub, st) {
 }
 
 export const FORMAT = 'step-planner';
-export const VERSION = 2;
+export const VERSION = 3;
 export const MD_VERSION = 3;
 export const APP_NAME = 'Data Science Step Planner';
 export const LOG_HEADING = 'Decision log';
@@ -99,6 +99,7 @@ export function normSub(o) {
     doneWhen: oneLine(x.doneWhen),
     notes: multiLine(x.notes),
     docs: docsOf(x.docs),
+    par: x.par === true,
   };
 }
 
@@ -112,6 +113,8 @@ export function normStep(o) {
   const x = isObj(o) ? o : {};
   const r = x.revisit;
   const rv = isObj(r) ? { reason: oneLine(r.reason), date: parseDate(r.date) || today(), round: Math.max(2, posInt(r.round), posInt(x.round)) } : null;
+  const subs = objs(x.subs).map(normSub);
+  if (subs[0]) subs[0].par = false; // bước con đầu không có ô trước để nhập vào
   return {
     id: idOr(x.id, 't'),
     title: oneLine(x.title) || 'Step',
@@ -121,7 +124,7 @@ export function normStep(o) {
     revisit: rv,
     round: rv ? rv.round : Math.max(1, posInt(x.round)),
     docs: docsOf(x.docs),
-    subs: objs(x.subs).map(normSub),
+    subs,
   };
 }
 
@@ -208,19 +211,114 @@ export function progress(subs) {
 /** @param {{steps:{subs:{status:string}[]}[]}} ws */
 export const overall = (ws) => progress(ws.steps.flatMap((s) => s.subs));
 
-/** Việc tiếp theo của một bước: bước con đầu tiên chưa xong, không bỏ qua, không huỷ. @param {{subs:{id:string,status:string}[]}} step */
-export function nextActionId(step) {
-  const s = step.subs.find((x) => x.status !== 'done' && !outOfScope(x.status));
-  return s ? s.id : null;
-}
+/* ── Ô (slot) song song ──
+ * Một bước là dãy ô có thứ tự; mỗi ô là một hay nhiều bước con chạy song song (xếp chồng trong một cột của hàng).
+ * Dữ liệu vẫn là mảng phẳng `subs`: bước con có `par: true` nhập vào ô của bước con đứng ngay trước nó. */
 
-/** Việc tiếp theo của cả dự án: việc tiếp theo của bước đầu tiên còn việc. @param {any} ws */
-export function projectNextId(ws) {
-  for (const s of ws.steps) {
-    const id = nextActionId(s);
-    if (id) return id;
+/** @param {{par?:boolean}[]} subs @returns {any[][]} */
+export function slotsOf(subs) {
+  /** @type {any[][]} */
+  const out = [];
+  for (const x of subs) if (x.par && out.length) out[out.length - 1].push(x); else out.push([x]);
+  return out;
+}
+/** Ô → mảng phẳng, đặt lại `par` (bỏ ô rỗng). @param {any[][]} slots */
+export const fromSlots = (slots) => slots.filter((sl) => sl.length).flatMap((sl) => sl.map((x, k) => Object.assign(x, { par: k > 0 })));
+
+/** @typedef {{stepId:string, slot:number, join:boolean, at:number}} Place
+ * Chỗ của một bước con, tính trên các ô của bước khi đã nhấc nó ra: `join` false là một ô mới chen vào chỗ `slot`; true là
+ * nhập vào ô `slot` ở vị trí `at` trong ô. Cùng một hệ toạ độ cho kéo thả, ô "Vị trí", phím tắt và Hoàn tác. */
+
+/** @param {any} ws @param {string} subId @returns {Place|null} */
+export function subPlace(ws, subId) {
+  for (const step of ws.steps) {
+    const slots = slotsOf(step.subs);
+    for (const [i, sl] of slots.entries()) {
+      const k = sl.findIndex((x) => x.id === subId);
+      if (k >= 0) return sl.length > 1 ? { stepId: step.id, slot: i, join: true, at: k } : { stepId: step.id, slot: i, join: false, at: 0 };
+    }
   }
   return null;
+}
+/** Nhấc bước con ra khỏi dự án (ô còn lại giữ nguyên, ô rỗng biến mất). @param {any} ws @param {string} subId */
+export function takeSub(ws, subId) {
+  for (const step of ws.steps) {
+    const j = step.subs.findIndex((/** @type {any} */ x) => x.id === subId);
+    if (j < 0) continue;
+    const slots = slotsOf(step.subs).map((sl) => sl.filter((x) => x.id !== subId));
+    const [sub] = step.subs.splice(j, 1);
+    step.subs.splice(0, step.subs.length, ...fromSlots(slots));
+    return sub;
+  }
+  return null;
+}
+/**
+ * Đặt bước con vào chỗ `to` (nhấc khỏi chỗ cũ nếu đang ở trong dự án). Trả chỗ cũ (null nếu trước đó chưa có), hay
+ * undefined khi bước đích không còn.
+ * @param {any} ws @param {any} sub @param {Place} to
+ */
+export function placeSub(ws, sub, to) {
+  const target = ws.steps.find((/** @type {any} */ s) => s.id === to.stepId);
+  if (!target) return undefined;
+  const from = subPlace(ws, sub.id);
+  if (from) takeSub(ws, sub.id);
+  const slots = slotsOf(target.subs);
+  const i = Math.max(0, Math.min(Number.isFinite(to.slot) ? to.slot : slots.length, slots.length));
+  if (to.join && slots[i]) slots[i].splice(Math.max(0, Math.min(Number.isFinite(to.at) ? to.at : slots[i].length, slots[i].length)), 0, sub);
+  else slots.splice(i, 0, [sub]);
+  target.subs.splice(0, target.subs.length, ...fromSlots(slots));
+  return from;
+}
+/**
+ * Alt + ← →: bước con đứng riêng một ô thì đổi chỗ với ô bên cạnh; đang ở ô song song thì tách ra thành ô riêng ngay trước
+ * (←) hay ngay sau (→) ô ấy. Alt + ↑ ↓ (d = 'up' / 'down'): đổi thứ tự trong ô song song. Trả chỗ mới, hay null khi đã ở mép.
+ * @param {any} ws @param {string} subId @param {'left'|'right'|'up'|'down'} d @returns {Place|null}
+ */
+export function shiftTarget(ws, subId, d) {
+  const p = subPlace(ws, subId);
+  if (!p) return null;
+  const step = ws.steps.find((/** @type {any} */ s) => s.id === p.stepId);
+  const n = slotsOf(step.subs).length; // số ô khi còn nó
+  if (d === 'up' || d === 'down') {
+    if (!p.join) return null;
+    const size = slotsOf(step.subs)[p.slot].length - 1;
+    const at = p.at + (d === 'up' ? -1 : 1);
+    return at < 0 || at > size ? null : { ...p, at };
+  }
+  if (p.join) return { stepId: p.stepId, slot: p.slot + (d === 'right' ? 1 : 0), join: false, at: 0 };
+  const slot = p.slot + (d === 'right' ? 1 : -1);
+  return slot < 0 || slot > n - 1 ? null : { stepId: p.stepId, slot, join: false, at: 0 };
+}
+
+/** Số hiện của mọi bước ("2") và bước con: vị trí ô trong hàng ("3"), ô song song k bước con thì "3.1" … "3.k". @param {any} ws */
+export function liveLabels(ws) {
+  /** @type {Map<string, string>} */
+  const m = new Map();
+  ws.steps.forEach((/** @type {any} */ step, /** @type {number} */ i) => {
+    m.set(step.id, String(i + 1));
+    slotsOf(step.subs).forEach((sl, si) => sl.forEach((x, k) => m.set(x.id, sl.length > 1 ? `${si + 1}.${k + 1}` : String(si + 1))));
+  });
+  return m;
+}
+
+const open = (/** @type {{status:string}} */ x) => x.status !== 'done' && !outOfScope(x.status);
+/** Việc tiếp theo của một bước: các bước con còn mở (không xong, không bỏ qua, không huỷ) của ô đầu tiên còn việc.
+ * @param {{subs:{id:string,status:string,par?:boolean}[]}} step @returns {string[]} */
+export function nextActionIds(step) {
+  for (const sl of slotsOf(step.subs)) {
+    const ids = sl.filter(open).map((x) => x.id);
+    if (ids.length) return ids;
+  }
+  return [];
+}
+
+/** Việc tiếp theo của cả dự án: việc tiếp theo của bước đầu tiên còn việc. @param {any} ws @returns {string[]} */
+export function projectNextIds(ws) {
+  for (const s of ws.steps) {
+    const ids = nextActionIds(s);
+    if (ids.length) return ids;
+  }
+  return [];
 }
 
 /** So khớp không phân biệt hoa thường và dấu. */
@@ -353,6 +451,7 @@ export function toMarkdown(ws) {
     if (s.subs.length) out.push('');
     for (const x of s.subs) {
       let line = `- [${MARK[x.status]}] ${escInline(x.title)}`;
+      if (x.par) line += ' · parallel';
       if (x.due) line += ` · due ${x.due}`;
       const more = [];
       if (x.doneWhen) more.push(`  Done when: ${x.doneWhen}`);
@@ -391,10 +490,12 @@ function parseSubText(raw, warnings) {
   const parts = splitDots(protect(raw));
   let title = parts[0];
   let due = '';
+  let par = false;
   for (const part of parts.slice(1)) {
     const t = part.trim();
     let m;
     if (/^`@[^`]+`$/.test(t) || /^@.+$/.test(t)) continue; // người làm của file cũ: bỏ
+    if (/^(?:parallel|song song)$/i.test(restore(t))) { par = true; continue; }
     if ((m = META_DUE.exec(restore(t))) && parseDate(m[1]) && !due) due = parseDate(m[1]);
     else {
       if (/^(?:hạn|due)\b/i.test(restore(t))) warnings.push(`Due date not readable, kept in the title: ${restore(t)}`);
@@ -412,7 +513,7 @@ function parseSubText(raw, warnings) {
     return pre;
   });
   if (changed) title = title.replace(/\(\s*(?:[,;]\s*)*\)/g, '').replace(/\s+/g, ' ').replace(/^[\s,;·:-]+|[\s,;·:-]+$/g, '');
-  return { title: restore(title).trim(), due };
+  return { title: restore(title).trim(), due, par };
 }
 
 /**
@@ -441,7 +542,7 @@ export function fromMarkdown(text) {
   const newSub = (/** @type {string} */ mark, /** @type {string} */ rest) => {
     if (!step) { step = { title: LOOSE_STEP, subs: [] }; ws.steps.push(step); }
     const p = parseSubText(rest, warnings);
-    sub = { title: p.title, status: FROM_MARK[mark ?? ' '] || 'todo', due: p.due };
+    sub = { title: p.title, status: FROM_MARK[mark ?? ' '] || 'todo', due: p.due, par: p.par };
     if (mark != null && !(mark in FROM_MARK)) warnings.push(`Unknown mark [${mark}], read as New: ${p.title}`);
     step.subs.push(sub);
     block = 'sub'; blockFirst = true;
@@ -634,7 +735,7 @@ export function shape(ws) {
     name: ws.name, templateId: ws.templateId, notes: ws.notes,
     steps: ws.steps.map((/** @type {any} */ s) => ({
       title: s.title, goal: s.goal, doneWhen: s.doneWhen, notes: s.notes, revisit: s.revisit, round: s.round, docs: s.docs.map(docShape),
-      subs: s.subs.map((/** @type {any} */ x) => ({ title: x.title, status: x.status, cancelReason: x.cancelReason, due: x.due, doneWhen: x.doneWhen, notes: x.notes, docs: x.docs.map(docShape) })),
+      subs: s.subs.map((/** @type {any} */ x) => ({ title: x.title, status: x.status, cancelReason: x.cancelReason, due: x.due, doneWhen: x.doneWhen, notes: x.notes, par: x.par, docs: x.docs.map(docShape) })),
     })),
     log: ws.log.map((/** @type {any} */ l) => ({ date: l.date, decision: l.decision, why: l.why })),
   };

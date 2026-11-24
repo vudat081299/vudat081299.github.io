@@ -13,12 +13,13 @@
 - PLAN-010 · Không có khái niệm người làm · `step-planner/`
 - PLAN-011 · Bước và bước con có tài liệu: link hoặc văn bản Markdown · `step-planner/`
 - PLAN-012 · Giao diện tiếng Anh; Markdown xuất nhãn tiếng Anh, file cũ vẫn nhập · `step-planner/`
+- PLAN-013 · Bước con chạy song song · `step-planner/`
 <!-- index:end -->
 
 ## PLAN-001 · Dự án là các bước có thứ tự, mỗi bước có bước con có thứ tự
 24/11/2026 · `step-planner/`
 
-Một dự án là danh sách bước chính có thứ tự; mỗi bước chứa bước con có thứ tự, đánh số phân cấp 1.1, 1.2, 2.1, đọc như một bảng: bước là hàng, bước con theo thứ tự trong hàng. Mỗi bước có tiến độ riêng, dự án có tiến độ chung. Công cụ tên là Data Science Step Planner: ưu tiên dự án dữ liệu nhưng dùng được cho dự án bất kỳ.
+Một dự án là danh sách bước chính có thứ tự; mỗi bước chứa bước con có thứ tự, đọc như một bảng: bước là hàng, bước con theo thứ tự trong hàng. Bước đánh số 1, 2, 3; bước con chỉ mang số vị trí trong hàng của nó (1, 2, 3), vì hàng đã cho biết nó thuộc bước nào. Mỗi bước có tiến độ riêng, dự án có tiến độ chung. Công cụ tên là Data Science Step Planner: ưu tiên dự án dữ liệu nhưng dùng được cho dự án bất kỳ.
 
 ## PLAN-002 · Dữ liệu chỉ ở trình duyệt, nhiều dự án, nhớ dự án mở cuối
 24/11/2026 · `step-planner/`
@@ -74,3 +75,8 @@ Mỗi bước có tài liệu riêng cho cả bước, mỗi bước con có tà
 24/11/2026 · `step-planner/`
 
 Mọi chữ trên giao diện là tiếng Anh: nút, trạng thái, thông báo, cảnh báo khi nhập. Trạng thái "chưa làm" tên là New. Markdown xuất ra dùng nhãn tiếng Anh (định dạng 3); file định dạng cũ có nhãn tiếng Việt và mọi kiểu viết tay đã nhận trước đây vẫn nhập được. Nội dung người dùng và nội dung mẫu giữ nguyên ngôn ngữ của nó.
+
+## PLAN-013 · Bước con chạy song song
+24/11/2026 · `step-planner/`
+
+Trong một bước, nhiều bước con có thể chạy song song rồi mới tới bước con kế tiếp (ví dụ ba việc song song rồi mới tới việc sau). Các bước con song song chiếm chung một vị trí trong hàng và mang số con của vị trí ấy (3.1, 3.2, 3.3). Bước con tạo song song được, nhập vào nhóm song song hay tách ra được, bằng kéo thả, bàn phím hay hộp sửa. "Việc tiếp theo" là mọi việc còn mở của vị trí đầu tiên còn việc; tiến độ không đổi. Nhóm song song đi theo khi xuất / nhập Markdown và JSON.

@@ -2,12 +2,11 @@
 
 - Tên hiển thị: Data Science Step Planner (`<title>`, thanh trên, trang chủ, Markdown); thư mục, khoá giữ `step-planner`.
 - Một trang, `index.html`: dự án chia thành bước (hàng) và bước con (thẻ), trạng thái, hạn, tài liệu, nhật ký quyết
-  định, xuất / nhập Markdown và JSON. Ưu tiên dự án dữ liệu, dùng được cho dự án bất kỳ.
-- Không có khái niệm người làm (PLAN-010): không thành viên, không giao việc, không lọc theo người.
+  định, xuất / nhập Markdown và JSON. Ưu tiên dự án dữ liệu, dùng được cho dự án bất kỳ. Không có người làm (PLAN-010).
 - Giao diện tiếng Anh (PLAN-012), chữ ngắn kiểu ghi chú; nội dung mẫu và tài liệu repo giữ tiếng Việt. Quyết định của chủ
   trang: [DECISIONS.md](DECISIONS.md).
-- Không bước build. Mở bằng HTTP: `python3 -m http.server` ở gốc repo, rồi `http://localhost:8000/step-planner/`.
-  Mở bằng `file://` thì trang báo cách mở; `fetch` mẫu hỏng thì banner báo cùng lệnh ấy.
+- Không bước build. Mở bằng HTTP: `python3 -m http.server` ở gốc repo, rồi `http://localhost:8000/step-planner/` (`file://`
+  hay `fetch` mẫu hỏng thì trang báo cách mở).
 
 ## File
 
@@ -29,8 +28,9 @@
 - Workspace `{id, name, templateId, createdAt, updatedAt, notes, steps[], log[]}`. Log `{id, date, decision, why}`.
 - Step `{id, title, goal, doneWhen, notes, revisit: null | {reason, date, round}, round, docs[], subs[]}`. `round`: vòng gần
   nhất (1 = chưa làm lại); đang đánh dấu thì `round` = `revisit.round` ≥ 2.
-- Sub `{id, title, status, cancelReason, due, doneWhen, notes, docs[]}`; `status` ∈ `todo doing done blocked skip cancel`;
-  `cancelReason` (nhiều dòng) chỉ giữ khi `cancel`; `due` là `YYYY-MM-DD` hoặc rỗng.
+- Sub `{id, title, status, cancelReason, due, doneWhen, notes, docs[], par}`; `status` ∈ `todo doing done blocked skip cancel`;
+  `cancelReason` (nhiều dòng) chỉ giữ khi `cancel`; `due` là `YYYY-MM-DD` hoặc rỗng. `par: true` = chạy song song với bước
+  con ngay trước (nhập ô của nó); `subs[0].par` luôn false. Ô (slot), chỗ (`Place`) và mọi phép dời ở `core.js`.
 - Doc `{id, kind: 'link', title, url}` hoặc `{id, kind: 'md', title, body}`. `url` chỉ http(s) (`safeUrl`); link khác bị bỏ
   (nhập thì cảnh báo). `body` giữ nguyên từng dòng, chỉ bỏ dòng trống đầu và khoảng trắng cuối.
 - Mọi dữ liệu đi qua `normSub` / `normStep` / `normWorkspace`: chuỗi một dòng gộp khoảng trắng, ghi chú bỏ khoảng trắng
@@ -44,16 +44,20 @@
 
 - Sáu trạng thái (PLAN-003), tên trên giao diện: New (`todo`), In progress, Done, Blocked, Skipped, Cancelled. Skipped: việc
   không cần với dự án này. Cancelled: đã quyết không làm, giữ thẻ để nhớ vì sao.
-- Tiến độ = xong / (tổng − bỏ qua − huỷ). "Next" chỉ tô một thẻ: bước con đầu tiên không xong, không bỏ qua, không huỷ của
-  bước đầu tiên còn việc. Hạn đã qua thì báo "(overdue)", trừ thẻ xong, bỏ qua, huỷ.
+- Tiến độ = xong / (tổng − bỏ qua − huỷ), không đổi với ô song song. "Next" tô các thẻ còn mở (không xong, bỏ qua, huỷ)
+  của ô đầu tiên còn việc, trong bước đầu tiên còn việc. Hạn đã qua thì báo "(overdue)", trừ thẻ xong, bỏ qua, huỷ.
+- Song song (PLAN-013): mỗi ô là một cột của hàng, bước con song song xếp chồng trong cột. Số trên thẻ là vị trí ô trong
+  hàng (`1`, `2`…), ô song song k thẻ thì `n.1` … `n.k`; bước số `1`, `2`…. Nút phụ "Add parallel" trên thẻ mở hộp thêm
+  đặt sẵn "Parallel with n"; ô "Vị trí" có "Position n" và "Parallel with n". Alt + ← →: đổi ô (thẻ ở ô song song thì tách
+  ra ô riêng ngay trước / sau); Alt + ↑ ↓: đổi thứ tự trong ô. Toast dời tả chỗ mới bằng tên hàng xóm, không bằng số.
 - Bấm chip: New → In progress → Done. Chip Done, Blocked, Skipped, Cancelled bấm là mở danh sách sáu trạng thái (chấm,
   một dòng gợi ý, đánh dấu cái hiện tại); Shift + bấm hay Alt + ↓ luôn mở. Chọn Cancelled: mở hộp sửa, trạng thái đặt sẵn,
   focus ô lý do; Lưu mới huỷ. Rời Cancelled thì bỏ lý do. Thẻ huỷ: tên gạch, lý do trong thân thẻ (cắt như ghi chú).
 - Thêm bước: nút cuối bảng, hoặc rê chuột lên vạch chia trên một bước thì nút "Add step" nổi lên (không xê dịch bố cục),
   bấm mở hộp thêm bước đặt sẵn vị trí ấy; màn cảm ứng: nút tròn nhỏ luôn hiện. Thêm bước con: nút ở cột tên bước.
-- Bấm vào thẻ (ngoài nút) là mở hộp sửa; mỗi thẻ chỉ hai điểm dừng Tab: tên và chip. Nút phụ (dời, nhân bản, xoá, mở lại,
-  tài liệu, nhãn kẹp, "Show more", vạch chia) có `tabindex=-1`; bàn phím làm cùng việc: Alt + ← → trên tên bước con, Alt +
-  ↑ ↓ trên tên bước, ô bước / vị trí và các nút trong hộp sửa.
+- Bấm vào thẻ (ngoài nút) là mở hộp sửa; mỗi thẻ chỉ hai điểm dừng Tab: tên và chip. Nút phụ (song song, nhân bản, xoá,
+  mở lại, tài liệu, nhãn kẹp, "Show more", vạch chia) có `tabindex=-1`; bàn phím làm cùng việc: Alt + mũi tên trên tên bước
+  con, Alt + ↑ ↓ trên tên bước, ô bước / vị trí và các nút trong hộp sửa.
 - Đổi chỗ (nút dời, Alt + mũi tên, kéo thả, ô bước / vị trí; cả bước): cái vừa dời có lớp `moved`, cái bị đổi chỗ có
   `swapped`, tự gỡ sau `--flash-dur`; toast "Moved …" có Hoàn tác, không lấy focus; hàng thẻ cuộn để thẻ trong tầm nhìn.
   Dời liền nhiều lần khi toast còn hiện: Hoàn tác về chỗ trước lần đầu; dời về đúng chỗ cũ thì toast tắt.
@@ -75,10 +79,8 @@
   mở hộp sửa bước con ở phần tài liệu. Thêm / sửa / xoá trong hộp sửa, lưu ngay; xoá khi hộp đang mở thì Hoàn tác là một
   hàng trong hộp. Link mở tab mới (`noopener noreferrer`); văn bản mở hộp lớn Sửa / Xem / Chia đôi (`#dlg-md`).
 - Nhật ký quyết định: sửa, xoá được; mới nhất trước. Tab khác sửa cùng khoá thì đọc lại (`storage`), giữ dự án của tab.
-- Nhắc sao lưu: có thay đổi chưa sao lưu từ ≥ 3 ngày thì nút "Not backed up for N days" / "Never backed up" hiện cạnh
-  Export; bấm là tải bản sao lưu mọi dự án. Chỉ bản sao lưu tất cả (tải hoặc chép) mới đặt lại mốc.
-- Chữ người dùng chỉ vào DOM qua text node (`h` trong `main.js`, `md.js`); không `innerHTML` ở `js/`. Không `alert` /
-  `confirm` / `prompt`: hỏi lại bằng `#dlg-ask`.
+- Nhắc sao lưu: thay đổi chưa sao lưu ≥ 3 ngày thì nút nhắc hiện cạnh Export, bấm là tải sao lưu mọi dự án (mới đặt lại mốc).
+- Chữ người dùng chỉ vào DOM qua text node; không `innerHTML` ở `js/`. Không `alert` / `confirm` / `prompt` (`#dlg-ask`).
 
 ## Mẫu (`data/templates.json`)
 
@@ -122,7 +124,7 @@ Docs:
     thân văn bản, kể cả ``` và dòng #, -, nhãn
     ````
 
-- [/] Tên bước con · due YYYY-MM-DD
+- [/] Tên bước con · parallel · due YYYY-MM-DD
   Done when: …
   Cancelled because: dòng đầu
     dòng tiếp của lý do
@@ -139,6 +141,7 @@ Docs:
 - Nhãn định dạng 2 (tiếng Việt) vẫn nhập: `Mẫu`, `Mục tiêu`, `Xong khi`, `Quay lại` (`· vòng N`), `Vòng`, `Ghi chú`, `Tài liệu`,
   `Huỷ vì`, `Vì sao`, `hạn`, `## Nhật ký quyết định`. Nhãn không phân biệt hoa thường. Dòng đầu (`… · format N`) chỉ để
   đọc, trang không dựa vào nó. Số thứ tự trên bảng không ghi vào Markdown.
+- Phần tử `parallel` (nhập nhận cả `song song`): bước con nhập ô của bước con ngay trước.
 - Dấu trạng thái: `[ ]` / `[]` mới, `[~]` đang làm, `[x]` / `[X]` xong, `[!]` bị chặn, `[-]` bỏ qua, `[/]` huỷ. Dấu lạ đọc là mới.
 - Trên dòng bước con, phần tử tách bằng ` · `. Trong tên: `\` → `\\`, `·` → `\·`, `@` → `\@`, `hạn` / `due` → `\hạn` / `\due`.
 - Dòng thụt hai dấu cách thuộc bước con / `Notes:` / quyết định ngay trên nó. Dòng thụt đầu `Done when: ` của bước con là
@@ -165,11 +168,10 @@ Nhập file cũ và Markdown viết tay (dễ dãi):
 
 ## JSON
 
-- Một dự án: `{format: "step-planner", version: 2, exportedAt, workspace}`. Sao lưu: `{…, workspaces: [...]}`. Trang không
-  dựa vào `version`: bản 1 (có người, không tài liệu) vẫn nhập.
-- Nhập nhận cả hai, mảng dự án, hoặc một dự án trần. Mục nào không phải object hay thiếu mảng `steps` thì bỏ, kèm cảnh
-  báo; không còn dự án nào thì báo lỗi, không bao giờ lộ TypeError. Chữ mở bằng `{`, hay `[` rồi một giá trị
-  JSON, là JSON; còn lại (kể cả `[tên](url)`, `[ ] việc`) là Markdown.
+- Một dự án: `{format: "step-planner", version: 3, exportedAt, workspace}`. Sao lưu: `{…, workspaces: [...]}`. Trang không
+  dựa vào `version`: bản 1 (có người, không tài liệu), bản 2 (không ô song song) vẫn nhập.
+- Nhập nhận cả hai, mảng dự án, hoặc một dự án trần. Mục sai khuôn thì bỏ, kèm cảnh báo; không còn dự án nào thì báo lỗi,
+  không lộ TypeError. Chữ mở bằng `{`, hay `[` rồi một giá trị JSON, là JSON; còn lại (kể cả `[tên](url)`) là Markdown.
 - Mặc định tạo dự án mới (id mới, trùng tên thì ` (imported)`, ` (imported 2)`…). "Thay dự án đang mở" (một dự án) có Hoàn tác.
 
 ## Giao diện
@@ -177,10 +179,9 @@ Nhập file cũ và Markdown viết tay (dễ dãi):
 - Màu, cỡ, khoảng cách chỉ ở token đầu `css/planner.css` (REPO-028); bảng màu theo trang chủ (REPO-023).
 - Dáng chung chép từ `md-annotate/` (token, thanh trên, nút, nhóm chọn, ô nhập, màn đầu, hộp thoại, toast, bản xem
   Markdown `.ma-md`): chép vào file của project này, không link sang project khác. Sửa dáng thì so ảnh với md-annotate.
-- Theme theo hệ điều hành tới khi bấm nút (REPO-024), khoá `hub-theme` chung cả site.
-- Thanh trên ghi đủ `vudat081299 / Data Science Step Planner`, không cắt "…"; hẹp thì xuống dòng.
-- Biểu tượng: một bộ `<symbol id="i-…">` trong `index.html`; HTML và `icon()` của `main.js` dùng `<use>`. Không dùng ký tự
-  unicode làm biểu tượng. Nút chỉ có biểu tượng thì có `aria-label` và `title`.
+- Theme theo hệ điều hành tới khi bấm nút (REPO-024), khoá `hub-theme`. Thanh trên ghi đủ tên, không cắt "…".
+- Biểu tượng: một bộ `<symbol id="i-…">` trong `index.html`, dùng qua `<use>`; không dùng ký tự unicode làm biểu tượng;
+  nút chỉ có biểu tượng có `aria-label` và `title`.
 - Đầu dự án: tên (bấm để đổi dự án), tiến độ chung, chú giải trạng thái kèm số bước con (đếm, không ghi tay). Chip
   trạng thái có chữ và chấm khác hình, không chỉ khác màu. Thanh công cụ: lọc bên trái, Export là nút chính.
 - Cột tên bước rộng cố định, thẻ cùng bề rộng (các hàng thẳng cột), không bị kéo cao theo thẻ cao nhất hàng. Hàng thẻ
@@ -188,8 +189,7 @@ Nhập file cũ và Markdown viết tay (dễ dãi):
 - Hộp văn bản Markdown gần toàn màn, ≤ 640px toàn màn; Chia đôi xếp trên / dưới khi hẹp.
 - Mọi `<select>` chọn thứ có nghĩa dùng danh sách tự dựng (nổi ở lớp trên cùng, không đẩy bố cục; phím ↑ ↓, gõ chữ đầu,
   Enter, Esc trả focus); ô chỉ chọn số giữ `<select>` gốc (`data-native`). Option có `data-dot`, `data-hint` thì hiện thêm.
-- Màn cảm ứng và ≤ 640px: vùng bấm ≥ 44px (vật nhỏ trong dòng nới bằng lớp giả). Trang không bao giờ cuộn ngang. Tạo
-  hay mở dự án thì về đầu trang, không cuộn theo focus.
+- Cảm ứng và ≤ 640px: vùng bấm ≥ 44px. Trang không cuộn ngang. Tạo hay mở dự án thì về đầu trang, không cuộn theo focus.
 
 ## Cổng: `sh step-planner/tools/check.sh`
 

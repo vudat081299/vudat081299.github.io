@@ -119,19 +119,19 @@ const check = (name, ok, detail = '') => {
 
   // Vẽ lại sau một thay đổi giữ nguyên chỗ người dùng đang xem: ghi chú bước đang mở, thẻ đã "Xem thêm", hàng đã cuộn ngang.
   await page.click('.step:nth-child(1) .step-notes summary');
-  await page.click('.step:nth-child(1) .card[data-sub]:nth-child(2) .more');
+  await page.click('.step:nth-child(1) .slot:nth-child(2) > .card .more');
   const keepBefore = await page.evaluate(() => { const sc = document.querySelector('.step:nth-child(1) .cards-scroll'); sc.scrollLeft = sc.scrollWidth; return sc.scrollLeft; });
-  await page.click('.step:nth-child(1) .card[data-sub]:nth-child(4) [data-act="status"]');
+  await page.click('.step:nth-child(1) .slot:nth-child(4) > .card [data-act="status"]');
   const keep = await page.evaluate(() => {
     const row = document.querySelector('.step:nth-child(1)');
-    const c2 = row.querySelector('.card[data-sub]:nth-child(2)');
+    const c2 = row.querySelector('.slot:nth-child(2) > .card');
     return { notes: row.querySelector('.step-notes').open, open: c2.classList.contains('open'), more: c2.querySelector('.more')?.textContent,
       expanded: c2.querySelector('.more')?.getAttribute('aria-expanded'), left: row.querySelector('.cards-scroll').scrollLeft };
   });
   check('vẽ lại giữ ghi chú bước đang mở, thẻ đã "Xem thêm", chỗ cuộn ngang của hàng', keep.notes && keep.open && keep.more === 'Show less'
     && keep.expanded === 'true' && keepBefore > 0 && Math.abs(keep.left - keepBefore) < 2, `${keepBefore} ${JSON.stringify(keep)}`);
-  await setSt(page, await page.getAttribute('.step:nth-child(1) .card[data-sub]:nth-child(4)', 'data-sub'), 'todo');
-  await page.click('.step:nth-child(1) .card[data-sub]:nth-child(2) .more');
+  await setSt(page, await page.getAttribute('.step:nth-child(1) .slot:nth-child(4) > .card', 'data-sub'), 'todo');
+  await page.click('.step:nth-child(1) .slot:nth-child(2) > .card .more');
   await page.click('.step:nth-child(1) .step-notes summary');
   await page.evaluate(() => { document.querySelector('.step:nth-child(1) .cards-scroll').scrollLeft = 0; });
   const nRows = await page.$$eval('.step', (r) => r.length);
@@ -151,36 +151,39 @@ const check = (name, ok, detail = '') => {
     };
   });
   check('bước con chạy sang phải cùng hàng, thẳng cột giữa các hàng', geo.sameLeft && geo.cardsRight && geo.sameRowTop && geo.headLeft);
-  const scr = await page.evaluate(() => {
+  const scr = await page.evaluate(async () => {
     const sc = document.querySelector('.step .cards-scroll'), st = getComputedStyle(document.querySelector('.step'));
+    const frame = () => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
     sc.scrollBy(400, 0);
     const moved = sc.scrollLeft > 0;
+    await frame();
     sc.scrollLeft = 0;
+    await frame();
     return { bar: sc.offsetHeight - sc.clientHeight, more: sc.scrollWidth > sc.clientWidth, moved, cue: sc.classList.contains('more-right'),
       pad: [parseFloat(st.paddingTop), parseFloat(st.paddingBottom)] };
   });
   check('hàng thẻ: không hiện thanh cuộn, vẫn cuộn được, mép báo còn thẻ; bước có lề dưới rộng hơn lề trên', scr.bar === 0 && scr.more && scr.moved && scr.cue
     && scr.pad[1] > scr.pad[0], JSON.stringify(scr));
-  check('đánh số 2.1, 2.2', geo.nums === '2.1,2.2', geo.nums);
-  check('việc tiếp theo là 1.1', geo.next === '1.1');
+  check('đánh số theo vị trí trong hàng: 1, 2', geo.nums === '1,2', geo.nums);
+  check('việc tiếp theo là thẻ 1', geo.next === '1');
 
   // Chip trạng thái: bấm hai lần → xong; việc tiếp theo dời sang 1.2; tiến độ. Bấm khi Done: mở danh sách.
-  const chip = '.step:nth-child(1) .card[data-sub]:nth-child(1) [data-act="status"]';
+  const chip = '.step:nth-child(1) .slot:nth-child(1) > .card [data-act="status"]';
   await page.click(chip);
   check('chip: New → In progress', (await page.textContent(chip)).trim() === 'In progress');
   const chipLook = (sel) => page.$eval(sel, (el) => { const c = getComputedStyle(el); return [c.color, c.backgroundColor, c.borderColor].join('|'); });
-  const doingLook = await chipLook(chip), todoLook = await chipLook('.step:nth-child(1) .card[data-sub]:nth-child(2) [data-act="status"]');
+  const doingLook = await chipLook(chip), todoLook = await chipLook('.step:nth-child(1) .slot:nth-child(2) > .card [data-act="status"]');
   check('chip Đang làm có màu riêng (chữ, nền, viền khác Chưa làm)', doingLook.split('|').every((v, k) => v !== todoLook.split('|')[k]), `${doingLook} / ${todoLook}`);
   await page.click(chip);
   check(`chip: → xong, tiến độ 1/${n1}`, (await page.textContent(chip)).trim() === 'Done'
     && (await page.textContent('.step:nth-child(1) .prog')).includes(`1/${n1}`));
-  check('việc tiếp theo dời sang 1.2', (await page.textContent('.step:nth-child(1) .card.next .num')) === '1.2');
+  check('việc tiếp theo dời sang thẻ 2', (await page.textContent('.step:nth-child(1) .card.next .num')) === '2');
   check('chip giữ focus sau khi bấm', await page.evaluate(() => document.activeElement?.dataset.act === 'status'));
   const layout0 = await page.evaluate(() => document.querySelector('.step').getBoundingClientRect().height);
   await page.click(chip);
   const menu = await page.evaluate(() => {
     const pop = document.querySelector('.dd-pop');
-    const chipEl = document.querySelector('.step:nth-child(1) .card[data-sub]:nth-child(1) [data-act="status"]');
+    const chipEl = document.querySelector('.step:nth-child(1) .slot:nth-child(1) > .card [data-act="status"]');
     return pop && { opts: [...pop.querySelectorAll('[role="option"] .dd-label')].map((o) => o.textContent),
       sel: pop.querySelector('[aria-selected="true"]')?.dataset.value, hints: pop.querySelectorAll('.dd-hint').length, dots: pop.querySelectorAll('.st-dot').length,
       focus: document.activeElement === pop, expanded: chipEl.getAttribute('aria-expanded'),
@@ -198,7 +201,7 @@ const check = (name, ok, detail = '') => {
 
   // Huỷ: chỉ chọn trong hộp sửa, có ô "Vì sao huỷ"; thẻ hiện lý do, tên gạch; không tính vào tiến độ; "Tiếp theo" bỏ qua;
   // chú giải có Huỷ; bấm chip Huỷ → Chưa làm.
-  const c12 = '.step:nth-child(1) .card[data-sub]:nth-child(2)';
+  const c12 = '.step:nth-child(1) .slot:nth-child(2) > .card';
   await page.click(`${c12} [data-act="edit-sub"]`);
   check('hộp sửa: có Huỷ trong trạng thái, ô "Vì sao huỷ" ẩn khi chưa chọn', (await page.$$eval('#sub-form [name="status"] option', (o) => o.map((x) => x.textContent))).includes('Cancelled')
     && !(await page.isVisible('#sub-cancel')));
@@ -227,7 +230,7 @@ const check = (name, ok, detail = '') => {
       legend: [...document.querySelectorAll('#legend li')].map((li) => li.textContent).join(',') };
   }, c12);
   check('Huỷ: chip, lý do trên thẻ, tên gạch ngang', cx.chip === 'Cancelled' && /^Cancelled because Đã có số liệu từ nguồn khác\nkhông cần làm lại$/.test(cx.reason) && cx.line === 'line-through', JSON.stringify(cx));
-  check(`Huỷ: tiến độ 1/${n1 - 1}, "Tiếp theo" sang 1.3, chú giải có Huỷ 1`, cx.prog.startsWith(`1/${n1 - 1}`) && cx.next === '1.3' && cx.legend.includes('Cancelled1'), JSON.stringify(cx));
+  check(`Huỷ: tiến độ 1/${n1 - 1}, "Tiếp theo" sang 1.3, chú giải có Huỷ 1`, cx.prog.startsWith(`1/${n1 - 1}`) && cx.next === '3' && cx.legend.includes('Cancelled1'), JSON.stringify(cx));
   check('Huỷ: lưu lý do', (await cur(page)).steps[0].subs[1].cancelReason === 'Đã có số liệu từ nguồn khác\nkhông cần làm lại');
   await page.click(`${c12} [data-act="status"]`);
   check('bấm chip Cancelled: mở danh sách', !!(await page.$('.dd-pop')));
@@ -259,10 +262,10 @@ const check = (name, ok, detail = '') => {
   check('thêm bước con: lưu đủ trường', added && added.status === 'blocked' && added.due === '2026-12-01' && !('owner' in added)
     && added.notes === 'dòng 1\n\ndòng 3' && added.doneWhen === 'Có kết quả');
   check('chữ người dùng không thành HTML', (await page.$$('.card img')).length === 0
-    && /<img src=x/.test(await page.textContent(`.step:nth-child(1) .card[data-sub]:nth-child(${n1 + 1}) .card-title`)));
+    && /<img src=x/.test(await page.textContent(`.step:nth-child(1) .slot:nth-child(${n1 + 1}) > .card .card-title`)));
 
   // Sửa: chuyển sang bước 2.
-  await page.click(`.step:nth-child(1) .card[data-sub]:nth-child(${n1 + 1}) [data-act="edit-sub"]`);
+  await page.click(`.step:nth-child(1) .slot:nth-child(${n1 + 1}) > .card [data-act="edit-sub"]`);
   await page.selectOption('#sub-form [name="step"]', ws.steps[1].id);
   await page.click('#sub-form button[type="submit"]');
   ws = await cur(page);
@@ -280,41 +283,82 @@ const check = (name, ok, detail = '') => {
   ws = await cur(page);
   check('hoàn tác xoá bước con: về đúng chỗ', ws.steps[1].subs.length === n2 + 2 && ws.steps[1].subs[n2 + 1].id === dupId);
 
-  // Sắp xếp bằng nút.
+  // Sắp xếp bằng bàn phím (Alt + mũi tên trên tên thẻ).
   const order = async () => (await cur(page)).steps[1].subs.map((x) => x.id);
   const before = await order();
-  await page.click(`.card[data-sub="${before[1]}"] [data-act="sub-left"]`);
+  const titleOf = async (id) => (await cur(page)).steps.flatMap((x) => x.subs).find((x) => x.id === id).title;
+  await page.focus(subSel(before[1], 'edit-sub'));
+  await page.keyboard.press('Alt+ArrowLeft');
   const afterLeft = await order();
-  check('nút sang trái', afterLeft[0] === before[1] && afterLeft[1] === before[0]);
-  check('focus ở lại nút vừa bấm', await page.evaluate(() => document.activeElement?.dataset.act === 'sub-left' || document.activeElement?.dataset.act === 'edit-sub'));
+  check('Alt + ←: sang trái một ô', afterLeft[0] === before[1] && afterLeft[1] === before[0]);
+  check('focus ở lại thẻ vừa dời', await page.evaluate((id) => document.activeElement?.closest('.card')?.dataset.sub === id, before[1]));
   const marks = () => page.evaluate(() => ({
     moved: [...document.querySelectorAll('.moved')].map((e) => e.dataset.sub || e.dataset.step),
     swapped: [...document.querySelectorAll('.swapped')].map((e) => e.dataset.sub || e.dataset.step),
     toast: document.getElementById('toast').hidden ? '' : document.getElementById('toast-text').textContent,
   }));
   let mk = await marks();
-  check('dời bằng nút: thẻ vừa dời tô nổi, thẻ bị đổi chỗ tô nhẹ, toast "Đã dời 2.2 → 2.1"',
-    mk.moved.join() === before[1] && mk.swapped.join() === before[0] && /^Moved 2\.2 → 2\.1 · /.test(mk.toast), JSON.stringify(mk));
-  await page.focus(subSel(before[1], 'edit-sub'));
+  check('dời: thẻ vừa dời tô nổi, thẻ bị đổi chỗ tô nhẹ, toast tả chỗ mới bằng tên (không bằng số)',
+    mk.moved.join() === before[1] && mk.swapped.join() === before[0] && mk.toast.startsWith(`Moved "${(await titleOf(before[1])).slice(0, 20)}`)
+    && / to the start of the row$/.test(mk.toast), JSON.stringify(mk));
   await page.keyboard.press('Alt+ArrowRight');
   await page.keyboard.press('Alt+ArrowRight');
   mk = await marks();
-  check('Alt + →: tô thẻ vừa dời, toast nói chỗ cũ → chỗ mới, focus giữ trên thẻ',
-    (await order())[2] === before[1] && mk.moved.join() === before[1] && mk.swapped.join() === before[2] && /^Moved 2\.2 → 2\.3 · /.test(mk.toast)
+  check('Alt + →: tô thẻ vừa dời, toast "after …", focus giữ trên thẻ',
+    (await order())[2] === before[1] && mk.moved.join() === before[1] && mk.swapped.join() === before[2]
+    && mk.toast.includes(` after "${(await titleOf(before[2])).slice(0, 20)}`)
     && await page.evaluate((id) => document.activeElement?.closest('.card')?.dataset.sub === id, before[1]), JSON.stringify(mk));
   await page.keyboard.press('Control+z');
   check('hoàn tác dời (Ctrl+Z): về chỗ cũ', JSON.stringify(await order()) === JSON.stringify(before));
   await page.waitForFunction(() => !document.querySelector('.moved, .swapped'), null, { timeout: 6000 }).catch(() => {});
   check('đánh dấu vừa dời tự tắt sau vài giây', !(await page.$('.moved, .swapped')));
-  await page.click(`.card[data-sub="${before[1]}"] [data-act="sub-left"]`);
-  await page.keyboard.press('Tab');
+
+  // Bước con song song: "Add parallel" trên thẻ đặt sẵn "Parallel with N"; ô xếp chồng, số "N.1", "N.2"; Alt + ↑ ↓ đổi thứ
+  // tự trong ô; Alt + → tách ra ô riêng; ô Vị trí của hộp sửa có "Parallel with N".
+  await page.click(`.card[data-sub="${before[2]}"] [data-act="add-par"]`, { force: true });
+  check('Add parallel: hộp thêm đặt sẵn "Parallel with 3"', (await page.inputValue('#sub-form [name="pos"]')) === 'j:2'
+    && /Parallel with 3/.test(await page.textContent('#sub-form .dd-btn >> nth=2')), await page.inputValue('#sub-form [name="pos"]'));
+  await page.fill('#sub-form [name="title"]', 'Song song A');
+  await page.click('#sub-form button[type="submit"]');
+  let ws2 = (await cur(page)).steps[1];
+  const parId = ws2.subs.find((x) => x.title === 'Song song A').id;
+  const stack = await page.evaluate((id) => {
+    const c = document.querySelector(`.card[data-sub="${id}"]`), slot = c.closest('.slot');
+    const cs = [...slot.querySelectorAll('.card')];
+    return { n: cs.length, par: slot.classList.contains('par'), nums: cs.map((x) => x.querySelector('.num').textContent).join(','),
+      under: cs[1].getBoundingClientRect().top > cs[0].getBoundingClientRect().bottom - 1, sameX: Math.abs(cs[1].getBoundingClientRect().left - cs[0].getBoundingClientRect().left) < 1,
+      nextSlot: slot.nextElementSibling?.querySelector('.num')?.textContent };
+  }, parId);
+  check('ô song song: hai thẻ xếp chồng một cột, số 3.1, 3.2, ô sau vẫn là 4', stack.n === 2 && stack.par && stack.nums === '3.1,3.2' && stack.under && stack.sameX
+    && stack.nextSlot === '4' && ws2.subs[3].id === parId && ws2.subs[3].par === true, JSON.stringify(stack));
+  await page.focus(subSel(parId, 'edit-sub'));
+  await page.keyboard.press('Alt+ArrowUp');
+  check('Alt + ↑: lên đầu ô song song', (await cur(page)).steps[1].subs[2].id === parId && (await cur(page)).steps[1].subs[3].par === true
+    && / parallel with "/.test((await marks()).toast), (await marks()).toast);
+  await page.keyboard.press('Alt+ArrowRight');
+  ws2 = (await cur(page)).steps[1];
+  check('Alt + →: tách khỏi ô song song thành ô riêng ngay sau', ws2.subs.every((x) => !x.par) && ws2.subs[3].id === parId, ws2.subs.map((x) => x.par).join());
+  await page.click(subSel(parId, 'edit-sub'));
+  const posOpts = await page.$$eval('#sub-form [name="pos"] option', (o) => o.map((x) => x.value + '=' + x.textContent));
+  check('ô Vị trí: Position N và Parallel with N', posOpts.includes('n:0=Position 1') && posOpts.includes('j:0=Parallel with 1')
+    && posOpts.at(-1).startsWith('n:'), posOpts.slice(0, 4).join(' | '));
+  await page.selectOption('#sub-form [name="pos"]', 'j:1');
+  await page.click('#sub-form button[type="submit"]');
+  ws2 = (await cur(page)).steps[1];
+  check('ô Vị trí "Parallel with 2": nhập vào ô 2', ws2.subs[2].id === parId && ws2.subs[2].par === true, ws2.subs.map((x) => x.par).join());
+  await page.keyboard.press('Control+z');
+  ws2 = (await cur(page)).steps[1];
+  check('hoàn tác (dời liền nhiều lần): về chỗ trước lần dời đầu, ô song song như lúc thêm', ws2.subs[3].id === parId && ws2.subs[3].par === true,
+    ws2.subs.map((x) => x.par).join());
+  await page.click(subSel(parId, 'sub-del'), { force: true });
+
   const stepsBefore = (await cur(page)).steps.map((s) => s.id);
   await page.click(`.step[data-step="${stepsBefore[1]}"] [data-act="step-up"]`);
   const stepsAfter = (await cur(page)).steps.map((s) => s.id);
   check('nút đưa bước lên', stepsAfter[0] === stepsBefore[1] && stepsAfter[1] === stepsBefore[0]);
   mk = await marks();
-  check('dời bước: hàng vừa dời tô nổi, hàng bị đổi chỗ tô nhẹ, toast "Đã dời bước 2 → 1"',
-    mk.moved.join() === stepsBefore[1] && mk.swapped.join() === stepsBefore[0] && /^Moved step 2 → 1 · /.test(mk.toast), JSON.stringify(mk));
+  check('dời bước: hàng vừa dời tô nổi, hàng bị đổi chỗ tô nhẹ, toast "Moved step … to the top"',
+    mk.moved.join() === stepsBefore[1] && mk.swapped.join() === stepsBefore[0] && /^Moved step ".*" to the top$/.test(mk.toast), JSON.stringify(mk));
   await page.click(`.step[data-step="${stepsBefore[1]}"] [data-act="step-down"]`);
 
   // Kéo thả: bước con cuối của hàng 1 lên đầu hàng 1; bước 3 lên trên bước 1. Khung cao để nguồn và đích cùng
@@ -331,11 +375,11 @@ const check = (name, ok, detail = '') => {
   check('kéo thả bước', st2[0] === st[2] && st2[1] === st[0], st2.indexOf(st[2]) + '');
   const r2 = (await cur(page)).steps[2].subs.map((x) => x.id);
   await page.evaluate((id) => { const sc = document.querySelector(`.step[data-step="${id}"] .cards-scroll`); sc.scrollLeft = sc.scrollWidth; }, st2[0]);
-  await page.dragAndDrop(`.card[data-sub="${r2[0]}"]`, `.step[data-step="${st2[0]}"] .card[data-sub]:last-child`, { targetPosition: { x: 220, y: 20 } });
+  await page.dragAndDrop(`.card[data-sub="${r2[0]}"]`, `.step[data-step="${st2[0]}"] .slot:last-child > .card`, { targetPosition: { x: 220, y: 20 } });
   const mkd = await marks();
   check('kéo thả bước con sang bước khác', (await cur(page)).steps[0].subs.at(-1).id === r2[0]);
-  check('kéo thả: thẻ vừa thả tô nổi, toast "Đã dời 3.1 → 1.N"', mkd.moved.join() === r2[0]
-    && new RegExp(`^Moved 3\\.1 → 1\\.${(await cur(page)).steps[0].subs.length} · `).test(mkd.toast), JSON.stringify(mkd));
+  check('kéo thả: thẻ vừa thả tô nổi, toast "Moved … to step …, after …"', mkd.moved.join() === r2[0]
+    && /^Moved ".*" to step ".*", after ".*"$/.test(mkd.toast), JSON.stringify(mkd));
   await page.setViewportSize({ width: 1280, height: 900 });
 
   // Thêm, sửa, xoá bước + hoàn tác.
@@ -517,7 +561,7 @@ const check = (name, ok, detail = '') => {
   // Tìm kiếm.
   await page.fill('#q', 'kiem chat');
   check('tìm không dấu: một bước con', (await page.$$eval('.card[data-sub]', (c) => c.length)) === 1);
-  check('lọc: tắt sắp xếp', (await page.$$('[data-act="sub-left"], [data-act="step-up"]')).length === 0);
+  check('lọc: tắt sắp xếp', (await page.$$('[data-act="step-up"], [draggable="true"]')).length === 0);
   await page.fill('#q', 'hieu nghiep vu');
   check('tìm không dấu theo tên bước: cả hàng hiện', (await page.$$eval('.step', (r) => r.length)) === 1);
   await page.fill('#q', '');
@@ -822,7 +866,7 @@ const check = (name, ok, detail = '') => {
   check('390px: hộp văn bản toàn màn, không tràn', mdM[0] === 0 && mdM[1] === 0 && mdM[2] === mdM[4] && Math.abs(mdM[3] - mdM[5]) < 2
     && (await hOverflow(m.page)) === 0, mdM.join(','));
   await m.page.click('#md-form button[type="submit"]');
-  await m.page.click('.step:first-child .card[data-sub]:first-child [data-act="edit-sub"]');
+  await m.page.click('.step:first-child .slot:first-child > .card [data-act="edit-sub"]');
   await m.page.click('#sub-docs [data-doc-add]');
   await m.page.fill('#doc-form [name="url"]', 'https://example.com/x');
   await m.page.click('#doc-save');
@@ -839,7 +883,7 @@ const check = (name, ok, detail = '') => {
     && brand.ellipsis !== 'ellipsis', JSON.stringify(brand));
   const small = await m.page.evaluate(() => {
     const bad = [];
-    const els = document.querySelectorAll('.step:first-child .card[data-sub]:first-child button:not([data-act="edit-sub"]),'
+    const els = document.querySelectorAll('.step:first-child .slot:first-child > .card button:not([data-act="edit-sub"]),'
       + ' .step:first-child .step-head button, .tools button, #theme-btn, #hint-off, #ws-btn, .ws-notes summary, .step:first-child .doc-tag,'
       + ' .step:first-child .step-notes summary');
     for (const el of els) {

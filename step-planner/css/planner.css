@@ -502,9 +502,16 @@ svg.i {
 .reset-item:has(input:disabled) { cursor: default; color: var(--ink-3); }
 .reset-title { flex: 1 1 auto; min-width: 0; overflow-wrap: anywhere; }
 
+/* ── Ô của hàng thẻ: mỗi ô một cột; ô song song xếp chồng thẻ trên một nền chung, bề rộng ngoài vẫn thẳng cột ── */
+.slot { flex: 0 0 var(--card-w); min-width: 0; display: flex; flex-direction: column; gap: var(--s2); }
+.slot.par {
+  flex-basis: calc(var(--card-w) + 2 * var(--s1)); margin: calc(-1 * var(--s1)); padding: var(--s1);
+  background: var(--chip); border-radius: calc(var(--r) + var(--s1));
+}
+
 /* ── Thẻ bước con ── */
 .card {
-  flex: 0 0 var(--card-w); min-height: var(--card-min); max-height: var(--card-max);
+  flex: none; min-height: var(--card-min); max-height: var(--card-max);
   display: flex; flex-direction: column; gap: var(--s2); position: relative; cursor: pointer;
   background: var(--surface); border: var(--line-w) solid var(--line); border-radius: var(--r); padding: var(--s3);
   box-shadow: var(--shadow-1); transition: border-color var(--dur) var(--ease);

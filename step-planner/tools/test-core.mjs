@@ -3,7 +3,7 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import {
-  fromTemplate, toMarkdown, fromMarkdown, parseImport, toJSON, toBackup, shape, progress, nextActionId, projectNextId,
+  fromTemplate, toMarkdown, fromMarkdown, parseImport, toJSON, toBackup, shape, progress, nextActionIds, projectNextIds, slotsOf, subPlace, placeSub, takeSub, shiftTarget, liveLabels,
   nextStatus, setStatus, splitInline, normWorkspace, normSub, counts, slug, fold, parseDate, uniqueName, normDoc, safeUrl,
 } from '../js/core.js';
 import { parseMd, inline } from '../js/md.js';
@@ -267,14 +267,14 @@ check('ngày: kiểm bằng đi rồi về', parseDate('2026-02-31') === '' && p
 check('tên trùng: (imported), (imported 2)', uniqueName('A', ['A']) === 'A (imported)' && uniqueName('A', ['A', 'A (imported)']) === 'A (imported 2)' && uniqueName('B', ['A']) === 'B');
 
 check('tiến độ không tính bỏ qua và huỷ', eq(progress(hard.steps[0].subs), { done: 1, total: 5, pct: 20 }));
-check('việc tiếp theo bỏ qua thẻ huỷ', nextActionId({ subs: [{ id: 'a', status: 'cancel' }, { id: 'b', status: 'skip' }, { id: 'c', status: 'todo' }] }) === 'c');
+check('việc tiếp theo bỏ qua thẻ huỷ', eq(nextActionIds({ subs: [{ id: 'a', status: 'cancel' }, { id: 'b', status: 'skip' }, { id: 'c', status: 'todo' }] }), ['c']));
 const oldMark = fromMarkdown('# A\n## 1. S\n- [/] huỷ cũ\n  Huỷ vì: không cần\n  ghi chú\n- [?] lạ\n');
 check('huỷ: dấu [/] và Huỷ vì: đọc được; dòng thụt hai sau đó là ghi chú', oldMark.workspace.steps[0].subs[0].status === 'cancel'
   && oldMark.workspace.steps[0].subs[0].cancelReason === 'không cần' && oldMark.workspace.steps[0].subs[0].notes === 'ghi chú'
   && oldMark.workspace.steps[0].subs[1].status === 'todo');
-check('việc tiếp theo bỏ qua xong và bỏ qua', nextActionId({ subs: [{ id: 'a', status: 'done' }, { id: 'b', status: 'skip' }, { id: 'c', status: 'blocked' }] }) === 'c');
+check('việc tiếp theo bỏ qua xong và bỏ qua', eq(nextActionIds({ subs: [{ id: 'a', status: 'done' }, { id: 'b', status: 'skip' }, { id: 'c', status: 'blocked' }] }), ['c']));
 check('việc tiếp theo của dự án: bước đầu còn việc',
-  projectNextId({ steps: [{ subs: [{ id: 'a', status: 'done' }] }, { subs: [] }, { subs: [{ id: 'b', status: 'todo' }] }] }) === 'b');
+  eq(projectNextIds({ steps: [{ subs: [{ id: 'a', status: 'done' }] }, { subs: [] }, { subs: [{ id: 'b', status: 'todo' }] }] }), ['b']));
 check('bấm chip: New → In progress → Done; trạng thái khác mở danh sách', nextStatus('todo') === 'doing' && nextStatus('doing') === 'done'
   && ['done', 'blocked', 'skip', 'cancel'].every((x) => nextStatus(x) === ''));
 {
@@ -288,6 +288,53 @@ check('tách theo ·', eq(splitInline('a \\· b · @c · hạn 2026-01-01'), ['a
 check('đếm', eq(counts([hard]), { workspaces: 1, steps: 4, subs: 9, log: 2, docs: 1 }));
 check('slug, fold', slug('Đồ án IT5425 — thể thao') === 'do-an-it5425-the-thao' && fold('Việc CỦA Tôi') === 'viec cua toi');
 
+/* Ô song song: bước con `par` nhập vào ô trước; số "3", "3.1"; chỗ (Place) dùng chung cho kéo thả, ô Vị trí, phím, Hoàn tác. */
+{
+  const mk = () => normWorkspace({ steps: [
+    { id: 'S', title: 'S', subs: [{ id: 'a', par: true }, { id: 'b' }, { id: 'c', par: true }, { id: 'd', par: true }, { id: 'e' }] },
+    { id: 'T', title: 'T', subs: [{ id: 'x' }] },
+  ] });
+  const ids = (w, k = 0) => slotsOf(w.steps[k].subs).map((sl) => sl.map((x) => x.id).join('+')).join(' ');
+  let w = mk();
+  check('ô song song: bước con đầu không nhập được ô trước; ô b+c+d', ids(w) === 'a b+c+d e' && w.steps[0].subs[0].par === false, ids(w));
+  check('số: ô "2", song song "2.1" … "2.3"', eq([...liveLabels(w)].filter(([k]) => 'abcdeST'.includes(k)).map(([k, v]) => k + v).join(' '), 'S1 a1 b2.1 c2.2 d2.3 e3 T2'));
+  check('chỗ của bước con: riêng một ô / trong ô song song', eq(subPlace(w, 'a'), { stepId: 'S', slot: 0, join: false, at: 0 })
+    && eq(subPlace(w, 'c'), { stepId: 'S', slot: 1, join: true, at: 1 }));
+  const from = placeSub(w, w.steps[0].subs[0], { stepId: 'S', slot: 0, join: true, at: 0 });
+  check('đặt vào ô song song (đầu ô)', ids(w) === 'a+b+c+d e' && eq(from, { stepId: 'S', slot: 0, join: false, at: 0 }), ids(w));
+  placeSub(w, w.steps[0].subs.find((x) => x.id === 'a'), from);
+  check('Hoàn tác bằng chỗ cũ: về đúng như trước', ids(w) === 'a b+c+d e', ids(w));
+  w = mk();
+  const head = w.steps[0].subs.find((x) => x.id === 'b');
+  const fb = placeSub(w, head, { stepId: 'T', slot: 1, join: false, at: 0 });
+  check('nhấc đầu ô song song sang bước khác: ô còn lại giữ nguyên', ids(w) === 'a c+d e' && ids(w, 1) === 'x b');
+  placeSub(w, head, fb);
+  check('… và trả về đúng đầu ô', ids(w) === 'a b+c+d e' && ids(w, 1) === 'x', ids(w));
+  w = mk();
+  const t = takeSub(w, 'b');
+  check('xoá đầu ô song song: phần tử sau thành đầu ô, không nhập vào ô trước', t.id === 'b' && ids(w) === 'a c+d e', ids(w));
+  w = mk();
+  check('Alt + ← → / ↑ ↓: đổi ô, tách khỏi ô song song, đổi thứ tự trong ô',
+    eq(shiftTarget(w, 'a', 'left'), null) && eq(shiftTarget(w, 'a', 'right'), { stepId: 'S', slot: 1, join: false, at: 0 })
+    && eq(shiftTarget(w, 'e', 'right'), null) && eq(shiftTarget(w, 'c', 'left'), { stepId: 'S', slot: 1, join: false, at: 0 })
+    && eq(shiftTarget(w, 'c', 'right'), { stepId: 'S', slot: 2, join: false, at: 0 }) && eq(shiftTarget(w, 'b', 'up'), null)
+    && eq(shiftTarget(w, 'b', 'down'), { stepId: 'S', slot: 1, join: true, at: 1 }) && eq(shiftTarget(w, 'a', 'down'), null));
+  placeSub(w, w.steps[0].subs.find((x) => x.id === 'c'), shiftTarget(w, 'c', 'right'));
+  check('Alt + →: tách c ra ô riêng ngay sau ô của nó', ids(w) === 'a b+d c e', ids(w));
+  w = mk();
+  w.steps[0].subs[3].status = 'done';
+  w.steps[0].subs[0].status = 'done';
+  check('Next: mọi bước con còn mở của ô đầu tiên còn việc', eq(projectNextIds(w), ['b', 'c']));
+  const md = toMarkdown(w);
+  check('Markdown: "· parallel" trên dòng bước con; đi rồi về giữ ô', (md.match(/ · parallel\n/g) || []).length === 2 && eq(shape(fromMarkdown(md).workspace), shape(w)),
+    firstDiff(shape(w), shape(fromMarkdown(md).workspace)));
+  const vi = fromMarkdown('# A\n## 1. S\n- [ ] a · song song\n- [ ] b\n- [ ] c · song song · hạn 2026-01-02\n- [ ] d · parallel\n').workspace.steps[0];
+  check('Markdown: nhận cả "song song"; bước con đầu không song song', ids({ steps: [vi] }) === vi.subs.map((x) => x.id)[0] + ' ' + vi.subs.slice(1).map((x) => x.id).join('+')
+    && vi.subs[2].due === '2026-01-02' && vi.subs[0].par === false);
+  const j = parseImport(toJSON(w)).workspaces[0];
+  check('JSON: giữ ô song song', eq(shape(j), shape(w)));
+}
+
 /* Bước có tài liệu, bước con đầu có ghi chú mở bằng rào code: bước con không bị đọc thành tài liệu. */
 const fenceNote = normWorkspace({ name: 'P', steps: [{ title: 'S', docs: [{ kind: 'link', title: 'L', url: 'https://a.b' }],
   subs: [{ title: 'A', notes: '```python\nx = 1\n```' }, { title: 'B', notes: '~~~' }] }] });
@@ -299,7 +346,7 @@ check('bước con có ghi chú mở bằng rào, ngay sau tài liệu của bư
   const atoms = ['a', ' ', '·', ' · ', '\\', '@x', '`', '```', '~~~', '#', '## ', '- ', '[ ]', '[x]', ']', '[', '(', ')', 'hạn 2026-01-01',
     'due', 'Xong khi: ', 'Tài liệu:', 'Vì sao: ', '> ', '1. ', '*', '**', '\n', '\n\n', '  ', 'https://e.com/a(b)', 'Huỷ vì: ',
     'Mục tiêu: ', 'Vòng: 3', 'Quay lại: x', 'Done when: ', 'Docs:', 'Why: ', 'Cancelled because: ', 'Goal: ', 'Iteration: 3',
-    'Reopened: x', 'notes:', 'DOCS:', 'Template: ', 'iteration 2'];
+    'Reopened: x', 'notes:', 'DOCS:', 'Template: ', 'iteration 2', 'parallel', ' · parallel', 'song song', ' · song song'];
   let seed = 7;
   const rnd = (n) => { seed = (seed + 0x6D2B79F5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t ^= t + Math.imul(t ^ (t >>> 7), 61 | t); return ((t ^ (t >>> 14)) >>> 0) % n; };
   const str = (n) => Array.from({ length: 1 + rnd(n) }, () => atoms[rnd(atoms.length)]).join('');
@@ -311,7 +358,7 @@ check('bước con có ghi chú mở bằng rào, ngay sau tài liệu của bư
         notes: rnd(2) ? str(6) : '', revisit: rnd(4) ? null : { reason: str(3), date: '2026-01-02', round: 2 + rnd(3) }, round: 1 + rnd(3),
         docs: Array.from({ length: rnd(3) }, doc),
         subs: Array.from({ length: rnd(4) }, () => ({ title: str(4), status: ['todo', 'doing', 'done', 'blocked', 'skip', 'cancel'][rnd(6)],
-          cancelReason: str(5), due: rnd(2) ? '2026-02-03' : '', doneWhen: rnd(2) ? str(3) : '', notes: rnd(2) ? str(6) : '',
+          cancelReason: str(5), due: rnd(2) ? '2026-02-03' : '', doneWhen: rnd(2) ? str(3) : '', notes: rnd(2) ? str(6) : '', par: !!rnd(2),
           docs: Array.from({ length: rnd(2) }, doc) })) })),
       log: Array.from({ length: rnd(3) }, () => ({ date: '2026-03-04', decision: str(3), why: rnd(2) ? str(5) : '' })) });
     let back = null;
