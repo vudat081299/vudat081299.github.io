@@ -22,17 +22,18 @@ export function available() {
 
 const isoOrEmpty = (/** @type {any} */ s) => (typeof s === 'string' && !isNaN(Date.parse(s)) ? s : '');
 
-/** @returns {{ state: any, problem: string }} */
+/** migrated: đọc từ khoá cũ, người gọi ghi sang KEY. @returns {{ state: any, problem: string, migrated: boolean }} */
 export function load() {
   const empty = { version: 2, workspaces: [], lastId: '', lastBackup: '', dirtySince: '' };
   let raw = null;
+  let migrated = false;
   try {
     raw = localStorage.getItem(KEY);
-    for (const k of OLD_KEYS) if (raw === null) raw = localStorage.getItem(k);
+    for (const k of OLD_KEYS) if (raw === null) { raw = localStorage.getItem(k); migrated = raw !== null; }
   } catch (e) {
-    return { state: empty, problem: 'blocked' };
+    return { state: empty, problem: 'blocked', migrated };
   }
-  if (!raw) return { state: empty, problem: '' };
+  if (!raw) return { state: empty, problem: '', migrated };
   try {
     const d = JSON.parse(raw);
     if (!d || !Array.isArray(d.workspaces)) throw new Error('khuôn lạ');
@@ -45,10 +46,11 @@ export function load() {
         dirtySince: isoOrEmpty(d.dirtySince),
       },
       problem: '',
+      migrated,
     };
   } catch (e) {
     try { localStorage.setItem(KEY + '.corrupt', raw); } catch (e2) { /* giữ được thì tốt */ }
-    return { state: empty, problem: 'corrupt' };
+    return { state: empty, problem: 'corrupt', migrated: false };
   }
 }
 

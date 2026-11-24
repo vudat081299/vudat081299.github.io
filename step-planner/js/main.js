@@ -1590,6 +1590,7 @@ async function boot() {
   const tab = S.tabProject();
   curId = findWs(tab) ? tab : findWs(state.lastId) ? state.lastId : state.workspaces[0]?.id || '';
   if (curId) S.setTabProject(curId);
+  if (loaded.migrated) persist(); // khoá cũ: ghi ngay sang khoá mới
   render();
 }
 boot();

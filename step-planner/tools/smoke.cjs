@@ -804,6 +804,9 @@ const check = (name, ok, detail = '') => {
   op.on('pageerror', (e) => oErr.push(String(e)));
   await op.goto(BASE);
   await op.waitForSelector('#app:not([hidden]) .card[data-sub]');
+  const ov0 = await op.evaluate(() => JSON.parse(localStorage.getItem('stepPlanner.v2')));
+  check('khoá cũ: mở trang là ghi ngay sang khoá mới, chưa cần sửa gì', !!ov0 && ov0.workspaces[0]?.id === 'w1' && ov0.lastId === 'w1'
+    && !('owner' in ov0.workspaces[0].steps[0].subs[0]), JSON.stringify(ov0)?.slice(0, 120));
   await op.click('.card[data-sub] [data-act="cycle"]');
   const ov = await op.evaluate(() => [JSON.parse(localStorage.getItem('stepPlanner.v2')), localStorage.getItem('stepPlanner.v1')]);
   check('khoá cũ có người làm: mở được, chuyển sang khoá mới không còn người, khoá cũ giữ nguyên',
