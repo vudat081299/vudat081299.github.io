@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import {
   fromTemplate, toMarkdown, fromMarkdown, parseImport, toJSON, toBackup, shape, progress, nextActionId, projectNextId,
-  nextStatus, splitInline, normWorkspace, normSub, counts, slug, fold, parseDate, uniqueName, normDoc, safeUrl,
+  nextStatus, setStatus, splitInline, normWorkspace, normSub, counts, slug, fold, parseDate, uniqueName, normDoc, safeUrl,
 } from '../js/core.js';
 import { parseMd, inline } from '../js/md.js';
 
@@ -275,7 +275,15 @@ check('huỷ: dấu [/] và Huỷ vì: đọc được; dòng thụt hai sau đ�
 check('việc tiếp theo bỏ qua xong và bỏ qua', nextActionId({ subs: [{ id: 'a', status: 'done' }, { id: 'b', status: 'skip' }, { id: 'c', status: 'blocked' }] }) === 'c');
 check('việc tiếp theo của dự án: bước đầu còn việc',
   projectNextId({ steps: [{ subs: [{ id: 'a', status: 'done' }] }, { subs: [] }, { subs: [{ id: 'b', status: 'todo' }] }] }) === 'b');
-check('vòng trạng thái', nextStatus('todo') === 'doing' && nextStatus('doing') === 'done' && nextStatus('done') === 'todo' && nextStatus('blocked') === 'doing' && nextStatus('cancel') === 'todo');
+check('bấm chip: New → In progress → Done; trạng thái khác mở danh sách', nextStatus('todo') === 'doing' && nextStatus('doing') === 'done'
+  && ['done', 'blocked', 'skip', 'cancel'].every((x) => nextStatus(x) === ''));
+{
+  const x = normSub({ status: 'cancel', cancelReason: 'vì' });
+  setStatus(x, 'done');
+  const y = normSub({ status: 'cancel', cancelReason: 'vì' });
+  setStatus(y, 'cancel');
+  check('setStatus: rời Cancelled thì bỏ lý do', x.status === 'done' && x.cancelReason === '' && y.cancelReason === 'vì');
+}
 check('tách theo ·', eq(splitInline('a \\· b · @c · hạn 2026-01-01'), ['a · b', '@c', 'hạn 2026-01-01']));
 check('đếm', eq(counts([hard]), { workspaces: 1, steps: 4, subs: 9, log: 2, docs: 1 }));
 check('slug, fold', slug('Đồ án IT5425 — thể thao') === 'do-an-it5425-the-thao' && fold('Việc CỦA Tôi') === 'viec cua toi');

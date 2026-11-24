@@ -99,6 +99,8 @@
   --md-max: 72ch;                      /* bề rộng đọc của bản xem */
   --md-split: 720px;                   /* hẹp hơn thì Chia đôi xếp trên / dưới */
   --search-w: 300px;
+  --dd-min: 180px;                     /* danh sách chọn tự dựng */
+  --dd-max: 420px;
   --tpl-min: 250px;
   --sa-b: env(safe-area-inset-bottom, 0px);
 
@@ -525,30 +527,31 @@ svg.i {
 }
 @media (hover: hover) { .add-step:hover { background: var(--chip); color: var(--ink); } }
 
-/* ── Chip trạng thái: bấm để đổi; chấm có hình riêng cho mỗi trạng thái (không chỉ màu). Cảm ứng: vùng bấm ≥ --hit ── */
+/* ── Chip trạng thái: bấm New → In progress → Done; Done và trạng thái khác mở danh sách. Chấm (.st-dot cũng dùng trong
+   danh sách chọn) có hình riêng cho mỗi trạng thái, không chỉ màu. Cảm ứng: vùng bấm ≥ --hit ── */
 .chip {
   position: relative; display: inline-flex; align-items: center; gap: var(--s1); flex: none;
   min-height: calc(var(--h-sm) - var(--s2)); padding: 0 var(--s2); border-radius: var(--r-pill);
   font: 600 var(--fs-xs)/1 var(--sans); white-space: nowrap; cursor: pointer;
   color: var(--ink-2); background: var(--surface); border: var(--line-w) solid var(--line);
 }
-.chip::before {
+.chip::before, .st-dot {
   content: ''; width: var(--dot); height: var(--dot); border-radius: var(--r-pill); flex: none;
   border: var(--mark-w) solid var(--ink-4); background: transparent;
 }
 .chip::after { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: var(--hit); transform: translateY(-50%); }
 @media (hover: hover) { button.chip:hover { border-color: var(--ink-4); color: var(--ink); } }
 .chip.st-doing { color: var(--blue-fg); background: var(--blue-soft); border-color: var(--blue-line); }
-.chip.st-doing::before { border-color: var(--blue); background: linear-gradient(90deg, var(--blue) 50%, transparent 50%); }
+.chip.st-doing::before, .st-dot.st-doing { border-color: var(--blue); background: linear-gradient(90deg, var(--blue) 50%, transparent 50%); }
 .chip.st-done { color: var(--green); background: var(--accent-soft); border-color: var(--accent-line); }
-.chip.st-done::before { border-color: var(--done-edge); background: var(--done-edge); }
+.chip.st-done::before, .st-dot.st-done { border-color: var(--done-edge); background: var(--done-edge); }
 .chip.st-blocked { color: var(--amber-fg); background: var(--amber-soft); border-color: var(--amber-line); }
-.chip.st-blocked::before { border-radius: var(--r-xs); border-color: var(--amber); background: var(--amber); }
+.chip.st-blocked::before, .st-dot.st-blocked { border-radius: var(--r-xs); border-color: var(--amber); background: var(--amber); }
 .chip.st-skip { color: var(--ink-3); border-style: dashed; }
-.chip.st-skip::before { border-style: dashed; }
+.chip.st-skip::before, .st-dot.st-skip { border-style: dashed; }
 /* Huỷ: chấm tròn có vạch chéo. */
 .chip.st-cancel { color: var(--danger); background: var(--red-soft); border-color: var(--red-line); }
-.chip.st-cancel::before { border-color: var(--danger); background: linear-gradient(135deg, transparent 38%, var(--danger) 38% 62%, transparent 62%); }
+.chip.st-cancel::before, .st-dot.st-cancel { border-color: var(--danger); background: linear-gradient(135deg, transparent 38%, var(--danger) 38% 62%, transparent 62%); }
 span.chip { cursor: default; }
 span.chip::after { content: none; }
 
@@ -592,6 +595,48 @@ span.chip::after { content: none; }
 .log-decision { font-weight: 600; overflow-wrap: anywhere; min-height: var(--hit); }
 .log-why { grid-column: 2; font-size: var(--fs-sm); color: var(--ink-2); white-space: pre-line; overflow-wrap: anywhere; }
 .log-item .icon-btn { grid-row: 1; grid-column: 3; }
+
+/* ── Danh sách chọn tự dựng (js/dropdown.js): nút thay <select>, danh sách nổi ở lớp trên cùng, không đẩy bố cục ── */
+select.dd-native {
+  position: absolute; width: 1px; height: 1px; min-height: 0; padding: 0; margin: 0; border: 0;
+  opacity: 0; pointer-events: none; clip-path: inset(50%);
+}
+.field:has(> select.dd-native) { position: relative; }
+.dd-btn {
+  display: flex; align-items: center; gap: var(--s2); width: 100%; min-width: 0; min-height: var(--ctl); padding: var(--s2) var(--s2) var(--s2) var(--s3);
+  font: inherit; font-size: var(--fs-md); color: var(--ink); text-align: left; cursor: pointer;
+  background: var(--surface); border: var(--line-w) solid var(--line); border-radius: var(--r-sm);
+  transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+.dd-btn > svg.i { margin-left: auto; color: var(--ink-3); transition: transform var(--dur) var(--ease); }
+.dd-btn[aria-expanded="true"] { border-color: var(--ring); box-shadow: 0 0 0 3px var(--accent-soft); }
+.dd-btn[aria-expanded="true"] > svg.i { transform: rotate(180deg); }
+.dd-btn:focus-visible { outline: none; border-color: var(--ring); box-shadow: 0 0 0 3px var(--accent-soft); }
+.dd-btn:disabled { opacity: .45; cursor: default; }
+@media (hover: hover) { .dd-btn:hover:not(:disabled) { border-color: var(--ink-4); } }
+@media (pointer: coarse) { .dd-btn { font-size: var(--fs-lg); } }
+.dd-val { display: flex; align-items: center; gap: var(--s2); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dd-pop {
+  position: fixed; inset: auto; margin: 0; z-index: 90; min-width: var(--dd-min); max-width: min(var(--dd-max), calc(100vw - 2 * var(--s2)));
+  overflow: auto; overscroll-behavior: contain; padding: var(--s1);
+  background: var(--surface); color: var(--ink); border: var(--line-w) solid var(--line); border-radius: var(--r);
+  box-shadow: var(--shadow-pop);
+}
+.dd-pop:focus { outline: none; }
+@media (prefers-reduced-motion: no-preference) { .dd-pop { animation: dd-in var(--dur) var(--ease); } }
+@keyframes dd-in { from { opacity: 0; translate: 0 calc(-1 * var(--s1)); } to { opacity: 1; translate: 0 0; } }
+.dd-pop[data-side="up"] { transform-origin: bottom; }
+.dd-opt {
+  display: flex; align-items: center; gap: var(--s2); min-height: var(--hit); padding: var(--s1) var(--s2); border-radius: var(--r-sm);
+  font-size: var(--fs-sm); cursor: pointer;
+}
+.dd-opt.active { background: var(--chip); }
+.dd-opt[aria-selected="true"] .dd-label { font-weight: 600; }
+.dd-opt[aria-disabled="true"] { opacity: .45; cursor: default; }
+.dd-opt > svg.i { margin-left: auto; color: var(--green); }
+.dd-text { display: flex; flex-direction: column; min-width: 0; }
+.dd-label { overflow-wrap: anywhere; }
+.dd-hint { font-size: var(--fs-xs); color: var(--ink-3); line-height: var(--lh-tight); }
 
 /* ── Hộp thoại (dáng md-annotate: đầu có vạch dưới, nút đóng trơn; điện thoại: tấm đáy) ── */
 .dlg {

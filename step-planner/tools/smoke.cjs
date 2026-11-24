@@ -36,6 +36,11 @@ const check = (name, ok, detail = '') => {
   const cur = async (page) => { const s = await stored(page); return s.workspaces.find((w) => w.id === s.lastId); };
   const shape = (page, ws) => page.evaluate(async (w) => (await import(new URL('js/core.js', location.href).href)).shape(w), ws);
   const subSel = (id, act) => `.card[data-sub="${id}"] [data-act="${act}"]`;
+  /* Đổi trạng thái qua danh sách: Shift + bấm chip luôn mở danh sách. */
+  const setSt = async (page, subId, st) => {
+    await page.click(`.card[data-sub="${subId}"] [data-act="status"]`, { modifiers: ['Shift'] });
+    await page.click(`.dd-pop [role="option"][data-value="${st}"]`);
+  };
   const hOverflow = (page) => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
 
   /* ── Máy rộng ── */
@@ -100,7 +105,7 @@ const check = (name, ok, detail = '') => {
   await page.click('.step:nth-child(1) .step-notes summary');
   await page.click('.step:nth-child(1) .card[data-sub]:nth-child(2) .more');
   const keepBefore = await page.evaluate(() => { const sc = document.querySelector('.step:nth-child(1) .cards-scroll'); sc.scrollLeft = sc.scrollWidth; return sc.scrollLeft; });
-  await page.click('.step:nth-child(1) .card[data-sub]:nth-child(4) [data-act="cycle"]');
+  await page.click('.step:nth-child(1) .card[data-sub]:nth-child(4) [data-act="status"]');
   const keep = await page.evaluate(() => {
     const row = document.querySelector('.step:nth-child(1)');
     const c2 = row.querySelector('.card[data-sub]:nth-child(2)');
@@ -109,7 +114,7 @@ const check = (name, ok, detail = '') => {
   });
   check('vẽ lại giữ ghi chú bước đang mở, thẻ đã "Xem thêm", chỗ cuộn ngang của hàng', keep.notes && keep.open && keep.more === 'Show less'
     && keep.expanded === 'true' && keepBefore > 0 && Math.abs(keep.left - keepBefore) < 2, `${keepBefore} ${JSON.stringify(keep)}`);
-  for (let k = 0; k < 2; k++) await page.click('.step:nth-child(1) .card[data-sub]:nth-child(4) [data-act="cycle"]');
+  await setSt(page, await page.getAttribute('.step:nth-child(1) .card[data-sub]:nth-child(4)', 'data-sub'), 'todo');
   await page.click('.step:nth-child(1) .card[data-sub]:nth-child(2) .more');
   await page.click('.step:nth-child(1) .step-notes summary');
   await page.evaluate(() => { document.querySelector('.step:nth-child(1) .cards-scroll').scrollLeft = 0; });
@@ -133,18 +138,37 @@ const check = (name, ok, detail = '') => {
   check('đánh số 2.1, 2.2', geo.nums === '2.1,2.2', geo.nums);
   check('việc tiếp theo là 1.1', geo.next === '1.1');
 
-  // Chip trạng thái: bấm hai lần → xong; việc tiếp theo dời sang 1.2; tiến độ.
-  const chip = '.step:nth-child(1) .card[data-sub]:nth-child(1) [data-act="cycle"]';
+  // Chip trạng thái: bấm hai lần → xong; việc tiếp theo dời sang 1.2; tiến độ. Bấm khi Done: mở danh sách.
+  const chip = '.step:nth-child(1) .card[data-sub]:nth-child(1) [data-act="status"]';
   await page.click(chip);
   check('chip: New → In progress', (await page.textContent(chip)).trim() === 'In progress');
   const chipLook = (sel) => page.$eval(sel, (el) => { const c = getComputedStyle(el); return [c.color, c.backgroundColor, c.borderColor].join('|'); });
-  const doingLook = await chipLook(chip), todoLook = await chipLook('.step:nth-child(1) .card[data-sub]:nth-child(2) [data-act="cycle"]');
+  const doingLook = await chipLook(chip), todoLook = await chipLook('.step:nth-child(1) .card[data-sub]:nth-child(2) [data-act="status"]');
   check('chip Đang làm có màu riêng (chữ, nền, viền khác Chưa làm)', doingLook.split('|').every((v, k) => v !== todoLook.split('|')[k]), `${doingLook} / ${todoLook}`);
   await page.click(chip);
   check(`chip: → xong, tiến độ 1/${n1}`, (await page.textContent(chip)).trim() === 'Done'
     && (await page.textContent('.step:nth-child(1) .prog')).includes(`1/${n1}`));
   check('việc tiếp theo dời sang 1.2', (await page.textContent('.step:nth-child(1) .card.next .num')) === '1.2');
-  check('chip giữ focus sau khi bấm', await page.evaluate(() => document.activeElement?.dataset.act === 'cycle'));
+  check('chip giữ focus sau khi bấm', await page.evaluate(() => document.activeElement?.dataset.act === 'status'));
+  const layout0 = await page.evaluate(() => document.querySelector('.step').getBoundingClientRect().height);
+  await page.click(chip);
+  const menu = await page.evaluate(() => {
+    const pop = document.querySelector('.dd-pop');
+    const chipEl = document.querySelector('.step:nth-child(1) .card[data-sub]:nth-child(1) [data-act="status"]');
+    return pop && { opts: [...pop.querySelectorAll('[role="option"] .dd-label')].map((o) => o.textContent),
+      sel: pop.querySelector('[aria-selected="true"]')?.dataset.value, hints: pop.querySelectorAll('.dd-hint').length, dots: pop.querySelectorAll('.st-dot').length,
+      focus: document.activeElement === pop, expanded: chipEl.getAttribute('aria-expanded'),
+      below: pop.getBoundingClientRect().top >= chipEl.getBoundingClientRect().bottom - 1 || pop.getBoundingClientRect().bottom <= chipEl.getBoundingClientRect().top + 1,
+      rowH: document.querySelector('.step').getBoundingClientRect().height };
+  });
+  check('chip Done: bấm mở danh sách sáu trạng thái (chấm, dòng gợi ý, đánh dấu hiện tại), không đẩy bố cục', !!menu && menu.opts.length === 6
+    && menu.sel === 'done' && menu.hints === 6 && menu.dots === 6 && menu.focus && menu.expanded === 'true' && menu.below && menu.rowH === layout0, JSON.stringify(menu));
+  await page.keyboard.press('Escape');
+  check('danh sách trạng thái: Esc đóng, focus về chip, không đổi gì', !(await page.$('.dd-pop')) && (await page.textContent(chip)).trim() === 'Done'
+    && await page.evaluate(() => document.activeElement?.dataset.act === 'status'));
+  await page.keyboard.press('Alt+ArrowDown');
+  check('Alt + ↓ trên chip: mở danh sách', !!(await page.$('.dd-pop')));
+  await page.keyboard.press('Escape');
 
   // Huỷ: chỉ chọn trong hộp sửa, có ô "Vì sao huỷ"; thẻ hiện lý do, tên gạch; không tính vào tiến độ; "Tiếp theo" bỏ qua;
   // chú giải có Huỷ; bấm chip Huỷ → Chưa làm.
@@ -152,8 +176,15 @@ const check = (name, ok, detail = '') => {
   await page.click(`${c12} [data-act="edit-sub"]`);
   check('hộp sửa: có Huỷ trong trạng thái, ô "Vì sao huỷ" ẩn khi chưa chọn', (await page.$$eval('#sub-form [name="status"] option', (o) => o.map((x) => x.textContent))).includes('Cancelled')
     && !(await page.isVisible('#sub-cancel')));
-  await page.selectOption('#sub-form [name="status"]', 'cancel');
-  check('chọn Huỷ: hiện ô "Vì sao huỷ"', await page.isVisible('#sub-cancel'));
+  // Danh sách chọn tự dựng thay <select>: mở bằng bấm, chọn bằng bàn phím (gõ chữ đầu, Enter), phát change.
+  await page.click('#sub-form .dd-btn');
+  const ddOpen = await page.evaluate(() => ({ pop: !!document.querySelector('#dlg-sub .dd-pop'), native: getComputedStyle(document.querySelector('#sub-form [name="status"]')).opacity }));
+  await page.keyboard.press('c');
+  await page.keyboard.press('Enter');
+  check('danh sách chọn tự dựng: mở trong hộp, gõ chữ + Enter chọn, <select> đổi theo và phát change (hiện ô lý do)', ddOpen.pop && ddOpen.native === '0'
+    && (await page.inputValue('#sub-form [name="status"]')) === 'cancel' && await page.isVisible('#sub-cancel')
+    && /Cancelled/.test(await page.textContent('#sub-form .dd-btn')) && await page.evaluate(() => document.activeElement?.name === 'cancelReason'), JSON.stringify(ddOpen));
+  check('chọn Cancelled: hiện ô lý do', await page.isVisible('#sub-cancel'));
   await page.fill('#sub-form [name="cancelReason"]', 'Đã có số liệu từ nguồn khác\nkhông cần làm lại');
   await page.fill('#sub-form [name="due"]', '2020-01-02');
   await page.click('#sub-form button[type="submit"]');
@@ -172,12 +203,22 @@ const check = (name, ok, detail = '') => {
   check('Huỷ: chip, lý do trên thẻ, tên gạch ngang', cx.chip === 'Cancelled' && /^Cancelled because Đã có số liệu từ nguồn khác\nkhông cần làm lại$/.test(cx.reason) && cx.line === 'line-through', JSON.stringify(cx));
   check(`Huỷ: tiến độ 1/${n1 - 1}, "Tiếp theo" sang 1.3, chú giải có Huỷ 1`, cx.prog.startsWith(`1/${n1 - 1}`) && cx.next === '1.3' && cx.legend.includes('Cancelled1'), JSON.stringify(cx));
   check('Huỷ: lưu lý do', (await cur(page)).steps[0].subs[1].cancelReason === 'Đã có số liệu từ nguồn khác\nkhông cần làm lại');
-  await page.click(`${c12} [data-act="cycle"]`);
-  check('bấm chip Huỷ → Chưa làm, lý do bỏ', (await page.textContent(`${c12} .chip`)).trim() === 'New' && (await cur(page)).steps[0].subs[1].cancelReason === '');
+  await page.click(`${c12} [data-act="status"]`);
+  check('bấm chip Cancelled: mở danh sách', !!(await page.$('.dd-pop')));
+  await page.click('.dd-pop [role="option"][data-value="todo"]');
+  check('chọn New từ danh sách: lý do huỷ bỏ', (await page.textContent(`${c12} .chip`)).trim() === 'New' && (await cur(page)).steps[0].subs[1].cancelReason === '');
   check('về Chưa làm: hạn đã qua báo trễ', !!(await page.$(`${c12} .due.overdue`)));
   await page.click(`${c12} [data-act="edit-sub"]`);
   await page.fill('#sub-form [name="due"]', '');
   await page.click('#sub-form button[type="submit"]');
+  // Chọn Cancelled từ danh sách của chip: mở hộp sửa ở ô lý do; Lưu mới huỷ, Esc thì không đổi gì.
+  const c12id = await page.getAttribute(c12, 'data-sub');
+  await setSt(page, c12id, 'cancel');
+  check('danh sách chip → Cancelled: hộp sửa mở, trạng thái đặt sẵn, focus ở ô lý do, chưa huỷ', await page.isVisible('#dlg-sub')
+    && (await page.inputValue('#sub-form [name="status"]')) === 'cancel' && await page.evaluate(() => document.activeElement?.name === 'cancelReason')
+    && (await cur(page)).steps[0].subs[1].status === 'todo');
+  await page.keyboard.press('Escape');
+  check('Esc: không huỷ', !(await page.isVisible('#dlg-sub')) && (await cur(page)).steps[0].subs[1].status === 'todo');
 
   // Thêm bước con có đủ trường.
   await page.click('.step:nth-child(1) [data-act="add-sub"]');
@@ -297,7 +338,7 @@ const check = (name, ok, detail = '') => {
   check('cần làm lại: nút có chữ', (await page.textContent(revBtn)).trim() === 'Reopen');
   const r0 = (await cur(page)).steps[1];
   const doneId = r0.subs[0].id;
-  for (let k = 0; k < 3 && (await cur(page)).steps[1].subs[0].status !== 'done'; k++) await page.click(subSel(doneId, 'cycle'));
+  for (let k = 0; k < 3 && (await cur(page)).steps[1].subs[0].status !== 'done'; k++) await page.click(subSel(doneId, 'status'));
   const statuses0 = (await cur(page)).steps[1].subs.map((x) => x.status).join();
   const nLogR = (await cur(page)).log.length;
   await page.click(revBtn);
@@ -689,13 +730,13 @@ const check = (name, ok, detail = '') => {
   await B.waitForSelector('.step');
   await B.click('#ws-btn');
   await B.click(`[data-ws="${w1.id}"] [data-act="ws-open"]`);
-  await B.click('.card[data-sub] >> nth=0 >> [data-act="cycle"]');
+  await B.click('.card[data-sub] >> nth=0 >> [data-act="status"]');
   await A.waitForTimeout(200);
   check('hai tab: tab kia đổi dự án và sửa, tab này vẫn ở dự án của nó', (await A.textContent('#ws-name')) === w2.name
     && (await B.textContent('#ws-name')) === w1.name);
   const w2sub = w2.steps[0].subs[0];
   await A.click(subSel(w2sub.id, 'sub-del'));
-  await B.click('.card[data-sub] >> nth=1 >> [data-act="cycle"]');
+  await B.click('.card[data-sub] >> nth=1 >> [data-act="status"]');
   await A.waitForTimeout(200);
   await A.click('#toast-undo');
   await A.waitForTimeout(100);
@@ -706,7 +747,7 @@ const check = (name, ok, detail = '') => {
   const w2step = w2.steps[1];
   await A.click(`.step[data-step="${w2step.id}"] [data-act="del-step"]`);
   await A.click('#ask-ok');
-  await B.click('.card[data-sub] >> nth=2 >> [data-act="cycle"]');
+  await B.click('.card[data-sub] >> nth=2 >> [data-act="status"]');
   await A.waitForTimeout(200);
   await A.click('#toast-undo');
   await A.waitForTimeout(100);
@@ -844,7 +885,7 @@ const check = (name, ok, detail = '') => {
   const ov0 = await op.evaluate(() => JSON.parse(localStorage.getItem('stepPlanner.v2')));
   check('khoá cũ: mở trang là ghi ngay sang khoá mới, chưa cần sửa gì', !!ov0 && ov0.workspaces[0]?.id === 'w1' && ov0.lastId === 'w1'
     && !('owner' in ov0.workspaces[0].steps[0].subs[0]), JSON.stringify(ov0)?.slice(0, 120));
-  await op.click('.card[data-sub] [data-act="cycle"]');
+  await op.click('.card[data-sub] [data-act="status"]');
   const ov = await op.evaluate(() => [JSON.parse(localStorage.getItem('stepPlanner.v2')), localStorage.getItem('stepPlanner.v1')]);
   check('khoá cũ có người làm: mở được, chuyển sang khoá mới không còn người, khoá cũ giữ nguyên',
     !oErr.length && (await op.textContent('#ws-name')) === 'Dự án cũ' && ov[0].workspaces[0].steps[0].subs[0].status === 'done'

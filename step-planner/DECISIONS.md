@@ -28,7 +28,7 @@ Không có máy chủ: mọi dự án lưu trong bộ nhớ trình duyệt dư�
 ## PLAN-003 · Sáu trạng thái; tiến độ không tính bỏ qua và huỷ; việc tiếp theo được tô
 24/11/2026 · `step-planner/`
 
-Bước con có sáu trạng thái: chưa làm, đang làm, xong, bị chặn, bỏ qua, huỷ; bấm chip để đổi nhanh. Bỏ qua là việc không cần với dự án này. Huỷ là việc đã quyết không làm nhưng giữ thẻ trên bảng để theo dõi, kèm lý do huỷ (chỉ chọn trong hộp sửa). Tiến độ = xong / (tổng − bỏ qua − huỷ). Bước con đầu tiên chưa xong, không bỏ qua, không huỷ của mỗi bước là việc tiếp theo.
+Bước con có sáu trạng thái: mới (New), đang làm, xong, bị chặn, bỏ qua, huỷ. Bấm chip đi ba trạng thái cơ bản mới → đang làm → xong; đã xong hay ở trạng thái khác thì bấm chip mở danh sách để chọn bất kỳ trạng thái nào. Bỏ qua là việc không cần với dự án này. Huỷ là việc đã quyết không làm nhưng giữ thẻ trên bảng để theo dõi, kèm lý do huỷ (chọn huỷ thì luôn được hỏi lý do). Tiến độ = xong / (tổng − bỏ qua − huỷ). Bước con đầu tiên chưa xong, không bỏ qua, không huỷ của mỗi bước là việc tiếp theo.
 
 ## PLAN-004 · Quay lại một bước có lý do, đếm vòng, đặt lại việc
 24/11/2026 · `step-planner/`

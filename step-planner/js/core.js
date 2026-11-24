@@ -8,11 +8,22 @@ export const STATUSES = ['todo', 'doing', 'done', 'blocked', 'skip', 'cancel'];
 export const STATUS_LABEL = { todo: 'New', doing: 'In progress', done: 'Done', blocked: 'Blocked', skip: 'Skipped', cancel: 'Cancelled' };
 const MARK = { todo: ' ', doing: '~', done: 'x', blocked: '!', skip: '-', cancel: '/' };
 const FROM_MARK = { ' ': 'todo', '': 'todo', '~': 'doing', x: 'done', X: 'done', '!': 'blocked', '-': 'skip', '/': 'cancel' };
-/* Bấm chip: chưa làm → đang làm → xong → chưa làm. Bị chặn → đang làm; bỏ qua, huỷ → chưa làm. */
-const NEXT = { todo: 'doing', doing: 'done', done: 'todo', blocked: 'doing', skip: 'todo', cancel: 'todo' };
+/** Một dòng giải thích của mỗi trạng thái, hiện trong danh sách chọn. */
+export const STATUS_HINT = {
+  todo: 'Not started yet', doing: 'Being worked on now', done: 'Finished: meets its Done when',
+  blocked: 'Waiting on something outside this sub-step', skip: 'Not needed for this project, left out of progress',
+  cancel: 'Decided not to do it; keep the card and say why',
+};
+/* Bấm chip: New → In progress → Done. Done, Blocked, Skipped, Cancelled: bấm mở danh sách mọi trạng thái ('' ở đây). */
+const NEXT = { todo: 'doing', doing: 'done' };
 /** Trạng thái không tính vào tiến độ và việc tiếp theo. @param {string} s */
 export const outOfScope = (s) => s === 'skip' || s === 'cancel';
-export const nextStatus = (/** @type {string} */ s) => NEXT[s] || 'todo';
+export const nextStatus = (/** @type {string} */ s) => NEXT[s] || '';
+/** Đổi trạng thái một bước con: rời Cancelled thì bỏ lý do huỷ. @param {any} sub @param {string} st */
+export function setStatus(sub, st) {
+  sub.status = STATUSES.includes(st) ? st : 'todo';
+  if (sub.status !== 'cancel') sub.cancelReason = '';
+}
 
 export const FORMAT = 'step-planner';
 export const VERSION = 2;

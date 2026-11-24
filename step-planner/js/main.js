@@ -4,6 +4,7 @@
 import * as C from './core.js';
 import * as S from './store.js';
 import { renderMd } from './md.js';
+import { enhanceSelect, openList, consumeJustClosed } from './dropdown.js';
 
 /** @param {string} id @returns {any} */
 const $ = (id) => document.getElementById(id);
@@ -266,7 +267,7 @@ function renderBoard(/** @type {any} */ ws) {
           x.docs.length > 0 && h('button', { type: 'button', class: 'doc-tag', 'data-act': 'sub-docs', tabindex: '-1',
             'aria-label': `${C.plural(x.docs.length, 'doc')}. Open the list`, title: x.docs.map((/** @type {any} */ d) => d.title).join('\n') },
           icon('clip'), String(x.docs.length)),
-          h('button', { type: 'button', class: `chip st-${x.status}`, 'data-act': 'cycle', 'aria-label': `Status: ${label}. Click to change`, title: 'Click to change the status' }, label)),
+          statusChip(x)),
         h('div', { class: 'card-body' },
           h('h3', { class: 'card-title' }, h('button', { type: 'button', class: 'link', 'data-act': 'edit-sub', 'aria-keyshortcuts': 'Alt+ArrowLeft Alt+ArrowRight' }, x.title)),
           x.due && h('p', { class: 'meta' },
@@ -298,6 +299,16 @@ function renderBoard(/** @type {any} */ ws) {
     if (sc) sc.scrollLeft = left;
   }
   updateScrollCues();
+}
+
+/** Chip trạng thái: New, In progress bấm là sang trạng thái kế; Done và các trạng thái khác bấm là mở danh sách.
+ * Shift + bấm hoặc Alt + ↓ luôn mở danh sách. @param {any} x */
+function statusChip(x) {
+  const label = C.STATUS_LABEL[x.status];
+  const nx = C.nextStatus(x.status);
+  const how = nx ? `Click: ${C.STATUS_LABEL[nx]}. Shift-click or Alt+Down: all statuses` : 'Click: choose a status';
+  return h('button', { type: 'button', class: `chip st-${x.status}`, 'data-act': 'status', 'aria-haspopup': nx ? null : 'listbox',
+    'aria-expanded': nx ? null : 'false', 'aria-keyshortcuts': 'Alt+ArrowDown', 'aria-label': `Status: ${label}. ${how}`, title: how }, label);
 }
 
 /** Thẻ chạm --card-max thì thân bị cắt: mờ dần ở đáy và thêm nút "Xem thêm" (mở cả thẻ). Nút ngoài vòng Tab:
@@ -436,6 +447,10 @@ function ask(o) {
     dlg.addEventListener('close', () => resolve(dlg.returnValue === 'ok' ? $('ask-input').value : null), { once: true });
   });
 }
+
+/* Mọi <select> có nghĩa dùng danh sách chọn tự dựng; ô vị trí của bước chỉ là số nên giữ <select> gốc. */
+field($('step-form'), 'pos').dataset.native = '';
+document.querySelectorAll('select').forEach((s) => enhanceSelect(/** @type {HTMLSelectElement} */ (s)));
 
 /* ── Dự án ── */
 
@@ -594,14 +609,19 @@ $('board').addEventListener('click', (/** @type {any} */ e) => {
     case 'edit-step': openStep(step); break;
     case 'add-doc': openDocNew({ wsId: ws.id, stepId: step.id, subId: null, docId: null }); break;
     case 'open-doc': openMd({ wsId: ws.id, stepId: step.id, subId: null, docId: b.dataset.doc }); break;
-    case 'sub-docs': openSub(step, sub, true); break;
+    case 'sub-docs': openSub(step, sub, { toDocs: true }); break;
     case 'revisit': openRevisit(step); break;
     case 'revisit-clear': step.revisit = null; commit(stepSel(step.id, 'edit-step')); break;
     case 'step-up': moveStep(ws, step, -1, act); break;
     case 'step-down': moveStep(ws, step, 1, act); break;
     case 'del-step': deleteStep(ws.id, step.id); break;
     case 'add-sub': openSub(step, null); break;
-    case 'cycle': sub.status = C.nextStatus(sub.status); sub.cancelReason = ''; commit(subSel(sub.id, 'cycle')); break;
+    case 'status': {
+      if (consumeJustClosed(b)) break;
+      const nx = C.nextStatus(sub.status);
+      if (nx && !e.shiftKey) { C.setStatus(sub, nx); commit(subSel(sub.id, 'status')); } else openStatusMenu(b, step, sub);
+      break;
+    }
     case 'edit-sub': openSub(step, sub); break;
     case 'sub-left': moveSub(step, sub, -1, act); break;
     case 'sub-right': moveSub(step, sub, 1, act); break;
@@ -610,14 +630,35 @@ $('board').addEventListener('click', (/** @type {any} */ e) => {
   }
 });
 
-/* Alt + mũi tên trên tên bước / tên bước con: dời bằng bàn phím. */
+/** Danh sách mọi trạng thái, mở dưới chip. Chọn Cancelled: mở hộp sửa ở ô lý do (lưu mới huỷ). @param {any} chip @param {any} step @param {any} sub */
+function openStatusMenu(chip, step, sub) {
+  const ids = { wsId: cur().id, stepId: step.id, subId: sub.id };
+  openList(chip, C.STATUSES.map((st) => ({ value: st, label: C.STATUS_LABEL[st], hint: C.STATUS_HINT[st], dot: st, selected: st === sub.status })), (v) => {
+    const s = stepOf(findWs(ids.wsId), ids.stepId);
+    const x = s && s.subs.find((/** @type {any} */ y) => y.id === ids.subId);
+    if (!x) return;
+    if (v === 'cancel') { openSub(s, x, { status: 'cancel' }); return; }
+    if (v === x.status) return;
+    C.setStatus(x, v);
+    commit(subSel(x.id, 'status'));
+  }, { label: `Status of "${sub.title}"`, className: 'dd-status' });
+}
+
+/* Alt + mũi tên trên tên bước / tên bước con: dời bằng bàn phím. Alt + ↓ trên chip: mở danh sách trạng thái. */
 $('board').addEventListener('keydown', (/** @type {any} */ e) => {
-  if (!e.altKey || e.ctrlKey || e.metaKey || $('board').classList.contains('filtering')) return;
+  if (!e.altKey || e.ctrlKey || e.metaKey) return;
   const ws = cur();
   const act = e.target.dataset && e.target.dataset.act;
   const row = e.target.closest('[data-step]');
   const step = row && stepOf(ws, row.dataset.step);
   if (!step) return;
+  if (act === 'status' && e.key === 'ArrowDown') {
+    e.preventDefault();
+    const sub = step.subs.find((/** @type {any} */ x) => x.id === e.target.closest('[data-sub]').dataset.sub);
+    if (sub) openStatusMenu(e.target, step, sub);
+    return;
+  }
+  if ($('board').classList.contains('filtering')) return;
   if (act === 'edit-step' && (e.key === 'ArrowUp' || e.key === 'ArrowDown')) {
     e.preventDefault();
     moveStep(ws, step, e.key === 'ArrowUp' ? -1 : 1, 'edit-step');
@@ -802,16 +843,17 @@ function subPosOptions(keep = true) {
   fillPos(field(f, 'pos'), n, keep ? idx : n - 1);
 }
 
-function openSub(/** @type {any} */ step, /** @type {any} */ sub, toDocs = false) {
+/** @param {any} step @param {any} sub @param {{toDocs?:boolean, status?:string}} [opt] status: đặt sẵn trạng thái (Cancelled: focus ô lý do) */
+function openSub(step, sub, opt = {}) {
   const ws = cur();
   const f = $('sub-form');
   subCtx = { wsId: ws.id, stepId: step.id, subId: sub ? sub.id : null };
   $('dlg-sub-title').textContent = sub ? 'Edit sub-step' : 'Add sub-step';
-  field(f, 'status').replaceChildren(...C.STATUSES.map((s) => h('option', { value: s }, C.STATUS_LABEL[s])));
+  field(f, 'status').replaceChildren(...C.STATUSES.map((s) => h('option', { value: s, 'data-dot': s, 'data-hint': C.STATUS_HINT[s] }, C.STATUS_LABEL[s])));
   field(f, 'step').replaceChildren(...ws.steps.map((/** @type {any} */ s, /** @type {number} */ i) => h('option', { value: s.id }, `${i + 1}. ${s.title}`)));
   const x = sub || C.normSub({ title: '' });
   field(f, 'title').value = sub ? x.title : '';
-  field(f, 'status').value = x.status;
+  field(f, 'status').value = opt.status || x.status;
   field(f, 'due').value = x.due;
   field(f, 'doneWhen').value = x.doneWhen;
   field(f, 'notes').value = x.notes;
@@ -823,8 +865,8 @@ function openSub(/** @type {any} */ step, /** @type {any} */ sub, toDocs = false
   $('sub-dup').hidden = !sub;
   docUndo = null;
   renderDocsEdit('sub');
-  openDlg($('dlg-sub'), toDocs ? null : field(f, 'title'));
-  if (toDocs) {
+  openDlg($('dlg-sub'), opt.toDocs ? null : opt.status === 'cancel' ? field(f, 'cancelReason') : field(f, 'title'));
+  if (opt.toDocs) {
     $('sub-docs').scrollIntoView({ block: 'nearest' });
     /** @type {any} */ ($('sub-docs').querySelector('.doc-list button, [data-doc-add]')).focus();
   }

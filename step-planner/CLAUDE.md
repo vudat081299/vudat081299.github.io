@@ -18,6 +18,7 @@
 | `js/core.js` | logic thuần: chuẩn hoá, ngày, tiến độ, việc tiếp theo, Markdown và JSON vào / ra; không DOM, chạy được trong Node |
 | `js/md.js` | Markdown của tài liệu văn bản → cây khối (`parseMd`, thuần) → DOM (`renderMd`, chỉ createElement / text node) |
 | `js/store.js` | `localStorage` (dữ liệu, mẹo `stepPlanner.hintOff`, Compact `stepPlanner.compact`, theme `hub-theme`), `sessionStorage` (dự án của tab); mọi truy cập bọc try/catch |
+| `js/dropdown.js` | danh sách chọn tự dựng: `enhanceSelect` (thay giao diện `<select>`, giữ nó làm nguồn value và `change`), `openList` |
 | `js/main.js` | vẽ bảng, sự kiện, hộp thoại, kéo thả, toast Hoàn tác, nhắc sao lưu |
 | `data/templates.json` | mẫu dự án, trang đọc bằng vòng lặp (REPO-001) |
 
@@ -45,8 +46,9 @@
   không cần với dự án này. Cancelled: đã quyết không làm, giữ thẻ để nhớ vì sao.
 - Tiến độ = xong / (tổng − bỏ qua − huỷ). "Next" chỉ tô một thẻ: bước con đầu tiên không xong, không bỏ qua, không huỷ của
   bước đầu tiên còn việc. Hạn đã qua thì báo "(overdue)", trừ thẻ xong, bỏ qua, huỷ.
-- Bấm chip: chưa làm → đang làm → xong → chưa làm; bị chặn → đang làm; bỏ qua, huỷ → chưa làm. Bị chặn, bỏ qua, huỷ chọn
-  trong hộp sửa; chọn Huỷ thì hiện ô "Vì sao huỷ". Thẻ huỷ: tên gạch, lý do trong thân thẻ (cắt và "Xem thêm" như ghi chú).
+- Bấm chip: New → In progress → Done. Chip Done, Blocked, Skipped, Cancelled bấm là mở danh sách sáu trạng thái (chấm,
+  một dòng gợi ý, đánh dấu cái hiện tại); Shift + bấm hay Alt + ↓ luôn mở. Chọn Cancelled: mở hộp sửa, trạng thái đặt sẵn,
+  focus ô lý do; Lưu mới huỷ. Rời Cancelled thì bỏ lý do. Thẻ huỷ: tên gạch, lý do trong thân thẻ (cắt như ghi chú).
 - Bấm vào thẻ (ngoài nút) là mở hộp sửa. Mỗi thẻ chỉ hai điểm dừng Tab: tên (mở sửa) và chip.
 - Nút phụ (dời, nhân bản, xoá, cần làm lại, tài liệu, nhãn kẹp, "Xem thêm") có `tabindex=-1`. Bàn phím làm cùng việc: Alt
   + ← → trên tên bước con, Alt + ↑ ↓ trên tên bước, ô "Thuộc bước" / "Vị trí" và các nút trong hộp sửa.
@@ -138,8 +140,7 @@ Docs:
   `Huỷ vì`, `Vì sao`, `hạn`, `## Nhật ký quyết định`. Nhãn không phân biệt hoa thường. Dòng đầu (`… · format N`) chỉ để
   đọc, trang không dựa vào nó. Số thứ tự trên bảng không ghi vào Markdown.
 - Dấu trạng thái: `[ ]` / `[]` mới, `[~]` đang làm, `[x]` / `[X]` xong, `[!]` bị chặn, `[-]` bỏ qua, `[/]` huỷ. Dấu lạ đọc là mới.
-- Trên dòng bước con, phần tử tách bằng ` · `. Trong tên: `\` viết `\\`, `·` viết `\·`, `@` viết `\@`, chữ `hạn` / `due`
-  viết `\hạn` / `\due`.
+- Trên dòng bước con, phần tử tách bằng ` · `. Trong tên: `\` → `\\`, `·` → `\·`, `@` → `\@`, `hạn` / `due` → `\hạn` / `\due`.
 - Dòng thụt hai dấu cách thuộc bước con / `Notes:` / quyết định ngay trên nó. Dòng thụt đầu `Done when: ` của bước con là
   `doneWhen`; dòng thụt đầu `Why: ` của quyết định mở phần lý do.
 - Bước con huỷ: dòng thụt `Cancelled because: dòng đầu` ngay sau `Done when:`, dòng sau của lý do thụt bốn (thoát như ghi chú).
@@ -153,17 +154,14 @@ Docs:
 
 Nhập file cũ và Markdown viết tay (dễ dãi):
 
-- Người làm: dòng `Người:`, phần tử `` `@tên` `` / `@tên`, và `@tên` viết tay bị bỏ khỏi tên, không cảnh báo.
-- Bước con: `- [ ] x`, `- [] x`, `* [ ] x`, `+ [ ] x`, `1. [ ] x`, gạch đầu dòng thường `- x` (mới). Mục lồng
-  (`  - [ ] con`) thành bước con cùng bước, xếp phẳng.
+- Người làm (dòng `Người:`, `` `@tên` ``, `@tên`) bị bỏ khỏi tên, không cảnh báo. Trước `##` đầu: dòng đầu không `#` là tên
+  dự án, việc thành bước "General", chữ khác là ghi chú dự án. Dòng lạ trong bước (đoạn văn, `###`) nối vào ghi chú bước.
+- Bước con: `- [ ] x`, `- [] x`, `* [ ] x`, `+ [ ] x`, `1. [ ] x`, gạch đầu dòng thường `- x` (mới); mục lồng xếp phẳng.
 - Hạn: `hạn` / `due` + `YYYY-MM-DD`, `YYYY-M-D`, `DD/MM/YYYY`, `D/M/YYYY`. Ngày không có thật thì cảnh báo, giữ trong tên.
 - Tiêu đề bước: `## 1. x`, `## 1) x`, `## 2 x`, `## Bước 1: x`, `## Step 2) x`, `## x`. `## Nhật ký (quyết định)` / `## Decision
-  log` là nhật ký.
-- Trước `##` đầu tiên: dòng đầu không có `#` là tên dự án; việc thành bước "General"; chữ khác là ghi chú dự án.
-- Trong nhật ký: gạch đầu dòng hay dòng thường đều là một quyết định; ngày đầu dòng (hai kiểu) là ngày quyết định.
-- Dòng lạ trong bước (đoạn văn, `###`) nối vào ghi chú bước. Xem trước khi nhập liệt kê mọi cảnh báo.
+  log` là nhật ký; trong đó mỗi gạch đầu dòng hay dòng thường là một quyết định, ngày đầu dòng (hai kiểu) là ngày.
 - Sau `Docs:`: mục là link, hoặc mục có rào ``` / ~~~ ngay dòng sau; mục của bước không cần thụt, của bước con thụt ≥ 2.
-  Link không phải http(s): cảnh báo, bỏ. Thiếu rào đóng: đọc tới hết file, cảnh báo.
+  Link không phải http(s): cảnh báo, bỏ. Thiếu rào đóng: đọc tới hết file, cảnh báo. Xem trước liệt kê mọi cảnh báo.
 
 ## JSON
 
@@ -188,6 +186,8 @@ Nhập file cũ và Markdown viết tay (dễ dãi):
 - Cột tên bước rộng cố định, thẻ cùng bề rộng (các hàng thẳng cột), không bị kéo cao theo thẻ cao nhất hàng. Hàng thẻ
   cuộn ngang bên trong, báo còn chỗ cuộn (`more-left` / `more-right`). ≤ 640px: tên bước nằm trên hàng thẻ.
 - Hộp văn bản Markdown gần toàn màn, ≤ 640px toàn màn; Chia đôi xếp trên / dưới khi hẹp.
+- Mọi `<select>` chọn thứ có nghĩa dùng danh sách tự dựng (nổi ở lớp trên cùng, không đẩy bố cục; phím ↑ ↓, gõ chữ đầu,
+  Enter, Esc trả focus); ô chỉ chọn số giữ `<select>` gốc (`data-native`). Option có `data-dot`, `data-hint` thì hiện thêm.
 - Màn cảm ứng và ≤ 640px: vùng bấm ≥ 44px (vật nhỏ trong dòng nới bằng lớp giả). Trang không bao giờ cuộn ngang. Tạo
   hay mở dự án thì về đầu trang, không cuộn theo focus.
 
