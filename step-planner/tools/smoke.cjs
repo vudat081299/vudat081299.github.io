@@ -598,6 +598,7 @@ const check = (name, ok, detail = '') => {
     && (await cur(page)).steps[0].subs.length === nSub0);
   await page.click('#sub-dup');
   await page.click('#ask-ok');
+  await page.waitForFunction((n) => { const d = JSON.parse(localStorage.getItem('stepPlanner.v2')); return d.workspaces.find((w) => w.id === d.lastId).steps[0].subs.length === n + 1; }, nSub0, { timeout: 3000 }).catch(() => {});
   check('chọn bỏ: nhân bản bản đã lưu', (await cur(page)).steps[0].subs.length === nSub0 + 1
     && (await cur(page)).steps[0].subs[1].notes === firstSub.notes);
   await page.click(subSel((await cur(page)).steps[0].subs[1].id, 'sub-del'));
@@ -808,6 +809,26 @@ const check = (name, ok, detail = '') => {
   check('bộ nhớ bị chặn: banner, vẫn dùng được', /chặn bộ nhớ/.test(await bp.textContent('#banner')) && await bp.isVisible('#banner')
     && (await bp.$$('.step')).length === nSteps && !bErr.length, bErr.join(' | '));
   await blocked.close();
+
+  /* ── Hàng đầu thẻ chật (số, "Tiếp theo", nhãn kẹp, chip dài): không chữ nào bị bẻ dòng, không tràn thẻ ── */
+  const crowd = { version: 2, lastId: 'wc', workspaces: [{ id: 'wc', name: 'Chật', steps: [{ id: 'tc', title: 'B', subs: [
+    { id: 'sc1', title: 'Một', status: 'doing', docs: [{ id: 'dc1', kind: 'link', title: 'L', url: 'https://a.example' }] },
+    { id: 'sc2', title: 'Hai', status: 'blocked', docs: [{ id: 'dc2', kind: 'md', title: 'M', body: 'x' }] }] }], log: [] }] };
+  for (const [w, hgt] of [[1280, 900], [390, 844]]) {
+    const cc = await browser.newContext({ viewport: { width: w, height: hgt }, hasTouch: w < 500 });
+    await cc.addInitScript((d) => { if (!localStorage.getItem('stepPlanner.v2')) localStorage.setItem('stepPlanner.v2', d); }, JSON.stringify(crowd));
+    const cp = await cc.newPage();
+    await cp.goto(BASE);
+    await cp.waitForSelector('#app:not([hidden]) .card[data-sub]');
+    const bad = await cp.evaluate(() => [...document.querySelectorAll('.card[data-sub] .card-top > *')].filter((el) => {
+      const lh = parseFloat(getComputedStyle(el).lineHeight) || parseFloat(getComputedStyle(el).fontSize) * 1.2;
+      const card = el.closest('.card').getBoundingClientRect(), r = el.getBoundingClientRect();
+      const textLines = [...el.childNodes].filter((n) => n.nodeType === 3 && n.textContent.trim()).map((n) => { const rg = document.createRange(); rg.selectNodeContents(n); return rg.getClientRects().length; });
+      return textLines.some((k) => k > 1) || r.right > card.right + 0.5 || r.left < card.left - 0.5 || r.height > Math.max(lh * 1.6, 48);
+    }).map((el) => `${el.className} "${el.textContent.trim()}"`));
+    check(`${w}px: hàng đầu thẻ chật không bẻ chữ, không tràn thẻ`, bad.length === 0, bad.join(', '));
+    await cc.close();
+  }
 
   /* ── Bộ nhớ khoá cũ (v1, có người làm): đọc, chuẩn hoá bỏ người, ghi sang khoá mới, giữ khoá cũ ── */
   const oldCtx = await browser.newContext();
