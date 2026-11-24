@@ -627,25 +627,57 @@ $('start-templates').addEventListener('click', (/** @type {any} */ e) => {
 });
 $('start-import').addEventListener('click', () => openImport());
 
+/* Hộp Dự án: hai tab — Open (danh sách dự án) và New project (tên + thẻ mẫu). Nút Create chỉ hiện ở tab New. */
+/** @param {'open'|'new'} tab */
+function setWsTab(tab) {
+  for (const t of /** @type {any} */ ($('dlg-ws').querySelectorAll('[data-ws-tab]'))) {
+    const on = t.dataset.wsTab === tab;
+    t.setAttribute('aria-selected', String(on));
+    t.tabIndex = on ? 0 : -1;
+  }
+  $('ws-pane-open').hidden = tab !== 'open';
+  $('ws-pane-new').hidden = tab !== 'new';
+  $('ws-create').hidden = tab !== 'new';
+}
+$('dlg-ws').querySelector('.tabs').addEventListener('click', (/** @type {any} */ e) => {
+  const t = e.target.closest('[data-ws-tab]');
+  if (t) setWsTab(t.dataset.wsTab);
+});
+$('dlg-ws').querySelector('.tabs').addEventListener('keydown', (/** @type {any} */ e) => {
+  if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+  const next = e.target.dataset.wsTab === 'open' ? 'new' : 'open';
+  setWsTab(next);
+  $('ws-tab-' + next).focus();
+});
 function openWs() {
   renderWsList();
   const fs = $('ws-new-templates');
   fs.replaceChildren(h('legend', {}, 'Template'), ...(templates.length ? templates : [BLANK_TPL]).map((t, i) =>
-    h('label', { class: 'tpl' }, h('input', { type: 'radio', name: 'tpl', value: t.id, checked: i === 0 }), tplInfo(t))));
+    h('label', { class: 'tpl', title: t.description || null }, h('input', { type: 'radio', name: 'tpl', value: t.id, checked: i === 0 }), tplInfo(t),
+      h('span', { class: 'tpl-check', 'aria-hidden': 'true' }, icon('check')))));
   $('ws-new-name').value = '';
+  setWsTab(state.workspaces.length ? 'open' : 'new');
   $('dlg-ws').showModal();
 }
 function renderWsList() {
+  $('ws-count').textContent = String(state.workspaces.length);
   $('ws-list').replaceChildren(...state.workspaces.map((w) => {
     const o = C.overall(w);
-    return h('li', { class: 'ws-item', 'data-ws': w.id },
-      h('button', { type: 'button', class: 'ws-open', 'data-act': 'ws-open', 'aria-current': w.id === curId ? 'true' : null },
-        h('b', {}, w.name), h('small', {}, `${C.plural(w.steps.length, 'step')} · ${o.done}/${o.total} done · edited ${fmtDate(w.updatedAt.slice(0, 10))}`)),
-      h('button', { type: 'button', class: 'btn', 'data-act': 'ws-rename' }, 'Rename'),
-      h('button', { type: 'button', class: 'btn', 'data-act': 'ws-dup' }, 'Duplicate'),
-      h('button', { type: 'button', class: 'btn danger', 'data-act': 'ws-del' }, 'Delete'));
+    const tpl = templates.find((t) => t.id === w.templateId);
+    const now = w.id === curId;
+    const meta = [tpl && tpl.steps.length ? tpl.name : '', C.plural(w.steps.length, 'step'), `edited ${fmtDate(w.updatedAt.slice(0, 10))}`];
+    return h('li', { class: 'ws-item' + (now ? ' now' : ''), 'data-ws': w.id },
+      h('button', { type: 'button', class: 'ws-open', 'data-act': 'ws-open', 'aria-current': now ? 'true' : null },
+        h('span', { class: 'ws-top' }, h('b', { class: 'ws-title' }, w.name), now && h('span', { class: 'ws-now' }, 'Open now')),
+        h('span', { class: 'ws-meta' }, meta.filter(Boolean).join(' · ')),
+        h('span', { class: 'ws-prog' }, h('span', { class: 'bar-prog', 'aria-hidden': 'true' }, barFill(o.pct)),
+          h('small', {}, o.total ? `${o.done}/${o.total} done · ${o.pct}%` : 'No sub-steps yet'))),
+      h('span', { class: 'ws-acts' },
+        h('button', { type: 'button', class: 'icon-btn', 'data-act': 'ws-rename', 'aria-label': `Rename ${w.name}`, title: 'Rename' }, icon('pencil')),
+        h('button', { type: 'button', class: 'icon-btn', 'data-act': 'ws-dup', 'aria-label': `Duplicate ${w.name}`, title: 'Duplicate' }, icon('copy')),
+        h('button', { type: 'button', class: 'icon-btn del', 'data-act': 'ws-del', 'aria-label': `Delete ${w.name}`, title: 'Delete' }, icon('trash'))));
   }));
-  if (!state.workspaces.length) $('ws-list').append(h('li', { class: 'muted' }, 'No projects yet.'));
+  if (!state.workspaces.length) $('ws-list').append(h('li', { class: 'ws-empty' }, 'No projects yet. Start one under New project.'));
 }
 $('ws-btn').addEventListener('click', openWs);
 $('ws-list').addEventListener('click', async (/** @type {any} */ e) => {

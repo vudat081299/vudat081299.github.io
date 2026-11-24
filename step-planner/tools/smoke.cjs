@@ -74,6 +74,7 @@ const check = (name, ok, detail = '') => {
   await page.click('#start .tpl[data-tpl="crisp-dm"]');
   for (const id of tplIds.filter((x) => x !== 'crisp-dm')) {
     await page.click('#ws-btn');
+    await page.click('#ws-tab-new');
     await page.check(`#ws-new-templates input[value="${id}"]`);
     await page.click('#ws-new button[type="submit"]');
   }
@@ -85,6 +86,20 @@ const check = (name, ok, detail = '') => {
   });
   check('tạo từ mỗi mẫu: đúng bước và bước con', s0.workspaces.length === 5 && okTpl);
   check('dự án trống: báo chưa có bước', /No steps yet/.test(await page.textContent('#board')));
+  // Hộp Dự án: tab Open mặc định, dòng dự án đang mở được đánh dấu, nút Create chỉ ở tab New; thẻ mẫu có dấu chọn.
+  await page.click('#ws-btn');
+  const wsd = await page.evaluate(() => ({
+    open: document.getElementById('ws-tab-open').getAttribute('aria-selected'), rows: document.querySelectorAll('#ws-list .ws-item').length,
+    count: document.getElementById('ws-count').textContent, now: document.querySelectorAll('#ws-list .ws-item.now [aria-current="true"]').length,
+    create: document.getElementById('ws-create').hidden, acts: [...document.querySelectorAll('#ws-list .ws-item:first-child .ws-acts button')].map((b) => b.title).join(),
+  }));
+  await page.click('#ws-tab-new');
+  const wsn = await page.evaluate(() => ({ create: document.getElementById('ws-create').hidden, list: document.getElementById('ws-pane-open').hidden,
+    checked: document.querySelectorAll('#ws-new-templates .tpl:has(input:checked)').length, cards: document.querySelectorAll('#ws-new-templates .tpl').length }));
+  check('hộp Dự án: tab Open, dòng đang mở đánh dấu, hành động gọn; tab New có Create và thẻ mẫu',
+    wsd.open === 'true' && wsd.rows === 5 && wsd.count === '5' && wsd.now === 1 && wsd.create && wsd.acts === 'Rename,Duplicate,Delete'
+    && !wsn.create && wsn.list && wsn.checked === 1 && wsn.cards === 5, JSON.stringify({ wsd, wsn }));
+  await page.keyboard.press('Escape');
   // Số bước / bước con của CRISP-DM đọc từ templates.json, không ghi tay (mẫu đổi thì smoke theo).
   const crisp = tplData.find((t) => t.id === 'crisp-dm');
   const nSteps = crisp.steps.length, n1 = crisp.steps[0].subs.length, n2 = crisp.steps[1].subs.length;
@@ -1070,6 +1085,7 @@ const check = (name, ok, detail = '') => {
   await A.goto(BASE);
   await A.click('#start .tpl[data-tpl="crisp-dm"]');
   await A.click('#ws-btn');
+  await A.click('#ws-tab-new');
   await A.check('#ws-new-templates input[value="stats-report"]');
   await A.click('#ws-new button[type="submit"]');
   const [w1, w2] = (await stored(A)).workspaces;
