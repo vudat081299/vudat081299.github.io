@@ -457,10 +457,10 @@
             {
               "key": "4",
               "icon": "checklist",
-              "name": "Step Planner",
-              "desc": "Chia dự án thành bước và bước con, theo dõi tiến độ, ghi quyết định",
+              "name": "Data Science Step Planner",
+              "desc": "Chia dự án dữ liệu thành bước và bước con, theo dõi tiến độ, ghi quyết định",
               "href": "step-planner/",
-              "tags": "kế hoạch, project plan, CRISP-DM, checklist, tiến độ, Markdown"
+              "tags": "Step Planner, kế hoạch, project plan, CRISP-DM, checklist, tiến độ, Markdown"
             }
           ]
         }
