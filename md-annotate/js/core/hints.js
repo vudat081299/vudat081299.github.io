@@ -1,8 +1,9 @@
-/* Gợi ý nhận xét, thuần: số đếm (stats = { items: khoá chuẩn hoá → { t, n, last, o, seed?, pin?, hidden? } }), xếp
-   hạng, tỉ lệ, gợi ý mặc định, gợi ý cho hộp nhận xét, chữ hiện của gợi ý dài. Hàm nhận stats và sửa tại chỗ; lưu ở
-   ui/hints.js. Gợi ý không giới hạn độ dài (MDAN-087).
-   Xuất: chipHints, countUse, HINT_SHOW, hideHint, hintShown, migrateHints, MIN_PCT, normKey, normStats, pct, pinHint,
-     rankedHints, resetHints, seedHints.
+/* Gợi ý nhận xét, thuần: số đếm (stats = { items: khoá chuẩn hoá → { t, n, last, o, seed?, pin?, hidden? }, built? }), xếp
+   hạng, tỉ lệ, gợi ý mặc định, gợi ý cho hộp nhận xét, chữ hiện của gợi ý dài. Hàm nhận stats và sửa tại chỗ. Mỗi phiên
+   một stats (s.hints, MDAN-088): core/session.js giữ, ui/hints.js đọc stats của phiên đang mở. Gợi ý không giới hạn độ
+   dài (MDAN-087).
+   Xuất: chipHints, countUse, dropBuilt, HINT_SHOW, hideHint, hintShown, migrateHints, MIN_PCT, normKey, normStats, pct,
+     pinHint, rankedHints, resetHints, seedHints, statsFromDocs.
    Dùng: không module nào. */
 
 export var HINT_SHOW = 80;      // gợi ý dài hơn chỉ hiện chừng này ký tự đầu, đuôi mờ dần (MDAN-087)
@@ -105,4 +106,23 @@ export function chipHints(stats, text, size) {
   var list = q ? all.filter(function (x) { return x.key.indexOf(q) >= 0 && x.key !== q; }) : all;
   var cap = size === 'all' ? list.length : POP_CHIPS;
   return { q: q, list: list.slice(0, cap), more: Math.max(0, list.length - cap), showPct: showPct };
+}
+/* Số đếm của một phiên lưu trước khi gợi ý tách theo phiên (MDAN-088): đếm chữ mọi nhận xét đã lưu trong docs
+   (fileId → doc), mỗi nhận xét một lần, theo giờ tạo; lần dùng gần nhất là giờ tạo. built: chữ nhận xét Mod + 1 có thể
+   đã bị đếm, dropBuilt bỏ nó khi biết chữ ấy. */
+export function statsFromDocs(docs) {
+  var stats = { items: {}, built: true }, all = [];
+  Object.keys(docs || {}).forEach(function (id) { (docs[id].comments || []).forEach(function (c) { all.push(c); }); });
+  all.sort(function (a, b) { return (+a.created || 0) - (+b.created || 0); });
+  all.forEach(function (c) {
+    if (typeof c.comment === 'string' && countUse(stats, c.comment)) stats.items[normKey(c.comment)].last = +c.created || 0;
+  });
+  return stats;
+}
+/* Số đếm dựng từ nhận xét (built): bỏ khoá của chữ t (nhận xét Mod + 1, không bao giờ đếm), một lần. */
+export function dropBuilt(stats, t) {
+  if (!stats.built || !normKey(t || '')) return;
+  var it = stats.items[normKey(t)];
+  if (it && !it.seed && !it.pin) delete stats.items[normKey(t)];
+  delete stats.built;
 }

@@ -214,6 +214,36 @@ const bp = (o, d) => { const u = upS(o); return dpPrompt.buildPrompt(u, u.docs[u
     const idx = dpSession.normIndex([{ id: 'a' }, null, 'x', { id: 'b', updated: 'hỏng' }, { id: 'c', updated: 7 }]);
     check('normIndex: mục thiếu giờ sửa vẫn ra ngày hợp lệ', idx.length === 3 && idx.every((e) => Number.isFinite(e.updated)) && idx[2].updated === 7, JSON.stringify(idx));
   }
+  // Gợi ý theo phiên (MDAN-088): phiên mới có bộ rỗng riêng; phiên cũ chưa có hints dựng từ nhận xét của chính nó.
+  {
+    const a = dpSession.createSession('', {}), b = dpSession.createSession('', {});
+    dpHints.countUse(a.hints, 'Chỉ ở phiên A');
+    check('createSession: mỗi phiên một bộ số đếm, đếm ở A không lọt sang B', eq(b.hints, { items: {} }) && a.hints !== b.hints && !!a.hints.items['chỉ ở phiên a']);
+    const C = (comment, created) => ({ id: 'c' + created, quote: 'q', comment, origin: 'src', prefix: '', suffix: '', rel: 0, created });
+    const old = dpSession.normSession({ id: 'o', nodes: [{ id: 'f1', parent: null, kind: 'file', name: 'a.md' }, { id: 'f2', parent: null, kind: 'file', name: 'b.md' }],
+      docs: { f1: { text: 'q', comments: [C('Viết gọn lại', 5), C('Câu này sai', 2)] }, f2: { text: 'q', comments: [C('câu này sai.', 9), C('Bỏ đoạn này khỏi văn bản.', 7), C('   ', 3)] } },
+      open: 'f1', collapsed: [] }, 'o');
+    const it = old.hints.items;
+    check('normSession: phiên chưa có hints đếm chữ mọi nhận xét của nó (mỗi nhận xét một lần, mọi file), lần gần nhất theo giờ tạo',
+      old.hints.built === true && eq(Object.keys(it).sort(), ['bỏ đoạn này khỏi văn bản', 'câu này sai', 'viết gọn lại']) && it['câu này sai'].n === 2 && it['câu này sai'].last === 9 &&
+      it['câu này sai'].t === 'câu này sai.' && it['viết gọn lại'].n === 1, JSON.stringify(old.hints));
+    dpHints.seedHints(old.hints, ['Viết gọn lại', 'Thêm ví dụ']);
+    dpHints.dropBuilt(old.hints, 'Bỏ đoạn này khỏi văn bản.');
+    check('dropBuilt: bỏ chữ Mod + 1 khỏi số đếm dựng từ nhận xét, một lần; gợi ý mặc định giữ số lần',
+      !it['bỏ đoạn này khỏi văn bản'] && !('built' in old.hints) && it['viết gọn lại'].seed && it['viết gọn lại'].n === 1, JSON.stringify(old.hints));
+    dpHints.countUse(old.hints, 'Bỏ đoạn này khỏi văn bản.');
+    dpHints.dropBuilt(old.hints, 'Bỏ đoạn này khỏi văn bản.');
+    check('dropBuilt: bộ không dựng từ nhận xét thì không bỏ gì', it['bỏ đoạn này khỏi văn bản'].n === 1);
+    const kept = dpSession.normSession({ id: 'k', nodes: [{ id: 'f', parent: null, kind: 'file', name: 'a.md' }], docs: { f: { text: 'q', comments: [C('Khác', 1)] } }, open: 'f', collapsed: [],
+      hints: { items: { 'của phiên': { t: 'Của phiên', n: 4, last: 1, o: 1e6, pin: true } } } }, 'k');
+    check('normSession: phiên đã có hints giữ nguyên, không đếm lại nhận xét', eq(Object.keys(kept.hints.items), ['của phiên']) && kept.hints.items['của phiên'].n === 4 && !kept.hints.built);
+    const bad = dpSession.normSession({ id: 'x', nodes: [{ id: 'f', parent: null, kind: 'file', name: 'a.md' }], docs: { f: { text: '', comments: [] } }, open: 'f', collapsed: [], hints: { items: [] } }, 'x');
+    check('normSession: hints hỏng thì bộ rỗng dùng được', eq(bad.hints, { items: {} }), JSON.stringify(bad.hints));
+    const up = upS({ text: 'Một câu.', comments: [C('Thêm ví dụ', 1)] });
+    check('normSession: phiên dạng cũ một văn bản cũng dựng số đếm từ nhận xét', up.hints.items['thêm ví dụ'].n === 1);
+    const moved = dpSession.removeNodes(old, ['f2']).s;
+    check('đổi cây (removeNodes) giữ bộ số đếm của phiên', moved.hints === old.hints);
+  }
   // Phiên: đổi tên, index.
   {
     const s = upS({ text: '# Tiêu đề\n\nthân', comments: [], named: true, name: 'Cũ' });

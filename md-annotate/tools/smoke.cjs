@@ -581,16 +581,15 @@ const cornerClash = (page) => page.evaluate(() => {
     const EXTRA = 21;   // gợi ý tự thêm: 9 mặc định + 21 = 30, đủ cho 10 phím và vượt trần 5,5 hàng
     const kctx = await browser.newContext({ viewport: { width: 1280, height: 900 }, colorScheme: 'light', reducedMotion: 'no-preference' });
     await kctx.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: new URL(BASE).origin });
-    await kctx.addInitScript((n) => {
-      if (sessionStorage.getItem('hk')) return;
-      sessionStorage.setItem('hk', '1');
-      const items = {};
-      for (let i = 1; i <= n; i++) items['gợi ý thêm số ' + i] = { t: 'Gợi ý thêm số ' + i, n: 0, last: 0, o: 1e6 + i, pin: true };
-      localStorage.setItem('md-annotate:stats:v1', JSON.stringify({ items }));
-    }, EXTRA);
     const kp = await openPage(kctx);
     await pasteText(kp, KDOC);
     await kp.waitForTimeout(150);
+    // Gợi ý tự thêm vào bộ của phiên đang mở (MDAN-088).
+    await kp.evaluate(async (n) => {
+      const st = await import('./js/ui/state.js'), { hintStats } = await import('./js/ui/hints.js'), items = hintStats().items;
+      for (let i = 1; i <= n; i++) items['gợi ý thêm số ' + i] = { t: 'Gợi ý thêm số ' + i, n: 0, last: 0, o: 1e6 + i, pin: true };
+      st.saveNow();
+    }, EXTRA);
     /* Chuyển động trong #pop (cao vùng chip, số phím) đã xong. */
     const settle = (p) => p.evaluate(async () => {
       await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
@@ -739,7 +738,7 @@ const cornerClash = (page) => page.evaluate(() => {
 
     // Mod+1 (MDAN-085): lưu ngay nhận xét remove của data/hints.json; không chip, không đếm, không đổi hạng gợi ý.
     const REMOVE = await kp.evaluate(() => fetch('data/hints.json').then((r) => r.json()).then((d) => d.remove));
-    const statsNow = (p) => p.evaluate(() => localStorage.getItem('md-annotate:stats:v1'));
+    const statsNow = (p) => p.evaluate(async () => JSON.stringify((await import('./js/ui/state.js')).S.hints));
     const st0 = await statsNow(kp);
     await openAt(kp, 10);
     await kp.click('#pop-chips .ma-chip--more'); await settle(kp);
@@ -751,7 +750,7 @@ const cornerClash = (page) => page.evaluate(() => {
     await kp.click('#pop-chips .ma-chip--more'); await settle(kp);
     const hs1 = await hintTexts(kp);
     await kp.keyboard.press('Escape');
-    check('Ctrl+1: số đếm gợi ý (localStorage) không đổi, gợi ý cùng hạng, không chip remove', (await statsNow(kp)) === st0 && JSON.stringify(hs1) === JSON.stringify(hs) && !hs1.includes(REMOVE));
+    check('Ctrl+1: số đếm gợi ý của phiên không đổi, gợi ý cùng hạng, không chip remove', (await statsNow(kp)) === st0 && JSON.stringify(hs1) === JSON.stringify(hs) && !hs1.includes(REMOVE));
     // Hộp sửa: Ctrl+1 thay chữ nhận xét, như chọn chip.
     await kp.click('#list .ma-item:nth-child(1) [aria-label="Edit comment"]'); await settle(kp);
     const wasEdit = await kp.isVisible('#pop-del');
@@ -868,7 +867,7 @@ const cornerClash = (page) => page.evaluate(() => {
     await lctx.close();
   }
 
-  /* ---------- Chuyển gợi ý tiếng Anh (bản trước) về tiếng Việt, giữ số đếm và phiên ---------- */
+  /* ---------- Số đếm gợi ý chung cũ (stats:v1) bị xoá, không chép sang phiên; phiên cũ dựng gợi ý từ nhận xét của nó (MDAN-088) ---------- */
   const vctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
   const vp = await vctx.newPage(); watch(vp);
   await vp.addInitScript(() => {
@@ -876,21 +875,87 @@ const cornerClash = (page) => page.evaluate(() => {
     sessionStorage.setItem('seeded', '1');
     localStorage.setItem('md-annotate:stats:v1', JSON.stringify({ items: {
       'make it shorter': { t: 'Make it shorter', n: 7, last: 5, o: 2, seed: true },
-      'remove this': { t: 'Remove this', n: 1, last: 1, o: 5, seed: true, hidden: true },
+      'xoá đoạn này': { t: 'Xoá đoạn này', n: 1, last: 1, o: 5, seed: true, hidden: true },
       'ý riêng của tôi': { t: 'Ý riêng của tôi', n: 3, last: 9, o: 1e6 } } }));
-    localStorage.setItem('md-annotate:s:old1', JSON.stringify({ id: 'old1', name: 'Phiên cũ', named: true, created: 1, updated: 2, text: '# Cũ\n\nMột câu cũ.', comments: [{ id: 'c1', quote: 'Một câu cũ.', comment: 'Viết gọn lại', origin: 'src', prefix: '', suffix: '', rel: 0.5, created: 1 }], header: '', footer: '', fmt: 'inline', includeDoc: false }));
-    localStorage.setItem('md-annotate:index:v1', JSON.stringify([{ id: 'old1', name: 'Phiên cũ', created: 1, updated: 2, chars: 18, count: 1 }]));
+    const C = (id, comment, created) => ({ id, quote: 'Một câu cũ.', comment, origin: 'src', prefix: '', suffix: '', rel: 0.5, created });
+    localStorage.setItem('md-annotate:s:old1', JSON.stringify({ id: 'old1', name: 'Phiên cũ', named: true, created: 1, updated: 2, text: '# Cũ\n\nMột câu cũ.',
+      comments: [C('c1', 'Viết gọn lại', 1), C('c2', 'Bỏ đoạn này khỏi văn bản.', 2), C('c3', 'Nhận xét riêng của phiên cũ', 3)], header: '', footer: '', fmt: 'inline', includeDoc: false }));
+    localStorage.setItem('md-annotate:index:v1', JSON.stringify([{ id: 'old1', name: 'Phiên cũ', created: 1, updated: 2, chars: 18, count: 3 }]));
     localStorage.setItem('md-annotate:current', JSON.stringify('old1'));
   });
   await vp.goto(BASE);
   await vp.waitForFunction(() => window.marked && window.DOMPurify);
-  await vp.waitForFunction(() => { try { return !!JSON.parse(localStorage.getItem('md-annotate:stats:v1')).items['viết gọn lại']; } catch (e) { return false; } });   // data/hints.json đã nạp, đã chuyển
-  const mig = await vp.evaluate(() => JSON.parse(localStorage.getItem('md-annotate:stats:v1')).items);
-  check('chuyển gợi ý: số đếm từ khoá tiếng Anh về tiếng Việt, giữ ẩn, giữ gợi ý tự gõ',
-    mig['viết gọn lại'] && mig['viết gọn lại'].n === 7 && !mig['make it shorter'] && mig['xoá đoạn này'] && mig['xoá đoạn này'].hidden && mig['ý riêng của tôi'].n === 3, JSON.stringify(mig));
+  await vp.waitForFunction(async () => (await import('./js/ui/hints.js')).seedState === 'ok');   // data/hints.json đã nạp
+  const mig = await vp.evaluate(async () => ({ items: (await import('./js/ui/hints.js')).hintStats().items, old: localStorage.getItem('md-annotate:stats:v1') }));
+  const mi = mig.items;
+  check('gợi ý cũ: khoá chung stats:v1 bị xoá, không chép sang phiên (không số đếm cũ, không ẩn cũ, không gợi ý tự gõ cũ)',
+    mig.old === null && mi['viết gọn lại'] && mi['viết gọn lại'].n === 1 && mi['viết gọn lại'].seed && !mi['make it shorter'] && mi['xoá đoạn này'] && !mi['xoá đoạn này'].hidden && !mi['ý riêng của tôi'], JSON.stringify({ old: mig.old, keys: Object.keys(mi), v: mi['viết gọn lại'], x: mi['xoá đoạn này'] }));
+  check('gợi ý cũ: phiên dựng gợi ý từ nhận xét của nó, bỏ nhận xét Mod + 1', mi['nhận xét riêng của phiên cũ'] && mi['nhận xét riêng của phiên cũ'].n === 1 && !mi['bỏ đoạn này khỏi văn bản'], JSON.stringify(Object.keys(mi)));
   check('phiên cũ còn nguyên, nhận xét giữ đúng chữ đã gõ', (await out(vp)).includes('"Một câu cũ." — Viết gọn lại'), JSON.stringify(await out(vp)));
   check('trang có lang="en"', (await vp.getAttribute('html', 'lang')) === 'en');
   await vctx.close();
+
+  /* ---------- Gợi ý riêng từng phiên (MDAN-088): nhận xét lưu ở phiên A không thành gợi ý ở phiên B; về A thì có lại;
+     phiên A bị bỏ (xoá file cuối rồi sang phiên khác) và Undo dựng lại thì gợi ý của A về theo; xoá A ở History thì mất. ---------- */
+  {
+    const ictx = await browser.newContext({ viewport: { width: 1280, height: 900 }, colorScheme: 'light' });
+    const ip = await openPage(ictx);
+    const MINE = 'Chỉ riêng phiên A thôi';
+    const chipsAt = async (needle) => {
+      await dragSelect(ip, '#v-md', needle);
+      if (await ip.$('#pop-chips .ma-chip--more')) await ip.click('#pop-chips .ma-chip--more');
+      const t = await ip.$$eval('#pop-chips .ma-chip .ma-chip__t', (els) => els.map((e) => e.textContent));
+      await ip.keyboard.press('Escape');
+      return t;
+    };
+    const dlgHints = async () => { await ip.click('#btn-hints'); const t = await ip.textContent('#hints-list'); await ip.keyboard.press('Escape'); return t; };
+    await pasteText(ip, '# Phiên A\n\nCâu một của A.\n\nCâu hai của A.\n');
+    await ip.waitForTimeout(150);
+    await ip.click('.ma-tab[data-view="view"]');
+    await dragSelect(ip, '#v-md', 'Câu một của A.');
+    await ip.keyboard.type(MINE); await ip.keyboard.press('Enter');
+    const a1 = await chipsAt('Câu hai của A.');
+    check('gợi ý theo phiên: nhận xét vừa lưu ở A là chip ở A', a1[0] === MINE, a1.join(' | '));
+    const aid = await ip.evaluate(async () => (await import('./js/ui/state.js')).S.id);
+    await ip.click('#btn-new');
+    await pasteText(ip, '# Phiên B\n\nCâu của B.\n');
+    await ip.waitForTimeout(150);
+    await ip.click('.ma-tab[data-view="view"]');
+    const b1 = await chipsAt('Câu của B.');
+    check('gợi ý theo phiên: phiên mới B không có chip của A, đủ gợi ý mặc định', !b1.includes(MINE) && b1.length === 9 && b1[0] === 'Sai, nói chưa rõ ràng', b1.join(' | '));
+    check('gợi ý theo phiên: hộp Hints của B không có gợi ý của A', !(await dlgHints()).includes(MINE));
+    const bid = await ip.evaluate(async () => (await import('./js/ui/state.js')).S.id);
+    await ip.click('#btn-hist');
+    await ip.click('#hist-list .ma-row:has-text("Phiên A") .ma-row__main');
+    await ip.waitForTimeout(150);
+    const a2 = await chipsAt('Câu hai của A.');
+    check('gợi ý theo phiên: về A thì chip của A có lại, ngay', a2[0] === MINE, a2.join(' | '));
+    // Xoá file cuối của A rồi sang B: A trống bị bỏ khỏi bộ nhớ; Undo dựng lại A cùng gợi ý của nó.
+    await ip.click('#btn-tree'); await ip.waitForTimeout(150);
+    await ip.click('#tree-list .ma-trow', { button: 'right' });
+    await ip.click('#tree-menu .ma-menu__i:has-text("Delete")'); await ip.waitForTimeout(150);
+    await ip.evaluate(async (bid) => { const S = await import('./js/ui/state.js'); S.switchTo(S.loadSession(bid)); }, bid);
+    await ip.waitForTimeout(200);
+    const gone = await ip.evaluate((aid) => localStorage.getItem('md-annotate:s:' + aid), aid);
+    await ip.click('#toast .ma-toast__btn'); await ip.waitForTimeout(300);
+    const back = await ip.evaluate((aid) => JSON.parse(localStorage.getItem('md-annotate:s:' + aid)), aid);
+    check('gợi ý theo phiên: A bị bỏ rồi Undo dựng lại thì gợi ý của A về theo', gone === null && back && back.hints.items[MINE.toLowerCase()] && back.hints.items[MINE.toLowerCase()].n === 1, JSON.stringify([gone, back && back.hints.items[MINE.toLowerCase()]]));
+    await ip.click('#btn-hist');
+    await ip.click('#hist-list .ma-row:has-text("Phiên A") .ma-row__main');
+    await ip.waitForTimeout(150);
+    check('gợi ý theo phiên: mở lại A sau Undo, hộp Hints có gợi ý của A', (await dlgHints()).includes(MINE));
+    // Xoá A ở History (hỏi rồi xoá hẳn): phiên mới không có gợi ý của A, không còn khoá nào giữ chữ ấy.
+    await ip.click('#btn-hist');
+    ip.once('dialog', (d) => d.accept());
+    await ip.click('#hist-list .ma-row:has-text("Phiên A") [aria-label="Delete session"]');
+    await ip.keyboard.press('Escape');
+    await ip.click('#btn-new'); await pasteText(ip, '# Phiên C\n\nCâu của C.\n'); await ip.waitForTimeout(150);
+    await ip.click('.ma-tab[data-view="view"]');
+    const c1 = await chipsAt('Câu của C.');
+    const left = await ip.evaluate((m) => Object.keys(localStorage).filter((k) => (localStorage.getItem(k) || '').includes(m)), MINE);
+    check('gợi ý theo phiên: xoá A ở History thì gợi ý của A mất theo', !c1.includes(MINE) && !left.length, JSON.stringify([c1, left]));
+    await ictx.close();
+  }
 
   /* ---------- Tối theo hệ điều hành ---------- */
   const dctx = await browser.newContext({ viewport: { width: 1000, height: 700 }, colorScheme: 'dark' });

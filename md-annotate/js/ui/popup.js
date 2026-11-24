@@ -23,7 +23,7 @@ import { pickSummary } from '../core/picks.js';
 import { $, barBottom, h, isMac, mqSheet, mqTouch, paintHL, shortcut, shown, syncBar, toast } from './dom.js';
 import { rangeAt } from './anchor-dom.js';
 import { D, scheduleSave } from './state.js';
-import { hintSpan, markOver, recordUse, removeHint, seedState, stats } from './hints.js';
+import { hintSpan, hintStats, markOver, recordUse, removeHint, seedState } from './hints.js';
 import { markActive } from './marks.js';
 import { anchors, mdText, numbers, ordered, orphans, renderAll } from './render.js';
 import { flashItem, removeComment } from './list.js';
@@ -247,7 +247,7 @@ function hintChip(x, i, showPct) {
 /* Vẽ chip theo chữ đang gõ, gọn hay mọi gợi ý (held, expanded); chip đầu đổi thì vùng chip về đầu (hạng 1). */
 export function renderPopHints() {
   var box = $('pop-chips'), h0 = box.hidden ? 0 : box.offsetHeight;
-  var ch = chipHints(stats, $('pop-text').value, held || expanded ? 'all' : 'few');
+  var ch = chipHints(hintStats(), $('pop-text').value, held || expanded ? 'all' : 'few');
   var sigs = ch.list.map(function (x) { return chipSig(x, ch.showPct); });
   var had = chipSigs.length, hadMore = !!box.querySelector('.ma-chip--more'), keep = 0;
   while (keep < had && keep < sigs.length && chipSigs[keep] === sigs[keep]) keep++;
@@ -307,7 +307,7 @@ function endHold() {
   if (pop.mode && !expanded) renderPopHints();
 }
 /* Gợi ý ở hạng rank theo chữ đang gõ, trong mọi gợi ý (cùng thứ tự với chip, kể cả chip chưa hiện); không có thì null. */
-function hintAt(rank) { return chipHints(stats, $('pop-text').value, 'all').list[rank - 1] || null; }
+function hintAt(rank) { return chipHints(hintStats(), $('pop-text').value, 'all').list[rank - 1] || null; }
 /* Pha bắt của window: chạy trước mọi nghe keydown khác. Phím đã dùng thì không tới ai nữa. */
 function hintKey(e) {
   if (e.isComposing || e.repeat) return;

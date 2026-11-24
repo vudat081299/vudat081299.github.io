@@ -3,7 +3,8 @@
    mà docs luôn khớp nodes, Undo của xoá / chuyển, nhãn file trong prompt, tên tự đặt, danh sách phiên (index), tên và
    kiểu file tải về, file để tải .zip. Đọc / ghi bộ nhớ ở ui/state.js.
    Phiên: { id, name, named, created, updated, header, footer, fmt, includeDoc, lineNums, path, rvPrompt, promptAll,
-     nodes: [{ id, parent, kind, name }] (core/tree.js), docs: { fileId: doc }, open: fileId, collapsed: [dirId] }.
+     nodes: [{ id, parent, kind, name }] (core/tree.js), docs: { fileId: doc }, open: fileId, collapsed: [dirId],
+     hints: số đếm gợi ý của riêng phiên (core/hints.js, MDAN-088) }.
    doc: { text, comments, reviews, rvPct?, real, legacy? } — comments / reviews như trước (core/comments.js, core/review.js);
      real: tên file là thật (mở / nạp từ đĩa, người dùng đổi tên), file dán chữ tên tự đặt untitled.md thì false;
      legacy: file nâng từ phiên cũ mà path cũ không tách được thành tên file (VD 'docs/', '.'): nhãn là path nguyên văn.
@@ -16,12 +17,13 @@
      fileLabel, importPaths, indexWith, indexWithout, isEmpty, moveIn, normIndex, normSession, openFile, openFromDisk,
      removeNodes, renameIn, renameIndex, renameSession, reveal, sessionTitle, textTitle, toggleDir, touchSession, treeFiles,
      uid, UNTITLED, zipOf.
-   Dùng: core/tree.js, core/text.js, core/file-type.js, core/zip.js. */
+   Dùng: core/tree.js, core/text.js, core/file-type.js, core/zip.js, core/hints.js. */
 import { addNode, afterRemove, byId, filesInOrder, firstFile, fromPaths, kids, moveNode, nameError, pathOf, removeNode, renameNode,
   subtree, uniqueName, visibleRows } from './tree.js';
 import { slug } from './text.js';
 import { fileType } from './file-type.js';
 import { zipFiles } from './zip.js';
+import { normStats, statsFromDocs } from './hints.js';
 
 export var UNTITLED = 'untitled.md';
 
@@ -40,7 +42,7 @@ export function createSession(text, prefs) {
     footer: typeof prefs.footer === 'string' ? prefs.footer : '',
     fmt: prefs.fmt === 'block' ? 'block' : 'inline', includeDoc: false,
     lineNums: true, path: '', rvPrompt: false, promptAll: false,
-    nodes: [{ id: f, parent: null, kind: 'file', name: UNTITLED }], docs: docs, open: f, collapsed: []
+    nodes: [{ id: f, parent: null, kind: 'file', name: UNTITLED }], docs: docs, open: f, collapsed: [], hints: { items: {} }
   };
 }
 
@@ -48,7 +50,7 @@ export function createSession(text, prefs) {
    Phiên cũ (text là chuỗi, không có nodes) nâng tại chỗ thành một file: tên là phần sau '/' (hoặc '\') cuối của path cũ,
    real: true, phần trước thành tiền tố path; path cũ không có tên dùng được ('docs/', '.', quá dài) thì untitled.md,
    real: false, legacy: true và path giữ nguyên văn. Nhờ vậy nhãn prompt (fileLabel) đúng bằng path cũ và prompt y hệt
-   từng byte. */
+   từng byte. Phiên chưa có hints (lưu trước MDAN-088) dựng số đếm từ nhận xét của chính nó (statsFromDocs). */
 export function normSession(s, id) {
   if (!s || typeof s !== 'object') return null;
   if (!Array.isArray(s.nodes)) {
@@ -64,6 +66,7 @@ export function normSession(s, id) {
   s.rvPrompt = s.rvPrompt === true;
   s.promptAll = s.promptAll === true;
   normTree(s);
+  s.hints = s.hints && typeof s.hints === 'object' ? normStats(s.hints) : statsFromDocs(s.docs);
   s.created = +s.created || Date.now(); s.updated = +s.updated || s.created;
   return s;
 }

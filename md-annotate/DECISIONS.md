@@ -58,6 +58,7 @@
 - MDAN-085 · Mod + 1 lưu nhận xét "bỏ đoạn này" · `md-annotate/js/ui/popup.js`, `md-annotate/js/core/hint-keys.js`, `md-annotate/data/hints.json`
 - MDAN-086 · Nhận xét đã lưu thành gợi ý ngay lần đầu · `md-annotate/js/core/hints.js`
 - MDAN-087 · Gợi ý không giới hạn độ dài, gợi ý dài chỉ hiện 80 ký tự đầu · `md-annotate/js/core/hints.js`, `md-annotate/js/ui/popup.js`, `md-annotate/js/ui/hints.js`
+- MDAN-088 · Gợi ý nhận xét riêng cho từng phiên · `md-annotate/js/core/hints.js`, `md-annotate/js/core/session.js`, `md-annotate/js/ui/hints.js`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Source tô màu cú pháp markdown kiểu VS Code
@@ -483,3 +484,12 @@ mặc định chưa dùng đứng sau. Nhận xét dài hơn 80 ký tự không 
 Sửa MDAN-086: mọi nhận xét gõ tay đã lưu, dài bao nhiêu cũng vậy, được đếm và thành gợi ý ngay lần đầu; gợi ý tự thêm ở
 hộp *Hints* cũng không giới hạn độ dài. Gợi ý dài hơn 80 ký tự chỉ hiện 80 ký tự đầu, ở hộp nhận xét và ở hộp *Hints*;
 rê chuột thì thấy chữ trọn. Chọn gợi ý (bấm hay phím của MDAN-084) vẫn lưu chữ trọn, lọc theo chữ đang gõ tính trên chữ trọn.
+
+## MDAN-088 · Gợi ý nhận xét riêng cho từng phiên
+24/11/2026 · `md-annotate/js/core/hints.js`, `md-annotate/js/core/session.js`, `md-annotate/js/ui/hints.js`
+
+Mỗi phiên có bộ gợi ý riêng: số lần dùng, gợi ý tự thêm, gợi ý đã bỏ và *Reset* chỉ áp cho phiên đang mở; nhận xét lưu
+ở phiên này không bao giờ thành gợi ý ở phiên khác. Gợi ý mặc định của `data/hints.json` và Mod + 1 có ở mọi phiên.
+Đổi phiên thì hộp nhận xét và hộp Hints đổi theo ngay. Xoá phiên thì mất bộ gợi ý của nó; Undo dựng lại phiên thì có lại.
+Phiên lưu trước đó dựng bộ gợi ý từ nhận xét đã lưu của chính nó (mỗi nhận xét một lần, trừ nhận xét Mod + 1); số đếm
+chung cũ, kể cả gợi ý đã bỏ hay tự thêm, bị xoá, không chép sang phiên nào.

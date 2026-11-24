@@ -6,7 +6,7 @@
 export var KEY = {
   index: 'md-annotate:index:v1',
   cur: 'md-annotate:current',
-  stats: 'md-annotate:stats:v1',
+  oldStats: 'md-annotate:stats:v1',   // số đếm gợi ý chung cũ: chỉ còn để xoá (MDAN-088)
   prefs: 'md-annotate:prefs:v1',
   s: function (id) { return 'md-annotate:s:' + id; }
 };
