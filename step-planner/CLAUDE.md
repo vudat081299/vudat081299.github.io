@@ -15,7 +15,7 @@
 | `index.html` | markup, hộp thoại, script theme trước lần vẽ đầu, script báo `file://` |
 | `css/planner.css` | token ở đầu (tới dòng `/* ── hết token ── */`), rồi từng component, mỗi khối mở bằng một dòng chú thích |
 | `js/core.js` | logic thuần: chuẩn hoá, ngày, tiến độ, việc tiếp theo, Markdown và JSON vào / ra; không DOM, chạy được trong Node |
-| `js/store.js` | `localStorage` (khoá `stepPlanner.v1`, theme `hub-theme`), `sessionStorage` (dự án của tab); mọi truy cập bọc try/catch |
+| `js/store.js` | `localStorage` (khoá `stepPlanner.v1`, mẹo `stepPlanner.hintOff`, theme `hub-theme`), `sessionStorage` (dự án của tab); mọi truy cập bọc try/catch |
 | `js/main.js` | vẽ bảng, sự kiện, hộp thoại, kéo thả, toast Hoàn tác, nhắc sao lưu |
 | `data/templates.json` | mẫu dự án, trang đọc bằng vòng lặp (REPO-001) |
 
@@ -40,9 +40,16 @@
 - Bấm chip trạng thái: chưa làm → đang làm → xong → chưa làm; bị chặn → đang làm; bỏ qua → chưa làm.
   Bị chặn và bỏ qua chọn trong hộp sửa.
 - Bấm vào thẻ (ngoài nút) là mở hộp sửa. Mỗi thẻ chỉ hai điểm dừng Tab: tên (mở sửa) và chip.
-- Nút phụ (dời, nhân bản, xoá, quay lại) có `tabindex=-1`. Bàn phím làm cùng việc: Alt + ← → trên tên bước con,
-  Alt + ↑ ↓ trên tên bước, ô "Thuộc bước" / "Vị trí" và nút Xoá / Nhân bản / Quay lại trong hộp sửa.
+- Nút phụ (dời, nhân bản, xoá, cần làm lại, "Xem thêm") có `tabindex=-1`. Bàn phím làm cùng việc: Alt + ← → trên tên
+  bước con, Alt + ↑ ↓ trên tên bước, ô "Thuộc bước" / "Vị trí" và nút Xoá / Nhân bản / Cần làm lại trong hộp sửa.
 - Kéo thả trên máy tính; bước con kéo được sang bước khác.
+- Đổi chỗ (nút dời, Alt + mũi tên, kéo thả, đổi "Thuộc bước" / "Vị trí" trong hộp sửa; cả bước): thẻ / hàng vừa dời
+  có lớp `moved`, cái bị đổi chỗ với nó có `swapped`, tự gỡ sau `--flash-dur`; toast "Đã dời 1.3 → 1.2 · tên" (bước:
+  "Đã dời bước 3 → 2 · tên") có Hoàn tác nhưng không lấy focus — focus ở lại thẻ, hàng thẻ cuộn để thẻ trong tầm nhìn.
+  Dời liền nhiều lần cùng một thứ khi toast còn hiện: Hoàn tác về chỗ trước lần đầu; dời về đúng chỗ cũ thì toast tắt.
+- "Cần làm lại" (dữ liệu `step.revisit`, Markdown `Quay lại:`): nút có chữ ở cột tên bước; hộp có câu giải thích, ví dụ,
+  ô lý do. Bước đang đánh dấu có băng "Đang làm lại · ngày · lý do" (bấm để sửa lý do) và nút "Xong, bỏ đánh dấu".
+- Mẹo người mới ("bấm thẻ để sửa · bấm chip…") hiện trên bảng tới khi bấm ×; nhớ ở `localStorage['stepPlanner.hintOff']`.
 - Đang lọc (tìm hoặc người làm) thì tắt sắp xếp và nút thêm bước. Thêm bước con khi đang lọc người thì điền sẵn người
   ấy; thẻ mới vẫn bị lọc ẩn thì toast "Đã thêm — đang bị bộ lọc ẩn".
 - Tìm không phân biệt hoa thường và dấu. Tên, mục tiêu hay ghi chú của bước khớp thì hiện cả hàng.
@@ -52,7 +59,8 @@
   hỏi lại, không hoàn tác.
 - Hộp sửa: mở thì focus ô đầu; tên là textarea tự cao, Enter lưu. Esc, × hay Huỷ khi chữ đã đổi thì hỏi "Bỏ thay đổi?".
 - Thành viên: sửa tên trên một dòng (số dòng không đổi) thì mọi bước con của người cũ và "Tôi là" đổi theo.
-- Ghi chú bước gập dưới tên bước; ghi chú thẻ cắt ba dòng, có nút "Xem thêm". Link http(s) trong ghi chú bấm được.
+- Ghi chú bước gập dưới tên bước. Thẻ cao theo nội dung, trong khoảng `--card-min` … `--card-max`; vượt max thì thân thẻ
+  bị cắt, mờ dần, nút "Xem thêm" mở cả thẻ. Link http(s) trong ghi chú bấm được.
 - Nhật ký quyết định: sửa và xoá được; hiện theo ngày, mới nhất trước.
 - Nhắc sao lưu: có thay đổi chưa sao lưu từ ≥ 3 ngày thì nút "Chưa sao lưu N ngày" / "Chưa sao lưu lần nào" hiện cạnh
   Xuất; bấm là tải bản sao lưu mọi dự án. Chỉ bản sao lưu tất cả (tải hoặc chép) mới đặt lại mốc.
@@ -155,9 +163,17 @@ Nhập Markdown viết tay (dễ dãi):
 ## Giao diện
 
 - Màu, cỡ, khoảng cách chỉ ở token đầu `css/planner.css` (REPO-028); bảng màu theo trang chủ (REPO-023).
+- Dáng chung chép từ `md-annotate/` (token, thanh trên, nút, nhóm chọn, ô nhập, màn đầu ba bước, hộp thoại, toast): chép
+  vào file của project này, không link sang file của project khác. Sửa dáng thì so ảnh với md-annotate.
 - Theme theo hệ điều hành tới khi bấm nút (REPO-024), khoá `hub-theme` chung cả site.
-- Cột tên bước rộng cố định, thẻ cùng bề rộng nên các hàng thẳng cột; hàng thẻ cuộn ngang bên trong và báo còn chỗ
-  cuộn (lớp `more-left` / `more-right`). Nút "+ Bước con" luôn ở cột tên bước. ≤ 640px: tên bước nằm trên hàng thẻ.
+- Biểu tượng: một bộ `<symbol id="i-…">` trong `index.html`; HTML và `icon()` của `main.js` dùng `<use>`. Không dùng ký tự
+  unicode làm biểu tượng. Nút chỉ có biểu tượng thì có `aria-label` và `title`.
+- Đầu dự án: tên (bấm để đổi dự án), tiến độ chung, chú giải năm trạng thái kèm số bước con (đếm, không ghi tay). Chip
+  trạng thái có chữ và chấm khác hình, không chỉ khác màu. Thanh công cụ: lọc bên trái, Xuất là nút chính.
+- Cột tên bước rộng cố định, thẻ cùng bề rộng nên các hàng thẳng cột; thẻ không bị kéo cao theo thẻ cao nhất hàng.
+  Hàng thẻ cuộn ngang bên trong và báo còn chỗ cuộn (lớp `more-left` / `more-right`). Nút "Bước con" luôn ở cột tên
+  bước. ≤ 640px: tên bước nằm trên hàng thẻ.
+- Màn cảm ứng và ≤ 640px: vùng bấm của nút và chip ≥ 44px (vật nhỏ trong dòng nới bằng lớp giả); smoke đo ở 390px.
 - Trang không bao giờ cuộn ngang (smoke đo ở 390px). Tạo hay mở dự án thì về đầu trang, không cuộn theo focus.
 
 ## Cổng: `sh step-planner/tools/check.sh`
@@ -166,6 +182,8 @@ Nhập Markdown viết tay (dễ dãi):
 - `node --check` cho `js/*.js`; `tools/test-core.mjs`: Markdown và JSON đi rồi về, Markdown viết tay, JSON sai khuôn,
   ngày, tên trùng, đổi tên người làm, tiến độ.
 - `tools/smoke.cjs` (cổng tự dựng máy chủ tạm; thiếu playwright thì bỏ qua, CI chạy ở job smoke): mọi mẫu, thêm / sửa /
-  xoá / hoàn tác (nút, Ctrl+Z), nút và kéo thả, lọc và thêm khi lọc, Esc có chữ chưa lưu, đổi tên thành viên, quay lại,
-  nhật ký, tải lại, xuất → nhập, thay dự án + hoàn tác, JSON sai khuôn, nhắc sao lưu, hai tab, 390px, bộ nhớ bị chặn,
-  dữ liệu hỏng, lỗi console. Chạy tay: `node step-planner/tools/smoke.cjs http://127.0.0.1:8347/step-planner/`.
+  xoá / hoàn tác (nút, Ctrl+Z), nút và kéo thả, tô sau khi dời (nút, Alt + mũi tên, kéo thả, bước) + hoàn tác, thẻ cao
+  theo nội dung và dừng ở max-height, "Xem thêm", lọc và thêm khi lọc, Esc có chữ chưa lưu, đổi tên thành viên, cần làm
+  lại (băng, bỏ đánh dấu, dòng `Quay lại:` khi xuất), mẹo tắt được, nhật ký, tải lại, xuất → nhập, thay dự án + hoàn tác,
+  JSON sai khuôn, nhắc sao lưu, hai tab, 390px (vùng bấm ≥ 44px), bộ nhớ bị chặn, dữ liệu hỏng, lỗi console. Số bước /
+  bước con của mẫu đọc từ `templates.json`, không ghi tay. Chạy tay: `node step-planner/tools/smoke.cjs http://127.0.0.1:8347/step-planner/`.

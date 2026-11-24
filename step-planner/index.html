@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
 <title>Data Science Step Planner</title>
 <meta name="description" content="Data Science Step Planner: chia dự án dữ liệu thành bước và bước con, theo dõi tiến độ, ghi quyết định, xuất Markdown.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,27 +20,43 @@
 <script type="module" src="js/main.js"></script>
 </head>
 <body>
+<!-- Bộ biểu tượng duy nhất: cùng viewBox, nét do CSS (svg.i) đặt; HTML và JS đều dùng <use href="#i-…">. -->
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 5v14M19 12l-7 7-7-7"/></symbol>
+  <symbol id="i-left" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></symbol>
+  <symbol id="i-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a1 1 0 0 1 1-1h9"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></symbol>
+  <symbol id="i-redo" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M2 20v-1a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v1M16 4.1a4 4 0 0 1 0 7.8M22 20v-1a5 5 0 0 0-3-4.6"/></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 15V4M8 8l4-4 4 4M5 20h14"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11M8 11l4 4 4-4M5 20h14"/></symbol>
+  <symbol id="i-hint" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.7.5 1.1 1.3 1.1 2.1V16h5v-.1c0-.8.4-1.6 1.1-2.1A6 6 0 0 0 12 3z"/></symbol>
+  <symbol id="i-board" viewBox="0 0 24 24"><rect x="3" y="4" width="5" height="16" rx="1.5"/><rect x="10" y="4" width="5" height="11" rx="1.5"/><rect x="17" y="4" width="4" height="7" rx="1.5"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4 7 7M17 17l1.6 1.6M18.6 5.4 17 7M7 17l-1.6 1.6"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.8 6.8 0 0 0 10.5 10.5Z"/></symbol>
+</svg>
+
 <a class="skip" href="#board">Bỏ qua tới bảng</a>
 <a class="skip" href="#log">Tới nhật ký</a>
 
-<header class="top">
-  <a class="icon-btn" href="../" aria-label="Về trang chủ">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
-  </a>
-  <div class="top-name">
-    <p class="brand">Data Science Step Planner</p>
-    <button type="button" class="ws-btn" id="ws-btn" aria-haspopup="dialog" aria-label="Dự án đang mở, bấm để đổi">
-      <span class="ws-name" id="ws-name">Chưa có dự án</span>
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+<header class="bar">
+  <div class="wrap bar-in">
+    <a class="brand" href="../" aria-label="Về trang chủ">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-txt"><span class="brand-own">vudat081299 / </span><b>step-planner</b></span>
+    </a>
+    <span class="bar-sp"></span>
+    <button type="button" class="icon-btn" id="theme-btn" aria-label="Đổi giao diện sáng/tối" title="Sáng / tối">
+      <svg class="i theme-moon" aria-hidden="true"><use href="#i-moon"/></svg>
+      <svg class="i theme-sun" aria-hidden="true"><use href="#i-sun"/></svg>
     </button>
   </div>
-  <div class="overall" id="overall" hidden>
-    <span class="overall-text" id="overall-text"></span>
-    <span class="bar" aria-hidden="true"><i id="overall-bar"></i></span>
-  </div>
-  <button type="button" class="icon-btn" id="theme-btn" aria-label="Đổi giao diện sáng/tối">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16z" class="fill"/></svg>
-  </button>
 </header>
 
 <div class="banner" id="file-note" hidden>
@@ -52,74 +69,120 @@
 <div class="banner" id="banner" role="alert" hidden></div>
 
 <main class="wrap" id="app" hidden>
+  <header class="proj">
+    <div class="proj-name">
+      <p class="proj-k">Data Science Step Planner</p>
+      <h1 class="top-name">
+        <button type="button" class="ws-btn" id="ws-btn" aria-haspopup="dialog" title="Đổi, tạo, đổi tên dự án">
+          <span class="ws-name" id="ws-name">Chưa có dự án</span>
+          <span class="sr">— đổi dự án</span>
+          <svg class="i" aria-hidden="true"><use href="#i-chev"/></svg>
+        </button>
+      </h1>
+    </div>
+    <div class="overall" id="overall" hidden>
+      <div class="overall-row">
+        <span class="overall-text" id="overall-text"></span>
+        <span class="bar-prog" aria-hidden="true"><i id="overall-bar"></i></span>
+      </div>
+      <ul class="legend" id="legend" aria-label="Số bước con theo trạng thái"></ul>
+    </div>
+  </header>
+
+  <div class="hint" id="hint" hidden>
+    <svg class="i" aria-hidden="true"><use href="#i-hint"/></svg>
+    <p><b>Mẹo:</b> bấm thẻ để sửa · bấm chip trạng thái để đổi
+      <span class="only-mouse">· kéo thẻ, hoặc Alt + ← → trên tên thẻ, để dời</span><span class="only-touch">· dời bằng nút mũi tên trên thẻ</span></p>
+    <button type="button" class="icon-btn" id="hint-off" aria-label="Ẩn mẹo" title="Ẩn mẹo">
+      <svg class="i" aria-hidden="true"><use href="#i-x"/></svg>
+    </button>
+  </div>
+
   <section class="tools" aria-label="Lọc và công cụ">
-    <label class="field search">
+    <label class="search">
+      <svg class="i" aria-hidden="true"><use href="#i-search"/></svg>
       <span class="sr">Tìm</span>
-      <input type="search" id="q" placeholder="Tìm bước, người, ghi chú" autocomplete="off">
+      <input type="search" class="input" id="q" placeholder="Tìm bước, người, ghi chú" autocomplete="off">
     </label>
-    <label class="field">
+    <label class="owner">
       <span class="sr">Người làm</span>
-      <select id="owner-filter"></select>
+      <select class="input" id="owner-filter"></select>
     </label>
     <span class="filter-note" id="filter-note" role="status"></span>
     <span class="tools-gap"></span>
-    <button type="button" class="btn" id="people-btn">Thành viên</button>
-    <button type="button" class="btn" id="import-btn">Nhập</button>
-    <button type="button" class="btn" id="export-btn">Xuất</button>
-    <button type="button" class="btn warn" id="backup-nudge" hidden></button>
+    <div class="tool-btns">
+      <button type="button" class="btn quiet" id="people-btn"><svg class="i" aria-hidden="true"><use href="#i-users"/></svg>Thành viên</button>
+      <button type="button" class="btn quiet" id="import-btn"><svg class="i" aria-hidden="true"><use href="#i-upload"/></svg>Nhập</button>
+      <button type="button" class="btn warn" id="backup-nudge" hidden></button>
+      <button type="button" class="btn go" id="export-btn"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Xuất</button>
+    </div>
   </section>
 
   <details class="ws-notes" id="ws-notes">
-    <summary>Ghi chú dự án <span class="muted" id="ws-notes-hint"></span></summary>
+    <summary><svg class="i" aria-hidden="true"><use href="#i-chev"/></svg>Ghi chú dự án <span class="muted" id="ws-notes-hint"></span></summary>
     <p class="notes-text" id="ws-notes-text"></p>
-    <button type="button" class="btn" id="ws-notes-edit">Sửa ghi chú</button>
+    <button type="button" class="btn small" id="ws-notes-edit">Sửa ghi chú</button>
   </details>
 
   <div class="board" id="board" tabindex="-1"></div>
-  <button type="button" class="btn add-step" id="add-step">+ Thêm bước</button>
+  <button type="button" class="add-step" id="add-step"><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg>Thêm bước</button>
 
   <section class="log" id="log" tabindex="-1" aria-labelledby="log-title">
     <h2 id="log-title">Nhật ký quyết định</h2>
+    <p class="muted">Ghi điều đã chốt và vì sao, để sau này không phải nhớ.</p>
     <form class="log-form" id="log-form">
       <label class="field"><span>Ngày</span><input type="date" id="log-date" required></label>
       <label class="field grow"><span>Quyết định</span><input type="text" id="log-decision" required maxlength="300"></label>
       <label class="field full"><span>Vì sao</span><textarea id="log-why" rows="2"></textarea></label>
-      <button type="submit" class="btn primary">Ghi</button>
+      <button type="submit" class="btn go">Ghi</button>
     </form>
     <ol class="log-list" id="log-list"></ol>
   </section>
 </main>
 
 <section class="start wrap" id="start" hidden aria-labelledby="start-title">
-  <h1 id="start-title">Data Science Step Planner</h1>
-  <p class="muted">Tạo dự án từ một mẫu. Dữ liệu lưu trong trình duyệt này; sao lưu JSON để giữ hoặc chuyển máy.</p>
+  <h1 class="page-h" id="start-title">Data Science Step Planner</h1>
+  <div class="start-card">
+    <span class="start-icon" aria-hidden="true"><svg class="i"><use href="#i-board"/></svg></span>
+    <h2>Chia dự án thành bước và bước con</h2>
+    <p>Mỗi bước là một hàng, mỗi bước con là một thẻ. Theo dõi trạng thái, người làm, hạn; ghi quyết định; xuất Markdown.</p>
+    <ol class="how" aria-label="Cách dùng">
+      <li><span class="how-n">1</span><span><b>Chọn mẫu</b> bên dưới, hoặc nhập file</span></li>
+      <li><span class="how-n">2</span><span><b>Bấm thẻ</b> để sửa, <b>bấm chip</b> để đổi trạng thái</span></li>
+      <li><span class="how-n">3</span><span><b>Xuất</b> Markdown để chia sẻ, sao lưu JSON để giữ</span></li>
+    </ol>
+  </div>
+  <h2 class="sec-h">Chọn mẫu</h2>
   <div class="tpl-list" id="start-templates"></div>
-  <p><button type="button" class="btn" id="start-import">Nhập từ file</button></p>
+  <div class="start-foot">
+    <button type="button" class="btn" id="start-import"><svg class="i" aria-hidden="true"><use href="#i-upload"/></svg>Nhập từ file</button>
+    <span class="muted">Dữ liệu lưu trong trình duyệt này; sao lưu JSON để giữ hoặc chuyển máy.</span>
+  </div>
 </section>
 
 <div class="toast" id="toast" role="status" aria-live="polite" hidden>
   <span id="toast-text"></span>
-  <button type="button" class="btn" id="toast-undo" aria-keyshortcuts="Control+Z Meta+Z">Hoàn tác</button>
+  <button type="button" class="toast-btn" id="toast-undo" aria-keyshortcuts="Control+Z Meta+Z">Hoàn tác</button>
 </div>
 
 <datalist id="people-list"></datalist>
 
 <!-- Dự án: danh sách, mở, đổi tên, nhân bản, xoá, tạo mới -->
 <dialog class="dlg" id="dlg-ws" aria-labelledby="dlg-ws-title">
-  <div class="dlg-head"><h2 id="dlg-ws-title">Dự án</h2><button type="button" class="icon-btn" data-close aria-label="Đóng">×</button></div>
+  <div class="dlg-head"><h2 id="dlg-ws-title">Dự án</h2><button type="button" class="icon-btn" data-close aria-label="Đóng" title="Đóng"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button></div>
   <ul class="ws-list" id="ws-list"></ul>
-  <h3>Tạo mới</h3>
+  <h3>Tạo dự án mới</h3>
   <form id="ws-new" class="stack">
     <label class="field"><span>Tên (để trống thì lấy tên mẫu)</span><input type="text" id="ws-new-name" maxlength="120"></label>
     <fieldset class="tpl-list" id="ws-new-templates"><legend>Mẫu</legend></fieldset>
-    <div class="row-end"><button type="submit" class="btn primary">Tạo</button></div>
+    <div class="row-end"><button type="submit" class="btn go">Tạo</button></div>
   </form>
 </dialog>
 
 <!-- Sửa / thêm bước con -->
 <dialog class="dlg" id="dlg-sub" aria-labelledby="dlg-sub-title">
   <form method="dialog" id="sub-form" class="stack">
-    <div class="dlg-head"><h2 id="dlg-sub-title">Bước con</h2><button type="button" class="icon-btn" data-close aria-label="Đóng">×</button></div>
+    <div class="dlg-head"><h2 id="dlg-sub-title">Bước con</h2><button type="button" class="icon-btn" data-close aria-label="Đóng" title="Đóng"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button></div>
     <label class="field"><span>Tên</span><textarea name="title" class="grow-title" rows="1" required maxlength="300"></textarea></label>
     <div class="grid2">
       <label class="field"><span>Trạng thái</span><select name="status"></select></label>
@@ -131,11 +194,11 @@
     <label class="field"><span>Xong khi</span><input type="text" name="doneWhen" maxlength="300"></label>
     <label class="field"><span>Ghi chú</span><textarea name="notes" rows="4"></textarea></label>
     <div class="row-end">
-      <button type="button" class="btn danger" id="sub-del">Xoá</button>
-      <button type="button" class="btn" id="sub-dup">Nhân bản</button>
+      <button type="button" class="btn quiet danger" id="sub-del"><svg class="i" aria-hidden="true"><use href="#i-trash"/></svg>Xoá</button>
+      <button type="button" class="btn quiet" id="sub-dup"><svg class="i" aria-hidden="true"><use href="#i-copy"/></svg>Nhân bản</button>
       <span class="tools-gap"></span>
       <button type="button" class="btn" data-close>Huỷ</button>
-      <button type="submit" class="btn primary" value="save">Lưu</button>
+      <button type="submit" class="btn go" value="save">Lưu</button>
     </div>
   </form>
 </dialog>
@@ -143,33 +206,36 @@
 <!-- Sửa / thêm bước -->
 <dialog class="dlg" id="dlg-step" aria-labelledby="dlg-step-title">
   <form method="dialog" id="step-form" class="stack">
-    <div class="dlg-head"><h2 id="dlg-step-title">Bước</h2><button type="button" class="icon-btn" data-close aria-label="Đóng">×</button></div>
+    <div class="dlg-head"><h2 id="dlg-step-title">Bước</h2><button type="button" class="icon-btn" data-close aria-label="Đóng" title="Đóng"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button></div>
     <label class="field"><span>Tên</span><textarea name="title" class="grow-title" rows="1" required maxlength="200"></textarea></label>
     <label class="field"><span>Vị trí</span><select name="pos"></select></label>
     <label class="field"><span>Mục tiêu</span><input type="text" name="goal" maxlength="400"></label>
     <label class="field"><span>Xong khi</span><input type="text" name="doneWhen" maxlength="400"></label>
     <label class="field"><span>Ghi chú</span><textarea name="notes" rows="4"></textarea></label>
     <div class="row-end">
-      <button type="button" class="btn danger" id="step-del">Xoá bước</button>
-      <button type="button" class="btn" id="step-revisit">Quay lại bước này…</button>
+      <button type="button" class="btn quiet danger" id="step-del"><svg class="i" aria-hidden="true"><use href="#i-trash"/></svg>Xoá bước</button>
+      <button type="button" class="btn quiet" id="step-revisit"><svg class="i" aria-hidden="true"><use href="#i-redo"/></svg>Cần làm lại…</button>
       <span class="tools-gap"></span>
       <button type="button" class="btn" data-close>Huỷ</button>
-      <button type="submit" class="btn primary" value="save">Lưu</button>
+      <button type="submit" class="btn go" value="save">Lưu</button>
     </div>
   </form>
 </dialog>
 
-<!-- Quay lại bước này -->
+<!-- Cần làm lại bước này (dữ liệu: step.revisit; Markdown: dòng "Quay lại:") -->
 <dialog class="dlg" id="dlg-revisit" aria-labelledby="dlg-revisit-title">
   <form method="dialog" id="revisit-form" class="stack">
-    <div class="dlg-head"><h2 id="dlg-revisit-title">Quay lại bước này</h2><button type="button" class="icon-btn" data-close aria-label="Đóng">×</button></div>
-    <p class="muted" id="revisit-step"></p>
-    <label class="field"><span>Vì sao phải quay lại</span><input type="text" name="reason" maxlength="300" required></label>
+    <div class="dlg-head"><h2 id="dlg-revisit-title">Cần làm lại bước này</h2><button type="button" class="icon-btn" data-close aria-label="Đóng" title="Đóng"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button></div>
+    <p class="dlg-step" id="revisit-step"></p>
+    <p class="dlg-note">Dùng khi một bước sau lộ ra vấn đề phải quay về sửa ở bước này. Ví dụ: đang dựng mô hình thì thấy thiếu
+      dữ liệu, nên đánh dấu bước "Chuẩn bị dữ liệu" cần làm lại. Hàng của bước hiện băng "Đang làm lại" tới khi bạn bấm
+      "Xong, bỏ đánh dấu".</p>
+    <label class="field"><span>Vì sao phải làm lại</span><input type="text" name="reason" maxlength="300" required placeholder="VD: mô hình lộ cột thiếu, phải điền lại"></label>
     <div class="row-end">
-      <button type="button" class="btn" id="revisit-clear">Bỏ đánh dấu</button>
+      <button type="button" class="btn quiet" id="revisit-clear">Xong, bỏ đánh dấu</button>
       <span class="tools-gap"></span>
       <button type="button" class="btn" data-close>Huỷ</button>
-      <button type="submit" class="btn primary" value="save">Đánh dấu</button>
+      <button type="submit" class="btn go" value="save">Đánh dấu cần làm lại</button>
     </div>
   </form>
 </dialog>
@@ -177,65 +243,65 @@
 <!-- Người trong dự án -->
 <dialog class="dlg" id="dlg-people" aria-labelledby="dlg-people-title">
   <form method="dialog" id="people-form" class="stack">
-    <div class="dlg-head"><h2 id="dlg-people-title">Thành viên</h2><button type="button" class="icon-btn" data-close aria-label="Đóng">×</button></div>
+    <div class="dlg-head"><h2 id="dlg-people-title">Thành viên</h2><button type="button" class="icon-btn" data-close aria-label="Đóng" title="Đóng"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button></div>
     <label class="field"><span>Mỗi dòng một người hoặc một vai. Sửa tên trên một dòng thì mọi bước con của người ấy đổi theo.</span><textarea name="people" rows="7"></textarea></label>
     <label class="field"><span>Tôi là (cho bộ lọc "Việc của tôi", chỉ lưu ở máy này)</span><select name="me"></select></label>
-    <div class="row-end"><button type="button" class="btn" data-close>Huỷ</button><button type="submit" class="btn primary" value="save">Lưu</button></div>
+    <div class="row-end"><button type="button" class="btn" data-close>Huỷ</button><button type="submit" class="btn go" value="save">Lưu</button></div>
   </form>
 </dialog>
 
 <!-- Xuất -->
 <dialog class="dlg wide" id="dlg-export" aria-labelledby="dlg-export-title">
-  <div class="dlg-head"><h2 id="dlg-export-title">Xuất</h2><button type="button" class="icon-btn" data-close aria-label="Đóng">×</button></div>
+  <div class="dlg-head"><h2 id="dlg-export-title">Xuất</h2><button type="button" class="icon-btn" data-close aria-label="Đóng" title="Đóng"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button></div>
   <div class="backup-row">
-    <button type="button" class="btn primary" id="backup-all">Sao lưu tất cả (JSON)</button>
+    <button type="button" class="btn" id="backup-all"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Sao lưu tất cả (JSON)</button>
     <span class="muted" id="backup-when"></span>
   </div>
   <fieldset class="seg" id="export-kind">
     <legend class="sr">Định dạng</legend>
-    <label><input type="radio" name="export-kind" value="md" checked> Markdown</label>
-    <label><input type="radio" name="export-kind" value="json"> JSON dự án này</label>
-    <label><input type="radio" name="export-kind" value="backup"> JSON sao lưu tất cả</label>
+    <label><input type="radio" name="export-kind" value="md" checked><span>Markdown</span></label>
+    <label><input type="radio" name="export-kind" value="json"><span>JSON dự án này</span></label>
+    <label><input type="radio" name="export-kind" value="backup"><span>JSON tất cả</span></label>
   </fieldset>
-  <label class="field"><span class="sr">Nội dung xuất</span><textarea id="export-text" rows="14" readonly spellcheck="false"></textarea></label>
+  <label class="field"><span class="sr">Nội dung xuất</span><textarea id="export-text" class="code" rows="14" readonly spellcheck="false"></textarea></label>
   <div class="row-end">
     <span class="muted" id="export-status" role="status"></span>
     <span class="tools-gap"></span>
-    <button type="button" class="btn" id="export-copy">Chép</button>
-    <button type="button" class="btn primary" id="export-download">Tải file</button>
+    <button type="button" class="btn" id="export-copy"><svg class="i" aria-hidden="true"><use href="#i-copy"/></svg>Chép</button>
+    <button type="button" class="btn go" id="export-download"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Tải file</button>
   </div>
 </dialog>
 
 <!-- Nhập -->
 <dialog class="dlg wide" id="dlg-import" aria-labelledby="dlg-import-title">
-  <div class="dlg-head"><h2 id="dlg-import-title">Nhập</h2><button type="button" class="icon-btn" data-close aria-label="Đóng">×</button></div>
+  <div class="dlg-head"><h2 id="dlg-import-title">Nhập</h2><button type="button" class="icon-btn" data-close aria-label="Đóng" title="Đóng"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button></div>
   <p class="muted">File .md hoặc .json, hoặc dán chữ.</p>
   <label class="field"><span>Chọn file</span><input type="file" id="import-file" accept=".md,.markdown,.txt,.json,text/markdown,application/json,text/plain"></label>
-  <label class="field"><span>Hoặc dán</span><textarea id="import-text" rows="10" spellcheck="false"></textarea></label>
+  <label class="field"><span>Hoặc dán</span><textarea id="import-text" class="code" rows="10" spellcheck="false"></textarea></label>
   <div class="preview" id="import-preview" role="status"></div>
   <fieldset class="seg" id="import-mode">
     <legend class="sr">Nhập vào đâu</legend>
-    <label><input type="radio" name="import-mode" value="new" checked> Tạo dự án mới</label>
-    <label><input type="radio" name="import-mode" value="replace"> Thay dự án đang mở</label>
+    <label><input type="radio" name="import-mode" value="new" checked><span>Tạo dự án mới</span></label>
+    <label><input type="radio" name="import-mode" value="replace"><span>Thay dự án đang mở</span></label>
   </fieldset>
   <div class="row-end">
     <button type="button" class="btn" data-close>Huỷ</button>
-    <button type="button" class="btn primary" id="import-go" disabled>Nhập</button>
+    <button type="button" class="btn go" id="import-go" disabled>Nhập</button>
   </div>
 </dialog>
 
 <!-- Sửa một quyết định -->
 <dialog class="dlg" id="dlg-log" aria-labelledby="dlg-log-title">
   <form method="dialog" id="log-edit-form" class="stack">
-    <div class="dlg-head"><h2 id="dlg-log-title">Sửa quyết định</h2><button type="button" class="icon-btn" data-close aria-label="Đóng">×</button></div>
+    <div class="dlg-head"><h2 id="dlg-log-title">Sửa quyết định</h2><button type="button" class="icon-btn" data-close aria-label="Đóng" title="Đóng"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button></div>
     <label class="field"><span>Ngày</span><input type="date" name="date" required></label>
     <label class="field"><span>Quyết định</span><textarea name="decision" class="grow-title" rows="1" required maxlength="300"></textarea></label>
     <label class="field"><span>Vì sao</span><textarea name="why" rows="4"></textarea></label>
     <div class="row-end">
-      <button type="button" class="btn danger" id="log-edit-del">Xoá</button>
+      <button type="button" class="btn quiet danger" id="log-edit-del"><svg class="i" aria-hidden="true"><use href="#i-trash"/></svg>Xoá</button>
       <span class="tools-gap"></span>
       <button type="button" class="btn" data-close>Huỷ</button>
-      <button type="submit" class="btn primary" value="save">Lưu</button>
+      <button type="submit" class="btn go" value="save">Lưu</button>
     </div>
   </form>
 </dialog>
@@ -243,9 +309,9 @@
 <!-- Ghi chú dự án -->
 <dialog class="dlg" id="dlg-notes" aria-labelledby="dlg-notes-title">
   <form method="dialog" id="notes-form" class="stack">
-    <div class="dlg-head"><h2 id="dlg-notes-title">Ghi chú dự án</h2><button type="button" class="icon-btn" data-close aria-label="Đóng">×</button></div>
+    <div class="dlg-head"><h2 id="dlg-notes-title">Ghi chú dự án</h2><button type="button" class="icon-btn" data-close aria-label="Đóng" title="Đóng"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button></div>
     <label class="field"><span class="sr">Ghi chú dự án</span><textarea name="notes" rows="8"></textarea></label>
-    <div class="row-end"><button type="button" class="btn" data-close>Huỷ</button><button type="submit" class="btn primary" value="save">Lưu</button></div>
+    <div class="row-end"><button type="button" class="btn" data-close>Huỷ</button><button type="submit" class="btn go" value="save">Lưu</button></div>
   </form>
 </dialog>
 
@@ -257,7 +323,7 @@
     <label class="field" id="ask-field"><span id="ask-label"></span><input type="text" id="ask-input" maxlength="120"></label>
     <div class="row-end">
       <button type="button" class="btn" data-close>Huỷ</button>
-      <button type="submit" class="btn primary" id="ask-ok" value="ok">OK</button>
+      <button type="submit" class="btn go" id="ask-ok" value="ok">OK</button>
     </div>
   </form>
 </dialog>

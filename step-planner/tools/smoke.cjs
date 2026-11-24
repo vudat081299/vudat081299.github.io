@@ -60,13 +60,39 @@ const check = (name, ok, detail = '') => {
   });
   check('tạo từ mỗi mẫu: đúng bước và bước con', s0.workspaces.length === 5 && okTpl);
   check('dự án trống: báo chưa có bước', /Chưa có bước nào/.test(await page.textContent('#board')));
+  // Số bước / bước con của CRISP-DM đọc từ templates.json, không ghi tay (mẫu đổi thì smoke theo).
+  const crisp = tplData.find((t) => t.id === 'crisp-dm');
+  const nSteps = crisp.steps.length, n1 = crisp.steps[0].subs.length, n2 = crisp.steps[1].subs.length;
+
+  // Thẻ cao theo nội dung trong khoảng min–max (dự án trống): không bị kéo cao bằng thẻ cao nhất hàng;
+  // thẻ dài chạm max thì cắt, có "Xem thêm", bấm thì mở hết.
+  await page.click('#add-step');
+  await page.fill('#step-form [name="title"]', 'Hàng thử');
+  await page.click('#step-form button[type="submit"]');
+  for (const [title, notes] of [['Ngắn', ''], ['Dài', Array.from({ length: 40 }, (_, i) => 'dòng ghi chú ' + i).join('\n')]]) {
+    await page.click('.step-head [data-act="add-sub"]');
+    await page.fill('#sub-form [name="title"]', title);
+    await page.fill('#sub-form [name="notes"]', notes);
+    await page.click('#sub-form button[type="submit"]');
+  }
+  const ch = await page.evaluate(() => {
+    const [a, b] = document.querySelectorAll('.card[data-sub]');
+    const cs = getComputedStyle(b);
+    return { a: a.getBoundingClientRect().height, b: b.getBoundingClientRect().height, min: parseFloat(cs.minHeight),
+      max: parseFloat(cs.maxHeight), cut: b.classList.contains('cut') && !a.classList.contains('cut'), more: !!b.querySelector('.more') };
+  });
+  check('thẻ cao theo nội dung, không kéo cao theo thẻ cao nhất hàng', ch.max > ch.min && ch.a >= ch.min - 1 && ch.a < ch.b - 40,
+    JSON.stringify(ch));
+  check('thẻ dài dừng ở max-height, cắt và có "Xem thêm"', Math.abs(ch.b - ch.max) < 1 && ch.cut && ch.more, JSON.stringify(ch));
+  await page.click('.card .more');
+  check('"Xem thêm" mở cả thẻ', await page.evaluate((max) => document.querySelectorAll('.card[data-sub]')[1].getBoundingClientRect().height > max + 40, ch.max));
 
   // Về CRISP-DM.
   await page.click('#ws-btn');
   await page.click('.ws-item:first-child [data-act="ws-open"]');
   check('đổi dự án: tên trên thanh trên', /CRISP-DM/.test(await page.textContent('#ws-name')));
   const nRows = await page.$$eval('.step', (r) => r.length);
-  check('mỗi bước một hàng', nRows === 6);
+  check('mỗi bước một hàng', nRows === nSteps);
   const geo = await page.evaluate(() => {
     const rows = [...document.querySelectorAll('.step')];
     const firstCards = rows.map((r) => r.querySelector('.card[data-sub]').getBoundingClientRect().left);
@@ -90,8 +116,8 @@ const check = (name, ok, detail = '') => {
   await page.click(chip);
   check('chip: chưa làm → đang làm', (await page.textContent(chip)).trim() === 'Đang làm');
   await page.click(chip);
-  check('chip: → xong, tiến độ 1/5', (await page.textContent(chip)).trim() === 'Xong'
-    && /1\/5/.test(await page.textContent('.step:nth-child(1) .prog')));
+  check(`chip: → xong, tiến độ 1/${n1}`, (await page.textContent(chip)).trim() === 'Xong'
+    && (await page.textContent('.step:nth-child(1) .prog')).includes(`1/${n1}`));
   check('việc tiếp theo dời sang 1.2', (await page.textContent('.step:nth-child(1) .card.next .num')) === '1.2');
   check('chip giữ focus sau khi bấm', await page.evaluate(() => document.activeElement?.dataset.act === 'cycle'));
 
@@ -105,30 +131,30 @@ const check = (name, ok, detail = '') => {
   await page.fill('#sub-form [name="notes"]', 'dòng 1\n\ndòng 3');
   await page.click('#sub-form button[type="submit"]');
   let ws = await cur(page);
-  const added = ws.steps[0].subs[5];
+  const added = ws.steps[0].subs[n1];
   check('thêm bước con: lưu đủ trường', added && added.status === 'blocked' && added.owner === 'Vai A' && added.due === '2026-12-01'
     && added.notes === 'dòng 1\n\ndòng 3' && added.doneWhen === 'Có kết quả');
   check('chữ người dùng không thành HTML', (await page.$$('.card img')).length === 0
-    && /<img src=x/.test(await page.textContent('.step:nth-child(1) .card[data-sub]:nth-child(6) .card-title')));
+    && /<img src=x/.test(await page.textContent(`.step:nth-child(1) .card[data-sub]:nth-child(${n1 + 1}) .card-title`)));
 
   // Sửa: chuyển sang bước 2.
-  await page.click('.step:nth-child(1) .card[data-sub]:nth-child(6) [data-act="edit-sub"]');
+  await page.click(`.step:nth-child(1) .card[data-sub]:nth-child(${n1 + 1}) [data-act="edit-sub"]`);
   await page.selectOption('#sub-form [name="step"]', ws.steps[1].id);
   await page.click('#sub-form button[type="submit"]');
   ws = await cur(page);
-  check('sửa: chuyển bước con sang bước khác', ws.steps[0].subs.length === 5 && ws.steps[1].subs.at(-1).id === added.id);
+  check('sửa: chuyển bước con sang bước khác', ws.steps[0].subs.length === n1 && ws.steps[1].subs.at(-1).id === added.id);
 
   // Nhân bản, rồi xoá + hoàn tác.
   await page.click(`.card[data-sub="${added.id}"] [data-act="sub-dup"]`);
   ws = await cur(page);
-  check('nhân bản bước con', ws.steps[1].subs.length === 7 && /bản sao/.test(ws.steps[1].subs[6].title));
-  const dupId = ws.steps[1].subs[6].id;
+  check('nhân bản bước con', ws.steps[1].subs.length === n2 + 2 && /bản sao/.test(ws.steps[1].subs[n2 + 1].title));
+  const dupId = ws.steps[1].subs[n2 + 1].id;
   await page.click(`.card[data-sub="${dupId}"] [data-act="sub-del"]`);
-  check('xoá: toast có Hoàn tác, focus ở nút Hoàn tác', await page.isVisible('#toast-undo') && (await cur(page)).steps[1].subs.length === 6
+  check('xoá: toast có Hoàn tác, focus ở nút Hoàn tác', await page.isVisible('#toast-undo') && (await cur(page)).steps[1].subs.length === n2 + 1
     && await page.evaluate(() => document.activeElement.id === 'toast-undo'));
   await page.click('#toast-undo');
   ws = await cur(page);
-  check('hoàn tác xoá bước con: về đúng chỗ', ws.steps[1].subs.length === 7 && ws.steps[1].subs[6].id === dupId);
+  check('hoàn tác xoá bước con: về đúng chỗ', ws.steps[1].subs.length === n2 + 2 && ws.steps[1].subs[n2 + 1].id === dupId);
 
   // Sắp xếp bằng nút.
   const order = async () => (await cur(page)).steps[1].subs.map((x) => x.id);
@@ -137,25 +163,54 @@ const check = (name, ok, detail = '') => {
   const afterLeft = await order();
   check('nút sang trái', afterLeft[0] === before[1] && afterLeft[1] === before[0]);
   check('focus ở lại nút vừa bấm', await page.evaluate(() => document.activeElement?.dataset.act === 'sub-left' || document.activeElement?.dataset.act === 'edit-sub'));
+  const marks = () => page.evaluate(() => ({
+    moved: [...document.querySelectorAll('.moved')].map((e) => e.dataset.sub || e.dataset.step),
+    swapped: [...document.querySelectorAll('.swapped')].map((e) => e.dataset.sub || e.dataset.step),
+    toast: document.getElementById('toast').hidden ? '' : document.getElementById('toast-text').textContent,
+  }));
+  let mk = await marks();
+  check('dời bằng nút: thẻ vừa dời tô nổi, thẻ bị đổi chỗ tô nhẹ, toast "Đã dời 2.2 → 2.1"',
+    mk.moved.join() === before[1] && mk.swapped.join() === before[0] && /^Đã dời 2\.2 → 2\.1 · /.test(mk.toast), JSON.stringify(mk));
+  await page.focus(subSel(before[1], 'edit-sub'));
+  await page.keyboard.press('Alt+ArrowRight');
+  await page.keyboard.press('Alt+ArrowRight');
+  mk = await marks();
+  check('Alt + →: tô thẻ vừa dời, toast nói chỗ cũ → chỗ mới, focus giữ trên thẻ',
+    (await order())[2] === before[1] && mk.moved.join() === before[1] && mk.swapped.join() === before[2] && /^Đã dời 2\.2 → 2\.3 · /.test(mk.toast)
+    && await page.evaluate((id) => document.activeElement?.closest('.card')?.dataset.sub === id, before[1]), JSON.stringify(mk));
+  await page.keyboard.press('Control+z');
+  check('hoàn tác dời (Ctrl+Z): về chỗ cũ', JSON.stringify(await order()) === JSON.stringify(before));
+  await page.waitForFunction(() => !document.querySelector('.moved, .swapped'), null, { timeout: 6000 }).catch(() => {});
+  check('đánh dấu vừa dời tự tắt sau vài giây', !(await page.$('.moved, .swapped')));
+  await page.click(`.card[data-sub="${before[1]}"] [data-act="sub-left"]`);
   await page.keyboard.press('Tab');
   const stepsBefore = (await cur(page)).steps.map((s) => s.id);
   await page.click(`.step[data-step="${stepsBefore[1]}"] [data-act="step-up"]`);
   const stepsAfter = (await cur(page)).steps.map((s) => s.id);
   check('nút đưa bước lên', stepsAfter[0] === stepsBefore[1] && stepsAfter[1] === stepsBefore[0]);
+  mk = await marks();
+  check('dời bước: hàng vừa dời tô nổi, hàng bị đổi chỗ tô nhẹ, toast "Đã dời bước 2 → 1"',
+    mk.moved.join() === stepsBefore[1] && mk.swapped.join() === stepsBefore[0] && /^Đã dời bước 2 → 1 · /.test(mk.toast), JSON.stringify(mk));
   await page.click(`.step[data-step="${stepsBefore[1]}"] [data-act="step-down"]`);
 
-  // Kéo thả: bước con cuối của hàng 1 lên đầu hàng 1; bước 3 lên trên bước 1.
+  // Kéo thả: bước con cuối của hàng 1 lên đầu hàng 1; bước 3 lên trên bước 1. Khung cao để nguồn và đích cùng
+  // trong tầm nhìn (kéo HTML5 của Playwright không cuộn trang giữa chừng); hàng của mẫu dài thì 900px không đủ.
+  await page.setViewportSize({ width: 1280, height: 2400 });
   const r1 = (await cur(page)).steps[0].subs.map((x) => x.id);
   await page.dragAndDrop(`.card[data-sub="${r1[2]}"]`, `.card[data-sub="${r1[0]}"]`, { targetPosition: { x: 5, y: 20 } });
   const r1b = (await cur(page)).steps[0].subs.map((x) => x.id);
-  check('kéo thả bước con trong hàng', r1b[0] === r1[2] && r1b.length === 5, r1b.indexOf(r1[2]) + '');
+  check('kéo thả bước con trong hàng', r1b[0] === r1[2] && r1b.length === n1, r1b.indexOf(r1[2]) + '');
   const st = (await cur(page)).steps.map((s) => s.id);
   await page.dragAndDrop(`.step[data-step="${st[2]}"] .step-head`, `.step[data-step="${st[0]}"] .step-head`, { targetPosition: { x: 10, y: 5 } });
   const st2 = (await cur(page)).steps.map((s) => s.id);
   check('kéo thả bước', st2[0] === st[2] && st2[1] === st[0], st2.indexOf(st[2]) + '');
   const r2 = (await cur(page)).steps[2].subs.map((x) => x.id);
   await page.dragAndDrop(`.card[data-sub="${r2[0]}"]`, `.step[data-step="${st2[0]}"] .card.add`);
+  const mkd = await marks();
   check('kéo thả bước con sang bước khác', (await cur(page)).steps[0].subs.at(-1).id === r2[0]);
+  check('kéo thả: thẻ vừa thả tô nổi, toast "Đã dời 3.1 → 1.N"', mkd.moved.join() === r2[0]
+    && new RegExp(`^Đã dời 3\\.1 → 1\\.${(await cur(page)).steps[0].subs.length} · `).test(mkd.toast), JSON.stringify(mkd));
+  await page.setViewportSize({ width: 1280, height: 900 });
 
   // Thêm, sửa, xoá bước + hoàn tác.
   await page.click('#add-step');
@@ -163,27 +218,39 @@ const check = (name, ok, detail = '') => {
   await page.fill('#step-form [name="goal"]', 'Mục tiêu mới');
   await page.click('#step-form button[type="submit"]');
   ws = await cur(page);
-  check('thêm bước', ws.steps.length === 7 && ws.steps[6].title === 'Bước mới' && ws.steps[6].goal === 'Mục tiêu mới');
-  await page.click(`.step[data-step="${ws.steps[6].id}"] [data-act="edit-step"]`);
+  check('thêm bước', ws.steps.length === nSteps + 1 && ws.steps[nSteps].title === 'Bước mới' && ws.steps[nSteps].goal === 'Mục tiêu mới');
+  await page.click(`.step[data-step="${ws.steps[nSteps].id}"] [data-act="edit-step"]`);
   await page.fill('#step-form [name="title"]', 'Bước đổi tên');
   await page.click('#step-form button[type="submit"]');
-  check('sửa bước', (await cur(page)).steps[6].title === 'Bước đổi tên');
+  check('sửa bước', (await cur(page)).steps[nSteps].title === 'Bước đổi tên');
   const s2id = ws.steps[1].id;
   await page.click(`.step[data-step="${s2id}"] [data-act="del-step"]`);
-  check('xoá bước có bước con: hỏi lại trước', await page.isVisible('#dlg-ask') && (await cur(page)).steps.length === 7);
+  check('xoá bước có bước con: hỏi lại trước', await page.isVisible('#dlg-ask') && (await cur(page)).steps.length === nSteps + 1);
   await page.click('#ask-ok');
-  await page.waitForFunction(() => JSON.parse(localStorage.getItem('stepPlanner.v1')).workspaces[0].steps.length === 6, null, { timeout: 3000 }).catch(() => {});
-  check('xoá bước', (await cur(page)).steps.length === 6);
+  await page.waitForFunction((n) => JSON.parse(localStorage.getItem('stepPlanner.v1')).workspaces[0].steps.length === n, nSteps, { timeout: 3000 }).catch(() => {});
+  check('xoá bước', (await cur(page)).steps.length === nSteps);
   await page.keyboard.press('Control+z');
   await page.waitForTimeout(50);
   check('hoàn tác xoá bước bằng Ctrl+Z', (await cur(page)).steps[1].id === s2id);
 
-  // Quay lại bước này.
-  await page.click(`.step[data-step="${s2id}"] .acts [data-act="revisit"]`);
+  // Cần làm lại bước này (step.revisit): nút có chữ, hộp có câu giải thích, băng "Đang làm lại · ngày · lý do", bỏ đánh dấu.
+  const revBtn = `.step[data-step="${s2id}"] .acts [data-act="revisit"]`;
+  check('cần làm lại: nút có chữ', (await page.textContent(revBtn)).trim() === 'Cần làm lại');
+  await page.click(revBtn);
+  check('cần làm lại: hộp có giải thích và ví dụ', /Ví dụ/.test(await page.textContent('#dlg-revisit'))
+    && !!(await page.getAttribute('#revisit-form [name="reason"]', 'placeholder')));
   await page.fill('#revisit-form [name="reason"]', 'EDA lộ cột thiếu');
   await page.click('#revisit-form button[type="submit"]');
-  check('quay lại: badge có lý do', /Quay lại: EDA lộ cột thiếu/.test(await page.textContent(`.step[data-step="${s2id}"] .badge`))
+  const band = `.step[data-step="${s2id}"] .revisit-band`;
+  check('cần làm lại: băng "Đang làm lại · ngày · lý do", nút bỏ đánh dấu',
+    /^Đang làm lại · \d\d\/\d\d\/\d{4} · EDA lộ cột thiếu$/.test((await page.textContent(`${band} .badge`)).trim())
+    && /Xong, bỏ đánh dấu/.test(await page.textContent(band))
     && (await cur(page)).steps[1].revisit.reason === 'EDA lộ cột thiếu');
+  await page.click(`${band} [data-act="revisit-clear"]`);
+  check('cần làm lại: "Xong, bỏ đánh dấu" xoá đánh dấu và băng', (await cur(page)).steps[1].revisit === null && !(await page.$(band)));
+  await page.click(revBtn);
+  await page.fill('#revisit-form [name="reason"]', 'EDA lộ cột thiếu');
+  await page.click('#revisit-form button[type="submit"]');
 
   // Người, lọc việc của tôi, tìm kiếm.
   await page.click('#people-btn');
@@ -222,10 +289,16 @@ const check = (name, ok, detail = '') => {
   check('nhật ký: sửa được, xếp lại theo ngày', (await cur(page)).log.some((l) => l.decision === 'Quyết định hai (sửa)' && l.date === '2020-01-01')
     && /sửa/.test(await page.textContent('.log-item:last-child .log-decision')));
 
+  // Mẹo cho người mới: tắt được, nhớ qua lần tải lại.
+  check('mẹo người mới hiện lúc đầu', await page.isVisible('#hint'));
+  await page.click('#hint-off');
+  check('tắt mẹo: ẩn ngay', !(await page.isVisible('#hint')));
+
   // Tải lại: còn nguyên, mở đúng dự án.
   const beforeReload = await cur(page);
   await page.reload();
   await page.waitForSelector('#app:not([hidden]) .step');
+  check('tắt mẹo: vẫn ẩn sau khi tải lại', !(await page.isVisible('#hint')));
   const afterReload = await cur(page);
   check('tải lại: giữ dữ liệu và dự án đang mở', JSON.stringify(beforeReload) === JSON.stringify(afterReload)
     && /CRISP-DM/.test(await page.textContent('#ws-name')));
@@ -236,6 +309,7 @@ const check = (name, ok, detail = '') => {
   const md = fs.readFileSync(await dl.path(), 'utf8');
   check('xuất Markdown: tải file .md', /\.md$/.test(dl.suggestedFilename()) && md.startsWith('# Dự án Data Science'));
   check('Markdown có dấu trạng thái, owner, hạn', /- \[x\] /.test(md) && /- \[!\] .* · `@Vai A` · hạn 2026-12-01/.test(md) && /## Nhật ký quyết định/.test(md));
+  check('Markdown giữ dòng "Quay lại:" của bước cần làm lại', /\nQuay lại: \d{4}-\d\d-\d\d · EDA lộ cột thiếu\n/.test(md));
   await page.click('#export-copy');
   const clip = await page.evaluate(() => navigator.clipboard.readText());
   check('chép Markdown vào clipboard', clip === md);
@@ -449,6 +523,24 @@ const check = (name, ok, detail = '') => {
   check('390px: không tràn ngang trang', (await hOverflow(m.page)) === 0, String(await hOverflow(m.page)));
   check('390px: tên bước nằm trên hàng bước con, hàng cuộn ngang bên trong', mob.stacked && mob.scrolls && mob.whole);
   check('390px: lề 16px', Math.round(mob.left) === 16, String(mob.left));
+  const small = await m.page.evaluate(() => {
+    const bad = [];
+    const els = document.querySelectorAll('.step:first-child .card[data-sub]:first-child button:not([data-act="edit-sub"]),'
+      + ' .step:first-child .step-head button, .tools button, #theme-btn, #hint-off, #ws-btn, .ws-notes summary');
+    for (const el of els) {
+      if (el.offsetParent === null) continue;
+      el.scrollIntoView({ block: 'center', inline: 'center' });
+      const r = el.getBoundingClientRect();
+      const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+      const at = (x, y) => { const t = document.elementFromPoint(x, y); return !!t && (t === el || el.contains(t)); };
+      const tall = r.height >= 44 || (at(cx, cy - 21.5) && at(cx, cy + 21.5));
+      const wide = r.width >= 44 || (at(cx - 21.5, cy) && at(cx + 21.5, cy));
+      if (!tall || !wide) bad.push(`${el.dataset.act || el.id || el.className} ${Math.round(r.width)}x${Math.round(r.height)}`);
+    }
+    window.scrollTo(0, 0);
+    return bad;
+  });
+  check('390px: vùng bấm ≥ 44px (chip, nút thẻ, nút bước, công cụ)', small.length === 0, small.join(', '));
   const topH = await m.page.evaluate(() => [document.querySelector('.top-name').getBoundingClientRect().height,
     document.querySelector('.ws-name').getBoundingClientRect().height]);
   check('390px: tên dự án một dòng, cắt bớt', topH[1] < 40 && topH[0] < 70, topH.join(','));
@@ -476,7 +568,7 @@ const check = (name, ok, detail = '') => {
   await bp.waitForSelector('#start:not([hidden]) .tpl');
   await bp.click('#start .tpl[data-tpl="crisp-dm"]');
   check('bộ nhớ bị chặn: banner, vẫn dùng được', /chặn bộ nhớ/.test(await bp.textContent('#banner')) && await bp.isVisible('#banner')
-    && (await bp.$$('.step')).length === 6 && !bErr.length, bErr.join(' | '));
+    && (await bp.$$('.step')).length === nSteps && !bErr.length, bErr.join(' | '));
   await blocked.close();
 
   /* ── Dữ liệu lưu bị hỏng ── */

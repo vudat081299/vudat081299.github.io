@@ -28,29 +28,22 @@ function withLinks(text) {
     : part));
 }
 
-const ICONS = {
-  up: 'M12 19V5M5 12l7-7 7 7',
-  down: 'M12 5v14M19 12l-7 7-7-7',
-  left: 'M19 12H5M12 19l-7-7 7-7',
-  right: 'M5 12h14M12 5l7 7-7 7',
-  copy: 'M9 9h11v11H9zM5 15H4V4h11v1',
-  trash: 'M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3',
-  revisit: 'M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5',
-};
-/** @param {keyof typeof ICONS} name */
+/* Biểu tượng: một bộ duy nhất, là các <symbol id="i-…"> trong index.html; nét và cỡ do CSS (svg.i) đặt. */
+/** @param {string} name */
 function icon(name) {
-  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  svg.setAttribute('viewBox', '0 0 24 24');
+  const NS = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(NS, 'svg');
+  svg.setAttribute('class', 'i');
   svg.setAttribute('aria-hidden', 'true');
-  const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-  p.setAttribute('d', ICONS[name]);
-  svg.append(p);
+  const use = document.createElementNS(NS, 'use');
+  use.setAttribute('href', '#i-' + name);
+  svg.append(use);
   return svg;
 }
 /* Nút phụ (dời, nhân bản, xoá) không nằm trong vòng Tab: bàn phím làm cùng việc ấy trong hộp sửa và bằng Alt + mũi tên. */
-/** @param {keyof typeof ICONS} name @param {string} label @param {string} act @param {boolean} [disabled] */
+/** @param {string} name @param {string} label @param {string} act @param {boolean} [disabled] */
 const iconBtn = (name, label, act, disabled = false) =>
-  h('button', { type: 'button', class: 'icon-btn', 'data-act': act, 'aria-label': label, title: label, disabled, tabindex: '-1' }, icon(name));
+  h('button', { type: 'button', class: 'icon-btn aux', 'data-act': act, 'aria-label': label, title: label, disabled, tabindex: '-1' }, icon(name));
 
 /* ── Trạng thái ── */
 
@@ -120,7 +113,8 @@ const stepSel = (/** @type {string} */ id, /** @type {string} */ act) => `.step[
 let toastUndo = null;
 let toastTimer = 0;
 let toastBack = '';
-function toast(/** @type {string} */ text, /** @type {null | (() => void)} */ undo = null, back = '') {
+/* Xoá: focus nhảy vào Hoàn tác. Dời chỗ (focusUndo = false): focus ở lại thẻ vừa dời, Ctrl/Cmd + Z vẫn hoàn tác. */
+function toast(/** @type {string} */ text, /** @type {null | (() => void)} */ undo = null, back = '', focusUndo = true) {
   $('toast-text').textContent = text;
   $('toast-undo').hidden = !undo;
   toastUndo = undo;
@@ -128,7 +122,7 @@ function toast(/** @type {string} */ text, /** @type {null | (() => void)} */ un
   $('toast').hidden = false;
   clearTimeout(toastTimer);
   toastTimer = window.setTimeout(hideToast, undo ? 15000 : 4000);
-  if (undo) $('toast-undo').focus();
+  if (undo && focusUndo) $('toast-undo').focus();
 }
 function hideToast(refocusAfter = true) {
   const had = document.activeElement === $('toast-undo');
@@ -166,11 +160,21 @@ function render() {
   const o = C.overall(ws);
   $('overall-text').textContent = `${o.done}/${o.total} xong · ${o.pct}%`;
   $('overall-bar').style.width = o.pct + '%';
+  renderLegend(ws);
+  $('hint').hidden = S.hintHidden();
   renderOwnerFilter(ws);
   renderWsNotes(ws);
   renderBoard(ws);
   renderLog(ws);
   $('people-list').replaceChildren(...ownersOf(ws).map((p) => h('option', { value: p })));
+}
+
+/** Chú giải năm trạng thái (chip mẫu + chữ + số bước con), cũng là tiến độ chi tiết của dự án. @param {any} ws */
+function renderLegend(ws) {
+  const n = Object.fromEntries(C.STATUSES.map((st) => [st, 0]));
+  for (const s of ws.steps) for (const x of s.subs) n[x.status]++;
+  $('legend').replaceChildren(...C.STATUSES.map((st) => h('li', {},
+    h('span', { class: `chip st-${st}` }, C.STATUS_LABEL[st]), h('b', {}, String(n[st])))));
 }
 
 /** Người trong `people`, rồi người được giao việc mà chưa có trong danh sách. @param {any} ws */
@@ -232,25 +236,32 @@ function renderBoard(/** @type {any} */ ws) {
     shown += visible.length;
     const prog = C.progress(step.subs);
     const last = step.subs.length - 1;
+    const done = prog.total > 0 && prog.done === prog.total;
     const head = h('div', { class: 'step-head', draggable: filtering ? null : 'true' },
       h('div', { class: 'step-top' },
         h('span', { class: 'step-num', 'aria-hidden': 'true' }, String(i + 1)),
         h('h2', { class: 'step-title', id: 'st-' + step.id },
           h('button', { type: 'button', class: 'link', 'data-act': 'edit-step', 'aria-label': `Bước ${i + 1}: ${step.title}. Sửa`, 'aria-keyshortcuts': 'Alt+ArrowUp Alt+ArrowDown' }, step.title))),
-      step.revisit && h('button', { type: 'button', class: 'badge', 'data-act': 'revisit', title: step.revisit.date ? 'Đánh dấu ngày ' + fmtDate(step.revisit.date) : null },
-        'Quay lại' + (step.revisit.reason ? ': ' + step.revisit.reason : '')),
       step.goal && h('p', { class: 'step-goal' }, step.goal),
       step.doneWhen && h('p', { class: 'step-done' }, h('span', { class: 'lbl' }, 'Xong khi '), step.doneWhen),
       step.notes && h('details', { class: 'step-notes' }, h('summary', {}, 'Ghi chú'), h('p', { class: 'notes-text' }, withLinks(step.notes))),
       h('div', { class: 'prog' },
         h('span', {}, `${prog.done}/${prog.total}`, h('span', { class: 'sr' }, ' bước con xong')),
-        h('span', { class: 'bar', 'aria-hidden': 'true' }, barFill(prog.pct))),
+        h('span', { class: 'bar-prog', 'aria-hidden': 'true' }, barFill(prog.pct))),
       h('div', { class: 'acts' },
-        h('button', { type: 'button', class: 'btn small', 'data-act': 'add-sub' }, '+ Bước con'),
+        h('button', { type: 'button', class: 'btn small', 'data-act': 'add-sub' }, icon('plus'), 'Bước con'),
+        !step.revisit && h('button', { type: 'button', class: 'btn small quiet aux', 'data-act': 'revisit', tabindex: '-1', title: 'Đánh dấu bước này cần làm lại' }, icon('redo'), 'Cần làm lại'),
         !filtering && iconBtn('up', 'Đưa bước lên', 'step-up', i === 0),
         !filtering && iconBtn('down', 'Đưa bước xuống', 'step-down', i === ws.steps.length - 1),
-        iconBtn('revisit', 'Quay lại bước này', 'revisit'),
         iconBtn('trash', 'Xoá bước', 'del-step')));
+    /* Băng "Đang làm lại": ngày đánh dấu, lý do (bấm để sửa), nút bỏ đánh dấu. */
+    const band = step.revisit && h('div', { class: 'revisit-band' },
+      icon('redo'),
+      h('button', { type: 'button', class: 'badge', 'data-act': 'revisit', title: 'Sửa lý do' },
+        h('b', {}, 'Đang làm lại'),
+        step.revisit.date ? ' · ' + fmtDate(step.revisit.date) : '',
+        step.revisit.reason ? ' · ' + step.revisit.reason : ''),
+      h('button', { type: 'button', class: 'btn small', 'data-act': 'revisit-clear' }, 'Xong, bỏ đánh dấu'));
     const cards = visible.map((/** @type {any} */ x) => {
       const j = step.subs.indexOf(x);
       const label = C.STATUS_LABEL[x.status];
@@ -260,40 +271,44 @@ function renderBoard(/** @type {any} */ ws) {
         h('div', { class: 'card-top' },
           h('span', { class: 'num' }, `${i + 1}.${j + 1}`),
           isNext && h('span', { class: 'next-tag' }, 'Tiếp theo'),
-          h('button', { type: 'button', class: `chip st-${x.status}`, 'data-act': 'cycle', 'aria-label': `Trạng thái: ${label}. Bấm để đổi` }, label)),
-        h('h3', { class: 'card-title' }, h('button', { type: 'button', class: 'link', 'data-act': 'edit-sub', 'aria-keyshortcuts': 'Alt+ArrowLeft Alt+ArrowRight' }, x.title)),
-        (x.owner || x.due) && h('p', { class: 'meta' },
-          x.owner && h('span', { class: 'owner' }, '@' + x.owner),
-          x.due && h('span', { class: 'due' + (overdue ? ' overdue' : '') }, 'hạn ' + fmtDate(x.due) + (overdue ? ' (trễ)' : ''))),
-        x.doneWhen && h('p', { class: 'card-done' }, h('span', { class: 'lbl' }, 'Xong khi '), x.doneWhen),
-        x.notes && h('p', { class: 'card-notes' }, withLinks(x.notes)),
+          h('button', { type: 'button', class: `chip st-${x.status}`, 'data-act': 'cycle', 'aria-label': `Trạng thái: ${label}. Bấm để đổi`, title: 'Bấm để đổi trạng thái' }, label)),
+        h('div', { class: 'card-body' },
+          h('h3', { class: 'card-title' }, h('button', { type: 'button', class: 'link', 'data-act': 'edit-sub', 'aria-keyshortcuts': 'Alt+ArrowLeft Alt+ArrowRight' }, x.title)),
+          (x.owner || x.due) && h('p', { class: 'meta' },
+            x.owner && h('span', { class: 'owner-tag' }, '@' + x.owner),
+            x.due && h('span', { class: 'due' + (overdue ? ' overdue' : '') }, 'hạn ' + fmtDate(x.due) + (overdue ? ' (trễ)' : ''))),
+          x.doneWhen && h('p', { class: 'card-done' }, h('span', { class: 'lbl' }, 'Xong khi '), x.doneWhen),
+          x.notes && h('p', { class: 'card-notes' }, withLinks(x.notes))),
         h('div', { class: 'acts' },
           !filtering && iconBtn('left', 'Sang trái', 'sub-left', j === 0),
           !filtering && iconBtn('right', 'Sang phải', 'sub-right', j === last),
           iconBtn('copy', 'Nhân bản', 'sub-dup'),
           iconBtn('trash', 'Xoá', 'sub-del')));
     });
-    cards.push(h('li', { class: 'card add' }, h('button', { type: 'button', class: 'add-sub', 'data-act': 'add-sub', tabindex: '-1' }, '+ Bước con')));
-    rows.push(h('section', { class: 'step' + (step.revisit ? ' revisit' : ''), 'data-step': step.id, 'aria-labelledby': 'st-' + step.id },
+    cards.push(h('li', { class: 'card add' }, h('button', { type: 'button', class: 'add-sub', 'data-act': 'add-sub', tabindex: '-1' }, icon('plus'), 'Bước con')));
+    rows.push(h('section', { class: 'step' + (step.revisit ? ' revisit' : '') + (done ? ' is-done' : ''), 'data-step': step.id, 'aria-labelledby': 'st-' + step.id },
+      band,
       head,
       h('div', { class: 'cards-scroll' }, h('ol', { class: 'cards', 'aria-label': `Bước con của bước ${i + 1}` }, cards))));
   });
-  if (!ws.steps.length) rows.push(h('p', { class: 'empty' }, 'Chưa có bước nào. Bấm "+ Thêm bước".'));
+  if (!ws.steps.length) rows.push(h('p', { class: 'empty' }, 'Chưa có bước nào. Bấm "Thêm bước" bên dưới.'));
   else if (!rows.length) rows.push(h('p', { class: 'empty' }, 'Không có bước con nào khớp. ',
     h('button', { type: 'button', class: 'btn', 'data-act': 'clear-filter' }, 'Bỏ lọc')));
   board.replaceChildren(...rows);
   $('filter-note').textContent = filtering ? `${shown} bước con khớp · sắp xếp tắt khi lọc` : '';
   $('add-step').hidden = filtering;
-  markCutNotes();
+  markCutCards();
   updateScrollCues();
 }
 
-/** Ghi chú thẻ bị cắt ở ba dòng: thêm nút "Xem thêm". */
-function markCutNotes() {
-  for (const p of /** @type {NodeListOf<HTMLElement>} */ (document.querySelectorAll('.card-notes'))) {
-    if (p.scrollHeight > p.clientHeight + 1) {
-      p.classList.add('cut');
-      p.after(h('button', { type: 'button', class: 'more', 'data-act': 'more-notes', 'aria-expanded': 'false' }, 'Xem thêm'));
+/** Thẻ chạm --card-max thì thân bị cắt: mờ dần ở đáy và thêm nút "Xem thêm" (mở cả thẻ). Nút ngoài vòng Tab:
+ * bàn phím đọc trọn trong hộp sửa. */
+function markCutCards() {
+  for (const card of /** @type {NodeListOf<HTMLElement>} */ (document.querySelectorAll('.card[data-sub]'))) {
+    const body = /** @type {HTMLElement} */ (card.querySelector('.card-body'));
+    if (body.scrollHeight > body.clientHeight + 1) {
+      card.classList.add('cut');
+      body.after(h('button', { type: 'button', class: 'more', 'data-act': 'more', 'aria-expanded': 'false', tabindex: '-1' }, 'Xem thêm'));
     }
   }
 }
@@ -328,11 +343,16 @@ function renderLog(/** @type {any} */ ws) {
     l.why && h('p', { class: 'log-why' }, withLinks(l.why)))));
 }
 
+const BLANK_TPL = { id: 'blank', name: 'Trống', description: '', steps: [] };
+/** Tên, mô tả và số bước / bước con của một mẫu (đếm từ templates.json). @param {any} t */
+function tplInfo(t) {
+  const subs = t.steps.reduce((/** @type {number} */ n, /** @type {any} */ s) => n + (s.subs || []).length, 0);
+  return h('span', {}, h('b', {}, t.name), t.description && h('small', {}, t.description),
+    t.steps.length > 0 && h('span', { class: 'tpl-n' }, `${t.steps.length} bước · ${subs} bước con`));
+}
 function renderStart() {
-  const box = $('start-templates');
-  const list = templates.length ? templates : [{ id: 'blank', name: 'Trống', description: '', steps: [] }];
-  box.replaceChildren(...list.map((t) => h('button', { type: 'button', class: 'tpl', 'data-tpl': t.id },
-    h('span', {}, h('b', {}, t.name), t.description && h('small', {}, t.description)))));
+  const list = templates.length ? templates : [BLANK_TPL];
+  $('start-templates').replaceChildren(...list.map((t) => h('button', { type: 'button', class: 'tpl', 'data-tpl': t.id }, tplInfo(t))));
 }
 
 /* ── Hộp thoại: mở, focus ô đầu, hỏi lại khi đóng mà chữ chưa lưu ── */
@@ -399,7 +419,7 @@ function ask(o) {
   $('ask-input').value = o.value || '';
   $('ask-input').required = !!o.label;
   $('ask-ok').textContent = o.ok;
-  $('ask-ok').className = 'btn ' + (o.danger ? 'danger' : 'primary');
+  $('ask-ok').className = 'btn ' + (o.danger ? 'danger' : 'go');
   dlg.returnValue = '';
   dlg.showModal();
   if (o.label) { $('ask-input').focus(); $('ask-input').select(); } else $('ask-ok').focus();
@@ -444,9 +464,8 @@ $('start-import').addEventListener('click', () => openImport());
 function openWs() {
   renderWsList();
   const fs = $('ws-new-templates');
-  fs.replaceChildren(h('legend', {}, 'Mẫu'), ...(templates.length ? templates : [{ id: 'blank', name: 'Trống', description: '' }]).map((t, i) =>
-    h('label', { class: 'tpl' }, h('input', { type: 'radio', name: 'tpl', value: t.id, checked: i === 0 }),
-      h('span', {}, h('b', {}, t.name), t.description && h('small', {}, t.description)))));
+  fs.replaceChildren(h('legend', {}, 'Mẫu'), ...(templates.length ? templates : [BLANK_TPL]).map((t, i) =>
+    h('label', { class: 'tpl' }, h('input', { type: 'radio', name: 'tpl', value: t.id, checked: i === 0 }), tplInfo(t))));
   $('ws-new-name').value = '';
   $('dlg-ws').showModal();
 }
@@ -502,6 +521,14 @@ $('ws-new').addEventListener('submit', (/** @type {any} */ e) => {
   createFrom(tpl, $('ws-new-name').value);
 });
 
+/* ── Mẹo cho người mới: tắt một lần, nhớ ở máy này ── */
+
+$('hint-off').addEventListener('click', () => {
+  S.hideHint();
+  $('hint').hidden = true;
+  refocus('#q');
+});
+
 /* ── Ghi chú dự án ── */
 
 $('ws-notes-edit').addEventListener('click', () => {
@@ -531,9 +558,8 @@ $('board').addEventListener('click', (/** @type {any} */ e) => {
   if (!b) return;
   const act = b.dataset.act;
   if (act === 'clear-filter') { clearFilter(); return; }
-  if (act === 'more-notes') {
-    const p = b.previousElementSibling;
-    const open = p.classList.toggle('open');
+  if (act === 'more') {
+    const open = b.closest('.card').classList.toggle('open');
     b.textContent = open ? 'Thu gọn' : 'Xem thêm';
     b.setAttribute('aria-expanded', String(open));
     return;
@@ -546,6 +572,7 @@ $('board').addEventListener('click', (/** @type {any} */ e) => {
   switch (act) {
     case 'edit-step': openStep(step); break;
     case 'revisit': openRevisit(step); break;
+    case 'revisit-clear': step.revisit = null; commit(stepSel(step.id, 'edit-step')); break;
     case 'step-up': moveStep(ws, step, -1, act); break;
     case 'step-down': moveStep(ws, step, 1, act); break;
     case 'del-step': deleteStep(ws.id, step.id); break;
@@ -581,15 +608,106 @@ function moveStep(/** @type {any} */ ws, /** @type {any} */ step, /** @type {num
   const i = ws.steps.indexOf(step);
   const k = i + d;
   if (k < 0 || k >= ws.steps.length) return;
+  const m = beginMove('step', step.id);
   ws.steps.splice(i, 1); ws.steps.splice(k, 0, step);
-  commit(`${stepSel(step.id, act)} || ${stepSel(step.id, 'edit-step')}`);
+  endMove(m, ws.steps[k - d].id, `${stepSel(step.id, act)} || ${stepSel(step.id, 'edit-step')}`);
 }
 function moveSub(/** @type {any} */ step, /** @type {any} */ sub, /** @type {number} */ d, /** @type {string} */ act) {
   const j = step.subs.indexOf(sub);
   const k = j + d;
   if (k < 0 || k >= step.subs.length) return;
+  const m = beginMove('sub', sub.id);
   step.subs.splice(j, 1); step.subs.splice(k, 0, sub);
-  commit(`${subSel(sub.id, act)} || ${subSel(sub.id, 'edit-sub')}`);
+  endMove(m, step.subs[k - d].id, `${subSel(sub.id, act)} || ${subSel(sub.id, 'edit-sub')}`);
+}
+
+/* ── Vừa dời: tô thẻ / hàng vừa di chuyển và cái bị đổi chỗ với nó, toast "Đã dời 1.3 → 1.2 · tên" có Hoàn tác.
+ * Dời liền nhiều lần cùng một thứ (toast của nó còn hiện) thì Hoàn tác trả về chỗ trước lần dời đầu. ── */
+
+/** @type {null | {kind:'sub'|'step', id:string, wsId:string, from:{stepId:string, index:number}, fromLabel:string, undo:null|(() => void)}} */
+let lastMove = null;
+let flashTimer = 0;
+
+/** Chỗ và số hiện của một bước ("3") hay bước con ("3.2"). @param {any} ws @param {'sub'|'step'} kind @param {string} id */
+function placeOf(ws, kind, id) {
+  if (kind === 'step') {
+    const i = ws.steps.findIndex((/** @type {any} */ s) => s.id === id);
+    return { stepId: id, index: i, label: String(i + 1), title: ws.steps[i]?.title || '' };
+  }
+  for (const [i, s] of ws.steps.entries()) {
+    const j = s.subs.findIndex((/** @type {any} */ x) => x.id === id);
+    if (j >= 0) return { stepId: s.id, index: j, label: `${i + 1}.${j + 1}`, title: s.subs[j].title };
+  }
+  return null;
+}
+/** Gọi trước khi đổi chỗ. @param {'sub'|'step'} kind @param {string} id */
+function beginMove(kind, id) {
+  const ws = cur();
+  if (lastMove && lastMove.kind === kind && lastMove.id === id && lastMove.wsId === ws.id
+    && !$('toast').hidden && toastUndo && toastUndo === lastMove.undo) return lastMove;
+  const p = placeOf(ws, kind, id);
+  lastMove = { kind, id, wsId: ws.id, from: { stepId: p.stepId, index: p.index }, fromLabel: p.label, undo: null };
+  return lastMove;
+}
+/** Gọi sau khi đổi chỗ: lưu, vẽ, giữ focus, tô, báo. @param {any} m @param {string|null|undefined} swapId @param {string} focusSel */
+function endMove(m, swapId, focusSel) {
+  commit(focusSel);
+  const p = placeOf(findWs(m.wsId), m.kind, m.id);
+  if (!p) return;
+  flash(m.kind, m.id, swapId);
+  if (p.stepId === m.from.stepId && p.index === m.from.index) {
+    if (toastUndo && toastUndo === m.undo) hideToast(false);
+    lastMove = null;
+    return;
+  }
+  m.undo = () => undoMove(m);
+  toast(`Đã dời ${m.kind === 'step' ? 'bước ' : ''}${m.fromLabel} → ${p.label} · ${p.title}`, m.undo, focusSel, false);
+}
+function undoMove(/** @type {any} */ m) {
+  lastMove = null;
+  const w = findWs(m.wsId);
+  if (!w) { toast('Không hoàn tác được: dự án đã bị xoá.'); return; }
+  if (m.kind === 'step') {
+    const step = stepOf(w, m.id);
+    if (!step) { toast('Không hoàn tác được: bước đã bị xoá.'); return; }
+    w.steps.splice(w.steps.indexOf(step), 1);
+    w.steps.splice(Math.min(m.from.index, w.steps.length), 0, step);
+  } else {
+    const from = w.steps.find((/** @type {any} */ s) => s.subs.some((/** @type {any} */ x) => x.id === m.id));
+    const back = stepOf(w, m.from.stepId);
+    if (!from) { toast('Không hoàn tác được: bước con đã bị xoá.'); return; }
+    if (!back) { toast('Không hoàn tác được: bước chứa nó đã bị xoá.'); return; }
+    const sub = from.subs.find((/** @type {any} */ x) => x.id === m.id);
+    from.subs.splice(from.subs.indexOf(sub), 1);
+    back.subs.splice(Math.min(m.from.index, back.subs.length), 0, sub);
+  }
+  if (curId !== m.wsId) switchTo(m.wsId);
+  commit(m.kind === 'step' ? stepSel(m.id, 'edit-step') : subSel(m.id, 'edit-sub'));
+  flash(m.kind, m.id, null);
+}
+/** Thời gian tô, đọc từ token --flash-dur (CSS là nguồn duy nhất). */
+function flashMs() {
+  const v = getComputedStyle(document.documentElement).getPropertyValue('--flash-dur').trim();
+  const n = parseFloat(v);
+  return !n ? 2600 : v.endsWith('ms') ? n : n * 1000;
+}
+/** @param {'sub'|'step'} kind @param {string} id @param {string|null|undefined} swapId */
+function flash(kind, id, swapId) {
+  clearTimeout(flashTimer);
+  document.querySelectorAll('.moved, .swapped').forEach((el) => el.classList.remove('moved', 'swapped'));
+  const sel = (/** @type {string} */ x) => (kind === 'sub' ? `.card[data-sub="${x}"]` : `.step[data-step="${x}"]`);
+  const el = document.querySelector(sel(id));
+  if (!el) return;
+  const sw = swapId ? document.querySelector(sel(swapId)) : null;
+  el.classList.add('moved');
+  if (sw) sw.classList.add('swapped');
+  /* Thẻ vừa dời trong tầm nhìn: cuộn hàng ngang (và trang, nếu cần) vừa đủ. */
+  (kind === 'sub' ? el : el.querySelector('.step-head') || el).scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  updateScrollCues();
+  flashTimer = window.setTimeout(() => {
+    el.classList.remove('moved');
+    if (sw) sw.classList.remove('swapped');
+  }, flashMs());
 }
 
 function duplicateSub(/** @type {any} */ step, /** @type {any} */ sub) {
@@ -703,10 +821,15 @@ $('sub-form').addEventListener('submit', (/** @type {any} */ e) => {
   const target = stepOf(ws, field(f, 'step').value) || step;
   const pos = Number(field(f, 'pos').value) || 0;
   let item = data;
-  if (sub) { Object.assign(sub, data); item = sub; step.subs.splice(step.subs.indexOf(sub), 1); }
-  target.subs.splice(Math.min(pos, target.subs.length), 0, item);
+  const m = sub && curId === ws.id ? beginMove('sub', sub.id) : null;
+  const j = sub ? step.subs.indexOf(sub) : -1;
+  if (sub) { Object.assign(sub, data); item = sub; step.subs.splice(j, 1); }
+  const k = Math.min(pos, target.subs.length);
+  target.subs.splice(k, 0, item);
   if (curId !== ws.id) switchTo(ws.id);
-  commit(`${subSel(item.id, 'edit-sub')} || ${stepSel(target.id, 'add-sub')} || #q`);
+  const focusSel = `${subSel(item.id, 'edit-sub')} || ${stepSel(target.id, 'add-sub')} || #q`;
+  if (m && (target !== step || k !== j)) endMove(m, (target === step && k > j ? target.subs[k - 1] : target.subs[k + 1])?.id, focusSel);
+  else commit(focusSel);
   if (!document.querySelector(`.card[data-sub="${item.id}"]`)) toast(sub ? 'Đã lưu — đang bị bộ lọc ẩn.' : 'Đã thêm — đang bị bộ lọc ẩn.');
 });
 $('sub-dup').addEventListener('click', () => {
@@ -749,13 +872,18 @@ $('step-form').addEventListener('submit', (/** @type {any} */ e) => {
   const vals = { title: field(f, 'title').value, goal: field(f, 'goal').value, doneWhen: field(f, 'doneWhen').value, notes: field(f, 'notes').value };
   let step = stepCtx.stepId ? stepOf(ws, stepCtx.stepId) : null;
   if (stepCtx.stepId && !step) { toast('Không lưu được: bước đã bị xoá ở nơi khác.'); return; }
+  const m = step && curId === ws.id ? beginMove('step', step.id) : null;
+  const i = step ? ws.steps.indexOf(step) : -1;
   if (step) {
     const n = C.normStep({ ...step, ...vals });
     Object.assign(step, { title: n.title, goal: n.goal, doneWhen: n.doneWhen, notes: n.notes });
-    ws.steps.splice(ws.steps.indexOf(step), 1);
+    ws.steps.splice(i, 1);
   } else step = C.normStep(vals);
-  ws.steps.splice(Math.min(Number(field(f, 'pos').value) || 0, ws.steps.length), 0, step);
-  commit(`${stepSel(step.id, 'edit-step')} || #q`);
+  const k = Math.min(Number(field(f, 'pos').value) || 0, ws.steps.length);
+  ws.steps.splice(k, 0, step);
+  const focusSel = `${stepSel(step.id, 'edit-step')} || #q`;
+  if (m && k !== i) endMove(m, (k > i ? ws.steps[k - 1] : ws.steps[k + 1])?.id, focusSel);
+  else commit(focusSel);
 });
 $('step-del').addEventListener('click', () => {
   const ctx = stepCtx;
@@ -774,9 +902,10 @@ $('step-revisit').addEventListener('click', async () => {
 let revisitCtx = { wsId: '', stepId: '' };
 function openRevisit(/** @type {any} */ step) {
   revisitCtx = { wsId: cur().id, stepId: step.id };
-  $('revisit-step').textContent = step.title;
+  $('revisit-step').textContent = `Bước ${cur().steps.indexOf(step) + 1} · ${step.title}`;
   field($('revisit-form'), 'reason').value = step.revisit ? step.revisit.reason : '';
   $('revisit-clear').hidden = !step.revisit;
+  /** @type {any} */ ($('revisit-form').querySelector('button[type="submit"]')).textContent = step.revisit ? 'Lưu lý do' : 'Đánh dấu cần làm lại';
   openDlg($('dlg-revisit'), field($('revisit-form'), 'reason'));
 }
 const revisitStep = () => stepOf(findWs(revisitCtx.wsId), revisitCtx.stepId);
@@ -786,7 +915,7 @@ $('revisit-form').addEventListener('submit', (/** @type {any} */ e) => {
   closeSaved($('dlg-revisit'));
   if (!step) return;
   step.revisit = { reason: C.oneLine(field($('revisit-form'), 'reason').value), date: C.today() };
-  commit(`${stepSel(step.id, 'revisit')} || ${stepSel(step.id, 'edit-step')}`);
+  commit(`.step[data-step="${step.id}"] .badge || ${stepSel(step.id, 'edit-step')}`);
 });
 $('revisit-clear').addEventListener('click', () => {
   const step = revisitStep();
@@ -1105,19 +1234,29 @@ $('board').addEventListener('drop', (/** @type {any} */ e) => {
     if (!from || !target) return;
     const before = subDropBefore(row.querySelector('.cards'), e.clientX);
     const sub = from.subs.find((/** @type {any} */ x) => x.id === d.id);
-    from.subs.splice(from.subs.indexOf(sub), 1);
-    const k = before ? target.subs.findIndex((/** @type {any} */ x) => x.id === before.dataset.sub) : -1;
-    target.subs.splice(k < 0 ? target.subs.length : k, 0, sub);
+    const m = beginMove('sub', sub.id);
+    const j = from.subs.indexOf(sub);
+    from.subs.splice(j, 1);
+    let k = before ? target.subs.findIndex((/** @type {any} */ x) => x.id === before.dataset.sub) : -1;
+    if (k < 0) k = target.subs.length;
+    target.subs.splice(k, 0, sub);
     drag = null;
-    commit(subSel(sub.id, 'edit-sub'));
+    clearDrop();
+    /* Cái bị đổi chỗ: cùng hàng thì thẻ vừa nhường chỗ; sang hàng khác thì thẻ bị đẩy sang phải. */
+    const swap = from === target && k > j ? target.subs[k - 1] : target.subs[k + 1];
+    endMove(m, swap?.id, subSel(sub.id, 'edit-sub'));
   } else {
     const step = stepOf(ws, d.id);
     if (!step || step === target) return;
     const after = stepDropAfter(row, e.clientY);
-    ws.steps.splice(ws.steps.indexOf(step), 1);
-    ws.steps.splice(ws.steps.indexOf(target) + (after ? 1 : 0), 0, step);
+    const m = beginMove('step', step.id);
+    const i = ws.steps.indexOf(step);
+    ws.steps.splice(i, 1);
+    const k = ws.steps.indexOf(target) + (after ? 1 : 0);
+    ws.steps.splice(k, 0, step);
     drag = null;
-    commit(stepSel(step.id, 'edit-step'));
+    clearDrop();
+    endMove(m, (k > i ? ws.steps[k - 1] : ws.steps[k + 1])?.id, stepSel(step.id, 'edit-step'));
   }
 });
 $('board').addEventListener('dragend', () => { drag = null; clearDrop(); });

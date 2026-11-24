@@ -80,3 +80,15 @@ const THEME_KEY = 'hub-theme';
 export function saveTheme(t) {
   try { localStorage.setItem(THEME_KEY, t); } catch (e) { /* theme chỉ giữ trong phiên */ }
 }
+
+/* Mẹo "bấm thẻ để sửa…": người dùng tắt thì nhớ ở máy này. Bộ nhớ bị chặn thì tắt trong phiên. */
+const HINT_KEY = 'stepPlanner.hintOff';
+let hintOff = false;
+export function hintHidden() {
+  if (hintOff) return true;
+  try { return localStorage.getItem(HINT_KEY) === '1'; } catch (e) { return false; }
+}
+export function hideHint() {
+  hintOff = true;
+  try { localStorage.setItem(HINT_KEY, '1'); } catch (e) { /* chỉ nhớ trong phiên */ }
+}
