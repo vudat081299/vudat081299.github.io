@@ -74,6 +74,17 @@ Khung xương đạt khi:
 - Mở khối gập bằng JS (Đọc liền, in) không được làm bài thành đã đọc trong `bd-seen`.
 - In: JS mở mọi `details` (cả đáp án) rồi trả lại như cũ.
 
+## Cách giải thích (BIGDATA-004)
+
+- Bài mở bằng một tình huống hay hình cụ thể: máy nào, chương trình nào, dữ liệu gì đi đâu. Thuật ngữ đến sau.
+- Lede và mục đầu nói bài giải vấn đề gì mà bài trước để lại, kèm link bài ấy.
+- Một ví dụ chạy suốt bài; mục sau và câu quiz dùng lại nó.
+- Thẻ `.keys` là định nghĩa bằng việc thứ ấy làm, ít thẻ; không thay cho phần kể các mảnh phối hợp ra sao.
+- Mục nối mục: câu đầu mỗi mục trả lời câu hỏi mục trước để lại.
+- Câu ngắn, một ý. Một ý chỉ nói một lần: lede, thẻ, chú thích hình, thân mục không lặp nhau.
+- Chủ đề trùng trang `../data-management-visualization/` (HDFS, hệ thống tệp, 5V, ACID, kho dữ liệu, TF-IDF, K-means,
+  đồ thị): giữ bản ngắn, số liệu khớp, trỏ sang bài bên ấy.
+
 ## Nội dung
 
 - Không ghi tên giảng viên, phòng, giờ học.

@@ -69,6 +69,17 @@
 - In: `beforeprint` mở mọi `details`, `afterprint` trả lại.
 - Viền một hoặc hai cạnh thì không bo góc (REPO-025).
 
+## Cách giải thích (DMV-004)
+
+- Bài mở bằng một tình huống hay hình cụ thể: máy nào, chương trình nào, dữ liệu gì đi đâu. Thuật ngữ đến sau.
+- Một ví dụ chạy suốt bài; các mục sau và câu quiz dùng lại nó.
+- Thuật ngữ định nghĩa bằng việc nó làm trong ví dụ, một câu; không bằng nhãn (master, slave) hay danh sách thuộc tính.
+- Mục nối mục: câu đầu mỗi mục trả lời câu hỏi mục trước để lại. Thứ tự slide làm gãy mạch thì đổi thứ tự, ghi `slide-note`.
+- Câu ngắn, một ý. Một ý chỉ nói một lần: chú thích hình, câu lõi, khối gập không lặp nhau.
+- Khái niệm đã dạy ở bài khác thì trỏ link, không định nghĩa lại.
+- Chủ đề trùng trang `../big-data-storage-processing/` (HDFS, hệ thống file, 5V, NoSQL, TF-IDF, K-means, đồ thị): giữ bản
+  ngắn, số liệu khớp, trỏ sang bài bên ấy.
+
 ## Nội dung
 
 - Không ghi tên giảng viên hay người soạn slide.
