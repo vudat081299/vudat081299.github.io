@@ -94,6 +94,22 @@ const check = (name, ok, detail = '') => {
     JSON.stringify(ch));
   check('thẻ dài dừng ở max-height, cắt và có "Xem thêm"', Math.abs(ch.b - ch.max) < 1 && ch.cut && ch.more, JSON.stringify(ch));
   await page.click('.card .more');
+  // Không còn thẻ "+ Sub-step" cuối hàng: thêm bước con bằng nút ở cột tên bước.
+  check('không có thẻ thêm cuối hàng', !(await page.$('.card.add, .add-sub')) && !!(await page.$('.step-head [data-act="add-sub"]')));
+  // Vạch chia trên bước: rê chuột thì hiện "Add step" nổi, không xê dịch gì; bấm thì hộp thêm bước đặt sẵn vị trí.
+  const boxes = () => page.evaluate(() => [...document.querySelectorAll('.step, .step-head, .card[data-sub], #add-step, .log')]
+    .map((e) => { const r = e.getBoundingClientRect(); return [r.x, r.y, r.width, r.height].map(Math.round).join(','); }).join('|'));
+  const box0 = await boxes();
+  const gapOp0 = await page.$eval('.step .gap-add-btn', (b) => getComputedStyle(b).opacity);
+  await page.hover('.step .gap-add');
+  await page.waitForTimeout(250);
+  const gapOp1 = await page.$eval('.step .gap-add-btn', (b) => getComputedStyle(b).opacity);
+  check('vạch chia: rê chuột hiện nút Add step, bố cục không xê dịch', gapOp0 === '0' && gapOp1 === '1' && (await boxes()) === box0, `${gapOp0}→${gapOp1}`);
+  await page.click('.step .gap-add-btn');
+  check('vạch chia: hộp thêm bước đặt sẵn vị trí 1', await page.isVisible('#dlg-step') && (await page.inputValue('#step-form [name="pos"]')) === '0');
+  await page.fill('#step-form [name="title"]', 'Chèn trên');
+  await page.click('#step-form button[type="submit"]');
+  check('vạch chia: bước mới chèn đúng chỗ', (await cur(page)).steps.map((x) => x.title).join() === 'Chèn trên,Hàng thử');
   check('"Xem thêm" mở cả thẻ', await page.evaluate((max) => document.querySelectorAll('.card[data-sub]')[1].getBoundingClientRect().height > max + 40, ch.max));
 
   // Về CRISP-DM.
@@ -314,7 +330,8 @@ const check = (name, ok, detail = '') => {
   const st2 = (await cur(page)).steps.map((s) => s.id);
   check('kéo thả bước', st2[0] === st[2] && st2[1] === st[0], st2.indexOf(st[2]) + '');
   const r2 = (await cur(page)).steps[2].subs.map((x) => x.id);
-  await page.dragAndDrop(`.card[data-sub="${r2[0]}"]`, `.step[data-step="${st2[0]}"] .card.add`);
+  await page.evaluate((id) => { const sc = document.querySelector(`.step[data-step="${id}"] .cards-scroll`); sc.scrollLeft = sc.scrollWidth; }, st2[0]);
+  await page.dragAndDrop(`.card[data-sub="${r2[0]}"]`, `.step[data-step="${st2[0]}"] .card[data-sub]:last-child`, { targetPosition: { x: 220, y: 20 } });
   const mkd = await marks();
   check('kéo thả bước con sang bước khác', (await cur(page)).steps[0].subs.at(-1).id === r2[0]);
   check('kéo thả: thẻ vừa thả tô nổi, toast "Đã dời 3.1 → 1.N"', mkd.moved.join() === r2[0]

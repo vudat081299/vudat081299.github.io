@@ -49,18 +49,18 @@
 - Bấm chip: New → In progress → Done. Chip Done, Blocked, Skipped, Cancelled bấm là mở danh sách sáu trạng thái (chấm,
   một dòng gợi ý, đánh dấu cái hiện tại); Shift + bấm hay Alt + ↓ luôn mở. Chọn Cancelled: mở hộp sửa, trạng thái đặt sẵn,
   focus ô lý do; Lưu mới huỷ. Rời Cancelled thì bỏ lý do. Thẻ huỷ: tên gạch, lý do trong thân thẻ (cắt như ghi chú).
-- Bấm vào thẻ (ngoài nút) là mở hộp sửa. Mỗi thẻ chỉ hai điểm dừng Tab: tên (mở sửa) và chip.
-- Nút phụ (dời, nhân bản, xoá, cần làm lại, tài liệu, nhãn kẹp, "Xem thêm") có `tabindex=-1`. Bàn phím làm cùng việc: Alt
-  + ← → trên tên bước con, Alt + ↑ ↓ trên tên bước, ô "Thuộc bước" / "Vị trí" và các nút trong hộp sửa.
+- Thêm bước: nút cuối bảng, hoặc rê chuột lên vạch chia trên một bước thì nút "Add step" nổi lên (không xê dịch bố cục),
+  bấm mở hộp thêm bước đặt sẵn vị trí ấy; màn cảm ứng: nút tròn nhỏ luôn hiện. Thêm bước con: nút ở cột tên bước.
+- Bấm vào thẻ (ngoài nút) là mở hộp sửa; mỗi thẻ chỉ hai điểm dừng Tab: tên và chip. Nút phụ (dời, nhân bản, xoá, mở lại,
+  tài liệu, nhãn kẹp, "Show more", vạch chia) có `tabindex=-1`; bàn phím làm cùng việc: Alt + ← → trên tên bước con, Alt +
+  ↑ ↓ trên tên bước, ô bước / vị trí và các nút trong hộp sửa.
 - Đổi chỗ (nút dời, Alt + mũi tên, kéo thả, ô bước / vị trí; cả bước): cái vừa dời có lớp `moved`, cái bị đổi chỗ có
   `swapped`, tự gỡ sau `--flash-dur`; toast "Moved …" có Hoàn tác, không lấy focus; hàng thẻ cuộn để thẻ trong tầm nhìn.
   Dời liền nhiều lần khi toast còn hiện: Hoàn tác về chỗ trước lần đầu; dời về đúng chỗ cũ thì toast tắt.
-- "Reopen" (PLAN-004): nút có chữ ở cột tên bước; hộp có giải thích, ví dụ, ô lý do, và (khi mở lại) danh sách bước con
-  đưa về New — mặc định không chọn. Mở lại mở vòng `round + 1`, ghi nhật ký "Reopened: tên bước (iteration N)" với lý do;
-  một Hoàn tác trả cả trạng thái thẻ, nhật ký, đánh dấu, vòng. Băng "Reopened · Iteration N · ngày · lý do" (bấm để sửa
-  lý do), nút "Close iteration" (vòng giữ để lần sau tăng tiếp).
-- Mẹo người mới hiện tới khi bấm × (nhớ ở máy này). Nút "Compact" (nhớ ở máy này) ẩn "Done when", ghi chú, lý do huỷ
-  trên thẻ và cột bước. Nút "Log (N)" cuộn tới khung nhật ký và focus vào đó.
+- "Reopen" (PLAN-004): hộp có giải thích, ô lý do, danh sách bước con đưa về New (mặc định không chọn). Mở vòng `round + 1`,
+  ghi nhật ký "Reopened: tên bước (iteration N)"; một Hoàn tác trả hết. Băng "Reopened · Iteration N · ngày · lý do" (bấm
+  để sửa lý do), nút "Close iteration" (vòng giữ để lần sau tăng tiếp).
+- Mẹo tắt bằng ×; "Compact" ẩn "Done when", ghi chú, lý do huỷ (cả hai nhớ ở máy này). "Log (N)" cuộn tới nhật ký, focus.
 - Tìm không phân biệt hoa thường và dấu, khớp cả tên tài liệu. Tên, mục tiêu, ghi chú hay tài liệu của bước khớp thì
   hiện cả hàng. Đang tìm thì tắt sắp xếp và nút thêm bước; thẻ mới bị lọc ẩn thì toast "Added — hidden by the search filter".
 - Xoá bước con, quyết định, tài liệu: một bấm. Xoá bước còn bước con, xoá dự án (không hoàn tác): hỏi lại. Sau khi xoá,

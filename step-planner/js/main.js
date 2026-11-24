@@ -280,12 +280,16 @@ function renderBoard(/** @type {any} */ ws) {
           iconBtn('copy', 'Duplicate', 'sub-dup'),
           iconBtn('trash', 'Delete', 'sub-del')));
     });
-    cards.push(h('li', { class: 'card add' }, h('button', { type: 'button', class: 'add-sub', 'data-act': 'add-sub', tabindex: '-1' }, icon('plus'), 'Sub-step')));
     /* Tài liệu của cả bước: dải chip ngay dưới băng Reopened (hay ở chỗ ấy khi không có băng), trên hàng thẻ. */
     const docs = step.docs.length > 0 && h('div', { class: 'step-docs' },
       h('ul', { class: 'doc-chips', 'aria-label': `Docs of step ${i + 1}` }, step.docs.map(docChip)),
       h('button', { type: 'button', class: 'doc-chip add aux', 'data-act': 'add-doc', tabindex: '-1', 'aria-label': 'Add a doc to this step', title: 'Add a link or a Markdown note for the whole step' }, icon('plus'), 'Doc'));
+    /* Vạch chia phía trên bước: rê chuột vào thì hiện nút "Add step" chèn bước mới vào chỗ này (nút nổi, không đẩy bố cục). */
+    const gap = !filtering && h('div', { class: 'gap-add' + (i === 0 ? ' first' : '') },
+      h('button', { type: 'button', class: 'gap-add-btn', 'data-act': 'insert-step', 'data-at': String(i), tabindex: '-1',
+        'aria-label': `Add a step before step ${i + 1}`, title: `Add a step here (before step ${i + 1})` }, icon('plus'), h('span', {}, 'Add step')));
     rows.push(h('section', { class: 'step' + (step.revisit ? ' revisit' : '') + (done ? ' is-done' : ''), 'data-step': step.id, 'aria-labelledby': 'st-' + step.id },
+      gap,
       band,
       docs,
       head,
@@ -598,6 +602,7 @@ $('board').addEventListener('click', (/** @type {any} */ e) => {
   if (!b) return;
   const act = b.dataset.act;
   if (act === 'clear-filter') { clearFilter(); return; }
+  if (act === 'insert-step') { openStep(null, Number(b.dataset.at) || 0); return; }
   if (act === 'more') {
     const open = b.closest('.card').classList.toggle('open');
     b.textContent = open ? 'Show less' : 'Show more';
@@ -929,7 +934,8 @@ $('sub-del').addEventListener('click', () => {
 
 /** @type {{wsId:string, stepId:string|null}|null} */
 let stepCtx = null;
-function openStep(/** @type {any} */ step) {
+/** @param {any} step null: thêm bước mới @param {number} [at] bước mới: chỗ chèn đặt sẵn (mặc định cuối) */
+function openStep(step, at) {
   const f = $('step-form');
   const ws = cur();
   stepCtx = { wsId: ws.id, stepId: step ? step.id : null };
@@ -939,7 +945,7 @@ function openStep(/** @type {any} */ step) {
   field(f, 'doneWhen').value = step ? step.doneWhen : '';
   field(f, 'notes').value = step ? step.notes : '';
   const n = ws.steps.length + (step ? 0 : 1);
-  fillPos(field(f, 'pos'), n, step ? ws.steps.indexOf(step) : n - 1);
+  fillPos(field(f, 'pos'), n, step ? ws.steps.indexOf(step) : at ?? n - 1);
   $('step-del').hidden = !step;
   $('step-revisit').hidden = !step;
   docUndo = null;
