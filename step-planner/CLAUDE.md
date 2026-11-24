@@ -64,8 +64,18 @@
 
 - `{note, templates[]}`; mẫu `{id, name, description, people?, steps[]}`; bước `{title, goal, doneWhen, notes?, subs[]}`;
   bước con `{title, doneWhen?, owner?, notes?}`. Không thẻ HTML. `owner` phải nằm trong `people` của mẫu. Đúng một mẫu trống.
+- Mẫu chung không gắn vào một bài toán cụ thể. Tên bước, bước con: tiếng Việt, tên gốc tiếng Anh trong ngoặc để tra.
+- `crisp-dm` theo CRISP-DM 1.0 Step-by-step guide (Chapman et al., 2000): bước là sáu pha, bước con là generic task
+  của pha, `doneWhen` là output của task theo guide, `notes` là câu hỏi gợi ý và bẫy hay gặp.
+- Việc thêm ngoài CRISP-DM 1.0 ghi nguồn trong tên thẻ: tái lập, kết quả theo nhóm (CRISP-ML(Q)), model card
+  (Mitchell et al., 2019), nghiệm thu (TDSP). Không thêm việc không có nguồn.
 - CRISP-DM: chia train / validation / test ngay sau chọn và ghép dữ liệu, trước làm sạch, điền thiếu, tạo đặc trưng;
   mọi biến đổi fit chỉ trên train. Đừng thêm bước con nào làm rò rỉ dữ liệu test.
+- Task 4.2 Generate test design của CRISP-DM nằm ở pha 3 của mẫu, ngay sau Tích hợp; ghi chú thẻ nói vì sao dời.
+- `smoke.cjs` tìm `kiem chat` (đúng một bước con) và `hieu nghiep vu` (đúng một bước) trên mẫu `crisp-dm`: đừng đưa
+  hai cụm ấy vào chỗ khác của mẫu.
+- `stats-report` theo chu trình PPDAC (MacKay & Oldford; Wild & Pfannkuch, 1999): bước là năm khâu, bước con là mục
+  của từng khâu.
 - `it5425-sports` sinh từ `masters-degree/data-management-visualization/data/sports-monitoring-project.json` (`phases`,
   `team`, `week1`) và danh sách "Xong khi nào" (`#lt-xong`) của trang đồ án. Không sửa tay:
   `python3 step-planner/tools/lint.py --write-course`. Cổng đỏ khi trang đồ án đổi mà mẫu chưa sinh lại.

@@ -9,6 +9,7 @@
 - PLAN-006 · Xoá hoàn tác được; sắp xếp lại được; lọc theo người làm · `step-planner/`
 - PLAN-007 · Markdown xuất ra đọc được và nhập lại được; nhập không ghi đè ngầm · `step-planner/`
 - PLAN-008 · Mẫu đồ án lấy đúng từ trang đồ án, người làm là vai · `step-planner/data/templates.json`
+- PLAN-009 · Mẫu Data Science theo chuẩn CRISP-DM 1.0, áp được cho mọi dự án · `step-planner/data/templates.json`
 <!-- index:end -->
 
 ## PLAN-001 · Dự án là các bước có thứ tự, mỗi bước có bước con có thứ tự
@@ -50,3 +51,8 @@ Xuất Markdown cho người đọc, theo một khuôn cố định để nhập
 24/11/2026 · `step-planner/data/templates.json`
 
 Có năm mẫu: dự án Data Science theo CRISP-DM, đồ án môn đang học, phân tích thống kê không học máy, tính năng app iOS / Flutter, và trống. Mẫu đồ án chỉ lấy các giai đoạn, vai, sản phẩm và tiêu chí xong của trang đồ án, không thêm nội dung; người làm ghi theo tên vai, không tên người thật.
+
+## PLAN-009 · Mẫu Data Science theo chuẩn CRISP-DM 1.0, áp được cho mọi dự án
+24/11/2026 · `step-planner/data/templates.json`
+
+Mẫu Data Science theo chuẩn CRISP-DM 1.0: bước là sáu pha, bước con là các việc chung (generic task) của từng pha, tiêu chí xong là sản phẩm đầu ra chuẩn của việc ấy. Mẫu đủ tổng quát để áp cho mọi dự án dữ liệu, không gắn vào bài toán nào. Chỗ CRISP-DM 1.0 đã cũ (tái lập, giám sát mô hình, model card, nghiệm thu) bổ sung từ CRISP-ML(Q), TDSP và Model Cards, có ghi nguồn. Riêng việc chia train / validation / test dời lên ngay sau ghép dữ liệu để tránh rò rỉ.

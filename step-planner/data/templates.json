@@ -4,158 +4,190 @@
     {
       "id": "crisp-dm",
       "name": "Dự án Data Science (CRISP-DM)",
-      "description": "Sáu pha CRISP-DM, từ hiểu nghiệp vụ tới triển khai. Pha nào lộ vấn đề thì quay lại pha trước.",
+      "description": "Chuẩn CRISP-DM 1.0: sáu pha, mỗi bước con là một việc chung (generic task) của pha, áp cho mọi dự án dữ liệu; thêm tái lập, giám sát, model card theo CRISP-ML(Q) và TDSP. Pha nào lộ vấn đề thì quay lại pha trước.",
       "steps": [
         {
-          "title": "Hiểu nghiệp vụ",
-          "goal": "Biết bài toán nghiệp vụ, ai dùng kết quả, quyết định nào sẽ đổi.",
-          "doneWhen": "Câu hỏi, tiêu chí thành công và phạm vi đã được người đặt bài toán đồng ý.",
+          "title": "Hiểu nghiệp vụ (Business Understanding)",
+          "goal": "Biết bài toán thật, ai dùng kết quả, quyết định nào sẽ đổi.",
+          "doneWhen": "Người đặt bài toán đồng ý mục tiêu, tiêu chí thành công và kế hoạch.",
+          "notes": "Mẫu theo CRISP-DM 1.0 Step-by-step data mining guide (Chapman et al., 2000). Tên tiếng Anh trong ngoặc là tên task gốc, để tra cứu.\nViệc bổ sung từ CRISP-ML(Q) (Studer et al., 2021) và Microsoft TDSP ghi rõ nguồn trên thẻ.\nCRISP-DM: https://en.wikipedia.org/wiki/Cross-industry_standard_process_for_data_mining\nCRISP-ML(Q): https://arxiv.org/abs/2003.05155\nBẫy hay gặp: làm nhanh pha này rồi trả lời đúng một câu hỏi sai.",
           "subs": [
             {
-              "title": "Xác định mục tiêu nghiệp vụ",
-              "doneWhen": "Ghi được vấn đề, người dùng kết quả, quyết định sẽ đổi."
+              "title": "Xác định mục tiêu nghiệp vụ (Determine business objectives)",
+              "doneWhen": "Có bối cảnh, mục tiêu nghiệp vụ chính và các câu hỏi phụ, tiêu chí thành công nghiệp vụ.",
+              "notes": "Hỏi: ai dùng kết quả? Có kết quả rồi họ làm gì khác? Hiện giờ họ quyết định thế nào?\nTiêu chí đo được thì ghi ngưỡng; tiêu chí chủ quan thì ghi ai là người đánh giá."
             },
             {
-              "title": "Đánh giá hiện trạng: nguồn lực, ràng buộc, rủi ro",
-              "doneWhen": "Có danh sách dữ liệu, người, công cụ, hạn và rủi ro."
+              "title": "Đánh giá hiện trạng (Assess situation)",
+              "doneWhen": "Có danh sách nguồn lực (người, dữ liệu, máy, phần mềm); yêu cầu, giả định, ràng buộc; rủi ro và phương án dự phòng; bảng thuật ngữ; chi phí và lợi ích.",
+              "notes": "Kiểm ngay quyền dùng dữ liệu: điều khoản, dữ liệu cá nhân.\nGhi cả giả định không kiểm được bằng dữ liệu: kết luận cuối đứng trên chúng."
             },
             {
-              "title": "Đổi mục tiêu nghiệp vụ thành câu hỏi phân tích",
-              "doneWhen": "Câu hỏi trả lời được bằng dữ liệu, có chỉ số đo."
+              "title": "Xác định mục tiêu khai phá dữ liệu (Determine data mining goals)",
+              "doneWhen": "Mục tiêu viết bằng ngôn ngữ kỹ thuật (biến đích, đầu vào, loại bài toán) và tiêu chí thành công kỹ thuật (chỉ số, ngưỡng).",
+              "notes": "TDSP gọi là câu hỏi sắc (sharp question): bao nhiêu? (hồi quy), loại nào? (phân loại), nhóm nào? (phân cụm), có bất thường không? (phát hiện bất thường), nên chọn gì? (gợi ý).\nChỉ số nên SMART: cụ thể, đo được, khả thi, liên quan, có hạn."
             },
             {
-              "title": "Chốt tiêu chí thành công",
-              "doneWhen": "Có ngưỡng cho chỉ số nghiệp vụ và chỉ số mô hình."
-            },
-            {
-              "title": "Lập kế hoạch dự án",
-              "doneWhen": "Mỗi pha có mốc và người phụ trách."
+              "title": "Lập kế hoạch dự án (Produce project plan)",
+              "doneWhen": "Kế hoạch có các giai đoạn, thời lượng, người, đầu vào, đầu ra, phụ thuộc, điểm soát cuối mỗi pha; đánh giá sơ bộ công cụ và kỹ thuật.",
+              "notes": "Ghi trước các vòng lặp lớn (mô hình hoá ↔ đánh giá) và cách đánh giá sẽ dùng.\nKế hoạch là tài liệu sống: cập nhật sau mỗi pha."
             }
           ]
         },
         {
-          "title": "Hiểu dữ liệu",
+          "title": "Hiểu dữ liệu (Data Understanding)",
           "goal": "Biết dữ liệu có gì, thiếu gì, tin được tới đâu.",
-          "doneWhen": "Có data card và báo cáo EDA; biết dữ liệu đủ trả lời câu hỏi hay không.",
+          "doneWhen": "Có bốn báo cáo: thu thập, mô tả, khám phá, chất lượng; biết dữ liệu đủ trả lời câu hỏi hay không.",
+          "notes": "Điểm kiểm của TDSP: dữ liệu không đủ trả lời câu hỏi thì quay lại pha 1 hoặc tìm thêm nguồn, đừng ép mô hình hoá.\nKhám phá ở đây để hiểu dữ liệu. Con số dùng để biến đổi (trung vị điền thiếu, ngưỡng ngoại lai) tính lại trên train ở pha 3.",
           "subs": [
             {
-              "title": "Thu thập dữ liệu ban đầu",
-              "doneWhen": "Ghi nguồn, ngày lấy, điều khoản dùng, mã băm của từng file."
+              "title": "Thu thập dữ liệu ban đầu (Collect initial data)",
+              "doneWhen": "Báo cáo thu thập: tập dữ liệu nào, để ở đâu, lấy bằng cách nào, gặp vấn đề gì và đã xử lý ra sao.",
+              "notes": "Ghi thêm ngày lấy, điều khoản, mã băm (SHA-256) từng file để người khác lấy lại đúng bản.\nKhông sửa tay file gốc; mọi thay đổi đi qua script."
             },
             {
-              "title": "Viết data card",
-              "doneWhen": "Nguồn, điều khoản, cột, giai đoạn, hạn chế đã ghi."
+              "title": "Mô tả dữ liệu (Describe data)",
+              "doneWhen": "Báo cáo mô tả: định dạng, số dòng và số cột mỗi bảng, tên, kiểu, đơn vị từng trường; dữ liệu có đáp ứng yêu cầu không.",
+              "notes": "Viết luôn data card: nguồn, ai tạo, để làm gì, giai đoạn, hạn chế (Datasheets for Datasets, Gebru et al.: https://arxiv.org/abs/1803.09010)."
             },
             {
-              "title": "Mô tả dữ liệu: số dòng, cột, kiểu, đơn vị"
+              "title": "Khám phá dữ liệu (Explore data)",
+              "doneWhen": "Báo cáo khám phá: phân phối các biến chính (nhất là biến đích), quan hệ giữa các biến, nhóm con đáng chú ý, giả thuyết ban đầu, kèm hình.",
+              "notes": "Mỗi phát hiện ghi luôn: nó đổi gì ở các pha sau.\nMột biến đoán biến đích quá giỏi thì nghi rò rỉ: lúc cần dự đoán thật, biến ấy đã có chưa?"
             },
             {
-              "title": "EDA: phân phối, tương quan, ngoại lai",
-              "doneWhen": "Có trang tóm tắt EDA kèm hình."
-            },
-            {
-              "title": "Kiểm chất lượng: thiếu, trùng, sai giá trị",
-              "doneWhen": "Có báo cáo chất lượng theo từng luật."
+              "title": "Kiểm chất lượng dữ liệu (Verify data quality)",
+              "doneWhen": "Báo cáo chất lượng: dữ liệu đủ chưa (phủ hết trường hợp), sai ở đâu và nhiều không, thiếu ở đâu và ghi thế nào; mỗi vấn đề có hướng xử lý.",
+              "notes": "Hướng xử lý cần cả hiểu biết về dữ liệu lẫn về lĩnh vực: hỏi chuyên gia trước khi xoá."
             }
           ]
         },
         {
-          "title": "Chuẩn bị dữ liệu",
-          "goal": "Ra bảng sạch, đủ đặc trưng, dựng lại được từ dữ liệu gốc.",
-          "doneWhen": "Một lệnh dựng lại bảng sạch từ dữ liệu gốc; lineage ghi đủ.",
+          "title": "Chuẩn bị dữ liệu (Data Preparation)",
+          "goal": "Ra bộ dữ liệu cho mô hình, dựng lại được, không rò rỉ từ tập test.",
+          "doneWhen": "Một lệnh dựng lại bộ dữ liệu từ dữ liệu gốc; tập test chưa bị nhìn.",
+          "notes": "Thứ tự trong mẫu: chọn → ghép → chia → làm sạch → tạo đặc trưng → định dạng.\nCRISP-DM 1.0 chia dữ liệu ở pha Mô hình hoá (task 4.2 Generate test design). Mẫu dời việc chia lên ngay sau ghép: làm sạch hay tạo đặc trưng trên toàn bộ dữ liệu thì thông tin của tập test lọt vào train (rò rỉ, leakage) và điểm test đẹp hơn thực tế.\nBiến đổi nào học tham số từ dữ liệu (điền thiếu, chuẩn hoá, mã hoá, chọn đặc trưng) thì fit chỉ trên train rồi áp cho validation và test; gói thành pipeline.",
           "subs": [
             {
-              "title": "Chọn dữ liệu đưa vào và ghi lý do"
+              "title": "Chọn dữ liệu (Select data)",
+              "doneWhen": "Danh sách dữ liệu đưa vào và loại ra (cả cột lẫn dòng) kèm lý do.",
+              "notes": "Tiêu chí: liên quan mục tiêu, chất lượng, giới hạn kỹ thuật.\nLoại cột chỉ biết sau sự kiện cần đoán: nguồn rò rỉ hay gặp nhất."
             },
             {
-              "title": "Tích hợp: ghép bảng, chuẩn hoá khoá"
+              "title": "Tích hợp dữ liệu (Integrate data)",
+              "doneWhen": "Bảng đã ghép: khoá chuẩn hoá, số dòng trước và sau mỗi lần ghép đã đối chiếu.",
+              "notes": "Gồm cả gộp nhiều dòng thành một (aggregation), ví dụ từ bảng giao dịch ra một dòng mỗi khách.\nGộp theo thời gian thì chỉ dùng dữ liệu trước mốc dự đoán."
             },
             {
-              "title": "Chia train / validation / test trước khi làm sạch",
-              "doneWhen": "Đã chọn cách chia (theo thời gian, ngẫu nhiên hay theo nhóm) và bỏ dòng trùng trước khi chia; tập test để riêng tới pha Đánh giá."
+              "title": "Chia train / validation / test (Generate test design)",
+              "doneWhen": "Đã ghi cách chia (theo thời gian, ngẫu nhiên, theo nhóm hay phân tầng), tỷ lệ, seed; bỏ dòng trùng trước khi chia; tập test cất riêng tới pha Đánh giá.",
+              "notes": "CRISP-DM 1.0 đặt task này ở pha Mô hình hoá (4.2). Mẫu dời lên đây để làm sạch và tạo đặc trưng không nhìn thấy tập test.\nDữ liệu theo thời gian: train là quá khứ, test là tương lai. Một người hay một nhóm có nhiều dòng: chia theo nhóm để không nằm ở cả hai phía."
             },
             {
-              "title": "Làm sạch: thiếu, trùng, sai kiểu",
-              "doneWhen": "Báo cáo chất lượng không còn lỗi chặn."
+              "title": "Làm sạch dữ liệu (Clean data)",
+              "doneWhen": "Báo cáo làm sạch: mỗi vấn đề trong báo cáo chất lượng đã xử lý thế nào, vì sao, có thể ảnh hưởng kết quả ra sao.",
+              "notes": "Sửa kiểu, đơn vị, lỗi nhập: làm như nhau trên mọi tập.\nĐiền thiếu, cắt ngoại lai theo ngưỡng: học giá trị từ train, áp cho validation và test."
             },
             {
-              "title": "Feature engineering",
-              "doneWhen": "Mỗi đặc trưng có định nghĩa và lý do."
+              "title": "Tạo dữ liệu mới, đặc trưng (Construct data)",
+              "doneWhen": "Mỗi đặc trưng mới có định nghĩa, công thức, lý do; bản ghi sinh thêm có mô tả.",
+              "notes": "Đặc trưng dùng thống kê của nhiều dòng (trung bình theo nhóm, target encoding) tính trên train.\nSinh thêm mẫu cho lớp hiếm (oversampling, SMOTE) chỉ làm trên train."
             },
             {
-              "title": "Fit mọi biến đổi chỉ trên tập train",
-              "doneWhen": "Điền thiếu, chuẩn hoá, mã hoá học tham số từ train rồi mới áp cho validation / test."
-            },
-            {
-              "title": "Ghi data lineage",
-              "doneWhen": "Script nào đọc gì, ra file nào."
+              "title": "Định dạng dữ liệu (Format data)",
+              "doneWhen": "Dữ liệu đúng khuôn công cụ mô hình cần (thứ tự cột, kiểu, bảng mã chữ) mà không đổi nghĩa."
             }
           ]
         },
         {
-          "title": "Mô hình hoá",
-          "goal": "Chọn và huấn luyện mô hình trả lời câu hỏi phân tích.",
-          "doneWhen": "Có mô hình vượt baseline trên tập validation, tham số đã ghi.",
+          "title": "Mô hình hoá (Modeling)",
+          "goal": "Chọn, huấn luyện, so các mô hình trên train và validation.",
+          "doneWhen": "Có mô hình vượt baseline trên validation; mỗi lần chạy đã ghi.",
+          "notes": "Lặp: dựng → đánh giá → chỉnh tham số → dựng lại. Không dùng tập test ở pha này.",
           "subs": [
             {
-              "title": "Chọn kỹ thuật mô hình và giả định của nó"
+              "title": "Chọn kỹ thuật mô hình (Select modeling technique)",
+              "doneWhen": "Ghi kỹ thuật sẽ dùng và giả định của nó về dữ liệu (phân phối, giá trị thiếu, kiểu biến).",
+              "notes": "Dùng nhiều kỹ thuật thì làm việc này cho từng cái.\nLuôn có một baseline đơn giản (đoán trung bình hay lớp đông nhất, hồi quy tuyến tính hay logistic) làm mốc so."
             },
             {
-              "title": "Dựng baseline",
-              "doneWhen": "Có điểm của baseline đơn giản để so."
+              "title": "Xây dựng mô hình (Build model)",
+              "doneWhen": "Có mô hình, tham số đã chọn kèm lý do, mô tả mô hình (diễn giải, khó khăn gặp phải).",
+              "notes": "Chỉnh tham số bằng cross-validation trên train hoặc bằng tập validation; không chạm tập test."
             },
             {
-              "title": "Huấn luyện và chỉnh tham số",
-              "doneWhen": "Chỉnh tham số bằng cross-validation trên train; không chạm tập test."
+              "title": "Đánh giá mô hình (Assess model)",
+              "doneWhen": "Bảng so và xếp hạng các mô hình theo tiêu chí kỹ thuật; tham số chỉnh lại cho vòng sau.",
+              "notes": "Đây là đánh giá kỹ thuật trên validation. Đánh giá theo mục tiêu nghiệp vụ ở pha 5."
             },
             {
-              "title": "Đánh giá kỹ thuật từng mô hình",
-              "doneWhen": "Bảng so mô hình theo chỉ số đã chốt."
+              "title": "Ghi thí nghiệm, đảm bảo tái lập (Assure reproducibility, CRISP-ML(Q))",
+              "doneWhen": "Mỗi lần chạy có: commit code, phiên bản dữ liệu, seed, phiên bản thư viện, tham số, điểm; chạy lại ra cùng số.",
+              "notes": "Báo điểm trung bình và độ lệch qua nhiều seed hay fold, không chỉ lần chạy đẹp nhất.\nGhi lần nào đổi gì và điểm đổi ra sao. Công cụ: một bảng tính là đủ; lớn hơn thì MLflow, DVC."
             }
           ]
         },
         {
-          "title": "Đánh giá",
-          "goal": "Xét kết quả theo tiêu chí nghiệp vụ, không chỉ theo chỉ số mô hình.",
-          "doneWhen": "Đã quyết: triển khai, lặp lại hay dừng; lý do ghi ở nhật ký quyết định.",
+          "title": "Đánh giá (Evaluation)",
+          "goal": "Xét kết quả theo mục tiêu nghiệp vụ, không chỉ theo chỉ số mô hình.",
+          "doneWhen": "Đã chạy tập test một lần; đã quyết triển khai, lặp lại hay dừng, lý do ở nhật ký quyết định.",
+          "notes": "Không đạt tiêu chí thì quay lại pha Mô hình hoá hay Chuẩn bị dữ liệu, hoặc dừng (CRISP-ML(Q)). Dùng nút Quay lại của bước ấy và ghi lý do.",
           "subs": [
             {
-              "title": "So kết quả với tiêu chí thành công",
-              "doneWhen": "Chạy một lần trên tập test."
+              "title": "Đánh giá kết quả (Evaluate results)",
+              "doneWhen": "Kết quả trên tập test so với tiêu chí thành công nghiệp vụ; câu kết: đã đạt mục tiêu chưa; danh sách mô hình được duyệt.",
+              "notes": "Tập test chạy một lần cho mô hình đã chọn. Chạy nhiều lần rồi chọn cái tốt nhất là biến test thành validation.\nGhi cả phát hiện ngoài mục tiêu ban đầu."
             },
             {
-              "title": "Phân tích lỗi theo nhóm"
+              "title": "Kết quả theo nhóm, độ vững, giải thích (CRISP-ML(Q))",
+              "doneWhen": "Bảng điểm theo từng nhóm (lớp, giai đoạn, vùng); đã thử với dữ liệu nhiễu; đặc trưng ảnh hưởng nhất hợp lý với chuyên gia.",
+              "notes": "Điểm trung bình tốt có thể giấu một nhóm rất tệ.\nĐặc trưng quan trọng nhất trông vô lý thường là dấu hiệu rò rỉ."
             },
             {
-              "title": "Soát lại quy trình: rò rỉ, bước bị bỏ, giả định sai"
+              "title": "Soát lại quy trình (Review process)",
+              "doneWhen": "Bản soát: việc bị sót, việc cần làm lại; chỉ dùng thuộc tính được phép dùng và có sẵn lúc dự đoán thật.",
+              "notes": "Hỏi: dựng mô hình đúng chưa? Có rò rỉ không (chia trước khi làm sạch, fit chỉ trên train)? Giả định nào chưa kiểm?"
             },
             {
-              "title": "Quyết định bước tiếp theo",
-              "doneWhen": "Ghi vào nhật ký quyết định."
+              "title": "Quyết định bước tiếp (Determine next steps)",
+              "doneWhen": "Danh sách phương án kèm lý do nên và không nên; quyết định và lý do ghi vào nhật ký quyết định.",
+              "notes": "Phương án: triển khai, lặp thêm vòng, mở dự án mới, dừng. Tính cả thời gian và nguồn lực còn lại."
             }
           ]
         },
         {
-          "title": "Triển khai",
+          "title": "Triển khai (Deployment)",
           "goal": "Đưa kết quả tới người dùng và giữ nó đúng theo thời gian.",
-          "doneWhen": "Người dùng nhận được kết quả; có kế hoạch theo dõi.",
+          "doneWhen": "Người dùng nhận kết quả; có kế hoạch giám sát; báo cáo cuối và bài học đã ghi.",
+          "notes": "Triển khai có thể chỉ là một báo cáo, hoặc một mô hình chạy mỗi ngày. Đồ án học tập: nộp và trình bày là triển khai.",
           "subs": [
             {
-              "title": "Trực quan hoá kết quả",
-              "doneWhen": "Mỗi hình có tiêu đề, trục, nguồn dữ liệu."
+              "title": "Lập kế hoạch triển khai (Plan deployment)",
+              "doneWhen": "Kế hoạch triển khai: chiến lược, các bước, cách làm từng bước; quy trình dựng lại mô hình đã ghi.",
+              "notes": "CRISP-ML(Q): thử trong điều kiện thật tăng dần; có phương án lùi (bản trước, baseline, luật đơn giản) khi lỗi."
             },
             {
-              "title": "Kế hoạch triển khai"
+              "title": "Lập kế hoạch giám sát và bảo trì (Plan monitoring and maintenance)",
+              "doneWhen": "Kế hoạch giám sát: theo dõi chỉ số gì, ngưỡng báo động, khi nào huấn luyện lại, ai chịu trách nhiệm.",
+              "notes": "CRISP-ML(Q) tách việc này thành pha riêng: dữ liệu thật đổi theo thời gian (drift) nên mô hình kém dần.\nTheo dõi phân phối đầu vào và dự đoán; có nhãn thật thì theo dõi điểm trực tiếp.\nMô hình cập nhật phải đánh giá lại và so với bản trước rồi mới thay."
             },
             {
-              "title": "Kế hoạch theo dõi và bảo trì: drift, lịch huấn luyện lại"
+              "title": "Viết model card (Mitchell et al., 2019)",
+              "doneWhen": "Model card có: mục đích dùng và không nên dùng, dữ liệu huấn luyện và đánh giá, chỉ số, kết quả theo nhóm, cân nhắc đạo đức, hạn chế.",
+              "notes": "Một trang là đủ. Mẫu gốc: https://arxiv.org/abs/1810.03993"
             },
             {
-              "title": "Viết báo cáo cuối",
-              "doneWhen": "Có câu hỏi, dữ liệu, phương pháp, kết quả, hạn chế."
+              "title": "Viết báo cáo cuối (Produce final report)",
+              "doneWhen": "Báo cáo cuối gom mọi sản phẩm trước và tóm kết quả; bài trình bày cuối.",
+              "notes": "Khung gợi ý: câu hỏi, dữ liệu, phương pháp, kết quả, hạn chế, khuyến nghị.\nMỗi số trong báo cáo truy được về code."
             },
             {
-              "title": "Rút kinh nghiệm dự án"
+              "title": "Nghiệm thu, bàn giao (Customer acceptance, TDSP)",
+              "doneWhen": "Người đặt bài toán xác nhận kết quả đạt yêu cầu; code, dữ liệu, tài liệu đã giao cho người vận hành hoặc đã nộp."
+            },
+            {
+              "title": "Rút kinh nghiệm dự án (Review project)",
+              "doneWhen": "Tài liệu kinh nghiệm: điều làm tốt, điều cần sửa, bẫy đã gặp, gợi ý cho dự án sau."
             }
           ]
         }
@@ -435,127 +467,119 @@
     {
       "id": "stats-report",
       "name": "Phân tích thống kê, viết báo cáo",
-      "description": "Từ câu hỏi tới báo cáo, không mô hình học máy: thiết kế, mô tả, kiểm định, ước lượng.",
+      "description": "Chu trình PPDAC (Problem, Plan, Data, Analysis, Conclusions) của tư duy thống kê: từ câu hỏi tới báo cáo, không học máy.",
       "steps": [
         {
-          "title": "Câu hỏi và thiết kế",
-          "goal": "Câu hỏi rõ, kế hoạch phân tích chốt trước khi xem kết quả.",
-          "doneWhen": "Kế hoạch phân tích đã ghi và lưu trước khi chạy kiểm định.",
+          "title": "Vấn đề (Problem)",
+          "goal": "Hiểu hệ thống đang xét và biến nó thành một câu hỏi thống kê rõ ràng.",
+          "doneWhen": "Câu hỏi một câu, có tổng thể, biến và giả thuyết; người đặt bài toán đồng ý.",
+          "notes": "Mẫu theo chu trình PPDAC (MacKay & Oldford, 1994) trong Wild & Pfannkuch (1999), Statistical Thinking in Empirical Enquiry. Tên tiếng Anh trong ngoặc là mục gốc của chu trình.\nhttps://ideas.repec.org/a/bla/istatr/v67y1999i3p223-248.html\nKết luận thường mở ra câu hỏi mới: chu trình lặp lại.",
           "subs": [
             {
-              "title": "Viết câu hỏi nghiên cứu",
-              "doneWhen": "Một câu, có biến và tổng thể."
+              "title": "Nắm hệ thống và bối cảnh (Grasping system dynamics)",
+              "doneWhen": "Ghi được hệ thống vận hành thế nào, yếu tố nào có thể ảnh hưởng kết quả, ai cần câu trả lời và để làm gì."
             },
             {
-              "title": "Viết giả thuyết H0 / H1"
+              "title": "Định nghĩa bài toán (Defining problem)",
+              "doneWhen": "Câu hỏi một câu, có tổng thể, đơn vị quan sát, biến trả lời, biến giải thích."
             },
             {
-              "title": "Chọn α, độ lớn hiệu ứng cần phát hiện, cỡ mẫu: phân tích công suất thống kê (power analysis)"
-            },
-            {
-              "title": "Viết kế hoạch phân tích",
-              "doneWhen": "Kiểm định, biến, cách xử lý thiếu và ngoại lai."
+              "title": "Viết giả thuyết H0 / H1",
+              "doneWhen": "Giả thuyết ghi trước khi xem dữ liệu."
             }
           ]
         },
         {
-          "title": "Dữ liệu",
+          "title": "Kế hoạch (Plan)",
+          "goal": "Chốt cách đo, cách lấy mẫu và cách phân tích trước khi xem kết quả.",
+          "doneWhen": "Kế hoạch phân tích đã ghi và lưu (có ngày) trước khi chạy kiểm định.",
+          "notes": "Chốt kế hoạch trước để không chọn phép thử theo p-value.",
+          "subs": [
+            {
+              "title": "Hệ đo lường (Measurement system)",
+              "doneWhen": "Mỗi biến có định nghĩa, cách đo, đơn vị; biết phép đo tin được tới đâu."
+            },
+            {
+              "title": "Thiết kế lấy mẫu, cỡ mẫu (Sampling design)",
+              "doneWhen": "Cách chọn mẫu; α, độ lớn hiệu ứng cần phát hiện, cỡ mẫu từ phân tích công suất (power analysis)."
+            },
+            {
+              "title": "Kế hoạch quản lý dữ liệu (Data management)",
+              "doneWhen": "Biết dữ liệu lưu ở đâu, đặt tên thế nào, ai được sửa; file gốc chỉ đọc."
+            },
+            {
+              "title": "Thử nhỏ và kế hoạch phân tích (Piloting & analysis)",
+              "doneWhen": "Đã thử thu thập trên mẫu nhỏ; kế hoạch phân tích ghi kiểm định, biến, cách xử lý thiếu và ngoại lai."
+            }
+          ]
+        },
+        {
+          "title": "Dữ liệu (Data)",
           "goal": "Có dữ liệu sạch, biết nguồn và giới hạn.",
           "doneWhen": "Bảng sạch dựng lại được bằng một lệnh; data card đủ.",
           "subs": [
             {
-              "title": "Thu thập dữ liệu",
-              "doneWhen": "Ghi nguồn, ngày lấy, điều khoản."
+              "title": "Thu thập dữ liệu (Data collection)",
+              "doneWhen": "Ghi nguồn, ngày lấy, điều khoản; chỗ lệch so với kế hoạch đã ghi."
             },
             {
-              "title": "Viết data card và data dictionary"
+              "title": "Quản lý dữ liệu (Data management)",
+              "doneWhen": "Có data card, data dictionary và lineage: file nào ra file nào."
             },
             {
-              "title": "Làm sạch: thiếu, trùng, sai",
-              "doneWhen": "Mỗi luật làm sạch có lý do."
-            },
-            {
-              "title": "Ghi lineage: file nào ra file nào"
+              "title": "Làm sạch dữ liệu (Data cleaning)",
+              "doneWhen": "Mỗi luật làm sạch có lý do; số dòng trước và sau mỗi luật."
             }
           ]
         },
         {
-          "title": "Thống kê mô tả",
-          "goal": "Thấy hình dạng dữ liệu trước khi kiểm định.",
-          "doneWhen": "Có bảng mô tả và hình phân phối cho mọi biến chính.",
+          "title": "Phân tích (Analysis)",
+          "goal": "Trả lời câu hỏi bằng phân tích đã chốt; tách rõ phân tích khám phá.",
+          "doneWhen": "Mỗi kết quả có ước lượng, độ lớn hiệu ứng, khoảng tin cậy (và p-value nếu kiểm định); phân tích ngoài kế hoạch ghi rõ là khám phá.",
           "subs": [
             {
-              "title": "Trung bình, trung vị, độ lệch chuẩn, khoảng tứ phân vị"
+              "title": "Khám phá dữ liệu (Data exploration)",
+              "doneWhen": "Bảng mô tả (trung bình, trung vị, độ lệch chuẩn, khoảng tứ phân vị) và hình phân phối cho mọi biến chính.",
+              "notes": "Ngoại lai: quyết giữ hay bỏ, lý do ghi ở nhật ký quyết định."
             },
             {
-              "title": "Histogram, box plot theo nhóm"
-            },
-            {
-              "title": "Tìm ngoại lai, quyết định giữ hay bỏ",
-              "doneWhen": "Lý do ghi ở nhật ký quyết định."
-            }
-          ]
-        },
-        {
-          "title": "Kiểm định và ước lượng",
-          "goal": "Trả lời câu hỏi bằng kiểm định đã chốt, kèm độ lớn hiệu ứng.",
-          "doneWhen": "Mỗi kết quả có p-value, độ lớn hiệu ứng và khoảng tin cậy.",
-          "subs": [
-            {
-              "title": "Kiểm giả định: độc lập, phân phối, phương sai bằng nhau"
-            },
-            {
-              "title": "Chạy kiểm định theo kế hoạch"
-            },
-            {
-              "title": "Hiệu chỉnh khi so nhiều lần"
-            },
-            {
-              "title": "Độ lớn hiệu ứng và khoảng tin cậy"
+              "title": "Phân tích theo kế hoạch (Planned analyses)",
+              "doneWhen": "Đã kiểm giả định (độc lập, phân phối, phương sai), chạy đúng kiểm định trong kế hoạch, hiệu chỉnh khi so nhiều lần, báo độ lớn hiệu ứng và khoảng tin cậy."
             },
             {
               "title": "Phân tích độ nhạy",
-              "doneWhen": "Kết luận có đổi khi đổi giả định hay bỏ ngoại lai không."
+              "doneWhen": "Biết kết luận có đổi không khi đổi giả định hay bỏ ngoại lai."
+            },
+            {
+              "title": "Phân tích ngoài kế hoạch (Unplanned analyses)",
+              "doneWhen": "Ghi rõ là khám phá, không trình bày như kết quả xác nhận."
+            },
+            {
+              "title": "Sinh giả thuyết mới (Hypothesis generation)",
+              "doneWhen": "Giả thuyết mới ghi lại cho vòng sau, không kiểm trên chính dữ liệu đã gợi ra nó."
             }
           ]
         },
         {
-          "title": "Trực quan hoá",
-          "goal": "Hình nói đúng điều kiểm định nói.",
-          "doneWhen": "Mỗi hình có tiêu đề, trục, đơn vị, nguồn dữ liệu.",
-          "subs": [
-            {
-              "title": "Chọn loại hình theo câu hỏi"
-            },
-            {
-              "title": "Vẽ hình kết quả chính, có khoảng tin cậy"
-            },
-            {
-              "title": "Soát trục, thang đo, màu"
-            }
-          ]
-        },
-        {
-          "title": "Báo cáo",
-          "goal": "Người đọc làm lại được và hiểu giới hạn.",
+          "title": "Kết luận (Conclusions)",
+          "goal": "Người đọc hiểu kết quả, giới hạn của nó, và làm lại được.",
           "doneWhen": "Báo cáo đủ phần; chạy lại từ đầu ra đúng số trong báo cáo.",
           "subs": [
             {
-              "title": "Viết phương pháp",
-              "doneWhen": "Đủ để người khác làm lại."
+              "title": "Diễn giải (Interpretation)",
+              "doneWhen": "Kết quả nói bằng ngôn ngữ của bài toán; phân biệt ý nghĩa thống kê với ý nghĩa thực tế."
             },
             {
-              "title": "Viết kết quả",
-              "doneWhen": "Mỗi số trong báo cáo truy được về code."
+              "title": "Kết luận và hạn chế (Conclusions)",
+              "doneWhen": "Kết luận trả lời đúng câu hỏi ở bước 1; ghi hạn chế và mối đe doạ tới giá trị kết luận; chỉ nói nhân quả khi thiết kế cho phép."
             },
             {
-              "title": "Viết hạn chế và mối đe doạ tới giá trị kết luận"
+              "title": "Ý tưởng mới (New ideas)",
+              "doneWhen": "Câu hỏi mở cho vòng PPDAC sau."
             },
             {
-              "title": "Trích dẫn nguồn dữ liệu và tài liệu"
-            },
-            {
-              "title": "Soát lại toàn bài"
+              "title": "Truyền đạt (Communication)",
+              "doneWhen": "Báo cáo: phương pháp đủ để làm lại, mỗi số truy được về code, hình có tiêu đề, trục, đơn vị, nguồn; trích dẫn nguồn dữ liệu và tài liệu."
             }
           ]
         }
