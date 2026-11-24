@@ -665,7 +665,7 @@ function renderWsList() {
     const o = C.overall(w);
     const tpl = templates.find((t) => t.id === w.templateId);
     const now = w.id === curId;
-    const meta = [tpl && tpl.steps.length ? tpl.name : '', C.plural(w.steps.length, 'step'), `edited ${fmtDate(w.updatedAt.slice(0, 10))}`];
+    const meta = [tpl && tpl.steps.length && C.fold(tpl.name) !== C.fold(w.name) ? tpl.name : '', C.plural(w.steps.length, 'step'), `edited ${fmtDate(w.updatedAt.slice(0, 10))}`];
     return h('li', { class: 'ws-item' + (now ? ' now' : ''), 'data-ws': w.id },
       h('button', { type: 'button', class: 'ws-open', 'data-act': 'ws-open', 'aria-current': now ? 'true' : null },
         h('span', { class: 'ws-top' }, h('b', { class: 'ws-title' }, w.name), now && h('span', { class: 'ws-now' }, 'Open now')),

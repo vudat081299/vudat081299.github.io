@@ -92,12 +92,14 @@ const check = (name, ok, detail = '') => {
     open: document.getElementById('ws-tab-open').getAttribute('aria-selected'), rows: document.querySelectorAll('#ws-list .ws-item').length,
     count: document.getElementById('ws-count').textContent, now: document.querySelectorAll('#ws-list .ws-item.now [aria-current="true"]').length,
     create: document.getElementById('ws-create').hidden, acts: [...document.querySelectorAll('#ws-list .ws-item:first-child .ws-acts button')].map((b) => b.title).join(),
+    // Dự án mang đúng tên mẫu: dòng phụ không lặp lại tên ấy.
+    dupName: [...document.querySelectorAll('#ws-list .ws-item')].filter((li) => li.querySelector('.ws-meta').textContent.startsWith(li.querySelector('.ws-title').textContent + ' ·')).length,
   }));
   await page.click('#ws-tab-new');
   const wsn = await page.evaluate(() => ({ create: document.getElementById('ws-create').hidden, list: document.getElementById('ws-pane-open').hidden,
     checked: document.querySelectorAll('#ws-new-templates .tpl:has(input:checked)').length, cards: document.querySelectorAll('#ws-new-templates .tpl').length }));
   check('hộp Dự án: tab Open, dòng đang mở đánh dấu, hành động gọn; tab New có Create và thẻ mẫu',
-    wsd.open === 'true' && wsd.rows === 5 && wsd.count === '5' && wsd.now === 1 && wsd.create && wsd.acts === 'Rename,Duplicate,Delete'
+    wsd.open === 'true' && wsd.rows === 5 && wsd.count === '5' && wsd.now === 1 && wsd.create && wsd.acts === 'Rename,Duplicate,Delete' && wsd.dupName === 0
     && !wsn.create && wsn.list && wsn.checked === 1 && wsn.cards === 5, JSON.stringify({ wsd, wsn }));
   await page.keyboard.press('Escape');
   // Số bước / bước con của CRISP-DM đọc từ templates.json, không ghi tay (mẫu đổi thì smoke theo).
