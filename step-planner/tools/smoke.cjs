@@ -133,10 +133,17 @@ const check = (name, ok, detail = '') => {
   await page.selectOption('#sub-form [name="status"]', 'cancel');
   check('chọn Huỷ: hiện ô "Vì sao huỷ"', await page.isVisible('#sub-cancel'));
   await page.fill('#sub-form [name="cancelReason"]', 'Đã có số liệu từ nguồn khác\nkhông cần làm lại');
+  await page.fill('#sub-form [name="due"]', '2020-01-02');
   await page.click('#sub-form button[type="submit"]');
+  // Thẻ huỷ: hạn đã qua không báo trễ.
+  const cxl = await page.evaluate((sel) => {
+    const c = document.querySelector(sel);
+    return { due: c.querySelector('.due')?.textContent, overdue: !!c.querySelector('.overdue') };
+  }, c12);
+  check('Huỷ: hạn đã qua không báo trễ', cxl.due === 'hạn 02/01/2020' && !cxl.overdue, JSON.stringify(cxl));
   const cx = await page.evaluate((sel) => {
     const c = document.querySelector(sel);
-    return { chip: c.querySelector('.chip').textContent, reason: c.querySelector('.card-cancel')?.textContent, line: getComputedStyle(c.querySelector('.card-title')).textDecorationLine,
+    return { chip: c.querySelector('.chip').textContent, reason: c.querySelector('.card-cancel')?.textContent, line: getComputedStyle(c.querySelector('.card-title .link')).textDecorationLine,
       prog: document.querySelector('.step:nth-child(1) .prog').textContent, next: document.querySelector('.card.next .num')?.textContent,
       legend: [...document.querySelectorAll('#legend li')].map((li) => li.textContent).join(',') };
   }, c12);
@@ -145,6 +152,10 @@ const check = (name, ok, detail = '') => {
   check('Huỷ: lưu lý do', (await cur(page)).steps[0].subs[1].cancelReason === 'Đã có số liệu từ nguồn khác\nkhông cần làm lại');
   await page.click(`${c12} [data-act="cycle"]`);
   check('bấm chip Huỷ → Chưa làm, lý do bỏ', (await page.textContent(`${c12} .chip`)).trim() === 'Chưa làm' && (await cur(page)).steps[0].subs[1].cancelReason === '');
+  check('về Chưa làm: hạn đã qua báo trễ', !!(await page.$(`${c12} .due.overdue`)));
+  await page.click(`${c12} [data-act="edit-sub"]`);
+  await page.fill('#sub-form [name="due"]', '');
+  await page.click('#sub-form button[type="submit"]');
 
   // Thêm bước con có đủ trường.
   await page.click('.step:nth-child(1) [data-act="add-sub"]');

@@ -46,6 +46,7 @@
   huỷ của bước đầu tiên còn việc.
 - Bấm chip: chưa làm → đang làm → xong → chưa làm; bị chặn → đang làm; bỏ qua, huỷ → chưa làm. Bị chặn, bỏ qua, huỷ chọn
   trong hộp sửa; chọn Huỷ thì hiện ô "Vì sao huỷ". Thẻ huỷ: tên gạch, lý do trong thân thẻ (cắt và "Xem thêm" như ghi chú).
+  Hạn đã qua thì báo "(trễ)", trừ thẻ xong, bỏ qua, huỷ.
 - Bấm vào thẻ (ngoài nút) là mở hộp sửa. Mỗi thẻ chỉ hai điểm dừng Tab: tên (mở sửa) và chip.
 - Nút phụ (dời, nhân bản, xoá, cần làm lại, tài liệu, nhãn kẹp, "Xem thêm") có `tabindex=-1`. Bàn phím làm cùng việc: Alt
   + ← → trên tên bước con, Alt + ↑ ↓ trên tên bước, ô "Thuộc bước" / "Vị trí" và các nút trong hộp sửa.

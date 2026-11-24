@@ -247,7 +247,7 @@ function renderBoard(/** @type {any} */ ws) {
     const cards = visible.map((/** @type {any} */ x) => {
       const j = step.subs.indexOf(x);
       const label = C.STATUS_LABEL[x.status];
-      const overdue = x.due && x.due < todayStr && x.status !== 'done' && x.status !== 'skip';
+      const overdue = x.due && x.due < todayStr && x.status !== 'done' && !C.outOfScope(x.status);
       const isNext = x.id === nextId;
       return h('li', { class: `card st-${x.status}${isNext ? ' next' : ''}`, 'data-sub': x.id, draggable: filtering ? null : 'true' },
         h('div', { class: 'card-top' },

@@ -497,7 +497,8 @@ svg.i {
 }
 .card .acts { flex: none; margin-top: auto; gap: 0; margin-inline: calc(-1 * var(--s1)); margin-bottom: calc(-1 * var(--s1)); }
 .card.st-done .card-title, .card.st-skip .card-title { color: var(--ink-3); }
-.card.st-skip .card-title, .card.st-cancel .card-title { text-decoration: line-through; }
+/* Nút tên là inline-block: nét gạch của h3 không vẽ qua nó, nên gạch trên chính nút. */
+.card.st-skip .card-title .link, .card.st-cancel .card-title .link { text-decoration: line-through; }
 .card.st-cancel .card-title { color: var(--ink-3); }
 .card-cancel { font-size: var(--fs-xs); color: var(--ink-2); white-space: pre-line; overflow-wrap: anywhere; }
 .card.add {
