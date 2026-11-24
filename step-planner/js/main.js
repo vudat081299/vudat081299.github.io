@@ -164,6 +164,10 @@ function render() {
   renderLegend(ws);
   $('hint').hidden = S.hintHidden();
   renderWsNotes(ws);
+  const compact = S.compactOn();
+  $('board').classList.toggle('compact', compact);
+  $('compact-btn').setAttribute('aria-pressed', String(compact));
+  $('log-btn-text').textContent = `Nhật ký (${ws.log.length})`;
   renderBoard(ws);
   renderLog(ws);
 }
@@ -514,6 +518,18 @@ $('hint-off').addEventListener('click', () => {
   S.hideHint();
   $('hint').hidden = true;
   refocus('#q');
+});
+
+/* ── Chế độ Gọn (ẩn "Xong khi" và ghi chú trên bảng) và nút tới nhật ký ── */
+
+$('compact-btn').addEventListener('click', () => {
+  S.setCompact(!S.compactOn());
+  render();
+});
+$('log-btn').addEventListener('click', () => {
+  const log = $('log');
+  log.scrollIntoView({ block: 'start' });
+  log.focus({ preventScroll: true });
 });
 
 /* ── Ghi chú dự án ── */

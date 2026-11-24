@@ -84,6 +84,20 @@ export function saveTheme(t) {
   try { localStorage.setItem(THEME_KEY, t); } catch (e) { /* theme chỉ giữ trong phiên */ }
 }
 
+/* Chế độ Gọn (ẩn "Xong khi" và ghi chú trên bảng): nhớ ở máy này. Bộ nhớ bị chặn thì chỉ nhớ trong phiên. */
+const COMPACT_KEY = 'stepPlanner.compact';
+/** @type {boolean | null} */
+let compactMem = null;
+export function compactOn() {
+  if (compactMem !== null) return compactMem;
+  try { return localStorage.getItem(COMPACT_KEY) === '1'; } catch (e) { return false; }
+}
+/** @param {boolean} on */
+export function setCompact(on) {
+  compactMem = on;
+  try { localStorage.setItem(COMPACT_KEY, on ? '1' : '0'); } catch (e) { /* chỉ nhớ trong phiên */ }
+}
+
 /* Mẹo "bấm thẻ để sửa…": người dùng tắt thì nhớ ở máy này. Bộ nhớ bị chặn thì tắt trong phiên. */
 const HINT_KEY = 'stepPlanner.hintOff';
 let hintOff = false;

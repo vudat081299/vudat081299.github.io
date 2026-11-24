@@ -17,7 +17,7 @@
 | `css/planner.css` | token ở đầu (tới dòng `/* ── hết token ── */`), rồi từng component, mỗi khối mở bằng một dòng chú thích |
 | `js/core.js` | logic thuần: chuẩn hoá, ngày, tiến độ, việc tiếp theo, Markdown và JSON vào / ra; không DOM, chạy được trong Node |
 | `js/md.js` | Markdown của tài liệu văn bản → cây khối (`parseMd`, thuần) → DOM (`renderMd`, chỉ createElement / text node) |
-| `js/store.js` | `localStorage` (dữ liệu, mẹo `stepPlanner.hintOff`, theme `hub-theme`), `sessionStorage` (dự án của tab); mọi truy cập bọc try/catch |
+| `js/store.js` | `localStorage` (dữ liệu, mẹo `stepPlanner.hintOff`, Gọn `stepPlanner.compact`, theme `hub-theme`), `sessionStorage` (dự án của tab); mọi truy cập bọc try/catch |
 | `js/main.js` | vẽ bảng, sự kiện, hộp thoại, kéo thả, toast Hoàn tác, nhắc sao lưu |
 | `data/templates.json` | mẫu dự án, trang đọc bằng vòng lặp (REPO-001) |
 
@@ -56,7 +56,8 @@
   sách bước con đưa về "Chưa làm" — mặc định không chọn, nút "Chọn tất cả đã xong". Đánh dấu mới mở vòng `round + 1`, ghi
   nhật ký "Làm lại: tên bước (vòng N)" với lý do; một Hoàn tác trả cả trạng thái thẻ, nhật ký, đánh dấu, vòng. Băng
   "Đang làm lại · Vòng N · ngày · lý do" (bấm để sửa lý do), nút "Xong, bỏ đánh dấu" (vòng giữ để lần sau tăng tiếp).
-- Mẹo người mới hiện trên bảng tới khi bấm ×; nhớ ở `localStorage['stepPlanner.hintOff']`.
+- Mẹo người mới hiện trên bảng tới khi bấm × (nhớ ở máy này). Nút "Gọn" (nhớ ở máy này) ẩn "Xong khi" và ghi chú trên thẻ
+  và cột bước. Nút "Nhật ký (N)" cuộn tới khung nhật ký và focus vào đó.
 - Tìm không phân biệt hoa thường và dấu, khớp cả tên tài liệu. Tên, mục tiêu, ghi chú hay tài liệu của bước khớp thì
   hiện cả hàng. Đang tìm thì tắt sắp xếp và nút thêm bước; thẻ mới bị lọc ẩn thì toast "Đã thêm — đang bị bộ lọc ẩn".
 - Xoá bước con, quyết định, tài liệu: một bấm. Xoá bước còn bước con: hỏi lại. Sau khi xoá, focus nhảy vào Hoàn tác của
@@ -144,8 +145,8 @@ Tài liệu:
   thụt thêm hai. Link `- [tên](url)`, url có ngoặc thì `(<url>)`. Văn bản `- tên` rồi khối rào thụt thêm hai, rào `` ` ``
   dài hơn chuỗi `` ` `` dài nhất trong thân (tối thiểu ba), dòng trống của thân ghi rỗng. Trong tên: `\`, `[`, `]` thoát
   bằng `\`.
-- Dòng đầu (`Data Science Step Planner · …` hay `Step Planner · …` cũ) chỉ để đọc; trang không dựa vào nó.
-- Số `1.1`, `1.2` trên bảng là số suy ra, không ghi vào Markdown.
+- Dòng đầu (`Data Science Step Planner · …` hay `Step Planner · …` cũ) chỉ để đọc; trang không dựa vào nó. Số `1.1`, `1.2`
+  là số suy ra, không ghi vào Markdown.
 
 Nhập file cũ và Markdown viết tay (dễ dãi):
 
@@ -176,6 +177,7 @@ Nhập file cũ và Markdown viết tay (dễ dãi):
 - Dáng chung chép từ `md-annotate/` (token, thanh trên, nút, nhóm chọn, ô nhập, màn đầu, hộp thoại, toast, bản xem
   Markdown `.ma-md`): chép vào file của project này, không link sang project khác. Sửa dáng thì so ảnh với md-annotate.
 - Theme theo hệ điều hành tới khi bấm nút (REPO-024), khoá `hub-theme` chung cả site.
+- Thanh trên ghi đủ `vudat081299 / Data Science Step Planner`, không cắt "…"; hẹp thì xuống dòng.
 - Biểu tượng: một bộ `<symbol id="i-…">` trong `index.html`; HTML và `icon()` của `main.js` dùng `<use>`. Không dùng ký tự
   unicode làm biểu tượng. Nút chỉ có biểu tượng thì có `aria-label` và `title`.
 - Đầu dự án: tên (bấm để đổi dự án), tiến độ chung, chú giải trạng thái kèm số bước con (đếm, không ghi tay). Chip

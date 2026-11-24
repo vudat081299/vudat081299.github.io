@@ -217,9 +217,10 @@ svg.i {
   width: calc(var(--icon-xl) * .375); height: calc(var(--s1) - 1px); border-radius: 1px; background: var(--accent);
 }
 .brand b { font-weight: 500; color: var(--ink); }
-.brand-txt { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* Tên đầy đủ, không cắt bằng "…": hẹp thì xuống dòng. */
+.brand-txt { min-width: 0; line-height: var(--lh-tight); overflow-wrap: anywhere; }
 .bar-sp { flex: 1; }
-@media (max-width: 359px) { .brand-own { display: none; } }
+@media (max-width: 640px) { .brand-own { display: block; } }
 
 /* ── Nút (chép từ md-annotate: .ma-btn, .ma-icbtn) — chính (go), phụ (mặc định), trơn (quiet), cảnh báo, chỉ biểu tượng ── */
 .btn, .icon-btn {
@@ -340,12 +341,17 @@ svg.i {
 .search .input { padding-left: calc(var(--s3) + var(--icon) + var(--s2)); }
 .filter-note { font-size: var(--fs-sm); color: var(--ink-3); }
 .tool-btns { display: flex; align-items: center; gap: var(--s1); flex-wrap: wrap; }
+/* Nút bật / tắt (Gọn): đang bật thì nền rãnh, chữ đậm. */
+.btn[aria-pressed="true"] { color: var(--ink); background: var(--surface-2); border-color: var(--line); }
 @media (max-width: 640px) {
   .search { flex: 1 1 100%; }
   .tools-gap { display: none; }
   .tool-btns { flex: 1 1 100%; }
   .tool-btns .btn { flex: 1 1 0; padding: 0 var(--s2); }
 }
+
+/* ── Chế độ Gọn: thẻ và cột bước chỉ còn số, tên, chip, hạn, nhãn tài liệu ── */
+.board.compact :is(.card-done, .card-notes, .step-done, .step-notes) { display: none; }
 
 /* ── Ghi chú dự án (gập) ── */
 .ws-notes { padding: 0 0 var(--s3); font-size: var(--fs-sm); }

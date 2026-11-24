@@ -412,11 +412,28 @@ const check = (name, ok, detail = '') => {
   await page.click('#hint-off');
   check('tắt mẹo: ẩn ngay', !(await page.isVisible('#hint')));
 
+  // Chế độ Gọn: ẩn "Xong khi" và ghi chú trên thẻ và cột bước, giữ số, tên, chip, nhãn tài liệu; nhớ qua lần tải lại.
+  const shown = (sel) => page.$$eval(sel, (els) => els.filter((e) => e.offsetParent !== null).length);
+  const full = [await shown('.card-done'), await shown('.step-done'), await shown('.step-notes')];
+  await page.click('#compact-btn');
+  check('Gọn: ẩn Xong khi và ghi chú, còn số, tên, chip, nhãn tài liệu', full.every((n) => n > 0)
+    && (await shown('.card-done, .card-notes, .step-done, .step-notes')) === 0 && (await page.getAttribute('#compact-btn', 'aria-pressed')) === 'true'
+    && (await shown('.card .num')) > 0 && (await shown('.card-title')) > 0 && (await shown('.card .chip')) > 0 && (await shown('.doc-tag')) > 0, full.join());
+  // Nút "Nhật ký (N)": đúng số, bấm thì cuộn tới khung nhật ký và focus vào đó.
+  const nLogNow = (await cur(page)).log.length;
+  check('nút Nhật ký có số mục', (await page.textContent('#log-btn')).trim() === `Nhật ký (${nLogNow})`);
+  await page.click('#log-btn');
+  check('nút Nhật ký: cuộn tới nhật ký, focus ở đó', await page.evaluate(() => document.activeElement?.id === 'log'
+    && document.getElementById('log').getBoundingClientRect().top < innerHeight / 2 && document.getElementById('log').getBoundingClientRect().top >= 0));
+
   // Tải lại: còn nguyên, mở đúng dự án.
   const beforeReload = await cur(page);
   await page.reload();
   await page.waitForSelector('#app:not([hidden]) .step');
   check('tắt mẹo: vẫn ẩn sau khi tải lại', !(await page.isVisible('#hint')));
+  check('Gọn: vẫn bật sau khi tải lại', (await page.getAttribute('#compact-btn', 'aria-pressed')) === 'true' && (await shown('.card-done')) === 0);
+  await page.click('#compact-btn');
+  check('tắt Gọn: Xong khi hiện lại', (await page.getAttribute('#compact-btn', 'aria-pressed')) === 'false' && (await shown('.card-done')) > 0);
   const afterReload = await cur(page);
   check('tải lại: giữ dữ liệu và dự án đang mở', JSON.stringify(beforeReload) === JSON.stringify(afterReload)
     && /CRISP-DM/.test(await page.textContent('#ws-name')));
@@ -661,6 +678,13 @@ const check = (name, ok, detail = '') => {
   check('390px: không tràn ngang trang', (await hOverflow(m.page)) === 0, String(await hOverflow(m.page)));
   check('390px: tên bước nằm trên hàng bước con, hàng cuộn ngang bên trong', mob.stacked && mob.scrolls && mob.whole);
   check('390px: lề 16px', Math.round(mob.left) === 16, String(mob.left));
+  const brand = await m.page.evaluate(() => {
+    const t = document.querySelector('.brand-txt');
+    return { text: t.textContent, fits: t.scrollWidth <= t.clientWidth && t.getBoundingClientRect().right <= document.getElementById('theme-btn').getBoundingClientRect().left,
+      ellipsis: getComputedStyle(t).textOverflow };
+  });
+  check('390px: thanh trên ghi tên đầy đủ, không cắt "…"', brand.text === 'vudat081299 / Data Science Step Planner' && brand.fits
+    && brand.ellipsis !== 'ellipsis', JSON.stringify(brand));
   const small = await m.page.evaluate(() => {
     const bad = [];
     const els = document.querySelectorAll('.step:first-child .card[data-sub]:first-child button:not([data-act="edit-sub"]),'
