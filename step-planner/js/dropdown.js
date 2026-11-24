@@ -65,6 +65,19 @@ function place() {
   pop.dataset.side = up ? 'up' : 'down';
 }
 
+/** Nút mở còn thấy được: trong khung nhìn và trong mọi khung cuộn / cắt chứa nó. @param {HTMLElement} a */
+function anchorShown(a) {
+  const r = a.getBoundingClientRect();
+  if (!a.isConnected || !r.width || r.bottom <= 0 || r.top >= innerHeight || r.right <= 0 || r.left >= innerWidth) return false;
+  for (let p = a.parentElement; p && p !== document.body; p = p.parentElement) {
+    const cs = getComputedStyle(p);
+    if (!/auto|scroll|hidden|clip/.test(cs.overflowX + cs.overflowY)) continue;
+    const q = p.getBoundingClientRect();
+    if (r.right <= q.left || r.left >= q.right || r.bottom <= q.top || r.top >= q.bottom) return false;
+  }
+  return true;
+}
+
 /** @param {number} i */
 function setActive(i) {
   if (!cur) return;
@@ -158,7 +171,7 @@ function onKey(e) {
   e.stopPropagation(); // Esc không đóng luôn hộp thoại chứa nó
 }
 
-/* Bấm ra ngoài: đóng (bấm lại đúng nút mở thì chỉ đóng, không mở lại). Cuộn trang hay đổi cỡ: đóng. */
+/* Bấm ra ngoài: đóng (bấm lại đúng nút mở thì chỉ đóng, không mở lại). Đổi cỡ: đóng. */
 document.addEventListener('pointerdown', (e) => {
   if (!cur) return;
   const t = /** @type {Node} */ (e.target);
@@ -166,8 +179,11 @@ document.addEventListener('pointerdown', (e) => {
   if (cur.anchor.contains(t)) cur.anchor.dataset.ddJustClosed = '1';
   closeList();
 }, true);
+/* Cuộn (trang, hàng thẻ, thân hộp thoại): nút mở còn thấy thì danh sách đi theo nó, khuất hẳn thì đóng. Hàng thẻ vừa vuốt còn
+   trôi khi ngón chạm chip: cuộn ấy không được đóng danh sách vừa mở. */
 document.addEventListener('scroll', (e) => {
-  if (cur && !cur.pop.contains(/** @type {Node} */ (e.target))) closeList();
+  if (!cur || cur.pop.contains(/** @type {Node} */ (e.target))) return;
+  if (anchorShown(cur.anchor)) place(); else closeList();
 }, true);
 window.addEventListener('resize', () => closeList());
 document.addEventListener('focusin', (e) => {

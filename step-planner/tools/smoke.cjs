@@ -1198,6 +1198,26 @@ const check = (name, ok, detail = '') => {
   check('390px: không tràn ngang trang', (await hOverflow(m.page)) === 0, String(await hOverflow(m.page)));
   check('390px: tên bước nằm trên hàng bước con, hàng cuộn ngang bên trong', mob.stacked && mob.scrolls && mob.whole);
   check('390px: lề 16px', Math.round(mob.left) === 16, String(mob.left));
+  // Danh sách trạng thái mở trên chip của hàng thẻ đang cuộn: cuộn tới (hàng vừa vuốt còn trôi, hay trình duyệt cuộn chip vào tầm
+  // nhìn khi bấm) không đóng nó, nó đi theo chip; chip khuất hẳn thì đóng.
+  const follow = await m.page.evaluate(async () => {
+    const frame = () => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    const sc = document.querySelector('.step .cards-scroll');
+    sc.scrollIntoView({ block: 'center' });
+    const chip = sc.querySelectorAll('.card[data-sub] [data-act="status"]')[1];
+    sc.scrollLeft = chip.getBoundingClientRect().right - sc.getBoundingClientRect().right + 20;
+    await frame();
+    chip.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, shiftKey: true }));
+    sc.scrollLeft += 60;
+    await frame();
+    const pop = document.querySelector('.dd-pop');
+    const gap = pop && Math.round(pop.getBoundingClientRect().top - chip.getBoundingClientRect().bottom);
+    sc.scrollLeft = 0;
+    await frame();
+    return { open: !!pop, gap, closed: !document.querySelector('.dd-pop') };
+  });
+  check('390px: danh sách trạng thái không đóng khi hàng thẻ cuộn, đi theo chip; chip khuất thì đóng', follow.open && follow.gap >= 0 && follow.gap <= 8
+    && follow.closed, JSON.stringify(follow));
   const brand = await m.page.evaluate(() => {
     const t = document.querySelector('.brand-txt');
     return { text: t.textContent, fits: t.scrollWidth <= t.clientWidth && t.getBoundingClientRect().right <= document.getElementById('theme-btn').getBoundingClientRect().left,
