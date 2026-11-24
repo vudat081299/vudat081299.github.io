@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Cổng của md-annotate/: dữ liệu gợi ý, luật an toàn và cấu trúc file của trang.
 
-  1. data/hints.json: có `hints` là danh sách chuỗi (và `renamed` cũ → mới trỏ đúng gợi ý), không rỗng, ≤ 80 ký tự (MAX_HINT trong trang),
+  1. data/hints.json: có `hints` là danh sách chuỗi (và `renamed` cũ → mới trỏ đúng gợi ý), không rỗng (không giới hạn độ dài, MDAN-087),
      không trùng sau khi chuẩn hoá như trang làm (chữ thường, gộp khoảng trắng, bỏ dấu chấm cuối),
      đủ 6 mục để hộp nhận xét có đủ gợi ý ở lần mở đầu. `remove` (nhận xét của Mod + 1), nếu có, là chuỗi không rỗng.
   2. js/**/*.js + index.html: chỉ một chỗ gán innerHTML, và chỗ ấy nhận HTML đã qua DOMPurify.
@@ -27,7 +27,6 @@ import sys
 import unicodedata
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-MAX_HINT = 80
 errors = []
 
 
@@ -52,8 +51,6 @@ if data is not None:
         if not isinstance(h, str) or not h.strip():
             errors.append(f'data/hints.json: hints[{i}] rỗng hoặc không phải chuỗi')
             continue
-        if len(h.strip()) > MAX_HINT:
-            errors.append(f'data/hints.json: "{h}" dài {len(h)} ký tự (tối đa {MAX_HINT})')
         k = norm(h)
         if k in seen:
             errors.append(f'data/hints.json: "{h}" trùng với "{seen[k]}"')

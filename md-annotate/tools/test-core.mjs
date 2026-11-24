@@ -169,13 +169,26 @@ const bp = (o, d) => { const u = upS(o); return dpPrompt.buildPrompt(u, u.docs[u
     dpHints.migrateHints(own, renamed);
     check('migrateHints: nhận xét tự gõ trùng chữ gợi ý cũ không bị đổi', eq(Object.keys(own.items), ['add an example']) && own.items['add an example'].n === 2, JSON.stringify(own));
   }
-  // Nhận xét đã dùng một lần thành gợi ý, đứng trên gợi ý mặc định chưa dùng; dài quá 80 ký tự thì không (MDAN-086).
+  // Nhận xét đã dùng một lần thành gợi ý, đứng trên gợi ý mặc định chưa dùng (MDAN-086).
   {
     const st = { items: {} };
     dpHints.seedHints(st, ['Mặc định']);
     dpHints.countUse(st, 'Câu này sai');
-    dpHints.countUse(st, 'x'.repeat(81));
     check('rankedHints: nhận xét dùng một lần đã là gợi ý, đứng đầu', eq(dpHints.rankedHints(st).map((x) => x.key), ['câu này sai', 'mặc định']));
+  }
+  // Gợi ý không giới hạn độ dài; gợi ý dài hiện 80 ký tự đầu, không cắt đôi emoji (MDAN-087).
+  {
+    const st = { items: {} };
+    const long = 'Đoạn này dài quá, '.repeat(12).trim();   // 215 ký tự
+    check('countUse: nhận xét 200+ ký tự được đếm, thành gợi ý với chữ trọn', long.length > 200 && dpHints.countUse(st, '  ' + long + ' ') &&
+      eq(dpHints.rankedHints(st).map((x) => x.t), [long]) && dpHints.chipHints(st, '').list[0].t === long, long.length);
+    check('countUse: chữ rỗng vẫn không đếm', !dpHints.countUse(st, '   ') && Object.keys(st.items).length === 1);
+    check('chipHints: lọc theo chữ ở đuôi gợi ý dài (sau ký tự 80)', dpHints.chipHints(st, long.slice(-30)).list.length === 1);
+    const s80 = 'a'.repeat(80), c = dpHints.hintShown(long);
+    check('hintShown: dài hơn 80 thì 80 ký tự đầu, cut', dpHints.HINT_SHOW === 80 && c.cut && c.text === long.slice(0, 80) && c.text.length === 80, JSON.stringify(c));
+    check('hintShown: đúng 80 hay ngắn hơn thì giữ nguyên, không cut', eq(dpHints.hintShown(s80), { text: s80, cut: false }) && eq(dpHints.hintShown('Ngắn'), { text: 'Ngắn', cut: false }));
+    const emo = '😀'.repeat(81), e = dpHints.hintShown(emo);
+    check('hintShown: đếm theo ký tự, không cắt đôi emoji', e.cut && Array.from(e.text).length === 80 && e.text === '😀'.repeat(80), e.text.length);
   }
   // Chip trong hộp nhận xét: gọn 5 + "+N", 'all' mọi gợi ý không trần (MDAN-084); cùng thứ tự, lọc theo chữ vẫn áp.
   {

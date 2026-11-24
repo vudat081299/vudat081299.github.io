@@ -1,10 +1,11 @@
 /* Gợi ý nhận xét, thuần: số đếm (stats = { items: khoá chuẩn hoá → { t, n, last, o, seed?, pin?, hidden? } }), xếp
-   hạng, tỉ lệ, gợi ý mặc định, gợi ý cho hộp nhận xét. Hàm nhận stats và sửa tại chỗ; lưu ở ui/hints.js.
-   Xuất: chipHints, countUse, hideHint, migrateHints, MIN_PCT, normKey, normStats, pct, pinHint, rankedHints,
-     resetHints, seedHints.
+   hạng, tỉ lệ, gợi ý mặc định, gợi ý cho hộp nhận xét, chữ hiện của gợi ý dài. Hàm nhận stats và sửa tại chỗ; lưu ở
+   ui/hints.js. Gợi ý không giới hạn độ dài (MDAN-087).
+   Xuất: chipHints, countUse, HINT_SHOW, hideHint, hintShown, migrateHints, MIN_PCT, normKey, normStats, pct, pinHint,
+     rankedHints, resetHints, seedHints.
    Dùng: không module nào. */
 
-var MAX_HINT = 80;
+export var HINT_SHOW = 80;      // gợi ý dài hơn chỉ hiện chừng này ký tự đầu, đuôi mờ dần (MDAN-087)
 export var MIN_PCT = 5;          // chưa đủ số lần dùng thì tỉ lệ chỉ là nhiễu: không hiện
 var POP_CHIPS = 5;               // số gợi ý của hộp gọn, còn lại gom vào chip "+N"
 
@@ -41,11 +42,11 @@ export function seedHints(stats, list) {
     else { it.seed = true; it.o = i; }
   });
 }
-/* Đếm một lần dùng. Trả false khi không đếm (rỗng hoặc dài quá MAX_HINT). Giữ tối đa 300 khoá. */
+/* Đếm một lần dùng. Trả false khi không đếm (rỗng). Giữ tối đa 300 khoá. */
 export function countUse(stats, t) {
   t = t.trim();
   var k = normKey(t);
-  if (!k || t.length > MAX_HINT) return false;
+  if (!k) return false;
   var it = stats.items[k] || (stats.items[k] = { t: t, n: 0, last: 0, o: 1e6 });
   it.n = (+it.n || 0) + 1; it.last = Date.now(); it.t = t; delete it.hidden;
   var keys = Object.keys(stats.items);
@@ -79,7 +80,7 @@ export function rankedHints(stats) {
     var v = stats.items[k];
     return { key: k, t: String(v.t || k), n: +v.n || 0, last: +v.last || 0, o: v.o == null ? 1e6 : +v.o, v: v };
   }).filter(function (x) {
-    return !x.v.hidden && x.t.length <= MAX_HINT && (x.v.seed || x.v.pin || x.n >= 1);
+    return !x.v.hidden && (x.v.seed || x.v.pin || x.n >= 1);
   });
   var N = arr.reduce(function (s, x) { return s + x.n; }, 0), K = arr.length;
   arr.forEach(function (x) { x.p = (x.n + 1) / (N + K); });
@@ -87,6 +88,12 @@ export function rankedHints(stats) {
   /* Số lần dùng mọi nhận xét đã đếm, kể cả chưa thành gợi ý: ngưỡng để hiện tỉ lệ. */
   arr.total = Object.keys(stats.items).reduce(function (t, k) { return t + (+stats.items[k].n || 0); }, 0);
   return arr;
+}
+/* Chữ hiện của gợi ý t: tối đa HINT_SHOW ký tự đầu (đếm theo điểm mã, không cắt đôi emoji); cut khi đã cắt. Chọn gợi ý
+   vẫn dùng t trọn. */
+export function hintShown(t) {
+  var cs = Array.from(String(t));
+  return cs.length > HINT_SHOW ? { text: cs.slice(0, HINT_SHOW).join(''), cut: true } : { text: String(t), cut: false };
 }
 export function pct(p) { var v = p * 100; return (v < 1 ? '<1' : Math.round(v)) + '%'; }
 /* Gợi ý cho hộp nhận xét khi đang gõ text: lọc theo chữ đã gõ (khớp đúng chữ đã gõ thì bỏ). size: 'few' (mặc định)

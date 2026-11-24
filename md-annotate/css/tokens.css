@@ -85,6 +85,9 @@
   --dur-sheet: .22s;                   /* tấm trượt mở ra (đáy, trái) */
   --icon: 16px; --icon-lg: 18px;       /* biểu tượng svg; trong nút biểu tượng cỡ thường */
   --ring-w: 2px;                       /* vòng focus bàn phím */
+  /* Chữ gợi ý bị cắt (chip, hàng Hints; MDAN-087): đuôi mờ dần thay cho "…". Mặt nạ chỉ dùng độ đục, nên hợp cả hai theme. */
+  --fade-w: 40px;
+  --fade-r: linear-gradient(to right, #000 calc(100% - var(--fade-w)), transparent);
 
   --pad: 24px;                         /* lề trang trong vùng làm việc */
   --wrap-f: .7; --wrap-min: 1280px;    /* vùng làm việc: phần khung nhìn còn lại, sàn (MDAN-005; ui/layout.js đổi, ui/tree.js đọc) */

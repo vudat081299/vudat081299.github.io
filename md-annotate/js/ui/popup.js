@@ -23,7 +23,7 @@ import { pickSummary } from '../core/picks.js';
 import { $, barBottom, h, isMac, mqSheet, mqTouch, paintHL, shortcut, shown, syncBar, toast } from './dom.js';
 import { rangeAt } from './anchor-dom.js';
 import { D, scheduleSave } from './state.js';
-import { recordUse, removeHint, seedState, stats } from './hints.js';
+import { hintSpan, recordUse, removeHint, seedState, stats } from './hints.js';
 import { markActive } from './marks.js';
 import { anchors, mdText, numbers, ordered, orphans, renderAll } from './render.js';
 import { flashItem, removeComment } from './list.js';
@@ -235,13 +235,14 @@ var chipSigs = [];
 function resetChips() { chipSigs = []; $('pop-chips').replaceChildren(); $('pop-chips').hidden = true; }
 function chipSig(x, showPct) { return x.key + '\n' + x.n + '\n' + (showPct ? pct(x.p) : ''); }
 function hintChip(x, i, showPct) {
-  var k = hintPresses(i + 1).map(shortcut).join(' '), badge = hintBadge(i + 1);
+  var k = hintPresses(i + 1).map(shortcut).join(' '), badge = hintBadge(i + 1), t = hintSpan(x.t, 'ma-chip__t');
+  var cut = t.classList.contains('is-cut');   // gợi ý dài: chip hiện 80 ký tự đầu, title có chữ trọn (MDAN-087)
   /* 10 chip đầu luôn có chữ phím (.ma-chip__k: Z, CC…), mọi trạng thái; CSS chỉ cho thấy khi #pop.is-keys. */
   return h('button', {
-    class: 'ma-chip', type: 'button', title: 'Used ' + plural(x.n, 'time') + (k ? ' · ' + k : ''),
+    class: 'ma-chip', type: 'button', title: (cut ? x.t + '\n' : '') + 'Used ' + plural(x.n, 'time') + (k ? ' · ' + k : ''),
     onclick: function () { savePop(x.t); }
   }, badge ? h('span', { class: 'ma-chip__k', 'aria-hidden': 'true' }, badge) : null,
-  h('span', { class: 'ma-chip__t' }, x.t), showPct ? h('span', { class: 'ma-chip__p' }, pct(x.p)) : null);
+  t, showPct ? h('span', { class: 'ma-chip__p' }, pct(x.p)) : null);
 }
 /* Vẽ chip theo chữ đang gõ, gọn hay mọi gợi ý (held, expanded); chip đầu đổi thì vùng chip về đầu (hạng 1). */
 export function renderPopHints() {

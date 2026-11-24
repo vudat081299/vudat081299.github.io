@@ -1,9 +1,10 @@
 /* Gợi ý nhận xét, phần trình duyệt: số đếm lưu ở localStorage, nạp gợi ý mặc định và chữ của gợi ý ẩn Mod + 1 (removeHint)
-   từ data/hints.json, hộp Hints. Logic đếm và xếp hạng ở core/hints.js.
-   Xuất: initHints, loadDefaultHints, recordUse, removeHint, renderHintsDlg, seedState, stats.
+   từ data/hints.json, hộp Hints, chữ của một gợi ý (hintSpan: gợi ý dài hiện 80 ký tự đầu, đuôi mờ dần; MDAN-087).
+   Logic đếm và xếp hạng ở core/hints.js.
+   Xuất: hintSpan, initHints, loadDefaultHints, recordUse, removeHint, renderHintsDlg, seedState, stats.
    Dùng: core/text.js, core/hints.js, ui/store.js, ui/dom.js. */
 import { plural } from '../core/text.js';
-import { countUse, hideHint, migrateHints, MIN_PCT, normStats, pct, pinHint, rankedHints, resetHints, seedHints } from '../core/hints.js';
+import { countUse, hideHint, hintShown, migrateHints, MIN_PCT, normStats, pct, pinHint, rankedHints, resetHints, seedHints } from '../core/hints.js';
 import { KEY, store } from './store.js';
 import { $, getJSON, h, icon } from './dom.js';
 
@@ -13,6 +14,12 @@ export var removeHint = '';   // nhận xét Mod + 1 lưu (remove của data/hin
 function saveStats() { store.set(KEY.stats, stats); }
 /* Đếm một lần dùng nhận xét t và lưu. */
 export function recordUse(t) { if (countUse(stats, t)) saveStats(); }
+/* Chữ của gợi ý t trong span lớp cls: tối đa 80 ký tự đầu; đã cắt thì thêm is-cut (CSS cho đuôi mờ dần), title chữ trọn
+   khi tip (chip đặt chữ trọn vào title của nút, cạnh số lần dùng). */
+export function hintSpan(t, cls, tip) {
+  var s = hintShown(t);
+  return h('span', { class: cls + (s.cut ? ' is-cut' : ''), title: s.cut && tip ? t : null }, s.text);
+}
 
 /* Nạp gợi ý mặc định (đổi chữ theo renamed, rồi gieo) và removeHint; lỗi mạng thì seedState = 'fail'. Trả promise để người gọi vẽ lại. */
 export function loadDefaultHints() {
@@ -36,7 +43,7 @@ export function renderHintsDlg() {
   list.forEach(function (x) {
     ol.append(h('li', { class: 'ma-row' },
       h('span', { class: 'ma-row__main ma-row__main--static' },
-        h('span', { class: 'ma-row__t' }, x.t),
+        hintSpan(x.t, 'ma-row__t', true),
         h('span', { class: 'ma-row__m' }, plural(x.n, 'use') + (list.total >= MIN_PCT ? ' · ' + pct(x.p) : ''))),
       h('button', { class: 'ma-icbtn ma-icbtn--bare', type: 'button', 'aria-label': 'Remove hint ' + x.t, title: 'Remove hint',
         onclick: function () { hideHint(stats, x.key); saveStats(); renderHintsDlg(); } }, icon('x'))));

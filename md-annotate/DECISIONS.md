@@ -57,6 +57,7 @@
 - MDAN-084 · Phím chọn gợi ý trong hộp nhận xét · `md-annotate/js/ui/popup.js`, `md-annotate/js/core/hint-keys.js`, `md-annotate/js/core/hints.js`
 - MDAN-085 · Mod + 1 lưu nhận xét "bỏ đoạn này" · `md-annotate/js/ui/popup.js`, `md-annotate/js/core/hint-keys.js`, `md-annotate/data/hints.json`
 - MDAN-086 · Nhận xét đã lưu thành gợi ý ngay lần đầu · `md-annotate/js/core/hints.js`
+- MDAN-087 · Gợi ý không giới hạn độ dài, gợi ý dài chỉ hiện 80 ký tự đầu · `md-annotate/js/core/hints.js`, `md-annotate/js/ui/popup.js`, `md-annotate/js/ui/hints.js`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Source tô màu cú pháp markdown kiểu VS Code
@@ -475,3 +476,10 @@ luôn bị chặn khi hộp mở; `data/hints.json` không nạp được thì p
 
 Mọi nhận xét gõ tay đã lưu (tối đa 80 ký tự) thành gợi ý ngay từ lần đầu, xếp hạng theo số lần dùng như mọi gợi ý; gợi ý
 mặc định chưa dùng đứng sau. Nhận xét dài hơn 80 ký tự không thành gợi ý. Gợi ý ẩn của MDAN-085 không được đếm.
+
+## MDAN-087 · Gợi ý không giới hạn độ dài, gợi ý dài chỉ hiện 80 ký tự đầu
+24/11/2026 · `md-annotate/js/core/hints.js`, `md-annotate/js/ui/popup.js`, `md-annotate/js/ui/hints.js`
+
+Sửa MDAN-086: mọi nhận xét gõ tay đã lưu, dài bao nhiêu cũng vậy, được đếm và thành gợi ý ngay lần đầu; gợi ý tự thêm ở
+hộp *Hints* cũng không giới hạn độ dài. Gợi ý dài hơn 80 ký tự chỉ hiện 80 ký tự đầu, ở hộp nhận xét và ở hộp *Hints*;
+rê chuột thì thấy chữ trọn. Chọn gợi ý (bấm hay phím của MDAN-084) vẫn lưu chữ trọn, lọc theo chữ đang gõ tính trên chữ trọn.
