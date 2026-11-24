@@ -895,6 +895,8 @@ html { scrollbar-gutter: stable; }   /* khoá cuộn không làm trang nhảy ng
 .dlg-x { margin: calc(-1 * var(--s2)) 0 0; }
 .dlg-body { flex: 1 1 auto; min-height: 0; overflow: auto; overscroll-behavior: contain; display: flex; flex-direction: column; gap: var(--s4); padding: var(--s5); }
 .dlg-body:not(:has(> :not([hidden]))) { display: none; }
+/* Thân cuộn thì phần tử con giữ đủ cao, không bị co lại đè lên nhau (ô xem trước nhập, ô chữ trên tấm đáy thấp). */
+.dlg-body > * { flex-shrink: 0; }
 .dlg-foot {
   flex: none; display: flex; align-items: center; gap: var(--s2); flex-wrap: wrap;
   padding: var(--s3) var(--s5); background: var(--foot-bg); border-top: var(--line-w) solid var(--line-2);

@@ -1275,6 +1275,13 @@ const check = (name, ok, detail = '') => {
     if (d === '#dlg-sub') { const st = await stickyHead(m.page, d); check('390px: tấm đáy dài, chỉ thân cuộn, đầu và chân đứng yên', sticky(st), JSON.stringify(st)); }
     await m.page.keyboard.press('Escape');
   }
+  // Tấm đáy thấp, thân cuộn: phần tử con của thân không bị co lại (chữ "Nothing to import yet." từng đè lên viền ô).
+  await m.page.setViewportSize({ width: 390, height: 664 });
+  await m.page.click('#import-btn');
+  const squeezed = await m.page.$eval('#dlg-import', (dl) => [...dl.querySelectorAll('.dlg-body > :not([hidden])')]
+    .filter((el) => el.tagName !== 'TEXTAREA' && el.scrollHeight > el.clientHeight + 1).map((el) => `${el.className || el.tagName} ${el.clientHeight}<${el.scrollHeight}`));
+  check('390px: hộp Import, phần tử trong thân không bị co lại', squeezed.length === 0, squeezed.join(', '));
+  await m.page.keyboard.press('Escape');
   await m.ctx.close();
 
   /* ── Bộ nhớ bị chặn ── */
