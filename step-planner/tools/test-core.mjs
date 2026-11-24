@@ -3,7 +3,7 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import {
-  fromTemplate, toMarkdown, fromMarkdown, parseImport, toJSON, toBackup, shape, progress, nextActionIds, projectNextIds, slotsOf, subPlace, placeSub, takeSub, shiftTarget, liveLabels,
+  fromTemplate, toMarkdown, fromMarkdown, parseImport, toJSON, toBackup, shape, progress, nextActionIds, projectNextIds, slotsOf, subPlace, placeSub, takeSub, shiftTarget, liveLabels, redoCount,
   nextStatus, setStatus, splitInline, normWorkspace, normSub, counts, slug, fold, parseDate, uniqueName, normDoc, safeUrl,
 } from '../js/core.js';
 import { parseMd, inline } from '../js/md.js';
@@ -242,6 +242,20 @@ check('vòng: dòng cũ "Quay lại: ngày · lý do" đọc là vòng 2', oldR.
     && ws2.steps[1].round === 2 && ws2.log[0].why === 'vì B', JSON.stringify(ws2).slice(0, 400) + r.warnings.join('|'));
 }
 
+/* Mở lại (Reopen): dấu redo của bước con chỉ sống trong vòng đang mở; đếm còn mấy việc; Markdown "· redo". */
+{
+  const w = normWorkspace({ steps: [
+    { title: 'A', revisit: { date: '2026-11-20', reason: 'rò rỉ', round: 2 }, subs: [{ title: 'x', redo: true }, { title: 'y', status: 'done', redo: true }, { title: 'z', redo: true, status: 'skip' }, { title: 't' }] },
+    { title: 'B', subs: [{ title: 'u', redo: true }] },
+  ] });
+  check('redo: chỉ giữ ở bước đang mở lại; đếm tổng và còn mở', w.steps[1].subs[0].redo === false && eq(redoCount(w.steps[0]), { total: 3, left: 1 }));
+  const md = toMarkdown(w);
+  check('redo: Markdown "· redo", đi rồi về giữ nguyên', md.includes('- [ ] x · redo') && md.includes('- [x] y · redo') && eq(shape(fromMarkdown(md).workspace), shape(w)),
+    firstDiff(shape(w), shape(fromMarkdown(md).workspace)));
+  const vi = fromMarkdown('# A\n## 1. S\nQuay lại: 2026-11-20 · vòng 2 · x\n- [ ] a · làm lại\n## 2. T\n- [ ] b · redo\n').workspace;
+  check('redo: nhận "làm lại"; bước không mở lại thì bỏ dấu', vi.steps[0].subs[0].redo === true && vi.steps[1].subs[0].redo === false);
+}
+
 let threw = '';
 try { parseImport('   '); } catch (e) { threw = e.message; }
 check('chữ rỗng thì báo lỗi', /Nothing to import/.test(threw));
@@ -346,7 +360,7 @@ check('bước con có ghi chú mở bằng rào, ngay sau tài liệu của bư
   const atoms = ['a', ' ', '·', ' · ', '\\', '@x', '`', '```', '~~~', '#', '## ', '- ', '[ ]', '[x]', ']', '[', '(', ')', 'hạn 2026-01-01',
     'due', 'Xong khi: ', 'Tài liệu:', 'Vì sao: ', '> ', '1. ', '*', '**', '\n', '\n\n', '  ', 'https://e.com/a(b)', 'Huỷ vì: ',
     'Mục tiêu: ', 'Vòng: 3', 'Quay lại: x', 'Done when: ', 'Docs:', 'Why: ', 'Cancelled because: ', 'Goal: ', 'Iteration: 3',
-    'Reopened: x', 'notes:', 'DOCS:', 'Template: ', 'iteration 2', 'parallel', ' · parallel', 'song song', ' · song song'];
+    'Reopened: x', 'notes:', 'DOCS:', 'Template: ', 'iteration 2', 'parallel', ' · parallel', 'song song', ' · song song', 'redo', ' · redo', 'làm lại'];
   let seed = 7;
   const rnd = (n) => { seed = (seed + 0x6D2B79F5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t ^= t + Math.imul(t ^ (t >>> 7), 61 | t); return ((t ^ (t >>> 14)) >>> 0) % n; };
   const str = (n) => Array.from({ length: 1 + rnd(n) }, () => atoms[rnd(atoms.length)]).join('');
@@ -358,7 +372,7 @@ check('bước con có ghi chú mở bằng rào, ngay sau tài liệu của bư
         notes: rnd(2) ? str(6) : '', revisit: rnd(4) ? null : { reason: str(3), date: '2026-01-02', round: 2 + rnd(3) }, round: 1 + rnd(3),
         docs: Array.from({ length: rnd(3) }, doc),
         subs: Array.from({ length: rnd(4) }, () => ({ title: str(4), status: ['todo', 'doing', 'done', 'blocked', 'skip', 'cancel'][rnd(6)],
-          cancelReason: str(5), due: rnd(2) ? '2026-02-03' : '', doneWhen: rnd(2) ? str(3) : '', notes: rnd(2) ? str(6) : '', par: !!rnd(2),
+          cancelReason: str(5), due: rnd(2) ? '2026-02-03' : '', doneWhen: rnd(2) ? str(3) : '', notes: rnd(2) ? str(6) : '', par: !!rnd(2), redo: !!rnd(2),
           docs: Array.from({ length: rnd(2) }, doc) })) })),
       log: Array.from({ length: rnd(3) }, () => ({ date: '2026-03-04', decision: str(3), why: rnd(2) ? str(5) : '' })) });
     let back = null;

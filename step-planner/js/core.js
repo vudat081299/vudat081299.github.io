@@ -100,14 +100,16 @@ export function normSub(o) {
     notes: multiLine(x.notes),
     docs: docsOf(x.docs),
     par: x.par === true,
+    redo: x.redo === true,
   };
 }
 
 /** Số nguyên dương, không thì 0. @param {any} v */
 const posInt = (v) => (Number.isInteger(v) && v > 0 && v < 10000 ? v : 0);
 
-/* Vòng: step.round là vòng gần nhất của bước (1 = chưa làm lại lần nào). Đánh dấu "Cần làm lại" mở vòng round + 1, ghi
- * cả vào revisit.round; bỏ đánh dấu thì revisit về null, step.round giữ để lần sau tăng tiếp. */
+/* Vòng (iteration): step.round là vòng gần nhất của bước (1 = chưa mở lại lần nào). "Reopen" mở vòng round + 1, ghi cả vào
+ * revisit.round, và các bước con được gửi lại làm có `redo: true` (đếm "còn mấy việc phải làm lại"). Đóng vòng: revisit về
+ * null, mọi `redo` về false, step.round giữ để lần sau tăng tiếp. */
 /** @param {any} o */
 export function normStep(o) {
   const x = isObj(o) ? o : {};
@@ -115,6 +117,7 @@ export function normStep(o) {
   const rv = isObj(r) ? { reason: oneLine(r.reason), date: parseDate(r.date) || today(), round: Math.max(2, posInt(r.round), posInt(x.round)) } : null;
   const subs = objs(x.subs).map(normSub);
   if (subs[0]) subs[0].par = false; // bước con đầu không có ô trước để nhập vào
+  if (!rv) for (const y of subs) y.redo = false; // dấu "Redo" chỉ có nghĩa trong vòng đang mở
   return {
     id: idOr(x.id, 't'),
     title: oneLine(x.title) || 'Step',
@@ -312,6 +315,12 @@ export function nextActionIds(step) {
   return [];
 }
 
+/** Việc phải làm lại của vòng đang mở: tổng số và số còn mở. @param {{subs:{status:string,redo?:boolean}[]}} step */
+export function redoCount(step) {
+  const all = step.subs.filter((x) => x.redo);
+  return { total: all.length, left: all.filter(open).length };
+}
+
 /** Việc tiếp theo của cả dự án: việc tiếp theo của bước đầu tiên còn việc. @param {any} ws @returns {string[]} */
 export function projectNextIds(ws) {
   for (const s of ws.steps) {
@@ -452,6 +461,7 @@ export function toMarkdown(ws) {
     for (const x of s.subs) {
       let line = `- [${MARK[x.status]}] ${escInline(x.title)}`;
       if (x.par) line += ' · parallel';
+      if (x.redo) line += ' · redo';
       if (x.due) line += ` · due ${x.due}`;
       const more = [];
       if (x.doneWhen) more.push(`  Done when: ${x.doneWhen}`);
@@ -491,11 +501,13 @@ function parseSubText(raw, warnings) {
   let title = parts[0];
   let due = '';
   let par = false;
+  let redo = false;
   for (const part of parts.slice(1)) {
     const t = part.trim();
     let m;
     if (/^`@[^`]+`$/.test(t) || /^@.+$/.test(t)) continue; // người làm của file cũ: bỏ
     if (/^(?:parallel|song song)$/i.test(restore(t))) { par = true; continue; }
+    if (/^(?:redo|làm lại)$/i.test(restore(t))) { redo = true; continue; }
     if ((m = META_DUE.exec(restore(t))) && parseDate(m[1]) && !due) due = parseDate(m[1]);
     else {
       if (/^(?:hạn|due)\b/i.test(restore(t))) warnings.push(`Due date not readable, kept in the title: ${restore(t)}`);
@@ -513,7 +525,7 @@ function parseSubText(raw, warnings) {
     return pre;
   });
   if (changed) title = title.replace(/\(\s*(?:[,;]\s*)*\)/g, '').replace(/\s+/g, ' ').replace(/^[\s,;·:-]+|[\s,;·:-]+$/g, '');
-  return { title: restore(title).trim(), due, par };
+  return { title: restore(title).trim(), due, par, redo };
 }
 
 /**
@@ -542,7 +554,7 @@ export function fromMarkdown(text) {
   const newSub = (/** @type {string} */ mark, /** @type {string} */ rest) => {
     if (!step) { step = { title: LOOSE_STEP, subs: [] }; ws.steps.push(step); }
     const p = parseSubText(rest, warnings);
-    sub = { title: p.title, status: FROM_MARK[mark ?? ' '] || 'todo', due: p.due, par: p.par };
+    sub = { title: p.title, status: FROM_MARK[mark ?? ' '] || 'todo', due: p.due, par: p.par, redo: p.redo };
     if (mark != null && !(mark in FROM_MARK)) warnings.push(`Unknown mark [${mark}], read as New: ${p.title}`);
     step.subs.push(sub);
     block = 'sub'; blockFirst = true;
@@ -735,7 +747,7 @@ export function shape(ws) {
     name: ws.name, templateId: ws.templateId, notes: ws.notes,
     steps: ws.steps.map((/** @type {any} */ s) => ({
       title: s.title, goal: s.goal, doneWhen: s.doneWhen, notes: s.notes, revisit: s.revisit, round: s.round, docs: s.docs.map(docShape),
-      subs: s.subs.map((/** @type {any} */ x) => ({ title: x.title, status: x.status, cancelReason: x.cancelReason, due: x.due, doneWhen: x.doneWhen, notes: x.notes, par: x.par, docs: x.docs.map(docShape) })),
+      subs: s.subs.map((/** @type {any} */ x) => ({ title: x.title, status: x.status, cancelReason: x.cancelReason, due: x.due, doneWhen: x.doneWhen, notes: x.notes, par: x.par, redo: x.redo, docs: x.docs.map(docShape) })),
     })),
     log: ws.log.map((/** @type {any} */ l) => ({ date: l.date, decision: l.decision, why: l.why })),
   };

@@ -243,15 +243,18 @@ function renderBoard(/** @type {any} */ ws) {
         !step.revisit && h('button', { type: 'button', class: 'btn small quiet aux', 'data-act': 'revisit', tabindex: '-1', title: 'A later step showed this one must be redone' }, icon('redo'), 'Reopen'),
         !step.docs.length && h('button', { type: 'button', class: 'btn small quiet aux', 'data-act': 'add-doc', tabindex: '-1', title: 'Add a link or a Markdown note for the whole step' }, icon('plus'), 'Doc'),
         iconBtn('trash', 'Delete step', 'del-step')));
-    /* Băng "Reopened": ngày mở lại, lý do (bấm để sửa), nút đóng vòng. */
-    const band = step.revisit && h('div', { class: 'revisit-band' },
+    /* Băng "Reopened": vòng, ngày, lý do (bấm để sửa), còn mấy việc phải làm lại; làm lại xong hết thì mời đóng vòng. */
+    const redo = C.redoCount(step);
+    const band = step.revisit && h('div', { class: 'revisit-band' + (redo.total && !redo.left ? ' all-redone' : '') },
       icon('redo'),
       h('button', { type: 'button', class: 'badge', 'data-act': 'revisit', title: 'Edit the reason' },
         h('b', {}, 'Reopened'),
         ' · Iteration ' + step.revisit.round,
         step.revisit.date ? ' · ' + fmtDate(step.revisit.date) : '',
         step.revisit.reason ? ' · ' + step.revisit.reason : ''),
-      h('button', { type: 'button', class: 'btn small', 'data-act': 'revisit-clear' }, 'Close iteration'));
+      redo.total > 0 && h('span', { class: 'redo-left' }, redo.left ? `${redo.left} of ${C.plural(redo.total, 'redo task')} left` : `All ${C.plural(redo.total, 'redo task')} done`),
+      h('button', { type: 'button', class: 'btn small' + (redo.total && !redo.left ? ' go' : ''), 'data-act': 'revisit-clear',
+        title: 'Finish this iteration: remove the band and the Redo marks' }, 'Close iteration'));
     const card = (/** @type {any} */ x) => {
       const overdue = x.due && x.due < todayStr && x.status !== 'done' && !C.outOfScope(x.status);
       const isNext = nextIds.has(x.id);
@@ -259,6 +262,7 @@ function renderBoard(/** @type {any} */ ws) {
         h('div', { class: 'card-top' },
           numTag('num', labels.get(x.id)),
           isNext && h('span', { class: 'next-tag' }, 'Next'),
+          x.redo && x.status !== 'done' && !C.outOfScope(x.status) && h('span', { class: 'redo-tag', title: `Sent back to redo in iteration ${step.revisit?.round}` }, icon('redo'), 'Redo'),
           x.docs.length > 0 && h('button', { type: 'button', class: 'doc-tag', 'data-act': 'sub-docs', tabindex: '-1',
             'aria-label': `${C.plural(x.docs.length, 'doc')}. Open the list`, title: x.docs.map((/** @type {any} */ d) => d.title).join('\n') },
           icon('clip'), String(x.docs.length)),
@@ -653,7 +657,7 @@ $('board').addEventListener('click', (/** @type {any} */ e) => {
     case 'open-doc': openMd({ wsId: ws.id, stepId: step.id, subId: null, docId: b.dataset.doc }); break;
     case 'sub-docs': openSub(step, sub, { toDocs: true }); break;
     case 'revisit': openRevisit(step); break;
-    case 'revisit-clear': step.revisit = null; commit(stepSel(step.id, 'edit-step')); break;
+    case 'revisit-clear': closeIteration(ws.id, step.id); break;
     case 'del-step': deleteStep(ws.id, step.id); break;
     case 'add-sub': openSub(step, null); break;
     case 'add-par': { const p = C.subPlace(ws, sub.id); openSub(step, null, { pos: `j:${p ? p.slot : 0}` }); break; }
@@ -1306,18 +1310,24 @@ $('md-del').addEventListener('click', () => {
 /* ── Quay lại bước này ── */
 
 let revisitCtx = { wsId: '', stepId: '' };
-function openRevisit(/** @type {any} */ step) {
-  revisitCtx = { wsId: cur().id, stepId: step.id };
-  const i = cur().steps.indexOf(step);
-  $('revisit-step').textContent = `Step ${i + 1} · ${step.title}`;
+/** Hộp "Reopen step": mở lại thì có lý do (bắt buộc) và danh sách bước con đã xong để gửi lại làm; đang mở lại thì chỉ sửa
+ * lý do hay đóng vòng. @param {any} step */
+function openRevisit(step) {
+  const ws = cur();
+  revisitCtx = { wsId: ws.id, stepId: step.id };
+  const labels = labelsOf(ws);
+  $('revisit-step').textContent = `Step ${labels.get(step.id) ?? ''} · ${step.title}`;
+  $('dlg-revisit-title').textContent = step.revisit ? `Iteration ${step.revisit.round}` : 'Reopen step';
+  $('revisit-help').hidden = !!step.revisit;
   field($('revisit-form'), 'reason').value = step.revisit ? step.revisit.reason : '';
-  /* Đánh dấu mới: chọn bước con đưa về "Chưa làm" (mặc định không chọn). Sửa lý do: không có danh sách. */
+  const done = step.subs.filter((/** @type {any} */ x) => x.status === 'done');
   $('revisit-subs').hidden = !!step.revisit || !step.subs.length;
-  $('revisit-round').textContent = `This opens iteration ${(step.round || 1) + 1}.`;
-  const labels = labelsOf(cur());
-  $('revisit-list').replaceChildren(...step.subs.map((/** @type {any} */ x) => h('li', {},
+  $('revisit-round').textContent = `This starts iteration ${(step.round || 1) + 1}. Picked sub-steps go back to ${C.STATUS_LABEL.todo} with a Redo mark.`;
+  $('revisit-all-done').hidden = done.length < 2;
+  $('revisit-none').hidden = done.length > 0;
+  $('revisit-list').replaceChildren(...done.map((/** @type {any} */ x) => h('li', {},
     h('label', { class: 'reset-item' },
-      h('input', { type: 'checkbox', name: 'reset', value: x.id, 'data-status': x.status, disabled: x.status === 'todo' }),
+      h('input', { type: 'checkbox', name: 'reset', value: x.id }),
       numTag('num', labels.get(x.id)), h('span', { class: 'reset-title' }, x.title),
       h('span', { class: `chip st-${x.status}` }, C.STATUS_LABEL[x.status])))));
   $('revisit-clear').hidden = !step.revisit;
@@ -1326,9 +1336,13 @@ function openRevisit(/** @type {any} */ step) {
 }
 const revisitStep = () => stepOf(findWs(revisitCtx.wsId), revisitCtx.stepId);
 $('revisit-all-done').addEventListener('click', () => {
-  for (const cb of /** @type {any} */ ($('revisit-list').querySelectorAll('input[name="reset"]'))) cb.checked = cb.dataset.status === 'done';
+  for (const cb of /** @type {any} */ ($('revisit-list').querySelectorAll('input[name="reset"]'))) cb.checked = true;
 });
-/* Đánh dấu mới: mở vòng mới, đưa bước con đã chọn về "Chưa làm", ghi một dòng nhật ký; Hoàn tác trả cả ba. */
+/** Trạng thái, dấu Redo của các bước con, để Hoàn tác. @param {any} step */
+const subMarks = (step) => new Map(step.subs.map((/** @type {any} */ x) => [x.id, { status: x.status, redo: x.redo }]));
+/** @param {any} step @param {Map<string, {status:string, redo:boolean}>} marks */
+const restoreMarks = (step, marks) => { for (const x of step.subs) if (marks.has(x.id)) Object.assign(x, marks.get(x.id)); };
+/* Mở lại: vòng mới, bước con đã chọn về New và mang dấu Redo, ghi một dòng nhật ký; một Hoàn tác trả hết. */
 $('revisit-form').addEventListener('submit', (/** @type {any} */ e) => {
   e.preventDefault();
   const { wsId, stepId } = revisitCtx;
@@ -1340,39 +1354,57 @@ $('revisit-form').addEventListener('submit', (/** @type {any} */ e) => {
   if (!ws || !step) return;
   const focusSel = `.step[data-step="${step.id}"] .badge || ${stepSel(step.id, 'edit-step')}`;
   if (step.revisit) { step.revisit.reason = reason; commit(focusSel); return; }
-  const before = { round: step.round, statuses: new Map() };
+  const before = { round: step.round, marks: subMarks(step) };
   const round = (step.round || 1) + 1;
   step.round = round;
   step.revisit = { reason, date: C.today(), round };
+  let n = 0;
   for (const x of step.subs) {
-    if (!picked.includes(x.id) || x.status === 'todo') continue;
-    before.statuses.set(x.id, x.status);
-    x.status = 'todo';
+    x.redo = false;
+    if (!picked.includes(x.id)) continue;
+    C.setStatus(x, 'todo');
+    x.redo = true;
+    n++;
   }
   const entry = C.normLog({ date: C.today(), decision: `Reopened: ${step.title} (iteration ${round})`, why: reason });
   ws.log.push(entry);
   commit(focusSel);
-  const n = before.statuses.size;
-  toast(`Step reopened · iteration ${round}${n ? ` · ${C.plural(n, 'sub-step')} back to ${C.STATUS_LABEL.todo}` : ''} · logged.`, () => {
+  toast(`Step reopened · iteration ${round}${n ? ` · ${C.plural(n, 'sub-step')} to redo` : ''} · logged.`, () => {
     const w = findWs(wsId);
     const s = stepOf(w, stepId);
     if (!w) { toast('Cannot undo: the project was deleted.'); return; }
     if (s) {
       s.revisit = null;
       s.round = before.round;
-      for (const x of s.subs) if (before.statuses.has(x.id)) x.status = before.statuses.get(x.id);
+      restoreMarks(s, before.marks);
     }
     w.log = w.log.filter((/** @type {any} */ l) => l.id !== entry.id);
     if (curId !== wsId) switchTo(wsId);
     commit(s ? stepSel(stepId, 'edit-step') : '#board');
   }, focusSel, false);
 });
+/** Đóng vòng: bỏ băng và mọi dấu Redo (vòng giữ để lần mở lại sau tăng tiếp); Hoàn tác được. @param {string} wsId @param {string} stepId */
+function closeIteration(wsId, stepId) {
+  const step = stepOf(findWs(wsId), stepId);
+  if (!step || !step.revisit) return;
+  const before = { revisit: step.revisit, marks: subMarks(step) };
+  step.revisit = null;
+  for (const x of step.subs) x.redo = false;
+  commit(stepSel(step.id, 'edit-step'));
+  toast(`Iteration ${before.revisit.round} closed.`, () => {
+    const s = stepOf(findWs(wsId), stepId);
+    if (!s) { toast('Cannot undo: the step was deleted.'); return; }
+    s.revisit = before.revisit;
+    s.round = Math.max(s.round, before.revisit.round);
+    restoreMarks(s, before.marks);
+    if (curId !== wsId) switchTo(wsId);
+    commit(`.step[data-step="${stepId}"] .badge`);
+  }, stepSel(step.id, 'edit-step'), false);
+}
 $('revisit-clear').addEventListener('click', () => {
   const step = revisitStep();
   closeSaved($('dlg-revisit'));
-  if (!step) return;
-  step.revisit = null;
-  commit(stepSel(step.id, 'edit-step'));
+  if (step) closeIteration(revisitCtx.wsId, step.id);
 });
 
 /* ── Lọc ── */

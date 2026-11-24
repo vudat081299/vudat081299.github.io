@@ -20,23 +20,22 @@
 | `js/dropdown.js` | danh sách chọn tự dựng: `enhanceSelect` (thay giao diện `<select>`, giữ nó làm nguồn value và `change`), `openList` |
 | `js/drag.js` | kéo thả bằng pointer events (chuột, chạm, bút): bóng, ô "Drop here", FLIP, tự cuộn, Esc |
 | `js/main.js` | vẽ bảng, sự kiện, hộp thoại, kéo thả, toast Hoàn tác, nhắc sao lưu |
-| `data/templates.json` | mẫu dự án, trang đọc bằng vòng lặp (REPO-001) |
 
 ## Dữ liệu
 
-- `localStorage['stepPlanner.v2']`: `{version, workspaces[], lastId, lastBackup, dirtySince}`. Đổi khuôn thì tăng số khoá.
-  Khoá cũ (`OLD_KEYS` trong `store.js`) đọc khi khoá mới chưa có, chuẩn hoá rồi ghi sang khoá mới; khoá cũ giữ nguyên.
+- `localStorage['stepPlanner.v2']`: `{version, workspaces[], lastId, lastBackup, dirtySince}`. Đổi khuôn thì tăng số khoá;
+  khoá cũ (`OLD_KEYS`) đọc khi khoá mới chưa có rồi ghi sang khoá mới. Trường mới có mặc định thì không cần đổi khoá.
 - Workspace `{id, name, templateId, createdAt, updatedAt, notes, steps[], log[]}`. Log `{id, date, decision, why}`.
 - Step `{id, title, goal, doneWhen, notes, revisit: null | {reason, date, round}, round, docs[], subs[]}`. `round`: vòng gần
-  nhất (1 = chưa làm lại); đang đánh dấu thì `round` = `revisit.round` ≥ 2.
-- Sub `{id, title, status, cancelReason, due, doneWhen, notes, docs[], par}`; `status` ∈ `todo doing done blocked skip cancel`;
+  nhất (1 = chưa mở lại); đang mở lại thì `round` = `revisit.round` ≥ 2.
+- Sub `{id, title, status, cancelReason, due, doneWhen, notes, docs[], par, redo}`; `status` ∈ `todo doing done blocked skip cancel`;
   `cancelReason` (nhiều dòng) chỉ giữ khi `cancel`; `due` là `YYYY-MM-DD` hoặc rỗng. `par: true` = chạy song song với bước
-  con ngay trước (nhập ô của nó); `subs[0].par` luôn false. Ô (slot), chỗ (`Place`) và mọi phép dời ở `core.js`.
+  con ngay trước (nhập ô của nó); `subs[0].par` luôn false. Ô (slot), chỗ (`Place`) và mọi phép dời ở `core.js`. `redo:
+  true` = được gửi lại làm trong vòng đang mở; bước không mở lại thì mọi `redo` là false.
 - Doc `{id, kind: 'link', title, url}` hoặc `{id, kind: 'md', title, body}`. `url` chỉ http(s) (`safeUrl`); link khác bị bỏ
   (nhập thì cảnh báo). `body` giữ nguyên từng dòng, chỉ bỏ dòng trống đầu và khoảng trắng cuối.
-- Mọi dữ liệu đi qua `normSub` / `normStep` / `normWorkspace`: chuỗi một dòng gộp khoảng trắng, ghi chú bỏ khoảng trắng
-  cuối dòng, phần tử không phải object bị bỏ, ngày phải có thật (`parseDate` kiểm đi rồi về). Trường lạ (kể cả `owner`,
-  `people`, `me` của dữ liệu cũ) bị bỏ, không lỗi.
+- Mọi dữ liệu đi qua `normSub` / `normStep` / `normWorkspace`: chuỗi một dòng gộp khoảng trắng, phần tử sai kiểu bị bỏ,
+  ngày phải có thật (`parseDate`). Trường lạ (kể cả `owner`, `people`, `me` của dữ liệu cũ) bị bỏ, không lỗi.
 - Hai mốc sao lưu chỉ ở máy này, không xuất. Dự án đang mở của tab ở `sessionStorage['stepPlanner.tab']`. Bộ nhớ bị
   chặn: bộ nhớ tạm + banner. Hỏng: chép sang `stepPlanner.v2.corrupt`, bắt đầu trống. Lúc mở gọi
   `navigator.storage.persist()` (Safari xoá dữ liệu do script ghi sau 7 ngày không mở trang).
@@ -65,9 +64,10 @@
   sau nó; phần dưới thẻ hay giữa ô song song: nhập ô ấy. Gần mép thì hàng / trang tự cuộn; Esc huỷ. Bước không có nút lên xuống.
 - Đổi chỗ (mọi cách): cái vừa dời có lớp `moved`, cái bị đổi chỗ có `swapped` (tự gỡ sau `--flash-dur`); toast "Moved …"
   có Hoàn tác, không lấy focus. Dời liền nhiều lần khi toast còn hiện: Hoàn tác về chỗ trước lần đầu.
-- "Reopen" (PLAN-004): hộp có giải thích, ô lý do, danh sách bước con đưa về New (mặc định không chọn). Mở vòng `round + 1`,
-  ghi nhật ký "Reopened: tên bước (iteration N)"; một Hoàn tác trả hết. Băng "Reopened · Iteration N · ngày · lý do" (bấm
-  để sửa lý do), nút "Close iteration" (vòng giữ để lần sau tăng tiếp).
+- "Reopen" (PLAN-004): hộp có một câu khi nào dùng, lý do bắt buộc, danh sách bước con đã xong để gửi lại làm (mặc định
+  không chọn). Mở vòng `round + 1`; bước con đã chọn về New, mang dấu "Redo" tới khi xong lại; nhật ký ghi "Reopened: tên
+  (iteration N)"; một Hoàn tác trả hết. Băng "Reopened · Iteration N · ngày · lý do" (bấm để sửa lý do) đếm "k of n redo
+  tasks left"; xong hết thì "Close iteration" thành nút chính. Đóng vòng bỏ băng và dấu Redo (Hoàn tác được).
 - Mẹo tắt bằng ×; "Compact" ẩn "Done when", ghi chú, lý do huỷ (cả hai nhớ ở máy này). "Log (N)" cuộn tới nhật ký, focus.
 - Tìm bỏ dấu, không phân biệt hoa thường, khớp cả tài liệu; bước khớp thì hiện cả hàng; đang tìm thì tắt sắp xếp, thêm bước.
 - Xoá bước con, quyết định, tài liệu: một bấm. Xoá bước còn bước con, xoá dự án (không hoàn tác): hỏi lại. Sau khi xoá,
@@ -127,7 +127,7 @@ Docs:
     thân văn bản, kể cả ``` và dòng #, -, nhãn
     ````
 
-- [/] Tên bước con · parallel · due YYYY-MM-DD
+- [/] Tên bước con · parallel · redo · due YYYY-MM-DD
   Done when: …
   Cancelled because: dòng đầu
     dòng tiếp của lý do
@@ -144,7 +144,7 @@ Docs:
 - Nhãn định dạng 2 (tiếng Việt) vẫn nhập: `Mẫu`, `Mục tiêu`, `Xong khi`, `Quay lại` (`· vòng N`), `Vòng`, `Ghi chú`, `Tài liệu`,
   `Huỷ vì`, `Vì sao`, `hạn`, `## Nhật ký quyết định`. Nhãn không phân biệt hoa thường. Dòng đầu (`… · format N`) chỉ để
   đọc, trang không dựa vào nó. Số thứ tự trên bảng không ghi vào Markdown.
-- Phần tử `parallel` (nhập nhận cả `song song`): bước con nhập ô của bước con ngay trước.
+- Phần tử `parallel` (nhận cả `song song`): nhập ô của bước con ngay trước. `redo` (nhận cả `làm lại`): dấu Redo.
 - Dấu trạng thái: `[ ]` / `[]` mới, `[~]` đang làm, `[x]` / `[X]` xong, `[!]` bị chặn, `[-]` bỏ qua, `[/]` huỷ. Dấu lạ đọc là mới.
 - Trên dòng bước con, phần tử tách bằng ` · `. Trong tên: `\` → `\\`, `·` → `\·`, `@` → `\@`, `hạn` / `due` → `\hạn` / `\due`.
 - Dòng thụt hai dấu cách thuộc bước con / `Notes:` / quyết định ngay trên nó. Dòng thụt đầu `Done when: ` của bước con là

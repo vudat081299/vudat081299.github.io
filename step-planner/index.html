@@ -293,28 +293,28 @@
   </form>
 </dialog>
 
-<!-- Cần làm lại bước này (dữ liệu: step.revisit; Markdown: dòng "Quay lại:") -->
+<!-- Mở lại một bước (dữ liệu: step.revisit, sub.redo; Markdown: dòng "Reopened:", phần tử "· redo") -->
 <dialog class="dlg" id="dlg-revisit" aria-labelledby="dlg-revisit-title">
   <form method="dialog" id="revisit-form" class="stack">
-    <div class="dlg-head"><h2 id="dlg-revisit-title">Cần làm lại bước này</h2><button type="button" class="icon-btn" data-close aria-label="Đóng" title="Đóng"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button></div>
+    <div class="dlg-head"><h2 id="dlg-revisit-title">Reopen step</h2><button type="button" class="icon-btn" data-close aria-label="Đóng" title="Đóng"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button></div>
     <p class="dlg-step" id="revisit-step"></p>
-    <p class="dlg-note">Dùng khi một bước sau lộ ra vấn đề phải quay về sửa ở bước này. Ví dụ: đang dựng mô hình thì thấy thiếu
-      dữ liệu, nên đánh dấu bước "Chuẩn bị dữ liệu" cần làm lại. Hàng của bước hiện băng "Đang làm lại · Vòng N" tới khi bạn
-      bấm "Xong, bỏ đánh dấu"; nhật ký quyết định tự ghi một dòng.</p>
-    <label class="field"><span>Vì sao phải làm lại</span><input type="text" name="reason" maxlength="300" required placeholder="VD: mô hình lộ cột thiếu, phải điền lại"></label>
+    <p class="dlg-note" id="revisit-help">Use this when a later step shows this one must be redone, e.g. modeling reveals a leaky
+      feature, so data preparation needs another pass. It starts a new iteration and logs the decision.</p>
+    <label class="field"><span>Why reopen?</span><input type="text" name="reason" maxlength="300" required placeholder="e.g. the model leaks the target through a date column"></label>
     <fieldset class="reset-subs" id="revisit-subs">
-      <legend>Đưa bước con nào về "Chưa làm"?</legend>
+      <legend>Which done sub-steps must be redone?</legend>
       <div class="reset-head">
         <span class="muted" id="revisit-round"></span>
-        <button type="button" class="btn small" id="revisit-all-done">Chọn tất cả đã xong</button>
+        <button type="button" class="btn small" id="revisit-all-done">Select all</button>
       </div>
       <ul class="reset-list" id="revisit-list"></ul>
+      <p class="muted" id="revisit-none">No sub-step is done yet, so there is nothing to send back.</p>
     </fieldset>
     <div class="row-end">
-      <button type="button" class="btn quiet" id="revisit-clear">Xong, bỏ đánh dấu</button>
+      <button type="button" class="btn quiet" id="revisit-clear">Close iteration</button>
       <span class="tools-gap"></span>
       <button type="button" class="btn" data-close>Đóng</button>
-      <button type="submit" class="btn go" value="save">Đánh dấu cần làm lại</button>
+      <button type="submit" class="btn go" value="save">Reopen step</button>
     </div>
   </form>
 </dialog>

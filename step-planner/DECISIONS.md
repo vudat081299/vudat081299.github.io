@@ -4,7 +4,7 @@
 - PLAN-001 · Dự án là các bước có thứ tự, mỗi bước có bước con có thứ tự · `step-planner/`
 - PLAN-002 · Dữ liệu chỉ ở trình duyệt, nhiều dự án, nhớ dự án mở cuối · `step-planner/`
 - PLAN-003 · Sáu trạng thái; tiến độ không tính bỏ qua và huỷ; việc tiếp theo được tô · `step-planner/`
-- PLAN-004 · Quay lại một bước có lý do, đếm vòng, đặt lại việc · `step-planner/`
+- PLAN-004 · Mở lại một bước (vòng lặp) có lý do, đếm vòng, chỉ rõ việc phải làm lại · `step-planner/`
 - PLAN-005 · Mỗi dự án có nhật ký quyết định · `step-planner/`
 - PLAN-006 · Xoá hoàn tác được; sắp xếp lại được; tìm theo chữ · `step-planner/`
 - PLAN-007 · Markdown xuất ra đọc được và nhập lại được; nhập không ghi đè ngầm · `step-planner/`
@@ -32,10 +32,10 @@ Không có máy chủ: mọi dự án lưu trong bộ nhớ trình duyệt dư�
 
 Bước con có sáu trạng thái: mới (New), đang làm, xong, bị chặn, bỏ qua, huỷ. Bấm chip đi ba trạng thái cơ bản mới → đang làm → xong; đã xong hay ở trạng thái khác thì bấm chip mở danh sách để chọn bất kỳ trạng thái nào. Bỏ qua là việc không cần với dự án này. Huỷ là việc đã quyết không làm nhưng giữ thẻ trên bảng để theo dõi, kèm lý do huỷ (chọn huỷ thì luôn được hỏi lý do). Tiến độ = xong / (tổng − bỏ qua − huỷ). Bước con đầu tiên chưa xong, không bỏ qua, không huỷ của mỗi bước là việc tiếp theo.
 
-## PLAN-004 · Quay lại một bước có lý do, đếm vòng, đặt lại việc
+## PLAN-004 · Mở lại một bước (vòng lặp) có lý do, đếm vòng, chỉ rõ việc phải làm lại
 24/11/2026 · `step-planner/`
 
-Việc dữ liệu lặp (CRISP-DM quay lại pha trước), nên một bước được đánh dấu "cần làm lại" kèm lý do và ngày, hiện thành băng trên bước tới khi bỏ đánh dấu. Mỗi lần đánh dấu mở một vòng mới (lần đầu là vòng 2, lần sau tăng tiếp, kể cả sau khi đã bỏ đánh dấu). Khi đánh dấu, người dùng chọn bước con nào đưa về "Chưa làm" (mặc định không cái nào); nhật ký quyết định tự ghi một dòng "Làm lại: tên bước (vòng N)" với lý do. Cả thao tác hoàn tác được một lần.
+Việc dữ liệu lặp (CRISP-DM quay lại pha trước): khi một bước sau cho thấy một bước trước phải làm lại, người dùng mở lại bước ấy, bắt buộc ghi lý do. Mỗi lần mở lại là một vòng mới (lần đầu là vòng 2, lần sau tăng tiếp, kể cả sau khi đã đóng vòng). Khi mở lại, người dùng chọn những bước con đã xong cần làm lại (mặc định không cái nào): chúng về trạng thái mới và mang dấu "làm lại" tới khi xong lại, nên nhìn bảng là biết đúng việc nào phải làm lại. Bước đang mở lại hiện vòng, ngày, lý do và còn mấy việc phải làm lại; làm lại xong hết thì mời đóng vòng. Nhật ký quyết định tự ghi một dòng; cả thao tác mở lại, cũng như đóng vòng, hoàn tác được. Dấu làm lại đi theo khi xuất / nhập.
 
 ## PLAN-005 · Mỗi dự án có nhật ký quyết định
 24/11/2026 · `step-planner/`
