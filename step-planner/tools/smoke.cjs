@@ -586,6 +586,21 @@ const check = (name, ok, detail = '') => {
   await page.click(subSel(firstSub.id, 'edit-sub'));
   await page.keyboard.press('Escape');
   check('Esc khi chưa sửa gì: đóng ngay', !(await page.isVisible('#dlg-sub')) && !(await page.isVisible('#dlg-ask')));
+  // "Nhân bản" trong hộp khi chữ đã sửa: hỏi lại như Đóng, không lặng lẽ bỏ chữ đang gõ.
+  const nSub0 = (await cur(page)).steps[0].subs.length;
+  await page.click(subSel(firstSub.id, 'edit-sub'));
+  await page.fill('#sub-form [name="notes"]', 'chữ chưa lưu');
+  await page.click('#sub-dup');
+  check('Nhân bản khi chữ chưa lưu: hỏi lại, chưa nhân bản', await page.isVisible('#dlg-ask') && await page.isVisible('#dlg-sub')
+    && (await cur(page)).steps[0].subs.length === nSub0);
+  await page.click('#ask-form [data-close]');
+  check('chọn ở lại: chữ còn, chưa nhân bản', (await page.inputValue('#sub-form [name="notes"]')) === 'chữ chưa lưu'
+    && (await cur(page)).steps[0].subs.length === nSub0);
+  await page.click('#sub-dup');
+  await page.click('#ask-ok');
+  check('chọn bỏ: nhân bản bản đã lưu', (await cur(page)).steps[0].subs.length === nSub0 + 1
+    && (await cur(page)).steps[0].subs[1].notes === firstSub.notes);
+  await page.click(subSel((await cur(page)).steps[0].subs[1].id, 'sub-del'));
 
   // Thêm bước con khi đang tìm: thẻ mới khớp thì hiện; bị lọc ẩn thì báo, focus không rơi về body.
   await page.click('.step:first-child .step-head [data-act="add-sub"]');

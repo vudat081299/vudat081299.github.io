@@ -865,9 +865,10 @@ $('sub-form').addEventListener('submit', (/** @type {any} */ e) => {
   else commit(focusSel);
   if (!document.querySelector(`.card[data-sub="${item.id}"]`)) toast(sub ? 'Đã lưu — đang bị bộ lọc ẩn.' : 'Đã thêm — đang bị bộ lọc ẩn.');
 });
-$('sub-dup').addEventListener('click', () => {
+/* Nhân bản bản đã lưu; chữ đang sửa chưa lưu thì hỏi lại như Đóng. */
+$('sub-dup').addEventListener('click', async () => {
+  if (!(await tryClose($('dlg-sub')))) return;
   const { step, sub } = subFromCtx();
-  closeSaved($('dlg-sub'));
   if (step && sub) duplicateSub(step, sub);
 });
 $('sub-del').addEventListener('click', () => {
