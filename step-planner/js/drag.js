@@ -8,7 +8,10 @@
  * - Vùng thả của thẻ: nửa trái / phải một ô = chen một ô mới trước / sau nó; phần dưới thẻ (hay giữa một ô song song) = nhập
  *   ô ấy, chạy song song. Chỗ ô viền đứt là chỗ sẽ thả.
  * - Esc huỷ; gần mép hàng thẻ thì hàng tự cuộn ngang, gần mép khung nhìn thì trang tự cuộn dọc.
- * Kết quả trả về qua onSub(id, Place) / onStep(id, index); bảng vẽ lại sau khi thả hay huỷ (onEnd). */
+ * Kết quả trả về qua onSub(id, Place) / onStep(id, index); bảng vẽ lại sau khi thả hay huỷ (onEnd).
+ * - Một lần kéo qua ba pha: `press` (đã nhấn, chưa kéo), `drag`, `fly` (đã thả, bóng bay vào chỗ). Chỉ một bóng tồn tại.
+ *   Mọi đường kết thúc (thả, Esc, pointercancel, mất pointer capture, rời cửa sổ, nút đã nhả mà pointerup bị nuốt, abort)
+ *   qua cleanup: gỡ bóng, ô viền đứt, lớp drag-src, dừng mọi animation của lần kéo ấy. */
 
 /** @typedef {{stepId:string, slot:number, join:boolean, at:number}} Place */
 
@@ -46,16 +49,18 @@ export function initDrag(board, api) {
     else if (grip || (head && e.pointerType === 'mouse')) { kind = 'step'; el = /** @type {HTMLElement} */ (t.closest('.step[data-step]')); }
     if (!el) return;
     st = { kind, el, id: kind === 'sub' ? el.dataset.sub : el.dataset.step, pointerId: e.pointerId, type: e.pointerType,
-      x0: e.clientX, y0: e.clientY, x: e.clientX, y: e.clientY, active: false, timer: 0, raf: 0, target: null };
+      x0: e.clientX, y0: e.clientY, x: e.clientX, y: e.clientY, phase: 'press', timer: 0, raf: 0, target: null, anims: [] };
     /* Chạm trên thẻ: phải giữ yên một lúc (không thì là cuộn). Chuột, bút, tay nắm của bước: kéo ngay khi trôi đủ xa. */
-    if (kind === 'sub' && e.pointerType === 'touch') st.timer = window.setTimeout(() => { if (st && !st.active) start(); }, PRESS_MS);
+    if (kind === 'sub' && e.pointerType === 'touch') st.timer = window.setTimeout(() => { if (st && st.phase === 'press') start(); }, PRESS_MS);
   });
 
   window.addEventListener('pointermove', (e) => {
-    if (!st || e.pointerId !== st.pointerId) return;
+    if (!st || st.phase === 'fly' || e.pointerId !== st.pointerId) return;
+    /* Không còn nút nào nhấn (nhả ngoài cửa sổ, pointerup bị nuốt): kết thúc như khi nhả, không kéo tiếp. */
+    if (e.buttons === 0) { if (st.phase === 'drag') endAt(e); else reset(); return; }
     st.x = e.clientX; st.y = e.clientY;
     const far = Math.hypot(st.x - st.x0, st.y - st.y0);
-    if (!st.active) {
+    if (st.phase === 'press') {
       if (st.kind === 'sub' && st.type === 'touch') { if (far > SLOP_PX) reset(); return; }
       if (far > MOVE_PX) start(); else return;
     }
@@ -63,34 +68,43 @@ export function initDrag(board, api) {
     update();
   }, { passive: false });
   /* Đang kéo bằng ngón: chặn cuộn trang của trình duyệt (touchmove phải là non-passive). */
-  window.addEventListener('touchmove', (e) => { if (st && st.active) e.preventDefault(); }, { passive: false });
+  window.addEventListener('touchmove', (e) => { if (st && st.phase !== 'press') e.preventDefault(); }, { passive: false });
   board.addEventListener('contextmenu', (e) => { if (st) e.preventDefault(); });
   window.addEventListener('pointerup', (e) => {
-    if (!st || e.pointerId !== st.pointerId) return;
-    if (!st.active) { reset(); return; }
-    /* Click sinh ra ngay sau khi thả (trên thẻ, tên thẻ) không được mở hộp sửa. */
+    if (!st || st.phase === 'fly' || e.pointerId !== st.pointerId) return;
+    if (st.phase === 'press') { reset(); return; }
+    endAt(e);
+  });
+  window.addEventListener('pointercancel', (e) => { if (st && e.pointerId === st.pointerId) cancel(); });
+  board.addEventListener('lostpointercapture', (e) => { if (st && st.phase === 'drag' && e.pointerId === st.pointerId) cancel(); });
+  window.addEventListener('blur', () => cancel());
+  /* Đang kéo: Esc huỷ; phím khác (Ctrl+Z, Alt + mũi tên…) bị chặn để bảng không đổi dưới tay. */
+  document.addEventListener('keydown', (e) => {
+    if (!st || st.phase === 'press') return;
+    e.preventDefault(); e.stopPropagation();
+    if (e.key === 'Escape') cancel();
+  }, true);
+
+  /** Nhả: click sinh ra ngay sau đó (trên thẻ, tên thẻ) không được mở hộp sửa. @param {PointerEvent} e */
+  function endAt(e) {
+    st.x = e.clientX; st.y = e.clientY;
     const eat = (/** @type {Event} */ ev) => { ev.stopPropagation(); ev.preventDefault(); };
     window.addEventListener('click', eat, { capture: true, once: true });
     setTimeout(() => window.removeEventListener('click', eat, { capture: true }), 0);
     drop();
-  });
-  window.addEventListener('pointercancel', (e) => { if (st && e.pointerId === st.pointerId) cancel(); });
-  window.addEventListener('blur', () => { if (st) cancel(); });
-  document.addEventListener('keydown', (e) => {
-    if (st && st.active && e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); cancel(); }
-  }, true);
+  }
 
+  /** Mới nhấn, chưa kéo: quên lần nhấn. */
   function reset() {
     if (!st) return;
     clearTimeout(st.timer);
-    cancelAnimationFrame(st.raf);
     st = null;
   }
 
   /* ── Bắt đầu: bóng, ô viền đứt ở đúng chỗ cũ, giấu thẻ gốc ── */
   function start() {
     const el = st.el;
-    st.active = true;
+    st.phase = 'drag';
     clearTimeout(st.timer);
     getSelection()?.removeAllRanges();
     document.body.classList.add('dragging-any');
@@ -99,10 +113,18 @@ export function initDrag(board, api) {
     const src = st.kind === 'sub' ? el : /** @type {HTMLElement} */ (el.querySelector('.step-head'));
     const r = src.getBoundingClientRect();
     st.offX = st.x0 - r.left; st.offY = st.y0 - r.top;
+    /* Chỉ một bóng: bóng sót (nếu có) bị gỡ trước. Bản sao bỏ id và khoá dữ liệu (không truy vấn nào của main.js chạm tới
+       nó), bỏ nút "Show more" (bóng chỉ để nhìn). */
+    for (const g of document.querySelectorAll('.drag-ghost')) g.remove();
     const ghost = /** @type {HTMLElement} */ (src.cloneNode(true));
+    for (const n of [ghost, ...ghost.querySelectorAll('[id], [data-sub], [data-step]')]) {
+      n.removeAttribute('id'); n.removeAttribute('data-sub'); n.removeAttribute('data-step');
+    }
+    for (const n of ghost.querySelectorAll('.more')) n.remove();
     ghost.classList.add('drag-ghost');
-    ghost.classList.remove('moved', 'swapped', 'open');
+    ghost.classList.remove('moved', 'swapped', 'open', 'drag-src');
     ghost.setAttribute('aria-hidden', 'true');
+    ghost.inert = true;
     ghost.style.width = r.width + 'px';
     if (st.kind === 'sub') ghost.style.height = r.height + 'px';
     document.body.append(ghost);
@@ -145,7 +167,7 @@ export function initDrag(board, api) {
   }
   /* Mỗi khung hình: tự cuộn gần mép rồi tính lại chỗ thả. */
   function loop() {
-    if (!st || !st.active) return;
+    if (!st || st.phase !== 'drag') return;
     const bar = document.querySelector('.bar');
     const top = (bar ? bar.getBoundingClientRect().bottom : 0) + EDGE_PX;
     const speed = (/** @type {number} */ d) => Math.ceil(Math.min(1, Math.max(0, d) / EDGE_PX) * MAX_SPEED);
@@ -221,12 +243,13 @@ export function initDrag(board, api) {
     mutate();
     if (!animate || reduced()) return;
     const ms = dur();
+    st.anims = st.anims.filter((/** @type {Animation} */ a) => a.playState === 'running');
     for (const [el, a] of before) {
       if (!el.isConnected) continue;
       const b = el.getBoundingClientRect();
       const dx = a.left - b.left, dy = a.top - b.top;
       if (Math.abs(dx) < 1 && Math.abs(dy) < 1) continue;
-      el.animate([{ transform: `translate(${dx}px, ${dy}px)` }, { transform: 'none' }], { duration: ms, easing: 'cubic-bezier(.2, .7, .2, 1)' });
+      st.anims.push(el.animate([{ transform: `translate(${dx}px, ${dy}px)` }, { transform: 'none' }], { duration: ms, easing: 'cubic-bezier(.2, .7, .2, 1)' }));
     }
   }
 
@@ -274,36 +297,56 @@ export function initDrag(board, api) {
     });
   }
 
-  /* ── Kết thúc ── */
-  function finish() {
-    const s = st;
-    st = null;
+  /* ── Kết thúc: mọi đường qua cleanup(s), s là đúng lần kéo ấy, nên lần kéo cũ không đụng được lần kéo mới ── */
+  /** @param {any} s */
+  function cleanup(s) {
+    if (st === s) st = null;
+    clearTimeout(s.timer);
+    clearTimeout(s.flyTimer);
     cancelAnimationFrame(s.raf);
+    for (const a of s.anims) a.cancel();
     s.ghost?.remove();
+    s.ph?.closest('.ph-slot')?.remove();
+    s.ph?.remove();
+    for (const n of board.querySelectorAll('.drag-src')) n.classList.remove('drag-src');
     document.body.classList.remove('dragging-any');
-    return s;
   }
   function drop() {
     const s = st;
+    s.phase = 'fly'; // trong lúc bay: bỏ qua pointerdown, pointermove, pointerup
     cancelAnimationFrame(s.raf);
+    let once = false;
     const done = () => {
-      finish();
+      if (once) return;
+      once = true;
+      cleanup(s);
       if (s.kind === 'sub' && s.target) api.onSub(s.id, s.target);
       else if (s.kind === 'step' && s.target !== null) api.onStep(s.id, s.target);
       else api.onEnd();
     };
     if (reduced() || !s.ph.isConnected) { done(); return; }
-    /* Bóng bay vào ô viền đứt rồi mới vẽ lại. */
+    /* Bóng bay vào ô viền đứt rồi mới vẽ lại. Hẹn giờ dự phòng: tab ẩn thì animation có thể không chạy tới cuối. */
     const r = s.ph.getBoundingClientRect();
     const a = s.ghost.animate([{ transform: s.ghost.style.transform }, { transform: `translate(${r.left}px, ${r.top}px)` }],
       { duration: dur(), easing: 'cubic-bezier(.2, .7, .2, 1)', fill: 'forwards' });
-    st = { ...s, active: false }; // chặn pointerdown mới trong lúc bay
+    s.anims.push(a);
     a.finished.then(done, done);
+    s.flyTimer = window.setTimeout(done, dur() + 250);
   }
+  /** Huỷ: mới nhấn thì quên lần nhấn; đang kéo thì trả mọi thứ về rồi vẽ lại; đang bay thì để nó tự xong. */
   function cancel() {
     if (!st) return;
-    if (!st.active) { reset(); return; }
-    finish();
+    if (st.phase === 'press') { reset(); return; }
+    if (st.phase === 'fly') return;
+    cleanup(st);
     api.onEnd();
   }
+
+  return {
+    /** Bảng sắp vẽ lại từ chỗ khác (tab khác ghi đè dữ liệu…): dọn lần kéo, không gọi onEnd / onSub. */
+    abort() {
+      if (!st) return;
+      if (st.phase === 'press') reset(); else cleanup(st);
+    },
+  };
 }

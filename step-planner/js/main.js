@@ -59,6 +59,8 @@ let curId = '';
 /** @type {any[]} */
 let templates = [];
 const ui = { q: '' };
+/** Kéo thả (js/drag.js); render() dọn lần kéo dở trước khi vẽ lại bảng. @type {{abort: () => void}|null} */
+let dragCtl = null;
 const banners = new Map();
 
 const findWs = (/** @type {string} */ id) => state.workspaces.find((w) => w.id === id) || null;
@@ -152,6 +154,7 @@ document.addEventListener('keydown', (e) => {
 /* ── Vẽ ── */
 
 function render() {
+  dragCtl?.abort();
   const ws = cur();
   $('app').hidden = !ws;
   $('start').hidden = !!ws;
@@ -367,7 +370,7 @@ function docChip(d) {
 
 /** @param {Set<string>} [keepOpen] thẻ đang mở trước lần vẽ này */
 function markCutCards(keepOpen = new Set()) {
-  for (const card of /** @type {NodeListOf<HTMLElement>} */ (document.querySelectorAll('.card[data-sub]'))) {
+  for (const card of /** @type {NodeListOf<HTMLElement>} */ ($('board').querySelectorAll('.card[data-sub]'))) {
     const body = /** @type {HTMLElement} */ (card.querySelector('.card-body'));
     if (body.scrollHeight > body.clientHeight + 1) {
       card.classList.add('cut');
@@ -1651,7 +1654,7 @@ $('import-go').addEventListener('click', () => {
 
 /* ── Kéo thả (js/drag.js): chuột, chạm (giữ rồi kéo), bút. Bàn phím: Alt + mũi tên, ô Vị trí trong hộp sửa ── */
 
-initDrag($('board'), {
+dragCtl = initDrag($('board'), {
   enabled: () => !!cur() && !ui.q.trim(),
   placeOf: (id) => C.subPlace(cur(), id),
   onSub: (id, to) => {

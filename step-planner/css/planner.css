@@ -613,7 +613,7 @@ body.dragging-any .board * { cursor: grabbing; }
 .drag-src { display: none !important; }
 .drag-ghost {
   position: fixed; left: 0; top: 0; z-index: 95; margin: 0; pointer-events: none; will-change: transform;
-  box-shadow: var(--shadow-pop); rotate: var(--drag-tilt); scale: var(--drag-scale); transform-origin: top left; opacity: .9;
+  box-shadow: var(--shadow-pop); rotate: var(--drag-tilt); scale: var(--drag-scale); transform-origin: top left;
 }
 .step-head.drag-ghost { padding: var(--s3); background: var(--surface); border: var(--line-w) solid var(--line); border-radius: var(--r); }
 .drop-ph, .step-ph {

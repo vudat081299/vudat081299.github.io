@@ -468,6 +468,45 @@ const check = (name, ok, detail = '') => {
   check('kéo thả bước con sang bước khác', (await cur(page)).steps[0].subs.at(-1).id === r2[0], JSON.stringify((await cur(page)).steps.slice(0, 3).map((x) => x.subs.map((y) => y.id.slice(-4) + (y.par ? 'p' : '')))) + ' ' + r2[0].slice(-4));
   check('kéo thả: thẻ vừa thả tô nổi, toast "Moved … to step …, after …"', mkd.moved.join() === r2[0]
     && /^Moved ".*" to step ".*", after ".*"$/.test(mkd.toast), JSON.stringify(mkd));
+  // 8. Bóng ma: lúc kéo đúng một bóng (không "Show more", không data-sub); mọi đường kết thúc (thả rồi chuột đi tiếp ngay,
+  // Esc, pointercancel, bảng vẽ lại giữa chừng) để lại không bóng, không ô viền đứt, không thẻ còn transform; kéo liền
+  // nhiều lần không dồn bóng. Thả về đúng chỗ cũ nên thứ tự không đổi.
+  const leftovers = () => page.evaluate(() => ({
+    ghosts: document.querySelectorAll('.drag-ghost').length,
+    rest: document.querySelectorAll('.drop-ph, .step-ph, .ph-slot, .drag-src').length + (document.body.classList.contains('dragging-any') ? 1 : 0),
+    tf: [...document.querySelectorAll('#board .card, #board .step')].filter((n) => n.style.transform || getComputedStyle(n).transform !== 'none').length,
+  }));
+  const settle = () => page.waitForFunction(() => !document.querySelector('.drag-ghost') && !document.body.classList.contains('dragging-any'), null, { timeout: 3000 }).catch(() => {});
+  const cutId = await page.evaluate(() => document.querySelector('#board .card.cut[data-sub]')?.dataset.sub);
+  const order8 = JSON.stringify((await cur(page)).steps.map((s) => [s.id, s.subs.map((x) => x.id + (x.par ? 'p' : ''))]));
+  /** Nhấn trên `sel`, trôi 20px (vẫn trong ô viền đứt ở chỗ cũ), đếm bóng; rồi kết thúc bằng `end`. */
+  const ghostRun = async (sel, end) => {
+    const a = await box(sel);
+    const x = a.x + Math.min(24, a.width / 2), y = a.y + Math.min(24, a.height / 2);
+    await page.mouse.move(x, y);
+    await page.mouse.down();
+    await page.mouse.move(x + 10, y + 2, { steps: 2 });
+    await page.mouse.move(x + 20, y + 4, { steps: 2 });
+    const during = await page.evaluate(() => [...document.querySelectorAll('.drag-ghost')].map((g) => ({
+      more: g.querySelectorAll('.more').length, keyed: g.querySelectorAll('[data-sub], [data-step], [id]').length + (g.dataset.sub || g.dataset.step || g.id ? 1 : 0) })));
+    if (end === 'drop') { await page.mouse.up(); await page.mouse.move(x + 320, y + 140, { steps: 6 }); }
+    if (end === 'esc') { await page.keyboard.press('Escape'); await page.mouse.up(); }
+    if (end === 'cancel') { await page.evaluate(() => window.dispatchEvent(new PointerEvent('pointercancel', { pointerId: 1, pointerType: 'mouse', bubbles: true }))); await page.mouse.up(); }
+    if (end === 'render') { await page.evaluate(() => window.dispatchEvent(new StorageEvent('storage', { key: 'stepPlanner.v2' }))); await page.mouse.up(); }
+    const after = await page.evaluate(() => document.querySelectorAll('.drag-ghost').length);
+    await settle();
+    await page.waitForTimeout(60);
+    return { during, after, left: await leftovers() };
+  };
+  const g8 = [];
+  for (const [sel, end] of [[cardSel(cutId), 'drop'], [cardSel(cutId), 'drop'], [cardSel(cutId), 'drop'], [cardSel(cutId), 'esc'],
+    [cardSel(cutId), 'cancel'], [cardSel(cutId), 'render'], [`.step[data-step="${st2[1]}"] .step-grip`, 'drop'],
+    [`.step[data-step="${st2[1]}"] .step-grip`, 'drop'], [`.step[data-step="${st2[1]}"] .step-grip`, 'esc'],
+    [`.step[data-step="${st2[1]}"] .step-grip`, 'cancel']]) g8.push({ end, ...(await ghostRun(sel, end)) });
+  check('kéo: đúng một bóng, bóng không có "Show more" hay id / khoá dữ liệu', !!cutId && g8.every((g) => g.during.length === 1 && g.during[0].more === 0 && g.during[0].keyed === 0), JSON.stringify(g8.map((g) => g.during)));
+  check('thả (chuột đi tiếp ngay), Esc, pointercancel, vẽ lại giữa chừng; thẻ và bước: không bóng sót, không dồn, không transform còn lại',
+    g8.every((g) => g.after <= 1 && g.left.ghosts === 0 && g.left.rest === 0 && g.left.tf === 0), JSON.stringify(g8.map((g) => [g.end, g.after, g.left])));
+  check('thả về chỗ cũ: thứ tự không đổi', JSON.stringify((await cur(page)).steps.map((s) => [s.id, s.subs.map((x) => x.id + (x.par ? 'p' : ''))])) === order8);
   await page.setViewportSize({ width: 1280, height: 900 });
 
   // Thêm, sửa, xoá bước + hoàn tác.
