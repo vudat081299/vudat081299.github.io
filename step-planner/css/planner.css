@@ -402,16 +402,22 @@ svg.i {
 }
 .step.is-done .step-num { background: var(--accent); color: var(--on-accent); }
 .step-title { font: 600 var(--fs-lg)/var(--lh-tight) var(--display); min-width: 0; overflow-wrap: anywhere; }
-/* Tên bước là nút chữ: vùng bấm nới tới --hit bằng lớp giả, không đổi bố cục. */
-.step-title .link, .more { position: relative; }
-.step-title .link::after, .more::after {
+/* Tên bước, nhãn "Ghi chú" là chữ bấm được: vùng bấm nới tới --hit bằng lớp giả, không đổi bố cục. */
+.step-title .link, .more, .step-notes summary { position: relative; }
+.step-title .link::after, .more::after, .step-notes summary::after {
   content: ''; position: absolute; left: 0; right: 0; top: 50%; height: max(100%, var(--hit)); transform: translateY(-50%);
 }
 .step-goal, .step-done { font-size: var(--fs-sm); color: var(--ink-2); overflow-wrap: anywhere; }
 .lbl { color: var(--ink-3); font-weight: 600; }
 .prog { display: flex; align-items: center; gap: var(--s2); font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-3); }
 .prog .bar-prog { flex: 1; }
-.step-notes summary { cursor: pointer; font-size: var(--fs-sm); font-weight: 600; color: var(--ink-2); }
+.step-notes summary {
+  display: inline-flex; align-items: center; gap: var(--s1); list-style: none; cursor: pointer;
+  font-size: var(--fs-sm); font-weight: 600; color: var(--ink-2);
+}
+.step-notes summary::-webkit-details-marker { display: none; }
+.step-notes summary svg.i { transform: rotate(-90deg); transition: transform var(--dur) var(--ease); color: var(--ink-3); }
+.step-notes[open] summary svg.i { transform: none; }
 .step-notes .notes-text { margin-top: var(--s1); }
 .acts { display: flex; gap: var(--s1); flex-wrap: wrap; align-items: center; }
 /* Nút phụ (dời, nhân bản, xoá, cần làm lại) hiện khi rê chuột hoặc focus; máy cảm ứng luôn hiện. */

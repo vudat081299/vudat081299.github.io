@@ -232,7 +232,7 @@ function renderBoard(/** @type {any} */ ws) {
       step.docs.length > 0 && h('ul', { class: 'step-docs', 'aria-label': `Tài liệu của bước ${i + 1}` }, step.docs.map(docLink)),
       step.goal && h('p', { class: 'step-goal' }, step.goal),
       step.doneWhen && h('p', { class: 'step-done' }, h('span', { class: 'lbl' }, 'Xong khi '), step.doneWhen),
-      step.notes && h('details', { class: 'step-notes', open: keep.notes.has(step.id) }, h('summary', {}, 'Ghi chú'), h('p', { class: 'notes-text' }, withLinks(step.notes))),
+      step.notes && h('details', { class: 'step-notes', open: keep.notes.has(step.id) }, h('summary', {}, icon('chev'), 'Ghi chú'), h('p', { class: 'notes-text' }, withLinks(step.notes))),
       h('div', { class: 'prog' },
         h('span', {}, `${prog.done}/${prog.total}`, h('span', { class: 'sr' }, ' bước con xong')),
         h('span', { class: 'bar-prog', 'aria-hidden': 'true' }, barFill(prog.pct))),

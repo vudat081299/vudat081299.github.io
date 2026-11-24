@@ -743,7 +743,8 @@ const check = (name, ok, detail = '') => {
   const small = await m.page.evaluate(() => {
     const bad = [];
     const els = document.querySelectorAll('.step:first-child .card[data-sub]:first-child button:not([data-act="edit-sub"]),'
-      + ' .step:first-child .step-head button, .tools button, #theme-btn, #hint-off, #ws-btn, .ws-notes summary, .step:first-child .doc-tag');
+      + ' .step:first-child .step-head button, .tools button, #theme-btn, #hint-off, #ws-btn, .ws-notes summary, .step:first-child .doc-tag,'
+      + ' .step:first-child .step-notes summary');
     for (const el of els) {
       if (el.offsetParent === null) continue;
       el.scrollIntoView({ block: 'center', inline: 'center' });
@@ -761,6 +762,8 @@ const check = (name, ok, detail = '') => {
   const topH = await m.page.evaluate(() => [document.querySelector('.top-name').getBoundingClientRect().height,
     document.querySelector('.ws-name').getBoundingClientRect().height]);
   check('390px: tên dự án một dòng, cắt bớt', topH[1] < 40 && topH[0] < 70, topH.join(','));
+  const chevs = await m.page.$$eval('.ws-notes summary, .step-notes summary', (ss) => ss.map((x) => `${getComputedStyle(x).display}:${x.querySelectorAll('svg.i use[href="#i-chev"]').length}`));
+  check('ghi chú dự án và ghi chú bước: cùng biểu tượng chevron, không dấu tam giác của trình duyệt', chevs.every((x) => /^(inline-)?flex:1$/.test(x)), [...new Set(chevs)].join(','));
   check('mẫu đồ án: ghi chú bước gập, có link trang đồ án', (await m.page.$$('.step-notes')).length === 10
     && (await m.page.$$eval('.step-notes a', (a) => a.filter((x) => /sports-monitoring-project\.html#lt-lich$/.test(x.href)).length)) === 10);
   for (const d of ['#dlg-sub', '#dlg-export']) {
