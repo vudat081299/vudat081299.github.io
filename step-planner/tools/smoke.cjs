@@ -115,11 +115,36 @@ const check = (name, ok, detail = '') => {
   const chip = '.step:nth-child(1) .card[data-sub]:nth-child(1) [data-act="cycle"]';
   await page.click(chip);
   check('chip: chưa làm → đang làm', (await page.textContent(chip)).trim() === 'Đang làm');
+  const chipLook = (sel) => page.$eval(sel, (el) => { const c = getComputedStyle(el); return [c.color, c.backgroundColor, c.borderColor].join('|'); });
+  const doingLook = await chipLook(chip), todoLook = await chipLook('.step:nth-child(1) .card[data-sub]:nth-child(2) [data-act="cycle"]');
+  check('chip Đang làm có màu riêng (chữ, nền, viền khác Chưa làm)', doingLook.split('|').every((v, k) => v !== todoLook.split('|')[k]), `${doingLook} / ${todoLook}`);
   await page.click(chip);
   check(`chip: → xong, tiến độ 1/${n1}`, (await page.textContent(chip)).trim() === 'Xong'
     && (await page.textContent('.step:nth-child(1) .prog')).includes(`1/${n1}`));
   check('việc tiếp theo dời sang 1.2', (await page.textContent('.step:nth-child(1) .card.next .num')) === '1.2');
   check('chip giữ focus sau khi bấm', await page.evaluate(() => document.activeElement?.dataset.act === 'cycle'));
+
+  // Huỷ: chỉ chọn trong hộp sửa, có ô "Vì sao huỷ"; thẻ hiện lý do, tên gạch; không tính vào tiến độ; "Tiếp theo" bỏ qua;
+  // chú giải có Huỷ; bấm chip Huỷ → Chưa làm.
+  const c12 = '.step:nth-child(1) .card[data-sub]:nth-child(2)';
+  await page.click(`${c12} [data-act="edit-sub"]`);
+  check('hộp sửa: có Huỷ trong trạng thái, ô "Vì sao huỷ" ẩn khi chưa chọn', (await page.$$eval('#sub-form [name="status"] option', (o) => o.map((x) => x.textContent))).includes('Huỷ')
+    && !(await page.isVisible('#sub-cancel')));
+  await page.selectOption('#sub-form [name="status"]', 'cancel');
+  check('chọn Huỷ: hiện ô "Vì sao huỷ"', await page.isVisible('#sub-cancel'));
+  await page.fill('#sub-form [name="cancelReason"]', 'Đã có số liệu từ nguồn khác\nkhông cần làm lại');
+  await page.click('#sub-form button[type="submit"]');
+  const cx = await page.evaluate((sel) => {
+    const c = document.querySelector(sel);
+    return { chip: c.querySelector('.chip').textContent, reason: c.querySelector('.card-cancel')?.textContent, line: getComputedStyle(c.querySelector('.card-title')).textDecorationLine,
+      prog: document.querySelector('.step:nth-child(1) .prog').textContent, next: document.querySelector('.card.next .num')?.textContent,
+      legend: [...document.querySelectorAll('#legend li')].map((li) => li.textContent).join(',') };
+  }, c12);
+  check('Huỷ: chip, lý do trên thẻ, tên gạch ngang', cx.chip === 'Huỷ' && /^Huỷ vì Đã có số liệu từ nguồn khác\nkhông cần làm lại$/.test(cx.reason) && cx.line === 'line-through', JSON.stringify(cx));
+  check(`Huỷ: tiến độ 1/${n1 - 1}, "Tiếp theo" sang 1.3, chú giải có Huỷ 1`, cx.prog.startsWith(`1/${n1 - 1}`) && cx.next === '1.3' && cx.legend.includes('Huỷ1'), JSON.stringify(cx));
+  check('Huỷ: lưu lý do', (await cur(page)).steps[0].subs[1].cancelReason === 'Đã có số liệu từ nguồn khác\nkhông cần làm lại');
+  await page.click(`${c12} [data-act="cycle"]`);
+  check('bấm chip Huỷ → Chưa làm, lý do bỏ', (await page.textContent(`${c12} .chip`)).trim() === 'Chưa làm' && (await cur(page)).steps[0].subs[1].cancelReason === '');
 
   // Thêm bước con có đủ trường.
   await page.click('.step:nth-child(1) [data-act="add-sub"]');

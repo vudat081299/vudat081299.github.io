@@ -1,7 +1,6 @@
 # `step-planner/` — Data Science Step Planner
 
-- Tên hiển thị: Data Science Step Planner (`<title>`, đầu trang, trang chủ, dòng đầu Markdown). Thư mục và khoá bộ nhớ
-  giữ tên `step-planner` để URL và cổng không đổi.
+- Tên hiển thị: Data Science Step Planner (`<title>`, thanh trên, trang chủ, Markdown); thư mục, khoá giữ `step-planner`.
 - Một trang, `index.html`: dự án chia thành bước (hàng) và bước con (thẻ), trạng thái, hạn, tài liệu, nhật ký quyết
   định, xuất / nhập Markdown và JSON. Ưu tiên dự án dữ liệu, dùng được cho dự án bất kỳ.
 - Không có khái niệm người làm (PLAN-010): không thành viên, không giao việc, không lọc theo người.
@@ -28,23 +27,25 @@
 - Workspace `{id, name, templateId, createdAt, updatedAt, notes, steps[], log[]}`.
 - Step `{id, title, goal, doneWhen, notes, revisit: null | {reason, date, round}, round, docs[], subs[]}`. `round`: vòng gần
   nhất (1 = chưa làm lại); đang đánh dấu thì `round` = `revisit.round` ≥ 2.
-- Sub `{id, title, status, due, doneWhen, notes, docs[]}`; `status` ∈ `todo doing done blocked skip`; `due` là `YYYY-MM-DD` hoặc rỗng.
+- Sub `{id, title, status, cancelReason, due, doneWhen, notes, docs[]}`; `status` ∈ `todo doing done blocked skip cancel`;
+  `cancelReason` (nhiều dòng) chỉ giữ khi `cancel`; `due` là `YYYY-MM-DD` hoặc rỗng.
 - Log `{id, date, decision, why}`.
 - Doc `{id, kind: 'link', title, url}` hoặc `{id, kind: 'md', title, body}`. `url` chỉ http(s) (`safeUrl`); link khác bị bỏ
   (nhập thì cảnh báo). `body` giữ nguyên từng dòng, chỉ bỏ dòng trống đầu và khoảng trắng cuối.
 - Mọi dữ liệu đi qua `normSub` / `normStep` / `normWorkspace`: chuỗi một dòng gộp khoảng trắng, ghi chú bỏ khoảng trắng
   cuối dòng, phần tử không phải object bị bỏ, ngày phải có thật (`parseDate` kiểm đi rồi về). Trường lạ (kể cả `owner`,
   `people`, `me` của dữ liệu cũ) bị bỏ, không lỗi.
-- Hai mốc sao lưu chỉ ở máy này, không xuất. Dự án đang mở của tab ở `sessionStorage['stepPlanner.tab']`; `lastId` cho tab mới.
-- Bộ nhớ bị chặn: chạy trong bộ nhớ tạm, có banner. Dữ liệu hỏng: chép sang `stepPlanner.v2.corrupt`, bắt đầu trống.
-  Lúc mở trang gọi `navigator.storage.persist()` (Safari xoá dữ liệu do script ghi sau 7 ngày không mở trang).
+- Hai mốc sao lưu chỉ ở máy này, không xuất. Dự án đang mở của tab ở `sessionStorage['stepPlanner.tab']`.
+- Bộ nhớ bị chặn: bộ nhớ tạm + banner. Hỏng: chép sang `stepPlanner.v2.corrupt`, bắt đầu trống. Lúc mở gọi
+  `navigator.storage.persist()` (Safari xoá dữ liệu do script ghi sau 7 ngày không mở trang).
 
 ## Hành vi
 
-- Tiến độ = xong / (tổng − bỏ qua). "Tiếp theo" chỉ tô một thẻ: bước con đầu tiên không `done`, không `skip` của bước
-  đầu tiên còn việc.
-- Bấm chip trạng thái: chưa làm → đang làm → xong → chưa làm; bị chặn → đang làm; bỏ qua → chưa làm.
-  Bị chặn và bỏ qua chọn trong hộp sửa.
+- Sáu trạng thái (PLAN-003). Bỏ qua: việc không cần với dự án này. Huỷ: đã quyết không làm, giữ thẻ để nhớ vì sao.
+- Tiến độ = xong / (tổng − bỏ qua − huỷ). "Tiếp theo" chỉ tô một thẻ: bước con đầu tiên không xong, không bỏ qua, không
+  huỷ của bước đầu tiên còn việc.
+- Bấm chip: chưa làm → đang làm → xong → chưa làm; bị chặn → đang làm; bỏ qua, huỷ → chưa làm. Bị chặn, bỏ qua, huỷ chọn
+  trong hộp sửa; chọn Huỷ thì hiện ô "Vì sao huỷ". Thẻ huỷ: tên gạch, lý do trong thân thẻ (cắt và "Xem thêm" như ghi chú).
 - Bấm vào thẻ (ngoài nút) là mở hộp sửa. Mỗi thẻ chỉ hai điểm dừng Tab: tên (mở sửa) và chip.
 - Nút phụ (dời, nhân bản, xoá, cần làm lại, tài liệu, nhãn kẹp, "Xem thêm") có `tabindex=-1`. Bàn phím làm cùng việc: Alt
   + ← → trên tên bước con, Alt + ↑ ↓ trên tên bước, ô "Thuộc bước" / "Vị trí" và các nút trong hộp sửa.
@@ -56,25 +57,24 @@
   sách bước con đưa về "Chưa làm" — mặc định không chọn, nút "Chọn tất cả đã xong". Đánh dấu mới mở vòng `round + 1`, ghi
   nhật ký "Làm lại: tên bước (vòng N)" với lý do; một Hoàn tác trả cả trạng thái thẻ, nhật ký, đánh dấu, vòng. Băng
   "Đang làm lại · Vòng N · ngày · lý do" (bấm để sửa lý do), nút "Xong, bỏ đánh dấu" (vòng giữ để lần sau tăng tiếp).
-- Mẹo người mới hiện trên bảng tới khi bấm × (nhớ ở máy này). Nút "Gọn" (nhớ ở máy này) ẩn "Xong khi" và ghi chú trên thẻ
-  và cột bước. Nút "Nhật ký (N)" cuộn tới khung nhật ký và focus vào đó.
+- Mẹo người mới hiện tới khi bấm × (nhớ ở máy này). Nút "Gọn" (nhớ ở máy này) ẩn "Xong khi", ghi chú, lý do huỷ trên
+  thẻ và cột bước. Nút "Nhật ký (N)" cuộn tới khung nhật ký và focus vào đó.
 - Tìm không phân biệt hoa thường và dấu, khớp cả tên tài liệu. Tên, mục tiêu, ghi chú hay tài liệu của bước khớp thì
   hiện cả hàng. Đang tìm thì tắt sắp xếp và nút thêm bước; thẻ mới bị lọc ẩn thì toast "Đã thêm — đang bị bộ lọc ẩn".
 - Xoá bước con, quyết định, tài liệu: một bấm. Xoá bước còn bước con: hỏi lại. Sau khi xoá, focus nhảy vào Hoàn tác của
   toast (15 giây); Ctrl/Cmd + Z cũng hoàn tác khi không gõ chữ và không có hộp thoại mở.
-- Hoàn tác tìm lại dự án và bước theo id (tab khác có thể đã thay `state`). Xoá dự án hỏi lại, không hoàn tác, toast
-  của dự án ấy biến mất.
+- Hoàn tác tìm lại dự án và bước theo id (tab khác có thể đã thay `state`). Xoá dự án hỏi lại, không hoàn tác.
 - Hộp sửa: mở thì focus ô đầu; tên là textarea tự cao, Enter lưu. Esc, × hay Huỷ khi chữ đã đổi thì hỏi "Bỏ thay đổi?".
-- Ghi chú bước gập dưới tên bước. Thẻ cao theo nội dung, trong khoảng `--card-min` … `--card-max`; vượt max thì thân thẻ
-  bị cắt, mờ dần, nút "Xem thêm" mở cả thẻ. Link http(s) trong ghi chú bấm được.
+- Ghi chú bước gập dưới tên bước. Thẻ cao theo nội dung (`--card-min` … `--card-max`); vượt max thì thân thẻ bị cắt, mờ
+  dần, nút "Xem thêm" mở cả thẻ. Link http(s) trong ghi chú bấm được.
 - Tài liệu (PLAN-011): cột bước liệt kê tài liệu của bước dưới tên, nút phụ "Tài liệu" để thêm. Thẻ chỉ có nhãn kẹp + số
   ở hàng đầu (không cao thêm); bấm là mở hộp sửa bước con ở phần Tài liệu. Thêm / sửa / xoá trong hộp sửa bước, bước
   con, lưu ngay; xoá khi hộp đang mở thì Hoàn tác là một hàng trong hộp (toast nằm dưới hộp thoại). Link mở tab mới
   (`noopener noreferrer`); văn bản mở hộp lớn Sửa / Xem / Chia đôi (`#dlg-md`).
-- Nhật ký quyết định: sửa và xoá được; hiện theo ngày, mới nhất trước.
+- Nhật ký quyết định: sửa và xoá được; hiện theo ngày, mới nhất trước. Tab khác sửa cùng khoá thì trang đọc lại (sự kiện
+  `storage`) và giữ dự án của tab này.
 - Nhắc sao lưu: có thay đổi chưa sao lưu từ ≥ 3 ngày thì nút "Chưa sao lưu N ngày" / "Chưa sao lưu lần nào" hiện cạnh
   Xuất; bấm là tải bản sao lưu mọi dự án. Chỉ bản sao lưu tất cả (tải hoặc chép) mới đặt lại mốc.
-- Tab khác sửa cùng khoá thì trang đọc lại (sự kiện `storage`) và giữ dự án của tab này.
 - Chữ người dùng chỉ vào DOM qua text node (`h` trong `main.js`, `md.js`); không `innerHTML` ở `js/`. Không `alert` /
   `confirm` / `prompt`: hỏi lại bằng `#dlg-ask`.
 
@@ -120,8 +120,10 @@ Tài liệu:
     thân văn bản, kể cả ``` và dòng #, -, nhãn
     ````
 
-- [ ] Tên bước con · hạn YYYY-MM-DD
+- [/] Tên bước con · hạn YYYY-MM-DD
   Xong khi: …
+  Huỷ vì: dòng đầu
+    dòng tiếp của lý do
   dòng ghi chú
   Tài liệu:
     - [Tên link](https://…)
@@ -132,21 +134,22 @@ Tài liệu:
   dòng tiếp
 ```
 
-- Dấu trạng thái: `[ ]` / `[]` chưa làm, `[~]` đang làm, `[x]` / `[X]` xong, `[!]` bị chặn, `[-]` bỏ qua. Dấu lạ đọc là chưa làm.
+- Dấu trạng thái: `[ ]` / `[]` chưa làm, `[~]` đang làm, `[x]` / `[X]` xong, `[!]` bị chặn, `[-]` bỏ qua, `[/]` huỷ. Dấu lạ
+  đọc là chưa làm.
 - Trên dòng bước con, phần tử tách bằng ` · `. Trong tên: `\` viết `\\`, `·` viết `\·`, `@` viết `\@`, chữ `hạn` / `due`
   viết `\hạn` / `\due`.
 - Dòng thụt hai dấu cách thuộc bước con / `Ghi chú:` / quyết định ngay trên nó. Dòng thụt đầu `Xong khi: ` của bước con
   là `doneWhen`; dòng thụt đầu `Vì sao: ` của quyết định mở phần lý do.
-- Dòng ghi chú: dòng trống viết `\`; dòng bắt đầu bằng `\`, `#`, `>`, đầu mục danh sách, `**` hay một nhãn (`Mục tiêu:`,
-  `Xong khi:`, `Vì sao:`, `Quay lại:`, `Vòng:`, `Ghi chú:`, `Tài liệu:`) thêm một `\` phía trước.
+- Bước con huỷ: dòng thụt `Huỷ vì: dòng đầu` ngay sau `Xong khi:`, các dòng sau của lý do thụt bốn (thoát như dòng ghi chú).
+- Dòng ghi chú: dòng trống viết `\`; dòng bắt đầu bằng `\`, khoảng trắng, `#`, `>`, đầu mục danh sách, `**` hay một nhãn
+  (`Mục tiêu:`, `Xong khi:`, `Huỷ vì:`, `Vì sao:`, `Quay lại:`, `Vòng:`, `Ghi chú:`, `Tài liệu:`) thêm một `\` phía trước.
 - Vòng: bước đang đánh dấu ghi vòng trong `Quay lại:`; bước đã bỏ đánh dấu mà `round` > 1 có dòng `Vòng: N` thay chỗ ấy.
   Dòng cũ `Quay lại: YYYY-MM-DD · lý do` (không vòng) đọc là vòng 2.
 - Tài liệu: nhãn `Tài liệu:` (bước: không thụt, sau `Ghi chú:`; bước con: thụt hai, cuối bước con), mỗi tài liệu một mục
   thụt thêm hai. Link `- [tên](url)`, url có ngoặc thì `(<url>)`. Văn bản `- tên` rồi khối rào thụt thêm hai, rào `` ` ``
   dài hơn chuỗi `` ` `` dài nhất trong thân (tối thiểu ba), dòng trống của thân ghi rỗng. Trong tên: `\`, `[`, `]` thoát
   bằng `\`.
-- Dòng đầu (`Data Science Step Planner · …` hay `Step Planner · …` cũ) chỉ để đọc; trang không dựa vào nó. Số `1.1`, `1.2`
-  là số suy ra, không ghi vào Markdown.
+- Dòng đầu (`… · định dạng N`) chỉ để đọc; trang không dựa vào nó. Số `1.1`, `1.2` là số suy ra, không ghi vào Markdown.
 
 Nhập file cũ và Markdown viết tay (dễ dãi):
 
@@ -154,8 +157,7 @@ Nhập file cũ và Markdown viết tay (dễ dãi):
 - Bước con: `- [ ] x`, `- [] x`, `* [ ] x`, `+ [ ] x`, `1. [ ] x`, gạch đầu dòng thường `- x` (chưa làm). Mục lồng
   (`  - [ ] con`) thành bước con cùng bước, xếp phẳng.
 - Hạn: `hạn` / `due` + `YYYY-MM-DD`, `YYYY-M-D`, `DD/MM/YYYY`, `D/M/YYYY`. Ngày không có thật thì cảnh báo, giữ trong tên.
-- Tiêu đề bước: `## 1. x`, `## 1) x`, `## 2 x`, `## Bước 1: x`, `## Step 2) x`, hay `## x` không số.
-  `## Nhật ký quyết định` / `## Nhật ký` là nhật ký.
+- Tiêu đề bước: `## 1. x`, `## 1) x`, `## 2 x`, `## Bước 1: x`, `## Step 2) x`, `## x`. `## Nhật ký (quyết định)` là nhật ký.
 - Trước `##` đầu tiên: dòng đầu không có `#` là tên dự án; việc thành bước "Việc chung"; chữ khác là ghi chú dự án.
 - Trong nhật ký: gạch đầu dòng hay dòng thường đều là một quyết định; ngày đầu dòng (hai kiểu) là ngày quyết định.
 - Dòng lạ trong bước (đoạn văn, `###`) nối vào ghi chú bước. Xem trước khi nhập liệt kê mọi cảnh báo.
@@ -168,8 +170,7 @@ Nhập file cũ và Markdown viết tay (dễ dãi):
   dựa vào `version`: bản 1 (có người, không tài liệu) vẫn nhập.
 - Nhập nhận cả hai, mảng dự án, hoặc một dự án trần. Mục nào không phải object hay thiếu mảng `steps` thì bỏ, kèm cảnh
   báo tiếng Việt; không còn dự án nào thì báo lỗi, không bao giờ lộ TypeError.
-- Mặc định tạo dự án mới (id mới); trùng tên thì thêm ` (nhập)`, ` (nhập 2)`… "Thay dự án đang mở" (chỉ khi nhập
-  đúng một dự án) giữ id, có Hoàn tác.
+- Mặc định tạo dự án mới (id mới, trùng tên thì ` (nhập)`, ` (nhập 2)`…). "Thay dự án đang mở" (một dự án) có Hoàn tác.
 
 ## Giao diện
 
@@ -182,12 +183,11 @@ Nhập file cũ và Markdown viết tay (dễ dãi):
   unicode làm biểu tượng. Nút chỉ có biểu tượng thì có `aria-label` và `title`.
 - Đầu dự án: tên (bấm để đổi dự án), tiến độ chung, chú giải trạng thái kèm số bước con (đếm, không ghi tay). Chip
   trạng thái có chữ và chấm khác hình, không chỉ khác màu. Thanh công cụ: lọc bên trái, Xuất là nút chính.
-- Cột tên bước rộng cố định, thẻ cùng bề rộng nên các hàng thẳng cột; thẻ không bị kéo cao theo thẻ cao nhất hàng.
-  Hàng thẻ cuộn ngang bên trong, báo còn chỗ cuộn (`more-left` / `more-right`). Nút "Bước con" luôn ở cột tên bước.
-  ≤ 640px: tên bước nằm trên hàng thẻ.
+- Cột tên bước rộng cố định, thẻ cùng bề rộng (các hàng thẳng cột), không bị kéo cao theo thẻ cao nhất hàng. Hàng thẻ
+  cuộn ngang bên trong, báo còn chỗ cuộn (`more-left` / `more-right`). ≤ 640px: tên bước nằm trên hàng thẻ.
 - Hộp văn bản Markdown gần toàn màn, ≤ 640px toàn màn; Chia đôi xếp trên / dưới khi hẹp.
-- Màn cảm ứng và ≤ 640px: vùng bấm của nút và chip ≥ 44px (vật nhỏ trong dòng nới bằng lớp giả).
-- Trang không bao giờ cuộn ngang. Tạo hay mở dự án thì về đầu trang, không cuộn theo focus.
+- Màn cảm ứng và ≤ 640px: vùng bấm ≥ 44px (vật nhỏ trong dòng nới bằng lớp giả). Trang không bao giờ cuộn ngang.
+- Tạo hay mở dự án thì về đầu trang, không cuộn theo focus.
 
 ## Cổng: `sh step-planner/tools/check.sh`
 
@@ -195,6 +195,5 @@ Nhập file cũ và Markdown viết tay (dễ dãi):
 - `node --check` cho `js/*.js`; `tools/test-core.mjs`: logic thuần của `core.js` và `md.js` (Markdown, JSON đi rồi về,
   viết tay, file cũ, sai khuôn); danh sách ở chính file.
 - `tools/smoke.cjs` (cổng tự dựng máy chủ tạm; thiếu playwright thì bỏ qua, CI chạy ở job smoke): bấm thật các hành vi
-  ở mục Hành vi, hai tab, 390px (tràn ngang, vùng bấm ≥ 44px), bộ nhớ bị chặn / hỏng / khoá cũ, lỗi console; danh sách ở
-  chính file. Số bước / bước con của mẫu đọc từ `templates.json`, không ghi tay.
-  Chạy tay: `node step-planner/tools/smoke.cjs http://127.0.0.1:8347/step-planner/`.
+  trên, hai tab, 390px, bộ nhớ bị chặn / hỏng / khoá cũ, lỗi console; số của mẫu đọc từ `templates.json`. Chạy tay:
+  `node step-planner/tools/smoke.cjs http://127.0.0.1:8347/step-planner/`.

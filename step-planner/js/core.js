@@ -2,12 +2,16 @@
 /* Logic thuần của Step Planner: chuẩn hoá dữ liệu, tiến độ, Markdown và JSON vào / ra.
  * Không đụng DOM hay bộ nhớ trình duyệt; chạy được trong Node (tools/test-core.mjs). */
 
-export const STATUSES = ['todo', 'doing', 'done', 'blocked', 'skip'];
-export const STATUS_LABEL = { todo: 'Chưa làm', doing: 'Đang làm', done: 'Xong', blocked: 'Bị chặn', skip: 'Bỏ qua' };
-const MARK = { todo: ' ', doing: '~', done: 'x', blocked: '!', skip: '-' };
-const FROM_MARK = { ' ': 'todo', '': 'todo', '~': 'doing', x: 'done', X: 'done', '!': 'blocked', '-': 'skip' };
-/* Bấm chip: chưa làm → đang làm → xong → chưa làm. Bị chặn → đang làm, bỏ qua → chưa làm. */
-const NEXT = { todo: 'doing', doing: 'done', done: 'todo', blocked: 'doing', skip: 'todo' };
+/* Sáu trạng thái. Bỏ qua: việc không cần với dự án này. Huỷ: đã quyết không làm, giữ thẻ để nhớ vì sao (cancelReason).
+ * Tiến độ và "Tiếp theo" không tính cả hai. */
+export const STATUSES = ['todo', 'doing', 'done', 'blocked', 'skip', 'cancel'];
+export const STATUS_LABEL = { todo: 'Chưa làm', doing: 'Đang làm', done: 'Xong', blocked: 'Bị chặn', skip: 'Bỏ qua', cancel: 'Huỷ' };
+const MARK = { todo: ' ', doing: '~', done: 'x', blocked: '!', skip: '-', cancel: '/' };
+const FROM_MARK = { ' ': 'todo', '': 'todo', '~': 'doing', x: 'done', X: 'done', '!': 'blocked', '-': 'skip', '/': 'cancel' };
+/* Bấm chip: chưa làm → đang làm → xong → chưa làm. Bị chặn → đang làm; bỏ qua, huỷ → chưa làm. */
+const NEXT = { todo: 'doing', doing: 'done', done: 'todo', blocked: 'doing', skip: 'todo', cancel: 'todo' };
+/** Trạng thái không tính vào tiến độ và việc tiếp theo. @param {string} s */
+export const outOfScope = (s) => s === 'skip' || s === 'cancel';
 export const nextStatus = (/** @type {string} */ s) => NEXT[s] || 'todo';
 
 export const FORMAT = 'step-planner';
@@ -74,10 +78,12 @@ const docsOf = (/** @type {any} */ a) => (Array.isArray(a) ? a.map(normDoc).filt
 /** @param {any} o */
 export function normSub(o) {
   const x = isObj(o) ? o : {};
+  const status = STATUSES.includes(x.status) ? x.status : 'todo';
   return {
     id: idOr(x.id, 's'),
     title: oneLine(x.title) || 'Bước con',
-    status: STATUSES.includes(x.status) ? x.status : 'todo',
+    status,
+    cancelReason: status === 'cancel' ? multiLine(x.cancelReason) : '',
     due: parseDate(x.due),
     doneWhen: oneLine(x.doneWhen),
     notes: multiLine(x.notes),
@@ -181,9 +187,9 @@ export function fromTemplate(tpl, name) {
 
 /* ── Tiến độ ── */
 
-/** Xong / (tổng − bỏ qua). @param {{status:string}[]} subs */
+/** Xong / (tổng − bỏ qua − huỷ). @param {{status:string}[]} subs */
 export function progress(subs) {
-  const total = subs.filter((s) => s.status !== 'skip').length;
+  const total = subs.filter((s) => !outOfScope(s.status)).length;
   const done = subs.filter((s) => s.status === 'done').length;
   return { done, total, pct: total ? Math.round((done / total) * 100) : 0 };
 }
@@ -191,9 +197,9 @@ export function progress(subs) {
 /** @param {{steps:{subs:{status:string}[]}[]}} ws */
 export const overall = (ws) => progress(ws.steps.flatMap((s) => s.subs));
 
-/** Việc tiếp theo của một bước: bước con đầu tiên chưa xong và không bị bỏ qua. @param {{subs:{id:string,status:string}[]}} step */
+/** Việc tiếp theo của một bước: bước con đầu tiên chưa xong, không bỏ qua, không huỷ. @param {{subs:{id:string,status:string}[]}} step */
 export function nextActionId(step) {
-  const s = step.subs.find((x) => x.status !== 'done' && x.status !== 'skip');
+  const s = step.subs.find((x) => x.status !== 'done' && !outOfScope(x.status));
   return s ? s.id : null;
 }
 
@@ -229,7 +235,7 @@ export const splitInline = (line) => splitDots(protect(line)).map(restore);
 
 /* Dòng ghi chú: dòng trống viết `\`; dòng có thể bị đọc nhầm (nhãn, đầu mục danh sách, tiêu đề, trích dẫn, `\`)
  * thêm `\` phía trước. */
-const RISKY = /^(\\|#|>|\s*([-*+]|\d+[.)])(\s|$)|\s*\*\*|(Xong khi|Vì sao|Mục tiêu|Quay lại|Vòng|Ghi chú|Tài liệu):)/;
+const RISKY = /^(\\|#|>|\s|([-*+]|\d+[.)])(\s|$)|\*\*|(Xong khi|Huỷ vì|Vì sao|Mục tiêu|Quay lại|Vòng|Ghi chú|Tài liệu):)/;
 const escBlock = (/** @type {string} */ s) => (s === '' ? '\\' : RISKY.test(s) ? '\\' + s : s);
 const unescBlock = (/** @type {string} */ s) => (s.startsWith('\\') ? s.slice(1) : s);
 /** Khối dòng: mỗi dòng trừ dòng cuối có hai dấu cách cuối (xuống dòng khi xem trên GitHub, VS Code). */
@@ -321,6 +327,10 @@ export function toMarkdown(ws) {
       if (x.due) line += ` · hạn ${x.due}`;
       const more = [];
       if (x.doneWhen) more.push(`  Xong khi: ${x.doneWhen}`);
+      if (x.status === 'cancel' && x.cancelReason) {
+        const [first, ...rest] = x.cancelReason.split('\n');
+        more.push(`  Huỷ vì: ${first}`, ...rest.map((l) => '    ' + escBlock(l)));
+      }
       if (x.notes) more.push(...x.notes.split('\n').map((l) => '  ' + escBlock(l)));
       if (x.docs.length) more.push('  Tài liệu:');
       out.push(...hardBreaks([line, ...more]), ...docLines(x.docs, '  '));
@@ -395,6 +405,7 @@ export function fromMarkdown(text) {
   let started = false; // đã qua `## ` đầu tiên
   let block = /** @type {'' | 'step' | 'sub' | 'why'} */ ('');
   let blockFirst = false;
+  let cancelCont = false; // đang ở các dòng thụt bốn nối tiếp `Huỷ vì:`
   const addNote = (/** @type {any} */ o, /** @type {string} */ key, /** @type {string} */ l) => {
     o[key] = o[key] === undefined || o[key] === null ? l : o[key] + '\n' + l;
   };
@@ -416,6 +427,17 @@ export function fromMarkdown(text) {
   for (let i = 0; i < lines.length; i++) {
     const raw = lines[i];
     const ind = /^( {2}|\t)(.*)$/.exec(raw);
+    if (ind && block === 'sub' && cancelCont && /^ {2}/.test(ind[2])) {
+      sub.cancelReason += '\n' + unescBlock(ind[2].slice(2));
+      continue;
+    }
+    cancelCont = false;
+    if (ind && block === 'sub' && /^Huỷ vì:/.test(ind[2])) {
+      sub.cancelReason = ind[2].replace(/^Huỷ vì: ?/, '');
+      cancelCont = true;
+      blockFirst = false;
+      continue;
+    }
     if (ind && block === 'sub' && /^Tài liệu:\s*$/.test(ind[2])) {
       sub.docs = sub.docs || [];
       i = readDocs(lines, i + 1, sub.docs, warnings, 2) - 1;
@@ -577,7 +599,7 @@ export function shape(ws) {
     name: ws.name, templateId: ws.templateId, notes: ws.notes,
     steps: ws.steps.map((/** @type {any} */ s) => ({
       title: s.title, goal: s.goal, doneWhen: s.doneWhen, notes: s.notes, revisit: s.revisit, round: s.round, docs: s.docs.map(docShape),
-      subs: s.subs.map((/** @type {any} */ x) => ({ title: x.title, status: x.status, due: x.due, doneWhen: x.doneWhen, notes: x.notes, docs: x.docs.map(docShape) })),
+      subs: s.subs.map((/** @type {any} */ x) => ({ title: x.title, status: x.status, cancelReason: x.cancelReason, due: x.due, doneWhen: x.doneWhen, notes: x.notes, docs: x.docs.map(docShape) })),
     })),
     log: ws.log.map((/** @type {any} */ l) => ({ date: l.date, decision: l.decision, why: l.why })),
   };

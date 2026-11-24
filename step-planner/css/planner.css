@@ -25,6 +25,13 @@
   --amber-fg:  #8a4005;
   --amber-soft: rgba(217, 119, 6, .13);
   --amber-line: rgba(180, 83, 9, .35);
+  /* Đang làm: xanh dương. Huỷ: đỏ (cùng họ --danger). */
+  --blue:      #2563eb;
+  --blue-fg:   #1d4ed8;
+  --blue-soft: rgba(37, 99, 235, .10);
+  --blue-line: rgba(37, 99, 235, .42);
+  --red-soft:  rgba(180, 35, 24, .08);
+  --red-line:  rgba(180, 35, 24, .38);
   --ring:      var(--ink);
   --chip:      rgba(11, 15, 12, .05);
   --sb-thumb:  color-mix(in srgb, var(--ink) 26%, transparent);
@@ -115,6 +122,8 @@
     --accent-line: color-mix(in srgb, var(--accent) 38%, transparent);
     --green: #5be08f; --done-edge: #4ade80;
     --amber: #f0a64a; --amber-fg: #f6c27e; --amber-soft: rgba(240, 166, 74, .14); --amber-line: rgba(240, 166, 74, .4);
+    --blue: #60a5fa; --blue-fg: #93c5fd; --blue-soft: rgba(96, 165, 250, .14); --blue-line: rgba(96, 165, 250, .45);
+    --red-soft: rgba(255, 138, 122, .12); --red-line: rgba(255, 138, 122, .42);
     --ring: var(--accent);
     --chip: rgba(255, 255, 255, .06);
     --scrim: rgba(0, 0, 0, .62);
@@ -138,6 +147,8 @@
   --accent-line: color-mix(in srgb, var(--accent) 38%, transparent);
   --green: #5be08f; --done-edge: #4ade80;
   --amber: #f0a64a; --amber-fg: #f6c27e; --amber-soft: rgba(240, 166, 74, .14); --amber-line: rgba(240, 166, 74, .4);
+  --blue: #60a5fa; --blue-fg: #93c5fd; --blue-soft: rgba(96, 165, 250, .14); --blue-line: rgba(96, 165, 250, .45);
+  --red-soft: rgba(255, 138, 122, .12); --red-line: rgba(255, 138, 122, .42);
   --ring: var(--accent);
   --chip: rgba(255, 255, 255, .06);
   --scrim: rgba(0, 0, 0, .62);
@@ -351,7 +362,7 @@ svg.i {
 }
 
 /* ── Chế độ Gọn: thẻ và cột bước chỉ còn số, tên, chip, hạn, nhãn tài liệu ── */
-.board.compact :is(.card-done, .card-notes, .step-done, .step-notes) { display: none; }
+.board.compact :is(.card-done, .card-notes, .card-cancel, .step-done, .step-notes) { display: none; }
 
 /* ── Ghi chú dự án (gập) ── */
 .ws-notes { padding: 0 0 var(--s3); font-size: var(--fs-sm); }
@@ -486,7 +497,9 @@ svg.i {
 }
 .card .acts { flex: none; margin-top: auto; gap: 0; margin-inline: calc(-1 * var(--s1)); margin-bottom: calc(-1 * var(--s1)); }
 .card.st-done .card-title, .card.st-skip .card-title { color: var(--ink-3); }
-.card.st-skip .card-title { text-decoration: line-through; }
+.card.st-skip .card-title, .card.st-cancel .card-title { text-decoration: line-through; }
+.card.st-cancel .card-title { color: var(--ink-3); }
+.card-cancel { font-size: var(--fs-xs); color: var(--ink-2); white-space: pre-line; overflow-wrap: anywhere; }
 .card.add {
   align-self: stretch; min-height: var(--card-min); max-height: none; padding: 0; cursor: default;
   background: none; border-style: dashed; border-color: var(--ink-4); box-shadow: none; justify-content: center;
@@ -516,14 +529,17 @@ svg.i {
 }
 .chip::after { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: var(--hit); transform: translateY(-50%); }
 @media (hover: hover) { button.chip:hover { border-color: var(--ink-4); color: var(--ink); } }
-.chip.st-doing { color: var(--ink); border-color: var(--ink-3); }
-.chip.st-doing::before { border-color: var(--ink); background: linear-gradient(90deg, var(--ink) 50%, transparent 50%); }
+.chip.st-doing { color: var(--blue-fg); background: var(--blue-soft); border-color: var(--blue-line); }
+.chip.st-doing::before { border-color: var(--blue); background: linear-gradient(90deg, var(--blue) 50%, transparent 50%); }
 .chip.st-done { color: var(--green); background: var(--accent-soft); border-color: var(--accent-line); }
 .chip.st-done::before { border-color: var(--done-edge); background: var(--done-edge); }
 .chip.st-blocked { color: var(--amber-fg); background: var(--amber-soft); border-color: var(--amber-line); }
 .chip.st-blocked::before { border-radius: var(--r-xs); border-color: var(--amber); background: var(--amber); }
 .chip.st-skip { color: var(--ink-3); border-style: dashed; }
 .chip.st-skip::before { border-style: dashed; }
+/* Huỷ: chấm tròn có vạch chéo. */
+.chip.st-cancel { color: var(--danger); background: var(--red-soft); border-color: var(--red-line); }
+.chip.st-cancel::before { border-color: var(--danger); background: linear-gradient(135deg, transparent 38%, var(--danger) 38% 62%, transparent 62%); }
 span.chip { cursor: default; }
 span.chip::after { content: none; }
 

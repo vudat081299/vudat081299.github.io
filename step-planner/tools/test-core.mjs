@@ -45,6 +45,8 @@ const hard = normWorkspace({
         { title: 'C (@x, hạn 01/12/2026) a@b.com', status: 'done', notes: 'Vì sao: ghi chú' },
         { title: 'D', status: 'blocked', due: '2026-02-03' },
         { title: 'E', status: 'skip' },
+        { title: 'F huỷ', status: 'cancel', doneWhen: 'y', notes: 'ghi chú sau lý do\n  thụt', cancelReason: 'lý do · có chấm `@x` [a](b)\n\n- gạch\nXong khi: giả\nHuỷ vì: lặp\n  thụt hai\n\\gạch ngược\n    thụt bốn\nTài liệu:', docs: [{ kind: 'link', title: 'L', url: 'https://l.example' }] },
+        { title: 'G', status: 'todo', cancelReason: 'bị bỏ vì không huỷ' },
       ],
     },
     { title: '2. Nhật ký quyết định', subs: [] },
@@ -60,9 +62,12 @@ const md = toMarkdown(hard);
 const back = fromMarkdown(md);
 check('dự án khó: Markdown đi rồi về giữ nguyên', eq(shape(hard), shape(back.workspace)), firstDiff(shape(hard), shape(back.workspace)));
 check('dự án khó: không cảnh báo', back.warnings.length === 0, back.warnings.join(' | '));
-check('dấu trạng thái', /- \[ \] A/.test(md) && /- \[~\] B/.test(md) && /- \[x\] C/.test(md) && /- \[!\] D/.test(md) && /- \[-\] E/.test(md));
+check('dấu trạng thái', /- \[ \] A/.test(md) && /- \[~\] B/.test(md) && /- \[x\] C/.test(md) && /- \[!\] D/.test(md) && /- \[-\] E/.test(md)
+  && /- \[\/\] F huỷ/.test(md));
+check('huỷ: lý do nhiều dòng ghi dưới "Huỷ vì:", dòng sau thụt bốn có thoát', md.includes('\n  Huỷ vì: lý do · có chấm `@x` [a](b)  \n    \\  \n    \\- gạch  \n')
+  && md.includes('\n    \\Huỷ vì: lặp  \n') && hard.steps[0].subs[6].cancelReason === '' && !/bị bỏ vì/.test(md));
 check('không có người làm: không dòng Người:, @ trong tên được thoát', !md.includes('Người:') && md.includes('- [ ] A \\· \\@giả')
-  && !/(^|[^\\])@/m.test(md));
+  && !md.split('\n').some((l) => /^- \[/.test(l) && /(^|[^\\])@/.test(l)));
 check('đầu file: tên công cụ', md.split('\n')[2] === '> Data Science Step Planner · định dạng 2');
 check('xem đẹp trên GitHub: nhãn cách dòng trống, khối có xuống dòng cứng',
   /\nMục tiêu: [^\n]*\n\nXong khi:/.test(md) && /Ghi chú: {2}\n/.test(md));
@@ -245,13 +250,18 @@ check('ngày: kiểm bằng đi rồi về', parseDate('2026-02-31') === '' && p
   && parseDate('2024-02-29') === '2024-02-29' && parseDate('1/2/2026') === '2026-02-01' && normSub({ due: '2026-02-31' }).due === '');
 check('tên trùng: (nhập), (nhập 2)', uniqueName('A', ['A']) === 'A (nhập)' && uniqueName('A', ['A', 'A (nhập)']) === 'A (nhập 2)' && uniqueName('B', ['A']) === 'B');
 
-check('tiến độ bỏ qua bước bị bỏ', eq(progress(hard.steps[0].subs), { done: 1, total: 4, pct: 25 }));
+check('tiến độ không tính bỏ qua và huỷ', eq(progress(hard.steps[0].subs), { done: 1, total: 5, pct: 20 }));
+check('việc tiếp theo bỏ qua thẻ huỷ', nextActionId({ subs: [{ id: 'a', status: 'cancel' }, { id: 'b', status: 'skip' }, { id: 'c', status: 'todo' }] }) === 'c');
+const oldMark = fromMarkdown('# A\n## 1. S\n- [/] huỷ cũ\n  Huỷ vì: không cần\n  ghi chú\n- [?] lạ\n');
+check('huỷ: dấu [/] và Huỷ vì: đọc được; dòng thụt hai sau đó là ghi chú', oldMark.workspace.steps[0].subs[0].status === 'cancel'
+  && oldMark.workspace.steps[0].subs[0].cancelReason === 'không cần' && oldMark.workspace.steps[0].subs[0].notes === 'ghi chú'
+  && oldMark.workspace.steps[0].subs[1].status === 'todo');
 check('việc tiếp theo bỏ qua xong và bỏ qua', nextActionId({ subs: [{ id: 'a', status: 'done' }, { id: 'b', status: 'skip' }, { id: 'c', status: 'blocked' }] }) === 'c');
 check('việc tiếp theo của dự án: bước đầu còn việc',
   projectNextId({ steps: [{ subs: [{ id: 'a', status: 'done' }] }, { subs: [] }, { subs: [{ id: 'b', status: 'todo' }] }] }) === 'b');
-check('vòng trạng thái', nextStatus('todo') === 'doing' && nextStatus('doing') === 'done' && nextStatus('done') === 'todo' && nextStatus('blocked') === 'doing');
+check('vòng trạng thái', nextStatus('todo') === 'doing' && nextStatus('doing') === 'done' && nextStatus('done') === 'todo' && nextStatus('blocked') === 'doing' && nextStatus('cancel') === 'todo');
 check('tách theo ·', eq(splitInline('a \\· b · @c · hạn 2026-01-01'), ['a · b', '@c', 'hạn 2026-01-01']));
-check('đếm', eq(counts([hard]), { workspaces: 1, steps: 4, subs: 7, log: 2, docs: 0 }));
+check('đếm', eq(counts([hard]), { workspaces: 1, steps: 4, subs: 9, log: 2, docs: 1 }));
 check('slug, fold', slug('Đồ án IT5425 — thể thao') === 'do-an-it5425-the-thao' && fold('Việc CỦA Tôi') === 'viec cua toi');
 
 if (fails) { console.log(`test-core: ${fails} LỖI`); process.exit(1); }

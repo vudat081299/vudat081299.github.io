@@ -3,7 +3,7 @@
 <!-- index:start -->
 - PLAN-001 · Dự án là các bước có thứ tự, mỗi bước có bước con có thứ tự · `step-planner/`
 - PLAN-002 · Dữ liệu chỉ ở trình duyệt, nhiều dự án, nhớ dự án mở cuối · `step-planner/`
-- PLAN-003 · Tiến độ không tính bước bị bỏ qua; việc tiếp theo được tô · `step-planner/`
+- PLAN-003 · Sáu trạng thái; tiến độ không tính bỏ qua và huỷ; việc tiếp theo được tô · `step-planner/`
 - PLAN-004 · Quay lại một bước có lý do, đếm vòng, đặt lại việc · `step-planner/`
 - PLAN-005 · Mỗi dự án có nhật ký quyết định · `step-planner/`
 - PLAN-006 · Xoá hoàn tác được; sắp xếp lại được; tìm theo chữ · `step-planner/`
@@ -24,10 +24,10 @@ Một dự án là danh sách bước chính có thứ tự; mỗi bước chứ
 
 Không có máy chủ: mọi dự án lưu trong bộ nhớ trình duyệt dưới một khoá có số phiên bản. Bộ nhớ bị chặn hay hỏng thì trang vẫn chạy và báo rõ. Có nhiều dự án: tạo (trống hoặc từ mẫu), đổi tên, nhân bản, xoá (hỏi lại), chuyển; mở lại trang thì vào dự án mở cuối.
 
-## PLAN-003 · Tiến độ không tính bước bị bỏ qua; việc tiếp theo được tô
+## PLAN-003 · Sáu trạng thái; tiến độ không tính bỏ qua và huỷ; việc tiếp theo được tô
 24/11/2026 · `step-planner/`
 
-Bước con có năm trạng thái: chưa làm, đang làm, xong, bị chặn, bỏ qua; bấm chip để đổi nhanh. Tiến độ = xong / (tổng − bỏ qua). Bước con đầu tiên chưa xong và không bị bỏ qua của mỗi bước là việc tiếp theo.
+Bước con có sáu trạng thái: chưa làm, đang làm, xong, bị chặn, bỏ qua, huỷ; bấm chip để đổi nhanh. Bỏ qua là việc không cần với dự án này. Huỷ là việc đã quyết không làm nhưng giữ thẻ trên bảng để theo dõi, kèm lý do huỷ (chỉ chọn trong hộp sửa). Tiến độ = xong / (tổng − bỏ qua − huỷ). Bước con đầu tiên chưa xong, không bỏ qua, không huỷ của mỗi bước là việc tiếp theo.
 
 ## PLAN-004 · Quay lại một bước có lý do, đếm vòng, đặt lại việc
 24/11/2026 · `step-planner/`

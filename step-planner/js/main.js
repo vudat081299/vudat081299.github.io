@@ -261,6 +261,7 @@ function renderBoard(/** @type {any} */ ws) {
           h('h3', { class: 'card-title' }, h('button', { type: 'button', class: 'link', 'data-act': 'edit-sub', 'aria-keyshortcuts': 'Alt+ArrowLeft Alt+ArrowRight' }, x.title)),
           x.due && h('p', { class: 'meta' },
             h('span', { class: 'due' + (overdue ? ' overdue' : '') }, 'hạn ' + fmtDate(x.due) + (overdue ? ' (trễ)' : ''))),
+          x.status === 'cancel' && x.cancelReason && h('p', { class: 'card-cancel' }, h('span', { class: 'lbl' }, 'Huỷ vì '), withLinks(x.cancelReason)),
           x.doneWhen && h('p', { class: 'card-done' }, h('span', { class: 'lbl' }, 'Xong khi '), x.doneWhen),
           x.notes && h('p', { class: 'card-notes' }, withLinks(x.notes))),
         h('div', { class: 'acts' },
@@ -583,7 +584,7 @@ $('board').addEventListener('click', (/** @type {any} */ e) => {
     case 'step-down': moveStep(ws, step, 1, act); break;
     case 'del-step': deleteStep(ws.id, step.id); break;
     case 'add-sub': openSub(step, null); break;
-    case 'cycle': sub.status = C.nextStatus(sub.status); commit(subSel(sub.id, 'cycle')); break;
+    case 'cycle': sub.status = C.nextStatus(sub.status); sub.cancelReason = ''; commit(subSel(sub.id, 'cycle')); break;
     case 'edit-sub': openSub(step, sub); break;
     case 'sub-left': moveSub(step, sub, -1, act); break;
     case 'sub-right': moveSub(step, sub, 1, act); break;
@@ -797,6 +798,8 @@ function openSub(/** @type {any} */ step, /** @type {any} */ sub, toDocs = false
   field(f, 'due').value = x.due;
   field(f, 'doneWhen').value = x.doneWhen;
   field(f, 'notes').value = x.notes;
+  field(f, 'cancelReason').value = x.cancelReason;
+  paintCancel();
   field(f, 'step').value = step.id;
   subPosOptions();
   $('sub-del').hidden = !sub;
@@ -810,6 +813,12 @@ function openSub(/** @type {any} */ step, /** @type {any} */ sub, toDocs = false
   }
 }
 field($('sub-form'), 'step').addEventListener('change', () => subPosOptions(false));
+/* Chọn "Huỷ" thì hiện ô "Vì sao huỷ" (giữ chữ đã gõ nếu đổi qua lại). */
+function paintCancel() { $('sub-cancel').hidden = field($('sub-form'), 'status').value !== 'cancel'; }
+field($('sub-form'), 'status').addEventListener('change', () => {
+  paintCancel();
+  if (!$('sub-cancel').hidden) field($('sub-form'), 'cancelReason').focus();
+});
 function subFromCtx() {
   const ws = subCtx && findWs(subCtx.wsId);
   const step = ws && stepOf(ws, subCtx.stepId);
@@ -825,7 +834,7 @@ $('sub-form').addEventListener('submit', (/** @type {any} */ e) => {
   const data = C.normSub({
     id: sub ? sub.id : '', docs: sub ? sub.docs : [],
     title: field(f, 'title').value, status: field(f, 'status').value,
-    due: field(f, 'due').value, doneWhen: field(f, 'doneWhen').value, notes: field(f, 'notes').value,
+    due: field(f, 'due').value, doneWhen: field(f, 'doneWhen').value, notes: field(f, 'notes').value, cancelReason: field(f, 'cancelReason').value,
   });
   const target = stepOf(ws, field(f, 'step').value) || step;
   const pos = Number(field(f, 'pos').value) || 0;
