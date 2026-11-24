@@ -4,8 +4,9 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import {
   fromTemplate, toMarkdown, fromMarkdown, parseImport, toJSON, toBackup, shape, progress, nextActionId, projectNextId,
-  nextStatus, splitInline, normWorkspace, normSub, counts, slug, fold, parseDate, uniqueName,
+  nextStatus, splitInline, normWorkspace, normSub, counts, slug, fold, parseDate, uniqueName, normDoc, safeUrl,
 } from '../js/core.js';
+import { parseMd, inline } from '../js/md.js';
 
 let fails = 0;
 const check = (name, ok, detail = '') => {
@@ -62,7 +63,7 @@ check('dự án khó: không cảnh báo', back.warnings.length === 0, back.warn
 check('dấu trạng thái', /- \[ \] A/.test(md) && /- \[~\] B/.test(md) && /- \[x\] C/.test(md) && /- \[!\] D/.test(md) && /- \[-\] E/.test(md));
 check('không có người làm: không dòng Người:, @ trong tên được thoát', !md.includes('Người:') && md.includes('- [ ] A \\· \\@giả')
   && !/(^|[^\\])@/m.test(md));
-check('đầu file: tên công cụ', md.split('\n')[2] === '> Data Science Step Planner · định dạng 1');
+check('đầu file: tên công cụ', md.split('\n')[2] === '> Data Science Step Planner · định dạng 2');
 check('xem đẹp trên GitHub: nhãn cách dòng trống, khối có xuống dòng cứng',
   /\nMục tiêu: [^\n]*\n\nXong khi:/.test(md) && /Ghi chú: {2}\n/.test(md));
 
@@ -128,6 +129,83 @@ check('file cũ có Người: và @người vẫn nhập được, bỏ thông t
   && o2.title === 'y' && o2.status === 'done' && o2.doneWhen === 'z' && old2.workspace.templateId === 'crisp-dm' && !old2.workspace.notes,
   JSON.stringify([o1, o2]));
 
+/* Tài liệu: link và văn bản Markdown ở bước và bước con, thân khó (rào ```, dòng #, -, nhãn, thụt, dòng trống). */
+const nasty = [
+  '# Tiêu đề trong thân', '', '- mục giả', '  - lồng', 'Xong khi: không phải nhãn', 'Tài liệu:', '  - [giả](https://x.y)',
+  '```python', 'print(1)', '```', '````', 'rào dài', '````', '~~~', '> trích', '\\gạch ngược', '## 2. không phải bước',
+  '- [ ] không phải việc', '    thụt bốn', '\ttab', 'cuối dòng có hai cách  ', '', '', 'sau hai dòng trống',
+].join('\n');
+const withDocs = normWorkspace({
+  name: 'Tài liệu',
+  steps: [
+    {
+      title: 'Bước có tài liệu', notes: 'ghi chú\nTài liệu: trong ghi chú',
+      docs: [
+        { kind: 'link', title: 'Đề [bài] \\ gốc', url: 'https://example.com/a_(b)?q=1&r=[2]' },
+        { kind: 'md', title: '[ ] trông như việc', body: nasty },
+        { kind: 'md', title: 'Trống', body: '' },
+        { kind: 'link', title: 'x', url: 'javascript:alert(1)' },
+        { kind: 'md', title: '- [x](https://giả.link)', body: '```' },
+      ],
+      subs: [
+        { title: 'Có tài liệu', notes: 'Tài liệu:\n- [x](https://a.b)', docs: [{ kind: 'md', title: 'Ghi chép', body: nasty }, { kind: 'link', title: 'Repo', url: 'http://git.example/x' }] },
+        { title: 'Kế tiếp', status: 'done', docs: [{ kind: 'link', title: 'Chỉ link', url: 'https://k.example' }] },
+        { title: 'Không tài liệu' },
+      ],
+    },
+    { title: 'Bước hai', docs: [{ kind: 'link', title: 'L', url: 'https://l.example' }], subs: [{ title: 'y' }] },
+  ],
+});
+const mdd = toMarkdown(withDocs);
+const backD = fromMarkdown(mdd);
+check('tài liệu: Markdown đi rồi về giữ nguyên (link, văn bản khó, bước và bước con)', eq(shape(withDocs), shape(backD.workspace)),
+  firstDiff(shape(withDocs), shape(backD.workspace)));
+check('tài liệu: không cảnh báo', backD.warnings.length === 0, backD.warnings.join(' | '));
+check('tài liệu: link không phải http(s) bị bỏ khi chuẩn hoá', withDocs.steps[0].docs.length === 4
+  && normDoc({ kind: 'link', url: 'ftp://x' }) === null && safeUrl(' https://a.b/<x> ') === 'https://a.b/%3Cx%3E' && safeUrl('https://a b') === '');
+check('tài liệu: rào dài hơn chuỗi ` dài nhất trong thân', /\n {4}`{5}markdown\n/.test(mdd) && /\n {6}`{5}markdown\n/.test(mdd));
+check('tài liệu: link có ngoặc ghi trong <>', mdd.includes('  - [Đề \\[bài\\] \\\\ gốc](<https://example.com/a_(b)?q=1&r=[2]>)'));
+check('tài liệu: JSON đi rồi về, id mới', eq(shape(parseImport(toJSON(withDocs)).workspaces[0]), shape(withDocs))
+  && parseImport(toJSON(withDocs)).workspaces[0].steps[0].docs[0].id !== withDocs.steps[0].docs[0].id);
+check('tài liệu: đếm', counts([withDocs]).docs === 8);
+const jd = parseImport(JSON.stringify({ steps: [{ title: 't', docs: [{ kind: 'link', title: 'bad', url: 'javascript:x' }, 5, { kind: 'md', title: 'ok' }],
+  subs: [{ title: 's', docs: [{ url: 'file:///etc' }] }] }] }));
+check('tài liệu: JSON có link sai, cảnh báo và bỏ', jd.workspaces[0].steps[0].docs.length === 1 && jd.workspaces[0].steps[0].subs[0].docs.length === 0
+  && jd.warnings.some((w) => /3 tài liệu/.test(w)), jd.warnings.join(' | '));
+const handD = fromMarkdown(`# Viết tay
+
+## 1. Một
+
+Tài liệu:
+- [Đề bài](https://de.bai)
+- [Lạ](ftp://x)
+- Ghi chú họp
+  ~~~
+  # họp
+  - a
+  ~~~
+
+- [ ] việc
+  Tài liệu:
+  - [Hướng dẫn](https://hd.example)
+- [ ] việc hai
+`);
+const hs = handD.workspace.steps[0];
+check('tài liệu viết tay: mục không thụt, rào ~~~, link lạ có cảnh báo, bước con vẫn đọc đúng',
+  hs.docs.length === 2 && hs.docs[1].body === '# họp\n- a' && hs.subs.length === 2 && hs.subs[0].docs[0].url === 'https://hd.example'
+  && hs.subs[1].title === 'việc hai' && handD.warnings.some((w) => /ftp/.test(w) || /Lạ/.test(w)), JSON.stringify(hs.docs) + handD.warnings.join('|'));
+check('file cũ không có tài liệu: nhập được, docs rỗng', fromMarkdown('# A\n## 1. S\n- [ ] x\n').workspace.steps[0].subs[0].docs.length === 0);
+
+/* Bộ dựng Markdown của tài liệu (js/md.js): cây khối, không HTML. */
+const tree = parseMd('# T\n\nđoạn **đậm** *nghiêng* `code` [l](https://a.b) [x](javascript:alert(1)) <b>\n\n- a\n  - b\n- [x] c\n\n1. một\n2. hai\n\n> trích\n\n````\n```\nin\n```\n````\n\n| a | b |\n|---|:-:|\n| 1 | 2 |\n\n---');
+check('md.js: tiêu đề, đoạn, danh sách lồng, việc, đánh số, trích dẫn, rào lồng, bảng, vạch',
+  eq(tree.map((b) => b.t), ['h', 'p', 'list', 'list', 'quote', 'code', 'table', 'hr']) && tree[2].items[0].c[1].t === 'list'
+  && tree[2].items[1].task === true && tree[3].ordered && tree[5].v === '```\nin\n```' && tree[6].align[1] === 'center', JSON.stringify(tree.map((b) => b.t)));
+const para = tree[1].c;
+check('md.js: link chỉ http(s); chữ HTML là chữ', para.some((n) => n.t === 'link' && n.href === 'https://a.b')
+  && !para.some((n) => n.t === 'link' && /javascript/.test(n.href)) && para.some((n) => n.t === 'text' && n.v.includes('<b>')));
+check('md.js: url trần bỏ dấu câu cuối', eq(inline('xem https://a.b/c).'), [{ t: 'text', v: 'xem ' }, { t: 'link', href: 'https://a.b/c', c: [{ t: 'text', v: 'https://a.b/c' }] }, { t: 'text', v: ').' }]));
+
 let threw = '';
 try { parseImport('   '); } catch (e) { threw = e.message; }
 check('chữ rỗng thì báo lỗi', /Chưa có nội dung/.test(threw));
@@ -158,7 +236,7 @@ check('việc tiếp theo của dự án: bước đầu còn việc',
   projectNextId({ steps: [{ subs: [{ id: 'a', status: 'done' }] }, { subs: [] }, { subs: [{ id: 'b', status: 'todo' }] }] }) === 'b');
 check('vòng trạng thái', nextStatus('todo') === 'doing' && nextStatus('doing') === 'done' && nextStatus('done') === 'todo' && nextStatus('blocked') === 'doing');
 check('tách theo ·', eq(splitInline('a \\· b · @c · hạn 2026-01-01'), ['a · b', '@c', 'hạn 2026-01-01']));
-check('đếm', eq(counts([hard]), { workspaces: 1, steps: 4, subs: 7, log: 2 }));
+check('đếm', eq(counts([hard]), { workspaces: 1, steps: 4, subs: 7, log: 2, docs: 0 }));
 check('slug, fold', slug('Đồ án IT5425 — thể thao') === 'do-an-it5425-the-thao' && fold('Việc CỦA Tôi') === 'viec cua toi');
 
 if (fails) { console.log(`test-core: ${fails} LỖI`); process.exit(1); }

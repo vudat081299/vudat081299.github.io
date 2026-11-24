@@ -251,6 +251,93 @@ const check = (name, ok, detail = '') => {
   await page.fill('#revisit-form [name="reason"]', 'EDA lộ cột thiếu');
   await page.click('#revisit-form button[type="submit"]');
 
+  // Tài liệu của bước: link (chỉ http(s), mở tab mới) và văn bản Markdown (Sửa / Xem / Chia đôi, không thành HTML).
+  const docStep = `.step[data-step="${s2id}"]`;
+  await page.click(`${docStep} [data-act="add-doc"]`, { force: true });
+  check('tài liệu: hộp thêm có chọn Link / Văn bản', await page.isVisible('#dlg-doc') && await page.isVisible('#doc-kind'));
+  await page.fill('#doc-form [name="title"]', 'Lạ');
+  await page.fill('#doc-form [name="url"]', 'javascript:alert(1)');
+  await page.click('#doc-save');
+  check('tài liệu: link không phải http(s) bị chặn', await page.isVisible('#dlg-doc') && (await cur(page)).steps[1].docs.length === 0);
+  await page.fill('#doc-form [name="title"]', 'Data card');
+  await page.fill('#doc-form [name="url"]', 'https://example.com/card');
+  await page.click('#doc-save');
+  const linkA = await page.$eval(`${docStep} .step-docs a`, (a) => [a.textContent, a.getAttribute('href'), a.target, a.rel]);
+  check('tài liệu: link ở cột bước, mở tab mới, noopener noreferrer',
+    linkA.join('|') === 'Data card|https://example.com/card|_blank|noopener noreferrer' && !(await page.isVisible('#dlg-doc')), linkA.join('|'));
+  await page.click(`${docStep} [data-act="add-doc"]`, { force: true });
+  await page.check('#doc-form input[name="kind"][value="md"]', { force: true });
+  check('tài liệu: chọn Văn bản thì ẩn ô link', !(await page.isVisible('#doc-url-field')));
+  await page.fill('#doc-form [name="title"]', 'Ghi chép EDA');
+  await page.click('#doc-save');
+  const mdState = () => page.evaluate(() => ({
+    open: document.getElementById('dlg-md').open, mode: document.getElementById('md-panes').dataset.mode,
+    sel: [...document.querySelectorAll('#dlg-md .tab[aria-selected="true"]')].map((t) => t.dataset.mode).join(),
+    src: getComputedStyle(document.querySelector('.md-src')).display !== 'none', view: getComputedStyle(document.getElementById('md-view')).display !== 'none',
+    w: document.getElementById('dlg-md').getBoundingClientRect().width,
+  }));
+  let ms = await mdState();
+  check('tài liệu văn bản mới: hộp lớn mở ở chế độ Sửa', ms.open && ms.mode === 'edit' && ms.sel === 'edit' && ms.src && !ms.view && ms.w > 1000, JSON.stringify(ms));
+  await page.fill('#md-form [name="body"]', '# Cột thiếu\n\n**age** thiếu <img src=x onerror=alert(1)>\n\n- a\n  - b\n\n[xấu](javascript:alert(1)) [tốt](https://ok.example)\n\n````\n```\nlồng\n```\n````');
+  await page.click('#md-form button[type="submit"]');
+  let st1 = (await cur(page)).steps[1];
+  check('tài liệu văn bản: lưu', st1.docs.length === 2 && st1.docs[1].kind === 'md' && st1.docs[1].title === 'Ghi chép EDA' && /lồng/.test(st1.docs[1].body));
+  await page.click(`${docStep} [data-act="open-doc"]`);
+  ms = await mdState();
+  const view = await page.evaluate(() => {
+    const v = document.getElementById('md-view');
+    return { h1: v.querySelector('h1')?.textContent, strong: v.querySelector('strong')?.textContent, img: v.querySelectorAll('img').length,
+      nested: !!v.querySelector('ul li ul li'), links: [...v.querySelectorAll('a')].map((a) => a.href + ' ' + a.target + ' ' + a.rel), pre: v.querySelector('pre')?.textContent };
+  });
+  check('tài liệu văn bản: mở từ cột bước ở chế độ Xem', ms.mode === 'view' && ms.sel === 'view' && ms.view && !ms.src, JSON.stringify(ms));
+  check('tài liệu văn bản: dựng Markdown, chữ HTML không thành thẻ, link chỉ http(s) mở tab mới',
+    view.h1 === 'Cột thiếu' && view.strong === 'age' && view.img === 0 && view.nested && view.pre === '```\nlồng\n```'
+    && view.links.join() === 'https://ok.example/ _blank noopener noreferrer', JSON.stringify(view));
+  await page.click('#dlg-md .tab[data-mode="split"]');
+  ms = await mdState();
+  check('tài liệu văn bản: Chia đôi hiện cả hai', ms.mode === 'split' && ms.sel === 'split' && ms.src && ms.view, JSON.stringify(ms));
+  await page.fill('#md-form [name="body"]', 'chữ chưa lưu');
+  await page.keyboard.press('Escape');
+  check('tài liệu văn bản: đóng khi chưa lưu thì hỏi lại', await page.isVisible('#dlg-ask') && (await mdState()).open);
+  await page.click('#dlg-ask [data-close]');
+  await page.click('#dlg-md .md-foot [data-close]');
+  await page.click('#ask-ok');
+  await page.waitForTimeout(50);
+  check('tài liệu văn bản: chọn bỏ thì không lưu', !(await mdState()).open && /lồng/.test((await cur(page)).steps[1].docs[1].body));
+
+  // Tài liệu của bước con: nhãn kẹp trên thẻ, sửa trong hộp bước con; xoá có Hoàn tác ngay trong hộp.
+  const dsub = (await cur(page)).steps[1].subs[0];
+  check('thẻ chưa có tài liệu: không có nhãn kẹp', !(await page.$(`.card[data-sub="${dsub.id}"] .doc-tag`)));
+  const h0 = await page.$eval(`.card[data-sub="${dsub.id}"]`, (c) => c.getBoundingClientRect().height);
+  await page.click(subSel(dsub.id, 'edit-sub'));
+  await page.click('#sub-docs [data-doc-add]');
+  await page.fill('#doc-form [name="title"]', 'Repo');
+  await page.fill('#doc-form [name="url"]', 'https://git.example/repo');
+  await page.click('#doc-save');
+  await page.click('#sub-docs [data-doc-add]');
+  await page.fill('#doc-form [name="title"]', 'Notebook');
+  await page.fill('#doc-form [name="url"]', 'https://git.example/nb');
+  await page.click('#doc-save');
+  check('hộp bước con: danh sách tài liệu cập nhật ngay', (await page.$$('#sub-docs .doc-row')).length === 2 && await page.isVisible('#dlg-sub'));
+  await page.click('#sub-docs .doc-row:first-child [data-doc-act="del"]');
+  check('xoá tài liệu trong hộp: hàng "Đã xoá · Hoàn tác", focus vào Hoàn tác', (await cur(page)).steps[1].subs[0].docs.length === 1
+    && await page.evaluate(() => document.activeElement?.dataset.docAct === 'undo'));
+  await page.click('#sub-docs [data-doc-act="undo"]');
+  check('hoàn tác xoá tài liệu: về đúng chỗ', (await cur(page)).steps[1].subs[0].docs.map((d) => d.title).join() === 'Repo,Notebook'
+    && (await page.$$('#sub-docs .doc-row:not(.undo)')).length === 2);
+  await page.click('#dlg-sub .row-end [data-close]');
+  const tag = `.card[data-sub="${dsub.id}"] .doc-tag`;
+  const h1c = await page.$eval(`.card[data-sub="${dsub.id}"]`, (c) => c.getBoundingClientRect().height);
+  check('thẻ có tài liệu: nhãn kẹp + số, thẻ không cao thêm đáng kể', (await page.textContent(tag)).trim() === '2'
+    && !!(await page.$(`${tag} use[href="#i-clip"]`)) && Math.abs(h1c - h0) < 1, `${h0} → ${h1c}`);
+  await page.click(tag);
+  check('bấm nhãn kẹp: mở hộp bước con ở phần tài liệu', await page.isVisible('#dlg-sub')
+    && await page.evaluate(() => !!document.activeElement?.closest('#sub-docs')));
+  await page.keyboard.press('Escape');
+  await page.fill('#q', 'notebook');
+  check('tìm khớp tên tài liệu', (await page.$$eval('.card[data-sub]', (c) => c.map((x) => x.dataset.sub))).includes(dsub.id));
+  await page.fill('#q', '');
+
   // Không có khái niệm người làm: không bộ lọc người, không nút Thành viên, ô tìm không nhắc người.
   check('không có người làm: không bộ lọc người, không Thành viên, không ô người làm',
     !(await page.$('#owner-filter, #people-btn, #dlg-people, #sub-form [name="owner"]'))
@@ -302,13 +389,16 @@ const check = (name, ok, detail = '') => {
   const md = fs.readFileSync(await dl.path(), 'utf8');
   check('xuất Markdown: tải file .md', /\.md$/.test(dl.suggestedFilename()) && md.startsWith('# Dự án Data Science'));
   check('Markdown có dấu trạng thái, hạn, không người làm', /- \[x\] /.test(md) && /- \[!\] .* · hạn 2026-12-01/.test(md) && !/`@|Người:/.test(md) && /## Nhật ký quyết định/.test(md));
+  check('Markdown có tài liệu: nhãn, link, rào văn bản', /\nTài liệu:\n {2}- \[Data card\]\(https:\/\/example\.com\/card\)\n {2}- Ghi chép EDA\n {4}`{5}markdown\n/.test(md)
+    && / {2}Tài liệu:\n {4}- \[Repo\]\(https:\/\/git\.example\/repo\)/.test(md));
   check('Markdown giữ dòng "Quay lại:" của bước cần làm lại', /\nQuay lại: \d{4}-\d\d-\d\d · EDA lộ cột thiếu\n/.test(md));
   await page.click('#export-copy');
   const clip = await page.evaluate(() => navigator.clipboard.readText());
   check('chép Markdown vào clipboard', clip === md);
   await page.click('#dlg-export [data-close]');
   const nBefore = (await stored(page)).workspaces.length;
-  const want = `Markdown: 1 dự án · ${afterReload.steps.length} bước · ${afterReload.steps.reduce((n, x) => n + x.subs.length, 0)} bước con · 2 quyết định`;
+  const nDocs = afterReload.steps.reduce((n, x) => n + x.docs.length + x.subs.reduce((k, y) => k + y.docs.length, 0), 0);
+  const want = `Markdown: 1 dự án · ${afterReload.steps.length} bước · ${afterReload.steps.reduce((n, x) => n + x.subs.length, 0)} bước con · 2 quyết định · ${nDocs} tài liệu`;
   await page.click('#import-btn');
   await page.fill('#import-text', md);
   check('nhập: xem trước có số đếm', (await page.textContent('#import-preview')) === want,
@@ -515,13 +605,28 @@ const check = (name, ok, detail = '') => {
     return { stacked: head.bottom <= sc.getBoundingClientRect().top + 1, scrolls: sc.scrollWidth > sc.clientWidth, left: head.left,
       whole: sc.clientHeight >= card.offsetHeight };
   });
+  await m.page.click('.step:first-child [data-act="add-doc"]');
+  await m.page.check('#doc-form input[name="kind"][value="md"]', { force: true });
+  await m.page.fill('#doc-form [name="title"]', 'Ghi chép');
+  await m.page.click('#doc-save');
+  await m.page.fill('#md-form [name="body"]', '# Tiêu đề\n\n' + 'dòng dài '.repeat(60) + '\n\n| a | b | c | d | e | f |\n|---|---|---|---|---|---|\n| ' + 'x'.repeat(80) + ' | 2 | 3 | 4 | 5 | 6 |');
+  await m.page.click('#dlg-md .tab[data-mode="split"]');
+  const mdM = await m.page.evaluate(() => { const r = document.getElementById('dlg-md').getBoundingClientRect(); return [r.left, r.top, r.width, r.height, innerWidth, innerHeight]; });
+  check('390px: hộp văn bản toàn màn, không tràn', mdM[0] === 0 && mdM[1] === 0 && mdM[2] === mdM[4] && Math.abs(mdM[3] - mdM[5]) < 2
+    && (await hOverflow(m.page)) === 0, mdM.join(','));
+  await m.page.click('#md-form button[type="submit"]');
+  await m.page.click('.step:first-child .card[data-sub]:first-child [data-act="edit-sub"]');
+  await m.page.click('#sub-docs [data-doc-add]');
+  await m.page.fill('#doc-form [name="url"]', 'https://example.com/x');
+  await m.page.click('#doc-save');
+  await m.page.click('#sub-form button[type="submit"]');
   check('390px: không tràn ngang trang', (await hOverflow(m.page)) === 0, String(await hOverflow(m.page)));
   check('390px: tên bước nằm trên hàng bước con, hàng cuộn ngang bên trong', mob.stacked && mob.scrolls && mob.whole);
   check('390px: lề 16px', Math.round(mob.left) === 16, String(mob.left));
   const small = await m.page.evaluate(() => {
     const bad = [];
     const els = document.querySelectorAll('.step:first-child .card[data-sub]:first-child button:not([data-act="edit-sub"]),'
-      + ' .step:first-child .step-head button, .tools button, #theme-btn, #hint-off, #ws-btn, .ws-notes summary');
+      + ' .step:first-child .step-head button, .tools button, #theme-btn, #hint-off, #ws-btn, .ws-notes summary, .step:first-child .doc-tag');
     for (const el of els) {
       if (el.offsetParent === null) continue;
       el.scrollIntoView({ block: 'center', inline: 'center' });

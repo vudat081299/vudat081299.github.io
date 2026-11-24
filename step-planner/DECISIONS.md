@@ -11,6 +11,7 @@
 - PLAN-008 · Mẫu đồ án lấy đúng từ trang đồ án · `step-planner/data/templates.json`
 - PLAN-009 · Mẫu Data Science theo chuẩn CRISP-DM 1.0, áp được cho mọi dự án · `step-planner/data/templates.json`
 - PLAN-010 · Không có khái niệm người làm · `step-planner/`
+- PLAN-011 · Bước và bước con có tài liệu: link hoặc văn bản Markdown · `step-planner/`
 <!-- index:end -->
 
 ## PLAN-001 · Dự án là các bước có thứ tự, mỗi bước có bước con có thứ tự
@@ -62,3 +63,8 @@ Mẫu Data Science theo chuẩn CRISP-DM 1.0: bước là sáu pha, bước con 
 24/11/2026 · `step-planner/`
 
 Công cụ không quản lý thành viên hay người làm: không danh sách thành viên, không giao bước con cho ai, không lọc "việc của tôi", mẫu không ghi người làm. File và dữ liệu cũ có thông tin người vẫn nhập và mở được; thông tin người bị bỏ.
+
+## PLAN-011 · Bước và bước con có tài liệu: link hoặc văn bản Markdown
+24/11/2026 · `step-planner/`
+
+Mỗi bước có tài liệu riêng cho cả bước, mỗi bước con có tài liệu riêng. Một tài liệu là một link (chỉ http(s), mở tab mới) hoặc một văn bản Markdown viết ngay trong công cụ, đọc được ở dạng đã dựng. Thêm, sửa, xoá được; xoá có Hoàn tác. Tìm kiếm khớp cả tên tài liệu. Tài liệu đi theo khi xuất / nhập Markdown và JSON; file cũ không có tài liệu vẫn nhập được.

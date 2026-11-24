@@ -11,8 +11,8 @@ const NEXT = { todo: 'doing', doing: 'done', done: 'todo', blocked: 'doing', ski
 export const nextStatus = (/** @type {string} */ s) => NEXT[s] || 'todo';
 
 export const FORMAT = 'step-planner';
-export const VERSION = 1;
-export const MD_VERSION = 1;
+export const VERSION = 2;
+export const MD_VERSION = 2;
 export const APP_NAME = 'Data Science Step Planner';
 export const LOG_HEADING = 'Nhật ký quyết định';
 export const LOOSE_STEP = 'Việc chung';
@@ -50,6 +50,27 @@ const isoOr = (/** @type {any} */ s) => (typeof s === 'string' && /^\d{4}-\d{2}-
 const objs = (/** @type {any} */ a) => (Array.isArray(a) ? a.filter(isObj) : []);
 const idOr = (/** @type {any} */ id, /** @type {string} */ p) => (typeof id === 'string' && id ? id : uid(p));
 
+/* Tài liệu của bước / bước con: link (chỉ http(s)) hoặc văn bản Markdown. */
+export const DOC_KINDS = ['link', 'md'];
+/** URL http(s) một dòng, không khoảng trắng; `<` `>` mã hoá để ghi được trong Markdown. Khác thì ''. @param {any} u */
+export function safeUrl(u) {
+  const s = oneLine(u).replace(/</g, '%3C').replace(/>/g, '%3E');
+  return /^https?:\/\/[^\s]+$/i.test(s) ? s : '';
+}
+/** Thân văn bản Markdown: giữ nguyên từng dòng (kể cả dấu cách cuối dòng), bỏ dòng trống đầu và khoảng trắng cuối. */
+const mdBody = (/** @type {any} */ s) => (typeof s === 'string' ? s : '').replace(/\r\n?/g, '\n').replace(/^(?:[ \t]*\n)+/, '').replace(/\s+$/, '');
+/** Một tài liệu, hoặc null nếu hỏng (không phải object, link không phải http(s)). @param {any} o */
+export function normDoc(o) {
+  if (!isObj(o)) return null;
+  const kind = o.kind === 'link' || (o.kind !== 'md' && typeof o.url === 'string' && o.url) ? 'link' : 'md';
+  if (kind === 'link') {
+    const url = safeUrl(o.url);
+    return url ? { id: idOr(o.id, 'd'), kind, title: oneLine(o.title) || url, url } : null;
+  }
+  return { id: idOr(o.id, 'd'), kind, title: oneLine(o.title) || 'Tài liệu', body: mdBody(o.body) };
+}
+const docsOf = (/** @type {any} */ a) => (Array.isArray(a) ? a.map(normDoc).filter(Boolean) : []);
+
 /** @param {any} o */
 export function normSub(o) {
   const x = isObj(o) ? o : {};
@@ -60,6 +81,7 @@ export function normSub(o) {
     due: parseDate(x.due),
     doneWhen: oneLine(x.doneWhen),
     notes: multiLine(x.notes),
+    docs: docsOf(x.docs),
   };
 }
 
@@ -74,6 +96,7 @@ export function normStep(o) {
     doneWhen: oneLine(x.doneWhen),
     notes: multiLine(x.notes),
     revisit: isObj(r) ? { reason: oneLine(r.reason), date: parseDate(r.date) || today() } : null,
+    docs: docsOf(x.docs),
     subs: objs(x.subs).map(normSub),
   };
 }
@@ -113,7 +136,11 @@ export function freshCopy(ws) {
   c.updatedAt = now;
   for (const s of c.steps) {
     s.id = uid('t');
-    for (const x of s.subs) x.id = uid('s');
+    for (const d of s.docs) d.id = uid('d');
+    for (const x of s.subs) {
+      x.id = uid('s');
+      for (const d of x.docs) d.id = uid('d');
+    }
   }
   for (const l of c.log) l.id = uid('l');
   return c;
@@ -195,11 +222,78 @@ export const splitInline = (line) => splitDots(protect(line)).map(restore);
 
 /* Dòng ghi chú: dòng trống viết `\`; dòng có thể bị đọc nhầm (nhãn, đầu mục danh sách, tiêu đề, trích dẫn, `\`)
  * thêm `\` phía trước. */
-const RISKY = /^(\\|#|>|\s*([-*+]|\d+[.)])(\s|$)|\s*\*\*|(Xong khi|Vì sao|Mục tiêu|Quay lại|Ghi chú):)/;
+const RISKY = /^(\\|#|>|\s*([-*+]|\d+[.)])(\s|$)|\s*\*\*|(Xong khi|Vì sao|Mục tiêu|Quay lại|Ghi chú|Tài liệu):)/;
 const escBlock = (/** @type {string} */ s) => (s === '' ? '\\' : RISKY.test(s) ? '\\' + s : s);
 const unescBlock = (/** @type {string} */ s) => (s.startsWith('\\') ? s.slice(1) : s);
 /** Khối dòng: mỗi dòng trừ dòng cuối có hai dấu cách cuối (xuống dòng khi xem trên GitHub, VS Code). */
 const hardBreaks = (/** @type {string[]} */ lines) => lines.map((l, i) => (i < lines.length - 1 ? l + '  ' : l));
+
+/* Tài liệu trong Markdown: nhãn `Tài liệu:` rồi mỗi tài liệu một mục thụt. Link: `- [tên](url)`. Văn bản: `- tên` rồi
+ * khối rào thụt thêm hai bậc; rào dài hơn chuỗi ` dài nhất trong thân, nên thân chứa ``` hay dòng #, -, nhãn vẫn
+ * nguyên. Trong tên: `\`, `[`, `]` thoát bằng `\`. */
+const escDoc = (/** @type {string} */ s) => s.replace(/[\\[\]]/g, '\\$&');
+const unescDoc = (/** @type {string} */ s) => s.replace(/\\([\\[\]])/g, '$1');
+const DOC_LINK = /^\[((?:\\.|[^\]\\])*)\]\((?:<([^<>]*)>|(\S+))\)$/;
+const DOC_ITEM = /^(\s*)[-*+][ \t]+(.*)$/;
+const DOC_FENCE = /^(\s*)(`{3,}|~{3,})/;
+/** Các dòng sau nhãn `Tài liệu:` (nhãn do người gọi ghi). @param {any[]} docs @param {string} ind thụt của nhãn */
+function docLines(docs, ind) {
+  const out = [];
+  for (const d of docs) {
+    if (d.kind === 'link') {
+      out.push(`${ind}  - [${escDoc(d.title)}](${/[()]/.test(d.url) ? '<' + d.url + '>' : d.url})`);
+      continue;
+    }
+    const longest = Math.max(0, ...(d.body.match(/`+/g) || []).map((r) => r.length));
+    const fence = '`'.repeat(Math.max(3, longest + 1));
+    const fi = ind + '    ';
+    out.push(`${ind}  - ${escDoc(d.title)}`, fi + fence + 'markdown',
+      ...(d.body ? d.body.split('\n').map((l) => (l ? fi + l : '')) : []), fi + fence);
+  }
+  return out;
+}
+/** Bỏ tối đa n dấu cách đầu dòng. @param {string} l @param {number} n */
+const dedent = (l, n) => l.replace(new RegExp(`^ {0,${n}}`), '');
+/** Dòng k mở một tài liệu: mục là link, hoặc mục mà dòng ngay sau là rào. @param {string[]} lines @param {number} k @param {number} min */
+function docAt(lines, k, min) {
+  const m = DOC_ITEM.exec(lines[k] || '');
+  return !!m && m[1].length >= min && (DOC_LINK.test(m[2]) || DOC_FENCE.test(lines[k + 1] || ''));
+}
+/**
+ * Đọc các tài liệu bắt đầu ở dòng i (ngay sau nhãn `Tài liệu:`), đẩy vào docs. Trả về dòng đầu tiên không thuộc chúng.
+ * min: thụt tối thiểu của mục (bước con: 2, để mục không thụt vẫn là bước con).
+ * @param {string[]} lines @param {number} i @param {any[]} docs @param {string[]} warnings @param {number} min
+ */
+function readDocs(lines, i, docs, warnings, min) {
+  while (i < lines.length) {
+    if (!lines[i].trim()) {
+      let k = i;
+      while (k < lines.length && !lines[k].trim()) k++;
+      if (!docAt(lines, k, min)) return i;
+      i = k;
+    }
+    if (!docAt(lines, i, min)) return i;
+    const text = /** @type {RegExpExecArray} */ (DOC_ITEM.exec(lines[i]))[2].trim();
+    const lk = DOC_LINK.exec(text);
+    if (lk) {
+      const title = unescDoc(lk[1]), url = lk[2] ?? lk[3];
+      const d = normDoc({ kind: 'link', title, url });
+      if (d) docs.push(d); else warnings.push(`Link không phải http(s), bỏ: ${title || url}`);
+      i++;
+      continue;
+    }
+    const f = /** @type {RegExpExecArray} */ (DOC_FENCE.exec(lines[i + 1]));
+    const close = new RegExp(`^\\s*${f[2][0] === '`' ? '`' : '~'}{${f[2].length},}\\s*$`);
+    const body = [];
+    let k = i + 2;
+    while (k < lines.length && !close.test(lines[k])) body.push(dedent(lines[k++], f[1].length));
+    const title = unescDoc(text);
+    if (k >= lines.length) warnings.push(`Tài liệu "${title}" thiếu rào đóng, đọc tới hết file.`);
+    docs.push(normDoc({ kind: 'md', title, body: body.join('\n') }));
+    i = k + 1;
+  }
+  return i;
+}
 
 /** @param {any} ws @returns {string} */
 export function toMarkdown(ws) {
@@ -212,6 +306,7 @@ export function toMarkdown(ws) {
     if (s.doneWhen) out.push('', `Xong khi: ${s.doneWhen}`);
     if (s.revisit) out.push('', `Quay lại: ${s.revisit.date}` + (s.revisit.reason ? ` · ${s.revisit.reason}` : ''));
     if (s.notes) out.push('', ...hardBreaks(['Ghi chú:', ...s.notes.split('\n').map((l) => '  ' + escBlock(l))]));
+    if (s.docs.length) out.push('', 'Tài liệu:', ...docLines(s.docs, ''));
     if (s.subs.length) out.push('');
     for (const x of s.subs) {
       let line = `- [${MARK[x.status]}] ${escInline(x.title)}`;
@@ -219,7 +314,8 @@ export function toMarkdown(ws) {
       const more = [];
       if (x.doneWhen) more.push(`  Xong khi: ${x.doneWhen}`);
       if (x.notes) more.push(...x.notes.split('\n').map((l) => '  ' + escBlock(l)));
-      out.push(...hardBreaks([line, ...more]));
+      if (x.docs.length) more.push('  Tài liệu:');
+      out.push(...hardBreaks([line, ...more]), ...docLines(x.docs, '  '));
     }
   });
   if (ws.log.length) {
@@ -309,8 +405,15 @@ export function fromMarkdown(text) {
     block = 'why'; blockFirst = true;
   };
 
-  for (const raw of lines) {
+  for (let i = 0; i < lines.length; i++) {
+    const raw = lines[i];
     const ind = /^( {2}|\t)(.*)$/.exec(raw);
+    if (ind && block === 'sub' && /^Tài liệu:\s*$/.test(ind[2])) {
+      sub.docs = sub.docs || [];
+      i = readDocs(lines, i + 1, sub.docs, warnings, 2) - 1;
+      blockFirst = false;
+      continue;
+    }
     if (ind && block) {
       const l = ind[2];
       const item = ITEM.exec(l.trimStart());
@@ -358,13 +461,17 @@ export function fromMarkdown(text) {
     const it = ITEM.exec(raw);
     if (it) { newSub(it[1], it[2]); continue; }
     sub = null;
-    const meta = /^\**(Mục tiêu|Xong khi|Quay lại|Ghi chú):\**\s?(.*)$/.exec(raw);
+    const meta = /^\**(Mục tiêu|Xong khi|Quay lại|Ghi chú|Tài liệu):\**\s?(.*)$/.exec(raw);
     if (meta && meta[1] === 'Mục tiêu') step.goal = meta[2];
     else if (meta && meta[1] === 'Xong khi') step.doneWhen = meta[2];
     else if (meta && meta[1] === 'Quay lại') {
       const d = /^(\S+)(?: · (.*))?$/.exec(meta[2]);
       step.revisit = d && parseDate(d[1]) ? { date: parseDate(d[1]), reason: d[2] || '' } : { reason: meta[2] };
     } else if (meta && meta[1] === 'Ghi chú' && !meta[2].trim()) { block = 'step'; blockFirst = true; }
+    else if (meta && meta[1] === 'Tài liệu' && !meta[2].trim()) {
+      step.docs = step.docs || [];
+      i = readDocs(lines, i + 1, step.docs, warnings, 0) - 1;
+    }
     else addNote(step, 'notes', raw);
   }
   if (!ws.name && !ws.steps.length) throw new Error('Không thấy tiêu đề "# …", bước "## …" hay việc "- [ ] …" nào.');
@@ -382,12 +489,19 @@ export const toBackup = (all) => JSON.stringify({ format: FORMAT, version: VERSI
 function skipped(w, warnings) {
   const bad = (/** @type {any} */ a) => (Array.isArray(a) ? a.filter((x) => !isObj(x)).length : 0);
   const steps = Array.isArray(w.steps) ? w.steps : [];
-  const n = { steps: bad(steps), subs: 0, log: bad(w.log) };
-  for (const s of steps) if (isObj(s)) n.subs += bad(s.subs);
+  const n = { steps: bad(steps), subs: 0, log: bad(w.log), docs: 0 };
+  const badDocs = (/** @type {any} */ a) => (Array.isArray(a) ? a.filter((d) => !normDoc(d)).length : 0);
+  for (const s of steps) {
+    if (!isObj(s)) continue;
+    n.subs += bad(s.subs);
+    n.docs += badDocs(s.docs);
+    for (const x of Array.isArray(s.subs) ? s.subs : []) if (isObj(x)) n.docs += badDocs(x.docs);
+  }
   const parts = [];
   if (n.steps) parts.push(`${n.steps} bước`);
   if (n.subs) parts.push(`${n.subs} bước con`);
   if (n.log) parts.push(`${n.log} quyết định`);
+  if (n.docs) parts.push(`${n.docs} tài liệu (link không phải http(s))`);
   if (parts.length) warnings.push(`"${oneLine(w.name) || 'Dự án'}": bỏ qua ${parts.join(', ')} không đúng khuôn.`);
 }
 
@@ -427,13 +541,16 @@ export function parseImport(text) {
 
 /** Đếm cho phần xem trước khi nhập. @param {any[]} wss */
 export function counts(wss) {
-  let steps = 0, subs = 0, log = 0;
+  let steps = 0, subs = 0, log = 0, docs = 0;
   for (const w of wss) {
     steps += w.steps.length;
-    subs += w.steps.reduce((/** @type {number} */ n, /** @type {any} */ s) => n + s.subs.length, 0);
+    for (const s of w.steps) {
+      subs += s.subs.length;
+      docs += s.docs.length + s.subs.reduce((/** @type {number} */ n, /** @type {any} */ x) => n + x.docs.length, 0);
+    }
     log += w.log.length;
   }
-  return { workspaces: wss.length, steps, subs, log };
+  return { workspaces: wss.length, steps, subs, log, docs };
 }
 
 /** Tên file an toàn từ tên dự án. */
@@ -441,13 +558,14 @@ export function slug(/** @type {string} */ s) {
   return fold(s).replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60) || 'du-an';
 }
 
+const docShape = (/** @type {any} */ d) => (d.kind === 'link' ? { kind: d.kind, title: d.title, url: d.url } : { kind: d.kind, title: d.title, body: d.body });
 /** Phần so được khi kiểm Markdown đi rồi về: bỏ id và mốc thời gian. @param {any} ws */
 export function shape(ws) {
   return {
     name: ws.name, templateId: ws.templateId, notes: ws.notes,
     steps: ws.steps.map((/** @type {any} */ s) => ({
-      title: s.title, goal: s.goal, doneWhen: s.doneWhen, notes: s.notes, revisit: s.revisit,
-      subs: s.subs.map((/** @type {any} */ x) => ({ title: x.title, status: x.status, due: x.due, doneWhen: x.doneWhen, notes: x.notes })),
+      title: s.title, goal: s.goal, doneWhen: s.doneWhen, notes: s.notes, revisit: s.revisit, docs: s.docs.map(docShape),
+      subs: s.subs.map((/** @type {any} */ x) => ({ title: x.title, status: x.status, due: x.due, doneWhen: x.doneWhen, notes: x.notes, docs: x.docs.map(docShape) })),
     })),
     log: ws.log.map((/** @type {any} */ l) => ({ date: l.date, decision: l.decision, why: l.why })),
   };

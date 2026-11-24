@@ -38,6 +38,9 @@
   <symbol id="i-hint" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.7.5 1.1 1.3 1.1 2.1V16h5v-.1c0-.8.4-1.6 1.1-2.1A6 6 0 0 0 12 3z"/></symbol>
   <symbol id="i-board" viewBox="0 0 24 24"><rect x="3" y="4" width="5" height="16" rx="1.5"/><rect x="10" y="4" width="5" height="11" rx="1.5"/><rect x="17" y="4" width="4" height="7" rx="1.5"/></symbol>
   <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4 7 7M17 17l1.6 1.6M18.6 5.4 17 7M7 17l-1.6 1.6"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M14 3H6v18h12V7l-4-4z"/><path d="M14 3v4h4M9 13h6M9 17h4"/></symbol>
+  <symbol id="i-clip" viewBox="0 0 24 24"><path d="M20 11.5 12.5 19a5 5 0 0 1-7-7L13 4.5a3.3 3.3 0 0 1 4.7 4.7l-7.5 7.5a1.7 1.7 0 0 1-2.4-2.4L14.5 7.6"/></symbol>
   <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.8 6.8 0 0 0 10.5 10.5Z"/></symbol>
 </svg>
 
@@ -184,6 +187,14 @@
     </div>
     <label class="field"><span>Xong khi</span><input type="text" name="doneWhen" maxlength="300"></label>
     <label class="field"><span>Ghi chú</span><textarea name="notes" rows="4"></textarea></label>
+    <section class="docs-edit" id="sub-docs" aria-labelledby="sub-docs-h">
+      <div class="docs-edit-head">
+        <h3 id="sub-docs-h">Tài liệu</h3>
+        <button type="button" class="btn small" data-doc-add><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg>Tài liệu</button>
+      </div>
+      <ul class="doc-list" data-doc-list></ul>
+      <p class="muted docs-note" data-doc-note></p>
+    </section>
     <div class="row-end">
       <button type="button" class="btn quiet danger" id="sub-del"><svg class="i" aria-hidden="true"><use href="#i-trash"/></svg>Xoá</button>
       <button type="button" class="btn quiet" id="sub-dup"><svg class="i" aria-hidden="true"><use href="#i-copy"/></svg>Nhân bản</button>
@@ -203,9 +214,69 @@
     <label class="field"><span>Mục tiêu</span><input type="text" name="goal" maxlength="400"></label>
     <label class="field"><span>Xong khi</span><input type="text" name="doneWhen" maxlength="400"></label>
     <label class="field"><span>Ghi chú</span><textarea name="notes" rows="4"></textarea></label>
+    <section class="docs-edit" id="step-docs" aria-labelledby="step-docs-h">
+      <div class="docs-edit-head">
+        <h3 id="step-docs-h">Tài liệu</h3>
+        <button type="button" class="btn small" data-doc-add><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg>Tài liệu</button>
+      </div>
+      <ul class="doc-list" data-doc-list></ul>
+      <p class="muted docs-note" data-doc-note></p>
+    </section>
     <div class="row-end">
       <button type="button" class="btn quiet danger" id="step-del"><svg class="i" aria-hidden="true"><use href="#i-trash"/></svg>Xoá bước</button>
       <button type="button" class="btn quiet" id="step-revisit"><svg class="i" aria-hidden="true"><use href="#i-redo"/></svg>Cần làm lại…</button>
+      <span class="tools-gap"></span>
+      <button type="button" class="btn" data-close>Huỷ</button>
+      <button type="submit" class="btn go" value="save">Lưu</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Thêm tài liệu (link hoặc văn bản), sửa link. Văn bản mở ở #dlg-md. -->
+<dialog class="dlg" id="dlg-doc" aria-labelledby="dlg-doc-title">
+  <form method="dialog" id="doc-form" class="stack">
+    <div class="dlg-head"><h2 id="dlg-doc-title">Tài liệu</h2><button type="button" class="icon-btn" data-close aria-label="Đóng" title="Đóng"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button></div>
+    <p class="dlg-step" id="doc-where"></p>
+    <fieldset class="seg" id="doc-kind">
+      <legend class="sr">Loại tài liệu</legend>
+      <label><input type="radio" name="kind" value="link" checked><span>Link</span></label>
+      <label><input type="radio" name="kind" value="md"><span>Văn bản Markdown</span></label>
+    </fieldset>
+    <label class="field"><span>Tên</span><input type="text" name="title" maxlength="200" placeholder="VD: Data card, đề bài, ghi chép EDA"></label>
+    <label class="field" id="doc-url-field"><span>Link (http hoặc https)</span><input type="url" name="url" maxlength="2000" required pattern="https?://\S+" placeholder="https://…" title="Link phải bắt đầu bằng http:// hoặc https://"></label>
+    <a class="doc-open" id="doc-open" target="_blank" rel="noopener noreferrer" hidden><svg class="i" aria-hidden="true"><use href="#i-link"/></svg>Mở link</a>
+    <div class="row-end">
+      <button type="button" class="btn quiet danger" id="doc-del"><svg class="i" aria-hidden="true"><use href="#i-trash"/></svg>Xoá</button>
+      <span class="tools-gap"></span>
+      <button type="button" class="btn" data-close>Huỷ</button>
+      <button type="submit" class="btn go" id="doc-save" value="save">Lưu</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Tài liệu văn bản Markdown: Sửa / Xem / Chia đôi (dáng md-annotate) -->
+<dialog class="dlg md-dlg" id="dlg-md" aria-labelledby="dlg-md-title">
+  <form method="dialog" id="md-form" class="md-form">
+    <div class="dlg-head">
+      <h2 class="sr" id="dlg-md-title">Tài liệu văn bản</h2>
+      <svg class="i md-ic" aria-hidden="true"><use href="#i-doc"/></svg>
+      <label class="md-name"><span class="sr">Tên tài liệu</span><input type="text" name="title" class="input" maxlength="200" required placeholder="Tên tài liệu"></label>
+      <button type="button" class="icon-btn" data-close aria-label="Đóng" title="Đóng"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="md-bar">
+      <div class="tabs" role="tablist" aria-label="Chế độ xem">
+        <button type="button" class="tab" role="tab" data-mode="edit">Sửa</button>
+        <button type="button" class="tab" role="tab" data-mode="view">Xem</button>
+        <button type="button" class="tab" role="tab" data-mode="split">Chia đôi</button>
+      </div>
+      <span class="md-where" id="md-where"></span>
+    </div>
+    <div class="md-panes" id="md-panes" data-mode="view">
+      <label class="md-src"><span class="sr">Nội dung Markdown</span><textarea name="body" class="md-ta" spellcheck="false" placeholder="# Tiêu đề&#10;&#10;Viết Markdown: **đậm**, *nghiêng*, - danh sách, `code`, [link](https://…)"></textarea></label>
+      <div class="md-view" id="md-view" tabindex="0" aria-label="Bản xem"></div>
+    </div>
+    <div class="row-end md-foot">
+      <button type="button" class="btn quiet danger" id="md-del"><svg class="i" aria-hidden="true"><use href="#i-trash"/></svg>Xoá</button>
       <span class="tools-gap"></span>
       <button type="button" class="btn" data-close>Huỷ</button>
       <button type="submit" class="btn go" value="save">Lưu</button>
