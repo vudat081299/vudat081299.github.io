@@ -187,7 +187,7 @@ Nhập file cũ và Markdown viết tay (dễ dãi):
 - Đầu dự án: tên (bấm để đổi dự án), tiến độ chung, chú giải trạng thái kèm số đếm. Chip trạng thái có chữ và chấm khác hình.
 - Cột tên bước rộng cố định, thẻ cùng bề rộng (các hàng thẳng cột). Hàng thẻ cuộn ngang bên trong, không hiện thanh cuộn,
   mép mờ báo còn chỗ cuộn. ≤ 640px: tên bước nằm trên hàng thẻ.
-- Hộp thoại: ≤ 640px là tấm đáy, chân dính đáy; hộp Markdown toàn màn. Trạng thái trong hộp bước con: bảy viên radio.
+- Hộp thoại: chỉ thân cuộn (đầu, chân đứng yên; trang sau khoá cuộn); ≤ 640px tấm đáy; Markdown toàn màn; trạng thái: viên radio.
 - Mọi `<select>` chọn thứ có nghĩa dùng danh sách tự dựng (nổi ở lớp trên cùng, không đẩy bố cục; phím ↑ ↓, gõ chữ đầu,
   Enter, Esc trả focus); ô chỉ chọn số giữ `<select>` gốc (`data-native`). Option có `data-dot`, `data-hint` thì hiện thêm.
 - Cảm ứng và ≤ 640px: vùng bấm ≥ 44px. Trang không cuộn ngang. Tạo hay mở dự án thì về đầu trang, không cuộn theo focus.

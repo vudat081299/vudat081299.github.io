@@ -41,6 +41,18 @@ const check = (name, ok, detail = '') => {
     await page.click(`.card[data-sub="${subId}"] [data-act="status"]`, { modifiers: ['Shift'] });
     await page.click(`.dd-pop [role="option"][data-value="${st}"]`);
   };
+  /* Hộp dài: chỉ thân cuộn. Thử cuộn chính hộp, cuộn thân tới đáy, focus phần tử cuối: hộp vẫn ở 0, đầu, chân sát mép. */
+  const stickyHead = (page, sel) => page.$eval(sel, (dl) => {
+    dl.getAnimations().forEach((x) => x.finish());
+    const form = dl.querySelector('.dlg-form'), body = dl.querySelector('.dlg-body');
+    dl.scrollTop = 9999; form.scrollTop = 9999; body.scrollTop = body.scrollHeight;
+    dl.querySelector('.dlg-foot > :last-child').scrollIntoView();
+    [...body.querySelectorAll('input:not([type="radio"]), textarea, button')].at(-1)?.focus();
+    const r = dl.getBoundingClientRect(), hd = dl.querySelector('.dlg-head').getBoundingClientRect(), ft = dl.querySelector('.dlg-foot').getBoundingClientRect();
+    return { dlg: dl.scrollTop, form: form.scrollTop, body: body.scrollTop, head: Math.round(hd.top - r.top), foot: Math.round(r.bottom - ft.bottom),
+      pageLocked: getComputedStyle(document.documentElement).overflowY === 'hidden' };
+  });
+  const sticky = (m) => m.dlg === 0 && m.form === 0 && m.body > 0 && m.head <= 1 && m.foot <= 1 && m.pageLocked;
   const hOverflow = (page) => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
 
   /* ── Máy rộng ── */
@@ -949,6 +961,10 @@ const check = (name, ok, detail = '') => {
   const firstSub = (await cur(page)).steps[0].subs[0];
   await page.click(subSel(firstSub.id, 'edit-sub'));
   check('hộp sửa: focus ở ô tên', await page.evaluate(() => document.activeElement.name === 'title'));
+  await page.setViewportSize({ width: 1280, height: 560 });
+  const stk = await stickyHead(page, '#dlg-sub');
+  check('hộp dài: chỉ thân cuộn, đầu và chân đứng yên, trang sau không cuộn', sticky(stk), JSON.stringify(stk));
+  await page.setViewportSize({ width: 1280, height: 900 });
   await page.fill('#sub-form [name="notes"]', 'chữ đang gõ');
   await page.keyboard.press('Escape');
   check('Esc khi có chữ chưa lưu: hỏi lại', await page.isVisible('#dlg-ask') && await page.isVisible('#dlg-sub'));
@@ -1213,6 +1229,7 @@ const check = (name, ok, detail = '') => {
         typing: a.tagName === 'TEXTAREA' || (a.tagName === 'INPUT' && a.type === 'text'), scrolls: body.scrollHeight > body.clientHeight };
     });
     check(`390px: ${d} là tấm đáy, chân hộp dính đáy, không tự focus ô chữ`, sheet.bottom === sheet.vh && sheet.vh - sheet.footBottom <= 1 && !sheet.typing, JSON.stringify(sheet));
+    if (d === '#dlg-sub') { const st = await stickyHead(m.page, d); check('390px: tấm đáy dài, chỉ thân cuộn, đầu và chân đứng yên', sticky(st), JSON.stringify(st)); }
     await m.page.keyboard.press('Escape');
   }
   await m.ctx.close();

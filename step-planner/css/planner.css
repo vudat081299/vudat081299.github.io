@@ -853,18 +853,23 @@ select.dd-native {
 
 /* ── Hộp thoại: khung chung. Đầu (nhãn nhỏ kiểu trang chủ, tiêu đề, dòng ngữ cảnh, ×), thân cuộn, chân dính (nút phụ
    trái, Close + nút chính phải). Điện thoại: tấm đáy, chân luôn ở đáy, nút phụ chỉ còn biểu tượng ── */
+/* Đầu và chân không bao giờ trôi: chỉ .dlg-body cuộn. Hộp không là khung cuộn (overflow: clip, kể cả focus hay
+   scrollIntoView không cuộn được nó); chiều cao tối đa đặt thẳng lên .dlg-form (cột flex một tầng, Safari co đúng). */
 .dlg {
-  width: min(var(--dlg-w), calc(100vw - 2 * var(--s4))); max-height: min(var(--dlg-h), calc(100dvh - 2 * var(--s5)));
-  padding: 0; overflow: hidden; overscroll-behavior: contain;
+  --dlg-max: min(var(--dlg-h), calc(100dvh - 2 * var(--s5)));
+  width: min(var(--dlg-w), calc(100vw - 2 * var(--s4))); max-height: var(--dlg-max);
+  padding: 0; overflow: hidden; overflow: clip; overscroll-behavior: contain;
   border: var(--line-w) solid var(--line); border-radius: var(--r-lg); background: var(--surface); color: var(--ink);
   box-shadow: var(--shadow);
 }
-.dlg[open] { display: flex; flex-direction: column; }
+/* Hộp mở thì trang phía sau không cuộn theo (lăn chuột hay vuốt trên đầu, chân hộp). */
+html:has(dialog.dlg[open]) { overflow: hidden; }
+html { scrollbar-gutter: stable; }   /* khoá cuộn không làm trang nhảy ngang */
 .dlg.wide { width: min(var(--dlg-wide), calc(100vw - 2 * var(--s4))); }
 .dlg.dlg-sm { width: min(var(--dlg-sm), calc(100vw - 2 * var(--s4))); }
 .dlg:focus, .dlg:focus-visible { outline: none; }
 .dlg::backdrop { background: var(--scrim); }
-.dlg-form { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; }
+.dlg-form { display: flex; flex-direction: column; max-height: calc(var(--dlg-max) - 2 * var(--line-w)); overflow: hidden; overflow: clip; }
 .dlg-head {
   position: relative; flex: none; display: flex; align-items: flex-start; gap: var(--s3);
   padding: var(--s5) var(--s4) var(--s4) var(--s5); border-bottom: var(--line-w) solid var(--line-2);
@@ -941,7 +946,8 @@ select.dd-native {
 @media (prefers-reduced-motion: no-preference) { .dlg[open] { animation: dlg-in var(--dur-sheet) var(--ease); } }
 @media (max-width: 640px) {
   .dlg:not(.dlg-ask), .dlg.wide, .dlg.dlg-sm:not(.dlg-ask) {
-    width: 100vw; max-width: 100vw; margin: auto 0 0; max-height: calc(100dvh - var(--s6));
+    --dlg-max: calc(100dvh - var(--s6));
+    width: 100vw; max-width: 100vw; margin: auto 0 0;
     border-radius: var(--r-lg) var(--r-lg) 0 0; border-bottom-color: transparent;
   }
   .dlg:not(.dlg-ask) .dlg-head { padding: calc(var(--s4) + var(--grip-h)) var(--s2) var(--s3) var(--s4); }
@@ -1064,6 +1070,7 @@ select.dd-native {
 /* ── Hộp văn bản Markdown (dáng md-annotate: tab gạch chân Edit / Preview, bản xem kiểu GitHub). Gần toàn màn; điện
    thoại: toàn màn. Đầu: biểu tượng, tên sửa tại chỗ, dòng ngữ cảnh ── */
 .dlg.md-dlg { width: min(var(--dlg-md), calc(100vw - 2 * var(--s5))); height: min(92dvh, calc(100dvh - 2 * var(--s5))); max-height: none; }
+.md-dlg .dlg-form { height: 100%; max-height: none; }
 .md-head { align-items: center; gap: var(--s3); padding: var(--s5) var(--s4) var(--s5) var(--s5); }
 .md-ic {
   display: inline-flex; align-items: center; justify-content: center; flex: none; width: var(--icon-box); height: var(--icon-box);
