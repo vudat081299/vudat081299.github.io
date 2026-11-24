@@ -1,0 +1,687 @@
+{
+  "note": "Mẫu dự án của Step Planner; trang đọc bằng vòng lặp (REPO-001). Mẫu it5425-sports sinh từ masters-degree/data-management-visualization/data/sports-monitoring-project.json bằng `python3 step-planner/tools/lint.py --write-course`, đừng sửa tay. Khuôn và luật: step-planner/CLAUDE.md.",
+  "templates": [
+    {
+      "id": "crisp-dm",
+      "name": "Dự án Data Science (CRISP-DM)",
+      "description": "Sáu pha CRISP-DM, từ hiểu nghiệp vụ tới triển khai. Pha nào lộ vấn đề thì quay lại pha trước.",
+      "steps": [
+        {
+          "title": "Hiểu nghiệp vụ",
+          "goal": "Biết bài toán nghiệp vụ, ai dùng kết quả, quyết định nào sẽ đổi.",
+          "doneWhen": "Câu hỏi, tiêu chí thành công và phạm vi đã được người đặt bài toán đồng ý.",
+          "subs": [
+            {
+              "title": "Xác định mục tiêu nghiệp vụ",
+              "doneWhen": "Ghi được vấn đề, người dùng kết quả, quyết định sẽ đổi."
+            },
+            {
+              "title": "Đánh giá hiện trạng: nguồn lực, ràng buộc, rủi ro",
+              "doneWhen": "Có danh sách dữ liệu, người, công cụ, hạn và rủi ro."
+            },
+            {
+              "title": "Đổi mục tiêu nghiệp vụ thành câu hỏi phân tích",
+              "doneWhen": "Câu hỏi trả lời được bằng dữ liệu, có chỉ số đo."
+            },
+            {
+              "title": "Chốt tiêu chí thành công",
+              "doneWhen": "Có ngưỡng cho chỉ số nghiệp vụ và chỉ số mô hình."
+            },
+            {
+              "title": "Lập kế hoạch dự án",
+              "doneWhen": "Mỗi pha có mốc và người phụ trách."
+            }
+          ]
+        },
+        {
+          "title": "Hiểu dữ liệu",
+          "goal": "Biết dữ liệu có gì, thiếu gì, tin được tới đâu.",
+          "doneWhen": "Có data card và báo cáo EDA; biết dữ liệu đủ trả lời câu hỏi hay không.",
+          "subs": [
+            {
+              "title": "Thu thập dữ liệu ban đầu",
+              "doneWhen": "Ghi nguồn, ngày lấy, điều khoản dùng, mã băm của từng file."
+            },
+            {
+              "title": "Viết data card",
+              "doneWhen": "Nguồn, điều khoản, cột, giai đoạn, hạn chế đã ghi."
+            },
+            {
+              "title": "Mô tả dữ liệu: số dòng, cột, kiểu, đơn vị"
+            },
+            {
+              "title": "EDA: phân phối, tương quan, ngoại lai",
+              "doneWhen": "Có trang tóm tắt EDA kèm hình."
+            },
+            {
+              "title": "Kiểm chất lượng: thiếu, trùng, sai giá trị",
+              "doneWhen": "Có báo cáo chất lượng theo từng luật."
+            }
+          ]
+        },
+        {
+          "title": "Chuẩn bị dữ liệu",
+          "goal": "Ra bảng sạch, đủ đặc trưng, dựng lại được từ dữ liệu gốc.",
+          "doneWhen": "Một lệnh dựng lại bảng sạch từ dữ liệu gốc; lineage ghi đủ.",
+          "subs": [
+            {
+              "title": "Chọn dữ liệu đưa vào và ghi lý do"
+            },
+            {
+              "title": "Làm sạch: thiếu, trùng, sai kiểu",
+              "doneWhen": "Báo cáo chất lượng không còn lỗi chặn."
+            },
+            {
+              "title": "Tích hợp: ghép bảng, chuẩn hoá khoá"
+            },
+            {
+              "title": "Feature engineering",
+              "doneWhen": "Mỗi đặc trưng có định nghĩa và lý do."
+            },
+            {
+              "title": "Chia train / validation / test",
+              "doneWhen": "Không rò rỉ dữ liệu giữa các phần."
+            },
+            {
+              "title": "Ghi data lineage",
+              "doneWhen": "Script nào đọc gì, ra file nào."
+            }
+          ]
+        },
+        {
+          "title": "Mô hình hoá",
+          "goal": "Chọn và huấn luyện mô hình trả lời câu hỏi phân tích.",
+          "doneWhen": "Có mô hình vượt baseline trên tập validation, tham số đã ghi.",
+          "subs": [
+            {
+              "title": "Chọn kỹ thuật mô hình và giả định của nó"
+            },
+            {
+              "title": "Dựng baseline",
+              "doneWhen": "Có điểm của baseline đơn giản để so."
+            },
+            {
+              "title": "Thiết kế phép thử: chỉ số, cách chia, cross-validation",
+              "doneWhen": "Ghi trước khi huấn luyện."
+            },
+            {
+              "title": "Huấn luyện và chỉnh tham số"
+            },
+            {
+              "title": "Đánh giá kỹ thuật từng mô hình",
+              "doneWhen": "Bảng so mô hình theo chỉ số đã chốt."
+            }
+          ]
+        },
+        {
+          "title": "Đánh giá",
+          "goal": "Xét kết quả theo tiêu chí nghiệp vụ, không chỉ theo chỉ số mô hình.",
+          "doneWhen": "Đã quyết: triển khai, lặp lại hay dừng; lý do ghi ở nhật ký quyết định.",
+          "subs": [
+            {
+              "title": "So kết quả với tiêu chí thành công",
+              "doneWhen": "Chạy một lần trên tập test."
+            },
+            {
+              "title": "Phân tích lỗi theo nhóm"
+            },
+            {
+              "title": "Soát lại quy trình: rò rỉ, bước bị bỏ, giả định sai"
+            },
+            {
+              "title": "Quyết định bước tiếp theo",
+              "doneWhen": "Ghi vào nhật ký quyết định."
+            }
+          ]
+        },
+        {
+          "title": "Triển khai",
+          "goal": "Đưa kết quả tới người dùng và giữ nó đúng theo thời gian.",
+          "doneWhen": "Người dùng nhận được kết quả; có kế hoạch theo dõi.",
+          "subs": [
+            {
+              "title": "Trực quan hoá kết quả",
+              "doneWhen": "Mỗi hình có tiêu đề, trục, nguồn dữ liệu."
+            },
+            {
+              "title": "Kế hoạch triển khai"
+            },
+            {
+              "title": "Kế hoạch theo dõi và bảo trì: drift, lịch huấn luyện lại"
+            },
+            {
+              "title": "Viết báo cáo cuối",
+              "doneWhen": "Có câu hỏi, dữ liệu, phương pháp, kết quả, hạn chế."
+            },
+            {
+              "title": "Rút kinh nghiệm dự án"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "it5425-sports",
+      "name": "Đồ án IT5425 — giám sát thể thao (Premier League)",
+      "description": "Các giai đoạn P0–P8 và bảy vai của đồ án môn Data Management and Visualization, lấy từ trang đồ án; người làm ghi theo vai.",
+      "people": [
+        "Trưởng nhóm & kể chuyện",
+        "Dữ liệu & lineage",
+        "EDA & ngoại lai",
+        "ANOM",
+        "CUSUM",
+        "SPRT",
+        "Demo & tích hợp"
+      ],
+      "steps": [
+        {
+          "title": "P0 · Khởi động",
+          "goal": "Đề bài, trang đồ án → repo có README.md, requirements.txt, .gitignore; bảng phân vai.",
+          "doneWhen": "Cả bảy người clone được repo và chạy được python -c \"import pandas\".",
+          "notes": "Vai: Trưởng nhóm & kể chuyện, Dữ liệu & lineage, EDA & ngoại lai, ANOM, CUSUM, SPRT, Demo & tích hợp\nCông cụ: git, GitHub, Python 3, VS Code hoặc Colab",
+          "subs": [
+            {
+              "title": "Gửi giảng viên các câu hỏi ở mục Cần xác nhận."
+            },
+            {
+              "title": "Email football-data.co.uk xin phép dùng dữ liệu cho đồ án, theo thư soạn sẵn (trang dữ liệu mời liên hệ khi có câu hỏi về cách dùng)."
+            },
+            {
+              "title": "Chốt phương án (A, B hay C)."
+            },
+            {
+              "title": "Tạo repo theo cây Repo mẫu trên trang đồ án."
+            },
+            {
+              "title": "Cài Python, VS Code (hoặc dùng Colab), git; tạo venv rồi cài requirements.txt."
+            },
+            {
+              "title": "Giao bảy vai."
+            },
+            {
+              "title": "Hẹn một buổi họp mỗi tuần."
+            }
+          ]
+        },
+        {
+          "title": "P1 · Tìm hiểu và thu thập",
+          "goal": "football-data.co.uk, notes.txt → data/raw/*.csv (không commit), data/manifest.csv, docs/data-card.md, docs/lineage.md.",
+          "doneWhen": "Chạy python src/download.py trên máy trống thì tải lại đúng các file, mã SHA-256 khớp manifest.",
+          "notes": "Vai: Dữ liệu & lineage\nCông cụ: Python: requests, hashlib",
+          "subs": [
+            {
+              "title": "Đọc notes.txt để biết nghĩa từng cột.",
+              "owner": "Dữ liệu & lineage"
+            },
+            {
+              "title": "Viết src/download.py: tải Premier League (file E0) mọi mùa từ 1997/98 (đã kiểm: mỗi mùa đủ 380 trận) tới 2025/26, theo mẫu …/mmz4281/2021/E0.csv. Các giải khác chỉ tải khi làm phần mở rộng ANOM.",
+              "owner": "Dữ liệu & lineage"
+            },
+            {
+              "title": "Ghi URL, ngày tải và mã SHA-256 của từng file vào data/manifest.csv.",
+              "owner": "Dữ liệu & lineage"
+            },
+            {
+              "title": "Viết docs/data-card.md: nguồn, điều khoản, cột, giai đoạn.",
+              "owner": "Dữ liệu & lineage"
+            },
+            {
+              "title": "Mở docs/lineage.md.",
+              "owner": "Dữ liệu & lineage"
+            },
+            {
+              "title": "File gốc để ở data/raw/, có tên trong .gitignore.",
+              "owner": "Dữ liệu & lineage"
+            }
+          ]
+        },
+        {
+          "title": "P1b · Học và viết phương pháp",
+          "goal": "Ví dụ có lời giải, dữ liệu giả lập → bản đầu của src/outliers.py, anom.py, cusum.py, sprt.py; tests/.",
+          "doneWhen": "Mỗi hàm cho đúng kết quả của ví dụ; test xanh.",
+          "notes": "Vai: EDA & ngoại lai, ANOM, CUSUM, SPRT\nCông cụ: numpy, scipy.stats, pytest",
+          "subs": [
+            {
+              "title": "Mỗi người viết phương pháp của mình trên ví dụ có lời giải và dữ liệu giả lập, trước khi có dữ liệu thật."
+            },
+            {
+              "title": "Ngoại lai: ví dụ Grubbs và generalized ESD của NIST (mục 1.3.5.17).",
+              "owner": "EDA & ngoại lai"
+            },
+            {
+              "title": "ANOM: theo công thức trên trang Minitab, tính tay một bộ tỉ lệ nhỏ rồi so với code.",
+              "owner": "ANOM"
+            },
+            {
+              "title": "CUSUM: ví dụ CUSUM của NIST (mục 6.3.2.3), rồi CUSUM Bernoulli trên chuỗi 0/1 giả lập có điểm đổi cài sẵn.",
+              "owner": "CUSUM"
+            },
+            {
+              "title": "SPRT: chuỗi Bernoulli giả lập với p biết trước; kiểm tỉ lệ báo nhầm gần α.",
+              "owner": "SPRT"
+            },
+            {
+              "title": "Viết unit test bằng pytest cho từng hàm."
+            }
+          ]
+        },
+        {
+          "title": "P2 · Làm sạch và tích hợp",
+          "goal": "data/raw/*.csv → data/clean/*.parquet, file DuckDB, báo cáo chất lượng, docs/data-dictionary.md.",
+          "doneWhen": "Báo cáo chất lượng không còn lỗi chặn; mỗi trọng tài chỉ còn một tên.",
+          "notes": "Vai: Dữ liệu & lineage, EDA & ngoại lai\nCông cụ: pandas, DuckDB; src/clean.py, src/quality.py",
+          "subs": [
+            {
+              "title": "Gộp các mùa thành một bảng; số cột đổi từ 21 (1997/98) tới 132 (2025/26), có mùa giảm; chỉ giữ cột cần."
+            },
+            {
+              "title": "Đọc cả hai kiểu ngày dd/mm/yy và dd/mm/yyyy."
+            },
+            {
+              "title": "Chuẩn hoá tên đội, và tên trọng tài cho phần mở rộng, bằng một bảng ánh xạ: cùng một trọng tài có tới năm cách ghi tên: đủ tên, viết tắt có hoặc không dấu chấm, họ đứng trước, có cả lỗi gõ. Đừng gộp theo họ: hai trọng tài khác nhau có thể cùng họ."
+            },
+            {
+              "title": "Viết luật chất lượng dữ liệu: HST ≤ HS, số thẻ ≥ 0, FTR khớp số bàn; xuất báo cáo chất lượng."
+            },
+            {
+              "title": "Lưu bảng sạch ra Parquet và nạp vào DuckDB (data/clean/)."
+            },
+            {
+              "title": "Viết docs/data-dictionary.md (data dictionary)."
+            }
+          ]
+        },
+        {
+          "title": "P3 · EDA",
+          "goal": "data/clean/ → notebooks/01_eda.ipynb, hình EDA, danh sách mùa Phase I.",
+          "doneWhen": "Có một trang tóm tắt EDA; đã chốt các mùa Phase I và tính tham số chỉ từ chúng.",
+          "notes": "Vai: EDA & ngoại lai, ANOM, CUSUM, SPRT\nCông cụ: pandas, matplotlib, Jupyter",
+          "subs": [
+            {
+              "title": "Thống kê mô tả: trung bình, trung vị, độ lệch chuẩn của bàn, thẻ, cú sút."
+            },
+            {
+              "title": "Box plot số bàn và số thẻ theo mùa."
+            },
+            {
+              "title": "Run-sequence plot tỉ lệ thắng sân nhà theo mùa."
+            },
+            {
+              "title": "Histogram số bàn mỗi trận."
+            },
+            {
+              "title": "Chọn các mùa làm mức bình thường (Phase I / Phase II)."
+            },
+            {
+              "title": "Mọi số đi vào tham số (μ0, σ, p0, p1, tỉ lệ hoà) chỉ tính trên các mùa Phase I; các mùa sau chỉ để vẽ, không để chọn tham số."
+            }
+          ]
+        },
+        {
+          "title": "P4 · Thiết kế phân tích, khoá tham số",
+          "goal": "Kết quả EDA, mùa Phase I → docs/analysis-plan.md, tests/.",
+          "doneWhen": "Tham số đã ghi và commit trước khi chạy Phase II; test xanh.",
+          "notes": "Vai: Trưởng nhóm & kể chuyện, ANOM, CUSUM, SPRT\nCông cụ: numpy, pytest",
+          "subs": [
+            {
+              "title": "Viết docs/analysis-plan.md trước khi xem dữ liệu Phase II: câu hỏi, H0/H1, α, β, k, h."
+            },
+            {
+              "title": "Mô phỏng ARL để chọn k và h."
+            },
+            {
+              "title": "Viết unit test so với ví dụ có lời giải, chẳng hạn ví dụ CUSUM của NIST."
+            }
+          ]
+        },
+        {
+          "title": "P5 · Chạy bốn phương pháp",
+          "goal": "data/clean/, docs/analysis-plan.md → results/*.csv.",
+          "doneWhen": "Chạy lại từ đầu ra đúng results/; số khớp test.",
+          "notes": "Vai: EDA & ngoại lai, ANOM, CUSUM, SPRT\nCông cụ: numpy, scipy.stats, pandas",
+          "subs": [
+            {
+              "title": "Chạy các hàm đã viết ở P1b trên dữ liệu thật: src/outliers.py, anom.py, cusum.py, sprt.py."
+            },
+            {
+              "title": "Đối chiếu CUSUM với giobbu/CUSUM."
+            },
+            {
+              "title": "Ghi kết quả ra results/*.csv."
+            },
+            {
+              "title": "Ghi vào lineage.md: script nào, đọc gì, ra file nào."
+            }
+          ]
+        },
+        {
+          "title": "P6 · Trực quan hoá",
+          "goal": "results/*.csv → src/charts.py, hình PNG hoặc SVG.",
+          "doneWhen": "Mỗi hình có tiêu đề, trục và nguồn dữ liệu.",
+          "notes": "Vai: Dữ liệu & lineage, EDA & ngoại lai, ANOM, CUSUM, SPRT, Demo & tích hợp\nCông cụ: matplotlib hoặc plotly",
+          "subs": [
+            {
+              "title": "Biểu đồ quyết định ANOM."
+            },
+            {
+              "title": "Biểu đồ CUSUM có vạch h."
+            },
+            {
+              "title": "Đường SPRT đi giữa hai ngưỡng."
+            },
+            {
+              "title": "Box plot và strip plot cho ngoại lai."
+            },
+            {
+              "title": "Small multiples: mỗi mùa một ô nhỏ; ở phần mở rộng, mỗi câu lạc bộ một ô."
+            },
+            {
+              "title": "Ghi chú sự kiện lên hình: mùa không khán giả, VAR từ 2019/20."
+            },
+            {
+              "title": "Hình luồng dữ liệu (lineage) và bảng chất lượng dữ liệu cho báo cáo.",
+              "owner": "Dữ liệu & lineage"
+            }
+          ]
+        },
+        {
+          "title": "P7 · Demo",
+          "goal": "data/clean/, src/, results/ → app/streamlit_app.py, kịch bản demo.",
+          "doneWhen": "Demo chạy trơn 3 phút trên máy trình chiếu, không cần mạng.",
+          "notes": "Vai: Dữ liệu & lineage, Demo & tích hợp\nCông cụ: Streamlit",
+          "subs": [
+            {
+              "title": "app/streamlit_app.py đọc data/clean/ và results/, gọi lại các hàm trong src/ khi kéo thanh trượt; chạy được khi không có mạng."
+            },
+            {
+              "title": "Tab \"Dữ liệu\" có báo cáo chất lượng, sơ đồ lineage và nút chạy lại đường ống.",
+              "owner": "Dữ liệu & lineage"
+            },
+            {
+              "title": "Mỗi phương pháp một tab có thanh trượt: ngưỡng ngoại lai; α cho ANOM; k, h cho CUSUM; p0, p1, α, β cho SPRT. Hình cập nhật ngay."
+            },
+            {
+              "title": "Kịch bản demo 3 phút."
+            }
+          ]
+        },
+        {
+          "title": "P8 · Kể chuyện: báo cáo, slide, tập dượt",
+          "goal": "Hình, results/, docs/ → report/, slides/.",
+          "doneWhen": "Mọi mục trong Xong khi nào đã đánh dấu.",
+          "notes": "Vai: Trưởng nhóm & kể chuyện, Dữ liệu & lineage, EDA & ngoại lai, ANOM, CUSUM, SPRT, Demo & tích hợp\nCông cụ: Word hoặc LaTeX; PowerPoint hoặc Google Slides\n\nXong khi nào:\n- Chạy lại từ đầu bằng một lệnh.\n- Có README: cách chạy, nguồn, điều khoản.\n- Không có CSV gốc trên repo công khai.\n- Mọi hình có tiêu đề, trục và nguồn.\n- Có trích dẫn đủ.\n- Đủ chương của từng thành viên.\n- Demo chạy khi không có mạng, từ dữ liệu sạch.\n- Đã tập dượt hai lần, ít nhất một lần đúng thời lượng.",
+          "subs": [
+            {
+              "title": "Viết báo cáo theo dàn ý trên trang đồ án; mỗi người viết chương của mình."
+            },
+            {
+              "title": "Làm slide theo dàn ý trên trang đồ án."
+            },
+            {
+              "title": "Tập dượt hai lần, bấm giờ."
+            },
+            {
+              "title": "Đi qua danh sách Xong khi nào."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "stats-report",
+      "name": "Phân tích thống kê, viết báo cáo",
+      "description": "Từ câu hỏi tới báo cáo, không mô hình học máy: thiết kế, mô tả, kiểm định, ước lượng.",
+      "steps": [
+        {
+          "title": "Câu hỏi và thiết kế",
+          "goal": "Câu hỏi rõ, kế hoạch phân tích chốt trước khi xem kết quả.",
+          "doneWhen": "Kế hoạch phân tích đã ghi và lưu trước khi chạy kiểm định.",
+          "subs": [
+            {
+              "title": "Viết câu hỏi nghiên cứu",
+              "doneWhen": "Một câu, có biến và tổng thể."
+            },
+            {
+              "title": "Viết giả thuyết H0 / H1"
+            },
+            {
+              "title": "Chọn α, chỉ số hiệu ứng, cỡ mẫu (phân tích lực)"
+            },
+            {
+              "title": "Viết kế hoạch phân tích",
+              "doneWhen": "Kiểm định, biến, cách xử lý thiếu và ngoại lai."
+            }
+          ]
+        },
+        {
+          "title": "Dữ liệu",
+          "goal": "Có dữ liệu sạch, biết nguồn và giới hạn.",
+          "doneWhen": "Bảng sạch dựng lại được bằng một lệnh; data card đủ.",
+          "subs": [
+            {
+              "title": "Thu thập dữ liệu",
+              "doneWhen": "Ghi nguồn, ngày lấy, điều khoản."
+            },
+            {
+              "title": "Viết data card và data dictionary"
+            },
+            {
+              "title": "Làm sạch: thiếu, trùng, sai",
+              "doneWhen": "Mỗi luật làm sạch có lý do."
+            },
+            {
+              "title": "Ghi lineage: file nào ra file nào"
+            }
+          ]
+        },
+        {
+          "title": "Thống kê mô tả",
+          "goal": "Thấy hình dạng dữ liệu trước khi kiểm định.",
+          "doneWhen": "Có bảng mô tả và hình phân phối cho mọi biến chính.",
+          "subs": [
+            {
+              "title": "Trung bình, trung vị, độ lệch chuẩn, khoảng tứ phân vị"
+            },
+            {
+              "title": "Histogram, box plot theo nhóm"
+            },
+            {
+              "title": "Tìm ngoại lai, quyết định giữ hay bỏ",
+              "doneWhen": "Lý do ghi ở nhật ký quyết định."
+            }
+          ]
+        },
+        {
+          "title": "Kiểm định và ước lượng",
+          "goal": "Trả lời câu hỏi bằng kiểm định đã chốt, kèm độ lớn hiệu ứng.",
+          "doneWhen": "Mỗi kết quả có p-value, độ lớn hiệu ứng và khoảng tin cậy.",
+          "subs": [
+            {
+              "title": "Kiểm giả định: độc lập, phân phối, phương sai bằng nhau"
+            },
+            {
+              "title": "Chạy kiểm định theo kế hoạch"
+            },
+            {
+              "title": "Hiệu chỉnh khi so nhiều lần"
+            },
+            {
+              "title": "Độ lớn hiệu ứng và khoảng tin cậy"
+            },
+            {
+              "title": "Phân tích độ nhạy",
+              "doneWhen": "Kết luận có đổi khi đổi giả định hay bỏ ngoại lai không."
+            }
+          ]
+        },
+        {
+          "title": "Trực quan hoá",
+          "goal": "Hình nói đúng điều kiểm định nói.",
+          "doneWhen": "Mỗi hình có tiêu đề, trục, đơn vị, nguồn dữ liệu.",
+          "subs": [
+            {
+              "title": "Chọn loại hình theo câu hỏi"
+            },
+            {
+              "title": "Vẽ hình kết quả chính, có khoảng tin cậy"
+            },
+            {
+              "title": "Soát trục, thang đo, màu"
+            }
+          ]
+        },
+        {
+          "title": "Báo cáo",
+          "goal": "Người đọc làm lại được và hiểu giới hạn.",
+          "doneWhen": "Báo cáo đủ phần; chạy lại từ đầu ra đúng số trong báo cáo.",
+          "subs": [
+            {
+              "title": "Viết phương pháp",
+              "doneWhen": "Đủ để người khác làm lại."
+            },
+            {
+              "title": "Viết kết quả",
+              "doneWhen": "Mỗi số trong báo cáo truy được về code."
+            },
+            {
+              "title": "Viết hạn chế và mối đe doạ tới giá trị kết luận"
+            },
+            {
+              "title": "Trích dẫn nguồn dữ liệu và tài liệu"
+            },
+            {
+              "title": "Soát lại toàn bài"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "app-feature",
+      "name": "Tính năng app (iOS / Flutter)",
+      "description": "Một tính năng từ spec tới phát hành: spec, thiết kế, làm, kiểm thử, phát hành.",
+      "steps": [
+        {
+          "title": "Spec",
+          "goal": "Biết tính năng giải quyết việc gì cho ai, và không làm gì.",
+          "doneWhen": "User story và tiêu chí chấp nhận đã được người đặt việc đồng ý.",
+          "subs": [
+            {
+              "title": "Viết user story và tiêu chí chấp nhận"
+            },
+            {
+              "title": "Liệt kê trường hợp biên: offline, lỗi mạng, quyền, dữ liệu rỗng"
+            },
+            {
+              "title": "Chốt phạm vi và những gì không làm"
+            },
+            {
+              "title": "Ước lượng và chia việc"
+            }
+          ]
+        },
+        {
+          "title": "Thiết kế",
+          "goal": "Màn hình, luồng và dữ liệu rõ trước khi viết code.",
+          "doneWhen": "Thiết kế đã review; API và model đã chốt.",
+          "subs": [
+            {
+              "title": "Wireframe / mockup các màn"
+            },
+            {
+              "title": "Luồng điều hướng và trạng thái: đang tải, rỗng, lỗi"
+            },
+            {
+              "title": "Thiết kế API và model dữ liệu"
+            },
+            {
+              "title": "Kế hoạch analytics và feature flag"
+            },
+            {
+              "title": "Review thiết kế"
+            }
+          ]
+        },
+        {
+          "title": "Làm",
+          "goal": "Code chạy đúng spec, sau feature flag.",
+          "doneWhen": "Mọi tiêu chí chấp nhận chạy được trên bản build nội bộ.",
+          "subs": [
+            {
+              "title": "Tạo nhánh và feature flag"
+            },
+            {
+              "title": "Model, repository, gọi API"
+            },
+            {
+              "title": "State management"
+            },
+            {
+              "title": "UI theo design system"
+            },
+            {
+              "title": "Accessibility: cỡ chữ động, VoiceOver / TalkBack",
+              "doneWhen": "Đọc được ở cỡ chữ lớn nhất."
+            },
+            {
+              "title": "Localization: chuỗi đưa ra file dịch"
+            }
+          ]
+        },
+        {
+          "title": "Kiểm thử",
+          "goal": "Bắt lỗi trước người dùng.",
+          "doneWhen": "Test xanh trên CI; không còn lỗi chặn.",
+          "subs": [
+            {
+              "title": "Unit test cho logic"
+            },
+            {
+              "title": "Widget test / UI test"
+            },
+            {
+              "title": "Thử trên máy thật: iOS và Android, máy cũ"
+            },
+            {
+              "title": "Thử offline, mạng chậm, từ chối quyền"
+            },
+            {
+              "title": "Code review"
+            }
+          ]
+        },
+        {
+          "title": "Phát hành",
+          "goal": "Đưa tới người dùng từng phần, theo dõi được.",
+          "doneWhen": "Phát hành cho mọi người; crash và chỉ số ổn định.",
+          "subs": [
+            {
+              "title": "Tăng version và build number"
+            },
+            {
+              "title": "Viết release note"
+            },
+            {
+              "title": "TestFlight / kênh kiểm thử nội bộ"
+            },
+            {
+              "title": "Phát hành theo giai đoạn"
+            },
+            {
+              "title": "Theo dõi crash và chỉ số sau phát hành"
+            },
+            {
+              "title": "Bật cờ cho mọi người, dọn flag cũ"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "blank",
+      "name": "Trống",
+      "description": "Không có bước nào; tự thêm.",
+      "steps": []
+    }
+  ]
+}

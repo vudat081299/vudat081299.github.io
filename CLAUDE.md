@@ -23,6 +23,7 @@ nằm ở CLAUDE.md trong thư mục của nó; Claude Code tự nạp file ấy
 | `web-builder/` | project | design system `wb-*`; nhiều trang link thẳng vào `web-builder.css` |
 | `json-analysis/` | project | công cụ xem, sửa, so JSON |
 | `md-annotate/` | project | nhận xét lên văn bản markdown, gom thành prompt cho AI |
+| `step-planner/` | project | kế hoạch dự án theo bước và bước con, xuất / nhập Markdown |
 | `loto/` | project | thống kê và heatmap xổ số |
 | `read-excel-file-to-table/` | project | đọc file Excel ra bảng |
 | `poem/` | project | thơ Việt, engine Truyện Kiều |

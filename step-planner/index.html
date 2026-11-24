@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Step Planner — kế hoạch từng bước</title>
+<meta name="description" content="Chia dự án thành bước và bước con, theo dõi tiến độ, ghi quyết định, xuất Markdown.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600&family=Be+Vietnam+Pro:wght@400;600&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="css/planner.css">
+<script>
+  // Theme đã lưu đặt trước lần vẽ đầu; chưa lưu thì theo hệ điều hành (REPO-024). Khoá chung cả site.
+  try {
+    var t = localStorage.getItem('hub-theme');
+    if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+  } catch (e) { /* không đọc được thì theo hệ điều hành */ }
+</script>
+<script type="module" src="js/main.js"></script>
+</head>
+<body>
+<a class="skip" href="#board">Bỏ qua tới bảng</a>
+
+<header class="top">
+  <a class="icon-btn" href="../" aria-label="Về trang chủ">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
+  </a>
+  <button type="button" class="ws-btn" id="ws-btn" aria-haspopup="dialog">
+    <span class="ws-name" id="ws-name">Step Planner</span>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+  </button>
+  <div class="overall" id="overall" hidden>
+    <span class="overall-text" id="overall-text"></span>
+    <span class="bar" aria-hidden="true"><i id="overall-bar"></i></span>
+  </div>
+  <button type="button" class="icon-btn" id="theme-btn" aria-label="Đổi giao diện sáng/tối">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16z" class="fill"/></svg>
+  </button>
+</header>
+
+<div class="banner" id="file-note" hidden>
+  Trang đang mở bằng <code>file://</code> nên không chạy được. Chạy <code>python3 -m http.server</code> ở gốc repo,
+  rồi mở <code>http://localhost:8000/step-planner/</code>.
+</div>
+<script>
+  if (location.protocol === 'file:') document.getElementById('file-note').hidden = false;
+</script>
+<div class="banner" id="banner" role="alert" hidden></div>
+
+<main class="wrap" id="app" hidden>
+  <section class="tools" aria-label="Lọc và công cụ">
+    <label class="field search">
+      <span class="sr">Tìm</span>
+      <input type="search" id="q" placeholder="Tìm bước, người, ghi chú" autocomplete="off">
+    </label>
+    <label class="field">
+      <span class="sr">Người làm</span>
+      <select id="owner-filter"></select>
+    </label>
+    <span class="filter-note" id="filter-note" role="status"></span>
+    <span class="tools-gap"></span>
+    <button type="button" class="btn" id="people-btn">Người</button>
+    <button type="button" class="btn" id="import-btn">Nhập</button>
+    <button type="button" class="btn" id="export-btn">Xuất</button>
+  </section>
+
+  <div class="board" id="board" tabindex="-1"></div>
+  <button type="button" class="btn add-step" id="add-step">+ Thêm bước</button>
+
+  <section class="log" aria-labelledby="log-title">
+    <h2 id="log-title">Nhật ký quyết định</h2>
+    <form class="log-form" id="log-form">
+      <label class="field"><span>Ngày</span><input type="date" id="log-date" required></label>
+      <label class="field grow"><span>Quyết định</span><input type="text" id="log-decision" required maxlength="300"></label>
+      <label class="field full"><span>Vì sao</span><textarea id="log-why" rows="2"></textarea></label>
+      <button type="submit" class="btn primary">Ghi</button>
+    </form>
+    <ol class="log-list" id="log-list"></ol>
+  </section>
+</main>
+
+<section class="start wrap" id="start" hidden aria-labelledby="start-title">
+  <h1 id="start-title">Tạo dự án</h1>
+  <p class="muted">Chọn mẫu. Dữ liệu lưu trong trình duyệt này; xuất JSON để giữ hoặc chuyển máy.</p>
+  <div class="tpl-list" id="start-templates"></div>
+  <p><button type="button" class="btn" id="start-import">Nhập từ file</button></p>
+</section>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden>
+  <span id="toast-text"></span>
+  <button type="button" class="btn" id="toast-undo">Hoàn tác</button>
+</div>
+
+<datalist id="people-list"></datalist>
+
+<!-- Dự án: danh sách, mở, đổi tên, nhân bản, xoá, tạo mới -->
+<dialog class="dlg" id="dlg-ws" aria-labelledby="dlg-ws-title">
+  <div class="dlg-head"><h2 id="dlg-ws-title">Dự án</h2><button type="button" class="icon-btn" data-close aria-label="Đóng">×</button></div>
+  <ul class="ws-list" id="ws-list"></ul>
+  <h3>Tạo mới</h3>
+  <form id="ws-new" class="stack">
+    <label class="field"><span>Tên (để trống thì lấy tên mẫu)</span><input type="text" id="ws-new-name" maxlength="120"></label>
+    <fieldset class="tpl-list" id="ws-new-templates"><legend>Mẫu</legend></fieldset>
+    <div class="row-end"><button type="submit" class="btn primary">Tạo</button></div>
+  </form>
+</dialog>
+
+<!-- Sửa / thêm bước con -->
+<dialog class="dlg" id="dlg-sub" aria-labelledby="dlg-sub-title">
+  <form method="dialog" id="sub-form" class="stack">
+    <div class="dlg-head"><h2 id="dlg-sub-title">Bước con</h2><button type="button" class="icon-btn" data-close aria-label="Đóng">×</button></div>
+    <label class="field"><span>Tên</span><input type="text" name="title" required maxlength="300"></label>
+    <div class="grid2">
+      <label class="field"><span>Trạng thái</span><select name="status"></select></label>
+      <label class="field"><span>Hạn</span><input type="date" name="due"></label>
+      <label class="field"><span>Người làm</span><input type="text" name="owner" list="people-list" maxlength="80"></label>
+      <label class="field"><span>Thuộc bước</span><select name="step"></select></label>
+    </div>
+    <label class="field"><span>Xong khi</span><input type="text" name="doneWhen" maxlength="300"></label>
+    <label class="field"><span>Ghi chú</span><textarea name="notes" rows="4"></textarea></label>
+    <div class="row-end">
+      <button type="button" class="btn danger" id="sub-del">Xoá</button>
+      <button type="button" class="btn" id="sub-dup">Nhân bản</button>
+      <span class="tools-gap"></span>
+      <button type="button" class="btn" data-close>Huỷ</button>
+      <button type="submit" class="btn primary" value="save">Lưu</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Sửa / thêm bước -->
+<dialog class="dlg" id="dlg-step" aria-labelledby="dlg-step-title">
+  <form method="dialog" id="step-form" class="stack">
+    <div class="dlg-head"><h2 id="dlg-step-title">Bước</h2><button type="button" class="icon-btn" data-close aria-label="Đóng">×</button></div>
+    <label class="field"><span>Tên</span><input type="text" name="title" required maxlength="200"></label>
+    <label class="field"><span>Mục tiêu</span><input type="text" name="goal" maxlength="400"></label>
+    <label class="field"><span>Xong khi</span><input type="text" name="doneWhen" maxlength="400"></label>
+    <label class="field"><span>Ghi chú</span><textarea name="notes" rows="4"></textarea></label>
+    <div class="row-end">
+      <button type="button" class="btn danger" id="step-del">Xoá bước</button>
+      <span class="tools-gap"></span>
+      <button type="button" class="btn" data-close>Huỷ</button>
+      <button type="submit" class="btn primary" value="save">Lưu</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Quay lại bước này -->
+<dialog class="dlg" id="dlg-revisit" aria-labelledby="dlg-revisit-title">
+  <form method="dialog" id="revisit-form" class="stack">
+    <div class="dlg-head"><h2 id="dlg-revisit-title">Quay lại bước này</h2><button type="button" class="icon-btn" data-close aria-label="Đóng">×</button></div>
+    <p class="muted" id="revisit-step"></p>
+    <label class="field"><span>Vì sao phải quay lại</span><input type="text" name="reason" maxlength="300" required></label>
+    <div class="row-end">
+      <button type="button" class="btn" id="revisit-clear">Bỏ đánh dấu</button>
+      <span class="tools-gap"></span>
+      <button type="button" class="btn" data-close>Huỷ</button>
+      <button type="submit" class="btn primary" value="save">Đánh dấu</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Người trong dự án -->
+<dialog class="dlg" id="dlg-people" aria-labelledby="dlg-people-title">
+  <form method="dialog" id="people-form" class="stack">
+    <div class="dlg-head"><h2 id="dlg-people-title">Người</h2><button type="button" class="icon-btn" data-close aria-label="Đóng">×</button></div>
+    <label class="field"><span>Mỗi dòng một người hoặc một vai</span><textarea name="people" rows="7"></textarea></label>
+    <label class="field"><span>Tôi là (cho bộ lọc "Việc của tôi", chỉ lưu ở máy này)</span><select name="me"></select></label>
+    <div class="row-end"><button type="button" class="btn" data-close>Huỷ</button><button type="submit" class="btn primary" value="save">Lưu</button></div>
+  </form>
+</dialog>
+
+<!-- Xuất -->
+<dialog class="dlg wide" id="dlg-export" aria-labelledby="dlg-export-title">
+  <div class="dlg-head"><h2 id="dlg-export-title">Xuất</h2><button type="button" class="icon-btn" data-close aria-label="Đóng">×</button></div>
+  <fieldset class="seg" id="export-kind">
+    <legend class="sr">Định dạng</legend>
+    <label><input type="radio" name="export-kind" value="md" checked> Markdown</label>
+    <label><input type="radio" name="export-kind" value="json"> JSON dự án này</label>
+    <label><input type="radio" name="export-kind" value="backup"> JSON sao lưu tất cả</label>
+  </fieldset>
+  <label class="field"><span class="sr">Nội dung xuất</span><textarea id="export-text" rows="14" readonly spellcheck="false"></textarea></label>
+  <div class="row-end">
+    <span class="muted" id="export-status" role="status"></span>
+    <span class="tools-gap"></span>
+    <button type="button" class="btn" id="export-copy">Chép</button>
+    <button type="button" class="btn primary" id="export-download">Tải file</button>
+  </div>
+</dialog>
+
+<!-- Nhập -->
+<dialog class="dlg wide" id="dlg-import" aria-labelledby="dlg-import-title">
+  <div class="dlg-head"><h2 id="dlg-import-title">Nhập</h2><button type="button" class="icon-btn" data-close aria-label="Đóng">×</button></div>
+  <p class="muted">File .md hoặc .json, hoặc dán chữ. Luôn tạo dự án mới, không ghi đè.</p>
+  <label class="field"><span>Chọn file</span><input type="file" id="import-file" accept=".md,.markdown,.txt,.json,text/markdown,application/json,text/plain"></label>
+  <label class="field"><span>Hoặc dán</span><textarea id="import-text" rows="10" spellcheck="false"></textarea></label>
+  <p class="preview" id="import-preview" role="status"></p>
+  <div class="row-end">
+    <button type="button" class="btn" data-close>Huỷ</button>
+    <button type="button" class="btn primary" id="import-go" disabled>Nhập thành dự án mới</button>
+  </div>
+</dialog>
+
+<!-- Hỏi lại / nhập một dòng -->
+<dialog class="dlg" id="dlg-ask" aria-labelledby="dlg-ask-title">
+  <form method="dialog" id="ask-form" class="stack">
+    <div class="dlg-head"><h2 id="dlg-ask-title"></h2></div>
+    <p id="ask-text"></p>
+    <label class="field" id="ask-field"><span id="ask-label"></span><input type="text" id="ask-input" maxlength="120"></label>
+    <div class="row-end">
+      <button type="button" class="btn" data-close>Huỷ</button>
+      <button type="submit" class="btn primary" id="ask-ok" value="ok">OK</button>
+    </div>
+  </form>
+</dialog>
+</body>
+</html>
