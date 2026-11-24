@@ -43,6 +43,10 @@ const check = (name, ok, detail = '') => {
   await page.waitForSelector('#start:not([hidden]) .tpl');
   const tplIds = await page.$$eval('#start .tpl', (bs) => bs.map((b) => b.dataset.tpl));
   check('màn đầu: đủ năm mẫu', tplIds.length === 5, tplIds.join(','));
+  // Nút đóng hộp không lưu ghi "Đóng": "Huỷ" là tên một trạng thái.
+  const closeBtns = await page.$$eval('dialog button', (bs) => bs.filter((b) => b.textContent.trim() && (b.hasAttribute('data-close') || b.textContent.trim() === 'Huỷ'))
+    .map((b) => b.textContent.trim()));
+  check('hộp thoại: nút đóng ghi "Đóng", không ghi "Huỷ"', closeBtns.length >= 8 && closeBtns.every((t) => t === 'Đóng'), [...new Set(closeBtns)].join(','));
 
   // Tạo từ từng mẫu: số bước và bước con khớp templates.json.
   const tplData = await page.evaluate(async () => (await (await fetch('data/templates.json')).json()).templates);

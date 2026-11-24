@@ -43,10 +43,9 @@
 
 - Sáu trạng thái (PLAN-003). Bỏ qua: việc không cần với dự án này. Huỷ: đã quyết không làm, giữ thẻ để nhớ vì sao.
 - Tiến độ = xong / (tổng − bỏ qua − huỷ). "Tiếp theo" chỉ tô một thẻ: bước con đầu tiên không xong, không bỏ qua, không
-  huỷ của bước đầu tiên còn việc.
+  huỷ của bước đầu tiên còn việc. Hạn đã qua thì báo "(trễ)", trừ thẻ xong, bỏ qua, huỷ.
 - Bấm chip: chưa làm → đang làm → xong → chưa làm; bị chặn → đang làm; bỏ qua, huỷ → chưa làm. Bị chặn, bỏ qua, huỷ chọn
   trong hộp sửa; chọn Huỷ thì hiện ô "Vì sao huỷ". Thẻ huỷ: tên gạch, lý do trong thân thẻ (cắt và "Xem thêm" như ghi chú).
-  Hạn đã qua thì báo "(trễ)", trừ thẻ xong, bỏ qua, huỷ.
 - Bấm vào thẻ (ngoài nút) là mở hộp sửa. Mỗi thẻ chỉ hai điểm dừng Tab: tên (mở sửa) và chip.
 - Nút phụ (dời, nhân bản, xoá, cần làm lại, tài liệu, nhãn kẹp, "Xem thêm") có `tabindex=-1`. Bàn phím làm cùng việc: Alt
   + ← → trên tên bước con, Alt + ↑ ↓ trên tên bước, ô "Thuộc bước" / "Vị trí" và các nút trong hộp sửa.
@@ -65,7 +64,8 @@
 - Xoá bước con, quyết định, tài liệu: một bấm. Xoá bước còn bước con: hỏi lại. Sau khi xoá, focus nhảy vào Hoàn tác của
   toast (15 giây); Ctrl/Cmd + Z cũng hoàn tác khi không gõ chữ và không có hộp thoại mở.
 - Hoàn tác tìm lại dự án và bước theo id (tab khác có thể đã thay `state`). Xoá dự án hỏi lại, không hoàn tác.
-- Hộp sửa: mở thì focus ô đầu; tên là textarea tự cao, Enter lưu. Esc, × hay Huỷ khi chữ đã đổi thì hỏi "Bỏ thay đổi?".
+- Hộp sửa: mở thì focus ô đầu; tên là textarea tự cao, Enter lưu. Esc, × hay Đóng khi chữ đã đổi thì hỏi "Bỏ thay đổi?".
+  Nút đóng không lưu của mọi hộp ghi "Đóng", không "Huỷ" (trùng tên trạng thái).
 - Ghi chú bước gập dưới tên bước. Thẻ cao theo nội dung (`--card-min` … `--card-max`); vượt max thì thân bị cắt, mờ dần,
   "Xem thêm" mở cả thẻ. Link http(s) trong ghi chú bấm được. Vẽ lại giữ ghi chú đang mở, thẻ đã mở, chỗ cuộn ngang.
 - Tài liệu (PLAN-011): cột bước liệt kê tài liệu của bước dưới tên, nút phụ "Tài liệu" để thêm. Thẻ chỉ có nhãn kẹp + số
