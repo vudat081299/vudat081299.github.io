@@ -223,7 +223,7 @@ function closing(s, from, mark) {
     if (s[k] === '\\') { k++; continue; }
     if (s[k] === '`') { const run = /^`+/.exec(s.slice(k))[0]; const e = s.indexOf(run, k + run.length); if (e > 0) { k = e + run.length - 1; continue; } }
     if (s.startsWith(mark, k) && !/\s/.test(s[k - 1]) && (mark.length === 2 || s[k + 1] !== mark)) {
-      if (mark === '_' && /[\p{L}\p{N}]/u.test(s[k + 1] || '')) continue;
+      if (mark[0] === '_' && /[\p{L}\p{N}]/u.test(s[k + mark.length] || '')) continue; // `_` / `__` dính chữ sau: không đóng
       return k;
     }
   }

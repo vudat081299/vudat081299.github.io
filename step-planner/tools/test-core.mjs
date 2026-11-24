@@ -296,5 +296,10 @@ check('bước con có ghi chú mở bằng rào, ngay sau tài liệu của bư
   check('Markdown đi rồi về: 1500 dự án ngẫu nhiên giữ nguyên', !bad.length, bad.join(' | '));
 }
 
+/* `__` trong chữ (tên biến Python, `obj.__dict__`) không mở in đậm nếu chỗ đóng dính chữ phía sau. */
+const under = (t) => inline(t).map((n) => n.t + ':' + (n.v ?? '')).join('|');
+check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x.__len và y.__len') === 'text:a = x.__len và y.__len'
+  && under('__đậm__ thường') === 'strong:|text: thường' && under('ten_bien_dai') === 'text:ten_bien_dai', under('a = x.__len và y.__len'));
+
 if (fails) { console.log(`test-core: ${fails} LỖI`); process.exit(1); }
 console.log('test-core: OK');
