@@ -1576,7 +1576,7 @@ input[type=range]{accent-color:var(--green-hi)}
           </div>
           <p class="demo-out" id="b2-2-calc-out">—</p>
         </div>
-        <p>HDFS dành cho file rất lớn (100 MB tới vài TB), ghi một lần đọc nhiều lần (chỉ cho nối thêm), trên phần cứng phổ thông. Một Namenode giữ danh mục trong RAM (file nào gồm khối nào, khối nằm ở Datanode nào), nhiều Datanode giữ các khối. File cắt thành khối 128 MB, mỗi khối thường có 3 bản trên 3 node khác nhau; khối lớn để danh mục nhỏ và ít trao đổi mạng, nên hàng triệu file nhỏ, mỗi file một mục riêng trong danh mục, làm đầy RAM Namenode dù tổng dung lượng chẳng bao nhiêu.</p>
+        <p>HDFS dành cho file rất lớn (100 MB tới vài TB), ghi một lần đọc nhiều lần (chỉ cho nối thêm), trên phần cứng phổ thông. File được cắt thành khối 128 MB, mỗi khối thường có 3 bản trên 3 máy khác nhau, nên một máy hỏng vẫn còn bản khác. Một máy chủ tên là Namenode giữ danh mục mọi file và khối trong RAM (<a href="#b2-2-kien-truc">2.2.2</a>); khối lớn thì danh mục nhỏ, còn hàng triệu file nhỏ thì mỗi file chiếm một mục, làm đầy RAM dù tổng dung lượng chẳng bao nhiêu.</p>
         <details class="more">
           <summary>Vì sao chỉ nối thêm, khối cuối ra sao, và slide ghi 64 MB là sao?</summary>
           <div class="more-body">
@@ -1602,48 +1602,45 @@ input[type=range]{accent-color:var(--green-hi)}
       <header class="node-h"><span class="node-k">2.2.2</span><h3 class="node-t">Kiến trúc: Namenode và Datanode</h3></header>
       <div class="node-body">
         <figure class="dg"><div class="dg-scroll">
-          <svg viewBox="0 0 700 300" role="img" aria-label="Kiến trúc HDFS: client hỏi Namenode về metadata, rồi đọc ghi khối trực tiếp với các Datanode nằm trên hai rack; Namenode ra lệnh khối cho Datanode; các Datanode sao chép khối cho nhau">
-            <circle cx="90" cy="80" r="40" class="f-surface s-ink1" stroke-width="1.5"/>
-            <text x="90" y="85" class="t-h t-c">Client</text>
-            <rect x="260" y="30" width="170" height="56" rx="10" class="f-acc"/>
-            <text x="345" y="56" class="t-h t-on t-c">Namenode</text>
-            <text x="345" y="74" class="t-m t-on t-c">master</text>
-            <rect x="470" y="22" width="220" height="72" rx="8" class="f-sunk s-line"/>
-            <text x="482" y="42" class="t-m">Metadata (tên, số bản sao…):</text>
-            <text x="482" y="62" class="t-m t-mono">/home/foo/data, 3, …</text>
-            <text x="482" y="82" class="t-m">tên → khối → datanode</text>
-            <path d="M430 58 L464 58" class="s-ink" marker-end="url(#arr)"/>
-            <path d="M127.5 66.1 L254 52.2" class="s-acc" stroke-width="1.6" marker-end="url(#arr-a)"/>
-            <text x="190" y="46" class="t-m t-c">metadata ops</text>
-            <rect x="40" y="170" width="290" height="100" rx="10" class="f-bg s-line"/>
-            <rect x="370" y="170" width="290" height="100" rx="10" class="f-bg s-line"/>
-            <text x="185" y="290" class="t-m t-c">Rack 1</text><text x="515" y="290" class="t-m t-c">Rack 2</text>
+          <svg viewBox="0 0 700 310" role="img" aria-label="Bốn kênh trong HDFS: một, client hỏi Namenode vị trí và nhận danh sách Datanode; hai, client đọc ghi dữ liệu thẳng với Datanode; ba, Datanode gửi heartbeat và block report lên Namenode, Namenode gửi lệnh chép, xoá khối kèm câu trả lời; bốn, Datanode chép khối cho nhau, kể cả sang rack khác">
+            <circle cx="95" cy="90" r="40" class="f-surface s-ink1" stroke-width="1.5"/>
+            <text x="95" y="95" class="t-h t-c">Client</text>
+            <rect x="400" y="30" width="170" height="60" rx="10" class="f-acc"/>
+            <text x="485" y="56" class="t-h t-on t-c">Namenode</text>
+            <text x="485" y="76" class="t-m t-on t-c">danh mục trong RAM</text>
+            <path d="M140.8 85.5 L394 60.6" class="s-acc" stroke-width="1.6" marker-start="url(#arr-a)" marker-end="url(#arr-a)"/>
+            <text x="265" y="60" class="t-m t-c">① hỏi “ở đâu?”</text>
+            <text x="270" y="96" class="t-m t-c">trả danh sách Datanode</text>
+            <rect x="40" y="186" width="290" height="114" rx="10" class="f-bg s-line"/>
+            <rect x="370" y="186" width="290" height="114" rx="10" class="f-bg s-line"/>
+            <text x="52" y="203" class="t-m">Rack 1</text><text x="382" y="203" class="t-m">Rack 2</text>
             <g>
-              <rect x="56" y="182" width="78" height="76" rx="6" class="f-surface s-line"/>
-              <rect x="146" y="182" width="78" height="76" rx="6" class="f-surface s-line"/>
-              <rect x="236" y="182" width="78" height="76" rx="6" class="f-surface s-line"/>
-              <rect x="386" y="182" width="78" height="76" rx="6" class="f-surface s-line"/>
-              <rect x="476" y="182" width="78" height="76" rx="6" class="f-surface s-line"/>
-              <rect x="566" y="182" width="78" height="76" rx="6" class="f-surface s-line"/>
-              <text x="95" y="250" class="t-m t-c">DN1</text><text x="185" y="250" class="t-m t-c">DN2</text><text x="275" y="250" class="t-m t-c">DN3</text>
-              <text x="425" y="250" class="t-m t-c">DN4</text><text x="515" y="250" class="t-m t-c">DN5</text><text x="605" y="250" class="t-m t-c">DN6</text>
-              <rect x="66" y="192" width="16" height="16" class="f-c1"/><rect x="88" y="192" width="16" height="16" class="f-c2"/><rect x="66" y="214" width="16" height="16" class="f-c3"/>
-              <rect x="156" y="192" width="16" height="16" class="f-c2"/><rect x="178" y="192" width="16" height="16" class="f-c4"/>
-              <rect x="246" y="192" width="16" height="16" class="f-c3"/><rect x="268" y="192" width="16" height="16" class="f-c4"/>
-              <rect x="396" y="192" width="16" height="16" class="f-c1"/><rect x="418" y="192" width="16" height="16" class="f-c3"/>
-              <rect x="486" y="192" width="16" height="16" class="f-c1"/><rect x="508" y="192" width="16" height="16" class="f-c4"/>
-              <rect x="576" y="192" width="16" height="16" class="f-c2"/>
+              <rect x="56" y="212" width="78" height="76" rx="6" class="f-surface s-line"/>
+              <rect x="146" y="212" width="78" height="76" rx="6" class="f-surface s-line"/>
+              <rect x="236" y="212" width="78" height="76" rx="6" class="f-surface s-line"/>
+              <rect x="386" y="212" width="78" height="76" rx="6" class="f-surface s-line"/>
+              <rect x="476" y="212" width="78" height="76" rx="6" class="f-surface s-line"/>
+              <rect x="566" y="212" width="78" height="76" rx="6" class="f-surface s-line"/>
+              <text x="95" y="280" class="t-m t-c">DN1</text><text x="185" y="280" class="t-m t-c">DN2</text><text x="275" y="280" class="t-m t-c">DN3</text>
+              <text x="425" y="280" class="t-m t-c">DN4</text><text x="515" y="280" class="t-m t-c">DN5</text><text x="605" y="280" class="t-m t-c">DN6</text>
+              <rect x="66" y="222" width="16" height="16" class="f-c1"/><rect x="88" y="222" width="16" height="16" class="f-c2"/><rect x="66" y="244" width="16" height="16" class="f-c3"/>
+              <rect x="156" y="222" width="16" height="16" class="f-c2"/><rect x="178" y="222" width="16" height="16" class="f-c4"/>
+              <rect x="246" y="222" width="16" height="16" class="f-c3"/><rect x="268" y="222" width="16" height="16" class="f-c4"/>
+              <rect x="396" y="222" width="16" height="16" class="f-c1"/><rect x="418" y="222" width="16" height="16" class="f-c3"/>
+              <rect x="486" y="222" width="16" height="16" class="f-c1"/><rect x="508" y="222" width="16" height="16" class="f-c4"/>
+              <rect x="576" y="222" width="16" height="16" class="f-c2"/>
             </g>
-            <path d="M110 119.9 L99.3 182" class="s-acc" stroke-width="1.6" marker-start="url(#arr-a)"/>
-            <text x="78" y="150" class="t-m">read</text>
-            <path d="M122.7 103.1 L396.4 177" class="s-acc" stroke-width="1.6" marker-end="url(#arr-a)"/>
-            <text x="260" y="136" class="t-m">write</text>
-            <path d="M377.3 86 L500.5 178.4" class="s-ink dash" marker-end="url(#arr)"/>
-            <text x="450" y="128" class="t-m">block ops</text>
-            <path d="M436 222 L470 222" class="s-ink" stroke-width="1.6" marker-end="url(#arr)"/>
+            <path d="M95 136 L95 206" class="s-acc" stroke-width="2" marker-start="url(#arr-a)" marker-end="url(#arr-a)"/>
+            <text x="105" y="160" class="t-m">② đọc, ghi dữ liệu</text>
+            <path d="M450 212 L450 96" class="s-ink" stroke-width="1.4" marker-end="url(#arr)"/>
+            <text x="442" y="140" class="t-m t-e">③ heartbeat 3 giây,</text><text x="442" y="156" class="t-m t-e">block report</text>
+            <path d="M520 90 L520 206" class="s-ink dash" stroke-width="1.4" marker-end="url(#arr)"/>
+            <text x="528" y="140" class="t-m">lệnh chép, xoá khối</text><text x="528" y="156" class="t-m">(kèm câu trả lời)</text>
+            <path d="M314 262 L380 262" class="s-ink" stroke-width="1.6" marker-end="url(#arr)"/>
+            <text x="350" y="252" class="t-m t-c">④</text>
           </svg>
-        </div><figcaption>Mỗi màu là một khối; mỗi khối có bản sao trên hai rack; mũi tên ngắn DN4 → DN5 là Datanode chép khối cho nhau. Dữ liệu đi thẳng giữa client và Datanode, không qua Namenode.</figcaption></figure>
-        <p>Danh mục ấy là không gian tên (cây thư mục và tên file) cùng metadata của từng file. Datanode, xếp trong các rack (tủ máy), lưu khối, gửi nhịp tim (heartbeat) 3 giây một lần và định kỳ gửi block report (danh sách khối mình có); mất heartbeat thì Namenode coi là hỏng.</p>
+        </div><figcaption>① Client hỏi Namenode. ② Dữ liệu đi thẳng giữa client và Datanode, không qua Namenode. ③ Datanode báo cáo lên; Namenode gửi lệnh kèm câu trả lời. ④ Datanode chép khối cho nhau, kể cả sang rack khác. Mỗi màu ô vuông là một khối; khối nào cũng có bản trên cả hai rack.</figcaption></figure>
+        <p>Danh mục của Namenode gồm cây thư mục, file nào gồm khối nào, khối nào nằm ở Datanode nào; các Datanode, xếp trong các rack (tủ máy), giữ chính các khối. Client chỉ hỏi Namenode “ở đâu” (①), rồi tự đọc ghi dữ liệu thẳng với Datanode (②), nên dữ liệu không bao giờ đi qua Namenode. Namenode không tự gọi Datanode: Datanode gửi heartbeat (“tôi còn sống”) 3 giây một lần và block report (danh sách khối mình giữ) định kỳ, Namenode gửi lệnh chép hay xoá khối kèm câu trả lời (③); Datanode chép khối cho nhau (④).</p>
         <details class="more">
           <summary>Namenode và Datanode còn giữ, còn làm những gì?</summary>
           <div class="more-body">
@@ -1651,6 +1648,13 @@ input[type=range]{accent-color:var(--green-hi)}
               <div class="card acc"><b>Namenode (master)</b><ul><li>Cấu hình cụm, bộ máy nhân bản khối, theo dõi Datanode.</li><li>Metadata trong RAM không phân trang, gồm danh sách file, khối của mỗi file, Datanode của mỗi khối, thuộc tính (thời gian tạo, hệ số nhân bản).</li><li>Nhật ký giao dịch (EditLog) ghi mọi lần tạo, xoá file.</li></ul></div>
               <div class="card"><b>Datanode (slave)</b><ul><li>Máy chủ khối: lưu khối như file thường trên FS cục bộ (vd ext3), kèm metadata khối (CRC).</li><li>Chuyển tiếp dữ liệu cho Datanode khác trong đường ống ghi.</li></ul></div>
             </div>
+          </div>
+        </details>
+        <details class="more">
+          <summary>Vì sao Namenode cần block report, và khi nào Datanode bị coi là chết?</summary>
+          <div class="more-body">
+            <p>Đĩa của Namenode chỉ lưu phần tên file → danh sách khối (FsImage và EditLog, <a href="#b2-2-chiu-loi">2.2.5</a>). Phần khối → Datanode chỉ nằm trong RAM: mỗi lần khởi động, Namenode dựng lại nó từ block report. Trong lúc chờ đủ báo cáo, cụm ở safemode: đọc được, chưa ghi được.</p>
+            <p>Heartbeat mặc định 3 giây (<code>dfs.heartbeat.interval</code>), block report đầy đủ mặc định 6 giờ (<code>dfs.blockreport.intervalMsec</code>); giữa hai lần, Datanode báo ngay từng khối vừa nhận hay vừa xoá. Mất heartbeat khoảng 10 phút rưỡi thì Namenode coi Datanode là chết và ra lệnh chép bù các khối thiếu bản (<a href="#b2-2-ban-sao">2.2.3</a>).</p>
           </div>
         </details>
       </div>
@@ -1706,36 +1710,90 @@ input[type=range]{accent-color:var(--green-hi)}
       <header class="node-h"><span class="node-k">2.2.4</span><h3 class="node-t">Ghi theo đường ống, đọc có kiểm tổng</h3></header>
       <div class="node-body">
         <figure class="dg"><div class="dg-scroll">
-          <svg viewBox="0 0 700 290" role="img" aria-label="Luồng ghi HDFS bảy bước: client tạo file, báo Namenode tạo tên file, ghi gói tin vào Datanode thứ nhất, gói chảy tiếp sang Datanode hai và ba, xác nhận chảy ngược về, client đóng file và báo Namenode hoàn tất">
-            <rect x="20" y="20" width="330" height="110" rx="10" class="f-bg s-line"/>
-            <text x="30" y="122" class="t-m">máy client</text>
-            <rect x="36" y="40" width="90" height="44" rx="6" class="f-c2" fill-opacity=".25"/>
-            <text x="81" y="60" class="t-b t-c" font-weight="600">HDFS</text><text x="81" y="76" class="t-b t-c" font-weight="600">client</text>
-            <rect x="200" y="32" width="136" height="36" rx="6" class="f-surface s-acc"/><text x="268" y="55" class="t-m t-c">DistributedFileSystem</text>
-            <rect x="200" y="78" width="136" height="36" rx="6" class="f-surface s-acc"/><text x="268" y="101" class="t-m t-c">FSDataOutputStream</text>
-            <path d="M126 52 L194 52" class="s-acc dash" marker-end="url(#arr-a)"/><text x="162" y="46" class="t-m t-c">1 create</text>
-            <path d="M126 75.5 L194.2 91.6" class="s-acc dash" marker-end="url(#arr-a)"/><text x="160" y="77" class="t-m t-c">3 write</text>
-            <path d="M126 81.2 L194.4 107.4" class="s-acc dash" marker-end="url(#arr-a)"/><text x="150" y="120" class="t-m t-c">6 close</text>
-            <rect x="520" y="32" width="150" height="70" rx="10" class="f-acc"/><text x="595" y="64" class="t-h t-on t-c">Namenode</text>
-            <path d="M336 46 L514 46" class="s-acc dash" marker-end="url(#arr-a)"/><text x="434" y="40" class="t-m t-c">2 create (tạo tên file)</text>
-            <path d="M336 59.8 C420 70 470 80 514 83.8" class="f-none s-acc dash" marker-end="url(#arr-a)"/><text x="430" y="92" class="t-m t-c">7 complete</text>
-            <rect x="70" y="200" width="150" height="56" rx="8" class="f-surface s-line"/><text x="145" y="233" class="t-b t-c" font-weight="600">Datanode 1</text>
-            <rect x="290" y="200" width="150" height="56" rx="8" class="f-surface s-line"/><text x="365" y="233" class="t-b t-c" font-weight="600">Datanode 2</text>
-            <rect x="510" y="200" width="150" height="56" rx="8" class="f-surface s-line"/><text x="585" y="233" class="t-b t-c" font-weight="600">Datanode 3</text>
-            <path d="M252.2 114 L160 196" class="s-acc" stroke-width="1.6" marker-end="url(#arr-a)"/><text x="160" y="160" class="t-m">4 write packet</text>
-            <path d="M185.2 200 L278.8 122.6" class="s-ink dash" marker-end="url(#arr)"/><text x="244" y="172" class="t-m">5 ack</text>
-            <path d="M220 220 L284 220" class="s-acc" stroke-width="1.6" marker-end="url(#arr-a)"/><text x="254" y="214" class="t-m t-c">4</text>
-            <path d="M290 240 L226 240" class="s-ink dash" marker-end="url(#arr)"/><text x="254" y="254" class="t-m t-c">5</text>
-            <path d="M440 220 L504 220" class="s-acc" stroke-width="1.6" marker-end="url(#arr-a)"/><text x="474" y="214" class="t-m t-c">4</text>
-            <path d="M510 240 L446 240" class="s-ink dash" marker-end="url(#arr)"/><text x="474" y="254" class="t-m t-c">5</text>
-            <text x="365" y="282" class="t-m t-c">đường ống Datanode: gói đi xuôi, xác nhận đi ngược</text>
+          <svg viewBox="0 0 700 352" role="img" aria-label="Luồng ghi HDFS theo thứ tự: client nhờ Namenode tạo tên file, xin chỗ cho khối và nhận ba Datanode; client gửi gói dữ liệu cho Datanode 1, gói được chuyền sang Datanode 2 rồi 3; xác nhận chạy ngược về client; lặp tới khi đủ khối rồi xin chỗ cho khối kế; cuối cùng client báo Namenode đóng file">
+            <path d="M70 44 L70 294" class="s-line dash"/>
+            <path d="M70 316 L70 344" class="s-line dash"/>
+            <path d="M215 44 L215 294" class="s-line dash"/>
+            <path d="M215 316 L215 344" class="s-line dash"/>
+            <path d="M360 44 L360 294" class="s-line dash"/>
+            <path d="M360 316 L360 344" class="s-line dash"/>
+            <path d="M495 44 L495 294" class="s-line dash"/>
+            <path d="M495 316 L495 344" class="s-line dash"/>
+            <path d="M630 44 L630 294" class="s-line dash"/>
+            <path d="M630 316 L630 344" class="s-line dash"/>
+            <rect x="15" y="10" width="110" height="34" rx="8" class="f-acc"/><text x="70" y="32" class="t-b t-on t-c" font-weight="600">Namenode</text>
+            <rect x="160" y="10" width="110" height="34" rx="8" class="f-surface s-ink1"/><text x="215" y="32" class="t-b t-c" font-weight="600">Client</text>
+            <rect x="305" y="10" width="110" height="34" rx="8" class="f-surface s-line"/><text x="360" y="32" class="t-b t-c" font-weight="600">Datanode 1</text>
+            <rect x="440" y="10" width="110" height="34" rx="8" class="f-surface s-line"/><text x="495" y="32" class="t-b t-c" font-weight="600">Datanode 2</text>
+            <rect x="575" y="10" width="110" height="34" rx="8" class="f-surface s-line"/><text x="630" y="32" class="t-b t-c" font-weight="600">Datanode 3</text>
+            <path d="M215 72 L76 72" class="s-acc" stroke-width="1.6" marker-end="url(#arr-a)"/>
+            <text x="142.5" y="66" class="t-m t-c">1 tạo tên file</text>
+            <path d="M215 98 L76 98" class="s-acc" stroke-width="1.6" marker-end="url(#arr-a)"/>
+            <text x="142.5" y="92" class="t-m t-c">2 xin chỗ cho khối</text>
+            <path d="M70 124 L209 124" class="s-ink dash" marker-end="url(#arr)"/>
+            <text x="142.5" y="118" class="t-m t-c">3 trả DN1, DN2, DN3</text>
+            <path d="M215 150 L354 150" class="s-acc" stroke-width="2" marker-end="url(#arr-a)"/>
+            <text x="287.5" y="144" class="t-m t-c">4 gói dữ liệu</text>
+            <path d="M360 176 L489 176" class="s-acc" stroke-width="1.6" marker-end="url(#arr-a)"/>
+            <text x="427.5" y="170" class="t-m t-c">5 chuyền gói</text>
+            <path d="M495 202 L624 202" class="s-acc" stroke-width="1.6" marker-end="url(#arr-a)"/>
+            <text x="562.5" y="196" class="t-m t-c">5 chuyền gói</text>
+            <path d="M630 228 L501 228" class="s-ink dash" marker-end="url(#arr)"/>
+            <text x="562.5" y="222" class="t-m t-c">6 ack</text>
+            <path d="M495 254 L366 254" class="s-ink dash" marker-end="url(#arr)"/>
+            <text x="427.5" y="248" class="t-m t-c">6 ack</text>
+            <path d="M360 280 L221 280" class="s-ink dash" marker-end="url(#arr)"/>
+            <text x="287.5" y="274" class="t-m t-c">6 ack</text>
+            <text x="350" y="309" class="t-m t-c">lặp 4–6 tới khi khối đủ 128 MB, rồi quay lại 2 cho khối kế</text>
+            <path d="M215 332 L76 332" class="s-acc" stroke-width="1.6" marker-end="url(#arr-a)"/>
+            <text x="142.5" y="326" class="t-m t-c">7 đóng file</text>
           </svg>
-        </div><figcaption>Ghi xong đủ bản sao của một khối, client mới ghi khối kế tiếp.</figcaption></figure>
-        <p>Ghi theo đường ống: client ghi khối vào Datanode thứ nhất, Datanode này chuyển tiếp cho node kế, cứ thế tới node cuối. Khi đọc, client lấy từng khối từ bản gần nhất và kiểm checksum CRC32C (mã kiểm tổng, một mã cho mỗi 512 byte), sai thì đọc bản sao khác.</p>
+        </div><figcaption>Đọc từ trên xuống. Nét liền là yêu cầu hoặc dữ liệu, nét đứt là trả lời hoặc xác nhận. Namenode chỉ có mặt ở bước 1, 2, 3 và 7.</figcaption></figure>
+        <p>Ghi: với mỗi khối, client xin Namenode ba Datanode, gửi dữ liệu cho máy thứ nhất; máy này chuyền cho máy thứ hai, máy thứ hai chuyền cho máy thứ ba, rồi xác nhận (ack) chạy ngược về client. Đọc: client hỏi Namenode vị trí các khối, lấy từng khối từ bản gần nhất và kiểm checksum CRC32C (mã kiểm tổng, một mã cho mỗi 512 byte); sai thì đọc bản khác và báo Namenode.</p>
         <details class="more">
-          <summary>Namenode và checksum vào cuộc ở bước nào?</summary>
+          <summary>Gói tin, máy hỏng giữa đường ống và lúc đóng file thì sao?</summary>
           <div class="more-body">
-            <p>Khi ghi, client xin Namenode danh sách Datanode cho các bản sao của khối (làm cho từng khối, trong lúc ghi); checksum do client tính lúc tạo file, Datanode lưu lại. Khi đọc, client hỏi Namenode vị trí các khối của file; Namenode trả danh sách Datanode, xếp theo khoảng cách; client lấy cả dữ liệu lẫn checksum để tự kiểm.</p>
+            <p>Client cắt khối thành gói khoảng 64 KB và tính checksum cho từng 512 byte; Datanode lưu checksum cạnh khối. Gói nào chưa có ack thì client còn giữ, để gửi lại khi cần. Một Datanode hỏng giữa chừng thì client gỡ nó khỏi đường ống và ghi tiếp với các máy còn lại; Namenode sau đó ra lệnh chép bù bản thiếu.</p>
+            <p>Đóng file là báo Namenode “complete”. Namenode chốt file khi mỗi khối đã có ít nhất số bản tối thiểu (mặc định 1); các bản còn thiếu được chép bù sau.</p>
+          </div>
+        </details>
+        <details class="more">
+          <summary>Đọc một file có khối hỏng thì đi những bước nào?</summary>
+          <div class="more-body">
+            <figure class="dg"><div class="dg-scroll">
+            <svg viewBox="0 0 700 326" role="img" aria-label="Luồng đọc HDFS theo thứ tự: client hỏi Namenode vị trí các khối, nhận danh sách xếp gần trước; đọc khối 1 từ Datanode 1, checksum khớp; đọc khối 2 từ Datanode 2, checksum sai; đọc khối 2 ở Datanode 6, khớp; client báo Namenode khối hỏng">
+              <path d="M70 44 L70 294" class="s-line dash"/>
+              <path d="M215 44 L215 294" class="s-line dash"/>
+              <path d="M360 44 L360 294" class="s-line dash"/>
+              <path d="M495 44 L495 294" class="s-line dash"/>
+              <path d="M630 44 L630 294" class="s-line dash"/>
+              <rect x="15" y="10" width="110" height="34" rx="8" class="f-acc"/><text x="70" y="32" class="t-b t-on t-c" font-weight="600">Namenode</text>
+              <rect x="160" y="10" width="110" height="34" rx="8" class="f-surface s-ink1"/><text x="215" y="32" class="t-b t-c" font-weight="600">Client</text>
+              <rect x="305" y="10" width="110" height="34" rx="8" class="f-surface s-line"/><text x="360" y="32" class="t-b t-c" font-weight="600">Datanode 1</text>
+              <rect x="440" y="10" width="110" height="34" rx="8" class="f-surface s-line"/><text x="495" y="32" class="t-b t-c" font-weight="600">Datanode 2</text>
+              <rect x="575" y="10" width="110" height="34" rx="8" class="f-surface s-line"/><text x="630" y="32" class="t-b t-c" font-weight="600">Datanode 6</text>
+              <path d="M215 72 L76 72" class="s-acc" stroke-width="1.6" marker-end="url(#arr-a)"/>
+              <text x="142.5" y="66" class="t-m t-c">1 hỏi vị trí các khối</text>
+              <path d="M70 98 L209 98" class="s-ink dash" marker-end="url(#arr)"/>
+              <text x="142.5" y="92" class="t-m t-c">2 vị trí, gần trước</text>
+              <path d="M215 124 L354 124" class="s-acc" stroke-width="1.6" marker-end="url(#arr-a)"/>
+              <text x="287.5" y="118" class="t-m t-c">3 đọc khối 1</text>
+              <path d="M360 150 L221 150" class="s-ink dash" marker-end="url(#arr)"/>
+              <text x="287.5" y="144" class="t-m t-c">4 dữ liệu, khớp ✓</text>
+              <path d="M215 176 L489 176" class="s-acc" stroke-width="1.6" marker-end="url(#arr-a)"/>
+              <text x="287.5" y="170" class="t-m t-c">5 đọc khối 2</text>
+              <path d="M495 202 L221 202" class="s-ink dash" marker-end="url(#arr)"/>
+              <text x="287.5" y="196" class="t-m t-c t-bad">6 checksum sai ✗</text>
+              <path d="M215 228 L624 228" class="s-acc" stroke-width="1.6" marker-end="url(#arr-a)"/>
+              <text x="287.5" y="222" class="t-m t-c">7 đọc khối 2 ở DN6</text>
+              <path d="M630 254 L221 254" class="s-ink dash" marker-end="url(#arr)"/>
+              <text x="287.5" y="248" class="t-m t-c">8 dữ liệu, khớp ✓</text>
+              <path d="M215 280 L76 280" class="s-acc" stroke-width="1.6" marker-end="url(#arr-a)"/>
+              <text x="142.5" y="274" class="t-m t-c">9 báo khối hỏng</text>
+              <text x="350" y="314" class="t-m t-c">Namenode sau đó ra lệnh chép bù khối 2 từ một bản lành (kênh ③, ④ ở 2.2.2)</text>
+            </svg>
+            </div><figcaption>Khối 2 có bản trên Datanode 2 và Datanode 6. Client tự kiểm checksum, nên Namenode chỉ biết khối hỏng khi client báo.</figcaption></figure>
+            <p>Namenode trả vị trí theo từng lô khối, xếp máy gần client lên trước: cùng máy, rồi cùng rack, rồi rack khác. Client đọc lần lượt từng khối; một máy không trả lời hay trả dữ liệu sai thì client chuyển sang bản kế trong danh sách.</p>
           </div>
         </details>
         <details class="more">
@@ -1785,7 +1843,7 @@ input[type=range]{accent-color:var(--green-hi)}
             <path d="M646.5 226 L632.1 206.8" class="s-ink" marker-end="url(#arr)"/><path d="M645 224 L454.1 204.4" class="s-ink" marker-end="url(#arr)"/>
             <path d="M530 224 L444 204.9" class="s-ink" marker-end="url(#arr)"/><path d="M530 224 L616 204.9" class="s-ink" marker-end="url(#arr)"/>
           </svg>
-        </div><figcaption>Datanode gửi block report và heartbeat cho cả hai Namenode, nên Namenode dự phòng (Standby) luôn biết vị trí khối.</figcaption></figure>
+        </div><figcaption>Datanode gửi block report và heartbeat cho cả hai Namenode, vì vị trí khối chỉ nằm trong RAM; nhờ vậy Namenode dự phòng (Standby) luôn biết khối ở đâu.</figcaption></figure>
         <p>Namenode là điểm hỏng duy nhất. Secondary Namenode chỉ định kỳ gộp FsImage (ảnh chụp không gian tên) với EditLog (nhật ký thay đổi sau ảnh chụp), việc gộp gọi là checkpoint, để Namenode khởi động lại nhanh.</p>
         <details class="more">
           <summary>Checkpoint chạy khi nào, và slide nói sai ở đâu?</summary>
@@ -1919,7 +1977,8 @@ input[type=range]{accent-color:var(--green-hi)}
   </div>
   <div class="recap"><h3>Mang theo</h3><ul>
     <li>HDFS hợp với file lớn, ghi một lần đọc nhiều, máy rẻ; không hợp với nhiều file nhỏ hay sửa giữa file.</li>
-    <li>Một Namenode giữ metadata trong RAM; nhiều Datanode giữ khối, báo heartbeat 3 giây một lần và block report định kỳ.</li>
+    <li>Một Namenode giữ danh mục trong RAM, nhiều Datanode giữ khối. Client hỏi Namenode “ở đâu” rồi đọc ghi thẳng với Datanode; dữ liệu không đi qua Namenode.</li>
+    <li>Datanode gửi heartbeat 3 giây một lần và block report định kỳ; Namenode gửi lệnh kèm câu trả lời, và dựng lại vị trí khối từ block report.</li>
     <li>Ba bản sao: một ở node ghi (nếu client là Datanode), hai trên một rack khác; ghi theo đường ống, đọc bản gần nhất, kiểm CRC32C mỗi 512 byte.</li>
     <li>Secondary Namenode chỉ gộp checkpoint; muốn thay thế tức thì cần HA với Standby Namenode và Journal Node.</li>
     <li>Truy vấn vài cột trên bảng rộng: chọn Parquet hoặc ORC; trao đổi dữ liệu có lược đồ đổi dần: Avro.</li>
@@ -1927,6 +1986,7 @@ input[type=range]{accent-color:var(--green-hi)}
   <div class="quiz-list">
     <details class="quiz"><summary>Vì sao HDFS chọn khối 64–128 MB thay vì vài KB như hệ thống file cục bộ?</summary><div>Namenode giữ metadata của mọi khối trong RAM; khối lớn thì số khối ít, metadata nhỏ. Mỗi khối là một lần hỏi Namenode và một lần mở kết nối, nên khối lớn cũng giảm trao đổi mạng và cho đọc tuần tự dài, hợp với file lớn ghi một lần đọc nhiều.</div></details>
     <details class="quiz"><summary>Hệ số nhân bản 3, một file 300 MB, khối 128 MB. Có bao nhiêu khối, tốn bao nhiêu dung lượng thô, chịu được mấy Datanode hỏng?</summary><div>3 khối (128 + 128 + 44 MB, khối cuối chỉ chiếm 44 MB). 9 bản khối, tổng 900 MB thô. Ba bản của mỗi khối nằm trên ba node khác nhau nên hỏng bất kỳ 2 Datanode cùng lúc vẫn còn ít nhất một bản mỗi khối.</div></details>
+    <details class="quiz"><summary>Một triệu file, mỗi file 1 KB, đặt lên HDFS. Phần nào của cụm chịu tải nặng, và vì sao?</summary><div>Namenode. Mỗi file và mỗi khối là một đối tượng trong RAM, khoảng 150 byte mỗi đối tượng: hai triệu đối tượng, cỡ 300 MB RAM, cho chỉ khoảng 1 GB dữ liệu. Đọc cả bộ cũng là một triệu lần hỏi Namenode và một triệu lần mở kết nối tới Datanode, thay cho vài lần đọc tuần tự dài. Datanode gần như rảnh.</div></details>
     <details class="quiz"><summary>Secondary Namenode có thay được Namenode khi Namenode chết không? Cần gì để có dự phòng thật?</summary><div>Không. Nó chỉ định kỳ gộp FsImage với EditLog để rút ngắn thời gian khởi động lại. Dự phòng thật là HA: Standby Namenode đọc cùng nhật ký qua Quorum Journal Node (hoặc thư mục NFS chung), nhận block report từ mọi Datanode, và được ZooKeeper chuyển lên khi Active hỏng.</div></details>
   </div>
 </section>
