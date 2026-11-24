@@ -88,7 +88,7 @@ quyết định và việc dở ở `DECISIONS.md` / `HANDOFF.md` gốc. Luật 
   cho mỗi bản clone: `sh tools/install-hooks.sh` (phiên Claude Code tự chạy lúc bắt đầu).
 - Push lên `main`: CI chạy mọi cổng; deploy chỉ chạy khi CI xanh (REPO-014).
 - Cổng không bấm nút. Trang có JS thì đo thêm trong trình duyệt thật: `tools/smoke-index.js`,
-  `masters-degree/class-schedule/tools/smoke.cjs` (CI chạy cả hai).
+  `masters-degree/class-schedule/tools/smoke.cjs`, `step-planner/tools/smoke.cjs` (CI chạy cả ba).
 - Mọi trang lên web theo theme hệ điều hành ở lần mở đầu; nút đổi theme chỉ thắng sau khi người dùng bấm
   (REPO-024). CI đo bằng `tools/smoke-theme.js`.
 - Cổng mới: viết script trong `<project>/tools/`, gọi nó từ `tools/check.sh` của project. Không khai tên ở
