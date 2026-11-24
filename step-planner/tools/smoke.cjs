@@ -679,11 +679,11 @@ const check = (name, ok, detail = '') => {
     !(await page.$('#owner-filter, #people-btn, #dlg-people, #sub-form [name="owner"]'))
     && !/người/i.test(await page.getAttribute('#q', 'placeholder')) && !/Thành viên|Người làm|Việc của tôi/.test(await page.textContent('body')));
   // Tìm kiếm.
-  await page.fill('#q', 'kiem chat');
-  check('tìm không dấu: một bước con', (await page.$$eval('.card[data-sub]', (c) => c.length)) === 1);
+  await page.fill('#q', 'VERIFY data quality');
+  check('tìm không phân biệt hoa thường: một bước con', (await page.$$eval('.card[data-sub]', (c) => c.length)) === 1);
   check('lọc: tắt sắp xếp (không tay nắm kéo bước)', (await page.$$('.step-grip')).length === 0);
-  await page.fill('#q', 'hieu nghiep vu');
-  check('tìm không dấu theo tên bước: cả hàng hiện', (await page.$$eval('.step', (r) => r.length)) === 1);
+  await page.fill('#q', 'BUSINESS understanding');
+  check('tìm theo tên bước: cả hàng hiện', (await page.$$eval('.step', (r) => r.length)) === 1);
   await page.fill('#q', '');
 
   // Nhật ký quyết định.
@@ -742,7 +742,7 @@ const check = (name, ok, detail = '') => {
   await page.click('#export-btn');
   const [dl] = await Promise.all([page.waitForEvent('download'), page.click('#export-download')]);
   const md = fs.readFileSync(await dl.path(), 'utf8');
-  check('xuất Markdown: tải file .md', /\.md$/.test(dl.suggestedFilename()) && md.startsWith('# Dự án Data Science'));
+  check('xuất Markdown: tải file .md', /\.md$/.test(dl.suggestedFilename()) && md.startsWith('# Data Science project (CRISP-DM)'));
   check('Markdown có dấu trạng thái, hạn, không người làm', /- \[x\] /.test(md) && /- \[!\] .* · due 2026-12-01/.test(md) && !/`@|Người:/.test(md) && /## Decision log/.test(md));
   check('Markdown có tài liệu: nhãn, link, rào văn bản', /\nDocs:\n {2}- \[Data card\]\(https:\/\/example\.com\/card\)\n {2}- Ghi chép EDA\n {4}`{5}markdown\n/.test(md)
     && / {2}Docs:\n {4}- \[Repo\]\(https:\/\/git\.example\/repo\)/.test(md));

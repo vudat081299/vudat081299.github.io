@@ -3,190 +3,190 @@
   "templates": [
     {
       "id": "crisp-dm",
-      "name": "Dự án Data Science (CRISP-DM)",
+      "name": "Data Science project (CRISP-DM)",
       "description": "Chuẩn CRISP-DM 1.0: sáu pha, mỗi bước con là một việc chung (generic task) của pha, áp cho mọi dự án dữ liệu; thêm tái lập, giám sát, model card theo CRISP-ML(Q) và TDSP. Pha nào lộ vấn đề thì quay lại pha trước.",
       "steps": [
         {
-          "title": "Hiểu nghiệp vụ (Business Understanding)",
+          "title": "Business Understanding",
           "goal": "Biết bài toán thật, ai dùng kết quả, quyết định nào sẽ đổi.",
           "doneWhen": "Người đặt bài toán đồng ý mục tiêu, tiêu chí thành công và kế hoạch.",
           "notes": "Mẫu theo CRISP-DM 1.0 Step-by-step data mining guide (Chapman et al., 2000). Tên tiếng Anh trong ngoặc là tên task gốc, để tra cứu.\nViệc bổ sung từ CRISP-ML(Q) (Studer et al., 2021) và Microsoft TDSP ghi rõ nguồn trên thẻ.\nCRISP-DM: https://en.wikipedia.org/wiki/Cross-industry_standard_process_for_data_mining\nCRISP-ML(Q): https://arxiv.org/abs/2003.05155\nBẫy hay gặp: làm nhanh pha này rồi trả lời đúng một câu hỏi sai.",
           "subs": [
             {
-              "title": "Xác định mục tiêu nghiệp vụ (Determine business objectives)",
+              "title": "Determine Business Objectives",
               "doneWhen": "Có bối cảnh, mục tiêu nghiệp vụ chính và các câu hỏi phụ, tiêu chí thành công nghiệp vụ.",
               "notes": "Hỏi: ai dùng kết quả? Có kết quả rồi họ làm gì khác? Hiện giờ họ quyết định thế nào?\nTiêu chí đo được thì ghi ngưỡng; tiêu chí chủ quan thì ghi ai là người đánh giá."
             },
             {
-              "title": "Đánh giá hiện trạng (Assess situation)",
+              "title": "Assess Situation",
               "doneWhen": "Có danh sách nguồn lực (người, dữ liệu, máy, phần mềm); yêu cầu, giả định, ràng buộc; rủi ro và phương án dự phòng; bảng thuật ngữ; chi phí và lợi ích.",
               "notes": "Kiểm ngay quyền dùng dữ liệu: điều khoản, dữ liệu cá nhân.\nGhi cả giả định không kiểm được bằng dữ liệu: kết luận cuối đứng trên chúng."
             },
             {
-              "title": "Xác định mục tiêu khai phá dữ liệu (Determine data mining goals)",
+              "title": "Determine Data Mining Goals",
               "doneWhen": "Mục tiêu viết bằng ngôn ngữ kỹ thuật (biến đích, đầu vào, loại bài toán) và tiêu chí thành công kỹ thuật (chỉ số, ngưỡng).",
               "notes": "TDSP gọi là câu hỏi sắc (sharp question): bao nhiêu? (hồi quy), loại nào? (phân loại), nhóm nào? (phân cụm), có bất thường không? (phát hiện bất thường), nên chọn gì? (gợi ý).\nChỉ số nên SMART: cụ thể, đo được, khả thi, liên quan, có hạn."
             },
             {
-              "title": "Lập kế hoạch dự án (Produce project plan)",
+              "title": "Produce Project Plan",
               "doneWhen": "Kế hoạch có các giai đoạn, thời lượng, người, đầu vào, đầu ra, phụ thuộc, điểm soát cuối mỗi pha; đánh giá sơ bộ công cụ và kỹ thuật.",
               "notes": "Ghi trước các vòng lặp lớn (mô hình hoá ↔ đánh giá) và cách đánh giá sẽ dùng.\nKế hoạch là tài liệu sống: cập nhật sau mỗi pha."
             }
           ]
         },
         {
-          "title": "Hiểu dữ liệu (Data Understanding)",
+          "title": "Data Understanding",
           "goal": "Biết dữ liệu có gì, thiếu gì, tin được tới đâu.",
           "doneWhen": "Có bốn báo cáo: thu thập, mô tả, khám phá, chất lượng; biết dữ liệu đủ trả lời câu hỏi hay không.",
           "notes": "Điểm kiểm của TDSP: dữ liệu không đủ trả lời câu hỏi thì quay lại pha 1 hoặc tìm thêm nguồn, đừng ép mô hình hoá.\nKhám phá ở đây để hiểu dữ liệu. Con số dùng để biến đổi (trung vị điền thiếu, ngưỡng ngoại lai) tính lại trên train ở pha 3.",
           "subs": [
             {
-              "title": "Thu thập dữ liệu ban đầu (Collect initial data)",
+              "title": "Collect Initial Data",
               "doneWhen": "Báo cáo thu thập: tập dữ liệu nào, để ở đâu, lấy bằng cách nào, gặp vấn đề gì và đã xử lý ra sao.",
               "notes": "Ghi thêm ngày lấy, điều khoản, mã băm (SHA-256) từng file để người khác lấy lại đúng bản.\nKhông sửa tay file gốc; mọi thay đổi đi qua script."
             },
             {
-              "title": "Mô tả dữ liệu (Describe data)",
+              "title": "Describe Data",
               "doneWhen": "Báo cáo mô tả: định dạng, số dòng và số cột mỗi bảng, tên, kiểu, đơn vị từng trường; dữ liệu có đáp ứng yêu cầu không.",
               "notes": "Viết luôn data card: nguồn, ai tạo, để làm gì, giai đoạn, hạn chế (Datasheets for Datasets, Gebru et al.: https://arxiv.org/abs/1803.09010)."
             },
             {
-              "title": "Khám phá dữ liệu (Explore data)",
+              "title": "Explore Data",
               "doneWhen": "Báo cáo khám phá: phân phối các biến chính (nhất là biến đích), quan hệ giữa các biến, nhóm con đáng chú ý, giả thuyết ban đầu, kèm hình.",
               "notes": "Mỗi phát hiện ghi luôn: nó đổi gì ở các pha sau.\nMột biến đoán biến đích quá giỏi thì nghi rò rỉ: lúc cần dự đoán thật, biến ấy đã có chưa?"
             },
             {
-              "title": "Kiểm chất lượng dữ liệu (Verify data quality)",
+              "title": "Verify Data Quality",
               "doneWhen": "Báo cáo chất lượng: dữ liệu đủ chưa (phủ hết trường hợp), sai ở đâu và nhiều không, thiếu ở đâu và ghi thế nào; mỗi vấn đề có hướng xử lý.",
               "notes": "Hướng xử lý cần cả hiểu biết về dữ liệu lẫn về lĩnh vực: hỏi chuyên gia trước khi xoá."
             }
           ]
         },
         {
-          "title": "Chuẩn bị dữ liệu (Data Preparation)",
+          "title": "Data Preparation",
           "goal": "Ra bộ dữ liệu cho mô hình, dựng lại được, không rò rỉ từ tập test.",
           "doneWhen": "Một lệnh dựng lại bộ dữ liệu từ dữ liệu gốc; tập test chưa bị nhìn.",
           "notes": "Thứ tự trong mẫu: chọn → ghép → chia → làm sạch → tạo đặc trưng → định dạng.\nCRISP-DM 1.0 chia dữ liệu ở pha Mô hình hoá (task 4.2 Generate test design). Mẫu dời việc chia lên ngay sau ghép: làm sạch hay tạo đặc trưng trên toàn bộ dữ liệu thì thông tin của tập test lọt vào train (rò rỉ, leakage) và điểm test đẹp hơn thực tế.\nBiến đổi nào học tham số từ dữ liệu (điền thiếu, chuẩn hoá, mã hoá, chọn đặc trưng) thì fit chỉ trên train rồi áp cho validation và test; gói thành pipeline.",
           "subs": [
             {
-              "title": "Chọn dữ liệu (Select data)",
+              "title": "Select Data",
               "doneWhen": "Danh sách dữ liệu đưa vào và loại ra (cả cột lẫn dòng) kèm lý do.",
               "notes": "Tiêu chí: liên quan mục tiêu, chất lượng, giới hạn kỹ thuật.\nLoại cột chỉ biết sau sự kiện cần đoán: nguồn rò rỉ hay gặp nhất."
             },
             {
-              "title": "Tích hợp dữ liệu (Integrate data)",
+              "title": "Integrate Data",
               "doneWhen": "Bảng đã ghép: khoá chuẩn hoá, số dòng trước và sau mỗi lần ghép đã đối chiếu.",
               "notes": "Gồm cả gộp nhiều dòng thành một (aggregation), ví dụ từ bảng giao dịch ra một dòng mỗi khách.\nGộp theo thời gian thì chỉ dùng dữ liệu trước mốc dự đoán."
             },
             {
-              "title": "Chia train / validation / test (Generate test design)",
+              "title": "Generate Test Design: Train / Validation / Test Split",
               "doneWhen": "Đã ghi cách chia (theo thời gian, ngẫu nhiên, theo nhóm hay phân tầng), tỷ lệ, seed; bỏ dòng trùng trước khi chia; tập test cất riêng tới pha Đánh giá.",
               "notes": "CRISP-DM 1.0 đặt task này ở pha Mô hình hoá (4.2). Mẫu dời lên đây để làm sạch và tạo đặc trưng không nhìn thấy tập test.\nDữ liệu theo thời gian: train là quá khứ, test là tương lai. Một người hay một nhóm có nhiều dòng: chia theo nhóm để không nằm ở cả hai phía."
             },
             {
-              "title": "Làm sạch dữ liệu (Clean data)",
+              "title": "Clean Data",
               "doneWhen": "Báo cáo làm sạch: mỗi vấn đề trong báo cáo chất lượng đã xử lý thế nào, vì sao, có thể ảnh hưởng kết quả ra sao.",
               "notes": "Sửa kiểu, đơn vị, lỗi nhập: làm như nhau trên mọi tập.\nĐiền thiếu, cắt ngoại lai theo ngưỡng: học giá trị từ train, áp cho validation và test."
             },
             {
-              "title": "Tạo dữ liệu mới, đặc trưng (Construct data)",
+              "title": "Construct Data",
               "doneWhen": "Mỗi đặc trưng mới có định nghĩa, công thức, lý do; bản ghi sinh thêm có mô tả.",
               "notes": "Đặc trưng dùng thống kê của nhiều dòng (trung bình theo nhóm, target encoding) tính trên train.\nSinh thêm mẫu cho lớp hiếm (oversampling, SMOTE) chỉ làm trên train."
             },
             {
-              "title": "Định dạng dữ liệu (Format data)",
+              "title": "Format Data",
               "doneWhen": "Dữ liệu đúng khuôn công cụ mô hình cần (thứ tự cột, kiểu, bảng mã chữ) mà không đổi nghĩa."
             }
           ]
         },
         {
-          "title": "Mô hình hoá (Modeling)",
+          "title": "Modeling",
           "goal": "Chọn, huấn luyện, so các mô hình trên train và validation.",
           "doneWhen": "Có mô hình vượt baseline trên validation; mỗi lần chạy đã ghi.",
           "notes": "Lặp: dựng → đánh giá → chỉnh tham số → dựng lại. Không dùng tập test ở pha này.",
           "subs": [
             {
-              "title": "Chọn kỹ thuật mô hình (Select modeling technique)",
+              "title": "Select Modeling Technique",
               "doneWhen": "Ghi kỹ thuật sẽ dùng và giả định của nó về dữ liệu (phân phối, giá trị thiếu, kiểu biến).",
               "notes": "Dùng nhiều kỹ thuật thì làm việc này cho từng cái.\nLuôn có một baseline đơn giản (đoán trung bình hay lớp đông nhất, hồi quy tuyến tính hay logistic) làm mốc so."
             },
             {
-              "title": "Xây dựng mô hình (Build model)",
+              "title": "Build Model",
               "doneWhen": "Có mô hình, tham số đã chọn kèm lý do, mô tả mô hình (diễn giải, khó khăn gặp phải).",
               "notes": "Chỉnh tham số bằng cross-validation trên train hoặc bằng tập validation; không chạm tập test."
             },
             {
-              "title": "Đánh giá mô hình (Assess model)",
+              "title": "Assess Model",
               "doneWhen": "Bảng so và xếp hạng các mô hình theo tiêu chí kỹ thuật; tham số chỉnh lại cho vòng sau.",
               "notes": "Đây là đánh giá kỹ thuật trên validation. Đánh giá theo mục tiêu nghiệp vụ ở pha 5."
             },
             {
-              "title": "Ghi thí nghiệm, đảm bảo tái lập (Assure reproducibility, CRISP-ML(Q))",
+              "title": "Assure Reproducibility (CRISP-ML(Q))",
               "doneWhen": "Mỗi lần chạy có: commit code, phiên bản dữ liệu, seed, phiên bản thư viện, tham số, điểm; chạy lại ra cùng số.",
               "notes": "Báo điểm trung bình và độ lệch qua nhiều seed hay fold, không chỉ lần chạy đẹp nhất.\nGhi lần nào đổi gì và điểm đổi ra sao. Công cụ: một bảng tính là đủ; lớn hơn thì MLflow, DVC."
             }
           ]
         },
         {
-          "title": "Đánh giá (Evaluation)",
+          "title": "Evaluation",
           "goal": "Xét kết quả theo mục tiêu nghiệp vụ, không chỉ theo chỉ số mô hình.",
           "doneWhen": "Đã chạy tập test một lần; đã quyết triển khai, lặp lại hay dừng, lý do ở nhật ký quyết định.",
           "notes": "Không đạt tiêu chí thì quay lại pha Mô hình hoá hay Chuẩn bị dữ liệu, hoặc dừng (CRISP-ML(Q)). Dùng nút Quay lại của bước ấy và ghi lý do.",
           "subs": [
             {
-              "title": "Đánh giá kết quả (Evaluate results)",
+              "title": "Evaluate Results",
               "doneWhen": "Kết quả trên tập test so với tiêu chí thành công nghiệp vụ; câu kết: đã đạt mục tiêu chưa; danh sách mô hình được duyệt.",
               "notes": "Tập test chạy một lần cho mô hình đã chọn. Chạy nhiều lần rồi chọn cái tốt nhất là biến test thành validation.\nGhi cả phát hiện ngoài mục tiêu ban đầu."
             },
             {
-              "title": "Kết quả theo nhóm, độ vững, giải thích (CRISP-ML(Q))",
+              "title": "Subgroup Results, Robustness, Explainability (CRISP-ML(Q))",
               "doneWhen": "Bảng điểm theo từng nhóm (lớp, giai đoạn, vùng); đã thử với dữ liệu nhiễu; đặc trưng ảnh hưởng nhất hợp lý với chuyên gia.",
               "notes": "Điểm trung bình tốt có thể giấu một nhóm rất tệ.\nĐặc trưng quan trọng nhất trông vô lý thường là dấu hiệu rò rỉ."
             },
             {
-              "title": "Soát lại quy trình (Review process)",
+              "title": "Review Process",
               "doneWhen": "Bản soát: việc bị sót, việc cần làm lại; chỉ dùng thuộc tính được phép dùng và có sẵn lúc dự đoán thật.",
               "notes": "Hỏi: dựng mô hình đúng chưa? Có rò rỉ không (chia trước khi làm sạch, fit chỉ trên train)? Giả định nào chưa kiểm?"
             },
             {
-              "title": "Quyết định bước tiếp (Determine next steps)",
+              "title": "Determine Next Steps",
               "doneWhen": "Danh sách phương án kèm lý do nên và không nên; quyết định và lý do ghi vào nhật ký quyết định.",
               "notes": "Phương án: triển khai, lặp thêm vòng, mở dự án mới, dừng. Tính cả thời gian và nguồn lực còn lại."
             }
           ]
         },
         {
-          "title": "Triển khai (Deployment)",
+          "title": "Deployment",
           "goal": "Đưa kết quả tới người dùng và giữ nó đúng theo thời gian.",
           "doneWhen": "Người dùng nhận kết quả; có kế hoạch giám sát; báo cáo cuối và bài học đã ghi.",
           "notes": "Triển khai có thể chỉ là một báo cáo, hoặc một mô hình chạy mỗi ngày. Đồ án học tập: nộp và trình bày là triển khai.",
           "subs": [
             {
-              "title": "Lập kế hoạch triển khai (Plan deployment)",
+              "title": "Plan Deployment",
               "doneWhen": "Kế hoạch triển khai: chiến lược, các bước, cách làm từng bước; quy trình dựng lại mô hình đã ghi.",
               "notes": "CRISP-ML(Q): thử trong điều kiện thật tăng dần; có phương án lùi (bản trước, baseline, luật đơn giản) khi lỗi."
             },
             {
-              "title": "Lập kế hoạch giám sát và bảo trì (Plan monitoring and maintenance)",
+              "title": "Plan Monitoring and Maintenance",
               "doneWhen": "Kế hoạch giám sát: theo dõi chỉ số gì, ngưỡng báo động, khi nào huấn luyện lại, ai chịu trách nhiệm.",
               "notes": "CRISP-ML(Q) tách việc này thành pha riêng: dữ liệu thật đổi theo thời gian (drift) nên mô hình kém dần.\nTheo dõi phân phối đầu vào và dự đoán; có nhãn thật thì theo dõi điểm trực tiếp.\nMô hình cập nhật phải đánh giá lại và so với bản trước rồi mới thay."
             },
             {
-              "title": "Viết model card (Mitchell et al., 2019)",
+              "title": "Write Model Card (Mitchell et al., 2019)",
               "doneWhen": "Model card có: mục đích dùng và không nên dùng, dữ liệu huấn luyện và đánh giá, chỉ số, kết quả theo nhóm, cân nhắc đạo đức, hạn chế.",
               "notes": "Một trang là đủ. Mẫu gốc: https://arxiv.org/abs/1810.03993"
             },
             {
-              "title": "Viết báo cáo cuối (Produce final report)",
+              "title": "Produce Final Report",
               "doneWhen": "Báo cáo cuối gom mọi sản phẩm trước và tóm kết quả; bài trình bày cuối.",
               "notes": "Khung gợi ý: câu hỏi, dữ liệu, phương pháp, kết quả, hạn chế, khuyến nghị.\nMỗi số trong báo cáo truy được về code."
             },
             {
-              "title": "Nghiệm thu, bàn giao (Customer acceptance, TDSP)",
+              "title": "Customer Acceptance (TDSP)",
               "doneWhen": "Người đặt bài toán xác nhận kết quả đạt yêu cầu; code, dữ liệu, tài liệu đã giao cho người vận hành hoặc đã nộp."
             },
             {
-              "title": "Rút kinh nghiệm dự án (Review project)",
+              "title": "Review Project",
               "doneWhen": "Tài liệu kinh nghiệm: điều làm tốt, điều cần sửa, bẫy đã gặp, gợi ý cho dự án sau."
             }
           ]
@@ -441,119 +441,119 @@
     },
     {
       "id": "stats-report",
-      "name": "Phân tích thống kê, viết báo cáo",
+      "name": "Statistical analysis and report (PPDAC)",
       "description": "Chu trình PPDAC (Problem, Plan, Data, Analysis, Conclusions) của tư duy thống kê: từ câu hỏi tới báo cáo, không học máy.",
       "steps": [
         {
-          "title": "Vấn đề (Problem)",
+          "title": "Problem",
           "goal": "Hiểu hệ thống đang xét và biến nó thành một câu hỏi thống kê rõ ràng.",
           "doneWhen": "Câu hỏi một câu, có tổng thể, biến và giả thuyết; người đặt bài toán đồng ý.",
           "notes": "Mẫu theo chu trình PPDAC (MacKay & Oldford, 1994) trong Wild & Pfannkuch (1999), Statistical Thinking in Empirical Enquiry. Tên tiếng Anh trong ngoặc là mục gốc của chu trình.\nhttps://ideas.repec.org/a/bla/istatr/v67y1999i3p223-248.html\nKết luận thường mở ra câu hỏi mới: chu trình lặp lại.",
           "subs": [
             {
-              "title": "Nắm hệ thống và bối cảnh (Grasping system dynamics)",
+              "title": "Grasping system dynamics",
               "doneWhen": "Ghi được hệ thống vận hành thế nào, yếu tố nào có thể ảnh hưởng kết quả, ai cần câu trả lời và để làm gì."
             },
             {
-              "title": "Định nghĩa bài toán (Defining problem)",
+              "title": "Defining the problem",
               "doneWhen": "Câu hỏi một câu, có tổng thể, đơn vị quan sát, biến trả lời, biến giải thích."
             },
             {
-              "title": "Viết giả thuyết H0 / H1",
+              "title": "Stating hypotheses H0 / H1",
               "doneWhen": "Giả thuyết ghi trước khi xem dữ liệu."
             }
           ]
         },
         {
-          "title": "Kế hoạch (Plan)",
+          "title": "Plan",
           "goal": "Chốt cách đo, cách lấy mẫu và cách phân tích trước khi xem kết quả.",
           "doneWhen": "Kế hoạch phân tích đã ghi và lưu (có ngày) trước khi chạy kiểm định.",
           "notes": "Chốt kế hoạch trước để không chọn phép thử theo p-value.",
           "subs": [
             {
-              "title": "Hệ đo lường (Measurement system)",
+              "title": "Measurement system",
               "doneWhen": "Mỗi biến có định nghĩa, cách đo, đơn vị; biết phép đo tin được tới đâu."
             },
             {
-              "title": "Thiết kế lấy mẫu, cỡ mẫu (Sampling design)",
+              "title": "Sampling design and sample size",
               "doneWhen": "Cách chọn mẫu; α, độ lớn hiệu ứng cần phát hiện, cỡ mẫu từ phân tích công suất (power analysis)."
             },
             {
-              "title": "Kế hoạch quản lý dữ liệu (Data management)",
+              "title": "Data management plan",
               "doneWhen": "Biết dữ liệu lưu ở đâu, đặt tên thế nào, ai được sửa; file gốc chỉ đọc."
             },
             {
-              "title": "Thử nhỏ và kế hoạch phân tích (Piloting & analysis)",
+              "title": "Piloting & analysis plan",
               "doneWhen": "Đã thử thu thập trên mẫu nhỏ; kế hoạch phân tích ghi kiểm định, biến, cách xử lý thiếu và ngoại lai."
             }
           ]
         },
         {
-          "title": "Dữ liệu (Data)",
+          "title": "Data",
           "goal": "Có dữ liệu sạch, biết nguồn và giới hạn.",
           "doneWhen": "Bảng sạch dựng lại được bằng một lệnh; data card đủ.",
           "subs": [
             {
-              "title": "Thu thập dữ liệu (Data collection)",
+              "title": "Data collection",
               "doneWhen": "Ghi nguồn, ngày lấy, điều khoản; chỗ lệch so với kế hoạch đã ghi."
             },
             {
-              "title": "Quản lý dữ liệu (Data management)",
+              "title": "Data management",
               "doneWhen": "Có data card, data dictionary và lineage: file nào ra file nào."
             },
             {
-              "title": "Làm sạch dữ liệu (Data cleaning)",
+              "title": "Data cleaning",
               "doneWhen": "Mỗi luật làm sạch có lý do; số dòng trước và sau mỗi luật."
             }
           ]
         },
         {
-          "title": "Phân tích (Analysis)",
+          "title": "Analysis",
           "goal": "Trả lời câu hỏi bằng phân tích đã chốt; tách rõ phân tích khám phá.",
           "doneWhen": "Mỗi kết quả có ước lượng, độ lớn hiệu ứng, khoảng tin cậy (và p-value nếu kiểm định); phân tích ngoài kế hoạch ghi rõ là khám phá.",
           "subs": [
             {
-              "title": "Khám phá dữ liệu (Data exploration)",
+              "title": "Data exploration",
               "doneWhen": "Bảng mô tả (trung bình, trung vị, độ lệch chuẩn, khoảng tứ phân vị) và hình phân phối cho mọi biến chính.",
               "notes": "Ngoại lai: quyết giữ hay bỏ, lý do ghi ở nhật ký quyết định."
             },
             {
-              "title": "Phân tích theo kế hoạch (Planned analyses)",
+              "title": "Planned analyses",
               "doneWhen": "Đã kiểm giả định (độc lập, phân phối, phương sai), chạy đúng kiểm định trong kế hoạch, hiệu chỉnh khi so nhiều lần, báo độ lớn hiệu ứng và khoảng tin cậy."
             },
             {
-              "title": "Phân tích độ nhạy",
+              "title": "Sensitivity analysis",
               "doneWhen": "Biết kết luận có đổi không khi đổi giả định hay bỏ ngoại lai."
             },
             {
-              "title": "Phân tích ngoài kế hoạch (Unplanned analyses)",
+              "title": "Unplanned analyses",
               "doneWhen": "Ghi rõ là khám phá, không trình bày như kết quả xác nhận."
             },
             {
-              "title": "Sinh giả thuyết mới (Hypothesis generation)",
+              "title": "Hypothesis generation",
               "doneWhen": "Giả thuyết mới ghi lại cho vòng sau, không kiểm trên chính dữ liệu đã gợi ra nó."
             }
           ]
         },
         {
-          "title": "Kết luận (Conclusions)",
+          "title": "Conclusion",
           "goal": "Người đọc hiểu kết quả, giới hạn của nó, và làm lại được.",
           "doneWhen": "Báo cáo đủ phần; chạy lại từ đầu ra đúng số trong báo cáo.",
           "subs": [
             {
-              "title": "Diễn giải (Interpretation)",
+              "title": "Interpretation",
               "doneWhen": "Kết quả nói bằng ngôn ngữ của bài toán; phân biệt ý nghĩa thống kê với ý nghĩa thực tế."
             },
             {
-              "title": "Kết luận và hạn chế (Conclusions)",
+              "title": "Conclusions and limitations",
               "doneWhen": "Kết luận trả lời đúng câu hỏi ở bước 1; ghi hạn chế và mối đe doạ tới giá trị kết luận; chỉ nói nhân quả khi thiết kế cho phép."
             },
             {
-              "title": "Ý tưởng mới (New ideas)",
+              "title": "New ideas",
               "doneWhen": "Câu hỏi mở cho vòng PPDAC sau."
             },
             {
-              "title": "Truyền đạt (Communication)",
+              "title": "Communication",
               "doneWhen": "Báo cáo: phương pháp đủ để làm lại, mỗi số truy được về code, hình có tiêu đề, trục, đơn vị, nguồn; trích dẫn nguồn dữ liệu và tài liệu."
             }
           ]
@@ -562,7 +562,7 @@
     },
     {
       "id": "app-feature",
-      "name": "Tính năng app (iOS / Flutter)",
+      "name": "App feature (iOS / Flutter)",
       "description": "Một tính năng từ spec tới phát hành: spec, thiết kế, làm, kiểm thử, phát hành.",
       "steps": [
         {
@@ -571,83 +571,83 @@
           "doneWhen": "User story và tiêu chí chấp nhận đã được người đặt việc đồng ý.",
           "subs": [
             {
-              "title": "Viết user story và tiêu chí chấp nhận"
+              "title": "Write user stories and acceptance criteria"
             },
             {
-              "title": "Liệt kê trường hợp biên: offline, lỗi mạng, quyền, dữ liệu rỗng"
+              "title": "List edge cases: offline, network errors, permissions, empty data"
             },
             {
-              "title": "Chốt phạm vi và những gì không làm"
+              "title": "Fix the scope and the non-goals"
             },
             {
-              "title": "Ước lượng và chia việc"
+              "title": "Estimate and split the work"
             }
           ]
         },
         {
-          "title": "Thiết kế",
+          "title": "Design",
           "goal": "Màn hình, luồng và dữ liệu rõ trước khi viết code.",
           "doneWhen": "Thiết kế đã review; API và model đã chốt.",
           "subs": [
             {
-              "title": "Wireframe / mockup các màn"
+              "title": "Wireframes / mockups for each screen"
             },
             {
-              "title": "Luồng điều hướng và trạng thái: đang tải, rỗng, lỗi"
+              "title": "Navigation flow and states: loading, empty, error"
             },
             {
-              "title": "Thiết kế API và model dữ liệu"
+              "title": "API and data model design"
             },
             {
-              "title": "Kế hoạch analytics và feature flag"
+              "title": "Analytics and feature flag plan"
             },
             {
-              "title": "Review thiết kế"
+              "title": "Design review"
             }
           ]
         },
         {
-          "title": "Làm",
+          "title": "Build",
           "goal": "Code chạy đúng spec, sau feature flag.",
           "doneWhen": "Mọi tiêu chí chấp nhận chạy được trên bản build nội bộ.",
           "subs": [
             {
-              "title": "Tạo nhánh và feature flag"
+              "title": "Create the branch and feature flag"
             },
             {
-              "title": "Model, repository, gọi API"
+              "title": "Model, repository, API calls"
             },
             {
               "title": "State management"
             },
             {
-              "title": "UI theo design system"
+              "title": "UI with the design system"
             },
             {
-              "title": "Accessibility: cỡ chữ động, VoiceOver / TalkBack",
+              "title": "Accessibility: Dynamic Type, VoiceOver / TalkBack",
               "doneWhen": "Đọc được ở cỡ chữ lớn nhất."
             },
             {
-              "title": "Localization: chuỗi đưa ra file dịch"
+              "title": "Localization: move strings to translation files"
             }
           ]
         },
         {
-          "title": "Kiểm thử",
+          "title": "Test",
           "goal": "Bắt lỗi trước người dùng.",
           "doneWhen": "Test xanh trên CI; không còn lỗi chặn.",
           "subs": [
             {
-              "title": "Unit test cho logic"
+              "title": "Unit tests for the logic"
             },
             {
-              "title": "Widget test / UI test"
+              "title": "Widget tests / UI tests"
             },
             {
-              "title": "Thử trên máy thật: iOS và Android, máy cũ"
+              "title": "Test on real devices: iOS and Android, older devices"
             },
             {
-              "title": "Thử offline, mạng chậm, từ chối quyền"
+              "title": "Test offline, slow network, denied permissions"
             },
             {
               "title": "Code review"
@@ -655,27 +655,27 @@
           ]
         },
         {
-          "title": "Phát hành",
+          "title": "Release",
           "goal": "Đưa tới người dùng từng phần, theo dõi được.",
           "doneWhen": "Phát hành cho mọi người; crash và chỉ số ổn định.",
           "subs": [
             {
-              "title": "Tăng version và build number"
+              "title": "Bump version and build number"
             },
             {
-              "title": "Viết release note"
+              "title": "Write release notes"
             },
             {
-              "title": "TestFlight / kênh kiểm thử nội bộ"
+              "title": "TestFlight / internal testing track"
             },
             {
-              "title": "Phát hành theo giai đoạn"
+              "title": "Staged rollout"
             },
             {
-              "title": "Theo dõi crash và chỉ số sau phát hành"
+              "title": "Monitor crashes and metrics after release"
             },
             {
-              "title": "Bật cờ cho mọi người, dọn flag cũ"
+              "title": "Turn the flag on for everyone, remove old flags"
             }
           ]
         }
@@ -683,7 +683,7 @@
     },
     {
       "id": "blank",
-      "name": "Trống",
+      "name": "Blank",
       "description": "Không có bước nào; tự thêm.",
       "steps": []
     }

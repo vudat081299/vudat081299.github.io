@@ -89,14 +89,14 @@
 
 - `{note, templates[]}`; mẫu `{id, name, description, steps[]}`; bước `{title, goal, doneWhen, notes?, subs[]}`; bước con
   `{title, doneWhen?, notes?}`. Không thẻ HTML, không người làm. Đúng một mẫu trống. Mẫu chung không gắn vào một bài toán.
-- Tên bước, bước con: tiếng Việt, tên gốc tiếng Anh trong ngoặc để tra.
+- Tên mẫu, bước, bước con: tiếng Anh, đúng tên gốc của chuẩn (PLAN-015, cổng kiểm); nội dung khác tiếng Việt.
 - `crisp-dm` theo CRISP-DM 1.0 Step-by-step guide (Chapman et al., 2000): bước là sáu pha, bước con là generic task,
   `doneWhen` là output của task, `notes` là câu hỏi gợi ý và bẫy hay gặp. Việc thêm ngoài guide ghi nguồn trong tên thẻ
   (CRISP-ML(Q), Mitchell et al. 2019, TDSP); không thêm việc không có nguồn.
-- CRISP-DM: chia train / validation / test (task 4.2, dời lên pha 3 ngay sau Tích hợp, ghi chú thẻ nói vì sao) trước làm
+- CRISP-DM: chia train / validation / test (task 4.2, dời lên pha 3 ngay sau Integrate Data, ghi chú thẻ nói vì sao) trước làm
   sạch, điền thiếu, tạo đặc trưng; mọi biến đổi fit chỉ trên train. Đừng thêm bước con làm rò rỉ dữ liệu test.
-- `smoke.cjs` tìm `kiem chat` (đúng một bước con) và `hieu nghiep vu` (đúng một bước) trên `crisp-dm`.
-- `stats-report` theo chu trình PPDAC (MacKay & Oldford; Wild & Pfannkuch, 1999): bước là năm khâu.
+- `smoke.cjs` tìm `VERIFY data quality` (đúng một bước con) và `BUSINESS understanding` (đúng một bước) trên `crisp-dm`.
+- `stats-report` theo chu trình PPDAC (MacKay & Oldford; Wild & Pfannkuch, 1999): năm khâu, việc theo Wild & Pfannkuch.
 - `it5425-sports` sinh từ `masters-degree/data-management-visualization/data/sports-monitoring-project.json` và "Xong khi
   nào" (`#lt-xong`) của trang đồ án: `python3 step-planner/tools/lint.py --write-course`, không sửa tay; cổng đỏ khi nguồn
   đổi mà chưa sinh lại. Tên việc giữ nguyên chữ nguồn (kể cả "Vai N, …"); ghi chú bước có dòng "Vai:" và link trang đồ án

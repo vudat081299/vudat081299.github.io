@@ -15,6 +15,7 @@
 - PLAN-012 · Giao diện tiếng Anh; Markdown xuất nhãn tiếng Anh, file cũ vẫn nhập · `step-planner/`
 - PLAN-013 · Bước con chạy song song · `step-planner/`
 - PLAN-014 · Số thứ tự đứng yên tới khi tải lại trang · `step-planner/`
+- PLAN-015 · Tên trong mẫu là tiếng Anh theo tên gốc của chuẩn; nội dung mẫu tiếng Việt · `step-planner/data/templates.json`
 <!-- index:end -->
 
 ## PLAN-001 · Dự án là các bước có thứ tự, mỗi bước có bước con có thứ tự
@@ -86,3 +87,8 @@ Trong một bước, nhiều bước con có thể chạy song song rồi mới 
 24/11/2026 · `step-planner/`
 
 Trong một lần mở trang, số của bước và bước con không đổi khi đổi chỗ: cái vừa dời giữ số cũ, nên người dùng nhìn hàng là biết mình vừa hoán đổi những gì. Số chỉ đánh lại khi tải lại trang, hoặc khi người dùng tự bấm đánh số lại. Cái mới thêm trong lần mở trang ấy chưa có số, có dấu riêng (không dùng chữ "New", trùng tên trạng thái).
+
+## PLAN-015 · Tên trong mẫu là tiếng Anh theo tên gốc của chuẩn; nội dung mẫu tiếng Việt
+24/11/2026 · `step-planner/data/templates.json`
+
+Tên mẫu, tên bước và tên bước con của các mẫu viết tiếng Anh, theo đúng tên gốc của chuẩn: pha và generic task của CRISP-DM 1.0, khâu và việc của PPDAC. Mục tiêu, tiêu chí xong, ghi chú và mô tả mẫu giữ tiếng Việt. Mẫu đồ án môn học giữ nguyên chữ của trang đồ án.

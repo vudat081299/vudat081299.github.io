@@ -3,6 +3,7 @@
 
   1. data/templates.json: khuôn mẫu (khoá, kiểu, chuỗi không rỗng, id không trùng, không thẻ HTML, có đúng một mẫu
      trống). Không có khái niệm người làm: mẫu không có `people` / `owner`.
+     Tên mẫu, tên bước, tên bước con tiếng Anh (trừ mẫu đồ án); nội dung khác tiếng Việt.
   2. Mẫu `it5425-sports` khớp từng chữ với bản sinh từ trang đồ án môn (COURSE_JSON, COURSE_HTML): không thêm nội dung.
      Sinh lại:  python3 step-planner/tools/lint.py --write-course
   3. js/*.js: không innerHTML / outerHTML / insertAdjacentHTML / document.write — chữ người dùng chỉ qua textContent.
@@ -15,6 +16,7 @@ import json
 import os
 import re
 import sys
+import unicodedata
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPO = os.path.dirname(HERE)
@@ -93,6 +95,13 @@ def need_str(where, obj, key, required=True):
         err(f'{where}: `{key}` chỉ một dòng')
 
 
+def english(where, s):
+    """Tên mẫu, bước, bước con viết tiếng Anh: không có chữ cái ngoài ASCII (dấu câu như · — … vẫn được)."""
+    bad = sorted({c for c in str(s) if ord(c) > 127 and unicodedata.category(c).startswith('L')})
+    if bad:
+        err(f'{where}: tên phải tiếng Anh, có chữ {"".join(bad)} (nội dung khác giữ tiếng Việt)')
+
+
 def check_templates(data):
     if set(data) != {'note', 'templates'}:
         err(f'templates.json: khoá gốc phải là note, templates (đang có {sorted(data)})')
@@ -108,6 +117,9 @@ def check_templates(data):
         for k in ('id', 'name', 'description'):
             need_str(w, t, k)
         tid = t.get('id', '')
+        en = tid != COURSE_ID  # mẫu đồ án giữ nguyên chữ nguồn
+        if en:
+            english(f'{w}.name', t.get('name', ''))
         if not re.fullmatch(r'[a-z0-9]+(-[a-z0-9]+)*', str(tid)):
             err(f'{w}: id "{tid}" phải là chữ thường-gạch-nối')
         if tid in seen:
@@ -123,6 +135,8 @@ def check_templates(data):
             if extra := set(s) - STEP_KEYS:
                 err(f'{ws}: khoá lạ {sorted(extra)}')
             need_str(ws, s, 'title')
+            if en:
+                english(f'{ws}.title', s.get('title', ''))
             for k in ('goal', 'doneWhen'):
                 need_str(ws, s, k)
             need_str(ws, s, 'notes', required=False)
@@ -135,6 +149,8 @@ def check_templates(data):
                 if extra := set(sub) - SUB_KEYS:
                     err(f'{wss}: khoá lạ {sorted(extra)}')
                 need_str(wss, sub, 'title')
+                if en:
+                    english(f'{wss}.title', sub.get('title', ''))
                 for key in ('doneWhen', 'notes'):
                     need_str(wss, sub, key, required=False)
     if blanks != 1:
