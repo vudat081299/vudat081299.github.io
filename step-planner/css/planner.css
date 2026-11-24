@@ -387,7 +387,7 @@ svg.i {
 .board .empty { display: flex; align-items: center; gap: var(--s3); flex-wrap: wrap; padding: var(--s5) 0; color: var(--ink-3); }
 .step {
   display: grid; grid-template-columns: var(--head-w) minmax(0, 1fr); gap: var(--s3) var(--s4);
-  padding: var(--s4) 0; border-top: var(--line-w) solid var(--line); position: relative;
+  padding: var(--s4) 0 var(--s6); border-top: var(--line-w) solid var(--line); position: relative;
 }
 .step:last-child { border-bottom: var(--line-w) solid var(--line); }
 .step.drop-before::before, .step.drop-after::after {
@@ -428,10 +428,12 @@ svg.i {
   .card .acts, .step-head .acts .aux { opacity: 0; transition: opacity var(--dur) var(--ease); }
   .card:hover .acts, .card:focus-within .acts, .step-head:hover .acts .aux, .step-head:focus-within .acts .aux { opacity: 1; }
 }
+/* Hàng thẻ cuộn ngang bằng con lăn, bàn di, chạm, bàn phím; không hiện thanh cuộn, mép mờ báo còn thẻ. */
 .cards-scroll {
   min-width: 0; overflow-x: auto; overscroll-behavior-x: contain; padding-bottom: var(--s2);
-  scroll-padding-inline: var(--fade);
+  scroll-padding-inline: var(--fade); scrollbar-width: none;
 }
+.cards-scroll::-webkit-scrollbar { display: none; }
 .cards-scroll.more-right { mask-image: linear-gradient(to right, var(--mask) calc(100% - var(--fade)), transparent); }
 .cards-scroll.more-left { mask-image: linear-gradient(to left, var(--mask) calc(100% - var(--fade)), transparent); }
 .cards-scroll.more-left.more-right { mask-image: linear-gradient(to right, transparent, var(--mask) var(--fade), var(--mask) calc(100% - var(--fade)), transparent); }

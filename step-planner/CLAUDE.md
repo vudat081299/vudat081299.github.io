@@ -184,7 +184,7 @@ Nhập file cũ và Markdown viết tay (dễ dãi):
 - Đầu dự án: tên (bấm để đổi dự án), tiến độ chung, chú giải trạng thái kèm số bước con (đếm, không ghi tay). Chip
   trạng thái có chữ và chấm khác hình, không chỉ khác màu. Thanh công cụ: lọc bên trái, Export là nút chính.
 - Cột tên bước rộng cố định, thẻ cùng bề rộng (các hàng thẳng cột), không bị kéo cao theo thẻ cao nhất hàng. Hàng thẻ
-  cuộn ngang bên trong, báo còn chỗ cuộn (`more-left` / `more-right`). ≤ 640px: tên bước nằm trên hàng thẻ.
+  cuộn ngang bên trong, không hiện thanh cuộn, mép mờ báo còn chỗ cuộn (`more-left` / `more-right`). ≤ 640px: tên bước nằm trên hàng thẻ.
 - Hộp văn bản Markdown gần toàn màn, ≤ 640px toàn màn; Chia đôi xếp trên / dưới khi hẹp.
 - Mọi `<select>` chọn thứ có nghĩa dùng danh sách tự dựng (nổi ở lớp trên cùng, không đẩy bố cục; phím ↑ ↓, gõ chữ đầu,
   Enter, Esc trả focus); ô chỉ chọn số giữ `<select>` gốc (`data-native`). Option có `data-dot`, `data-hint` thì hiện thêm.

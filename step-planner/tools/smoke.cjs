@@ -135,6 +135,16 @@ const check = (name, ok, detail = '') => {
     };
   });
   check('bước con chạy sang phải cùng hàng, thẳng cột giữa các hàng', geo.sameLeft && geo.cardsRight && geo.sameRowTop && geo.headLeft);
+  const scr = await page.evaluate(() => {
+    const sc = document.querySelector('.step .cards-scroll'), st = getComputedStyle(document.querySelector('.step'));
+    sc.scrollBy(400, 0);
+    const moved = sc.scrollLeft > 0;
+    sc.scrollLeft = 0;
+    return { bar: sc.offsetHeight - sc.clientHeight, more: sc.scrollWidth > sc.clientWidth, moved, cue: sc.classList.contains('more-right'),
+      pad: [parseFloat(st.paddingTop), parseFloat(st.paddingBottom)] };
+  });
+  check('hàng thẻ: không hiện thanh cuộn, vẫn cuộn được, mép báo còn thẻ; bước có lề dưới rộng hơn lề trên', scr.bar === 0 && scr.more && scr.moved && scr.cue
+    && scr.pad[1] > scr.pad[0], JSON.stringify(scr));
   check('đánh số 2.1, 2.2', geo.nums === '2.1,2.2', geo.nums);
   check('việc tiếp theo là 1.1', geo.next === '1.1');
 
