@@ -637,6 +637,7 @@ function setWsTab(tab) {
   }
   $('ws-pane-open').hidden = tab !== 'open';
   $('ws-pane-new').hidden = tab !== 'new';
+  $('ws-pane-' + tab).scrollTop = 0; // hộp dùng lại: lần trước cuộn tới đâu thì lần này vẫn mở từ đầu
   $('ws-create').hidden = tab !== 'new';
 }
 $('dlg-ws').querySelector('.tabs').addEventListener('click', (/** @type {any} */ e) => {

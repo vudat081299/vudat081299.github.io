@@ -96,11 +96,17 @@ const check = (name, ok, detail = '') => {
     dupName: [...document.querySelectorAll('#ws-list .ws-item')].filter((li) => li.querySelector('.ws-meta').textContent.startsWith(li.querySelector('.ws-title').textContent + ' ·')).length,
   }));
   await page.click('#ws-tab-new');
-  const wsn = await page.evaluate(() => ({ create: document.getElementById('ws-create').hidden, list: document.getElementById('ws-pane-open').hidden,
-    checked: document.querySelectorAll('#ws-new-templates .tpl:has(input:checked)').length, cards: document.querySelectorAll('#ws-new-templates .tpl').length }));
+  // Hộp dùng lại: mở lại tab thì thân về đầu (khung thấp để thân cuộn được).
+  await page.setViewportSize({ width: 1280, height: 560 });
+  const scrolled = await page.evaluate(() => { const p = document.getElementById('ws-pane-new'); p.scrollTop = 999; return p.scrollTop; });
+  await page.click('#ws-tab-open');
+  await page.click('#ws-tab-new');
+  const wsn = await page.evaluate((sc) => ({ top: sc > 0 ? document.getElementById('ws-pane-new').scrollTop : -1, create: document.getElementById('ws-create').hidden, list: document.getElementById('ws-pane-open').hidden,
+    checked: document.querySelectorAll('#ws-new-templates .tpl:has(input:checked)').length, cards: document.querySelectorAll('#ws-new-templates .tpl').length }), scrolled);
+  await page.setViewportSize({ width: 1280, height: 900 });
   check('hộp Dự án: tab Open, dòng đang mở đánh dấu, hành động gọn; tab New có Create và thẻ mẫu',
     wsd.open === 'true' && wsd.rows === 5 && wsd.count === '5' && wsd.now === 1 && wsd.create && wsd.acts === 'Rename,Duplicate,Delete' && wsd.dupName === 0
-    && !wsn.create && wsn.list && wsn.checked === 1 && wsn.cards === 5, JSON.stringify({ wsd, wsn }));
+    && !wsn.create && wsn.list && wsn.checked === 1 && wsn.top === 0 && wsn.cards === 5, JSON.stringify({ wsd, wsn }));
   await page.keyboard.press('Escape');
   // Số bước / bước con của CRISP-DM đọc từ templates.json, không ghi tay (mẫu đổi thì smoke theo).
   const crisp = tplData.find((t) => t.id === 'crisp-dm');
