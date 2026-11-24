@@ -5,95 +5,115 @@
 export const STATUSES = ['todo', 'doing', 'done', 'blocked', 'skip'];
 export const STATUS_LABEL = { todo: 'Chưa làm', doing: 'Đang làm', done: 'Xong', blocked: 'Bị chặn', skip: 'Bỏ qua' };
 const MARK = { todo: ' ', doing: '~', done: 'x', blocked: '!', skip: '-' };
-const FROM_MARK = { ' ': 'todo', '~': 'doing', x: 'done', X: 'done', '!': 'blocked', '-': 'skip' };
+const FROM_MARK = { ' ': 'todo', '': 'todo', '~': 'doing', x: 'done', X: 'done', '!': 'blocked', '-': 'skip' };
 /* Bấm chip: chưa làm → đang làm → xong → chưa làm. Bị chặn → đang làm, bỏ qua → chưa làm. */
 const NEXT = { todo: 'doing', doing: 'done', done: 'todo', blocked: 'doing', skip: 'todo' };
 export const nextStatus = (/** @type {string} */ s) => NEXT[s] || 'todo';
 
 export const FORMAT = 'step-planner';
 export const VERSION = 1;
+export const MD_VERSION = 1;
+export const APP_NAME = 'Data Science Step Planner';
 export const LOG_HEADING = 'Nhật ký quyết định';
+export const LOOSE_STEP = 'Việc chung';
 
 let seq = 0;
 export function uid(prefix = 'x') {
   return prefix + Date.now().toString(36) + (seq++).toString(36) + Math.random().toString(36).slice(2, 6);
 }
 
+const pad = (/** @type {number} */ n) => String(n).padStart(2, '0');
 /** Ngày hôm nay theo giờ máy, dạng YYYY-MM-DD. */
 export function today(d = new Date()) {
-  const p = (/** @type {number} */ n) => String(n).padStart(2, '0');
-  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+}
+
+/** Ngày hợp lệ → YYYY-MM-DD, không thì ''. Nhận YYYY-MM-DD, YYYY-M-D, DD/MM/YYYY, D/M/YYYY; ngày phải có thật. */
+export function parseDate(/** @type {any} */ s) {
+  const t = String(s ?? '').trim();
+  let r, y, m, d;
+  if ((r = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(t))) [y, m, d] = [+r[1], +r[2], +r[3]];
+  else if ((r = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(t))) [d, m, y] = [+r[1], +r[2], +r[3]];
+  else return '';
+  const dt = new Date(Date.UTC(y, m - 1, d));
+  if (y < 1000 || dt.getUTCFullYear() !== y || dt.getUTCMonth() !== m - 1 || dt.getUTCDate() !== d) return '';
+  return `${y}-${pad(m)}-${pad(d)}`;
 }
 
 /* ── Chuẩn hoá ── */
 
-export const oneLine = (/** @type {any} */ s) => String(s ?? '').replace(/\s+/g, ' ').trim();
-export const multiLine = (/** @type {any} */ s) => String(s ?? '').replace(/\r\n?/g, '\n').split('\n')
+export const isObj = (/** @type {any} */ o) => !!o && typeof o === 'object' && !Array.isArray(o);
+export const oneLine = (/** @type {any} */ s) => (typeof s === 'string' || typeof s === 'number' ? String(s) : '').replace(/\s+/g, ' ').trim();
+export const multiLine = (/** @type {any} */ s) => (typeof s === 'string' ? s : '').replace(/\r\n?/g, '\n').split('\n')
   .map((l) => l.replace(/\s+$/, '')).join('\n').replace(/^\n+|\n+$/g, '');
-const isDate = (/** @type {any} */ s) => typeof s === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s) && !isNaN(Date.parse(s));
-const dateOr = (/** @type {any} */ s, fallback = '') => (isDate(s) ? s : fallback);
-const isoOr = (/** @type {any} */ s) => (typeof s === 'string' && !isNaN(Date.parse(s)) ? s : new Date().toISOString());
-const list = (/** @type {any} */ a) => (Array.isArray(a) ? a : []);
+const isoOr = (/** @type {any} */ s) => (typeof s === 'string' && /^\d{4}-\d{2}-\d{2}T/.test(s) && !isNaN(Date.parse(s)) ? s : new Date().toISOString());
+const objs = (/** @type {any} */ a) => (Array.isArray(a) ? a.filter(isObj) : []);
+const idOr = (/** @type {any} */ id, /** @type {string} */ p) => (typeof id === 'string' && id ? id : uid(p));
 
 /** @param {any} o */
-export function normSub(o = {}) {
+export function normSub(o) {
+  const x = isObj(o) ? o : {};
   return {
-    id: typeof o.id === 'string' && o.id ? o.id : uid('s'),
-    title: oneLine(o.title) || 'Bước con',
-    status: STATUSES.includes(o.status) ? o.status : 'todo',
-    owner: oneLine(o.owner),
-    due: dateOr(o.due),
-    doneWhen: oneLine(o.doneWhen),
-    notes: multiLine(o.notes),
+    id: idOr(x.id, 's'),
+    title: oneLine(x.title) || 'Bước con',
+    status: STATUSES.includes(x.status) ? x.status : 'todo',
+    owner: oneLine(x.owner),
+    due: parseDate(x.due),
+    doneWhen: oneLine(x.doneWhen),
+    notes: multiLine(x.notes),
   };
 }
 
 /** @param {any} o */
-export function normStep(o = {}) {
-  const r = o.revisit;
+export function normStep(o) {
+  const x = isObj(o) ? o : {};
+  const r = x.revisit;
   return {
-    id: typeof o.id === 'string' && o.id ? o.id : uid('t'),
-    title: oneLine(o.title) || 'Bước',
-    goal: oneLine(o.goal),
-    doneWhen: oneLine(o.doneWhen),
-    notes: multiLine(o.notes),
-    revisit: r && typeof r === 'object' ? { reason: oneLine(r.reason), date: dateOr(r.date, today()) } : null,
-    subs: list(o.subs).map(normSub),
+    id: idOr(x.id, 't'),
+    title: oneLine(x.title) || 'Bước',
+    goal: oneLine(x.goal),
+    doneWhen: oneLine(x.doneWhen),
+    notes: multiLine(x.notes),
+    revisit: isObj(r) ? { reason: oneLine(r.reason), date: parseDate(r.date) || today() } : null,
+    subs: objs(x.subs).map(normSub),
   };
 }
 
 /** @param {any} o */
-export function normLog(o = {}) {
+export function normLog(o) {
+  const x = isObj(o) ? o : {};
   return {
-    id: typeof o.id === 'string' && o.id ? o.id : uid('l'),
-    date: dateOr(o.date, today()),
-    decision: oneLine(o.decision) || '(không ghi)',
-    why: multiLine(o.why),
+    id: idOr(x.id, 'l'),
+    date: parseDate(x.date) || today(),
+    decision: oneLine(x.decision) || '(không ghi)',
+    why: multiLine(x.why),
   };
 }
 
 /** @param {any} o */
-export function normWorkspace(o = {}) {
+export function normWorkspace(o) {
+  const x = isObj(o) ? o : {};
   const people = [];
-  for (const p of list(o.people)) {
-    const n = oneLine(p);
+  for (const p of Array.isArray(x.people) ? x.people : []) {
+    const n = typeof p === 'string' ? oneLine(p) : '';
     if (n && !people.includes(n)) people.push(n);
   }
   return {
-    id: typeof o.id === 'string' && o.id ? o.id : uid('w'),
-    name: oneLine(o.name) || 'Dự án',
-    templateId: oneLine(o.templateId),
-    createdAt: isoOr(o.createdAt),
-    updatedAt: isoOr(o.updatedAt),
+    id: idOr(x.id, 'w'),
+    name: oneLine(x.name) || 'Dự án',
+    templateId: oneLine(x.templateId),
+    createdAt: isoOr(x.createdAt),
+    updatedAt: isoOr(x.updatedAt),
+    notes: multiLine(x.notes),
     people,
-    steps: list(o.steps).map(normStep),
-    log: list(o.log).map(normLog),
+    steps: objs(x.steps).map(normStep),
+    log: objs(x.log).map(normLog),
   };
 }
 
 /** Bản sao sâu với id mới cho mọi thứ — dùng khi nhân bản và khi nhập. @param {any} ws */
 export function freshCopy(ws) {
-  const c = normWorkspace(JSON.parse(JSON.stringify(ws)));
+  const c = normWorkspace(JSON.parse(JSON.stringify(normWorkspace(ws))));
   const now = new Date().toISOString();
   c.id = uid('w');
   c.createdAt = now;
@@ -106,9 +126,19 @@ export function freshCopy(ws) {
   return c;
 }
 
+/** Tên chưa trùng: tên, rồi "tên (nhập)", "tên (nhập 2)"… @param {string} name @param {Iterable<string>} taken */
+export function uniqueName(name, taken, tag = 'nhập') {
+  const set = new Set(taken);
+  if (!set.has(name)) return name;
+  for (let i = 1; ; i++) {
+    const n = `${name} (${tag}${i > 1 ? ' ' + i : ''})`;
+    if (!set.has(n)) return n;
+  }
+}
+
 /** Dự án mới từ một mẫu của data/templates.json. @param {any} tpl @param {string} [name] */
 export function fromTemplate(tpl, name) {
-  const t = tpl || {};
+  const t = isObj(tpl) ? tpl : {};
   const now = new Date().toISOString();
   return normWorkspace({
     name: oneLine(name) || t.name || 'Dự án',
@@ -116,9 +146,9 @@ export function fromTemplate(tpl, name) {
     createdAt: now,
     updatedAt: now,
     people: t.people || [],
-    steps: list(t.steps).map((/** @type {any} */ s) => ({
+    steps: objs(t.steps).map((/** @type {any} */ s) => ({
       title: s.title, goal: s.goal, doneWhen: s.doneWhen, notes: s.notes,
-      subs: list(s.subs).map((/** @type {any} */ x) => ({ title: x.title, doneWhen: x.doneWhen, owner: x.owner, notes: x.notes })),
+      subs: objs(s.subs).map((/** @type {any} */ x) => ({ title: x.title, doneWhen: x.doneWhen, owner: x.owner, notes: x.notes })),
     })),
   });
 }
@@ -141,89 +171,129 @@ export function nextActionId(step) {
   return s ? s.id : null;
 }
 
-/** So khớp không phân biệt hoa thường và dấu. */
-export const fold = (/** @type {string} */ s) => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '')
-  .replace(/[đĐ]/g, 'd').toLowerCase();
-
-/* ── Markdown ──
- * Khuôn (ghi đủ ở step-planner/CLAUDE.md, mục Markdown):
- *   # Tên dự án
- *   > Step Planner · định dạng 1
- *   > Mẫu: crisp-dm
- *   > Người: @A · @B
- *   ## 1. Tên bước
- *   Mục tiêu: …   Xong khi: …   Quay lại: 2026-11-24 · lý do   Ghi chú: (rồi các dòng thụt 2 dấu cách)
- *   - [~] Tên bước con · @người · hạn 2026-12-01
- *     Xong khi: …
- *     ghi chú (mỗi dòng thụt 2 dấu cách)
- *   ## Nhật ký quyết định
- *   - 2026-11-24 · quyết định
- *     Vì sao: …
- */
-
-/** Giá trị nằm giữa các dấu ` · `: thoát `\` và `·`. */
-const escInline = (/** @type {string} */ s) => s.replace(/\\/g, '\\\\').replace(/·/g, '\\·');
-
-/** Tách theo ` · ` chưa thoát, đồng thời bỏ thoát. @param {string} line */
-export function splitInline(line) {
-  const parts = [];
-  let cur = '';
-  for (let i = 0; i < line.length; i++) {
-    const c = line[i];
-    if (c === '\\' && i + 1 < line.length) { cur += line[++i]; continue; }
-    if (line.startsWith(' · ', i)) { parts.push(cur); cur = ''; i += 2; continue; }
-    cur += c;
+/** Việc tiếp theo của cả dự án: việc tiếp theo của bước đầu tiên còn việc. @param {any} ws */
+export function projectNextId(ws) {
+  for (const s of ws.steps) {
+    const id = nextActionId(s);
+    if (id) return id;
   }
-  parts.push(cur);
-  return parts;
+  return null;
 }
 
-/* Dòng thụt của ghi chú: dòng trống viết `\`; dòng bắt đầu bằng `\`, `Xong khi:` hay `Vì sao:` thêm `\` phía trước. */
-const escBlock = (/** @type {string} */ s) => (s === '' ? '\\' : /^(\\|Xong khi:|Vì sao:)/.test(s) ? '\\' + s : s);
+/** So khớp không phân biệt hoa thường và dấu. */
+export const fold = (/** @type {string} */ s) => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+  .replace(/[đĐ]/g, 'd').toLowerCase();
+
+/* ── Markdown ── (khuôn ghi đủ ở step-planner/CLAUDE.md, mục Markdown) */
+
+/* Ký tự thoát `\x` đổi tạm sang vùng riêng của Unicode để các biểu thức bên dưới không thấy nó, rồi đổi lại. */
+const PUA = 0xe000;
+const protect = (/** @type {string} */ s) => s.replace(/\\([\s\S])/g, (_, c) => (c.charCodeAt(0) < 0x1900 ? String.fromCharCode(PUA + c.charCodeAt(0)) : c));
+const restore = (/** @type {string} */ s) => s.replace(/[\ue000-\uf8ff]/g, (c) => String.fromCharCode(c.charCodeAt(0) - PUA));
+/** Tách chuỗi đã protect theo ` · `. */
+const splitDots = (/** @type {string} */ s) => s.split(' · ');
+
+/** Giá trị trên dòng bước con / dòng Người: thoát `\`, `·`, `@`, và chữ `hạn` / `due` để không bị đọc là hạn. */
+const escInline = (/** @type {string} */ s) => s.replace(/\\/g, '\\\\').replace(/·/g, '\\·').replace(/@/g, '\\@')
+  .replace(/(^|[^\p{L}\p{N}])(hạn|due)/giu, (_, a, k) => a + '\\' + k);
+/** Người làm: `` `@tên` `` để dán lên GitHub không gọi tên tài khoản nào; tên có dấu ` thì viết @tên. */
+const escOwner = (/** @type {string} */ s) => (s.includes('`') ? '@' + escInline(s) : '`@' + escInline(s).replace(/^\\@/, '@') + '`');
+
+/** Tách theo ` · ` chưa thoát, đồng thời bỏ thoát. @param {string} line */
+export const splitInline = (line) => splitDots(protect(line)).map(restore);
+
+/* Dòng ghi chú: dòng trống viết `\`; dòng có thể bị đọc nhầm (nhãn, đầu mục danh sách, tiêu đề, trích dẫn, `\`)
+ * thêm `\` phía trước. */
+const RISKY = /^(\\|#|>|\s*([-*+]|\d+[.)])(\s|$)|\s*\*\*|(Xong khi|Vì sao|Mục tiêu|Quay lại|Ghi chú):)/;
+const escBlock = (/** @type {string} */ s) => (s === '' ? '\\' : RISKY.test(s) ? '\\' + s : s);
 const unescBlock = (/** @type {string} */ s) => (s.startsWith('\\') ? s.slice(1) : s);
-const indentLines = (/** @type {string} */ text) => text.split('\n').map((l) => '  ' + escBlock(l));
+/** Khối dòng: mỗi dòng trừ dòng cuối có hai dấu cách cuối (xuống dòng khi xem trên GitHub, VS Code). */
+const hardBreaks = (/** @type {string[]} */ lines) => lines.map((l, i) => (i < lines.length - 1 ? l + '  ' : l));
 
 /** @param {any} ws @returns {string} */
 export function toMarkdown(ws) {
-  const out = [`# ${ws.name}`, '', `> Step Planner · định dạng ${VERSION}`];
-  if (ws.templateId) out.push(`> Mẫu: ${ws.templateId}`);
-  if (ws.people.length) out.push('> Người: ' + ws.people.map((/** @type {string} */ p) => '@' + escInline(p)).join(' · '));
+  const out = [`# ${ws.name}`, '', `> ${APP_NAME} · định dạng ${MD_VERSION}`];
+  if (ws.templateId) out.push('>', `> Mẫu: ${ws.templateId}`);
+  if (ws.people.length) out.push('>', '> Người: ' + ws.people.map(escOwner).join(' · '));
+  if (ws.notes) out.push('', ...hardBreaks(ws.notes.split('\n').map(escBlock)));
   ws.steps.forEach((/** @type {any} */ s, /** @type {number} */ i) => {
     out.push('', `## ${i + 1}. ${s.title}`);
-    if (s.goal) out.push(`Mục tiêu: ${s.goal}`);
-    if (s.doneWhen) out.push(`Xong khi: ${s.doneWhen}`);
-    if (s.revisit) out.push(`Quay lại: ${s.revisit.date} · ${s.revisit.reason}`.replace(/ · $/, ''));
-    if (s.notes) out.push('Ghi chú:', ...indentLines(s.notes));
+    if (s.goal) out.push('', `Mục tiêu: ${s.goal}`);
+    if (s.doneWhen) out.push('', `Xong khi: ${s.doneWhen}`);
+    if (s.revisit) out.push('', `Quay lại: ${s.revisit.date}` + (s.revisit.reason ? ` · ${s.revisit.reason}` : ''));
+    if (s.notes) out.push('', ...hardBreaks(['Ghi chú:', ...s.notes.split('\n').map((l) => '  ' + escBlock(l))]));
     if (s.subs.length) out.push('');
     for (const x of s.subs) {
       let line = `- [${MARK[x.status]}] ${escInline(x.title)}`;
-      if (x.owner) line += ` · @${escInline(x.owner)}`;
+      if (x.owner) line += ' · ' + escOwner(x.owner);
       if (x.due) line += ` · hạn ${x.due}`;
-      out.push(line);
-      if (x.doneWhen) out.push(`  Xong khi: ${x.doneWhen}`);
-      if (x.notes) out.push(...indentLines(x.notes));
+      const more = [];
+      if (x.doneWhen) more.push(`  Xong khi: ${x.doneWhen}`);
+      if (x.notes) more.push(...x.notes.split('\n').map((l) => '  ' + escBlock(l)));
+      out.push(...hardBreaks([line, ...more]));
     }
   });
   if (ws.log.length) {
     out.push('', `## ${LOG_HEADING}`, '');
     for (const l of ws.log) {
-      out.push(`- ${l.date} · ${l.decision}`);
-      if (l.why) {
-        const [first, ...rest] = l.why.split('\n');
-        out.push(`  Vì sao: ${first}`, ...rest.map((/** @type {string} */ r) => '  ' + escBlock(r)));
-      }
+      const why = l.why ? l.why.split('\n') : [];
+      out.push(...hardBreaks([`- ${l.date} · ${l.decision}`, ...why.map((w, k) => (k ? '  ' + escBlock(w) : `  Vì sao: ${w}`))]));
     }
   }
   return out.join('\n') + '\n';
 }
 
+const ITEM = /^(?:[-*+]|\d+[.)])\s+(?:\[(.?)\]\s*)?(.*)$/;
+const STEP_PREFIX = /^(?:(?:bước|step)\s*)?\d+(?:\s*[.):]\s*|\s+)/i;
+const DATE_TOKEN = '(\\d{4}-\\d{1,2}-\\d{1,2}|\\d{1,2}\\/\\d{1,2}\\/\\d{4})';
+const META_DUE = new RegExp(`^(?:hạn|due):?\\s+${DATE_TOKEN}$`, 'i');
+const TITLE_DUE = new RegExp(`(^|[\\s(\\[,;])(?:hạn|due):?\\s+(\\d{1,4}[-\\/]\\d{1,2}[-\\/]\\d{1,4})`, 'gi');
+const LOG_DATE = new RegExp(`^${DATE_TOKEN}\\s*(?:·|–|-|:)?\\s*(.*)$`);
+
 /**
- * Đọc Markdown theo khuôn ở trên. Dòng lạ không bị bỏ: nằm trong bước thì thành ghi chú của bước.
+ * Chữ sau dấu ô của một bước con: tên, người làm, hạn. Viết tay thì `@tên` và `hạn` / `due` ở đâu trên dòng cũng được;
+ * nhiều `@` thì người đầu là người làm, những người sau vào ghi chú.
+ * @param {string} raw @param {string[]} warnings
+ */
+function parseSubText(raw, warnings) {
+  const parts = splitDots(protect(raw));
+  let title = parts[0];
+  const owners = [];
+  let due = '';
+  for (const part of parts.slice(1)) {
+    const t = part.trim();
+    let m;
+    if ((m = /^`@([^`]+)`$/.exec(t)) || (m = /^@(.+)$/.exec(t))) owners.push(m[1]);
+    else if ((m = META_DUE.exec(restore(t))) && parseDate(m[1]) && !due) due = parseDate(m[1]);
+    else {
+      if (/^(?:hạn|due)\b/i.test(restore(t))) warnings.push(`Hạn không đọc được, để lại trong tên: ${restore(t)}`);
+      title += ' · ' + part;
+    }
+  }
+  let changed = false;
+  title = title.replace(/`@([^`]+)`/g, (_, n) => { owners.push(n); changed = true; return ' '; });
+  title = title.replace(/(^|[\s(\[,;])@([^\s,;()[\]`]+)/g, (_, pre, n) => { owners.push(n); changed = true; return pre; });
+  title = title.replace(TITLE_DUE, (all, pre, d) => {
+    const v = parseDate(d);
+    if (!v) { warnings.push(`Hạn không đọc được: ${d}`); return all; }
+    if (!due) due = v;
+    changed = true;
+    return pre;
+  });
+  if (changed) title = title.replace(/\(\s*(?:[,;]\s*)*\)/g, '').replace(/\s+/g, ' ').replace(/^[\s,;·:-]+|[\s,;·:-]+$/g, '');
+  const names = owners.map((o) => restore(o).trim()).filter(Boolean);
+  return { title: restore(title).trim(), owner: names[0] || '', more: names.slice(1), due };
+}
+
+/**
+ * Đọc Markdown: khuôn do trang xuất, và cả Markdown viết tay (gạch đầu dòng thường, `+`, `1.`, `[]`, mục lồng, ngày
+ * dd/mm/yyyy, chữ trước bước đầu). Dòng lạ không bị bỏ: thành ghi chú.
  * @param {string} text
  * @returns {{ workspace: any, warnings: string[] }}
  */
 export function fromMarkdown(text) {
   const lines = String(text).replace(/\r\n?/g, '\n').split('\n');
+  /** @type {string[]} */
   const warnings = [];
   /** @type {any} */
   const ws = { name: '', templateId: '', people: [], steps: [], log: [] };
@@ -231,20 +301,37 @@ export function fromMarkdown(text) {
   /** @type {any} */ let sub = null;
   /** @type {any} */ let entry = null;
   let inLog = false;
+  let started = false; // đã qua `## ` đầu tiên
   let block = /** @type {'' | 'step' | 'sub' | 'why'} */ ('');
   let blockFirst = false;
   const addNote = (/** @type {any} */ o, /** @type {string} */ key, /** @type {string} */ l) => {
     o[key] = o[key] === undefined || o[key] === null ? l : o[key] + '\n' + l;
+  };
+  const newSub = (/** @type {string} */ mark, /** @type {string} */ rest) => {
+    if (!step) { step = { title: LOOSE_STEP, subs: [] }; ws.steps.push(step); }
+    const p = parseSubText(rest, warnings);
+    sub = { title: p.title, status: FROM_MARK[mark ?? ' '] || 'todo', owner: p.owner, due: p.due };
+    if (p.more.length) sub.notes = 'Người khác: ' + p.more.map((n) => '@' + n).join(', ');
+    if (mark != null && !(mark in FROM_MARK)) warnings.push(`Dấu [${mark}] lạ, đọc là chưa làm: ${p.title}`);
+    step.subs.push(sub);
+    block = 'sub'; blockFirst = sub.notes === undefined;
+  };
+  const newEntry = (/** @type {string} */ s) => {
+    const d = LOG_DATE.exec(s);
+    entry = d && parseDate(d[1]) ? { date: parseDate(d[1]), decision: d[2] } : { decision: s };
+    ws.log.push(entry);
+    block = 'why'; blockFirst = true;
   };
 
   for (const raw of lines) {
     const ind = /^( {2}|\t)(.*)$/.exec(raw);
     if (ind && block) {
       const l = ind[2];
+      const item = ITEM.exec(l.trimStart());
+      if (block === 'sub' && item && !/^\s*\\/.test(l)) { newSub(item[1], item[2]); continue; }
       if (block === 'sub') {
-        if (blockFirst && sub.notes === undefined && sub.doneWhen === undefined && l.startsWith('Xong khi: ')) {
-          sub.doneWhen = l.slice(10);
-        } else addNote(sub, 'notes', unescBlock(l));
+        if (blockFirst && l.startsWith('Xong khi: ')) sub.doneWhen = l.slice(10);
+        else addNote(sub, 'notes', unescBlock(l));
       } else if (block === 'step') addNote(step, 'notes', unescBlock(l));
       else if (block === 'why') addNote(entry, 'why', blockFirst && l.startsWith('Vì sao: ') ? l.slice(8) : unescBlock(l));
       blockFirst = false;
@@ -254,55 +341,48 @@ export function fromMarkdown(text) {
     block = '';
     if (raw.trim() === '') continue;
     let m;
-    if ((m = /^# (.+)$/.exec(raw)) && !ws.name && !step && !inLog) { ws.name = m[1]; continue; }
-    if ((m = /^>\s?(.*)$/.exec(raw)) && !step && !inLog) {
-      const kv = /^(Mẫu|Người):\s*(.*)$/.exec(m[1]);
-      if (kv && kv[1] === 'Mẫu') ws.templateId = kv[2];
-      if (kv && kv[1] === 'Người') ws.people = splitInline(kv[2]).map((p) => p.replace(/^@/, ''));
-      continue;
-    }
     if ((m = /^## (.+)$/.exec(raw))) {
-      sub = null;
-      const num = /^\d+\.\s+(.*)$/.exec(m[1]);
-      if (num) { inLog = false; step = { title: num[1], subs: [] }; ws.steps.push(step); continue; }
-      if (m[1].trim() === LOG_HEADING) { inLog = true; step = null; continue; }
-      inLog = false; step = { title: m[1], subs: [] }; ws.steps.push(step);
-      warnings.push(`"${m[1]}" không có số thứ tự; vẫn đọc là một bước.`);
+      started = true; sub = null;
+      const h = m[1].trim();
+      if (/^(nhật ký( quyết định)?|decision log)$/i.test(h)) { inLog = true; step = null; continue; }
+      inLog = false;
+      step = { title: h.replace(STEP_PREFIX, '') || h, subs: [] };
+      ws.steps.push(step);
       continue;
     }
     if (inLog) {
-      if ((m = /^[-*] (\d{4}-\d{2}-\d{2}) · (.*)$/.exec(raw))) entry = { date: m[1], decision: m[2] };
-      else if ((m = /^[-*] (.*)$/.exec(raw))) entry = { decision: m[1] };
-      else { warnings.push(`Bỏ qua dòng trong nhật ký: ${raw}`); continue; }
-      ws.log.push(entry);
-      block = 'why'; blockFirst = true;
+      const it = ITEM.exec(raw);
+      newEntry(it ? it[2] : raw.trim());
       continue;
     }
-    if (!step) { warnings.push(`Bỏ qua dòng trước bước đầu: ${raw}`); continue; }
-    if ((m = /^[-*] \[(.)\]\s?(.*)$/.exec(raw))) {
-      const [title, ...meta] = splitInline(m[2]);
-      sub = { title, status: FROM_MARK[m[1]] || 'todo', owner: '', due: '' };
-      for (const p of meta) {
-        const due = /^hạn (\d{4}-\d{2}-\d{2})$/.exec(p);
-        if (p.startsWith('@') && !sub.owner) sub.owner = p.slice(1);
-        else if (due && !sub.due) sub.due = due[1];
-        else sub.title += ' · ' + p;
+    if (!started) {
+      if ((m = /^# (.+)$/.exec(raw)) && !ws.name) { ws.name = m[1]; continue; }
+      if ((m = /^>\s?(.*)$/.exec(raw))) {
+        const kv = /^(Mẫu|Người):\s*(.*)$/.exec(m[1]);
+        if (kv && kv[1] === 'Mẫu') ws.templateId = kv[2];
+        if (kv && kv[1] === 'Người') ws.people = splitDots(protect(kv[2])).map((p) => restore(p.trim().replace(/^`(.*)`$/, '$1').replace(/^@/, '')));
+        continue;
       }
-      if (!FROM_MARK[m[1]]) warnings.push(`Dấu [${m[1]}] lạ, đọc là chưa làm: ${title}`);
-      step.subs.push(sub);
-      block = 'sub'; blockFirst = true;
+      const it = ITEM.exec(raw);
+      if (it) { newSub(it[1], it[2]); continue; }
+      if (!ws.name && !ws.notes && !ws.steps.length) { ws.name = raw.replace(/^#+\s*/, ''); continue; }
+      addNote(ws, 'notes', unescBlock(raw));
       continue;
     }
+    if (!step) continue;
+    const it = ITEM.exec(raw);
+    if (it) { newSub(it[1], it[2]); continue; }
     sub = null;
-    if ((m = /^Mục tiêu: (.*)$/.exec(raw))) step.goal = m[1];
-    else if ((m = /^Xong khi: (.*)$/.exec(raw))) step.doneWhen = m[1];
-    else if ((m = /^Quay lại: (.*)$/.exec(raw))) {
-      const d = /^(\d{4}-\d{2}-\d{2})(?: · (.*))?$/.exec(m[1]);
-      step.revisit = d ? { date: d[1], reason: d[2] || '' } : { reason: m[1] };
-    } else if (/^Ghi chú:\s*$/.test(raw)) { block = 'step'; blockFirst = true; }
+    const meta = /^\**(Mục tiêu|Xong khi|Quay lại|Ghi chú):\**\s?(.*)$/.exec(raw);
+    if (meta && meta[1] === 'Mục tiêu') step.goal = meta[2];
+    else if (meta && meta[1] === 'Xong khi') step.doneWhen = meta[2];
+    else if (meta && meta[1] === 'Quay lại') {
+      const d = /^(\S+)(?: · (.*))?$/.exec(meta[2]);
+      step.revisit = d && parseDate(d[1]) ? { date: parseDate(d[1]), reason: d[2] || '' } : { reason: meta[2] };
+    } else if (meta && meta[1] === 'Ghi chú' && !meta[2].trim()) { block = 'step'; blockFirst = true; }
     else addNote(step, 'notes', raw);
   }
-  if (!ws.name && !ws.steps.length) throw new Error('Không thấy tiêu đề "# …" hay bước "## 1. …" nào.');
+  if (!ws.name && !ws.steps.length) throw new Error('Không thấy tiêu đề "# …", bước "## …" hay việc "- [ ] …" nào.');
   return { workspace: normWorkspace(ws), warnings };
 }
 
@@ -313,9 +393,22 @@ export const toJSON = (ws) => JSON.stringify({ format: FORMAT, version: VERSION,
 /** @param {any[]} all */
 export const toBackup = (all) => JSON.stringify({ format: FORMAT, version: VERSION, exportedAt: new Date().toISOString(), workspaces: all }, null, 2) + '\n';
 
+/** Đếm mục không đúng khuôn sẽ bị bỏ khi chuẩn hoá. @param {any} w @param {string[]} warnings */
+function skipped(w, warnings) {
+  const bad = (/** @type {any} */ a) => (Array.isArray(a) ? a.filter((x) => !isObj(x)).length : 0);
+  const steps = Array.isArray(w.steps) ? w.steps : [];
+  const n = { steps: bad(steps), subs: 0, log: bad(w.log) };
+  for (const s of steps) if (isObj(s)) n.subs += bad(s.subs);
+  const parts = [];
+  if (n.steps) parts.push(`${n.steps} bước`);
+  if (n.subs) parts.push(`${n.subs} bước con`);
+  if (n.log) parts.push(`${n.log} quyết định`);
+  if (parts.length) warnings.push(`"${oneLine(w.name) || 'Dự án'}": bỏ qua ${parts.join(', ')} không đúng khuôn.`);
+}
+
 /**
  * Đọc chữ dán vào hay file chọn: JSON (một dự án, bản sao lưu, hay mảng dự án) hoặc Markdown.
- * Luôn trả bản sao có id mới — nhập không bao giờ ghi đè dự án đang có.
+ * Luôn trả bản sao có id mới; ghi vào đâu là việc của trang.
  * @param {string} text
  * @returns {{ kind: 'json' | 'backup' | 'md', workspaces: any[], warnings: string[] }}
  */
@@ -328,13 +421,20 @@ export function parseImport(text) {
     /** @type {any[]} */ let items;
     let kind = /** @type {'json' | 'backup'} */ ('json');
     if (Array.isArray(data)) { items = data; kind = 'backup'; }
-    else if (data && Array.isArray(data.workspaces)) { items = data.workspaces; kind = 'backup'; }
-    else if (data && data.workspace && typeof data.workspace === 'object') items = [data.workspace];
-    else if (data && Array.isArray(data.steps)) items = [data];
+    else if (isObj(data) && Array.isArray(data.workspaces)) { items = data.workspaces; kind = 'backup'; }
+    else if (isObj(data) && isObj(data.workspace)) items = [data.workspace];
+    else if (isObj(data) && Array.isArray(data.steps)) items = [data];
     else throw new Error('JSON không phải dự án Step Planner (thiếu `workspace`, `workspaces` hay `steps`).');
-    items = items.filter((w) => w && typeof w === 'object');
-    if (!items.length) throw new Error('Không có dự án nào trong JSON.');
-    return { kind, workspaces: items.map(freshCopy), warnings: [] };
+    /** @type {string[]} */
+    const warnings = [];
+    const out = [];
+    items.forEach((w, i) => {
+      if (!isObj(w) || !Array.isArray(w.steps)) { warnings.push(`Bỏ qua mục ${i + 1}: không phải dự án (thiếu danh sách steps).`); return; }
+      skipped(w, warnings);
+      out.push(freshCopy(w));
+    });
+    if (!out.length) throw new Error('Không có dự án hợp lệ nào trong JSON. ' + warnings.slice(0, 3).join(' '));
+    return { kind, workspaces: out, warnings };
   }
   const { workspace, warnings } = fromMarkdown(t);
   return { kind: 'md', workspaces: [freshCopy(workspace)], warnings };
@@ -356,10 +456,17 @@ export function slug(/** @type {string} */ s) {
   return fold(s).replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60) || 'du-an';
 }
 
+/** Đổi tên người làm trên mọi bước con. @param {any} ws @param {string} from @param {string} to */
+export function renameOwner(ws, from, to) {
+  let n = 0;
+  for (const s of ws.steps) for (const x of s.subs) if (x.owner === from) { x.owner = to; n++; }
+  return n;
+}
+
 /** Phần so được khi kiểm Markdown đi rồi về: bỏ id và mốc thời gian. @param {any} ws */
 export function shape(ws) {
   return {
-    name: ws.name, templateId: ws.templateId, people: ws.people,
+    name: ws.name, templateId: ws.templateId, notes: ws.notes, people: ws.people,
     steps: ws.steps.map((/** @type {any} */ s) => ({
       title: s.title, goal: s.goal, doneWhen: s.doneWhen, notes: s.notes, revisit: s.revisit,
       subs: s.subs.map((/** @type {any} */ x) => ({ title: x.title, status: x.status, owner: x.owner, due: x.due, doneWhen: x.doneWhen, notes: x.notes })),

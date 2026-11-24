@@ -55,6 +55,8 @@
   --dlg-w: 560px;
   --dlg-wide: 780px;
   --toast-w: 520px;
+  --fade: 40px;
+  --mask: #000;
 }
 
 @media (pointer: coarse) {
@@ -124,6 +126,11 @@ svg .fill { fill: currentColor; stroke: none; }
 .btn.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
 .btn.danger { color: var(--danger); }
 .btn:disabled { opacity: .45; cursor: default; }
+.btn.small { min-height: calc(var(--icon-btn) - var(--sp-1)); padding: 0 var(--sp-2); font-size: var(--fs-xs); }
+.btn.warn { background: var(--amber-soft); border-color: var(--amber-soft); color: var(--amber-fg); }
+.notes-text { white-space: pre-line; overflow-wrap: anywhere; font-size: var(--fs-sm); color: var(--ink-2); }
+.notes-text a, .card-notes a, .log-why a { color: inherit; text-underline-offset: 3px; }
+.field textarea.grow-title { resize: none; overflow: hidden; }
 .icon-btn {
   display: inline-flex; align-items: center; justify-content: center; flex: none;
   width: var(--icon-btn); height: var(--icon-btn); border-radius: var(--r-sm); color: var(--ink-2); font-size: var(--fs-lg);
@@ -151,11 +158,13 @@ svg .fill { fill: currentColor; stroke: none; }
   max-width: var(--wrap); margin: 0 auto; padding: var(--sp-3) var(--gutter);
 }
 .ws-btn {
-  display: inline-flex; align-items: center; gap: var(--sp-1); flex: 0 1 auto; min-width: 0; margin-right: auto;
+  display: inline-flex; align-items: center; gap: var(--sp-1); max-width: 100%; min-width: 0;
   font: 600 var(--fs-xl)/1.2 var(--display); color: var(--ink); background: none; border: 0; padding: var(--sp-1) var(--sp-2);
   border-radius: var(--r-sm); cursor: pointer; text-align: left;
 }
 .ws-btn:hover { background: var(--soft); }
+.top-name { display: flex; flex-direction: column; align-items: flex-start; flex: 1 1 0; min-width: 0; }
+.brand { font: 500 var(--fs-xs)/1.2 var(--mono); color: var(--ink-3); padding: 0 var(--sp-2); }
 .ws-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
 .overall { display: flex; align-items: center; gap: var(--sp-2); flex: 0 0 auto; font-size: var(--fs-sm); color: var(--ink-2); }
 .overall .bar { width: calc(var(--card-w) * .6); }
@@ -181,9 +190,16 @@ svg .fill { fill: currentColor; stroke: none; }
 .tools .search { flex: 0 1 calc(var(--card-w) * 1.2); }
 .tools select { max-width: calc(var(--card-w) * 1.1); }
 .filter-note { font-size: var(--fs-sm); color: var(--ink-2); }
+
+/* ── Ghi chú dự án (gập) ── */
+.ws-notes { padding: 0 0 var(--sp-3); font-size: var(--fs-sm); }
+.ws-notes summary { cursor: pointer; color: var(--ink-2); font-weight: 600; }
+.ws-notes[open] summary { margin-bottom: var(--sp-2); }
+.ws-notes .notes-text { margin-bottom: var(--sp-2); }
 @media (max-width: 640px) {
   .tools .search { flex: 1 1 100%; }
-  .tools .field:not(.search) { flex: 1 1 0; }
+  .tools .field:not(.search) { flex: 1 1 100%; }
+  .tools .btn { flex: 1 1 0; }
   .tools select { max-width: none; }
   .tools-gap { display: none; }
 }
@@ -212,8 +228,21 @@ svg .fill { fill: currentColor; stroke: none; }
 }
 .prog { display: flex; align-items: center; gap: var(--sp-2); font-size: var(--fs-xs); color: var(--ink-2); }
 .prog .bar { flex: 1; }
-.acts { display: flex; gap: var(--sp-1); flex-wrap: wrap; }
-.cards-scroll { flex: 1 1 0; min-width: 0; overflow-x: auto; overscroll-behavior-x: contain; padding-bottom: var(--sp-2); }
+.acts { display: flex; gap: var(--sp-1); flex-wrap: wrap; align-items: center; }
+.step-notes summary { cursor: pointer; font-size: var(--fs-sm); font-weight: 600; color: var(--ink-2); }
+.step-notes .notes-text { margin-top: var(--sp-1); }
+.cards-scroll {
+  flex: 1 1 0; min-width: 0; overflow-x: auto; overscroll-behavior-x: contain; padding-bottom: var(--sp-2);
+  scrollbar-width: thin; scrollbar-color: var(--line) transparent;
+}
+.cards-scroll.more-right { mask-image: linear-gradient(to right, var(--mask) calc(100% - var(--fade)), transparent); }
+.cards-scroll.more-left { mask-image: linear-gradient(to left, var(--mask) calc(100% - var(--fade)), transparent); }
+.cards-scroll.more-left.more-right { mask-image: linear-gradient(to right, transparent, var(--mask) var(--fade), var(--mask) calc(100% - var(--fade)), transparent); }
+/* Nút phụ (dời, nhân bản, xoá) hiện khi rê chuột hoặc focus; máy cảm ứng luôn hiện. */
+@media (hover: hover) {
+  .card .acts, .step-head .acts .icon-btn { opacity: 0; }
+  .card:hover .acts, .card:focus-within .acts, .step-head:hover .acts .icon-btn, .step-head:focus-within .acts .icon-btn { opacity: 1; }
+}
 .cards { display: flex; gap: var(--sp-3); align-items: stretch; }
 .cards.drop-end > .add { box-shadow: 0 0 0 var(--mark-w) var(--green-hi); }
 @media (max-width: 640px) {
@@ -240,6 +269,8 @@ svg .fill { fill: currentColor; stroke: none; }
 .due.overdue { color: var(--danger); font-weight: 600; }
 .card-done, .card-notes { font-size: var(--fs-xs); color: var(--ink-2); overflow-wrap: anywhere; }
 .card-notes { white-space: pre-line; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.card-notes.open { display: block; }
+.more { align-self: flex-start; font: inherit; font-size: var(--fs-xs); font-weight: 600; color: var(--ink-2); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
 .card .acts { margin-top: auto; }
 .card.st-done .card-title, .card.st-skip .card-title { color: var(--ink-2); }
 .card.st-skip .card-title { text-decoration: line-through; }
@@ -268,6 +299,8 @@ svg .fill { fill: currentColor; stroke: none; }
 .log-item { display: grid; grid-template-columns: auto 1fr auto; gap: var(--sp-1) var(--sp-3); padding: var(--sp-3) 0; border-top: var(--line-w) solid var(--line); }
 .log-date { font: 500 var(--fs-xs)/1.9 var(--mono); color: var(--ink-3); }
 .log-decision { font-weight: 600; overflow-wrap: anywhere; }
+.warn-list { margin: var(--sp-1) 0 0; padding-left: var(--sp-4); list-style: disc; }
+.backup-row { display: flex; align-items: center; gap: var(--sp-3); flex-wrap: wrap; }
 .log-why { grid-column: 2; font-size: var(--fs-sm); color: var(--ink-2); white-space: pre-line; overflow-wrap: anywhere; }
 .log-item .icon-btn { grid-row: 1; grid-column: 3; }
 

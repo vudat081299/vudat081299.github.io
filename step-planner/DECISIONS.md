@@ -1,20 +1,20 @@
 # Quyết định — step-planner
 
 <!-- index:start -->
-- PLAN-001 · Bảng đọc như bảng tính: mỗi bước một hàng, bước con chạy sang phải · `step-planner/`
+- PLAN-001 · Dự án là các bước có thứ tự, mỗi bước có bước con có thứ tự · `step-planner/`
 - PLAN-002 · Dữ liệu chỉ ở trình duyệt, nhiều dự án, nhớ dự án mở cuối · `step-planner/`
 - PLAN-003 · Tiến độ không tính bước bị bỏ qua; việc tiếp theo được tô · `step-planner/`
 - PLAN-004 · Quay lại một bước có lý do · `step-planner/`
 - PLAN-005 · Mỗi dự án có nhật ký quyết định · `step-planner/`
-- PLAN-006 · Xoá có Hoàn tác; sắp xếp bằng kéo thả và bằng nút · `step-planner/`
-- PLAN-007 · Markdown xuất ra đọc được và nhập lại được; nhập luôn tạo dự án mới · `step-planner/`
+- PLAN-006 · Xoá hoàn tác được; sắp xếp lại được; lọc theo người làm · `step-planner/`
+- PLAN-007 · Markdown xuất ra đọc được và nhập lại được; nhập không ghi đè ngầm · `step-planner/`
 - PLAN-008 · Mẫu đồ án lấy đúng từ trang đồ án, người làm là vai · `step-planner/data/templates.json`
 <!-- index:end -->
 
-## PLAN-001 · Bảng đọc như bảng tính: mỗi bước một hàng, bước con chạy sang phải
+## PLAN-001 · Dự án là các bước có thứ tự, mỗi bước có bước con có thứ tự
 24/11/2026 · `step-planner/`
 
-Mỗi bước chính là một hàng, tên bước ở cột trái như cột A; bước con nằm cùng hàng, theo thứ tự sang phải, đánh số phân cấp 1.1, 1.2, 2.1. Cột tên bước đứng yên khi hàng bước con cuộn ngang; điện thoại thì tên bước nằm trên hàng bước con. Mỗi hàng có tiến độ riêng, thanh trên có tiến độ chung.
+Một dự án là danh sách bước chính có thứ tự; mỗi bước chứa bước con có thứ tự, đánh số phân cấp 1.1, 1.2, 2.1, đọc như một bảng: bước là hàng, bước con theo thứ tự trong hàng. Mỗi bước có tiến độ riêng, dự án có tiến độ chung. Công cụ tên là Data Science Step Planner: ưu tiên dự án dữ liệu nhưng dùng được cho dự án bất kỳ.
 
 ## PLAN-002 · Dữ liệu chỉ ở trình duyệt, nhiều dự án, nhớ dự án mở cuối
 24/11/2026 · `step-planner/`
@@ -36,15 +36,15 @@ Việc dữ liệu lặp (CRISP-DM quay lại pha trước), nên một bước 
 
 Mỗi dự án giữ danh sách quyết định: ngày, quyết định, vì sao; thêm và xoá được (xoá có Hoàn tác).
 
-## PLAN-006 · Xoá có Hoàn tác; sắp xếp bằng kéo thả và bằng nút
+## PLAN-006 · Xoá hoàn tác được; sắp xếp lại được; lọc theo người làm
 24/11/2026 · `step-planner/`
 
-Xoá bước, bước con hay quyết định hiện thông báo có nút Hoàn tác, trả về đúng chỗ. Bước và bước con sắp xếp được bằng kéo thả trên máy tính và bằng nút lên / xuống, trái / phải cho bàn phím và điện thoại; bước con nhân bản được. Lọc theo người làm ("việc của tôi") và tìm theo chữ.
+Xoá bước, bước con hay quyết định đều hoàn tác được, trả về đúng chỗ; xoá một bước còn bước con thì hỏi lại trước. Bước và bước con sắp xếp lại được, kể cả chỉ dùng bàn phím, và bước con chuyển được sang bước khác; bước con nhân bản được. Lọc theo người làm ("việc của tôi") và tìm theo chữ.
 
-## PLAN-007 · Markdown xuất ra đọc được và nhập lại được; nhập luôn tạo dự án mới
+## PLAN-007 · Markdown xuất ra đọc được và nhập lại được; nhập không ghi đè ngầm
 24/11/2026 · `step-planner/`
 
-Xuất Markdown cho người đọc, theo một khuôn cố định để nhập lại ra đúng cấu trúc; xuất JSON một dự án hoặc sao lưu tất cả; tải file hoặc chép. Nhập (file hay dán) hiện xem trước số bước, bước con và luôn tạo dự án mới, không ghi đè dự án đang có.
+Xuất Markdown cho người đọc, theo một khuôn cố định để nhập lại ra đúng cấu trúc; Markdown viết tay cũng nhập được. Xuất JSON một dự án hoặc sao lưu tất cả; tải file hoặc chép. Nhập (file hay dán) hiện xem trước số bước, bước con và mọi cảnh báo; mặc định tạo dự án mới, hoặc chọn thay dự án đang mở (hoàn tác được). Không bao giờ ghi đè mà không hỏi.
 
 ## PLAN-008 · Mẫu đồ án lấy đúng từ trang đồ án, người làm là vai
 24/11/2026 · `step-planner/data/templates.json`
