@@ -28,10 +28,10 @@
 - Workspace `{id, name, templateId, createdAt, updatedAt, notes, steps[], log[]}`. Log `{id, date, decision, why}`.
 - Step `{id, title, goal, doneWhen, notes, revisit: null | {reason, date, round}, round, docs[], subs[]}`. `round`: vòng gần
   nhất (1 = chưa mở lại); đang mở lại thì `round` = `revisit.round` ≥ 2.
-- Sub `{id, title, status, cancelReason, due, doneWhen, notes, docs[], par, redo}`; `status` ∈ `todo doing done blocked skip cancel`;
-  `cancelReason` (nhiều dòng) chỉ giữ khi `cancel`; `due` là `YYYY-MM-DD` hoặc rỗng. `par: true` = chạy song song với bước
-  con ngay trước (nhập ô của nó); `subs[0].par` luôn false. Ô (slot), chỗ (`Place`) và mọi phép dời ở `core.js`. `redo:
-  true` = được gửi lại làm trong vòng đang mở; bước không mở lại thì mọi `redo` là false.
+- Sub `{id, title, status, reason, due, doneWhen, notes, docs[], par, redo}`; `status` ∈ `todo doing pending blocked done skip
+  cancel`; `reason` (nhiều dòng) chỉ giữ khi `pending`, `blocked`, `cancel` (`cancelReason` cũ đọc thành `reason`); `due`:
+  `YYYY-MM-DD` hoặc rỗng. `par: true` = nhập ô của bước con ngay trước; `subs[0].par` luôn false. Ô (slot), chỗ (`Place`), mọi
+  phép dời ở `core.js`. `redo: true` = được gửi lại làm trong vòng đang mở; bước không mở lại thì mọi `redo` là false.
 - Doc `{id, kind: 'link', title, url}` hoặc `{id, kind: 'md', title, body}`. `url` chỉ http(s) (`safeUrl`); link khác bị bỏ
   (nhập thì cảnh báo). `body` giữ nguyên từng dòng, chỉ bỏ dòng trống đầu và khoảng trắng cuối.
 - Mọi dữ liệu đi qua `normSub` / `normStep` / `normWorkspace`: chuỗi một dòng gộp khoảng trắng, phần tử sai kiểu bị bỏ,
@@ -42,18 +42,18 @@
 
 ## Hành vi
 
-- Sáu trạng thái (PLAN-003), tên trên giao diện: New (`todo`), In progress, Done, Blocked, Skipped, Cancelled. Skipped: việc
-  không cần với dự án này. Cancelled: đã quyết không làm, giữ thẻ để nhớ vì sao.
-- Tiến độ = xong / (tổng − bỏ qua − huỷ), không đổi với ô song song. "Next" tô các thẻ còn mở (không xong, bỏ qua, huỷ)
-  của ô đầu tiên còn việc, trong bước đầu tiên còn việc. Hạn đã qua thì báo "(overdue)", trừ thẻ xong, bỏ qua, huỷ.
+- Bảy trạng thái, ý nghĩa ở PLAN-003, thứ tự này ở mọi chỗ: New (`todo`), In progress, Pending, Blocked, Done, Skipped,
+  Cancelled. Nhãn lý do: Pending "Waiting on", Blocked "Blocked by", Cancelled "Cancelled because" (`REASON_LABEL`).
+- Tiến độ = xong / (tổng − bỏ qua − huỷ), không đổi với ô song song. "Next" tô các thẻ còn mở (không xong, bỏ qua, huỷ),
+  trừ thẻ chờ, của ô đầu tiên còn việc trong bước đầu tiên còn việc. Hạn qua: "(overdue)", trừ thẻ xong, bỏ qua, huỷ.
 - Song song (PLAN-013): mỗi ô một cột của hàng, thẻ song song xếp chồng. Số thẻ là vị trí ô (`1`, `2`…), ô k thẻ thì `n.1`
   … `n.k`. "Add parallel" trên thẻ, ô "Position" ("Position n" / "Parallel with n"); Alt + ← →: đổi ô (thẻ ở ô song song thì
   tách ra ô riêng), Alt + ↑ ↓: đổi thứ tự trong ô. Toast dời tả chỗ mới bằng tên hàng xóm, không bằng số.
 - Số đứng yên trong phiên (PLAN-014): chụp số khi dự án hiện lần đầu sau khi mở trang (và sau nhập thay nội dung); dời,
   xoá không đổi số (hàng đọc "1 3 2"); cái thêm trong phiên hiện chấm thay số. Số lệch thì nút "Renumber" hiện.
-- Bấm chip: New → In progress → Done. Chip Done, Blocked, Skipped, Cancelled bấm là mở danh sách sáu trạng thái (chấm,
-  một dòng gợi ý, đánh dấu cái hiện tại); Shift + bấm hay Alt + ↓ luôn mở. Chọn Cancelled: mở hộp sửa, trạng thái đặt sẵn,
-  focus ô lý do; Lưu mới huỷ. Rời Cancelled thì bỏ lý do. Thẻ huỷ: tên gạch, lý do trong thân thẻ (cắt như ghi chú).
+- Bấm chip: New → In progress → Done. Chip trạng thái khác bấm là mở danh sách bảy trạng thái (chấm, một dòng gợi ý, đánh
+  dấu cái hiện tại); Shift + bấm hay Alt + ↓ luôn mở. Chọn Cancelled: mở hộp sửa, trạng thái đặt sẵn, focus ô lý do; Lưu mới
+  huỷ. Pending, Blocked đặt ngay, lý do sửa trong hộp. Lý do trong thân thẻ kèm nhãn (cắt như ghi chú). Thẻ huỷ: tên gạch.
 - Thêm bước: nút cuối bảng, hoặc rê chuột lên vạch chia trên một bước thì nút "Add step" nổi lên (không xê dịch bố cục),
   bấm mở hộp thêm bước đặt sẵn vị trí ấy; màn cảm ứng: nút tròn nhỏ luôn hiện. Thêm bước con: nút ở cột tên bước.
 - Bấm vào thẻ (ngoài nút) là mở hộp sửa; mỗi thẻ chỉ hai điểm dừng Tab: tên và chip. Nút phụ (song song, nhân bản, xoá,
@@ -68,8 +68,8 @@
   không chọn). Mở vòng `round + 1`; bước con đã chọn về New, mang dấu "Redo" tới khi xong lại; nhật ký ghi "Reopened: tên
   (iteration N)"; một Hoàn tác trả hết. Băng "Reopened · Iteration N · ngày · lý do" (bấm để sửa lý do) đếm "k of n redo
   tasks left"; xong hết thì "Close iteration" thành nút chính. Đóng vòng bỏ băng và dấu Redo (Hoàn tác được).
-- Mẹo tắt bằng ×; "Compact" ẩn "Done when", ghi chú, lý do huỷ (cả hai nhớ ở máy này). "Log (N)" cuộn tới nhật ký, focus.
-- Tìm bỏ dấu, không phân biệt hoa thường, khớp cả tài liệu; bước khớp thì hiện cả hàng; đang tìm thì tắt sắp xếp, thêm bước.
+- Mẹo tắt bằng ×; "Compact" ẩn "Done when", ghi chú, lý do (cả hai nhớ ở máy này). "Log (N)" cuộn tới nhật ký, focus. Tìm
+  bỏ dấu, không phân biệt hoa thường, khớp cả lý do, tài liệu; bước khớp thì hiện cả hàng; đang tìm thì tắt sắp xếp, thêm bước.
 - Xoá bước con, quyết định, tài liệu: một bấm. Xoá bước còn bước con, xoá dự án (không hoàn tác): hỏi lại. Sau khi xoá,
   focus nhảy vào Hoàn tác của toast (15 giây); Ctrl/Cmd + Z cũng hoàn tác khi không gõ chữ và không có hộp thoại mở. Hoàn
   tác tìm lại dự án và bước theo id (tab khác có thể đã thay `state`).
@@ -145,11 +145,11 @@ Docs:
   `Huỷ vì`, `Vì sao`, `hạn`, `## Nhật ký quyết định`. Nhãn không phân biệt hoa thường. Dòng đầu (`… · format N`) chỉ để
   đọc, trang không dựa vào nó. Số thứ tự trên bảng không ghi vào Markdown.
 - Phần tử `parallel` (nhận cả `song song`): nhập ô của bước con ngay trước. `redo` (nhận cả `làm lại`): dấu Redo.
-- Dấu trạng thái: `[ ]` / `[]` mới, `[~]` đang làm, `[x]` / `[X]` xong, `[!]` bị chặn, `[-]` bỏ qua, `[/]` huỷ. Dấu lạ đọc là mới.
+- Dấu: `[ ]` / `[]` mới, `[~]` đang làm, `[>]` chờ, `[!]` bị chặn, `[x]` / `[X]` xong, `[-]` bỏ qua, `[/]` huỷ; dấu lạ là mới.
 - Trên dòng bước con, phần tử tách bằng ` · `. Trong tên: `\` → `\\`, `·` → `\·`, `@` → `\@`, `hạn` / `due` → `\hạn` / `\due`.
 - Dòng thụt hai dấu cách thuộc bước con / `Notes:` / quyết định ngay trên nó. Dòng thụt đầu `Done when: ` của bước con là
   `doneWhen`; dòng thụt đầu `Why: ` của quyết định mở phần lý do.
-- Bước con huỷ: dòng thụt `Cancelled because: dòng đầu` ngay sau `Done when:`, dòng sau của lý do thụt bốn (thoát như ghi chú).
+- Lý do: dòng thụt `<nhãn>: dòng đầu` sau `Done when:`, dòng sau thụt bốn; nhập nhận mọi nhãn lý do (cả `Huỷ vì`) khi trạng thái có lý do, không thì là ghi chú.
 - Dòng ghi chú: dòng trống viết `\`; dòng bắt đầu bằng `\`, khoảng trắng, `#`, `>`, đầu mục danh sách, `**` hay một nhãn (cả
   nhãn định dạng 2) thêm một `\` phía trước.
 - Vòng: bước đang mở lại ghi vòng trong `Reopened:`; bước đã đóng vòng mà `round` > 1 có dòng `Iteration: N` thay chỗ ấy.
@@ -186,7 +186,7 @@ Nhập file cũ và Markdown viết tay (dễ dãi):
 - Đầu dự án: tên (bấm để đổi dự án), tiến độ chung, chú giải trạng thái kèm số đếm. Chip trạng thái có chữ và chấm khác hình.
 - Cột tên bước rộng cố định, thẻ cùng bề rộng (các hàng thẳng cột). Hàng thẻ cuộn ngang bên trong, không hiện thanh cuộn,
   mép mờ báo còn chỗ cuộn. ≤ 640px: tên bước nằm trên hàng thẻ.
-- Hộp thoại: ≤ 640px là tấm đáy, chân dính đáy; hộp Markdown toàn màn. Trạng thái trong hộp bước con: sáu viên radio.
+- Hộp thoại: ≤ 640px là tấm đáy, chân dính đáy; hộp Markdown toàn màn. Trạng thái trong hộp bước con: bảy viên radio.
 - Mọi `<select>` chọn thứ có nghĩa dùng danh sách tự dựng (nổi ở lớp trên cùng, không đẩy bố cục; phím ↑ ↓, gõ chữ đầu,
   Enter, Esc trả focus); ô chỉ chọn số giữ `<select>` gốc (`data-native`). Option có `data-dot`, `data-hint` thì hiện thêm.
 - Cảm ứng và ≤ 640px: vùng bấm ≥ 44px. Trang không cuộn ngang. Tạo hay mở dự án thì về đầu trang, không cuộn theo focus.

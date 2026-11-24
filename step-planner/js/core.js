@@ -2,27 +2,33 @@
 /* Logic thuần của Step Planner: chuẩn hoá dữ liệu, tiến độ, Markdown và JSON vào / ra.
  * Không đụng DOM hay bộ nhớ trình duyệt; chạy được trong Node (tools/test-core.mjs). */
 
-/* Sáu trạng thái. Bỏ qua: việc không cần với dự án này. Huỷ: đã quyết không làm, giữ thẻ để nhớ vì sao (cancelReason).
- * Tiến độ và "Tiếp theo" không tính cả hai. */
-export const STATUSES = ['todo', 'doing', 'done', 'blocked', 'skip', 'cancel'];
-export const STATUS_LABEL = { todo: 'New', doing: 'In progress', done: 'Done', blocked: 'Blocked', skip: 'Skipped', cancel: 'Cancelled' };
-const MARK = { todo: ' ', doing: '~', done: 'x', blocked: '!', skip: '-', cancel: '/' };
-const FROM_MARK = { ' ': 'todo', '': 'todo', '~': 'doing', x: 'done', X: 'done', '!': 'blocked', '-': 'skip', '/': 'cancel' };
+/* Bảy trạng thái (PLAN-003), theo thứ tự: còn mở (mới, đang làm, chờ, bị chặn), xong, ngoài phạm vi (bỏ qua, huỷ).
+ * Chờ: đợi bên ngoài, tự xong mà ta không phải làm gì. Bị chặn: vướng, phải ra tay gỡ. Bỏ qua: không cần với dự án này.
+ * Huỷ: đã quyết không làm, giữ thẻ để nhớ vì sao. Tiến độ và "Tiếp theo" không tính bỏ qua, huỷ. */
+export const STATUSES = ['todo', 'doing', 'pending', 'blocked', 'done', 'skip', 'cancel'];
+export const STATUS_LABEL = { todo: 'New', doing: 'In progress', pending: 'Pending', blocked: 'Blocked', done: 'Done', skip: 'Skipped', cancel: 'Cancelled' };
+const MARK = { todo: ' ', doing: '~', pending: '>', blocked: '!', done: 'x', skip: '-', cancel: '/' };
+const FROM_MARK = { ' ': 'todo', '': 'todo', '~': 'doing', '>': 'pending', '!': 'blocked', x: 'done', X: 'done', '-': 'skip', '/': 'cancel' };
 /** Một dòng giải thích của mỗi trạng thái, hiện trong danh sách chọn. */
 export const STATUS_HINT = {
-  todo: 'Not started yet', doing: 'Being worked on now', done: 'Finished: meets its Done when',
-  blocked: 'Waiting on something outside this sub-step', skip: 'Not needed for this project, left out of progress',
-  cancel: 'Decided not to do it; keep the card and say why',
+  todo: 'Not started yet', doing: 'Being worked on now',
+  pending: 'Waiting on others (approval, data access, a long run); nothing to do now',
+  blocked: 'Stuck on a problem; needs action to unblock', done: 'Finished: meets its Done when',
+  skip: 'Not needed for this project, left out of progress', cancel: 'Decided not to do it; keep the card and say why',
 };
-/* Bấm chip: New → In progress → Done. Done, Blocked, Skipped, Cancelled: bấm mở danh sách mọi trạng thái ('' ở đây). */
+/** Trạng thái có lý do (`reason`, nhiều dòng) và nhãn của lý do: trên thẻ, trong hộp sửa, trong Markdown. */
+export const REASON_LABEL = { pending: 'Waiting on', blocked: 'Blocked by', cancel: 'Cancelled because' };
+export const hasReason = (/** @type {string} */ s) => Object.hasOwn(REASON_LABEL, s);
+/* Bấm chip: New → In progress → Done. Trạng thái khác: bấm mở danh sách mọi trạng thái ('' ở đây). */
 const NEXT = { todo: 'doing', doing: 'done' };
 /** Trạng thái không tính vào tiến độ và việc tiếp theo. @param {string} s */
 export const outOfScope = (s) => s === 'skip' || s === 'cancel';
 export const nextStatus = (/** @type {string} */ s) => NEXT[s] || '';
-/** Đổi trạng thái một bước con: rời Cancelled thì bỏ lý do huỷ. @param {any} sub @param {string} st */
+/** Đổi trạng thái một bước con: sang trạng thái không có lý do thì bỏ lý do; giữa Pending, Blocked, Cancelled thì giữ.
+ * @param {any} sub @param {string} st */
 export function setStatus(sub, st) {
   sub.status = STATUSES.includes(st) ? st : 'todo';
-  if (sub.status !== 'cancel') sub.cancelReason = '';
+  if (!hasReason(sub.status)) sub.reason = '';
 }
 
 export const FORMAT = 'step-planner';
@@ -94,7 +100,7 @@ export function normSub(o) {
     id: idOr(x.id, 's'),
     title: oneLine(x.title) || 'Sub-step',
     status,
-    cancelReason: status === 'cancel' ? multiLine(x.cancelReason) : '',
+    reason: hasReason(status) ? multiLine(typeof x.reason === 'string' ? x.reason : x.cancelReason) : '', // cancelReason: dữ liệu cũ
     due: parseDate(x.due),
     doneWhen: oneLine(x.doneWhen),
     notes: multiLine(x.notes),
@@ -305,13 +311,11 @@ export function liveLabels(ws) {
 }
 
 const open = (/** @type {{status:string}} */ x) => x.status !== 'done' && !outOfScope(x.status);
-/** Việc tiếp theo của một bước: các bước con còn mở (không xong, không bỏ qua, không huỷ) của ô đầu tiên còn việc.
+/** Việc tiếp theo của một bước: các bước con còn mở (không xong, không bỏ qua, không huỷ) của ô đầu tiên còn việc, trừ
+ * thẻ chờ (không có việc để làm). Ô đầu còn việc chỉ có thẻ chờ: rỗng, "Next" không vượt qua chỗ đang chờ.
  * @param {{subs:{id:string,status:string,par?:boolean}[]}} step @returns {string[]} */
 export function nextActionIds(step) {
-  for (const sl of slotsOf(step.subs)) {
-    const ids = sl.filter(open).map((x) => x.id);
-    if (ids.length) return ids;
-  }
+  for (const sl of slotsOf(step.subs)) if (sl.some(open)) return sl.filter((x) => open(x) && x.status !== 'pending').map((x) => x.id);
   return [];
 }
 
@@ -323,10 +327,7 @@ export function redoCount(step) {
 
 /** Việc tiếp theo của cả dự án: việc tiếp theo của bước đầu tiên còn việc. @param {any} ws @returns {string[]} */
 export function projectNextIds(ws) {
-  for (const s of ws.steps) {
-    const ids = nextActionIds(s);
-    if (ids.length) return ids;
-  }
+  for (const s of ws.steps) if (s.subs.some(open)) return nextActionIds(s);
   return [];
 }
 
@@ -355,7 +356,9 @@ export const splitInline = (line) => splitDots(protect(line)).map(restore);
  * thường. */
 const LABELS = {
   goal: ['Goal', 'Mục tiêu'], doneWhen: ['Done when', 'Xong khi'], reopened: ['Reopened', 'Quay lại'], iteration: ['Iteration', 'Vòng'],
-  notes: ['Notes', 'Ghi chú'], docs: ['Docs', 'Tài liệu'], cancel: ['Cancelled because', 'Huỷ vì'], why: ['Why', 'Vì sao'],
+  notes: ['Notes', 'Ghi chú'], docs: ['Docs', 'Tài liệu'], why: ['Why', 'Vì sao'],
+  /* Lý do của bước con: xuất nhãn theo trạng thái (REASON_LABEL); nhập nhận nhãn nào cũng được nếu trạng thái có lý do. */
+  reason: ['Cancelled because', 'Huỷ vì', 'Blocked by', 'Waiting on'],
 };
 const labelRe = (/** @type {string[]} */ names) => names.join('|');
 const ANY_LABEL = labelRe(Object.values(LABELS).flat());
@@ -465,9 +468,9 @@ export function toMarkdown(ws) {
       if (x.due) line += ` · due ${x.due}`;
       const more = [];
       if (x.doneWhen) more.push(`  Done when: ${x.doneWhen}`);
-      if (x.status === 'cancel' && x.cancelReason) {
-        const [first, ...rest] = x.cancelReason.split('\n');
-        more.push(`  Cancelled because: ${first}`, ...rest.map((l) => '    ' + escBlock(l)));
+      if (hasReason(x.status) && x.reason) {
+        const [first, ...rest] = x.reason.split('\n');
+        more.push(`  ${REASON_LABEL[x.status]}: ${first}`, ...rest.map((l) => '    ' + escBlock(l)));
       }
       if (x.notes) more.push(...x.notes.split('\n').map((l) => '  ' + escBlock(l)));
       if (x.docs.length) more.push('  Docs:');
@@ -547,7 +550,7 @@ export function fromMarkdown(text) {
   let started = false; // đã qua `## ` đầu tiên
   let block = /** @type {'' | 'step' | 'sub' | 'why'} */ ('');
   let blockFirst = false;
-  let cancelCont = false; // đang ở các dòng thụt bốn nối tiếp `Huỷ vì:`
+  let reasonCont = false; // đang ở các dòng thụt bốn nối tiếp nhãn lý do (`Cancelled because:`, `Huỷ vì:`…)
   const addNote = (/** @type {any} */ o, /** @type {string} */ key, /** @type {string} */ l) => {
     o[key] = o[key] === undefined || o[key] === null ? l : o[key] + '\n' + l;
   };
@@ -569,14 +572,15 @@ export function fromMarkdown(text) {
   for (let i = 0; i < lines.length; i++) {
     const raw = lines[i];
     const ind = /^( {2}|\t)(.*)$/.exec(raw);
-    if (ind && block === 'sub' && cancelCont && /^ {2}/.test(ind[2])) {
-      sub.cancelReason += '\n' + unescBlock(ind[2].slice(2));
+    if (ind && block === 'sub' && reasonCont && /^ {2}/.test(ind[2])) {
+      sub.reason += '\n' + unescBlock(ind[2].slice(2));
       continue;
     }
-    cancelCont = false;
-    if (ind && block === 'sub' && after(ind[2], 'cancel') !== null) {
-      sub.cancelReason = /** @type {string} */ (after(ind[2], 'cancel'));
-      cancelCont = true;
+    reasonCont = false;
+    /* Nhãn lý do chỉ là lý do khi trạng thái có lý do; còn lại là một dòng ghi chú (không mất chữ). */
+    if (ind && block === 'sub' && hasReason(sub.status) && after(ind[2], 'reason') !== null) {
+      sub.reason = /** @type {string} */ (after(ind[2], 'reason'));
+      reasonCont = true;
       blockFirst = false;
       continue;
     }
@@ -747,7 +751,7 @@ export function shape(ws) {
     name: ws.name, templateId: ws.templateId, notes: ws.notes,
     steps: ws.steps.map((/** @type {any} */ s) => ({
       title: s.title, goal: s.goal, doneWhen: s.doneWhen, notes: s.notes, revisit: s.revisit, round: s.round, docs: s.docs.map(docShape),
-      subs: s.subs.map((/** @type {any} */ x) => ({ title: x.title, status: x.status, cancelReason: x.cancelReason, due: x.due, doneWhen: x.doneWhen, notes: x.notes, par: x.par, redo: x.redo, docs: x.docs.map(docShape) })),
+      subs: s.subs.map((/** @type {any} */ x) => ({ title: x.title, status: x.status, reason: x.reason, due: x.due, doneWhen: x.doneWhen, notes: x.notes, par: x.par, redo: x.redo, docs: x.docs.map(docShape) })),
     })),
     log: ws.log.map((/** @type {any} */ l) => ({ date: l.date, decision: l.decision, why: l.why })),
   };

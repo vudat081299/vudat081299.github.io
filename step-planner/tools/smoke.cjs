@@ -194,8 +194,8 @@ const check = (name, ok, detail = '') => {
       below: pop.getBoundingClientRect().top >= chipEl.getBoundingClientRect().bottom - 1 || pop.getBoundingClientRect().bottom <= chipEl.getBoundingClientRect().top + 1,
       rowH: document.querySelector('.step').getBoundingClientRect().height };
   });
-  check('chip Done: bấm mở danh sách sáu trạng thái (chấm, dòng gợi ý, đánh dấu hiện tại), không đẩy bố cục', !!menu && menu.opts.length === 6
-    && menu.sel === 'done' && menu.hints === 6 && menu.dots === 6 && menu.focus && menu.expanded === 'true' && menu.below && menu.rowH === layout0, JSON.stringify(menu));
+  check('chip Done: bấm mở danh sách bảy trạng thái (chấm, dòng gợi ý, đánh dấu hiện tại), không đẩy bố cục', !!menu
+    && menu.opts.join() === 'New,In progress,Pending,Blocked,Done,Skipped,Cancelled' && menu.sel === 'done' && menu.hints === 7 && menu.dots === 7 && menu.focus && menu.expanded === 'true' && menu.below && menu.rowH === layout0, JSON.stringify(menu));
   await page.keyboard.press('Escape');
   check('danh sách trạng thái: Esc đóng, focus về chip, không đổi gì', !(await page.$('.dd-pop')) && (await page.textContent(chip)).trim() === 'Done'
     && await page.evaluate(() => document.activeElement?.dataset.act === 'status'));
@@ -208,8 +208,19 @@ const check = (name, ok, detail = '') => {
   const c12 = '.step:nth-child(1) .slot:nth-child(2) > .card';
   await page.click(`${c12} [data-act="edit-sub"]`);
   const stLabels = await page.$$eval('#sub-status label', (ls) => ls.map((l) => `${l.querySelector('input').value}:${l.textContent.trim()}`));
-  check('hộp sửa: sáu trạng thái dạng viên, có Cancelled, ô "Why cancelled" ẩn khi chưa chọn',
-    stLabels.join() === 'todo:New,doing:In progress,done:Done,blocked:Blocked,skip:Skipped,cancel:Cancelled' && !(await page.isVisible('#sub-cancel')), stLabels.join());
+  check('hộp sửa: bảy trạng thái dạng viên, có Pending, Cancelled; ô lý do ẩn khi trạng thái không có lý do',
+    stLabels.join() === 'todo:New,doing:In progress,pending:Pending,blocked:Blocked,done:Done,skip:Skipped,cancel:Cancelled' && !(await page.isVisible('#sub-reason')), stLabels.join());
+  await page.focus('#sub-form [name="status"]:checked');
+  await page.keyboard.press('ArrowRight');
+  await page.keyboard.press('ArrowRight');
+  const pendPick = await page.evaluate(() => ({ st: document.querySelector('#sub-form [name="status"]:checked').value, focus: document.activeElement?.value,
+    label: document.querySelector('#sub-reason-label').textContent, ph: document.querySelector('#sub-form [name="reason"]').placeholder }));
+  check('hộp sửa: chọn Pending bằng mũi tên hiện ô "Waiting on", focus vẫn ở viên', await page.isVisible('#sub-reason') && pendPick.st === 'pending'
+    && pendPick.focus === 'pending' && pendPick.label === 'Waiting on' && !!pendPick.ph, JSON.stringify(pendPick));
+  await page.keyboard.press('ArrowRight');
+  check('hộp sửa: Blocked đổi nhãn thành "Blocked by"', (await page.textContent('#sub-reason-label')) === 'Blocked by');
+  await page.keyboard.press('ArrowRight');
+  check('hộp sửa: Done ẩn ô lý do', !(await page.isVisible('#sub-reason')));
   // Danh sách chọn tự dựng thay <select> (ô Step): mở bằng bấm, chọn bằng phím mũi tên + Enter, <select> đổi theo.
   const step0 = await page.inputValue('#sub-form [name="step"]');
   await page.click('#sub-form .f-step .dd-btn');
@@ -223,8 +234,9 @@ const check = (name, ok, detail = '') => {
   check('danh sách chọn tự dựng trong hộp: mở, mũi tên + Enter chọn, <select> đổi theo', ddOpen.pop && ddOpen.native === '0' && step1 !== step0
     && (await page.inputValue('#sub-form [name="step"]')) === step0, JSON.stringify({ ...ddOpen, step0, step1 }));
   await page.check('#sub-form [name="status"][value="cancel"]', { force: true });
-  check('chọn Cancelled: hiện ô lý do, focus vào đó', await page.isVisible('#sub-cancel') && await page.evaluate(() => document.activeElement?.name === 'cancelReason'));
-  await page.fill('#sub-form [name="cancelReason"]', 'Đã có số liệu từ nguồn khác\nkhông cần làm lại');
+  check('chọn Cancelled: hiện ô lý do, focus vào đó', await page.isVisible('#sub-reason') && await page.evaluate(() => document.activeElement?.name === 'reason')
+    && (await page.textContent('#sub-reason-label')) === 'Cancelled because');
+  await page.fill('#sub-form [name="reason"]', 'Đã có số liệu từ nguồn khác\nkhông cần làm lại');
   await page.fill('#sub-form [name="due"]', '2020-01-02');
   await page.click('#sub-form button[type="submit"]');
   // Thẻ huỷ: hạn đã qua không báo trễ.
@@ -235,17 +247,17 @@ const check = (name, ok, detail = '') => {
   check('Huỷ: hạn đã qua không báo trễ', cxl.due === 'due 2 Jan 2020' && !cxl.overdue, JSON.stringify(cxl));
   const cx = await page.evaluate((sel) => {
     const c = document.querySelector(sel);
-    return { chip: c.querySelector('.chip').textContent, reason: c.querySelector('.card-cancel')?.textContent, line: getComputedStyle(c.querySelector('.card-title .link')).textDecorationLine,
+    return { chip: c.querySelector('.chip').textContent, reason: c.querySelector('.card-reason')?.textContent, line: getComputedStyle(c.querySelector('.card-title .link')).textDecorationLine,
       prog: document.querySelector('.step:nth-child(1) .prog').textContent, next: document.querySelector('.card.next .num')?.textContent,
       legend: [...document.querySelectorAll('#legend li')].map((li) => li.textContent).join(',') };
   }, c12);
   check('Huỷ: chip, lý do trên thẻ, tên gạch ngang', cx.chip === 'Cancelled' && /^Cancelled because Đã có số liệu từ nguồn khác\nkhông cần làm lại$/.test(cx.reason) && cx.line === 'line-through', JSON.stringify(cx));
   check(`Huỷ: tiến độ 1/${n1 - 1}, "Tiếp theo" sang 1.3, chú giải có Huỷ 1`, cx.prog.startsWith(`1/${n1 - 1}`) && cx.next === '3' && cx.legend.includes('Cancelled1'), JSON.stringify(cx));
-  check('Huỷ: lưu lý do', (await cur(page)).steps[0].subs[1].cancelReason === 'Đã có số liệu từ nguồn khác\nkhông cần làm lại');
+  check('Huỷ: lưu lý do', (await cur(page)).steps[0].subs[1].reason === 'Đã có số liệu từ nguồn khác\nkhông cần làm lại');
   await page.click(`${c12} [data-act="status"]`);
   check('bấm chip Cancelled: mở danh sách', !!(await page.$('.dd-pop')));
   await page.click('.dd-pop [role="option"][data-value="todo"]');
-  check('chọn New từ danh sách: lý do huỷ bỏ', (await page.textContent(`${c12} .chip`)).trim() === 'New' && (await cur(page)).steps[0].subs[1].cancelReason === '');
+  check('chọn New từ danh sách: lý do huỷ bỏ', (await page.textContent(`${c12} .chip`)).trim() === 'New' && (await cur(page)).steps[0].subs[1].reason === '');
   check('về Chưa làm: hạn đã qua báo trễ', !!(await page.$(`${c12} .due.overdue`)));
   await page.click(`${c12} [data-act="edit-sub"]`);
   await page.fill('#sub-form [name="due"]', '');
@@ -254,10 +266,49 @@ const check = (name, ok, detail = '') => {
   const c12id = await page.getAttribute(c12, 'data-sub');
   await setSt(page, c12id, 'cancel');
   check('danh sách chip → Cancelled: hộp sửa mở, trạng thái đặt sẵn, focus ở ô lý do, chưa huỷ', await page.isVisible('#dlg-sub')
-    && (await page.$eval('#sub-form [name="status"]:checked', (r) => r.value)) === 'cancel' && await page.evaluate(() => document.activeElement?.name === 'cancelReason')
+    && (await page.$eval('#sub-form [name="status"]:checked', (r) => r.value)) === 'cancel' && await page.evaluate(() => document.activeElement?.name === 'reason')
     && (await cur(page)).steps[0].subs[1].status === 'todo');
   await page.keyboard.press('Escape');
   check('Esc: không huỷ', !(await page.isVisible('#dlg-sub')) && (await cur(page)).steps[0].subs[1].status === 'todo');
+
+  // Chờ (Pending): chọn từ danh sách là đặt ngay, không mở hộp; còn mở trong tiến độ, không là "Next", hạn qua vẫn báo trễ;
+  // ghi chú "Waiting on" trên thẻ; bấm chip Pending mở danh sách; sang Blocked giữ ghi chú, sang New thì bỏ.
+  const prog0 = await page.textContent('.step:nth-child(1) .prog');
+  await setSt(page, c12id, 'pending');
+  check('danh sách chip → Pending: đặt ngay, không mở hộp', !(await page.isVisible('#dlg-sub')) && (await cur(page)).steps[0].subs[1].status === 'pending'
+    && (await page.textContent(`${c12} .chip`)).trim() === 'Pending');
+  await page.click(`${c12} [data-act="edit-sub"]`);
+  check('hộp sửa thẻ chờ: ô "Waiting on" hiện, focus ở tên', await page.isVisible('#sub-reason') && (await page.textContent('#sub-reason-label')) === 'Waiting on'
+    && await page.evaluate(() => document.activeElement?.name === 'title'));
+  await page.fill('#sub-form [name="reason"]', 'Chủ dữ liệu duyệt quyền truy cập');
+  await page.fill('#sub-form [name="due"]', '2020-01-02');
+  await page.click('#sub-form button[type="submit"]');
+  const px = await page.evaluate((sel) => {
+    const c = document.querySelector(sel);
+    return { reason: c.querySelector('.card-reason')?.textContent, overdue: !!c.querySelector('.due.overdue'), next: c.classList.contains('next'),
+      nextNum: document.querySelector('.step:nth-child(1) .card.next .num')?.textContent, anyNext: document.querySelectorAll('.card.next').length, prog: document.querySelector('.step:nth-child(1) .prog').textContent,
+      legend: [...document.querySelectorAll('#legend li')].map((li) => li.textContent).join(','), dot: getComputedStyle(c.querySelector('.chip'), '::before').backgroundImage };
+  }, c12);
+  check('Pending: ghi chú "Waiting on" trên thẻ, hạn qua báo trễ, không là Next, ô chờ giữ Next lại (không thẻ nào Next), tiến độ không đổi, chú giải Pending1, chấm có hình riêng',
+    px.reason === 'Waiting on Chủ dữ liệu duyệt quyền truy cập' && px.overdue && !px.next && px.nextNum === undefined && px.anyNext === 0 && px.prog === prog0
+    && px.legend.startsWith('New') && px.legend.includes('Pending1') && /radial-gradient/.test(px.dot), JSON.stringify(px));
+  await page.fill('#q', 'duyet quyen');
+  check('tìm: khớp cả ghi chú Waiting on', (await page.$$('.card[data-sub]')).length === 1 && !!(await page.$(`.card[data-sub="${c12id}"] .card-reason`)));
+  await page.fill('#q', '');
+  await page.click('#compact-btn');
+  const reasonCompact = await page.isVisible(`${c12} .card-reason`);
+  await page.click('#compact-btn');
+  check('Gọn: ẩn ghi chú Waiting on, tắt Gọn thì hiện lại', !reasonCompact && await page.isVisible(`${c12} .card-reason`));
+  await page.click(`${c12} [data-act="status"]`);
+  check('bấm chip Pending: mở danh sách', !!(await page.$('.dd-pop')) && (await page.getAttribute('.dd-pop [aria-selected="true"]', 'data-value')) === 'pending');
+  await page.click('.dd-pop [role="option"][data-value="blocked"]');
+  check('Pending → Blocked: giữ ghi chú, nhãn "Blocked by"', (await cur(page)).steps[0].subs[1].reason === 'Chủ dữ liệu duyệt quyền truy cập'
+    && (await page.textContent(`${c12} .card-reason`)) === 'Blocked by Chủ dữ liệu duyệt quyền truy cập');
+  await setSt(page, c12id, 'todo');
+  check('Blocked → New: bỏ ghi chú', (await cur(page)).steps[0].subs[1].reason === '' && !(await page.$(`${c12} .card-reason`)));
+  await page.click(`${c12} [data-act="edit-sub"]`);
+  await page.fill('#sub-form [name="due"]', '');
+  await page.click('#sub-form button[type="submit"]');
 
   // Thêm bước con có đủ trường.
   await page.click('.step:nth-child(1) [data-act="add-sub"]');

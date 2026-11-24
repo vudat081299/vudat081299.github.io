@@ -25,11 +25,15 @@
   --amber-fg:  #8a4005;
   --amber-soft: rgba(217, 119, 6, .13);
   --amber-line: rgba(180, 83, 9, .35);
-  /* Đang làm: xanh dương. Huỷ: đỏ (cùng họ --danger). */
+  /* Đang làm: xanh dương. Chờ: tím. Huỷ: đỏ (cùng họ --danger). */
   --blue:      #2563eb;
   --blue-fg:   #1d4ed8;
   --blue-soft: rgba(37, 99, 235, .10);
   --blue-line: rgba(37, 99, 235, .42);
+  --violet:      #7c3aed;
+  --violet-fg:   #6d28d9;
+  --violet-soft: rgba(124, 58, 237, .10);
+  --violet-line: rgba(124, 58, 237, .42);
   --red-soft:  rgba(180, 35, 24, .08);
   --red-line:  rgba(180, 35, 24, .38);
   --ring:      var(--ink);
@@ -140,6 +144,7 @@
     --green: #5be08f; --done-edge: #4ade80;
     --amber: #f0a64a; --amber-fg: #f6c27e; --amber-soft: rgba(240, 166, 74, .14); --amber-line: rgba(240, 166, 74, .4);
     --blue: #60a5fa; --blue-fg: #93c5fd; --blue-soft: rgba(96, 165, 250, .14); --blue-line: rgba(96, 165, 250, .45);
+    --violet: #a78bfa; --violet-fg: #c4b5fd; --violet-soft: rgba(167, 139, 250, .14); --violet-line: rgba(167, 139, 250, .45);
     --red-soft: rgba(255, 138, 122, .12); --red-line: rgba(255, 138, 122, .42);
     --ring: var(--accent);
     --chip: rgba(255, 255, 255, .06);
@@ -167,6 +172,7 @@
   --green: #5be08f; --done-edge: #4ade80;
   --amber: #f0a64a; --amber-fg: #f6c27e; --amber-soft: rgba(240, 166, 74, .14); --amber-line: rgba(240, 166, 74, .4);
   --blue: #60a5fa; --blue-fg: #93c5fd; --blue-soft: rgba(96, 165, 250, .14); --blue-line: rgba(96, 165, 250, .45);
+  --violet: #a78bfa; --violet-fg: #c4b5fd; --violet-soft: rgba(167, 139, 250, .14); --violet-line: rgba(167, 139, 250, .45);
   --red-soft: rgba(255, 138, 122, .12); --red-line: rgba(255, 138, 122, .42);
   --ring: var(--accent);
   --chip: rgba(255, 255, 255, .06);
@@ -385,7 +391,7 @@ svg.i {
 }
 
 /* ── Chế độ Gọn: thẻ và cột bước chỉ còn số, tên, chip, hạn, nhãn tài liệu ── */
-.board.compact :is(.card-done, .card-notes, .card-cancel, .step-done, .step-notes) { display: none; }
+.board.compact :is(.card-done, .card-notes, .card-reason, .step-done, .step-notes) { display: none; }
 
 /* ── Ghi chú dự án (gập) ── */
 .ws-notes { padding: 0 0 var(--s3); font-size: var(--fs-sm); }
@@ -570,7 +576,7 @@ svg.i {
 /* Nút tên là inline-block: nét gạch của h3 không vẽ qua nó, nên gạch trên chính nút. */
 .card.st-skip .card-title .link, .card.st-cancel .card-title .link { text-decoration: line-through; }
 .card.st-cancel .card-title { color: var(--ink-3); }
-.card-cancel { font-size: var(--fs-xs); color: var(--ink-2); white-space: pre-line; overflow-wrap: anywhere; }
+.card-reason { font-size: var(--fs-xs); color: var(--ink-2); white-space: pre-line; overflow-wrap: anywhere; }
 .add-step {
   display: flex; align-items: center; justify-content: center; gap: var(--s2); width: 100%; min-height: var(--h-touch); margin: var(--s4) 0 var(--s6);
   font: 600 var(--fs-md)/1 var(--sans); color: var(--ink-2); background: none; cursor: pointer;
@@ -594,6 +600,9 @@ svg.i {
 @media (hover: hover) { button.chip:hover { border-color: var(--ink-4); color: var(--ink); } }
 .chip.st-doing { color: var(--blue-fg); background: var(--blue-soft); border-color: var(--blue-line); }
 .chip.st-doing::before, .st-dot.st-doing { border-color: var(--blue); background: linear-gradient(90deg, var(--blue) 50%, transparent 50%); }
+/* Chờ: vòng có chấm giữa. */
+.chip.st-pending { color: var(--violet-fg); background: var(--violet-soft); border-color: var(--violet-line); }
+.chip.st-pending::before, .st-dot.st-pending { border-color: var(--violet); background: radial-gradient(circle closest-side, var(--violet) 0 60%, transparent 70%); }
 .chip.st-done { color: var(--green); background: var(--accent-soft); border-color: var(--accent-line); }
 .chip.st-done::before, .st-dot.st-done { border-color: var(--done-edge); background: var(--done-edge); }
 .chip.st-blocked { color: var(--amber-fg); background: var(--amber-soft); border-color: var(--amber-line); }
@@ -835,7 +844,7 @@ select.dd-native {
   .dlg[open]:not(.dlg-ask) { animation: sheet-in var(--dur-sheet) var(--ease); }
 }
 
-/* ── Chọn trạng thái trong hộp bước con: sáu viên có chấm hình riêng (như chip trên thẻ); viên đang chọn tô màu trạng thái ── */
+/* ── Chọn trạng thái trong hộp bước con: bảy viên có chấm hình riêng (như chip trên thẻ); viên đang chọn tô màu trạng thái ── */
 .st-pick { display: flex; flex-direction: column; gap: var(--s2); }
 .st-opts { display: flex; flex-wrap: wrap; gap: var(--s2); }
 @media (max-width: 640px) { .st-opts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); } .st-opt span { width: 100%; justify-content: center; padding: 0 var(--s2); } }
@@ -854,12 +863,14 @@ select.dd-native {
 @media (hover: hover) { .st-opt:hover span { border-color: var(--ink-4); color: var(--ink); } }
 .st-opt input:focus-visible + span { outline: var(--ring-w) solid var(--ring); outline-offset: var(--mark-w); }
 .st-doing span::before { border-color: var(--blue); background: linear-gradient(90deg, var(--blue) 50%, transparent 50%); }
+.st-pending span::before { border-color: var(--violet); background: radial-gradient(circle closest-side, var(--violet) 0 60%, transparent 70%); }
 .st-done span::before { border-color: var(--done-edge); background: var(--done-edge); }
 .st-blocked span::before { border-radius: var(--r-xs); border-color: var(--amber); background: var(--amber); }
 .st-skip span::before { border-style: dashed; }
 .st-cancel span::before { border-color: var(--danger); background: linear-gradient(135deg, transparent 38%, var(--danger) 38% 62%, transparent 62%); }
 .st-todo input:checked + span { color: var(--ink); background: var(--chip); border-color: var(--ink-4); }
 .st-doing input:checked + span { color: var(--blue-fg); background: var(--blue-soft); border-color: var(--blue-line); }
+.st-pending input:checked + span { color: var(--violet-fg); background: var(--violet-soft); border-color: var(--violet-line); }
 .st-done input:checked + span { color: var(--green); background: var(--accent-soft); border-color: var(--accent-line); }
 .st-blocked input:checked + span { color: var(--amber-fg); background: var(--amber-soft); border-color: var(--amber-line); }
 .st-skip input:checked + span { color: var(--ink-2); background: var(--chip); border-color: var(--ink-4); border-style: dashed; }

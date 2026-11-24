@@ -217,13 +217,17 @@
         <div class="st-opts">
           <label class="st-opt st-todo"><input type="radio" name="status" value="todo"><span>New</span></label>
           <label class="st-opt st-doing"><input type="radio" name="status" value="doing"><span>In progress</span></label>
-          <label class="st-opt st-done"><input type="radio" name="status" value="done"><span>Done</span></label>
+          <label class="st-opt st-pending"><input type="radio" name="status" value="pending"><span>Pending</span></label>
           <label class="st-opt st-blocked"><input type="radio" name="status" value="blocked"><span>Blocked</span></label>
+          <label class="st-opt st-done"><input type="radio" name="status" value="done"><span>Done</span></label>
           <label class="st-opt st-skip"><input type="radio" name="status" value="skip"><span>Skipped</span></label>
           <label class="st-opt st-cancel"><input type="radio" name="status" value="cancel"><span>Cancelled</span></label>
         </div>
       </fieldset>
-      <label class="field" id="sub-cancel" hidden><span>Why cancelled</span><textarea name="cancelReason" rows="2" placeholder="E.g. the data already comes from another source"></textarea></label>
+      <label class="field" id="sub-reason" hidden><span id="sub-reason-label">Reason</span><textarea name="reason" rows="2"
+        data-ph-pending="E.g. access request sent to the data owner, reply expected Friday"
+        data-ph-blocked="E.g. the API returns errors for dates before 2020"
+        data-ph-cancel="E.g. the data already comes from another source"></textarea></label>
       <div class="field-row place-row">
         <label class="field f-due"><span>Due date</span><input type="date" name="due"></label>
         <label class="field f-step"><span>Step</span><select name="step"></select></label>

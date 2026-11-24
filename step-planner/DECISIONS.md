@@ -3,7 +3,7 @@
 <!-- index:start -->
 - PLAN-001 · Dự án là các bước có thứ tự, mỗi bước có bước con có thứ tự · `step-planner/`
 - PLAN-002 · Dữ liệu chỉ ở trình duyệt, nhiều dự án, nhớ dự án mở cuối · `step-planner/`
-- PLAN-003 · Sáu trạng thái; tiến độ không tính bỏ qua và huỷ; việc tiếp theo được tô · `step-planner/`
+- PLAN-003 · Bảy trạng thái, có Chờ (Pending); tiến độ không tính bỏ qua và huỷ; việc tiếp theo được tô · `step-planner/`
 - PLAN-004 · Mở lại một bước (vòng lặp) có lý do, đếm vòng, chỉ rõ việc phải làm lại · `step-planner/`
 - PLAN-005 · Mỗi dự án có nhật ký quyết định · `step-planner/`
 - PLAN-006 · Xoá hoàn tác được; sắp xếp lại được; tìm theo chữ · `step-planner/`
@@ -28,10 +28,10 @@ Một dự án là danh sách bước chính có thứ tự; mỗi bước chứ
 
 Không có máy chủ: mọi dự án lưu trong bộ nhớ trình duyệt dưới một khoá có số phiên bản. Bộ nhớ bị chặn hay hỏng thì trang vẫn chạy và báo rõ. Có nhiều dự án: tạo (trống hoặc từ mẫu), đổi tên, nhân bản, xoá (hỏi lại), chuyển; mở lại trang thì vào dự án mở cuối.
 
-## PLAN-003 · Sáu trạng thái; tiến độ không tính bỏ qua và huỷ; việc tiếp theo được tô
+## PLAN-003 · Bảy trạng thái, có Chờ (Pending); tiến độ không tính bỏ qua và huỷ; việc tiếp theo được tô
 24/11/2026 · `step-planner/`
 
-Bước con có sáu trạng thái: mới (New), đang làm, xong, bị chặn, bỏ qua, huỷ. Bấm chip đi ba trạng thái cơ bản mới → đang làm → xong; đã xong hay ở trạng thái khác thì bấm chip mở danh sách để chọn bất kỳ trạng thái nào. Bỏ qua là việc không cần với dự án này. Huỷ là việc đã quyết không làm nhưng giữ thẻ trên bảng để theo dõi, kèm lý do huỷ (chọn huỷ thì luôn được hỏi lý do). Tiến độ = xong / (tổng − bỏ qua − huỷ). Bước con đầu tiên chưa xong, không bỏ qua, không huỷ của mỗi bước là việc tiếp theo.
+Bước con có bảy trạng thái, theo thứ tự: mới (New), đang làm, chờ (Pending), bị chặn, xong, bỏ qua, huỷ. Chờ là đang đợi người hay việc ngoài tầm tay của nhóm và sẽ tự xong mà nhóm không phải làm gì (bên liên quan duyệt, cấp quyền dữ liệu, nhà cung cấp giao hàng, một lần huấn luyện dài); bị chặn là vướng một vấn đề mà nhóm phải ra tay gỡ. Bỏ qua là việc không cần với dự án này. Huỷ là việc đã quyết không làm nhưng giữ thẻ để theo dõi, kèm lý do (chọn huỷ thì luôn được hỏi lý do). Chờ và bị chặn có ghi chú tuỳ chọn (chờ gì, vướng gì) hiện trên thẻ; đổi qua lại giữa chờ, bị chặn, huỷ thì giữ ghi chú, sang trạng thái khác thì bỏ. Bấm chip đi ba trạng thái cơ bản mới → đang làm → xong; trạng thái khác chọn từ danh sách hay hộp sửa. Tiến độ = xong / (tổng − bỏ qua − huỷ); thẻ chờ tính là còn mở, quá hạn vẫn báo trễ. Việc tiếp theo là các bước con còn mở của vị trí đầu tiên còn việc, trừ thẻ chờ; vị trí ấy chỉ còn thẻ chờ thì không có việc tiếp theo, vì các bước sau phụ thuộc nó.
 
 ## PLAN-004 · Mở lại một bước (vòng lặp) có lý do, đếm vòng, chỉ rõ việc phải làm lại
 24/11/2026 · `step-planner/`

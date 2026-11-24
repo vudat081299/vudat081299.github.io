@@ -177,7 +177,7 @@ function render() {
   renderLog(ws);
 }
 
-/** Chú giải năm trạng thái (chip mẫu + chữ + số bước con), cũng là tiến độ chi tiết của dự án. @param {any} ws */
+/** Chú giải bảy trạng thái (chip mẫu + chữ + số bước con), cũng là tiến độ chi tiết của dự án. @param {any} ws */
 function renderLegend(ws) {
   const n = Object.fromEntries(C.STATUSES.map((st) => [st, 0]));
   for (const s of ws.steps) for (const x of s.subs) n[x.status]++;
@@ -224,7 +224,7 @@ function renderBoard(/** @type {any} */ ws) {
   ws.steps.forEach((/** @type {any} */ step, /** @type {number} */ i) => {
     const docTitles = (/** @type {any[]} */ docs) => docs.map((d) => d.title).join(' ');
     const stepHit = !!q && C.fold([step.title, step.goal, step.doneWhen, step.notes, step.revisit?.reason, docTitles(step.docs)].join(' ')).includes(q);
-    const visible = step.subs.filter((/** @type {any} */ x) => !q || stepHit || C.fold([x.title, x.doneWhen, x.notes, docTitles(x.docs)].join(' ')).includes(q));
+    const visible = step.subs.filter((/** @type {any} */ x) => !q || stepHit || C.fold([x.title, x.doneWhen, x.notes, x.reason, docTitles(x.docs)].join(' ')).includes(q));
     if (filtering && !visible.length && !stepHit) return;
     shown += visible.length;
     const prog = C.progress(step.subs);
@@ -274,7 +274,7 @@ function renderBoard(/** @type {any} */ ws) {
           h('h3', { class: 'card-title' }, h('button', { type: 'button', class: 'link', 'data-act': 'edit-sub', 'aria-keyshortcuts': 'Alt+ArrowLeft Alt+ArrowRight Alt+ArrowUp Alt+ArrowDown' }, x.title)),
           x.due && h('p', { class: 'meta' },
             h('span', { class: 'due' + (overdue ? ' overdue' : '') }, 'due ' + fmtDate(x.due) + (overdue ? ' (overdue)' : ''))),
-          x.status === 'cancel' && x.cancelReason && h('p', { class: 'card-cancel' }, h('span', { class: 'lbl' }, 'Cancelled because '), withLinks(x.cancelReason)),
+          x.reason && h('p', { class: 'card-reason' }, h('span', { class: 'lbl' }, C.REASON_LABEL[x.status] + ' '), withLinks(x.reason)),
           x.doneWhen && h('p', { class: 'card-done' }, h('span', { class: 'lbl' }, 'Done when '), x.doneWhen),
           x.notes && h('p', { class: 'card-notes' }, withLinks(x.notes))),
         h('div', { class: 'acts' },
@@ -703,7 +703,8 @@ $('board').addEventListener('click', (/** @type {any} */ e) => {
   }
 });
 
-/** Danh sách mọi trạng thái, mở dưới chip. Chọn Cancelled: mở hộp sửa ở ô lý do (lưu mới huỷ). @param {any} chip @param {any} step @param {any} sub */
+/** Danh sách mọi trạng thái, mở dưới chip. Chọn Cancelled: mở hộp sửa ở ô lý do (lưu mới huỷ); Pending, Blocked đặt ngay
+ * (lý do không bắt buộc, sửa trong hộp). @param {any} chip @param {any} step @param {any} sub */
 function openStatusMenu(chip, step, sub) {
   const ids = { wsId: cur().id, stepId: step.id, subId: sub.id };
   openList(chip, C.STATUSES.map((st) => ({ value: st, label: C.STATUS_LABEL[st], hint: C.STATUS_HINT[st], dot: st, selected: st === sub.status })), (v) => {
@@ -962,8 +963,8 @@ function openSub(step, sub, opt = {}) {
   field(f, 'due').value = x.due;
   field(f, 'doneWhen').value = x.doneWhen;
   field(f, 'notes').value = x.notes;
-  field(f, 'cancelReason').value = x.cancelReason;
-  paintCancel();
+  field(f, 'reason').value = x.reason;
+  paintReason();
   field(f, 'step').value = step.id;
   subPosOptions();
   subCtx.pos0 = field(f, 'pos').value;
@@ -971,20 +972,29 @@ function openSub(step, sub, opt = {}) {
   $('sub-dup').hidden = !sub;
   docUndo = null;
   renderDocsEdit('sub');
-  openDlg($('dlg-sub'), opt.toDocs ? null : opt.status === 'cancel' ? field(f, 'cancelReason') : field(f, 'title'));
+  openDlg($('dlg-sub'), opt.toDocs ? null : opt.status === 'cancel' ? field(f, 'reason') : field(f, 'title'));
   if (opt.toDocs) {
     $('sub-docs').scrollIntoView({ block: 'nearest' });
     /** @type {any} */ ($('sub-docs').querySelector('.doc-list button, [data-doc-add]')).focus();
   }
 }
 field($('sub-form'), 'step').addEventListener('change', () => subPosOptions(false));
-/* Chọn Cancelled thì hiện ô "Why cancelled" (giữ chữ đã gõ nếu đổi qua lại). */
-function paintCancel() { $('sub-cancel').hidden = field($('sub-form'), 'status').value !== 'cancel'; }
-/* Sáu viên trạng thái nằm sẵn trong HTML; chữ giải thích của mỗi viên lấy từ core.js. */
+/* Pending, Blocked, Cancelled thì hiện ô lý do, nhãn theo trạng thái (giữ chữ đã gõ khi đổi qua lại; lưu với trạng thái
+ * không có lý do thì bỏ). */
+function paintReason() {
+  const st = field($('sub-form'), 'status').value;
+  const ta = field($('sub-form'), 'reason');
+  $('sub-reason').hidden = !C.hasReason(st);
+  if (!C.hasReason(st)) return;
+  $('sub-reason-label').textContent = C.REASON_LABEL[st];
+  ta.placeholder = ta.dataset['ph' + st[0].toUpperCase() + st.slice(1)] || '';
+}
+/* Bảy viên trạng thái nằm sẵn trong HTML; chữ giải thích của mỗi viên lấy từ core.js. */
 for (const r of /** @type {any} */ ($('sub-status').querySelectorAll('input[name="status"]'))) r.closest('label').title = C.STATUS_HINT[r.value];
 $('sub-status').addEventListener('change', () => {
-  paintCancel();
-  if (!$('sub-cancel').hidden) focusField(field($('sub-form'), 'cancelReason'));
+  paintReason();
+  /* Chỉ Cancelled đưa focus vào ô lý do: lý do của Pending, Blocked không bắt buộc, và mũi tên trong nhóm viên phải đi tiếp. */
+  if (field($('sub-form'), 'status').value === 'cancel') focusField(field($('sub-form'), 'reason'));
 });
 function subFromCtx() {
   const ws = subCtx && findWs(subCtx.wsId);
@@ -1001,7 +1011,7 @@ $('sub-form').addEventListener('submit', (/** @type {any} */ e) => {
   const data = C.normSub({
     id: sub ? sub.id : '', docs: sub ? sub.docs : [],
     title: field(f, 'title').value, status: field(f, 'status').value,
-    due: field(f, 'due').value, doneWhen: field(f, 'doneWhen').value, notes: field(f, 'notes').value, cancelReason: field(f, 'cancelReason').value,
+    due: field(f, 'due').value, doneWhen: field(f, 'doneWhen').value, notes: field(f, 'notes').value, reason: field(f, 'reason').value,
   });
   const target = stepOf(ws, field(f, 'step').value) || step;
   const pos = String(field(f, 'pos').value || 'n:999');

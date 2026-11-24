@@ -45,8 +45,10 @@ const hard = normWorkspace({
         { title: 'C (@x, hạn 01/12/2026) a@b.com', status: 'done', notes: 'Vì sao: ghi chú' },
         { title: 'D', status: 'blocked', due: '2026-02-03' },
         { title: 'E', status: 'skip' },
-        { title: 'F huỷ', status: 'cancel', doneWhen: 'y', notes: 'ghi chú sau lý do\n  thụt', cancelReason: 'lý do · có chấm `@x` [a](b)\n\n- gạch\nXong khi: giả\nHuỷ vì: lặp\n  thụt hai\n\\gạch ngược\n    thụt bốn\nTài liệu:', docs: [{ kind: 'link', title: 'L', url: 'https://l.example' }] },
-        { title: 'G', status: 'todo', cancelReason: 'bị bỏ vì không huỷ' },
+        { title: 'F huỷ', status: 'cancel', doneWhen: 'y', notes: 'ghi chú sau lý do\n  thụt', reason: 'lý do · có chấm `@x` [a](b)\n\n- gạch\nXong khi: giả\nHuỷ vì: lặp\n  thụt hai\n\\gạch ngược\n    thụt bốn\nTài liệu:', docs: [{ kind: 'link', title: 'L', url: 'https://l.example' }] },
+        { title: 'G', status: 'todo', reason: 'bị bỏ vì không huỷ' },
+        { title: 'H chờ', status: 'pending', due: '2020-01-01', reason: 'chủ dữ liệu duyệt quyền\nWaiting on: lặp\nBlocked by: lặp', notes: 'Waiting on: ghi chú' },
+        { title: 'I chặn', status: 'blocked', reason: 'API lỗi', doneWhen: 'z' },
       ],
     },
     { title: '2. Nhật ký quyết định', subs: [] },
@@ -63,9 +65,12 @@ const back = fromMarkdown(md);
 check('dự án khó: Markdown đi rồi về giữ nguyên', eq(shape(hard), shape(back.workspace)), firstDiff(shape(hard), shape(back.workspace)));
 check('dự án khó: không cảnh báo', back.warnings.length === 0, back.warnings.join(' | '));
 check('dấu trạng thái', /- \[ \] A/.test(md) && /- \[~\] B/.test(md) && /- \[x\] C/.test(md) && /- \[!\] D/.test(md) && /- \[-\] E/.test(md)
-  && /- \[\/\] F huỷ/.test(md));
+  && /- \[\/\] F huỷ/.test(md) && /- \[>\] H chờ/.test(md));
+check('lý do theo trạng thái: Waiting on (chờ), Blocked by (chặn); dòng ghi chú trông như nhãn được thoát',
+  md.includes('\n  Waiting on: chủ dữ liệu duyệt quyền  \n    \\Waiting on: lặp  \n    \\Blocked by: lặp  \n  \\Waiting on: ghi chú')
+  && md.includes('\n  Done when: z  \n  Blocked by: API lỗi'));
 check('huỷ: lý do nhiều dòng ghi dưới "Cancelled because:", dòng sau thụt bốn có thoát', md.includes('\n  Cancelled because: lý do · có chấm `@x` [a](b)  \n    \\  \n    \\- gạch  \n')
-  && md.includes('\n    \\Huỷ vì: lặp  \n') && hard.steps[0].subs[6].cancelReason === '' && !/bị bỏ vì/.test(md));
+  && md.includes('\n    \\Huỷ vì: lặp  \n') && hard.steps[0].subs[6].reason === '' && !/bị bỏ vì/.test(md));
 check('không có người làm: không dòng Người:, @ trong tên được thoát', !md.includes('Người:') && md.includes('- [ ] A \\· \\@giả')
   && !md.split('\n').some((l) => /^- \[/.test(l) && /(^|[^\\])@/.test(l)));
 check('đầu file: tên công cụ, định dạng 3', md.split('\n')[2] === '> Data Science Step Planner · format 3' && md.includes('\n> Template: crisp-dm\n'));
@@ -238,7 +243,7 @@ check('vòng: dòng cũ "Quay lại: ngày · lý do" đọc là vòng 2', oldR.
   check('nhập file định dạng 2 tiếng Việt: đủ trường, không cảnh báo', !r.warnings.length && ws2.templateId === 'crisp-dm' && ws2.notes === 'ghi chú dự án'
     && st.goal === 'mt' && st.doneWhen === 'xk' && st.revisit.round === 3 && st.revisit.reason === 'lý do' && st.notes === 'dòng 1\nTài liệu: giả'
     && st.docs[0].url === 'https://l.example' && x.status === 'cancel' && x.due === '2026-12-01' && x.doneWhen === 'x'
-    && x.cancelReason === 'không cần\ndòng hai' && x.notes === 'ghi chú' && x.docs[0].url === 'https://r.example' && st.subs[1].status === 'doing'
+    && x.reason === 'không cần\ndòng hai' && x.notes === 'ghi chú' && x.docs[0].url === 'https://r.example' && st.subs[1].status === 'doing'
     && ws2.steps[1].round === 2 && ws2.log[0].why === 'vì B', JSON.stringify(ws2).slice(0, 400) + r.warnings.join('|'));
 }
 
@@ -280,26 +285,49 @@ check('ngày: kiểm bằng đi rồi về', parseDate('2026-02-31') === '' && p
   && parseDate('2024-02-29') === '2024-02-29' && parseDate('1/2/2026') === '2026-02-01' && normSub({ due: '2026-02-31' }).due === '');
 check('tên trùng: (imported), (imported 2)', uniqueName('A', ['A']) === 'A (imported)' && uniqueName('A', ['A', 'A (imported)']) === 'A (imported 2)' && uniqueName('B', ['A']) === 'B');
 
-check('tiến độ không tính bỏ qua và huỷ', eq(progress(hard.steps[0].subs), { done: 1, total: 5, pct: 20 }));
+check('tiến độ không tính bỏ qua và huỷ; chờ là còn mở', eq(progress(hard.steps[0].subs), { done: 1, total: 7, pct: 14 }));
 check('việc tiếp theo bỏ qua thẻ huỷ', eq(nextActionIds({ subs: [{ id: 'a', status: 'cancel' }, { id: 'b', status: 'skip' }, { id: 'c', status: 'todo' }] }), ['c']));
 const oldMark = fromMarkdown('# A\n## 1. S\n- [/] huỷ cũ\n  Huỷ vì: không cần\n  ghi chú\n- [?] lạ\n');
 check('huỷ: dấu [/] và Huỷ vì: đọc được; dòng thụt hai sau đó là ghi chú', oldMark.workspace.steps[0].subs[0].status === 'cancel'
-  && oldMark.workspace.steps[0].subs[0].cancelReason === 'không cần' && oldMark.workspace.steps[0].subs[0].notes === 'ghi chú'
+  && oldMark.workspace.steps[0].subs[0].reason === 'không cần' && oldMark.workspace.steps[0].subs[0].notes === 'ghi chú'
   && oldMark.workspace.steps[0].subs[1].status === 'todo');
 check('việc tiếp theo bỏ qua xong và bỏ qua', eq(nextActionIds({ subs: [{ id: 'a', status: 'done' }, { id: 'b', status: 'skip' }, { id: 'c', status: 'blocked' }] }), ['c']));
 check('việc tiếp theo của dự án: bước đầu còn việc',
   eq(projectNextIds({ steps: [{ subs: [{ id: 'a', status: 'done' }] }, { subs: [] }, { subs: [{ id: 'b', status: 'todo' }] }] }), ['b']));
 check('bấm chip: New → In progress → Done; trạng thái khác mở danh sách', nextStatus('todo') === 'doing' && nextStatus('doing') === 'done'
-  && ['done', 'blocked', 'skip', 'cancel'].every((x) => nextStatus(x) === ''));
+  && ['pending', 'done', 'blocked', 'skip', 'cancel'].every((x) => nextStatus(x) === ''));
 {
-  const x = normSub({ status: 'cancel', cancelReason: 'vì' });
+  const x = normSub({ status: 'cancel', reason: 'vì' });
   setStatus(x, 'done');
-  const y = normSub({ status: 'cancel', cancelReason: 'vì' });
+  const y = normSub({ status: 'cancel', reason: 'vì' });
   setStatus(y, 'cancel');
-  check('setStatus: rời Cancelled thì bỏ lý do', x.status === 'done' && x.cancelReason === '' && y.cancelReason === 'vì');
+  const z = normSub({ status: 'pending', reason: 'đợi duyệt' });
+  setStatus(z, 'blocked');
+  const zb = z.reason;
+  setStatus(z, 'doing');
+  check('setStatus: giữa Pending, Blocked, Cancelled giữ lý do; sang trạng thái không có lý do thì bỏ', x.status === 'done' && x.reason === ''
+    && y.reason === 'vì' && zb === 'đợi duyệt' && z.reason === '');
+  check('dữ liệu cũ: cancelReason đọc thành reason; trạng thái không có lý do thì bỏ', normSub({ status: 'cancel', cancelReason: 'cũ' }).reason === 'cũ'
+    && !('cancelReason' in normSub({ status: 'cancel', cancelReason: 'cũ' })) && normSub({ status: 'done', reason: 'x' }).reason === ''
+    && normSub({ status: 'pending', reason: 'a', cancelReason: 'b' }).reason === 'a');
+  const oldJ = parseImport('{"format":"step-planner","version":3,"workspace":{"name":"c","steps":[{"title":"s","subs":[{"title":"h","status":"cancel","cancelReason":"không cần"}]}]}}');
+  check('JSON cũ: cancelReason nhập được', oldJ.workspaces[0].steps[0].subs[0].reason === 'không cần' && !oldJ.warnings.length);
 }
+{
+  const p = fromMarkdown('# A\n## 1. S\n- [>] đợi · due 2026-01-02\n  Waiting on: duyệt\n    dòng hai\n  ghi chú\n- [!] chặn\n  Cancelled because: nhãn khác vẫn nhận\n'
+    + '- [ ] mới\n  Waiting on: là ghi chú\n- [x] xong\n  Huỷ vì: cũng là ghi chú\n').workspace.steps[0].subs;
+  check('Markdown: [>] là Pending; nhãn lý do nào cũng nhận khi trạng thái có lý do; còn lại là ghi chú', p[0].status === 'pending'
+    && p[0].reason === 'duyệt\ndòng hai' && p[0].notes === 'ghi chú' && p[0].due === '2026-01-02' && p[1].status === 'blocked' && p[1].reason === 'nhãn khác vẫn nhận'
+    && p[2].reason === '' && p[2].notes === 'Waiting on: là ghi chú' && p[3].notes === 'Huỷ vì: cũng là ghi chú', JSON.stringify(p));
+}
+check('Next: thẻ chờ không là việc tiếp theo; ô chỉ còn thẻ chờ thì Next không vượt qua',
+  eq(nextActionIds({ subs: [{ id: 'a', status: 'pending' }, { id: 'b', status: 'todo', par: true }, { id: 'c', status: 'todo' }] }), ['b'])
+  && eq(nextActionIds({ subs: [{ id: 'a', status: 'done' }, { id: 'b', status: 'pending' }, { id: 'c', status: 'todo' }] }), [])
+  && eq(projectNextIds({ steps: [{ subs: [{ id: 'a', status: 'pending' }] }, { subs: [{ id: 'b', status: 'todo' }] }] }), [])
+  && eq(projectNextIds({ steps: [{ subs: [{ id: 'a', status: 'done' }] }, { subs: [{ id: 'b', status: 'blocked' }, { id: 'c', status: 'pending', par: true }] }] }), ['b']));
+check('Next: dấu Redo của thẻ chờ còn tính là còn phải làm', eq(redoCount({ subs: [{ status: 'pending', redo: true }, { status: 'done', redo: true }] }), { total: 2, left: 1 }));
 check('tách theo ·', eq(splitInline('a \\· b · @c · hạn 2026-01-01'), ['a · b', '@c', 'hạn 2026-01-01']));
-check('đếm', eq(counts([hard]), { workspaces: 1, steps: 4, subs: 9, log: 2, docs: 1 }));
+check('đếm', eq(counts([hard]), { workspaces: 1, steps: 4, subs: 11, log: 2, docs: 1 }));
 check('slug, fold', slug('Đồ án IT5425 — thể thao') === 'do-an-it5425-the-thao' && fold('Việc CỦA Tôi') === 'viec cua toi');
 
 /* Ô song song: bước con `par` nhập vào ô trước; số "3", "3.1"; chỗ (Place) dùng chung cho kéo thả, ô Vị trí, phím, Hoàn tác. */
@@ -360,7 +388,7 @@ check('bước con có ghi chú mở bằng rào, ngay sau tài liệu của bư
   const atoms = ['a', ' ', '·', ' · ', '\\', '@x', '`', '```', '~~~', '#', '## ', '- ', '[ ]', '[x]', ']', '[', '(', ')', 'hạn 2026-01-01',
     'due', 'Xong khi: ', 'Tài liệu:', 'Vì sao: ', '> ', '1. ', '*', '**', '\n', '\n\n', '  ', 'https://e.com/a(b)', 'Huỷ vì: ',
     'Mục tiêu: ', 'Vòng: 3', 'Quay lại: x', 'Done when: ', 'Docs:', 'Why: ', 'Cancelled because: ', 'Goal: ', 'Iteration: 3',
-    'Reopened: x', 'notes:', 'DOCS:', 'Template: ', 'iteration 2', 'parallel', ' · parallel', 'song song', ' · song song', 'redo', ' · redo', 'làm lại'];
+    'Reopened: x', 'notes:', 'DOCS:', 'Waiting on: ', 'Blocked by: ', 'waiting ON:', '[>]', '- [>] ', 'Template: ', 'iteration 2', 'parallel', ' · parallel', 'song song', ' · song song', 'redo', ' · redo', 'làm lại'];
   let seed = 7;
   const rnd = (n) => { seed = (seed + 0x6D2B79F5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t ^= t + Math.imul(t ^ (t >>> 7), 61 | t); return ((t ^ (t >>> 14)) >>> 0) % n; };
   const str = (n) => Array.from({ length: 1 + rnd(n) }, () => atoms[rnd(atoms.length)]).join('');
@@ -371,8 +399,8 @@ check('bước con có ghi chú mở bằng rào, ngay sau tài liệu của bư
       steps: Array.from({ length: rnd(3) + 1 }, () => ({ title: str(3), goal: rnd(2) ? str(3) : '', doneWhen: rnd(2) ? str(3) : '',
         notes: rnd(2) ? str(6) : '', revisit: rnd(4) ? null : { reason: str(3), date: '2026-01-02', round: 2 + rnd(3) }, round: 1 + rnd(3),
         docs: Array.from({ length: rnd(3) }, doc),
-        subs: Array.from({ length: rnd(4) }, () => ({ title: str(4), status: ['todo', 'doing', 'done', 'blocked', 'skip', 'cancel'][rnd(6)],
-          cancelReason: str(5), due: rnd(2) ? '2026-02-03' : '', doneWhen: rnd(2) ? str(3) : '', notes: rnd(2) ? str(6) : '', par: !!rnd(2), redo: !!rnd(2),
+        subs: Array.from({ length: rnd(4) }, () => ({ title: str(4), status: ['todo', 'doing', 'pending', 'blocked', 'done', 'skip', 'cancel'][rnd(7)],
+          reason: str(5), due: rnd(2) ? '2026-02-03' : '', doneWhen: rnd(2) ? str(3) : '', notes: rnd(2) ? str(6) : '', par: !!rnd(2), redo: !!rnd(2),
           docs: Array.from({ length: rnd(2) }, doc) })) })),
       log: Array.from({ length: rnd(3) }, () => ({ date: '2026-03-04', decision: str(3), why: rnd(2) ? str(5) : '' })) });
     let back = null;
