@@ -22,6 +22,15 @@ TEMPLATES = os.path.join(HERE, 'data/templates.json')
 COURSE_JSON = os.path.join(REPO, 'masters-degree/data-management-visualization/data/sports-monitoring-project.json')
 COURSE_HTML = os.path.join(REPO, 'masters-degree/data-management-visualization/sports-monitoring-project.html')
 COURSE_ID = 'it5425-sports'
+COURSE_URL = 'https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-project.html'
+# Người làm việc P0 lấy từ bảng `week1` (tuần đầu, mỗi vai một việc): (chữ trong việc P0, chữ trong việc week1).
+# Việc P0 không có dòng nào ở đây thì để trống người làm — nguồn không nói ai làm.
+P0_FROM_WEEK1 = [
+    ('Gửi giảng viên', 'Gửi giảng viên'),
+    ('Email football-data.co.uk', 'gửi football-data.co.uk thư xin phép'),
+    ('Tạo repo theo cây', 'Tạo repo theo cây mẫu'),
+    ('Hẹn một buổi họp', 'hẹn họp hằng tuần'),
+]
 TOKEN_END = '/* ── hết token ── */'
 
 errors = []
@@ -47,12 +56,25 @@ def course_template():
     checklist = [text(x) for x in re.findall(r'<li>(.*?)</li>', m.group(1), re.S)] if m else []
     if not checklist:
         err(f'{COURSE_HTML}: không tìm thấy danh sách "Xong khi nào" (#lt-xong)')
+    for anchor in ('lt-lich', 'can-xac-nhan', 'lt-xong'):
+        if f'id="{anchor}"' not in page:
+            err(f'{COURSE_HTML}: mất neo #{anchor} mà mẫu {COURSE_ID} trỏ tới')
+    week1 = [(w['role'], text(w['task_html'])) for w in src['week1']]
+    p0_owner = {}
+    for task_key, week_key in P0_FROM_WEEK1:
+        hit = [r for r, t in week1 if week_key in t]
+        if len(hit) != 1:
+            err(f'{COURSE_JSON}: week1 không có đúng một việc chứa "{week_key}"')
+        else:
+            p0_owner[task_key] = roles[hit[0] - 1]
     steps = []
     for p in src['phases']:
         phase_roles = [roles[i - 1] for i in p['roles']]
         subs = []
         for t in p['tasks_html']:
             title, owner = text(t), phase_roles[0] if len(phase_roles) == 1 else ''
+            if p['id'] == 'P0':
+                owner = next((o for k, o in p0_owner.items() if title.startswith(k)), '')
             v = re.match(r'Vai (\d+)[,:] (.*)$', title)
             if v:
                 owner, title = roles[int(v.group(1)) - 1], v.group(2)
@@ -61,9 +83,12 @@ def course_template():
             if owner:
                 sub['owner'] = owner
             subs.append(sub)
-        notes = ['Vai: ' + ', '.join(phase_roles), 'Công cụ: ' + text(p['tools'])]
+        notes = ['Vai: ' + ', '.join(phase_roles), 'Công cụ: ' + text(p['tools']),
+                 f'Trang đồ án, pha {p["id"]}: {COURSE_URL}#lt-lich']
+        if p['id'] == 'P0':
+            notes.append(f'Câu hỏi gửi giảng viên, thư xin phép: {COURSE_URL}#can-xac-nhan')
         if p['id'] == 'P8' and checklist:
-            notes += ['', 'Xong khi nào:'] + ['- ' + c for c in checklist]
+            notes += ['', f'Xong khi nào ({COURSE_URL}#lt-xong):'] + ['- ' + c for c in checklist]
         steps.append({
             'title': f'{p["id"]} · {p["name"]}',
             'goal': text(p['io_html']),
