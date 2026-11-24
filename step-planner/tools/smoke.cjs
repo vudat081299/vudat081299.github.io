@@ -91,6 +91,24 @@ const check = (name, ok, detail = '') => {
   await page.click('#ws-btn');
   await page.click('.ws-item:first-child [data-act="ws-open"]');
   check('đổi dự án: tên trên thanh trên', /CRISP-DM/.test(await page.textContent('#ws-name')));
+
+  // Vẽ lại sau một thay đổi giữ nguyên chỗ người dùng đang xem: ghi chú bước đang mở, thẻ đã "Xem thêm", hàng đã cuộn ngang.
+  await page.click('.step:nth-child(1) .step-notes summary');
+  await page.click('.step:nth-child(1) .card[data-sub]:nth-child(2) .more');
+  const keepBefore = await page.evaluate(() => { const sc = document.querySelector('.step:nth-child(1) .cards-scroll'); sc.scrollLeft = sc.scrollWidth; return sc.scrollLeft; });
+  await page.click('.step:nth-child(1) .card[data-sub]:nth-child(4) [data-act="cycle"]');
+  const keep = await page.evaluate(() => {
+    const row = document.querySelector('.step:nth-child(1)');
+    const c2 = row.querySelector('.card[data-sub]:nth-child(2)');
+    return { notes: row.querySelector('.step-notes').open, open: c2.classList.contains('open'), more: c2.querySelector('.more')?.textContent,
+      expanded: c2.querySelector('.more')?.getAttribute('aria-expanded'), left: row.querySelector('.cards-scroll').scrollLeft };
+  });
+  check('vẽ lại giữ ghi chú bước đang mở, thẻ đã "Xem thêm", chỗ cuộn ngang của hàng', keep.notes && keep.open && keep.more === 'Thu gọn'
+    && keep.expanded === 'true' && keepBefore > 0 && Math.abs(keep.left - keepBefore) < 2, `${keepBefore} ${JSON.stringify(keep)}`);
+  for (let k = 0; k < 2; k++) await page.click('.step:nth-child(1) .card[data-sub]:nth-child(4) [data-act="cycle"]');
+  await page.click('.step:nth-child(1) .card[data-sub]:nth-child(2) .more');
+  await page.click('.step:nth-child(1) .step-notes summary');
+  await page.evaluate(() => { document.querySelector('.step:nth-child(1) .cards-scroll').scrollLeft = 0; });
   const nRows = await page.$$eval('.step', (r) => r.length);
   check('mỗi bước một hàng', nRows === nSteps);
   const geo = await page.evaluate(() => {
@@ -231,6 +249,7 @@ const check = (name, ok, detail = '') => {
   // Kéo thả: bước con cuối của hàng 1 lên đầu hàng 1; bước 3 lên trên bước 1. Khung cao để nguồn và đích cùng
   // trong tầm nhìn (kéo HTML5 của Playwright không cuộn trang giữa chừng); hàng của mẫu dài thì 900px không đủ.
   await page.setViewportSize({ width: 1280, height: 2400 });
+  await page.evaluate(() => document.querySelectorAll('.cards-scroll').forEach((sc) => { sc.scrollLeft = 0; })); // vẽ lại giữ chỗ cuộn
   const r1 = (await cur(page)).steps[0].subs.map((x) => x.id);
   await page.dragAndDrop(`.card[data-sub="${r1[2]}"]`, `.card[data-sub="${r1[0]}"]`, { targetPosition: { x: 5, y: 20 } });
   const r1b = (await cur(page)).steps[0].subs.map((x) => x.id);

@@ -205,6 +205,14 @@ function renderBoard(/** @type {any} */ ws) {
   board.classList.toggle('filtering', filtering);
   const todayStr = C.today();
   const nextId = C.projectNextId(ws);
+  /* Vẽ lại không làm mất chỗ đang xem: ghi chú bước đang mở, thẻ đã "Xem thêm", chỗ cuộn ngang của từng hàng. */
+  const keep = { notes: new Set(), open: new Set(), left: new Map() };
+  for (const row of board.querySelectorAll('.step[data-step]')) {
+    if (row.querySelector('.step-notes')?.open) keep.notes.add(row.dataset.step);
+    const sc = row.querySelector('.cards-scroll');
+    if (sc && sc.scrollLeft) keep.left.set(row.dataset.step, sc.scrollLeft);
+  }
+  for (const c of board.querySelectorAll('.card.open[data-sub]')) keep.open.add(c.dataset.sub);
   const rows = [];
   let shown = 0;
   ws.steps.forEach((/** @type {any} */ step, /** @type {number} */ i) => {
@@ -224,7 +232,7 @@ function renderBoard(/** @type {any} */ ws) {
       step.docs.length > 0 && h('ul', { class: 'step-docs', 'aria-label': `Tài liệu của bước ${i + 1}` }, step.docs.map(docLink)),
       step.goal && h('p', { class: 'step-goal' }, step.goal),
       step.doneWhen && h('p', { class: 'step-done' }, h('span', { class: 'lbl' }, 'Xong khi '), step.doneWhen),
-      step.notes && h('details', { class: 'step-notes' }, h('summary', {}, 'Ghi chú'), h('p', { class: 'notes-text' }, withLinks(step.notes))),
+      step.notes && h('details', { class: 'step-notes', open: keep.notes.has(step.id) }, h('summary', {}, 'Ghi chú'), h('p', { class: 'notes-text' }, withLinks(step.notes))),
       h('div', { class: 'prog' },
         h('span', {}, `${prog.done}/${prog.total}`, h('span', { class: 'sr' }, ' bước con xong')),
         h('span', { class: 'bar-prog', 'aria-hidden': 'true' }, barFill(prog.pct))),
@@ -282,7 +290,11 @@ function renderBoard(/** @type {any} */ ws) {
   board.replaceChildren(...rows);
   $('filter-note').textContent = filtering ? `${shown} bước con khớp · sắp xếp tắt khi lọc` : '';
   $('add-step').hidden = filtering;
-  markCutCards();
+  markCutCards(keep.open);
+  for (const [id, left] of keep.left) {
+    const sc = board.querySelector(`.step[data-step="${id}"] .cards-scroll`);
+    if (sc) sc.scrollLeft = left;
+  }
   updateScrollCues();
 }
 
@@ -295,12 +307,15 @@ function docLink(d) {
     : h('button', { type: 'button', class: 'doc-link', 'data-act': 'open-doc', 'data-doc': d.id }, icon('doc'), h('span', {}, d.title)));
 }
 
-function markCutCards() {
+/** @param {Set<string>} [keepOpen] thẻ đang mở trước lần vẽ này */
+function markCutCards(keepOpen = new Set()) {
   for (const card of /** @type {NodeListOf<HTMLElement>} */ (document.querySelectorAll('.card[data-sub]'))) {
     const body = /** @type {HTMLElement} */ (card.querySelector('.card-body'));
     if (body.scrollHeight > body.clientHeight + 1) {
       card.classList.add('cut');
-      body.after(h('button', { type: 'button', class: 'more', 'data-act': 'more', 'aria-expanded': 'false', tabindex: '-1' }, 'Xem thêm'));
+      const open = keepOpen.has(card.dataset.sub);
+      if (open) card.classList.add('open');
+      body.after(h('button', { type: 'button', class: 'more', 'data-act': 'more', 'aria-expanded': String(open), tabindex: '-1' }, open ? 'Thu gọn' : 'Xem thêm'));
     }
   }
 }

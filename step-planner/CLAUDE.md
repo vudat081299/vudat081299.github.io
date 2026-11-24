@@ -66,8 +66,8 @@
   toast (15 giây); Ctrl/Cmd + Z cũng hoàn tác khi không gõ chữ và không có hộp thoại mở.
 - Hoàn tác tìm lại dự án và bước theo id (tab khác có thể đã thay `state`). Xoá dự án hỏi lại, không hoàn tác.
 - Hộp sửa: mở thì focus ô đầu; tên là textarea tự cao, Enter lưu. Esc, × hay Huỷ khi chữ đã đổi thì hỏi "Bỏ thay đổi?".
-- Ghi chú bước gập dưới tên bước. Thẻ cao theo nội dung (`--card-min` … `--card-max`); vượt max thì thân thẻ bị cắt, mờ
-  dần, nút "Xem thêm" mở cả thẻ. Link http(s) trong ghi chú bấm được.
+- Ghi chú bước gập dưới tên bước. Thẻ cao theo nội dung (`--card-min` … `--card-max`); vượt max thì thân bị cắt, mờ dần,
+  "Xem thêm" mở cả thẻ. Link http(s) trong ghi chú bấm được. Vẽ lại giữ ghi chú đang mở, thẻ đã mở, chỗ cuộn ngang.
 - Tài liệu (PLAN-011): cột bước liệt kê tài liệu của bước dưới tên, nút phụ "Tài liệu" để thêm. Thẻ chỉ có nhãn kẹp + số
   ở hàng đầu (không cao thêm); bấm là mở hộp sửa bước con ở phần Tài liệu. Thêm / sửa / xoá trong hộp sửa bước, bước
   con, lưu ngay; xoá khi hộp đang mở thì Hoàn tác là một hàng trong hộp (toast nằm dưới hộp thoại). Link mở tab mới
