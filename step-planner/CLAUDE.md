@@ -2,8 +2,9 @@
 
 - Tên hiển thị: Data Science Step Planner (`<title>`, đầu trang, trang chủ, dòng đầu Markdown xuất ra). Thư mục và khoá
   bộ nhớ giữ tên `step-planner` để URL và cổng không đổi.
-- Một trang, `index.html`: dự án chia thành bước (hàng) và bước con (thẻ), theo dõi trạng thái, người làm, hạn,
-  ghi quyết định, xuất / nhập Markdown và JSON. Ưu tiên dự án dữ liệu, dùng được cho dự án bất kỳ.
+- Một trang, `index.html`: dự án chia thành bước (hàng) và bước con (thẻ), theo dõi trạng thái, hạn, ghi quyết định,
+  xuất / nhập Markdown và JSON. Ưu tiên dự án dữ liệu, dùng được cho dự án bất kỳ.
+- Không có khái niệm người làm (PLAN-010): không thành viên, không giao việc, không lọc theo người.
 - Giao diện tiếng Việt, chữ ngắn kiểu ghi chú. Quyết định của chủ trang: [DECISIONS.md](DECISIONS.md).
 - Không bước build. Mở bằng HTTP: `python3 -m http.server` ở gốc repo, rồi `http://localhost:8000/step-planner/`.
   Mở bằng `file://` thì trang báo cách mở; `fetch` mẫu hỏng thì banner báo cùng lệnh ấy.
@@ -15,22 +16,25 @@
 | `index.html` | markup, hộp thoại, script theme trước lần vẽ đầu, script báo `file://` |
 | `css/planner.css` | token ở đầu (tới dòng `/* ── hết token ── */`), rồi từng component, mỗi khối mở bằng một dòng chú thích |
 | `js/core.js` | logic thuần: chuẩn hoá, ngày, tiến độ, việc tiếp theo, Markdown và JSON vào / ra; không DOM, chạy được trong Node |
-| `js/store.js` | `localStorage` (khoá `stepPlanner.v1`, mẹo `stepPlanner.hintOff`, theme `hub-theme`), `sessionStorage` (dự án của tab); mọi truy cập bọc try/catch |
+| `js/store.js` | `localStorage` (khoá `stepPlanner.v2`, mẹo `stepPlanner.hintOff`, theme `hub-theme`), `sessionStorage` (dự án của tab); mọi truy cập bọc try/catch |
 | `js/main.js` | vẽ bảng, sự kiện, hộp thoại, kéo thả, toast Hoàn tác, nhắc sao lưu |
 | `data/templates.json` | mẫu dự án, trang đọc bằng vòng lặp (REPO-001) |
 
 ## Dữ liệu
 
-- `localStorage['stepPlanner.v1']`: `{version, workspaces[], lastId, me{wsId: tên}, lastBackup, dirtySince}`. Đổi khuôn thì tăng số khoá.
-- Workspace `{id, name, templateId, createdAt, updatedAt, notes, people[], steps[], log[]}`.
+- `localStorage['stepPlanner.v2']`: `{version, workspaces[], lastId, lastBackup, dirtySince}`. Đổi khuôn thì tăng số khoá.
+- Khoá cũ (`OLD_KEYS` trong `store.js`: `stepPlanner.v1`) đọc khi khoá mới chưa có, chuẩn hoá rồi ghi sang khoá mới; khoá cũ
+  giữ nguyên, không ghi vào nữa.
+- Workspace `{id, name, templateId, createdAt, updatedAt, notes, steps[], log[]}`.
 - Step `{id, title, goal, doneWhen, notes, revisit: null | {reason, date}, subs[]}`.
-- Sub `{id, title, status, owner, due, doneWhen, notes}`; `status` ∈ `todo doing done blocked skip`; `due` là `YYYY-MM-DD` hoặc rỗng.
+- Sub `{id, title, status, due, doneWhen, notes}`; `status` ∈ `todo doing done blocked skip`; `due` là `YYYY-MM-DD` hoặc rỗng.
 - Log `{id, date, decision, why}`.
 - Mọi dữ liệu đi qua `normSub` / `normStep` / `normWorkspace`: chuỗi một dòng gộp khoảng trắng, ghi chú bỏ khoảng trắng
   cuối dòng, phần tử không phải object bị bỏ, ngày phải có thật (`parseDate` kiểm đi rồi về: ngày 31 tháng 2 bị loại).
-- `me` (người dùng là ai) và hai mốc sao lưu chỉ ở máy này, không xuất.
+  Trường lạ (kể cả `owner`, `people`, `me` của dữ liệu cũ) bị bỏ, không lỗi.
+- Hai mốc sao lưu chỉ ở máy này, không xuất.
 - Mỗi tab giữ dự án đang mở ở `sessionStorage['stepPlanner.tab']`; `lastId` chỉ dùng cho tab mới mở.
-- Bộ nhớ bị chặn: trang chạy trong bộ nhớ tạm và hiện banner. Dữ liệu hỏng: chép sang `stepPlanner.v1.corrupt`, bắt đầu trống.
+- Bộ nhớ bị chặn: trang chạy trong bộ nhớ tạm và hiện banner. Dữ liệu hỏng: chép sang `stepPlanner.v2.corrupt`, bắt đầu trống.
 - Lúc mở trang gọi `navigator.storage.persist()` (Safari xoá dữ liệu do script ghi sau 7 ngày không mở trang).
 
 ## Hành vi
@@ -50,15 +54,13 @@
 - "Cần làm lại" (dữ liệu `step.revisit`, Markdown `Quay lại:`): nút có chữ ở cột tên bước; hộp có câu giải thích, ví dụ,
   ô lý do. Bước đang đánh dấu có băng "Đang làm lại · ngày · lý do" (bấm để sửa lý do) và nút "Xong, bỏ đánh dấu".
 - Mẹo người mới ("bấm thẻ để sửa · bấm chip…") hiện trên bảng tới khi bấm ×; nhớ ở `localStorage['stepPlanner.hintOff']`.
-- Đang lọc (tìm hoặc người làm) thì tắt sắp xếp và nút thêm bước. Thêm bước con khi đang lọc người thì điền sẵn người
-  ấy; thẻ mới vẫn bị lọc ẩn thì toast "Đã thêm — đang bị bộ lọc ẩn".
+- Đang tìm thì tắt sắp xếp và nút thêm bước; thẻ mới thêm mà bị lọc ẩn thì toast "Đã thêm — đang bị bộ lọc ẩn".
 - Tìm không phân biệt hoa thường và dấu. Tên, mục tiêu hay ghi chú của bước khớp thì hiện cả hàng.
 - Xoá bước con, quyết định: một bấm. Xoá bước còn bước con: hỏi lại. Sau khi xoá, focus nhảy vào nút Hoàn tác
   của toast (15 giây); Ctrl/Cmd + Z cũng hoàn tác khi không gõ chữ và không có hộp thoại mở.
 - Hoàn tác tìm lại dự án và bước theo id (tab khác có thể đã thay `state`). Xoá dự án thì toast biến mất; xoá dự án
   hỏi lại, không hoàn tác.
 - Hộp sửa: mở thì focus ô đầu; tên là textarea tự cao, Enter lưu. Esc, × hay Huỷ khi chữ đã đổi thì hỏi "Bỏ thay đổi?".
-- Thành viên: sửa tên trên một dòng (số dòng không đổi) thì mọi bước con của người cũ và "Tôi là" đổi theo.
 - Ghi chú bước gập dưới tên bước. Thẻ cao theo nội dung, trong khoảng `--card-min` … `--card-max`; vượt max thì thân thẻ
   bị cắt, mờ dần, nút "Xem thêm" mở cả thẻ. Link http(s) trong ghi chú bấm được.
 - Nhật ký quyết định: sửa và xoá được; hiện theo ngày, mới nhất trước.
@@ -70,8 +72,8 @@
 
 ## Mẫu (`data/templates.json`)
 
-- `{note, templates[]}`; mẫu `{id, name, description, people?, steps[]}`; bước `{title, goal, doneWhen, notes?, subs[]}`;
-  bước con `{title, doneWhen?, owner?, notes?}`. Không thẻ HTML. `owner` phải nằm trong `people` của mẫu. Đúng một mẫu trống.
+- `{note, templates[]}`; mẫu `{id, name, description, steps[]}`; bước `{title, goal, doneWhen, notes?, subs[]}`;
+  bước con `{title, doneWhen?, notes?}`. Không thẻ HTML, không người làm. Đúng một mẫu trống.
 - Mẫu chung không gắn vào một bài toán cụ thể. Tên bước, bước con: tiếng Việt, tên gốc tiếng Anh trong ngoặc để tra.
 - `crisp-dm` theo CRISP-DM 1.0 Step-by-step guide (Chapman et al., 2000): bước là sáu pha, bước con là generic task
   của pha, `doneWhen` là output của task theo guide, `notes` là câu hỏi gợi ý và bẫy hay gặp.
@@ -85,15 +87,15 @@
 - `stats-report` theo chu trình PPDAC (MacKay & Oldford; Wild & Pfannkuch, 1999): bước là năm khâu, bước con là mục
   của từng khâu.
 - `it5425-sports` sinh từ `masters-degree/data-management-visualization/data/sports-monitoring-project.json` (`phases`,
-  `team`, `week1`) và danh sách "Xong khi nào" (`#lt-xong`) của trang đồ án. Không sửa tay:
+  `team`) và danh sách "Xong khi nào" (`#lt-xong`) của trang đồ án. Không sửa tay:
   `python3 step-planner/tools/lint.py --write-course`. Cổng đỏ khi trang đồ án đổi mà mẫu chưa sinh lại.
-- Người làm trong mẫu đồ án: vai, không tên người. Chỉ ghi khi nguồn nói rõ — pha một vai, việc mở đầu "Vai N",
-  việc P0 khớp bảng `week1` (`P0_FROM_WEEK1` trong `lint.py`). Không đoán. Không ghi tên giảng viên.
+- Tên việc của mẫu đồ án giữ nguyên chữ trang đồ án, kể cả "Vai N, …"; ghi chú bước có dòng "Vai:" của pha. Không ghi
+  tên người, kể cả giảng viên.
 - Ghi chú mỗi bước của mẫu đồ án có link trang đồ án kèm neo (`#lt-lich`, `#can-xac-nhan`, `#lt-xong`); cổng kiểm neo còn.
 
 ## Markdown
 
-Xuất rồi nhập lại ra đúng cấu trúc cũ (tên, trạng thái, người, hạn, ghi chú, quay lại, nhật ký, ghi chú dự án).
+Xuất rồi nhập lại ra đúng cấu trúc cũ (tên, trạng thái, hạn, ghi chú, quay lại, nhật ký, ghi chú dự án).
 Xem trên GitHub / VS Code: nhãn cách nhau một dòng trống, dòng trong khối có hai dấu cách cuối (xuống dòng cứng).
 
 ```
@@ -102,8 +104,6 @@ Xem trên GitHub / VS Code: nhãn cách nhau một dòng trống, dòng trong kh
 > Data Science Step Planner · định dạng 1
 >
 > Mẫu: <templateId>
->
-> Người: `@Tên A` · `@Tên B`
 
 dòng ghi chú dự án
 
@@ -118,7 +118,7 @@ Quay lại: YYYY-MM-DD · lý do
 Ghi chú:
   dòng ghi chú
 
-- [ ] Tên bước con · `@người` · hạn YYYY-MM-DD
+- [ ] Tên bước con · hạn YYYY-MM-DD
   Xong khi: …
   dòng ghi chú
 
@@ -130,8 +130,8 @@ Ghi chú:
 ```
 
 - Dấu trạng thái: `[ ]` / `[]` chưa làm, `[~]` đang làm, `[x]` / `[X]` xong, `[!]` bị chặn, `[-]` bỏ qua. Dấu lạ đọc là chưa làm.
-- Người làm xuất trong dấu `` ` `` để dán lên GitHub không gọi tên tài khoản nào; đọc cả `` `@tên` `` và `@tên`.
-- Trên dòng bước con và dòng `Người:`, phần tử tách bằng ` · `. Trong tên: `\` viết `\\`, `·` viết `\·`, `@` viết `\@`,
+- Không có người làm: dòng `Người:`, phần tử `` `@tên` `` / `@tên` của file cũ và `@tên` viết tay bị bỏ khỏi tên, không cảnh báo.
+- Trên dòng bước con, phần tử tách bằng ` · `. Trong tên: `\` viết `\\`, `·` viết `\·`, `@` viết `\@`,
   chữ `hạn` / `due` viết `\hạn` / `\due`.
 - Dòng thụt hai dấu cách thuộc bước con / `Ghi chú:` / quyết định ngay trên nó. Dòng thụt đầu `Xong khi: ` của bước con
   là `doneWhen`; dòng thụt đầu `Vì sao: ` của quyết định mở phần lý do.
@@ -143,7 +143,6 @@ Nhập Markdown viết tay (dễ dãi):
 
 - Bước con: `- [ ] x`, `- [] x`, `* [ ] x`, `+ [ ] x`, `1. [ ] x`, gạch đầu dòng thường `- x` (chưa làm). Mục lồng
   (`  - [ ] con`) thành bước con cùng bước, xếp phẳng.
-- `@tên` ở đâu trên dòng cũng được; nhiều `@` thì người đầu làm, người sau vào ghi chú ("Người khác: …").
 - Hạn: `hạn` / `due` + `YYYY-MM-DD`, `YYYY-M-D`, `DD/MM/YYYY`, `D/M/YYYY`. Ngày không có thật thì cảnh báo, giữ trong tên.
 - Tiêu đề bước: `## 1. x`, `## 1) x`, `## 2 x`, `## Bước 1: x`, `## Step 2) x`, hay `## x` không số.
   `## Nhật ký quyết định` / `## Nhật ký` là nhật ký.
@@ -180,10 +179,10 @@ Nhập Markdown viết tay (dễ dãi):
 
 - `tools/lint.py`: khuôn mẫu, mẫu đồ án khớp nguồn và neo, không `innerHTML`, mã màu chỉ trong khối token.
 - `node --check` cho `js/*.js`; `tools/test-core.mjs`: Markdown và JSON đi rồi về, Markdown viết tay, JSON sai khuôn,
-  ngày, tên trùng, đổi tên người làm, tiến độ.
+  ngày, tên trùng, file cũ có người làm, tiến độ.
 - `tools/smoke.cjs` (cổng tự dựng máy chủ tạm; thiếu playwright thì bỏ qua, CI chạy ở job smoke): mọi mẫu, thêm / sửa /
   xoá / hoàn tác (nút, Ctrl+Z), nút và kéo thả, tô sau khi dời (nút, Alt + mũi tên, kéo thả, bước) + hoàn tác, thẻ cao
-  theo nội dung và dừng ở max-height, "Xem thêm", lọc và thêm khi lọc, Esc có chữ chưa lưu, đổi tên thành viên, cần làm
+  theo nội dung và dừng ở max-height, "Xem thêm", tìm và thêm khi tìm, Esc có chữ chưa lưu, nhập file / khoá cũ có người làm, cần làm
   lại (băng, bỏ đánh dấu, dòng `Quay lại:` khi xuất), mẹo tắt được, nhật ký, tải lại, xuất → nhập, thay dự án + hoàn tác,
   JSON sai khuôn, nhắc sao lưu, hai tab, 390px (vùng bấm ≥ 44px), bộ nhớ bị chặn, dữ liệu hỏng, lỗi console. Số bước /
   bước con của mẫu đọc từ `templates.json`, không ghi tay. Chạy tay: `node step-planner/tools/smoke.cjs http://127.0.0.1:8347/step-planner/`.

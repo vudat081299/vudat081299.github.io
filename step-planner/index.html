@@ -33,7 +33,6 @@
   <symbol id="i-chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
   <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
   <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol>
-  <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M2 20v-1a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v1M16 4.1a4 4 0 0 1 0 7.8M22 20v-1a5 5 0 0 0-3-4.6"/></symbol>
   <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 15V4M8 8l4-4 4 4M5 20h14"/></symbol>
   <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11M8 11l4 4 4-4M5 20h14"/></symbol>
   <symbol id="i-hint" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.7.5 1.1 1.3 1.1 2.1V16h5v-.1c0-.8.4-1.6 1.1-2.1A6 6 0 0 0 12 3z"/></symbol>
@@ -102,16 +101,11 @@
     <label class="search">
       <svg class="i" aria-hidden="true"><use href="#i-search"/></svg>
       <span class="sr">Tìm</span>
-      <input type="search" class="input" id="q" placeholder="Tìm bước, người, ghi chú" autocomplete="off">
-    </label>
-    <label class="owner">
-      <span class="sr">Người làm</span>
-      <select class="input" id="owner-filter"></select>
+      <input type="search" class="input" id="q" placeholder="Tìm bước, bước con, ghi chú" autocomplete="off">
     </label>
     <span class="filter-note" id="filter-note" role="status"></span>
     <span class="tools-gap"></span>
     <div class="tool-btns">
-      <button type="button" class="btn quiet" id="people-btn"><svg class="i" aria-hidden="true"><use href="#i-users"/></svg>Thành viên</button>
       <button type="button" class="btn quiet" id="import-btn"><svg class="i" aria-hidden="true"><use href="#i-upload"/></svg>Nhập</button>
       <button type="button" class="btn warn" id="backup-nudge" hidden></button>
       <button type="button" class="btn go" id="export-btn"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Xuất</button>
@@ -145,7 +139,7 @@
   <div class="start-card">
     <span class="start-icon" aria-hidden="true"><svg class="i"><use href="#i-board"/></svg></span>
     <h2>Chia dự án thành bước và bước con</h2>
-    <p>Mỗi bước là một hàng, mỗi bước con là một thẻ. Theo dõi trạng thái, người làm, hạn; ghi quyết định; xuất Markdown.</p>
+    <p>Mỗi bước là một hàng, mỗi bước con là một thẻ. Theo dõi trạng thái, hạn; ghi quyết định; xuất Markdown.</p>
     <ol class="how" aria-label="Cách dùng">
       <li><span class="how-n">1</span><span><b>Chọn mẫu</b> bên dưới, hoặc nhập file</span></li>
       <li><span class="how-n">2</span><span><b>Bấm thẻ</b> để sửa, <b>bấm chip</b> để đổi trạng thái</span></li>
@@ -164,8 +158,6 @@
   <span id="toast-text"></span>
   <button type="button" class="toast-btn" id="toast-undo" aria-keyshortcuts="Control+Z Meta+Z">Hoàn tác</button>
 </div>
-
-<datalist id="people-list"></datalist>
 
 <!-- Dự án: danh sách, mở, đổi tên, nhân bản, xoá, tạo mới -->
 <dialog class="dlg" id="dlg-ws" aria-labelledby="dlg-ws-title">
@@ -187,7 +179,6 @@
     <div class="grid2">
       <label class="field"><span>Trạng thái</span><select name="status"></select></label>
       <label class="field"><span>Hạn</span><input type="date" name="due"></label>
-      <label class="field"><span>Người làm</span><input type="text" name="owner" list="people-list" maxlength="80"></label>
       <label class="field"><span>Thuộc bước</span><select name="step"></select></label>
       <label class="field"><span>Vị trí trong bước</span><select name="pos"></select></label>
     </div>
@@ -237,16 +228,6 @@
       <button type="button" class="btn" data-close>Huỷ</button>
       <button type="submit" class="btn go" value="save">Đánh dấu cần làm lại</button>
     </div>
-  </form>
-</dialog>
-
-<!-- Người trong dự án -->
-<dialog class="dlg" id="dlg-people" aria-labelledby="dlg-people-title">
-  <form method="dialog" id="people-form" class="stack">
-    <div class="dlg-head"><h2 id="dlg-people-title">Thành viên</h2><button type="button" class="icon-btn" data-close aria-label="Đóng" title="Đóng"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button></div>
-    <label class="field"><span>Mỗi dòng một người hoặc một vai. Sửa tên trên một dòng thì mọi bước con của người ấy đổi theo.</span><textarea name="people" rows="7"></textarea></label>
-    <label class="field"><span>Tôi là (cho bộ lọc "Việc của tôi", chỉ lưu ở máy này)</span><select name="me"></select></label>
-    <div class="row-end"><button type="button" class="btn" data-close>Huỷ</button><button type="submit" class="btn go" value="save">Lưu</button></div>
   </form>
 </dialog>
 

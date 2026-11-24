@@ -3,7 +3,10 @@
  * vẫn chạy trong bộ nhớ tạm và báo bằng banner. */
 import { normWorkspace } from './core.js';
 
-export const KEY = 'stepPlanner.v1';
+export const KEY = 'stepPlanner.v2';
+/* Khoá của khuôn cũ: đọc một lần khi KEY chưa có, rồi chuẩn hoá sang khuôn mới. Khoá cũ giữ nguyên (bản dự phòng);
+ * trang không ghi vào nó nữa. */
+export const OLD_KEYS = ['stepPlanner.v1'];
 const TAB_KEY = 'stepPlanner.tab';
 
 /** @returns {boolean} */
@@ -21,10 +24,11 @@ const isoOrEmpty = (/** @type {any} */ s) => (typeof s === 'string' && !isNaN(Da
 
 /** @returns {{ state: any, problem: string }} */
 export function load() {
-  const empty = { version: 1, workspaces: [], lastId: '', me: {}, lastBackup: '', dirtySince: '' };
+  const empty = { version: 2, workspaces: [], lastId: '', lastBackup: '', dirtySince: '' };
   let raw = null;
   try {
     raw = localStorage.getItem(KEY);
+    for (const k of OLD_KEYS) if (raw === null) raw = localStorage.getItem(k);
   } catch (e) {
     return { state: empty, problem: 'blocked' };
   }
@@ -34,10 +38,9 @@ export function load() {
     if (!d || !Array.isArray(d.workspaces)) throw new Error('khuôn lạ');
     return {
       state: {
-        version: 1,
+        version: 2,
         workspaces: d.workspaces.map(normWorkspace),
         lastId: typeof d.lastId === 'string' ? d.lastId : '',
-        me: d.me && typeof d.me === 'object' && !Array.isArray(d.me) ? d.me : {},
         lastBackup: isoOrEmpty(d.lastBackup),
         dirtySince: isoOrEmpty(d.dirtySince),
       },

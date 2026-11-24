@@ -196,16 +196,7 @@
     {
       "id": "it5425-sports",
       "name": "Đồ án IT5425 — giám sát thể thao (Premier League)",
-      "description": "Các giai đoạn P0–P8 và bảy vai của đồ án môn Data Management and Visualization, lấy từ trang đồ án; người làm ghi theo vai.",
-      "people": [
-        "Trưởng nhóm & kể chuyện",
-        "Dữ liệu & lineage",
-        "EDA & ngoại lai",
-        "ANOM",
-        "CUSUM",
-        "SPRT",
-        "Demo & tích hợp"
-      ],
+      "description": "Các giai đoạn P0–P8 của đồ án môn Data Management and Visualization, lấy từ trang đồ án.",
       "steps": [
         {
           "title": "P0 · Khởi động",
@@ -214,19 +205,16 @@
           "notes": "Vai: Trưởng nhóm & kể chuyện, Dữ liệu & lineage, EDA & ngoại lai, ANOM, CUSUM, SPRT, Demo & tích hợp\nCông cụ: git, GitHub, Python 3, VS Code hoặc Colab\nTrang đồ án, pha P0: https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-project.html#lt-lich\nCâu hỏi gửi giảng viên, thư xin phép: https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-project.html#can-xac-nhan",
           "subs": [
             {
-              "title": "Gửi giảng viên các câu hỏi ở mục Cần xác nhận.",
-              "owner": "Trưởng nhóm & kể chuyện"
+              "title": "Gửi giảng viên các câu hỏi ở mục Cần xác nhận."
             },
             {
-              "title": "Email football-data.co.uk xin phép dùng dữ liệu cho đồ án, theo thư soạn sẵn (trang dữ liệu mời liên hệ khi có câu hỏi về cách dùng).",
-              "owner": "Trưởng nhóm & kể chuyện"
+              "title": "Email football-data.co.uk xin phép dùng dữ liệu cho đồ án, theo thư soạn sẵn (trang dữ liệu mời liên hệ khi có câu hỏi về cách dùng)."
             },
             {
               "title": "Chốt phương án (A, B hay C)."
             },
             {
-              "title": "Tạo repo theo cây Repo mẫu trên trang đồ án.",
-              "owner": "Demo & tích hợp"
+              "title": "Tạo repo theo cây Repo mẫu trên trang đồ án."
             },
             {
               "title": "Cài Python, VS Code (hoặc dùng Colab), git; tạo venv rồi cài requirements.txt."
@@ -235,8 +223,7 @@
               "title": "Giao bảy vai."
             },
             {
-              "title": "Hẹn một buổi họp mỗi tuần.",
-              "owner": "Trưởng nhóm & kể chuyện"
+              "title": "Hẹn một buổi họp mỗi tuần."
             }
           ]
         },
@@ -247,28 +234,22 @@
           "notes": "Vai: Dữ liệu & lineage\nCông cụ: Python: requests, hashlib\nTrang đồ án, pha P1: https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-project.html#lt-lich",
           "subs": [
             {
-              "title": "Đọc notes.txt để biết nghĩa từng cột.",
-              "owner": "Dữ liệu & lineage"
+              "title": "Đọc notes.txt để biết nghĩa từng cột."
             },
             {
-              "title": "Viết src/download.py: tải Premier League (file E0) mọi mùa từ 1997/98 (đã kiểm: mỗi mùa đủ 380 trận) tới 2025/26, theo mẫu …/mmz4281/2021/E0.csv. Các giải khác chỉ tải khi làm phần mở rộng ANOM.",
-              "owner": "Dữ liệu & lineage"
+              "title": "Viết src/download.py: tải Premier League (file E0) mọi mùa từ 1997/98 (đã kiểm: mỗi mùa đủ 380 trận) tới 2025/26, theo mẫu …/mmz4281/2021/E0.csv. Các giải khác chỉ tải khi làm phần mở rộng ANOM."
             },
             {
-              "title": "Ghi URL, ngày tải và mã SHA-256 của từng file vào data/manifest.csv.",
-              "owner": "Dữ liệu & lineage"
+              "title": "Ghi URL, ngày tải và mã SHA-256 của từng file vào data/manifest.csv."
             },
             {
-              "title": "Viết docs/data-card.md: nguồn, điều khoản, cột, giai đoạn.",
-              "owner": "Dữ liệu & lineage"
+              "title": "Viết docs/data-card.md: nguồn, điều khoản, cột, giai đoạn."
             },
             {
-              "title": "Mở docs/lineage.md.",
-              "owner": "Dữ liệu & lineage"
+              "title": "Mở docs/lineage.md."
             },
             {
-              "title": "File gốc để ở data/raw/, có tên trong .gitignore.",
-              "owner": "Dữ liệu & lineage"
+              "title": "File gốc để ở data/raw/, có tên trong .gitignore."
             }
           ]
         },
@@ -282,20 +263,16 @@
               "title": "Mỗi người viết phương pháp của mình trên ví dụ có lời giải và dữ liệu giả lập, trước khi có dữ liệu thật."
             },
             {
-              "title": "Ngoại lai: ví dụ Grubbs và generalized ESD của NIST (mục 1.3.5.17).",
-              "owner": "EDA & ngoại lai"
+              "title": "Vai 3, ngoại lai: ví dụ Grubbs và generalized ESD của NIST (mục 1.3.5.17)."
             },
             {
-              "title": "ANOM: theo công thức trên trang Minitab, tính tay một bộ tỉ lệ nhỏ rồi so với code.",
-              "owner": "ANOM"
+              "title": "Vai 4, ANOM: theo công thức trên trang Minitab, tính tay một bộ tỉ lệ nhỏ rồi so với code."
             },
             {
-              "title": "CUSUM: ví dụ CUSUM của NIST (mục 6.3.2.3), rồi CUSUM Bernoulli trên chuỗi 0/1 giả lập có điểm đổi cài sẵn.",
-              "owner": "CUSUM"
+              "title": "Vai 5, CUSUM: ví dụ CUSUM của NIST (mục 6.3.2.3), rồi CUSUM Bernoulli trên chuỗi 0/1 giả lập có điểm đổi cài sẵn."
             },
             {
-              "title": "SPRT: chuỗi Bernoulli giả lập với p biết trước; kiểm tỉ lệ báo nhầm gần α.",
-              "owner": "SPRT"
+              "title": "Vai 6, SPRT: chuỗi Bernoulli giả lập với p biết trước; kiểm tỉ lệ báo nhầm gần α."
             },
             {
               "title": "Viết unit test bằng pytest cho từng hàm."
@@ -416,8 +393,7 @@
               "title": "Ghi chú sự kiện lên hình: mùa không khán giả, VAR từ 2019/20."
             },
             {
-              "title": "Hình luồng dữ liệu (lineage) và bảng chất lượng dữ liệu cho báo cáo.",
-              "owner": "Dữ liệu & lineage"
+              "title": "Vai 2: hình luồng dữ liệu (lineage) và bảng chất lượng dữ liệu cho báo cáo."
             }
           ]
         },
@@ -431,8 +407,7 @@
               "title": "app/streamlit_app.py đọc data/clean/ và results/, gọi lại các hàm trong src/ khi kéo thanh trượt; chạy được khi không có mạng."
             },
             {
-              "title": "Tab \"Dữ liệu\" có báo cáo chất lượng, sơ đồ lineage và nút chạy lại đường ống.",
-              "owner": "Dữ liệu & lineage"
+              "title": "Vai 2: tab \"Dữ liệu\" có báo cáo chất lượng, sơ đồ lineage và nút chạy lại đường ống."
             },
             {
               "title": "Mỗi phương pháp một tab có thanh trượt: ngưỡng ngoại lai; α cho ANOM; k, h cho CUSUM; p0, p1, α, β cho SPRT. Hình cập nhật ngay."

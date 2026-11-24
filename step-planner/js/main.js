@@ -49,13 +49,13 @@ const iconBtn = (name, label, act, disabled = false) =>
 
 const storageOK = S.available();
 const loaded = S.load();
-/** @type {{version:number, workspaces:any[], lastId:string, me:Record<string,string>, lastBackup:string, dirtySince:string}} */
+/** @type {{version:number, workspaces:any[], lastId:string, lastBackup:string, dirtySince:string}} */
 let state = loaded.state;
 /** Dự án tab này đang mở (mỗi tab một dự án). */
 let curId = '';
 /** @type {any[]} */
 let templates = [];
-const ui = { q: '', owner: '' };
+const ui = { q: '' };
 /** @type {{kind:'sub'|'step', id:string} | null} */
 let drag = null;
 const banners = new Map();
@@ -162,11 +162,9 @@ function render() {
   $('overall-bar').style.width = o.pct + '%';
   renderLegend(ws);
   $('hint').hidden = S.hintHidden();
-  renderOwnerFilter(ws);
   renderWsNotes(ws);
   renderBoard(ws);
   renderLog(ws);
-  $('people-list').replaceChildren(...ownersOf(ws).map((p) => h('option', { value: p })));
 }
 
 /** Chú giải năm trạng thái (chip mẫu + chữ + số bước con), cũng là tiến độ chi tiết của dự án. @param {any} ws */
@@ -175,27 +173,6 @@ function renderLegend(ws) {
   for (const s of ws.steps) for (const x of s.subs) n[x.status]++;
   $('legend').replaceChildren(...C.STATUSES.map((st) => h('li', {},
     h('span', { class: `chip st-${st}` }, C.STATUS_LABEL[st]), h('b', {}, String(n[st])))));
-}
-
-/** Người trong `people`, rồi người được giao việc mà chưa có trong danh sách. @param {any} ws */
-function ownersOf(ws) {
-  const out = [...ws.people];
-  for (const s of ws.steps) for (const x of s.subs) if (x.owner && !out.includes(x.owner)) out.push(x.owner);
-  return out;
-}
-
-function renderOwnerFilter(/** @type {any} */ ws) {
-  const me = state.me[ws.id] || '';
-  const names = ownersOf(ws);
-  if (ui.owner && !['@me', '@none'].includes(ui.owner) && !names.includes(ui.owner)) ui.owner = '';
-  const sel = $('owner-filter');
-  sel.replaceChildren(
-    h('option', { value: '' }, 'Mọi người'),
-    h('option', { value: '@me' }, me ? `Việc của tôi (${me})` : 'Việc của tôi (chọn "Tôi là" ở Thành viên)'),
-    ...names.map((n) => h('option', { value: n }, n)),
-    h('option', { value: '@none' }, 'Chưa giao'),
-  );
-  sel.value = ui.owner;
 }
 
 function renderWsNotes(/** @type {any} */ ws) {
@@ -218,21 +195,17 @@ function renderNudge() {
 
 function renderBoard(/** @type {any} */ ws) {
   const board = $('board');
-  const me = state.me[ws.id] || '';
   const q = C.fold(ui.q.trim());
-  const filtering = !!(q || ui.owner);
+  const filtering = !!q;
   board.classList.toggle('filtering', filtering);
-  const ownerOk = (/** @type {any} */ x) => !ui.owner
-    || (ui.owner === '@none' ? !x.owner : ui.owner === '@me' ? !!me && x.owner === me : x.owner === ui.owner);
   const todayStr = C.today();
   const nextId = C.projectNextId(ws);
   const rows = [];
   let shown = 0;
   ws.steps.forEach((/** @type {any} */ step, /** @type {number} */ i) => {
     const stepHit = !!q && C.fold([step.title, step.goal, step.doneWhen, step.notes, step.revisit?.reason].join(' ')).includes(q);
-    const visible = step.subs.filter((/** @type {any} */ x) => ownerOk(x)
-      && (!q || stepHit || C.fold([x.title, x.owner, x.doneWhen, x.notes].join(' ')).includes(q)));
-    if (filtering && !visible.length && !(stepHit && !ui.owner)) return;
+    const visible = step.subs.filter((/** @type {any} */ x) => !q || stepHit || C.fold([x.title, x.doneWhen, x.notes].join(' ')).includes(q));
+    if (filtering && !visible.length && !stepHit) return;
     shown += visible.length;
     const prog = C.progress(step.subs);
     const last = step.subs.length - 1;
@@ -274,9 +247,8 @@ function renderBoard(/** @type {any} */ ws) {
           h('button', { type: 'button', class: `chip st-${x.status}`, 'data-act': 'cycle', 'aria-label': `Trạng thái: ${label}. Bấm để đổi`, title: 'Bấm để đổi trạng thái' }, label)),
         h('div', { class: 'card-body' },
           h('h3', { class: 'card-title' }, h('button', { type: 'button', class: 'link', 'data-act': 'edit-sub', 'aria-keyshortcuts': 'Alt+ArrowLeft Alt+ArrowRight' }, x.title)),
-          (x.owner || x.due) && h('p', { class: 'meta' },
-            x.owner && h('span', { class: 'owner-tag' }, '@' + x.owner),
-            x.due && h('span', { class: 'due' + (overdue ? ' overdue' : '') }, 'hạn ' + fmtDate(x.due) + (overdue ? ' (trễ)' : ''))),
+          x.due && h('p', { class: 'meta' },
+            h('span', { class: 'due' + (overdue ? ' overdue' : '') }, 'hạn ' + fmtDate(x.due) + (overdue ? ' (trễ)' : ''))),
           x.doneWhen && h('p', { class: 'card-done' }, h('span', { class: 'lbl' }, 'Xong khi '), x.doneWhen),
           x.notes && h('p', { class: 'card-notes' }, withLinks(x.notes))),
         h('div', { class: 'acts' },
@@ -361,7 +333,7 @@ const field = (/** @type {any} */ form, /** @type {string} */ name) => form.elem
 const snapshot = (/** @type {any} */ form) => JSON.stringify([...form.elements].filter((e) => e.name).map((e) => (e.type === 'radio' || e.type === 'checkbox' ? e.checked : e.value)));
 /** @type {WeakMap<any, string>} */
 const snaps = new WeakMap();
-const GUARDED = ['dlg-sub', 'dlg-step', 'dlg-revisit', 'dlg-people', 'dlg-log', 'dlg-notes'];
+const GUARDED = ['dlg-sub', 'dlg-step', 'dlg-revisit', 'dlg-log', 'dlg-notes'];
 
 function autosize(/** @type {any} */ el) {
   el.style.height = 'auto';
@@ -434,7 +406,7 @@ function ask(o) {
 function addWorkspace(ws) {
   state.workspaces.push(ws);
   setCur(ws.id);
-  ui.q = ''; ui.owner = '';
+  ui.q = '';
   $('q').value = '';
 }
 function afterOpen() {
@@ -449,7 +421,7 @@ function createFrom(/** @type {string} */ tplId, /** @type {string} */ name = ''
 }
 function switchTo(/** @type {string} */ id) {
   setCur(id);
-  ui.q = ''; ui.owner = '';
+  ui.q = '';
   $('q').value = '';
   persist();
   render();
@@ -785,12 +757,9 @@ function openSub(/** @type {any} */ step, /** @type {any} */ sub) {
   $('dlg-sub-title').textContent = sub ? 'Sửa bước con' : 'Thêm bước con';
   field(f, 'status').replaceChildren(...C.STATUSES.map((s) => h('option', { value: s }, C.STATUS_LABEL[s])));
   field(f, 'step').replaceChildren(...ws.steps.map((/** @type {any} */ s, /** @type {number} */ i) => h('option', { value: s.id }, `${i + 1}. ${s.title}`)));
-  const me = state.me[ws.id] || '';
-  const filterOwner = ui.owner === '@me' ? me : ui.owner === '@none' ? '' : ui.owner;
-  const x = sub || C.normSub({ title: '', owner: filterOwner });
+  const x = sub || C.normSub({ title: '' });
   field(f, 'title').value = sub ? x.title : '';
   field(f, 'status').value = x.status;
-  field(f, 'owner').value = x.owner;
   field(f, 'due').value = x.due;
   field(f, 'doneWhen').value = x.doneWhen;
   field(f, 'notes').value = x.notes;
@@ -815,7 +784,7 @@ $('sub-form').addEventListener('submit', (/** @type {any} */ e) => {
   if (!ws || !step || (subCtx.subId && !sub)) { toast('Không lưu được: bước đã bị xoá ở nơi khác.'); return; }
   const data = C.normSub({
     id: sub ? sub.id : '',
-    title: field(f, 'title').value, status: field(f, 'status').value, owner: field(f, 'owner').value,
+    title: field(f, 'title').value, status: field(f, 'status').value,
     due: field(f, 'due').value, doneWhen: field(f, 'doneWhen').value, notes: field(f, 'notes').value,
   });
   const target = stepOf(ws, field(f, 'step').value) || step;
@@ -925,59 +894,15 @@ $('revisit-clear').addEventListener('click', () => {
   commit(stepSel(step.id, 'edit-step'));
 });
 
-/* ── Thành viên ── */
-
-function openPeople(focusMe = false) {
-  const ws = cur();
-  const f = $('people-form');
-  field(f, 'people').value = ws.people.join('\n');
-  const me = state.me[ws.id] || '';
-  const names = ownersOf(ws);
-  field(f, 'me').replaceChildren(h('option', { value: '' }, '(chưa chọn)'), ...names.map((n) => h('option', { value: n }, n)));
-  field(f, 'me').value = names.includes(me) ? me : '';
-  openDlg($('dlg-people'), focusMe ? field(f, 'me') : field(f, 'people'));
-}
-$('people-btn').addEventListener('click', () => openPeople());
-$('people-form').addEventListener('submit', (/** @type {any} */ e) => {
-  e.preventDefault();
-  const ws = cur();
-  const f = $('people-form');
-  closeSaved($('dlg-people'));
-  if (!ws) return;
-  /* Đổi tên theo vị trí dòng: dòng thứ i đổi chữ thì mọi bước con của người cũ chuyển sang tên mới. */
-  const lines = field(f, 'people').value.split('\n').map(C.oneLine);
-  while (lines.length && !lines[lines.length - 1]) lines.pop();
-  let me = field(f, 'me').value;
-  let renamed = 0;
-  if (lines.length === ws.people.length) {
-    ws.people.forEach((/** @type {string} */ old, /** @type {number} */ i) => {
-      const nu = lines[i];
-      if (!nu || nu === old) return;
-      renamed += C.renameOwner(ws, old, nu);
-      if (me === old) me = nu;
-    });
-  }
-  ws.people = C.normWorkspace({ people: lines }).people;
-  if (me) state.me[ws.id] = me; else delete state.me[ws.id];
-  commit('#people-btn');
-  if (renamed) toast(`Đã đổi tên người làm trên ${renamed} bước con.`);
-});
-
 /* ── Lọc ── */
 
 function clearFilter() {
-  ui.q = ''; ui.owner = '';
+  ui.q = '';
   $('q').value = '';
   render();
   $('q').focus();
 }
 $('q').addEventListener('input', (/** @type {any} */ e) => { ui.q = e.target.value; render(); });
-$('owner-filter').addEventListener('change', (/** @type {any} */ e) => {
-  ui.owner = e.target.value;
-  const ws = cur();
-  if (ui.owner === '@me' && ws && !state.me[ws.id]) { ui.owner = ''; render(); openPeople(true); return; }
-  render();
-});
 
 /* ── Nhật ký quyết định ── */
 
@@ -1156,7 +1081,7 @@ $('import-go').addEventListener('click', () => {
   const mode = /** @type {any} */ (document.querySelector('input[name="import-mode"]:checked')).value;
   const parsed = importParsed;
   $('dlg-import').close();
-  ui.q = ''; ui.owner = ''; $('q').value = '';
+  ui.q = ''; $('q').value = '';
   const ws = cur();
   if (mode === 'replace' && ws && parsed.workspaces.length === 1) {
     const before = JSON.parse(JSON.stringify(ws));

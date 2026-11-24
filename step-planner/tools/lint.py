@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Cổng dữ liệu và code của step-planner/.
 
-  1. data/templates.json: khuôn mẫu (khoá, kiểu, chuỗi không rỗng, id không trùng, không thẻ HTML, owner nằm trong
-     `people` của mẫu, có đúng một mẫu trống).
+  1. data/templates.json: khuôn mẫu (khoá, kiểu, chuỗi không rỗng, id không trùng, không thẻ HTML, có đúng một mẫu
+     trống). Không có khái niệm người làm: mẫu không có `people` / `owner`.
   2. Mẫu `it5425-sports` khớp từng chữ với bản sinh từ trang đồ án môn (COURSE_JSON, COURSE_HTML): không thêm nội dung.
      Sinh lại:  python3 step-planner/tools/lint.py --write-course
   3. js/*.js: không innerHTML / outerHTML / insertAdjacentHTML / document.write — chữ người dùng chỉ qua textContent.
@@ -23,14 +23,6 @@ COURSE_JSON = os.path.join(REPO, 'masters-degree/data-management-visualization/d
 COURSE_HTML = os.path.join(REPO, 'masters-degree/data-management-visualization/sports-monitoring-project.html')
 COURSE_ID = 'it5425-sports'
 COURSE_URL = 'https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-project.html'
-# Người làm việc P0 lấy từ bảng `week1` (tuần đầu, mỗi vai một việc): (chữ trong việc P0, chữ trong việc week1).
-# Việc P0 không có dòng nào ở đây thì để trống người làm — nguồn không nói ai làm.
-P0_FROM_WEEK1 = [
-    ('Gửi giảng viên', 'Gửi giảng viên'),
-    ('Email football-data.co.uk', 'gửi football-data.co.uk thư xin phép'),
-    ('Tạo repo theo cây', 'Tạo repo theo cây mẫu'),
-    ('Hẹn một buổi họp', 'hẹn họp hằng tuần'),
-]
 TOKEN_END = '/* ── hết token ── */'
 
 errors = []
@@ -59,30 +51,10 @@ def course_template():
     for anchor in ('lt-lich', 'can-xac-nhan', 'lt-xong'):
         if f'id="{anchor}"' not in page:
             err(f'{COURSE_HTML}: mất neo #{anchor} mà mẫu {COURSE_ID} trỏ tới')
-    week1 = [(w['role'], text(w['task_html'])) for w in src['week1']]
-    p0_owner = {}
-    for task_key, week_key in P0_FROM_WEEK1:
-        hit = [r for r, t in week1 if week_key in t]
-        if len(hit) != 1:
-            err(f'{COURSE_JSON}: week1 không có đúng một việc chứa "{week_key}"')
-        else:
-            p0_owner[task_key] = roles[hit[0] - 1]
     steps = []
     for p in src['phases']:
         phase_roles = [roles[i - 1] for i in p['roles']]
-        subs = []
-        for t in p['tasks_html']:
-            title, owner = text(t), phase_roles[0] if len(phase_roles) == 1 else ''
-            if p['id'] == 'P0':
-                owner = next((o for k, o in p0_owner.items() if title.startswith(k)), '')
-            v = re.match(r'Vai (\d+)[,:] (.*)$', title)
-            if v:
-                owner, title = roles[int(v.group(1)) - 1], v.group(2)
-                title = title[0].upper() + title[1:]
-            sub = {'title': title}
-            if owner:
-                sub['owner'] = owner
-            subs.append(sub)
+        subs = [{'title': text(t)} for t in p['tasks_html']]
         notes = ['Vai: ' + ', '.join(phase_roles), 'Công cụ: ' + text(p['tools']),
                  f'Trang đồ án, pha {p["id"]}: {COURSE_URL}#lt-lich']
         if p['id'] == 'P0':
@@ -99,16 +71,14 @@ def course_template():
     return {
         'id': COURSE_ID,
         'name': 'Đồ án IT5425 — giám sát thể thao (Premier League)',
-        'description': 'Các giai đoạn P0–P8 và bảy vai của đồ án môn Data Management and Visualization, '
-                       'lấy từ trang đồ án; người làm ghi theo vai.',
-        'people': roles,
+        'description': 'Các giai đoạn P0–P8 của đồ án môn Data Management and Visualization, lấy từ trang đồ án.',
         'steps': steps,
     }
 
 
 STEP_KEYS = {'title', 'goal', 'doneWhen', 'notes', 'subs'}
-SUB_KEYS = {'title', 'doneWhen', 'owner', 'notes'}
-TPL_KEYS = {'id', 'name', 'description', 'people', 'steps'}
+SUB_KEYS = {'title', 'doneWhen', 'notes'}
+TPL_KEYS = {'id', 'name', 'description', 'steps'}
 
 
 def need_str(where, obj, key, required=True):
@@ -143,12 +113,6 @@ def check_templates(data):
         if tid in seen:
             err(f'{w}: id "{tid}" trùng')
         seen.add(tid)
-        people = t.get('people', [])
-        if not isinstance(people, list) or not all(isinstance(p, str) and p.strip() for p in people):
-            err(f'{w}: `people` phải là danh sách chuỗi')
-            people = []
-        if len(set(people)) != len(people):
-            err(f'{w}: `people` có tên trùng')
         steps = t.get('steps')
         if not isinstance(steps, list):
             err(f'{w}: `steps` phải là danh sách')
@@ -171,10 +135,8 @@ def check_templates(data):
                 if extra := set(sub) - SUB_KEYS:
                     err(f'{wss}: khoá lạ {sorted(extra)}')
                 need_str(wss, sub, 'title')
-                for key in ('doneWhen', 'owner', 'notes'):
+                for key in ('doneWhen', 'notes'):
                     need_str(wss, sub, key, required=False)
-                if sub.get('owner') and sub['owner'] not in people:
-                    err(f'{wss}: owner "{sub["owner"]}" không có trong `people` của mẫu')
     if blanks != 1:
         err(f'templates.json: cần đúng một mẫu trống (steps rỗng), đang có {blanks}')
     course = next((t for t in tpls if t.get('id') == COURSE_ID), None)

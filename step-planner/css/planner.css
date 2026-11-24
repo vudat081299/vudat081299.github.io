@@ -89,7 +89,6 @@
   --dlg-wide: 780px;
   --toast-w: 560px;
   --search-w: 300px;
-  --owner-w: 260px;
   --tpl-min: 250px;
   --sa-b: env(safe-area-inset-bottom, 0px);
 
@@ -336,12 +335,10 @@ svg.i {
 .search { position: relative; flex: 0 1 var(--search-w); min-width: 0; display: flex; align-items: center; }
 .search svg.i { position: absolute; left: var(--s3); color: var(--ink-3); pointer-events: none; }
 .search .input { padding-left: calc(var(--s3) + var(--icon) + var(--s2)); }
-.owner { flex: 0 1 var(--owner-w); min-width: 0; }
 .filter-note { font-size: var(--fs-sm); color: var(--ink-3); }
 .tool-btns { display: flex; align-items: center; gap: var(--s1); flex-wrap: wrap; }
 @media (max-width: 640px) {
   .search { flex: 1 1 100%; }
-  .owner { flex: 1 1 100%; }
   .tools-gap { display: none; }
   .tool-btns { flex: 1 1 100%; }
   .tool-btns .btn { flex: 1 1 0; padding: 0 var(--s2); }
@@ -457,7 +454,6 @@ svg.i {
 .card.open .card-body { mask-image: none; }
 .card-title { font-size: var(--fs-md); font-weight: 600; line-height: 1.35; overflow-wrap: anywhere; }
 .meta { display: flex; gap: var(--s1) var(--s2); flex-wrap: wrap; font-size: var(--fs-xs); color: var(--ink-2); }
-.owner-tag { font-weight: 600; overflow-wrap: anywhere; }
 .due.overdue { color: var(--danger); font-weight: 600; }
 .card-done, .card-notes { font-size: var(--fs-xs); color: var(--ink-2); overflow-wrap: anywhere; }
 .card-notes { white-space: pre-line; }

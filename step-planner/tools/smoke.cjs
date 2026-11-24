@@ -32,7 +32,7 @@ const check = (name, ok, detail = '') => {
     if (!res || res.status() !== 200) throw new Error('HTTP ' + (res && res.status()));
     return { ctx, page };
   };
-  const stored = (page) => page.evaluate(() => JSON.parse(localStorage.getItem('stepPlanner.v1') || 'null'));
+  const stored = (page) => page.evaluate(() => JSON.parse(localStorage.getItem('stepPlanner.v2') || 'null'));
   const cur = async (page) => { const s = await stored(page); return s.workspaces.find((w) => w.id === s.lastId); };
   const shape = (page, ws) => page.evaluate(async (w) => (await import(new URL('js/core.js', location.href).href)).shape(w), ws);
   const subSel = (id, act) => `.card[data-sub="${id}"] [data-act="${act}"]`;
@@ -125,14 +125,13 @@ const check = (name, ok, detail = '') => {
   await page.click('.step:nth-child(1) [data-act="add-sub"]');
   await page.fill('#sub-form [name="title"]', 'Thử <img src=x onerror=alert(1)> · chấm');
   await page.selectOption('#sub-form [name="status"]', 'blocked');
-  await page.fill('#sub-form [name="owner"]', 'Vai A');
   await page.fill('#sub-form [name="due"]', '2026-12-01');
   await page.fill('#sub-form [name="doneWhen"]', 'Có kết quả');
   await page.fill('#sub-form [name="notes"]', 'dòng 1\n\ndòng 3');
   await page.click('#sub-form button[type="submit"]');
   let ws = await cur(page);
   const added = ws.steps[0].subs[n1];
-  check('thêm bước con: lưu đủ trường', added && added.status === 'blocked' && added.owner === 'Vai A' && added.due === '2026-12-01'
+  check('thêm bước con: lưu đủ trường', added && added.status === 'blocked' && added.due === '2026-12-01' && !('owner' in added)
     && added.notes === 'dòng 1\n\ndòng 3' && added.doneWhen === 'Có kết quả');
   check('chữ người dùng không thành HTML', (await page.$$('.card img')).length === 0
     && /<img src=x/.test(await page.textContent(`.step:nth-child(1) .card[data-sub]:nth-child(${n1 + 1}) .card-title`)));
@@ -227,7 +226,7 @@ const check = (name, ok, detail = '') => {
   await page.click(`.step[data-step="${s2id}"] [data-act="del-step"]`);
   check('xoá bước có bước con: hỏi lại trước', await page.isVisible('#dlg-ask') && (await cur(page)).steps.length === nSteps + 1);
   await page.click('#ask-ok');
-  await page.waitForFunction((n) => JSON.parse(localStorage.getItem('stepPlanner.v1')).workspaces[0].steps.length === n, nSteps, { timeout: 3000 }).catch(() => {});
+  await page.waitForFunction((n) => JSON.parse(localStorage.getItem('stepPlanner.v2')).workspaces[0].steps.length === n, nSteps, { timeout: 3000 }).catch(() => {});
   check('xoá bước', (await cur(page)).steps.length === nSteps);
   await page.keyboard.press('Control+z');
   await page.waitForTimeout(50);
@@ -252,20 +251,14 @@ const check = (name, ok, detail = '') => {
   await page.fill('#revisit-form [name="reason"]', 'EDA lộ cột thiếu');
   await page.click('#revisit-form button[type="submit"]');
 
-  // Người, lọc việc của tôi, tìm kiếm.
-  await page.click('#people-btn');
-  await page.fill('#people-form [name="people"]', 'Vai A\nVai B');
-  await page.click('#people-form button[type="submit"]');
-  await page.click('#people-btn');
-  await page.selectOption('#people-form [name="me"]', 'Vai A');
-  await page.click('#people-form button[type="submit"]');
-  await page.selectOption('#owner-filter', '@me');
-  const mine = await page.$$eval('.card[data-sub]', (c) => c.length);
-  check('lọc "Việc của tôi"', mine === 2, String(mine));
-  check('lọc: tắt sắp xếp', (await page.$$('[data-act="sub-left"], [data-act="step-up"]')).length === 0);
-  await page.selectOption('#owner-filter', '');
+  // Không có khái niệm người làm: không bộ lọc người, không nút Thành viên, ô tìm không nhắc người.
+  check('không có người làm: không bộ lọc người, không Thành viên, không ô người làm',
+    !(await page.$('#owner-filter, #people-btn, #dlg-people, #sub-form [name="owner"]'))
+    && !/người/i.test(await page.getAttribute('#q', 'placeholder')) && !/Thành viên|Người làm|Việc của tôi/.test(await page.textContent('body')));
+  // Tìm kiếm.
   await page.fill('#q', 'kiem chat');
   check('tìm không dấu: một bước con', (await page.$$eval('.card[data-sub]', (c) => c.length)) === 1);
+  check('lọc: tắt sắp xếp', (await page.$$('[data-act="sub-left"], [data-act="step-up"]')).length === 0);
   await page.fill('#q', 'hieu nghiep vu');
   check('tìm không dấu theo tên bước: cả hàng hiện', (await page.$$eval('.step', (r) => r.length)) === 1);
   await page.fill('#q', '');
@@ -308,7 +301,7 @@ const check = (name, ok, detail = '') => {
   const [dl] = await Promise.all([page.waitForEvent('download'), page.click('#export-download')]);
   const md = fs.readFileSync(await dl.path(), 'utf8');
   check('xuất Markdown: tải file .md', /\.md$/.test(dl.suggestedFilename()) && md.startsWith('# Dự án Data Science'));
-  check('Markdown có dấu trạng thái, owner, hạn', /- \[x\] /.test(md) && /- \[!\] .* · `@Vai A` · hạn 2026-12-01/.test(md) && /## Nhật ký quyết định/.test(md));
+  check('Markdown có dấu trạng thái, hạn, không người làm', /- \[x\] /.test(md) && /- \[!\] .* · hạn 2026-12-01/.test(md) && !/`@|Người:/.test(md) && /## Nhật ký quyết định/.test(md));
   check('Markdown giữ dòng "Quay lại:" của bước cần làm lại', /\nQuay lại: \d{4}-\d\d-\d\d · EDA lộ cột thiếu\n/.test(md));
   await page.click('#export-copy');
   const clip = await page.evaluate(() => navigator.clipboard.readText());
@@ -360,14 +353,14 @@ const check = (name, ok, detail = '') => {
   await page.click('.ws-item:first-child [data-act="ws-rename"]');
   await page.fill('#ask-input', 'Tên mới');
   await page.click('#ask-ok');
-  await page.waitForFunction(() => JSON.parse(localStorage.getItem('stepPlanner.v1')).workspaces[0].name === 'Tên mới', null, { timeout: 3000 }).catch(() => {});
+  await page.waitForFunction(() => JSON.parse(localStorage.getItem('stepPlanner.v2')).workspaces[0].name === 'Tên mới', null, { timeout: 3000 }).catch(() => {});
   check('đổi tên dự án', (await stored(page)).workspaces[0].name === 'Tên mới');
   const nw = (await stored(page)).workspaces.length;
   await page.click('.ws-item:first-child [data-act="ws-dup"]');
   check('nhân bản dự án', (await stored(page)).workspaces.length === nw + 1);
   await page.click('.ws-item:nth-child(2) [data-act="ws-del"]');
   await page.click('#ask-ok');
-  await page.waitForFunction((n) => JSON.parse(localStorage.getItem('stepPlanner.v1')).workspaces.length === n, nw, { timeout: 3000 }).catch(() => {});
+  await page.waitForFunction((n) => JSON.parse(localStorage.getItem('stepPlanner.v2')).workspaces.length === n, nw, { timeout: 3000 }).catch(() => {});
   check('xoá dự án sau khi hỏi lại', (await stored(page)).workspaces.length === nw);
   await page.click('#dlg-ws [data-close]');
 
@@ -390,33 +383,35 @@ const check = (name, ok, detail = '') => {
   await page.keyboard.press('Escape');
   check('Esc khi chưa sửa gì: đóng ngay', !(await page.isVisible('#dlg-sub')) && !(await page.isVisible('#dlg-ask')));
 
-  // Thêm bước con khi đang lọc người làm: điền sẵn người ấy; bị lọc ẩn thì báo, focus không rơi về body.
-  await page.click('#people-btn');
-  await page.selectOption('#people-form [name="me"]', 'Vai A');
-  await page.click('#people-form button[type="submit"]');
-  await page.selectOption('#owner-filter', 'Vai A');
+  // Thêm bước con khi đang tìm: thẻ mới khớp thì hiện; bị lọc ẩn thì báo, focus không rơi về body.
   await page.click('.step:first-child .step-head [data-act="add-sub"]');
-  check('lọc người: ô người làm điền sẵn', (await page.inputValue('#sub-form [name="owner"]')) === 'Vai A');
   await page.fill('#sub-form [name="title"]', 'Việc của A');
   await page.click('#sub-form button[type="submit"]');
-  check('lọc người: thẻ mới hiện', /Việc của A/.test(await page.textContent('#board')));
   await page.fill('#q', 'việc của a');
+  check('đang tìm: thẻ khớp hiện', /Việc của A/.test(await page.textContent('#board')));
   await page.click('.step:first-child .step-head [data-act="add-sub"]');
   await page.fill('#sub-form [name="title"]', 'Không khớp tìm');
   await page.click('#sub-form button[type="submit"]');
   check('thêm mà bộ lọc ẩn: báo, focus không về body', /đang bị bộ lọc ẩn/.test(await page.textContent('#toast-text'))
     && await page.evaluate(() => document.activeElement !== document.body));
   await page.fill('#q', '');
-  await page.selectOption('#owner-filter', '');
 
-  // Đổi tên trong Thành viên: mọi bước con của người ấy đổi theo, "Tôi là" cũng theo.
-  await page.click('#people-btn');
-  await page.fill('#people-form [name="people"]', 'Vai A2\nVai B');
-  await page.click('#people-form button[type="submit"]');
-  ws = await cur(page);
-  const owners = ws.steps.flatMap((x) => x.subs.map((y) => y.owner));
-  check('đổi tên thành viên: bước con đổi theo', owners.includes('Vai A2') && !owners.includes('Vai A')
-    && (await stored(page)).me[ws.id] === 'Vai A2');
+  // Nhập Markdown cũ có người làm (dòng Người:, `@X`, @X): chạy được, bỏ thông tin người, tên thẻ không còn rác.
+  await page.click('#import-btn');
+  await page.fill('#import-text', '# Cũ\n\n> Data Science Step Planner · định dạng 1\n>\n> Người: `@An` · `@Bình`\n\n## 1. Một\n\n'
+    + '- [x] Việc cũ · `@An` · hạn 2026-01-02\n- [ ] Viết tay @Bình hạn 03/01/2026\n');
+  check('nhập file cũ có người: xem trước không cảnh báo', /^Markdown: 1 dự án · 1 bước · 2 bước con · 0 quyết định$/.test(await page.textContent('#import-preview')),
+    await page.textContent('#import-preview'));
+  await page.click('#import-go');
+  const oldMd = await cur(page);
+  check('nhập file cũ có người: bỏ người, tên sạch', oldMd.steps[0].subs.map((x) => x.title).join('|') === 'Việc cũ|Viết tay'
+    && oldMd.steps[0].subs.every((x) => !('owner' in x)) && !('people' in oldMd)
+    && !/@/.test(await page.textContent('#board')), JSON.stringify(oldMd.steps[0].subs));
+  await page.click('#ws-btn');
+  await page.click(`[data-ws="${oldMd.id}"] [data-act="ws-del"]`);
+  await page.click('#ask-ok');
+  await page.waitForTimeout(100);
+  await page.click('.ws-item:first-child [data-act="ws-open"]');
 
   // Nhập "Thay dự án đang mở", rồi hoàn tác.
   const beforeReplace = await cur(page);
@@ -439,10 +434,10 @@ const check = (name, ok, detail = '') => {
 
   // Nhắc sao lưu: thay đổi cũ hơn 3 ngày.
   await page.evaluate(() => {
-    const st = JSON.parse(localStorage.getItem('stepPlanner.v1'));
+    const st = JSON.parse(localStorage.getItem('stepPlanner.v2'));
     st.dirtySince = new Date(Date.now() - 5 * 86400000).toISOString();
     st.lastBackup = '';
-    localStorage.setItem('stepPlanner.v1', JSON.stringify(st));
+    localStorage.setItem('stepPlanner.v2', JSON.stringify(st));
   });
   await page.reload();
   await page.waitForSelector('#app:not([hidden])');
@@ -546,7 +541,6 @@ const check = (name, ok, detail = '') => {
   check('390px: tên dự án một dòng, cắt bớt', topH[1] < 40 && topH[0] < 70, topH.join(','));
   check('mẫu đồ án: ghi chú bước gập, có link trang đồ án', (await m.page.$$('.step-notes')).length === 10
     && (await m.page.$$eval('.step-notes a', (a) => a.filter((x) => /sports-monitoring-project\.html#lt-lich$/.test(x.href)).length)) === 10);
-  check('mẫu đồ án: người làm là vai', /@Dữ liệu & lineage/.test(await m.page.textContent('.step:nth-child(2)')));
   for (const d of ['#dlg-sub', '#dlg-export']) {
     if (d === '#dlg-sub') await m.page.click('.step:nth-child(1) [data-act="edit-sub"]');
     else await m.page.click('#export-btn');
@@ -571,14 +565,32 @@ const check = (name, ok, detail = '') => {
     && (await bp.$$('.step')).length === nSteps && !bErr.length, bErr.join(' | '));
   await blocked.close();
 
+  /* ── Bộ nhớ khoá cũ (v1, có người làm): đọc, chuẩn hoá bỏ người, ghi sang khoá mới, giữ khoá cũ ── */
+  const oldCtx = await browser.newContext();
+  const v1 = { version: 1, lastId: 'w1', me: { w1: 'An' }, lastBackup: '', dirtySince: '', workspaces: [{ id: 'w1', name: 'Dự án cũ',
+    people: ['An', 'Bình'], steps: [{ id: 't1', title: 'Bước cũ', subs: [{ id: 's1', title: 'Việc cũ', status: 'doing', owner: 'An' }] }], log: [] }] };
+  await oldCtx.addInitScript((d) => { if (!sessionStorage.getItem('x')) { sessionStorage.setItem('x', '1'); localStorage.setItem('stepPlanner.v1', d); } }, JSON.stringify(v1));
+  const op = await oldCtx.newPage();
+  const oErr = [];
+  op.on('pageerror', (e) => oErr.push(String(e)));
+  await op.goto(BASE);
+  await op.waitForSelector('#app:not([hidden]) .card[data-sub]');
+  await op.click('.card[data-sub] [data-act="cycle"]');
+  const ov = await op.evaluate(() => [JSON.parse(localStorage.getItem('stepPlanner.v2')), localStorage.getItem('stepPlanner.v1')]);
+  check('khoá cũ có người làm: mở được, chuyển sang khoá mới không còn người, khoá cũ giữ nguyên',
+    !oErr.length && (await op.textContent('#ws-name')) === 'Dự án cũ' && ov[0].workspaces[0].steps[0].subs[0].status === 'done'
+    && !('me' in ov[0]) && !('people' in ov[0].workspaces[0]) && !('owner' in ov[0].workspaces[0].steps[0].subs[0])
+    && ov[1] === JSON.stringify(v1), oErr.join(' | '));
+  await oldCtx.close();
+
   /* ── Dữ liệu lưu bị hỏng ── */
   const bad = await browser.newContext();
-  await bad.addInitScript(() => { if (!sessionStorage.getItem('x')) { sessionStorage.setItem('x', '1'); localStorage.setItem('stepPlanner.v1', '{hỏng'); } });
+  await bad.addInitScript(() => { if (!sessionStorage.getItem('x')) { sessionStorage.setItem('x', '1'); localStorage.setItem('stepPlanner.v2', '{hỏng'); } });
   const badp = await bad.newPage();
   await badp.goto(BASE);
   await badp.waitForSelector('#start:not([hidden])');
   check('dữ liệu hỏng: báo và giữ bản cũ', /bị hỏng/.test(await badp.textContent('#banner'))
-    && (await badp.evaluate(() => localStorage.getItem('stepPlanner.v1.corrupt'))) === '{hỏng');
+    && (await badp.evaluate(() => localStorage.getItem('stepPlanner.v2.corrupt'))) === '{hỏng');
   await bad.close();
 
   await browser.close();
