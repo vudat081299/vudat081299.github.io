@@ -48,10 +48,14 @@ const check = (name, ok, detail = '') => {
   await page.waitForSelector('#start:not([hidden]) .tpl');
   const tplIds = await page.$$eval('#start .tpl', (bs) => bs.map((b) => b.dataset.tpl));
   check('màn đầu: đủ năm mẫu', tplIds.length === 5, tplIds.join(','));
-  // Nút đóng hộp không lưu ghi "Đóng": "Huỷ" là tên một trạng thái.
-  const closeBtns = await page.$$eval('dialog button', (bs) => bs.filter((b) => b.textContent.trim() && (b.hasAttribute('data-close') || b.textContent.trim() === 'Huỷ'))
+  // Nút đóng hộp không lưu ghi "Close": "Cancelled" là tên một trạng thái.
+  const closeBtns = await page.$$eval('dialog button', (bs) => bs.filter((b) => b.textContent.trim() && (b.hasAttribute('data-close') || /^Cancel/.test(b.textContent.trim())))
     .map((b) => b.textContent.trim()));
-  check('hộp thoại: nút đóng ghi "Đóng", không ghi "Huỷ"', closeBtns.length >= 8 && closeBtns.every((t) => t === 'Đóng'), [...new Set(closeBtns)].join(','));
+  check('hộp thoại: nút đóng ghi "Close", không ghi "Cancel"', closeBtns.length >= 8 && closeBtns.every((t) => t === 'Close'), [...new Set(closeBtns)].join(','));
+  // Mọi hộp cùng khung: đầu, thân, chân; nút chính ở mép phải chân hộp.
+  const frames = await page.$$eval('dialog', (ds) => ds.filter((d) => !d.querySelector(':scope > .dlg-form > .dlg-head') || !d.querySelector(':scope > .dlg-form > .dlg-foot')
+    || d.querySelector('.dlg-foot > :last-child:not(.go)')).map((d) => d.id));
+  check('hộp thoại: đủ đầu và chân, nút chính đứng cuối chân', frames.length === 0, frames.join(','));
 
   // Tạo từ từng mẫu: số bước và bước con khớp templates.json.
   const tplData = await page.evaluate(async () => (await (await fetch('data/templates.json')).json()).templates);
@@ -203,17 +207,23 @@ const check = (name, ok, detail = '') => {
   // chú giải có Huỷ; bấm chip Huỷ → Chưa làm.
   const c12 = '.step:nth-child(1) .slot:nth-child(2) > .card';
   await page.click(`${c12} [data-act="edit-sub"]`);
-  check('hộp sửa: có Huỷ trong trạng thái, ô "Vì sao huỷ" ẩn khi chưa chọn', (await page.$$eval('#sub-form [name="status"] option', (o) => o.map((x) => x.textContent))).includes('Cancelled')
-    && !(await page.isVisible('#sub-cancel')));
-  // Danh sách chọn tự dựng thay <select>: mở bằng bấm, chọn bằng bàn phím (gõ chữ đầu, Enter), phát change.
-  await page.click('#sub-form .dd-btn');
-  const ddOpen = await page.evaluate(() => ({ pop: !!document.querySelector('#dlg-sub .dd-pop'), native: getComputedStyle(document.querySelector('#sub-form [name="status"]')).opacity }));
-  await page.keyboard.press('c');
+  const stLabels = await page.$$eval('#sub-status label', (ls) => ls.map((l) => `${l.querySelector('input').value}:${l.textContent.trim()}`));
+  check('hộp sửa: sáu trạng thái dạng viên, có Cancelled, ô "Why cancelled" ẩn khi chưa chọn',
+    stLabels.join() === 'todo:New,doing:In progress,done:Done,blocked:Blocked,skip:Skipped,cancel:Cancelled' && !(await page.isVisible('#sub-cancel')), stLabels.join());
+  // Danh sách chọn tự dựng thay <select> (ô Step): mở bằng bấm, chọn bằng phím mũi tên + Enter, <select> đổi theo.
+  const step0 = await page.inputValue('#sub-form [name="step"]');
+  await page.click('#sub-form .f-step .dd-btn');
+  const ddOpen = await page.evaluate(() => ({ pop: !!document.querySelector('.dd-pop'), native: getComputedStyle(document.querySelector('#sub-form [name="step"]')).opacity }));
+  await page.keyboard.press('ArrowDown');
   await page.keyboard.press('Enter');
-  check('danh sách chọn tự dựng: mở trong hộp, gõ chữ + Enter chọn, <select> đổi theo và phát change (hiện ô lý do)', ddOpen.pop && ddOpen.native === '0'
-    && (await page.inputValue('#sub-form [name="status"]')) === 'cancel' && await page.isVisible('#sub-cancel')
-    && /Cancelled/.test(await page.textContent('#sub-form .dd-btn')) && await page.evaluate(() => document.activeElement?.name === 'cancelReason'), JSON.stringify(ddOpen));
-  check('chọn Cancelled: hiện ô lý do', await page.isVisible('#sub-cancel'));
+  const step1 = await page.inputValue('#sub-form [name="step"]');
+  await page.click('#sub-form .f-step .dd-btn');
+  await page.keyboard.press('ArrowUp');
+  await page.keyboard.press('Enter');
+  check('danh sách chọn tự dựng trong hộp: mở, mũi tên + Enter chọn, <select> đổi theo', ddOpen.pop && ddOpen.native === '0' && step1 !== step0
+    && (await page.inputValue('#sub-form [name="step"]')) === step0, JSON.stringify({ ...ddOpen, step0, step1 }));
+  await page.check('#sub-form [name="status"][value="cancel"]', { force: true });
+  check('chọn Cancelled: hiện ô lý do, focus vào đó', await page.isVisible('#sub-cancel') && await page.evaluate(() => document.activeElement?.name === 'cancelReason'));
   await page.fill('#sub-form [name="cancelReason"]', 'Đã có số liệu từ nguồn khác\nkhông cần làm lại');
   await page.fill('#sub-form [name="due"]', '2020-01-02');
   await page.click('#sub-form button[type="submit"]');
@@ -244,7 +254,7 @@ const check = (name, ok, detail = '') => {
   const c12id = await page.getAttribute(c12, 'data-sub');
   await setSt(page, c12id, 'cancel');
   check('danh sách chip → Cancelled: hộp sửa mở, trạng thái đặt sẵn, focus ở ô lý do, chưa huỷ', await page.isVisible('#dlg-sub')
-    && (await page.inputValue('#sub-form [name="status"]')) === 'cancel' && await page.evaluate(() => document.activeElement?.name === 'cancelReason')
+    && (await page.$eval('#sub-form [name="status"]:checked', (r) => r.value)) === 'cancel' && await page.evaluate(() => document.activeElement?.name === 'cancelReason')
     && (await cur(page)).steps[0].subs[1].status === 'todo');
   await page.keyboard.press('Escape');
   check('Esc: không huỷ', !(await page.isVisible('#dlg-sub')) && (await cur(page)).steps[0].subs[1].status === 'todo');
@@ -252,7 +262,7 @@ const check = (name, ok, detail = '') => {
   // Thêm bước con có đủ trường.
   await page.click('.step:nth-child(1) [data-act="add-sub"]');
   await page.fill('#sub-form [name="title"]', 'Thử <img src=x onerror=alert(1)> · chấm');
-  await page.selectOption('#sub-form [name="status"]', 'blocked');
+  await page.check('#sub-form [name="status"][value="blocked"]', { force: true });
   await page.fill('#sub-form [name="due"]', '2026-12-01');
   await page.fill('#sub-form [name="doneWhen"]', 'Có kết quả');
   await page.fill('#sub-form [name="notes"]', 'dòng 1\n\ndòng 3');
@@ -325,7 +335,7 @@ const check = (name, ok, detail = '') => {
   // tự trong ô; Alt + → tách ra ô riêng; ô Vị trí của hộp sửa có "Parallel with N".
   await page.click(`.card[data-sub="${before[2]}"] [data-act="add-par"]`, { force: true });
   check('Add parallel: hộp thêm đặt sẵn "Parallel with 3"', (await page.inputValue('#sub-form [name="pos"]')) === 'j:2'
-    && /Parallel with 3/.test(await page.textContent('#sub-form .dd-btn >> nth=2')), await page.inputValue('#sub-form [name="pos"]'));
+    && /Parallel with 3/.test(await page.textContent('#sub-form .f-pos .dd-btn')), await page.inputValue('#sub-form [name="pos"]'));
   await page.fill('#sub-form [name="title"]', 'Song song A');
   await page.click('#sub-form button[type="submit"]');
   let ws2 = (await cur(page)).steps[1];
@@ -608,14 +618,15 @@ const check = (name, ok, detail = '') => {
   check('tài liệu văn bản: dựng Markdown, chữ HTML không thành thẻ, link chỉ http(s) mở tab mới',
     view.h1 === 'Cột thiếu' && view.strong === 'age' && view.img === 0 && view.nested && view.pre === '```\nlồng\n```'
     && view.links.join() === 'https://ok.example/ _blank noopener noreferrer', JSON.stringify(view));
-  await page.click('#dlg-md .tab[data-mode="split"]');
+  check('tài liệu văn bản: đúng hai tab Edit / Preview', (await page.$$eval('#dlg-md .tab', (ts) => ts.map((t) => t.textContent.trim()))).join() === 'Edit,Preview');
+  await page.click('#dlg-md .tab[data-mode="edit"]');
   ms = await mdState();
-  check('tài liệu văn bản: Chia đôi hiện cả hai', ms.mode === 'split' && ms.sel === 'split' && ms.src && ms.view, JSON.stringify(ms));
+  check('tài liệu văn bản: tab Edit hiện ô chữ, ẩn bản xem', ms.mode === 'edit' && ms.sel === 'edit' && ms.src && !ms.view, JSON.stringify(ms));
   await page.fill('#md-form [name="body"]', 'chữ chưa lưu');
   await page.keyboard.press('Escape');
   check('tài liệu văn bản: đóng khi chưa lưu thì hỏi lại', await page.isVisible('#dlg-ask') && (await mdState()).open);
   await page.click('#dlg-ask [data-close]');
-  await page.click('#dlg-md .md-foot [data-close]');
+  await page.click('#dlg-md .dlg-foot [data-close]');
   await page.click('#ask-ok');
   await page.waitForFunction(() => !document.getElementById('dlg-md').open, null, { timeout: 3000 }).catch(() => {});
   check('tài liệu văn bản: chọn bỏ thì không lưu', !(await mdState()).open && /lồng/.test((await cur(page)).steps[1].docs[1].body));
@@ -650,7 +661,7 @@ const check = (name, ok, detail = '') => {
   await page.click('#sub-docs [data-doc-act="undo"]');
   check('hoàn tác xoá tài liệu: về đúng chỗ', (await cur(page)).steps[1].subs[0].docs.map((d) => d.title).join() === 'Repo,Notebook'
     && (await page.$$('#sub-docs .doc-row:not(.undo)')).length === 2);
-  await page.click('#dlg-sub .row-end [data-close]');
+  await page.click('#dlg-sub .dlg-foot [data-close]');
   const tag = `.card[data-sub="${dsub.id}"] .doc-tag`;
   const h1c = await page.$eval(`.card[data-sub="${dsub.id}"]`, (c) => c.getBoundingClientRect().height);
   check('thẻ có tài liệu: nhãn kẹp + số, thẻ không cao thêm đáng kể', (await page.textContent(tag)).trim() === '2'
@@ -810,7 +821,7 @@ const check = (name, ok, detail = '') => {
   check('Esc khi có chữ chưa lưu: hỏi lại', await page.isVisible('#dlg-ask') && await page.isVisible('#dlg-sub'));
   await page.click('#dlg-ask [data-close]');
   check('chọn ở lại: chữ còn nguyên', await page.isVisible('#dlg-sub') && (await page.inputValue('#sub-form [name="notes"]')) === 'chữ đang gõ');
-  await page.click('#dlg-sub .row-end [data-close]');
+  await page.click('#dlg-sub .dlg-foot [data-close]');
   await page.click('#ask-ok');
   await page.waitForTimeout(100);
   check('chọn bỏ: hộp đóng, không lưu', !(await page.isVisible('#dlg-sub')) && (await cur(page)).steps[0].subs[0].notes === firstSub.notes);
@@ -1001,7 +1012,7 @@ const check = (name, ok, detail = '') => {
   await m.page.fill('#doc-form [name="title"]', 'Ghi chép');
   await m.page.click('#doc-save');
   await m.page.fill('#md-form [name="body"]', '# Tiêu đề\n\n' + 'dòng dài '.repeat(60) + '\n\n| a | b | c | d | e | f |\n|---|---|---|---|---|---|\n| ' + 'x'.repeat(80) + ' | 2 | 3 | 4 | 5 | 6 |');
-  await m.page.click('#dlg-md .tab[data-mode="split"]');
+  await m.page.click('#dlg-md .tab[data-mode="view"]');
   const mdM = await m.page.evaluate(() => { const r = document.getElementById('dlg-md').getBoundingClientRect(); return [r.left, r.top, r.width, r.height, innerWidth, innerHeight]; });
   check('390px: hộp văn bản toàn màn, không tràn', mdM[0] === 0 && mdM[1] === 0 && mdM[2] === mdM[4] && Math.abs(mdM[3] - mdM[5]) < 2
     && (await hOverflow(m.page)) === 0, mdM.join(','));
@@ -1052,6 +1063,15 @@ const check = (name, ok, detail = '') => {
     else await m.page.click('#export-btn');
     check(`390px: ${d} không tràn`, (await hOverflow(m.page)) === 0
       && (await m.page.$eval(d, (el) => el.getBoundingClientRect().right <= innerWidth)));
+    const sheet = await m.page.$eval(d, (el) => {
+      el.getAnimations().forEach((x) => x.finish());
+      const foot = el.querySelector('.dlg-foot').getBoundingClientRect();
+      const body = el.querySelector('.dlg-body');
+      const a = document.activeElement;
+      return { bottom: Math.round(el.getBoundingClientRect().bottom), footBottom: Math.round(foot.bottom), vh: innerHeight,
+        typing: a.tagName === 'TEXTAREA' || (a.tagName === 'INPUT' && a.type === 'text'), scrolls: body.scrollHeight > body.clientHeight };
+    });
+    check(`390px: ${d} là tấm đáy, chân hộp dính đáy, không tự focus ô chữ`, sheet.bottom === sheet.vh && sheet.vh - sheet.footBottom <= 1 && !sheet.typing, JSON.stringify(sheet));
     await m.page.keyboard.press('Escape');
   }
   await m.ctx.close();

@@ -166,230 +166,353 @@
   <button type="button" class="toast-btn" id="toast-undo" aria-keyshortcuts="Control+Z Meta+Z">Undo</button>
 </div>
 
+<!-- Hộp thoại: mọi hộp cùng khung — .dlg-head (nhãn nhỏ, tiêu đề, dòng ngữ cảnh, nút ×), .dlg-body (cuộn), .dlg-foot
+     (nút phụ trái, Close + nút chính phải; điện thoại: tấm đáy, chân dính đáy). Nút × đứng đầu: showModal focus vào nó. -->
+
 <!-- Dự án: danh sách, mở, đổi tên, nhân bản, xoá, tạo mới -->
-<dialog class="dlg" id="dlg-ws" aria-labelledby="dlg-ws-title">
-  <div class="dlg-head"><h2 id="dlg-ws-title">Dự án</h2><button type="button" class="icon-btn" data-close aria-label="Đóng" title="Đóng"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button></div>
-  <ul class="ws-list" id="ws-list"></ul>
-  <h3>Tạo dự án mới</h3>
-  <form id="ws-new" class="stack">
-    <label class="field"><span>Tên (để trống thì lấy tên mẫu)</span><input type="text" id="ws-new-name" maxlength="120"></label>
-    <fieldset class="tpl-list" id="ws-new-templates"><legend>Mẫu</legend></fieldset>
-    <div class="row-end"><button type="submit" class="btn go">Tạo</button></div>
+<dialog class="dlg" id="dlg-ws" aria-labelledby="dlg-ws-title" aria-describedby="dlg-ws-sub">
+  <form id="ws-new" class="dlg-form">
+    <header class="dlg-head">
+      <div class="dlg-titles">
+        <p class="dlg-kicker">Projects</p>
+        <h2 id="dlg-ws-title">Open or create a project</h2>
+        <p class="dlg-sub" id="dlg-ws-sub">Projects live in this browser. Back up as JSON to keep them or move them to another device.</p>
+      </div>
+      <button type="button" class="icon-btn dlg-x" data-close aria-label="Close" title="Close"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button>
+    </header>
+    <div class="dlg-body">
+      <section class="dlg-sec" aria-labelledby="ws-list-h">
+        <h3 class="dlg-sec-h" id="ws-list-h">Your projects</h3>
+        <ul class="ws-list" id="ws-list"></ul>
+      </section>
+      <section class="dlg-sec" aria-labelledby="ws-new-h">
+        <h3 class="dlg-sec-h" id="ws-new-h">New project</h3>
+        <label class="field"><span>Name</span><input type="text" id="ws-new-name" maxlength="120" placeholder="Leave blank to use the template name"></label>
+        <fieldset class="tpl-list" id="ws-new-templates"><legend>Template</legend></fieldset>
+      </section>
+    </div>
+    <footer class="dlg-foot">
+      <span class="dlg-gap"></span>
+      <button type="button" class="btn" data-close>Close</button>
+      <button type="submit" class="btn go"><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg>Create project</button>
+    </footer>
   </form>
 </dialog>
 
 <!-- Sửa / thêm bước con -->
 <dialog class="dlg" id="dlg-sub" aria-labelledby="dlg-sub-title">
-  <form method="dialog" id="sub-form" class="stack">
-    <div class="dlg-head"><h2 id="dlg-sub-title">Bước con</h2><button type="button" class="icon-btn" data-close aria-label="Đóng" title="Đóng"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button></div>
-    <label class="field"><span>Tên</span><textarea name="title" class="grow-title" rows="1" required maxlength="300"></textarea></label>
-    <div class="grid2">
-      <label class="field"><span>Trạng thái</span><select name="status"></select></label>
-      <label class="field"><span>Hạn</span><input type="date" name="due"></label>
-      <label class="field"><span>Thuộc bước</span><select name="step"></select></label>
-      <label class="field"><span>Vị trí trong bước</span><select name="pos"></select></label>
-    </div>
-    <label class="field" id="sub-cancel" hidden><span>Vì sao huỷ</span><textarea name="cancelReason" rows="2" placeholder="VD: đã có dữ liệu sẵn từ nguồn khác"></textarea></label>
-    <label class="field"><span>Xong khi</span><input type="text" name="doneWhen" maxlength="300"></label>
-    <label class="field"><span>Ghi chú</span><textarea name="notes" rows="4"></textarea></label>
-    <section class="docs-edit" id="sub-docs" aria-labelledby="sub-docs-h">
-      <div class="docs-edit-head">
-        <h3 id="sub-docs-h">Tài liệu</h3>
-        <button type="button" class="btn small" data-doc-add><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg>Tài liệu</button>
+  <form method="dialog" id="sub-form" class="dlg-form">
+    <header class="dlg-head">
+      <div class="dlg-titles">
+        <p class="dlg-kicker">Sub-step</p>
+        <h2 id="dlg-sub-title">Sub-step</h2>
+        <p class="dlg-sub" id="sub-where"></p>
       </div>
-      <ul class="doc-list" data-doc-list></ul>
-      <p class="muted docs-note" data-doc-note></p>
-    </section>
-    <div class="row-end">
-      <button type="button" class="btn quiet danger" id="sub-del"><svg class="i" aria-hidden="true"><use href="#i-trash"/></svg>Xoá</button>
-      <button type="button" class="btn quiet" id="sub-dup"><svg class="i" aria-hidden="true"><use href="#i-copy"/></svg>Nhân bản</button>
-      <span class="tools-gap"></span>
-      <button type="button" class="btn" data-close>Đóng</button>
-      <button type="submit" class="btn go" value="save">Lưu</button>
+      <button type="button" class="icon-btn dlg-x" data-close aria-label="Close" title="Close"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button>
+    </header>
+    <div class="dlg-body">
+      <label class="field field-title"><span>Title</span><textarea name="title" class="grow-title" rows="1" required maxlength="300" placeholder="What needs to be done?"></textarea></label>
+      <fieldset class="st-pick" id="sub-status">
+        <legend>Status</legend>
+        <div class="st-opts">
+          <label class="st-opt st-todo"><input type="radio" name="status" value="todo"><span>New</span></label>
+          <label class="st-opt st-doing"><input type="radio" name="status" value="doing"><span>In progress</span></label>
+          <label class="st-opt st-done"><input type="radio" name="status" value="done"><span>Done</span></label>
+          <label class="st-opt st-blocked"><input type="radio" name="status" value="blocked"><span>Blocked</span></label>
+          <label class="st-opt st-skip"><input type="radio" name="status" value="skip"><span>Skipped</span></label>
+          <label class="st-opt st-cancel"><input type="radio" name="status" value="cancel"><span>Cancelled</span></label>
+        </div>
+      </fieldset>
+      <label class="field" id="sub-cancel" hidden><span>Why cancelled</span><textarea name="cancelReason" rows="2" placeholder="E.g. the data already comes from another source"></textarea></label>
+      <div class="field-row place-row">
+        <label class="field f-due"><span>Due date</span><input type="date" name="due"></label>
+        <label class="field f-step"><span>Step</span><select name="step"></select></label>
+        <label class="field f-pos"><span>Position</span><select name="pos"></select></label>
+      </div>
+      <label class="field"><span>Done when</span><input type="text" name="doneWhen" maxlength="300" placeholder="The output that shows this is finished"></label>
+      <label class="field"><span>Notes</span><textarea name="notes" rows="4" placeholder="Questions, pitfalls, links…"></textarea></label>
+      <section class="docs-edit" id="sub-docs" aria-labelledby="sub-docs-h">
+        <div class="docs-edit-head">
+          <h3 class="dlg-sec-h" id="sub-docs-h">Documents</h3>
+          <button type="button" class="btn small" data-doc-add><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg>Add</button>
+        </div>
+        <ul class="doc-list" data-doc-list></ul>
+        <p class="docs-note" data-doc-note></p>
+      </section>
     </div>
+    <footer class="dlg-foot">
+      <button type="button" class="btn quiet danger foot-aux" id="sub-del" title="Delete"><svg class="i" aria-hidden="true"><use href="#i-trash"/></svg><span class="btn-lbl">Delete</span></button>
+      <button type="button" class="btn quiet foot-aux" id="sub-dup" title="Duplicate"><svg class="i" aria-hidden="true"><use href="#i-copy"/></svg><span class="btn-lbl">Duplicate</span></button>
+      <span class="dlg-gap"></span>
+      <button type="button" class="btn" data-close>Close</button>
+      <button type="submit" class="btn go" value="save">Save</button>
+    </footer>
   </form>
 </dialog>
 
 <!-- Sửa / thêm bước -->
-<dialog class="dlg" id="dlg-step" aria-labelledby="dlg-step-title">
-  <form method="dialog" id="step-form" class="stack">
-    <div class="dlg-head"><h2 id="dlg-step-title">Bước</h2><button type="button" class="icon-btn" data-close aria-label="Đóng" title="Đóng"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button></div>
-    <label class="field"><span>Tên</span><textarea name="title" class="grow-title" rows="1" required maxlength="200"></textarea></label>
-    <label class="field"><span>Vị trí</span><select name="pos"></select></label>
-    <label class="field"><span>Mục tiêu</span><input type="text" name="goal" maxlength="400"></label>
-    <label class="field"><span>Xong khi</span><input type="text" name="doneWhen" maxlength="400"></label>
-    <label class="field"><span>Ghi chú</span><textarea name="notes" rows="4"></textarea></label>
-    <section class="docs-edit" id="step-docs" aria-labelledby="step-docs-h">
-      <div class="docs-edit-head">
-        <h3 id="step-docs-h">Tài liệu</h3>
-        <button type="button" class="btn small" data-doc-add><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg>Tài liệu</button>
+<dialog class="dlg" id="dlg-step" aria-labelledby="dlg-step-title" aria-describedby="dlg-step-sub">
+  <form method="dialog" id="step-form" class="dlg-form">
+    <header class="dlg-head">
+      <div class="dlg-titles">
+        <p class="dlg-kicker">Step</p>
+        <h2 id="dlg-step-title">Step</h2>
+        <p class="dlg-sub" id="dlg-step-sub">A row on the board; its sub-steps are the cards in that row.</p>
       </div>
-      <ul class="doc-list" data-doc-list></ul>
-      <p class="muted docs-note" data-doc-note></p>
-    </section>
-    <div class="row-end">
-      <button type="button" class="btn quiet danger" id="step-del"><svg class="i" aria-hidden="true"><use href="#i-trash"/></svg>Xoá bước</button>
-      <button type="button" class="btn quiet" id="step-revisit"><svg class="i" aria-hidden="true"><use href="#i-redo"/></svg>Cần làm lại…</button>
-      <span class="tools-gap"></span>
-      <button type="button" class="btn" data-close>Đóng</button>
-      <button type="submit" class="btn go" value="save">Lưu</button>
+      <button type="button" class="icon-btn dlg-x" data-close aria-label="Close" title="Close"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button>
+    </header>
+    <div class="dlg-body">
+      <div class="field-row title-row">
+        <label class="field field-title"><span>Title</span><textarea name="title" class="grow-title" rows="1" required maxlength="200" placeholder="E.g. Data Preparation"></textarea></label>
+        <label class="field f-pos"><span>Position</span><select name="pos"></select></label>
+      </div>
+      <label class="field"><span>Goal</span><input type="text" name="goal" maxlength="400" placeholder="Why this step exists"></label>
+      <label class="field"><span>Done when</span><input type="text" name="doneWhen" maxlength="400" placeholder="The output that closes this step"></label>
+      <label class="field"><span>Notes</span><textarea name="notes" rows="4" placeholder="Guiding questions, common traps…"></textarea></label>
+      <section class="docs-edit" id="step-docs" aria-labelledby="step-docs-h">
+        <div class="docs-edit-head">
+          <h3 class="dlg-sec-h" id="step-docs-h">Documents</h3>
+          <button type="button" class="btn small" data-doc-add><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg>Add</button>
+        </div>
+        <ul class="doc-list" data-doc-list></ul>
+        <p class="docs-note" data-doc-note></p>
+      </section>
     </div>
+    <footer class="dlg-foot">
+      <button type="button" class="btn quiet danger foot-aux" id="step-del" title="Delete step"><svg class="i" aria-hidden="true"><use href="#i-trash"/></svg><span class="btn-lbl">Delete</span></button>
+      <button type="button" class="btn quiet foot-aux" id="step-revisit" title="Reopen step"><svg class="i" aria-hidden="true"><use href="#i-redo"/></svg><span class="btn-lbl">Reopen…</span></button>
+      <span class="dlg-gap"></span>
+      <button type="button" class="btn" data-close>Close</button>
+      <button type="submit" class="btn go" value="save">Save</button>
+    </footer>
   </form>
 </dialog>
 
 <!-- Thêm tài liệu (link hoặc văn bản), sửa link. Văn bản mở ở #dlg-md. -->
-<dialog class="dlg" id="dlg-doc" aria-labelledby="dlg-doc-title">
-  <form method="dialog" id="doc-form" class="stack">
-    <div class="dlg-head"><h2 id="dlg-doc-title">Tài liệu</h2><button type="button" class="icon-btn" data-close aria-label="Đóng" title="Đóng"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button></div>
-    <p class="dlg-step" id="doc-where"></p>
-    <fieldset class="seg" id="doc-kind">
-      <legend class="sr">Loại tài liệu</legend>
-      <label><input type="radio" name="kind" value="link" checked><span>Link</span></label>
-      <label><input type="radio" name="kind" value="md"><span>Văn bản Markdown</span></label>
-    </fieldset>
-    <label class="field"><span>Tên</span><input type="text" name="title" maxlength="200" placeholder="VD: Data card, đề bài, ghi chép EDA"></label>
-    <label class="field" id="doc-url-field"><span>Link (http hoặc https)</span><input type="url" name="url" maxlength="2000" required pattern="https?://\S+" placeholder="https://…" title="Link phải bắt đầu bằng http:// hoặc https://"></label>
-    <a class="doc-open" id="doc-open" target="_blank" rel="noopener noreferrer" hidden><svg class="i" aria-hidden="true"><use href="#i-link"/></svg>Mở link</a>
-    <div class="row-end">
-      <button type="button" class="btn quiet danger" id="doc-del"><svg class="i" aria-hidden="true"><use href="#i-trash"/></svg>Xoá</button>
-      <span class="tools-gap"></span>
-      <button type="button" class="btn" data-close>Đóng</button>
-      <button type="submit" class="btn go" id="doc-save" value="save">Lưu</button>
+<dialog class="dlg dlg-sm" id="dlg-doc" aria-labelledby="dlg-doc-title">
+  <form method="dialog" id="doc-form" class="dlg-form">
+    <header class="dlg-head">
+      <div class="dlg-titles">
+        <p class="dlg-kicker">Document</p>
+        <h2 id="dlg-doc-title">Document</h2>
+        <p class="dlg-sub" id="doc-where"></p>
+      </div>
+      <button type="button" class="icon-btn dlg-x" data-close aria-label="Close" title="Close"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button>
+    </header>
+    <div class="dlg-body">
+      <fieldset class="seg seg-full" id="doc-kind">
+        <legend class="sr">Document type</legend>
+        <label><input type="radio" name="kind" value="link" checked><span><svg class="i" aria-hidden="true"><use href="#i-link"/></svg>Link</span></label>
+        <label><input type="radio" name="kind" value="md"><span><svg class="i" aria-hidden="true"><use href="#i-doc"/></svg>Markdown text</span></label>
+      </fieldset>
+      <label class="field"><span>Title</span><input type="text" name="title" maxlength="200" placeholder="E.g. Data card, brief, EDA notes"></label>
+      <label class="field" id="doc-url-field"><span>URL</span><input type="url" name="url" maxlength="2000" required pattern="https?://\S+" placeholder="https://…" title="The link must start with http:// or https://"><small class="field-help">Opens in a new tab. Only http:// and https:// links.</small></label>
+      <a class="doc-open" id="doc-open" target="_blank" rel="noopener noreferrer" hidden><svg class="i" aria-hidden="true"><use href="#i-link"/></svg>Open link</a>
     </div>
+    <footer class="dlg-foot">
+      <button type="button" class="btn quiet danger foot-aux" id="doc-del" title="Delete"><svg class="i" aria-hidden="true"><use href="#i-trash"/></svg><span class="btn-lbl">Delete</span></button>
+      <span class="dlg-gap"></span>
+      <button type="button" class="btn" data-close>Close</button>
+      <button type="submit" class="btn go" id="doc-save" value="save">Save</button>
+    </footer>
   </form>
 </dialog>
 
-<!-- Tài liệu văn bản Markdown: Sửa / Xem / Chia đôi (dáng md-annotate) -->
+<!-- Tài liệu văn bản Markdown: Edit / Preview (dáng md-annotate) -->
 <dialog class="dlg md-dlg" id="dlg-md" aria-labelledby="dlg-md-title">
-  <form method="dialog" id="md-form" class="md-form">
-    <div class="dlg-head">
-      <h2 class="sr" id="dlg-md-title">Tài liệu văn bản</h2>
-      <svg class="i md-ic" aria-hidden="true"><use href="#i-doc"/></svg>
-      <label class="md-name"><span class="sr">Tên tài liệu</span><input type="text" name="title" class="input" maxlength="200" required placeholder="Tên tài liệu"></label>
-      <button type="button" class="icon-btn" data-close aria-label="Đóng" title="Đóng"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button>
-    </div>
-    <div class="md-bar">
-      <div class="tabs" role="tablist" aria-label="Chế độ xem">
-        <button type="button" class="tab" role="tab" data-mode="edit">Sửa</button>
-        <button type="button" class="tab" role="tab" data-mode="view">Xem</button>
-        <button type="button" class="tab" role="tab" data-mode="split">Chia đôi</button>
+  <form method="dialog" id="md-form" class="dlg-form">
+    <header class="dlg-head md-head">
+      <span class="md-ic" aria-hidden="true"><svg class="i"><use href="#i-doc"/></svg></span>
+      <div class="dlg-titles">
+        <h2 class="sr" id="dlg-md-title">Markdown document</h2>
+        <label class="md-name"><span class="sr">Document title</span><input type="text" name="title" class="input" maxlength="200" required placeholder="Untitled document"></label>
+        <p class="dlg-sub" id="md-where"></p>
       </div>
-      <span class="md-where" id="md-where"></span>
+      <button type="button" class="icon-btn dlg-x" data-close aria-label="Close" title="Close"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button>
+    </header>
+    <div class="md-bar">
+      <div class="tabs" role="tablist" aria-label="View mode">
+        <button type="button" class="tab" role="tab" data-mode="edit" aria-controls="md-panes">Edit</button>
+        <button type="button" class="tab" role="tab" data-mode="view" aria-controls="md-panes">Preview</button>
+      </div>
+      <span class="md-hint"><code>#</code> heading · <code>**bold**</code> · <code>- list</code> · <code>`code`</code> · <code>[link](https://…)</code></span>
     </div>
     <div class="md-panes" id="md-panes" data-mode="view">
-      <label class="md-src"><span class="sr">Nội dung Markdown</span><textarea name="body" class="md-ta" spellcheck="false" placeholder="# Tiêu đề&#10;&#10;Viết Markdown: **đậm**, *nghiêng*, - danh sách, `code`, [link](https://…)"></textarea></label>
-      <div class="md-view" id="md-view" tabindex="0" aria-label="Bản xem"></div>
+      <label class="md-src"><span class="sr">Markdown content</span><textarea name="body" class="md-ta" spellcheck="false" placeholder="# Heading&#10;&#10;Write Markdown: **bold**, *italic*, - lists, `code`, [link](https://…)"></textarea></label>
+      <div class="md-view" id="md-view" tabindex="0" aria-label="Preview"></div>
     </div>
-    <div class="row-end md-foot">
-      <button type="button" class="btn quiet danger" id="md-del"><svg class="i" aria-hidden="true"><use href="#i-trash"/></svg>Xoá</button>
-      <span class="tools-gap"></span>
-      <button type="button" class="btn" data-close>Đóng</button>
-      <button type="submit" class="btn go" value="save">Lưu</button>
-    </div>
+    <footer class="dlg-foot">
+      <button type="button" class="btn quiet danger foot-aux" id="md-del" title="Delete"><svg class="i" aria-hidden="true"><use href="#i-trash"/></svg><span class="btn-lbl">Delete</span></button>
+      <span class="dlg-gap"></span>
+      <button type="button" class="btn" data-close>Close</button>
+      <button type="submit" class="btn go" value="save">Save</button>
+    </footer>
   </form>
 </dialog>
 
 <!-- Mở lại một bước (dữ liệu: step.revisit, sub.redo; Markdown: dòng "Reopened:", phần tử "· redo") -->
 <dialog class="dlg" id="dlg-revisit" aria-labelledby="dlg-revisit-title">
-  <form method="dialog" id="revisit-form" class="stack">
-    <div class="dlg-head"><h2 id="dlg-revisit-title">Reopen step</h2><button type="button" class="icon-btn" data-close aria-label="Đóng" title="Đóng"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button></div>
-    <p class="dlg-step" id="revisit-step"></p>
-    <p class="dlg-note" id="revisit-help">Use this when a later step shows this one must be redone, e.g. modeling reveals a leaky
-      feature, so data preparation needs another pass. It starts a new iteration and logs the decision.</p>
-    <label class="field"><span>Why reopen?</span><input type="text" name="reason" maxlength="300" required placeholder="e.g. the model leaks the target through a date column"></label>
-    <fieldset class="reset-subs" id="revisit-subs">
-      <legend>Which done sub-steps must be redone?</legend>
-      <div class="reset-head">
-        <span class="muted" id="revisit-round"></span>
-        <button type="button" class="btn small" id="revisit-all-done">Select all</button>
+  <form method="dialog" id="revisit-form" class="dlg-form">
+    <header class="dlg-head">
+      <div class="dlg-titles">
+        <p class="dlg-kicker">Reopen</p>
+        <h2 id="dlg-revisit-title">Reopen step</h2>
+        <p class="dlg-sub" id="revisit-step"></p>
       </div>
-      <ul class="reset-list" id="revisit-list"></ul>
-      <p class="muted" id="revisit-none">No sub-step is done yet, so there is nothing to send back.</p>
-    </fieldset>
-    <div class="row-end">
-      <button type="button" class="btn quiet" id="revisit-clear">Close iteration</button>
-      <span class="tools-gap"></span>
-      <button type="button" class="btn" data-close>Đóng</button>
-      <button type="submit" class="btn go" value="save">Reopen step</button>
+      <button type="button" class="icon-btn dlg-x" data-close aria-label="Close" title="Close"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button>
+    </header>
+    <div class="dlg-body">
+      <div class="dlg-callout" id="revisit-help">
+        <svg class="i" aria-hidden="true"><use href="#i-redo"/></svg>
+        <p>Use this when a later step shows this one must be redone, e.g. modeling reveals a leaky feature, so data
+          preparation needs another pass. It starts a new iteration and logs the decision.</p>
+      </div>
+      <label class="field"><span>Why reopen?</span><input type="text" name="reason" maxlength="300" required placeholder="e.g. the model leaks the target through a date column"></label>
+      <fieldset class="reset-subs" id="revisit-subs">
+        <legend>Which done sub-steps must be redone?</legend>
+        <div class="reset-head">
+          <span class="muted" id="revisit-round"></span>
+          <button type="button" class="btn small" id="revisit-all-done">Select all</button>
+        </div>
+        <ul class="reset-list" id="revisit-list"></ul>
+        <p class="muted" id="revisit-none">No sub-step is done yet, so there is nothing to send back.</p>
+      </fieldset>
     </div>
+    <footer class="dlg-foot">
+      <button type="button" class="btn quiet foot-aux" id="revisit-clear" title="Close iteration"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg><span class="btn-lbl">Close iteration</span></button>
+      <span class="dlg-gap"></span>
+      <button type="button" class="btn" data-close>Close</button>
+      <button type="submit" class="btn go" value="save">Reopen step</button>
+    </footer>
   </form>
 </dialog>
 
 <!-- Xuất -->
-<dialog class="dlg wide" id="dlg-export" aria-labelledby="dlg-export-title">
-  <div class="dlg-head"><h2 id="dlg-export-title">Xuất</h2><button type="button" class="icon-btn" data-close aria-label="Đóng" title="Đóng"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button></div>
-  <div class="backup-row">
-    <button type="button" class="btn" id="backup-all"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Sao lưu tất cả (JSON)</button>
-    <span class="muted" id="backup-when"></span>
-  </div>
-  <fieldset class="seg" id="export-kind">
-    <legend class="sr">Định dạng</legend>
-    <label><input type="radio" name="export-kind" value="md" checked><span>Markdown</span></label>
-    <label><input type="radio" name="export-kind" value="json"><span>JSON dự án này</span></label>
-    <label><input type="radio" name="export-kind" value="backup"><span>JSON tất cả</span></label>
-  </fieldset>
-  <label class="field"><span class="sr">Nội dung xuất</span><textarea id="export-text" class="code" rows="14" readonly spellcheck="false"></textarea></label>
-  <div class="row-end">
-    <span class="muted" id="export-status" role="status"></span>
-    <span class="tools-gap"></span>
-    <button type="button" class="btn" id="export-copy"><svg class="i" aria-hidden="true"><use href="#i-copy"/></svg>Chép</button>
-    <button type="button" class="btn go" id="export-download"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Tải file</button>
+<dialog class="dlg wide" id="dlg-export" aria-labelledby="dlg-export-title" aria-describedby="dlg-export-sub">
+  <div class="dlg-form">
+    <header class="dlg-head">
+      <div class="dlg-titles">
+        <p class="dlg-kicker">Export</p>
+        <h2 id="dlg-export-title">Export this project</h2>
+        <p class="dlg-sub" id="dlg-export-sub">Markdown to read and share; JSON to import again exactly as it is.</p>
+      </div>
+      <button type="button" class="icon-btn dlg-x" data-close aria-label="Close" title="Close"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button>
+    </header>
+    <div class="dlg-body">
+      <fieldset class="seg seg-full" id="export-kind">
+        <legend class="sr">Format</legend>
+        <label><input type="radio" name="export-kind" value="md" checked><span>Markdown</span></label>
+        <label><input type="radio" name="export-kind" value="json"><span>JSON · this project</span></label>
+        <label><input type="radio" name="export-kind" value="backup"><span>JSON · all projects</span></label>
+      </fieldset>
+      <label class="field"><span class="sr">Export content</span><textarea id="export-text" class="code" rows="14" readonly spellcheck="false"></textarea></label>
+      <div class="backup-row dlg-callout">
+        <svg class="i" aria-hidden="true"><use href="#i-download"/></svg>
+        <p><b>Back up everything</b><span class="muted" id="backup-when"></span></p>
+        <button type="button" class="btn small" id="backup-all">Back up all (JSON)</button>
+      </div>
+    </div>
+    <footer class="dlg-foot">
+      <span class="dlg-status muted" id="export-status" role="status"></span>
+      <span class="dlg-gap"></span>
+      <button type="button" class="btn" id="export-copy"><svg class="i" aria-hidden="true"><use href="#i-copy"/></svg>Copy</button>
+      <button type="button" class="btn go" id="export-download"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Download</button>
+    </footer>
   </div>
 </dialog>
 
 <!-- Nhập -->
-<dialog class="dlg wide" id="dlg-import" aria-labelledby="dlg-import-title">
-  <div class="dlg-head"><h2 id="dlg-import-title">Nhập</h2><button type="button" class="icon-btn" data-close aria-label="Đóng" title="Đóng"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button></div>
-  <p class="muted">File .md hoặc .json, hoặc dán chữ.</p>
-  <label class="field"><span>Chọn file</span><input type="file" id="import-file" accept=".md,.markdown,.txt,.json,text/markdown,application/json,text/plain"></label>
-  <label class="field"><span>Hoặc dán</span><textarea id="import-text" class="code" rows="10" spellcheck="false"></textarea></label>
-  <div class="preview" id="import-preview" role="status"></div>
-  <fieldset class="seg" id="import-mode">
-    <legend class="sr">Nhập vào đâu</legend>
-    <label><input type="radio" name="import-mode" value="new" checked><span>Tạo dự án mới</span></label>
-    <label><input type="radio" name="import-mode" value="replace"><span>Thay dự án đang mở</span></label>
-  </fieldset>
-  <div class="row-end">
-    <button type="button" class="btn" data-close>Đóng</button>
-    <button type="button" class="btn go" id="import-go" disabled>Nhập</button>
+<dialog class="dlg wide" id="dlg-import" aria-labelledby="dlg-import-title" aria-describedby="dlg-import-sub">
+  <div class="dlg-form">
+    <header class="dlg-head">
+      <div class="dlg-titles">
+        <p class="dlg-kicker">Import</p>
+        <h2 id="dlg-import-title">Import a project</h2>
+        <p class="dlg-sub" id="dlg-import-sub">A .md or .json file, or paste the text. You see a preview before anything changes.</p>
+      </div>
+      <button type="button" class="icon-btn dlg-x" data-close aria-label="Close" title="Close"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button>
+    </header>
+    <div class="dlg-body">
+      <label class="field"><span>File</span><input type="file" id="import-file" accept=".md,.markdown,.txt,.json,text/markdown,application/json,text/plain"></label>
+      <label class="field"><span>Or paste</span><textarea id="import-text" class="code" rows="10" spellcheck="false" placeholder="# Project name&#10;&#10;## 1. Step&#10;- [ ] Sub-step"></textarea></label>
+      <div class="preview" id="import-preview" role="status"></div>
+      <fieldset class="seg seg-full" id="import-mode">
+        <legend class="sr">Import into</legend>
+        <label><input type="radio" name="import-mode" value="new" checked><span>Create a new project</span></label>
+        <label><input type="radio" name="import-mode" value="replace"><span>Replace the open project</span></label>
+      </fieldset>
+    </div>
+    <footer class="dlg-foot">
+      <span class="dlg-gap"></span>
+      <button type="button" class="btn" data-close>Close</button>
+      <button type="button" class="btn go" id="import-go" disabled><svg class="i" aria-hidden="true"><use href="#i-upload"/></svg>Import</button>
+    </footer>
   </div>
 </dialog>
 
 <!-- Sửa một quyết định -->
 <dialog class="dlg" id="dlg-log" aria-labelledby="dlg-log-title">
-  <form method="dialog" id="log-edit-form" class="stack">
-    <div class="dlg-head"><h2 id="dlg-log-title">Sửa quyết định</h2><button type="button" class="icon-btn" data-close aria-label="Đóng" title="Đóng"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button></div>
-    <label class="field"><span>Ngày</span><input type="date" name="date" required></label>
-    <label class="field"><span>Quyết định</span><textarea name="decision" class="grow-title" rows="1" required maxlength="300"></textarea></label>
-    <label class="field"><span>Vì sao</span><textarea name="why" rows="4"></textarea></label>
-    <div class="row-end">
-      <button type="button" class="btn quiet danger" id="log-edit-del"><svg class="i" aria-hidden="true"><use href="#i-trash"/></svg>Xoá</button>
-      <span class="tools-gap"></span>
-      <button type="button" class="btn" data-close>Đóng</button>
-      <button type="submit" class="btn go" value="save">Lưu</button>
+  <form method="dialog" id="log-edit-form" class="dlg-form">
+    <header class="dlg-head">
+      <div class="dlg-titles">
+        <p class="dlg-kicker">Decision log</p>
+        <h2 id="dlg-log-title">Edit decision</h2>
+      </div>
+      <button type="button" class="icon-btn dlg-x" data-close aria-label="Close" title="Close"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button>
+    </header>
+    <div class="dlg-body">
+      <label class="field f-date"><span>Date</span><input type="date" name="date" required></label>
+      <label class="field field-title"><span>Decision</span><textarea name="decision" class="grow-title" rows="1" required maxlength="300"></textarea></label>
+      <label class="field"><span>Why</span><textarea name="why" rows="4" placeholder="The reason, so nobody has to remember it later"></textarea></label>
     </div>
+    <footer class="dlg-foot">
+      <button type="button" class="btn quiet danger foot-aux" id="log-edit-del" title="Delete"><svg class="i" aria-hidden="true"><use href="#i-trash"/></svg><span class="btn-lbl">Delete</span></button>
+      <span class="dlg-gap"></span>
+      <button type="button" class="btn" data-close>Close</button>
+      <button type="submit" class="btn go" value="save">Save</button>
+    </footer>
   </form>
 </dialog>
 
 <!-- Ghi chú dự án -->
-<dialog class="dlg" id="dlg-notes" aria-labelledby="dlg-notes-title">
-  <form method="dialog" id="notes-form" class="stack">
-    <div class="dlg-head"><h2 id="dlg-notes-title">Ghi chú dự án</h2><button type="button" class="icon-btn" data-close aria-label="Đóng" title="Đóng"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button></div>
-    <label class="field"><span class="sr">Ghi chú dự án</span><textarea name="notes" rows="8"></textarea></label>
-    <div class="row-end"><button type="button" class="btn" data-close>Đóng</button><button type="submit" class="btn go" value="save">Lưu</button></div>
+<dialog class="dlg" id="dlg-notes" aria-labelledby="dlg-notes-title" aria-describedby="dlg-notes-sub">
+  <form method="dialog" id="notes-form" class="dlg-form">
+    <header class="dlg-head">
+      <div class="dlg-titles">
+        <p class="dlg-kicker">Project</p>
+        <h2 id="dlg-notes-title">Project notes</h2>
+        <p class="dlg-sub" id="dlg-notes-sub">Folded above the board. Links starting with http(s) become clickable.</p>
+      </div>
+      <button type="button" class="icon-btn dlg-x" data-close aria-label="Close" title="Close"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button>
+    </header>
+    <div class="dlg-body">
+      <label class="field"><span class="sr">Project notes</span><textarea name="notes" rows="10" placeholder="Context, scope, deadlines…"></textarea></label>
+    </div>
+    <footer class="dlg-foot">
+      <span class="dlg-gap"></span>
+      <button type="button" class="btn" data-close>Close</button>
+      <button type="submit" class="btn go" value="save">Save</button>
+    </footer>
   </form>
 </dialog>
 
-<!-- Hỏi lại / nhập một dòng -->
-<dialog class="dlg" id="dlg-ask" aria-labelledby="dlg-ask-title">
-  <form method="dialog" id="ask-form" class="stack">
-    <div class="dlg-head"><h2 id="dlg-ask-title"></h2></div>
-    <p id="ask-text"></p>
-    <label class="field" id="ask-field"><span id="ask-label"></span><input type="text" id="ask-input" maxlength="120"></label>
-    <div class="row-end">
-      <button type="button" class="btn" data-close>Đóng</button>
-      <button type="submit" class="btn go" id="ask-ok" value="ok">OK</button>
+<!-- Hỏi lại / nhập một dòng (thay alert / confirm / prompt) -->
+<dialog class="dlg dlg-sm dlg-ask" id="dlg-ask" aria-labelledby="dlg-ask-title" aria-describedby="ask-text">
+  <form method="dialog" id="ask-form" class="dlg-form">
+    <header class="dlg-head">
+      <div class="dlg-titles">
+        <h2 id="dlg-ask-title"></h2>
+        <p class="dlg-sub" id="ask-text"></p>
+      </div>
+    </header>
+    <div class="dlg-body">
+      <label class="field" id="ask-field"><span id="ask-label"></span><input type="text" id="ask-input" maxlength="120"></label>
     </div>
+    <footer class="dlg-foot">
+      <span class="dlg-gap"></span>
+      <button type="button" class="btn" data-close>Close</button>
+      <button type="submit" class="btn go" id="ask-ok" value="ok">OK</button>
+    </footer>
   </form>
 </dialog>
 </body>

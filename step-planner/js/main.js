@@ -439,9 +439,21 @@ document.querySelectorAll('textarea.grow-title').forEach((ta) => {
   });
 });
 
-/* Đóng hộp (Esc, Đóng, Lưu, Enter): focus về nút mở hay chỗ vừa sửa. Phím vừa bấm khiến trình duyệt vẽ vòng
+/* Màn cảm ứng: mở hộp không tự focus ô chữ (bàn phím ảo bật lên che hộp). showModal focus phần tử đầu tiên: mọi hộp
+ * trừ #dlg-ask mở đầu bằng nút ×; #dlg-ask trên màn cảm ứng đặt autofocus vào nút OK. */
+const coarse = matchMedia('(pointer: coarse)');
+const NO_KEYBOARD = ['radio', 'checkbox', 'button', 'submit', 'reset', 'file', 'date', 'range', 'color'];
+/** @param {any} el @param {boolean} [select] */
+function focusField(el, select = false) {
+  if (!el) return;
+  const typing = el.tagName === 'TEXTAREA' || (el.tagName === 'INPUT' && !NO_KEYBOARD.includes(el.type));
+  if (typing && coarse.matches) return;
+  el.focus();
+  if (select && typing && el.select) el.select();
+}
+/* Đóng hộp (Esc, Close, Save, Enter): focus về nút mở hay chỗ vừa sửa. Phím vừa bấm khiến trình duyệt vẽ vòng
  * focus-visible quanh chỗ ấy; lớp quiet-focus ẩn vòng tới lần bấm Tab / mũi tên kế tiếp, chuột hay chạm cũng gỡ lớp.
- * Đặt lớp ngay lúc bắt đầu đóng (Esc, submit, nút Đóng, closeSaved, tryClose), không chờ sự kiện close: sự kiện ấy tới
+ * Đặt lớp ngay lúc bắt đầu đóng (Esc, submit, nút Close, closeSaved, tryClose), không chờ sự kiện close: sự kiện ấy tới
  * sau, có thể sau cả lần bấm Tab kế tiếp. */
 const NAV_KEYS = ['Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Home', 'End', 'PageUp', 'PageDown'];
 const quietFocus = () => document.documentElement.classList.add('quiet-focus');
@@ -456,7 +468,7 @@ function openDlg(dlg, focusEl) {
   dlg.querySelectorAll('textarea.grow-title').forEach(autosize);
   const form = dlg.querySelector('form');
   if (form && GUARDED.includes(dlg.id)) snaps.set(dlg, snapshot(form));
-  if (focusEl) { focusEl.focus(); if (focusEl.select && focusEl.tagName !== 'SELECT') focusEl.select(); }
+  focusField(focusEl, true);
 }
 /** Đóng hộp; chữ đã sửa mà chưa lưu thì hỏi lại. @param {any} dlg */
 async function tryClose(dlg) {
@@ -500,8 +512,9 @@ function ask(o) {
   $('ask-ok').textContent = o.ok;
   $('ask-ok').className = 'btn ' + (o.danger ? 'danger' : 'go');
   dlg.returnValue = '';
+  $('ask-ok').autofocus = coarse.matches;
   dlg.showModal();
-  if (o.label) { $('ask-input').focus(); $('ask-input').select(); } else $('ask-ok').focus();
+  if (o.label) focusField($('ask-input'), true); else $('ask-ok').focus();
   return new Promise((resolve) => {
     dlg.addEventListener('close', () => resolve(dlg.returnValue === 'ok' ? $('ask-input').value : null), { once: true });
   });
@@ -937,7 +950,7 @@ function openSub(step, sub, opt = {}) {
   const f = $('sub-form');
   subCtx = { wsId: ws.id, stepId: step.id, subId: sub ? sub.id : null, pos: opt.pos };
   $('dlg-sub-title').textContent = sub ? 'Edit sub-step' : 'Add sub-step';
-  field(f, 'status').replaceChildren(...C.STATUSES.map((s) => h('option', { value: s, 'data-dot': s, 'data-hint': C.STATUS_HINT[s] }, C.STATUS_LABEL[s])));
+  $('sub-where').textContent = docWhere({ wsId: ws.id, stepId: step.id, subId: null, docId: null });
   const labels = labelsOf(ws);
   field(f, 'step').replaceChildren(...ws.steps.map((/** @type {any} */ s) => h('option', { value: s.id }, (labels.has(s.id) ? `${labels.get(s.id)}. ` : '') + s.title)));
   const x = sub || C.normSub({ title: '' });
@@ -962,11 +975,13 @@ function openSub(step, sub, opt = {}) {
   }
 }
 field($('sub-form'), 'step').addEventListener('change', () => subPosOptions(false));
-/* Chọn "Huỷ" thì hiện ô "Vì sao huỷ" (giữ chữ đã gõ nếu đổi qua lại). */
+/* Chọn Cancelled thì hiện ô "Why cancelled" (giữ chữ đã gõ nếu đổi qua lại). */
 function paintCancel() { $('sub-cancel').hidden = field($('sub-form'), 'status').value !== 'cancel'; }
-field($('sub-form'), 'status').addEventListener('change', () => {
+/* Sáu viên trạng thái nằm sẵn trong HTML; chữ giải thích của mỗi viên lấy từ core.js. */
+for (const r of /** @type {any} */ ($('sub-status').querySelectorAll('input[name="status"]'))) r.closest('label').title = C.STATUS_HINT[r.value];
+$('sub-status').addEventListener('change', () => {
   paintCancel();
-  if (!$('sub-cancel').hidden) field($('sub-form'), 'cancelReason').focus();
+  if (!$('sub-cancel').hidden) focusField(field($('sub-form'), 'cancelReason'));
 });
 function subFromCtx() {
   const ws = subCtx && findWs(subCtx.wsId);
@@ -1248,15 +1263,14 @@ $('doc-del').addEventListener('click', () => {
   if (ctx && ctx.docId) deleteDoc(ctx);
 });
 
-/* Hộp lớn: văn bản Markdown, ba chế độ như md-annotate — Sửa (ô chữ), Xem (bản dựng), Chia đôi (cả hai). */
+/* Hộp lớn: văn bản Markdown, hai chế độ như md-annotate — Edit (ô chữ), Preview (bản dựng). */
 /** @type {DocCtx|null} */
 let mdCtx = null;
-let mdTimer = 0;
 function paintMdView() {
   const body = field($('md-form'), 'body').value;
   $('md-view').replaceChildren(body.trim() ? renderMd(body) : h('p', { class: 'muted' }, 'Nothing here yet. Choose "Edit" to write.'));
 }
-/** @param {'edit'|'view'|'split'} mode */
+/** @param {'edit'|'view'} mode */
 function setMdMode(mode) {
   $('md-panes').dataset.mode = mode;
   for (const t of /** @type {any} */ ($('dlg-md').querySelectorAll('.tab'))) {
@@ -1264,7 +1278,7 @@ function setMdMode(mode) {
     t.setAttribute('aria-selected', String(on));
     t.tabIndex = on ? 0 : -1;
   }
-  if (mode !== 'edit') paintMdView();
+  if (mode === 'view') paintMdView();
 }
 $('dlg-md').querySelector('.tabs').addEventListener('click', (/** @type {any} */ e) => {
   const t = e.target.closest('.tab');
@@ -1278,10 +1292,6 @@ $('dlg-md').querySelector('.tabs').addEventListener('keydown', (/** @type {any} 
   const k = (tabs.indexOf(e.target) + (e.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
   setMdMode(tabs[k].dataset.mode);
   tabs[k].focus();
-});
-field($('md-form'), 'body').addEventListener('input', () => {
-  clearTimeout(mdTimer);
-  if ($('md-panes').dataset.mode === 'split') mdTimer = window.setTimeout(paintMdView, 150);
 });
 /** @param {DocCtx} ctx @param {string} [newTitle] */
 function openMd(ctx, newTitle = '') {
@@ -1298,7 +1308,7 @@ function openMd(ctx, newTitle = '') {
   setMdMode(mode);
   openDlg($('dlg-md'));
   $('md-view').scrollTop = 0;
-  (mode === 'edit' ? (doc || newTitle ? field(f, 'body') : field(f, 'title')) : $('md-view')).focus();
+  focusField(mode === 'edit' ? (doc || newTitle ? field(f, 'body') : field(f, 'title')) : $('md-view'));
 }
 $('md-form').addEventListener('submit', (/** @type {any} */ e) => {
   e.preventDefault();

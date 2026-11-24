@@ -47,7 +47,7 @@
 - Tiến độ = xong / (tổng − bỏ qua − huỷ), không đổi với ô song song. "Next" tô các thẻ còn mở (không xong, bỏ qua, huỷ)
   của ô đầu tiên còn việc, trong bước đầu tiên còn việc. Hạn đã qua thì báo "(overdue)", trừ thẻ xong, bỏ qua, huỷ.
 - Song song (PLAN-013): mỗi ô một cột của hàng, thẻ song song xếp chồng. Số thẻ là vị trí ô (`1`, `2`…), ô k thẻ thì `n.1`
-  … `n.k`. "Add parallel" trên thẻ, ô "Vị trí" ("Position n" / "Parallel with n"); Alt + ← →: đổi ô (thẻ ở ô song song thì
+  … `n.k`. "Add parallel" trên thẻ, ô "Position" ("Position n" / "Parallel with n"); Alt + ← →: đổi ô (thẻ ở ô song song thì
   tách ra ô riêng), Alt + ↑ ↓: đổi thứ tự trong ô. Toast dời tả chỗ mới bằng tên hàng xóm, không bằng số.
 - Số đứng yên trong phiên (PLAN-014): chụp số khi dự án hiện lần đầu sau khi mở trang (và sau nhập thay nội dung); dời,
   xoá không đổi số (hàng đọc "1 3 2"); cái thêm trong phiên hiện chấm thay số. Số lệch thì nút "Renumber" hiện.
@@ -73,14 +73,14 @@
 - Xoá bước con, quyết định, tài liệu: một bấm. Xoá bước còn bước con, xoá dự án (không hoàn tác): hỏi lại. Sau khi xoá,
   focus nhảy vào Hoàn tác của toast (15 giây); Ctrl/Cmd + Z cũng hoàn tác khi không gõ chữ và không có hộp thoại mở. Hoàn
   tác tìm lại dự án và bước theo id (tab khác có thể đã thay `state`).
-- Hộp sửa: mở thì focus ô đầu; tên là textarea tự cao, Enter lưu. Esc, ×, Đóng hay Nhân bản khi chữ đã đổi thì hỏi "Bỏ
-  thay đổi?". Nút đóng không lưu ghi "Đóng", không "Huỷ". Đóng hộp: focus về chỗ mở, không vòng tới lần Tab / mũi tên kế.
+- Hộp sửa: mở thì focus ô đầu (cảm ứng: không tự focus ô chữ); tên tự cao, Enter lưu. Esc, ×, Close, Duplicate khi chữ
+  đổi thì hỏi lại. Nút đóng ghi "Close", không "Cancel". Đóng hộp: focus về chỗ mở, không vòng tới lần Tab / mũi tên kế.
 - Ghi chú bước gập dưới tên. Thẻ cao theo nội dung, quá `--card-max` thì cắt, "Show more" mở cả thẻ; link trong ghi chú
   bấm được. Vẽ lại giữ ghi chú đang mở, thẻ đã mở, chỗ cuộn ngang.
 - Tài liệu (PLAN-011): tài liệu của bước là dải chip rộng cả hàng ngay dưới băng Reopened (không băng thì ở chỗ ấy), trên
   hàng thẻ; nút phụ "Doc" ở cuối dải (bước chưa có tài liệu: ở cột tên bước). Thẻ chỉ có nhãn kẹp + số ở hàng đầu; bấm là
   mở hộp sửa bước con ở phần tài liệu. Thêm / sửa / xoá trong hộp sửa, lưu ngay; xoá khi hộp đang mở thì Hoàn tác là một
-  hàng trong hộp. Link mở tab mới (`noopener noreferrer`); văn bản mở hộp lớn Sửa / Xem / Chia đôi (`#dlg-md`).
+  hàng trong hộp. Link mở tab mới (`noopener noreferrer`); văn bản mở hộp lớn Edit / Preview (`#dlg-md`).
 - Nhật ký quyết định: sửa, xoá được; mới nhất trước. Tab khác sửa cùng khoá thì đọc lại (`storage`), giữ dự án của tab.
 - Nhắc sao lưu: thay đổi chưa sao lưu ≥ 3 ngày thì nút nhắc hiện cạnh Export, bấm là tải sao lưu mọi dự án (mới đặt lại mốc).
 - Chữ người dùng chỉ vào DOM qua text node; không `innerHTML` ở `js/`. Không `alert` / `confirm` / `prompt` (`#dlg-ask`).
@@ -186,7 +186,7 @@ Nhập file cũ và Markdown viết tay (dễ dãi):
 - Đầu dự án: tên (bấm để đổi dự án), tiến độ chung, chú giải trạng thái kèm số đếm. Chip trạng thái có chữ và chấm khác hình.
 - Cột tên bước rộng cố định, thẻ cùng bề rộng (các hàng thẳng cột). Hàng thẻ cuộn ngang bên trong, không hiện thanh cuộn,
   mép mờ báo còn chỗ cuộn. ≤ 640px: tên bước nằm trên hàng thẻ.
-- Hộp văn bản Markdown gần toàn màn, ≤ 640px toàn màn; Chia đôi xếp trên / dưới khi hẹp.
+- Hộp thoại: ≤ 640px là tấm đáy, chân dính đáy; hộp Markdown toàn màn. Trạng thái trong hộp bước con: sáu viên radio.
 - Mọi `<select>` chọn thứ có nghĩa dùng danh sách tự dựng (nổi ở lớp trên cùng, không đẩy bố cục; phím ↑ ↓, gõ chữ đầu,
   Enter, Esc trả focus); ô chỉ chọn số giữ `<select>` gốc (`data-native`). Option có `data-dot`, `data-hint` thì hiện thêm.
 - Cảm ứng và ≤ 640px: vùng bấm ≥ 44px. Trang không cuộn ngang. Tạo hay mở dự án thì về đầu trang, không cuộn theo focus.
