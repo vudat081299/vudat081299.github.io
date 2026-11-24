@@ -232,24 +232,61 @@ const check = (name, ok, detail = '') => {
   await page.waitForTimeout(50);
   check('hoàn tác xoá bước bằng Ctrl+Z', (await cur(page)).steps[1].id === s2id);
 
-  // Cần làm lại bước này (step.revisit): nút có chữ, hộp có câu giải thích, băng "Đang làm lại · ngày · lý do", bỏ đánh dấu.
+  // Cần làm lại bước này (step.revisit): nút có chữ, hộp có câu giải thích, danh sách bước con đưa về Chưa làm,
+  // băng "Đang làm lại · Vòng N · ngày · lý do", dòng nhật ký tự ghi, Hoàn tác cả thao tác, bỏ đánh dấu, vòng tăng tiếp.
   const revBtn = `.step[data-step="${s2id}"] .acts [data-act="revisit"]`;
   check('cần làm lại: nút có chữ', (await page.textContent(revBtn)).trim() === 'Cần làm lại');
+  const r0 = (await cur(page)).steps[1];
+  const doneId = r0.subs[0].id;
+  for (let k = 0; k < 3 && (await cur(page)).steps[1].subs[0].status !== 'done'; k++) await page.click(subSel(doneId, 'cycle'));
+  const statuses0 = (await cur(page)).steps[1].subs.map((x) => x.status).join();
+  const nLogR = (await cur(page)).log.length;
   await page.click(revBtn);
   check('cần làm lại: hộp có giải thích và ví dụ', /Ví dụ/.test(await page.textContent('#dlg-revisit'))
     && !!(await page.getAttribute('#revisit-form [name="reason"]', 'placeholder')));
+  const rl = await page.evaluate(() => ({
+    n: document.querySelectorAll('#revisit-list input[name="reset"]').length,
+    checked: document.querySelectorAll('#revisit-list input:checked').length, round: document.getElementById('revisit-round').textContent,
+  }));
+  check('cần làm lại: danh sách mọi bước con, mặc định không chọn, báo vòng 2', rl.n === r0.subs.length && rl.checked === 0
+    && /vòng 2/.test(rl.round), JSON.stringify(rl));
+  await page.click('#revisit-all-done');
+  const picked = await page.$$eval('#revisit-list input:checked', (c) => c.map((x) => x.value));
+  check('"Chọn tất cả đã xong": chọn đúng các bước con đã xong', picked.join() === (await cur(page)).steps[1].subs.filter((x) => x.status === 'done').map((x) => x.id).join()
+    && picked.includes(doneId), picked.join());
+  await page.fill('#revisit-form [name="reason"]', 'EDA lộ cột thiếu');
+  await page.click('#revisit-form button[type="submit"]');
+  let rs = await cur(page);
+  const autoLog = rs.log.at(-1);
+  check('cần làm lại: bước con đã chọn về Chưa làm, vòng 2, nhật ký tự ghi',
+    rs.steps[1].subs.find((x) => x.id === doneId).status === 'todo' && rs.steps[1].revisit.round === 2 && rs.steps[1].round === 2
+    && rs.log.length === nLogR + 1 && autoLog.decision === `Làm lại: ${r0.title} (vòng 2)` && autoLog.why === 'EDA lộ cột thiếu'
+    && /Làm lại: /.test(await page.textContent('#log-list')), JSON.stringify(autoLog));
+  check('cần làm lại: toast có Hoàn tác, focus không bị lấy', await page.isVisible('#toast-undo')
+    && await page.evaluate(() => document.activeElement?.id !== 'toast-undo'));
+  await page.keyboard.press('Control+z');
+  rs = await cur(page);
+  check('hoàn tác cần làm lại: trạng thái thẻ, nhật ký, đánh dấu, vòng đều về như cũ', rs.steps[1].revisit === null && rs.steps[1].round === 1
+    && rs.steps[1].subs.map((x) => x.status).join() === statuses0 && rs.log.length === nLogR && !/Làm lại: /.test(await page.textContent('#log-list')));
+  await page.click(revBtn);
   await page.fill('#revisit-form [name="reason"]', 'EDA lộ cột thiếu');
   await page.click('#revisit-form button[type="submit"]');
   const band = `.step[data-step="${s2id}"] .revisit-band`;
-  check('cần làm lại: băng "Đang làm lại · ngày · lý do", nút bỏ đánh dấu',
-    /^Đang làm lại · \d\d\/\d\d\/\d{4} · EDA lộ cột thiếu$/.test((await page.textContent(`${band} .badge`)).trim())
+  check('cần làm lại: băng "Đang làm lại · Vòng 2 · ngày · lý do", nút bỏ đánh dấu',
+    /^Đang làm lại · Vòng 2 · \d\d\/\d\d\/\d{4} · EDA lộ cột thiếu$/.test((await page.textContent(`${band} .badge`)).trim())
     && /Xong, bỏ đánh dấu/.test(await page.textContent(band))
     && (await cur(page)).steps[1].revisit.reason === 'EDA lộ cột thiếu');
   await page.click(`${band} [data-act="revisit-clear"]`);
   check('cần làm lại: "Xong, bỏ đánh dấu" xoá đánh dấu và băng', (await cur(page)).steps[1].revisit === null && !(await page.$(band)));
   await page.click(revBtn);
+  check('đánh dấu lại sau khi bỏ: báo vòng 3', /vòng 3/.test(await page.textContent('#revisit-round')));
   await page.fill('#revisit-form [name="reason"]', 'EDA lộ cột thiếu');
   await page.click('#revisit-form button[type="submit"]');
+  check('đánh dấu lại: băng "Vòng 3", nhật ký "(vòng 3)"', /^Đang làm lại · Vòng 3 · /.test((await page.textContent(`${band} .badge`)).trim())
+    && (await cur(page)).log.at(-1).decision.endsWith('(vòng 3)'));
+  await page.click(`${band} .badge`);
+  check('sửa lý do khi đang làm lại: không có danh sách bước con', !(await page.isVisible('#revisit-subs')));
+  await page.keyboard.press('Escape');
 
   // Tài liệu của bước: link (chỉ http(s), mở tab mới) và văn bản Markdown (Sửa / Xem / Chia đôi, không thành HTML).
   const docStep = `.step[data-step="${s2id}"]`;
@@ -356,11 +393,12 @@ const check = (name, ok, detail = '') => {
   await page.click('#log-form button[type="submit"]');
   await page.fill('#log-decision', 'Quyết định hai');
   await page.click('#log-form button[type="submit"]');
-  check('nhật ký: thêm hai mục', (await cur(page)).log.length === 2 && (await page.$$('.log-item')).length === 2);
+  const nL = (await cur(page)).log.length;
+  check('nhật ký: thêm hai mục', nL === nLogR + 4 && (await page.$$('.log-item')).length === nL);
   await page.click('.log-item:first-child [data-act="del-log"]');
-  check('nhật ký: xoá', (await cur(page)).log.length === 1);
+  check('nhật ký: xoá', (await cur(page)).log.length === nL - 1);
   await page.click('#toast-undo');
-  check('nhật ký: hoàn tác', (await cur(page)).log.length === 2);
+  check('nhật ký: hoàn tác', (await cur(page)).log.length === nL);
   check('nhật ký: mới nhất trước', (await page.textContent('.log-item:first-child .log-decision')).trim() === 'Quyết định hai');
   await page.click('.log-item:first-child [data-act="edit-log"]');
   await page.fill('#log-edit-form [name="decision"]', 'Quyết định hai (sửa)');
@@ -391,14 +429,14 @@ const check = (name, ok, detail = '') => {
   check('Markdown có dấu trạng thái, hạn, không người làm', /- \[x\] /.test(md) && /- \[!\] .* · hạn 2026-12-01/.test(md) && !/`@|Người:/.test(md) && /## Nhật ký quyết định/.test(md));
   check('Markdown có tài liệu: nhãn, link, rào văn bản', /\nTài liệu:\n {2}- \[Data card\]\(https:\/\/example\.com\/card\)\n {2}- Ghi chép EDA\n {4}`{5}markdown\n/.test(md)
     && / {2}Tài liệu:\n {4}- \[Repo\]\(https:\/\/git\.example\/repo\)/.test(md));
-  check('Markdown giữ dòng "Quay lại:" của bước cần làm lại', /\nQuay lại: \d{4}-\d\d-\d\d · EDA lộ cột thiếu\n/.test(md));
+  check('Markdown giữ dòng "Quay lại:" của bước cần làm lại', /\nQuay lại: \d{4}-\d\d-\d\d · vòng 3 · EDA lộ cột thiếu\n/.test(md));
   await page.click('#export-copy');
   const clip = await page.evaluate(() => navigator.clipboard.readText());
   check('chép Markdown vào clipboard', clip === md);
   await page.click('#dlg-export [data-close]');
   const nBefore = (await stored(page)).workspaces.length;
   const nDocs = afterReload.steps.reduce((n, x) => n + x.docs.length + x.subs.reduce((k, y) => k + y.docs.length, 0), 0);
-  const want = `Markdown: 1 dự án · ${afterReload.steps.length} bước · ${afterReload.steps.reduce((n, x) => n + x.subs.length, 0)} bước con · 2 quyết định · ${nDocs} tài liệu`;
+  const want = `Markdown: 1 dự án · ${afterReload.steps.length} bước · ${afterReload.steps.reduce((n, x) => n + x.subs.length, 0)} bước con · ${afterReload.log.length} quyết định · ${nDocs} tài liệu`;
   await page.click('#import-btn');
   await page.fill('#import-text', md);
   check('nhập: xem trước có số đếm', (await page.textContent('#import-preview')) === want,

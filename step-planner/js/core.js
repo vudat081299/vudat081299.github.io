@@ -85,17 +85,24 @@ export function normSub(o) {
   };
 }
 
+/** Số nguyên dương, không thì 0. @param {any} v */
+const posInt = (v) => (Number.isInteger(v) && v > 0 && v < 10000 ? v : 0);
+
+/* Vòng: step.round là vòng gần nhất của bước (1 = chưa làm lại lần nào). Đánh dấu "Cần làm lại" mở vòng round + 1, ghi
+ * cả vào revisit.round; bỏ đánh dấu thì revisit về null, step.round giữ để lần sau tăng tiếp. */
 /** @param {any} o */
 export function normStep(o) {
   const x = isObj(o) ? o : {};
   const r = x.revisit;
+  const rv = isObj(r) ? { reason: oneLine(r.reason), date: parseDate(r.date) || today(), round: Math.max(2, posInt(r.round), posInt(x.round)) } : null;
   return {
     id: idOr(x.id, 't'),
     title: oneLine(x.title) || 'Bước',
     goal: oneLine(x.goal),
     doneWhen: oneLine(x.doneWhen),
     notes: multiLine(x.notes),
-    revisit: isObj(r) ? { reason: oneLine(r.reason), date: parseDate(r.date) || today() } : null,
+    revisit: rv,
+    round: rv ? rv.round : Math.max(1, posInt(x.round)),
     docs: docsOf(x.docs),
     subs: objs(x.subs).map(normSub),
   };
@@ -222,7 +229,7 @@ export const splitInline = (line) => splitDots(protect(line)).map(restore);
 
 /* Dòng ghi chú: dòng trống viết `\`; dòng có thể bị đọc nhầm (nhãn, đầu mục danh sách, tiêu đề, trích dẫn, `\`)
  * thêm `\` phía trước. */
-const RISKY = /^(\\|#|>|\s*([-*+]|\d+[.)])(\s|$)|\s*\*\*|(Xong khi|Vì sao|Mục tiêu|Quay lại|Ghi chú|Tài liệu):)/;
+const RISKY = /^(\\|#|>|\s*([-*+]|\d+[.)])(\s|$)|\s*\*\*|(Xong khi|Vì sao|Mục tiêu|Quay lại|Vòng|Ghi chú|Tài liệu):)/;
 const escBlock = (/** @type {string} */ s) => (s === '' ? '\\' : RISKY.test(s) ? '\\' + s : s);
 const unescBlock = (/** @type {string} */ s) => (s.startsWith('\\') ? s.slice(1) : s);
 /** Khối dòng: mỗi dòng trừ dòng cuối có hai dấu cách cuối (xuống dòng khi xem trên GitHub, VS Code). */
@@ -304,7 +311,8 @@ export function toMarkdown(ws) {
     out.push('', `## ${i + 1}. ${s.title}`);
     if (s.goal) out.push('', `Mục tiêu: ${s.goal}`);
     if (s.doneWhen) out.push('', `Xong khi: ${s.doneWhen}`);
-    if (s.revisit) out.push('', `Quay lại: ${s.revisit.date}` + (s.revisit.reason ? ` · ${s.revisit.reason}` : ''));
+    if (s.revisit) out.push('', `Quay lại: ${s.revisit.date} · vòng ${s.revisit.round}` + (s.revisit.reason ? ` · ${s.revisit.reason}` : ''));
+    else if (s.round > 1) out.push('', `Vòng: ${s.round}`);
     if (s.notes) out.push('', ...hardBreaks(['Ghi chú:', ...s.notes.split('\n').map((l) => '  ' + escBlock(l))]));
     if (s.docs.length) out.push('', 'Tài liệu:', ...docLines(s.docs, ''));
     if (s.subs.length) out.push('');
@@ -461,12 +469,16 @@ export function fromMarkdown(text) {
     const it = ITEM.exec(raw);
     if (it) { newSub(it[1], it[2]); continue; }
     sub = null;
-    const meta = /^\**(Mục tiêu|Xong khi|Quay lại|Ghi chú|Tài liệu):\**\s?(.*)$/.exec(raw);
+    const meta = /^\**(Mục tiêu|Xong khi|Quay lại|Vòng|Ghi chú|Tài liệu):\**\s?(.*)$/.exec(raw);
     if (meta && meta[1] === 'Mục tiêu') step.goal = meta[2];
     else if (meta && meta[1] === 'Xong khi') step.doneWhen = meta[2];
     else if (meta && meta[1] === 'Quay lại') {
-      const d = /^(\S+)(?: · (.*))?$/.exec(meta[2]);
-      step.revisit = d && parseDate(d[1]) ? { date: parseDate(d[1]), reason: d[2] || '' } : { reason: meta[2] };
+      /* `ngày · vòng N · lý do`; dòng cũ `ngày · lý do` (không vòng) vẫn đọc: vòng 2. */
+      const d = /^(\S+)(?: · vòng (\d+)(?= · |$))?(?: · (.*))?$/.exec(meta[2]);
+      step.revisit = d && parseDate(d[1]) ? { date: parseDate(d[1]), round: d[2] ? +d[2] : 0, reason: d[3] || '' } : { reason: meta[2] };
+    } else if (meta && meta[1] === 'Vòng') {
+      const n = /^\s*(\d+)\s*$/.exec(meta[2]);
+      if (n) step.round = +n[1]; else addNote(step, 'notes', raw);
     } else if (meta && meta[1] === 'Ghi chú' && !meta[2].trim()) { block = 'step'; blockFirst = true; }
     else if (meta && meta[1] === 'Tài liệu' && !meta[2].trim()) {
       step.docs = step.docs || [];
@@ -564,7 +576,7 @@ export function shape(ws) {
   return {
     name: ws.name, templateId: ws.templateId, notes: ws.notes,
     steps: ws.steps.map((/** @type {any} */ s) => ({
-      title: s.title, goal: s.goal, doneWhen: s.doneWhen, notes: s.notes, revisit: s.revisit, docs: s.docs.map(docShape),
+      title: s.title, goal: s.goal, doneWhen: s.doneWhen, notes: s.notes, revisit: s.revisit, round: s.round, docs: s.docs.map(docShape),
       subs: s.subs.map((/** @type {any} */ x) => ({ title: x.title, status: x.status, due: x.due, doneWhen: x.doneWhen, notes: x.notes, docs: x.docs.map(docShape) })),
     })),
     log: ws.log.map((/** @type {any} */ l) => ({ date: l.date, decision: l.decision, why: l.why })),

@@ -236,6 +236,7 @@ function renderBoard(/** @type {any} */ ws) {
       icon('redo'),
       h('button', { type: 'button', class: 'badge', 'data-act': 'revisit', title: 'Sửa lý do' },
         h('b', {}, 'Đang làm lại'),
+        ' · Vòng ' + step.revisit.round,
         step.revisit.date ? ' · ' + fmtDate(step.revisit.date) : '',
         step.revisit.reason ? ' · ' + step.revisit.reason : ''),
       h('button', { type: 'button', class: 'btn small', 'data-act': 'revisit-clear' }, 'Xong, bỏ đánh dấu'));
@@ -1148,20 +1149,63 @@ $('md-del').addEventListener('click', () => {
 let revisitCtx = { wsId: '', stepId: '' };
 function openRevisit(/** @type {any} */ step) {
   revisitCtx = { wsId: cur().id, stepId: step.id };
-  $('revisit-step').textContent = `Bước ${cur().steps.indexOf(step) + 1} · ${step.title}`;
+  const i = cur().steps.indexOf(step);
+  $('revisit-step').textContent = `Bước ${i + 1} · ${step.title}`;
   field($('revisit-form'), 'reason').value = step.revisit ? step.revisit.reason : '';
+  /* Đánh dấu mới: chọn bước con đưa về "Chưa làm" (mặc định không chọn). Sửa lý do: không có danh sách. */
+  $('revisit-subs').hidden = !!step.revisit || !step.subs.length;
+  $('revisit-round').textContent = `Lần này là vòng ${(step.round || 1) + 1}.`;
+  $('revisit-list').replaceChildren(...step.subs.map((/** @type {any} */ x, /** @type {number} */ j) => h('li', {},
+    h('label', { class: 'reset-item' },
+      h('input', { type: 'checkbox', name: 'reset', value: x.id, 'data-status': x.status, disabled: x.status === 'todo' }),
+      h('span', { class: 'num' }, `${i + 1}.${j + 1}`), h('span', { class: 'reset-title' }, x.title),
+      h('span', { class: `chip st-${x.status}` }, C.STATUS_LABEL[x.status])))));
   $('revisit-clear').hidden = !step.revisit;
   /** @type {any} */ ($('revisit-form').querySelector('button[type="submit"]')).textContent = step.revisit ? 'Lưu lý do' : 'Đánh dấu cần làm lại';
   openDlg($('dlg-revisit'), field($('revisit-form'), 'reason'));
 }
 const revisitStep = () => stepOf(findWs(revisitCtx.wsId), revisitCtx.stepId);
+$('revisit-all-done').addEventListener('click', () => {
+  for (const cb of /** @type {any} */ ($('revisit-list').querySelectorAll('input[name="reset"]'))) cb.checked = cb.dataset.status === 'done';
+});
+/* Đánh dấu mới: mở vòng mới, đưa bước con đã chọn về "Chưa làm", ghi một dòng nhật ký; Hoàn tác trả cả ba. */
 $('revisit-form').addEventListener('submit', (/** @type {any} */ e) => {
   e.preventDefault();
+  const { wsId, stepId } = revisitCtx;
+  const ws = findWs(wsId);
   const step = revisitStep();
+  const reason = C.oneLine(field($('revisit-form'), 'reason').value);
+  const picked = [...$('revisit-list').querySelectorAll('input[name="reset"]:checked')].map((/** @type {any} */ cb) => cb.value);
   closeSaved($('dlg-revisit'));
-  if (!step) return;
-  step.revisit = { reason: C.oneLine(field($('revisit-form'), 'reason').value), date: C.today() };
-  commit(`.step[data-step="${step.id}"] .badge || ${stepSel(step.id, 'edit-step')}`);
+  if (!ws || !step) return;
+  const focusSel = `.step[data-step="${step.id}"] .badge || ${stepSel(step.id, 'edit-step')}`;
+  if (step.revisit) { step.revisit.reason = reason; commit(focusSel); return; }
+  const before = { round: step.round, statuses: new Map() };
+  const round = (step.round || 1) + 1;
+  step.round = round;
+  step.revisit = { reason, date: C.today(), round };
+  for (const x of step.subs) {
+    if (!picked.includes(x.id) || x.status === 'todo') continue;
+    before.statuses.set(x.id, x.status);
+    x.status = 'todo';
+  }
+  const entry = C.normLog({ date: C.today(), decision: `Làm lại: ${step.title} (vòng ${round})`, why: reason });
+  ws.log.push(entry);
+  commit(focusSel);
+  const n = before.statuses.size;
+  toast(`Đã đánh dấu làm lại · vòng ${round}${n ? ` · ${n} bước con về Chưa làm` : ''} · ghi nhật ký.`, () => {
+    const w = findWs(wsId);
+    const s = stepOf(w, stepId);
+    if (!w) { toast('Không hoàn tác được: dự án đã bị xoá.'); return; }
+    if (s) {
+      s.revisit = null;
+      s.round = before.round;
+      for (const x of s.subs) if (before.statuses.has(x.id)) x.status = before.statuses.get(x.id);
+    }
+    w.log = w.log.filter((/** @type {any} */ l) => l.id !== entry.id);
+    if (curId !== wsId) switchTo(wsId);
+    commit(s ? stepSel(stepId, 'edit-step') : '#board');
+  }, focusSel, false);
 });
 $('revisit-clear').addEventListener('click', () => {
   const step = revisitStep();

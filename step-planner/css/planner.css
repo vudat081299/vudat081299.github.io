@@ -434,6 +434,19 @@ svg.i {
 .revisit-band .btn { background: var(--surface); border-color: var(--amber-line); color: var(--amber-fg); }
 @media (max-width: 640px) { .revisit-band { padding: var(--s1) var(--s2) var(--s2) var(--s3); } .revisit-band .btn { flex: 1 1 100%; } }
 
+/* ── Hộp "Cần làm lại": danh sách bước con đưa về Chưa làm ── */
+.reset-subs { display: flex; flex-direction: column; gap: var(--s2); }
+.reset-subs legend { font-size: var(--fs-sm); font-weight: 600; color: var(--ink-2); margin-bottom: var(--s2); }
+.reset-head { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); flex-wrap: wrap; font-size: var(--fs-sm); }
+.reset-list { display: flex; flex-direction: column; max-height: calc(var(--card-max) * 1.2); overflow: auto; border-top: var(--line-w) solid var(--line-2); }
+.reset-item {
+  display: flex; align-items: center; gap: var(--s2); min-height: var(--hit); padding: var(--s1) 0;
+  border-bottom: var(--line-w) solid var(--line-2); font-size: var(--fs-sm); cursor: pointer;
+}
+.reset-item input { flex: none; width: var(--icon); height: var(--icon); margin: 0; accent-color: var(--done-edge); }
+.reset-item:has(input:disabled) { cursor: default; color: var(--ink-3); }
+.reset-title { flex: 1 1 auto; min-width: 0; overflow-wrap: anywhere; }
+
 /* ── Thẻ bước con ── */
 .card {
   flex: 0 0 var(--card-w); min-height: var(--card-min); max-height: var(--card-max);

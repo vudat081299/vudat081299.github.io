@@ -206,6 +206,21 @@ check('md.js: link chỉ http(s); chữ HTML là chữ', para.some((n) => n.t ==
   && !para.some((n) => n.t === 'link' && /javascript/.test(n.href)) && para.some((n) => n.t === 'text' && n.v.includes('<b>')));
 check('md.js: url trần bỏ dấu câu cuối', eq(inline('xem https://a.b/c).'), [{ t: 'text', v: 'xem ' }, { t: 'link', href: 'https://a.b/c', c: [{ t: 'text', v: 'https://a.b/c' }] }, { t: 'text', v: ').' }]));
 
+/* Vòng làm lại: dòng Quay lại có vòng; bước đã bỏ đánh dấu giữ vòng (dòng Vòng:); dòng cũ không vòng đọc là vòng 2. */
+const rounds = normWorkspace({ steps: [
+  { title: 'A', round: 3, revisit: null, subs: [] },
+  { title: 'B', round: 4, revisit: { date: '2026-11-01', reason: 'vòng 5 · lạ', round: 4 }, subs: [] },
+  { title: 'C', revisit: { date: '2026-11-02', reason: '' }, subs: [] },
+  { title: 'D', notes: 'Vòng: 9\nQuay lại: giả', subs: [] },
+] });
+const mdr = toMarkdown(rounds);
+check('vòng: Markdown đi rồi về (Vòng:, Quay lại có vòng, lý do có chữ "vòng")', eq(shape(rounds), shape(fromMarkdown(mdr).workspace)),
+  firstDiff(shape(rounds), shape(fromMarkdown(mdr).workspace)));
+check('vòng: khuôn dòng', mdr.includes('\nVòng: 3\n') && mdr.includes('\nQuay lại: 2026-11-01 · vòng 4 · vòng 5 · lạ\n')
+  && mdr.includes('\nQuay lại: 2026-11-02 · vòng 2\n') && rounds.steps[3].round === 1 && !/\nVòng: 1/.test(mdr));
+const oldR = fromMarkdown('# A\n## 1. S\nQuay lại: 2026-11-20 · lý do cũ\n').workspace.steps[0];
+check('vòng: dòng cũ "Quay lại: ngày · lý do" đọc là vòng 2', oldR.revisit.round === 2 && oldR.round === 2 && oldR.revisit.reason === 'lý do cũ');
+
 let threw = '';
 try { parseImport('   '); } catch (e) { threw = e.message; }
 check('chữ rỗng thì báo lỗi', /Chưa có nội dung/.test(threw));

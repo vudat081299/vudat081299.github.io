@@ -4,7 +4,7 @@
 - PLAN-001 · Dự án là các bước có thứ tự, mỗi bước có bước con có thứ tự · `step-planner/`
 - PLAN-002 · Dữ liệu chỉ ở trình duyệt, nhiều dự án, nhớ dự án mở cuối · `step-planner/`
 - PLAN-003 · Tiến độ không tính bước bị bỏ qua; việc tiếp theo được tô · `step-planner/`
-- PLAN-004 · Quay lại một bước có lý do · `step-planner/`
+- PLAN-004 · Quay lại một bước có lý do, đếm vòng, đặt lại việc · `step-planner/`
 - PLAN-005 · Mỗi dự án có nhật ký quyết định · `step-planner/`
 - PLAN-006 · Xoá hoàn tác được; sắp xếp lại được; tìm theo chữ · `step-planner/`
 - PLAN-007 · Markdown xuất ra đọc được và nhập lại được; nhập không ghi đè ngầm · `step-planner/`
@@ -29,10 +29,10 @@ Không có máy chủ: mọi dự án lưu trong bộ nhớ trình duyệt dư�
 
 Bước con có năm trạng thái: chưa làm, đang làm, xong, bị chặn, bỏ qua; bấm chip để đổi nhanh. Tiến độ = xong / (tổng − bỏ qua). Bước con đầu tiên chưa xong và không bị bỏ qua của mỗi bước là việc tiếp theo.
 
-## PLAN-004 · Quay lại một bước có lý do
+## PLAN-004 · Quay lại một bước có lý do, đếm vòng, đặt lại việc
 24/11/2026 · `step-planner/`
 
-Việc dữ liệu lặp (CRISP-DM quay lại pha trước), nên một bước được đánh dấu "quay lại" kèm lý do và ngày, hiện thành nhãn trên bước tới khi bỏ đánh dấu.
+Việc dữ liệu lặp (CRISP-DM quay lại pha trước), nên một bước được đánh dấu "cần làm lại" kèm lý do và ngày, hiện thành băng trên bước tới khi bỏ đánh dấu. Mỗi lần đánh dấu mở một vòng mới (lần đầu là vòng 2, lần sau tăng tiếp, kể cả sau khi đã bỏ đánh dấu). Khi đánh dấu, người dùng chọn bước con nào đưa về "Chưa làm" (mặc định không cái nào); nhật ký quyết định tự ghi một dòng "Làm lại: tên bước (vòng N)" với lý do. Cả thao tác hoàn tác được một lần.
 
 ## PLAN-005 · Mỗi dự án có nhật ký quyết định
 24/11/2026 · `step-planner/`

@@ -290,9 +290,17 @@
     <div class="dlg-head"><h2 id="dlg-revisit-title">Cần làm lại bước này</h2><button type="button" class="icon-btn" data-close aria-label="Đóng" title="Đóng"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button></div>
     <p class="dlg-step" id="revisit-step"></p>
     <p class="dlg-note">Dùng khi một bước sau lộ ra vấn đề phải quay về sửa ở bước này. Ví dụ: đang dựng mô hình thì thấy thiếu
-      dữ liệu, nên đánh dấu bước "Chuẩn bị dữ liệu" cần làm lại. Hàng của bước hiện băng "Đang làm lại" tới khi bạn bấm
-      "Xong, bỏ đánh dấu".</p>
+      dữ liệu, nên đánh dấu bước "Chuẩn bị dữ liệu" cần làm lại. Hàng của bước hiện băng "Đang làm lại · Vòng N" tới khi bạn
+      bấm "Xong, bỏ đánh dấu"; nhật ký quyết định tự ghi một dòng.</p>
     <label class="field"><span>Vì sao phải làm lại</span><input type="text" name="reason" maxlength="300" required placeholder="VD: mô hình lộ cột thiếu, phải điền lại"></label>
+    <fieldset class="reset-subs" id="revisit-subs">
+      <legend>Đưa bước con nào về "Chưa làm"?</legend>
+      <div class="reset-head">
+        <span class="muted" id="revisit-round"></span>
+        <button type="button" class="btn small" id="revisit-all-done">Chọn tất cả đã xong</button>
+      </div>
+      <ul class="reset-list" id="revisit-list"></ul>
+    </fieldset>
     <div class="row-end">
       <button type="button" class="btn quiet" id="revisit-clear">Xong, bỏ đánh dấu</button>
       <span class="tools-gap"></span>

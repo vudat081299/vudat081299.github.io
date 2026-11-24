@@ -26,7 +26,8 @@
 - `localStorage['stepPlanner.v2']`: `{version, workspaces[], lastId, lastBackup, dirtySince}`. Đổi khuôn thì tăng số khoá.
   Khoá cũ (`OLD_KEYS` trong `store.js`) đọc khi khoá mới chưa có, chuẩn hoá rồi ghi sang khoá mới; khoá cũ giữ nguyên.
 - Workspace `{id, name, templateId, createdAt, updatedAt, notes, steps[], log[]}`.
-- Step `{id, title, goal, doneWhen, notes, revisit: null | {reason, date}, docs[], subs[]}`.
+- Step `{id, title, goal, doneWhen, notes, revisit: null | {reason, date, round}, round, docs[], subs[]}`. `round`: vòng gần
+  nhất (1 = chưa làm lại); đang đánh dấu thì `round` = `revisit.round` ≥ 2.
 - Sub `{id, title, status, due, doneWhen, notes, docs[]}`; `status` ∈ `todo doing done blocked skip`; `due` là `YYYY-MM-DD` hoặc rỗng.
 - Log `{id, date, decision, why}`.
 - Doc `{id, kind: 'link', title, url}` hoặc `{id, kind: 'md', title, body}`. `url` chỉ http(s) (`safeUrl`); link khác bị bỏ
@@ -47,13 +48,14 @@
 - Bấm vào thẻ (ngoài nút) là mở hộp sửa. Mỗi thẻ chỉ hai điểm dừng Tab: tên (mở sửa) và chip.
 - Nút phụ (dời, nhân bản, xoá, cần làm lại, tài liệu, nhãn kẹp, "Xem thêm") có `tabindex=-1`. Bàn phím làm cùng việc: Alt
   + ← → trên tên bước con, Alt + ↑ ↓ trên tên bước, ô "Thuộc bước" / "Vị trí" và các nút trong hộp sửa.
-- Kéo thả trên máy tính; bước con kéo được sang bước khác.
-- Đổi chỗ (nút dời, Alt + mũi tên, kéo thả, "Thuộc bước" / "Vị trí"; cả bước): cái vừa dời có lớp `moved`, cái bị đổi chỗ
+- Đổi chỗ (nút dời, Alt + mũi tên, kéo thả trên máy tính, "Thuộc bước" / "Vị trí"; cả bước): cái vừa dời có lớp `moved`, cái bị đổi chỗ
   có `swapped`, tự gỡ sau `--flash-dur`; toast "Đã dời 1.3 → 1.2 · tên" (bước: "Đã dời bước 3 → 2 · tên") có Hoàn tác,
   không lấy focus; hàng thẻ cuộn để thẻ trong tầm nhìn. Dời liền nhiều lần khi toast còn hiện: Hoàn tác về chỗ trước lần
   đầu; dời về đúng chỗ cũ thì toast tắt.
-- "Cần làm lại" (`step.revisit`, Markdown `Quay lại:`): nút có chữ ở cột tên bước; hộp có câu giải thích, ví dụ, ô lý
-  do. Bước đang đánh dấu có băng "Đang làm lại · ngày · lý do" (bấm để sửa lý do) và nút "Xong, bỏ đánh dấu".
+- "Cần làm lại" (PLAN-004): nút có chữ ở cột tên bước; hộp có giải thích, ví dụ, ô lý do, và (khi đánh dấu mới) danh
+  sách bước con đưa về "Chưa làm" — mặc định không chọn, nút "Chọn tất cả đã xong". Đánh dấu mới mở vòng `round + 1`, ghi
+  nhật ký "Làm lại: tên bước (vòng N)" với lý do; một Hoàn tác trả cả trạng thái thẻ, nhật ký, đánh dấu, vòng. Băng
+  "Đang làm lại · Vòng N · ngày · lý do" (bấm để sửa lý do), nút "Xong, bỏ đánh dấu" (vòng giữ để lần sau tăng tiếp).
 - Mẹo người mới hiện trên bảng tới khi bấm ×; nhớ ở `localStorage['stepPlanner.hintOff']`.
 - Tìm không phân biệt hoa thường và dấu, khớp cả tên tài liệu. Tên, mục tiêu, ghi chú hay tài liệu của bước khớp thì
   hiện cả hàng. Đang tìm thì tắt sắp xếp và nút thêm bước; thẻ mới bị lọc ẩn thì toast "Đã thêm — đang bị bộ lọc ẩn".
@@ -66,14 +68,14 @@
   bị cắt, mờ dần, nút "Xem thêm" mở cả thẻ. Link http(s) trong ghi chú bấm được.
 - Tài liệu (PLAN-011): cột bước liệt kê tài liệu của bước dưới tên, nút phụ "Tài liệu" để thêm. Thẻ chỉ có nhãn kẹp + số
   ở hàng đầu (không cao thêm); bấm là mở hộp sửa bước con ở phần Tài liệu. Thêm / sửa / xoá trong hộp sửa bước, bước
-  con, lưu ngay. Link mở tab mới (`noopener noreferrer`); văn bản mở hộp lớn Sửa / Xem / Chia đôi (`#dlg-md`).
-- Xoá tài liệu khi hộp sửa đang mở: hàng "Đã xoá · Hoàn tác" ngay trong hộp (toast nằm dưới hộp thoại), toast vẫn có.
+  con, lưu ngay; xoá khi hộp đang mở thì Hoàn tác là một hàng trong hộp (toast nằm dưới hộp thoại). Link mở tab mới
+  (`noopener noreferrer`); văn bản mở hộp lớn Sửa / Xem / Chia đôi (`#dlg-md`).
 - Nhật ký quyết định: sửa và xoá được; hiện theo ngày, mới nhất trước.
 - Nhắc sao lưu: có thay đổi chưa sao lưu từ ≥ 3 ngày thì nút "Chưa sao lưu N ngày" / "Chưa sao lưu lần nào" hiện cạnh
   Xuất; bấm là tải bản sao lưu mọi dự án. Chỉ bản sao lưu tất cả (tải hoặc chép) mới đặt lại mốc.
 - Tab khác sửa cùng khoá thì trang đọc lại (sự kiện `storage`) và giữ dự án của tab này.
-- Chữ người dùng chỉ vào DOM qua `textContent` / text node (`h` trong `main.js`, `md.js`). Không `innerHTML` ở `js/`.
-- Không dùng `alert` / `confirm` / `prompt` của trình duyệt: hỏi lại bằng `#dlg-ask`.
+- Chữ người dùng chỉ vào DOM qua text node (`h` trong `main.js`, `md.js`); không `innerHTML` ở `js/`. Không `alert` /
+  `confirm` / `prompt`: hỏi lại bằng `#dlg-ask`.
 
 ## Mẫu (`data/templates.json`)
 
@@ -95,8 +97,7 @@
 ## Markdown
 
 Xuất rồi nhập lại ra đúng cấu trúc cũ (tên, trạng thái, hạn, ghi chú, quay lại, tài liệu, nhật ký, ghi chú dự án).
-Xem trên GitHub / VS Code: nhãn và khối cách nhau một dòng trống (khuôn dưới bỏ bớt cho gọn), dòng trong khối có hai
-dấu cách cuối (xuống dòng cứng).
+Xem trên GitHub / VS Code: nhãn và khối cách nhau một dòng trống (khuôn dưới bỏ bớt), dòng trong khối có hai dấu cách cuối.
 
 ```
 # Tên dự án
@@ -108,7 +109,7 @@ dòng ghi chú dự án
 ## 1. Tên bước
 Mục tiêu: …
 Xong khi: …
-Quay lại: YYYY-MM-DD · lý do
+Quay lại: YYYY-MM-DD · vòng N · lý do
 Ghi chú:
   dòng ghi chú
 Tài liệu:
@@ -136,7 +137,9 @@ Tài liệu:
 - Dòng thụt hai dấu cách thuộc bước con / `Ghi chú:` / quyết định ngay trên nó. Dòng thụt đầu `Xong khi: ` của bước con
   là `doneWhen`; dòng thụt đầu `Vì sao: ` của quyết định mở phần lý do.
 - Dòng ghi chú: dòng trống viết `\`; dòng bắt đầu bằng `\`, `#`, `>`, đầu mục danh sách, `**` hay một nhãn (`Mục tiêu:`,
-  `Xong khi:`, `Vì sao:`, `Quay lại:`, `Ghi chú:`, `Tài liệu:`) thêm một `\` phía trước.
+  `Xong khi:`, `Vì sao:`, `Quay lại:`, `Vòng:`, `Ghi chú:`, `Tài liệu:`) thêm một `\` phía trước.
+- Vòng: bước đang đánh dấu ghi vòng trong `Quay lại:`; bước đã bỏ đánh dấu mà `round` > 1 có dòng `Vòng: N` thay chỗ ấy.
+  Dòng cũ `Quay lại: YYYY-MM-DD · lý do` (không vòng) đọc là vòng 2.
 - Tài liệu: nhãn `Tài liệu:` (bước: không thụt, sau `Ghi chú:`; bước con: thụt hai, cuối bước con), mỗi tài liệu một mục
   thụt thêm hai. Link `- [tên](url)`, url có ngoặc thì `(<url>)`. Văn bản `- tên` rồi khối rào thụt thêm hai, rào `` ` ``
   dài hơn chuỗi `` ` `` dài nhất trong thân (tối thiểu ba), dòng trống của thân ghi rỗng. Trong tên: `\`, `[`, `]` thoát
