@@ -42,6 +42,7 @@
   <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.8 6.8 0 0 0 10.5 10.5Z"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
   <symbol id="i-grip" viewBox="0 0 24 24"><path d="M9 6h.01M15 6h.01M9 12h.01M15 12h.01M9 18h.01M15 18h.01"/></symbol>
+  <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16v4z"/><path d="m13.5 6.5 4 4"/></symbol>
   <symbol id="i-parallel" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="7" rx="2"/><rect x="4" y="14" width="16" height="7" rx="2"/></symbol>
 </svg>
 
@@ -128,16 +129,34 @@
   <div class="board" id="board" tabindex="-1"></div>
   <button type="button" class="add-step" id="add-step"><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg>Add step</button>
 
+  <!-- Nhật ký quyết định: cột trái tên và lời dẫn (thẳng cột tên bước), cột phải ô ghi (gập tới khi dùng) và dòng thời gian -->
   <section class="log" id="log" tabindex="-1" aria-labelledby="log-title">
-    <h2 id="log-title">Decision log</h2>
-    <p class="muted">Write down what was settled and why, so nobody has to remember it later.</p>
-    <form class="log-form" id="log-form">
-      <label class="field"><span>Date</span><input type="date" id="log-date" required></label>
-      <label class="field grow"><span>Decision</span><input type="text" id="log-decision" required maxlength="300"></label>
-      <label class="field full"><span>Why</span><textarea id="log-why" rows="2"></textarea></label>
-      <button type="submit" class="btn go">Log it</button>
-    </form>
-    <ol class="log-list" id="log-list"></ol>
+    <header class="log-head">
+      <h2 id="log-title">Decision log <span class="log-count" id="log-count"></span></h2>
+      <p class="log-lede">What was settled and why, so nobody has to remember it later. Newest first.</p>
+    </header>
+    <div class="log-main">
+      <form class="log-form" id="log-form" aria-label="Record a decision">
+        <button type="button" class="log-open" id="log-compose-open">
+          <span class="log-open-i" aria-hidden="true"><svg class="i"><use href="#i-plus"/></svg></span>
+          <span class="log-open-t">Record a decision…</span>
+        </button>
+        <div class="log-compose" id="log-compose" hidden>
+          <label class="field field-title"><span>Decision</span><textarea id="log-decision" name="decision" class="grow-title" rows="1" required maxlength="300" placeholder="What did you decide?"></textarea></label>
+          <label class="field"><span>Why</span><textarea id="log-why" name="why" rows="3" placeholder="The reason, the options you ruled out, the trade-off"></textarea></label>
+          <div class="log-compose-foot">
+            <label class="field f-date"><span>Date</span><input type="date" id="log-date" name="date" required></label>
+            <label class="field f-step"><span>Step</span><select id="log-step" name="step"></select></label>
+            <span class="dlg-gap"></span>
+            <div class="log-compose-btns">
+              <button type="button" class="btn" id="log-compose-close">Close</button>
+              <button type="submit" class="btn go"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Record</button>
+            </div>
+          </div>
+        </div>
+      </form>
+      <div class="log-list" id="log-list"></div>
+    </div>
   </section>
 </main>
 
@@ -465,9 +484,12 @@
       <button type="button" class="icon-btn dlg-x" data-close aria-label="Close" title="Close"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button>
     </header>
     <div class="dlg-body">
-      <label class="field f-date"><span>Date</span><input type="date" name="date" required></label>
-      <label class="field field-title"><span>Decision</span><textarea name="decision" class="grow-title" rows="1" required maxlength="300"></textarea></label>
-      <label class="field"><span>Why</span><textarea name="why" rows="4" placeholder="The reason, so nobody has to remember it later"></textarea></label>
+      <label class="field field-title"><span>Decision</span><textarea name="decision" class="grow-title" rows="1" required maxlength="300" placeholder="What did you decide?"></textarea></label>
+      <label class="field"><span>Why</span><textarea name="why" rows="4" placeholder="The reason, the options you ruled out, the trade-off"></textarea></label>
+      <div class="field-row log-row">
+        <label class="field"><span>Date</span><input type="date" name="date" required></label>
+        <label class="field"><span>Step</span><select name="step"></select></label>
+      </div>
     </div>
     <footer class="dlg-foot">
       <button type="button" class="btn quiet danger foot-aux" id="log-edit-del" title="Delete"><svg class="i" aria-hidden="true"><use href="#i-trash"/></svg><span class="btn-lbl">Delete</span></button>

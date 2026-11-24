@@ -3,10 +3,8 @@
 - Tên hiển thị: Data Science Step Planner (`<title>`, thanh trên, trang chủ, Markdown); thư mục, khoá giữ `step-planner`.
 - Một trang, `index.html`: dự án chia thành bước (hàng) và bước con (thẻ), trạng thái, hạn, tài liệu, nhật ký quyết
   định, xuất / nhập Markdown và JSON. Ưu tiên dự án dữ liệu, dùng được cho dự án bất kỳ. Không có người làm (PLAN-010).
-- Giao diện tiếng Anh (PLAN-012), chữ ngắn kiểu ghi chú; nội dung mẫu và tài liệu repo giữ tiếng Việt. Quyết định của chủ
-  trang: [DECISIONS.md](DECISIONS.md).
-- Không bước build. Mở bằng HTTP: `python3 -m http.server` ở gốc repo, rồi `http://localhost:8000/step-planner/` (`file://`
-  hay `fetch` mẫu hỏng thì trang báo cách mở).
+- Giao diện tiếng Anh (PLAN-012), chữ ngắn kiểu ghi chú; nội dung mẫu, tài liệu repo tiếng Việt. Quyết định: [DECISIONS.md](DECISIONS.md).
+- Không build. Mở qua HTTP: `python3 -m http.server` ở gốc repo, `http://localhost:8000/step-planner/` (`file://`: trang báo).
 
 ## File
 
@@ -25,7 +23,8 @@
 
 - `localStorage['stepPlanner.v2']`: `{version, workspaces[], lastId, lastBackup, dirtySince}`. Đổi khuôn thì tăng số khoá;
   khoá cũ (`OLD_KEYS`) đọc khi khoá mới chưa có rồi ghi sang khoá mới. Trường mới có mặc định thì không cần đổi khoá.
-- Workspace `{id, name, templateId, createdAt, updatedAt, notes, steps[], log[]}`. Log `{id, date, decision, why}`.
+- Workspace `{id, name, templateId, createdAt, updatedAt, notes, steps[], log[]}`. Log `{id, date, decision, why, stepId}`;
+  `stepId`: id một bước hoặc rỗng; bước không còn thì rỗng; nhân bản, nhập thì theo id mới.
 - Step `{id, title, goal, doneWhen, notes, revisit: null | {reason, date, round}, round, docs[], subs[]}`. `round`: vòng gần
   nhất (1 = chưa mở lại); đang mở lại thì `round` = `revisit.round` ≥ 2.
 - Sub `{id, title, status, reason, due, doneWhen, notes, docs[], par, redo}`; `status` ∈ `todo doing pending blocked done skip
@@ -66,7 +65,7 @@
   có Hoàn tác, không lấy focus. Dời liền nhiều lần khi toast còn hiện: Hoàn tác về chỗ trước lần đầu.
 - "Reopen" (PLAN-004): hộp có một câu khi nào dùng, lý do bắt buộc, danh sách bước con đã xong để gửi lại làm (mặc định
   không chọn). Mở vòng `round + 1`; bước con đã chọn về New, mang dấu "Redo" tới khi xong lại; nhật ký ghi "Reopened: tên
-  (iteration N)"; một Hoàn tác trả hết. Băng "Reopened · Iteration N · ngày · lý do" (bấm để sửa lý do) đếm "k of n redo
+  (iteration N)" gắn với bước ấy; một Hoàn tác trả hết. Băng "Reopened · Iteration N · ngày · lý do" (bấm để sửa lý do) đếm "k of n redo
   tasks left"; xong hết thì "Close iteration" thành nút chính. Đóng vòng bỏ băng và dấu Redo (Hoàn tác được).
 - Mẹo tắt bằng ×; "Compact" ẩn "Done when", ghi chú, lý do (cả hai nhớ ở máy này). "Log (N)" cuộn tới nhật ký, focus. Tìm
   bỏ dấu, không phân biệt hoa thường, khớp cả lý do, tài liệu; bước khớp thì hiện cả hàng; đang tìm thì tắt sắp xếp, thêm bước.
@@ -81,7 +80,9 @@
   hàng thẻ; nút phụ "Doc" ở cuối dải (bước chưa có tài liệu: ở cột tên bước). Thẻ chỉ có nhãn kẹp + số ở hàng đầu; bấm là
   mở hộp sửa bước con ở phần tài liệu. Thêm / sửa / xoá trong hộp sửa, lưu ngay; xoá khi hộp đang mở thì Hoàn tác là một
   hàng trong hộp. Link mở tab mới (`noopener noreferrer`); văn bản mở hộp lớn Edit / Preview (`#dlg-md`).
-- Nhật ký quyết định: sửa, xoá được; mới nhất trước. Tab khác sửa cùng khoá thì đọc lại (`storage`), giữ dự án của tab.
+- Nhật ký (PLAN-005): ô ghi gập tới khi bấm; mở thì focus Decision, ngày mặc định hôm nay, bước tuỳ chọn; Esc gập, giữ chữ.
+  Mới nhất trước, nhóm theo tháng; lý do dài cắt, "Show more"; bấm mục là sửa; bấm chip bước là tới bước ấy (bỏ lọc nếu cần).
+- Tab khác sửa cùng khoá thì đọc lại (`storage`), giữ dự án của tab.
 - Nhắc sao lưu: thay đổi chưa sao lưu ≥ 3 ngày thì nút nhắc hiện cạnh Export, bấm là tải sao lưu mọi dự án (mới đặt lại mốc).
 - Chữ người dùng chỉ vào DOM qua text node; không `innerHTML` ở `js/`. Không `alert` / `confirm` / `prompt` (`#dlg-ask`).
 
@@ -137,21 +138,22 @@ Docs:
 
 ## Decision log
 - YYYY-MM-DD · quyết định
+  Step: tên bước
   Why: dòng đầu
   dòng tiếp
 ```
 
 - Nhãn định dạng 2 (tiếng Việt) vẫn nhập: `Mẫu`, `Mục tiêu`, `Xong khi`, `Quay lại` (`· vòng N`), `Vòng`, `Ghi chú`, `Tài liệu`,
-  `Huỷ vì`, `Vì sao`, `hạn`, `## Nhật ký quyết định`. Nhãn không phân biệt hoa thường. Dòng đầu (`… · format N`) chỉ để
+  `Huỷ vì`, `Vì sao`, `Bước`, `hạn`, `## Nhật ký quyết định`. Nhãn không phân biệt hoa thường. Dòng đầu (`… · format N`) chỉ để
   đọc, trang không dựa vào nó. Số thứ tự trên bảng không ghi vào Markdown.
 - Phần tử `parallel` (nhận cả `song song`): nhập ô của bước con ngay trước. `redo` (nhận cả `làm lại`): dấu Redo.
 - Dấu: `[ ]` / `[]` mới, `[~]` đang làm, `[>]` chờ, `[!]` bị chặn, `[x]` / `[X]` xong, `[-]` bỏ qua, `[/]` huỷ; dấu lạ là mới.
 - Trên dòng bước con, phần tử tách bằng ` · `. Trong tên: `\` → `\\`, `·` → `\·`, `@` → `\@`, `hạn` / `due` → `\hạn` / `\due`.
 - Dòng thụt hai dấu cách thuộc bước con / `Notes:` / quyết định ngay trên nó. Dòng thụt đầu `Done when: ` của bước con là
-  `doneWhen`; dòng thụt đầu `Why: ` của quyết định mở phần lý do.
+  `doneWhen`; dòng thụt đầu `Why: ` của quyết định mở phần lý do. `Step: tên` ngay dưới dòng quyết định gắn nó với bước đầu
+  tiên cùng tên (bỏ dấu, không phân biệt hoa thường); không có bước ấy thì cảnh báo, bỏ link.
 - Lý do: dòng thụt `<nhãn>: dòng đầu` sau `Done when:`, dòng sau thụt bốn; nhập nhận mọi nhãn lý do (cả `Huỷ vì`) khi trạng thái có lý do, không thì là ghi chú.
-- Dòng ghi chú: dòng trống viết `\`; dòng bắt đầu bằng `\`, khoảng trắng, `#`, `>`, đầu mục danh sách, `**` hay một nhãn (cả
-  nhãn định dạng 2) thêm một `\` phía trước.
+- Dòng ghi chú: dòng trống viết `\`; dòng mở bằng `\`, khoảng trắng, `#`, `>`, đầu mục danh sách, `**` hay nhãn (cả định dạng 2) thêm `\`.
 - Vòng: bước đang mở lại ghi vòng trong `Reopened:`; bước đã đóng vòng mà `round` > 1 có dòng `Iteration: N` thay chỗ ấy.
   Dòng cũ `Quay lại: YYYY-MM-DD · lý do` (không vòng) đọc là vòng 2.
 - Tài liệu: nhãn `Docs:` (bước: không thụt, sau `Notes:`; bước con: thụt hai, cuối bước con), mỗi tài liệu một mục thụt thêm
@@ -181,8 +183,7 @@ Nhập file cũ và Markdown viết tay (dễ dãi):
 
 - Màu, cỡ, khoảng cách chỉ ở token đầu `css/planner.css` (REPO-028, REPO-023); dáng chung chép từ `md-annotate/`.
 - Theme theo hệ điều hành tới khi bấm nút (REPO-024), khoá `hub-theme`. Thanh trên ghi đủ tên, không cắt "…".
-- Biểu tượng: một bộ `<symbol id="i-…">` trong `index.html`, dùng qua `<use>`; không dùng ký tự unicode làm biểu tượng;
-  nút chỉ có biểu tượng có `aria-label` và `title`.
+- Biểu tượng: một bộ `<symbol id="i-…">` trong `index.html` qua `<use>`, không ký tự unicode; nút chỉ biểu tượng có `aria-label`, `title`.
 - Đầu dự án: tên (bấm để đổi dự án), tiến độ chung, chú giải trạng thái kèm số đếm. Chip trạng thái có chữ và chấm khác hình.
 - Cột tên bước rộng cố định, thẻ cùng bề rộng (các hàng thẳng cột). Hàng thẻ cuộn ngang bên trong, không hiện thanh cuộn,
   mép mờ báo còn chỗ cuộn. ≤ 640px: tên bước nằm trên hàng thẻ.
@@ -195,6 +196,5 @@ Nhập file cũ và Markdown viết tay (dễ dãi):
 
 - `tools/lint.py`: khuôn mẫu, mẫu đồ án khớp nguồn và neo, không `innerHTML`, mã màu chỉ trong khối token.
 - `node --check` cho `js/*.js`; `tools/test-core.mjs`: logic thuần của `core.js`, `md.js`; danh sách ở chính file.
-- `tools/smoke.cjs` (cổng tự dựng máy chủ tạm; thiếu playwright thì bỏ qua, CI chạy ở job smoke): bấm thật các hành vi
-  trên, hai tab, 390px, bộ nhớ bị chặn / hỏng / khoá cũ, lỗi console; số của mẫu đọc từ `templates.json`. Chạy tay: `node
-  step-planner/tools/smoke.cjs http://127.0.0.1:8347/step-planner/`.
+- `tools/smoke.cjs` (cổng tự dựng máy chủ tạm; thiếu playwright thì bỏ qua, CI chạy ở job smoke): bấm thật các hành vi trên,
+  hai tab, 390px, bộ nhớ bị chặn / hỏng / khoá cũ, lỗi console; số mẫu đọc từ `templates.json`. Chạy tay: `node <file> <url>`.

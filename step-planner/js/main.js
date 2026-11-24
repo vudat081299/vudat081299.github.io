@@ -398,17 +398,84 @@ function barFill(/** @type {number} */ pct) {
   return i;
 }
 
-/** Nhật ký: mới nhất trước theo ngày; cùng ngày thì ghi sau đứng trước. */
+/* ── Nhật ký quyết định: dòng thời gian theo tháng, mới nhất trước; cùng ngày thì ghi sau đứng trước ── */
+const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+/** Dòng do "Reopen" tự ghi. */
+const AUTO_LOG = /^Reopened: .+ \(iteration \d+\)$/;
+/** Quyết định đang mở hết lý do ("Show more"); vẽ lại vẫn giữ. */
+const logOpen = new Set();
+/** Option "No step" + mọi bước (kèm số đang hiện) cho ô Step của nhật ký. @param {any} ws */
+const stepOptions = (ws) => {
+  const labels = labelsOf(ws);
+  return [h('option', { value: '' }, 'No step'),
+    ...ws.steps.map((/** @type {any} */ s) => h('option', { value: s.id }, (labels.has(s.id) ? `${labels.get(s.id)}. ` : '') + s.title))];
+};
+/** Đổ option bước vào một <select>, giữ giá trị nếu bước còn. @param {any} sel @param {any} ws @param {string} value */
+function fillStepSelect(sel, ws, value) {
+  sel.replaceChildren(...stepOptions(ws));
+  sel.value = ws.steps.some((/** @type {any} */ s) => s.id === value) ? value : '';
+}
+
 function renderLog(/** @type {any} */ ws) {
   if (!$('log-date').value) $('log-date').value = C.today();
+  fillStepSelect($('log-step'), ws, $('log-step').value);
+  $('log-count').textContent = ws.log.length ? String(ws.log.length) : '';
   const sorted = ws.log.map((/** @type {any} */ l, /** @type {number} */ i) => ({ l, i }))
     .sort((/** @type {any} */ a, /** @type {any} */ b) => (a.l.date === b.l.date ? b.i - a.i : a.l.date < b.l.date ? 1 : -1))
     .map((/** @type {any} */ x) => x.l);
-  $('log-list').replaceChildren(...sorted.map((/** @type {any} */ l) => h('li', { class: 'log-item', 'data-log': l.id },
-    h('span', { class: 'log-date' }, fmtDate(l.date)),
-    h('button', { type: 'button', class: 'link log-decision', 'data-act': 'edit-log' }, l.decision),
-    h('button', { type: 'button', class: 'icon-btn', 'data-act': 'del-log', 'aria-label': 'Delete decision', title: 'Delete decision' }, icon('trash')),
-    l.why && h('p', { class: 'log-why' }, withLinks(l.why)))));
+  if (!sorted.length) { $('log-list').replaceChildren(logEmpty()); return; }
+  const labels = labelsOf(ws);
+  /** @type {Map<string, any[]>} */
+  const months = new Map();
+  for (const l of sorted) {
+    const k = l.date.slice(0, 7);
+    if (!months.has(k)) months.set(k, []);
+    /** @type {any[]} */ (months.get(k)).push(l);
+  }
+  const item = (/** @type {any} */ l) => {
+    const step = stepOf(ws, l.stepId);
+    const auto = AUTO_LOG.test(l.decision);
+    const open = logOpen.has(l.id);
+    return h('li', { class: `log-item${auto ? ' auto' : ''}${open ? ' open' : ''}`, 'data-log': l.id },
+      h('span', { class: 'log-dot', 'aria-hidden': 'true' }, auto && icon('redo')),
+      h('div', { class: 'log-body' },
+        h('p', { class: 'log-meta' },
+          h('time', { class: 'log-date', datetime: l.date }, `${+l.date.slice(8, 10)} ${MONTHS[+l.date.slice(5, 7) - 1]}`),
+          auto && h('span', { class: 'log-auto' }, 'Auto-logged'),
+          step && h('button', { type: 'button', class: 'log-step', 'data-act': 'goto-step', title: 'Go to this step on the board' },
+            labels.has(step.id) && h('span', { class: 'log-step-n' }, labels.get(step.id)), h('span', { class: 'log-step-t' }, step.title))),
+        h('h4', { class: 'log-title' }, h('button', { type: 'button', class: 'link log-decision', 'data-act': 'edit-log', title: 'Edit decision' }, l.decision)),
+        l.why && h('p', { class: 'log-why', id: `why-${l.id}` }, withLinks(l.why)),
+        l.why && h('button', { type: 'button', class: 'link log-more', 'data-act': 'more-log', 'aria-expanded': String(open), 'aria-controls': `why-${l.id}`, hidden: true },
+          open ? 'Show less' : 'Show more')),
+      h('div', { class: 'log-acts' },
+        iconBtn('edit', 'Edit decision', 'edit-log'),
+        iconBtn('trash', 'Delete decision', 'del-log')));
+  };
+  $('log-list').replaceChildren(...[...months].map(([k, list]) => h('section', { class: 'log-group', 'aria-labelledby': `log-m-${k}` },
+    h('h3', { class: 'log-month', id: `log-m-${k}` }, `${MONTH_NAMES[+k.slice(5, 7) - 1]} ${k.slice(0, 4)}`,
+      h('span', { class: 'log-month-n' }, C.plural(list.length, 'decision'))),
+    h('ol', { class: 'log-entries' }, ...list.map(item)))));
+  measureLog();
+}
+/* "Show more" chỉ hiện khi lý do bị cắt (hay đang mở hết); đo lại khi font tải xong và khi đổi cỡ. */
+function measureLog() {
+  for (const p of $('log-list').querySelectorAll('.log-why')) {
+    const more = p.nextElementSibling;
+    if (more) more.hidden = !(p.closest('.log-item').classList.contains('open') || p.scrollHeight > p.clientHeight + 1);
+  }
+}
+document.fonts?.ready.then(measureLog);
+window.addEventListener('resize', measureLog);
+/** Nhật ký trống: nói nên ghi gì, kèm một ví dụ. */
+function logEmpty() {
+  return h('div', { class: 'log-empty' },
+    h('p', { class: 'log-empty-h' }, 'No decisions yet'),
+    h('p', { class: 'log-empty-t' }, 'Record the choices someone will ask about later: the target metric, how the data is split, a feature you dropped. One line for what, one for why.'),
+    h('figure', { class: 'log-example' },
+      h('figcaption', {}, 'Example'),
+      h('p', { class: 'log-example-d' }, 'Use PR-AUC, not accuracy, as the main metric'),
+      h('p', { class: 'log-example-w' }, 'Only 4% of customers churn, so a model that predicts nobody churns is already 96% accurate.')));
 }
 
 const BLANK_TPL = { id: 'blank', name: 'Blank', description: '', steps: [] };
@@ -845,18 +912,18 @@ function flashMs() {
   const n = parseFloat(v);
   return !n ? 2600 : v.endsWith('ms') ? n : n * 1000;
 }
-/** @param {'sub'|'step'} kind @param {string} id @param {string|null|undefined} swapId */
+/** Tô cái vừa dời (thẻ, hàng), quyết định vừa ghi, hay bước vừa nhảy tới. @param {'sub'|'step'|'log'} kind @param {string} id @param {string|null|undefined} swapId */
 function flash(kind, id, swapId) {
   clearTimeout(flashTimer);
   document.querySelectorAll('.moved, .swapped').forEach((el) => el.classList.remove('moved', 'swapped'));
-  const sel = (/** @type {string} */ x) => (kind === 'sub' ? `.card[data-sub="${x}"]` : `.step[data-step="${x}"]`);
+  const sel = (/** @type {string} */ x) => (kind === 'sub' ? `.card[data-sub="${x}"]` : kind === 'log' ? `.log-item[data-log="${x}"]` : `.step[data-step="${x}"]`);
   const el = document.querySelector(sel(id));
   if (!el) return;
   const sw = swapId ? document.querySelector(sel(swapId)) : null;
   el.classList.add('moved');
   if (sw) sw.classList.add('swapped');
   /* Thẻ vừa dời trong tầm nhìn: cuộn hàng ngang (và trang, nếu cần) vừa đủ. */
-  (kind === 'sub' ? el : el.querySelector('.step-head') || el).scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  (kind === 'step' ? el.querySelector('.step-head') || el : el).scrollIntoView({ block: 'nearest', inline: 'nearest' });
   updateScrollCues();
   flashTimer = window.setTimeout(() => {
     el.classList.remove('moved');
@@ -1403,7 +1470,7 @@ $('revisit-form').addEventListener('submit', (/** @type {any} */ e) => {
     x.redo = true;
     n++;
   }
-  const entry = C.normLog({ date: C.today(), decision: `Reopened: ${step.title} (iteration ${round})`, why: reason });
+  const entry = C.normLog({ date: C.today(), decision: `Reopened: ${step.title} (iteration ${round})`, why: reason, stepId: step.id });
   ws.log.push(entry);
   commit(focusSel);
   toast(`Step reopened · iteration ${round}${n ? ` · ${C.plural(n, 'sub-step')} to redo` : ''} · logged.`, () => {
@@ -1456,30 +1523,64 @@ $('q').addEventListener('input', (/** @type {any} */ e) => { ui.q = e.target.val
 
 /* ── Nhật ký quyết định ── */
 
+/* Ô ghi gập thành một nút tới khi dùng; Esc hay Close gập lại, giữ chữ đang viết. */
+function openCompose() {
+  $('log-compose').hidden = false;
+  $('log-compose-open').hidden = true;
+  autosize($('log-decision'));
+  $('log-decision').focus();
+}
+function closeCompose(back = true) {
+  $('log-compose').hidden = true;
+  $('log-compose-open').hidden = false;
+  if (back) $('log-compose-open').focus();
+}
+$('log-compose-open').addEventListener('click', openCompose);
+$('log-compose-close').addEventListener('click', () => closeCompose());
+$('log-form').addEventListener('keydown', (/** @type {any} */ e) => {
+  if (e.key === 'Escape' && !$('log-compose').hidden) { e.preventDefault(); closeCompose(); }
+});
 $('log-form').addEventListener('submit', (/** @type {any} */ e) => {
   e.preventDefault();
   const ws = cur();
   if (!ws) return;
-  ws.log.push(C.normLog({ date: $('log-date').value, decision: $('log-decision').value, why: $('log-why').value }));
+  const entry = C.normLog({ date: $('log-date').value, decision: $('log-decision').value, why: $('log-why').value, stepId: $('log-step').value });
+  ws.log.push(entry);
   $('log-decision').value = '';
   $('log-why').value = '';
-  commit('#log-decision');
+  $('log-step').value = '';
+  $('log-date').value = C.today();
+  closeCompose(false);
+  commit(`[data-log="${entry.id}"] [data-act="edit-log"]`, { preventScroll: true });
+  flash('log', entry.id, null);
 });
 let logCtx = { wsId: '', id: '' };
+/* Bấm vào một quyết định (ngoài nút, link, chữ đang bôi) là mở hộp sửa, như thẻ bước con. */
 $('log-list').addEventListener('click', (/** @type {any} */ e) => {
-  const b = e.target.closest('[data-act]');
+  const li = e.target.closest('.log-item[data-log]');
   const ws = cur();
-  if (!b || !ws) return;
-  const id = b.closest('[data-log]').dataset.log;
+  if (!li || !ws || e.target.closest('a') || (!e.target.closest('[data-act]') && String(getSelection()))) return;
+  const act = e.target.closest('[data-act]')?.dataset.act || 'edit-log';
+  const id = li.dataset.log;
   const entry = ws.log.find((/** @type {any} */ l) => l.id === id);
   if (!entry) return;
-  if (b.dataset.act === 'del-log') deleteLog(ws.id, id);
-  else {
+  if (act === 'del-log') deleteLog(ws.id, id);
+  else if (act === 'more-log') {
+    if (logOpen.has(id)) logOpen.delete(id); else logOpen.add(id);
+    render();
+    refocus(`[data-log="${id}"] [data-act="more-log"]`, { preventScroll: true });
+  } else if (act === 'goto-step') {
+    /* Bước đang bị lọc ẩn thì bỏ lọc trước. */
+    if (!document.querySelector(`.step[data-step="${entry.stepId}"]`)) { ui.q = ''; $('q').value = ''; render(); }
+    flash('step', entry.stepId, null);
+    refocus(stepSel(entry.stepId, 'edit-step'), { preventScroll: true });
+  } else {
     logCtx = { wsId: ws.id, id };
     const f = $('log-edit-form');
     field(f, 'date').value = entry.date;
     field(f, 'decision').value = entry.decision;
     field(f, 'why').value = entry.why;
+    fillStepSelect(field(f, 'step'), ws, entry.stepId);
     openDlg($('dlg-log'), field(f, 'decision'));
   }
 });
@@ -1489,7 +1590,7 @@ $('log-edit-form').addEventListener('submit', (/** @type {any} */ e) => {
   closeSaved($('dlg-log'));
   const entry = findWs(logCtx.wsId)?.log.find((/** @type {any} */ l) => l.id === logCtx.id);
   if (!entry) { toast('Not saved: the decision was deleted elsewhere.'); return; }
-  Object.assign(entry, C.normLog({ id: entry.id, date: field(f, 'date').value, decision: field(f, 'decision').value, why: field(f, 'why').value }));
+  Object.assign(entry, C.normLog({ id: entry.id, date: field(f, 'date').value, decision: field(f, 'decision').value, why: field(f, 'why').value, stepId: field(f, 'step').value }));
   commit(`[data-log="${entry.id}"] [data-act="edit-log"]`);
 });
 $('log-edit-del').addEventListener('click', () => {
@@ -1508,7 +1609,7 @@ function deleteLog(/** @type {string} */ wsId, /** @type {string} */ id) {
     if (!w.log.some((/** @type {any} */ l) => l.id === entry.id)) w.log.splice(Math.min(k, w.log.length), 0, entry);
     if (curId !== wsId) switchTo(wsId);
     commit(`[data-log="${entry.id}"] [data-act="edit-log"]`);
-  }, '#log-decision');
+  }, '#log-compose-open');
 }
 
 /* ── Xuất và sao lưu ── */

@@ -145,12 +145,17 @@ export function normLog(o) {
     date: parseDate(x.date) || today(),
     decision: oneLine(x.decision) || '(empty)',
     why: multiLine(x.why),
+    stepId: oneLine(x.stepId),
   };
 }
 
 /** @param {any} o */
 export function normWorkspace(o) {
   const x = isObj(o) ? o : {};
+  const steps = objs(x.steps).map(normStep);
+  const ids = new Set(steps.map((s) => s.id));
+  /* Quyết định chỉ gắn với bước còn trong dự án. */
+  const log = objs(x.log).map(normLog).map((l) => (ids.has(l.stepId) ? l : { ...l, stepId: '' }));
   return {
     id: idOr(x.id, 'w'),
     name: oneLine(x.name) || 'Project',
@@ -158,8 +163,8 @@ export function normWorkspace(o) {
     createdAt: isoOr(x.createdAt),
     updatedAt: isoOr(x.updatedAt),
     notes: multiLine(x.notes),
-    steps: objs(x.steps).map(normStep),
-    log: objs(x.log).map(normLog),
+    steps,
+    log,
   };
 }
 
@@ -170,15 +175,20 @@ export function freshCopy(ws) {
   c.id = uid('w');
   c.createdAt = now;
   c.updatedAt = now;
+  const stepIds = new Map();
   for (const s of c.steps) {
-    s.id = uid('t');
+    stepIds.set(s.id, uid('t'));
+    s.id = stepIds.get(s.id);
     for (const d of s.docs) d.id = uid('d');
     for (const x of s.subs) {
       x.id = uid('s');
       for (const d of x.docs) d.id = uid('d');
     }
   }
-  for (const l of c.log) l.id = uid('l');
+  for (const l of c.log) {
+    l.id = uid('l');
+    l.stepId = stepIds.get(l.stepId) || '';
+  }
   return c;
 }
 
@@ -359,6 +369,7 @@ const LABELS = {
   notes: ['Notes', 'Ghi chú'], docs: ['Docs', 'Tài liệu'], why: ['Why', 'Vì sao'],
   /* Lý do của bước con: xuất nhãn theo trạng thái (REASON_LABEL); nhập nhận nhãn nào cũng được nếu trạng thái có lý do. */
   reason: ['Cancelled because', 'Huỷ vì', 'Blocked by', 'Waiting on'],
+  step: ['Step', 'Bước'],
 };
 const labelRe = (/** @type {string[]} */ names) => names.join('|');
 const ANY_LABEL = labelRe(Object.values(LABELS).flat());
@@ -481,7 +492,9 @@ export function toMarkdown(ws) {
     out.push('', `## ${LOG_HEADING}`, '');
     for (const l of ws.log) {
       const why = l.why ? l.why.split('\n') : [];
-      out.push(...hardBreaks([`- ${l.date} · ${l.decision}`, ...why.map((w, k) => (k ? '  ' + escBlock(w) : `  Why: ${w}`))]));
+      const step = ws.steps.find((/** @type {any} */ s) => s.id === l.stepId);
+      out.push(...hardBreaks([`- ${l.date} · ${l.decision}`, ...(step ? [`  Step: ${step.title}`] : []),
+        ...why.map((w, k) => (k ? '  ' + escBlock(w) : `  Why: ${w}`))]));
     }
   }
   return out.join('\n') + '\n';
@@ -598,7 +611,10 @@ export function fromMarkdown(text) {
         if (blockFirst && after(l, 'doneWhen') !== null) sub.doneWhen = /** @type {string} */ (after(l, 'doneWhen'));
         else addNote(sub, 'notes', unescBlock(l));
       } else if (block === 'step') addNote(step, 'notes', unescBlock(l));
-      else if (block === 'why') addNote(entry, 'why', blockFirst && after(l, 'why') !== null ? /** @type {string} */ (after(l, 'why')) : unescBlock(l));
+      else if (block === 'why' && blockFirst && entry.why == null && entry.stepTitle == null && after(l, 'step') !== null) {
+        entry.stepTitle = oneLine(after(l, 'step')); // `Step:` đứng ngay dưới dòng quyết định, trước `Why:`
+        continue;
+      } else if (block === 'why') addNote(entry, 'why', blockFirst && after(l, 'why') !== null ? /** @type {string} */ (after(l, 'why')) : unescBlock(l));
       blockFirst = false;
       continue;
     }
@@ -657,6 +673,14 @@ export function fromMarkdown(text) {
     else addNote(step, 'notes', raw);
   }
   if (!ws.name && !ws.steps.length) throw new Error('No "# …" title, "## …" step or "- [ ] …" task found.');
+  /* `Step: tên` của quyết định: gắn với bước đầu tiên cùng tên (bỏ dấu, không phân biệt hoa thường). */
+  for (const l of ws.log) {
+    if (l.stepTitle == null) continue;
+    const s = ws.steps.find((/** @type {any} */ x) => fold(oneLine(x.title)) === fold(l.stepTitle));
+    if (s) l.stepId = s.id = s.id || uid('t');
+    else if (l.stepTitle) warnings.push(`Decision linked to a missing step, link dropped: ${l.stepTitle}`);
+    delete l.stepTitle;
+  }
   return { workspace: normWorkspace(ws), warnings };
 }
 
@@ -753,6 +777,6 @@ export function shape(ws) {
       title: s.title, goal: s.goal, doneWhen: s.doneWhen, notes: s.notes, revisit: s.revisit, round: s.round, docs: s.docs.map(docShape),
       subs: s.subs.map((/** @type {any} */ x) => ({ title: x.title, status: x.status, reason: x.reason, due: x.due, doneWhen: x.doneWhen, notes: x.notes, par: x.par, redo: x.redo, docs: x.docs.map(docShape) })),
     })),
-    log: ws.log.map((/** @type {any} */ l) => ({ date: l.date, decision: l.decision, why: l.why })),
+    log: ws.log.map((/** @type {any} */ l) => ({ date: l.date, decision: l.decision, why: l.why, step: ws.steps.findIndex((/** @type {any} */ s) => s.id === l.stepId) })),
   };
 }

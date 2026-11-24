@@ -121,6 +121,9 @@
   --dd-min: 180px;                     /* danh sách chọn tự dựng */
   --dd-max: 420px;
   --tpl-min: 250px;
+  --log-w: 860px;                      /* cột phải của nhật ký quyết định */
+  --rail: 24px;                        /* cột dòng thời gian của nhật ký */
+  --log-clamp: 3;                      /* số dòng lý do trước "Show more" */
   --sa-b: env(safe-area-inset-bottom, 0px);
 
   /* Cỡ điều khiển thật: máy tính dùng cao thường; cảm ứng và điện thoại ≥ --h-touch. */
@@ -405,7 +408,7 @@ svg.i {
 .ws-notes[open] summary { margin-bottom: var(--s2); }
 .ws-notes .notes-text { margin-bottom: var(--s2); }
 .notes-text { white-space: pre-line; overflow-wrap: anywhere; font-size: var(--fs-sm); color: var(--ink-2); }
-.notes-text a, .card-notes a, .log-why a { color: inherit; text-underline-offset: 3px; }
+.notes-text a, .card-notes a { color: inherit; text-underline-offset: 3px; }
 
 /* ── Bảng: mỗi bước một hàng; cột tên bước cố định bên trái, thẻ bước con chạy sang phải ── */
 .board { display: flex; flex-direction: column; }
@@ -668,22 +671,143 @@ body.dragging-any .board * { cursor: grabbing; }
   .step.swapped { background-color: var(--flash-2); }
 }
 
-/* ── Nhật ký quyết định ── */
-.log { padding: var(--s5) 0 var(--s6); }
-.log h2 { font: 600 var(--fs-xl)/var(--lh-tight) var(--display); }
-.log > .muted { font-size: var(--fs-sm); margin: var(--s1) 0 var(--s3); }
-.log-form {
-  display: flex; flex-wrap: wrap; gap: var(--s3); align-items: flex-end; margin-bottom: var(--s4);
-  padding: var(--s4); background: var(--surface); border: var(--line-w) solid var(--line); border-radius: var(--r-lg);
+/* ── Nhật ký quyết định: cột trái tên + lời dẫn (thẳng cột tên bước, dính khi cuộn), cột phải ô ghi gập và dòng thời gian
+   theo tháng; mỗi quyết định một chấm trên trục, dòng do Reopen tự ghi có chấm hổ phách; nút sửa / xoá hiện khi rê / focus ── */
+.log {
+  display: grid; grid-template-columns: var(--head-w) minmax(0, var(--log-w)); gap: var(--s4);
+  padding: var(--s6) 0;
 }
-.log-form .grow { flex: 1 1 calc(var(--card-w) * 1.5); }
-.log-form .full { flex: 1 1 100%; }
-.log-list { display: flex; flex-direction: column; }
-.log-item { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: var(--s1) var(--s3); padding: var(--s2) 0; border-top: var(--line-w) solid var(--line-2); }
+.log:focus { outline: none; }
+.log-head { position: sticky; top: calc(var(--bar-h) + var(--s4)); align-self: start; display: flex; flex-direction: column; gap: var(--s2); }
+.log-head h2 { display: flex; align-items: center; gap: var(--s2); font: 600 var(--fs-xl)/var(--lh-tight) var(--display); }
+.log-count {
+  display: inline-grid; place-items: center; min-width: var(--h-xs); height: var(--h-xs); padding: 0 var(--s1);
+  font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-2); background: var(--chip); border-radius: var(--r-xs);
+}
+.log-count:empty { display: none; }
+.log-lede { font-size: var(--fs-sm); color: var(--ink-3); }
+.log-main { min-width: 0; display: flex; flex-direction: column; gap: var(--s5); }
+.log-why a { color: inherit; text-underline-offset: 3px; }
+/* Ô ghi: gập là một nút trông như ô nhập; mở là thẻ có Decision, Why, ngày, bước. */
+.log-open {
+  display: flex; align-items: center; gap: var(--s3); width: 100%; min-height: calc(var(--ctl) + var(--s2)); padding: 0 var(--s4) 0 var(--s2);
+  font: 400 var(--fs-md)/1 var(--sans); color: var(--ink-3); text-align: left; cursor: text;
+  background: var(--surface); border: var(--line-w) solid var(--line); border-radius: var(--r); box-shadow: var(--shadow-1);
+  transition: border-color var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+@media (hover: hover) { .log-open:hover { border-color: var(--ink-4); color: var(--ink-2); } }
+.log-open-i { display: grid; place-items: center; flex: none; width: var(--h-sm); height: var(--h-sm); border-radius: var(--r-sm); background: var(--accent-soft); color: var(--green); }
+.log-compose {
+  display: flex; flex-direction: column; gap: var(--s3); padding: var(--s4);
+  background: var(--surface); border: var(--line-w) solid var(--ink-4); border-radius: var(--r); box-shadow: var(--shadow-1);
+}
+.log-compose .field { gap: var(--s2); }
+.log-compose .field > span:first-child { font: 600 var(--fs-sm)/var(--lh-tight) var(--sans); color: var(--ink-2); }
+.log-compose .field :is(input, textarea), .log-compose .field .dd-btn { background: var(--field-bg); }
+.log-compose .field :is(input, textarea):focus, .log-compose .field .dd-btn:is([aria-expanded="true"], :focus-visible) { background: var(--surface); }
+.log-compose .field-title textarea { min-height: var(--ctl); font: 600 var(--fs-lg)/var(--lh-tight) var(--sans); }
+.log-compose-foot { display: flex; align-items: flex-end; gap: var(--s3); flex-wrap: wrap; }
+.log-compose-foot .f-date { flex: 0 1 var(--date-w); }
+.log-compose-foot .f-step { flex: 1 1 var(--dd-min); max-width: var(--card-w); }
+.log-compose-btns { display: flex; gap: var(--s2); }
+/* Dòng thời gian: nhóm theo tháng (nhãn mono, vạch mảnh), trục dọc nối các chấm trong nhóm. */
+.log-list { display: flex; flex-direction: column; gap: var(--s5); }
+.log-month {
+  display: flex; align-items: center; gap: var(--s2); margin-bottom: var(--s1);
+  font: 500 var(--fs-xs)/var(--lh-tight) var(--mono); letter-spacing: var(--track); text-transform: uppercase; color: var(--ink-2);
+}
+.log-month::after { content: ''; flex: 1 1 auto; height: var(--line-w); background: var(--line); }
+.log-month-n { font: 400 var(--fs-xs)/1 var(--sans); letter-spacing: 0; text-transform: none; color: var(--ink-3); }
+.log-item {
+  position: relative; display: grid; grid-template-columns: var(--rail) minmax(0, 1fr) auto; column-gap: var(--s3);
+  padding: var(--s3) 0; cursor: pointer; isolation: isolate;
+}
+/* Nền khi rê chuột và khi vừa ghi: lớp giả sau chữ, chừa cột trục. */
+.log-item::after {
+  content: ''; position: absolute; z-index: -1; top: 0; bottom: 0; left: calc(var(--rail) + var(--s3) - var(--s2)); right: calc(-1 * var(--s2));
+  border-radius: var(--r-sm); background: var(--chip); opacity: 0; transition: opacity var(--dur) var(--ease);
+}
+@media (hover: hover) { .log-item:hover::after { opacity: 1; } }
+.log-item::before {
+  content: ''; position: absolute; left: calc((var(--rail) - var(--line-w)) / 2); top: 0; bottom: 0; width: var(--line-w); background: var(--line);
+}
+.log-item:first-child::before { top: calc(var(--s3) + var(--h-xs) / 2); }
+.log-item:last-child::before { bottom: calc(100% - var(--s3) - var(--h-xs) / 2); }
+.log-item:only-child::before { display: none; }
+.log-dot {
+  position: relative; grid-row: 1 / span 4; justify-self: center; align-self: start; box-sizing: content-box;
+  width: var(--dot); height: var(--dot); margin-top: calc((var(--h-xs) - var(--dot)) / 2 - var(--mark-w));
+  border: var(--mark-w) solid var(--ink-4); border-radius: var(--r-pill); background: var(--bg);
+}
+.log-item.auto .log-dot {
+  display: grid; place-items: center; width: var(--h-xs); height: var(--h-xs); margin-top: calc(-1 * var(--line-w)); box-sizing: border-box;
+  border: var(--line-w) solid var(--amber-line); background: color-mix(in srgb, var(--amber-soft), var(--bg)); color: var(--amber);
+}
+.log-item.auto .log-dot svg.i { width: var(--fs-sm); height: var(--fs-sm); }
+/* Thân là display: contents để hàng đầu (ngày, bước) chung hàng với nút, chữ dưới trải hết bề rộng. */
+.log-body { display: contents; }
+.log-body > :not(.log-meta) { grid-column: 2 / -1; }
+.log-meta { grid-column: 2; display: flex; align-items: center; flex-wrap: wrap; gap: var(--s1) var(--s2); min-height: var(--h-xs); font-size: var(--fs-xs); }
 .log-date { font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-3); }
-.log-decision { font-weight: 600; overflow-wrap: anywhere; min-height: var(--hit); }
-.log-why { grid-column: 2; font-size: var(--fs-sm); color: var(--ink-2); white-space: pre-line; overflow-wrap: anywhere; }
-.log-item .icon-btn { grid-row: 1; grid-column: 3; }
+.log-auto { font-weight: 600; color: var(--amber-fg); }
+.log-step {
+  position: relative; display: inline-flex; align-items: center; gap: var(--s1); max-width: var(--chip-max); height: var(--h-xs); padding: 0 var(--s2);
+  font: 600 var(--fs-xs)/1 var(--sans); color: var(--ink-2); background: var(--chip); border: 0; border-radius: var(--r-pill); cursor: pointer;
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+@media (hover: hover) { .log-step:hover { color: var(--ink); background: var(--surface-2); } }
+.log-step-n { font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-3); }
+.log-step-t { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.log-title { margin: var(--s1) 0 0; font: 600 var(--fs-lg)/var(--lh-tight) var(--sans); }
+.log-decision { overflow-wrap: anywhere; }
+.log-why {
+  margin-top: var(--s1); max-width: var(--md-max); font-size: var(--fs-sm); line-height: var(--lh); color: var(--ink-2);
+  white-space: pre-line; overflow-wrap: anywhere;
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: var(--log-clamp); line-clamp: var(--log-clamp); overflow: hidden;
+}
+.log-item.open .log-why { display: block; -webkit-line-clamp: unset; line-clamp: none; overflow: visible; }
+.log-more { justify-self: start; margin-top: var(--s1); font-size: var(--fs-xs); font-weight: 600; color: var(--ink-3); }
+/* Chip bước và "Show more": vùng bấm nới tới --hit bằng lớp giả, không đổi bố cục; chip nằm trên. Tên không cần: bấm cả mục là sửa. */
+.log-step { z-index: 1; }
+.log-more { position: relative; }
+.log-step::after, .log-more::after {
+  content: ''; position: absolute; left: 0; right: 0; top: 50%; height: max(100%, var(--hit)); transform: translateY(-50%);
+}
+.log-acts { grid-column: 3; grid-row: 1; display: flex; margin: calc((var(--h-xs) - var(--hit)) / 2) 0; }
+/* Chuột: nút hiện khi rê hay focus. Cảm ứng: chỉ nút xoá, luôn hiện (chạm tên là sửa). */
+@media (hover: hover) and (pointer: fine) {
+  .log-acts { opacity: 0; transition: opacity var(--dur) var(--ease); }
+  .log-item:hover .log-acts, .log-item:focus-within .log-acts { opacity: 1; }
+}
+@media (hover: none), (pointer: coarse) { .log-acts [data-act="edit-log"] { display: none; } }
+.log-item.moved::after { background: var(--flash); animation: log-flash var(--flash-dur) var(--ease) both; }
+@keyframes log-flash { from { opacity: 1; } to { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .log-item.moved::after { animation: none; opacity: 1; } }
+/* Chưa có quyết định: nói nên ghi gì, kèm một ví dụ. */
+.log-empty {
+  display: flex; flex-direction: column; gap: var(--s2); padding: var(--s5);
+  border: var(--line-w) dashed var(--line); border-radius: var(--r);
+}
+.log-empty-h { font: 600 var(--fs-md)/var(--lh-tight) var(--sans); }
+.log-empty-t { max-width: var(--md-max); font-size: var(--fs-sm); color: var(--ink-3); }
+.log-example {
+  margin: var(--s2) 0 0; max-width: var(--md-max); padding: var(--s3) var(--s4);
+  background: var(--surface); border: var(--line-w) solid var(--line-2); border-radius: var(--r-sm);
+}
+.log-example figcaption { margin-bottom: var(--s1); font: 500 var(--fs-xs)/var(--lh-tight) var(--mono); letter-spacing: var(--track); text-transform: uppercase; color: var(--ink-3); }
+.log-example-d { font-weight: 600; font-size: var(--fs-sm); }
+.log-example-w { font-size: var(--fs-sm); color: var(--ink-2); }
+@media (max-width: 640px) {
+  .log { grid-template-columns: minmax(0, 1fr); padding-top: var(--s5); }
+  .log-head { position: static; }
+  .log-compose { padding: var(--s3); }
+  .log-compose-foot .f-date, .log-compose-foot .f-step { flex: 1 1 0; max-width: none; min-width: 0; }
+  .log-compose-foot .dlg-gap { display: none; }
+  .log-compose-btns { flex: 1 1 100%; }
+  .log-compose-btns .btn { flex: 1 1 0; }
+  .log-title { font-size: var(--fs-md); }
+  .log-empty { padding: var(--s4); }
+}
 
 /* ── Danh sách chọn tự dựng (js/dropdown.js): nút thay <select>, danh sách nổi ở lớp trên cùng, không đẩy bố cục ── */
 select.dd-native {
@@ -788,6 +912,7 @@ select.dd-native {
 .title-row { grid-template-columns: minmax(0, 1fr) var(--pos-w); }
 .title-row .field-title textarea { min-height: var(--ctl); }
 .f-date { max-width: var(--date-w); }
+.log-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); }
 /* Chú thích có biểu tượng (giải thích của hộp Cần làm lại, sao lưu trong Xuất): viền đủ bốn cạnh, bo (REPO-025). */
 .dlg-callout {
   display: flex; align-items: flex-start; gap: var(--s3); padding: var(--s3) var(--s4);

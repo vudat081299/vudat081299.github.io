@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import {
   fromTemplate, toMarkdown, fromMarkdown, parseImport, toJSON, toBackup, shape, progress, nextActionIds, projectNextIds, slotsOf, subPlace, placeSub, takeSub, shiftTarget, liveLabels, redoCount,
-  nextStatus, setStatus, splitInline, normWorkspace, normSub, counts, slug, fold, parseDate, uniqueName, normDoc, safeUrl,
+  nextStatus, setStatus, splitInline, normWorkspace, normSub, normLog, freshCopy, counts, slug, fold, parseDate, uniqueName, normDoc, safeUrl,
 } from '../js/core.js';
 import { parseMd, inline } from '../js/md.js';
 
@@ -53,17 +53,30 @@ const hard = normWorkspace({
     },
     { title: '2. Nhật ký quyết định', subs: [] },
     { title: 'Nhật ký quyết định', subs: [{ title: 'k' }] },
-    { title: 'Ba', revisit: { date: '2026-11-21', reason: '' }, subs: [{ title: '- [x] lồng' }] },
+    { id: 'tb', title: 'Ba', revisit: { date: '2026-11-21', reason: '' }, subs: [{ title: '- [x] lồng' }] },
   ],
   log: [
-    { date: '2026-11-22', decision: 'Chọn A · không B', why: 'vì\n\n\\x\nVì sao: lặp\n- gạch' },
-    { date: '2026-11-23', decision: 'Không lý do', why: '' },
+    { date: '2026-11-22', decision: 'Chọn A · không B', why: 'vì\n\n\\x\nVì sao: lặp\n- gạch\nStep: giả\nBước: giả', stepId: 'tb' },
+    { date: '2026-11-23', decision: 'Không lý do', why: '', stepId: 'không có' },
+    { date: '2026-11-24', decision: 'Step: trong tên', why: '', stepId: 'tb' },
   ],
 });
 const md = toMarkdown(hard);
 const back = fromMarkdown(md);
 check('dự án khó: Markdown đi rồi về giữ nguyên', eq(shape(hard), shape(back.workspace)), firstDiff(shape(hard), shape(back.workspace)));
 check('dự án khó: không cảnh báo', back.warnings.length === 0, back.warnings.join(' | '));
+check('nhật ký gắn bước: dòng "Step:" ngay dưới quyết định, id lạ bị bỏ, đi rồi về gắn lại đúng bước',
+  md.includes('\n- 2026-11-22 · Chọn A · không B  \n  Step: Ba  \n  Why: vì') && hard.log[1].stepId === '' && !md.includes('Không lý do  \n  Step')
+  && back.workspace.log[0].stepId === back.workspace.steps[3].id && back.workspace.log[2].stepId === back.workspace.steps[3].id
+  && back.workspace.log[0].why.endsWith('\nStep: giả\nBước: giả'));
+{
+  const r = fromMarkdown('# A\n## 1. Một\n## 2. Hai\n## Decision log\n- 2026-11-20 · x\n  Bước: hai\n  Why: y\n- 2026-11-21 · z\n  Step: Không có\n');
+  check('nhật ký gắn bước: nhãn "Bước:", không phân biệt hoa thường; bước không có thì cảnh báo, bỏ link',
+    r.workspace.log[0].stepId === r.workspace.steps[1].id && r.workspace.log[0].why === 'y' && r.workspace.log[1].stepId === ''
+    && r.warnings.length === 1 && /missing step/.test(r.warnings[0]), JSON.stringify(r.workspace.log) + r.warnings.join('|'));
+  const c = freshCopy(hard);
+  check('nhân bản: quyết định gắn sang id mới của bước', c.log[0].stepId === c.steps[3].id && c.steps[3].id !== 'tb');
+}
 check('dấu trạng thái', /- \[ \] A/.test(md) && /- \[~\] B/.test(md) && /- \[x\] C/.test(md) && /- \[!\] D/.test(md) && /- \[-\] E/.test(md)
   && /- \[\/\] F huỷ/.test(md) && /- \[>\] H chờ/.test(md));
 check('lý do theo trạng thái: Waiting on (chờ), Blocked by (chặn); dòng ghi chú trông như nhãn được thoát',
@@ -244,7 +257,7 @@ check('vòng: dòng cũ "Quay lại: ngày · lý do" đọc là vòng 2', oldR.
     && st.goal === 'mt' && st.doneWhen === 'xk' && st.revisit.round === 3 && st.revisit.reason === 'lý do' && st.notes === 'dòng 1\nTài liệu: giả'
     && st.docs[0].url === 'https://l.example' && x.status === 'cancel' && x.due === '2026-12-01' && x.doneWhen === 'x'
     && x.reason === 'không cần\ndòng hai' && x.notes === 'ghi chú' && x.docs[0].url === 'https://r.example' && st.subs[1].status === 'doing'
-    && ws2.steps[1].round === 2 && ws2.log[0].why === 'vì B', JSON.stringify(ws2).slice(0, 400) + r.warnings.join('|'));
+    && ws2.steps[1].round === 2 && ws2.log[0].why === 'vì B' && ws2.log[0].stepId === '', JSON.stringify(ws2).slice(0, 400) + r.warnings.join('|'));
 }
 
 /* Mở lại (Reopen): dấu redo của bước con chỉ sống trong vòng đang mở; đếm còn mấy việc; Markdown "· redo". */
@@ -327,7 +340,7 @@ check('Next: thẻ chờ không là việc tiếp theo; ô chỉ còn thẻ ch�
   && eq(projectNextIds({ steps: [{ subs: [{ id: 'a', status: 'done' }] }, { subs: [{ id: 'b', status: 'blocked' }, { id: 'c', status: 'pending', par: true }] }] }), ['b']));
 check('Next: dấu Redo của thẻ chờ còn tính là còn phải làm', eq(redoCount({ subs: [{ status: 'pending', redo: true }, { status: 'done', redo: true }] }), { total: 2, left: 1 }));
 check('tách theo ·', eq(splitInline('a \\· b · @c · hạn 2026-01-01'), ['a · b', '@c', 'hạn 2026-01-01']));
-check('đếm', eq(counts([hard]), { workspaces: 1, steps: 4, subs: 11, log: 2, docs: 1 }));
+check('đếm', eq(counts([hard]), { workspaces: 1, steps: 4, subs: 11, log: 3, docs: 1 }));
 check('slug, fold', slug('Đồ án IT5425 — thể thao') === 'do-an-it5425-the-thao' && fold('Việc CỦA Tôi') === 'viec cua toi');
 
 /* Ô song song: bước con `par` nhập vào ô trước; số "3", "3.1"; chỗ (Place) dùng chung cho kéo thả, ô Vị trí, phím, Hoàn tác. */
@@ -388,7 +401,7 @@ check('bước con có ghi chú mở bằng rào, ngay sau tài liệu của bư
   const atoms = ['a', ' ', '·', ' · ', '\\', '@x', '`', '```', '~~~', '#', '## ', '- ', '[ ]', '[x]', ']', '[', '(', ')', 'hạn 2026-01-01',
     'due', 'Xong khi: ', 'Tài liệu:', 'Vì sao: ', '> ', '1. ', '*', '**', '\n', '\n\n', '  ', 'https://e.com/a(b)', 'Huỷ vì: ',
     'Mục tiêu: ', 'Vòng: 3', 'Quay lại: x', 'Done when: ', 'Docs:', 'Why: ', 'Cancelled because: ', 'Goal: ', 'Iteration: 3',
-    'Reopened: x', 'notes:', 'DOCS:', 'Waiting on: ', 'Blocked by: ', 'waiting ON:', '[>]', '- [>] ', 'Template: ', 'iteration 2', 'parallel', ' · parallel', 'song song', ' · song song', 'redo', ' · redo', 'làm lại'];
+    'Reopened: x', 'notes:', 'DOCS:', 'Step: ', 'bước: ', 'Waiting on: ', 'Blocked by: ', 'waiting ON:', '[>]', '- [>] ', 'Template: ', 'iteration 2', 'parallel', ' · parallel', 'song song', ' · song song', 'redo', ' · redo', 'làm lại'];
   let seed = 7;
   const rnd = (n) => { seed = (seed + 0x6D2B79F5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t ^= t + Math.imul(t ^ (t >>> 7), 61 | t); return ((t ^ (t >>> 14)) >>> 0) % n; };
   const str = (n) => Array.from({ length: 1 + rnd(n) }, () => atoms[rnd(atoms.length)]).join('');
@@ -402,7 +415,11 @@ check('bước con có ghi chú mở bằng rào, ngay sau tài liệu của bư
         subs: Array.from({ length: rnd(4) }, () => ({ title: str(4), status: ['todo', 'doing', 'pending', 'blocked', 'done', 'skip', 'cancel'][rnd(7)],
           reason: str(5), due: rnd(2) ? '2026-02-03' : '', doneWhen: rnd(2) ? str(3) : '', notes: rnd(2) ? str(6) : '', par: !!rnd(2), redo: !!rnd(2),
           docs: Array.from({ length: rnd(2) }, doc) })) })),
-      log: Array.from({ length: rnd(3) }, () => ({ date: '2026-03-04', decision: str(3), why: rnd(2) ? str(5) : '' })) });
+      log: [] });
+    /* Quyết định gắn với bước đầu tiên mang tên ấy (Markdown chỉ ghi tên bước). */
+    const firsts = w.steps.filter((s, k) => w.steps.findIndex((o) => fold(o.title) === fold(s.title)) === k);
+    w.log = Array.from({ length: rnd(3) }, () => normLog({ date: '2026-03-04', decision: str(3), why: rnd(2) ? str(5) : '',
+      stepId: rnd(2) ? firsts[rnd(firsts.length)].id : '' }));
     let back = null;
     try { back = roundTrip(w); } catch (e) { bad.push(`#${t}: ${e.message}`); continue; }
     if (!eq(shape(w), back)) bad.push(`#${t}: ${firstDiff(shape(w), back)}`);

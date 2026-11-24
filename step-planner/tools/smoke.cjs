@@ -617,6 +617,9 @@ const check = (name, ok, detail = '') => {
     sentBack.every((x) => x.status === 'todo' && x.redo) && rs.steps[1].revisit.round === 2 && rs.steps[1].round === 2
     && rs.log.length === nLogR + 1 && autoLog.decision === `Reopened: ${r0.title} (iteration 2)` && autoLog.why === 'EDA lộ cột thiếu'
     && /Reopened: /.test(await page.textContent('#log-list')), JSON.stringify(autoLog));
+  check('Reopen: dòng nhật ký tự ghi gắn với bước, có dấu riêng và chip bước', autoLog.stepId === s2id
+    && (await page.textContent(`.log-item.auto[data-log="${autoLog.id}"] .log-step`)).includes(r0.title)
+    && !!(await page.$(`.log-item.auto[data-log="${autoLog.id}"] .log-dot svg`)));
   const band = `.step[data-step="${s2id}"] .revisit-band`;
   check('Reopen: thẻ gửi lại có dấu "Redo"; băng đếm việc phải làm lại', (await page.textContent(`.card[data-sub="${doneId}"] .redo-tag`)).trim() === 'Redo'
     && (await page.textContent(`${band} .redo-left`)) === `${nDone} of ${nDone} redo tasks left`, await page.textContent(`${band} .redo-left`));
@@ -776,25 +779,65 @@ const check = (name, ok, detail = '') => {
   check('tìm theo tên bước: cả hàng hiện', (await page.$$eval('.step', (r) => r.length)) === 1);
   await page.fill('#q', '');
 
-  // Nhật ký quyết định.
+  // Nhật ký quyết định: ô ghi gập thành một nút tới khi dùng; mở ra: Decision (focus), Why, ngày (mặc định hôm nay), bước
+  // (danh sách tự dựng). Ghi xong thì gập, focus ở mục mới; Esc gập mà giữ chữ; Enter trong Decision là ghi.
+  check('nhật ký: ô ghi gập, chỉ hiện một nút', await page.isVisible('#log-compose-open') && !(await page.isVisible('#log-compose')));
+  await page.click('#log-compose-open');
+  const comp = await page.evaluate(() => {
+    const d = new Date();
+    const today = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    return { focus: document.activeElement?.id, date: document.getElementById('log-date').value === today,
+      dd: !!document.querySelector('#log-form .f-step .dd-btn'), open: document.getElementById('log-compose-open').hidden };
+  });
+  check('nhật ký: mở ô ghi thì focus Decision, ngày hôm nay, bước là danh sách tự dựng', comp.focus === 'log-decision' && comp.date && comp.dd && comp.open,
+    JSON.stringify(comp));
+  const logStep = (await cur(page)).steps[2];
   await page.fill('#log-decision', 'Bỏ cột thiếu > 40%');
-  await page.fill('#log-why', 'Không điền được\nđáng tin');
+  await page.fill('#log-why', 'Không điền được\nđáng tin\n' + 'lý do rất dài '.repeat(40));
+  await page.click('#log-form .f-step .dd-btn');
+  await page.click(`.dd-pop [role="option"][data-value="${logStep.id}"]`);
   await page.click('#log-form button[type="submit"]');
+  const e1 = (await cur(page)).log.at(-1);
+  check('nhật ký: ghi xong thì gập, mục mới gắn bước, focus ở mục mới', e1.decision === 'Bỏ cột thiếu > 40%' && e1.stepId === logStep.id
+    && !(await page.isVisible('#log-compose')) && await page.evaluate((id) => document.activeElement === document.querySelector(`[data-log="${id}"] .log-decision`), e1.id)
+    && (await page.textContent(`[data-log="${e1.id}"] .log-step`)).includes(logStep.title) && (await page.inputValue('#log-decision')) === '');
+  const why1 = `[data-log="${e1.id}"] .log-why`;
+  const clamp0 = await page.$eval(why1, (p) => [p.clientHeight, p.scrollHeight]);
+  await page.click(`[data-log="${e1.id}"] [data-act="more-log"]`);
+  const clamp1 = await page.$eval(why1, (p) => p.clientHeight);
+  check('nhật ký: lý do dài bị cắt, "Show more" mở hết, giữ qua lần vẽ lại', clamp0[1] > clamp0[0] + 20 && clamp1 >= clamp0[1] - 1
+    && (await page.getAttribute(`[data-log="${e1.id}"] [data-act="more-log"]`, 'aria-expanded')) === 'true', JSON.stringify([clamp0, clamp1]));
+  await page.click('#log-compose-open');
   await page.fill('#log-decision', 'Quyết định hai');
-  await page.click('#log-form button[type="submit"]');
+  await page.keyboard.press('Escape');
+  check('nhật ký: Esc gập ô ghi, focus về nút', !(await page.isVisible('#log-compose')) && await page.evaluate(() => document.activeElement?.id === 'log-compose-open'));
+  await page.click('#log-compose-open');
+  check('nhật ký: mở lại còn chữ đang viết', (await page.inputValue('#log-decision')) === 'Quyết định hai');
+  await page.keyboard.press('Enter');
   const nL = (await cur(page)).log.length;
-  check('nhật ký: thêm hai mục', nL === nLogR + 4 && (await page.$$('.log-item')).length === nL);
-  await page.click('.log-item:first-child [data-act="del-log"]');
+  check('nhật ký: Enter ghi; thêm hai mục', nL === nLogR + 4 && (await page.$$('.log-item')).length === nL && (await cur(page)).log.at(-1).stepId === '');
+  const firstDecision = () => page.$eval('.log-item .log-decision', (b) => b.textContent.trim());
+  await page.click('.log-item [data-act="del-log"]');
   check('nhật ký: xoá', (await cur(page)).log.length === nL - 1);
   await page.click('#toast-undo');
   check('nhật ký: hoàn tác', (await cur(page)).log.length === nL);
-  check('nhật ký: mới nhất trước', (await page.textContent('.log-item:first-child .log-decision')).trim() === 'Quyết định hai');
-  await page.click('.log-item:first-child [data-act="edit-log"]');
+  check('nhật ký: mới nhất trước, nhóm theo tháng', (await firstDecision()) === 'Quyết định hai'
+    && /^[A-Z][a-z]+ \d{4}/.test(await page.textContent('.log-group .log-month')));
+  // Chip bước: bấm thì tới bước ấy trên bảng (focus tên bước).
+  await page.click(`[data-log="${e1.id}"] .log-step`);
+  check('nhật ký: bấm chip bước thì tới bước trên bảng', await page.evaluate((id) => document.activeElement === document.querySelector(`.step[data-step="${id}"] [data-act="edit-step"]`), logStep.id));
+  // Bấm vào mục (ngoài nút) là mở hộp sửa; hộp có ô Step.
+  await page.click('.log-item:not(.auto) .log-why');
+  check('nhật ký: bấm vào mục là mở hộp sửa', await page.isVisible('#dlg-log'));
+  await page.keyboard.press('Escape');
+  await page.click('.log-item [data-act="edit-log"]');
   await page.fill('#log-edit-form [name="decision"]', 'Quyết định hai (sửa)');
   await page.fill('#log-edit-form [name="date"]', '2020-01-01');
+  await page.click('#log-edit-form .dd-btn');
+  await page.click(`.dd-pop [role="option"][data-value="${logStep.id}"]`);
   await page.click('#log-edit-form button[type="submit"]');
-  check('nhật ký: sửa được, xếp lại theo ngày', (await cur(page)).log.some((l) => l.decision === 'Quyết định hai (sửa)' && l.date === '2020-01-01')
-    && /sửa/.test(await page.textContent('.log-item:last-child .log-decision')));
+  check('nhật ký: sửa được (cả bước), xếp lại theo ngày', (await cur(page)).log.some((l) => l.decision === 'Quyết định hai (sửa)' && l.date === '2020-01-01' && l.stepId === logStep.id)
+    && /sửa/.test(await page.$$eval('.log-item .log-decision', (bs) => bs.at(-1).textContent)) && /2020/.test(await page.$$eval('.log-month', (hs) => hs.at(-1).textContent)));
 
   // Mẹo cho người mới: tắt được, nhớ qua lần tải lại.
   check('mẹo người mới hiện lúc đầu', await page.isVisible('#hint'));
@@ -1112,6 +1155,14 @@ const check = (name, ok, detail = '') => {
   await m.page.fill('#doc-form [name="url"]', 'https://example.com/x');
   await m.page.click('#doc-save');
   await m.page.click('#sub-form button[type="submit"]');
+  await m.page.click('#log-compose-open');
+  await m.page.fill('#log-decision', 'Chọn mùa giải 2023/24');
+  await m.page.fill('#log-why', 'Đủ dữ liệu\n' + 'lý do dài '.repeat(40));
+  await m.page.click('#log-form .f-step .dd-btn');
+  await m.page.click('.dd-pop [role="option"]:nth-child(2)');
+  await m.page.click('#log-form button[type="submit"]');
+  check('390px: nhật ký có chip bước, nút xoá hiện sẵn (cảm ứng)', !!(await m.page.$('.log-item .log-step'))
+    && await m.page.$eval('.log-item [data-act="del-log"]', (b) => getComputedStyle(b.parentElement).opacity === '1' && b.offsetParent !== null));
   check('390px: không tràn ngang trang', (await hOverflow(m.page)) === 0, String(await hOverflow(m.page)));
   check('390px: tên bước nằm trên hàng bước con, hàng cuộn ngang bên trong', mob.stacked && mob.scrolls && mob.whole);
   check('390px: lề 16px', Math.round(mob.left) === 16, String(mob.left));
@@ -1126,7 +1177,7 @@ const check = (name, ok, detail = '') => {
     const bad = [];
     const els = document.querySelectorAll('.step:first-child .slot:first-child > .card button:not([data-act="edit-sub"]),'
       + ' .step:first-child .step-head button, .tools button, #theme-btn, #hint-off, #ws-btn, .ws-notes summary, .step:first-child .doc-tag,'
-      + ' .step:first-child .step-notes summary');
+      + ' .step:first-child .step-notes summary, #log-compose-open, .log-item button:not([data-act="edit-log"])');
     for (const el of els) {
       if (el.offsetParent === null) continue;
       el.scrollIntoView({ block: 'center', inline: 'center' });
