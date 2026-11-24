@@ -264,5 +264,37 @@ check('tách theo ·', eq(splitInline('a \\· b · @c · hạn 2026-01-01'), ['a
 check('đếm', eq(counts([hard]), { workspaces: 1, steps: 4, subs: 9, log: 2, docs: 1 }));
 check('slug, fold', slug('Đồ án IT5425 — thể thao') === 'do-an-it5425-the-thao' && fold('Việc CỦA Tôi') === 'viec cua toi');
 
+/* Bước có tài liệu, bước con đầu có ghi chú mở bằng rào code: bước con không bị đọc thành tài liệu. */
+const fenceNote = normWorkspace({ name: 'P', steps: [{ title: 'S', docs: [{ kind: 'link', title: 'L', url: 'https://a.b' }],
+  subs: [{ title: 'A', notes: '```python\nx = 1\n```' }, { title: 'B', notes: '~~~' }] }] });
+check('bước con có ghi chú mở bằng rào, ngay sau tài liệu của bước: đi rồi về giữ nguyên', eq(shape(fenceNote), roundTrip(fenceNote)),
+  firstDiff(shape(fenceNote), roundTrip(fenceNote)));
+
+/* Đi rồi về với dữ liệu ngẫu nhiên (hạt cố định) ghép từ các mảnh dễ đọc nhầm: dấu ·, \\, @, rào, nhãn, đầu mục. */
+{
+  const atoms = ['a', ' ', '·', ' · ', '\\', '@x', '`', '```', '~~~', '#', '## ', '- ', '[ ]', '[x]', ']', '[', '(', ')', 'hạn 2026-01-01',
+    'due', 'Xong khi: ', 'Tài liệu:', 'Vì sao: ', '> ', '1. ', '*', '**', '\n', '\n\n', '  ', 'https://e.com/a(b)', 'Huỷ vì: ',
+    'Mục tiêu: ', 'Vòng: 3', 'Quay lại: x'];
+  let seed = 7;
+  const rnd = (n) => { seed = (seed + 0x6D2B79F5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t ^= t + Math.imul(t ^ (t >>> 7), 61 | t); return ((t ^ (t >>> 14)) >>> 0) % n; };
+  const str = (n) => Array.from({ length: 1 + rnd(n) }, () => atoms[rnd(atoms.length)]).join('');
+  const doc = () => (rnd(2) ? { kind: 'link', title: str(3), url: 'https://e.com/' + rnd(99) } : { kind: 'md', title: str(3), body: str(10) });
+  const bad = [];
+  for (let t = 0; t < 1500 && bad.length < 3; t++) {
+    const w = normWorkspace({ name: str(3), notes: rnd(2) ? str(6) : '', templateId: rnd(2) ? 'crisp-dm' : '',
+      steps: Array.from({ length: rnd(3) + 1 }, () => ({ title: str(3), goal: rnd(2) ? str(3) : '', doneWhen: rnd(2) ? str(3) : '',
+        notes: rnd(2) ? str(6) : '', revisit: rnd(4) ? null : { reason: str(3), date: '2026-01-02', round: 2 + rnd(3) }, round: 1 + rnd(3),
+        docs: Array.from({ length: rnd(3) }, doc),
+        subs: Array.from({ length: rnd(4) }, () => ({ title: str(4), status: ['todo', 'doing', 'done', 'blocked', 'skip', 'cancel'][rnd(6)],
+          cancelReason: str(5), due: rnd(2) ? '2026-02-03' : '', doneWhen: rnd(2) ? str(3) : '', notes: rnd(2) ? str(6) : '',
+          docs: Array.from({ length: rnd(2) }, doc) })) })),
+      log: Array.from({ length: rnd(3) }, () => ({ date: '2026-03-04', decision: str(3), why: rnd(2) ? str(5) : '' })) });
+    let back = null;
+    try { back = roundTrip(w); } catch (e) { bad.push(`#${t}: ${e.message}`); continue; }
+    if (!eq(shape(w), back)) bad.push(`#${t}: ${firstDiff(shape(w), back)}`);
+  }
+  check('Markdown đi rồi về: 1500 dự án ngẫu nhiên giữ nguyên', !bad.length, bad.join(' | '));
+}
+
 if (fails) { console.log(`test-core: ${fails} LỖI`); process.exit(1); }
 console.log('test-core: OK');

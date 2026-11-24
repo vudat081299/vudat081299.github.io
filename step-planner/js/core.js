@@ -267,10 +267,12 @@ function docLines(docs, ind) {
 }
 /** Bỏ tối đa n dấu cách đầu dòng. @param {string} l @param {number} n */
 const dedent = (l, n) => l.replace(new RegExp(`^ {0,${n}}`), '');
-/** Dòng k mở một tài liệu: mục là link, hoặc mục mà dòng ngay sau là rào. @param {string[]} lines @param {number} k @param {number} min */
+/** Dòng k mở một tài liệu: mục là link, hoặc mục mà dòng ngay sau là rào. Mục mở bằng ô việc (`[ ]`, `[x]`…) là
+ * bước con, kể cả khi ghi chú của nó mở bằng rào (tên tài liệu xuất ra luôn thoát `[`).
+ * @param {string[]} lines @param {number} k @param {number} min */
 function docAt(lines, k, min) {
   const m = DOC_ITEM.exec(lines[k] || '');
-  return !!m && m[1].length >= min && (DOC_LINK.test(m[2]) || DOC_FENCE.test(lines[k + 1] || ''));
+  return !!m && m[1].length >= min && (DOC_LINK.test(m[2]) || (!/^\[.?\]/.test(m[2]) && DOC_FENCE.test(lines[k + 1] || '')));
 }
 /**
  * Đọc các tài liệu bắt đầu ở dòng i (ngay sau nhãn `Tài liệu:`), đẩy vào docs. Trả về dòng đầu tiên không thuộc chúng.
