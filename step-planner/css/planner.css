@@ -1109,6 +1109,7 @@ html { scrollbar-gutter: stable; }   /* khoá cuộn không làm trang nhảy ng
 .tab:focus-visible { outline-offset: calc(-1 * var(--ring-w)); border-radius: var(--r-xs); }
 .md-hint { margin-left: auto; align-self: center; min-width: 0; font-size: var(--fs-xs); color: var(--ink-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .md-hint code { color: var(--ink-2); }
+.md-dlg:has(#md-panes[data-mode="view"]) .md-hint { visibility: hidden; }
 .md-panes { flex: 1 1 auto; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr); }
 .md-panes[data-mode="edit"] .md-view, .md-panes[data-mode="view"] .md-src { display: none; }
 .md-src { display: flex; min-height: 0; background: var(--field-bg); }

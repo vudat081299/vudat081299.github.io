@@ -722,6 +722,7 @@ const check = (name, ok, detail = '') => {
     sel: [...document.querySelectorAll('#dlg-md .tab[aria-selected="true"]')].map((t) => t.dataset.mode).join(),
     src: getComputedStyle(document.querySelector('.md-src')).display !== 'none', view: getComputedStyle(document.getElementById('md-view')).display !== 'none',
     w: document.getElementById('dlg-md').getBoundingClientRect().width,
+    hint: getComputedStyle(document.querySelector('#dlg-md .md-hint')).visibility === 'visible',
   }));
   let ms = await mdState();
   check('tài liệu văn bản mới: hộp lớn mở ở chế độ Sửa', ms.open && ms.mode === 'edit' && ms.sel === 'edit' && ms.src && !ms.view && ms.w > 1000, JSON.stringify(ms));
@@ -736,14 +737,14 @@ const check = (name, ok, detail = '') => {
     return { h1: v.querySelector('h1')?.textContent, strong: v.querySelector('strong')?.textContent, img: v.querySelectorAll('img').length,
       nested: !!v.querySelector('ul li ul li'), links: [...v.querySelectorAll('a')].map((a) => a.href + ' ' + a.target + ' ' + a.rel), pre: v.querySelector('pre')?.textContent };
   });
-  check('tài liệu văn bản: mở từ cột bước ở chế độ Xem', ms.mode === 'view' && ms.sel === 'view' && ms.view && !ms.src, JSON.stringify(ms));
+  check('tài liệu văn bản: mở từ cột bước ở chế độ Xem, không hiện dòng nhắc cú pháp', ms.mode === 'view' && ms.sel === 'view' && ms.view && !ms.src && !ms.hint, JSON.stringify(ms));
   check('tài liệu văn bản: dựng Markdown, chữ HTML không thành thẻ, link chỉ http(s) mở tab mới',
     view.h1 === 'Cột thiếu' && view.strong === 'age' && view.img === 0 && view.nested && view.pre === '```\nlồng\n```'
     && view.links.join() === 'https://ok.example/ _blank noopener noreferrer', JSON.stringify(view));
   check('tài liệu văn bản: đúng hai tab Edit / Preview', (await page.$$eval('#dlg-md .tab', (ts) => ts.map((t) => t.textContent.trim()))).join() === 'Edit,Preview');
   await page.click('#dlg-md .tab[data-mode="edit"]');
   ms = await mdState();
-  check('tài liệu văn bản: tab Edit hiện ô chữ, ẩn bản xem', ms.mode === 'edit' && ms.sel === 'edit' && ms.src && !ms.view, JSON.stringify(ms));
+  check('tài liệu văn bản: tab Edit hiện ô chữ, dòng nhắc cú pháp, ẩn bản xem', ms.mode === 'edit' && ms.sel === 'edit' && ms.src && !ms.view && ms.hint, JSON.stringify(ms));
   await page.fill('#md-form [name="body"]', 'chữ chưa lưu');
   await page.keyboard.press('Escape');
   check('tài liệu văn bản: đóng khi chưa lưu thì hỏi lại', await page.isVisible('#dlg-ask') && (await mdState()).open);
