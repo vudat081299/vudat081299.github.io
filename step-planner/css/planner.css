@@ -384,6 +384,13 @@ svg.i {
 .search { position: relative; flex: 0 1 var(--search-w); min-width: 0; display: flex; align-items: center; }
 .search svg.i { position: absolute; left: var(--s3); color: var(--ink-3); pointer-events: none; }
 .search .input { padding-left: calc(var(--s3) + var(--icon) + var(--s2)); }
+/* Nút xoá chữ của ô tìm: thay dấu × màu xanh của trình duyệt bằng × của bộ biểu tượng, màu chữ phụ. */
+.search .input::-webkit-search-cancel-button {
+  -webkit-appearance: none; appearance: none; width: var(--fs-sm); height: var(--fs-sm); cursor: pointer; background: var(--ink-3);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M6 6l12 12M18 6 6 18'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M6 6l12 12M18 6 6 18'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+@media (hover: hover) { .search .input::-webkit-search-cancel-button:hover { background: var(--ink); } }
 .filter-note { font-size: var(--fs-sm); color: var(--ink-3); }
 .tool-btns { display: flex; align-items: center; gap: var(--s1); flex-wrap: wrap; }
 /* Nút bật / tắt (Gọn): đang bật thì nền rãnh, chữ đậm. */

@@ -807,6 +807,10 @@ const check = (name, ok, detail = '') => {
   check('lọc: tắt sắp xếp (không tay nắm kéo bước)', (await page.$$('.step-grip')).length === 0);
   await page.fill('#q', 'BUSINESS understanding');
   check('tìm theo tên bước: cả hàng hiện', (await page.$$eval('.step', (r) => r.length)) === 1);
+  // Nút xoá chữ của ô tìm: không dùng dấu × xanh của trình duyệt (getComputedStyle không đọc được phần giả này: đọc luật CSS).
+  const cancelX = await page.evaluate(() => [...document.styleSheets].flatMap((ss) => { try { return [...ss.cssRules]; } catch (e) { return []; } })
+    .some((r) => r.selectorText && /search-cancel-button/.test(r.selectorText) && /none/.test(r.style.getPropertyValue('appearance'))));
+  check('ô tìm: nút xoá chữ theo bộ biểu tượng, không phải dấu × xanh mặc định', cancelX);
   await page.fill('#q', '');
 
   // Nhật ký quyết định: ô ghi gập thành một nút tới khi dùng; mở ra: Decision (focus), Why, ngày (mặc định hôm nay), bước
