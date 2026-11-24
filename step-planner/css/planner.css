@@ -99,6 +99,7 @@
   --md-max: 72ch;                      /* bề rộng đọc của bản xem */
   --md-split: 720px;                   /* hẹp hơn thì Chia đôi xếp trên / dưới */
   --search-w: 300px;
+  --chip-max: 280px;                   /* chip tài liệu của bước: tên dài thì cắt "…" */
   --dd-min: 180px;                     /* danh sách chọn tự dựng */
   --dd-max: 420px;
   --tpl-min: 250px;
@@ -674,8 +675,24 @@ select.dd-native {
   .dlg[open] { animation: sheet-in var(--dur-sheet) var(--ease); }
 }
 
-/* ── Tài liệu: danh sách ở cột bước, nhãn kẹp trên thẻ, phần Tài liệu trong hộp sửa ── */
-.step-docs { display: flex; flex-direction: column; gap: 0; margin: calc(-1 * var(--s1)) 0 0; }
+/* ── Tài liệu: dải chip của bước (trên hàng thẻ), nhãn kẹp trên thẻ, phần Tài liệu trong hộp sửa ── */
+.step-docs { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); min-width: 0; }
+.doc-chips { display: contents; }
+.doc-chip {
+  position: relative; display: inline-flex; align-items: center; gap: var(--s1); max-width: var(--chip-max); min-height: var(--h-sm);
+  padding: 0 var(--s3) 0 var(--s2); font: 600 var(--fs-sm)/1 var(--sans); color: var(--ink-2); text-decoration: none; cursor: pointer;
+  background: var(--surface); border: var(--line-w) solid var(--line); border-radius: var(--r-pill);
+  transition: border-color var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+.doc-chip svg.i { width: var(--fs-lg); height: var(--fs-lg); color: var(--ink-3); }
+.doc-chip span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.doc-chip::after { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: max(100%, var(--hit)); transform: translateY(-50%); }
+.doc-chip.add { color: var(--ink-3); background: transparent; border-style: dashed; border-color: var(--ink-4); }
+@media (hover: hover) {
+  .doc-chip:hover { color: var(--ink); border-color: var(--ink-4); }
+  .doc-chip.add { opacity: 0; transition: opacity var(--dur) var(--ease); }
+  .step:hover .doc-chip.add, .step-docs:focus-within .doc-chip.add { opacity: 1; }
+}
 .doc-link {
   position: relative; display: inline-flex; align-items: center; gap: var(--s2); max-width: 100%; min-height: var(--h-xs);
   padding: var(--s1) 0; font: 600 var(--fs-sm)/var(--lh-tight) var(--sans); color: var(--ink-2); text-align: left;
@@ -685,7 +702,6 @@ select.dd-native {
 .doc-link span { min-width: 0; overflow-wrap: anywhere; }
 .doc-link small { font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-3); white-space: nowrap; }
 @media (hover: hover) { .doc-link:hover span { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; } }
-.step-docs .doc-link::after { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: max(100%, var(--hit)); transform: translateY(-50%); }
 .doc-tag {
   position: relative; display: inline-flex; align-items: center; gap: var(--s1); min-height: var(--h-xs); padding: 0 var(--s2);
   font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-2); cursor: pointer;

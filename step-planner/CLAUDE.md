@@ -70,10 +70,10 @@
   thay đổi?". Nút đóng không lưu của mọi hộp ghi "Đóng", không "Huỷ" (trùng tên trạng thái).
 - Ghi chú bước gập dưới tên bước. Thẻ cao theo nội dung (`--card-min` … `--card-max`); vượt max thì thân bị cắt, mờ dần,
   "Xem thêm" mở cả thẻ. Link http(s) trong ghi chú bấm được. Vẽ lại giữ ghi chú đang mở, thẻ đã mở, chỗ cuộn ngang.
-- Tài liệu (PLAN-011): cột bước liệt kê tài liệu của bước dưới tên, nút phụ "Tài liệu" để thêm. Thẻ chỉ có nhãn kẹp + số
-  ở hàng đầu (không cao thêm); bấm là mở hộp sửa bước con ở phần Tài liệu. Thêm / sửa / xoá trong hộp sửa bước, bước
-  con, lưu ngay; xoá khi hộp đang mở thì Hoàn tác là một hàng trong hộp (toast nằm dưới hộp thoại). Link mở tab mới
-  (`noopener noreferrer`); văn bản mở hộp lớn Sửa / Xem / Chia đôi (`#dlg-md`).
+- Tài liệu (PLAN-011): tài liệu của bước là dải chip rộng cả hàng ngay dưới băng Reopened (không băng thì ở chỗ ấy), trên
+  hàng thẻ; nút phụ "Doc" ở cuối dải (bước chưa có tài liệu: ở cột tên bước). Thẻ chỉ có nhãn kẹp + số ở hàng đầu; bấm là
+  mở hộp sửa bước con ở phần tài liệu. Thêm / sửa / xoá trong hộp sửa, lưu ngay; xoá khi hộp đang mở thì Hoàn tác là một
+  hàng trong hộp. Link mở tab mới (`noopener noreferrer`); văn bản mở hộp lớn Sửa / Xem / Chia đôi (`#dlg-md`).
 - Nhật ký quyết định: sửa, xoá được; mới nhất trước. Tab khác sửa cùng khoá thì đọc lại (`storage`), giữ dự án của tab.
 - Nhắc sao lưu: có thay đổi chưa sao lưu từ ≥ 3 ngày thì nút "Not backed up for N days" / "Never backed up" hiện cạnh
   Export; bấm là tải bản sao lưu mọi dự án. Chỉ bản sao lưu tất cả (tải hoặc chép) mới đặt lại mốc.

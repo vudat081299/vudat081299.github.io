@@ -402,6 +402,14 @@ const check = (name, ok, detail = '') => {
   const linkA = await page.$eval(`${docStep} .step-docs a`, (a) => [a.textContent, a.getAttribute('href'), a.target, a.rel]);
   check('tài liệu: link ở cột bước, mở tab mới, noopener noreferrer',
     linkA.join('|') === 'Data card|https://example.com/card|_blank|noopener noreferrer' && !(await page.isVisible('#dlg-doc')), linkA.join('|'));
+  const strip = await page.evaluate((sel) => {
+    const row = document.querySelector(sel), st = row.querySelector('.step-docs'), band = row.querySelector('.revisit-band');
+    const r = st.getBoundingClientRect(), hd = row.querySelector('.step-head').getBoundingClientRect(), sc = row.querySelector('.cards-scroll').getBoundingClientRect();
+    return { afterBand: !!band && band.nextElementSibling === st, above: r.bottom <= Math.min(hd.top, sc.top) + 1, wide: r.left <= hd.left + 1 && r.right >= sc.left,
+      inHead: !!row.querySelector('.step-head .step-docs') };
+  }, docStep);
+  check('tài liệu của bước: dải chip ngay dưới băng Reopened, trên cột tên và hàng thẻ, rộng cả hàng', strip.afterBand && strip.above && strip.wide && !strip.inHead,
+    JSON.stringify(strip));
   await page.click(`${docStep} [data-act="add-doc"]`, { force: true });
   await page.check('#doc-form input[name="kind"][value="md"]', { force: true });
   check('tài liệu: chọn Văn bản thì ẩn ô link', !(await page.isVisible('#doc-url-field')));

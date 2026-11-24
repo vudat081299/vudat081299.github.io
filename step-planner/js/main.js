@@ -232,7 +232,6 @@ function renderBoard(/** @type {any} */ ws) {
         h('span', { class: 'step-num', 'aria-hidden': 'true' }, String(i + 1)),
         h('h2', { class: 'step-title', id: 'st-' + step.id },
           h('button', { type: 'button', class: 'link', 'data-act': 'edit-step', 'aria-label': `Step ${i + 1}: ${step.title}. Edit`, 'aria-keyshortcuts': 'Alt+ArrowUp Alt+ArrowDown' }, step.title))),
-      step.docs.length > 0 && h('ul', { class: 'step-docs', 'aria-label': `Docs of step ${i + 1}` }, step.docs.map(docLink)),
       step.goal && h('p', { class: 'step-goal' }, step.goal),
       step.doneWhen && h('p', { class: 'step-done' }, h('span', { class: 'lbl' }, 'Done when '), step.doneWhen),
       step.notes && h('details', { class: 'step-notes', open: keep.notes.has(step.id) }, h('summary', {}, icon('chev'), 'Notes'), h('p', { class: 'notes-text' }, withLinks(step.notes))),
@@ -242,7 +241,7 @@ function renderBoard(/** @type {any} */ ws) {
       h('div', { class: 'acts' },
         h('button', { type: 'button', class: 'btn small', 'data-act': 'add-sub' }, icon('plus'), 'Sub-step'),
         !step.revisit && h('button', { type: 'button', class: 'btn small quiet aux', 'data-act': 'revisit', tabindex: '-1', title: 'A later step showed this one must be redone' }, icon('redo'), 'Reopen'),
-        h('button', { type: 'button', class: 'btn small quiet aux', 'data-act': 'add-doc', tabindex: '-1', title: 'Add a link or a Markdown note for the whole step' }, icon('plus'), 'Doc'),
+        !step.docs.length && h('button', { type: 'button', class: 'btn small quiet aux', 'data-act': 'add-doc', tabindex: '-1', title: 'Add a link or a Markdown note for the whole step' }, icon('plus'), 'Doc'),
         !filtering && iconBtn('up', 'Move step up', 'step-up', i === 0),
         !filtering && iconBtn('down', 'Move step down', 'step-down', i === ws.steps.length - 1),
         iconBtn('trash', 'Delete step', 'del-step')));
@@ -282,8 +281,13 @@ function renderBoard(/** @type {any} */ ws) {
           iconBtn('trash', 'Delete', 'sub-del')));
     });
     cards.push(h('li', { class: 'card add' }, h('button', { type: 'button', class: 'add-sub', 'data-act': 'add-sub', tabindex: '-1' }, icon('plus'), 'Sub-step')));
+    /* Tài liệu của cả bước: dải chip ngay dưới băng Reopened (hay ở chỗ ấy khi không có băng), trên hàng thẻ. */
+    const docs = step.docs.length > 0 && h('div', { class: 'step-docs' },
+      h('ul', { class: 'doc-chips', 'aria-label': `Docs of step ${i + 1}` }, step.docs.map(docChip)),
+      h('button', { type: 'button', class: 'doc-chip add aux', 'data-act': 'add-doc', tabindex: '-1', 'aria-label': 'Add a doc to this step', title: 'Add a link or a Markdown note for the whole step' }, icon('plus'), 'Doc'));
     rows.push(h('section', { class: 'step' + (step.revisit ? ' revisit' : '') + (done ? ' is-done' : ''), 'data-step': step.id, 'aria-labelledby': 'st-' + step.id },
       band,
+      docs,
       head,
       h('div', { class: 'cards-scroll' }, h('ol', { class: 'cards', 'aria-label': `Sub-steps of step ${i + 1}` }, cards))));
   });
@@ -313,11 +317,11 @@ function statusChip(x) {
 
 /** Thẻ chạm --card-max thì thân bị cắt: mờ dần ở đáy và thêm nút "Xem thêm" (mở cả thẻ). Nút ngoài vòng Tab:
  * bàn phím đọc trọn trong hộp sửa. */
-/** Một tài liệu ở cột bước: link mở tab mới, văn bản mở hộp đọc. @param {any} d */
-function docLink(d) {
+/** Một tài liệu của bước (chip): link mở tab mới, văn bản mở hộp đọc. @param {any} d */
+function docChip(d) {
   return h('li', {}, d.kind === 'link'
-    ? h('a', { class: 'doc-link', href: d.url, target: '_blank', rel: 'noopener noreferrer', title: d.url }, icon('link'), h('span', {}, d.title))
-    : h('button', { type: 'button', class: 'doc-link', 'data-act': 'open-doc', 'data-doc': d.id }, icon('doc'), h('span', {}, d.title)));
+    ? h('a', { class: 'doc-chip', href: d.url, target: '_blank', rel: 'noopener noreferrer', title: `${d.title}\n${d.url}`, 'data-doc': d.id }, icon('link'), h('span', {}, d.title))
+    : h('button', { type: 'button', class: 'doc-chip', 'data-act': 'open-doc', 'data-doc': d.id, title: d.title }, icon('doc'), h('span', {}, d.title)));
 }
 
 /** @param {Set<string>} [keepOpen] thẻ đang mở trước lần vẽ này */
