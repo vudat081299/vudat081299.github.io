@@ -157,7 +157,7 @@
 ## Gợi ý nhận xét
 
 - Đếm theo khoá chuẩn hoá (`normKey`); xếp theo số lần, lần dùng gần nhất, thứ tự gốc. Tỉ lệ (số lần + 1) / (tổng + số gợi ý), hiện từ 5 lần (`MIN_PCT`).
-- Hộp nhận xét hiện 5 gợi ý đầu (`POP_CHIPS`), còn lại sau chip `+N`; giữ Mod hay bấm `+N` hiện mọi gợi ý (lọc theo chữ gõ), vùng chip cuộn; Mod + phím chọn gợi ý 1–10, giữ Mod hiện chữ phím trên chip (MDAN-084); Mod + 1 lưu `remove` của `hints.json`, không chip, không đếm (MDAN-085). Nhãn phím tắt chỉ qua `shortcut()` (`ui/dom.js`). Mọi nhận xét gõ tay được đếm và thành gợi ý ngay lần đầu (MDAN-086); gợi ý không giới hạn độ dài, chip và hàng *Hints* hiện `HINT_SHOW` (80) ký tự đầu, đuôi mờ dần (`hintShown`, `hintSpan`), chọn thì lưu chữ trọn (MDAN-087).
+- Hộp nhận xét hiện 5 gợi ý đầu (`POP_CHIPS`), còn lại sau chip `+N`; giữ Mod hay bấm `+N` hiện mọi gợi ý (lọc theo chữ gõ), vùng chip cuộn; Mod + phím chọn gợi ý 1–10, giữ Mod hiện chữ phím trên chip (MDAN-084); Mod + 1 lưu `remove` của `hints.json`, không chip, không đếm (MDAN-085). Nhãn phím tắt chỉ qua `shortcut()` (`ui/dom.js`). Mọi nhận xét gõ tay được đếm và thành gợi ý ngay lần đầu (MDAN-086); gợi ý không giới hạn độ dài, chip và hàng *Hints* hiện `HINT_SHOW` (80) ký tự đầu (`hintShown`, `hintSpan`); bị cắt hay tràn hộp (`markOver`) thì đuôi mờ dần, không "…"; chọn thì lưu chữ trọn (MDAN-087).
 - Bỏ gợi ý là ẩn, không xoá số đếm (gợi ý mặc định không quay lại). Đổi chữ gợi ý mặc định: cặp cũ → mới vào `renamed` của `data/hints.json`;
   `migrateHints()` dồn số đếm, giữ trạng thái ẩn, chỉ cho khoá từng là gợi ý mặc định (`seed`).
 

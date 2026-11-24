@@ -23,7 +23,7 @@ import { pickSummary } from '../core/picks.js';
 import { $, barBottom, h, isMac, mqSheet, mqTouch, paintHL, shortcut, shown, syncBar, toast } from './dom.js';
 import { rangeAt } from './anchor-dom.js';
 import { D, scheduleSave } from './state.js';
-import { hintSpan, recordUse, removeHint, seedState, stats } from './hints.js';
+import { hintSpan, markOver, recordUse, removeHint, seedState, stats } from './hints.js';
 import { markActive } from './marks.js';
 import { anchors, mdText, numbers, ordered, orphans, renderAll } from './render.js';
 import { flashItem, removeComment } from './list.js';
@@ -271,6 +271,7 @@ export function renderPopHints() {
     box.append(h('span', { class: 'ma-sub' }, 'No hints yet: the default hints could not load.'));
   }
   box.hidden = !box.childNodes.length;
+  markOver(box, '.ma-chip__t');   // chữ tràn chip: đuôi mờ dần, không "…" (MDAN-087)
   if (!keep) { box.scrollTop = 0; box.scrollLeft = 0; }
   var el = $('pop');
   if (el.hidden || el.classList.contains('is-sheet')) return;

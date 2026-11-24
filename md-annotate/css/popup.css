@@ -104,8 +104,9 @@ html.ma-sheet-sp body { padding-bottom: max(calc(var(--dock-h, 0px) + var(--sa-b
   transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
 }
 @media (hover: hover) { .ma-chip:hover { background: var(--accent-soft); color: var(--ink); } }
-.ma-chip__t { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.ma-chip__t.is-cut { text-overflow: clip; -webkit-mask-image: var(--fade-r); mask-image: var(--fade-r); }   /* gợi ý dài: 80 ký tự đầu */
+.ma-chip__t { min-width: 0; overflow: hidden; white-space: nowrap; }
+/* Gợi ý dài (80 ký tự đầu, is-cut) hay chữ tràn chip (is-over, ui/hints.js markOver): đuôi mờ dần, không "…". */
+.ma-chip__t:is(.is-cut, .is-over) { -webkit-mask-image: var(--fade-r); mask-image: var(--fade-r); }
 .ma-chip__p { font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-3); }
 .ma-chip--more { font: 500 var(--fs-xs)/1 var(--mono); min-width: var(--h); justify-content: center; }
 .ma-chip__k {

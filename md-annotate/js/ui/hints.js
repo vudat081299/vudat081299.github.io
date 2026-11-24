@@ -1,7 +1,7 @@
 /* Gợi ý nhận xét, phần trình duyệt: số đếm lưu ở localStorage, nạp gợi ý mặc định và chữ của gợi ý ẩn Mod + 1 (removeHint)
-   từ data/hints.json, hộp Hints, chữ của một gợi ý (hintSpan: gợi ý dài hiện 80 ký tự đầu, đuôi mờ dần; MDAN-087).
-   Logic đếm và xếp hạng ở core/hints.js.
-   Xuất: hintSpan, initHints, loadDefaultHints, recordUse, removeHint, renderHintsDlg, seedState, stats.
+   từ data/hints.json, hộp Hints, chữ của một gợi ý (hintSpan: gợi ý dài hiện 80 ký tự đầu; markOver: chữ tràn hộp; cả hai
+   đuôi mờ dần, không "…"; MDAN-087). Logic đếm và xếp hạng ở core/hints.js.
+   Xuất: hintSpan, initHints, loadDefaultHints, markOver, recordUse, removeHint, renderHintsDlg, seedState, stats.
    Dùng: core/text.js, core/hints.js, ui/store.js, ui/dom.js. */
 import { plural } from '../core/text.js';
 import { countUse, hideHint, hintShown, migrateHints, MIN_PCT, normStats, pct, pinHint, rankedHints, resetHints, seedHints } from '../core/hints.js';
@@ -19,6 +19,16 @@ export function recordUse(t) { if (countUse(stats, t)) saveStats(); }
 export function hintSpan(t, cls, tip) {
   var s = hintShown(t);
   return h('span', { class: cls + (s.cut ? ' is-cut' : ''), title: s.cut && tip ? t : null }, s.text);
+}
+/* Chữ gợi ý (sel) trong box tràn khỏi hộp của nó: is-over (CSS: đuôi mờ dần như is-cut). Đo ngay, và lại khi box đổi bề rộng
+   (khung nhìn đổi, box từ ẩn thành hiện như hộp Hints vừa mở); cao đổi (vùng chip trượt) không đo lại. */
+var watched = new WeakSet();
+export function markOver(box, sel) {
+  box.querySelectorAll(sel).forEach(function (t) { t.classList.toggle('is-over', t.scrollWidth > t.clientWidth); });
+  if (watched.has(box) || typeof ResizeObserver === 'undefined') return;
+  watched.add(box);
+  var w = box.clientWidth;
+  new ResizeObserver(function () { if (box.clientWidth !== w) { w = box.clientWidth; markOver(box, sel); } }).observe(box);
 }
 
 /* Nạp gợi ý mặc định (đổi chữ theo renamed, rồi gieo) và removeHint; lỗi mạng thì seedState = 'fail'. Trả promise để người gọi vẽ lại. */
@@ -48,6 +58,7 @@ export function renderHintsDlg() {
       h('button', { class: 'ma-icbtn ma-icbtn--bare', type: 'button', 'aria-label': 'Remove hint ' + x.t, title: 'Remove hint',
         onclick: function () { hideHint(stats, x.key); saveStats(); renderHintsDlg(); } }, icon('x'))));
   });
+  markOver(ol, '.ma-row__t');   // hộp đang đóng thì chưa đo được: mở ra là bề rộng đổi, markOver đo lại
   var note = $('hints-seed-note');
   note.hidden = seedState !== 'fail';
   note.textContent = 'The default hints (data/hints.json) could not load.';

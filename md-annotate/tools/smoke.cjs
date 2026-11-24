@@ -824,37 +824,47 @@ const cornerClash = (page) => page.evaluate(() => {
   }
 
   /* ---------- Gợi ý dài (MDAN-087): nhận xét > 80 ký tự lưu một lần đã là chip; chip hiện 80 ký tự đầu, đuôi mờ dần (is-cut,
-     mask), title có chữ trọn; giữ Ctrl (chữ phím) không đổi bề rộng chip; bấm chip lưu chữ trọn; hàng ở hộp Hints cũng vậy. ---------- */
+     mask), title có chữ trọn; chữ ≤ 80 ký tự mà tràn chip cũng mờ đuôi (is-over), không "…"; chữ vừa chip thì không mờ;
+     giữ Ctrl (chữ phím) không đổi bề rộng chip; bấm chip lưu chữ trọn; hàng ở hộp Hints cũng vậy. ---------- */
   {
-    const LDOC = '# Gợi ý dài\n\nCâu một để thử gợi ý dài.\n\nCâu hai để thử gợi ý dài.\n';
+    const LDOC = '# Gợi ý dài\n\nCâu một để thử gợi ý dài.\n\nCâu hai để thử gợi ý dài.\n\nCâu ba để thử gợi ý dài.\n';
     const LONG = 'Đoạn này cần viết lại cho rõ: nêu nguồn, thêm ví dụ cụ thể, bỏ câu lặp ý và tách thành hai đoạn ngắn hơn cho dễ đọc.';
+    const MID = 'Câu này nên tách đôi: ý đầu nói về nguồn, ý sau nói về cách làm cụ thể.';   // ≤ 80 ký tự, rộng hơn chip
     const lctx = await browser.newContext({ viewport: { width: 1280, height: 900 }, colorScheme: 'light' });
     const lp = await openPage(lctx);
     await pasteText(lp, LDOC); await lp.waitForTimeout(150);
-    await dragSelect(lp, '#v-md', 'Câu một để thử gợi ý dài');
-    await lp.fill('#pop-text', LONG);
-    await lp.keyboard.press('Enter'); await lp.waitForTimeout(100);
-    await dragSelect(lp, '#v-md', 'Câu hai để thử gợi ý dài');
-    const geo = () => lp.$eval('#pop-chips .ma-chip', (c) => {
-      const t = c.querySelector('.ma-chip__t'), cs = getComputedStyle(t);
-      return { text: t.textContent, cut: t.classList.contains('is-cut'), mask: cs.maskImage || cs.webkitMaskImage, to: cs.textOverflow, title: c.title,
-        w: c.getBoundingClientRect().width, k: getComputedStyle(c.querySelector('.ma-chip__k')).opacity };
-    });
-    const c0 = await geo();
-    check('gợi ý dài: nhận xét ' + LONG.length + ' ký tự lưu một lần đã là chip đầu, hiện 80 ký tự đầu, is-cut',
-      LONG.length > 80 && c0.text === LONG.slice(0, 80) && c0.text.length === 80 && c0.cut, JSON.stringify(c0.text));
-    check('gợi ý dài: đuôi mờ dần bằng mask, không "…"; title có chữ trọn', /gradient/.test(c0.mask) && c0.to === 'clip' && c0.title.startsWith(LONG + '\n'), JSON.stringify([c0.mask, c0.to, c0.title]));
+    for (const [n, t] of [['một', LONG], ['hai', MID]]) {
+      await dragSelect(lp, '#v-md', `Câu ${n} để thử gợi ý dài`);
+      await lp.fill('#pop-text', t);
+      await lp.keyboard.press('Enter'); await lp.waitForTimeout(100);
+    }
+    await dragSelect(lp, '#v-md', 'Câu ba để thử gợi ý dài');
+    const geo = () => lp.$$eval('#pop-chips .ma-chip:not(.ma-chip--more)', (cs) => cs.map((c) => {
+      const t = c.querySelector('.ma-chip__t'), s = getComputedStyle(t), m = s.maskImage || s.webkitMaskImage;
+      return { text: t.textContent, cut: t.classList.contains('is-cut'), over: t.classList.contains('is-over'), sw: t.scrollWidth, cw: t.clientWidth,
+        fade: /gradient/.test(m), to: s.textOverflow, title: c.title, w: c.getBoundingClientRect().width, k: c.querySelector('.ma-chip__k') && getComputedStyle(c.querySelector('.ma-chip__k')).opacity };
+    }));
+    const [m0, l0, s0] = await geo();   // hạng: MID (mới nhất), LONG, rồi gợi ý mặc định ngắn
+    check('gợi ý dài: nhận xét ' + LONG.length + ' ký tự lưu một lần đã là chip, hiện 80 ký tự đầu, is-cut',
+      LONG.length > 80 && l0.text === LONG.slice(0, 80) && l0.text.length === 80 && l0.cut, JSON.stringify(l0.text));
+    check('gợi ý dài: đuôi mờ dần bằng mask, không "…"; title có chữ trọn', l0.fade && l0.to === 'clip' && l0.title.startsWith(LONG + '\n'), JSON.stringify([l0.to, l0.title]));
+    check('gợi ý ' + MID.length + ' ký tự tràn chip: không cắt, is-over, đuôi mờ dần, không "…"',
+      MID.length <= 80 && m0.text === MID && !m0.cut && m0.over && m0.sw > m0.cw && m0.fade && m0.to === 'clip', JSON.stringify(m0));
+    check('gợi ý ngắn vừa chip: không is-over, không mờ', !s0.cut && !s0.over && !s0.fade && s0.sw <= s0.cw, JSON.stringify(s0));
     await lp.keyboard.down('Control'); await lp.waitForTimeout(100);
-    const c1 = await geo();
+    const [m1, l1, s1] = await geo();
     await lp.keyboard.up('Control'); await lp.waitForTimeout(100);
-    check('gợi ý dài: giữ Ctrl hiện chữ phím, bề rộng chip không đổi', c1.k === '1' && c1.w === c0.w, JSON.stringify([c0.w, c1.w, c1.k]));
-    await lp.click('#pop-chips .ma-chip >> nth=0'); await lp.waitForTimeout(100);
-    await lp.click('#list .ma-item:nth-child(2) [aria-label="Edit comment"]');
+    check('gợi ý dài: giữ Ctrl hiện chữ phím, bề rộng và lớp mờ của chip không đổi', l1.k === '1' && [m1.w, l1.w, s1.w].join() === [m0.w, l0.w, s0.w].join() &&
+      m1.over && l1.cut && !s1.over, JSON.stringify([[m0.w, l0.w, s0.w], [m1.w, l1.w, s1.w], l1.k]));
+    await lp.click('#pop-chips .ma-chip >> nth=1'); await lp.waitForTimeout(100);
+    await lp.click('#list .ma-item:nth-child(3) [aria-label="Edit comment"]');
     check('gợi ý dài: bấm chip lưu chữ trọn (hộp sửa có cả câu)', (await lp.inputValue('#pop-text')) === LONG, JSON.stringify(await lp.inputValue('#pop-text')));
     await lp.keyboard.press('Escape');
-    await lp.click('#btn-hints');
-    const row = await lp.$eval('#hints-list .ma-row__t', (t) => { const cs = getComputedStyle(t); return { text: t.textContent, cut: t.classList.contains('is-cut'), title: t.title, mask: cs.maskImage || cs.webkitMaskImage }; });
-    check('gợi ý dài: hàng ở hộp Hints hiện 80 ký tự đầu, mờ đuôi, title chữ trọn', row.text === LONG.slice(0, 80) && row.cut && row.title === LONG && /gradient/.test(row.mask), JSON.stringify(row));
+    await lp.click('#btn-hints'); await lp.waitForTimeout(100);
+    const rows = await lp.$$eval('#hints-list .ma-row__t', (ts) => ts.slice(0, 3).map((t) => { const s = getComputedStyle(t);
+      return { text: t.textContent, cut: t.classList.contains('is-cut'), over: t.classList.contains('is-over'), title: t.title, fade: /gradient/.test(s.maskImage || s.webkitMaskImage), to: s.textOverflow }; }));
+    const rl = rows.find((r) => r.cut);
+    check('gợi ý dài: hàng ở hộp Hints hiện 80 ký tự đầu, mờ đuôi, không "…", title chữ trọn', !!rl && rl.text === LONG.slice(0, 80) && rl.title === LONG && rl.fade && rl.to === 'clip', JSON.stringify(rows));
     await lctx.close();
   }
 
