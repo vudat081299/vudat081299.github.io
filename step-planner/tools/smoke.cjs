@@ -1403,6 +1403,22 @@ const check = (name, ok, detail = '') => {
       ? ord.head.bottom <= ord.band.top + 1 && ord.band.bottom <= ord.docs.top + 1 && ord.docs.bottom <= ord.cards.top + 1
       : ord.band.bottom <= ord.docs.top + 1 && ord.docs.bottom <= Math.min(ord.head.top, ord.cards.top) + 1,
     JSON.stringify(Object.fromEntries(Object.entries(ord).map(([k, v]) => [k, [Math.round(v.top), Math.round(v.bottom)]]))));
+    // Thanh trên dính có nền đặc ở cả hai theme: nút xanh cuộn dưới nó không loang thành quầng.
+    const bars = [];
+    for (const scheme of ['light', 'dark']) {
+      await lp.emulateMedia({ colorScheme: scheme });
+      bars.push(await lp.evaluate(() => {
+        window.scrollTo(0, document.getElementById('export-btn').getBoundingClientRect().top + scrollY - 20);
+        const cs = getComputedStyle(document.querySelector('.bar'));
+        const solid = !/rgba\(.*,\s*0?\.\d+\)$|transparent/.test(cs.backgroundColor) && cs.backgroundColor === getComputedStyle(document.body).backgroundColor;
+        const fx = (cs.backdropFilter || 'none') + (cs.webkitBackdropFilter || 'none');
+        window.scrollTo(0, 0);
+        return { bg: cs.backgroundColor, solid, fx };
+      }));
+    }
+    await lp.emulateMedia({ colorScheme: 'light' });
+    check(`${w}px: thanh trên dính có nền đặc, không làm mờ nội dung dưới (sáng, tối)`, bars.every((b) => b.solid && b.fx === 'nonenone')
+      && bars[0].bg !== bars[1].bg, JSON.stringify(bars));
     // Vòng đã đóng: nhãn "Iteration N" ở đầu bước, chú thích số lần mở lại và ngày mở lại cuối; bước đang mở lại (có băng),
     // bước chưa mở lại thì không có nhãn.
     const iter = await lp.evaluate(() => [...document.querySelectorAll('.step[data-step]')].map((r) => {

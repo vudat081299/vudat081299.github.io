@@ -244,15 +244,9 @@ svg.i {
   :root:not([data-theme="light"]) .theme-moon { display: none; }
 }
 
-/* ── Thanh trên (chép từ md-annotate: .ma-bar, .ma-brand): dính, nền mờ, dấu nhãn, nút theme ── */
-.bar {
-  position: sticky; top: 0; z-index: 30;
-  background: color-mix(in srgb, var(--bg) 84%, transparent);
-  backdrop-filter: saturate(160%) blur(12px);
-  -webkit-backdrop-filter: saturate(160%) blur(12px);
-  border-bottom: var(--line-w) solid var(--line);
-}
-@supports not (backdrop-filter: blur(1px)) { .bar { background: var(--bg); } }
+/* ── Thanh trên (chép từ md-annotate: .ma-bar, .ma-brand): dính, nền đặc (nội dung cuộn dưới không loang màu qua), dấu nhãn,
+   nút theme ── */
+.bar { position: sticky; top: 0; z-index: 30; background: var(--bg); border-bottom: var(--line-w) solid var(--line); }
 .bar-in { display: flex; align-items: center; gap: var(--s2); min-height: var(--bar-h); }
 .brand {
   display: inline-flex; align-items: center; gap: var(--s3); min-width: 0; min-height: var(--h-touch);
