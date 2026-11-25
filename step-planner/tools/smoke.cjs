@@ -1378,6 +1378,34 @@ const check = (name, ok, detail = '') => {
     && (await bp.$$('.step')).length === nSteps && !bErr.length, bErr.join(' | '));
   await blocked.close();
 
+  /* ── Bố cục bước: bước đang mở lại có tài liệu, bước đã đóng vòng, bước chưa có bước con xong ── */
+  const lay = { version: 2, lastId: 'wl', workspaces: [{ id: 'wl', name: 'Bố cục', steps: [
+    { id: 'tl1', title: 'Đang mở lại', round: 2, revisit: { reason: 'Thiếu cột', date: '2026-11-20', round: 2 },
+      docs: [{ id: 'dl1', kind: 'link', title: 'Từ điển dữ liệu', url: 'https://a.example' }],
+      subs: [{ id: 'sl1', title: 'Một', status: 'done' }, { id: 'sl2', title: 'Hai', status: 'todo', redo: true }] },
+    { id: 'tl2', title: 'Đã đóng vòng', round: 3, subs: [{ id: 'sl3', title: 'Ba', status: 'done' }, { id: 'sl4', title: 'Bốn', status: 'todo' }] },
+    { id: 'tl3', title: 'Chưa xong gì', subs: [{ id: 'sl5', title: 'Năm', status: 'doing' }, { id: 'sl6', title: 'Sáu', status: 'todo', par: true }] }],
+  log: [{ id: 'll1', date: '2026-11-10', decision: 'Reopened: Đã đóng vòng (iteration 2)', why: 'a', stepId: 'tl2' },
+    { id: 'll2', date: '2026-11-18', decision: 'Reopened: Đã đóng vòng (iteration 3)', why: 'b', stepId: 'tl2' }] }] };
+  for (const [w, hgt] of [[1440, 900], [390, 844]]) {
+    const lc = await browser.newContext({ viewport: { width: w, height: hgt }, hasTouch: w < 500, isMobile: w < 500 });
+    await lc.addInitScript((d) => { if (!localStorage.getItem('stepPlanner.v2')) localStorage.setItem('stepPlanner.v2', d); }, JSON.stringify(lay));
+    const lp = await lc.newPage();
+    lp.on('pageerror', (e) => errors.push(String(e)));
+    await lp.goto(BASE);
+    await lp.waitForSelector('#app:not([hidden]) .card[data-sub]');
+    const ord = await lp.evaluate(() => {
+      const row = document.querySelector('.step[data-step="tl1"]');
+      const r = (s) => row.querySelector(s).getBoundingClientRect();
+      return { head: r('.step-head'), band: r('.revisit-band'), docs: r('.step-docs'), cards: r('.cards-scroll') };
+    });
+    check(`${w}px: bước đọc liền một khối (${w < 500 ? 'đầu bước, băng, tài liệu, thẻ' : 'băng, tài liệu trên cột tên và hàng thẻ'})`, w < 500
+      ? ord.head.bottom <= ord.band.top + 1 && ord.band.bottom <= ord.docs.top + 1 && ord.docs.bottom <= ord.cards.top + 1
+      : ord.band.bottom <= ord.docs.top + 1 && ord.docs.bottom <= Math.min(ord.head.top, ord.cards.top) + 1,
+    JSON.stringify(Object.fromEntries(Object.entries(ord).map(([k, v]) => [k, [Math.round(v.top), Math.round(v.bottom)]]))));
+    await lc.close();
+  }
+
   /* ── Hàng đầu thẻ chật (số, "Tiếp theo", nhãn kẹp, chip dài): không chữ nào bị bẻ dòng, không tràn thẻ ── */
   const crowd = { version: 2, lastId: 'wc', workspaces: [{ id: 'wc', name: 'Chật', steps: [{ id: 'tc', title: 'B', subs: [
     { id: 'sc1', title: 'Một', status: 'doing', docs: [{ id: 'dc1', kind: 'link', title: 'L', url: 'https://a.example' }] },

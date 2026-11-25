@@ -471,8 +471,10 @@ svg.i {
 .cards-scroll.more-left.more-right { mask-image: linear-gradient(to right, transparent, var(--mask) var(--fade), var(--mask) calc(100% - var(--fade)), transparent); }
 /* Thẻ không bị kéo cao bằng thẻ cao nhất hàng: mỗi thẻ cao theo nội dung (--card-min … --card-max). */
 .cards { display: flex; gap: var(--s3); align-items: flex-start; }
+/* Một cột: bước đọc liền một khối — đầu bước (số, tên) trước, rồi băng Reopened, dải tài liệu, hàng thẻ. */
 @media (max-width: 640px) {
   .step { grid-template-columns: minmax(0, 1fr); }
+  .step-head { order: -1; }
   .step-head .acts { gap: 0; }
   .step-head .acts .btn.small { padding: 0 var(--s2); }
 }
@@ -498,6 +500,9 @@ svg.i {
 .gap-add:hover::before, .gap-add:hover .gap-add-btn, .gap-add-btn:focus-visible { opacity: 1; }
 @media (hover: none) {
   .step { padding-top: var(--s5); }
+  /* Chỉ nút nhận chạm: vạch không che vùng bấm của tên bước ngay dưới nó. */
+  .gap-add { pointer-events: none; }
+  .gap-add-btn { pointer-events: auto; }
   .gap-add-btn { opacity: .7; width: var(--h-xs); padding: 0; justify-content: center; color: var(--ink-3); background: var(--surface); border: var(--line-w) solid var(--line); box-shadow: none; }
   .gap-add-btn span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
   .gap-add-btn::after { content: ''; position: absolute; left: 50%; top: 50%; width: var(--hit); height: var(--hit); transform: translate(-50%, -50%); }

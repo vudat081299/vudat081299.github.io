@@ -186,7 +186,7 @@ Nhập file cũ và Markdown viết tay (dễ dãi):
 - Biểu tượng: một bộ `<symbol id="i-…">` trong `index.html` qua `<use>`, không ký tự unicode; nút chỉ biểu tượng có `aria-label`, `title`.
 - Đầu dự án: tên (bấm để đổi dự án), tiến độ chung, chú giải trạng thái kèm số đếm. Chip trạng thái có chữ và chấm khác hình.
 - Cột tên bước rộng cố định, thẻ cùng bề rộng (các hàng thẳng cột). Hàng thẻ cuộn ngang bên trong, không hiện thanh cuộn,
-  mép mờ báo còn chỗ cuộn. ≤ 640px: tên bước nằm trên hàng thẻ.
+  mép mờ báo còn chỗ cuộn. ≤ 640px: một cột, đầu bước trên cùng, rồi băng Reopened, dải tài liệu, hàng thẻ.
 - Hộp thoại: chỉ thân cuộn (đầu, chân đứng yên; trang sau khoá cuộn); ≤ 640px tấm đáy; Markdown toàn màn; trạng thái: viên radio.
 - Mọi `<select>` chọn thứ có nghĩa dùng danh sách tự dựng (nổi ở lớp trên cùng, không đẩy bố cục; phím ↑ ↓, gõ chữ đầu,
   Enter, Esc trả focus); ô chỉ chọn số giữ `<select>` gốc (`data-native`). Option có `data-dot`, `data-hint` thì hiện thêm.
