@@ -350,8 +350,11 @@ const cornerClash = (page) => page.evaluate(() => {
     return r;
   });
   const edH = await page.evaluate(() => { const p = document.getElementById('pane-edit'), ta = document.getElementById('src-input'), tools = document.getElementById('edit-tools');
-    return { h: p.offsetHeight, vh: innerHeight, gap: p.getBoundingClientRect().bottom - tools.getBoundingClientRect().bottom, fill: ta.offsetHeight > innerHeight / 2 }; });
-  check('Edit: khung cao một khung nhìn, ô chữ giãn hết, đáy còn đệm', Math.abs(edH.h - edH.vh) < 2 && edH.gap > 8 && edH.fill, JSON.stringify(edH));
+    const r = p.getBoundingClientRect();
+    return { bottom: innerHeight - r.bottom, gap: r.bottom - tools.getBoundingClientRect().bottom, fill: ta.offsetHeight > 200,
+      fit: document.documentElement.classList.contains('ma-fit'), scroll: document.scrollingElement.scrollHeight - innerHeight }; });
+  check('Edit: khung lấp tới gần đáy khung nhìn, trang không cuộn, ô chữ giãn hết, đáy còn đệm', edH.bottom > 0 && edH.bottom < 40 && edH.fit
+    && edH.gap > 8 && edH.fill, JSON.stringify(edH));
   check('Edit: lề số dòng khớp từng dòng nguồn, cùng chỗ xuống hàng, theo cuộn', eln.same && eln.n === eln.lines && eln.num === 'counter(eln)' && eln.shown
     && eln.dh >= 0 && eln.dh < 8 && eln.moved && eln.w, JSON.stringify(eln));
   const o6 = await out(page);

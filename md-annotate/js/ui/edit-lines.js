@@ -2,9 +2,10 @@
    chữ trong suốt, cùng font, đệm, bề rộng và cách xuống hàng với ô chữ, nên số (::before, counter) đứng đúng đầu dòng kể cả
    dòng dài xuống hàng. Lớp không nhận chuột; dời theo chỗ cuộn của ô chữ. Gõ chữ chỉ dựng lại các dòng đã đổi (lineDiff).
    Xuất: initEditLines, paintEditLines.
-   Dùng: core/text.js, ui/dom.js. */
+   Dùng: core/text.js, ui/dom.js, ui/views.js. */
 import { lineDiff } from '../core/text.js';
 import { $, h } from './dom.js';
+import { sizePanes } from './views.js';
 
 var ta, box, list, lines = [];
 
@@ -30,7 +31,10 @@ export function paintEditLines() {
   /* Lề rộng theo số chữ số của dòng cuối; văn bản trống: không lề, chữ gợi ý đứng như cũ. */
   var gw = Math.max(2, String(next.length).length) + 'ch';
   ta.style.setProperty('--ed-gw', gw); list.style.setProperty('--ed-gw', gw);
-  $('pane-edit').classList.toggle('has-ln', ta.value !== '');
+  /* Có chữ / hết chữ: khung Edit vào / ra khỏi cỡ vừa khung nhìn (sizePanes). */
+  var pane = $('pane-edit'), had = pane.classList.contains('has-ln');
+  pane.classList.toggle('has-ln', ta.value !== '');
+  if (had !== (ta.value !== '')) sizePanes();
   fit(); follow();
 }
 

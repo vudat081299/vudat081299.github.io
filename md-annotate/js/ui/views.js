@@ -62,12 +62,14 @@ export function refreshSplit() {
   if (view !== 'edit' && prefs.view === 'split' && (view === 'split') !== splitShown()) setView('split');
   else sizePanes();
 }
+/* Split: hai khung cao phần còn lại của khung nhìn (--pane-h). Edit có chữ: khung Edit cũng vậy (--edit-h), ô chữ giãn
+   trong nó. Vừa khung nhìn thì khoá cuộn trang (ma-fit). */
 export function sizePanes() {
-  var v = $('views'), de = document.documentElement;
-  if (!isSplit() || v.hidden) { de.classList.remove('ma-fit'); return; }
+  var v = isSplit() ? $('views') : $('pane-edit'), de = document.documentElement;
+  if (v.hidden || (v.id === 'pane-edit' && !v.classList.contains('has-ln'))) { de.classList.remove('ma-fit'); return; }
   var top = v.getBoundingClientRect().top + window.scrollY;
   var ph = paneHeight(window.innerHeight, top, window.innerHeight - dockTop());   // dưới đỉnh thanh đáy (≤ 1080px) là của nó
-  v.style.setProperty('--pane-h', ph.h + 'px');
+  v.style.setProperty(v.id === 'pane-edit' ? '--edit-h' : '--pane-h', ph.h + 'px');
   if (ph.fit && !de.classList.contains('ma-fit')) window.scrollTo(0, 0);
   de.classList.toggle('ma-fit', ph.fit);
 }
