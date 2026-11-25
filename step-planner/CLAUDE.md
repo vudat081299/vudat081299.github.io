@@ -63,10 +63,10 @@
   sau nó; phần dưới thẻ hay giữa ô song song: nhập ô ấy. Gần mép thì hàng / trang tự cuộn; Esc huỷ. Bước không có nút lên xuống.
 - Đổi chỗ (mọi cách): cái vừa dời có lớp `moved`, cái bị đổi chỗ có `swapped` (tự gỡ sau `--flash-dur`); toast "Moved …"
   có Hoàn tác, không lấy focus. Dời liền nhiều lần khi toast còn hiện: Hoàn tác về chỗ trước lần đầu.
-- "Reopen" (PLAN-004): hộp có một câu khi nào dùng, lý do bắt buộc, danh sách bước con đã xong để gửi lại làm (mặc định
-  không chọn). Mở vòng `round + 1`; bước con đã chọn về New, mang dấu "Redo" tới khi xong lại; nhật ký ghi "Reopened: tên
-  (iteration N)" gắn với bước ấy; một Hoàn tác trả hết. Băng "Reopened · Iteration N · ngày · lý do" (bấm để sửa lý do) đếm "k of n redo
-  tasks left"; xong hết thì "Close iteration" thành nút chính. Đóng vòng bỏ băng và dấu Redo (Hoàn tác được).
+- "Reopen" (PLAN-004): hộp có một câu khi nào dùng, lý do bắt buộc, danh sách bước con đã xong để gửi lại làm (mặc định không chọn). Mở vòng
+  `round + 1`; bước con đã chọn về New, mang dấu "Redo" tới khi xong lại; nhật ký ghi "Reopened: tên (iteration N)" gắn với bước ấy; một Hoàn tác trả
+  hết. Băng "Reopened · Iteration N · ngày · lý do" (bấm để sửa lý do) đếm "k of n redo tasks left"; xong hết thì "Close iteration" thành nút chính.
+  Đóng vòng bỏ băng và dấu Redo (Hoàn tác được). Hết băng mà `round` > 1: đầu bước có nhãn "Iteration N".
 - Mẹo tắt bằng ×; "Compact" ẩn "Done when", ghi chú, lý do, ở cảm ứng cả nút thẻ (cả hai nhớ ở máy này). "Log (N)" tới nhật ký,
   focus. Tìm bỏ qua dấu và hoa thường, khớp cả lý do, tài liệu; bước khớp thì hiện cả hàng; đang tìm thì tắt sắp xếp, thêm bước.
 - Xoá bước con, quyết định, tài liệu: một bấm. Xoá bước còn bước con, xoá dự án (không hoàn tác): hỏi lại. Sau khi xoá,

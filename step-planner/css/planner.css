@@ -453,6 +453,12 @@ svg.i {
 }
 .step.is-done .step-num { background: var(--accent); color: var(--on-accent); }
 .step-title { font: 600 var(--fs-lg)/var(--lh-tight) var(--display); min-width: 0; overflow-wrap: anywhere; }
+/* Vòng đã đóng (không còn băng Reopened): nhãn trơn "Iteration N" dưới tên, giữ dấu lịch sử. */
+.step-iter {
+  align-self: flex-start; display: inline-flex; align-items: center; gap: var(--s1); min-height: var(--h-xs); padding: 0 var(--s2);
+  font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-3); background: var(--chip); border-radius: var(--r-pill);
+}
+.step-iter svg.i { width: var(--fs-sm); height: var(--fs-sm); }
 /* Tên bước, nhãn "Ghi chú" là chữ bấm được: vùng bấm nới tới --hit bằng lớp giả, không đổi bố cục. */
 .step-title .link, .more, .step-notes summary { position: relative; }
 .step-title .link::after, .more::after, .step-notes summary::after {

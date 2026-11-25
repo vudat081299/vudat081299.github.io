@@ -237,14 +237,18 @@ function renderBoard(ws, opt = {}) {
   const docTitles = (/** @type {any[]} */ docs) => docs.map((d) => d.title).join(' ');
   /* 1. Dữ liệu: hàng nào hiện, khoá của nó, dùng lại được hàng cũ không. Chưa đọc, chưa ghi DOM. */
   const plan = [];
+  /** Ngày mở lại cuối của bước đã đóng vòng (chú thích nhãn "Iteration N"); nằm trong khoá hàng vì nó đọc nhật ký. */
+  const reopenedOn = new Map();
   let shown = 0;
   ws.steps.forEach((/** @type {any} */ step, /** @type {number} */ i) => {
     const stepHit = !!q && foldOf(step, () => [step.title, step.goal, step.doneWhen, step.notes, step.revisit?.reason, docTitles(step.docs)]).includes(q);
     const visible = step.subs.filter((/** @type {any} */ x) => !q || stepHit || foldOf(x, () => [x.title, x.doneWhen, x.notes, x.reason, docTitles(x.docs)]).includes(q));
     if (filtering && !visible.length && !stepHit) return;
     shown += visible.length;
+    if (!step.revisit && step.round > 1) reopenedOn.set(step.id, lastReopened(ws, step));
     const key = JSON.stringify([step, filtering ? visible.map((/** @type {any} */ x) => x.id) : null,
-      labels.get(step.id) ?? null, step.subs.map((/** @type {any} */ x) => [labels.get(x.id) ?? null, nextIds.has(x.id)]), todayStr]);
+      labels.get(step.id) ?? null, step.subs.map((/** @type {any} */ x) => [labels.get(x.id) ?? null, nextIds.has(x.id)]), todayStr,
+      reopenedOn.get(step.id) ?? null]);
     const prev = old.get(step.id);
     plan.push({ step, i, visible, key, row: reuse && prev && rowKeys.get(prev) === key ? prev : null, prev });
   });
@@ -266,7 +270,7 @@ function renderBoard(ws, opt = {}) {
   const compactChanged = board.classList.contains('compact') !== compact;
   board.classList.toggle('compact', compact);
   $('compact-btn').setAttribute('aria-pressed', String(compact));
-  const ctx = { filtering, todayStr, nextIds, labels, keep };
+  const ctx = { filtering, todayStr, nextIds, labels, keep, reopenedOn };
   /** @type {HTMLElement[]} */
   const fresh = [];
   const nodes = plan.map((p) => {
@@ -351,9 +355,9 @@ function patchRowIndex(row, i) {
 
 /** Dựng một hàng (bước): đầu bước, băng Reopened, dải tài liệu, hàng thẻ theo ô.
  * @param {any} step @param {number} i @param {any[]} visible
- * @param {{filtering:boolean, todayStr:string, nextIds:Set<string>, labels:Map<string,string>, keep:{notes:Set<string>, open:Set<string>}}} ctx */
+ * @param {{filtering:boolean, todayStr:string, nextIds:Set<string>, labels:Map<string,string>, keep:{notes:Set<string>, open:Set<string>}, reopenedOn:Map<string,string>}} ctx */
 function stepRow(step, i, visible, ctx) {
-  const { filtering, todayStr, nextIds, labels, keep } = ctx;
+  const { filtering, todayStr, nextIds, labels, keep, reopenedOn } = ctx;
   const prog = C.progress(step.subs);
   const done = prog.total > 0 && prog.done === prog.total;
   const head = h('div', { class: 'step-head' },
@@ -362,6 +366,7 @@ function stepRow(step, i, visible, ctx) {
       numTag('step-num', labels.get(step.id)),
       h('h2', { class: 'step-title', id: 'st-' + step.id },
         h('button', { type: 'button', class: 'link', 'data-act': 'edit-step', 'aria-label': `Step ${labels.get(step.id) ?? '(added this session)'}: ${step.title}. Edit`, 'aria-keyshortcuts': 'Alt+ArrowUp Alt+ArrowDown' }, step.title))),
+    reopenedOn.has(step.id) && iterTag(step, reopenedOn.get(step.id)),
     step.goal && h('p', { class: 'step-goal' }, step.goal),
     step.doneWhen && h('p', { class: 'step-done' }, h('span', { class: 'lbl' }, 'Done when '), step.doneWhen),
     step.notes && h('details', { class: 'step-notes', open: keep.notes.has(step.id) }, h('summary', {}, icon('chev'), 'Notes'), h('p', { class: 'notes-text' }, withLinks(step.notes))),
@@ -553,6 +558,15 @@ function barFill(/** @type {number} */ pct) {
 const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 /** Dòng do "Reopen" tự ghi. */
 const AUTO_LOG = /^Reopened: .+ \(iteration \d+\)$/;
+/** Ngày của dòng nhật ký tự ghi mới nhất khi mở lại bước này ('' nếu không còn). @param {any} ws @param {any} step @returns {string} */
+const lastReopened = (ws, step) => ws.log.filter((/** @type {any} */ l) => l.stepId === step.id && AUTO_LOG.test(l.decision))
+  .map((/** @type {any} */ l) => l.date).sort().at(-1) || '';
+/** Bước đã mở lại rồi đóng vòng (không còn băng): nhãn "Iteration N" ở đầu bước, chú thích số lần mở lại, ngày mở lại cuối.
+ * @param {any} step @param {string} last */
+function iterTag(step, last) {
+  const title = `Reopened ${C.plural(step.round - 1, 'time')}, every iteration closed${last ? ` · last reopened ${fmtDate(last)}` : ''}`;
+  return h('p', { class: 'step-iter', title }, icon('redo'), `Iteration ${step.round}`);
+}
 /** Quyết định đang mở hết lý do ("Show more"); vẽ lại vẫn giữ. */
 const logOpen = new Set();
 /** Option "No step" + mọi bước (kèm số đang hiện) cho ô Step của nhật ký. @param {any} ws */

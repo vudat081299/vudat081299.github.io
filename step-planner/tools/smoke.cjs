@@ -1403,6 +1403,14 @@ const check = (name, ok, detail = '') => {
       ? ord.head.bottom <= ord.band.top + 1 && ord.band.bottom <= ord.docs.top + 1 && ord.docs.bottom <= ord.cards.top + 1
       : ord.band.bottom <= ord.docs.top + 1 && ord.docs.bottom <= Math.min(ord.head.top, ord.cards.top) + 1,
     JSON.stringify(Object.fromEntries(Object.entries(ord).map(([k, v]) => [k, [Math.round(v.top), Math.round(v.bottom)]]))));
+    // Vòng đã đóng: nhãn "Iteration N" ở đầu bước, chú thích số lần mở lại và ngày mở lại cuối; bước đang mở lại (có băng),
+    // bước chưa mở lại thì không có nhãn.
+    const iter = await lp.evaluate(() => [...document.querySelectorAll('.step[data-step]')].map((r) => {
+      const t = r.querySelector('.step-head .step-iter');
+      return t ? `${r.dataset.step}:${t.textContent}:${t.title}` : `${r.dataset.step}:-`;
+    }));
+    check(`${w}px: vòng đã đóng có nhãn "Iteration N" (chú thích lần mở lại, ngày cuối), không lặp băng`, iter[0] === 'tl1:-' && iter[2] === 'tl3:-'
+      && /^tl2:Iteration 3:Reopened 2 times.* · last reopened 18 Nov 2026$/.test(iter[1]), iter.join(' | '));
     // Gọn: thẻ co theo nội dung (thấp hơn hẳn), hàng sát hơn; ô song song không chồng lên nhau; nút thẻ không giữ chỗ.
     const sizes = () => lp.evaluate(() => {
       const hs = [...document.querySelectorAll('.card[data-sub]')].map((c) => c.getBoundingClientRect());
