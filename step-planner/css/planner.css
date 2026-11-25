@@ -101,6 +101,8 @@
   --head-w: 260px;                     /* cột tên bước */
   --card-w: 236px;                     /* mọi thẻ cùng rộng: các hàng thẳng cột */
   --card-min: 120px;                   /* thẻ cao theo nội dung, trong khoảng này */
+  --card-min-compact: 64px;            /* chế độ Gọn: thẻ chỉ còn hàng đầu và tên */
+  --goal-clamp: 2;                     /* chế độ Gọn: số dòng mục tiêu bước */
   --card-max: 300px;
   --how-w: 680px;
   --dlg-w: 660px;
@@ -402,8 +404,22 @@ svg.i {
   .tool-btns .btn { flex: 1 1 0; padding: 0 var(--s2); }
 }
 
-/* ── Chế độ Gọn: thẻ và cột bước chỉ còn số, tên, chip, hạn, nhãn tài liệu ── */
+/* ── Chế độ Gọn: thẻ và cột bước chỉ còn số, tên, chip, hạn, nhãn tài liệu; thẻ co theo nội dung, hàng sát hơn ── */
 .board.compact :is(.card-done, .card-notes, .card-reason, .step-done, .step-notes) { display: none; }
+.board.compact .step { padding-bottom: var(--s4); }
+.board.compact .step-goal {
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: var(--goal-clamp); line-clamp: var(--goal-clamp); overflow: hidden;
+}
+.board.compact .card { min-height: var(--card-min-compact); }
+/* Chuột: nút của thẻ nổi ở góc dưới khi rê hay focus, không giữ chỗ một hàng trống. Cảm ứng: ẩn (song song, nhân bản, xoá
+   có trong hộp sửa, chạm thẻ là mở). */
+@media (hover: hover) {
+  .board.compact .card .acts {
+    position: absolute; right: var(--s1); bottom: var(--s1); margin: 0;
+    background: var(--surface); border-radius: var(--r-sm); box-shadow: var(--lift);
+  }
+}
+@media (hover: none) { .board.compact .card .acts { display: none; } }
 
 /* ── Ghi chú dự án (gập) ── */
 .ws-notes { padding: 0 0 var(--s3); font-size: var(--fs-sm); }
@@ -641,6 +657,9 @@ span.chip::after { content: none; }
   position: fixed; left: 0; top: 0; z-index: 95; margin: 0; pointer-events: none; will-change: transform;
   box-shadow: var(--shadow-pop); rotate: var(--drag-tilt); scale: var(--drag-scale); transform-origin: top left;
 }
+/* Bóng thẻ nằm ngoài bảng: cao đúng bằng thẻ gốc (drag.js đặt), kể cả ở chế độ Gọn; không mang hàng nút. */
+.card.drag-ghost { min-height: 0; }
+.card.drag-ghost .acts { display: none; }
 .step-head.drag-ghost { padding: var(--s3); background: var(--surface); border: var(--line-w) solid var(--line); border-radius: var(--r); }
 .drop-ph, .step-ph {
   display: flex; align-items: center; justify-content: center; text-align: center; padding: var(--s3);

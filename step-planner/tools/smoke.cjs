@@ -1403,6 +1403,25 @@ const check = (name, ok, detail = '') => {
       ? ord.head.bottom <= ord.band.top + 1 && ord.band.bottom <= ord.docs.top + 1 && ord.docs.bottom <= ord.cards.top + 1
       : ord.band.bottom <= ord.docs.top + 1 && ord.docs.bottom <= Math.min(ord.head.top, ord.cards.top) + 1,
     JSON.stringify(Object.fromEntries(Object.entries(ord).map(([k, v]) => [k, [Math.round(v.top), Math.round(v.bottom)]]))));
+    // Gọn: thẻ co theo nội dung (thấp hơn hẳn), hàng sát hơn; ô song song không chồng lên nhau; nút thẻ không giữ chỗ.
+    const sizes = () => lp.evaluate(() => {
+      const hs = [...document.querySelectorAll('.card[data-sub]')].map((c) => c.getBoundingClientRect());
+      const par = [...document.querySelectorAll('.slot.par .card[data-sub]')].map((c) => c.getBoundingClientRect());
+      return { card: Math.max(...hs.map((r) => r.height)), row: document.querySelector('.step[data-step="tl3"]').getBoundingClientRect().height,
+        stacked: par.length === 2 && par[1].top >= par[0].bottom, s5: document.querySelector('.card[data-sub="sl5"]').getBoundingClientRect().height };
+    });
+    const full = await sizes();
+    await lp.click('#compact-btn');
+    const comp = await sizes();
+    await lp.hover('.card[data-sub="sl5"] .card-title');
+    await lp.waitForTimeout(250);
+    const hov = await lp.$eval('.card[data-sub="sl5"]', (c) => {
+      const a = c.querySelector('.acts'), r = c.getBoundingClientRect(), ra = a.getBoundingClientRect();
+      return { h: r.height, shown: a.offsetParent !== null && getComputedStyle(a).opacity === '1', inside: ra.bottom <= r.bottom && ra.right <= r.right };
+    });
+    check(`${w}px: Gọn: thẻ thấp hẳn, hàng sát hơn, ô song song không chồng; nút thẻ ${w < 500 ? 'ẩn (cảm ứng)' : 'nổi trong thẻ khi rê, không đổi cao'}`,
+      comp.card <= full.card * 0.8 && comp.row < full.row && comp.stacked
+      && (w < 500 ? !hov.shown : hov.shown && hov.inside && Math.abs(hov.h - comp.s5) < 1), JSON.stringify({ full, comp, hov }));
     await lc.close();
   }
 
