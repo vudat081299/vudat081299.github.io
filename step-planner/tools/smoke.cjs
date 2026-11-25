@@ -409,6 +409,12 @@ const check = (name, ok, detail = '') => {
   check('dời: thẻ vừa dời tô nổi, thẻ bị đổi chỗ tô nhẹ, toast tả chỗ mới bằng tên (không bằng số)',
     mk.moved.join() === before[1] && mk.swapped.join() === before[0] && mk.toast.startsWith(`Moved "${(await titleOf(before[1])).slice(0, 20)}`)
     && / to the start of the row$/.test(mk.toast), JSON.stringify(mk));
+  const flashRing = await page.evaluate(() => {
+    const el = document.querySelector('.card.moved');
+    const kf = el ? el.getAnimations().flatMap((a) => a.effect.getKeyframes()) : [];
+    return { n: kf.length, out: kf.filter((k) => k.offset === 0).map((k) => k.boxShadow || '').filter((s) => s && !s.split(/,(?![^(]*\))/)[0].includes('inset')) };
+  });
+  check('dời: vòng tô của thẻ nằm trong viền (inset), hàng cuộn ngang không cắt mất', flashRing.n > 0 && flashRing.out.length === 0, JSON.stringify(flashRing));
   await page.keyboard.press('Alt+ArrowRight');
   await page.keyboard.press('Alt+ArrowRight');
   mk = await marks();

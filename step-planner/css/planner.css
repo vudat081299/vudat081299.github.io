@@ -681,13 +681,12 @@ span.chip::after { content: none; }
 @media (pointer: coarse) { .card[data-sub] { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; } }
 
 /* ── Vừa dời: thẻ / hàng vừa di chuyển nổi lên rồi mờ dần; thẻ bị đổi chỗ với nó nhạt hơn ── */
+/* Vòng tô nằm trong viền thẻ (inset): hàng thẻ cuộn ngang cắt mọi thứ vẽ ra ngoài. Chỉ có `from` để mờ về đúng kiểu đang có (vd .next). */
 @keyframes moved-card {
-  from { background-color: var(--flash); box-shadow: 0 0 0 var(--mark-w) var(--flash-ring); }
-  to { background-color: var(--surface); box-shadow: 0 0 0 var(--mark-w) transparent; }
+  from { background-color: var(--flash); border-color: var(--flash-ring); box-shadow: inset 0 0 0 calc(var(--mark-w) - var(--line-w)) var(--flash-ring), var(--shadow-1); }
 }
 @keyframes swapped-card {
-  from { background-color: var(--flash-2); box-shadow: 0 0 0 var(--line-w) var(--flash-ring-2); }
-  to { background-color: var(--surface); box-shadow: 0 0 0 var(--line-w) transparent; }
+  from { background-color: var(--flash-2); border-color: var(--flash-ring-2); }
 }
 @keyframes moved-row { from { background-color: var(--flash); } to { background-color: transparent; } }
 @keyframes swapped-row { from { background-color: var(--flash-2); } to { background-color: transparent; } }
@@ -698,8 +697,8 @@ span.chip::after { content: none; }
 /* Giảm chuyển động: đánh dấu đứng yên trong --flash-dur (main.js gỡ lớp), không mờ dần. */
 @media (prefers-reduced-motion: reduce) {
   .card.moved, .card.swapped, .step.moved, .step.swapped { animation: none; }
-  .card.moved { background-color: var(--flash); box-shadow: 0 0 0 var(--mark-w) var(--flash-ring); }
-  .card.swapped { background-color: var(--flash-2); box-shadow: 0 0 0 var(--line-w) var(--flash-ring-2); }
+  .card.moved { background-color: var(--flash); border-color: var(--flash-ring); box-shadow: inset 0 0 0 calc(var(--mark-w) - var(--line-w)) var(--flash-ring), var(--shadow-1); }
+  .card.swapped { background-color: var(--flash-2); border-color: var(--flash-ring-2); }
   .step.moved { background-color: var(--flash); }
   .step.swapped { background-color: var(--flash-2); }
 }
