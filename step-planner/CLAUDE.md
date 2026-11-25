@@ -82,7 +82,7 @@
   hàng trong hộp. Link mở tab mới (`noopener noreferrer`); văn bản mở hộp lớn Edit / Preview (`#dlg-md`).
 - Nhật ký (PLAN-005): ô ghi gập tới khi bấm; mở thì focus Decision, ngày mặc định hôm nay, bước tuỳ chọn; Esc gập, giữ chữ.
   Mới nhất trước, nhóm theo tháng; lý do dài cắt, "Show more"; bấm mục là sửa; bấm chip bước là tới bước ấy (bỏ lọc nếu cần).
-- Ghi bộ nhớ sau khung hình kế (rời, ẩn trang: ghi ngay). Tab khác sửa cùng khoá thì đọc lại (`storage`), giữ dự án của tab.
+- Ghi bộ nhớ ở lượt việc kế, không chờ khung hình (tab nền bị hãm khung hình, tab kia ghi đè); rời, ẩn trang: ghi ngay. Tab khác sửa cùng khoá thì đọc lại (`storage`), giữ dự án của tab.
 - Nhắc sao lưu: thay đổi chưa sao lưu ≥ 3 ngày thì nút nhắc hiện cạnh Export, bấm là tải sao lưu mọi dự án (mới đặt lại mốc).
 - Chữ người dùng chỉ vào DOM qua text node; không `innerHTML` ở `js/`. Không `alert` / `confirm` / `prompt` (`#dlg-ask`).
 

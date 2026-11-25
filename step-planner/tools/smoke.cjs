@@ -32,7 +32,7 @@ const check = (name, ok, detail = '') => {
     if (!res || res.status() !== 200) throw new Error('HTTP ' + (res && res.status()));
     return { ctx, page };
   };
-  /* Trang ghi bộ nhớ sau khung hình kế: chờ một khung hình rồi mới đọc. */
+  /* Trang ghi bộ nhớ ở lượt việc kế: chờ một khung hình và một lượt rồi mới đọc. */
   const afterSave = (page) => page.evaluate(() => new Promise((r) => requestAnimationFrame(() => setTimeout(r, 0))));
   const stored = async (page) => { await afterSave(page); return page.evaluate(() => JSON.parse(localStorage.getItem('stepPlanner.v2') || 'null')); };
   const cur = async (page) => { const s = await stored(page); return s.workspaces.find((w) => w.id === s.lastId); };

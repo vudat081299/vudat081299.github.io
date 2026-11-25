@@ -84,14 +84,13 @@ function setBanner(/** @type {string} */ key, /** @type {string} */ msg) {
   b.hidden = !banners.size;
 }
 
-/* Ghi bộ nhớ sau khung hình kế (chuỗi JSON của mọi dự án tốn vài ms, không nằm trên đường của một lần bấm); nhiều thay đổi
- * liền nhau ghi một lần. Tab ẩn không có khung hình: hẹn giờ dự phòng. Rời trang, ẩn tab: ghi ngay. */
+/* Ghi bộ nhớ ở lượt việc kế (mọi thay đổi của một lần bấm gộp một lần ghi). Không chờ khung hình: tab nền bị hãm khung
+ * hình, tab kia ghi trước thì thay đổi của tab này mất. Rời trang, ẩn tab: ghi ngay. */
 let savePending = false;
 function persist() {
   if (!storageOK || savePending) return;
   savePending = true;
-  requestAnimationFrame(() => setTimeout(flushSave, 0));
-  setTimeout(flushSave, 250);
+  setTimeout(flushSave, 0);
 }
 function flushSave() {
   if (!savePending) return;
