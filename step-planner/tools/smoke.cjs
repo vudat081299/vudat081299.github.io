@@ -1413,6 +1413,14 @@ const check = (name, ok, detail = '') => {
     lp.on('pageerror', (e) => errors.push(String(e)));
     await lp.goto(BASE);
     await lp.waitForSelector('#app:not([hidden]) .card[data-sub]');
+    const foot = await lp.evaluate(() => {
+      const f = document.querySelector('.site-foot'); const app = document.getElementById('app').getBoundingClientRect();
+      const a = [...f.querySelectorAll('a')];
+      return { below: f.getBoundingClientRect().top >= app.bottom, shown: f.offsetHeight > 0, kb: document.querySelector('.foot-kb').offsetHeight > 0,
+        home: a.some((x) => x.getAttribute('href') === '../'), ext: a.filter((x) => x.target === '_blank').every((x) => /noopener/.test(x.rel) && x.href.startsWith('https://')) };
+    });
+    check(`chân trang ${w}px: dưới bảng, có link trang chủ, link ngoài noopener; cột phím tắt ${w < 500 ? 'ẩn ở cảm ứng' : 'hiện'}`,
+      foot.shown && foot.below && foot.home && foot.ext && foot.kb === !(w < 500), JSON.stringify(foot));
     const ord = await lp.evaluate(() => {
       const row = document.querySelector('.step[data-step="tl1"]');
       const r = (s) => row.querySelector(s).getBoundingClientRect();

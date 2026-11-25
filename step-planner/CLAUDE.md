@@ -182,7 +182,7 @@ Nhập file cũ và Markdown viết tay (dễ dãi):
 ## Giao diện
 
 - Màu, cỡ, khoảng cách chỉ ở token đầu `css/planner.css` (REPO-028, REPO-023); dáng chung chép từ `md-annotate/`.
-- Theme theo hệ điều hành tới khi bấm nút (REPO-024), khoá `hub-theme`. Thanh trên ghi đủ tên, không cắt "…".
+- Theme theo hệ điều hành tới khi bấm nút (REPO-024), khoá `hub-theme`. Thanh trên ghi đủ tên, không cắt "…". Chân trang giới thiệu (chữ ở HTML), cảm ứng ẩn cột phím tắt.
 - Biểu tượng: một bộ `<symbol id="i-…">` trong `index.html` qua `<use>`, không ký tự unicode; nút chỉ biểu tượng có `aria-label`, `title`.
 - Đầu dự án: tên (bấm để đổi dự án), tiến độ chung, chú giải trạng thái kèm số đếm. Chip trạng thái có chữ và chấm khác hình.
 - Cột tên bước rộng cố định, thẻ cùng bề rộng (các hàng thẳng cột). Hàng thẻ cuộn ngang bên trong, không hiện thanh cuộn,
