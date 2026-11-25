@@ -119,7 +119,11 @@
 - Sơ đồ mô tả bằng toạ độ trong `DG` của JS; chữ tràn hộp thì console báo "Chữ tràn hộp".
 - `phases`: `start`, `len` là phần trăm tổng thời gian; nút số tuần chỉ đổi nhãn tuần và số ngày. Pha của mỗi vai suy từ
   `phases[].roles`; tổng trang (`report`) và tổng phút (`slides`) do JS tính.
-- Glossary trang 2 chỉ giữ thuật ngữ có trên trang; mã luật chất lượng (B1…, F1…) không tự bọc.
+- Glossary trang 2 chỉ giữ thuật ngữ có trên trang. Mã luật chất lượng là QB1–QB8 (chặn), QF1–QF5 (gắn cờ), ở trang 2
+  và `starter/src/quality.py`; không dùng mã trùng mã thẻ nguồn.
+- `starter/`: repo khung nhóm chép về làm repo của mình (README, `src/`, `tests/`, `app/`, khuôn `docs/`). Không kèm
+  dữ liệu, `results/`, `.venv`. Code trên trang 2 trích từ đây; sửa `starter/` thì sửa đoạn code tương ứng trong
+  `sports-monitoring-build.json`. Số và thời gian chạy trên trang 2 lấy từ `starter/` chạy trên 29 file gốc.
 
 ### Thuật ngữ, link, nội dung
 

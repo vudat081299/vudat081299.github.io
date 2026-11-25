@@ -378,6 +378,10 @@ pre.code code{background:none;padding:0;font:inherit;white-space:pre;overflow-wr
 .dg-box.solid{fill:var(--ink);stroke:var(--ink)}
 .step-eyebrow span+span::before{content:"·";margin-right:var(--s3)}
 
+/* ═══ PHÍM ═══ */
+kbd{font:500 .84em var(--mono);padding:.05em .4em;border:1px solid var(--line-2);border-bottom-width:2px;border-radius:var(--r-xs);background:var(--surface)}
+#kiem-so{margin-top:var(--s7)}
+
 /* ═══ THUẬT NGỮ: chữ có chú giải, bong bóng, danh sách ═══ */
 .term{text-decoration:underline dotted var(--green-hi);text-decoration-thickness:2px;text-underline-offset:3px;cursor:help;border-radius:var(--r-xs)}
 .term:hover,.term:focus-visible,.term.on{background:var(--a-soft)}
@@ -460,17 +464,19 @@ pre.code code{background:none;padding:0;font:inherit;white-space:pre;overflow-wr
   <p class="lede">Trang này đi hết đề tài A như thể người viết đang tự làm, từ buổi họp đầu tới buổi bảo vệ. Mỗi bước có câu hỏi nó trả lời, file nó tạo ra và điều phải chốt.</p>
   <ul class="lede-list">
     <li>Chỗ phải chốt thì chốt luôn một phương án. Các phương án khác nằm trong khối gập ngay dưới, kèm lý do không chọn và khi nào nên chọn.</li>
-    <li>Mọi con số là số thật từ một lần chạy thử đề tài A trên 29 mùa Premier League (25/11/2026). Code ngắn trên trang lấy từ lần chạy ấy.</li>
-    <li>Dùng lại cho dự án khác: mỗi bước có tên chung và mục “Dùng lại”. Thay nguồn dữ liệu và câu hỏi, giữ khung.</li>
+    <li>Mọi con số là số thật từ một lần chạy thử đề tài A trên 29 mùa Premier League (25/11/2026). Code trên trang lấy từ repo khung <a href="starter/">starter/</a> (<a href="https://github.com/vudat081299/vudat081299.github.io/tree/main/masters-degree/data-management-visualization/starter">xem trên GitHub</a>), chính là code của lần chạy ấy.</li>
+    <li>Dùng lại cho dự án khác: mỗi bước có tên chung và mục “Dùng lại”; cuối trang có bảng <a href="#du-an-khac">khi đề khác đề A</a>.</li>
+    <li>Khung trình bày mượn từ repo mẫu <a href="https://github.com/ivanrivasgr/Sports_Injury_Risk_Intelligence">ivanrivasgr/Sports_Injury_Risk_Intelligence</a> (app Streamlit 12 trang). Chỉ mượn khung: repo ấy dùng dữ liệu tổng hợp cho mô hình, đồ án này dùng dữ liệu thật.</li>
   </ul>
   <figure class="jr2">
     <div class="jr2-svg" id="journey"></div>
     <div class="jr2-list" id="journeyList"></div>
-    <figcaption>Mười sáu bước xếp theo ba làn, trái sang phải theo thời gian. Bấm một ô để tới bước ấy. Dải dưới cùng chạy suốt đồ án.</figcaption>
+    <figcaption>Mười sáu bước xếp theo bốn làn (khung, dữ liệu, phương pháp, ra) và một dải dưới cùng chạy suốt đồ án; trái sang phải theo thời gian. Nét đứt: làm sạch gặp lỗi đọc file thì quay lại sửa script, chạy lại. Bấm một ô để tới bước ấy.</figcaption>
   </figure>
   <p class="hero-line" id="heroStats"></p>
   <nav aria-label="Các phần của trang">
     <ul class="jump">
+      <li><a href="#bat-dau">Bắt đầu từ đây</a></li>
       <li><a href="#lich">Lịch</a></li>
       <li><a href="#vai">Bảy vai</a></li>
       <li><a href="#khoi-dong">Bước 1</a></li>
@@ -479,15 +485,31 @@ pre.code code{background:none;padding:0;font:inherit;white-space:pre;overflow-wr
       <li><a href="#repo">Cây repo</a></li>
       <li><a href="#quyet-dinh">Mọi điều đã chốt</a></li>
       <li><a href="#repo-mau">Đối chiếu repo mẫu</a></li>
+      <li><a href="#du-an-khac">Dự án khác</a></li>
       <li><a href="#thuat-ngu">Thuật ngữ</a></li>
     </ul>
   </nav>
 </section>
 
+<!-- ═══════════════ BẮT ĐẦU ═══════════════ -->
+<section id="bat-dau" class="block">
+  <h2>Bắt đầu từ đây</h2>
+  <p class="stage-why">Nhóm làm lại từ đầu theo các bước. Số trên trang là đáp án từ lần chạy thử để đối chiếu, không phải việc đã xong.</p>
+  <p>Số bước là thứ tự logic, không phải thứ tự làm: làm theo pha trên <a href="#lich">lịch</a>. Ví dụ vai 3–6 viết phương pháp (bước 10–11) ngay tuần 1 trên dữ liệu giả lập, song song với vai 2 lấy dữ liệu (bước 3, 6). Repo nhóm tạo từ <a href="starter/">starter/</a>: đã có code chạy được, nhóm đọc, hiểu, sửa và viết lại phần của mình.</p>
+  <h3>Tuần 1 của bảy vai</h3>
+  <div class="tbl-wrap" data-tbl="week1"></div>
+  <figure class="dg2"><div class="dg-host" data-dg="W1"></div>
+    <figcaption>Ai giao gì cho ai. Vai 2 giao bảng sạch; vai 3–6 chạy phương pháp trên đó và giao <code>results/</code>; vai 7 dựng app, vai 1 viết báo cáo và slide từ cùng kết quả.</figcaption></figure>
+  <details class="fold" id="toi-thieu"><summary>Lối đi tối thiểu nếu thiếu thời gian</summary><div class="fold-body">
+    <p class="sub">Bước “bắt buộc” thiếu thì đồ án không đứng được; bước “rút gọn” làm phần nhỏ nhất ghi ở cột phải.</p>
+    <div class="tbl-wrap" data-tbl="minimal"></div>
+  </div></details>
+</section>
+
 <!-- ═══════════════ LỊCH ═══════════════ -->
 <section id="lich" class="block">
   <h2>Lịch các pha</h2>
-  <p class="sub"><span data-count="phases"></span> pha, có pha chồng lên nhau. Bấm một pha (hoặc Tab rồi Enter) để xem việc cụ thể, điều cần thống nhất và các bước của trang này thuộc pha ấy.</p>
+  <p class="sub"><span data-count="phases"></span> pha, có pha chồng lên nhau. Bấm một pha (hoặc <kbd>Tab</kbd> rồi <kbd>Enter</kbd>) để xem việc cụ thể, điều cần thống nhất và các bước của trang này thuộc pha ấy. Mục “Cần thống nhất” của mỗi pha là phần phải chốt trong pha ấy.</p>
   <div class="gantt-box">
     <div class="gantt-head">
       <span id="weeksLabel">Số tuần còn lại</span>
@@ -579,7 +601,7 @@ pre.code code{background:none;padding:0;font:inherit;white-space:pre;overflow-wr
     <figcaption>Luật chặn đứng trước luật gắn cờ. Vi phạm luật chặn thì dừng và sửa code, chạy lại; không sửa tay file gốc. Luật gắn cờ giữ mọi dòng và ghi trận nào, luật nào.</figcaption></figure>
   <details class="fold step-ext"><summary>13 luật chất lượng và số vi phạm thật</summary><div class="fold-body">
     <div class="tbl-wrap" data-tbl="quality"></div>
-    <p class="sub">F1 (<code>HS</code>, <code>AS</code>, <code>HST</code>, <code>AST</code>): Coventry–Tottenham 14/10/2000: 0, 4, 5, 5; Bradford–Charlton 13/4/2001: 4, 3, 8, 8; Newcastle–West Ham 15/8/2021: 17, 8, 3, 9 (chỉ lệch đội khách). F4: Newcastle 0–3 Aston Villa, 2/4/2005, đội nhà 3 thẻ đỏ.</p>
+    <p class="sub">QF1 (<code>HS</code>, <code>AS</code>, <code>HST</code>, <code>AST</code>): Coventry–Tottenham 14/10/2000: 0, 4, 5, 5; Bradford–Charlton 13/4/2001: 4, 3, 8, 8; Newcastle–West Ham 15/8/2021: 17, 8, 3, 9 (chỉ lệch đội khách). QF4: Newcastle 0–3 Aston Villa, 2/4/2005, đội nhà 3 thẻ đỏ.</p>
   </div></details>
 </section>
 
@@ -597,7 +619,7 @@ pre.code code{background:none;padding:0;font:inherit;white-space:pre;overflow-wr
 <!-- ═══════════════ BƯỚC 9 ═══════════════ -->
 <section id="ke-hoach-phan-tich" class="block step">
   <h2>Kế hoạch phân tích</h2>
-  <p>Viết kế hoạch trước khi chạy trên dữ liệu Phase II. Lịch sử git là bằng chứng nhóm không chỉnh tham số sau khi thấy kết quả.</p>
+  <p>Nhóm khoá kế hoạch trước khi chạy Phase II; lịch sử git là bằng chứng không chỉnh tham số sau khi thấy kết quả. Số trên trang này là đáp án để đối chiếu.</p>
   <figure class="dg2"><div class="dg-host" data-dg="K2"></div>
     <figcaption>Khoá trước, chạy sau. Đường nét đứt có dấu ✕ là đường cấm: không quay lại sửa tham số theo kết quả.</figcaption></figure>
   <details class="fold step-ext"><summary>Bảng tham số đã khoá</summary><div class="fold-body">
@@ -615,7 +637,7 @@ pre.code code{background:none;padding:0;font:inherit;white-space:pre;overflow-wr
       <div class="m-body"></div>
       <figure class="res-fig"><p class="res-title">Đuôi Poisson rất khắt khe, rào IQR rộng tay</p><span class="res-real">Số thật · results/outliers_summary.csv, eda_dispersion.csv</span>
         <div class="res-host" data-res="outlier"></div>
-        <figcaption>Trái: xác suất Poisson của số bàn đội khách với λ = 1,184; ngưỡng 0,05/9.880 chỉ bắt trận 9 bàn. Phải: box plot cú sút đội nhà mỗi trận; vùng xám là 133 trận vượt rào 27,5; chấm đậm là trận nhiều cú sút nhất (43). Thẻ đỏ: Q1 = Q3 = 0 và MAD = 0, nên không dùng rào hay z-score hiệu chỉnh.</figcaption></figure>
+        <figcaption>Trái: xác suất Poisson của số bàn đội khách với <span class="term" data-t="lambda-p">λ</span> = 1,184; cột là P(X = x), luật dùng đuôi P(X ≥ x); ngưỡng 0,05/9.880 chỉ bắt trận 9 bàn. Phải: box plot cú sút đội nhà mỗi trận; vùng xám là 133 trận vượt rào 27,5; chấm đậm là trận nhiều cú sút nhất (43). Thẻ đỏ: Q1 = Q3 = 0 và MAD = 0, nên không dùng rào hay z-score hiệu chỉnh.</figcaption></figure>
       <div class="m-more"></div>
     </article>
     <article class="method" id="pp-anom">
@@ -633,7 +655,7 @@ pre.code code{background:none;padding:0;font:inherit;white-space:pre;overflow-wr
         <figcaption>Minh hoạ, số giả lập: chuỗi 0/1 đổi tỉ lệ ở trận 60. Nhánh giảm nằm sát 0 trước điểm đổi, leo dần sau đó, vượt h thì báo. Trận đổi ước tính là trận ngay sau lần cuối nhánh bằng 0.</figcaption></figure>
       <figure class="res-fig" id="hinh-cusum"><p class="res-title">Từ 2019/20 chỉ có cảnh báo giảm</p><span class="res-real">Số thật · results/cusum_path.csv, cusum_alarms.csv</span>
         <div class="res-host" data-res="cusum"></div>
-        <figcaption>Hai nhánh CUSUM (giảm, tăng) trên 9.880 trận từ 2000/01, p0 = 540/1140, mức đổi 0,05, h = 3,1 (ARL0 mô phỏng 2.039 trận). Mỗi 20 trận một điểm, cộng mọi trận có cảnh báo. Số trên tam giác ứng với bảng bảy cảnh báo ngay dưới.</figcaption></figure>
+        <figcaption>Hai nhánh CUSUM (giảm, tăng) trên 9.880 trận từ 2000/01, p0 = 540/1140, mức đổi 0,05, h = 3,1 (ARL0 mô phỏng 2.039 trận). Nhánh giảm cộng dồn bằng chứng rằng tỉ lệ thắng sân nhà đã giảm, nên đi lên khi lợi thế sân nhà giảm; nhánh tăng ngược lại. Mỗi 20 trận một điểm, cộng mọi trận có cảnh báo. Số trên tam giác ứng với bảng bảy cảnh báo ngay dưới.</figcaption></figure>
       <details class="fold"><summary>Bảy cảnh báo: mùa, trận, trận đổi ước tính</summary><div class="fold-body">
         <div class="tbl-wrap" data-tbl="cusum_alarms"></div>
       </div></details>
@@ -688,9 +710,9 @@ pre.code code{background:none;padding:0;font:inherit;white-space:pre;overflow-wr
     </ul>
     <ul class="traps">
       <li><code>anom</code> trên PyPI là bộ ánh xạ cho Google Datastore, không phải ANOM.</li>
-      <li><code>pip install cusum</code> cài một công cụ xử lý ảnh radar vệ tinh, không phải CUSUM thống kê.</li>
+      <li><code>pip install cusum</code> cài gói CUSUM cho ảnh radar vệ tinh (SAR), kéo theo GDAL; không dùng cho chuỗi số.</li>
       <li><code>qcc</code> trên PyPI là công cụ quản lý cấu hình Claude Code, không phải gói <code>qcc</code> của R.</li>
-      <li><code>outliers</code> trên PyPI là gói rác; gói đúng là <code>outlier_utils</code>.</li>
+      <li><code>outliers</code> trên PyPI là một gói bản 0.1 không có tài liệu; gói có Grubbs là <code>outlier_utils</code>.</li>
       <li><code>scipy.stats.dunnett</code> so từng nhóm với một nhóm đối chứng, không phải ANOM.</li>
     </ul>
   </div></details>
@@ -703,10 +725,6 @@ pre.code code{background:none;padding:0;font:inherit;white-space:pre;overflow-wr
     <figcaption>Ba bậc kiểm trước khi tin kết quả. Số trong hộp là kết quả thật của bản chạy thử.</figcaption></figure>
   <details class="fold step-ext"><summary>22 test: kiểm gì, kỳ vọng gì, ra gì</summary><div class="fold-body">
     <div class="tbl-wrap" data-tbl="tests"></div>
-  </div></details>
-  <details class="fold step-ext"><summary>Đối chiếu với trang 1: 5 số lệch</summary><div class="fold-body">
-    <p class="sub"><code>src/verify.py</code> tính lại 46 số trang 1 đã in. 41 khớp. Năm số lệch dưới đây; trang 1 đã hoặc sẽ sửa theo cột phải.</p>
-    <div class="tbl-wrap" data-tbl="verify_diff"></div>
   </div></details>
 </section>
 
@@ -774,7 +792,7 @@ pre.code code{background:none;padding:0;font:inherit;white-space:pre;overflow-wr
 <!-- ═══════════════ CÂY REPO ═══════════════ -->
 <section id="repo" class="block">
   <h2>Cây repo</h2>
-  <p class="sub">Cây của bản chạy thử. Nhãn “mới” là file thêm so với cây ở trang 1.</p>
+  <p class="sub">Cây của repo khung <a href="starter/">starter/</a> (<a href="https://github.com/vudat081299/vudat081299.github.io/tree/main/masters-degree/data-management-visualization/starter">trên GitHub</a>): tạo repo riêng tư của nhóm từ thư mục này. Thư mục <code>data/</code>, <code>results/</code> sinh ra khi chạy; repo không kèm dữ liệu.</p>
   <div class="box"><ul class="tree" id="tree" aria-label="Cây thư mục của repo đồ án"></ul></div>
 </section>
 
@@ -782,6 +800,7 @@ pre.code code{background:none;padding:0;font:inherit;white-space:pre;overflow-wr
 <section id="quyet-dinh" class="block">
   <h2>Mọi điều đã chốt</h2>
   <p class="sub" id="decCount"></p>
+  <p class="sub">Ba danh sách chốt khớp nhau: tám điều ở <a href="sports-monitoring-project.html#can-chot">trang 1</a> là bản gộp; bảng dưới là chi tiết theo bước; mục “Cần thống nhất” của mỗi pha trên <a href="#lich">lịch</a> là phần phải chốt trong pha ấy.</p>
   <div class="tbl-wrap"><table class="stack dec-sum" id="decSum"></table></div>
 </section>
 
@@ -792,6 +811,27 @@ pre.code code{background:none;padding:0;font:inherit;white-space:pre;overflow-wr
   <p>Đồ án này mượn khung trình bày và cách nghĩ, bỏ phần hạ tầng mà dữ liệu nhỏ không cần. Mọi kết quả dùng dữ liệu thật; dữ liệu giả lập chỉ để kiểm code. Repo mẫu cho thấy một hệ thống được thiết kế kỹ; đồ án này phải chứng minh thêm một điều: chạy thật trên dữ liệu thật và trả lời được câu hỏi.</p>
   <div class="tbl-wrap" data-tbl="sample_map"></div>
 </section>
+
+<!-- ═══════════════ DỰ ÁN KHÁC ═══════════════ -->
+<section id="du-an-khac" class="block">
+  <h2>Dùng khung này cho dự án khác</h2>
+  <p class="sub">Giữ mười sáu bước. Khi đề khác đề A ở một điểm dưới đây, sửa các bước ở cột giữa.</p>
+  <div class="tbl-wrap" data-tbl="other_projects"></div>
+</section>
+
+<!-- ═══════════════ TRANG NÀY ĐÃ KIỂM SỐ THẾ NÀO ═══════════════ -->
+<details class="fold" id="kiem-so">
+  <summary>Trang này đã kiểm số thế nào</summary>
+  <div class="fold-body">
+    <p>Phần này nói về trang web, không phải việc của đồ án.</p>
+    <ul>
+      <li>Trang 1 đã chạy thử kết quả trên dữ liệu thật trước khi viết trang này, nên số ở hai trang được biết trước khi “khoá kế hoạch”. Báo cáo của nhóm phải nói rõ điều ấy (giới hạn GH-03).</li>
+      <li>Mọi số trên trang 2 lấy từ <code>results/*.csv</code> của <code>starter/</code> chạy trên 29 file gốc. Hình kết quả vẽ lại bằng SVG từ CSV nhỏ: đường CUSUM lấy mỗi 20 trận và mọi trận có cảnh báo (501 dòng thay vì 9.880).</li>
+      <li>Một script đối chiếu riêng tính lại 46 số trang 1 đã in: 41 khớp, 5 lệch, đã sửa theo cột phải.</li>
+    </ul>
+    <div class="tbl-wrap" data-tbl="verify_diff"></div>
+  </div>
+</details>
 
 <!-- ═══════════════ PHỤ LỤC ═══════════════ -->
 <details class="fold appendix" id="phu-luc">
@@ -952,7 +992,7 @@ pre.code code{background:none;padding:0;font:inherit;white-space:pre;overflow-wr
     spec.t.push({ x: 30, y: 16, t: 'KHUNG', c: 'dg-k' }, { x: 30, y: 96, t: 'DỮ LIỆU', c: 'dg-k' }, { x: 30, y: 214, t: 'PHƯƠNG PHÁP', c: 'dg-k' },
       { x: 750, y: 256, t: 'RA', c: 'dg-k' }, { x: 970, y: 392, t: 'thời gian →', c: 'dg-lm', a: 'end' },
       { x: 318, y: 219, t: 'ví dụ có lời giải', c: 'dg-l', a: 'middle' }, { x: 566, y: 184, t: 'Phase I', c: 'dg-l' },
-      { x: 500, y: 225, t: 'hàm đã test', c: 'dg-l' });
+      { x: 500, y: 225, t: 'hàm đã test', c: 'dg-l' }, { x: 250, y: 181, t: 'lỗi đọc: sửa, chạy lại', c: 'dg-l' });
     spec.e.push({ p: [[126, 51], [150, 51]] }, { p: [[246, 51], [270, 51]] },
       { p: [[126, 131], [150, 131]] }, { p: [[246, 131], [270, 131]] }, { p: [[366, 131], [390, 131]] }, { p: [[486, 131], [510, 131]] },
       { p: [[420, 158], [420, 170], [198, 170], [198, 158]], d: 1 },
@@ -1106,7 +1146,7 @@ pre.code code{background:none;padding:0;font:inherit;white-space:pre;overflow-wr
         e.push({ p: [[165, y + 30], [197, y + 30]] }, { p: [[362, y + 30], [394, y + 30]] });
       });
       var y2 = rows.length * 74 + 4;
-      n.push({ x: 0, y: y2, w: 560, h: 36, c: 'ghost', s: 'Ngoài phạm vi: nhân quả, dự đoán trận, đánh giá cá nhân trọng tài hay cầu thủ' });
+      n.push({ x: 0, y: y2, w: 560, h: 36, c: 'ghost', s: 'Ngoài phạm vi: nhân quả, dự đoán trận, kết luận về một trọng tài hay cầu thủ cụ thể' });
       return { w: 560, h: y2 + 38, label: 'Bốn câu hỏi, dạng câu trả lời và ai dùng để quyết định gì', n: n, e: e };
     },
     A1: function () {
@@ -1170,9 +1210,9 @@ pre.code code{background:none;padding:0;font:inherit;white-space:pre;overflow-wr
           { x: 130, y: 70, w: 220, h: 56, t: 'clean.py', mono: 1, s: 'đọc, cắt dòng thừa, ngày, tên' },
           { x: 0, y: 76, w: 110, h: 44, t: 'Bảng lỗi gõ', s: 'tên trọng tài' },
           { x: 150, y: 160, w: 180, h: 40, c: 'file', t: 'matches.parquet', mono: 1 },
-          { x: 155, y: 232, w: 170, h: 64, c: 'dia', t: 'Luật chặn', s: 'B1–B8' },
+          { x: 155, y: 232, w: 170, h: 64, c: 'dia', t: 'Luật chặn', s: 'QB1–QB8' },
           { x: 380, y: 242, w: 100, h: 44, c: 'warn', t: 'Dừng', s: 'thoát mã 1' },
-          { x: 155, y: 340, w: 170, h: 64, c: 'dia', t: 'Luật gắn cờ', s: 'F1–F5' },
+          { x: 155, y: 340, w: 170, h: 64, c: 'dia', t: 'Luật gắn cờ', s: 'QF1–QF5' },
           { x: 0, y: 440, w: 150, h: 44, c: 'file', t: 'quality_rows.csv', mono: 1, s: 'trận nào, luật nào' },
           { x: 324, y: 440, w: 156, h: 44, c: 'file', t: 'quality_report.csv', mono: 1, s: '13 luật, số vi phạm' },
           { x: 165, y: 450, w: 150, h: 48, t: 'matches.duckdb', mono: 1, s: 'PRIMARY KEY' },
@@ -1208,6 +1248,22 @@ pre.code code{background:none;padding:0;font:inherit;white-space:pre;overflow-wr
       e.push({ p: [[340, 251], [372, 251]] });
       return { w: 640, h: 266, label: 'Phase I và Phase II của từng phương pháp trên 29 mùa', n: n, e: e, t: t };
     },
+    W1: function () {
+      var R = [[3, 'Ngoại lai'], [4, 'ANOM'], [5, 'CUSUM'], [6, 'SPRT']], n = [], e = [];
+      n.push({ x: 0, y: 0, w: 170, h: 48, k: 'VAI 2', t: 'Dữ liệu' }, { x: 200, y: 4, w: 160, h: 40, c: 'file', t: 'matches.parquet', mono: 1 },
+        { x: 200, y: 184, w: 160, h: 40, c: 'file', t: 'results/*.csv', mono: 1 },
+        { x: 40, y: 256, w: 200, h: 48, k: 'VAI 7', t: 'App, một lệnh chạy' }, { x: 320, y: 256, w: 200, h: 48, k: 'VAI 1', t: 'Báo cáo, slide' });
+      e.push({ p: [[170, 24], [200, 24]] }, { p: [[280, 44], [280, 72]], a: false }, { p: [[65, 72], [485, 72]], a: false },
+        { p: [[65, 150], [485, 150]], a: false }, { p: [[280, 150], [280, 184]] },
+        { p: [[250, 224], [250, 240], [140, 240], [140, 256]] }, { p: [[310, 224], [310, 240], [420, 240], [420, 256]] });
+      R.forEach(function (r, i) {
+        var x = i * 140, cx = x + 65;
+        n.push({ x: x, y: 96, w: 130, h: 48, k: 'VAI ' + r[0], t: r[1] });
+        e.push({ p: [[cx, 72], [cx, 96]] }, { p: [[cx, 144], [cx, 150]], a: false });
+      });
+      return { w: 560, h: 306, label: 'Ai giao gì cho ai: vai 2 giao bảng sạch, vai 3–6 giao kết quả, vai 7 và vai 1 dùng kết quả', n: n, e: e,
+        t: [{ x: 372, y: 28, t: 'bảng sạch, cuối P2', c: 'dg-l' }, { x: 290, y: 172, t: 'kết quả, P5', c: 'dg-l' }] };
+    },
     K2: function () {
       return { w: 560, h: 172, label: 'Khoá kế hoạch trước, chạy sau; không quay lại chỉnh tham số',
         e: [{ p: [[20, 70], [540, 70]], a: false, b: 1 }, { p: [[200, 64], [200, 25]], a: false, th: 1 },
@@ -1223,7 +1279,7 @@ pre.code code{background:none;padding:0;font:inherit;white-space:pre;overflow-wr
       return { w: 560, h: 240, label: 'Ba bậc kiểm: tính tay, giả lập, dữ liệu thật',
         e: [{ p: [[450, 226], [450, 10]] }],
         n: [{ x: 0, y: 168, w: 300, h: 64, k: 'BẬC 1', t: 'Ví dụ tính tay', s: 'CUSUM 6 bước, ANOM 3 nhóm, ngưỡng SPRT' },
-          { x: 60, y: 88, w: 300, h: 64, k: 'BẬC 2', t: 'Giả lập có đáp án', s: ['điểm đổi cài sẵn; ARL 4.000 chuỗi', 'SPRT báo nhầm 0,042, lực 0,910'] },
+          { x: 60, y: 88, w: 300, h: 64, k: 'BẬC 2', t: 'Giả lập có đáp án', s: ['điểm đổi cài sẵn; ARL 4.000 chuỗi', 'SPRT báo nhầm 0,042; lực kiểm định 0,910'] },
           { x: 120, y: 8, w: 300, h: 64, c: 'pick', k: 'BẬC 3', t: 'Dữ liệu thật', s: 'tham số đã khoá; 22 test xanh' }],
         t: [{ x: 462, y: 110, t: 'chỉ lên bậc' }, { x: 462, y: 124, t: 'khi bậc dưới' }, { x: 462, y: 138, t: 'xanh' }] };
     },
@@ -1282,22 +1338,21 @@ pre.code code{background:none;padding:0;font:inherit;white-space:pre;overflow-wr
         { x: 220, y: 300, w: 160, h: 44, t: 'quality', mono: 1, s: tsec('quality') },
         { x: 400, y: 308, w: 28, h: 28, c: 'oct' },
         { x: 200, y: 470, w: 200, h: 40, c: 'file', t: 'results/*.csv', mono: 1 },
-        { x: 110, y: 546, w: 150, h: 44, t: 'charts', mono: 1, s: tsec('charts') }, { x: 340, y: 546, w: 150, h: 44, t: 'verify', mono: 1, s: tsec('verify') },
-        { x: 110, y: 616, w: 150, h: 40, c: 'file', t: 'results/fig/', mono: 1 }, { x: 340, y: 616, w: 150, h: 40, c: 'file', t: 'verify.csv', mono: 1 }];
+        { x: 225, y: 546, w: 150, h: 44, t: 'charts', mono: 1, s: tsec('charts') },
+        { x: 225, y: 616, w: 150, h: 40, c: 'file', t: 'results/fig/', mono: 1 }];
       var e = [{ p: [[270, 44], [270, 60], [185, 60], [185, 76]] }, { p: [[330, 44], [330, 60], [415, 60], [415, 76]] },
         { p: [[380, 22], [396, 22]], a: false, th: 1 },
         { p: [[185, 116], [185, 132], [270, 132], [270, 150]] }, { p: [[300, 194], [300, 226]] }, { p: [[300, 270], [300, 300]] },
         { p: [[380, 322], [400, 322]], a: false, th: 1 },
         { p: [[300, 344], [300, 362]], a: false }, { p: [[55, 362], [535, 362]], a: false }, { p: [[55, 446], [535, 446]], a: false },
         { p: [[300, 446], [300, 470]] },
-        { p: [[260, 510], [260, 528], [185, 528], [185, 546]] }, { p: [[340, 510], [340, 528], [415, 528], [415, 546]] },
-        { p: [[185, 590], [185, 616]] }, { p: [[415, 590], [415, 616]] }];
+        { p: [[300, 510], [300, 546]] }, { p: [[300, 590], [300, 616]] }];
       M.forEach(function (m, i) {
         var x = i * 120, cx = x + 55;
         n.push({ x: x, y: 384, w: 110, h: 44, t: m, mono: 1, s: tsec(m) });
         e.push({ p: [[cx, 362], [cx, 384]] }, { p: [[cx, 428], [cx, 446]], a: false });
       });
-      return { w: 600, h: 700, label: 'Đường ống python -m src.pipeline: mười bước, file vào và ra', n: n, e: e,
+      return { w: 600, h: 700, label: 'Đường ống python -m src.pipeline: chín bước, file vào và ra', n: n, e: e,
         t: [{ x: 432, y: 27, t: 'dừng nếu SHA-256 lệch' }, { x: 436, y: 327, t: 'dừng nếu luật chặn sai' },
           { x: 300, y: 684, t: 'Một lệnh: python -m src.pipeline · ' + fmt(D.timings.reduce(function (a, x) { return a + x.s; }, 0), 1) + ' giây · cùng đầu vào thì cùng đầu ra', a: 'middle', c: 'dg-lm' }] };
     },
@@ -1476,7 +1531,7 @@ pre.code code{background:none;padding:0;font:inherit;white-space:pre;overflow-wr
     stext(s, 0, B + 36, 't-lab', 'Trục ngang: trận thứ n của mùa; trục đứng: LLR');
   }
   function drawOutlier(host) {
-    var c = chartSvg(host, 240, 'Trái: xác suất Poisson số bàn đội khách, thang log; phải: box plot cú sút đội nhà với rào IQR'), s = c.s, W = c.W;
+    var c = chartSvg(host, 262, 'Trái: xác suất Poisson số bàn đội khách, thang log; phải: box plot cú sút đội nhà với rào IQR'), s = c.s, W = c.W;
     var lam = D.res.ftag_lambda, N = D.res.hs_box.n, cut = 0.05 / N, pm = [], p = Math.exp(-lam), sf = [];
     for (var x = 0; x <= 10; x++) { pm.push(p); p = p * lam / (x + 1); }
     for (x = 0; x <= 10; x++) { var t = 0; for (var j = x; j <= 30; j++) { t += Math.exp(-lam) * Math.pow(lam, j) / fact(j); } sf.push(t); }
@@ -1497,13 +1552,14 @@ pre.code code{background:none;padding:0;font:inherit;white-space:pre;overflow-wr
     var xt = L + thr * bw;
     svg('path', { d: 'M' + xt + ',' + T + 'V' + B, 'class': 'c-ref' }, s);
     stext(s, xt - 4, T + 10, 't-lab', 'ngưỡng 0,05/' + fmt(N), 'end');
-    var x9 = L + 9.5 * bw;
-    svg('circle', { cx: x9, cy: sy(pm[9]) - 10, r: 5, 'class': 'c-dot on' }, s);
-    stext(s, x9 + 8, sy(pm[9]) - 22, 't-lab', '0–9', 'start');
-    stext(s, L, B + 32, 't-lab', 'Số bàn · trục đứng: xác suất, thang log');
+    /* Cột là P(X = x); luật dùng đuôi P(X ≥ x): chấm đặt ở P(X ≥ 9) của trận 0–9. */
+    var x9 = L + 9.5 * bw, dot = svg('circle', { cx: x9, cy: sy(sf[9]), r: 5, 'class': 'c-dot on' }, s);
+    svg('title', {}, dot).textContent = 'P(X ≥ 9) = ' + sf[9].toExponential(1);
+    stext(s, 0, B + 32, 't-lab', 'Cột: P(X = x), thang log. Chấm: P(X ≥ 9) = ' + fmtF(sf[9] * 1e6, 1) + '·10⁻⁶');
+    stext(s, 0, B + 48, 't-lab', '< ngưỡng ' + fmtF(cut * 1e6, 1) + '·10⁻⁶: trận 0–9 bị báo.');
     /* Box plot cú sút đội nhà: rào Q3 + 1,5·IQR. Màn hẹp: vẽ dưới. */
-    var hb = D.res.hs_box, ox = W < 560 ? 0 : half, oy = W < 560 ? 250 : 0;
-    if (W < 560) { s.setAttribute('height', 470); s.setAttribute('viewBox', '0 0 ' + W + ' 470'); }
+    var hb = D.res.hs_box, ox = W < 560 ? 0 : half, oy = W < 560 ? 272 : 0;
+    if (W < 560) { s.setAttribute('height', 492); s.setAttribute('viewBox', '0 0 ' + W + ' 492'); }
     var L2 = ox + 20, R2 = ox + (W < 560 ? W : half) - 20, mx = 45, bx = function (v) { return L2 + (R2 - L2) * v / mx; }, yb = oy + 110;
     stext(s, L2, oy + 14, 't-strong', 'Cú sút đội nhà mỗi trận');
     svg('rect', { x: bx(hb.q1), y: yb - 18, width: bx(hb.q3) - bx(hb.q1), height: 36, 'class': 'dg-box' }, s);
@@ -1593,12 +1649,12 @@ pre.code code{background:none;padding:0;font:inherit;white-space:pre;overflow-wr
     f4.appendChild(lp);
     [f1, f2, f3, f4].forEach(function (x) { facts.appendChild(x); });
     more.appendChild(fold('Việc, file, vai, bài môn', facts));
-    if (s.code) {
+    s.codes.forEach(function (c) {
       var cb = frag();
-      var pre = el('pre', 'code'), cd = el('code', null, s.code.src); pre.appendChild(cd); cb.appendChild(pre);
-      cb.appendChild(el('p', 'code-src', 'Lấy từ lần chạy thử đề tài A, rút gọn cho dễ đọc; chú thích tiếng Việt.'));
-      more.appendChild(fold('Code thật: ' + s.code.file, cb));
-    }
+      var pre = el('pre', 'code'), cd = el('code', null, c.src); pre.appendChild(cd); cb.appendChild(pre);
+      cb.appendChild(el('p', 'code-src', 'Lấy từ starter/ (cùng code của lần chạy thử); chú thích tiếng Việt.'));
+      more.appendChild(fold('Code: ' + c.file, cb));
+    });
     if (s.traps.length) {
       var w = el('div', 'tbl-wrap');
       w.appendChild(mkTable(['Bẫy', 'Triệu chứng', 'Cách sửa'], s.traps.map(function (t) { return [H(t, 'trap_html'), H(t, 'symptom_html'), H(t, 'fix_html')]; })));
@@ -1653,7 +1709,13 @@ pre.code code{background:none;padding:0;font:inherit;white-space:pre;overflow-wr
     tests: function () { return mkTable(['Test', 'Đầu vào', 'Kết quả'], D.tests); },
     verify_diff: function () { return mkTable(['Trang 1 ghi', 'Tính lại'], D.verify_diff); },
     figs: function () { return mkTable(['Câu hỏi', 'Hình chính', 'Tiêu đề'], D.figs); },
-    limits: function () { return mkTable(['Mã', 'Loại', 'Mức', 'Mô tả', 'Cách giảm'], D.limits.map(function (r) { return [r.id, r.kind, r.level, r.desc, H(r, 'fix_html')]; })); },
+    limits: function () { return mkTable(['Mã', 'Loại', 'Mức', 'Mô tả', 'Cách giảm'], D.limits.map(function (r) { return [r.id, r.kind, r.level, H(r, 'desc_html'), H(r, 'fix_html')]; })); },
+    week1: function () { return mkTable(['Vai', 'Việc tuần 1', 'File tạo ra', 'Xong khi', 'Học từ'],
+      D.week1.map(function (r) { return [roleName(r.role), H(r, 'task_html'), r.files, H(r, 'done_html'), H(r, 'learn_html')]; })); },
+    minimal: function () { return mkTable(['Bước', 'Mức', 'Làm tối thiểu'],
+      D.minimal.map(function (r) { return [stepLinks([r.id]), r.need, H(r, 'how_html')]; })); },
+    other_projects: function () { return mkTable(['Trường hợp', 'Bước phải đổi', 'Đổi gì'],
+      D.other_projects.map(function (r) { return [r['case'], stepLinks(r.steps), H(r, 'change_html')]; })); },
     sample_map: function () { return mkTable(['Trang repo mẫu', 'Bước ở đây', 'Mượn', 'Bỏ', 'Vì sao bỏ'],
       D.sample_map.map(function (r) {
         var ids = r.steps.filter(function (x) { return stepById(x); });
@@ -1692,8 +1754,8 @@ pre.code code{background:none;padding:0;font:inherit;white-space:pre;overflow-wr
       var op = el('p'); op.appendChild(el('b', null, 'Ghi ra: ')); op.appendChild(html(el('span'), m, 'output_html')); f.appendChild(op);
       mo.appendChild(fold('Công thức rút gọn và file ra', f));
       var pre = el('pre', 'code'); pre.appendChild(el('code', null, m.code));
-      var cf = frag(); cf.appendChild(pre); cf.appendChild(el('p', 'code-src', 'Lấy từ lần chạy thử, rút gọn; chú thích tiếng Việt.'));
-      mo.appendChild(fold('Code thật: ' + m.file, cf));
+      var cf = frag(); cf.appendChild(pre); cf.appendChild(el('p', 'code-src', 'Lấy từ starter/' + m.file + ', bỏ docstring; chú thích tiếng Việt.'));
+      mo.appendChild(fold('Code: ' + m.file, cf));
     });
   }
 
@@ -1898,7 +1960,7 @@ pre.code code{background:none;padding:0;font:inherit;white-space:pre;overflow-wr
     D.flow_out.forEach(function (n, k) {
       var ox = x0 + k * (ow + og);
       if (n.demo) demoK = k;
-      else svg('path', { d: 'M' + cx + ',' + lastB + 'L' + (ox + ow / 2) + ',' + (oy - 6), 'class': 's-arr', 'marker-end': 'url(#arr)' }, s);
+      else svg('path', { d: 'M' + cx + ',' + lastB + (Math.abs(ox + ow / 2 - cx) < 1 ? '' : 'V' + (oy - 20) + 'H' + (ox + ow / 2)) + 'V' + (oy - 6), 'class': 's-arr', 'marker-end': 'url(#arr)' }, s);
       node(n, ox, oy, ow, oh, true);
     });
     if (demoIn.length) {
@@ -2009,8 +2071,8 @@ pre.code code{background:none;padding:0;font:inherit;white-space:pre;overflow-wr
   /* Tự bọc thuật ngữ: lần xuất hiện đầu của mỗi mục glossary trong mỗi đoạn (p, li, td…) chưa bọc thì bọc.
      Bỏ qua tiêu đề, link, nút, summary, code, SVG, danh sách thuật ngữ, nguồn.
      Không tự bọc bốn phương pháp chính và lợi thế sân nhà (dùng khắp trang); α, β chỉ bọc tay. */
-  var AUTO_SKIP = 'a,button,summary,label,code,pre,script,style,svg,h1,h2,h3,h4,nav,select,textarea,.term,.tip,[role="button"],[data-noterm],#thuat-ngu,#nguon,.lab';
-  var AUTO_NO = { outlier: 1, anom: 1, cusum: 1, sprt: 1, 'home-advantage': 1, f1: 1 };   // F1 trên trang này là mã luật chất lượng, không phải đua xe
+  var AUTO_SKIP = 'a,button,summary,label,code,pre,script,style,svg,h1,h2,h3,h4,nav,select,textarea,.term,.tip,[role="button"],[data-noterm],kbd,#thuat-ngu,#nguon,.lab';
+  var AUTO_NO = { outlier: 1, anom: 1, cusum: 1, sprt: 1, 'home-advantage': 1 };
   var AUTO_BLOCK = 'p,li,td,th,dd,dt,figcaption,blockquote';
   var autoRe = null;
   function autoKeyOk(g, t) {
@@ -2156,7 +2218,7 @@ pre.code code{background:none;padding:0;font:inherit;white-space:pre;overflow-wr
       try { history.replaceState(null, '', '#' + h); } catch (e) { /* giữ hash cũ */ }
       openTo(h);
       var t = document.getElementById(h);
-      if (t) t.scrollIntoView({ block: 'start' });
+      if (t) t.scrollIntoView({ block: 'start', behavior: 'instant' });
       return;
     }
     openTo(h);
@@ -2235,9 +2297,11 @@ pre.code code{background:none;padding:0;font:inherit;white-space:pre;overflow-wr
       redrawSized();
       upgradeTerms(document);
       /* Phông chữ tải xong thì bề rộng chữ đổi: dựng lại sơ đồ có xuống dòng. */
-      if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { drawJourney(); drawAllDG(); redrawSized(); });
+      /* Mở bằng hash: nhảy thẳng tới đích (không cuộn mượt), và nhảy lại sau khi phông chữ làm đổi chiều cao. */
       var hid = decodeURIComponent(location.hash.slice(1)), ht = hid && document.getElementById(hid);
-      if (ht) { openTo(hid); ht.scrollIntoView({ block: 'start' }); }
+      var jump = function () { if (ht) ht.scrollIntoView({ block: 'start', behavior: 'instant' }); };
+      if (ht) { openTo(hid); jump(); }
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { drawJourney(); drawAllDG(); redrawSized(); jump(); });
     })
     .catch(function (err) { console.error(err); fail(); });
 })();

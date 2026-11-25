@@ -141,7 +141,7 @@
       "what_html": "Thư viện Python 3.11+ gom nhiều bộ phát hiện điểm đổi: <span class=\"term\">CUSUM</span>, <span class=\"term\">Page-Hinkley</span>, ProbCUSUM, ChartCUSUM, KS-CUM, PC1-CUSUM. Mỗi bộ có <code>detection()</code> chạy theo luồng và <code>offline_detection()</code> chạy cả lô. <span class=\"term\">GPL</span>-3.0, 21 sao, commit cuối 25/10/2026. Còn là <span class=\"term\" data-t=\"alpha-release\">bản alpha</span>, gần như một người bảo trì.",
       "why_html": "Đúng một trong bốn phương pháp. Trừ điểm vì còn alpha, một người bảo trì, giấy phép GPL, và vì tham số mặc định (<code>delta=10</code>, <code>threshold=20</code>) phải chỉnh lại; Minitab mặc định <span class=\"term\">k</span> = 0,5 và <span class=\"term\">h</span> = 4, tính theo độ lệch chuẩn.",
       "use_html": "Tự viết CUSUM dạng bảng, rồi chạy repo này trên cùng dữ liệu để đối chiếu. Cài bằng cách lấy thẳng từ GitHub (clone repo).",
-      "warn_html": "GPL: chép code của nó vào repo của nhóm thì cả repo phải theo GPL. Chỉ chạy để đối chiếu, đừng chép. Lệnh <code>pip install cusum</code> cài một gói xử lý ảnh radar vệ tinh không liên quan.",
+      "warn_html": "GPL: chép code của nó vào repo của nhóm thì cả repo phải theo GPL. Chỉ chạy để đối chiếu, đừng chép. Lệnh <code>pip install cusum</code> cài một gói khác: CUSUM cho ảnh radar vệ tinh (<span class=\"term\">SAR</span>), kéo theo <span class=\"term\">GDAL</span>; không dùng cho chuỗi số.",
       "scores_r1": [
         7,
         6,
@@ -577,7 +577,7 @@
     {"method": "Ngoại lai", "q": "Trận nào có số liệu bất thường, và đâu là lỗi ghi chép?", "decision_html": "Bên giữ dữ liệu: dòng nào sửa, dòng nào chỉ gắn cờ, và đặt luật chạy mỗi lần nạp mùa mới. Ví dụ: 3 trận có sút trúng đích nhiều hơn tổng cú sút không có số đúng để thay, nên giữ bản gốc, gắn cờ và để trống cú sút của chúng trong bảng phân tích; 51 trận có bàn nhiều hơn sút trúng đích chỉ gắn cờ."},
     {"method": "ANOM", "q": "Mùa Premier League nào có tỉ lệ thắng sân nhà khác hẳn trung bình chung?", "decision_html": "Người dựng mô hình dự đoán: khi ước lợi thế sân nhà “bình thường”, có tách riêng mùa 2020/21 không. Mùa này nằm sát vạch, nên đánh dấu và chạy mô hình cả có lẫn không có nó, đừng xoá."},
     {"method": "CUSUM", "q": "Lợi thế sân nhà ở Premier League có đang giảm không, và giảm từ trận nào?", "decision_html": "Nhà phân tích của câu lạc bộ hay nhà cái: con số lợi thế sân nhà trong mô hình có cần cập nhật không, từ trận nào. Chỉ cập nhật khi CUSUM vượt h; khi không có gì đổi, trung bình khoảng 2.000 trận mới báo nhầm một lần."},
-    {"method": "SPRT", "q": "Nếu theo dõi từ đầu mùa 2020/21, sau bao nhiêu trận sẽ có cảnh báo lợi thế sân nhà đã mất?", "decision_html": "Nhà cái hay người dựng mô hình: khi điều kiện đổi giữa mùa (sân vắng), sửa mô hình sau bao nhiêu trận thay vì chờ hết mùa. Mùa 2020/21: sau trận <span data-calc=\"stop\"></span> trên 380."}
+    {"method": "SPRT", "q": "Nếu theo dõi từ đầu mùa 2020/21, sau bao nhiêu trận sẽ có cảnh báo lợi thế sân nhà đã mất?", "decision_html": "Nhà cái hay người dựng mô hình: khi điều kiện đổi giữa mùa (sân vắng), sửa mô hình sau bao nhiêu trận thay vì chờ hết mùa. <i>Chạy thử để đối chiếu, chưa phải kết quả của nhóm</i>: mùa 2020/21 cảnh báo sau trận <span data-calc=\"stop\"></span> trên 380; nhóm tự làm lại ở trang 2."}
   ],
 
   "refs": [
@@ -711,11 +711,13 @@
     {"id": "google-scholar", "term": "Google Scholar", "def": "Máy tìm kiếm của Google chỉ cho tài liệu học thuật: bài báo, luận văn, sách. Cho biết mỗi bài được trích bao nhiêu lần."},
     {"id": "github", "term": "GitHub", "def": "Trang lưu repo git trên mạng, cũng là nơi tìm code mẫu. Mỗi repo ghi giấy phép, số sao và lịch sử sửa."},
     {"id": "business-question", "term": "Câu hỏi nghiệp vụ", "full": "business question", "aliases": ["câu hỏi nghiệp vụ"], "def": "Câu hỏi của người dùng kết quả: ai quyết định gì nhờ con số này. Câu hỏi nghiên cứu hỏi về dữ liệu; câu hỏi nghiệp vụ hỏi kết quả ấy dùng để làm gì."},
-    {"id": "weight", "term": "Trọng số", "full": "weight", "aliases": ["trọng số"], "def": "Phần trăm điểm tổng mà một tiêu chí chiếm. Điểm tổng = tổng của điểm từng tiêu chí nhân trọng số của nó."}
+    {"id": "weight", "term": "Trọng số", "full": "weight", "aliases": ["trọng số"], "def": "Phần trăm điểm tổng mà một tiêu chí chiếm. Điểm tổng = tổng của điểm từng tiêu chí nhân trọng số của nó."},
+    {"id": "sar", "term": "SAR", "full": "synthetic aperture radar, radar khẩu độ tổng hợp", "def": "Loại radar trên vệ tinh chụp ảnh mặt đất cả ban đêm, xuyên mây. Không liên quan tới thống kê thể thao."},
+    {"id": "gdal", "term": "GDAL", "def": "Thư viện đọc và ghi dữ liệu bản đồ, ảnh vệ tinh. Cài nặng, cần thư viện C đi kèm."}
   ],
   "sprt_check": {"note": "Trận dừng của SPRT trên thứ tự trận thật của Premier League 2020/21 (CSV football-data.co.uk). Tham số và cách tính ở sports-monitoring-build.html.", "stop": 129},
   "rounds": [
-    {"item": "Điều khoản football-data", "r1": "Không có điều khoản rõ.", "r2": "Chỉ cho cá nhân, chỉ để dự đoán.", "check": "Trang dữ liệu ghi \"private individuals only\", \"league match prediction only\"; chân trang \"All Rights Reserved\".", "final": "Vòng 2 đúng. Không đưa CSV gốc lên repo công khai; hỏi giảng viên.", "src": "C1"},
+    {"item": "Điều khoản football-data", "r1": "Không có điều khoản rõ.", "r2": "Chỉ cho cá nhân, chỉ để dự đoán.", "check": "Đúng như vòng 2 (câu trích đủ ở thẻ C1); chân trang còn ghi \"All Rights Reserved\".", "final": "Vòng 2 đúng. Không đưa CSV gốc lên repo công khai; hỏi giảng viên.", "src": "C1"},
     {"item": "Trọng tài và các cột", "r1": "Có từ 2000/01.", "r2": "Trọng tài chỉ \"khi có\".", "check": "Mọi file Premier League từ 2000/01: trọng tài, cú sút, phạm lỗi, phạt góc, thẻ đủ 380/380 trận; file trước đó chỉ có kết quả.", "final": "Dùng từ 2000/01; gộp tên trọng tài trước ANOM."},
     {"item": "F1: giấy phép, cỡ, ngày Ergast", "r1": "CC0, 22 MB, Ergast đóng cuối 2024.", "r2": "Gốc là CC BY-NC-SA, zip 6,3 MB, tắt đầu 2025.", "check": "Kaggle ghi CC0 nhưng điều khoản Jolpica ghi CC BY-NC-SA 4.0; zip 6.585.538 byte; tài liệu FastF1: \"shutdown at the beginning of 2025\".", "final": "Vòng 2 đúng.", "src": "A1"},
     {"item": "F1: SPRT", "r1": "Khớp yếu: không có chuỗi có/không.", "r2": "Thắng đồng đội từng chặng.", "check": "Mỗi chặng cho một kết quả 1/0 tự nhiên.", "final": "Vòng 2 đúng: khớp ●● thay vì ●."},
@@ -770,7 +772,7 @@
       "cons_html": [
         "Điều khoản chặt: không đưa CSV gốc lên repo công khai; hỏi giảng viên và email football-data.co.uk.",
         "Cảnh báo không chỉ ra nguyên nhân: khán giả, VAR, lịch đá đổi cùng lúc.",
-        "Phần mở rộng trọng tài bị nhiễu: ai được giao trận nào, thời kỳ nào."
+        "Phần mở rộng trọng tài (ANOM theo trọng tài, việc của vai 4) bị nhiễu: ai được giao trận nào, thời kỳ nào. Trọng tài ngoài vạch chỉ là cờ để xem, không kết luận về một trọng tài cụ thể."
       ],
       "best_html": "Giảng viên và football-data.co.uk đồng ý cho dùng; repo để riêng tư hoặc chỉ chứa script tải."
     },

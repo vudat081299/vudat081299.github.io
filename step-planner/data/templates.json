@@ -201,7 +201,7 @@
         {
           "title": "P0 · Khởi động",
           "goal": "Đề bài, trang 1 → repo có README.md, requirements.txt, .gitignore; bảng phân vai.",
-          "doneWhen": "Cả bảy người clone được repo và chạy được python -c \"import pandas\".",
+          "doneWhen": "Cả bảy người clone được repo, chạy được python -c \"import pandas, duckdb, streamlit\", và mỗi người đã gộp một pull request.",
           "notes": "Vai: Trưởng nhóm & kể chuyện, Dữ liệu & lineage, EDA & ngoại lai, ANOM, CUSUM, SPRT, Demo & tích hợp\nCông cụ: git, GitHub, Python 3, VS Code hoặc Colab\nTrang đồ án, pha P0: https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-build.html#lich\nCâu hỏi gửi giảng viên, thư xin phép: https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-project.html#can-xac-nhan",
           "subs": [
             {
@@ -361,7 +361,7 @@
               "title": "Chạy các hàm đã viết ở P1b trên dữ liệu thật: src/outliers.py, anom.py, cusum.py, sprt.py."
             },
             {
-              "title": "Chạy python -m src.pipeline: mọi bước, 24,7 giây."
+              "title": "Chạy python -m src.pipeline: mọi bước, vài giây."
             },
             {
               "title": "Ghi kết quả ra results/*.csv."

@@ -488,7 +488,7 @@ svg.dg{display:block;width:100%;max-width:380px;height:auto}
         <div id="q-khi"></div>
       </div>
     </div>
-    <figcaption>Bốn hình nhỏ là minh hoạ, số giả lập; số thật do nhóm tính từ dữ liệu.</figcaption>
+    <figcaption>Bốn hình nhỏ là minh hoạ, số giả lập. Tham số trong hình (α, β, p0, p1, k, h) cũng là số minh hoạ, khác bản thật ở <a href="sports-monitoring-build.html#phuong-phap">trang 2</a>; số thật do nhóm tính từ dữ liệu.</figcaption>
   </figure>
 
   <h3>Đề cần dữ liệu dạng nào</h3>
@@ -524,18 +524,24 @@ svg.dg{display:block;width:100%;max-width:380px;height:auto}
   <p>Trang môn có ngoại lai (<a href="data-management-visualization.html#b3">bài 3</a>, <a href="data-management-visualization.html#b4">bài 4</a>: box plot, rào 1,5·IQR) nhưng không có ANOM, CUSUM, SPRT. Ba phương pháp này học từ nguồn ngoài; công thức ở <a href="sports-monitoring-build.html#phuong-phap">trang 2, bước Phương pháp</a>.</p>
 
   <h3>Đề tài từ đâu ra</h3>
-  <p>Bốn phương pháp là công cụ kiểm soát chất lượng chung: CUSUM có từ Page (1954), SPRT từ Wald (1945). Cách đặt tên đề khớp với một môn về chất lượng y tế: môn <i lang="sl">Statistična podpora kakovosti in organizaciji v zdravstvu</i> (hỗ trợ thống kê cho chất lượng và tổ chức trong y tế) của chương trình thạc sĩ liên ngành Thống kê, Đại học Ljubljana.</p>
-  <p>Đề cương môn ấy (<a href="https://web.archive.org/web/20161019174839/http://stat.uni-lj.si:80/files/Predstavitveni_zbornik_US_2016_2017_maj16_f98.pdf">bản lưu</a>, tr. 28) liệt kê phát hiện ngoại lai, ANOM, CUSUM và <span class="term">SPRT</span>, và trích Spiegelhalter, Grigg &amp; Kinsman (2003), bài dùng SPRT có <span class="term">hiệu chỉnh rủi ro</span> cho hai vụ y khoa ở Anh. Môn vẫn có trong tài liệu giới thiệu năm 2025/26. Bài Spiegelhalter và cs. (2012) chỉ là bối cảnh: bài ấy nói funnel plot và CUSUM có hiệu chỉnh rủi ro, không nói ANOM. Không rõ đề của nhóm lấy từ đâu: hỏi giảng viên.</p>
-  <p>Chuyển sang thể thao thì đổi vai như sau.</p>
-  <table class="map-tbl">
-    <thead><tr><th scope="col">Y tế</th><th scope="col">Thể thao</th></tr></thead>
-    <tbody>
-      <tr><td>Bệnh viện</td><td>Đội bóng, trọng tài</td></tr>
-      <tr><td>Bác sĩ phẫu thuật</td><td>Cầu thủ</td></tr>
-      <tr><td>Ca tử vong</td><td>Trận thua</td></tr>
-      <tr><td>Độ nặng của bệnh nhân</td><td>Sức mạnh của đối thủ (hiệu chỉnh rủi ro)</td></tr>
-    </tbody>
-  </table>
+  <p>Bốn phương pháp là công cụ kiểm soát chất lượng, quen dùng trong y tế; tên đề khớp với đề cương một môn thống kê y tế ở Đại học Ljubljana. Chuyển sang thể thao: bệnh viện thành đội bóng, ca tử vong thành trận thua.</p>
+  <details class="fold" id="nguon-goc">
+    <summary>Đề tài lấy từ môn nào, đổi y tế sang thể thao ra sao?</summary>
+    <div class="fold-body">
+    <p>Bốn phương pháp là công cụ kiểm soát chất lượng chung: CUSUM có từ Page (1954), SPRT từ Wald (1945). Cách đặt tên đề khớp với một môn về chất lượng y tế: môn <i lang="sl">Statistična podpora kakovosti in organizaciji v zdravstvu</i> (hỗ trợ thống kê cho chất lượng và tổ chức trong y tế) của chương trình thạc sĩ liên ngành Thống kê, Đại học Ljubljana.</p>
+    <p>Đề cương môn ấy (<a href="https://web.archive.org/web/20161019174839/http://stat.uni-lj.si:80/files/Predstavitveni_zbornik_US_2016_2017_maj16_f98.pdf">bản lưu</a>, tr. 28) liệt kê phát hiện ngoại lai, ANOM, CUSUM và <span class="term">SPRT</span>, và trích Spiegelhalter, Grigg &amp; Kinsman (2003), bài dùng SPRT có <span class="term">hiệu chỉnh rủi ro</span> cho hai vụ y khoa ở Anh. Môn vẫn có trong tài liệu giới thiệu năm 2025/26. Bài Spiegelhalter và cs. (2012) chỉ là bối cảnh: bài ấy nói funnel plot và CUSUM có hiệu chỉnh rủi ro, không nói ANOM. Không rõ đề của nhóm lấy từ đâu: hỏi giảng viên.</p>
+    <p>Chuyển sang thể thao thì đổi vai như sau.</p>
+    <table class="map-tbl">
+      <thead><tr><th scope="col">Y tế</th><th scope="col">Thể thao</th></tr></thead>
+      <tbody>
+        <tr><td>Bệnh viện</td><td>Đội bóng, trọng tài</td></tr>
+        <tr><td>Bác sĩ phẫu thuật</td><td>Cầu thủ</td></tr>
+        <tr><td>Ca tử vong</td><td>Trận thua</td></tr>
+        <tr><td>Độ nặng của bệnh nhân</td><td>Sức mạnh của đối thủ (hiệu chỉnh rủi ro)</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </details>
 
   <h3>Công trình gần nhất</h3>
   <p>Chúng tôi không tìm thấy bài báo hay đồ án đã công bố nào dùng đủ cả bốn phương pháp (ngoại lai, ANOM, CUSUM, SPRT) cho dữ liệu thể thao. Gần nhất:</p>
@@ -550,43 +556,48 @@ svg.dg{display:block;width:100%;max-width:380px;height:auto}
   </ul>
 
   <h3 id="lineage">Lineage: một phần của quản lý dữ liệu, không phải tên khác của môn</h3>
-  <p>Nhóm được gợi ý dùng “Data Lineage &amp; Provenance” làm từ khoá quốc tế thay cho tên môn. Trước hết, lineage là gì:</p>
-  <figure class="dg-fig">
-    <svg class="dg" viewBox="0 0 380 136" role="img" aria-label="Lineage: CSV gốc thành bảng sạch, thành kết quả, thành hình; manifest.csv và data-card.md ghi nguồn, lineage.md ghi từng bước, nên lần ngược được từ hình về dữ liệu gốc">
-      <text x="190" y="12" class="dg-s" text-anchor="middle">lần ngược: hình này từ dữ liệu nào?</text>
-      <path d="M343,36V24H37V30" class="s-arr dash" marker-end="url(#arr)"/>
-      <rect x="0" y="36" width="74" height="40" rx="8" class="dg-box"/>
-      <text x="37" y="61" class="dg-t" text-anchor="middle">CSV gốc</text>
-      <path d="M74,56H96" class="s-arr" marker-end="url(#arr)"/>
-      <rect x="102" y="36" width="74" height="40" rx="8" class="dg-box"/>
-      <text x="139" y="61" class="dg-t" text-anchor="middle">Bảng sạch</text>
-      <path d="M176,56H198" class="s-arr" marker-end="url(#arr)"/>
-      <rect x="204" y="36" width="74" height="40" rx="8" class="dg-box"/>
-      <text x="241" y="61" class="dg-t" text-anchor="middle">Kết quả</text>
-      <path d="M278,56H300" class="s-arr" marker-end="url(#arr)"/>
-      <rect x="306" y="36" width="74" height="40" rx="8" class="dg-box"/>
-      <text x="343" y="61" class="dg-t" text-anchor="middle">Hình</text>
-      <text x="0" y="98" class="dg-c">manifest.csv</text>
-      <text x="0" y="114" class="dg-c">data-card.md</text>
-      <text x="0" y="130" class="dg-s">lấy từ đâu, lúc nào</text>
-      <text x="130" y="98" class="dg-c">lineage.md</text>
-      <text x="130" y="114" class="dg-s">mỗi mũi tên: đọc gì, đổi gì,</text>
-      <text x="130" y="130" class="dg-s">ra file nào</text>
-    </svg>
-    <figcaption>Ba file ghi lineage. Thiếu chúng thì không lần ngược được từ một hình về dữ liệu gốc.</figcaption>
-  </figure>
-  <div class="cols">
-    <div class="box">
-      <h4>Đúng ở đâu</h4>
-      <p>Là thuật ngữ quốc tế có thật, và môn đã dạy: <span class="term">lineage</span> ở <a href="data-management-visualization.html#b1-quy-trinh">bài 1</a> (<span class="term">data governance</span>), <span class="term">provenance</span> của <span class="term">Apache NiFi</span> ở <a href="data-management-visualization.html#b3-nifi">bài 3</a>.</p>
+  <p>Nhóm được gợi ý dùng “Data Lineage &amp; Provenance” làm từ khoá thay cho tên môn. Lineage là bản ghi dữ liệu đi từ đâu, qua bước nào, ra hình nào: một phần của quản lý dữ liệu, nên đồ án vẫn ghi lineage, nhưng từ khoá ấy không thay được tên môn.</p>
+  <details class="fold" id="lineage-chi-tiet">
+    <summary>Lineage trông thế nào, từ khoá ấy đúng sai ở đâu?</summary>
+    <div class="fold-body">
+    <figure class="dg-fig">
+      <svg class="dg" viewBox="0 0 380 136" role="img" aria-label="Lineage: CSV gốc thành bảng sạch, thành kết quả, thành hình; manifest.csv và data-card.md ghi nguồn, lineage.md ghi từng bước, nên lần ngược được từ hình về dữ liệu gốc">
+        <text x="190" y="12" class="dg-s" text-anchor="middle">lần ngược: hình này từ dữ liệu nào?</text>
+        <path d="M343,36V24H37V30" class="s-arr dash" marker-end="url(#arr)"/>
+        <rect x="0" y="36" width="74" height="40" rx="8" class="dg-box"/>
+        <text x="37" y="61" class="dg-t" text-anchor="middle">CSV gốc</text>
+        <path d="M74,56H96" class="s-arr" marker-end="url(#arr)"/>
+        <rect x="102" y="36" width="74" height="40" rx="8" class="dg-box"/>
+        <text x="139" y="61" class="dg-t" text-anchor="middle">Bảng sạch</text>
+        <path d="M176,56H198" class="s-arr" marker-end="url(#arr)"/>
+        <rect x="204" y="36" width="74" height="40" rx="8" class="dg-box"/>
+        <text x="241" y="61" class="dg-t" text-anchor="middle">Kết quả</text>
+        <path d="M278,56H300" class="s-arr" marker-end="url(#arr)"/>
+        <rect x="306" y="36" width="74" height="40" rx="8" class="dg-box"/>
+        <text x="343" y="61" class="dg-t" text-anchor="middle">Hình</text>
+        <text x="0" y="98" class="dg-c">manifest.csv</text>
+        <text x="0" y="114" class="dg-c">data-card.md</text>
+        <text x="0" y="130" class="dg-s">lấy từ đâu, lúc nào</text>
+        <text x="130" y="98" class="dg-c">lineage.md</text>
+        <text x="130" y="114" class="dg-s">mỗi mũi tên: đọc gì, đổi gì,</text>
+        <text x="130" y="130" class="dg-s">ra file nào</text>
+      </svg>
+      <figcaption>Ba file ghi lineage. Thiếu chúng thì không lần ngược được từ một hình về dữ liệu gốc.</figcaption>
+    </figure>
+    <div class="cols">
+      <div class="box">
+        <h4>Đúng ở đâu</h4>
+        <p>Là thuật ngữ quốc tế có thật, và môn đã dạy: <span class="term">lineage</span> ở <a href="data-management-visualization.html#b1-quy-trinh">bài 1</a> (<span class="term">data governance</span>), <span class="term">provenance</span> của <span class="term">Apache NiFi</span> ở <a href="data-management-visualization.html#b3-nifi">bài 3</a>.</p>
+      </div>
+      <div class="box">
+        <h4>Sai ở đâu</h4>
+        <p>Chỉ là một mảng con của <span class="term">quản lý metadata</span> (<span class="term">DAMA-DMBOK</span>): không có phần hình, không liên quan bốn phương pháp. Tên môn tự nó đã dùng quốc tế (ví dụ <a href="https://www.coursera.org/learn/data-visualization">môn cùng tên trên Coursera</a>).</p>
+      </div>
     </div>
-    <div class="box">
-      <h4>Sai ở đâu</h4>
-      <p>Chỉ là một mảng con của <span class="term">quản lý metadata</span> (<span class="term">DAMA-DMBOK</span>): không có phần hình, không liên quan bốn phương pháp. Tên môn tự nó đã dùng quốc tế (ví dụ <a href="https://www.coursera.org/learn/data-visualization">môn cùng tên trên Coursera</a>).</p>
+    <p>Trong đồ án, lineage là ba file trên và một mục của báo cáo; cách ghi ở <a href="sports-monitoring-build.html#thu-nap">trang 2, bước Thu nạp</a>. Ví dụ ngược: repo MLOps ở thẻ A4 không ghi dữ liệu nào đã huấn luyện mô hình nào, nên không lần ngược được.</p>
+    <p class="sub">Định nghĩa nên trích: <a href="https://www.w3.org/TR/prov-overview/">W3C PROV Overview</a>, <a href="https://openlineage.io/docs/">tài liệu OpenLineage</a>, bài tổng quan của Herschel và cs. (2017).</p>
     </div>
-  </div>
-  <p>Trong đồ án, lineage là ba file trên và một mục của báo cáo; cách ghi ở <a href="sports-monitoring-build.html#thu-nap">trang 2, bước Thu nạp</a>. Ví dụ ngược: repo MLOps ở thẻ A4 không ghi dữ liệu nào đã huấn luyện mô hình nào, nên không lần ngược được.</p>
-  <p class="sub">Định nghĩa nên trích: <a href="https://www.w3.org/TR/prov-overview/">W3C PROV Overview</a>, <a href="https://openlineage.io/docs/">tài liệu OpenLineage</a>, bài tổng quan của Herschel và cs. (2017).</p>
+  </details>
 </section>
 
 <!-- ═══════════════ CHẶNG 2 · TÌM NGUỒN ═══════════════ -->
@@ -614,7 +625,7 @@ svg.dg{display:block;width:100%;max-width:380px;height:auto}
   <h3>Kiểm tận nơi trước khi ghi vào danh sách</h3>
   <ul>
     <li>Link còn sống; tác giả, năm, nội dung đúng như người gợi ý nói.</li>
-    <li>Dữ liệu thật hay dữ liệu giả lập: thẻ A3 là ví dụ số giả lập.</li>
+    <li>Dữ liệu thật hay dữ liệu giả lập: repo mẫu <a href="https://github.com/ivanrivasgr/Sports_Injury_Risk_Intelligence">Sports_Injury_Risk_Intelligence</a> (thẻ A3) dùng số giả lập.</li>
     <li>Giấy phép cho làm gì: dùng riêng, công bố, chép code.</li>
     <li>Nguồn do chatbot gợi ý (nhóm B, bảng tổng hợp) phải mở từng cái, kể cả khi trông như thật.</li>
   </ul>
@@ -649,7 +660,7 @@ svg.dg{display:block;width:100%;max-width:380px;height:auto}
   </div>
 
   <details class="fold" id="hai-vong">
-    <summary>Ba vòng kiểm</summary>
+    <summary>Trang đã chấm lại mấy vòng, đổi gì?</summary>
     <div class="fold-body">
       <p class="sub">Vòng 2: ba trợ lý AI chấm độc lập, không xem vòng 1, rồi một trợ lý kiểm từng chỗ lệch tại nguồn. Vòng 3: bốn trợ lý kiểm lại sự kiện, thống kê, cách người mới đọc trang, và giao diện. Kiểm ngày <span data-checked></span>. Điểm trong bảng là điểm tổng trên 10.</p>
       <h3>Vòng 1 và vòng 2</h3>
@@ -682,6 +693,7 @@ svg.dg{display:block;width:100%;max-width:380px;height:auto}
 
   <h3>Vì sao ba phương án này</h3>
   <p>Phương án A và B dùng hai bộ dữ liệu đã kiểm, có đủ ba dạng mà bốn phương pháp cần: nhiều nhóm cùng lúc (ngoại lai, ANOM), một chuỗi dài theo thời gian (CUSUM, SPRT), và đủ cột để làm sạch (phần quản lý dữ liệu). C giữ lại vì không rủi ro giấy phép và có đội tuyển Việt Nam, nhưng chỉ làm phần mở rộng.</p>
+  <p>Điểm của B lấy theo C11 (<span data-total="C11"></span>), không theo A1 (bộ Kaggle, <span data-total="A1"></span>): bộ Kaggle dừng ở mùa 2024 và nhãn giấy phép trên Kaggle lỏng hơn giấy phép thật, còn bản dump CSV của Jolpica có tới mùa hiện tại, giấy phép ghi rõ.</p>
   <p>Các bộ khác rơi ra: chuỗi của StatsBomb quá ngắn; nba_api bị chặn trên máy chủ đám mây; repo quần vợt của Sackmann đã bị gỡ; Match Charting Project phải bóc tách nặng.</p>
 </section>
 
@@ -742,8 +754,9 @@ svg.dg{display:block;width:100%;max-width:380px;height:auto}
   </figure>
 
   <h3 id="can-chot"><span data-count="agree"></span> điều phải chốt</h3>
+  <p class="sub">Tám điều dưới đây là bản gộp. Danh sách đầy đủ (<span id="buildDec">mỗi điều</span> kèm các phương án khác và vì sao không chọn) ở <a href="sports-monitoring-build.html#quyet-dinh">trang 2, Mọi điều đã chốt</a>.</p>
   <ol class="agree" id="agree"></ol>
-  <p>Khung đồ án mượn từ repo mẫu Sports_Injury_Risk_Intelligence (thẻ A3): mượn cách chia các trang của app và các tầng dữ liệu, không mượn số liệu. Xem <a href="sports-monitoring-build.html#repo">trang 2, cây repo</a>.</p>
+  <p>Khung đồ án mượn từ repo mẫu <a href="https://github.com/ivanrivasgr/Sports_Injury_Risk_Intelligence">Sports_Injury_Risk_Intelligence</a> (thẻ A3): mượn cách chia các trang của app và các tầng dữ liệu, không mượn số liệu. A3 bị chấm “Bỏ” vì nội dung (dữ liệu giả lập, đề khác), không phải vì khung. Xem <a href="sports-monitoring-build.html#repo">trang 2, cây repo</a>.</p>
 
   <h3 id="cau-hoi">Bốn câu hỏi nghiên cứu</h3>
   <p>Ba câu ANOM, CUSUM, SPRT cùng hỏi một chuyện: <span class="term">lợi thế sân nhà</span> có giảm không. ANOM so từng mùa, CUSUM theo dõi liên tục qua mọi mùa, SPRT trả lời nhanh trong một mùa. Câu ngoại lai lo phần dữ liệu: số liệu trận nào bất thường, dòng nào ghi sai.</p>
@@ -985,7 +998,7 @@ Kind regards,
       var x = function (v) { return 24 + v * 27; };
       var s = miniFrame('Box plot tổng số bàn mỗi trận, ' + out.length + ' trận nằm ngoài rào');
       for (var v = 0; v <= 10; v += 2) {
-        svg('line', { x1: x(v), x2: x(v), y1: 20, y2: 118, 'class': 's-grid' }, s);
+        svg('line', { x1: x(v), x2: x(v), y1: 32, y2: 118, 'class': 's-grid' }, s);   // bắt đầu dưới dòng nhãn rào
         stext(s, x(v), 134, 't-tick', String(v), 'middle');
       }
       stext(s, 6, 12, 't-tick', 'số bàn mỗi trận', 'start');
@@ -1029,15 +1042,16 @@ Kind regards,
       return { svg: s, key: 'M1–M8: tám mùa. Chấm lam than: mùa trong giới hạn. Chấm mận: vượt UDL hoặc LDL.' };
     },
     cusum: function () {
-      var xs = [0, 1, -1, 0, 2, -1, 0, -2, 1, 0, -1, 1, 0, -1, 1,   // hiệu số 15 trận đầu, quanh 0
-                1, 2, 0, 1, 3, 1, 0, 2, 1, 2, 1, 0, 2, 1, 1];      // từ trận 16 dịch lên khoảng +1
-      var mu0 = 0, k = 0.5, h = 4, shift = 16;
+      var xs = [0, 1, -1, 0, 2, -1, 0, -2, 1, 0, -1, 1, 0, -1, 1,        // hiệu số sân nhà 15 trận đầu, quanh 0
+                -1, -2, 0, -1, -3, -1, 0, -2, -1, -2, -1, 0, -2, -1, -1];  // từ trận 16 giảm khoảng 1
+      var mu0 = 0, k = 0.5, h = 4, shift = 16;                              // k, h minh hoạ, không phải tham số của đồ án
       var S = [], cur = 0, alarm = 0;
-      xs.forEach(function (v, i) { cur = Math.max(0, cur + v - mu0 - k); S.push(cur); if (!alarm && cur > h) alarm = i + 1; });
+      /* Nhánh giảm: S_lo(i) = max(0, S_lo(i−1) + μ0 − k − x_i). */
+      xs.forEach(function (v, i) { cur = Math.max(0, cur + mu0 - k - v); S.push(cur); if (!alarm && cur > h) alarm = i + 1; });
       var x = function (i) { return 26 + (i - 1) * 9.6; };
       var top = Math.max(h, Math.max.apply(null, S));
       var y = function (v) { return 120 - v * 92 / top; };
-      var s = miniFrame('Biểu đồ CUSUM: S_hi vượt ngưỡng h ở trận ' + alarm);
+      var s = miniFrame('Biểu đồ CUSUM nhánh giảm: S_lo vượt ngưỡng h ở trận ' + alarm);
       svg('line', { x1: 20, x2: W0 - 8, y1: y(0), y2: y(0), 'class': 's-grid' }, s);
       svg('line', { x1: 20, x2: W0 - 8, y1: y(h), y2: y(h), 'class': 's-thr' }, s);
       stext(s, 22, y(h) - 5, 't-tick', 'ngưỡng h = ' + fmt(h), 'start');
@@ -1045,11 +1059,11 @@ Kind regards,
       stext(s, x(shift) - 4, 24, 't-tick', 'đổi thật: trận ' + shift, 'end');
       svg('polyline', { points: S.map(function (v, i) { return x(i + 1) + ',' + y(v); }).join(' '), fill: 'none', stroke: 'var(--c2)', 'stroke-width': 2, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }, s);
       svg('circle', { cx: x(alarm), cy: y(S[alarm - 1]), r: 4.5, 'class': 'f-c4', stroke: 'var(--inset)', 'stroke-width': 2 }, s);
-      stext(s, x(alarm) - 8, y(S[alarm - 1]) - 8, 't-val', 'báo: trận ' + alarm, 'end');
+      stext(s, x(alarm) + 8, y(h) + 16, 't-val', 'báo: trận ' + alarm, 'start');   // dưới vạch h, bên phải điểm báo: không đè vạch nào
       stext(s, x(1), 138, 't-tick', '1', 'middle');
       stext(s, x(xs.length), 138, 't-tick', String(xs.length), 'middle');
       stext(s, W0 / 2, 146, 't-tick', 'trận', 'middle');
-      return { svg: s, key: 'Đường lam than: tổng S_hi. Chấm mận: lần đầu vượt h.' };
+      return { svg: s, key: 'Đường lam than: tổng S_lo của nhánh giảm (cộng dồn phần hụt dưới mức cũ). Chấm mận: lần đầu vượt h.' };
     },
     sprt: function () {
       var p0 = 0.5, p1 = 0.3, al = 0.05, be = 0.2;                // tham số chung chung, không phải của đồ án
@@ -1195,9 +1209,9 @@ Kind regards,
     var s = svg('svg', { width: W, height: H, viewBox: '0 0 ' + W + ' ' + H, role: 'group', 'aria-label': 'Điểm tổng của ' + rows.length + ' nguồn, xếp từ cao xuống thấp' }, box);
     var thr = D.verdicts.map(function (v) { return v.min; }).filter(function (v) { return v > 0; });
     [0, 10].concat(thr).forEach(function (v) {
-      svg('line', { x1: X(v), x2: X(v), y1: padT - 6, y2: H - 2, 'class': thr.indexOf(v) >= 0 ? 's-thr' : 's-grid' }, s);
       stext(s, X(v), 12, 't-tick', fmt(v), v === 0 && narrow ? 'start' : (v === 10 && narrow ? 'end' : 'middle'));
     });
+    var grid = svg('g', {}, s), labels = [];   // vạch vẽ sau, nằm dưới thanh; chừa trống chỗ có nhãn
     rows.forEach(function (r, i) {
       var y = padT + i * rowH;
       var a = svg('a', { href: '#src-' + r.id.toLowerCase(), 'class': 'bar-row', 'data-id': r.id,
@@ -1213,6 +1227,7 @@ Kind regards,
         var lt = stext(a, 2, y + 18, 't-lab', label, 'start');
         fitText(lt, W - vt.getComputedTextLength() - 16);
         textBg(vt); textBg(lt);
+        labels.push({ t: vt, y0: y + 2, y1: y + 24 }, { t: lt, y0: y + 2, y1: y + 24 });
         by = y + 26;
       } else {
         var lt2 = stext(a, labW, y + rowH / 2 + 4.5, 't-lab', label, 'end');
@@ -1222,12 +1237,22 @@ Kind regards,
         vt2.appendChild(document.createTextNode(val + ' '));
         var vs2 = svg('tspan', { 'class': 'v' }, vt2); vs2.textContent = r.verdict.name;
         textBg(vt2);
+        labels.push({ t: vt2, y0: y, y1: y + rowH }, { t: lt2, y0: y, y1: y + rowH });
       }
       svg('path', { d: barPath(X(0), X(r.total), by, barH, 4), 'class': 'bar f-' + r.verdict.color }, a);
       a.addEventListener('click', function (e) {
         e.preventDefault();
         goCard(r.id);
       });
+    });
+    /* Vạch lưới và vạch ngưỡng: cắt ở hàng có nhãn chữ nằm trên vạch (luật: nhãn không đè nét). */
+    [0, 10].concat(thr).forEach(function (v) {
+      var xv = X(v), yy = padT - 6, cls = thr.indexOf(v) >= 0 ? 's-thr' : 's-grid';
+      var seg = function (a, b) { if (b - a > 2) svg('line', { x1: xv, x2: xv, y1: a, y2: b, 'class': cls }, grid); };
+      labels.filter(function (l) { var b = l.t.getBBox(); return b.x - 4 <= xv && b.x + b.width + 4 >= xv; })
+        .sort(function (a, b) { return a.y0 - b.y0; })
+        .forEach(function (l) { seg(yy, l.y0); yy = Math.max(yy, l.y1); });
+      seg(yy, H - 2);
     });
     renderScoreTable(rows);
   }
@@ -1532,10 +1557,6 @@ Kind regards,
       c.appendChild(htmlList('ul', o, 'cons_html'));
       c.appendChild(el('h4', null, 'Nên chọn khi'));
       c.appendChild(html(el('p'), o, 'best_html'));
-      if (o.questions_html) {
-        c.appendChild(el('h4', null, 'Bốn câu hỏi nếu chọn ' + o.id));
-        c.appendChild(htmlList('ul', o, 'questions_html'));
-      }
       box.appendChild(c);
     });
     var sb = $('#switchB'), ob = D.options.filter(function (o) { return o.id === 'B'; })[0];
@@ -1606,6 +1627,16 @@ Kind regards,
         y += x.items.length * (ih + ig) - ig + gap;
       }
     });
+  }
+  /* Số điều chốt ở trang 2 = tổng steps[].decisions trong JSON của trang 2; không nạp được thì giữ chữ mặc định. */
+  function countBuildDecisions() {
+    fetch('data/sports-monitoring-build.json', { cache: 'no-cache' })
+      .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(function (b) {
+        var n = (b.steps || []).reduce(function (a, st) { return a + (st.decisions || []).length; }, 0);
+        if (n) $('#buildDec').textContent = n + ' điều, mỗi điều';
+      })
+      .catch(function () { /* giữ chữ mặc định */ });
   }
   /* Bốn câu hỏi, dạng gọn: câu hỏi và dòng "Giúp quyết định". Cách làm và số đã kiểm ở trang 2. */
   function renderPlanA() {
@@ -1970,6 +2001,7 @@ Kind regards,
       renderOptions();
       renderAgree();
       renderPlanA();
+      countBuildDecisions();
       renderGloss();
       renderRefs();
       renderRounds();

@@ -36,7 +36,7 @@
       {
        "name_html": "Mỗi người một repo rồi gửi file",
        "why_html": "Không ai biết bản nào là bản đúng; không ghép được app.",
-       "when_html": "Không nên cho đồ án nhóm."
+       "when_html": "Bài cá nhân, mỗi người nộp phần riêng, không cần ghép."
       },
       {
        "name_html": "Thư mục chung trên Google Drive",
@@ -47,7 +47,7 @@
     },
     {
      "topic": "Cách làm với git",
-     "pick_html": "<b>GitHub Flow</b>: nhánh ngắn theo việc (<code>feat/cusum</code>), mở pull request vào <code>main</code>, một người khác duyệt, test xanh rồi mới gộp.",
+     "pick_html": "<b>GitHub Flow</b>: <span class=\"term\" data-t=\"branch\">nhánh</span> ngắn theo việc (<code>feat/cusum</code>), mở pull request vào <code>main</code>, một người khác duyệt, test xanh rồi mới gộp.",
      "alts": [
       {
        "name_html": "Ai cũng đẩy thẳng <code>main</code>",
@@ -68,8 +68,13 @@
     },
     {
      "topic": "Môi trường Python",
-     "pick_html": "Python 3.12 trở lên, <code>venv</code> + <code>pip</code>; <code>requirements.txt</code> ghim đúng phiên bản bằng <code>==</code>. Bản chạy thử: Python 3.13, cài gói mất 23 giây.",
+     "pick_html": "Python 3.12 trở lên, <code>venv</code> + <code>pip</code>; <code>requirements.txt</code> ghim đúng phiên bản (<code>==</code>) chín gói dùng trực tiếp. Bản chạy thử: Python 3.13, cài gói mất 23 giây.",
      "alts": [
+      {
+       "name_html": "<code>pip freeze &gt; requirements.txt</code>",
+       "why_html": "Ghim cả gói kéo theo: danh sách dài, có gói chỉ có trên một hệ điều hành, cài trên máy khác dễ lỗi.",
+       "when_html": "Cần tái lập từng gói trên cùng một hệ điều hành, ví dụ máy chủ chạy định kỳ."
+      },
       {
        "name_html": "Không ghim, hoặc ghim <code>&gt;=</code>",
        "why_html": "Bảy máy cài ra bảy bộ phiên bản; thư viện đổi hành vi là số lệch giữa các máy.",
@@ -150,10 +155,6 @@
     }
    ],
    "done_html": "Cả bảy người clone được repo, chạy được <code>python -c \"import pandas, duckdb, streamlit\"</code>, và mỗi người đã gộp một pull request.",
-   "code": {
-    "file": "requirements.txt, .gitignore và ba lệnh cài",
-    "src": "# requirements.txt: ghim đúng phiên bản, máy nào cài cũng ra một bộ\nduckdb==2.0.1\nmatplotlib==3.11.2\nnumpy==2.5.5\npandas==3.1.1\npyarrow==26.0.1\npytest==9.2.0\nrequests==2.34.2\nscipy==1.18.1\nstreamlit==1.67.0\n\n# .gitignore: dữ liệu và môi trường không lên repo\n.venv/\ndata/raw/\ndata/clean/\n__pycache__/\n\n# Cài (Windows: .venv\\Scripts\\activate)\npython3 -m venv .venv            # 3,2 giây\n. .venv/bin/activate\npip install -r requirements.txt  # 23 giây"
-   },
    "traps": [],
    "reuse": {
     "swap_html": [
@@ -166,7 +167,13 @@
      "<code>decisions.md</code> ba dòng mỗi mục."
     ]
    },
-   "no": 1
+   "no": 1,
+   "codes": [
+    {
+     "file": "requirements.txt, .gitignore và lệnh cài",
+     "src": "# requirements.txt: ghim đúng phiên bản các gói dùng trực tiếp\nduckdb==2.0.1\nmatplotlib==3.11.2\nnumpy==2.5.5\npandas==3.1.1\npyarrow==26.0.1\npytest==9.2.0\nrequests==2.34.2\nscipy==1.18.1\nstreamlit==1.67.0\n\n# .gitignore: dữ liệu và môi trường không lên repo\n.venv/\ndata/raw/\ndata/clean/\n__pycache__/\n\n# Cài (Windows: .venv\\Scripts\\activate)\npython3 -m venv .venv\n. .venv/bin/activate\npip install -r requirements.txt"
+    }
+   ]
   },
   {
    "id": "bai-toan",
@@ -227,7 +234,12 @@
       {
        "name_html": "“Thành công = tìm ra thay đổi”",
        "why_html": "Đẩy nhóm chỉnh tham số tới khi thấy thay đổi.",
-       "when_html": "Không bao giờ."
+       "when_html": "Đề bài là tìm một hiệu ứng đã biết chắc có, và kế hoạch đã khoá trước."
+      },
+      {
+       "name_html": "“Thành công = chạy xong bốn phương pháp”",
+       "why_html": "Không nói ai dùng kết quả, không có độ bất định.",
+       "when_html": "Bài tập luyện công cụ, không có người dùng kết quả."
       }
      ]
     }
@@ -251,10 +263,6 @@
     }
    ],
    "done_html": "<code>problem.md</code> có đủ bốn câu, mỗi câu có người dùng, quyết định, dạng câu trả lời; có danh sách tiêu chí thành công; cả nhóm đã đồng ý (ghi ngày ở <code>decisions.md</code>).",
-   "code": {
-    "file": "Khuôn docs/problem.md (một câu)",
-    "src": "## Câu 3 · CUSUM\nCâu hỏi:     Lợi thế sân nhà ở Premier League có giảm không, từ trận nào?\nAi dùng:     nhà phân tích của câu lạc bộ, nhà cái.\nQuyết định:  cập nhật hệ số sân nhà trong mô hình từ trận nào.\nDạng trả lời: danh sách cảnh báo: trận báo, nhánh (tăng/giảm), trận đổi ước tính.\nSai số đắt:  báo nhầm (sửa mô hình khi không cần) → giữ ARL0 ≈ 2.000 trận.\nNgoài phạm vi: vì sao giảm (nhân quả)."
-   },
    "traps": [],
    "reuse": {
     "swap_html": [
@@ -266,7 +274,13 @@
      "Tiêu chí thành công không phụ thuộc kết quả."
     ]
    },
-   "no": 2
+   "no": 2,
+   "codes": [
+    {
+     "file": "Khuôn docs/problem.md (một câu)",
+     "src": "## Câu 3 · CUSUM\nCâu hỏi:     Lợi thế sân nhà ở Premier League có giảm không, từ trận nào?\nAi dùng:     nhà phân tích của câu lạc bộ, nhà cái.\nQuyết định:  cập nhật hệ số sân nhà trong mô hình từ trận nào.\nDạng trả lời: danh sách cảnh báo: trận báo, nhánh (tăng/giảm), trận đổi ước tính.\nSai số đắt:  báo nhầm (sửa mô hình khi không cần) → giữ ARL0 ≈ 2.000 trận.\nNgoài phạm vi: vì sao giảm (nhân quả)."
+    }
+   ]
   },
   {
    "id": "nguon-du-lieu",
@@ -297,7 +311,7 @@
       {
        "name_html": "Bản sao trên Kaggle",
        "why_html": "Không rõ ai tải, lúc nào, có sửa gì không; giấy phép của người đăng không thay được điều khoản gốc.",
-       "when_html": "Không nên; nếu bắt buộc thì vẫn ghi nguồn gốc là football-data.co.uk."
+       "when_html": "Trang gốc không truy cập được; vẫn ghi nguồn gốc là football-data.co.uk và so SHA-256 khi tải lại được."
       },
       {
        "name_html": "openfootball (GitHub)",
@@ -311,8 +325,8 @@
       },
       {
        "name_html": "Phương án B (đua xe F1)",
-       "why_html": "Chủ trang đã chốt A.",
-       "when_html": "Theo <a href=\"sports-monitoring-project.html#chon\">cây chọn ở trang 1</a>."
+       "why_html": "Nhóm đã chọn A ở <a href=\"sports-monitoring-project.html#chon\">trang 1, chặng Chọn</a>.",
+       "when_html": "Không được dùng football-data.co.uk: theo cây chọn ở trang 1."
       }
      ]
     },
@@ -322,7 +336,7 @@
      "alts": [
       {
        "name_html": "Commit CSV cho tiện",
-       "why_html": "Trang dữ liệu ghi “its use is intended for private individuals only” và “made available for the purposes of league match prediction only” (đọc 25/11/2026). Commit là phân phối lại.",
+       "why_html": "Điều khoản dành dữ liệu cho cá nhân và cho dự đoán kết quả (trích nguyên văn ở data card, khối code bên dưới). Commit là phân phối lại.",
        "when_html": "Có thư cho phép bằng văn bản."
       },
       {
@@ -371,10 +385,6 @@
     }
    ],
    "done_html": "Data card có đủ các trường, điều khoản trích nguyên văn kèm ngày đọc; vai 3–6 đã xác nhận danh sách cột.",
-   "code": {
-    "file": "docs/data-card.md (bản chạy thử)",
-    "src": "# Data card\n- Nguồn: https://www.football-data.co.uk/ , file mmz4281/{mã mùa}/E0.csv\n  (mã mùa: 9798 … 2526). Trang chuyển hướng www → không www.\n- Điều khoản (đọc 25/11/2026): \"its use is intended for private individuals\n  only\"; \"made available for the purposes of league match prediction only\".\n  Đã email xin phép dùng cho đồ án (P0). Không phân phối lại file gốc.\n- Giai đoạn: 29 mùa 1997/98–2025/26, mỗi mùa 380 trận, tổng 11.020 trận.\n- Grain: một dòng một trận.\n- Cột: kết quả (ngày, đội, bàn, FTR, hiệp 1) có ở mọi mùa; trọng tài, cú sút,\n  phạt góc, phạm lỗi, thẻ có từ 2000/01; giờ đá có từ 2019/20.\n- Thẻ vàng: không tính thẻ vàng đầu khi thẻ thứ hai thành đỏ (notes.txt).\n- Phiên bản: SHA-256 từng file trong data/manifest.csv.\n- Bẫy định dạng: xem docs/lineage.md."
-   },
    "traps": [],
    "reuse": {
     "swap_html": [
@@ -386,7 +396,13 @@
      "Data card một trang; danh sách cột theo người dùng."
     ]
    },
-   "no": 3
+   "no": 3,
+   "codes": [
+    {
+     "file": "docs/data-card.md (bản chạy thử)",
+     "src": "# Data card\n- Nguồn: https://www.football-data.co.uk/ , file mmz4281/{mã mùa}/E0.csv\n  (mã mùa: 9798 … 2526). Trang chuyển hướng www → không www.\n- Điều khoản (data.php, đọc 25/11/2026): \"its use is intended for private\n  individuals only, NOT commerical or data training products using automated\n  bots/scrapers/AI\"; \"made available for the purposes of league match\n  prediction only\".\n  Đã email xin phép dùng cho đồ án (P0). Không phân phối lại file gốc.\n- Giai đoạn: 29 mùa 1997/98–2025/26, mỗi mùa 380 trận, tổng 11.020 trận.\n- Grain: một dòng một trận.\n- Cột: kết quả (ngày, đội, bàn, FTR, hiệp 1) có ở mọi mùa; trọng tài, cú sút,\n  phạt góc, phạm lỗi, thẻ có từ 2000/01; giờ đá có từ 2019/20.\n- Thẻ vàng: không tính thẻ vàng đầu khi thẻ thứ hai thành đỏ (notes.txt).\n- Phiên bản: SHA-256 từng file trong data/manifest.csv.\n- Bẫy định dạng: xem docs/lineage.md."
+    }
+   ]
   },
   {
    "id": "kien-truc",
@@ -412,7 +428,7 @@
      "alts": [
       {
        "name_html": "Kiến trúc Lambda (nhánh lô + nhánh luồng)",
-       "why_html": "Dành cho dữ liệu lớn cần kết quả tức thì. Ở đây 11.020 trận, 3,1 MB, trận mới tới vài ngày một lần; cả đường ống chạy lại mất 24,7 giây. Học ở <a href=\"../big-data-storage-processing/big-data-storage-processing.html#b9\">bài 9 môn Lưu trữ và xử lý dữ liệu lớn</a>.",
+       "why_html": "Dành cho dữ liệu lớn cần kết quả tức thì. Ở đây 11.020 trận, 3,1 MB, trận mới tới vài ngày một lần; cả đường ống chạy lại mất 5,1 giây. Học ở <a href=\"../big-data-storage-processing/big-data-storage-processing.html#b9\">bài 9 môn Lưu trữ và xử lý dữ liệu lớn</a>.",
        "when_html": "Hàng triệu sự kiện mỗi giờ và cần cập nhật dưới một phút."
       },
       {
@@ -482,7 +498,6 @@
     }
    ],
    "done_html": "README có sơ đồ tầng và bảng ba tầng; <code>decisions.md</code> có mục “không dùng Lambda” kèm lý do một dòng.",
-   "code": null,
    "traps": [],
    "reuse": {
     "swap_html": [
@@ -494,7 +509,8 @@
      "Ghi lý do không chọn kiến trúc lớn."
     ]
    },
-   "no": 4
+   "no": 4,
+   "codes": []
   },
   {
    "id": "mo-hinh-du-lieu",
@@ -567,12 +583,12 @@
     },
     {
      "topic": "Chuẩn hoá tên",
-     "pick_html": "Tên đội giữ như nguồn (49 tên, đã nhất quán; luật B3 kiểm). Tên trọng tài: khoá “chữ đầu của tên + họ”, bảng lỗi gõ, 4 ánh xạ suy từ ngữ cảnh mùa; 190 chuỗi gốc → 84 người; lưu <code>referee_map.csv</code>.",
+     "pick_html": "Tên đội giữ như nguồn (49 tên, đã nhất quán; luật QB3 kiểm). Tên trọng tài: khoá “chữ đầu của tên + họ”, bảng lỗi gõ, 4 ánh xạ suy từ ngữ cảnh mùa; 190 chuỗi gốc → 84 người; lưu <code>referee_map.csv</code>.",
      "alts": [
       {
        "name_html": "Gộp theo họ",
        "why_html": "Nhập hai người khác nhau: A Madley và R Madley; M, R, P Jones.",
-       "when_html": "Không nên."
+       "when_html": "Đã kiểm bảng tên và không có hai trọng tài trùng họ."
       },
       {
        "name_html": "So khớp mờ tự động (fuzzy matching)",
@@ -585,11 +601,6 @@
      "topic": "Ô trống",
      "pick_html": "Số đếm dùng kiểu <code>Int16</code> có thể rỗng: ô trống là NA, không phải 0 (trước 2000/01 không có cú sút).",
      "alts": [
-      {
-       "name_html": "Điền 0",
-       "why_html": "Bịa rằng trận ấy có 0 cú sút.",
-       "when_html": "Không bao giờ."
-      },
       {
        "name_html": "Để kiểu số thực",
        "why_html": "NaN biến số nguyên thành 1.0, 2.0; luật “≥ 0” và so sánh vẫn được nhưng dễ đọc sai.",
@@ -626,11 +637,7 @@
      "name": "Đặc trưng thời gian"
     }
    ],
-   "done_html": "Mỗi cột của <code>matches</code> có một dòng trong data dictionary; khoá chính được kiểm bằng code (luật B1 và PRIMARY KEY); ERD có trong <code>docs/</code>.",
-   "code": {
-    "file": "Nạp DuckDB và truy vấn (trích src/clean.py)",
-    "src": "import duckdb\n\ncon = duckdb.connect(\"data/clean/matches.duckdb\")\ncon.execute(\"CREATE TABLE matches AS \"\n            \"SELECT * FROM read_parquet('data/clean/matches.parquet')\")\ncon.execute(\"ALTER TABLE matches ADD PRIMARY KEY (match_id)\")  # trùng khoá: lỗi ngay\n\n# AS là từ khoá SQL: cột cú sút đội khách phải viết \"AS\"\ncon.sql(\"\"\"\n    SELECT season, avg(home_win) AS p_home, sum(\"AS\") AS away_shots\n    FROM matches GROUP BY season ORDER BY season\n\"\"\").show()"
-   },
+   "done_html": "Mỗi cột của <code>matches</code> có một dòng trong data dictionary; khoá chính được kiểm bằng code (luật QB1 và PRIMARY KEY); ERD có trong <code>docs/</code>.",
    "traps": [
     {
      "trap_html": "Cột <code>AS</code> trong DuckDB",
@@ -649,7 +656,13 @@
      "Cột nguồn (<code>source_file</code>, <code>file_row</code>) ở mỗi dòng."
     ]
    },
-   "no": 5
+   "no": 5,
+   "codes": [
+    {
+     "file": "Nạp DuckDB và truy vấn (theo src/clean.py)",
+     "src": "import duckdb\n\ncon = duckdb.connect(\"data/clean/matches.duckdb\")\n# OR REPLACE: chạy lại bao nhiêu lần cũng được, bảng cũ bị thay\ncon.execute(\"CREATE OR REPLACE TABLE matches AS \"\n            \"SELECT * FROM read_parquet('data/clean/matches.parquet')\")\ncon.execute(\"ALTER TABLE matches ADD PRIMARY KEY (match_id)\")  # trùng khoá: lỗi ngay\n\n# AS là từ khoá SQL: cột cú sút đội khách phải viết \"AS\"\ncon.sql(\"\"\"\n    SELECT season, avg(home_win) AS p_home, sum(\"AS\") AS away_shots\n    FROM matches GROUP BY season ORDER BY season\n\"\"\").show()"
+    }
+   ]
   },
   {
    "id": "thu-nap",
@@ -669,7 +682,7 @@
    "decisions": [
     {
      "topic": "Cách tải",
-     "pick_html": "Một script <code>src/download.py</code>, chạy tay, tải tuần tự, nghỉ 2 giây giữa hai file; file đã có trong manifest thì bỏ qua; <code>--force</code> tải lại. Lần đầu 68,5 giây.",
+     "pick_html": "Một script <code>src/download.py</code>, chạy tay, tải tuần tự, nghỉ 2 giây giữa hai file; file đã có trong <code>data/raw/</code> thì không tải lại, chỉ băm; <code>--force</code> tải lại. Lần đầu 68,5 giây.",
      "alts": [
       {
        "name_html": "Tải tay từng file bằng trình duyệt",
@@ -683,7 +696,7 @@
       },
       {
        "name_html": "Lịch chạy tự động (cron, GitHub Actions)",
-       "why_html": "Dữ liệu lịch sử không đổi; điều khoản nhắc tới “automated bots/scrapers”.",
+       "why_html": "Dữ liệu lịch sử không đổi; điều khoản nhắc tới bot tự động (xem <a href=\"#nguon-du-lieu\">Nguồn dữ liệu</a>).",
        "when_html": "Theo dõi mùa đang đá và nguồn cho phép."
       }
      ]
@@ -706,12 +719,7 @@
       {
        "name_html": "MD5",
        "why_html": "MD5 đã bị phá về va chạm; SHA-256 có sẵn trong <code>hashlib</code>.",
-       "when_html": "Không cần."
-      },
-      {
-       "name_html": "Chỉ ghi ngày tải",
-       "why_html": "Không chứng minh được hai người có cùng file.",
-       "when_html": "Không nên."
+       "when_html": "Chỉ cần phát hiện file hỏng khi chép, không cần chống ai cố ý sửa."
       },
       {
        "name_html": "DVC",
@@ -757,10 +765,6 @@
     }
    ],
    "done_html": "Trên máy thứ hai, <code>python -m src.download</code> tải đủ 29 file (21.157–203.438 byte mỗi file) và SHA-256 khớp manifest.",
-   "code": {
-    "file": "src/download.py (rút gọn)",
-    "src": "URL = \"https://www.football-data.co.uk/mmz4281/{code}/E0.csv\"\n\ndef season_code(y):                    # 1997 -> '9798', 2020 -> '2021'\n    return f\"{y % 100:02d}{(y + 1) % 100:02d}\"\n\nwith requests.Session() as s:\n    s.headers[\"User-Agent\"] = \"student-project-downloader/1.0\"  # không tên, không email\n    for y in range(1997, 2026):\n        code = season_code(y)\n        dest = RAW / f\"E0_{code}.csv\"\n        if dest.exists() and not force and dest.name in old:\n            rows.append(old[dest.name]); continue          # đã có: giữ dòng manifest cũ\n        r = s.get(URL.format(code=code), timeout=60)       # tự theo 301 www -> không www\n        r.raise_for_status()\n        dest.write_bytes(r.content)                         # ghi BYTE gốc, không decode\n        rows.append({\"season\": f\"{y}/{(y + 1) % 100:02d}\", \"file\": dest.name,\n                     \"url\": URL.format(code=code), \"final_url\": r.url,\n                     \"downloaded_utc\": now_utc(), \"bytes\": len(r.content),\n                     \"sha256\": hashlib.sha256(r.content).hexdigest()})\n        time.sleep(2.0)                                     # lịch sự với máy chủ"
-   },
    "traps": [
     {
      "trap_html": "Chuyển hướng www",
@@ -783,7 +787,13 @@
      "File đã có thì bỏ qua; muốn tải lại phải nói rõ (<code>--force</code>)."
     ]
    },
-   "no": 6
+   "no": 6,
+   "codes": [
+    {
+     "file": "src/download.py, vòng tải (rút gọn; đủ file trong starter/)",
+     "src": "import hashlib, time\nfrom pathlib import Path\nimport requests\n\nRAW = Path(\"data/raw\")\nURL = \"https://www.football-data.co.uk/mmz4281/{code}/E0.csv\"\n\ndef season_code(y):                       # 1997 -> '9798', 2020 -> '2021'\n    return f\"{y % 100:02d}{(y + 1) % 100:02d}\"\n\ndef download_all(force=False):\n    RAW.mkdir(parents=True, exist_ok=True)\n    with requests.Session() as s:\n        s.headers[\"User-Agent\"] = \"student-project-downloader/1.0\"  # không tên, không email\n        for y in range(1997, 2026):\n            dest = RAW / f\"E0_{season_code(y)}.csv\"\n            if dest.exists() and not force:\n                continue                                   # đã có: không tải lại\n            r = s.get(URL.format(code=season_code(y)), timeout=60)  # tự theo 301\n            r.raise_for_status()\n            dest.write_bytes(r.content)                    # ghi byte gốc, không decode\n            print(dest.name, hashlib.sha256(r.content).hexdigest())\n            time.sleep(2.0)                                # lịch sự với máy chủ"
+    }
+   ]
   },
   {
    "id": "lam-sach",
@@ -809,7 +819,7 @@
       {
        "name_html": "<code>on_bad_lines=\"skip\"</code> hoặc <code>\"warn\"</code>",
        "why_html": "Mất 45 trận mỗi mùa 2003/04 và 2004/05 (90 trận) mà không báo gì.",
-       "when_html": "Không nên."
+       "when_html": "Khám phá nhanh, khi đã đếm số dòng bị bỏ và chắc chúng là rác."
       },
       {
        "name_html": "<code>engine=\"python\"</code> kèm hàm cắt",
@@ -825,7 +835,7 @@
     },
     {
      "topic": "Mã hoá ký tự",
-     "pick_html": "<code>utf-8-sig</code> (bỏ BOM), lỗi thì <code>cp1252</code>; thay <code>\\xa0</code> bằng dấu cách.",
+     "pick_html": "<code>utf-8-sig</code> (bỏ BOM), lỗi thì đọc bằng bảng mã cp1252; thay <code>\\xa0</code> bằng dấu cách.",
      "alts": [
       {
        "name_html": "<code>latin-1</code>",
@@ -835,7 +845,7 @@
       {
        "name_html": "<code>errors=\"replace\"</code>",
        "why_html": "Âm thầm thay ký tự hỏng bằng dấu hỏi.",
-       "when_html": "Không nên."
+       "when_html": "Cột chữ không dùng tới, chỉ cần đọc được file."
       }
      ]
     },
@@ -846,13 +856,13 @@
       {
        "name_html": "Để pandas tự đoán (<code>dayfirst</code>)",
        "why_html": "Dễ đảo ngày và tháng mà không báo.",
-       "when_html": "Không nên."
+       "when_html": "Mọi file một định dạng ngày, đã kiểm."
       }
      ]
     },
     {
      "topic": "Chặn hay gắn cờ",
-     "pick_html": "<b>8 luật chặn</b> (B1–B8) cho cột câu hỏi chính dùng: khoá, ngày, đội, bàn, <code>FTR</code>. <b>5 luật gắn cờ</b> (F1–F5) cho cột phụ. Vi phạm luật chặn thì <code>sys.exit</code>, đường ống dừng.",
+     "pick_html": "<b>8 luật chặn</b> (QB1–QB8) cho cột câu hỏi chính dùng: khoá, ngày, đội, bàn, <code>FTR</code>. <b>5 luật gắn cờ</b> (QF1–QF5) cho cột phụ. Vi phạm luật chặn thì gọi sys.exit, đường ống dừng.",
      "alts": [
       {
        "name_html": "Một mức: lỗi nào cũng dừng",
@@ -862,7 +872,7 @@
       {
        "name_html": "Lỗi nào cũng chỉ ghi lại",
        "why_html": "Dòng trùng hay <code>FTR</code> sai lặng lẽ đi vào CUSUM.",
-       "when_html": "Không nên."
+       "when_html": "Dữ liệu chỉ để khám phá, chưa có kết luận nào dựa vào nó."
       },
       {
        "name_html": "Ba mức như repo mẫu",
@@ -894,22 +904,12 @@
     },
     {
      "topic": "Sửa lỗi",
-     "pick_html": "Không sửa tay file thô. F1 (sút trúng đích nhiều hơn tổng cú sút, 3 trận) chỉ gắn cờ: không có số đúng để thay. Trong bảng phân tích đặt trống <code>HS</code>, <code>HST</code> của 3 trận ấy; bảng sạch giữ bản gốc.",
+     "pick_html": "Không sửa tay file thô. QF1 (sút trúng đích nhiều hơn tổng cú sút, 3 trận) chỉ gắn cờ: không có số đúng để thay. Trong bảng phân tích đặt trống cột cú sút của đội bị lệch (Newcastle–West Ham 15/8/2021 chỉ lệch đội khách); bảng sạch giữ bản gốc.",
      "alts": [
       {
-       "name_html": "Đổi chỗ <code>HS</code> và <code>HST</code>",
-       "why_html": "Là đoán.",
-       "when_html": "Không bao giờ."
-      },
-      {
        "name_html": "Xoá dòng lỗi",
-       "why_html": "Mùa còn 379 trận, luật B2 chặn; CUSUM lệch thứ tự.",
+       "why_html": "Mùa còn 379 trận, luật QB2 chặn; CUSUM lệch thứ tự.",
        "when_html": "Dòng trùng hoàn toàn (ghi vào lineage)."
-      },
-      {
-       "name_html": "Sửa trong Excel",
-       "why_html": "Không ai lần ra được; chạy lại từ thô là mất sửa.",
-       "when_html": "Không bao giờ."
       }
      ]
     },
@@ -938,7 +938,7 @@
    "tasks_html": [
     "Vai 2 viết <code>src/clean.py</code> và <code>src/quality.py</code>; mỗi luật một test trên dữ liệu cố ý sai.",
     "Vai 2 lập bảng ánh xạ tên trọng tài; ghi bốn ánh xạ suy từ ngữ cảnh và lý do vào <code>lineage.md</code>.",
-    "Vai 3 xem 3 trận F1, tìm biên bản trận ở nguồn khác; có bằng chứng thì ghi vào <code>lineage.md</code>, không thì để trống.",
+    "Vai 3 xem 3 trận QF1, tìm biên bản trận ở nguồn khác; có bằng chứng thì ghi vào <code>lineage.md</code>, không thì để trống.",
     "Vai 2 ghi <code>lineage.md</code>: bỏ cột nào, gộp tên nào, cắt dòng nào, vì sao."
    ],
    "files": [
@@ -976,10 +976,6 @@
     }
    ],
    "done_html": "<code>python -m src.quality</code> thoát mã 0: tám luật chặn không vi phạm; <code>quality_report.csv</code> có 13 dòng; mỗi trọng tài chỉ còn một tên chuẩn. Chạy hết bước này mất 0,8 giây.",
-   "code": {
-    "file": "src/clean.py, hàm read_raw (rút gọn)",
-    "src": "def read_raw(path):\n    b = path.read_bytes()\n    try:\n        text = b.decode(\"utf-8-sig\")          # -sig: bỏ BOM nếu có\n    except UnicodeDecodeError:\n        text = b.decode(\"cp1252\")             # 2004/05: byte 0xA0 trước tên trọng tài\n    header, *body = csv.reader(io.StringIO(text))   # đếm ô bằng trình đọc CSV thật\n    out = []\n    for i, r in enumerate(body, start=1):\n        if not any(x.strip() for x in r):     # dòng toàn dấu phẩy (1999/00, 2014/15)\n            continue                          # (đếm vào load_log)\n        if len(r) > len(header):              # thừa dấu phẩy (2003/04, 2004/05)\n            extra = r[len(header):]\n            if any(x.strip() for x in extra): # phần thừa có chữ: dừng, đừng đoán\n                raise ValueError(f\"{path.name} dòng {i}: {extra}\")\n            r = r[:len(header)]\n        d = {h: v for h, v in zip(header, r) if h}  # bỏ cột không tên\n        d[\"file_row\"] = i                      # lineage mức dòng\n        out.append(d)\n    return out"
-   },
    "traps": [
     {
      "trap_html": "Thừa dấu phẩy 2003/04, 2004/05",
@@ -1018,7 +1014,7 @@
     },
     {
      "trap_html": "Giờ đá",
-     "symptom_html": "Chỉ có từ 2019/20 (luật F5 đếm 8.360 trận không có giờ).",
+     "symptom_html": "Chỉ có từ 2019/20 (luật QF5 đếm 8.360 trận không có giờ).",
      "fix_html": "Để trống; thứ tự trong ngày lấy theo file."
     },
     {
@@ -1027,7 +1023,7 @@
      "fix_html": "Luôn đếm ô bằng trình đọc CSV thật."
     },
     {
-     "trap_html": "Cửa sổ ngày của luật B7",
+     "trap_html": "Cửa sổ ngày của luật QB7",
      "symptom_html": "Bản đầu (1/7–30/6) chặn nhầm 66 trận 2019/20: mùa ấy đá lại sau đại dịch tới 26/7/2020.",
      "fix_html": "Cửa sổ tới 31/8 năm sau, thêm luật hai mùa liền nhau không chồng ngày."
     }
@@ -1044,7 +1040,13 @@
      "Test chèn lỗi cho mỗi luật."
     ]
    },
-   "no": 7
+   "no": 7,
+   "codes": [
+    {
+     "file": "src/clean.py, hàm read_raw (rút gọn)",
+     "src": "import csv, io\n\ndef read_raw(path):\n    b = path.read_bytes()\n    try:\n        text = b.decode(\"utf-8-sig\")          # -sig: bỏ BOM nếu có\n    except UnicodeDecodeError:\n        text = b.decode(\"cp1252\")             # 2004/05: byte 0xA0 trước tên trọng tài\n    header, *body = csv.reader(io.StringIO(text))   # đếm ô bằng trình đọc CSV thật\n    out = []\n    for i, r in enumerate(body, start=1):\n        if not any(x.strip() for x in r):     # dòng toàn dấu phẩy (1999/00, 2014/15)\n            continue                          # (bản đầy đủ đếm vào load_log)\n        if len(r) > len(header):              # thừa dấu phẩy (2003/04, 2004/05)\n            extra = r[len(header):]\n            if any(x.strip() for x in extra): # phần thừa có chữ: dừng, đừng đoán\n                raise ValueError(f\"{path.name} dòng {i}: {extra}\")\n            r = r[:len(header)]\n        d = {h: v for h, v in zip(header, r) if h}  # bỏ cột không tên\n        d[\"file_row\"] = i                      # lineage mức dòng\n        out.append(d)\n    return out"
+    }
+   ]
   },
   {
    "id": "eda",
@@ -1083,19 +1085,14 @@
       {
        "name_html": "Một công cụ cho mọi cột",
        "why_html": "Đuôi Poisson trên cú sút báo nhầm hàng loạt; rào IQR trên thẻ đỏ vô nghĩa (Q1 = Q3 = 0).",
-       "when_html": "Không nên."
+       "when_html": "Mọi cột cùng kiểu phân phối: tỉ số phương sai / trung bình gần nhau."
       }
      ]
     },
     {
      "topic": "Phase I",
-     "pick_html": "Chọn theo vị trí, không theo kết quả: CUSUM dùng 1997/98–1999/00 (540 thắng sân nhà / 1.140 trận); SPRT dùng 2016/17–2018/19 (541 / 1.140, hoà 254). Tham số chỉ tính trên Phase I. Hai phép dùng hai Phase I khác nhau là cố ý.",
+     "pick_html": "Chọn theo vị trí, không theo kết quả: CUSUM dùng 1997/98–1999/00 (540 thắng sân nhà / 1.140 trận); SPRT dùng 2016/17–2018/19 (541 / 1.140, hoà 254). Tham số chỉ tính trên Phase I. CUSUM theo dõi suốt 26 mùa nên mốc là các mùa đầu; SPRT hỏi 2020/21 so với “bình thường gần nhất” nên mốc là ba mùa ngay trước 2019/20.",
      "alts": [
-      {
-       "name_html": "Chọn những mùa “trông bình thường” sau khi nhìn hình",
-       "why_html": "Là chọn theo kết quả; mức bình thường bị kéo về phía muốn thấy.",
-       "when_html": "Không nên; phải bỏ một mùa thì ghi lý do ngoài dữ liệu (đổi luật giải)."
-      },
       {
        "name_html": "Dùng mọi mùa làm mức bình thường",
        "why_html": "Đoạn đang kiểm nằm luôn trong mức bình thường; thay đổi bị pha loãng.",
@@ -1160,10 +1157,6 @@
     }
    ],
    "done_html": "Có bảng tỉ số phương sai / trung bình cho mọi số đếm dùng ở câu ngoại lai; mùa Phase I của CUSUM và SPRT đã ghi trong kế hoạch phân tích.",
-   "code": {
-    "file": "src/eda.py, hàm dispersion (rút gọn)",
-    "src": "PAIRS = {\"bàn\": (\"FTHG\", \"FTAG\"), \"cú sút\": (\"HS\", \"AS\"),\n         \"sút trúng đích\": (\"HST\", \"AST\"), \"phạt góc\": (\"HC\", \"AC\"),\n         \"thẻ vàng\": (\"HY\", \"AY\"), \"thẻ đỏ\": (\"HR\", \"AR\")}\n\ndef dispersion(df):\n    \"\"\"var/mean: gần 1 thì gần Poisson; lớn hơn hẳn 1 là phân tán quá mức.\"\"\"\n    rows = []\n    for name, (h, a) in PAIRS.items():\n        for side, s in [(\"đội nhà\", df[h]), (\"đội khách\", df[a])]:\n            s = s.dropna().astype(float)\n            rows.append({\"variable\": name, \"unit\": side, \"mean\": s.mean(),\n                         \"var_over_mean\": s.var() / s.mean()})\n    return pd.DataFrame(rows)\n\nstats = df[df.season >= \"2000/01\"]       # cú sút, thẻ có từ mùa này\ndispersion(stats).to_csv(\"results/eda_dispersion.csv\", index=False)"
-   },
    "traps": [],
    "reuse": {
     "swap_html": [
@@ -1175,7 +1168,13 @@
      "Bảng số tính bằng hàm, notebook chỉ gọi."
     ]
    },
-   "no": 8
+   "no": 8,
+   "codes": [
+    {
+     "file": "src/eda.py, hàm dispersion",
+     "src": "import pandas as pd\n\nPAIRS = {\"bàn\": (\"FTHG\", \"FTAG\"), \"cú sút\": (\"HS\", \"AS\"),\n         \"sút trúng đích\": (\"HST\", \"AST\"), \"phạt góc\": (\"HC\", \"AC\"),\n         \"phạm lỗi\": (\"HF\", \"AF\"), \"thẻ vàng\": (\"HY\", \"AY\"), \"thẻ đỏ\": (\"HR\", \"AR\")}\n\ndef dispersion(df):\n    \"\"\"var/mean: gần 1 thì gần Poisson; lớn hơn hẳn 1 là phân tán quá mức.\"\"\"\n    rows = []\n    for name, (h, a) in PAIRS.items():\n        for unit, s in [(\"đội nhà\", df[h]), (\"đội khách\", df[a]), (\"cả trận\", df[h] + df[a])]:\n            s = s.dropna().astype(float)\n            rows.append({\"variable\": name, \"unit\": unit, \"mean\": s.mean(),\n                         \"var_over_mean\": s.var() / s.mean()})\n    return pd.DataFrame(rows)\n\ndf = pd.read_parquet(\"data/clean/matches.parquet\")\nstats = df[df.season >= \"2000/01\"]       # cú sút, thẻ có từ mùa này\ndispersion(stats).to_csv(\"results/eda_dispersion.csv\", index=False)"
+    }
+   ]
   },
   {
    "id": "ke-hoach-phan-tich",
@@ -1214,7 +1213,7 @@
       {
        "name_html": "Ghi kế hoạch trong notebook",
        "why_html": "Notebook bị sửa liên tục, khó chỉ ra bản đã khoá.",
-       "when_html": "Không nên."
+       "when_html": "Phân tích một người, notebook được commit và gắn thẻ như file khác."
       }
      ]
     },
@@ -1231,11 +1230,6 @@
        "name_html": "YAML hoặc JSON",
        "why_html": "YAML cần thêm PyYAML; JSON không có chú thích để ghi nguồn từng tham số.",
        "when_html": "Nhóm đã quen; máy đọc, người không sửa."
-      },
-      {
-       "name_html": "Số cứng rải trong code",
-       "why_html": "Lẫn tham số với code; không ai biết đã đổi gì.",
-       "when_html": "Không nên."
       }
      ]
     },
@@ -1249,23 +1243,12 @@
        "when_html": "CUSUM dạng bảng trên dữ liệu gần chuẩn."
       }
      ]
-    },
-    {
-     "topic": "Kết quả đã thấy trước",
-     "pick_html": "Nói thẳng: số ở trang 1 đã chạy thử trước khi khoá. Vẫn khoá, tự chạy lại, và báo cáo ghi rằng kết quả sơ bộ đã được thấy.",
-     "alts": [
-      {
-       "name_html": "Không nhắc",
-       "why_html": "Hội đồng hỏi là lộ; phép kiểm không còn “mù”.",
-       "when_html": "Không bao giờ."
-      }
-     ]
     }
    ],
    "tasks_html": [
     "Vai 1 dựng khuôn <code>analysis-plan.md</code>; vai 3–6 điền phần mình.",
-    "Mỗi câu hỏi viết trước cả hai chiều: ra A thì trả lời câu nghiệp vụ thế nào, ra B thì thế nào.",
-    "Ghi số phép kiểm sẽ chạy và phân tích độ nhạy đã định (CUSUM mức đổi 0,08, h = 3,9; SPRT bốn cửa sổ Phase I).",
+    "Mỗi câu hỏi viết trước cả hai chiều: nếu có cảnh báo thì trả lời câu nghiệp vụ thế nào, nếu không có thì thế nào.",
+    "Ghi số phép kiểm sẽ chạy và phân tích độ nhạy đã định (CUSUM mức đổi 0,08 với h = 3,9, mức đổi 0,05 với h = 3,66; SPRT bốn cửa sổ Phase I).",
     "Vai 1 họp duyệt; commit; <code>git tag plan-locked</code>; đẩy thẻ lên GitHub.",
     "Từ đây đổi tham số nào thì ghi mục “Lệch kế hoạch”: ngày, điều lệch, lý do."
    ],
@@ -1283,10 +1266,6 @@
     }
    ],
    "done_html": "Thẻ <code>plan-locked</code> có trên GitHub, trỏ tới commit chứa <code>analysis-plan.md</code> đủ tham số; mọi giá trị mặc định trong code khớp bảng.",
-   "code": {
-    "file": "docs/analysis-plan.md (bản chạy thử) và lệnh khoá",
-    "src": "| Phương pháp | Dữ liệu                     | Tham số                                   |\n|-------------|-----------------------------|-------------------------------------------|\n| Ngoại lai   | 2000/01–2025/26, mỗi đội    | Đuôi Poisson FTHG, FTAG, HY, AY:          |\n|             | mỗi trận                    |   báo khi P(X ≥ x) < 0,05/9.880           |\n|             |                             | Rào IQR k = 1,5: HS, AS, HST, AST, HC, AC |\n| ANOM        | 29 mùa, home_win            | α = 0,05; h Šidák; kiểm thêm α = 0,01     |\n| CUSUM       | Phase I 1997/98–1999/00     | p0 = 540/1140; mức đổi 0,05; h = 3,1      |\n|             | theo dõi từ 2000/01         | báo thì đặt hai nhánh về 0                |\n| SPRT        | Phase I 2016/17–2018/19     | p0 = 541/1140; p1 = (1 − 254/1140)/2      |\n|             | kiểm mùa 2020/21            | α = 0,05; β = 0,10                        |\n\ngit add docs/analysis-plan.md\ngit commit -m \"Khoá kế hoạch phân tích\"\ngit tag plan-locked && git push origin plan-locked"
-   },
    "traps": [],
    "reuse": {
     "swap_html": [
@@ -1298,7 +1277,17 @@
      "Thẻ git đánh dấu lúc khoá; mục “Lệch kế hoạch”."
     ]
    },
-   "no": 9
+   "no": 9,
+   "codes": [
+    {
+     "file": "Mô phỏng ARL để chọn h (src/cusum.py, hàm simulate_arl)",
+     "src": "import numpy as np\n\ndef simulate_arl(p_true, p0, delta, h, runs=4000, max_n=60_000, seed=7):\n    \"\"\"Số trận trung bình tới cảnh báo đầu, CUSUM hai nhánh, nhiều chuỗi song song.\"\"\"\n    rng = np.random.default_rng(seed)                 # seed: chạy lại ra cùng số\n    d1, d0 = np.log((p0 - delta) / p0), np.log((1 - p0 + delta) / (1 - p0))\n    u1, u0 = np.log((p0 + delta) / p0), np.log((1 - p0 - delta) / (1 - p0))\n    sd, su = np.zeros(runs), np.zeros(runs)\n    rl, alive = np.full(runs, max_n), np.ones(runs, bool)\n    for t in range(1, max_n + 1):\n        x = rng.random(runs) < p_true                 # một trận cho mỗi chuỗi\n        sd = np.maximum(0, sd + np.where(x, d1, d0))  # nhánh giảm\n        su = np.maximum(0, su + np.where(x, u1, u0))  # nhánh tăng\n        hit = alive & ((sd > h) | (su > h))\n        rl[hit], alive = t, alive & ~hit\n        if not alive.any():\n            break\n    return rl.mean()\n\np0 = 540 / 1140\nfor h in (2.6, 2.8, 3.0, 3.1, 3.2):                   # chọn h nhỏ nhất có ARL0 ≥ 2.000\n    print(h, simulate_arl(p0, p0, 0.05, h), simulate_arl(p0 - 0.05, p0, 0.05, h))"
+    },
+    {
+     "file": "docs/analysis-plan.md (bản chạy thử) và lệnh khoá",
+     "src": "| Phương pháp | Dữ liệu                     | Tham số                                   |\n|-------------|-----------------------------|-------------------------------------------|\n| Ngoại lai   | 2000/01–2025/26, mỗi đội    | Đuôi Poisson FTHG, FTAG, HY, AY:          |\n|             | mỗi trận                    |   báo khi P(X ≥ x) < 0,05/9.880           |\n|             |                             | Rào IQR k = 1,5: HS, AS, HST, AST, HC, AC |\n| ANOM        | 29 mùa, home_win            | α = 0,05; h Šidák; kiểm thêm α = 0,01     |\n| CUSUM       | Phase I 1997/98–1999/00     | p0 = 540/1140; mức đổi 0,05; h = 3,1      |\n|             | theo dõi từ 2000/01         | báo thì đặt hai nhánh về 0                |\n| SPRT        | Phase I 2016/17–2018/19     | p0 = 541/1140; p1 = (1 − 254/1140)/2      |\n|             | kiểm mùa 2020/21            | α = 0,05; β = 0,10                        |\n\ngit add docs/analysis-plan.md\ngit commit -m \"Khoá kế hoạch phân tích\"\ngit tag plan-locked && git push origin plan-locked"
+    }
+   ]
   },
   {
    "id": "phuong-phap",
@@ -1364,18 +1353,13 @@
      "alts": [
       {
        "name_html": "Không chia Bonferroni",
-       "why_html": "Khoảng 494 trận bị báo nhầm (0,05 × 9.880).",
+       "why_html": "Báo nhầm tới 494 trận mỗi cột (0,05 × 9.880, cận trên). Chạy thật ở ngưỡng 0,05: 168–406 trận mỗi cột (HY 168, FTHG 256, AY 283, FTAG 406).",
        "when_html": "Chỉ kiểm một trận chọn trước."
       },
       {
        "name_html": "λ riêng từng mùa",
        "why_html": "Nhiều tham số hơn, mỗi mùa ít dữ liệu.",
        "when_html": "Phần mở rộng, khi mức bàn đổi theo thời kỳ."
-      },
-      {
-       "name_html": "z-score hiệu chỉnh cho thẻ đỏ",
-       "why_html": "MAD = 0 nên chia cho 0.",
-       "when_html": "Không dùng cho thẻ đỏ."
       }
      ]
     },
@@ -1426,7 +1410,6 @@
     }
    ],
    "done_html": "Bốn hàm qua test ở <a href=\"#kiem-chung\">Kiểm chứng</a>; chạy bốn script ra đủ file <code>results/</code> trong khoảng 3 giây; mỗi phương pháp có một câu trả lời một dòng.",
-   "code": null,
    "traps": [],
    "reuse": {
     "swap_html": [
@@ -1439,7 +1422,8 @@
      "Một câu kết luận mỗi phương pháp."
     ]
    },
-   "no": 10
+   "no": 10,
+   "codes": []
   },
   {
    "id": "kiem-chung",
@@ -1461,7 +1445,7 @@
    ],
    "q": "Làm sao biết code đúng trước khi tin kết quả?",
    "in_html": "Hàm ở <code>src/</code>, ví dụ có lời giải, dữ liệu giả lập.",
-   "out_html": "<code>tests/test_*.py</code> (22 test, 3,2 giây); <code>src/verify.py</code> → <code>results/verify.csv</code>.",
+   "out_html": "<code>tests/test_*.py</code>: 22 test, chạy trong khoảng 3,5 giây.",
    "decisions": [
     {
      "topic": "Công cụ test",
@@ -1486,7 +1470,7 @@
       {
        "name_html": "Chạy thẳng trên dữ liệu thật",
        "why_html": "Ra số lạ thì không biết lỗi ở code hay ở dữ liệu.",
-       "when_html": "Không nên."
+       "when_html": "Phương pháp lấy từ thư viện đã được kiểm, chỉ cần một test khói."
       }
      ]
     },
@@ -1507,17 +1491,6 @@
      ]
     },
     {
-     "topic": "Đối chiếu số đã in",
-     "pick_html": "<code>src/verify.py</code> tính lại mọi số trang 1 đã in: 46 mục, 41 khớp, 5 lệch; sửa trang theo số tính lại.",
-     "alts": [
-      {
-       "name_html": "Tin số cũ",
-       "why_html": "Một số cũ đã sai (SPRT 2021/22 ghi “H1 ở trận 114”, thật ra chưa quyết).",
-       "when_html": "Không nên."
-      }
-     ]
-    },
-    {
      "topic": "Độ phủ test",
      "pick_html": "Không đặt cổng độ phủ; mỗi hàm công khai có ít nhất một test ví dụ hay giả lập.",
      "alts": [
@@ -1533,7 +1506,7 @@
     "Vai 3: test đuôi Poisson, rào IQR; ví dụ Grubbs và generalized ESD của NIST nếu dùng.",
     "Vai 4: test ANOM tính tay; so h Šidák với h mô phỏng.",
     "Vai 5: test CUSUM tính tay, nhánh không xuống dưới 0, điểm đổi cài sẵn; mô phỏng ARL.",
-    "Vai 6: test hai ngưỡng a, b; tỉ lệ báo nhầm dưới H0, lực dưới H1.",
+    "Vai 6: test hai ngưỡng a, b; tỉ lệ báo nhầm dưới H0, lực kiểm định dưới H1.",
     "Vai 2: test đọc ngày, tên trọng tài, dòng thừa dấu phẩy, luật chất lượng bắt lỗi cài vào.",
     "Vai 7: test app chạy và kéo thanh trượt (AppTest); <code>pytest</code> xanh trước mỗi lần gộp."
    ],
@@ -1542,8 +1515,7 @@
     "tests/test_sprt.py",
     "tests/test_anom.py",
     "tests/test_clean_quality.py",
-    "tests/test_app.py",
-    "src/verify.py"
+    "tests/test_app.py"
    ],
    "lessons": [
     {
@@ -1552,10 +1524,6 @@
     }
    ],
    "done_html": "<code>python -m pytest -q tests</code>: 22 passed; mỗi phương pháp có ít nhất một test so với số tính tay; ARL0 mô phỏng khớp h đã khoá.",
-   "code": {
-    "file": "tests/test_cusum.py (rút gọn)",
-    "src": "from src.cusum import bernoulli_cusum\n\ndef test_hand_example():\n    # p0 = 0,5; nhánh giảm p1 = 0,25: thắng cộng ln(0,5) = −0,693; không thắng cộng ln(1,5) = 0,405\n    path, alarms = bernoulli_cusum([0, 0, 1, 0, 0, 0], p0=0.5, delta=0.25, h=10)\n    assert path.s_down.round(3).tolist() == [0.405, 0.811, 0.118, 0.523, 0.929, 1.334]\n    assert alarms == []\n\ndef test_reset_to_zero():\n    path, _ = bernoulli_cusum([1, 1, 1], p0=0.5, delta=0.25, h=10)\n    assert path.s_down.tolist() == [0, 0, 0]       # thắng liên tiếp: nhánh giảm không âm\n\ndef test_finds_planted_change():\n    rng = np.random.default_rng(42)                 # seed: chạy lại ra đúng chuỗi này\n    x = np.r_[rng.random(1500) < 0.47, rng.random(1000) < 0.30].astype(int)\n    _, alarms = bernoulli_cusum(x, p0=0.47, delta=0.05, h=3.1)\n    first = [a for a in alarms if a[\"t\"] >= 1500 and a[\"side\"] == \"giảm\"][0]\n    assert 1500 <= first[\"t\"] < 1700                 # bắt được trong 200 trận\n    assert abs(first[\"change_t\"] - 1500) < 80        # trận đổi ước tính lệch < 80"
-   },
    "traps": [
     {
      "trap_html": "AppTest tìm file app",
@@ -1578,7 +1546,13 @@
      "Đối chiếu mọi số đã công bố bằng script."
     ]
    },
-   "no": 11
+   "no": 11,
+   "codes": [
+    {
+     "file": "tests/test_cusum.py (rút gọn)",
+     "src": "import numpy as np\nfrom src.cusum import bernoulli_cusum\n\ndef test_hand_example():\n    # p0 = 0,5; nhánh giảm p1 = 0,25: thắng cộng ln(0,5) = −0,693; không thắng cộng ln(1,5) = 0,405\n    path, alarms = bernoulli_cusum([0, 0, 1, 0, 0, 0], p0=0.5, delta=0.25, h=10)\n    assert path.s_down.round(3).tolist() == [0.405, 0.811, 0.118, 0.523, 0.929, 1.334]\n    assert alarms == []\n\ndef test_reset_to_zero():\n    path, _ = bernoulli_cusum([1, 1, 1], p0=0.5, delta=0.25, h=10)\n    assert path.s_down.tolist() == [0, 0, 0]       # thắng liên tiếp: nhánh giảm không âm\n\ndef test_finds_planted_change():\n    rng = np.random.default_rng(42)                 # seed: chạy lại ra đúng chuỗi này\n    x = np.r_[rng.random(1500) < 0.47, rng.random(1000) < 0.30].astype(int)\n    _, alarms = bernoulli_cusum(x, p0=0.47, delta=0.05, h=3.1)\n    first = [a for a in alarms if a[\"t\"] >= 1500 and a[\"side\"] == \"giảm\"][0]\n    assert 1500 <= first[\"t\"] < 1700                 # bắt được trong 200 trận\n    assert abs(first[\"change_t\"] - 1500) < 80        # trận đổi ước tính lệch < 80"
+    }
+   ]
   },
   {
    "id": "truc-quan",
@@ -1635,18 +1609,7 @@
       {
        "name_html": "Mỗi nơi một kiểu hình",
        "why_html": "Người nghe phải học hai lần; số dễ lệch.",
-       "when_html": "Không nên."
-      }
-     ]
-    },
-    {
-     "topic": "Hình cho trang web",
-     "pick_html": "Xuất CSV nhỏ để vẽ lại bằng SVG: đường CUSUM lấy mỗi 20 trận và mọi trận có cảnh báo (501 dòng thay vì 9.880).",
-     "alts": [
-      {
-       "name_html": "Nhúng ảnh PNG",
-       "why_html": "Không đổi theo theme sáng tối, không phóng to được chữ.",
-       "when_html": "Hình phức tạp, không cần tương tác."
+       "when_html": "App cần hình tương tác khác hình in, nhưng cùng số và cùng tiêu đề."
       }
      ]
     }
@@ -1688,11 +1651,13 @@
     }
    ],
    "done_html": "Mỗi câu hỏi có một hình chính trong <code>results/fig/</code>; mọi hình có tiêu đề là câu trả lời, trục có đơn vị, dòng nguồn, dòng độ bất định.",
-   "code": {
-    "file": "src/charts.py, hàm anom_chart",
-    "src": "SRC = \"Nguồn: football-data.co.uk, Premier League (E0)\"\n\ndef anom_chart():\n    a = pd.read_csv(R / \"anom.csv\")\n    fig, ax = plt.subplots(figsize=(10, 4))\n    ax.plot(a.group, a.p, marker=\"o\", color=\"0.2\")\n    for col, ls in [(\"pbar\", \"-\"), (\"LDL\", \"--\"), (\"UDL\", \"--\")]:\n        ax.axhline(a[col].iloc[0], ls=ls, color=\"0.5\", lw=1)\n    out = a[a.signal != \"\"]                       # mùa ngoài vạch: khoanh tròn\n    ax.scatter(out.group, out.p, s=80, facecolors=\"none\", edgecolors=\"k\", zorder=3)\n    # tiêu đề là câu trả lời, không phải tên biến\n    ax.set_title(\"Chỉ 2020/21 có tỉ lệ thắng sân nhà dưới vạch ANOM (α = 0,05)\", loc=\"left\")\n    ax.set_ylabel(\"Tỉ lệ thắng sân nhà\")\n    fig.text(0.01, 0.01, SRC, fontsize=8)          # dòng nguồn dưới hình\n    fig.savefig(FIG / \"anom.png\", dpi=120)"
-   },
-   "traps": [],
+   "traps": [
+    {
+     "trap_html": "Ô trống đọc từ CSV",
+     "symptom_html": "<code>a[a.signal != \"\"]</code> khoanh tròn cả 29 mùa: pandas đọc ô trống thành NaN, mà NaN khác \"\".",
+     "fix_html": "<code>a.signal.fillna(\"\") != \"\"</code>; hình nào cũng mở ra xem trước khi đưa vào báo cáo."
+    }
+   ],
    "reuse": {
     "swap_html": [
      "Bảng câu hỏi → hình."
@@ -1703,7 +1668,13 @@
      "Một hàm một hình, dùng chung mọi nơi."
     ]
    },
-   "no": 12
+   "no": 12,
+   "codes": [
+    {
+     "file": "src/charts.py, hàm anom_chart",
+     "src": "from pathlib import Path\nimport matplotlib\nmatplotlib.use(\"Agg\")                              # không cần màn hình\nimport matplotlib.pyplot as plt\nimport pandas as pd\n\nR, FIG = Path(\"results\"), Path(\"results/fig\")\nSRC = \"Nguồn: football-data.co.uk, Premier League (E0)\"\n\ndef anom_chart():\n    a = pd.read_csv(R / \"anom.csv\")\n    fig, ax = plt.subplots(figsize=(10, 4))\n    ax.plot(a.group, a.p, marker=\"o\", color=\"0.2\")\n    for col, ls in [(\"pbar\", \"-\"), (\"LDL\", \"--\"), (\"UDL\", \"--\")]:\n        ax.axhline(a[col].iloc[0], ls=ls, color=\"0.5\", lw=1)\n    out = a[a.signal.fillna(\"\") != \"\"]             # mùa ngoài vạch (CSV: ô trống là NaN)\n    ax.scatter(out.group, out.p, s=80, facecolors=\"none\", edgecolors=\"k\", zorder=3)\n    # tiêu đề là câu trả lời, không phải tên biến\n    ax.set_title(\"Chỉ 2020/21 có tỉ lệ thắng sân nhà dưới vạch ANOM (α = 0,05)\", loc=\"left\")\n    ax.set_ylabel(\"Tỉ lệ thắng sân nhà\")\n    fig.text(0.01, 0.01, SRC, fontsize=8)          # dòng nguồn dưới hình\n    fig.savefig(FIG / \"anom.png\", dpi=120)"
+    }
+   ]
   },
   {
    "id": "demo",
@@ -1799,10 +1770,6 @@
     }
    ],
    "done_html": "<code>streamlit run app/streamlit_app.py</code> chạy trên máy trình chiếu khi tắt mạng; kéo mỗi thanh trượt thì hình đổi; AppTest xanh; kịch bản đã tập hai lần; có video dự phòng.",
-   "code": {
-    "file": "app/streamlit_app.py (rút gọn)",
-    "src": "ROOT = Path(__file__).resolve().parents[1]\nsys.path.insert(0, str(ROOT))                  # để import được src/ khi chạy file này\nfrom src import anom, cusum, outliers, sprt\n\n@st.cache_data                                 # Streamlit chạy lại cả file mỗi lần kéo\ndef load():\n    return pd.read_parquet(ROOT / \"data\" / \"clean\" / \"matches.parquet\")\n\ndf = load()\nt_data, t_out, t_anom, t_cusum, t_sprt = st.tabs(\n    [\"Dữ liệu\", \"Ngoại lai\", \"ANOM\", \"CUSUM\", \"SPRT\"])\n\nwith t_cusum:\n    delta = st.slider(\"Mức đổi muốn bắt\", 0.02, 0.10, 0.05, 0.01)   # mặc định = bản khoá\n    h = st.slider(\"Ngưỡng h\", 2.0, 5.0, 3.1, 0.1)\n    p0, path, alarms = cusum.run(df, delta=delta, h=h)              # gọi lại hàm thật\n    st.line_chart(path.set_index(\"seq\")[[\"s_down\", \"s_up\"]])\n    st.dataframe(alarms, hide_index=True)"
-   },
    "traps": [
     {
      "trap_html": "Cột trộn số và chữ",
@@ -1825,7 +1792,13 @@
      "Chạy không mạng; kịch bản theo câu hỏi; video dự phòng."
     ]
    },
-   "no": 13
+   "no": 13,
+   "codes": [
+    {
+     "file": "app/streamlit_app.py (rút gọn)",
+     "src": "import sys\nfrom pathlib import Path\nimport pandas as pd\nimport streamlit as st\n\nROOT = Path(__file__).resolve().parents[1]\nsys.path.insert(0, str(ROOT))                  # để import được src/ khi chạy file này\nfrom src import cusum\n\n@st.cache_data                                 # Streamlit chạy lại cả file mỗi lần kéo\ndef load():\n    return pd.read_parquet(ROOT / \"data\" / \"clean\" / \"matches.parquet\")\n\ndf = load()\nt_data, t_out, t_anom, t_cusum, t_sprt = st.tabs(\n    [\"Dữ liệu\", \"Ngoại lai\", \"ANOM\", \"CUSUM\", \"SPRT\"])\nwith t_cusum:\n    delta = st.slider(\"Mức đổi muốn bắt\", 0.02, 0.10, 0.05, 0.01)   # mặc định = bản khoá\n    h = st.slider(\"Ngưỡng h\", 2.0, 5.0, 3.1, 0.1)\n    p0 = df[df.season <= \"1999/00\"].home_win.mean()                # Phase I\n    mon = df[df.season >= \"2000/01\"].sort_values(\"seq\")\n    path, alarms = cusum.bernoulli_cusum(mon.home_win.to_numpy(), p0, delta, h)\n    st.line_chart(path)                                            # s_down, s_up\n    st.dataframe(pd.DataFrame(alarms), hide_index=True)"
+    }
+   ]
   },
   {
    "id": "gioi-han",
@@ -1867,7 +1840,7 @@
       {
        "name_html": "Chỉ ghi một lần cuối báo cáo",
        "why_html": "Người xem demo hay chỉ xem slide không thấy.",
-       "when_html": "Không nên."
+       "when_html": "Sản phẩm chỉ có báo cáo, không có slide và app."
       }
      ]
     }
@@ -1895,7 +1868,6 @@
     }
    ],
    "done_html": "<code>limitations.md</code> có đủ các mục (hoặc ghi rõ mục nào không áp dụng); mỗi hình chính có dòng độ bất định; có câu trả lời mẫu cho ba câu hỏi.",
-   "code": null,
    "traps": [],
    "reuse": {
     "swap_html": [
@@ -1908,7 +1880,8 @@
      "Câu trả lời mẫu cho câu hỏi khó."
     ]
    },
-   "no": 14
+   "no": 14,
+   "codes": []
   },
   {
    "id": "bao-cao",
@@ -1955,7 +1928,7 @@
       {
        "name_html": "Chạy lại tới phút chót",
        "why_html": "Số ở slide lệch số ở báo cáo.",
-       "when_html": "Không nên."
+       "when_html": "Dữ liệu còn đổi tới phút chót (mùa đang đá) và mọi số trong slide, app sinh tự động từ một lần chạy."
       }
      ]
     },
@@ -2002,7 +1975,6 @@
     }
    ],
    "done_html": "Báo cáo đủ 9 chương, mỗi chương có người viết; slide đủ thời lượng khi bấm giờ; số trong báo cáo, slide, app trùng nhau; đã tập dượt hai lần.",
-   "code": null,
    "traps": [],
    "reuse": {
     "swap_html": [
@@ -2014,7 +1986,8 @@
      "Chuyện trước, phương pháp sau; tập dượt có người ngoài hỏi."
     ]
    },
-   "no": 15
+   "no": 15,
+   "codes": []
   },
   {
    "id": "tai-lap",
@@ -2037,7 +2010,7 @@
    "decisions": [
     {
      "topic": "Một lệnh chạy lại",
-     "pick_html": "<code>python -m src.pipeline</code>: chạy mười bước trong một tiến trình bằng <code>runpy</code>; mất 24,7 giây (tải lần đầu thêm 68,5 giây). Luật chặn ở bước quality dừng cả đường ống.",
+     "pick_html": "<code>python -m src.pipeline</code>: chạy chín bước trong một tiến trình bằng <code>runpy</code>; mất 5,1 giây (tải lần đầu thêm 68,5 giây). Luật chặn ở bước quality dừng cả đường ống.",
      "alts": [
       {
        "name_html": "Makefile",
@@ -2051,7 +2024,7 @@
       },
       {
        "name_html": "Airflow, Prefect (như repo mẫu thiết kế)",
-       "why_html": "Phải dựng máy chủ lập lịch; thừa cho mười bước 25 giây.",
+       "why_html": "Phải dựng máy chủ lập lịch; thừa cho chín bước chạy vài giây.",
        "when_html": "Đường ống chạy định kỳ trên máy chủ, cần thử lại và cảnh báo."
       },
       {
@@ -2087,9 +2060,9 @@
      "pick_html": "Ghim phiên bản; seed cố định cho mọi mô phỏng; so <code>results/*.csv</code> giữa hai máy, không so PNG (phông chữ làm PNG khác vài byte).",
      "alts": [
       {
-       "name_html": "So bằng mắt vài con số",
-       "why_html": "Bỏ sót lệch nhỏ ở cột khác.",
-       "when_html": "Không nên."
+       "name_html": "So cả file PNG",
+       "why_html": "Phông chữ làm PNG khác vài byte dù số giống hệt.",
+       "when_html": "Hai máy cùng hệ điều hành, cùng phông chữ."
       }
      ]
     }
@@ -2115,10 +2088,6 @@
     }
    ],
    "done_html": "Trên máy thứ hai, ba lệnh chạy không lỗi; mọi <code>results/*.csv</code> trùng với máy vai 7; <code>pytest</code> xanh.",
-   "code": {
-    "file": "src/pipeline.py (rút gọn) và README",
-    "src": "STEPS = [\"download\", \"clean\", \"quality\", \"eda\", \"outliers\",\n         \"anom\", \"cusum\", \"sprt\", \"charts\", \"verify\"]\n\nfor step in STEPS:\n    t0 = time.perf_counter()\n    # chạy src/<step>.py như \"python -m src.<step>\", trong cùng một tiến trình;\n    # luật chặn ở quality gọi sys.exit -> đường ống dừng tại đây\n    runpy.run_module(f\"src.{step}\", run_name=\"__main__\")\n    times.append({\"step\": step, \"seconds\": round(time.perf_counter() - t0, 2)})\npd.DataFrame(times).to_csv(ROOT / \"results\" / \"timings.csv\", index=False)\n\n# README · Cách chạy\n#   python -m src.pipeline              # tải (nếu thiếu), làm sạch, kiểm, 4 phương pháp, hình\n#   python -m pytest -q tests           # 22 test\n#   streamlit run app/streamlit_app.py  # demo"
-   },
    "traps": [],
    "reuse": {
     "swap_html": [
@@ -2130,7 +2099,13 @@
      "CI không chạm dữ liệu có điều khoản."
     ]
    },
-   "no": 16
+   "no": 16,
+   "codes": [
+    {
+     "file": "src/pipeline.py (rút gọn) và README",
+     "src": "import runpy, time\nimport pandas as pd\n\nSTEPS = [\"download\", \"clean\", \"quality\", \"eda\", \"outliers\",\n         \"anom\", \"cusum\", \"sprt\", \"charts\"]\n\ntimes = []\nfor step in STEPS:\n    t0 = time.perf_counter()\n    # chạy src/<step>.py như \"python -m src.<step>\", trong cùng một tiến trình;\n    # luật chặn ở quality gọi sys.exit -> đường ống dừng tại đây\n    runpy.run_module(f\"src.{step}\", run_name=\"__main__\")\n    times.append({\"step\": step, \"seconds\": round(time.perf_counter() - t0, 2)})\npd.DataFrame(times).to_csv(\"results/timings.csv\", index=False)\n\n# README · Cách chạy\n#   python -m src.pipeline              # tải (nếu thiếu), làm sạch, kiểm, 4 phương pháp, hình\n#   python -m pytest -q tests           # 22 test\n#   streamlit run app/streamlit_app.py  # demo"
+    }
+   ]
   }
  ],
  "methods": [
@@ -2139,11 +2114,11 @@
    "name": "Ngoại lai",
    "role": 3,
    "file": "src/outliers.py",
-   "idea_html": "Tìm trận có số liệu xa hẳn phần còn lại. Lỗi ghi chép đã do luật F1–F5 bắt ở bước làm sạch, không do phép thử.",
+   "idea_html": "Tìm trận có số liệu xa hẳn phần còn lại. Lỗi ghi chép đã do luật QF1–QF5 bắt ở bước làm sạch, không do phép thử.",
    "formula_html": "Bàn, thẻ vàng: <code>P(X ≥ x) = poisson.sf(x − 1, λ)</code>, báo khi nhỏ hơn 0,05 / 9.880. Cú sút, sút trúng đích, phạt góc: báo khi ngoài [Q1 − 1,5·IQR, Q3 + 1,5·IQR].",
-   "result_html": "Đuôi Poisson: <b>1 trận</b>, Southampton 0–9 Leicester (25/10/2019), bàn đội khách. Trận 9 bàn đội nhà có P = 3,3·10⁻⁵, chưa dưới ngưỡng 5,1·10⁻⁶. Rào IQR: <code>HS</code> &gt; 27,5: 133 trận; <code>AS</code> &gt; 24,5: 86; <code>HST</code> &gt; 14: 150; <code>AST</code> &gt; 10,5: 330; <code>HC</code> &gt; 14: 100; <code>AC</code> &gt; 10,5: 358. Ba trận F1 nằm trong rào: lỗi ghi chép không lộ ra bằng phép thử.",
+   "result_html": "Đuôi Poisson: <b>1 trận</b>, Southampton 0–9 Leicester (25/10/2019), bàn đội khách. Trận 9 bàn đội nhà có P = 3,3·10⁻⁵, chưa dưới ngưỡng 5,1·10⁻⁶. Rào IQR: <code>HS</code> &gt; 27,5: 133 trận; <code>AS</code> &gt; 24,5: 86; <code>HST</code> &gt; 14: 150; <code>AST</code> &gt; 10,5: 330; <code>HC</code> &gt; 14: 100; <code>AC</code> &gt; 10,5: 358. Ba trận QF1 nằm trong rào: lỗi ghi chép không lộ ra bằng phép thử.",
    "output_html": "<code>results/outliers.csv</code> (mỗi trận bị báo một dòng: cột, phương pháp, giá trị, ngưỡng); <code>outliers_summary.csv</code>.",
-   "code": "def poisson_tail(x, alpha=0.05):\n    lam = x.mean()                               # λ gộp 26 mùa\n    p = stats.poisson.sf(x - 1, lam)             # sf(x − 1) = P(X ≥ x)\n    cut = alpha / x.notna().sum()                # Bonferroni: chia cho số trận\n    return pd.DataFrame({\"value\": x, \"p_tail\": p, \"outlier\": p < cut})\n\ndef iqr_fence(x, k=1.5):\n    q1, q3 = x.quantile([0.25, 0.75])\n    lo, hi = q1 - k * (q3 - q1), q3 + k * (q3 - q1)\n    return pd.DataFrame({\"value\": x, \"outlier\": (x < lo) | (x > hi)})\n\ndef modified_z(x):                               # Iglewicz–Hoaglin\n    mad = (x - x.median()).abs().median()\n    if mad == 0:                                 # thẻ đỏ: MAD = 0, không dùng được\n        return pd.Series(np.nan, index=x.index)\n    return 0.6745 * (x - x.median()) / mad"
+   "code": "import numpy as np\nimport pandas as pd\nfrom scipy import stats\n\ndef poisson_tail(x, alpha=0.05):\n    lam = x.mean()                               # λ gộp 26 mùa\n    p = stats.poisson.sf(x - 1, lam)             # sf(x − 1) = P(X ≥ x)\n    cut = alpha / x.notna().sum()                # Bonferroni: chia cho số trận\n    return pd.DataFrame({\"value\": x, \"p_tail\": p, \"outlier\": p < cut})\n\ndef iqr_fence(x, k=1.5):\n    q1, q3 = x.quantile([0.25, 0.75])\n    lo, hi = q1 - k * (q3 - q1), q3 + k * (q3 - q1)\n    return pd.DataFrame({\"value\": x, \"outlier\": (x < lo) | (x > hi)})\n\ndef modified_z(x):                               # Iglewicz–Hoaglin\n    mad = (x - x.median()).abs().median()\n    if mad == 0:                                 # thẻ đỏ: MAD = 0, không dùng được\n        return pd.Series(np.nan, index=x.index)\n    return 0.6745 * (x - x.median()) / mad"
   },
   {
    "id": "pp-anom",
@@ -2154,7 +2129,7 @@
    "formula_html": "<code>p̄ = Σx / Σn</code>, <code>s = √(p̄(1 − p̄)/n)</code>, <code>LDL, UDL = p̄ ∓ h · s · √((k − 1)/k)</code>; h Šidák là phân vị chuẩn tại <code>1 − (1 − (1 − α)^(1/k))/2</code>. Ở đây k = 29 mùa, n = 380.",
    "result_html": "p̄ = 0,4584, h = 3,1268, LDL = 0,3799, UDL = 0,5370. <b>Chỉ 2020/21</b> (0,3789) nằm dưới LDL, cách vạch 0,36 trận thắng. Với α = 0,01 (LDL 0,3686) không mùa nào ra ngoài. Thêm 1995/96 và 1996/97 (31 mùa) vẫn chỉ 2020/21.",
    "output_html": "<code>results/anom.csv</code>: mùa, số thắng, n, p, p̄, h, LDL, UDL, tín hiệu.",
-   "code": "def h_sidak(alpha, k):\n    return stats.norm.ppf(1 - (1 - (1 - alpha) ** (1 / k)) / 2)\n\ndef anom_binomial(groups, alpha=0.05):\n    \"\"\"groups: cột 'group', 'x' (số thắng), 'n' (cùng một n cho mọi nhóm).\"\"\"\n    n, k = groups.n.iloc[0], len(groups)\n    assert (groups.n == n).all(), \"cỡ nhóm khác nhau: cần giới hạn riêng từng nhóm\"\n    pbar = groups.x.sum() / groups.n.sum()\n    h = h_sidak(alpha, k)\n    half = h * np.sqrt(pbar * (1 - pbar) / n) * np.sqrt((k - 1) / k)\n    out = groups.assign(p=groups.x / n, pbar=pbar, h=h,\n                        LDL=pbar - half, UDL=pbar + half)\n    out[\"signal\"] = np.select([out.p < out.LDL, out.p > out.UDL],\n                              [\"dưới\", \"trên\"], \"\")\n    return out"
+   "code": "import numpy as np\nfrom scipy import stats\n\ndef h_sidak(alpha, k):\n    return stats.norm.ppf(1 - (1 - (1 - alpha) ** (1 / k)) / 2)\n\ndef anom_binomial(groups, alpha=0.05):\n    \"\"\"groups: cột 'group', 'x' (số thắng), 'n' (cùng một n cho mọi nhóm).\"\"\"\n    n, k = groups.n.iloc[0], len(groups)\n    assert (groups.n == n).all(), \"cỡ nhóm khác nhau: cần giới hạn riêng từng nhóm\"\n    pbar = groups.x.sum() / groups.n.sum()\n    h = h_sidak(alpha, k)\n    half = h * np.sqrt(pbar * (1 - pbar) / n) * np.sqrt((k - 1) / k)\n    out = groups.assign(p=groups.x / n, pbar=pbar, h=h,\n                        LDL=pbar - half, UDL=pbar + half)\n    out[\"signal\"] = np.select([out.p < out.LDL, out.p > out.UDL],\n                              [\"dưới\", \"trên\"], \"\")\n    return out"
   },
   {
    "id": "pp-cusum",
@@ -2163,9 +2138,9 @@
    "file": "src/cusum.py",
    "idea_html": "Sau mỗi trận cộng thêm bằng chứng “tỉ lệ đã đổi”; tổng rơi xuống dưới 0 thì về 0; vượt h thì báo. Bắt được thay đổi nhỏ nhưng kéo dài.",
    "formula_html": "<code>S_t = max(0, S_{t−1} + x_t·ln(p1/p0) + (1 − x_t)·ln((1 − p1)/(1 − p0)))</code>. Nhánh giảm dùng p1 = p0 − 0,05, nhánh tăng p1 = p0 + 0,05. Với p0 = 540/1140: nhánh giảm cộng −0,112 khi đội nhà thắng, +0,091 khi không. Trận đổi ước tính là trận ngay sau lần cuối nhánh ấy bằng 0.",
-   "result_html": "<b>7 cảnh báo</b> trên 9.880 trận từ 2000/01. Trước 2019/20 có 2 (tăng 2006/07, giảm 2015/16), dưới 3,54 báo nhầm kỳ vọng. Từ 2019/20 có 5, đều là giảm. Cảnh báo 2020/21 trận 150 có trận đổi ước tính ở cuối 2018/19: nhánh giảm đã tích luỹ từ trước đại dịch. Độ nhạy: mức đổi 0,08 với h = 3,9 báo ở trận 171; h = 3,66 ở trận 194.",
+   "result_html": "<b>7 cảnh báo</b> trên 9.880 trận từ 2000/01. Trước 2019/20 có 2 (tăng 2006/07, giảm 2015/16), dưới 3,54 báo nhầm kỳ vọng. Từ 2019/20 có 5, đều là giảm. Cảnh báo 2020/21 trận 150 có trận đổi ước tính ở cuối 2018/19: nhánh giảm đã tích luỹ từ trước đại dịch. Độ nhạy: mức đổi 0,08 với h = 3,9 báo ở trận 171; mức đổi 0,05 với h = 3,66 báo ở trận 194.",
    "output_html": "<code>cusum_alarms.csv</code> (trận báo, nhánh, trận đổi ước tính), <code>cusum_path.csv</code> (hai nhánh theo trận), <code>cusum_arl.csv</code>.",
-   "code": "def llr_weights(p0, p1):\n    return np.log(p1 / p0), np.log((1 - p1) / (1 - p0))   # cộng khi x = 1, x = 0\n\ndef bernoulli_cusum(x, p0, delta, h):\n    w = {\"giảm\": llr_weights(p0, p0 - delta), \"tăng\": llr_weights(p0, p0 + delta)}\n    s = {\"giảm\": 0.0, \"tăng\": 0.0}\n    last_zero = {\"giảm\": -1, \"tăng\": -1}\n    path, alarms = np.zeros((len(x), 2)), []\n    for t, xt in enumerate(x):\n        for side, (w1, w0) in w.items():\n            s[side] = max(0.0, s[side] + (w1 if xt == 1 else w0))  # sàn 0\n            if s[side] == 0.0:\n                last_zero[side] = t\n        path[t] = s[\"giảm\"], s[\"tăng\"]\n        for side in (\"giảm\", \"tăng\"):\n            if s[side] > h:                                         # báo\n                alarms.append({\"t\": t, \"side\": side, \"change_t\": last_zero[side] + 1})\n                s = {\"giảm\": 0.0, \"tăng\": 0.0}                      # đặt cả hai về 0\n                last_zero = {\"giảm\": t, \"tăng\": t}\n                break\n    return pd.DataFrame(path, columns=[\"s_down\", \"s_up\"]), alarms"
+   "code": "import numpy as np\nimport pandas as pd\n\ndef llr_weights(p0, p1):\n    return np.log(p1 / p0), np.log((1 - p1) / (1 - p0))   # cộng khi x = 1, x = 0\n\ndef bernoulli_cusum(x, p0, delta, h):\n    w = {\"giảm\": llr_weights(p0, p0 - delta), \"tăng\": llr_weights(p0, p0 + delta)}\n    s = {\"giảm\": 0.0, \"tăng\": 0.0}\n    last_zero = {\"giảm\": -1, \"tăng\": -1}\n    path, alarms = np.zeros((len(x), 2)), []\n    for t, xt in enumerate(x):\n        for side, (w1, w0) in w.items():\n            s[side] = max(0.0, s[side] + (w1 if xt == 1 else w0))  # sàn 0\n            if s[side] == 0.0:\n                last_zero[side] = t\n        path[t] = s[\"giảm\"], s[\"tăng\"]\n        for side in (\"giảm\", \"tăng\"):\n            if s[side] > h:                                         # báo\n                alarms.append({\"t\": t, \"side\": side, \"change_t\": last_zero[side] + 1})\n                s = {\"giảm\": 0.0, \"tăng\": 0.0}                      # đặt cả hai về 0\n                last_zero = {\"giảm\": t, \"tăng\": t}\n                break\n    return pd.DataFrame(path, columns=[\"s_down\", \"s_up\"]), alarms"
   },
   {
    "id": "pp-sprt",
@@ -2176,7 +2151,7 @@
    "formula_html": "<code>a = ln(β/(1 − α))</code>, <code>b = ln((1 − β)/α)</code>; với α = 0,05, β = 0,10: a = −2,2513, b = 2,8904. <code>Λ_n = Σ LLR_t</code>. Với p0 = 541/1140 = 0,47456 và p1 = (1 − 254/1140)/2 = 0,38860: thắng sân nhà cộng −0,200, không thắng cộng +0,152.",
    "result_html": "Mùa 2020/21: <b>chấp nhận H1 ở trận 129</b>, Southampton 0–1 Man City, 19/12/2020. Đảo các trận cùng giờ: luôn 129; đảo các trận cùng ngày: 129 hoặc 131. Mọi mùa: H1 ở 2015/16 (trận 33), 2020/21 (129), 2024/25 (205); chưa quyết sau 380 trận ở 2001/02, 2003/04, 2021/22 (đỉnh LLR 2,867 ở trận 114, ngưỡng 2,890); các mùa khác H0. Cửa sổ Phase I khác: 129, 133, 156, 177, luôn H1.",
    "output_html": "<code>sprt_path_2020-21.csv</code> (LLR từng trận), <code>sprt_seasons.csv</code> (quyết định mỗi mùa).",
-   "code": "def bounds(alpha, beta):\n    return np.log(beta / (1 - alpha)), np.log((1 - beta) / alpha)\n\ndef sprt(x, p0, p1, alpha=0.05, beta=0.10):\n    a, b = bounds(alpha, beta)\n    step = np.where(np.asarray(x) == 1, np.log(p1 / p0),\n                    np.log((1 - p1) / (1 - p0)))\n    llr = np.cumsum(step)                        # Λ sau mỗi trận\n    hit = np.flatnonzero((llr >= b) | (llr <= a))\n    if len(hit) == 0:\n        return {\"decision\": \"chưa quyết\", \"n\": len(llr), \"llr\": llr}\n    n = hit[0]\n    return {\"decision\": \"H1\" if llr[n] >= b else \"H0\", \"n\": n + 1, \"llr\": llr}\n\ndef phase1_params(df, first=\"2016/17\", last=\"2018/19\"):\n    ph = df[df.season.between(first, last)]\n    p0, draw = ph.home_win.mean(), (ph.FTR == \"D\").mean()\n    return p0, draw, (1 - draw) / 2              # p1: hết lợi thế sân nhà"
+   "code": "import numpy as np\n\ndef bounds(alpha, beta):\n    return np.log(beta / (1 - alpha)), np.log((1 - beta) / alpha)\n\ndef sprt(x, p0, p1, alpha=0.05, beta=0.10):\n    a, b = bounds(alpha, beta)\n    step = np.where(np.asarray(x) == 1, np.log(p1 / p0),\n                    np.log((1 - p1) / (1 - p0)))\n    llr = np.cumsum(step)                        # Λ sau mỗi trận\n    hit = np.flatnonzero((llr >= b) | (llr <= a))\n    if len(hit) == 0:\n        return {\"decision\": \"chưa quyết\", \"n\": len(llr), \"llr\": llr}\n    n = hit[0]\n    return {\"decision\": \"H1\" if llr[n] >= b else \"H0\", \"n\": n + 1, \"llr\": llr}\n\ndef phase1_params(df, first=\"2016/17\", last=\"2018/19\"):\n    ph = df[df.season.between(first, last)]\n    p0, draw = ph.home_win.mean(), (ph.FTR == \"D\").mean()\n    return p0, draw, (1 - draw) / 2              # p1: hết lợi thế sân nhà"
   }
  ],
  "res": {
@@ -5429,79 +5404,79 @@
  },
  "quality": [
   {
-   "rule": "B1",
+   "rule": "QB1",
    "level": "chặn",
    "desc": "khoá (mùa, đội nhà, đội khách) không trùng",
    "n": 0
   },
   {
-   "rule": "B2",
+   "rule": "QB2",
    "level": "chặn",
    "desc": "mỗi mùa đúng 380 trận",
    "n": 0
   },
   {
-   "rule": "B3",
+   "rule": "QB3",
    "level": "chặn",
    "desc": "mỗi đội 19 trận sân nhà, 19 sân khách",
    "n": 0
   },
   {
-   "rule": "B4",
+   "rule": "QB4",
    "level": "chặn",
    "desc": "ngày, hai đội, bàn, FTR không trống",
    "n": 0
   },
   {
-   "rule": "B5",
+   "rule": "QB5",
    "level": "chặn",
    "desc": "FTR khớp số bàn",
    "n": 0
   },
   {
-   "rule": "B6",
+   "rule": "QB6",
    "level": "chặn",
    "desc": "mọi số đếm ≥ 0",
    "n": 0
   },
   {
-   "rule": "B7",
+   "rule": "QB7",
    "level": "chặn",
    "desc": "ngày từ 1/7 năm đầu tới 31/8 năm sau, và hai mùa liền nhau không chồng ngày",
    "n": 0
   },
   {
-   "rule": "B8",
+   "rule": "QB8",
    "level": "chặn",
    "desc": "từ 2000/01: cú sút, thẻ, phạt góc, trọng tài không trống",
    "n": 0
   },
   {
-   "rule": "F1",
+   "rule": "QF1",
    "level": "gắn cờ",
    "desc": "sút trúng đích > tổng cú sút (HST > HS hoặc AST > AS)",
    "n": 3
   },
   {
-   "rule": "F2",
+   "rule": "QF2",
    "level": "gắn cờ",
    "desc": "bàn > sút trúng đích (FTHG > HST hoặc FTAG > AST)",
    "n": 51
   },
   {
-   "rule": "F3",
+   "rule": "QF3",
    "level": "gắn cờ",
    "desc": "HTR không khớp bàn hiệp 1, hoặc bàn hiệp 1 > cả trận",
    "n": 0
   },
   {
-   "rule": "F4",
+   "rule": "QF4",
    "level": "gắn cờ",
    "desc": "thẻ đỏ ≥ 3 cho một đội trong một trận",
    "n": 1
   },
   {
-   "rule": "F5",
+   "rule": "QF5",
    "level": "gắn cờ",
    "desc": "không có giờ đá (trước 2019/20): thứ tự trong ngày lấy theo file",
    "n": 8360
@@ -5568,19 +5543,19 @@
  "timings": [
   {
    "step": "download",
-   "s": 0.07
+   "s": 0.06
   },
   {
    "step": "clean",
-   "s": 0.64
+   "s": 0.65
   },
   {
    "step": "quality",
-   "s": 0.13
+   "s": 0.11
   },
   {
    "step": "eda",
-   "s": 0.08
+   "s": 0.09
   },
   {
    "step": "outliers",
@@ -5588,23 +5563,19 @@
   },
   {
    "step": "anom",
-   "s": 0.39
+   "s": 0.37
   },
   {
    "step": "cusum",
-   "s": 2.04
+   "s": 1.98
   },
   {
    "step": "sprt",
-   "s": 0.03
+   "s": 0.06
   },
   {
    "step": "charts",
-   "s": 1.23
-  },
-  {
-   "step": "verify",
-   "s": 19.46
+   "s": 1.13
   }
  ],
  "framing": {
@@ -5615,7 +5586,7 @@
     "form": "Danh sách trận, mỗi trận một lý do",
     "who": "Bên giữ dữ liệu",
     "decide": "sửa, hay chỉ gắn cờ",
-    "result_html": "1 trận theo đuôi Poisson; 86–358 trận mỗi cột vượt rào IQR; 3 trận lỗi ghi chép (luật F1)."
+    "result_html": "1 trận theo đuôi Poisson; 86–358 trận mỗi cột vượt rào IQR; 3 trận lỗi ghi chép (luật QF1)."
    },
    {
     "method": "ANOM",
@@ -5658,13 +5629,13 @@
   "out_html": [
    "Dự đoán trận.",
    "Khẳng định nhân quả.",
-   "Đánh giá cá nhân trọng tài hay cầu thủ.",
+   "Kết luận về một trọng tài hay cầu thủ cụ thể. ANOM theo trọng tài là phần mở rộng của vai 4: trọng tài ngoài vạch chỉ là cờ để xem.",
    "Mùa đang đá dở (2026/27); dữ liệu thời gian thực."
   ],
   "assume": [
    {
     "id": "G1",
-    "text_html": "Kết quả trận (<code>FTR</code>) trong file đúng; lỗi ghi chép chỉ ở cột phụ. Kiểm bằng luật B5."
+    "text_html": "Kết quả trận (<code>FTR</code>) trong file đúng; lỗi ghi chép chỉ ở cột phụ. Kiểm bằng luật QB5."
    },
    {
     "id": "G2",
@@ -5880,7 +5851,7 @@
   [
    "Độ nhạy",
    "đã định trước",
-   "CUSUM mức đổi 0,08 với h = 3,9; SPRT bốn cửa sổ Phase I"
+   "CUSUM mức đổi 0,08 với h = 3,9; mức đổi 0,05 với h = 3,66; SPRT bốn cửa sổ Phase I"
   ]
  ],
  "tests": [
@@ -5910,7 +5881,7 @@
    "0,042 (cận Wald 0,056)"
   ],
   [
-   "SPRT lực",
+   "SPRT lực kiểm định",
    "4.000 chuỗi sinh từ H1",
    "0,910"
   ],
@@ -5932,7 +5903,7 @@
   [
    "Luật chất lượng",
    "chèn 1 lỗi FTR và 1 lỗi HST",
-   "B5 bắt 1, F1 bắt 4 (3 cũ + 1 mới)"
+   "QB5 bắt 1, QF1 bắt 4 (3 cũ + 1 mới)"
   ],
   [
    "App",
@@ -6003,77 +5974,77 @@
    "id": "GH-01",
    "kind": "Nhân quả",
    "level": "nghiêm trọng",
-   "desc": "Cảnh báo chỉ nói tỉ lệ đã đổi, không nói vì sao: sân vắng, VAR, lịch đá dồn đổi cùng lúc.",
+   "desc_html": "Cảnh báo chỉ nói tỉ lệ đã đổi, không nói vì sao: sân vắng, VAR, lịch đá dồn đổi cùng lúc.",
    "fix_html": "Viết “đi cùng”, không viết “gây ra”. Đối chứng: SPRT cũng chấp nhận H1 ở 2015/16 và 2024/25, mùa có khán giả."
   },
   {
    "id": "GH-02",
    "kind": "Điều khoản dữ liệu",
    "level": "nghiêm trọng",
-   "desc": "Trang nguồn ghi dữ liệu cho cá nhân, để dự đoán, “NOT commerical or data training products using automated bots/scrapers/AI”.",
-   "fix_html": "Repo riêng tư, không công bố CSV, chỉ công bố hình và số tổng hợp; <a href=\"sports-monitoring-project.html#email-fd\">thư xin phép</a> hỏi luôn về script tải. Cách hiểu câu này do giảng viên hoặc bên giữ dữ liệu quyết."
+   "desc_html": "Điều khoản (trích ở <a href=\"#nguon-du-lieu\">Nguồn dữ liệu</a>) dành dữ liệu cho cá nhân, cho dự đoán, và nhắc tới bot tự động.",
+   "fix_html": "Repo riêng tư, không công bố CSV, chỉ công bố hình và số tổng hợp; <a href=\"sports-monitoring-project.html#email-fd\">thư xin phép</a> hỏi luôn về script tải. Cách hiểu điều khoản do giảng viên hoặc bên giữ dữ liệu quyết."
   },
   {
    "id": "GH-03",
    "kind": "Kết quả đã thấy trước",
    "level": "cao",
-   "desc": "Trang 1 chạy thử trước khi khoá kế hoạch; cách đặt p1 của SPRT chọn sau khi đã thấy 2020/21.",
+   "desc_html": "Trang 1 chạy thử trước khi khoá kế hoạch; cách đặt p1 của SPRT chọn sau khi đã thấy 2020/21.",
    "fix_html": "Nói rõ trong báo cáo; giữ đối chứng trên 28 mùa khác; kể lần thử p1 = 0,303 đã bỏ."
   },
   {
    "id": "GH-04",
    "kind": "Mùa không hoàn toàn vắng",
    "level": "trung bình",
-   "desc": "Khán giả giới hạn trở lại 12/2020 và 5/2021.",
+   "desc_html": "Khán giả giới hạn trở lại 12/2020 và 5/2021.",
    "fix_html": "“Mùa sân vắng” là gần đúng; ghi sự kiện lên hình."
   },
   {
    "id": "GH-05",
    "kind": "Nhiều phép kiểm",
    "level": "cao",
-   "desc": "Nhiều mùa, hai nhánh, phân tích độ nhạy: chắc chắn có báo nhầm.",
+   "desc_html": "Nhiều mùa, hai nhánh, phân tích độ nhạy: chắc chắn có báo nhầm.",
    "fix_html": "Ghi tổng số phép kiểm; Bonferroni, ARL0."
   },
   {
    "id": "GH-06",
    "kind": "Độc lập, cùng p",
    "level": "trung bình",
-   "desc": "Mỗi trận có xác suất riêng theo sức hai đội.",
+   "desc_html": "Mỗi trận có xác suất riêng theo sức hai đội.",
    "fix_html": "ARL và α thật có thể lệch mô phỏng; mở rộng bằng phần dư theo tỉ lệ cược."
   },
   {
    "id": "GH-07",
    "kind": "Thứ tự trận cùng ngày",
    "level": "thấp",
-   "desc": "Trước 2019/20 không có giờ đá; trận cùng giờ không có thứ tự thật.",
+   "desc_html": "Trước 2019/20 không có giờ đá; trận cùng giờ không có thứ tự thật.",
    "fix_html": "Báo cáo khoảng: SPRT 2020/21 dừng ở 129 hoặc 131."
   },
   {
    "id": "GH-08",
    "kind": "Chọn Phase I",
    "level": "trung bình",
-   "desc": "SPRT dừng ở 129, 133, 156 hay 177 tuỳ cửa sổ.",
+   "desc_html": "SPRT dừng ở 129, 133, 156 hay 177 tuỳ cửa sổ.",
    "fix_html": "Chọn theo vị trí; báo cáo cả bốn cửa sổ."
   },
   {
    "id": "GH-09",
    "kind": "Sát ngưỡng",
    "level": "trung bình",
-   "desc": "ANOM 2020/21 cách vạch 0,36 trận thắng; SPRT 2021/22 đỉnh 2,867 so với ngưỡng 2,890 (đảo trận cùng ngày giờ: 40% chưa quyết).",
+   "desc_html": "ANOM 2020/21 cách vạch 0,36 trận thắng; SPRT 2021/22 đỉnh 2,867 so với ngưỡng 2,890 (đảo trận cùng ngày giờ: 40% chưa quyết).",
    "fix_html": "Nói “sát ngưỡng”, đừng nói “khác hẳn”."
   },
   {
    "id": "GH-10",
    "kind": "Lỗi ghi chép, tên trọng tài",
    "level": "thấp",
-   "desc": "F1: 3 trận; 4 ánh xạ tên trọng tài suy từ ngữ cảnh, chưa đối chiếu nguồn thứ hai.",
+   "desc_html": "QF1: 3 trận; 4 ánh xạ tên trọng tài suy từ ngữ cảnh, chưa đối chiếu nguồn thứ hai.",
    "fix_html": "Luật chạy trước phép thử; ghi ánh xạ trong lineage."
   },
   {
    "id": "GH-11",
    "kind": "Hồi cứu",
    "level": "trung bình",
-   "desc": "Chạy trên dữ liệu đã có; người theo dõi thật không biết trước sự kiện.",
+   "desc_html": "Chạy trên dữ liệu đã có; người theo dõi thật không biết trước sự kiện.",
    "fix_html": "Nói rõ “đã biết sớm” chỉ là giả định."
   }
  ],
@@ -6110,7 +6081,7 @@
    ],
    "io_html": "Đề bài, trang 1 → repo có <code>README.md</code>, <code>requirements.txt</code>, <code>.gitignore</code>; bảng phân vai.",
    "tools": "git, GitHub, Python 3, VS Code hoặc Colab",
-   "done_html": "Cả bảy người clone được repo và chạy được <code>python -c \"import pandas\"</code>.",
+   "done_html": "Cả bảy người clone được repo, chạy được <code>python -c \"import pandas, duckdb, streamlit\"</code>, và mỗi người đã gộp một pull request.",
    "lessons": [],
    "tip_html": "Mỗi việc một nhánh ngắn; gộp vào main qua pull request, một người khác duyệt.",
    "steps": [
@@ -6224,11 +6195,11 @@
     },
     {
      "id": "b2-2",
-     "name": "b2-2"
+     "name": "HDFS và định dạng file"
     },
     {
      "id": "b3",
-     "name": "b3"
+     "name": "Gom và làm sạch dữ liệu"
     }
    ],
    "tip_html": "Ghi mọi quyết định (bỏ cột nào, gộp tên nào) vào <code>lineage.md</code>: đó là phần quản lý dữ liệu đáng điểm nhất.",
@@ -6318,7 +6289,7 @@
    ],
    "tasks_html": [
     "Chạy các hàm đã viết ở P1b trên dữ liệu thật: <code>src/outliers.py</code>, <code>anom.py</code>, <code>cusum.py</code>, <code>sprt.py</code>.",
-    "Chạy <code>python -m src.pipeline</code>: mọi bước, 24,7 giây.",
+    "Chạy <code>python -m src.pipeline</code>: mọi bước, vài giây.",
     "Ghi kết quả ra <code>results/*.csv</code>.",
     "Ghi vào <code>lineage.md</code>: script nào, đọc gì, ra file nào."
    ],
@@ -6621,13 +6592,13 @@
   {
    "path": "README.md",
    "depth": 0,
-   "note": "cách chạy (ba lệnh), nguồn, điều khoản, kiến trúc",
+   "note": "cách chạy (ba lệnh), nguồn, điều khoản",
    "new": false
   },
   {
    "path": "requirements.txt",
    "depth": 0,
-   "note": "ghim phiên bản ==",
+   "note": "chín gói, ghim ==",
    "new": false
   },
   {
@@ -6639,7 +6610,7 @@
   {
    "path": "data/",
    "depth": 0,
-   "note": "",
+   "note": "sinh ra khi chạy; không có trong starter/",
    "new": false
   },
   {
@@ -6647,12 +6618,6 @@
    "depth": 1,
    "note": "29 file E0_*.csv, không commit",
    "new": false
-  },
-  {
-   "path": "ref/notes.txt",
-   "depth": 1,
-   "note": "bản lưu nghĩa cột của nguồn",
-   "new": true
   },
   {
    "path": "manifest.csv",
@@ -6669,20 +6634,20 @@
   {
    "path": "docs/",
    "depth": 0,
-   "note": "",
+   "note": "khuôn để điền",
    "new": false
   },
   {
    "path": "problem.md",
    "depth": 1,
    "note": "bốn câu hỏi, người dùng, tiêu chí thành công",
-   "new": true
+   "new": false
   },
   {
    "path": "decisions.md",
    "depth": 1,
    "note": "nhật ký quyết định",
-   "new": true
+   "new": false
   },
   {
    "path": "data-card.md",
@@ -6712,18 +6677,6 @@
    "path": "limitations.md",
    "depth": 1,
    "note": "giới hạn GH-01…",
-   "new": true
-  },
-  {
-   "path": "demo-script.md",
-   "depth": 1,
-   "note": "kịch bản 3 phút",
-   "new": true
-  },
-  {
-   "path": "notebooks/",
-   "depth": 0,
-   "note": "01_eda.ipynb (gọi hàm trong src/)",
    "new": false
   },
   {
@@ -6747,14 +6700,14 @@
   {
    "path": "quality.py",
    "depth": 1,
-   "note": "8 luật chặn, 5 luật gắn cờ",
+   "note": "8 luật chặn QB1–QB8, 5 luật gắn cờ QF1–QF5",
    "new": false
   },
   {
    "path": "eda.py",
    "depth": 1,
    "note": "bảng mỗi mùa, tỉ số phương sai / trung bình",
-   "new": true
+   "new": false
   },
   {
    "path": "outliers.py",
@@ -6787,16 +6740,10 @@
    "new": false
   },
   {
-   "path": "verify.py",
-   "depth": 1,
-   "note": "đối chiếu số đã công bố",
-   "new": true
-  },
-  {
    "path": "pipeline.py",
    "depth": 1,
    "note": "một lệnh chạy lại mọi bước",
-   "new": true
+   "new": false
   },
   {
    "path": "tests/",
@@ -6813,20 +6760,198 @@
   {
    "path": "results/",
    "depth": 0,
-   "note": "CSV kết quả, fig/*.png, timings.csv",
+   "note": "sinh ra khi chạy: CSV kết quả, fig/*.png, timings.csv",
    "new": false
   },
   {
-   "path": "report/",
+   "path": "notebooks/  report/  slides/",
    "depth": 0,
-   "note": "báo cáo",
+   "note": "nhóm tự thêm",
    "new": false
+  }
+ ],
+ "week1": [
+  {
+   "role": 1,
+   "task_html": "Gửi giảng viên <a href=\"sports-monitoring-project.html#gui-giang-vien\">tin nhắn soạn sẵn</a> và gửi football-data.co.uk <a href=\"sports-monitoring-project.html#email-fd\">thư xin phép</a>; chốt giờ họp; viết bản đầu <code>docs/problem.md</code>.",
+   "files": "docs/problem.md, docs/decisions.md",
+   "done_html": "Hai thư đã gửi; <code>problem.md</code> có bốn câu hỏi, mỗi câu có người dùng.",
+   "learn_html": "<a href=\"#bai-toan\">Bài toán</a>; <a href=\"data-management-visualization.html#b1-vi-sao\">bài 1: vì sao cần quản trị dữ liệu</a>."
   },
   {
-   "path": "slides/",
-   "depth": 0,
-   "note": "slide",
-   "new": false
+   "role": 2,
+   "task_html": "Clone repo nhóm (tạo từ <code>starter/</code>), chạy <code>python -m src.download</code>, đọc <code>notes.txt</code>, viết <code>docs/data-card.md</code>.",
+   "files": "data/manifest.csv, docs/data-card.md",
+   "done_html": "29 file trong <code>data/raw/</code>, SHA-256 trong manifest; data card có điều khoản trích nguyên văn.",
+   "learn_html": "<a href=\"#nguon-du-lieu\">Nguồn dữ liệu</a>, <a href=\"#thu-nap\">Thu nạp</a>; notes.txt của nguồn."
+  },
+  {
+   "role": 3,
+   "task_html": "Học theo thứ tự: rào IQR và box plot (bài 4) → NIST 1.3.5.17 (ngoại lai) → 1.3.5.17.1 Grubbs → 1.3.5.17.3 generalized ESD; viết rào IQR và đuôi Poisson.",
+   "files": "src/outliers.py, tests/test_outliers.py",
+   "done_html": "Test ví dụ Grubbs của NIST (G = 2,4687) và một ví dụ đuôi Poisson tính tay xanh.",
+   "learn_html": "<a href=\"https://www.itl.nist.gov/div898/handbook/eda/section3/eda35h.htm\">NIST 1.3.5.17</a>; <a href=\"data-management-visualization.html#b4-phan-tan\">bài 4: độ phân tán</a>."
+  },
+  {
+   "role": 4,
+   "task_html": "Học ANOM cho tỉ lệ trên trang Minitab (dữ liệu nhị thức), tính tay ba nhóm nhỏ, rồi viết hàm.",
+   "files": "src/anom.py, tests/test_anom.py",
+   "done_html": "Test ba nhóm 40/50/60 trên 100 xanh: một nhóm dưới vạch, một nhóm trên.",
+   "learn_html": "<a href=\"https://support.minitab.com/en-us/minitab/help-and-how-to/statistical-modeling/anova/how-to/analysis-of-means/methods-and-formulas/binomial-data/\">Minitab, ANOM nhị thức</a>; <a href=\"#cong-thuc\">khối công thức</a>."
+  },
+  {
+   "role": 5,
+   "task_html": "Học theo thứ tự: NIST 6.3.2.3 (CUSUM dạng bảng, có ví dụ số) → CUSUM cho chuỗi 0/1 (Reynolds &amp; Stoumbos 1999); viết CUSUM Bernoulli hai nhánh.",
+   "files": "src/cusum.py, tests/test_cusum.py",
+   "done_html": "Test tính tay sáu bước (0,405 … 1,334) và test điểm đổi cài sẵn xanh.",
+   "learn_html": "<a href=\"https://www.itl.nist.gov/div898/handbook/pmc/section3/pmc323.htm\">NIST 6.3.2.3</a>; <a href=\"#pp-cusum\">CUSUM ở bước Phương pháp</a>."
+  },
+  {
+   "role": 6,
+   "task_html": "Học SPRT từ Wald (1945): hai ngưỡng a, b và LLR cộng dồn; viết SPRT Bernoulli; mô phỏng tỉ lệ báo nhầm.",
+   "files": "src/sprt.py, tests/test_sprt.py",
+   "done_html": "Test a = −2,2513, b = 2,8904 xanh; báo nhầm mô phỏng dưới cận Wald 0,056.",
+   "learn_html": "<a href=\"https://doi.org/10.1214/aoms/1177731118\">Wald (1945)</a>; <a href=\"#pp-sprt\">SPRT ở bước Phương pháp</a>."
+  },
+  {
+   "role": 7,
+   "task_html": "Tạo repo riêng tư của nhóm từ <code>starter/</code>, mời sáu người, bật duyệt pull request; chạy <code>pytest</code> và khung app.",
+   "files": "repo nhóm, README.md",
+   "done_html": "Cả bảy người clone được, chạy được <code>python -c \"import pandas, duckdb, streamlit\"</code>.",
+   "learn_html": "<a href=\"#khoi-dong\">Khởi động</a>, <a href=\"#tai-lap\">Tái lập</a>."
+  }
+ ],
+ "minimal": [
+  {
+   "id": "khoi-dong",
+   "need": "bắt buộc",
+   "how_html": "Repo, <code>requirements.txt</code>, pull request. Họp có thể thay bằng chat có chốt."
+  },
+  {
+   "id": "bai-toan",
+   "need": "bắt buộc",
+   "how_html": "Bốn câu hỏi, mỗi câu một người dùng; nửa trang là đủ."
+  },
+  {
+   "id": "nguon-du-lieu",
+   "need": "bắt buộc",
+   "how_html": "Data card có điều khoản trích nguyên văn."
+  },
+  {
+   "id": "kien-truc",
+   "need": "rút gọn",
+   "how_html": "Một đoạn trong README và sơ đồ ba tầng; bỏ bảng."
+  },
+  {
+   "id": "mo-hinh-du-lieu",
+   "need": "rút gọn",
+   "how_html": "Data dictionary; bỏ ERD."
+  },
+  {
+   "id": "thu-nap",
+   "need": "bắt buộc",
+   "how_html": "Đã có sẵn trong <code>starter/</code>: chỉ cần chạy và commit manifest."
+  },
+  {
+   "id": "lam-sach",
+   "need": "bắt buộc",
+   "how_html": "Tám luật chặn; luật gắn cờ giữ QF1, QF2."
+  },
+  {
+   "id": "eda",
+   "need": "rút gọn",
+   "how_html": "Bảng tỉ số phương sai / trung bình và tỉ lệ thắng sân nhà theo mùa."
+  },
+  {
+   "id": "ke-hoach-phan-tich",
+   "need": "bắt buộc",
+   "how_html": "Một bảng tham số, commit trước khi chạy."
+  },
+  {
+   "id": "phuong-phap",
+   "need": "bắt buộc",
+   "how_html": "Bốn hàm chính; bỏ mọi phần mở rộng."
+  },
+  {
+   "id": "kiem-chung",
+   "need": "bắt buộc",
+   "how_html": "Một test tính tay mỗi phương pháp. Không kịp mô phỏng ARL thì dùng h = 3,1 và ghi rõ lấy từ đâu."
+  },
+  {
+   "id": "truc-quan",
+   "need": "bắt buộc",
+   "how_html": "Ba hình chính: ANOM, CUSUM, SPRT."
+  },
+  {
+   "id": "demo",
+   "need": "rút gọn",
+   "how_html": "Hai tab CUSUM và SPRT; video nếu giảng viên chấp nhận."
+  },
+  {
+   "id": "gioi-han",
+   "need": "rút gọn",
+   "how_html": "Năm giới hạn chính trong chương Thảo luận."
+  },
+  {
+   "id": "bao-cao",
+   "need": "bắt buộc",
+   "how_html": "Báo cáo và slide; tập dượt ít nhất một lần."
+  },
+  {
+   "id": "tai-lap",
+   "need": "bắt buộc",
+   "how_html": "<code>python -m src.pipeline</code> chạy được trên máy thứ hai; bỏ CI."
+  }
+ ],
+ "other_projects": [
+  {
+   "case": "Nhiều nguồn cần nối",
+   "steps": [
+    "mo-hinh-du-lieu",
+    "lam-sach"
+   ],
+   "change_html": "Chốt khoá nối chung và bảng ánh xạ cho từng nguồn; thêm luật kiểm tỉ lệ dòng nối được; tầng Enriched trở nên cần."
+  },
+  {
+   "case": "API có khoá",
+   "steps": [
+    "nguon-du-lieu",
+    "thu-nap"
+   ],
+   "change_html": "Khoá để trong biến môi trường, không commit; ghi giới hạn tần suất; lưu phản hồi gốc làm tầng thô."
+  },
+  {
+   "case": "Dữ liệu cá nhân (PII)",
+   "steps": [
+    "nguon-du-lieu",
+    "gioi-han"
+   ],
+   "change_html": "Xin phép trước; ẩn danh trước tầng sạch; không đưa dữ liệu lên repo hay đám mây."
+  },
+  {
+   "case": "Dữ liệu lớn hơn RAM",
+   "steps": [
+    "kien-truc",
+    "lam-sach"
+   ],
+   "change_html": "Đọc theo khối hoặc truy vấn Parquet phân vùng bằng DuckDB; xem lại phương án Spark đã loại."
+  },
+  {
+   "case": "Dự án học máy",
+   "steps": [
+    "eda",
+    "ke-hoach-phan-tich",
+    "kiem-chung"
+   ],
+   "change_html": "Chia train / validation / test trước mọi biến đổi, chỉ fit trên train, chọn thước đo đánh giá trước khi chạy."
+  },
+  {
+   "case": "Đề không nêu tên phương pháp",
+   "steps": [
+    "bai-toan",
+    "phuong-phap"
+   ],
+   "change_html": "Chọn phương pháp theo câu hỏi và kiểu biến, ghi phương án khác và lý do như trang này làm."
   }
  ],
  "report": [
@@ -6865,11 +6990,11 @@
    "lessons": [
     {
      "id": "b2-2",
-     "name": "b2-2"
+     "name": "HDFS và định dạng file"
     },
     {
      "id": "b3",
-     "name": "b3"
+     "name": "Gom và làm sạch dữ liệu"
     }
    ],
    "pages": 4
@@ -7148,7 +7273,7 @@
    ],
    "borrow_html": "Vẽ DAG; mỗi bước đọc gì, ghi gì; chạy lại ra cùng kết quả.",
    "drop_html": "Airflow, lịch chạy hằng ngày, nạp tăng dần.",
-   "why_html": "Một lệnh chạy lại toàn bộ mất 24,7 giây."
+   "why_html": "Một lệnh chạy lại toàn bộ mất vài giây."
   },
   {
    "page": "p07 Observability",
@@ -7636,6 +7761,12 @@
    "def": "Sơ đồ các bảng và cách chúng nối với nhau bằng khoá. Bài 3 của môn có mô hình ER."
   },
   {
+   "id": "f1",
+   "term": "F1",
+   "full": "Formula 1",
+   "def": "Giải đua xe công thức 1: những mùa gần đây có 20–24 chặng, khoảng 20 tay đua. Phương án B dùng kết quả từng chặng từ dữ liệu Jolpica."
+  },
+  {
    "id": "fbref",
    "term": "FBref",
    "def": "Trang thống kê bóng đá; điều khoản không cho cào tự động.",
@@ -7671,6 +7802,11 @@
     "fuzzy matching",
     "so khớp mờ"
    ]
+  },
+  {
+   "id": "gdal",
+   "term": "GDAL",
+   "def": "Thư viện đọc và ghi dữ liệu bản đồ, ảnh vệ tinh. Cài nặng, cần thư viện C đi kèm."
   },
   {
    "id": "esd",
@@ -7731,6 +7867,15 @@
    "aliases": [
     "giả định"
    ]
+  },
+  {
+   "id": "rate-limit",
+   "term": "Giới hạn tần suất",
+   "full": "rate limit",
+   "aliases": [
+    "giới hạn tần suất"
+   ],
+   "def": "Số lần gọi API tối đa trong một khoảng thời gian; gọi quá thì bị chặn tạm."
   },
   {
    "id": "grain",
@@ -8032,6 +8177,15 @@
    ]
   },
   {
+   "id": "power",
+   "term": "Lực kiểm định",
+   "def": "Xác suất phép kiểm phát hiện thay đổi khi thay đổi có thật; bằng 1 − β.",
+   "full": "power",
+   "aliases": [
+    "lực kiểm định"
+   ]
+  },
+  {
    "id": "mad",
    "term": "MAD",
    "full": "độ lệch tuyệt đối trung vị",
@@ -8157,12 +8311,22 @@
    ]
   },
   {
+   "id": "cusum-branch",
+   "term": "Nhánh CUSUM",
+   "def": "Một trong hai tổng CUSUM chạy song song: nhánh giảm cộng bằng chứng tỉ lệ đã giảm, nhánh tăng cộng bằng chứng tỉ lệ đã tăng.",
+   "aliases": [
+    "nhánh giảm",
+    "nhánh tăng",
+    "hai nhánh"
+   ]
+  },
+  {
    "id": "branch",
-   "term": "Nhánh",
+   "term": "Nhánh git",
    "def": "Một dòng commit tách riêng để làm việc mà không ảnh hưởng nhánh chính.",
    "full": "branch",
    "aliases": [
-    "nhánh"
+    "nhánh git"
    ]
   },
   {
@@ -8332,7 +8496,7 @@
    "aliases": [
     "phương sai"
    ],
-   "def": "Bình phương của độ lệch chuẩn. Với số đếm kiểu Poisson, phương sai xấp xỉ bằng trung bình. Số cú sút, số phạt góc có phương sai gấp khoảng 1,7–2,2 lần trung bình (quá phân tán), nên không coi là Poisson được."
+   "def": "Bình phương của độ lệch chuẩn. Với số đếm kiểu Poisson, phương sai xấp xỉ bằng trung bình. Số cú sút, số phạt góc có phương sai gấp khoảng 1,6–2,1 lần trung bình (mỗi đội mỗi trận) (quá phân tán), nên không coi là Poisson được."
   },
   {
    "id": "scope",
@@ -8361,6 +8525,15 @@
     "phần dư"
    ],
    "def": "Kết quả thật trừ kết quả kỳ vọng. Ở đây kỳ vọng lấy từ tỉ lệ cược, nên phần dư đã bỏ được chuyện đối thủ mạnh hay yếu."
+  },
+  {
+   "id": "pii",
+   "term": "PII",
+   "def": "Dữ liệu nhận diện được một người: tên, email, số điện thoại, mã số.",
+   "full": "personally identifiable information",
+   "aliases": [
+    "PII"
+   ]
   },
   {
    "id": "pip",
@@ -8504,6 +8677,12 @@
    "def": "Mô hình được học từ thông tin mà lúc dự đoán thật chưa có, ví dụ thống kê của chính trận đang đoán. Độ chính xác đo được vì thế đẹp giả."
   },
   {
+   "id": "sar",
+   "term": "SAR",
+   "full": "synthetic aperture radar, radar khẩu độ tổng hợp",
+   "def": "Loại radar trên vệ tinh chụp ảnh mặt đất cả ban đêm, xuyên mây. Không liên quan tới thống kê thể thao."
+  },
+  {
    "id": "schema-contract",
    "term": "Schema contract",
    "aliases": [
@@ -8610,11 +8789,28 @@
    "def": "Vẽ từng điểm dữ liệu trên một trục, thường đặt cạnh box plot để thấy cả điểm lẻ."
   },
   {
+   "id": "sys-exit",
+   "term": "sys.exit",
+   "def": "Lệnh Python dừng chương trình với mã thoát khác 0, để lệnh gọi nó biết là lỗi.",
+   "aliases": [
+    "sys.exit"
+   ]
+  },
+  {
    "id": "ui-tab",
    "term": "Tab",
    "def": "Thẻ chia app thành nhiều trang con trên cùng một màn hình.",
    "aliases": [
     "tab"
+   ]
+  },
+  {
+   "id": "smoke-test",
+   "term": "Test khói",
+   "def": "Test rất ngắn chỉ kiểm chương trình chạy được, chưa kiểm kết quả đúng.",
+   "full": "smoke test",
+   "aliases": [
+    "test khói"
    ]
   },
   {
@@ -8633,8 +8829,7 @@
    "full": "git tag",
    "aliases": [
     "thẻ git",
-    "gắn thẻ",
-    "thẻ"
+    "gắn thẻ"
    ]
   },
   {
@@ -8644,6 +8839,15 @@
    "full": "action title",
    "aliases": [
     "tiêu đề là câu trả lời"
+   ]
+  },
+  {
+   "id": "train-test",
+   "term": "Train / validation / test",
+   "def": "Ba phần tách riêng của dữ liệu: để mô hình học, để chọn tham số, và để đánh giá lần cuối.",
+   "aliases": [
+    "train",
+    "validation"
    ]
   },
   {
@@ -8850,8 +9054,7 @@
    "def": "Mỗi lần chạy chỉ xử lý phần dữ liệu mới hay phần đã đổi.",
    "full": "incremental",
    "aliases": [
-    "xử lý tăng dần",
-    "tăng dần"
+    "xử lý tăng dần"
    ]
   },
   {
@@ -8937,6 +9140,15 @@
     "sidak"
    ],
    "def": "Cách siết mức ý nghĩa của từng phép so sánh khi làm m phép cùng lúc: dùng 1 − (1 − α)^(1/m) thay cho α, để xác suất có ít nhất một báo nhầm vẫn quanh α. Gần giống Bonferroni, hơi bảo thủ."
+  },
+  {
+   "id": "lambda-p",
+   "term": "λ",
+   "def": "Tham số của phân phối Poisson: số trung bình mỗi trận, ví dụ 1,184 bàn đội khách.",
+   "full": "lambda",
+   "aliases": [
+    "λ"
+   ]
   }
  ]
 }
