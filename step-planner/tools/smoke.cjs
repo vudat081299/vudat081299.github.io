@@ -701,7 +701,11 @@ const check = (name, ok, detail = '') => {
   rs = await cur(page);
   check('Close iteration: bỏ băng và dấu redo, toast có Hoàn tác', rs.steps[1].revisit === null && rs.steps[1].subs.every((x) => !x.redo) && !(await page.$(band))
     && /^Iteration 2 closed/.test(await page.textContent('#toast-text')));
+  const iterTag = `.step[data-step="${s2id}"] .step-head .step-iter`;
+  check('Close iteration: đầu bước hiện nhãn "Iteration 2" (hàng vẽ lại), có chú thích ngày mở lại', (await page.textContent(iterTag)) === 'Iteration 2'
+    && /^Reopened 1 time.* · last reopened \d{1,2} \w{3} \d{4}$/.test(await page.getAttribute(iterTag, 'title')));
   await page.keyboard.press('Control+z');
+  check('hoàn tác Close iteration: nhãn "Iteration" mất, băng hiện lại (không lặp)', !(await page.$(iterTag)) && !!(await page.$(band)));
   check('hoàn tác Close iteration: băng và dấu redo trở lại', (await cur(page)).steps[1].revisit?.round === 2 && (await cur(page)).steps[1].subs.filter((x) => x.redo).length === nDone);
   await page.click(`${band} [data-act="revisit-clear"]`);
   await page.click(revBtn);
