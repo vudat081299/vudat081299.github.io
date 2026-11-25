@@ -13,7 +13,7 @@ nếu chạm dữ liệu), rồi xoá câu ấy ở trang và ở đây.
 1. Đề bài đầy đủ, tiêu chí chấm; đề có trong danh sách không; được tự chọn môn thể thao không.
 2. Hạn nộp, thời lượng thuyết trình, độ dài báo cáo, ngôn ngữ. Hạn nộp quyết định nút số tuần mặc định của lịch;
    thời lượng quyết định số phút trong `slides`.
-3. "Demo" là app chạy trực tiếp, notebook hay video. Trang đang đề xuất app Streamlit (pha P7).
+3. "Demo" là app chạy trực tiếp, notebook hay video. Trang 2 đang chốt app Streamlit (`#demo`).
 4. Có cần phần quản lý dữ liệu (đường ống, lineage) không; "Data Lineage & Provenance" có phải yêu cầu của giảng
    viên không; có bắt buộc HDFS, Spark hay NiFi không. Bắt buộc thì thêm bước vào P2 và ô vào `flow`.
 5. Tỉ trọng điểm giữa phương pháp và quản lý dữ liệu cùng trực quan hoá. Bẫy 6 của trang trỏ câu này.
@@ -26,8 +26,7 @@ nếu chạm dữ liệu), rồi xoá câu ấy ở trang và ở đây.
 
 ### Nhóm tự chốt
 
-- A (Premier League) hay B (F1). C chỉ là phần mở rộng. Trang đang chốt A; theo cây chọn ở `#top-3` (hết tuần 1 chưa
-  ai trả lời thì làm tiếp A trong repo riêng tư, chuẩn bị sẵn B). Đổi sang B thì sửa câu "Chốt", `plan_a`, `flow`,
-  các pha P1–P2 và `#ke-hoach`.
+- Chủ trang đã chốt A (Premier League). Nếu giảng viên hay football-data.co.uk không đồng ý thì theo cây chọn ở `#chon`
+  (trang 1) chuyển sang B; trang 2 khi ấy phải làm lại các bước dữ liệu (`#nguon-du-lieu` tới `#lam-sach`) và câu hỏi.
 - Công cụ mặc định Python; ai chưa dùng Streamlit thì xem trước ở P0.
 - Ai nhận vai nào; còn bao nhiêu tuần.

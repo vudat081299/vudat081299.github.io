@@ -98,8 +98,8 @@
   sạch, điền thiếu, tạo đặc trưng; mọi biến đổi fit chỉ trên train. Đừng thêm bước con làm rò rỉ dữ liệu test.
 - `smoke.cjs` tìm `VERIFY data quality` (đúng một bước con) và `BUSINESS understanding` (đúng một bước) trên `crisp-dm`.
 - `stats-report` theo chu trình PPDAC (MacKay & Oldford; Wild & Pfannkuch, 1999): năm khâu, việc theo Wild & Pfannkuch.
-- `it5425-sports` sinh từ `masters-degree/data-management-visualization/data/sports-monitoring-project.json` và "Xong khi
-  nào" (`#lt-xong`) của trang đồ án: `python3 step-planner/tools/lint.py --write-course`, không sửa tay; cổng đỏ khi nguồn
+- `it5425-sports` sinh từ `masters-degree/data-management-visualization/data/sports-monitoring-build.json` và "Xong khi
+  nào" (`#xong`) của trang 2 đồ án (link câu hỏi giảng viên trỏ `#can-xac-nhan` của trang 1): `python3 step-planner/tools/lint.py --write-course`, không sửa tay; cổng đỏ khi nguồn
   đổi mà chưa sinh lại. Tên việc giữ nguyên chữ nguồn (kể cả "Vai N, …"); ghi chú bước có dòng "Vai:" và link trang đồ án
   kèm neo (cổng kiểm neo còn). Không tên người, kể cả giảng viên.
 

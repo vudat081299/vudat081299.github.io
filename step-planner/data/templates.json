@@ -200,12 +200,12 @@
       "steps": [
         {
           "title": "P0 · Khởi động",
-          "goal": "Đề bài, trang đồ án → repo có README.md, requirements.txt, .gitignore; bảng phân vai.",
+          "goal": "Đề bài, trang 1 → repo có README.md, requirements.txt, .gitignore; bảng phân vai.",
           "doneWhen": "Cả bảy người clone được repo và chạy được python -c \"import pandas\".",
-          "notes": "Vai: Trưởng nhóm & kể chuyện, Dữ liệu & lineage, EDA & ngoại lai, ANOM, CUSUM, SPRT, Demo & tích hợp\nCông cụ: git, GitHub, Python 3, VS Code hoặc Colab\nTrang đồ án, pha P0: https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-project.html#lt-lich\nCâu hỏi gửi giảng viên, thư xin phép: https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-project.html#can-xac-nhan",
+          "notes": "Vai: Trưởng nhóm & kể chuyện, Dữ liệu & lineage, EDA & ngoại lai, ANOM, CUSUM, SPRT, Demo & tích hợp\nCông cụ: git, GitHub, Python 3, VS Code hoặc Colab\nTrang đồ án, pha P0: https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-build.html#lich\nCâu hỏi gửi giảng viên, thư xin phép: https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-project.html#can-xac-nhan",
           "subs": [
             {
-              "title": "Gửi giảng viên các câu hỏi ở mục Cần xác nhận."
+              "title": "Gửi giảng viên các câu hỏi ở trang 1, mục Cần xác nhận."
             },
             {
               "title": "Email football-data.co.uk xin phép dùng dữ liệu cho đồ án, theo thư soạn sẵn (trang dữ liệu mời liên hệ khi có câu hỏi về cách dùng)."
@@ -214,7 +214,7 @@
               "title": "Chốt phương án (A, B hay C)."
             },
             {
-              "title": "Tạo repo theo cây Repo mẫu trên trang đồ án."
+              "title": "Tạo repo theo cây repo."
             },
             {
               "title": "Cài Python, VS Code (hoặc dùng Colab), git; tạo venv rồi cài requirements.txt."
@@ -230,14 +230,14 @@
         {
           "title": "P1 · Tìm hiểu và thu thập",
           "goal": "football-data.co.uk, notes.txt → data/raw/*.csv (không commit), data/manifest.csv, docs/data-card.md, docs/lineage.md.",
-          "doneWhen": "Chạy python src/download.py trên máy trống thì tải lại đúng các file, mã SHA-256 khớp manifest.",
-          "notes": "Vai: Dữ liệu & lineage\nCông cụ: Python: requests, hashlib\nTrang đồ án, pha P1: https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-project.html#lt-lich",
+          "doneWhen": "Chạy python -m src.download trên máy trống thì tải lại đúng các file, mã SHA-256 khớp manifest.",
+          "notes": "Vai: Dữ liệu & lineage\nCông cụ: Python: requests, hashlib\nTrang đồ án, pha P1: https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-build.html#lich",
           "subs": [
             {
               "title": "Đọc notes.txt để biết nghĩa từng cột."
             },
             {
-              "title": "Viết src/download.py: tải Premier League (file E0) mọi mùa từ 1997/98 (đã kiểm: mỗi mùa đủ 380 trận) tới 2025/26, theo mẫu …/mmz4281/2021/E0.csv. Các giải khác chỉ tải khi làm phần mở rộng ANOM."
+              "title": "Viết src/download.py: tải Premier League (file E0) 29 mùa 1997/98–2025/26, theo mẫu …/mmz4281/2021/E0.csv; mỗi mùa 380 trận. Các giải khác chỉ tải khi làm phần mở rộng ANOM."
             },
             {
               "title": "Ghi URL, ngày tải và mã SHA-256 của từng file vào data/manifest.csv."
@@ -257,7 +257,7 @@
           "title": "P1b · Học và viết phương pháp",
           "goal": "Ví dụ có lời giải, dữ liệu giả lập → bản đầu của src/outliers.py, anom.py, cusum.py, sprt.py; tests/.",
           "doneWhen": "Mỗi hàm cho đúng kết quả của ví dụ; test xanh.",
-          "notes": "Vai: EDA & ngoại lai, ANOM, CUSUM, SPRT\nCông cụ: numpy, scipy.stats, pytest\nTrang đồ án, pha P1b: https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-project.html#lt-lich",
+          "notes": "Vai: EDA & ngoại lai, ANOM, CUSUM, SPRT\nCông cụ: numpy, scipy.stats, pytest\nTrang đồ án, pha P1b: https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-build.html#lich",
           "subs": [
             {
               "title": "Mỗi người viết phương pháp của mình trên ví dụ có lời giải và dữ liệu giả lập, trước khi có dữ liệu thật."
@@ -283,16 +283,16 @@
           "title": "P2 · Làm sạch và tích hợp",
           "goal": "data/raw/*.csv → data/clean/*.parquet, file DuckDB, báo cáo chất lượng, docs/data-dictionary.md.",
           "doneWhen": "Báo cáo chất lượng không còn lỗi chặn; mỗi trọng tài chỉ còn một tên.",
-          "notes": "Vai: Dữ liệu & lineage, EDA & ngoại lai\nCông cụ: pandas, DuckDB; src/clean.py, src/quality.py\nTrang đồ án, pha P2: https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-project.html#lt-lich",
+          "notes": "Vai: Dữ liệu & lineage, EDA & ngoại lai\nCông cụ: pandas, DuckDB; src/clean.py, src/quality.py\nTrang đồ án, pha P2: https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-build.html#lich",
           "subs": [
             {
-              "title": "Gộp các mùa thành một bảng; số cột đổi từ 21 (1997/98) tới 132 (2025/26), có mùa giảm; chỉ giữ cột cần."
+              "title": "Gộp các mùa thành một bảng; số ô tiêu đề đổi từ 21 (1997/98, chỉ 10 ô có tên) tới 132 (2025/26), có mùa giảm; chỉ giữ cột cần."
             },
             {
               "title": "Đọc cả hai kiểu ngày dd/mm/yy và dd/mm/yyyy."
             },
             {
-              "title": "Chuẩn hoá tên đội, và tên trọng tài cho phần mở rộng, bằng một bảng ánh xạ: cùng một trọng tài có tới năm cách ghi tên: đủ tên, viết tắt có hoặc không dấu chấm, họ đứng trước, có cả lỗi gõ. Đừng gộp theo họ: hai trọng tài khác nhau có thể cùng họ."
+              "title": "Chuẩn hoá tên đội, và tên trọng tài cho phần mở rộng, bằng một bảng ánh xạ: cùng một trọng tài có tới sáu cách ghi tên: đủ tên, viết tắt có hoặc không dấu chấm, họ đứng trước, có cả lỗi gõ. Đừng gộp theo họ: hai trọng tài khác nhau có thể cùng họ."
             },
             {
               "title": "Viết luật chất lượng dữ liệu: HST ≤ HS, số thẻ ≥ 0, FTR khớp số bàn; xuất báo cáo chất lượng."
@@ -309,10 +309,13 @@
           "title": "P3 · EDA",
           "goal": "data/clean/ → notebooks/01_eda.ipynb, hình EDA, danh sách mùa Phase I.",
           "doneWhen": "Có một trang tóm tắt EDA; đã chốt các mùa Phase I và tính tham số chỉ từ chúng.",
-          "notes": "Vai: EDA & ngoại lai, ANOM, CUSUM, SPRT\nCông cụ: pandas, matplotlib, Jupyter\nTrang đồ án, pha P3: https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-project.html#lt-lich",
+          "notes": "Vai: EDA & ngoại lai, ANOM, CUSUM, SPRT\nCông cụ: pandas, matplotlib, Jupyter\nTrang đồ án, pha P3: https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-build.html#lich",
           "subs": [
             {
               "title": "Thống kê mô tả: trung bình, trung vị, độ lệch chuẩn của bàn, thẻ, cú sút."
+            },
+            {
+              "title": "Tỉ số phương sai / trung bình của mỗi số đếm, đơn vị một đội một trận: chọn công cụ ngoại lai."
             },
             {
               "title": "Box plot số bàn và số thẻ theo mùa."
@@ -335,10 +338,10 @@
           "title": "P4 · Thiết kế phân tích, khoá tham số",
           "goal": "Kết quả EDA, mùa Phase I → docs/analysis-plan.md, tests/.",
           "doneWhen": "Tham số đã ghi và commit trước khi chạy Phase II; test xanh.",
-          "notes": "Vai: Trưởng nhóm & kể chuyện, ANOM, CUSUM, SPRT\nCông cụ: numpy, pytest\nTrang đồ án, pha P4: https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-project.html#lt-lich",
+          "notes": "Vai: Trưởng nhóm & kể chuyện, ANOM, CUSUM, SPRT\nCông cụ: numpy, pytest\nTrang đồ án, pha P4: https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-build.html#lich",
           "subs": [
             {
-              "title": "Viết docs/analysis-plan.md trước khi xem dữ liệu Phase II: câu hỏi, H0/H1, α, β, k, h."
+              "title": "Viết docs/analysis-plan.md trước khi xem dữ liệu Phase II: câu hỏi, H0/H1, α, β, mức đổi, h."
             },
             {
               "title": "Mô phỏng ARL để chọn k và h."
@@ -352,13 +355,13 @@
           "title": "P5 · Chạy bốn phương pháp",
           "goal": "data/clean/, docs/analysis-plan.md → results/*.csv.",
           "doneWhen": "Chạy lại từ đầu ra đúng results/; số khớp test.",
-          "notes": "Vai: EDA & ngoại lai, ANOM, CUSUM, SPRT\nCông cụ: numpy, scipy.stats, pandas\nTrang đồ án, pha P5: https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-project.html#lt-lich",
+          "notes": "Vai: EDA & ngoại lai, ANOM, CUSUM, SPRT\nCông cụ: numpy, scipy.stats, pandas\nTrang đồ án, pha P5: https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-build.html#lich",
           "subs": [
             {
               "title": "Chạy các hàm đã viết ở P1b trên dữ liệu thật: src/outliers.py, anom.py, cusum.py, sprt.py."
             },
             {
-              "title": "Đối chiếu CUSUM với giobbu/CUSUM."
+              "title": "Chạy python -m src.pipeline: mọi bước, 24,7 giây."
             },
             {
               "title": "Ghi kết quả ra results/*.csv."
@@ -372,7 +375,7 @@
           "title": "P6 · Trực quan hoá",
           "goal": "results/*.csv → src/charts.py, hình PNG hoặc SVG.",
           "doneWhen": "Mỗi hình có tiêu đề, trục và nguồn dữ liệu.",
-          "notes": "Vai: Dữ liệu & lineage, EDA & ngoại lai, ANOM, CUSUM, SPRT, Demo & tích hợp\nCông cụ: matplotlib hoặc plotly\nTrang đồ án, pha P6: https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-project.html#lt-lich",
+          "notes": "Vai: Dữ liệu & lineage, EDA & ngoại lai, ANOM, CUSUM, SPRT, Demo & tích hợp\nCông cụ: matplotlib; st.line_chart trong app\nTrang đồ án, pha P6: https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-build.html#lich",
           "subs": [
             {
               "title": "Biểu đồ quyết định ANOM."
@@ -401,7 +404,7 @@
           "title": "P7 · Demo",
           "goal": "data/clean/, src/, results/ → app/streamlit_app.py, kịch bản demo.",
           "doneWhen": "Demo chạy trơn 3 phút trên máy trình chiếu, không cần mạng.",
-          "notes": "Vai: Dữ liệu & lineage, Demo & tích hợp\nCông cụ: Streamlit\nTrang đồ án, pha P7: https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-project.html#lt-lich",
+          "notes": "Vai: Dữ liệu & lineage, Demo & tích hợp\nCông cụ: Streamlit\nTrang đồ án, pha P7: https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-build.html#lich",
           "subs": [
             {
               "title": "app/streamlit_app.py đọc data/clean/ và results/, gọi lại các hàm trong src/ khi kéo thanh trượt; chạy được khi không có mạng."
@@ -410,7 +413,7 @@
               "title": "Vai 2: tab \"Dữ liệu\" có báo cáo chất lượng, sơ đồ lineage và nút chạy lại đường ống."
             },
             {
-              "title": "Mỗi phương pháp một tab có thanh trượt: ngưỡng ngoại lai; α cho ANOM; k, h cho CUSUM; p0, p1, α, β cho SPRT. Hình cập nhật ngay."
+              "title": "Mỗi phương pháp một tab có thanh trượt: k và α cho ngoại lai; α cho ANOM; mức đổi và h cho CUSUM; mùa, p0, p1, α, β cho SPRT. Hình cập nhật ngay."
             },
             {
               "title": "Kịch bản demo 3 phút."
@@ -421,13 +424,13 @@
           "title": "P8 · Kể chuyện: báo cáo, slide, tập dượt",
           "goal": "Hình, results/, docs/ → report/, slides/.",
           "doneWhen": "Mọi mục trong Xong khi nào đã đánh dấu.",
-          "notes": "Vai: Trưởng nhóm & kể chuyện, Dữ liệu & lineage, EDA & ngoại lai, ANOM, CUSUM, SPRT, Demo & tích hợp\nCông cụ: Word hoặc LaTeX; PowerPoint hoặc Google Slides\nTrang đồ án, pha P8: https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-project.html#lt-lich\n\nXong khi nào (https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-project.html#lt-xong):\n- Chạy lại từ đầu bằng một lệnh.\n- Có README: cách chạy, nguồn, điều khoản.\n- Không có CSV gốc trên repo công khai.\n- Mọi hình có tiêu đề, trục và nguồn.\n- Có trích dẫn đủ.\n- Đủ chương của từng thành viên.\n- Demo chạy khi không có mạng, từ dữ liệu sạch.\n- Đã tập dượt hai lần, ít nhất một lần đúng thời lượng.",
+          "notes": "Vai: Trưởng nhóm & kể chuyện, Dữ liệu & lineage, EDA & ngoại lai, ANOM, CUSUM, SPRT, Demo & tích hợp\nCông cụ: Word hoặc LaTeX; PowerPoint hoặc Google Slides\nTrang đồ án, pha P8: https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-build.html#lich\n\nXong khi nào (https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-build.html#xong):\n- Chạy lại từ đầu bằng một lệnh: python -m src.pipeline.\n- README có cách chạy, nguồn, điều khoản.\n- Không có CSV gốc trên repo.\n- Mọi hình có tiêu đề là câu trả lời, trục, nguồn và dòng độ bất định.\n- Có trích dẫn đủ: nguồn dữ liệu, công thức, bài gốc.\n- Đủ chương của từng thành viên.\n- Demo chạy khi không có mạng, từ dữ liệu sạch.\n- Đã tập dượt hai lần, ít nhất một lần đúng thời lượng.",
           "subs": [
             {
-              "title": "Viết báo cáo theo dàn ý trên trang đồ án; mỗi người viết chương của mình."
+              "title": "Viết báo cáo theo dàn ý; mỗi người viết chương của mình."
             },
             {
-              "title": "Làm slide theo dàn ý trên trang đồ án."
+              "title": "Làm slide theo dàn ý."
             },
             {
               "title": "Tập dượt hai lần, bấm giờ."

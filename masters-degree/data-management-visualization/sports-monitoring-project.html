@@ -10,8 +10,8 @@
   if(v!=='dark'&&v!=='light'){var mq=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)');v=mq&&mq.matches?'dark':'light';}
   document.documentElement.setAttribute('data-theme',v);})();
 </script>
-<title>Sports Monitoring — Group Project Plan</title>
-<meta name="description" content="Đồ án nhóm IT5425: ngoại lai, ANOM, CUSUM, SPRT trên dữ liệu thể thao — chấm điểm nguồn, phương án, chia việc.">
+<title>Sports Monitoring — From Topic to Plan</title>
+<meta name="description" content="Đồ án nhóm IT5425, trang 1: từ đề tài tới phương án — hiểu đề, tìm và chấm nguồn, so và chọn phương án, chốt gì trước khi làm.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600&family=Be+Vietnam+Pro:wght@400;600;700&family=JetBrains+Mono:wght@500&display=swap">
@@ -70,6 +70,12 @@ main{max-width:calc(var(--read) + 2 * var(--gutter));margin:0 auto;padding:0 var
 .top-name{flex:1;min-width:0;font:600 var(--fs-sm) var(--display);letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media (max-width:420px){.top-back span{display:none}.top-back{padding:0;width:var(--tap);justify-content:center}}
 
+/* ═══ TRANG CON ═══ */
+.subpages{display:flex;gap:var(--s2);max-width:calc(var(--read) + 2 * var(--gutter));margin:0 auto;padding:var(--s3) var(--gutter) 0}
+.subpages a{flex:1 1 0;display:flex;align-items:center;justify-content:center;min-height:var(--tap);padding:0 var(--s3);border:1px solid var(--line);border-radius:var(--r-pill);background:var(--surface);color:var(--ink-2);font-size:var(--fs-xs);font-weight:600;text-align:center;text-decoration:none}
+.subpages a:hover{border-color:var(--stroke);color:var(--ink)}
+.subpages a[aria-current="page"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+
 /* ═══ THÔNG BÁO DỮ LIỆU ═══ */
 .notice{margin:var(--s5) 0 0;padding:var(--s3) var(--s4);border:1px solid var(--stroke);border-radius:var(--r);background:var(--surface);font-size:var(--fs-sm)}
 .notice b{display:block}
@@ -84,28 +90,27 @@ main{max-width:calc(var(--read) + 2 * var(--gutter));margin:0 auto;padding:0 var
 .hero-line{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s1) var(--s3);font-size:var(--fs-sm);color:var(--ink-2);margin:var(--s3) 0 var(--s4)}
 .hero-line span{display:inline-flex;align-items:center;gap:var(--s2)}
 
-/* ═══ KẾ HOẠCH MỘT TRANG ═══ */
+/* ═══ TÓM TẮT QUYẾT ĐỊNH ═══ */
 .onepage{margin:var(--s4) 0 var(--s5);padding:var(--s4) var(--s5);border:1px solid var(--ink);border-radius:var(--r);background:var(--surface);box-shadow:var(--shadow);font-size:var(--fs-sm);line-height:1.55}
 .onepage h2{font-size:var(--fs-h3);margin-bottom:var(--s2)}
-.op-one{font-size:var(--fs);font-weight:600}
-.op-data .lab,.kw-line .lab{display:inline}
-.op-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s3) var(--s5);margin:var(--s3) 0}
-.op-q,.op-w1{margin:var(--s1) 0 0;padding-left:1.4em}
-.op-q li,.op-w1 li{margin:var(--s1) 0}
-.op-w1 b{font-weight:600}
-.op-submit .lab,.op-why .lab{display:inline;margin-right:var(--s2)}
-.op-p1b{margin:var(--s1) 0 0}
-.op-links{display:flex;flex-wrap:wrap;gap:var(--s2);margin:0}
-.op-links a{display:inline-flex;align-items:center;min-height:var(--tap);padding:0 var(--s4);border:1px solid var(--stroke);border-radius:var(--r-pill);text-decoration:none;font-weight:600}
-.op-links a:hover{border-color:var(--ink)}
-@media (max-width:720px){.onepage{padding:var(--s4)}.op-grid{grid-template-columns:minmax(0,1fr)}}
+.op-dl{margin:0 0 var(--s3)}
+.op-dl div{display:grid;grid-template-columns:150px minmax(0,1fr);gap:var(--s3);padding:var(--s2) 0;border-bottom:1px solid var(--line)}
+.op-dl dt{font:500 var(--fs-lab)/1.9 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+.op-dl dd{margin:0}
+.op-dl dd>a{white-space:nowrap}
+@media (max-width:720px){.onepage{padding:var(--s4)}.op-dl div{grid-template-columns:minmax(0,1fr);gap:0}}
+
+/* ═══ NÚT SANG TRANG 2 ═══ */
+.next-wrap{margin:var(--s4) 0 0}
+.next-page{display:inline-flex;align-items:center;gap:var(--s2);min-height:var(--tap);padding:0 var(--s5);border-radius:var(--r-pill);background:var(--ink);color:var(--bg);font-weight:600;text-decoration:none}
+.next-page::after{content:"→"}
+.next-page:hover{color:var(--bg);background:var(--a)}
 
 /* ═══ MỤC LỤC NHANH ═══ */
 .jump{display:flex;flex-wrap:wrap;gap:var(--s2);margin:0 0 var(--s2);padding:0;list-style:none}
 .jump li{margin:0}
 .jump a{display:inline-flex;align-items:center;min-height:var(--tap);padding:0 var(--s4);border:1px solid var(--line);border-radius:var(--r-pill);background:var(--surface);font-size:var(--fs-xs);text-decoration:none}
 .jump a:hover{border-color:var(--stroke)}
-.sub-jump{margin:var(--s3) 0 var(--s4)}
 
 /* ═══ KHỐI NỘI DUNG ═══ */
 .block{margin:var(--s7) 0 0;padding-top:var(--s5);border-top:1px solid var(--line)}
@@ -121,9 +126,9 @@ main{max-width:calc(var(--read) + 2 * var(--gutter));margin:0 auto;padding:0 var
 .sw{display:inline-block;flex:none;width:var(--dot);height:var(--dot);border-radius:50%}
 .sw.c1{background:var(--c1)} .sw.c2{background:var(--c2)} .sw.c3{background:var(--c3)} .sw.c4{background:var(--c4)} .sw.c5{background:var(--c5)} .sw.c6{background:var(--c6)}
 .kw-line{font-size:var(--fs-sm);line-height:1.8}
+.stage-why{font-size:var(--fs-lg);max-width:44em}
+.block>.eyebrow{margin-bottom:var(--s1)}
 .kw-line .lab{display:inline;margin-right:var(--s2)}
-.les-links a{display:inline-flex;align-items:center;justify-content:center;min-height:var(--tap);min-width:var(--tap);padding:0 var(--s1)}
-table.stack .les-links a{align-items:flex-start;vertical-align:top}
 @media (max-width:720px){.cols{grid-template-columns:minmax(0,1fr)}}
 
 /* ═══ HÌNH HAI CÂU HỎI ═══ */
@@ -197,6 +202,9 @@ details.fold>summary::-webkit-details-marker{display:none}
 details.fold>summary::before{content:"›";display:inline-block;width:1em;color:var(--ink-3);transition:transform .15s}
 details.fold[open]>summary::before{transform:rotate(90deg)}
 details.fold>.fold-body{padding:0 var(--s4) var(--s4)}
+details.appendix{margin-top:var(--s7)}
+details.appendix>summary{font-size:var(--fs-h3);padding-top:var(--s3);padding-bottom:var(--s3)}
+details.appendix .block:first-child{margin-top:0;border-top:0}
 
 /* ═══ THẺ NGUỒN: gập mặc định, một dòng tên · kết luận · điểm ═══ */
 .cards-box{margin-top:var(--s5)}
@@ -273,14 +281,14 @@ details.fold>.fold-body{padding:0 var(--s4) var(--s4)}
 .qa .box h4{margin:var(--s2) 0;font-size:var(--fs-sm);line-height:1.45}
 .qa .box p{font-size:var(--fs-sm);line-height:1.55;margin:var(--s2) 0 0}
 .lab{display:block;font:500 var(--fs-lab) var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+.qa-dec{padding-left:var(--s3);border-left:2px solid var(--green)}
 @media (max-width:720px){.qa{grid-template-columns:minmax(0,1fr)}}
 
-/* ═══ BẢNG XẾP CHỒNG: hai vòng chấm, dàn ý báo cáo; ≤ 720px mỗi dòng thành một khối có nhãn ═══ */
+/* ═══ BẢNG XẾP CHỒNG: ba vòng kiểm; ≤ 720px mỗi dòng thành một khối có nhãn ═══ */
 table.stack{width:100%;border-collapse:collapse;font-size:var(--fs-xs);line-height:1.45}
 table.stack th,table.stack td{padding:var(--s2);border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
 table.stack thead th{font:500 var(--fs-lab) var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);background:var(--sunk)}
 table.stack tbody th{font-weight:600;width:18%}
-table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
 .rd-score{display:block;margin-top:var(--s1);font:500 var(--fs-lab) var(--mono);color:var(--ink-2)}
 @media (max-width:720px){
   table.stack thead{display:none}
@@ -288,121 +296,56 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
   table.stack tr{padding:var(--s2) 0;border-bottom:1px solid var(--line)}
   table.stack th,table.stack td{border:0;padding:var(--s1) 0}
   table.stack tbody th{width:auto}
-  table.outline td:last-child{text-align:left}
   table.stack td::before{content:attr(data-l);display:block;font:500 var(--fs-lab) var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
 }
 
-/* ═══ BẪY PHƯƠNG PHÁP ═══ */
-.traps-box{margin-top:var(--s4)}
-.traps-box h3{margin-top:0}
-.traps-box ol{margin-bottom:0}
-.traps-box li{font-size:var(--fs-sm)}
-.qa-notes{margin-top:var(--s2);font-size:var(--fs-sm);line-height:1.55}
-.qa-dec{padding-left:var(--s3);border-left:2px solid var(--green)}
-
-/* ═══ CẦN CHỐT VÀ KIẾN TRÚC ═══ */
-.agree{margin:var(--s2) 0 0;padding-left:1.4em;font-size:var(--fs-sm);line-height:1.55}
+/* ═══ CẦN CHỐT ═══ */
+.agree{margin:var(--s2) 0 var(--s4);padding-left:1.4em;font-size:var(--fs-sm);line-height:1.55}
 .agree li{margin:var(--s2) 0}
 .agree .ag-ph{color:var(--ink-2);font-size:var(--fs-xs)}
-.arch-why{margin-top:var(--s3)}
-.arch-why h4{margin:0 0 var(--s2)}
-.arch-why ul{margin:0;padding-left:1.2em;font-size:var(--fs-sm);line-height:1.55}
-.qa-check{margin-top:var(--s3);padding:var(--s2) var(--s3);border:1px solid var(--stroke);border-radius:var(--r-sm);background:var(--sunk);font-size:var(--fs-sm)}
-.qa-check p{margin:var(--s1) 0 0!important}
-.qa-notes ul{margin:var(--s1) 0 0;padding-left:1.1em}
 
-/* ═══ LỊCH (GANTT) ═══ */
-.gantt-box{padding:var(--s4);border:1px solid var(--line);border-radius:var(--r);background:var(--surface);box-shadow:var(--shadow)}
-.gantt-head{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s2) var(--s3);margin-bottom:var(--s3);font-size:var(--fs-xs);color:var(--ink-2)}
-.seg{display:inline-flex;border:1px solid var(--line);border-radius:var(--r-pill);overflow:hidden}
-.seg-btn{min-height:var(--tap);min-width:var(--tap);padding:0 var(--s3);border:0;border-left:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:var(--fs-xs);cursor:pointer}
-.seg-btn:first-child{border-left:0}
-.seg-btn[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
-.gantt{--weeks:6}
-.g-axis,.g-row{display:grid;grid-template-columns:240px minmax(0,1fr);align-items:center;gap:var(--s3)}
-.g-axis{padding:0 var(--s2);border:1px solid transparent}
-.g-weeks{display:grid;grid-template-columns:repeat(var(--weeks),1fr);font:500 var(--fs-lab) var(--mono);color:var(--ink-3)}
-.g-weeks span{padding-left:var(--s1);border-left:1px solid var(--line)}
-.g-row{width:100%;min-height:var(--tap);padding:var(--s1) var(--s2);margin:0;border:1px solid transparent;border-radius:var(--r-sm);background:none;color:var(--ink);font:inherit;font-size:var(--fs-xs);text-align:left;cursor:pointer}
-.g-row:hover{background:var(--sunk)}
-.g-row.hl{background:var(--a-soft);border-color:var(--green)}
-.g-row[aria-pressed="true"]{border-color:var(--ink)}
-.g-name b{font-family:var(--mono);font-weight:500;color:var(--ink-3)}
-.g-when{margin-left:var(--s2);color:var(--ink-3);font-size:var(--fs-lab);white-space:nowrap}
-.g-track{position:relative;display:block;height:20px;background-image:linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:calc(100% / var(--weeks)) 100%}
-.g-bar{position:absolute;top:3px;bottom:3px;border-radius:var(--r-xs);background:var(--c2)}
-.g-row[aria-pressed="true"] .g-bar{background:var(--ink)}
-.phase-panel{margin-top:var(--s4);padding-top:var(--s4);border-top:1px solid var(--line)}
-.phase-panel:focus{outline:none}
-.phase-panel h4{margin:0;font-size:var(--fs-h3)}
-.pp-meta{color:var(--ink-2);font-size:var(--fs-xs);margin:var(--s1) 0 var(--s3)}
-.pp-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s3) var(--s5);font-size:var(--fs-sm);line-height:1.55}
-.pp-grid p{margin:var(--s1) 0 0}
-.pp-item:first-child{grid-row:span 3}
-.pp-who{display:flex;flex-wrap:wrap;gap:var(--s1)}
-.pp-agree{margin:0 0 var(--s4);padding:var(--s2) var(--s3);border:1px solid var(--stroke);border-radius:var(--r-sm);background:var(--sunk);font-size:var(--fs-sm);line-height:1.55}
-@media (max-width:600px){
-  .g-axis{display:none}
-  .g-row{display:block;padding:var(--s2)}
-  .g-when{display:block;margin-left:0}
-  .g-track{height:var(--meter);margin-top:var(--s1);border-radius:var(--r-pill);background:var(--sunk)}
-  .g-bar{top:0;bottom:0}
-  .pp-grid{grid-template-columns:minmax(0,1fr)}
-  .pp-item:first-child{grid-row:auto}
-}
-
-/* ═══ LUỒNG DỮ LIỆU ═══ */
-.flow-wrap{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:var(--s5);align-items:start}
-.flow-fig{margin:0}
-.flow-fig figcaption{font-size:var(--fs-xs);color:var(--ink-3);margin-top:var(--s2)}
-#flow svg{display:block;overflow:visible}
-.flow-note{font-size:var(--fs-sm);line-height:1.55}
-.fnode{cursor:pointer;outline:none}
-.fn-box{fill:var(--inset);stroke:var(--stroke);stroke-width:1}
-.fnode:hover .fn-box,.fnode:focus-visible .fn-box{stroke:var(--green);stroke-width:2}
-.fnode.on .fn-box{fill:var(--a-soft);stroke:var(--ink)}
-.fn-t{font:600 13px var(--mono);fill:var(--ink)}
-.fn-s{font:400 var(--fs-lab) var(--font);fill:var(--ink-2)}
-.fn-d{font:500 11.5px var(--mono);fill:var(--ink-3)}
+/* ═══ SƠ ĐỒ: hộp, chữ, mũi tên, ga hành trình; SVG tĩnh co theo cột nhưng không rộng quá viewBox ═══ */
+.dg-fig{margin:var(--s4) 0}
+.dg-fig figcaption{font-size:var(--fs-xs);color:var(--ink-3);margin-top:var(--s2);max-width:44em}
+svg.dg{display:block;width:100%;max-width:380px;height:auto}
+.dg-fig.wide>div{width:100%}
+.dg-fig.wide svg{display:block;overflow:visible}
+.dg-box{fill:var(--inset);stroke:var(--stroke);stroke-width:1}
+.dg-box.pick{stroke:var(--ink);stroke-width:2}
+.dg-t{font:600 13px var(--font);fill:var(--ink)}
+.dg-s{font:400 12px var(--font);fill:var(--ink-2)}
+.dg-s2{font:600 12.5px var(--font);fill:var(--ink)}
+.dg-h{font:500 11px var(--mono);fill:var(--ink-3);letter-spacing:.04em}
+.dg-k{font:500 10.5px var(--mono);fill:var(--ink-3);letter-spacing:.06em}
+.dg-k2{font:500 11px var(--mono);fill:var(--ink-3)}
+.dg-c{font:500 11.5px var(--mono);fill:var(--ink-3)}
+.dg-big{font:600 24px var(--display);fill:var(--ink)}
+.dg-link{cursor:pointer;outline:none}
+.dg-link:hover .dg-box,.dg-link:focus-visible .dg-box{stroke:var(--green);stroke-width:2}
 .s-arr{fill:none;stroke:var(--ink-3);stroke-width:1.5}
+.s-arr.dash{stroke-dasharray:4 3}
 .f-ink3{fill:var(--ink-3)}
-@media (max-width:720px){.flow-wrap{grid-template-columns:minmax(0,1fr)}}
+.jr-fig{margin:var(--s4) 0 0}
+.jr-fig figcaption{font-size:var(--fs-xs);color:var(--ink-3);margin-top:var(--s1)}
+#journey svg{display:block}
+.jr-st{cursor:pointer;outline:none}
+.jr-st .hit{fill:transparent}
+.jr-st:hover .hit,.jr-st:focus-visible .hit{fill:var(--sunk)}
+.jr-st:focus-visible .hit{stroke:var(--green);stroke-width:2}
+.jr-dot{fill:var(--surface);stroke:var(--ink);stroke-width:1.5}
+.jr-st.next .jr-dot{fill:var(--ink)}
+.jr-n{font:500 11px var(--mono);fill:var(--ink)}
+.jr-st.next .jr-n{fill:var(--bg)}
+.jr-t{font:600 14px var(--font);fill:var(--ink)}
+.jr-o{font:400 13px var(--font);fill:var(--ink-2)}
 
-/* ═══ REPO MẪU ═══ */
-.tree{list-style:none;margin:0;padding:0;font-size:var(--fs-xs);line-height:1.4}
-.tree li{display:flex;flex-wrap:wrap;gap:0 var(--s2);margin:0;padding:var(--s1) 0}
-.tree li.d1{margin-left:var(--s3);padding-left:var(--s3);border-left:1px solid var(--line)}
-.tree code{background:none;padding:0;color:var(--ink)}
-.tree span{color:var(--ink-3)}
-
-/* ═══ DÀN Ý SLIDE, DANH SÁCH VIỆC ═══ */
-.slides{padding-left:1.6em;font-size:var(--fs-sm)}
-.slides li{margin:var(--s1) 0}
-.sl-m{display:block;font-size:var(--fs-xs);color:var(--ink-3)}
-.checklist{padding-left:1.25em;margin:var(--s1) 0 0}
-.checklist li{margin:var(--s1) 0}
-
-/* ═══ CÔNG THỨC ═══ */
-.fx{margin:var(--s3) 0;padding:var(--s3) var(--s4);border:1px solid var(--line);border-radius:var(--r-sm);background:var(--inset);font:500 var(--fs-sm)/1.8 var(--mono);overflow-x:auto}
-.fx div{white-space:nowrap}
-.fx-src{font-size:var(--fs-xs);color:var(--ink-3)}
-.ov{text-decoration:overline;text-decoration-thickness:1px}
-
-/* ═══ BẪY ═══ */
-.traps{list-style:none;padding:0}
-.traps li{padding:var(--s2) 0;border-bottom:1px solid var(--line);margin:0;font-size:var(--fs-sm)}
-.traps li:last-child{border-bottom:0}
-
-/* ═══ AI LÀM GÌ ═══ */
-.team{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s2);list-style:none;padding:0}
-.role{margin:0;padding:var(--s2) var(--s3) var(--s3);border:1px solid var(--line);border-radius:var(--r);background:var(--surface);font-size:var(--fs-sm);line-height:1.55}
-.role.on{border-color:var(--ink)}
-.role h4{margin:0}
-.role-h{display:flex;align-items:center;gap:var(--s2);width:100%;min-height:var(--tap);padding:0;border:0;background:none;color:var(--ink);font:600 var(--fs-sm) var(--display);text-align:left;cursor:pointer}
-.role-n{display:inline-flex;align-items:center;justify-content:center;flex:none;width:var(--s5);height:var(--s5);border-radius:50%;background:var(--ink);color:var(--bg);font:500 var(--fs-lab) var(--mono)}
-.role p{margin:0}
-.role-ph{margin-top:var(--s1)!important;font:500 var(--fs-lab) var(--mono);color:var(--ink-3)}
-@media (max-width:720px){.team{grid-template-columns:minmax(0,1fr)}}
+/* ═══ VAI CỦA NGUỒN ═══ */
+.roles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 var(--s5);margin:var(--s2) 0 0}
+.roles div{padding:var(--s2) 0;border-bottom:1px solid var(--line);font-size:var(--fs-sm);line-height:1.55}
+.roles dt{font-weight:600}
+.roles dt small{font:500 var(--fs-lab) var(--mono);color:var(--ink-3)}
+.roles dd{margin:var(--s1) 0 0;color:var(--ink-2)}
+@media (max-width:720px){.roles{grid-template-columns:minmax(0,1fr)}}
 
 /* ═══ CÂU HỎI CHỜ ═══ */
 .gaps{padding-left:1.4em}
@@ -446,8 +389,8 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
     --c1:#2f7a52; --c2:#3b4a63; --c3:#8f6516; --c4:#8c4a6b; --c5:#6b756f; --c6:#376f7b; --shadow:none;
   }
   .top,.tip,.jump,.chips,.chart-note,.foot,.notice{display:none!important}
-  .src,.box,.qcol,.opt,.role{break-inside:avoid}
-  .seg{display:none!important}
+  .src,.box,.qcol,.opt,.dg-fig{break-inside:avoid}
+  .subpages,.next-wrap{display:none!important}
   .term{text-decoration:none}
 }
 @media print{details:not([open])::details-content{content-visibility:visible;display:block}}
@@ -467,6 +410,10 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
     <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="6.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M9 2.5a6.5 6.5 0 0 1 0 13z" fill="currentColor"/></svg>
   </button>
 </header>
+<nav class="subpages" aria-label="Hai trang của đồ án">
+  <a href="sports-monitoring-project.html" aria-current="page">1 · Chọn đề tài</a>
+  <a href="sports-monitoring-build.html">2 · Làm đề tài A</a>
+</nav>
 
 <!-- Mũi tên dùng chung cho SVG: marker-end="url(#arr)" -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -479,39 +426,42 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
 
 <div class="notice" id="notice" role="status" hidden>
   <b>Chưa nạp được dữ liệu của trang.</b>
-  Bảng chấm, thẻ nguồn, chia việc và thuật ngữ nằm trong <code>data/sports-monitoring-project.json</code>, nên trang phải mở qua HTTP:
+  Sơ đồ, bảng chấm, thẻ nguồn, điều phải chốt và thuật ngữ nằm trong <code>data/sports-monitoring-project.json</code>, nên trang phải mở qua HTTP:
   chạy <code>python3 -m http.server</code> ở gốc repo, rồi mở
   <code>http://localhost:8000/masters-degree/data-management-visualization/sports-monitoring-project.html</code>.
 </div>
 
 <!-- ═══════════════ HERO ═══════════════ -->
 <section id="tom-tat" class="hero">
-  <div class="eyebrow">Đồ án nhóm · IT5425 Data Management and Visualization</div>
-  <h1>Theo dõi bất thường trong thể thao: chọn nguồn và cách làm</h1>
-  <p class="lede">Kế hoạch đồ án: bốn phương pháp (<span class="term">ngoại lai</span>, <span class="term">ANOM</span>, <span class="term">CUSUM</span>, <span class="term">SPRT</span>) áp vào bóng đá Premier League, dữ liệu football-data.co.uk, công thức tự viết theo nguồn chuẩn. Trang gom kế hoạch, cách chọn nguồn và lộ trình từng tuần.</p>
+  <div class="eyebrow">Đồ án nhóm · IT5425 Data Management and Visualization · Trang 1 / 2</div>
+  <h1>Theo dõi bất thường trong thể thao: từ đề tài tới phương án</h1>
+  <p class="lede">Trang này đi lại con đường từ một tên đề tài tới một phương án cụ thể: hiểu đề hỏi gì, tìm và chấm nguồn, so các phương án, chọn một, rồi chốt những điều cả nhóm phải thống nhất trước khi làm thật. Đề tài khác cũng đi đúng các chặng này.</p>
+  <figure class="jr-fig">
+    <div id="journey"></div>
+    <figcaption>Các chặng của trang này; chặng cuối ở trang 2. Bấm một chặng để tới mục ấy.</figcaption>
+  </figure>
   <div class="onepage" id="ke-hoach">
-    <h2>Kế hoạch một trang</h2>
-    <p class="op-one">Giám sát Premier League như bệnh viện giám sát chất lượng: ai khác thường, và đổi từ lúc nào — bằng <span class="term">ngoại lai</span>, <span class="term">ANOM</span>, <span class="term">CUSUM</span>, <span class="term">SPRT</span> trên dữ liệu football-data.co.uk.</p>
-    <p class="op-data"><span class="lab">Dữ liệu</span> Mỗi mùa một file <span class="term">CSV</span>, ví dụ <code>https://www.football-data.co.uk/mmz4281/2021/E0.csv</code>: <code>2021</code> là mùa 2020/21, <code>E0</code> là Premier League.</p>
-    <div class="op-grid">
-      <div><span class="lab">Bốn câu hỏi</span><ol class="op-q" id="planQ"></ol></div>
-      <div><span class="lab">Tuần 1: mỗi vai một việc</span><ol class="op-w1" id="planW1"></ol>
-        <p class="op-p1b">Vai 3–6: <a href="#lt-lich" data-ph="P1b">pha P1b</a> (học và viết phương pháp).</p></div>
-    </div>
-    <p class="op-why"><span class="lab">Ba phương án</span> Nhóm so ba bộ dữ liệu: <b>A</b> bóng đá Premier League, <b>B</b> đua xe F1, <b>C</b> bóng đá quốc tế. Chọn A vì một bộ dữ liệu làm đủ bốn phương pháp, mùa nào cũng 380 trận. Không được dùng football-data thì chuyển sang <a href="#top-3">B (dữ liệu Jolpica)</a>.</p>
-    <p class="op-submit" id="planSubmit"></p>
-    <p class="op-links"><a href="#lo-trinh">Kế hoạch đầy đủ</a><a href="#top-3">So ba phương án</a><a href="#can-xac-nhan">Hỏi gì trước</a></p>
+    <h2>Tóm tắt quyết định</h2>
+    <dl class="op-dl">
+      <div><dt>Đề tài</dt><dd>Bốn phương pháp (<span class="term">ngoại lai</span>, <span class="term">ANOM</span>, <span class="term">CUSUM</span>, <span class="term">SPRT</span>) trả lời hai câu hỏi: ai khác thường, và đổi từ lúc nào. Đề bảo áp vào thể thao. <a href="#de-tai">Hiểu đề</a></dd></div>
+      <div><dt>Ba phương án</dt><dd><b>A</b> bóng đá Premier League (football-data.co.uk), <b>B</b> đua xe F1 (Jolpica), <b>C</b> bóng đá quốc tế. Mỗi phương án là một bộ dữ liệu chính cộng bốn câu hỏi làm trên nó. <a href="#top-3">So ba phương án</a></dd></div>
+      <div><dt>Chọn A</dt><dd>Một bộ dữ liệu làm đủ bốn phương pháp, mùa nào cũng 380 trận. Hơn B không nhiều: <span data-total="C1"></span> so với <span data-total="C11"></span> điểm. Không được dùng football-data.co.uk thì chuyển sang B. <a href="#chon">Cây chọn</a></dd></div>
+      <div><dt>Chốt trước khi làm</dt><dd><span data-count="agree"></span> điều cả nhóm thống nhất, từ câu hỏi nghiệp vụ tới demo, và <span data-count="plan_a"></span> câu hỏi nghiên cứu. Song song, hỏi giảng viên và football-data.co.uk. <a href="#truoc-khi-lam">Chốt gì</a> · <a href="#can-xac-nhan">Hỏi gì</a></dd></div>
+      <div><dt>Đi tiếp</dt><dd>Trang 2 làm đề tài A từ repo trống tới demo, báo cáo và slide.</dd></div>
+    </dl>
+    <p class="next-wrap"><a class="next-page" href="sports-monitoring-build.html">Sang trang 2: làm đề tài A</a></p>
   </div>
   <p class="brief">Đề bài: <q lang="en">Outlier detection, analysis of means, CUSUM and sequential probability ratio testing. Applications in sports.</q> Nhóm 7 người nộp slide, báo cáo và demo.</p>
   <p class="hero-line" id="heroStats"></p>
 
   <nav aria-label="Các phần của trang">
     <ul class="jump">
-      <li><a href="#de-tai">Đề tài</a></li>
-      <li><a href="#lineage">Lineage</a></li>
-      <li><a href="#cham-diem">Chấm điểm</a></li>
+      <li><a href="#de-tai">Hiểu đề</a></li>
+      <li><a href="#tim-nguon">Tìm nguồn</a></li>
+      <li><a href="#cham-diem">Chấm nguồn</a></li>
       <li><a href="#top-3">Ba phương án</a></li>
-      <li><a href="#lo-trinh">Lộ trình</a></li>
+      <li><a href="#chon">Chọn</a></li>
+      <li><a href="#truoc-khi-lam">Chốt trước khi làm</a></li>
       <li><a href="#can-xac-nhan">Cần xác nhận</a></li>
       <li><a href="#thuat-ngu">Thuật ngữ</a></li>
       <li><a href="#nguon">Nguồn</a></li>
@@ -519,9 +469,11 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
   </nav>
 </section>
 
-<!-- ═══════════════ ĐỀ TÀI ═══════════════ -->
+<!-- ═══════════════ CHẶNG 1 · HIỂU ĐỀ ═══════════════ -->
 <section id="de-tai" class="block">
+  <div class="eyebrow" data-stage="de-tai"></div>
   <h2>Đề tài nghĩa là gì</h2>
+  <p class="stage-why">Chặng này đọc tên đề cho tới khi nói lại được bằng lời của mình: đề hỏi câu gì, cần dữ liệu dạng nào. Chưa biết cần dữ liệu dạng nào thì chưa biết phải đi tìm gì.</p>
   <p class="sub">Bốn phương pháp trong tên đề tài thật ra trả lời hai câu hỏi.</p>
   <figure class="qfig">
     <div class="qgrid">
@@ -538,6 +490,38 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
     </div>
     <figcaption>Bốn hình nhỏ là minh hoạ, số giả lập; số thật do nhóm tính từ dữ liệu.</figcaption>
   </figure>
+
+  <h3>Đề cần dữ liệu dạng nào</h3>
+  <p>Đọc ngược từ câu hỏi ra dữ liệu. Mỗi dòng dưới đây là một điều bộ dữ liệu phải có; chặng So phương án chấm từng phương án theo đúng các điều này.</p>
+  <figure class="dg-fig">
+    <svg class="dg" viewBox="0 0 380 204" role="img" aria-label="Từ câu hỏi ra dữ liệu: ai khác thường cần nhiều nhóm cùng lúc; đổi từ lúc nào cần một chuỗi dài theo thời gian; phần quản lý dữ liệu cần nhiều cột và lỗi thật để làm sạch">
+      <text x="85" y="12" class="dg-h" text-anchor="middle">Câu hỏi</text>
+      <text x="295" y="12" class="dg-h" text-anchor="middle">Dữ liệu phải có</text>
+      <rect x="0" y="22" width="170" height="52" rx="8" class="dg-box"/>
+      <text x="12" y="42" class="dg-k">NGOẠI LAI · ANOM</text>
+      <text x="12" y="62" class="dg-t">Ai khác thường?</text>
+      <path d="M170,48H204" class="s-arr" marker-end="url(#arr)"/>
+      <rect x="210" y="22" width="170" height="52" rx="8" class="dg-box"/>
+      <text x="222" y="44" class="dg-t">Nhiều nhóm cùng lúc</text>
+      <text x="222" y="62" class="dg-s">đội, mùa, trọng tài</text>
+      <rect x="0" y="86" width="170" height="52" rx="8" class="dg-box"/>
+      <text x="12" y="106" class="dg-k">CUSUM · SPRT</text>
+      <text x="12" y="126" class="dg-t">Đổi từ lúc nào?</text>
+      <path d="M170,112H204" class="s-arr" marker-end="url(#arr)"/>
+      <rect x="210" y="86" width="170" height="52" rx="8" class="dg-box"/>
+      <text x="222" y="108" class="dg-t">Một chuỗi dài</text>
+      <text x="222" y="126" class="dg-s">xếp theo thời gian</text>
+      <rect x="0" y="150" width="170" height="52" rx="8" class="dg-box"/>
+      <text x="12" y="170" class="dg-k">TÊN MÔN</text>
+      <text x="12" y="190" class="dg-t">Làm sạch, vẽ ra sao?</text>
+      <path d="M170,176H204" class="s-arr" marker-end="url(#arr)"/>
+      <rect x="210" y="150" width="170" height="52" rx="8" class="dg-box"/>
+      <text x="222" y="172" class="dg-t">Nhiều cột, có lỗi thật</text>
+      <text x="222" y="190" class="dg-s">để làm sạch và vẽ</text>
+    </svg>
+    <figcaption>Hai dòng đầu từ bốn phương pháp; dòng cuối từ tên môn: quản lý dữ liệu và trực quan hoá.</figcaption>
+  </figure>
+  <p>Trang môn có ngoại lai (<a href="data-management-visualization.html#b3">bài 3</a>, <a href="data-management-visualization.html#b4">bài 4</a>: box plot, rào 1,5·IQR) nhưng không có ANOM, CUSUM, SPRT. Ba phương pháp này học từ nguồn ngoài; công thức ở <a href="sports-monitoring-build.html#phuong-phap">trang 2, bước Phương pháp</a>.</p>
 
   <h3>Đề tài từ đâu ra</h3>
   <p>Bốn phương pháp là công cụ kiểm soát chất lượng chung: CUSUM có từ Page (1954), SPRT từ Wald (1945). Cách đặt tên đề khớp với một môn về chất lượng y tế: môn <i lang="sl">Statistična podpora kakovosti in organizaciji v zdravstvu</i> (hỗ trợ thống kê cho chất lượng và tổ chức trong y tế) của chương trình thạc sĩ liên ngành Thống kê, Đại học Ljubljana.</p>
@@ -564,33 +548,94 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
     <li>Montagna &amp; Hopker (2018): ngoại lai trong thể thao, theo dõi thành tích cả sự nghiệp của vận động viên đẩy tạ để đánh dấu nghi doping.</li>
     <li>Miles (1984): coi luật tính điểm quần vợt như một phép kiểm tuần tự, họ hàng của SPRT.</li>
   </ul>
-</section>
 
-<!-- ═══════════════ LINEAGE ═══════════════ -->
-<section id="lineage" class="block">
-  <h2>Lineage không phải tên khác của môn, nhưng là một phần quản lý dữ liệu</h2>
-  <p>Nhóm được gợi ý dùng “Data Lineage &amp; Provenance” làm từ khoá quốc tế thay cho tên môn.</p>
+  <h3 id="lineage">Lineage: một phần của quản lý dữ liệu, không phải tên khác của môn</h3>
+  <p>Nhóm được gợi ý dùng “Data Lineage &amp; Provenance” làm từ khoá quốc tế thay cho tên môn. Trước hết, lineage là gì:</p>
+  <figure class="dg-fig">
+    <svg class="dg" viewBox="0 0 380 136" role="img" aria-label="Lineage: CSV gốc thành bảng sạch, thành kết quả, thành hình; manifest.csv và data-card.md ghi nguồn, lineage.md ghi từng bước, nên lần ngược được từ hình về dữ liệu gốc">
+      <text x="190" y="12" class="dg-s" text-anchor="middle">lần ngược: hình này từ dữ liệu nào?</text>
+      <path d="M343,36V24H37V30" class="s-arr dash" marker-end="url(#arr)"/>
+      <rect x="0" y="36" width="74" height="40" rx="8" class="dg-box"/>
+      <text x="37" y="61" class="dg-t" text-anchor="middle">CSV gốc</text>
+      <path d="M74,56H96" class="s-arr" marker-end="url(#arr)"/>
+      <rect x="102" y="36" width="74" height="40" rx="8" class="dg-box"/>
+      <text x="139" y="61" class="dg-t" text-anchor="middle">Bảng sạch</text>
+      <path d="M176,56H198" class="s-arr" marker-end="url(#arr)"/>
+      <rect x="204" y="36" width="74" height="40" rx="8" class="dg-box"/>
+      <text x="241" y="61" class="dg-t" text-anchor="middle">Kết quả</text>
+      <path d="M278,56H300" class="s-arr" marker-end="url(#arr)"/>
+      <rect x="306" y="36" width="74" height="40" rx="8" class="dg-box"/>
+      <text x="343" y="61" class="dg-t" text-anchor="middle">Hình</text>
+      <text x="0" y="98" class="dg-c">manifest.csv</text>
+      <text x="0" y="114" class="dg-c">data-card.md</text>
+      <text x="0" y="130" class="dg-s">lấy từ đâu, lúc nào</text>
+      <text x="130" y="98" class="dg-c">lineage.md</text>
+      <text x="130" y="114" class="dg-s">mỗi mũi tên: đọc gì, đổi gì,</text>
+      <text x="130" y="130" class="dg-s">ra file nào</text>
+    </svg>
+    <figcaption>Ba file ghi lineage. Thiếu chúng thì không lần ngược được từ một hình về dữ liệu gốc.</figcaption>
+  </figure>
   <div class="cols">
     <div class="box">
-      <h3>Đúng ở đâu</h3>
+      <h4>Đúng ở đâu</h4>
       <p>Là thuật ngữ quốc tế có thật, và môn đã dạy: <span class="term">lineage</span> ở <a href="data-management-visualization.html#b1-quy-trinh">bài 1</a> (<span class="term">data governance</span>), <span class="term">provenance</span> của <span class="term">Apache NiFi</span> ở <a href="data-management-visualization.html#b3-nifi">bài 3</a>.</p>
     </div>
     <div class="box">
-      <h3>Sai ở đâu</h3>
+      <h4>Sai ở đâu</h4>
       <p>Chỉ là một mảng con của <span class="term">quản lý metadata</span> (<span class="term">DAMA-DMBOK</span>): không có phần hình, không liên quan bốn phương pháp. Tên môn tự nó đã dùng quốc tế (ví dụ <a href="https://www.coursera.org/learn/data-visualization">môn cùng tên trên Coursera</a>).</p>
     </div>
   </div>
-  <p>Trong kế hoạch, lineage là việc của vai 2 “Dữ liệu &amp; lineage”: ba file <code>manifest.csv</code>, <code>data-card.md</code>, <code>lineage.md</code> (xem <a href="#lt-luong">luồng dữ liệu</a>), và một mục của báo cáo. Ví dụ ngược: repo MLOps ở thẻ A4 không ghi dữ liệu nào đã huấn luyện mô hình nào, nên không lần ngược được.</p>
-  <p class="kw-line"><span class="lab">Từ khoá tìm tốt hơn</span> <code>statistical process control sports</code> · <code>CUSUM sports performance</code> · <code>sequential probability ratio test sports</code> · <code>analysis of means ANOM</code> · <code>change point detection sports</code></p>
+  <p>Trong đồ án, lineage là ba file trên và một mục của báo cáo; cách ghi ở <a href="sports-monitoring-build.html#thu-nap">trang 2, bước Thu nạp</a>. Ví dụ ngược: repo MLOps ở thẻ A4 không ghi dữ liệu nào đã huấn luyện mô hình nào, nên không lần ngược được.</p>
   <p class="sub">Định nghĩa nên trích: <a href="https://www.w3.org/TR/prov-overview/">W3C PROV Overview</a>, <a href="https://openlineage.io/docs/">tài liệu OpenLineage</a>, bài tổng quan của Herschel và cs. (2017).</p>
 </section>
 
-<!-- ═══════════════ CHẤM ĐIỂM ═══════════════ -->
+<!-- ═══════════════ CHẶNG 2 · TÌM NGUỒN ═══════════════ -->
+<section id="tim-nguon" class="block">
+  <div class="eyebrow" data-stage="tim-nguon"></div>
+  <h2>Tìm nguồn</h2>
+  <p class="stage-why">Chặng này gom mọi thứ có thể dùng: bộ dữ liệu, công thức, bài báo, code mẫu. Gom rộng trước, chưa loại nguồn nào; chấm và loại là việc của chặng sau.</p>
+  <figure class="dg-fig wide">
+    <div id="srcFlow"></div>
+    <figcaption>Nguồn đến từ ba nơi, gộp thành một danh sách, rồi xếp theo vai: mỗi vai giúp một việc khác. Số đếm tính từ các thẻ nguồn.</figcaption>
+  </figure>
+
+  <h3>Mỗi vai giúp gì</h3>
+  <dl class="roles" id="roles"></dl>
+
+  <h3>Tìm ở đâu</h3>
+  <ul>
+    <li>Bài báo: <span class="term">Google Scholar</span>; ghép tên phương pháp với chữ <code>sports</code>.</li>
+    <li>Dữ liệu: trang của chính nguồn dữ liệu, Kaggle; đọc điều khoản trước khi tải.</li>
+    <li>Code: GitHub; xem giấy phép, số sao, lần sửa cuối.</li>
+    <li>Công thức: sổ tay chuẩn như NIST e-Handbook, trang hỗ trợ của Minitab, bài gốc của người đặt ra phương pháp.</li>
+  </ul>
+  <p class="kw-line"><span class="lab">Từ khoá tìm tốt hơn tên môn</span> <code>statistical process control sports</code> · <code>CUSUM sports performance</code> · <code>sequential probability ratio test sports</code> · <code>analysis of means ANOM</code> · <code>change point detection sports</code></p>
+
+  <h3>Kiểm tận nơi trước khi ghi vào danh sách</h3>
+  <ul>
+    <li>Link còn sống; tác giả, năm, nội dung đúng như người gợi ý nói.</li>
+    <li>Dữ liệu thật hay dữ liệu giả lập: thẻ A3 là ví dụ số giả lập.</li>
+    <li>Giấy phép cho làm gì: dùng riêng, công bố, chép code.</li>
+    <li>Nguồn do chatbot gợi ý (nhóm B, bảng tổng hợp) phải mở từng cái, kể cả khi trông như thật.</li>
+  </ul>
+  <p class="sub">Mã thẻ như C1, A4: chữ là nhóm nguồn (A nhóm gửi, B bảng tổng hợp, C tìm thêm), số là thứ tự; không liên quan tới phương án A, B, C.</p>
+</section>
+
+<!-- ═══════════════ CHẶNG 3 · CHẤM NGUỒN ═══════════════ -->
 <section id="cham-diem" class="block">
-  <h2>Bảng chấm điểm</h2>
-  <p class="sub">Mỗi nguồn được chấm bốn tiêu chí, mỗi tiêu chí trên 10. Điểm tổng là trung bình có trọng số, cũng trên 10. Mã thẻ như C1, A4: chữ là nhóm nguồn (A nhóm gửi, B bảng tổng hợp, C tìm thêm), số là thứ tự; không liên quan tới phương án A, B, C.</p>
+  <div class="eyebrow" data-stage="cham-diem"></div>
+  <h2>Chấm nguồn</h2>
+  <p class="stage-why">Chặng này cho mỗi nguồn một con số để so được với nhau. Viết tiêu chí và trọng số trước khi chấm, thì người khác chấm lại cũng ra gần như vậy, và lý do loại một nguồn ghi lại được.</p>
+  <p class="sub">Mỗi nguồn được chấm bốn tiêu chí, mỗi tiêu chí trên 10. Trọng số là phần trăm điểm tổng mà tiêu chí ấy chiếm.</p>
   <div class="crits" id="crits"></div>
 
+  <h3>Điểm tổng tính thế nào</h3>
+  <figure class="dg-fig wide">
+    <div id="scoreFig"></div>
+    <figcaption id="scoreCap"></figcaption>
+  </figure>
+
+  <h3>Điểm của mọi nguồn</h3>
   <div class="chart-box">
     <div class="chips" id="chips" role="group" aria-label="Lọc theo nhóm nguồn"></div>
     <p class="chips-desc" id="chipsDesc"></p>
@@ -626,221 +671,88 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
   </details>
 </section>
 
-<!-- ═══════════════ BA PHƯƠNG ÁN ═══════════════ -->
+<!-- ═══════════════ CHẶNG 4 · SO PHƯƠNG ÁN ═══════════════ -->
 <section id="top-3" class="block">
+  <div class="eyebrow" data-stage="top-3"></div>
   <h2>Ba phương án tốt nhất</h2>
-  <p class="sub">Ba bộ dữ liệu đứng đầu sau hai vòng chấm. Điểm của mỗi phương án là điểm tổng của nguồn dữ liệu chính.</p>
+  <p class="stage-why">Chặng này đổi từ “nguồn” sang “phương án”: một phương án là một bộ dữ liệu chính cộng bốn câu hỏi làm trên nó. Các phương án được so trên cùng một bảng: khớp với dữ liệu đề cần tới đâu, giấy phép, công sức, người nghe.</p>
+  <p class="sub">Ba bộ dữ liệu đứng đầu sau khi chấm. Điểm của mỗi phương án là điểm tổng của nguồn dữ liệu chính.</p>
   <p class="fit-key" id="optKey"></p>
   <div class="opts" id="opts"></div>
 
   <h3>Vì sao ba phương án này</h3>
   <p>Phương án A và B dùng hai bộ dữ liệu đã kiểm, có đủ ba dạng mà bốn phương pháp cần: nhiều nhóm cùng lúc (ngoại lai, ANOM), một chuỗi dài theo thời gian (CUSUM, SPRT), và đủ cột để làm sạch (phần quản lý dữ liệu). C giữ lại vì không rủi ro giấy phép và có đội tuyển Việt Nam, nhưng chỉ làm phần mở rộng.</p>
   <p>Các bộ khác rơi ra: chuỗi của StatsBomb quá ngắn; nba_api bị chặn trên máy chủ đám mây; repo quần vợt của Sackmann đã bị gỡ; Match Charting Project phải bóc tách nặng.</p>
+</section>
 
-  <h3>Chọn thế nào</h3>
-  <p class="dq">Hỏi giảng viên và email football-data.co.uk (trang dữ liệu mời liên hệ).</p>
+<!-- ═══════════════ CHẶNG 5 · CHỌN ═══════════════ -->
+<section id="chon" class="block">
+  <div class="eyebrow" data-stage="chon"></div>
+  <h2>Chọn một phương án và một đường lui</h2>
+  <p class="stage-why">Chặng này chọn. Lựa chọn còn phụ thuộc điều nhóm chưa biết (giảng viên có nhận nguồn này không), nên viết thành cây “nếu … thì …”: ai cũng biết khi nào phải đổi, và đổi sang đâu.</p>
+  <p class="verdict-line"><b>Chốt: phương án A, hơn B không nhiều</b> (<span data-total="C1"></span> so với <span data-total="C11"></span>). Nguồn dữ liệu của A có điểm cao nhất trong các bộ dữ liệu (thẻ C4 cao hơn nhưng là bộ công thức). Lý do: một bộ dữ liệu quen thuộc làm được cả bốn phương pháp, các mùa sạch và cùng cỡ. B là phương án an toàn nếu chưa rõ có được dùng football-data không.</p>
+  <figure class="dg-fig">
+    <svg class="dg" viewBox="0 0 380 242" role="img" aria-label="Cây chọn: giảng viên chưa trả lời khi hết tuần 1 thì làm A trong repo riêng tư và chuẩn bị B; đã trả lời, nhận football-data và không đòi repo công khai thì A, không thì B">
+      <rect x="0" y="0" width="380" height="40" rx="8" class="dg-box"/>
+      <text x="190" y="25" class="dg-t" text-anchor="middle">Giảng viên đã trả lời chưa?</text>
+      <path d="M85,40V90" class="s-arr" marker-end="url(#arr)"/>
+      <text x="93" y="72" class="dg-s">chưa, hết tuần 1</text>
+      <path d="M290,40V90" class="s-arr" marker-end="url(#arr)"/>
+      <text x="298" y="72" class="dg-s">rồi</text>
+      <rect x="0" y="96" width="170" height="64" rx="8" class="dg-box pick"/>
+      <text x="12" y="120" class="dg-t">A, repo riêng tư;</text>
+      <text x="12" y="140" class="dg-s">chuẩn bị sẵn B</text>
+      <rect x="200" y="96" width="180" height="64" rx="8" class="dg-box"/>
+      <text x="212" y="116" class="dg-t">Nhận football-data,</text>
+      <text x="212" y="134" class="dg-t">không đòi repo</text>
+      <text x="212" y="152" class="dg-t">công khai?</text>
+      <path d="M241,160V194" class="s-arr" marker-end="url(#arr)"/>
+      <text x="249" y="184" class="dg-s">có</text>
+      <path d="M339,160V194" class="s-arr" marker-end="url(#arr)"/>
+      <text x="331" y="184" class="dg-s" text-anchor="end">không</text>
+      <rect x="200" y="200" width="82" height="40" rx="8" class="dg-box pick"/>
+      <text x="241" y="225" class="dg-t" text-anchor="middle">A</text>
+      <rect x="298" y="200" width="82" height="40" rx="8" class="dg-box"/>
+      <text x="339" y="225" class="dg-t" text-anchor="middle">B</text>
+    </svg>
+    <figcaption>Ô viền đậm là phương án A. Ở nhánh A, repo chỉ công khai khi football-data.co.uk đồng ý; chưa có thư trả lời thì để riêng tư.</figcaption>
+  </figure>
+  <p class="dq">Hỏi giảng viên và email football-data.co.uk (trang dữ liệu mời liên hệ). Tin nhắn và thư soạn sẵn ở <a href="#can-xac-nhan">Cần bạn xác nhận</a>.</p>
   <ul class="dtree3">
     <li><span class="da">Nếu</span> giảng viên đồng ý, và football-data đồng ý hoặc repo để riêng tư <span class="dr">→ A</span></li>
     <li><span class="da">Nếu</span> giảng viên không đồng ý, hoặc đòi repo công khai <span class="dr">→ B</span></li>
     <li><span class="da">Nếu</span> hết tuần 1 chưa ai trả lời <span class="dr">→ làm tiếp A trong repo riêng tư, chuẩn bị sẵn B</span></li>
   </ul>
-  <h4>Chuyển sang B thì đổi gì</h4>
+  <h3>Chuyển sang B thì đổi gì</h3>
   <ul class="switch-b">
     <li>Dữ liệu: bản dump CSV của Jolpica (hoặc bộ Kaggle).</li>
     <li>Bốn câu hỏi theo F1:<ul id="switchB"></ul></li>
-    <li>Giữ nguyên: đường ống, bảy vai, lịch, các file lineage.</li>
+    <li>Giữ nguyên các bước ở <a href="sports-monitoring-build.html">trang 2</a>: đường ống, bảy vai, lịch, các file lineage.</li>
   </ul>
-  <p class="verdict-line"><b>Chốt: phương án A, hơn B không nhiều</b> (<span data-total="C1"></span> so với <span data-total="C11"></span>). Nguồn dữ liệu của A có điểm cao nhất trong các bộ dữ liệu (thẻ C4 cao hơn nhưng là bộ công thức). Lý do: một bộ dữ liệu quen thuộc làm được cả bốn phương pháp, các mùa sạch và cùng cỡ. B là phương án an toàn nếu chưa rõ có được dùng football-data không.</p>
 </section>
 
-<!-- ═══════════════ LỘ TRÌNH ═══════════════ -->
-<section id="lo-trinh" class="block">
-  <h2>Chốt A rồi làm gì: lộ trình từng bước</h2>
-  <p class="sub">Từ câu hỏi tới demo, slide và báo cáo. Đổi sang B hay C thì giữ khung này, thay nguồn dữ liệu và câu hỏi.</p>
-  <nav aria-label="Các phần của lộ trình">
-    <ul class="jump sub-jump">
-      <li><a href="#lt-chot">Cần chốt</a></li>
-      <li><a href="#lt-cau-hoi">Câu hỏi</a></li>
-      <li><a href="#lt-lich">Lịch</a></li>
-      <li><a href="#lt-vai">Ai làm gì</a></li>
-      <li><a href="#lt-kien-truc">Kiến trúc</a></li>
-      <li><a href="#lt-luong">Luồng dữ liệu</a></li>
-      <li><a href="#lt-repo">Repo mẫu</a></li>
-      <li><a href="#cong-thuc">Công thức</a></li>
-      <li><a href="#lt-bao-cao">Báo cáo</a></li>
-      <li><a href="#lt-slide">Slide</a></li>
-      <li><a href="#lt-xong">Xong khi nào</a></li>
-    </ul>
-  </nav>
-  <p>Trang môn có ngoại lai (<a href="data-management-visualization.html#b3">bài 3</a>, <a href="data-management-visualization.html#b4">bài 4</a>: box plot, rào 1,5·IQR) nhưng không có ANOM, CUSUM, SPRT. Ba phương pháp này học từ nguồn ngoài, xem khối công thức.</p>
+<!-- ═══════════════ CHẶNG 6 · CHỐT TRƯỚC KHI LÀM ═══════════════ -->
+<section id="truoc-khi-lam" class="block">
+  <div class="eyebrow" data-stage="truoc-khi-lam"></div>
+  <h2>Trước khi bắt tay: chốt gì</h2>
+  <p class="stage-why">Chặng này biến lựa chọn thành những điều cả nhóm thống nhất trước khi làm. Chốt muộn thì phải làm lại: đổi câu hỏi sau khi đã làm sạch dữ liệu, hay đổi tham số sau khi đã thấy kết quả.</p>
+  <figure class="dg-fig wide">
+    <div id="agreeFig"></div>
+    <figcaption>Mỗi điều chốt trước một mốc. Bấm một ô để mở bước ấy ở trang 2.</figcaption>
+  </figure>
 
-  <h3 id="lt-chot">Từ ý tưởng tới demo: nhóm phải chốt gì</h3>
-  <p class="sub">Tám điều cả nhóm phải thống nhất, theo thứ tự làm. Mỗi pha trên lịch có mục “Cần thống nhất” ghi chi tiết; bấm tên pha để mở.</p>
+  <h3 id="can-chot"><span data-count="agree"></span> điều phải chốt</h3>
   <ol class="agree" id="agree"></ol>
+  <p>Khung đồ án mượn từ repo mẫu Sports_Injury_Risk_Intelligence (thẻ A3): mượn cách chia các trang của app và các tầng dữ liệu, không mượn số liệu. Xem <a href="sports-monitoring-build.html#repo">trang 2, cây repo</a>.</p>
 
-  <h3 id="lt-cau-hoi">Bốn câu hỏi nghiên cứu</h3>
-  <p>Ba câu ANOM, CUSUM, SPRT cùng hỏi một chuyện: <span class="term">lợi thế sân nhà</span> có giảm không. ANOM so từng mùa, CUSUM theo dõi liên tục 26 mùa, SPRT trả lời nhanh trong một mùa. Câu ngoại lai lo phần dữ liệu: số liệu trận nào bất thường, dòng nào ghi sai.</p>
+  <h3 id="cau-hoi">Bốn câu hỏi nghiên cứu</h3>
+  <p>Ba câu ANOM, CUSUM, SPRT cùng hỏi một chuyện: <span class="term">lợi thế sân nhà</span> có giảm không. ANOM so từng mùa, CUSUM theo dõi liên tục qua mọi mùa, SPRT trả lời nhanh trong một mùa. Câu ngoại lai lo phần dữ liệu: số liệu trận nào bất thường, dòng nào ghi sai.</p>
   <p>Dòng “Giúp quyết định” là câu hỏi nghiệp vụ: ai dùng kết quả để quyết định gì. Đồ án nhìn lại dữ liệu cũ, nên câu trả lời có dạng “nếu hồi ấy dùng thì đã quyết định sớm hay đúng hơn bao nhiêu”. Dữ liệu chỉ cho thấy hai điều đi cùng nhau, chưa chứng minh cái này gây ra cái kia.</p>
   <div class="qa" id="planA"></div>
-
-  <div class="box traps-box">
-    <h3>Bẫy phương pháp</h3>
-    <ol>
-      <li>Đừng ước mức “bình thường” từ chính đoạn dữ liệu đang kiểm. Tách <span class="term">Phase I / Phase II</span>. ANOM là ngoại lệ: nó so mỗi mùa với trung bình chung của chính các mùa ấy.</li>
-      <li>Khoá tham số (<span class="term">α</span>, <span class="term">β</span>, <span class="term">k</span>, <span class="term">h</span>) trước khi xem kết quả.</li>
-      <li>Nhiều phép kiểm thì sẽ có báo động giả. Ghi rõ đã chạy bao nhiêu phép kiểm. CUSUM: chọn h bằng mô phỏng <span class="term">ARL</span> cho cả chuỗi; phép kiểm một lần: <span class="term">Bonferroni</span>.</li>
-      <li>Đối thủ mạnh yếu khác nhau nên kết quả từng trận nhiễu. <span class="term">Phần dư</span> so với tỉ lệ cược bỏ được sức đối thủ nhưng cũng bỏ luôn phong độ, nên chỉ dùng ở phần mở rộng.</li>
-      <li>Số đếm (bàn, thẻ) không theo phân phối chuẩn.</li>
-      <li>Đừng để phần thống kê nuốt phần quản lý dữ liệu: phần ấy có thể tới nửa số điểm. Hỏi giảng viên (<a href="#gui-giang-vien">câu 5</a> trong tin nhắn).</li>
-    </ol>
-  </div>
-
-  <h3 id="lt-lich">Lịch làm việc</h3>
-  <p class="sub"><span data-count="phases"></span> pha, có pha chồng lên nhau. Bấm một pha (hoặc dùng Tab rồi Enter) để xem việc cụ thể.</p>
-  <div class="gantt-box">
-    <div class="gantt-head">
-      <span id="weeksLabel">Số tuần còn lại</span>
-      <div class="seg" role="group" aria-labelledby="weeksLabel" id="weeks"></div>
-      <span class="muted">đổi theo hạn nộp</span>
-    </div>
-    <div class="gantt" id="gantt"></div>
-    <div class="phase-panel" id="phasePanel" tabindex="-1" aria-live="polite"></div>
-  </div>
-
-  <h3 id="lt-vai">Ai làm gì</h3>
-  <p class="sub">Bảy vai; mỗi người viết chương báo cáo của phần mình. Rê chuột hoặc bấm một vai để tô các pha của vai ấy trên lịch.</p>
-  <ol class="team" id="team"></ol>
-
-  <h3 id="lt-kien-truc">Kiến trúc: chạy theo lô trên một máy</h3>
-  <p class="sub">Kiến trúc trả lời bốn câu: dữ liệu vào từ đâu, lưu ở đâu, xử lý lúc nào, người xem dùng gì. Nhóm chốt ở <a href="#lt-lich" data-ph="P0">pha P0</a>.</p>
-  <div class="tbl-wrap">
-    <table class="stack">
-      <thead><tr><th scope="col">Tầng</th><th scope="col">Đồ án này dùng</th><th scope="col">Lưu ý</th></tr></thead>
-      <tbody>
-        <tr><th scope="row">Thu nạp</th><td><code>src/download.py</code> tải CSV từ football-data.co.uk.</td><td>Chạy tay. Theo dõi mùa đang đá thì chạy lại sau mỗi vòng đấu.</td></tr>
-        <tr><th scope="row">Lưu trữ</th><td><code>data/raw/</code> → <code>data/clean/</code> (Parquet, DuckDB) → <code>results/</code>.</td><td>Không sửa tay file trong <code>raw/</code>; sai thì sửa code rồi chạy lại.</td></tr>
-        <tr><th scope="row">Xử lý</th><td>Các script trong <code>src/</code>, Python trên một laptop.</td><td>Một lệnh chạy lại từ đầu, ra đúng các file cũ.</td></tr>
-        <tr><th scope="row">Phục vụ</th><td>App Streamlit; hình PNG hay SVG cho báo cáo và slide.</td><td>Demo chạy được khi không có mạng.</td></tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="box arch-why">
-    <h4>Vì sao không dùng kiến trúc Lambda</h4>
-    <ul>
-      <li><span class="term">Kiến trúc Lambda</span> chạy song song hai nhánh: nhánh theo lô tính lại toàn bộ dữ liệu, nhánh luồng cập nhật ngay từng sự kiện. Học ở <a href="../big-data-storage-processing/big-data-storage-processing.html#b9">bài 9 môn Lưu trữ và xử lý dữ liệu lớn</a>.</li>
-      <li>Lambda dành cho dữ liệu lớn cần kết quả tức thì. Đồ án này có khoảng 11.000 trận, vài MB, trận mới tới vài ngày một lần.</li>
-      <li>CUSUM và SPRT cập nhật sau mỗi trận, nhưng chạy lại phần xử lý sau mỗi vòng đấu chỉ mất vài giây. Không cần Kafka, Spark hay HDFS.</li>
-      <li>Ghi lựa chọn này và lý do vào chương 2 của báo cáo: hội đồng hay hỏi vì sao chọn kiến trúc ấy.</li>
-    </ul>
-  </div>
-
-  <h3 id="lt-luong">Dữ liệu chảy qua đâu</h3>
-  <div class="flow-wrap">
-    <figure class="flow-fig">
-      <div id="flow"></div>
-      <figcaption>Luồng dữ liệu của phương án A. Slide và báo cáo lấy hình từ <code>charts.py</code>; demo đọc thẳng <code>data/clean/</code> và <code>results/</code>, gọi lại các hàm trong <code>src/</code> khi kéo thanh trượt. Bấm một ô để mở pha của nó trên lịch.</figcaption>
-    </figure>
-    <div class="flow-note">
-      <p>Dòng “ghi vào” là chỗ nhóm ghi <span class="term">lineage</span>:</p>
-      <ul>
-        <li><code>manifest.csv</code>: tải gì, lúc nào, mã SHA-256 nào.</li>
-        <li><code>data-card.md</code>: nguồn, điều khoản, cột.</li>
-        <li><code>lineage.md</code>: bước nào đọc gì, biến đổi gì, ra gì.</li>
-      </ul>
-      <p>Thiếu ba file này thì không lần ngược được từ một hình về dữ liệu gốc.</p>
-    </div>
-  </div>
-
-  <h3 id="lt-repo">Repo mẫu</h3>
-  <div class="cols">
-    <div class="box"><ul class="tree" id="tree" aria-label="Cây thư mục repo mẫu"></ul></div>
-    <div class="box">
-      <h4>Mượn gì từ các repo đã chấm</h4>
-      <ul>
-        <li>giobbu/CUSUM (B1): chạy để đối chiếu CUSUM.</li>
-        <li>Sports_Injury_Risk_Intelligence (A3, đã bỏ): nếu muốn, chỉ xem mẫu kiểm chất lượng dữ liệu <code>run_dq_checks()</code>.</li>
-        <li>README của RuiFSP (A4): kiểu sơ đồ <span class="term">Mermaid</span>.</li>
-        <li>NIST e-Handbook: ví dụ có lời giải để viết test.</li>
-        <li>Repo để công khai thì đừng chép code <span class="term">GPL</span> vào.</li>
-      </ul>
-    </div>
-  </div>
-
-  <details class="fold" id="cong-thuc">
-    <summary>Công thức cần tự viết là gì?</summary>
-    <div class="fold-body">
-      <h4>Ngoại lai</h4>
-      <div class="fx"><div>z<sub>i</sub> = (x<sub>i</sub> − <span class="ov">x</span>) / s</div><div>z-score hiệu chỉnh: M<sub>i</sub> = 0,6745 · (x<sub>i</sub> − m) / MAD, nghi khi |M<sub>i</sub>| &gt; 3,5</div><div>rào: dưới Q1 − 1,5·IQR hoặc trên Q3 + 1,5·IQR</div></div>
-      <p><span class="ov">x</span> là trung bình, m là trung vị, MAD là trung vị của |x<sub>i</sub> − m|. <span class="term">Grubbs</span> và generalized ESD giả định dữ liệu gần chuẩn. Bàn thắng và thẻ là số đếm, nên dùng rào IQR hoặc <span class="term">xác suất đuôi Poisson</span>.</p>
-      <p class="fx-src">Nguồn: NIST/SEMATECH e-Handbook <a href="https://www.itl.nist.gov/div898/handbook/eda/section3/eda35h.htm">1.3.5.17</a>, <a href="https://www.itl.nist.gov/div898/handbook/eda/section3/eda35h1.htm">Grubbs</a>, <a href="https://www.itl.nist.gov/div898/handbook/eda/section3/eda35h3.htm">generalized ESD</a>.</p>
-
-      <h4>ANOM, dữ liệu chuẩn: giới hạn quyết định</h4>
-      <div class="fx"><div>UDL, LDL = <span class="ov">y</span> ± h · s<sub>p</sub> · √((N − n<sub>i</sub>) / (N · n<sub>i</sub>))</div></div>
-      <p><span class="ov">y</span> là trung bình chung, s<sub>p</sub> là độ lệch chuẩn gộp, N là tổng số quan sát, n<sub>i</sub> là số quan sát của nhóm i, r là số nhóm.</p>
-      <p>Cách lấy h: các nhóm cùng cỡ và 0,001 ≤ α ≤ 0,1 thì Minitab lấy h chính xác từ bảng của Nelson (1983). Các nhóm khác cỡ thì dùng t hiệu chỉnh <span class="term">Šidák</span>: h = t(α<sub>2</sub>; N − r), α<sub>2</sub> = (1 − (1 − α)<sup>1/r</sup>) / 2. Cách này là xấp xỉ, hơi bảo thủ: với 4 nhóm, mỗi nhóm 5, α = 0,05, h đúng khoảng 2,74 còn Šidák cho 2,80.</p>
-      <p class="fx-src">Nguồn: <a href="https://support.minitab.com/en-us/minitab/help-and-how-to/statistical-modeling/anova/how-to/analysis-of-means/methods-and-formulas/one-way-designs-with-normal-data">Minitab, ANOM với dữ liệu chuẩn</a>.</p>
-
-      <h4>ANOM cho tỉ lệ (tỉ lệ thắng)</h4>
-      <div class="fx"><div><span class="ov">p</span> = Σ p<sub>i</sub> / k,  s = √(<span class="ov">p</span> (1 − <span class="ov">p</span>) / n)</div><div>UDL, LDL = <span class="ov">p</span> ± h<sub>α</sub> · s · √((k − 1) / k)</div><div>h<sub>α</sub>: phân vị chuẩn tại 1 − α / (2k)</div></div>
-      <p>Tỉ lệ thắng là tỉ lệ, nên dùng <span class="term">ANOM cho tỉ lệ</span>. k ở đây là số nhóm, khác k của CUSUM. Trang Minitab chỉ cho trường hợp k nhóm cùng cỡ n, đúng với câu chính (mỗi mùa Premier League 380 trận). Phần mở rộng theo giải (khác cỡ): dùng giới hạn riêng từng nhóm, hiệu chỉnh <span class="term">Šidák</span> (xấp xỉ); xem thẻ ANOM ở mục Bốn câu hỏi nghiên cứu.</p>
-      <p class="fx-src">Nguồn: <a href="https://support.minitab.com/en-us/minitab/help-and-how-to/statistical-modeling/anova/how-to/analysis-of-means/methods-and-formulas/binomial-data/">Minitab, ANOM với dữ liệu nhị thức</a>.</p>
-
-      <h4>CUSUM Bernoulli (câu hỏi 3)</h4>
-      <div class="fx"><div>S<sub>i</sub> = max(0, S<sub>i−1</sub> + x<sub>i</sub> · ln(p<sub>1</sub>/p<sub>0</sub>) + (1 − x<sub>i</sub>) · ln((1 − p<sub>1</sub>)/(1 − p<sub>0</sub>)))</div><div>bắt đầu S<sub>0</sub> = 0; báo khi S<sub>i</sub> &gt; h; nhánh giảm dùng p<sub>1</sub> &lt; p<sub>0</sub>, nhánh tăng dùng p<sub>1</sub> &gt; p<sub>0</sub></div></div>
-      <p>Bước cộng giống hệt LLR của SPRT bên dưới. CUSUM là một chuỗi SPRT có ngưỡng dưới bằng 0: tổng LLR rơi xuống 0 thì bắt đầu lại, vượt h thì báo. x<sub>i</sub> = 1 nếu đội nhà thắng.</p>
-
-      <h4>CUSUM dạng bảng (phần mở rộng: hiệu số câu lạc bộ)</h4>
-      <div class="fx"><div>S<sub>hi</sub>(i) = max(0, S<sub>hi</sub>(i−1) + x<sub>i</sub> − μ<sub>0</sub> − k)</div><div>S<sub>lo</sub>(i) = max(0, S<sub>lo</sub>(i−1) + μ<sub>0</sub> − k − x<sub>i</sub>)</div><div>bắt đầu S(0) = 0; báo khi S<sub>hi</sub> hoặc S<sub>lo</sub> vượt h</div></div>
-      <p>Quy tắc nhanh: <span class="term">k</span> = δσ/2, với δ là độ lệch muốn bắt tính bằng số σ; với k = 0,5σ thì <span class="term">h</span> khoảng 4–5σ. Minitab mặc định k = 0,5 và h = 4 (tính theo σ), <span class="term">ARL</span>0 hai phía khoảng 170 quan sát. Với hiệu số (σ khoảng 1,6–1,9 bàn mỗi trận), 26 mùa sau Phase I là 988 trận, nên mặc định này gần như chắc chắn báo động giả ở mọi câu lạc bộ. Phong độ cả mùa thường chỉ lệch 0,15–0,5σ: thử k = 0,25σ và h khoảng 8–10σ (ARL0 hai phía khoảng 360–1.000 trận). Chọn k và h bằng mô phỏng, lấy mẫu lại từ hiệu số Phase I, trước khi xem kết quả.</p>
-      <p class="fx-src">Nguồn: <a href="https://www.itl.nist.gov/div898/handbook/pmc/section3/pmc323.htm">NIST/SEMATECH e-Handbook 6.3.2.3</a>; <a href="https://support.minitab.com/en-us/minitab/help-and-how-to/quality-and-process-improvement/control-charts/how-to/time-weighted-charts/cusum-chart/methods-and-formulas/methods-and-formulas/">Minitab, CUSUM</a>; bài gốc <a href="https://doi.org/10.1093/biomet/41.1-2.100">Page (1954), Biometrika 41:100–115</a>.</p>
-
-      <h4>Tỉ lệ cược → xác suất, điểm kỳ vọng (phần mở rộng CUSUM)</h4>
-      <div class="fx"><div>P(kết quả j) = (1/o<sub>j</sub>) / [ (1/o<sub>thắng</sub>) + (1/o<sub>hoà</sub>) + (1/o<sub>thua</sub>) ]</div><div>điểm kỳ vọng = 3 · P(thắng) + 1 · P(hoà)</div><div>phần dư = điểm thật − điểm kỳ vọng</div></div>
-      <p>o<sub>j</sub> là tỉ lệ cược thập phân. Tổng ba giá trị 1/o lớn hơn 1 vì nhà cái cộng phần lời (overround); chia cho tổng ấy để ba xác suất cộng lại bằng 1.</p>
-
-      <h4>SPRT: hai ngưỡng và bước cộng</h4>
-      <div class="fx"><div>a = ln(β / (1 − α)),  b = ln((1 − β) / α)</div><div>Bernoulli: LLR<sub>i</sub> = x<sub>i</sub> · ln(p<sub>1</sub>/p<sub>0</sub>) + (1 − x<sub>i</sub>) · ln((1 − p<sub>1</sub>)/(1 − p<sub>0</sub>))</div><div>Λ<sub>n</sub> = Σ LLR<sub>i</sub>: Λ ≤ a chấp nhận H0, Λ ≥ b chấp nhận H1, còn lại xem tiếp</div></div>
-      <p><span class="term">LLR</span> cộng dồn đi giữa hai ngưỡng; chạm ngưỡng nào thì dừng. x<sub>i</sub> = 1 nếu đội nhà thắng, 0 nếu không. CUSUM là một chuỗi SPRT có ngưỡng dưới bằng 0: tổng LLR rơi xuống 0 thì bắt đầu lại, vượt h thì báo.</p>
-      <p class="fx-src">Nguồn: <a href="https://doi.org/10.1214/aoms/1177731118">Wald (1945), Annals of Mathematical Statistics 16(2):117–186</a>.</p>
-    </div>
-  </details>
-
-  <h3>Công cụ Python</h3>
-  <ul>
-    <li><code>pandas</code> để gom và làm sạch; <code>scipy.stats</code> cho phân phối t, chuẩn, Poisson. <code>scipy.stats</code> không có ANOM.</li>
-    <li>Ngoại lai: rào <span class="term">IQR</span>, xác suất đuôi Poisson và z-score hiệu chỉnh, tự viết. <span class="term">Grubbs</span> có trong gói <code>outlier_utils</code> (<span class="term">MIT</span>), chỉ dùng khi dữ liệu gần chuẩn. Tuỳ chọn: <code>IsolationForest</code> của scikit-learn hoặc PyOD (<span class="term">Isolation Forest</span>).</li>
-    <li>ANOM và SPRT: tự viết, khoảng 20 dòng mỗi cái.</li>
-    <li>CUSUM: tự viết, rồi đối chiếu với giobbu/CUSUM; chỉ chạy, đừng chép vì <span class="term">GPL</span>.</li>
-  </ul>
-
-  <h3>Bẫy: gói không như tên</h3>
-  <ul class="traps">
-    <li><code>anom</code> trên <span class="term">PyPI</span> là bộ ánh xạ cho Google Datastore, không phải ANOM.</li>
-    <li><code>pip install cusum</code> cài một công cụ xử lý ảnh radar vệ tinh, không phải giobbu/CUSUM.</li>
-    <li><code>qcc</code> trên PyPI là công cụ quản lý cấu hình Claude Code, không phải gói <code>qcc</code> của R.</li>
-    <li><code>outliers</code> trên PyPI là gói rác; gói đúng là <code>outlier_utils</code>.</li>
-    <li><code>scipy.stats</code> không có ANOM; <code>scipy.stats.dunnett</code> so từng nhóm với một nhóm đối chứng, không phải ANOM.</li>
-  </ul>
-
-  <h3 id="lt-bao-cao">Dàn ý báo cáo</h3>
-  <table class="outline stack" id="report"></table>
-
-  <h3 id="lt-slide">Dàn ý slide</h3>
-  <p class="sub">Chuyện trước, phương pháp sau. Số phút đổi theo thời lượng giảng viên cho.</p>
-  <ol class="slides" id="slides"></ol>
-
-  <h3 id="lt-xong">Xong khi nào</h3>
-  <ul class="checklist">
-    <li>Chạy lại từ đầu bằng một lệnh.</li>
-    <li>Có README: cách chạy, nguồn, điều khoản.</li>
-    <li>Không có CSV gốc trên repo công khai.</li>
-    <li>Mọi hình có tiêu đề, trục và nguồn.</li>
-    <li>Có trích dẫn đủ.</li>
-    <li>Đủ chương của từng thành viên.</li>
-    <li>Demo chạy khi không có mạng, từ dữ liệu sạch.</li>
-    <li>Đã tập dượt hai lần, ít nhất một lần đúng thời lượng.</li>
-  </ul>
+  <p class="sub">Dữ liệu, cách làm, tham số và số đã chạy thử của từng câu ở <a href="sports-monitoring-build.html#phuong-phap">trang 2, bước Phương pháp</a>.</p>
+  <p class="next-wrap"><a class="next-page" href="sports-monitoring-build.html">Sang trang 2: làm đề tài A</a></p>
 </section>
+
 
 <!-- ═══════════════ CẦN XÁC NHẬN ═══════════════ -->
 <section id="can-xac-nhan" class="block">
@@ -880,9 +792,9 @@ Dear Football-Data team,
 
 We are a team of master's students at [University]. For a non-commercial course project, we would like to analyse Premier League results from your CSV files with statistical quality-control methods (outlier tests, analysis of means, CUSUM and sequential probability ratio tests).
 
-We will not redistribute the raw CSV files. We will publish only charts and aggregate figures, with full credit to football-data.co.uk.
+We would download the 29 Premier League files (E0, 1997/98 to 2025/26) once, with a small script run by hand, and keep them in a private repository. We will not redistribute the raw CSV files. We will publish only charts and aggregate figures, with full credit to football-data.co.uk.
 
-Could you let us know whether this use is acceptable?
+Your terms mention automated bots and scrapers, so could you let us know whether this one-off download and this use are acceptable?
 
 Thank you for maintaining the data.
 
@@ -897,20 +809,24 @@ Kind regards,
 
   <h3 id="nhom-tu-chot">Nhóm tự chốt</h3>
   <ul class="gaps">
-    <li>Chọn A (bóng đá Premier League), B (F1) hay C (bóng đá quốc tế)? Trang đang chốt A; nếu giảng viên hay football-data.co.uk không đồng ý thì theo cây chọn ở <a href="#top-3">Ba phương án</a>.</li>
-    <li>Công cụ: mặc định Python (pandas, scipy, Streamlit). Ai chưa dùng Streamlit thì xem trước ở pha P0.</li>
-    <li>Ai nhận vai nào trong bảy vai ở <a href="#lt-vai">Ai làm gì</a>.</li>
-    <li>Số tuần còn lại, để chọn trên <a href="#lt-lich">lịch</a>.</li>
+    <li>Chọn A (bóng đá Premier League), B (F1) hay C (bóng đá quốc tế)? Trang đang chốt A; nếu giảng viên hay football-data.co.uk không đồng ý thì theo <a href="#chon">cây chọn</a>.</li>
+    <li>Công cụ: mặc định Python (pandas, scipy, Streamlit). Ai chưa dùng Streamlit thì xem trước ở <a href="sports-monitoring-build.html#khoi-dong">bước Khởi động</a> (trang 2).</li>
+    <li>Ai nhận vai nào trong <a href="sports-monitoring-build.html#vai">bảy vai</a> (trang 2).</li>
+    <li>Số tuần còn lại, để xếp <a href="sports-monitoring-build.html#lich">lịch</a> (trang 2).</li>
   </ul>
 </section>
 
 <!-- ═══════════════ THUẬT NGỮ ═══════════════ -->
+<!-- Thuật ngữ và nguồn gập chung một khối; link tới #thuat-ngu, #nguon, #src-… tự mở khối (openTo). -->
+<details class="fold appendix" id="phu-luc">
+  <summary>Thuật ngữ và nguồn</summary>
+  <div class="fold-body">
 <section id="thuat-ngu" class="block">
   <h2>Thuật ngữ</h2>
   <p class="sub">Chữ có gạch chấm xanh là thuật ngữ: rê chuột, bấm Tab tới hoặc chạm vào để xem nghĩa. Bản đầy đủ ở đây, cho khi in hay đọc trên điện thoại.</p>
   <dl class="gloss" id="gloss"></dl>
   <details class="fold" id="glossMore">
-    <summary id="glossMoreSum">Thuật ngữ khác (trong thẻ nguồn)</summary>
+    <summary id="glossMoreSum">Thuật ngữ khác (trong thẻ nguồn và ba vòng kiểm)</summary>
     <div class="fold-body"><dl class="gloss" id="gloss2"></dl></div>
   </details>
 </section>
@@ -923,6 +839,8 @@ Kind regards,
   <h3>Tham khảo thêm</h3>
   <ol class="refs" id="refList"></ol>
 </section>
+  </div>
+</details>
 
 <footer class="foot">
   <a href="../../index.html">Trang chủ</a>
@@ -938,7 +856,7 @@ Kind regards,
   'use strict';
 
   var DATA_URL = 'data/sports-monitoring-project.json';
-  var COURSE = 'data-management-visualization.html';
+  var BUILD = 'sports-monitoring-build.html';   // trang 2: làm đề tài A
   /* Tên màu khớp token --c1…--c6 của trang môn; chú giải gọi màu bằng tên này. */
   var COLOR_NAME = { c1: 'lục', c2: 'lam than', c3: 'vàng đất', c4: 'mận', c5: 'xám', c6: 'xanh đá' };
   var SVGNS = 'http://www.w3.org/2000/svg';
@@ -977,8 +895,6 @@ Kind regards,
   /* Điểm tổng hiện một chữ số, làm tròn xuống từ t100 để không bao giờ vượt ngưỡng kết luận. */
   function fmt1(r) { return (Math.floor(r.t100 / 10) / 10).toLocaleString('vi-VN', { minimumFractionDigits: 1, maximumFractionDigits: 1 }); }
   function norm(s) { return String(s).normalize('NFC').toLowerCase().replace(/\s+/g, ' ').trim(); }
-  function lessonLabel(id) { return 'Bài ' + id.slice(1).replace('-', '.'); }
-  function roleName(n) { return n + ' · ' + D.team[n - 1].role; }
   function srcById(id) { return D.sources.filter(function (x) { return x.id === id; })[0]; }
   /* Mảng trường _html: từng phần tử vào innerHTML của một nút con. */
   function htmlList(tag, obj, key) {
@@ -987,6 +903,22 @@ Kind regards,
     (obj[key] || []).forEach(function (h) { var li = el('li'); li.innerHTML = h; ul.appendChild(li); });
     return ul;
   }
+
+  /* ═══ LINK CŨ: mục đã chuyển sang trang 2 hay đổi id thì đưa hash cũ tới chỗ mới. */
+  var MOVED = {
+    'lo-trinh': '#truoc-khi-lam', 'lt-chot': '#can-chot', 'lt-cau-hoi': '#cau-hoi',
+    'lt-lich': BUILD + '#lich', 'lt-vai': BUILD + '#vai',
+    'lt-kien-truc': BUILD + '#kien-truc', 'lt-luong': BUILD + '#thu-nap',
+    'lt-repo': BUILD + '#repo', 'cong-thuc': BUILD + '#phuong-phap',
+    'lt-bao-cao': BUILD + '#bao-cao', 'lt-slide': BUILD + '#bao-cao',
+    'lt-xong': BUILD + '#tai-lap'
+  };
+  (function () {
+    var to = MOVED[decodeURIComponent(location.hash.slice(1))];
+    if (!to) return;
+    if (to.charAt(0) !== '#') { location.replace(to); return; }
+    try { history.replaceState(null, '', to); } catch (e) { location.hash = to; }
+  })();
 
   /* ═══ THEME: nút ghi 'hub-theme' chỉ khi bấm; chưa chọn thì theo hệ điều hành, kể cả khi hệ điều hành đổi. */
   function storedTheme() {
@@ -1412,37 +1344,137 @@ Kind regards,
     });
   }
 
-  /* ═══ KẾ HOẠCH MỘT TRANG: câu hỏi lấy từ plan_a, việc tuần 1 từ week1. */
-  function renderPlanBox() {
-    var q = $('#planQ');
-    q.textContent = '';
-    D.plan_a.forEach(function (x) {
-      var li = el('li');
-      li.appendChild(el('b', null, x.method + ': '));
-      li.appendChild(document.createTextNode(x.q));
-      q.appendChild(li);
+
+  /* ═══ TÓM TẮT, CHẶNG: số đếm và nhãn chặng tính từ agree, plan_a, journey. */
+  function renderSummary() {
+    var counts = { agree: D.agree.length, plan_a: D.plan_a.length };
+    Array.prototype.forEach.call(document.querySelectorAll('[data-count]'), function (n) { n.textContent = String(counts[n.getAttribute('data-count')]); });
+    var stages = D.journey.filter(function (j) { return j.id; });
+    Array.prototype.forEach.call(document.querySelectorAll('[data-stage]'), function (n) {
+      var k = stages.map(function (j) { return j.id; }).indexOf(n.getAttribute('data-stage'));
+      if (k >= 0) n.textContent = 'Chặng ' + (k + 1) + ' / ' + stages.length + ' · ' + stages[k].name;
     });
-    var w = $('#planW1');
-    w.textContent = '';
-    D.week1.forEach(function (x) {
-      var li = el('li');
-      var lb = el('b');
-      if (x.label_html) { html(lb, x, 'label_html'); lb.appendChild(document.createTextNode(': ')); } else lb.textContent = D.team[x.role - 1].role + ': ';
-      li.appendChild(lb);
-      li.appendChild(html(el('span'), x, 'task_html'));
-      w.appendChild(li);
+  }
+
+  /* ═══ SƠ ĐỒ HÀNH TRÌNH: mỗi chặng một ga trên đường dọc; ga cuối sang trang 2. Mũi tên dừng ở mép ga sau − 6. */
+  function drawJourney() {
+    var box = $('#journey');
+    var W = Math.floor(box.clientWidth);
+    if (!W) return;
+    box.textContent = '';
+    var wide = W >= 560, rowH = wide ? 40 : 52, cx = 16, r = 12, tx = 40, n = D.journey.length, H = n * rowH;
+    var s = svg('svg', { width: W, height: H, viewBox: '0 0 ' + W + ' ' + H, role: 'group',
+      'aria-label': 'Hành trình: ' + D.journey.map(function (j) { return j.name; }).join(', ') }, box);
+    D.journey.forEach(function (j, i) {
+      var cy = i * rowH + rowH / 2, last = !j.id;
+      if (i) svg('path', { d: 'M' + cx + ',' + (cy - rowH + r) + 'V' + (cy - r - 6), 'class': 's-arr', 'marker-end': 'url(#arr)' }, s);
+      var a = svg('a', { href: j.href || '#' + j.id, 'class': 'jr-st' + (last ? ' next' : ''),
+        'aria-label': (last ? 'Trang 2: ' : 'Chặng ' + (i + 1) + ': ') + j.name + ', ra: ' + j.out }, s);
+      svg('rect', { x: 0, y: i * rowH + 2, width: W, height: rowH - 4, rx: 8, 'class': 'hit' }, a);
+      svg('circle', { cx: cx, cy: cy, r: r, 'class': 'jr-dot' }, a);
+      stext(a, cx, cy + 4, 'jr-n', last ? '2' : String(i + 1), 'middle');
+      if (wide) {
+        var t = stext(a, tx, cy + 5, 'jr-t', j.name, 'start');
+        var o = svg('tspan', { 'class': 'jr-o', dx: 12 }, t); o.textContent = j.out;
+      } else {
+        fitText(stext(a, tx, cy - 3, 'jr-t', j.name, 'start'), W - tx - 4);
+        fitText(stext(a, tx, cy + 15, 'jr-o', j.out, 'start'), W - tx - 4);
+      }
     });
-    /* Dòng "Nộp": số tab, slide, phút, chương, trang tính từ plan_a, slides, report. */
-    var sub = $('#planSubmit');
-    sub.textContent = '';
-    sub.appendChild(el('span', 'lab', 'Nộp'));
-    var mins = D.slides.reduce(function (a, x) { return a + x.min; }, 0);
-    var pages = D.report.reduce(function (a, x) { return a + x.pages; }, 0);
-    sub.appendChild(document.createTextNode('app Streamlit (tab dữ liệu + ' + D.plan_a.length + ' tab phương pháp) · '));
-    var a1 = el('a', null, D.slides.length + ' slide (~' + fmt(mins) + ' phút)'); a1.href = '#lt-slide'; sub.appendChild(a1);
-    sub.appendChild(document.createTextNode(' · '));
-    var a2 = el('a', null, 'báo cáo ' + D.report.length + ' chương (~' + pages + ' trang)'); a2.href = '#lt-bao-cao'; sub.appendChild(a2);
-    upgradeTerms($('#ke-hoach'));
+  }
+
+  /* ═══ TÌM NGUỒN: ba nhóm nguồn → một danh sách → sáu vai; số đếm từ sources. Mọi mũi tên nằm ngang. */
+  function drawSrcFlow() {
+    var box = $('#srcFlow');
+    var W = Math.min(Math.floor(box.clientWidth), 640);
+    if (!W) return;
+    box.textContent = '';
+    var cnt = function (f) { return D.sources.filter(f).length; };
+    var narrow = W < 480;
+    var groups = D.groups.map(function (g) { return { label: (narrow ? '' : g.id + ' · ') + g.name, n: cnt(function (s) { return s.group === g.id; }) }; });
+    var roles = D.roles.map(function (r) { return { label: r.id, n: cnt(function (s) { return s.role === r.id; }) }; });
+    var head = 22, bh = 30, bg = 8, gap = narrow ? 22 : 28, midW = narrow ? 56 : 72;
+    var colW = Math.floor((W - midW - 2 * gap) / 2), mx = colW + gap, rx = mx + midW + gap;
+    var body = roles.length * (bh + bg) - bg, H = head + body;
+    var s = svg('svg', { width: W, height: H, viewBox: '0 0 ' + W + ' ' + H, role: 'img',
+      'aria-label': D.sources.length + ' nguồn từ ' + groups.length + ' nhóm, xếp theo vai: ' + roles.map(function (r) { return r.label + ' ' + r.n; }).join(', ') }, box);
+    stext(s, colW / 2, 12, 'dg-h', 'Nơi tìm', 'middle');
+    stext(s, rx + colW / 2, 12, 'dg-h', 'Vai của nguồn', 'middle');
+    function item(it, x, y) {
+      svg('rect', { x: x, y: y, width: colW, height: bh, rx: 6, 'class': 'dg-box' }, s);
+      var v = stext(s, x + colW - 10, y + 20, 'dg-c', String(it.n), 'end');
+      fitText(stext(s, x + 10, y + 20, 'dg-s', it.label, 'start'), colW - 20 - v.getComputedTextLength() - 6);
+    }
+    var step = groups.length > 1 ? (body - bh) / (groups.length - 1) : 0;
+    groups.forEach(function (g, k) {
+      var y = head + Math.round(k * step);
+      item(g, 0, y);
+      svg('path', { d: 'M' + colW + ',' + (y + bh / 2) + 'H' + (mx - 6), 'class': 's-arr', 'marker-end': 'url(#arr)' }, s);
+    });
+    svg('rect', { x: mx, y: head, width: midW, height: body, rx: 8, 'class': 'dg-box pick' }, s);
+    stext(s, mx + midW / 2, head + body / 2 - 2, 'dg-big', String(D.sources.length), 'middle');
+    stext(s, mx + midW / 2, head + body / 2 + 16, 'dg-s', 'nguồn', 'middle');
+    roles.forEach(function (r, k) {
+      var y = head + k * (bh + bg);
+      svg('path', { d: 'M' + (mx + midW) + ',' + (y + bh / 2) + 'H' + (rx - 6), 'class': 's-arr', 'marker-end': 'url(#arr)' }, s);
+      item(r, rx, y);
+    });
+  }
+  function renderRoles() {
+    var dl = $('#roles');
+    dl.textContent = '';
+    D.roles.forEach(function (r) {
+      var d = el('div');
+      var dt = el('dt', null, r.id);
+      dt.appendChild(el('small', null, ' · ' + D.sources.filter(function (s) { return s.role === r.id; }).map(function (s) { return s.id; }).join(', ')));
+      d.appendChild(dt);
+      d.appendChild(el('dd', null, r.why));
+      dl.appendChild(d);
+    });
+  }
+
+  /* ═══ ĐIỂM TỔNG TÍNH THẾ NÀO: thác nước điểm × trọng số của nguồn dữ liệu phương án được chọn. */
+  function drawScore() {
+    var box = $('#scoreFig');
+    var W = Math.min(Math.floor(box.clientWidth), 640);
+    if (!W) return;
+    box.textContent = '';
+    var src = srcById(D.options.filter(function (o) { return o.pick; })[0].src);
+    var narrow = W < 520, rowH = narrow ? 42 : 32, padT = 22, barH = 14;
+    var labW = narrow ? 112 : 190, valW = 48, x0 = labW + 10, x1 = W - valW - 8;
+    var X = function (v) { return x0 + (x1 - x0) * v / 10; };
+    var n = D.criteria.length + 1, H = padT + n * rowH + 2;
+    var s = svg('svg', { width: W, height: H, viewBox: '0 0 ' + W + ' ' + H, role: 'img',
+      'aria-label': 'Điểm tổng của ' + src.id + ': ' + D.criteria.map(function (c, i) { return c.name + ' ' + src.scores[i] + ' nhân ' + c.weight + '%'; }).join(', ') + ', cộng lại ' + fmt(src.total) }, box);
+    var thr = D.verdicts.map(function (v) { return v.min; }).filter(function (v) { return v > 0; });
+    [0, 10].concat(thr).forEach(function (v) {
+      svg('line', { x1: X(v), x2: X(v), y1: padT - 6, y2: H - 2, 'class': thr.indexOf(v) >= 0 ? 's-thr' : 's-grid' }, s);
+      stext(s, X(v), 12, 't-tick', fmt(v), 'middle');
+    });
+    var cum = 0;
+    D.criteria.forEach(function (c, i) {
+      var y = padT + i * rowH, part = src.scores[i] * c.weight / 100, mid = y + rowH / 2;
+      if (narrow) {
+        stext(s, 0, mid - 3, 't-lab', c.name, 'start');
+        stext(s, 0, mid + 13, 't-tick', src.scores[i] + ' × ' + c.weight + '%', 'start');
+      } else {
+        var t = stext(s, 0, mid + 4.5, 't-lab', c.name, 'start');
+        var k = svg('tspan', { 'class': 'dg-k2', dx: 8 }, t); k.textContent = src.scores[i] + ' × ' + c.weight + '%';
+      }
+      svg('rect', { x: X(cum), y: mid - barH / 2, width: Math.max(1, X(cum + part) - X(cum)), height: barH, rx: 2, 'class': 'f-c2' }, s);
+      stext(s, W, mid + 4.5, 't-val', '+' + fmt(part), 'end');
+      cum += part;
+    });
+    var y = padT + D.criteria.length * rowH, mid = y + rowH / 2;
+    svg('line', { x1: 0, x2: W, y1: y, y2: y, 'class': 's-grid' }, s);
+    stext(s, 0, mid + 4.5, 't-val', 'Điểm tổng', 'start');
+    svg('rect', { x: X(0), y: mid - barH / 2, width: X(src.total) - X(0), height: barH, rx: 2, 'class': 'f-' + src.verdict.color }, s);
+    stext(s, W, mid + 4.5, 't-val', '= ' + fmt(src.total), 'end');
+    var cap = $('#scoreCap');
+    cap.textContent = 'Ví dụ: ' + src.id + ', nguồn dữ liệu của phương án được chọn. Mỗi tiêu chí góp điểm × trọng số; cộng lại được ' +
+      fmt(src.total) + ', từ ' + fmt(src.verdict.min) + ' trở lên nên kết luận “' + src.verdict.name + '”. Vạch đứng ở ' +
+      thr.slice().sort(function (a, b) { return a - b; }).map(function (v) { return fmt(v); }).join(' và ') + ' là các ngưỡng kết luận.' +
+      (fmt(src.total) === fmt1(src) ? '' : ' Biểu đồ bên dưới hiện ' + fmt1(src) + ' (làm tròn xuống).');
   }
 
   /* ═══ BA PHƯƠNG ÁN: điểm lấy từ nguồn dữ liệu chính, chấm khớp từ options[].fit ═══ */
@@ -1514,7 +1546,7 @@ Kind regards,
     });
     upgradeTerms(box);
   }
-  /* ═══ CẦN CHỐT: tám điều nhóm thống nhất, lấy từ agree; tên pha là link mở pha ấy trên lịch. */
+  /* ═══ CHỐT TRƯỚC KHI LÀM: agree theo ba mốc (bands); mỗi điều trỏ sang bước ở trang 2 (build_steps). */
   function renderAgree() {
     var ol = $('#agree');
     ol.textContent = '';
@@ -1523,16 +1555,59 @@ Kind regards,
       li.appendChild(el('b', null, a.name));
       li.appendChild(document.createTextNode(': '));
       li.appendChild(html(el('span'), a, 'what_html'));
-      var ph = el('span', 'ag-ph', ' · Pha ');
-      a.phases.forEach(function (id, k) {
+      var ph = el('span', 'ag-ph', ' · Trang 2: ');
+      a.build.forEach(function (id, k) {
         if (k) ph.appendChild(document.createTextNode(', '));
-        var l = el('a', null, id); l.href = '#lt-lich'; l.setAttribute('data-ph', id);
+        var l = el('a', null, D.build_steps[id]); l.href = BUILD + '#' + id;
         ph.appendChild(l);
       });
       li.appendChild(ph);
       ol.appendChild(li);
     });
   }
+  /* Rộng: ba cột theo mốc, mũi tên giữa các đầu cột. Hẹp: các mốc xếp dọc, mũi tên ở rãnh trái nối đáy đầu mốc này với đỉnh đầu mốc sau. */
+  function drawAgree() {
+    var box = $('#agreeFig');
+    var W = Math.floor(box.clientWidth);
+    if (!W) return;
+    box.textContent = '';
+    var bands = D.bands.map(function (b) {
+      return { b: b, items: D.agree.map(function (a, i) { return { a: a, n: i + 1 }; }).filter(function (x) { return x.a.when === b.id; }) };
+    });
+    var cols = W >= 640, hh = 36, ih = 34, ig = 8, gap = 32, gut = 20;
+    var colW = cols ? Math.floor((W - 2 - 2 * gap) / 3) : W - 2;   // chừa 1 đơn vị mỗi bên cho nét viền 2
+    var H;
+    if (cols) H = hh + 12 + Math.max.apply(null, bands.map(function (x) { return x.items.length; })) * (ih + ig) - ig + 2;
+    else H = bands.reduce(function (h, x) { return h + hh + 8 + x.items.length * (ih + ig) - ig; }, 0) + (bands.length - 1) * gap + 2;
+    var s = svg('svg', { width: W, height: H, viewBox: '0 0 ' + W + ' ' + H, role: 'group', 'aria-label': 'Điều phải chốt, theo ba mốc' }, box);
+    function head(b, x, y, w) {
+      svg('rect', { x: x, y: y, width: w, height: hh, rx: 8, 'class': 'dg-box pick' }, s);
+      fitText(stext(s, x + 12, y + 23, 'dg-t', b.name, 'start'), w - 24);
+    }
+    function item(it, x, y, w) {
+      var a = svg('a', { href: BUILD + '#' + it.a.build[0], 'class': 'dg-link', 'aria-label': it.n + '. ' + it.a.name + ': mở bước ' + D.build_steps[it.a.build[0]] + ' ở trang 2' }, s);
+      svg('rect', { x: x, y: y, width: w, height: ih, rx: 6, 'class': 'dg-box' }, a);
+      stext(a, x + 12, y + 22, 'dg-c', String(it.n), 'start');
+      fitText(stext(a, x + 32, y + 22, 'dg-s2', it.a.name, 'start'), w - 44);
+    }
+    var y = 0, prevHead = 0;
+    bands.forEach(function (x, k) {
+      if (cols) {
+        var bx = 1 + k * (colW + gap);
+        head(x.b, bx, 0, colW);
+        if (k) svg('path', { d: 'M' + (bx - gap) + ',' + hh / 2 + 'H' + (bx - 6), 'class': 's-arr', 'marker-end': 'url(#arr)' }, s);
+        x.items.forEach(function (it, j) { item(it, bx, hh + 12 + j * (ih + ig), colW); });
+      } else {
+        if (k) svg('path', { d: 'M' + gut / 2 + ',' + prevHead + 'V' + (y - 6), 'class': 's-arr', 'marker-end': 'url(#arr)' }, s);
+        head(x.b, 1, y, colW);
+        prevHead = y + hh;
+        y += hh + 8;
+        x.items.forEach(function (it, j) { item(it, gut, y + j * (ih + ig), W - 1 - gut); });
+        y += x.items.length * (ih + ig) - ig + gap;
+      }
+    });
+  }
+  /* Bốn câu hỏi, dạng gọn: câu hỏi và dòng "Giúp quyết định". Cách làm và số đã kiểm ở trang 2. */
   function renderPlanA() {
     var box = $('#planA');
     box.textContent = '';
@@ -1540,41 +1615,13 @@ Kind regards,
       var b = el('div', 'box');
       b.appendChild(el('span', 'pill', q.method));
       b.appendChild(el('h4', null, q.q));
-      if (q.decision_html) {
-        var pd = el('p', 'qa-dec'); pd.appendChild(el('span', 'lab', 'Giúp quyết định'));
-        pd.appendChild(html(el('span'), q, 'decision_html'));
-        b.appendChild(pd);
-      }
-      var p1 = el('p'); p1.appendChild(el('span', 'lab', 'Dữ liệu')); var s1 = html(el('span'), q, 'data_html'); p1.appendChild(s1);
-      var p2 = el('p'); p2.appendChild(el('span', 'lab', 'Cách làm')); var s2 = html(el('span'), q, 'how_html'); p2.appendChild(s2);
-      b.appendChild(p1); b.appendChild(p2);
-      if (q.check_html) {
-        var ck = el('div', 'qa-check');
-        ck.appendChild(el('span', 'lab', 'Kiểm tra khả thi (nhìn lại, chúng tôi đã chạy thử)'));
-        ck.appendChild(html(el('p'), q, 'check_html'));
-        b.appendChild(ck);
-      }
-      if (q.notes_html) {
-        var n = el('div', 'qa-notes');
-        n.appendChild(el('span', 'lab', 'Lưu ý'));
-        n.appendChild(html(el('div'), q, 'notes_html'));
-        b.appendChild(n);
-      }
+      var pd = el('p', 'qa-dec'); pd.appendChild(el('span', 'lab', 'Giúp quyết định'));
+      pd.appendChild(html(el('span'), q, 'decision_html'));
+      b.appendChild(pd);
       box.appendChild(b);
     });
-    fillCalc(box);
+    Array.prototype.forEach.call(box.querySelectorAll('[data-calc="stop"]'), function (n) { n.textContent = String(D.sprt_check.stop); });
     upgradeTerms(box);
-  }
-  /* Số của câu hỏi SPRT: tham số lấy từ sprt_check, p1 và hai ngưỡng tính ở đây. */
-  function fillCalc(scope) {
-    var c = D.sprt_check;
-    var v = {
-      p0: fmt(c.p0, 3), draw: fmt(c.draw, 3), alpha: fmt(c.alpha), beta: fmt(c.beta), stop: String(c.stop),
-      p1: fmt((1 - c.draw) / 2, 3),
-      a: fmt(Math.log(c.beta / (1 - c.alpha)), 2),
-      b: fmt(Math.log((1 - c.beta) / c.alpha), 2)
-    };
-    Array.prototype.forEach.call(scope.querySelectorAll('[data-calc]'), function (n) { n.textContent = v[n.getAttribute('data-calc')]; });
   }
 
   /* ═══ HAI VÒNG CHẤM: bảng, điểm tổng hai vòng tính từ scores_r1 và scores. */
@@ -1619,288 +1666,19 @@ Kind regards,
       return s.scores_r2 ? roundScore(s, s.scores_r2, s.scores) : null;
     }));
   }
-  function lessonLinks(ids) {
-    var f = el('span', 'les-links');
-    ids.forEach(function (id, i) {
-      if (i) f.appendChild(document.createTextNode(' · '));
-      var a = el('a', null, lessonLabel(id)); a.href = COURSE + '#' + id; f.appendChild(a);
-    });
-    return f;
-  }
-
-  /* ═══ LỊCH: pha khai bằng % tổng thời gian; đổi số tuần thì nhãn tuần và lưới đổi theo. */
-  var WEEK_OPTS = [4, 6, 8, 10], weeks = 6, curPhase = 'P0', roleOn = 0;
-  function narrow() { return window.matchMedia && window.matchMedia('(max-width: 600px)').matches; }
-  function phaseById(id) { return D.phases.filter(function (p) { return p.id === id; })[0]; }
-  function weekSpan(ph) {
-    var a = Math.floor(ph.start / 100 * weeks) + 1;
-    var b = Math.max(a, Math.ceil((ph.start + ph.len) / 100 * weeks));
-    return a === b ? 'tuần ' + a : 'tuần ' + a + '–' + b;
-  }
-  function renderWeeks() {
-    var box = $('#weeks');
-    box.textContent = '';
-    WEEK_OPTS.forEach(function (n) {
-      var b = el('button', 'seg-btn', n + ' tuần');
-      b.type = 'button';
-      b.setAttribute('aria-pressed', String(n === weeks));
-      b.addEventListener('click', function () {
-        weeks = n;
-        Array.prototype.forEach.call(box.children, function (x) { x.setAttribute('aria-pressed', String(x === b)); });
-        renderGantt();
-        renderPanel();
-      });
-      box.appendChild(b);
-    });
-  }
-  function renderGantt() {
-    var box = $('#gantt');
-    box.textContent = '';
-    box.style.setProperty('--weeks', weeks);
-    var ax = el('div', 'g-axis');
-    ax.setAttribute('aria-hidden', 'true');
-    ax.appendChild(el('span', 'g-name'));
-    var wk = el('span', 'g-weeks');
-    for (var i = 1; i <= weeks; i++) wk.appendChild(el('span', null, 'T' + i));
-    ax.appendChild(wk);
-    box.appendChild(ax);
-    D.phases.forEach(function (ph, idx) {
-      var b = el('button', 'g-row');
-      b.type = 'button';
-      b.setAttribute('data-ph', ph.id);
-      b.setAttribute('aria-pressed', String(ph.id === curPhase));
-      b.setAttribute('aria-controls', 'phasePanel');
-      var nm = el('span', 'g-name');
-      nm.appendChild(el('b', null, ph.id + ' '));
-      nm.appendChild(document.createTextNode(ph.name));
-      nm.appendChild(el('small', 'g-when', weekSpan(ph)));
-      b.appendChild(nm);
-      var tr = el('span', 'g-track');
-      var bar = el('span', 'g-bar');
-      bar.style.left = ph.start + '%';
-      bar.style.width = ph.len + '%';
-      tr.appendChild(bar);
-      b.appendChild(tr);
-      if (roleOn && ph.roles.indexOf(roleOn) >= 0) b.classList.add('hl');
-      b.addEventListener('click', function () { selectPhase(ph.id, narrow()); });
-      b.addEventListener('keydown', function (e) {
-        var rows = box.querySelectorAll('.g-row');
-        var k = e.key === 'ArrowDown' ? 1 : e.key === 'ArrowUp' ? -1 : 0;
-        if (k && rows[idx + k]) { e.preventDefault(); rows[idx + k].focus(); }
-      });
-      box.appendChild(b);
-    });
-  }
-  function selectPhase(id, scroll) {
-    curPhase = id;
-    Array.prototype.forEach.call(document.querySelectorAll('.g-row'), function (r) { r.setAttribute('aria-pressed', String(r.getAttribute('data-ph') === id)); });
-    Array.prototype.forEach.call(document.querySelectorAll('.fnode'), function (n) { n.classList.toggle('on', n.getAttribute('data-ph') === id); });
-    renderPanel();
-    var p = $('#phasePanel');
-    if (scroll) {
-      p.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
-      p.focus({ preventScroll: true });
-    } else if (p.getBoundingClientRect().top > window.innerHeight - 120) {
-      /* Khung chi tiết đang khuất dưới màn hình: cuộn tới để người bấm thấy nó đổi. */
-      p.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'nearest' });
-    }
-  }
-  function panelItem(grid, label, node) {
-    var d = el('div', 'pp-item');
-    d.appendChild(el('span', 'lab', label));
-    d.appendChild(node);
-    grid.appendChild(d);
-  }
-  function renderPanel() {
-    var ph = phaseById(curPhase);
-    var box = $('#phasePanel');
-    box.textContent = '';
-    box.appendChild(el('h4', null, ph.id + ' · ' + ph.name));
-    box.appendChild(el('p', 'pp-meta', weekSpan(ph) + ' · khoảng ' + Math.max(1, Math.round(ph.len / 100 * weeks * 7)) + ' ngày nếu còn ' + weeks + ' tuần'));
-    if (ph.agree_html) {
-      var ag = el('div', 'pp-agree');
-      ag.appendChild(el('span', 'lab', 'Cần thống nhất trước khi làm'));
-      var al = htmlList('ul', ph, 'agree_html'); al.className = 'checklist';
-      ag.appendChild(al);
-      box.appendChild(ag);
-    }
-    var grid = el('div', 'pp-grid');
-    var tasks = htmlList('ul', ph, 'tasks_html');
-    tasks.className = 'checklist';
-    panelItem(grid, 'Việc cụ thể', tasks);
-    var who = el('p', 'pp-who');
-    ph.roles.forEach(function (r) { who.appendChild(el('span', 'tag', r + ' · ' + D.team[r - 1].role)); });
-    panelItem(grid, 'Ai', who);
-    panelItem(grid, 'Đầu vào → đầu ra', html(el('p'), ph, 'io_html'));
-    panelItem(grid, 'Công cụ', el('p', null, ph.tools));
-    panelItem(grid, 'Xong khi', html(el('p'), ph, 'done_html'));
-    var les = el('p');
-    if (ph.lessons.length) les.appendChild(lessonLinks(ph.lessons));
-    else les.textContent = 'Không có bài riêng trong môn; xem khối công thức và các nguồn.';
-    panelItem(grid, 'Bài môn', les);
-    panelItem(grid, 'Mẹo cho người mới', html(el('p'), ph, 'tip_html'));
-    box.appendChild(grid);
-    upgradeTerms(box);
-  }
-
-  /* ═══ AI LÀM GÌ: pha của mỗi vai suy ra từ phases[].roles; rê, focus hay bấm thì tô các pha ấy. */
-  var rolePinned = 0;
-  function highlightRole(n) {
-    roleOn = n;
-    Array.prototype.forEach.call(document.querySelectorAll('.g-row'), function (r) {
-      var ph = phaseById(r.getAttribute('data-ph'));
-      r.classList.toggle('hl', !!n && ph.roles.indexOf(n) >= 0);
-    });
-    Array.prototype.forEach.call(document.querySelectorAll('#team .role'), function (li) { li.classList.toggle('on', +li.getAttribute('data-role') === n); });
-  }
-  function renderTeam() {
-    var box = $('#team');
-    box.textContent = '';
-    D.team.forEach(function (m, i) {
-      var n = i + 1;
-      var li = el('li', 'role');
-      li.setAttribute('data-role', n);
-      var h = el('h4');
-      var b = el('button', 'role-h');
-      b.type = 'button';
-      b.setAttribute('aria-pressed', 'false');
-      b.appendChild(el('span', 'role-n', String(n)));
-      b.appendChild(document.createTextNode(m.role));
-      h.appendChild(b);
-      li.appendChild(h);
-      li.appendChild(html(el('p'), m, 'does_html'));
-      var phs = D.phases.filter(function (p) { return p.roles.indexOf(n) >= 0; }).map(function (p) { return p.id; });
-      li.appendChild(el('p', 'role-ph', 'Pha: ' + phs.join(', ')));
-      li.addEventListener('mouseenter', function () { if (!rolePinned) highlightRole(n); });
-      li.addEventListener('mouseleave', function () { if (!rolePinned) highlightRole(0); });
-      b.addEventListener('focus', function () { if (!rolePinned) highlightRole(n); });
-      b.addEventListener('blur', function () { if (!rolePinned) highlightRole(0); });
-      b.addEventListener('click', function () {
-        rolePinned = rolePinned === n ? 0 : n;
-        Array.prototype.forEach.call(box.querySelectorAll('.role-h'), function (x) { x.setAttribute('aria-pressed', String(x === b && rolePinned === n)); });
-        highlightRole(rolePinned);
-        if (rolePinned) $('.gantt-box').scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
-      });
-      box.appendChild(li);
-    });
-    upgradeTerms(box);
-  }
-
-  /* ═══ LUỒNG DỮ LIỆU: SVG vẽ theo bề rộng thật; mỗi ô mở pha của nó. Mũi tên dừng ở mép đích − 6. */
-  function drawFlow() {
-    var box = $('#flow');
-    var W = Math.floor(box.clientWidth);
-    if (!W) return;
-    box.textContent = '';
-    /* Cột chính ở giữa; lề phải 20 cho đường gom của demo (đọc data/clean, src/, results/). */
-    var gut = 40, bus = 20, nw = Math.min(W - gut - bus, 440), x0 = gut, cx = x0 + nw / 2, gap = 26;
-    var busX = x0 + nw + bus / 2;
-    var pos = [], y = 2;
-    D.flow.forEach(function (n) { var h = n.doc ? 64 : 48; pos.push({ y: y, h: h }); y += h + gap; });
-    var last = pos.length - 1, lastB = pos[last].y + pos[last].h;
-    var oy = lastB + 44, oh = 48, og = 10, ow = (nw - og * (D.flow_out.length - 1)) / D.flow_out.length;
-    var H = oy + oh + 2;
-    var s = svg('svg', { width: W, height: H, viewBox: '0 0 ' + W + ' ' + H, role: 'group', 'aria-label': 'Luồng dữ liệu từ nguồn tới demo, slide, báo cáo' }, box);
-    function node(n, x, yy, w, h, center) {
-      var a = svg('a', { href: '#phasePanel', 'class': 'fnode' + (n.phase === curPhase ? ' on' : ''), 'data-ph': n.phase, 'aria-label': n.label + ': mở pha ' + n.phase }, s);
-      svg('rect', { x: x, y: yy, width: w, height: h, rx: 8, 'class': 'fn-box' }, a);
-      var tx = center ? x + w / 2 : x + 12, an = center ? 'middle' : 'start';
-      var t1 = stext(a, tx, yy + 20, 'fn-t', n.label, an); fitText(t1, w - 20);
-      if (n.sub) { var t2 = stext(a, tx, yy + 38, 'fn-s', n.sub, an); fitText(t2, w - 20); }
-      if (center) stext(a, tx, yy + 38, 'fn-s', n.phase, an);
-      if (n.doc) { var t3 = stext(a, tx, yy + 56, 'fn-d', 'ghi vào ' + n.doc, an); fitText(t3, w - 20); }
-      a.addEventListener('click', function (e) { e.preventDefault(); selectPhase(n.phase, true); });
-    }
-    var demoIn = [];
-    D.flow.forEach(function (n, i) {
-      var p = pos[i];
-      node(n, x0, p.y, nw, p.h, false);
-      stext(s, gut - 8, p.y + p.h / 2 + 4, 't-tick', n.phase, 'end');
-      if (i) svg('path', { d: 'M' + cx + ',' + (pos[i - 1].y + pos[i - 1].h) + 'V' + (p.y - 6), 'class': 's-arr', 'marker-end': 'url(#arr)' }, s);
-      if (n.demo) demoIn.push(p.y + p.h / 2);
-    });
-    var demoK = 0;
-    D.flow_out.forEach(function (n, k) {
-      var ox = x0 + k * (ow + og);
-      if (n.demo) demoK = k;
-      else svg('path', { d: 'M' + cx + ',' + lastB + 'L' + (ox + ow / 2) + ',' + (oy - 6), 'class': 's-arr', 'marker-end': 'url(#arr)' }, s);
-      node(n, ox, oy, ow, oh, true);
-    });
-    /* Đường gom: mỗi ô nguồn của demo có một nhánh ngang chạm mép phải, gom vào một đường dọc, mũi tên vào đỉnh ô demo. */
-    if (demoIn.length) {
-      var dcx = x0 + demoK * (ow + og) + ow / 2, turn = oy - 20;
-      demoIn.forEach(function (yy) { svg('path', { d: 'M' + (x0 + nw) + ',' + yy + 'H' + busX, 'class': 's-arr' }, s); });
-      svg('path', { d: 'M' + busX + ',' + demoIn[0] + 'V' + turn + 'H' + dcx + 'V' + (oy - 6), 'class': 's-arr', 'marker-end': 'url(#arr)' }, s);
-    }
-  }
-
-  /* ═══ REPO MẪU, DÀN Ý BÁO CÁO, DÀN Ý SLIDE ═══ */
-  function renderTree() {
-    var box = $('#tree');
-    box.textContent = '';
-    D.repo_tree.forEach(function (r) {
-      var li = el('li', 'd' + r.depth);
-      li.appendChild(el('code', null, r.path));
-      if (r.note) li.appendChild(el('span', null, r.note));
-      box.appendChild(li);
-    });
-  }
-  function renderReport() {
-    var t = $('#report');
-    t.textContent = '';
-    var cols = ['Chương', 'Nội dung', 'Vai', 'Bài môn', 'Trang'];
-    var hr = el('tr');
-    cols.forEach(function (c) { var th = el('th', null, c); th.scope = 'col'; hr.appendChild(th); });
-    var thead = el('thead'); thead.appendChild(hr); t.appendChild(thead);
-    var tb = el('tbody'), total = 0;
-    D.report.forEach(function (r) {
-      var tr = el('tr');
-      var th = el('th', null, r.ch + '. ' + r.title); th.scope = 'row'; th.setAttribute('data-l', cols[0]); tr.appendChild(th);
-      var cells = [r.content, r.who.map(roleName).join('; '), null, String(r.pages)];
-      cells.forEach(function (v, i) {
-        var td = el('td', null, v);
-        td.setAttribute('data-l', cols[i + 1]);
-        if (i === 2) { if (r.lessons.length) td.appendChild(lessonLinks(r.lessons)); else td.textContent = '—'; }
-        tr.appendChild(td);
-      });
-      total += r.pages;
-      tb.appendChild(tr);
-    });
-    t.appendChild(tb);
-    var old = t.nextElementSibling;
-    if (old && old.classList.contains('outline-note')) old.remove();
-    t.insertAdjacentElement('afterend', el('p', 'sub outline-note', 'Tổng khoảng ' + total + ' trang.'));
-  }
-  function renderSlides() {
-    var box = $('#slides');
-    box.textContent = '';
-    var total = 0;
-    D.slides.forEach(function (sl) {
-      var li = el('li');
-      li.appendChild(el('span', 'sl-t', sl.title));
-      var meta = (sl.min ? fmt(sl.min) + ' phút · ' : '') + (sl.who.length > 6 ? 'cả nhóm' : sl.who.map(roleName).join('; '));
-      li.appendChild(el('span', 'sl-m', meta));
-      total += sl.min;
-      box.appendChild(li);
-    });
-    var p = el('p', 'sub', 'Tổng khoảng ' + fmt(total) + ' phút trình bày, chưa tính hỏi đáp.');
-    box.parentNode.insertBefore(p, box.nextSibling);
-  }
 
   /* ═══ THUẬT NGỮ: danh sách đầy đủ ═══ */
-  /* Thuật ngữ chính: dùng ở hero, #de-tai, #lineage, #top-3, #lo-trinh (kể cả mọi pha, không chỉ pha đang mở). Còn lại gập lại. */
+  /* Thuật ngữ chính: dùng ở hero và các chặng, trừ thẻ nguồn và ba vòng kiểm. Còn lại gập lại. */
   function coreTermIds() {
     var set = {};
-    var add = function (n) { autoTerms(n); Array.prototype.forEach.call(n.querySelectorAll('.term'), function (t) { var g = lookup(t); if (g) set[g.id] = 1; }); };
-    ['#tom-tat', '#de-tai', '#lineage', '#top-3', '#lo-trinh'].forEach(function (sel) { add($(sel)); });
-    var tmp = el('div');
-    D.phases.forEach(function (ph) {
-      Object.keys(ph).forEach(function (k) {
-        if (!/_html$/.test(k)) return;
-        tmp.appendChild(Array.isArray(ph[k]) ? htmlList('ul', ph, k) : html(el('div'), ph, k));
+    ['#tom-tat', '#de-tai', '#tim-nguon', '#cham-diem', '#top-3', '#chon', '#truoc-khi-lam', '#can-xac-nhan'].forEach(function (sel) {
+      var n = $(sel);
+      autoTerms(n);
+      Array.prototype.forEach.call(n.querySelectorAll('.term'), function (t) {
+        if (t.closest('#cardsBox, #hai-vong')) return;
+        var g = lookup(t); if (g) set[g.id] = 1;
       });
     });
-    add(tmp);
     return set;
   }
   function glossItem(g) {
@@ -1920,7 +1698,7 @@ Kind regards,
       if (core[g.id]) box.appendChild(glossItem(g));
       else { more.appendChild(glossItem(g)); nMore++; }
     });
-    $('#glossMoreSum').textContent = 'Thuật ngữ khác (trong thẻ nguồn) · ' + nMore;
+    $('#glossMoreSum').textContent = 'Thuật ngữ khác (trong thẻ nguồn và ba vòng kiểm) · ' + nMore;
   }
 
   /* ═══ TIN NHẮN GỬI GIẢNG VIÊN: chép vào bộ nhớ tạm; không được thì chọn sẵn chữ. */
@@ -2129,16 +1907,10 @@ Kind regards,
     for (var p = t.parentElement; p; p = p.parentElement) if (p.tagName === 'DETAILS') p.open = true;
   }
   document.addEventListener('click', function (e) {
-    var h = e.target.closest ? e.target.closest('a[href^="#"]:not([data-ph])') : null;
+    var h = e.target.closest ? e.target.closest('a[href^="#"]') : null;
     if (h && h.getAttribute('href').length > 1) openTo(decodeURIComponent(h.getAttribute('href').slice(1)));
   }, true);
   window.addEventListener('hashchange', function () { openTo(decodeURIComponent(location.hash.slice(1))); });
-  document.addEventListener('click', function (e) {
-    var a = e.target.closest ? e.target.closest('a[data-ph]:not(.fnode)') : null;
-    if (!a || !D) return;
-    e.preventDefault();
-    selectPhase(a.getAttribute('data-ph'), true);
-  });
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' && tipFor) hideTip();
     if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('term')) {
@@ -2161,15 +1933,18 @@ Kind regards,
 
   /* ═══ NẠP DỮ LIỆU ═══ */
   function fail() { $('#notice').hidden = false; }
-  var lastW = 0, lastFlowW = 0, rz = 0;
+  /* Hình vẽ theo bề rộng thật: vẽ lại khi khung đổi rộng. */
+  var SIZED = [['#journey', drawJourney], ['#srcFlow', drawSrcFlow], ['#scoreFig', drawScore], ['#chart', drawChart], ['#agreeFig', drawAgree]];
+  var sizedW = {}, rz = 0;
+  function drawSized(force) {
+    SIZED.forEach(function (x) {
+      var w = $(x[0]).clientWidth;
+      if (force || w !== sizedW[x[0]]) { sizedW[x[0]] = w; x[1](); }
+    });
+  }
   window.addEventListener('resize', function () {
     clearTimeout(rz);
-    rz = setTimeout(function () {
-      var w = $('#chart').clientWidth, fw = $('#flow').clientWidth;
-      if (D && w !== lastW) { lastW = w; drawChart(); }
-      if (D && fw !== lastFlowW) { lastFlowW = fw; drawFlow(); }
-      placeTip();
-    }, 120);
+    rz = setTimeout(function () { if (D) drawSized(false); placeTip(); }, 120);
   });
 
   initCopy();
@@ -2184,36 +1959,24 @@ Kind regards,
       D.verdicts.sort(function (a, b) { return b.min - a.min; });
       D.sources.forEach(score);
       renderHero();
-      renderPlanBox();
+      renderSummary();
       initCardToggle();
       renderMethods();
+      renderRoles();
       renderCriteria();
       renderChips();
-      lastW = $('#chart').clientWidth;
-      drawChart();
+      drawSized(true);
       renderCards();
       renderOptions();
       renderAgree();
       renderPlanA();
-      renderWeeks();
-      renderGantt();
-      renderPanel();
-      renderTeam();
-      Array.prototype.forEach.call(document.querySelectorAll('[data-count="phases"]'), function (n) { n.textContent = String(D.phases.length); });
-      lastFlowW = $('#flow').clientWidth;
-      drawFlow();
-      renderTree();
-      renderReport();
-      renderSlides();
       renderGloss();
       renderRefs();
       renderRounds();
       upgradeTerms(document);
-      if (location.hash.length > 1) openTo(decodeURIComponent(location.hash.slice(1)));
-      if (/^#src-/.test(location.hash)) {
-        var c = document.querySelector(location.hash);
-        if (c) { $('#cardsBox').open = true; c.open = true; c.scrollIntoView({ block: 'start' }); }
-      }
+      /* Trang dựng xong thì chiều cao đổi: mở khối gập chứa đích rồi cuộn lại tới đích của hash. */
+      var hid = decodeURIComponent(location.hash.slice(1)), ht = hid && document.getElementById(hid);
+      if (ht) { openTo(hid); ht.scrollIntoView({ block: 'start' }); }
     })
     .catch(function (err) { console.error(err); fail(); upgradeTerms(document); });
 })();

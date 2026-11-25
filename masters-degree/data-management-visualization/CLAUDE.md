@@ -2,10 +2,11 @@
 
 - `data-management-visualization.html` (trang môn): tự chứa, dạy lại môn Data Management and Visualization theo
   đúng thứ tự mười ba file slide (1, 2.1, 2.2, 3 … 12). Mở thẳng là chạy.
-- `sports-monitoring-project.html` (trang đồ án): đồ án nhóm ngoại lai, ANOM, CUSUM, SPRT trên dữ liệu thể thao;
-  chấm điểm nguồn, phương án, chia việc. Chữ lặp ở `data/sports-monitoring-project.json`.
-- Chỉ nạp font Google. Không build. Cả hai trang có mục trên trang chủ (section Master's Degree); hero trang môn
-  có nút sang trang đồ án.
+- Đồ án nhóm (ngoại lai, ANOM, CUSUM, SPRT trên dữ liệu thể thao) có hai trang con (DMV-005):
+  trang 1 `sports-monitoring-project.html` (từ đề tài tới phương án, chốt gì trước khi làm) và
+  trang 2 `sports-monitoring-build.html` (làm đề tài A từ đầu tới cuối). Chữ lặp ở `data/<tên trang>.json`.
+- Chỉ nạp font Google. Không build. Trang chủ có mục trang môn và mục đồ án (trỏ trang 1); hero trang môn có nút
+  sang trang 1.
 - Không có cổng riêng. Cổng tĩnh của `pages/` chạy tay được, với đường dẫn tuyệt đối:
   `python3 pages/tools/lint-pages.py "$PWD/masters-degree/data-management-visualization/<file>"`.
 - Đo hai chế độ đọc (chạy tay, không phải cổng):
@@ -76,54 +77,49 @@
 - Kiến thức đề cương có mà slide không dạy: mục ngắn trong bài gần nhất, `p.slide-note` ghi theo đề cương nằm trong khối
   gập của mục ấy.
 
-## Trang đồ án `sports-monitoring-project.html`
+## Đồ án: hai trang con (DMV-005)
 
-- Thứ tự: hero (có `#ke-hoach`) → `#de-tai` → `#lineage` → `#cham-diem` (biểu đồ, `#hai-vong`, thẻ nguồn) → `#top-3`
-  → `#lo-trinh` → `#can-xac-nhan` → `#thuat-ngu` → `#nguon`. Thêm mục thì sửa luôn chip `.jump` ở hero.
-- `#top-3` và `#lo-trinh` ở nửa dưới theo ý chủ trang; muốn dễ thấy thì sửa khung `#ke-hoach`, đừng dời hai mục ấy lên.
-- Chữ lặp ở `data/sports-monitoring-project.json`; văn xuôi độc nhất ở HTML (REPO-001).
+- Hai trang có chung `nav.subpages` ngay dưới `header.top` ("1 · Chọn đề tài", "2 · Làm đề tài A") và khối CSS
+  `/* ═══ TRANG CON ═══ */`; sửa ở trang này thì sửa y hệt trang kia.
 - Trang đọc JSON bằng `fetch`: chạy `python3 -m http.server` ở gốc repo. Mở bằng `file://` thì `#notice` hiện.
-- Chỉ trường tên kết thúc bằng `_html` vào `innerHTML`, kể cả mảng (`pros_html`, `tasks_html`: từng phần tử); JS ném
-  lỗi nếu trường khác bị đưa vào.
+- Chỉ trường tên kết thúc bằng `_html` vào `innerHTML`, kể cả mảng; JS ném lỗi nếu trường khác bị đưa vào.
+- Thuật ngữ và nguồn gập chung trong `details#phu-luc`; link hay hash tới đích trong khối gập thì `openTo` mở khối.
+- Link sang phần thi công luôn trỏ trang 2. Trang 1 chuyển hash cũ (`#lt-…`, `#cong-thuc`) qua bảng `MOVED` trong JS;
+  dời một mục thì thêm dòng.
 
-### Số do JS tính, đừng ghi tay
+### Trang 1 `sports-monitoring-project.html`
 
-- Điểm tổng, kết luận, thứ tự thanh, số trên chip, số đếm ở hero: từ `scores`, `criteria[].weight`, `verdicts[].min`.
-- Điểm tổng hiện một chữ số, làm tròn xuống (`fmt1`), để con số không bao giờ vượt ngưỡng kết luận.
-- `scores` theo đúng thứ tự `criteria`. Đổi điểm thì sửa `why_html` cho khớp.
-- Điểm các vòng trước để ở `scores_r1`, `scores_r2`. `rounds[].src` in điểm vòng 1 → vòng 2, `rounds3[].src` in vòng 2 → hiện tại.
-- `options[].src`: điểm của phương án là điểm tổng của nguồn ấy; `[data-total="<id>"]` trong HTML cũng lấy từ đó.
-- `sprt_check` lưu p0, draw chưa làm tròn (541/1140, 254/1140); trang hiện 3 chữ số. p1, a, b tính bằng JS, chèn bằng
-  `<span data-calc>`. Số đã kiểm trên CSV (`stop`, các số trong `check_html`, `notes_html`) chỉ sửa khi chạy lại trên dữ liệu.
-- Tham số của câu hỏi chỉ lấy từ Phase I; kết quả đã chạy thử để ở `check_html` (nhãn "Kiểm tra khả thi").
-- Tổng trang (`report`), tổng phút (`slides`), pha của mỗi vai (suy từ `phases[].roles`), nhãn tuần trên lịch.
-
-### Các khối
-
-- `#lo-trinh` mở bằng `#lt-chot`: danh sách `agree` (tên, `what_html`, `phases` thành link mở pha). Mỗi pha có
-  `agree_html` ("Cần thống nhất", hiện trên cùng khung chi tiết). Mỗi `plan_a` có `decision_html` (ai quyết định gì) (DMV-004).
-- `#lt-kien-truc` (HTML): bảng bốn tầng thu nạp, lưu trữ, xử lý, phục vụ và lý do không dùng kiến trúc Lambda; link sang
-  bài `b9` của trang môn big data.
-- `#ke-hoach`: bốn câu hỏi lấy từ `plan_a[].q`, việc tuần 1 từ `week1` (mỗi vai một dòng, nhãn vai có thể là `label_html`).
-  Sửa câu hỏi ở `plan_a`. Câu 3 là CUSUM Bernoulli trên thắng sân nhà; phong độ câu lạc bộ chỉ là phần mở rộng.
-  Dòng "Nộp" tính số tab, slide, phút, chương, trang từ `plan_a`, `slides`, `report`.
-- Link có `data-ph` chọn pha ấy trên lịch; link trong trang tới đích nằm trong khối gập thì mở khối.
-- Danh sách thẻ nguồn nằm trong `#cardsBox` (gập); mỗi thẻ là `details` một dòng. Bấm thanh biểu đồ hay link `#src-…`
-  thì mở danh sách, mở thẻ ấy rồi cuộn tới.
-- `#de-tai`: hình SPRT dùng tham số chung chung, không phải tham số của đồ án.
-- `#can-xac-nhan` có ba phần: `#gvMsg` (tin nhắn gửi giảng viên, đánh số câu; bẫy 6 trỏ "câu 5", đổi thứ tự thì sửa chỗ
-  trỏ), `#fdMsg`, và việc nhóm tự chốt.
-  `#fdMsg` là thư tiếng Anh xin phép football-data.co.uk, không tên người, không tên trường; P0 và `week1` trỏ tới nó.
-- `#thuat-ngu`: thuật ngữ dùng ở hero, `#de-tai`, `#lineage`, `#top-3`, `#lo-trinh` (kể cả mọi pha) hiện sẵn; còn lại trong
-  `#glossMore`.
-- `options[].fit` chấm 1–3 theo `fit_rows`; nhiều chấm là tốt hơn ở tiêu chí ấy.
-- `phases`: `start`, `len` là phần trăm tổng thời gian; nút 4/6/8/10 tuần (mặc định 6) chỉ đổi nhãn tuần và số ngày.
-- Bấm một pha, hoặc Tab rồi Enter, mở khung chi tiết; mũi tên lên xuống chuyển pha. Ở ≤ 600px lịch thành danh sách.
-- Rê, focus hay bấm một vai thì tô các pha của vai ấy; bấm thì cuộn tới lịch, bấm lần nữa thì bỏ tô.
-- `flow`, `flow_out`: mỗi ô có `phase`, bấm thì mở pha ấy. Ô có `demo: true` nối vào ô Demo qua đường gom bên phải.
-  SVG vẽ theo bề rộng thật, theo luật mũi tên ở mục Giao diện.
+- Thứ tự: hero (sơ đồ `#journey`, `#ke-hoach`) → `#de-tai` (có `#lineage`) → `#tim-nguon` → `#cham-diem` → `#top-3`
+  → `#chon` → `#truoc-khi-lam` (`#can-chot`, `#cau-hoi`) → `#can-xac-nhan` → `#phu-luc`. Thêm mục thì sửa chip `.jump`
+  và `journey`.
+- Chặng lấy từ `journey`; mỗi mục chặng có `div.eyebrow[data-stage]` (JS điền "Chặng k / n") và `p.stage-why`.
+- `agree[].when` chọn mốc trong `bands`; `agree[].build` là id bước ở trang 2, tên lấy từ `build_steps`.
+- `plan_a` ở trang 1 chỉ có câu hỏi và `decision_html` (ai quyết định gì, DMV-004); cách làm và số đã kiểm ở trang 2.
+- Điểm tổng, kết luận, thứ tự thanh, số trên chip, số đếm ở hero: tính từ `scores`, `criteria[].weight`,
+  `verdicts[].min`. Điểm tổng hiện một chữ số, làm tròn xuống (`fmt1`). `scores` theo đúng thứ tự `criteria`; đổi điểm
+  thì sửa `why_html`. Điểm vòng trước ở `scores_r1`, `scores_r2`.
+- `options[].src`: điểm phương án là điểm tổng của nguồn ấy; `[data-total="<id>"]` cũng lấy từ đó. `options[].fit`
+  chấm 1–3 theo `fit_rows`.
+- Thẻ nguồn nằm trong `#cardsBox` (gập); bấm thanh biểu đồ hay link `#src-…` thì mở thẻ ấy rồi cuộn tới.
+- `#de-tai`: hình minh hoạ dùng số giả lập, luôn kèm nhãn "minh hoạ, số giả lập".
+- `#can-xac-nhan`: `#gvMsg` (tin nhắn gửi giảng viên, đánh số câu), `#fdMsg` (thư tiếng Anh xin phép
+  football-data.co.uk, không tên người, không tên trường), việc nhóm tự chốt.
 - "Ví dụ quen thuộc" (`methods[].familiar_html`) so với việc theo dõi một app di động; không nhắc tới chủ trang.
-- Bốn hình nhỏ ở `#de-tai` dùng số giả lập, luôn kèm nhãn "minh hoạ, số giả lập".
+
+### Trang 2 `sports-monitoring-build.html`
+
+- 16 bước, id cố định: `#khoi-dong`, `#bai-toan`, `#nguon-du-lieu`, `#kien-truc`, `#mo-hinh-du-lieu`, `#thu-nap`,
+  `#lam-sach`, `#eda`, `#ke-hoach-phan-tich`, `#phuong-phap`, `#kiem-chung`, `#truc-quan`, `#demo`, `#gioi-han`,
+  `#bao-cao`, `#tai-lap`; thêm `#lich`, `#vai`, `#repo`, `#xong`. Trang 1 và trang khác link vào: không đổi id.
+- Mỗi bước: phần luôn hiện (câu hỏi, tên chung, vào → ra, sơ đồ, các dòng "Chốt", "Xong khi"); phần gập (phương án khác
+  của từng chốt: vì sao không, khi nào nên chọn; việc, file, vai, bài môn; code; bẫy; dùng lại). `h2` trùng `steps[].title`.
+- Mỗi chỗ phải chốt thì chốt một phương án và liệt kê phương án khác; không để "tuỳ nhóm".
+- Số kết quả lấy từ lần chạy thử đề tài A (results/*.csv); chạy lại thì sinh lại JSON, đừng sửa tay. Hình kết quả ghi
+  nhãn "Số thật"; hình giả lập ghi "minh hoạ, số giả lập".
+- Sơ đồ mô tả bằng toạ độ trong `DG` của JS; chữ tràn hộp thì console báo "Chữ tràn hộp".
+- `phases`: `start`, `len` là phần trăm tổng thời gian; nút số tuần chỉ đổi nhãn tuần và số ngày. Pha của mỗi vai suy từ
+  `phases[].roles`; tổng trang (`report`) và tổng phút (`slides`) do JS tính.
+- Glossary trang 2 chỉ giữ thuật ngữ có trên trang; mã luật chất lượng (B1…, F1…) không tự bọc.
 
 ### Thuật ngữ, link, nội dung
 

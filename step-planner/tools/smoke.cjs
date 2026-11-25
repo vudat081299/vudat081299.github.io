@@ -1307,7 +1307,7 @@ const check = (name, ok, detail = '') => {
   const chevs = await m.page.$$eval('.ws-notes summary, .step-notes summary', (ss) => ss.map((x) => `${getComputedStyle(x).display}:${x.querySelectorAll('svg.i use[href="#i-chev"]').length}`));
   check('ghi chú dự án và ghi chú bước: cùng biểu tượng chevron, không dấu tam giác của trình duyệt', chevs.every((x) => /^(inline-)?flex:1$/.test(x)), [...new Set(chevs)].join(','));
   check('mẫu đồ án: ghi chú bước gập, có link trang đồ án', (await m.page.$$('.step-notes')).length === 10
-    && (await m.page.$$eval('.step-notes a', (a) => a.filter((x) => /sports-monitoring-project\.html#lt-lich$/.test(x.href)).length)) === 10);
+    && (await m.page.$$eval('.step-notes a', (a) => a.filter((x) => /sports-monitoring-build\.html#lich$/.test(x.href)).length)) === 10);
   for (const d of ['#dlg-sub', '#dlg-export']) {
     if (d === '#dlg-sub') await m.page.click('.step:nth-child(1) [data-act="edit-sub"]');
     else await m.page.click('#export-btn');

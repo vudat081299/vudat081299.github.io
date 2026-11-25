@@ -21,10 +21,12 @@ import unicodedata
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPO = os.path.dirname(HERE)
 TEMPLATES = os.path.join(HERE, 'data/templates.json')
-COURSE_JSON = os.path.join(REPO, 'masters-degree/data-management-visualization/data/sports-monitoring-project.json')
-COURSE_HTML = os.path.join(REPO, 'masters-degree/data-management-visualization/sports-monitoring-project.html')
+COURSE_JSON = os.path.join(REPO, 'masters-degree/data-management-visualization/data/sports-monitoring-build.json')
+COURSE_HTML = os.path.join(REPO, 'masters-degree/data-management-visualization/sports-monitoring-build.html')
+PLAN_HTML = os.path.join(REPO, 'masters-degree/data-management-visualization/sports-monitoring-project.html')
 COURSE_ID = 'it5425-sports'
-COURSE_URL = 'https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-project.html'
+COURSE_URL = 'https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-build.html'
+PLAN_URL = 'https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-project.html'
 TOKEN_END = '/* ── hết token ── */'
 
 errors = []
@@ -46,23 +48,25 @@ def course_template():
     src = json.load(open(COURSE_JSON, encoding='utf-8'))
     roles = [t['role'] for t in src['team']]
     page = open(COURSE_HTML, encoding='utf-8').read()
-    m = re.search(r'id="lt-xong">.*?<ul class="checklist">(.*?)</ul>', page, re.S)
+    m = re.search(r'id="xong">.*?<ul class="checklist">(.*?)</ul>', page, re.S)
     checklist = [text(x) for x in re.findall(r'<li>(.*?)</li>', m.group(1), re.S)] if m else []
     if not checklist:
-        err(f'{COURSE_HTML}: không tìm thấy danh sách "Xong khi nào" (#lt-xong)')
-    for anchor in ('lt-lich', 'can-xac-nhan', 'lt-xong'):
+        err(f'{COURSE_HTML}: không tìm thấy danh sách "Xong khi nào" (#xong)')
+    for anchor in ('lich', 'xong'):
         if f'id="{anchor}"' not in page:
             err(f'{COURSE_HTML}: mất neo #{anchor} mà mẫu {COURSE_ID} trỏ tới')
+    if 'id="can-xac-nhan"' not in open(PLAN_HTML, encoding='utf-8').read():
+        err(f'{PLAN_HTML}: mất neo #can-xac-nhan mà mẫu {COURSE_ID} trỏ tới')
     steps = []
     for p in src['phases']:
         phase_roles = [roles[i - 1] for i in p['roles']]
         subs = [{'title': text(t)} for t in p['tasks_html']]
         notes = ['Vai: ' + ', '.join(phase_roles), 'Công cụ: ' + text(p['tools']),
-                 f'Trang đồ án, pha {p["id"]}: {COURSE_URL}#lt-lich']
+                 f'Trang đồ án, pha {p["id"]}: {COURSE_URL}#lich']
         if p['id'] == 'P0':
-            notes.append(f'Câu hỏi gửi giảng viên, thư xin phép: {COURSE_URL}#can-xac-nhan')
+            notes.append(f'Câu hỏi gửi giảng viên, thư xin phép: {PLAN_URL}#can-xac-nhan')
         if p['id'] == 'P8' and checklist:
-            notes += ['', f'Xong khi nào ({COURSE_URL}#lt-xong):'] + ['- ' + c for c in checklist]
+            notes += ['', f'Xong khi nào ({COURSE_URL}#xong):'] + ['- ' + c for c in checklist]
         steps.append({
             'title': f'{p["id"]} · {p["name"]}',
             'goal': text(p['io_html']),
