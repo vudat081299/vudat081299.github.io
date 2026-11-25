@@ -375,8 +375,9 @@ function stepRow(step, i, visible, ctx) {
       h('span', { class: 'bar-prog', 'aria-hidden': 'true' }, barFill(prog.pct))),
     h('div', { class: 'acts' },
       h('button', { type: 'button', class: 'btn small', 'data-act': 'add-sub' }, icon('plus'), 'Sub-step'),
-      !step.revisit && C.canReopen(step) && h('button', { type: 'button', class: 'btn small quiet aux', 'data-act': 'revisit', tabindex: '-1', title: 'A later step showed this one must be redone' }, icon('redo'), 'Reopen'),
-      !step.docs.length && h('button', { type: 'button', class: 'btn small quiet aux', 'data-act': 'add-doc', tabindex: '-1', title: 'Add a link or a Markdown note for the whole step' }, icon('plus'), 'Doc'),
+      /* Nút phụ chỉ biểu tượng (tên ở aria-label, title): cả hàng nằm gọn một dòng trong cột tên bước. */
+      !step.revisit && C.canReopen(step) && iconBtn('redo', 'Reopen step: a later step showed this one must be redone', 'revisit'),
+      !step.docs.length && iconBtn('clip', 'Add a doc: a link or a Markdown note for the whole step', 'add-doc'),
       iconBtn('trash', 'Delete step', 'del-step')));
   /* Băng "Reopened": vòng, ngày, lý do (bấm để sửa), còn mấy việc phải làm lại; làm lại xong hết thì mời đóng vòng. */
   const redo = C.redoCount(step);

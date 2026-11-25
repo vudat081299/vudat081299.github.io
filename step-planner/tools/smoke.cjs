@@ -1396,7 +1396,7 @@ const check = (name, ok, detail = '') => {
     { id: 'tl3', title: 'Chưa xong gì', subs: [{ id: 'sl5', title: 'Năm', status: 'doing' }, { id: 'sl6', title: 'Sáu', status: 'todo', par: true }] }],
   log: [{ id: 'll1', date: '2026-11-10', decision: 'Reopened: Đã đóng vòng (iteration 2)', why: 'a', stepId: 'tl2' },
     { id: 'll2', date: '2026-11-18', decision: 'Reopened: Đã đóng vòng (iteration 3)', why: 'b', stepId: 'tl2' }] }] };
-  for (const [w, hgt] of [[1440, 900], [390, 844]]) {
+  for (const [w, hgt] of [[1440, 900], [1280, 800], [390, 844]]) {
     const lc = await browser.newContext({ viewport: { width: w, height: hgt }, hasTouch: w < 500, isMobile: w < 500 });
     await lc.addInitScript((d) => { if (!localStorage.getItem('stepPlanner.v2')) localStorage.setItem('stepPlanner.v2', d); }, JSON.stringify(lay));
     const lp = await lc.newPage();
@@ -1412,6 +1412,15 @@ const check = (name, ok, detail = '') => {
       ? ord.head.bottom <= ord.band.top + 1 && ord.band.bottom <= ord.docs.top + 1 && ord.docs.bottom <= ord.cards.top + 1
       : ord.band.bottom <= ord.docs.top + 1 && ord.docs.bottom <= Math.min(ord.head.top, ord.cards.top) + 1,
     JSON.stringify(Object.fromEntries(Object.entries(ord).map(([k, v]) => [k, [Math.round(v.top), Math.round(v.bottom)]]))));
+    // Hàng nút của đầu bước (Sub-step, Reopen, Doc, xoá) nằm một dòng; nút phụ chỉ biểu tượng, có aria-label và title.
+    const acts = await lp.$eval('.step[data-step="tl2"] .step-head .acts', (a) => {
+      const bs = [...a.children];
+      return { acts: bs.map((b) => b.dataset.act).join(), rows: new Set(bs.map((b) => Math.round(b.getBoundingClientRect().top))).size,
+        named: bs.filter((b) => b.classList.contains('icon-btn')).every((b) => b.getAttribute('aria-label') && b.title && !b.textContent.trim()),
+        fits: bs.every((b) => b.getBoundingClientRect().right <= a.getBoundingClientRect().right + 0.5) };
+    });
+    check(`${w}px: nút của đầu bước một dòng, nút phụ chỉ biểu tượng có tên`, acts.acts === 'add-sub,revisit,add-doc,del-step' && acts.rows === 1
+      && acts.named && acts.fits, JSON.stringify(acts));
     // Thanh trên dính có nền đặc ở cả hai theme: nút xanh cuộn dưới nó không loang thành quầng.
     const bars = [];
     for (const scheme of ['light', 'dark']) {
