@@ -435,10 +435,10 @@ svg.i {
 .board .empty { display: flex; align-items: center; gap: var(--s3); flex-wrap: wrap; padding: var(--s5) 0; color: var(--ink-3); }
 .step {
   display: grid; grid-template-columns: var(--head-w) minmax(0, 1fr); gap: var(--s3) var(--s4);
-  padding: var(--s4) 0 var(--s6); border-top: var(--line-w) solid var(--line); position: relative;
+  padding: var(--s4) 0 var(--s6) var(--s2); border-top: var(--line-w) solid var(--line); position: relative;
 }
 .step:last-child { border-bottom: var(--line-w) solid var(--line); }
-.step-head { min-width: 0; display: flex; flex-direction: column; gap: var(--s2); padding-inline-start: var(--s2); }
+.step-head { min-width: 0; display: flex; flex-direction: column; gap: var(--s2); }
 @media (hover: hover) { .board:not(.filtering) .step-head { cursor: grab; } }
 .step-top { display: flex; gap: var(--s2); align-items: flex-start; }
 .step-num {
@@ -728,7 +728,7 @@ span.chip::after { content: none; }
    theo tháng; mỗi quyết định một chấm trên trục, dòng do Reopen tự ghi có chấm hổ phách; nút sửa / xoá hiện khi rê / focus ── */
 .log {
   display: grid; grid-template-columns: var(--head-w) minmax(0, var(--log-w)); gap: var(--s4);
-  padding: var(--s6) 0;
+  padding: var(--s6) 0 var(--s6) var(--s2);
 }
 .log:focus { outline: none; }
 .log-head { position: sticky; top: calc(var(--bar-h) + var(--s4)); align-self: start; display: flex; flex-direction: column; gap: var(--s2); }

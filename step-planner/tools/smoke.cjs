@@ -1181,7 +1181,7 @@ const check = (name, ok, detail = '') => {
     const head = row.querySelector('.step-head').getBoundingClientRect();
     const sc = row.querySelector('.cards-scroll');
     const card = row.querySelector('.card[data-sub]');
-    return { stacked: head.bottom <= sc.getBoundingClientRect().top + 1, scrolls: sc.scrollWidth > sc.clientWidth, left: head.left,
+    return { stacked: head.bottom <= sc.getBoundingClientRect().top + 1, scrolls: sc.scrollWidth > sc.clientWidth, left: row.getBoundingClientRect().left,
       whole: sc.clientHeight >= card.offsetHeight };
   });
   // Chạm: giữ thẻ rồi kéo (pointer events kiểu touch); vuốt nhanh thì là cuộn, không kéo.
@@ -1239,7 +1239,7 @@ const check = (name, ok, detail = '') => {
     && await m.page.$eval('.log-item [data-act="del-log"]', (b) => getComputedStyle(b.parentElement).opacity === '1' && b.offsetParent !== null));
   check('390px: không tràn ngang trang', (await hOverflow(m.page)) === 0, String(await hOverflow(m.page)));
   check('390px: tên bước nằm trên hàng bước con, hàng cuộn ngang bên trong', mob.stacked && mob.scrolls && mob.whole);
-  check('390px: lề 16px', Math.round(mob.left) === 16, String(mob.left));
+  check('390px: lề trang 16px (vạch chia của bước)', Math.round(mob.left) === 16, String(mob.left));
   // Danh sách trạng thái mở trên chip của hàng thẻ đang cuộn: cuộn tới (hàng vừa vuốt còn trôi, hay trình duyệt cuộn chip vào tầm
   // nhìn khi bấm) không đóng nó, nó đi theo chip; chip khuất hẳn thì đóng.
   const follow = await m.page.evaluate(async () => {
@@ -1421,6 +1421,15 @@ const check = (name, ok, detail = '') => {
     });
     check(`chân trang ${w}px: dưới bảng, có link trang chủ, link ngoài noopener; cột phím tắt ${w < 500 ? 'ẩn ở cảm ứng' : 'hiện'}`,
       foot.shown && foot.below && foot.home && foot.ext && foot.kb === !(w < 500), JSON.stringify(foot));
+    const inset = await lp.evaluate(() => {
+      const s = document.querySelector('.step[data-step="tl1"]'); const r = s.getBoundingClientRect();
+      const kids = [...s.children].filter((c) => getComputedStyle(c).position !== 'absolute' && c.offsetWidth);
+      const board = document.getElementById('board').getBoundingClientRect();
+      return { full: Math.abs(r.left - board.left) < 1 && Math.abs(r.width - board.width) < 1, line: getComputedStyle(s).borderTopWidth !== '0px',
+        pad: Math.round(Math.min(...kids.map((c) => c.getBoundingClientRect().left)) - r.left) };
+    });
+    check(`hàng bước ${w}px: vạch chia rộng hết bảng, mọi nội dung lùi vào trong (nền tô "vừa dời" thừa một khoảng bên trái)`,
+      inset.full && inset.line && inset.pad > 0, JSON.stringify(inset));
     const ord = await lp.evaluate(() => {
       const row = document.querySelector('.step[data-step="tl1"]');
       const r = (s) => row.querySelector(s).getBoundingClientRect();
