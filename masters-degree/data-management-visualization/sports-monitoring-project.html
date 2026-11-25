@@ -298,6 +298,15 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
 .traps-box ol{margin-bottom:0}
 .traps-box li{font-size:var(--fs-sm)}
 .qa-notes{margin-top:var(--s2);font-size:var(--fs-sm);line-height:1.55}
+.qa-dec{padding-left:var(--s3);border-left:2px solid var(--green)}
+
+/* ═══ CẦN CHỐT VÀ KIẾN TRÚC ═══ */
+.agree{margin:var(--s2) 0 0;padding-left:1.4em;font-size:var(--fs-sm);line-height:1.55}
+.agree li{margin:var(--s2) 0}
+.agree .ag-ph{color:var(--ink-2);font-size:var(--fs-xs)}
+.arch-why{margin-top:var(--s3)}
+.arch-why h4{margin:0 0 var(--s2)}
+.arch-why ul{margin:0;padding-left:1.2em;font-size:var(--fs-sm);line-height:1.55}
 .qa-check{margin-top:var(--s3);padding:var(--s2) var(--s3);border:1px solid var(--stroke);border-radius:var(--r-sm);background:var(--sunk);font-size:var(--fs-sm)}
 .qa-check p{margin:var(--s1) 0 0!important}
 .qa-notes ul{margin:var(--s1) 0 0;padding-left:1.1em}
@@ -331,6 +340,7 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
 .pp-grid p{margin:var(--s1) 0 0}
 .pp-item:first-child{grid-row:span 3}
 .pp-who{display:flex;flex-wrap:wrap;gap:var(--s1)}
+.pp-agree{margin:0 0 var(--s4);padding:var(--s2) var(--s3);border:1px solid var(--stroke);border-radius:var(--r-sm);background:var(--sunk);font-size:var(--fs-sm);line-height:1.55}
 @media (max-width:600px){
   .g-axis{display:none}
   .g-row{display:block;padding:var(--s2)}
@@ -649,9 +659,11 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
   <p class="sub">Từ câu hỏi tới demo, slide và báo cáo. Đổi sang B hay C thì giữ khung này, thay nguồn dữ liệu và câu hỏi.</p>
   <nav aria-label="Các phần của lộ trình">
     <ul class="jump sub-jump">
+      <li><a href="#lt-chot">Cần chốt</a></li>
       <li><a href="#lt-cau-hoi">Câu hỏi</a></li>
       <li><a href="#lt-lich">Lịch</a></li>
       <li><a href="#lt-vai">Ai làm gì</a></li>
+      <li><a href="#lt-kien-truc">Kiến trúc</a></li>
       <li><a href="#lt-luong">Luồng dữ liệu</a></li>
       <li><a href="#lt-repo">Repo mẫu</a></li>
       <li><a href="#cong-thuc">Công thức</a></li>
@@ -662,8 +674,13 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
   </nav>
   <p>Trang môn có ngoại lai (<a href="data-management-visualization.html#b3">bài 3</a>, <a href="data-management-visualization.html#b4">bài 4</a>: box plot, rào 1,5·IQR) nhưng không có ANOM, CUSUM, SPRT. Ba phương pháp này học từ nguồn ngoài, xem khối công thức.</p>
 
+  <h3 id="lt-chot">Từ ý tưởng tới demo: nhóm phải chốt gì</h3>
+  <p class="sub">Tám điều cả nhóm phải thống nhất, theo thứ tự làm. Mỗi pha trên lịch có mục “Cần thống nhất” ghi chi tiết; bấm tên pha để mở.</p>
+  <ol class="agree" id="agree"></ol>
+
   <h3 id="lt-cau-hoi">Bốn câu hỏi nghiên cứu</h3>
   <p>Ba câu ANOM, CUSUM, SPRT cùng hỏi một chuyện: <span class="term">lợi thế sân nhà</span> có giảm không. ANOM so từng mùa, CUSUM theo dõi liên tục 26 mùa, SPRT trả lời nhanh trong một mùa. Câu ngoại lai lo phần dữ liệu: số liệu trận nào bất thường, dòng nào ghi sai.</p>
+  <p>Dòng “Giúp quyết định” là câu hỏi nghiệp vụ: ai dùng kết quả để quyết định gì. Đồ án nhìn lại dữ liệu cũ, nên câu trả lời có dạng “nếu hồi ấy dùng thì đã quyết định sớm hay đúng hơn bao nhiêu”. Dữ liệu chỉ cho thấy hai điều đi cùng nhau, chưa chứng minh cái này gây ra cái kia.</p>
   <div class="qa" id="planA"></div>
 
   <div class="box traps-box">
@@ -693,6 +710,29 @@ table.outline td:last-child{text-align:right;font-variant-numeric:tabular-nums}
   <h3 id="lt-vai">Ai làm gì</h3>
   <p class="sub">Bảy vai; mỗi người viết chương báo cáo của phần mình. Rê chuột hoặc bấm một vai để tô các pha của vai ấy trên lịch.</p>
   <ol class="team" id="team"></ol>
+
+  <h3 id="lt-kien-truc">Kiến trúc: chạy theo lô trên một máy</h3>
+  <p class="sub">Kiến trúc trả lời bốn câu: dữ liệu vào từ đâu, lưu ở đâu, xử lý lúc nào, người xem dùng gì. Nhóm chốt ở <a href="#lt-lich" data-ph="P0">pha P0</a>.</p>
+  <div class="tbl-wrap">
+    <table class="stack">
+      <thead><tr><th scope="col">Tầng</th><th scope="col">Đồ án này dùng</th><th scope="col">Lưu ý</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Thu nạp</th><td><code>src/download.py</code> tải CSV từ football-data.co.uk.</td><td>Chạy tay. Theo dõi mùa đang đá thì chạy lại sau mỗi vòng đấu.</td></tr>
+        <tr><th scope="row">Lưu trữ</th><td><code>data/raw/</code> → <code>data/clean/</code> (Parquet, DuckDB) → <code>results/</code>.</td><td>Không sửa tay file trong <code>raw/</code>; sai thì sửa code rồi chạy lại.</td></tr>
+        <tr><th scope="row">Xử lý</th><td>Các script trong <code>src/</code>, Python trên một laptop.</td><td>Một lệnh chạy lại từ đầu, ra đúng các file cũ.</td></tr>
+        <tr><th scope="row">Phục vụ</th><td>App Streamlit; hình PNG hay SVG cho báo cáo và slide.</td><td>Demo chạy được khi không có mạng.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="box arch-why">
+    <h4>Vì sao không dùng kiến trúc Lambda</h4>
+    <ul>
+      <li><span class="term">Kiến trúc Lambda</span> chạy song song hai nhánh: nhánh theo lô tính lại toàn bộ dữ liệu, nhánh luồng cập nhật ngay từng sự kiện. Học ở <a href="../big-data-storage-processing/big-data-storage-processing.html#b9">bài 9 môn Lưu trữ và xử lý dữ liệu lớn</a>.</li>
+      <li>Lambda dành cho dữ liệu lớn cần kết quả tức thì. Đồ án này có khoảng 11.000 trận, vài MB, trận mới tới vài ngày một lần.</li>
+      <li>CUSUM và SPRT cập nhật sau mỗi trận, nhưng chạy lại phần xử lý sau mỗi vòng đấu chỉ mất vài giây. Không cần Kafka, Spark hay HDFS.</li>
+      <li>Ghi lựa chọn này và lý do vào chương 2 của báo cáo: hội đồng hay hỏi vì sao chọn kiến trúc ấy.</li>
+    </ul>
+  </div>
 
   <h3 id="lt-luong">Dữ liệu chảy qua đâu</h3>
   <div class="flow-wrap">
@@ -1474,6 +1514,25 @@ Kind regards,
     });
     upgradeTerms(box);
   }
+  /* ═══ CẦN CHỐT: tám điều nhóm thống nhất, lấy từ agree; tên pha là link mở pha ấy trên lịch. */
+  function renderAgree() {
+    var ol = $('#agree');
+    ol.textContent = '';
+    D.agree.forEach(function (a) {
+      var li = el('li');
+      li.appendChild(el('b', null, a.name));
+      li.appendChild(document.createTextNode(': '));
+      li.appendChild(html(el('span'), a, 'what_html'));
+      var ph = el('span', 'ag-ph', ' · Pha ');
+      a.phases.forEach(function (id, k) {
+        if (k) ph.appendChild(document.createTextNode(', '));
+        var l = el('a', null, id); l.href = '#lt-lich'; l.setAttribute('data-ph', id);
+        ph.appendChild(l);
+      });
+      li.appendChild(ph);
+      ol.appendChild(li);
+    });
+  }
   function renderPlanA() {
     var box = $('#planA');
     box.textContent = '';
@@ -1481,6 +1540,11 @@ Kind regards,
       var b = el('div', 'box');
       b.appendChild(el('span', 'pill', q.method));
       b.appendChild(el('h4', null, q.q));
+      if (q.decision_html) {
+        var pd = el('p', 'qa-dec'); pd.appendChild(el('span', 'lab', 'Giúp quyết định'));
+        pd.appendChild(html(el('span'), q, 'decision_html'));
+        b.appendChild(pd);
+      }
       var p1 = el('p'); p1.appendChild(el('span', 'lab', 'Dữ liệu')); var s1 = html(el('span'), q, 'data_html'); p1.appendChild(s1);
       var p2 = el('p'); p2.appendChild(el('span', 'lab', 'Cách làm')); var s2 = html(el('span'), q, 'how_html'); p2.appendChild(s2);
       b.appendChild(p1); b.appendChild(p2);
@@ -1653,6 +1717,13 @@ Kind regards,
     box.textContent = '';
     box.appendChild(el('h4', null, ph.id + ' · ' + ph.name));
     box.appendChild(el('p', 'pp-meta', weekSpan(ph) + ' · khoảng ' + Math.max(1, Math.round(ph.len / 100 * weeks * 7)) + ' ngày nếu còn ' + weeks + ' tuần'));
+    if (ph.agree_html) {
+      var ag = el('div', 'pp-agree');
+      ag.appendChild(el('span', 'lab', 'Cần thống nhất trước khi làm'));
+      var al = htmlList('ul', ph, 'agree_html'); al.className = 'checklist';
+      ag.appendChild(al);
+      box.appendChild(ag);
+    }
     var grid = el('div', 'pp-grid');
     var tasks = htmlList('ul', ph, 'tasks_html');
     tasks.className = 'checklist';
@@ -2122,6 +2193,7 @@ Kind regards,
       drawChart();
       renderCards();
       renderOptions();
+      renderAgree();
       renderPlanA();
       renderWeeks();
       renderGantt();

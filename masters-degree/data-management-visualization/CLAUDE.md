@@ -100,6 +100,10 @@
 
 ### Các khối
 
+- `#lo-trinh` mở bằng `#lt-chot`: danh sách `agree` (tên, `what_html`, `phases` thành link mở pha). Mỗi pha có
+  `agree_html` ("Cần thống nhất", hiện trên cùng khung chi tiết). Mỗi `plan_a` có `decision_html` (ai quyết định gì) (DMV-004).
+- `#lt-kien-truc` (HTML): bảng bốn tầng thu nạp, lưu trữ, xử lý, phục vụ và lý do không dùng kiến trúc Lambda; link sang
+  bài `b9` của trang môn big data.
 - `#ke-hoach`: bốn câu hỏi lấy từ `plan_a[].q`, việc tuần 1 từ `week1` (mỗi vai một dòng, nhãn vai có thể là `label_html`).
   Sửa câu hỏi ở `plan_a`. Câu 3 là CUSUM Bernoulli trên thắng sân nhà; phong độ câu lạc bộ chỉ là phần mở rộng.
   Dòng "Nộp" tính số tab, slide, phút, chương, trang từ `plan_a`, `slides`, `report`.
