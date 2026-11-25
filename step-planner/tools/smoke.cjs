@@ -630,8 +630,17 @@ const check = (name, ok, detail = '') => {
   // thẻ gửi lại mang dấu Redo tới khi xong lại; băng "Reopened · Iteration N · ngày · lý do" và "k of n redo tasks left";
   // làm lại xong hết thì "Close iteration" thành nút chính; nhật ký tự ghi; Hoàn tác; vòng tăng tiếp.
   const revBtn = `.step[data-step="${s2id}"] .acts [data-act="revisit"]`;
-  check('Reopen: nút có chữ', (await page.textContent(revBtn)).trim() === 'Reopen');
   const r0 = (await cur(page)).steps[1];
+  // Chưa có bước con xong thì không có gì để gửi lại: không có Reopen, ở đầu bước lẫn trong hộp sửa bước.
+  const nd = (await cur(page)).steps.find((s) => s.subs.length && s.subs.every((x) => x.status !== 'done'));
+  await page.click(`.step[data-step="${nd.id}"] [data-act="edit-step"]`);
+  const noReopen = !(await page.$(`.step[data-step="${nd.id}"] [data-act="revisit"]`)) && !(await page.isVisible('#step-revisit'));
+  await page.keyboard.press('Escape');
+  await page.click(`.step[data-step="${s2id}"] [data-act="edit-step"]`);
+  const dlgReopen = await page.isVisible('#step-revisit');
+  await page.keyboard.press('Escape');
+  check('Reopen: chỉ có khi bước có bước con Done (đầu bước và hộp sửa bước)', noReopen && dlgReopen && !!(await page.$(revBtn)),
+    `${r0.subs.map((x) => x.status)} ${noReopen} ${dlgReopen}`);
   const [doneId, doneId2] = [r0.subs[0].id, r0.subs[1].id];
   for (const id of [doneId, doneId2]) {
     for (let k = 0; k < 3 && (await cur(page)).steps[1].subs.find((x) => x.id === id).status !== 'done'; k++) await page.click(subSel(id, 'status'));

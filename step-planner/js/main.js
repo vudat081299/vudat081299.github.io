@@ -375,7 +375,7 @@ function stepRow(step, i, visible, ctx) {
       h('span', { class: 'bar-prog', 'aria-hidden': 'true' }, barFill(prog.pct))),
     h('div', { class: 'acts' },
       h('button', { type: 'button', class: 'btn small', 'data-act': 'add-sub' }, icon('plus'), 'Sub-step'),
-      !step.revisit && h('button', { type: 'button', class: 'btn small quiet aux', 'data-act': 'revisit', tabindex: '-1', title: 'A later step showed this one must be redone' }, icon('redo'), 'Reopen'),
+      !step.revisit && C.canReopen(step) && h('button', { type: 'button', class: 'btn small quiet aux', 'data-act': 'revisit', tabindex: '-1', title: 'A later step showed this one must be redone' }, icon('redo'), 'Reopen'),
       !step.docs.length && h('button', { type: 'button', class: 'btn small quiet aux', 'data-act': 'add-doc', tabindex: '-1', title: 'Add a link or a Markdown note for the whole step' }, icon('plus'), 'Doc'),
       iconBtn('trash', 'Delete step', 'del-step')));
   /* Băng "Reopened": vòng, ngày, lý do (bấm để sửa), còn mấy việc phải làm lại; làm lại xong hết thì mời đóng vòng. */
@@ -1334,7 +1334,7 @@ function openStep(step, at) {
   const n = ws.steps.length + (step ? 0 : 1);
   fillPos(field(f, 'pos'), n, step ? ws.steps.indexOf(step) : at ?? n - 1);
   $('step-del').hidden = !step;
-  $('step-revisit').hidden = !step;
+  $('step-revisit').hidden = !step || (!step.revisit && !C.canReopen(step));
   docUndo = null;
   renderDocsEdit('step');
   openDlg($('dlg-step'), field(f, 'title'));
@@ -1626,8 +1626,9 @@ $('md-del').addEventListener('click', () => {
 
 let revisitCtx = { wsId: '', stepId: '' };
 /** Hộp "Reopen step": mở lại thì có lý do (bắt buộc) và danh sách bước con đã xong để gửi lại làm; đang mở lại thì chỉ sửa
- * lý do hay đóng vòng. @param {any} step */
+ * lý do hay đóng vòng. Chưa có bước con nào xong thì không mở lại (nút cũng không hiện). @param {any} step */
 function openRevisit(step) {
+  if (!step.revisit && !C.canReopen(step)) return;
   const ws = cur();
   revisitCtx = { wsId: ws.id, stepId: step.id };
   const labels = labelsOf(ws);
@@ -1636,10 +1637,9 @@ function openRevisit(step) {
   $('revisit-help').hidden = !!step.revisit;
   field($('revisit-form'), 'reason').value = step.revisit ? step.revisit.reason : '';
   const done = step.subs.filter((/** @type {any} */ x) => x.status === 'done');
-  $('revisit-subs').hidden = !!step.revisit || !step.subs.length;
+  $('revisit-subs').hidden = !!step.revisit;
   $('revisit-round').textContent = `This starts iteration ${(step.round || 1) + 1}. Picked sub-steps go back to ${C.STATUS_LABEL.todo} with a Redo mark.`;
   $('revisit-all-done').hidden = done.length < 2;
-  $('revisit-none').hidden = done.length > 0;
   $('revisit-list').replaceChildren(...done.map((/** @type {any} */ x) => h('li', {},
     h('label', { class: 'reset-item' },
       h('input', { type: 'checkbox', name: 'reset', value: x.id }),

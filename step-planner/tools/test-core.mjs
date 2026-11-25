@@ -3,7 +3,7 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import {
-  fromTemplate, toMarkdown, fromMarkdown, parseImport, toJSON, toBackup, shape, progress, nextActionIds, projectNextIds, slotsOf, subPlace, placeSub, takeSub, shiftTarget, liveLabels, redoCount,
+  fromTemplate, toMarkdown, fromMarkdown, parseImport, toJSON, toBackup, shape, progress, nextActionIds, projectNextIds, slotsOf, subPlace, placeSub, takeSub, shiftTarget, liveLabels, redoCount, canReopen,
   nextStatus, setStatus, splitInline, normWorkspace, normSub, normLog, freshCopy, counts, slug, fold, parseDate, uniqueName, normDoc, safeUrl,
 } from '../js/core.js';
 import { parseMd, inline } from '../js/md.js';
@@ -338,6 +338,8 @@ check('Next: thẻ chờ không là việc tiếp theo; ô chỉ còn thẻ ch�
   && eq(nextActionIds({ subs: [{ id: 'a', status: 'done' }, { id: 'b', status: 'pending' }, { id: 'c', status: 'todo' }] }), [])
   && eq(projectNextIds({ steps: [{ subs: [{ id: 'a', status: 'pending' }] }, { subs: [{ id: 'b', status: 'todo' }] }] }), [])
   && eq(projectNextIds({ steps: [{ subs: [{ id: 'a', status: 'done' }] }, { subs: [{ id: 'b', status: 'blocked' }, { id: 'c', status: 'pending', par: true }] }] }), ['b']));
+check('Reopen: chỉ khi bước có bước con Done', canReopen({ subs: [{ status: 'todo' }, { status: 'done' }] })
+  && !canReopen({ subs: [{ status: 'doing' }, { status: 'skip' }, { status: 'cancel' }] }) && !canReopen({ subs: [] }));
 check('Next: dấu Redo của thẻ chờ còn tính là còn phải làm', eq(redoCount({ subs: [{ status: 'pending', redo: true }, { status: 'done', redo: true }] }), { total: 2, left: 1 }));
 check('tách theo ·', eq(splitInline('a \\· b · @c · hạn 2026-01-01'), ['a · b', '@c', 'hạn 2026-01-01']));
 check('đếm', eq(counts([hard]), { workspaces: 1, steps: 4, subs: 11, log: 3, docs: 1 }));

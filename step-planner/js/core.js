@@ -335,6 +335,9 @@ export function redoCount(step) {
   return { total: all.length, left: all.filter(open).length };
 }
 
+/** Mở lại một bước chỉ có nghĩa khi nó có bước con đã xong để gửi lại làm (PLAN-004). @param {{subs:{status:string}[]}} step */
+export const canReopen = (step) => step.subs.some((x) => x.status === 'done');
+
 /** Việc tiếp theo của cả dự án: việc tiếp theo của bước đầu tiên còn việc. @param {any} ws @returns {string[]} */
 export function projectNextIds(ws) {
   for (const s of ws.steps) if (s.subs.some(open)) return nextActionIds(s);
