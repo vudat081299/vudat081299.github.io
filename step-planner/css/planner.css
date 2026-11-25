@@ -628,8 +628,8 @@ span.chip { cursor: default; }
 span.chip::after { content: none; }
 
 /* ── Kéo thả (js/drag.js): bóng đi theo con trỏ; chỗ thả là ô viền đứt cỡ thẻ đang kéo, chữ mờ ở giữa; tay nắm của bước ── */
-body.dragging-any { -webkit-user-select: none; user-select: none; cursor: grabbing; }
-body.dragging-any .board * { cursor: grabbing; }
+/* Tấm phủ trong suốt khi đang kéo: con trỏ "grabbing" khắp trang, không phải đổi kiểu từng phần tử của bảng. */
+.drag-cover { position: fixed; inset: 0; z-index: 95; cursor: grabbing; }
 .dragging-any .gap-add { display: none; }
 .drag-src { display: none !important; }
 .drag-ghost {

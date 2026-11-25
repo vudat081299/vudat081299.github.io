@@ -506,11 +506,13 @@ const check = (name, ok, detail = '') => {
       const first = ph?.closest('.cards')?.firstElementChild;
       return { ph: !!ph, text: ph?.textContent, first: !!first && first.contains(ph), dashed: ph && getComputedStyle(ph).borderStyle,
         hidden: !!document.querySelector(`.card[data-sub="${ids[2]}"]`)?.closest('.drag-src'), same: window.__keep === document.querySelector(`.card[data-sub="${ids[1]}"]`),
-        ghost: !!document.querySelector('.drag-ghost'), w: ph && Math.round(ph.getBoundingClientRect().width), cw: Math.round(document.querySelector(`.card[data-sub="${ids[1]}"]`).getBoundingClientRect().width) };
+        ghost: !!document.querySelector('.drag-ghost'), w: ph && Math.round(ph.getBoundingClientRect().width), cw: Math.round(document.querySelector(`.card[data-sub="${ids[1]}"]`).getBoundingClientRect().width),
+        cover: getComputedStyle(document.querySelector('.drag-cover') || document.body).cursor, noSel: getSelection().isCollapsed };
     }, r1),
   });
   check('kéo thẻ: chưa thả đã thấy ô viền đứt "Drop here" ở chỗ sẽ thả, cỡ thẻ; thẻ gốc ẩn; bảng không vẽ lại giữa chừng',
     mid1.ph && mid1.text === 'Drop here' && mid1.first && mid1.dashed === 'dashed' && mid1.hidden && mid1.same && mid1.ghost && mid1.w === mid1.cw, JSON.stringify(mid1));
+  check('kéo thẻ: con trỏ "grabbing" (tấm phủ), không bôi chữ', mid1.cover === 'grabbing' && mid1.noSel, JSON.stringify(mid1));
   const r1b = await ids0();
   check('kéo thả bước con trong hàng', r1b[0] === r1[2] && r1b.length === n1, r1b.indexOf(r1[2]) + '');
   check('kéo thả: không mở hộp sửa sau khi thả', !(await page.isVisible('#dlg-sub')));
@@ -525,6 +527,8 @@ const check = (name, ok, detail = '') => {
   await dragTo(cardSel(r1[3]), async () => { const b = await box(cardSel(r1[2])); return { x: b.x + 12, y: b.y + 30 }; });
   r1c = await ids0();
   check('kéo ra khỏi ô song song: thành ô riêng', r1c[0] === r1[3] && !(await pars0()).includes('p'), (await pars0()));
+  const parBad = await page.evaluate(() => [...document.querySelectorAll('.cards > .slot')].filter((li) => li.classList.contains('par') !== (li.querySelectorAll('.card[data-sub]').length > 1)).length);
+  check('sau khi kéo: dáng ô song song đúng số thẻ của từng ô (hàng không vẽ lại cũng vậy)', parBad === 0, String(parBad));
   // 4. Esc huỷ: không đổi gì, ô viền đứt biến mất, thẻ gốc hiện lại.
   const before4 = await ids0();
   await dragTo(cardSel(r1[0]), async () => { const b = await box(cardSel(before4[0])); return { x: b.x + 12, y: b.y + 30 }; }, { esc: true });
@@ -561,7 +565,7 @@ const check = (name, ok, detail = '') => {
   // nhiều lần không dồn bóng. Thả về đúng chỗ cũ nên thứ tự không đổi.
   const leftovers = () => page.evaluate(() => ({
     ghosts: document.querySelectorAll('.drag-ghost').length,
-    rest: document.querySelectorAll('.drop-ph, .step-ph, .ph-slot, .drag-src').length + (document.body.classList.contains('dragging-any') ? 1 : 0),
+    rest: document.querySelectorAll('.drop-ph, .step-ph, .ph-slot, .drag-src, .drag-cover').length + (document.body.classList.contains('dragging-any') ? 1 : 0),
     tf: [...document.querySelectorAll('#board .card, #board .step')].filter((n) => n.style.transform || getComputedStyle(n).transform !== 'none').length,
   }));
   const settle = () => page.waitForFunction(() => !document.querySelector('.drag-ghost') && !document.body.classList.contains('dragging-any'), null, { timeout: 3000 }).catch(() => {});
