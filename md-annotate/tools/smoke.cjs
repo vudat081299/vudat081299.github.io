@@ -339,6 +339,18 @@ const cornerClash = (page) => page.evaluate(() => {
   await page.fill('#src-input', 'Thêm một dòng ở đầu.\n\n' + DOC.replace('chữ đậm ở đây', 'chữ nghiêng ở đây'));
   await page.waitForTimeout(400);
   check('nhận xét mất neo được báo', /1 comment has lost its quote/.test(await page.textContent('#edit-note')));
+  // Lề số dòng của Edit: một dòng của lớp cho mỗi dòng nguồn, chữ khớp, cao bằng nội dung ô chữ (cùng chỗ xuống hàng), dời theo cuộn.
+  const eln = await page.evaluate(() => {
+    const ta = document.getElementById('src-input'), L = document.getElementById('ed-lines'), box = document.getElementById('ed-ln');
+    ta.style.height = '120px'; ta.scrollTop = 60; ta.dispatchEvent(new Event('scroll'));
+    const r = { same: [...L.children].map((x) => x.textContent).join('\n') === ta.value, n: L.children.length, lines: ta.value.split('\n').length,
+      num: getComputedStyle(L.children[0], '::before').content, shown: getComputedStyle(box).display !== 'none',
+      dh: ta.scrollHeight - L.offsetHeight, moved: L.style.transform === 'translateY(-' + ta.scrollTop + 'px)', w: box.clientWidth === ta.clientWidth };
+    ta.style.height = '';
+    return r;
+  });
+  check('Edit: lề số dòng khớp từng dòng nguồn, cùng chỗ xuống hàng, theo cuộn', eln.same && eln.n === eln.lines && eln.num === 'counter(eln)' && eln.shown
+    && eln.dh >= 0 && eln.dh < 8 && eln.moved && eln.w, JSON.stringify(eln));
   const o6 = await out(page);
   check('nhận xét mất neo không vào prompt', !/chữ đậm/.test(o6) && /1\. L5 "liên kết/.test(o6) && /2\. L12 "Câu lặp lại/.test(o6), JSON.stringify(o6));
   check('mục mất neo có dấu !', (await page.$$eval('#list .ma-item.is-orphan .ma-item__n', (e) => e.map((x) => x.textContent))).join() === '!');

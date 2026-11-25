@@ -12,7 +12,7 @@
    Xuất: không (chạy khi nạp).
    Dùng: ui/store.js, ui/dom.js, ui/state.js, ui/hints.js, ui/render.js, ui/list.js, ui/prompt.js, ui/views.js,
      ui/sync-scroll.js, ui/panel.js, ui/layout.js, ui/help.js, ui/focus.js, ui/popup.js, ui/selection.js, ui/picks.js,
-     ui/history.js, ui/editor.js, ui/review.js, ui/review-panel.js, ui/minimap.js, ui/dwell.js, ui/tree.js, ui/bar.js.
+     ui/history.js, ui/editor.js, ui/edit-lines.js, ui/review.js, ui/review-panel.js, ui/minimap.js, ui/dwell.js, ui/tree.js, ui/bar.js.
    ui/files.js (cây của phiên) không có init: renderAll() vẽ cây lần đầu. */
 import { KEY, store } from './ui/store.js';
 import { $, shortcut, syncBar, trackKeyboard } from './ui/dom.js';
@@ -34,6 +34,7 @@ import { initSelection } from './ui/selection.js';
 import { initPicks } from './ui/picks.js';
 import { initHistory, renderHistCount } from './ui/history.js';
 import { initEditor, syncInputs } from './ui/editor.js';
+import { initEditLines } from './ui/edit-lines.js';
 import { initReview } from './ui/review.js';
 import { initReviewPanel } from './ui/review-panel.js';
 import { initMinimap } from './ui/minimap.js';
@@ -82,6 +83,7 @@ initLayout();
 initHelp();
 initFocus();
 initEditor();
+initEditLines();
 initPrompt();
 initHistory();
 initHints();

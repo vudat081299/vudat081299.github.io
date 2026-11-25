@@ -157,6 +157,10 @@ const bp = (o, d) => { const u = upS(o); return dpPrompt.buildPrompt(u, u.docs[u
     check('buildPrompt: tắt số dòng thì không nhãn, không câu dẫn số dòng', !/notes\/a\.md|tệp:dòng/.test(bp(s, d)));
     check('buildPrompt: không nhận xét, không toàn văn thì rỗng', bp(ses(text, [c3]), dpComments.anchorAll([c3], text, '')) === '');
     check('lineOf: đầu dòng, cuối văn bản', dpText.lineOf('a\nb\n', 0) === 1 && dpText.lineOf('a\nb\n', 2) === 2 && dpText.lineOf('a\nb\n', 4) === 3);
+    const ld = (a, b) => { const d = dpText.lineDiff(a.split('\n'), b.split('\n')); return d.head + ',' + d.tail; };
+    check('lineDiff: sửa giữa, thêm dòng, xoá dòng, dòng trùng ở mép không đếm hai lần',
+      ld('a\nb\nc', 'a\nB\nc') === '1,1' && ld('a\nc', 'a\nb\nc') === '1,1' && ld('a\nb\nc', 'a\nc') === '1,1'
+      && ld('x\nx', 'x\nx\nx') === '2,0' && ld('', 'a') === '0,0' && ld('a', 'a') === '1,0');
     check('slug: bỏ dấu tiếng Việt', dpText.slug('Bài thử Đặng — số 1') === 'bai-thu-dang-so-1');
   }
   // Gợi ý: renamed chỉ dồn số đếm của gợi ý mặc định cũ; nhận xét tự gõ trùng chữ cũ giữ nguyên.

@@ -23,7 +23,24 @@
 }
 
 /* KHUNG EDIT: ô dán / sửa chữ (.ma-ta, base.css) và hàng công cụ. */
-.ma-edit { padding: var(--s4); display: flex; flex-direction: column; gap: var(--s3); }
+.ma-edit { position: relative; padding: var(--s4); display: flex; flex-direction: column; gap: var(--s3); }
+/* Lề số dòng (ui/edit-lines.js, mọi loại file): #ed-ln phủ đúng vùng đệm của ô chữ (JS đo), cắt phần ngoài; bên trong mỗi
+   dòng chữ trong suốt cùng font, đệm, cách xuống hàng với ô chữ, số là ::before ở lề trái như Source. Văn bản trống: không lề. */
+@property --ed-gw { syntax: '<length>'; inherits: true; initial-value: 0px; }
+.ma-edln { display: none; position: absolute; overflow: hidden; pointer-events: none; }
+.ma-edit.has-ln .ma-edln { display: block; }
+.ma-edit.has-ln #src-input { padding-left: calc(var(--s2) + var(--ed-gw) + var(--s3)); }
+.ma-edln__in {
+  padding: calc(var(--s3) - var(--r-sm)) var(--s3) 0 calc(var(--s2) + var(--ed-gw) + var(--s3));
+  color: transparent; white-space: pre-wrap; overflow-wrap: break-word; word-break: normal; tab-size: 4; counter-reset: eln;
+}
+#src-input { white-space: pre-wrap; overflow-wrap: break-word; word-break: normal; }
+.ma-eln { display: block; }
+.ma-eln::before {
+  counter-increment: eln; content: counter(eln);
+  display: inline-block; vertical-align: top; width: var(--ed-gw); margin: 0 var(--s3) 0 calc(-1 * (var(--ed-gw) + var(--s3)));
+  text-align: right; font-size: var(--fs-xs); color: var(--ink-3); font-variant-numeric: tabular-nums;
+}
 #src-input { min-height: 52vh; }
 #src-input.is-empty { min-height: 140px; }
 .ma-edit__tools { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); }

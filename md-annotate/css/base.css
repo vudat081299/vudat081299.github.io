@@ -248,7 +248,7 @@ html.dark .ma-to-dark, html:not(.dark) .ma-to-light { display: none; }
 
 /* CHỮ CODE: Source, ô Edit, hộp prompt, mẫu ở Help. Không ligature: JetBrains Mono vẽ <!--, ->, ==, != thành mũi tên / dấu
    gộp, chữ thấy khác chữ thật (none tắt cả calt, nơi JetBrains Mono để các ligature ấy). */
-.ma-src, .ma-ta, .ma-out, .ma-keys code { font: 500 var(--fs-sm)/var(--lh-code) var(--mono); font-variant-ligatures: none; }
+.ma-src, .ma-ta, .ma-edln__in, .ma-out, .ma-keys code { font: 500 var(--fs-sm)/var(--lh-code) var(--mono); font-variant-ligatures: none; }
 
 /* Ô NHẬP — một họ: .ma-input (một dòng), .ma-ta (nhiều dòng), tên phiên. Bo --r-sm, chữ --fs-md;
    gõ: viền --ring + quầng --accent-soft. Cảm ứng: cao --h-touch, chữ --fs-lg (Safari iOS phóng to trang khi focus ô chữ
@@ -281,7 +281,7 @@ html.dark .ma-to-dark, html:not(.dark) .ma-to-light { display: none; }
 .ma-docname:focus { background: var(--bg); }
 @media (max-width: 720px), (pointer: coarse) {
   .ma-input, .ma-docname { height: var(--h-touch); }
-  .ma-input, .ma-ta, .ma-docname { font-size: var(--fs-lg); }
+  .ma-input, .ma-ta, .ma-edln__in, .ma-docname { font-size: var(--fs-lg); }
 }
 
 /* Ô ĐÁNH DẤU vẽ tay: Chrome tự làm tối accent-color khi màu sáng (thành xanh đậm), nên không dùng accent-color.

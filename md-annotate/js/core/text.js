@@ -1,6 +1,6 @@
 /* Tiện ích chữ, thuần (không DOM): số nhiều tiếng Anh, chuẩn hoá xuống dòng, số dòng của một vị trí, slug tên file,
    luật file chữ khi mở / nạp từ đĩa, nhãn phím tắt (keyCombo).
-   Xuất: hasNul, importCheck, isTextFile, keyCombo, lineOf, lineStarts, MAX_IMPORT, normNewlines, oneLine, plural, skipEntry, slug.
+   Xuất: hasNul, importCheck, isTextFile, keyCombo, lineDiff, lineOf, lineStarts, MAX_IMPORT, normNewlines, oneLine, plural, skipEntry, slug.
    Dùng: core/file-type.js. */
 import { langOf } from './file-type.js';
 
@@ -51,6 +51,14 @@ export function lineOf(text, i) {
   var a = lineCache.starts, lo = 0, hi = a.length - 1;
   while (lo < hi) { var mid = (lo + hi + 1) >> 1; if (a[mid] <= i) lo = mid; else hi = mid - 1; }
   return lo + 1;
+}
+/* Hai mảng dòng trước / sau một lần sửa: số dòng giống nhau ở đầu (head) và ở cuối (tail), không chồng nhau. Lề số dòng của
+   khung Edit (ui/edit-lines.js) chỉ dựng lại phần giữa. */
+export function lineDiff(a, b) {
+  var n = Math.min(a.length, b.length), head = 0, tail = 0;
+  while (head < n && a[head] === b[head]) head++;
+  while (tail < n - head && a[a.length - 1 - tail] === b[b.length - 1 - tail]) tail++;
+  return { head: head, tail: tail };
 }
 /* Vị trí đầu mỗi dòng của văn bản (dòng 1 ở chỉ số 0). Mảng dùng chung với lineOf: đừng sửa. */
 export function lineStarts(text) {

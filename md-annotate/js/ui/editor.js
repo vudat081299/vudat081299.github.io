@@ -2,7 +2,7 @@
    thả file / folder lên thẻ văn bản, tên phiên, phiên mới. syncInputs() đổ S và D vào mọi ô nhập. Mở file từ đĩa, nạp
    folder: ui/files.js (openDiskFile, importItems).
    Xuất: initEditor, syncInputs.
-   Dùng: core/text.js, core/session.js, ui/dom.js, ui/state.js, ui/render.js, ui/views.js, ui/prompt.js, ui/files.js. */
+   Dùng: core/text.js, core/session.js, ui/dom.js, ui/state.js, ui/render.js, ui/views.js, ui/prompt.js, ui/files.js, ui/edit-lines.js. */
 import { normNewlines, plural } from '../core/text.js';
 import { isEmpty } from '../core/session.js';
 import { $, droppedItems, toast } from './dom.js';
@@ -11,9 +11,11 @@ import { renderAll, renderMeta } from './render.js';
 import { lastRead, setView, view } from './views.js';
 import { syncOptions } from './prompt.js';
 import { importItems, openDiskFile, refreshTree } from './files.js';
+import { paintEditLines } from './edit-lines.js';
 
 export function syncInputs() {
   $('src-input').value = D.text;
+  paintEditLines();
   $('s-name').value = S.named ? S.name : '';
   $('s-name').placeholder = S.named ? '' : (S.name || 'Session name');
   syncOptions();
@@ -21,6 +23,7 @@ export function syncInputs() {
 function setText(t) {
   D.text = normNewlines(t);
   $('src-input').value = D.text;
+  paintEditLines();
   scheduleSave(); renderAll();
 }
 
