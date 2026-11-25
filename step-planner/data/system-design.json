@@ -1,0 +1,2380 @@
+{
+  "note": "Danh mục System design của Step Planner (PLAN-016): hồ sơ dự án và các khâu theo đường đi của dữ liệu; trang đọc bằng vòng lặp (REPO-001). Khuôn và luật: step-planner/CLAUDE.md.",
+  "profile": [
+    {
+      "id": "size",
+      "label": "How much data?",
+      "help": "Ước lượng cỡ dữ liệu thô. pandas cần RAM gấp vài lần cỡ file, nên “vừa bộ nhớ” nghĩa là file nhỏ hơn nhiều so với RAM máy.",
+      "choices": [
+        {
+          "id": "small",
+          "label": "Fits in memory (< 1 GB)"
+        },
+        {
+          "id": "medium",
+          "label": "One disk (1–100 GB)"
+        },
+        {
+          "id": "large",
+          "label": "More than one machine (> 100 GB)"
+        }
+      ]
+    },
+    {
+      "id": "fresh",
+      "label": "How often does new data arrive?",
+      "help": "Dữ liệu cố định (một bộ tải về) thì không cần lập lịch lấy dữ liệu.",
+      "choices": [
+        {
+          "id": "once",
+          "label": "Once (a fixed dataset)"
+        },
+        {
+          "id": "batch",
+          "label": "Daily or weekly"
+        },
+        {
+          "id": "stream",
+          "label": "Continuously (events, sensors)"
+        }
+      ]
+    },
+    {
+      "id": "latency",
+      "label": "How do people get the results?",
+      "help": "Câu này quyết định có cần API chạy suốt ngày hay chỉ cần chạy theo lịch.",
+      "choices": [
+        {
+          "id": "report",
+          "label": "A report or notebook"
+        },
+        {
+          "id": "batch",
+          "label": "Results refreshed on a schedule"
+        },
+        {
+          "id": "online",
+          "label": "An answer on request, in about a second"
+        }
+      ]
+    },
+    {
+      "id": "users",
+      "label": "Who uses it?",
+      "help": "Càng nhiều người dùng càng cần chỗ chạy ổn định và theo dõi lỗi.",
+      "choices": [
+        {
+          "id": "me",
+          "label": "Me or a grader"
+        },
+        {
+          "id": "few",
+          "label": "A few people (class, team, demo)"
+        },
+        {
+          "id": "public",
+          "label": "Many people (public)"
+        }
+      ]
+    },
+    {
+      "id": "budget",
+      "label": "Budget for running it?",
+      "help": "Nhiều gói miễn phí vẫn đòi thẻ thanh toán hoặc cho ứng dụng ngủ khi không ai dùng.",
+      "choices": [
+        {
+          "id": "free",
+          "label": "Free only"
+        },
+        {
+          "id": "low",
+          "label": "A few dollars a month"
+        },
+        {
+          "id": "cloud",
+          "label": "Pay as you go (cloud account)"
+        }
+      ]
+    },
+    {
+      "id": "gpu",
+      "label": "Does training need a GPU?",
+      "help": "Học máy cổ điển trên bảng (hồi quy, cây, boosting) chạy tốt trên CPU. Học sâu với ảnh, văn bản, mô hình lớn cần GPU.",
+      "choices": [
+        {
+          "id": "no",
+          "label": "No (classic ML on tables)"
+        },
+        {
+          "id": "yes",
+          "label": "Yes (deep learning)"
+        }
+      ]
+    }
+  ],
+  "stages": [
+    {
+      "id": "source",
+      "title": "Data source",
+      "lane": "data",
+      "question": "Dữ liệu của bạn đến từ đâu?",
+      "guide": "Đây là điểm bắt đầu của luồng dữ liệu.\nNguồn quyết định dữ liệu cũ hay mới, nhiều hay ít, và có cần lấy lại theo lịch không.\nMột dự án thường ghép vài nguồn, ví dụ một bộ Kaggle cộng một API.\nBước sau (Ingestion) lo việc kéo dữ liệu từ các nguồn này về.",
+      "multi": true,
+      "skipWhen": "",
+      "options": [
+        {
+          "id": "kaggle-datasets",
+          "name": "Kaggle Datasets",
+          "kind": "Public dataset hub",
+          "summary": "Kho dữ liệu công khai có sẵn file CSV, ảnh, văn bản. Tải về bằng trình duyệt hoặc bằng lệnh kaggle.",
+          "pick": "Chọn khi bạn cần một bộ dữ liệu cố định để học và thử mô hình ngay.",
+          "avoid": "Tránh khi đề bài cần dữ liệu mới mỗi ngày.",
+          "cost": "free",
+          "level": 1,
+          "fit": {
+            "fresh": [
+              "once"
+            ]
+          },
+          "links": [
+            {
+              "title": "Kaggle Datasets",
+              "url": "https://www.kaggle.com/datasets"
+            },
+            {
+              "title": "Kaggle CLI docs",
+              "url": "https://github.com/Kaggle/kaggle-api/blob/main/docs/README.md"
+            }
+          ],
+          "setup": [
+            "pip install kaggle",
+            "kaggle auth login",
+            "kaggle datasets download mlg-ulb/creditcardfraud -f creditcard.csv -p data --unzip"
+          ],
+          "task": "File dữ liệu gốc đã nằm trong thư mục data và ghi rõ tên bộ dữ liệu, giấy phép, ngày tải."
+        },
+        {
+          "id": "hf-datasets",
+          "name": "Hugging Face Datasets",
+          "kind": "Dataset hub + library",
+          "summary": "Kho dữ liệu cho văn bản, ảnh, âm thanh, kèm thư viện datasets để tải bằng một dòng Python. Hợp với dự án deep learning.",
+          "pick": "Chọn khi bạn làm NLP, ảnh hoặc âm thanh và muốn một bộ dữ liệu đã chia sẵn train và test.",
+          "avoid": "Tránh khi bạn cần dữ liệu bảng về một chủ đề địa phương cụ thể.",
+          "cost": "free",
+          "level": 1,
+          "fit": {
+            "fresh": [
+              "once"
+            ]
+          },
+          "links": [
+            {
+              "title": "Installation",
+              "url": "https://huggingface.co/docs/datasets/installation"
+            },
+            {
+              "title": "Load a dataset from the Hub",
+              "url": "https://huggingface.co/docs/datasets/load_hub"
+            }
+          ],
+          "setup": [
+            "pip install datasets"
+          ],
+          "task": "Gọi load_dataset chạy được và in ra số dòng của từng split."
+        },
+        {
+          "id": "open-data",
+          "name": "Open data portals",
+          "kind": "Government / public data",
+          "summary": "Cổng dữ liệu mở của chính phủ và tổ chức quốc tế. Dữ liệu thường là CSV, có cập nhật định kỳ.",
+          "pick": "Chọn khi đề tài về kinh tế, dân số, giao thông hay y tế và cần nguồn chính thức để trích dẫn.",
+          "avoid": "Tránh khi bạn cần dữ liệu theo thời gian thực.",
+          "cost": "free",
+          "level": 1,
+          "fit": {
+            "fresh": [
+              "once",
+              "batch"
+            ]
+          },
+          "links": [
+            {
+              "title": "Google Dataset Search",
+              "url": "https://datasetsearch.research.google.com/"
+            },
+            {
+              "title": "UN Data",
+              "url": "https://data.un.org/"
+            },
+            {
+              "title": "Data.gov",
+              "url": "https://data.gov/"
+            }
+          ],
+          "setup": [],
+          "task": "Đã ghi link nguồn, giấy phép và tần suất cập nhật của từng bảng sẽ dùng."
+        },
+        {
+          "id": "rest-api",
+          "name": "Requests",
+          "kind": "REST API client",
+          "summary": "Thư viện Python để gọi một API công khai qua HTTP và nhận JSON. Giống gọi fetch trong app web.",
+          "pick": "Chọn khi nguồn có API công khai như thời tiết, tỷ giá, chứng khoán, và bạn muốn lấy lại theo lịch.",
+          "avoid": "Tránh khi API giới hạn số lượt gọi quá thấp so với lượng dữ liệu bạn cần.",
+          "cost": "free",
+          "level": 1,
+          "fit": {
+            "fresh": [
+              "once",
+              "batch"
+            ]
+          },
+          "links": [
+            {
+              "title": "Quickstart",
+              "url": "https://requests.readthedocs.io/en/latest/user/quickstart/"
+            },
+            {
+              "title": "Install",
+              "url": "https://requests.readthedocs.io/en/latest/user/install/"
+            }
+          ],
+          "setup": [
+            "python -m pip install requests"
+          ],
+          "task": "Một script gọi API, lưu kết quả JSON vào data/raw và xử lý được lỗi mạng."
+        },
+        {
+          "id": "web-scraping",
+          "name": "Beautiful Soup",
+          "kind": "HTML scraping library",
+          "summary": "Thư viện đọc HTML của trang web và lấy ra bảng, giá, bài viết. Khi cần cào nhiều trang thì dùng Scrapy.",
+          "pick": "Chọn khi dữ liệu chỉ có trên trang web, không có API hay file tải về.",
+          "avoid": "Tránh khi điều khoản của trang hoặc robots.txt cấm cào dữ liệu.",
+          "cost": "free",
+          "level": 2,
+          "fit": {
+            "fresh": [
+              "once",
+              "batch"
+            ]
+          },
+          "links": [
+            {
+              "title": "Beautiful Soup docs",
+              "url": "https://www.crummy.com/software/BeautifulSoup/bs4/doc/"
+            },
+            {
+              "title": "Scrapy install",
+              "url": "https://docs.scrapy.org/en/latest/intro/install.html"
+            }
+          ],
+          "setup": [
+            "pip install beautifulsoup4",
+            "python -m pip install requests"
+          ],
+          "task": "Script cào được ít nhất một trang, lưu HTML gốc và bảng đã tách vào data/raw."
+        },
+        {
+          "id": "app-db",
+          "name": "PostgreSQL / MySQL (app database)",
+          "kind": "Existing app database",
+          "summary": "Database của một app có sẵn, ví dụ app web hay mobile bạn đã làm. Đọc bằng file dump hoặc bằng một bản sao chỉ đọc.",
+          "pick": "Chọn khi bạn có quyền vào database của một app thật và muốn phân tích hành vi người dùng.",
+          "avoid": "Tránh chạy truy vấn nặng thẳng vào database đang phục vụ người dùng.",
+          "cost": "free",
+          "level": 2,
+          "fit": {},
+          "links": [
+            {
+              "title": "pg_dump",
+              "url": "https://www.postgresql.org/docs/current/app-pgdump.html"
+            },
+            {
+              "title": "mysqldump",
+              "url": "https://dev.mysql.com/doc/refman/8.4/en/mysqldump.html"
+            }
+          ],
+          "setup": [
+            "pg_dump mydb > db.sql"
+          ],
+          "task": "Có một bản dump hoặc kết nối chỉ đọc, và danh sách bảng cần dùng đã được chọn."
+        },
+        {
+          "id": "event-stream",
+          "name": "App events / logs",
+          "kind": "Event or log stream",
+          "summary": "Sự kiện app gửi liên tục, như lượt click, đơn hàng, log server, dữ liệu cảm biến. Mỗi sự kiện là một dòng JSON nhỏ.",
+          "pick": "Chọn khi đề bài cần phản ứng với dữ liệu mới trong vài giây hoặc vài phút.",
+          "avoid": "Tránh khi một bộ dữ liệu cố định là đủ cho câu hỏi của bạn.",
+          "cost": "free",
+          "level": 3,
+          "fit": {
+            "fresh": [
+              "batch",
+              "stream"
+            ]
+          },
+          "links": [
+            {
+              "title": "Kafka introduction",
+              "url": "https://kafka.apache.org/intro"
+            }
+          ],
+          "setup": [],
+          "task": "Đã viết ra định dạng một sự kiện (các trường, kiểu, thời gian) và nơi app gửi nó tới."
+        }
+      ]
+    },
+    {
+      "id": "ingest",
+      "title": "Ingestion & scheduling",
+      "lane": "data",
+      "question": "Bạn kéo dữ liệu về bằng cách nào và bao lâu một lần?",
+      "guide": "Ingestion là đoạn code lấy dữ liệu từ nguồn và ghi vào kho thô.\nScheduling là thứ chạy đoạn code đó theo lịch, ví dụ mỗi sáng.\nDữ liệu cố định chỉ cần chạy một lần bằng tay.\nDữ liệu mới mỗi ngày cần lịch chạy; dữ liệu liên tục cần hệ thống stream.",
+      "multi": false,
+      "skipWhen": "Bỏ qua khi bạn chỉ tải một file về bằng trình duyệt và không cần tải lại.",
+      "options": [
+        {
+          "id": "notebook-script",
+          "name": "Jupyter / Python script",
+          "kind": "Manual one-off run",
+          "summary": "Một notebook hoặc file Python tải dữ liệu, bạn bấm chạy khi cần. Không có lịch tự động.",
+          "pick": "Chọn khi dữ liệu cố định và chỉ tải một lần.",
+          "avoid": "Tránh khi dữ liệu phải được cập nhật đều đặn mà không cần bạn ngồi bấm.",
+          "cost": "free",
+          "level": 1,
+          "fit": {
+            "fresh": [
+              "once"
+            ]
+          },
+          "links": [
+            {
+              "title": "Install Jupyter",
+              "url": "https://jupyter.org/install"
+            },
+            {
+              "title": "Jupyter docs",
+              "url": "https://docs.jupyter.org/en/latest/"
+            }
+          ],
+          "setup": [
+            "pip install jupyterlab",
+            "jupyter lab"
+          ],
+          "task": "Chạy lại notebook từ đầu trên máy sạch vẫn tải đủ dữ liệu vào data/raw."
+        },
+        {
+          "id": "cron",
+          "name": "cron",
+          "kind": "OS job scheduler",
+          "summary": "Bộ hẹn giờ có sẵn trên Linux và macOS. Bạn khai một dòng lịch, máy tự chạy script Python theo lịch đó.",
+          "pick": "Chọn khi bạn có một máy luôn bật (server, VPS, Raspberry Pi) và cần chạy script mỗi giờ hoặc mỗi ngày.",
+          "avoid": "Tránh khi máy chạy là laptop hay tắt, vì lượt chạy lúc máy tắt sẽ bị bỏ qua.",
+          "cost": "free",
+          "level": 2,
+          "fit": {
+            "fresh": [
+              "batch"
+            ]
+          },
+          "links": [
+            {
+              "title": "crontab(5)",
+              "url": "https://man7.org/linux/man-pages/man5/crontab.5.html"
+            },
+            {
+              "title": "crontab(1)",
+              "url": "https://man7.org/linux/man-pages/man1/crontab.1.html"
+            }
+          ],
+          "setup": [
+            "crontab -e"
+          ],
+          "task": "Có một dòng crontab chạy script, ghi log ra file, và log cho thấy ít nhất hai lượt chạy thành công."
+        },
+        {
+          "id": "github-actions",
+          "name": "GitHub Actions",
+          "kind": "Scheduled CI workflow",
+          "summary": "Workflow trong repo GitHub có thể chạy theo lịch cron trên máy của GitHub. Không cần tự giữ server.",
+          "pick": "Chọn khi bạn cần lấy dữ liệu mới mỗi ngày, code đã ở GitHub, và không muốn trả tiền server.",
+          "avoid": "Tránh khi mỗi lượt chạy cần nhiều giờ, nhiều RAM, hoặc phải chạy đúng từng phút.",
+          "cost": "freemium",
+          "level": 2,
+          "fit": {
+            "fresh": [
+              "batch"
+            ],
+            "budget": [
+              "free",
+              "low"
+            ],
+            "size": [
+              "small",
+              "medium"
+            ]
+          },
+          "links": [
+            {
+              "title": "schedule event",
+              "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule"
+            },
+            {
+              "title": "Actions billing",
+              "url": "https://docs.github.com/en/billing/concepts/product-billing/github-actions"
+            }
+          ],
+          "setup": [],
+          "task": "Workflow có on.schedule đã chạy tự động ít nhất một lần và ghi dữ liệu mới vào kho thô."
+        },
+        {
+          "id": "prefect",
+          "name": "Prefect",
+          "kind": "Python workflow orchestrator",
+          "summary": "Thư viện biến hàm Python thành flow có lịch, tự thử lại khi lỗi, và có giao diện xem lịch sử chạy. Có bản mã nguồn mở và bản Prefect Cloud.",
+          "pick": "Chọn khi pipeline có vài bước nối nhau và bạn muốn thấy bước nào lỗi mà vẫn viết Python thuần.",
+          "avoid": "Tránh khi chỉ có một script chạy mỗi ngày, vì cron hoặc GitHub Actions là đủ.",
+          "cost": "free",
+          "level": 2,
+          "fit": {
+            "fresh": [
+              "batch"
+            ]
+          },
+          "links": [
+            {
+              "title": "Install Prefect",
+              "url": "https://www.prefect.io/docs/v3/get-started/install"
+            },
+            {
+              "title": "Quickstart",
+              "url": "https://www.prefect.io/docs/v3/get-started/quickstart"
+            }
+          ],
+          "setup": [
+            "pip install -U prefect",
+            "prefect server start"
+          ],
+          "task": "Flow ingest đã được deploy với lịch chạy và giao diện Prefect hiện một lượt chạy thành công."
+        },
+        {
+          "id": "airflow",
+          "name": "Apache Airflow",
+          "kind": "Workflow orchestrator (DAG)",
+          "summary": "Công cụ điều phối pipeline phổ biến trong doanh nghiệp. Mỗi pipeline là một DAG viết bằng Python, chạy trên scheduler riêng.",
+          "pick": "Chọn khi pipeline có nhiều bước, nhiều nguồn, và bạn muốn học công cụ mà các đội data dùng trong công việc.",
+          "avoid": "Tránh khi bạn mới bắt đầu và chỉ có một hai script, vì Airflow cần nhiều thành phần chạy cùng lúc.",
+          "cost": "free",
+          "level": 3,
+          "fit": {
+            "fresh": [
+              "batch"
+            ],
+            "size": [
+              "medium",
+              "large"
+            ]
+          },
+          "links": [
+            {
+              "title": "Quick Start",
+              "url": "https://airflow.apache.org/docs/apache-airflow/stable/start.html"
+            }
+          ],
+          "setup": [
+            "AIRFLOW_VERSION=3.4.0",
+            "PYTHON_VERSION=\"$(python -c 'import sys; print(f\"{sys.version_info.major}.{sys.version_info.minor}\")')\"",
+            "pip install \"apache-airflow==${AIRFLOW_VERSION}\" --constraint \"https://raw.githubusercontent.com/apache/airflow/constraints-${AIRFLOW_VERSION}/constraints-${PYTHON_VERSION}.txt\"",
+            "airflow standalone"
+          ],
+          "task": "Một DAG ingest hiện trên giao diện Airflow, có lịch, và đã chạy xanh ít nhất một lần."
+        },
+        {
+          "id": "kafka",
+          "name": "Apache Kafka",
+          "kind": "Event streaming platform",
+          "summary": "Hệ thống nhận và lưu sự kiện liên tục theo topic. App gửi sự kiện vào, các consumer đọc ra để xử lý.",
+          "pick": "Chọn khi dữ liệu đến liên tục và cần xử lý trong vài giây.",
+          "avoid": "Tránh khi dữ liệu chỉ cập nhật theo ngày, vì một job theo lịch đơn giản hơn nhiều.",
+          "cost": "free",
+          "level": 3,
+          "fit": {
+            "fresh": [
+              "stream"
+            ]
+          },
+          "links": [
+            {
+              "title": "Quickstart",
+              "url": "https://kafka.apache.org/quickstart"
+            },
+            {
+              "title": "Introduction",
+              "url": "https://kafka.apache.org/intro"
+            }
+          ],
+          "setup": [
+            "docker pull apache/kafka:4.4.0",
+            "docker run -p 9092:9092 apache/kafka:4.4.0"
+          ],
+          "task": "Producer gửi sự kiện vào một topic và consumer đọc lại đúng các sự kiện đó."
+        }
+      ]
+    },
+    {
+      "id": "raw",
+      "title": "Raw storage",
+      "lane": "data",
+      "question": "Dữ liệu gốc, chưa sửa, được cất ở đâu?",
+      "guide": "Kho thô giữ dữ liệu đúng như lúc tải về, không ai sửa tay.\nNhờ vậy khi code làm sạch có lỗi, bạn chạy lại từ bản gốc mà không phải tải lại.\nDữ liệu nhỏ để trong thư mục dự án; dữ liệu lớn hoặc nhiều máy cùng đọc thì để trên object storage.\nBước sau (Processing) đọc từ đây và ghi kết quả sạch ra chỗ khác.",
+      "multi": false,
+      "skipWhen": "",
+      "options": [
+        {
+          "id": "project-folder",
+          "name": "Project folder (data/raw)",
+          "kind": "Local files",
+          "summary": "Một thư mục data/raw trong dự án, chỉ thêm file mới, không sửa file cũ. Cookiecutter Data Science tạo sẵn khung thư mục này.",
+          "pick": "Chọn khi dữ liệu nhỏ và chỉ mình bạn làm trên một máy.",
+          "avoid": "Tránh commit file dữ liệu lớn vào git.",
+          "cost": "free",
+          "level": 1,
+          "fit": {
+            "size": [
+              "small",
+              "medium"
+            ]
+          },
+          "links": [
+            {
+              "title": "Cookiecutter Data Science",
+              "url": "https://cookiecutter-data-science.drivendata.org/"
+            }
+          ],
+          "setup": [
+            "pipx install cookiecutter-data-science",
+            "ccds"
+          ],
+          "task": "Dữ liệu gốc nằm trong data/raw, thư mục này có trong .gitignore, và README ghi cách tải lại."
+        },
+        {
+          "id": "dvc",
+          "name": "DVC",
+          "kind": "Data version control",
+          "summary": "Công cụ đi kèm git để đánh phiên bản file dữ liệu. Git chỉ giữ một file nhỏ trỏ tới dữ liệu; dữ liệu thật nằm ở cache hoặc remote.",
+          "pick": "Chọn khi dữ liệu thay đổi qua các lần tải và bạn muốn quay lại đúng bản đã dùng để train.",
+          "avoid": "Tránh khi dữ liệu chỉ tải một lần và không đổi.",
+          "cost": "free",
+          "level": 2,
+          "fit": {
+            "size": [
+              "small",
+              "medium"
+            ],
+            "fresh": [
+              "batch",
+              "stream"
+            ]
+          },
+          "links": [
+            {
+              "title": "Get Started",
+              "url": "https://doc.dvc.org/start"
+            }
+          ],
+          "setup": [
+            "pipx install dvc",
+            "dvc init",
+            "dvc add data/data.xml"
+          ],
+          "task": "File .dvc của dữ liệu gốc đã được commit và dvc pull trên máy khác lấy lại đúng dữ liệu."
+        },
+        {
+          "id": "cloudflare-r2",
+          "name": "Cloudflare R2",
+          "kind": "S3-compatible object storage",
+          "summary": "Object storage dùng chung API với Amazon S3. Không tính phí tải dữ liệu ra (egress) và có gói miễn phí.",
+          "pick": "Chọn khi bạn cần chỗ lưu file trên mạng cho nhiều máy cùng đọc mà ngân sách thấp.",
+          "avoid": "Tránh khi toàn bộ hệ thống khác của bạn đã nằm trong AWS hoặc Google Cloud.",
+          "cost": "freemium",
+          "level": 2,
+          "fit": {},
+          "links": [
+            {
+              "title": "Get started",
+              "url": "https://developers.cloudflare.com/r2/get-started/"
+            },
+            {
+              "title": "Pricing",
+              "url": "https://developers.cloudflare.com/r2/pricing/"
+            },
+            {
+              "title": "Wrangler commands",
+              "url": "https://developers.cloudflare.com/r2/reference/wrangler-commands/"
+            }
+          ],
+          "setup": [
+            "wrangler r2 bucket create <NAME>",
+            "wrangler r2 object put <OBJECTPATH>"
+          ],
+          "task": "Có một bucket raw, script ingest ghi file vào đó, và đọc lại được bằng boto3 hoặc DuckDB."
+        },
+        {
+          "id": "gcs",
+          "name": "Google Cloud Storage",
+          "kind": "Object storage",
+          "summary": "Object storage của Google Cloud. Đọc thẳng được từ BigQuery, Vertex AI và Colab.",
+          "pick": "Chọn khi bạn dự định dùng BigQuery hoặc Vertex AI ở các bước sau.",
+          "avoid": "Tránh khi bạn chưa muốn tạo tài khoản thanh toán Google Cloud.",
+          "cost": "freemium",
+          "level": 2,
+          "fit": {
+            "budget": [
+              "low",
+              "cloud"
+            ]
+          },
+          "links": [
+            {
+              "title": "Quickstart (gcloud)",
+              "url": "https://docs.cloud.google.com/storage/docs/discover-object-storage-gcloud"
+            },
+            {
+              "title": "Pricing",
+              "url": "https://cloud.google.com/storage/pricing"
+            }
+          ],
+          "setup": [
+            "gcloud storage buckets create gs://BUCKET_NAME/ --uniform-bucket-level-access",
+            "gcloud storage cp OBJECT_LOCATION gs://BUCKET_NAME"
+          ],
+          "task": "Bucket raw đã có dữ liệu gốc, và quyền đọc chỉ cấp cho tài khoản của dự án."
+        },
+        {
+          "id": "s3",
+          "name": "Amazon S3",
+          "kind": "Object storage",
+          "summary": "Object storage chuẩn của ngành. Gần như mọi công cụ dữ liệu đều đọc được đường dẫn s3://.",
+          "pick": "Chọn khi bạn có tài khoản AWS hoặc định dùng SageMaker, Spark trên AWS.",
+          "avoid": "Tránh khi ngân sách chỉ là miễn phí, vì gói miễn phí của AWS có hạn dùng.",
+          "cost": "paid",
+          "level": 2,
+          "fit": {
+            "budget": [
+              "low",
+              "cloud"
+            ]
+          },
+          "links": [
+            {
+              "title": "S3 commands in AWS CLI",
+              "url": "https://docs.aws.amazon.com/cli/latest/userguide/cli-services-s3-commands.html"
+            },
+            {
+              "title": "Pricing",
+              "url": "https://aws.amazon.com/s3/pricing/"
+            }
+          ],
+          "setup": [
+            "aws s3 mb s3://amzn-s3-demo-bucket",
+            "aws s3 cp filename.txt s3://amzn-s3-demo-bucket"
+          ],
+          "task": "Bucket raw đã có dữ liệu gốc, chặn truy cập công khai, và có cảnh báo chi phí trong AWS Budgets."
+        },
+        {
+          "id": "postgres-raw",
+          "name": "PostgreSQL (raw table)",
+          "kind": "Database landing table",
+          "summary": "Ghi mỗi bản ghi tải về thành một dòng trong bảng thô, giữ nguyên JSON gốc trong cột jsonb. Bước sau dùng SQL để tách cột.",
+          "pick": "Chọn khi dữ liệu đến từ API hoặc app dưới dạng JSON và bạn đã quen SQL.",
+          "avoid": "Tránh khi dữ liệu là ảnh, âm thanh hay file lớn.",
+          "cost": "free",
+          "level": 2,
+          "fit": {
+            "size": [
+              "small",
+              "medium"
+            ],
+            "fresh": [
+              "batch",
+              "stream"
+            ]
+          },
+          "links": [
+            {
+              "title": "JSON types",
+              "url": "https://www.postgresql.org/docs/current/datatype-json.html"
+            },
+            {
+              "title": "COPY",
+              "url": "https://www.postgresql.org/docs/current/sql-copy.html"
+            }
+          ],
+          "setup": [],
+          "task": "Bảng raw có cột thời điểm tải và cột jsonb, và script ingest chỉ chèn thêm, không sửa dòng cũ."
+        }
+      ]
+    },
+    {
+      "id": "process",
+      "title": "Processing & cleaning",
+      "lane": "data",
+      "question": "Bạn dùng công cụ nào để làm sạch và biến đổi dữ liệu?",
+      "guide": "Bước này đọc dữ liệu thô, sửa kiểu, bỏ trùng, xử lý thiếu, rồi ghép bảng.\nCông cụ một máy (pandas, Polars, DuckDB) chạy trên RAM và ổ đĩa của một máy, dễ cài, đủ cho phần lớn dự án.\nCông cụ phân tán (Dask, Spark) chia dữ liệu cho nhiều máy cùng xử lý, chỉ cần khi một máy không chứa nổi.\nKết quả sạch được ghi sang bước Analytical store.",
+      "multi": false,
+      "skipWhen": "",
+      "options": [
+        {
+          "id": "pandas",
+          "name": "pandas",
+          "kind": "DataFrame library",
+          "summary": "Thư viện DataFrame phổ biến nhất của Python. Toàn bộ bảng phải nằm trong RAM.",
+          "pick": "Chọn khi dữ liệu nhỏ và bạn muốn nhiều ví dụ, nhiều câu trả lời sẵn trên mạng.",
+          "avoid": "Tránh khi bảng lớn gần bằng RAM của máy, vì pandas sẽ chậm hoặc hết bộ nhớ.",
+          "cost": "free",
+          "level": 1,
+          "fit": {
+            "size": [
+              "small"
+            ]
+          },
+          "links": [
+            {
+              "title": "Installation",
+              "url": "https://pandas.pydata.org/docs/getting_started/install.html"
+            },
+            {
+              "title": "10 minutes to pandas",
+              "url": "https://pandas.pydata.org/docs/user_guide/10min.html"
+            }
+          ],
+          "setup": [
+            "pip install pandas"
+          ],
+          "task": "Một script đọc data/raw, làm sạch, và ghi bảng sạch ra Parquet; chạy lại cho đúng cùng kết quả."
+        },
+        {
+          "id": "polars",
+          "name": "Polars",
+          "kind": "Fast DataFrame library",
+          "summary": "Thư viện DataFrame viết bằng Rust, chạy song song trên mọi nhân CPU. Chế độ lazy đọc dần nên xử lý được dữ liệu lớn hơn RAM.",
+          "pick": "Chọn khi pandas đã chậm hoặc dữ liệu cỡ vài chục GB trên một máy.",
+          "avoid": "Tránh khi thư viện bạn cần chỉ nhận DataFrame của pandas.",
+          "cost": "free",
+          "level": 1,
+          "fit": {
+            "size": [
+              "small",
+              "medium"
+            ]
+          },
+          "links": [
+            {
+              "title": "Getting started",
+              "url": "https://docs.pola.rs/user-guide/getting-started/"
+            }
+          ],
+          "setup": [
+            "pip install polars"
+          ],
+          "task": "Pipeline làm sạch viết bằng LazyFrame, ghi Parquet, và đo được thời gian chạy."
+        },
+        {
+          "id": "duckdb",
+          "name": "DuckDB",
+          "kind": "In-process SQL engine",
+          "summary": "Database SQL chạy ngay trong tiến trình Python, không cần server. Đọc thẳng CSV và Parquet, xử lý được dữ liệu lớn hơn RAM.",
+          "pick": "Chọn khi bạn thích viết SQL và dữ liệu nằm trong file CSV hoặc Parquet.",
+          "avoid": "Tránh khi nhiều tiến trình cùng ghi vào một file database.",
+          "cost": "free",
+          "level": 1,
+          "fit": {
+            "size": [
+              "small",
+              "medium"
+            ]
+          },
+          "links": [
+            {
+              "title": "Python API",
+              "url": "https://duckdb.org/docs/stable/clients/python/overview"
+            },
+            {
+              "title": "Installation",
+              "url": "https://duckdb.org/docs/installation/"
+            }
+          ],
+          "setup": [
+            "pip install duckdb"
+          ],
+          "task": "Các câu SQL làm sạch nằm trong file .sql, đọc data/raw và ghi bảng sạch ra Parquet."
+        },
+        {
+          "id": "dbt",
+          "name": "dbt",
+          "kind": "SQL transformation framework",
+          "summary": "Công cụ tổ chức các câu SQL biến đổi thành model có thứ tự, có test và tài liệu. Chạy trên DuckDB, BigQuery, Snowflake và các warehouse khác.",
+          "pick": "Chọn khi pipeline chạy lại theo lịch và có nhiều bảng phụ thuộc nhau.",
+          "avoid": "Tránh khi chỉ có vài bước làm sạch chạy một lần.",
+          "cost": "free",
+          "level": 2,
+          "fit": {
+            "fresh": [
+              "batch"
+            ]
+          },
+          "links": [
+            {
+              "title": "Install dbt",
+              "url": "https://docs.getdbt.com/docs/local/install-dbt"
+            },
+            {
+              "title": "DuckDB setup",
+              "url": "https://docs.getdbt.com/docs/local/connect-data-platform/duckdb-setup"
+            }
+          ],
+          "setup": [
+            "python -m pip install dbt",
+            "dbt init"
+          ],
+          "task": "dbt build chạy xanh, có model staging và model sạch, và mỗi model có ít nhất một test."
+        },
+        {
+          "id": "dask",
+          "name": "Dask",
+          "kind": "Parallel Python library",
+          "summary": "Chia một DataFrame kiểu pandas thành nhiều phần và xử lý song song. Chạy trên một máy nhiều nhân hoặc một cụm máy.",
+          "pick": "Chọn khi code đã viết bằng pandas và dữ liệu vượt quá RAM của một máy.",
+          "avoid": "Tránh khi dữ liệu vừa RAM, vì chia phần chỉ làm chậm thêm.",
+          "cost": "free",
+          "level": 2,
+          "fit": {
+            "size": [
+              "medium",
+              "large"
+            ]
+          },
+          "links": [
+            {
+              "title": "Install Dask",
+              "url": "https://docs.dask.org/en/stable/install.html"
+            },
+            {
+              "title": "Dask DataFrame",
+              "url": "https://docs.dask.org/en/stable/dataframe.html"
+            }
+          ],
+          "setup": [
+            "python -m pip install \"dask[complete]\""
+          ],
+          "task": "Pipeline chạy trên toàn bộ dữ liệu không hết RAM, và dashboard của Dask cho thấy các task song song."
+        },
+        {
+          "id": "spark",
+          "name": "Apache Spark (PySpark)",
+          "kind": "Distributed processing engine",
+          "summary": "Engine xử lý phân tán chuẩn của ngành dữ liệu lớn. Một driver chia việc cho nhiều executor trên nhiều máy; viết bằng PySpark hoặc Spark SQL.",
+          "pick": "Chọn khi dữ liệu trên 100 GB hoặc nằm rải trên object storage, và bạn có cụm máy để chạy.",
+          "avoid": "Tránh khi dữ liệu nhỏ, vì thời gian khởi động và cấu hình lớn hơn thời gian xử lý.",
+          "cost": "free",
+          "level": 3,
+          "fit": {
+            "size": [
+              "large"
+            ]
+          },
+          "links": [
+            {
+              "title": "PySpark installation",
+              "url": "https://spark.apache.org/docs/latest/api/python/getting_started/install.html"
+            },
+            {
+              "title": "Quick Start",
+              "url": "https://spark.apache.org/docs/latest/quick-start.html"
+            }
+          ],
+          "setup": [
+            "pip install pyspark"
+          ],
+          "task": "Job PySpark đọc dữ liệu thô từ object storage, làm sạch, và ghi Parquet chia partition theo ngày."
+        }
+      ]
+    },
+    {
+      "id": "store",
+      "title": "Analytical store & query",
+      "lane": "data",
+      "question": "Dữ liệu sạch được lưu ở đâu để truy vấn và phân tích?",
+      "guide": "Kho phân tích giữ bảng sạch để notebook, dashboard và mô hình cùng đọc.\nDữ liệu nhỏ: một file Parquet hoặc SQLite, truy vấn chạy ngay trên máy bạn.\nDữ liệu vừa hoặc cần nhiều người truy cập: một server PostgreSQL nhận câu SQL qua mạng.\nDữ liệu lớn: warehouse trên cloud chia câu SQL cho nhiều máy chạy song song và tính phí theo lượng dữ liệu quét.",
+      "multi": false,
+      "skipWhen": "Bỏ qua khi bạn chỉ có một bảng nhỏ và đọc thẳng từ file sạch trong notebook.",
+      "options": [
+        {
+          "id": "parquet-duckdb",
+          "name": "Parquet + DuckDB",
+          "kind": "Columnar files + SQL engine",
+          "summary": "Lưu bảng sạch thành file Parquet nén theo cột, rồi truy vấn bằng DuckDB ngay trên máy. Không có server nào phải chạy.",
+          "pick": "Chọn khi dữ liệu vừa một máy và người đọc là bạn hoặc vài người.",
+          "avoid": "Tránh khi nhiều người cùng ghi dữ liệu một lúc.",
+          "cost": "free",
+          "level": 1,
+          "fit": {
+            "size": [
+              "small",
+              "medium"
+            ],
+            "users": [
+              "me",
+              "few"
+            ]
+          },
+          "links": [
+            {
+              "title": "Reading and writing Parquet",
+              "url": "https://duckdb.org/docs/stable/data/parquet/overview"
+            },
+            {
+              "title": "Python API",
+              "url": "https://duckdb.org/docs/stable/clients/python/overview"
+            }
+          ],
+          "setup": [
+            "pip install duckdb"
+          ],
+          "task": "Bảng sạch nằm ở data/processed dạng Parquet, và một câu SELECT trong DuckDB trả về kết quả mong đợi."
+        },
+        {
+          "id": "sqlite",
+          "name": "SQLite",
+          "kind": "Embedded SQL database",
+          "summary": "Database SQL trong một file, có sẵn trong Python qua module sqlite3. Nhiều app mobile dùng nó làm database cục bộ.",
+          "pick": "Chọn khi dữ liệu nhỏ và một app nhỏ cần đọc bảng sạch qua SQL.",
+          "avoid": "Tránh khi câu truy vấn quét và gom nhóm hàng chục triệu dòng, vì SQLite lưu theo dòng.",
+          "cost": "free",
+          "level": 1,
+          "fit": {
+            "size": [
+              "small"
+            ]
+          },
+          "links": [
+            {
+              "title": "sqlite3 (Python)",
+              "url": "https://docs.python.org/3/library/sqlite3.html"
+            },
+            {
+              "title": "Command line shell",
+              "url": "https://sqlite.org/cli.html"
+            }
+          ],
+          "setup": [],
+          "task": "File .db chứa các bảng sạch có khoá chính, và các câu truy vấn chính chạy được."
+        },
+        {
+          "id": "postgresql",
+          "name": "PostgreSQL",
+          "kind": "Relational database server",
+          "summary": "Database SQL chạy như một server, nhiều người và nhiều app kết nối cùng lúc qua mạng. Tự cài trên máy hoặc server.",
+          "pick": "Chọn khi app hoặc dashboard cần đọc dữ liệu theo yêu cầu, hoặc nhiều người cùng truy cập.",
+          "avoid": "Tránh khi bạn không muốn tự lo cài đặt, sao lưu và bảo mật server.",
+          "cost": "free",
+          "level": 2,
+          "fit": {
+            "size": [
+              "small",
+              "medium"
+            ]
+          },
+          "links": [
+            {
+              "title": "Download",
+              "url": "https://www.postgresql.org/download/"
+            },
+            {
+              "title": "Creating a database",
+              "url": "https://www.postgresql.org/docs/current/tutorial-createdb.html"
+            },
+            {
+              "title": "Accessing a database",
+              "url": "https://www.postgresql.org/docs/current/tutorial-accessdb.html"
+            }
+          ],
+          "setup": [
+            "createdb mydb",
+            "psql mydb"
+          ],
+          "task": "Database có schema cho bảng sạch, có index cho cột lọc chính, và app đọc được qua chuỗi kết nối."
+        },
+        {
+          "id": "supabase",
+          "name": "Supabase",
+          "kind": "Hosted PostgreSQL platform",
+          "summary": "PostgreSQL được host sẵn, kèm API tự sinh, đăng nhập và giao diện xem bảng. Dev web và mobile thường đã quen.",
+          "pick": "Chọn khi bạn muốn PostgreSQL trên mạng ngay mà không tự giữ server, và app cần đọc dữ liệu.",
+          "avoid": "Tránh khi dữ liệu lớn hơn giới hạn gói miễn phí mà bạn không định trả phí.",
+          "cost": "freemium",
+          "level": 1,
+          "fit": {
+            "size": [
+              "small"
+            ]
+          },
+          "links": [
+            {
+              "title": "Docs",
+              "url": "https://supabase.com/docs"
+            },
+            {
+              "title": "Pricing",
+              "url": "https://supabase.com/pricing"
+            }
+          ],
+          "setup": [],
+          "task": "Project Supabase có bảng sạch, Row Level Security đã bật, và app đọc được bằng khoá công khai."
+        },
+        {
+          "id": "neon",
+          "name": "Neon",
+          "kind": "Serverless PostgreSQL",
+          "summary": "PostgreSQL serverless, tự tắt khi không dùng và tự bật khi có truy vấn. Có branch database giống branch git.",
+          "pick": "Chọn khi bạn chỉ cần PostgreSQL thuần trên mạng và truy cập không đều.",
+          "avoid": "Tránh khi app cần phản hồi nhanh ngay cả ở truy vấn đầu tiên sau lúc nghỉ.",
+          "cost": "freemium",
+          "level": 1,
+          "fit": {
+            "size": [
+              "small"
+            ]
+          },
+          "links": [
+            {
+              "title": "Docs",
+              "url": "https://neon.com/docs"
+            },
+            {
+              "title": "Pricing",
+              "url": "https://neon.com/pricing"
+            }
+          ],
+          "setup": [],
+          "task": "Project Neon có bảng sạch, và chuỗi kết nối nằm trong biến môi trường, không nằm trong code."
+        },
+        {
+          "id": "bigquery",
+          "name": "BigQuery",
+          "kind": "Serverless cloud warehouse",
+          "summary": "Data warehouse của Google Cloud: bạn gửi câu SQL, Google chia cho nhiều máy chạy và tính phí theo lượng dữ liệu quét. Có sandbox dùng không cần thẻ thanh toán.",
+          "pick": "Chọn khi dữ liệu quá lớn cho một máy, hoặc muốn dùng các bộ dữ liệu công khai có sẵn trong BigQuery.",
+          "avoid": "Tránh dùng làm database cho app cần trả lời từng yêu cầu nhỏ trong vài mili giây.",
+          "cost": "freemium",
+          "level": 2,
+          "fit": {
+            "size": [
+              "medium",
+              "large"
+            ],
+            "latency": [
+              "report",
+              "batch"
+            ]
+          },
+          "links": [
+            {
+              "title": "BigQuery sandbox",
+              "url": "https://docs.cloud.google.com/bigquery/docs/sandbox"
+            },
+            {
+              "title": "Pricing",
+              "url": "https://cloud.google.com/bigquery/pricing"
+            }
+          ],
+          "setup": [],
+          "task": "Dataset BigQuery có bảng sạch chia partition theo ngày, và mỗi câu truy vấn chính hiện rõ lượng byte quét."
+        },
+        {
+          "id": "snowflake",
+          "name": "Snowflake",
+          "kind": "Cloud data warehouse",
+          "summary": "Data warehouse trên cloud, tách phần lưu trữ và phần tính toán. Bạn bật warehouse để chạy SQL và trả tiền theo thời gian nó chạy.",
+          "pick": "Chọn khi dữ liệu lớn, có ngân sách cloud, và bạn muốn học công cụ nhiều doanh nghiệp dùng.",
+          "avoid": "Tránh khi bạn cần một lựa chọn miễn phí lâu dài, vì Snowflake chỉ có bản dùng thử.",
+          "cost": "paid",
+          "level": 2,
+          "fit": {
+            "size": [
+              "medium",
+              "large"
+            ],
+            "budget": [
+              "cloud"
+            ],
+            "latency": [
+              "report",
+              "batch"
+            ]
+          },
+          "links": [
+            {
+              "title": "Getting started",
+              "url": "https://docs.snowflake.com/en/user-guide-getting-started"
+            },
+            {
+              "title": "Trial accounts",
+              "url": "https://docs.snowflake.com/en/user-guide/admin-trial-account"
+            },
+            {
+              "title": "Understanding cost",
+              "url": "https://docs.snowflake.com/en/user-guide/cost-understanding-overall"
+            }
+          ],
+          "setup": [],
+          "task": "Warehouse có auto-suspend, bảng sạch đã nạp, và có resource monitor giới hạn chi phí."
+        }
+      ]
+    },
+    {
+      "id": "train",
+      "title": "Training environment",
+      "lane": "model",
+      "question": "Mô hình được train ở đâu?",
+      "guide": "Bước này chọn máy để train mô hình từ bảng sạch.\nMô hình học máy cổ điển trên bảng (hồi quy, cây quyết định) chạy tốt trên CPU của laptop.\nDeep learning với ảnh, văn bản hay mô hình lớn cần GPU, lấy miễn phí từ notebook online hoặc thuê trên cloud.\nMô hình train xong được lưu thành file để bước phục vụ (serving) dùng.",
+      "multi": false,
+      "skipWhen": "Bỏ qua khi dự án chỉ phân tích và báo cáo, không train mô hình.",
+      "options": [
+        {
+          "id": "local",
+          "name": "Local laptop",
+          "kind": "Your own machine",
+          "summary": "Train ngay trên máy của bạn bằng scikit-learn, XGBoost hoặc LightGBM. Không tốn tiền, không giới hạn phiên.",
+          "pick": "Chọn khi làm ML cổ điển trên dữ liệu bảng vừa RAM.",
+          "avoid": "Tránh khi cần train deep learning mà máy không có GPU phù hợp.",
+          "cost": "free",
+          "level": 1,
+          "fit": {
+            "gpu": [
+              "no"
+            ],
+            "size": [
+              "small",
+              "medium"
+            ]
+          },
+          "links": [
+            {
+              "title": "scikit-learn install",
+              "url": "https://scikit-learn.org/stable/install.html"
+            },
+            {
+              "title": "Getting started",
+              "url": "https://scikit-learn.org/stable/getting_started.html"
+            }
+          ],
+          "setup": [
+            "pip install -U scikit-learn"
+          ],
+          "task": "Script train chạy lại cho cùng kết quả nhờ cố định random_state, và lưu mô hình ra file."
+        },
+        {
+          "id": "colab",
+          "name": "Google Colab",
+          "kind": "Hosted notebook with GPU",
+          "summary": "Notebook Jupyter chạy trên máy của Google, mở bằng trình duyệt. Bản miễn phí có GPU nhưng giới hạn và không bảo đảm; gói trả phí cho thêm tài nguyên.",
+          "pick": "Chọn khi cần GPU để thử deep learning mà không có ngân sách.",
+          "avoid": "Tránh khi một lần train kéo dài nhiều giờ, vì phiên miễn phí có thể bị ngắt.",
+          "cost": "freemium",
+          "level": 1,
+          "fit": {
+            "budget": [
+              "free",
+              "low"
+            ],
+            "size": [
+              "small"
+            ]
+          },
+          "links": [
+            {
+              "title": "Colab",
+              "url": "https://colab.research.google.com/"
+            },
+            {
+              "title": "FAQ",
+              "url": "https://research.google.com/colaboratory/faq.html"
+            }
+          ],
+          "setup": [],
+          "task": "Notebook train lưu checkpoint ra Google Drive, nên phiên bị ngắt vẫn train tiếp được."
+        },
+        {
+          "id": "kaggle-notebooks",
+          "name": "Kaggle Notebooks",
+          "kind": "Hosted notebook with GPU",
+          "summary": "Notebook miễn phí trên Kaggle, có GPU và TPU dùng trong giới hạn thời gian. Gắn thẳng được các bộ Kaggle Datasets.",
+          "pick": "Chọn khi dữ liệu đã ở Kaggle và bạn cần GPU miễn phí.",
+          "avoid": "Tránh khi dữ liệu là riêng tư và không được đưa lên nền tảng bên ngoài.",
+          "cost": "free",
+          "level": 1,
+          "fit": {
+            "size": [
+              "small"
+            ]
+          },
+          "links": [
+            {
+              "title": "Notebooks docs",
+              "url": "https://www.kaggle.com/docs/notebooks"
+            }
+          ],
+          "setup": [],
+          "task": "Notebook chạy hết từ đầu với Save Version và lưu mô hình vào phần Output."
+        },
+        {
+          "id": "compute-engine-gpu",
+          "name": "Compute Engine (GPU VM)",
+          "kind": "Cloud GPU virtual machine",
+          "summary": "Thuê một máy ảo có GPU trên Google Cloud và trả tiền theo giờ chạy. AWS EC2 và Azure có dịch vụ tương tự.",
+          "pick": "Chọn khi cần GPU lâu hơn giới hạn của Colab hay Kaggle và bạn biết dùng Linux qua SSH.",
+          "avoid": "Tránh khi bạn hay quên tắt máy, vì máy ảo tính tiền cả lúc không train.",
+          "cost": "paid",
+          "level": 3,
+          "fit": {
+            "gpu": [
+              "yes"
+            ],
+            "budget": [
+              "low",
+              "cloud"
+            ]
+          },
+          "links": [
+            {
+              "title": "GPU machine types",
+              "url": "https://docs.cloud.google.com/compute/docs/gpus"
+            },
+            {
+              "title": "VM and GPU pricing",
+              "url": "https://cloud.google.com/products/compute/pricing"
+            }
+          ],
+          "setup": [],
+          "task": "Máy ảo GPU chạy xong một lần train, mô hình đã chép về object storage, và máy đã được tắt."
+        },
+        {
+          "id": "sagemaker",
+          "name": "Amazon SageMaker AI",
+          "kind": "Managed ML platform",
+          "summary": "Nền tảng ML của AWS: bạn gửi job train, AWS bật máy, chạy, lưu mô hình vào S3 rồi tự tắt. Có thêm notebook, theo dõi thí nghiệm và deploy.",
+          "pick": "Chọn khi dữ liệu đã ở S3 và bạn muốn job train tự bật, tự tắt máy.",
+          "avoid": "Tránh khi bạn mới học, vì quyền IAM và cách tính phí khá phức tạp.",
+          "cost": "paid",
+          "level": 3,
+          "fit": {
+            "budget": [
+              "cloud"
+            ],
+            "size": [
+              "medium",
+              "large"
+            ]
+          },
+          "links": [
+            {
+              "title": "What is SageMaker AI",
+              "url": "https://docs.aws.amazon.com/sagemaker/latest/dg/whatis.html"
+            },
+            {
+              "title": "Pricing",
+              "url": "https://aws.amazon.com/sagemaker/ai/pricing/"
+            }
+          ],
+          "setup": [],
+          "task": "Một training job chạy xong, mô hình nằm trong S3, và không còn endpoint hay notebook nào đang tính tiền."
+        },
+        {
+          "id": "gemini-agent-platform",
+          "name": "Gemini Enterprise Agent Platform",
+          "kind": "Managed ML platform",
+          "summary": "Nền tảng ML của Google Cloud, trước đây tên là Vertex AI. Serverless training bật máy, chạy code train của bạn rồi tự xoá máy khi xong.",
+          "pick": "Chọn khi dữ liệu đã ở BigQuery hoặc Cloud Storage và cần train trên máy lớn theo job.",
+          "avoid": "Tránh khi bạn mới học, vì cấu hình project, quyền và vùng khá nhiều bước.",
+          "cost": "paid",
+          "level": 3,
+          "fit": {
+            "budget": [
+              "cloud"
+            ],
+            "size": [
+              "medium",
+              "large"
+            ]
+          },
+          "links": [
+            {
+              "title": "Serverless training overview",
+              "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/machine-learning/training/overview"
+            },
+            {
+              "title": "Pricing",
+              "url": "https://cloud.google.com/products/gemini-enterprise-agent-platform/pricing"
+            }
+          ],
+          "setup": [],
+          "task": "Một training job chạy xong và mô hình được lưu trong Cloud Storage hoặc Model Registry."
+        }
+      ]
+    },
+    {
+      "id": "track",
+      "title": "Experiment tracking & model registry",
+      "lane": "model",
+      "question": "Bạn lưu lại các lần chạy, chỉ số và file mô hình bằng gì?",
+      "guide": "Mỗi lần huấn luyện là một lần chạy: tham số, dữ liệu, chỉ số và file mô hình.\nGhi lại từng lần chạy để so sánh và chọn ra mô hình tốt nhất.\nModel registry giữ các phiên bản mô hình đã chọn.\nBước Serving phía sau nạp đúng phiên bản mô hình lấy từ đây.",
+      "multi": true,
+      "skipWhen": "",
+      "options": [
+        {
+          "id": "git-results",
+          "name": "Git + bảng kết quả",
+          "kind": "Version control + notes",
+          "summary": "Code nằm trong Git. Mỗi lần chạy ghi một dòng vào file kết quả (CSV hoặc Markdown): commit, tham số, chỉ số.",
+          "pick": "Chọn khi dự án nhỏ, ít lần chạy và bạn muốn bắt đầu ngay.",
+          "avoid": "Tránh khi file mô hình hay dữ liệu lớn, vì Git không hợp để lưu file nặng.",
+          "cost": "free",
+          "level": 1,
+          "fit": {
+            "size": [
+              "small",
+              "medium"
+            ]
+          },
+          "links": [
+            {
+              "title": "gittutorial",
+              "url": "https://git-scm.com/docs/gittutorial"
+            },
+            {
+              "title": "GitHub Hello World",
+              "url": "https://docs.github.com/en/get-started/start-your-journey/hello-world"
+            }
+          ],
+          "setup": [
+            "git init",
+            "git add .",
+            "git commit"
+          ],
+          "task": "Repo có file kết quả, mỗi lần chạy một dòng gồm commit, tham số và chỉ số."
+        },
+        {
+          "id": "mlflow",
+          "name": "MLflow",
+          "kind": "Experiment tracking server",
+          "summary": "Thư viện mã nguồn mở ghi tham số, chỉ số và file mô hình của từng lần chạy. Có giao diện web chạy trên máy bạn và có model registry.",
+          "pick": "Chọn khi bạn chạy nhiều thử nghiệm và muốn so sánh chúng trên một giao diện, miễn phí.",
+          "avoid": "Tránh khi bạn chỉ chạy vài lần, vì ghi chú tay đã đủ.",
+          "cost": "free",
+          "level": 2,
+          "fit": {},
+          "links": [
+            {
+              "title": "Tracking quickstart",
+              "url": "https://mlflow.org/docs/latest/ml/tracking/quickstart/"
+            },
+            {
+              "title": "Model Registry",
+              "url": "https://mlflow.org/docs/latest/ml/model-registry/"
+            }
+          ],
+          "setup": [
+            "pip install mlflow",
+            "mlflow server --port 5000"
+          ],
+          "task": "Giao diện MLflow ở localhost:5000 hiện ít nhất hai lần chạy với chỉ số để so sánh."
+        },
+        {
+          "id": "wandb",
+          "name": "Weights & Biases",
+          "kind": "Hosted experiment tracking",
+          "summary": "Dịch vụ đám mây ghi chỉ số, biểu đồ huấn luyện và file mô hình. Có gói miễn phí cho cá nhân và gói cho nghiên cứu học thuật.",
+          "pick": "Chọn khi huấn luyện deep learning lâu và muốn xem đường loss trực tiếp từ bất kỳ đâu.",
+          "avoid": "Tránh khi dữ liệu không được phép đưa lên dịch vụ bên ngoài.",
+          "cost": "freemium",
+          "level": 1,
+          "fit": {
+            "gpu": [
+              "yes"
+            ]
+          },
+          "links": [
+            {
+              "title": "Quickstart",
+              "url": "https://docs.coreweave.com/quickstart"
+            },
+            {
+              "title": "Pricing",
+              "url": "https://www.coreweave.com/forge-pricing"
+            }
+          ],
+          "setup": [
+            "pip install wandb",
+            "wandb login"
+          ],
+          "task": "Một lần huấn luyện hiện biểu đồ loss trên trang dự án W&B."
+        },
+        {
+          "id": "dvc",
+          "name": "DVC",
+          "kind": "Data and model versioning",
+          "summary": "Công cụ chạy cùng Git để quản lý phiên bản file dữ liệu và mô hình lớn. Git chỉ giữ file mô tả nhỏ, file thật nằm ở kho lưu trữ riêng.",
+          "pick": "Chọn khi dữ liệu hoặc mô hình quá lớn cho Git và bạn cần quay lại đúng phiên bản cũ.",
+          "avoid": "Tránh khi dữ liệu nhỏ và không đổi, vì DVC thêm một lớp lệnh phải nhớ.",
+          "cost": "free",
+          "level": 2,
+          "fit": {
+            "size": [
+              "medium",
+              "large"
+            ]
+          },
+          "links": [
+            {
+              "title": "Get Started",
+              "url": "https://doc.dvc.org/start"
+            }
+          ],
+          "setup": [
+            "pipx install dvc",
+            "dvc init",
+            "dvc add data/data.xml"
+          ],
+          "task": "File dữ liệu được dvc add, file .dvc của nó nằm trong commit Git."
+        },
+        {
+          "id": "hf-hub",
+          "name": "Hugging Face Hub",
+          "kind": "Model file hosting",
+          "summary": "Kho lưu file mô hình dạng repo, có phiên bản theo Git. Ứng dụng tải mô hình về bằng tên repo.",
+          "pick": "Chọn khi cần chia sẻ file mô hình cho ứng dụng đã triển khai hoặc cho người khác.",
+          "avoid": "Tránh khi mô hình là bí mật mà bạn chưa đặt repo ở chế độ private.",
+          "cost": "freemium",
+          "level": 1,
+          "fit": {
+            "users": [
+              "few",
+              "public"
+            ]
+          },
+          "links": [
+            {
+              "title": "Quickstart",
+              "url": "https://huggingface.co/docs/huggingface_hub/quick-start"
+            }
+          ],
+          "setup": [
+            "pip install --upgrade huggingface_hub",
+            "hf auth login"
+          ],
+          "task": "File mô hình nằm trên một repo Hub và tải về được bằng hf_hub_download."
+        }
+      ]
+    },
+    {
+      "id": "serve",
+      "title": "Serving",
+      "lane": "app",
+      "question": "Dự đoán của mô hình đến tay người dùng theo cách nào?",
+      "guide": "Serving là cách đưa mô hình đã huấn luyện ra để tạo dự đoán.\nBatch: chạy mô hình theo lịch, ghi kết quả ra file hoặc bảng, người dùng đọc kết quả có sẵn.\nOnline: người dùng gửi dữ liệu và nhận dự đoán ngay, trong khoảng một giây.\nMô hình lấy từ bước tracking; giao diện ở bước sau đọc kết quả hoặc gọi API ở đây.",
+      "multi": false,
+      "skipWhen": "Bỏ qua khi dự án chỉ phân tích dữ liệu, không có mô hình dự đoán.",
+      "options": [
+        {
+          "id": "batch-file",
+          "name": "Batch predictions",
+          "kind": "Scheduled batch scoring",
+          "summary": "Một script nạp mô hình, dự đoán cho cả bảng dữ liệu và ghi kết quả ra file hoặc bảng. Script chạy tay hoặc theo lịch.",
+          "pick": "Chọn khi người dùng chỉ cần xem kết quả đã tính sẵn, không cần hỏi mô hình từng lần.",
+          "avoid": "Tránh khi người dùng nhập dữ liệu mới và chờ kết quả ngay.",
+          "cost": "free",
+          "level": 1,
+          "fit": {
+            "latency": [
+              "report",
+              "batch"
+            ]
+          },
+          "links": [
+            {
+              "title": "Model persistence",
+              "url": "https://scikit-learn.org/stable/model_persistence.html"
+            },
+            {
+              "title": "GitHub Actions schedule",
+              "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule"
+            }
+          ],
+          "setup": [],
+          "task": "Chạy một lệnh là sinh ra file dự đoán mới có đủ cột id và kết quả."
+        },
+        {
+          "id": "in-app",
+          "name": "Model inside the UI app",
+          "kind": "In-process model serving",
+          "summary": "Mô hình được nạp thẳng trong ứng dụng Streamlit hoặc Gradio. Không có API riêng, giao diện gọi hàm predict trong cùng tiến trình.",
+          "pick": "Chọn khi cần dự đoán online cho bạn hoặc vài người dùng, với ít phần phải dựng nhất.",
+          "avoid": "Tránh khi một ứng dụng khác (web, mobile) cũng cần gọi mô hình.",
+          "cost": "free",
+          "level": 1,
+          "fit": {
+            "latency": [
+              "online"
+            ],
+            "users": [
+              "me",
+              "few"
+            ]
+          },
+          "links": [
+            {
+              "title": "st.cache_resource",
+              "url": "https://docs.streamlit.io/develop/api-reference/caching-and-state/st.cache_resource"
+            },
+            {
+              "title": "Gradio quickstart",
+              "url": "https://www.gradio.app/guides/quickstart"
+            }
+          ],
+          "setup": [],
+          "task": "Mô hình chỉ nạp một lần khi ứng dụng khởi động, nhập dữ liệu là thấy dự đoán."
+        },
+        {
+          "id": "fastapi",
+          "name": "FastAPI",
+          "kind": "Python web API",
+          "summary": "Framework Python để viết REST API. Mô hình nằm sau một endpoint, nhận JSON và trả về dự đoán dạng JSON.",
+          "pick": "Chọn khi web app, mobile app hay hệ thống khác cần gọi mô hình qua HTTP.",
+          "avoid": "Tránh khi chỉ có bạn dùng, vì giao diện có mô hình bên trong đơn giản hơn.",
+          "cost": "free",
+          "level": 2,
+          "fit": {
+            "latency": [
+              "online"
+            ],
+            "users": [
+              "few",
+              "public"
+            ]
+          },
+          "links": [
+            {
+              "title": "First steps",
+              "url": "https://fastapi.tiangolo.com/tutorial/first-steps/"
+            },
+            {
+              "title": "FastAPI in Docker",
+              "url": "https://fastapi.tiangolo.com/deployment/docker/"
+            }
+          ],
+          "setup": [
+            "pip install \"fastapi[standard]\"",
+            "fastapi dev main.py"
+          ],
+          "task": "Endpoint /predict trả về dự đoán và thử được trên trang /docs."
+        },
+        {
+          "id": "bentoml",
+          "name": "BentoML",
+          "kind": "Model serving framework",
+          "summary": "Framework mã nguồn mở đóng gói mô hình thành dịch vụ API. Có sẵn gom request theo lô và hỗ trợ GPU.",
+          "pick": "Chọn khi phục vụ mô hình deep learning nặng cho nhiều người và cần tận dụng GPU.",
+          "avoid": "Tránh khi mô hình nhỏ, vì FastAPI đủ dùng và dễ học hơn.",
+          "cost": "free",
+          "level": 3,
+          "fit": {
+            "latency": [
+              "online"
+            ],
+            "users": [
+              "few",
+              "public"
+            ],
+            "gpu": [
+              "yes"
+            ]
+          },
+          "links": [
+            {
+              "title": "BentoML on GitHub",
+              "url": "https://github.com/bentoml/BentoML"
+            }
+          ],
+          "setup": [
+            "pip install -U bentoml",
+            "bentoml serve"
+          ],
+          "task": "Lệnh bentoml serve chạy được và một request trả về dự đoán."
+        },
+        {
+          "id": "serverless",
+          "name": "Serverless function",
+          "kind": "Function as a service",
+          "summary": "Đoạn code chạy trên Cloud Run functions hoặc AWS Lambda mỗi khi có request. Không có request thì không chạy và không tốn tiền tính toán.",
+          "pick": "Chọn khi lượng request ít và thất thường, và bạn đã có tài khoản đám mây.",
+          "avoid": "Tránh khi mô hình nạp chậm hoặc rất nặng, vì lần gọi đầu sau lúc nghỉ sẽ chậm.",
+          "cost": "freemium",
+          "level": 3,
+          "fit": {
+            "latency": [
+              "online"
+            ],
+            "users": [
+              "few",
+              "public"
+            ],
+            "budget": [
+              "low",
+              "cloud"
+            ],
+            "gpu": [
+              "no"
+            ]
+          },
+          "links": [
+            {
+              "title": "Cloud Run functions",
+              "url": "https://docs.cloud.google.com/run/docs/write-functions"
+            },
+            {
+              "title": "AWS Lambda with Python",
+              "url": "https://docs.aws.amazon.com/lambda/latest/dg/lambda-python.html"
+            }
+          ],
+          "setup": [],
+          "task": "Gọi URL của function với dữ liệu mẫu và nhận về dự đoán."
+        }
+      ]
+    },
+    {
+      "id": "app",
+      "title": "User interface",
+      "lane": "app",
+      "question": "Người dùng xem kết quả trên giao diện nào?",
+      "guide": "Đây là phần người dùng nhìn thấy.\nGiao diện đọc file kết quả batch, hoặc gọi mô hình online từ bước Serving.\nChọn theo ai xem và họ cần làm gì: đọc báo cáo, lọc số liệu, hay nhập dữ liệu để nhận dự đoán.\nBước Hosting phía sau đưa giao diện này lên mạng.",
+      "multi": false,
+      "skipWhen": "",
+      "options": [
+        {
+          "id": "notebook-report",
+          "name": "Jupyter / Quarto report",
+          "kind": "Notebook or static report",
+          "summary": "Notebook Jupyter chứa code, biểu đồ và kết luận. Quarto xuất notebook thành trang HTML hoặc file Word gọn gàng.",
+          "pick": "Chọn khi sản phẩm cuối là một bài phân tích để đọc hoặc nộp.",
+          "avoid": "Tránh khi người dùng cần nhập dữ liệu và nhận dự đoán.",
+          "cost": "free",
+          "level": 1,
+          "fit": {
+            "latency": [
+              "report",
+              "batch"
+            ],
+            "users": [
+              "me",
+              "few"
+            ]
+          },
+          "links": [
+            {
+              "title": "Quarto with Jupyter",
+              "url": "https://quarto.org/docs/get-started/hello/jupyter.html"
+            },
+            {
+              "title": "Install Jupyter",
+              "url": "https://jupyter.org/install"
+            }
+          ],
+          "setup": [
+            "pip install jupyterlab",
+            "jupyter lab",
+            "quarto render hello.ipynb --to html"
+          ],
+          "task": "File HTML của báo cáo mở được, có đủ biểu đồ và kết luận."
+        },
+        {
+          "id": "bi-dashboard",
+          "name": "Data Studio / Power BI / Metabase",
+          "kind": "BI dashboard",
+          "summary": "Công cụ BI kéo thả biểu đồ từ bảng dữ liệu. Data Studio của Google (tên cũ Looker Studio) miễn phí, Metabase là mã nguồn mở tự host.",
+          "pick": "Chọn khi người xem cần lọc và xem số liệu đã tính sẵn mà không cần code.",
+          "avoid": "Tránh Power BI khi cần chia sẻ miễn phí, vì chia sẻ báo cáo cần giấy phép Pro.",
+          "cost": "freemium",
+          "level": 1,
+          "fit": {
+            "latency": [
+              "report",
+              "batch"
+            ],
+            "users": [
+              "few",
+              "public"
+            ]
+          },
+          "links": [
+            {
+              "title": "Data Studio docs",
+              "url": "https://docs.cloud.google.com/looker/docs/studio"
+            },
+            {
+              "title": "Power BI Desktop",
+              "url": "https://learn.microsoft.com/en-us/power-bi/fundamentals/desktop-getting-started"
+            },
+            {
+              "title": "Metabase JAR",
+              "url": "https://www.metabase.com/docs/latest/installation-and-operation/running-the-metabase-jar-file"
+            }
+          ],
+          "setup": [],
+          "task": "Dashboard đọc bảng kết quả và có ít nhất một bộ lọc hoạt động."
+        },
+        {
+          "id": "streamlit",
+          "name": "Streamlit",
+          "kind": "Python data app",
+          "summary": "Thư viện Python dựng trang web dữ liệu chỉ bằng một file .py. Có bảng, biểu đồ, ô nhập và nút bấm.",
+          "pick": "Chọn khi bạn muốn một app có biểu đồ và ô nhập mà chỉ cần viết Python.",
+          "avoid": "Tránh khi cần giao diện tuỳ biến cao hoặc phục vụ rất nhiều người.",
+          "cost": "free",
+          "level": 1,
+          "fit": {
+            "latency": [
+              "online",
+              "batch"
+            ],
+            "users": [
+              "me",
+              "few"
+            ]
+          },
+          "links": [
+            {
+              "title": "Install Streamlit",
+              "url": "https://docs.streamlit.io/get-started/installation"
+            },
+            {
+              "title": "Run with command line",
+              "url": "https://docs.streamlit.io/get-started/installation/command-line"
+            }
+          ],
+          "setup": [
+            "pip install streamlit",
+            "streamlit hello",
+            "streamlit run app.py"
+          ],
+          "task": "Lệnh streamlit run app.py mở trang có ô nhập và hiện kết quả dự đoán."
+        },
+        {
+          "id": "gradio",
+          "name": "Gradio",
+          "kind": "ML demo UI",
+          "summary": "Thư viện Python tạo giao diện demo cho một hàm: đầu vào, nút chạy, đầu ra. Hợp với ảnh, âm thanh và văn bản.",
+          "pick": "Chọn khi cần demo một mô hình deep learning nhận ảnh hoặc văn bản.",
+          "avoid": "Tránh khi cần dashboard nhiều biểu đồ và bộ lọc.",
+          "cost": "free",
+          "level": 1,
+          "fit": {
+            "latency": [
+              "online"
+            ],
+            "users": [
+              "me",
+              "few"
+            ],
+            "gpu": [
+              "yes"
+            ]
+          },
+          "links": [
+            {
+              "title": "Quickstart",
+              "url": "https://www.gradio.app/guides/quickstart"
+            }
+          ],
+          "setup": [
+            "pip install --upgrade gradio",
+            "python app.py"
+          ],
+          "task": "Trang demo ở localhost:7860 nhận đầu vào và trả về dự đoán."
+        },
+        {
+          "id": "web-app",
+          "name": "Vue / React web app",
+          "kind": "Custom web frontend",
+          "summary": "Ứng dụng web tự viết bằng Vue hoặc React, gọi API dự đoán qua HTTP. Bạn toàn quyền về giao diện.",
+          "pick": "Chọn khi đã biết làm web và cần một sản phẩm cho nhiều người dùng.",
+          "avoid": "Tránh khi chưa có API, vì app này cần bước Serving trả JSON.",
+          "cost": "free",
+          "level": 2,
+          "fit": {
+            "latency": [
+              "online",
+              "batch"
+            ],
+            "users": [
+              "public"
+            ]
+          },
+          "links": [
+            {
+              "title": "Vue quick start",
+              "url": "https://vuejs.org/guide/quick-start"
+            },
+            {
+              "title": "FastAPI CORS",
+              "url": "https://fastapi.tiangolo.com/tutorial/cors/"
+            }
+          ],
+          "setup": [
+            "npm create vue@latest",
+            "npm install",
+            "npm run dev"
+          ],
+          "task": "Trang web gửi dữ liệu tới API và hiện dự đoán trả về."
+        },
+        {
+          "id": "mobile-app",
+          "name": "Flutter / native mobile app",
+          "kind": "Mobile client",
+          "summary": "App điện thoại viết bằng Flutter hoặc Swift, gọi API dự đoán qua HTTP. Mô hình chạy trên server, không nằm trong app.",
+          "pick": "Chọn khi người dùng chính dùng điện thoại và bạn đã quen làm mobile.",
+          "avoid": "Tránh khi chưa có API công khai, vì app trên máy người dùng không gọi được localhost của bạn.",
+          "cost": "free",
+          "level": 2,
+          "fit": {
+            "latency": [
+              "online"
+            ],
+            "users": [
+              "public"
+            ]
+          },
+          "links": [
+            {
+              "title": "Create a Flutter app",
+              "url": "https://docs.flutter.dev/reference/create-new-app"
+            },
+            {
+              "title": "Fetch data from the internet",
+              "url": "https://docs.flutter.dev/cookbook/networking/fetch-data"
+            }
+          ],
+          "setup": [
+            "flutter create my_app",
+            "flutter pub add http",
+            "flutter run"
+          ],
+          "task": "App trên máy thật gọi API và hiện dự đoán."
+        }
+      ]
+    },
+    {
+      "id": "package",
+      "title": "Packaging & CI/CD",
+      "lane": "ops",
+      "question": "Bạn đóng gói môi trường và tự động hoá kiểm tra, triển khai ra sao?",
+      "guide": "Đóng gói ghi lại đúng thư viện và phiên bản để máy khác chạy y như máy bạn.\nCI/CD tự chạy test mỗi lần push và tự triển khai khi gộp code.\nBước này nối code ở các bước trước với máy chủ ở bước Hosting.",
+      "multi": true,
+      "skipWhen": "",
+      "options": [
+        {
+          "id": "requirements",
+          "name": "requirements.txt",
+          "kind": "Pinned dependency list",
+          "summary": "File liệt kê thư viện Python và phiên bản. pip cài lại đúng các phiên bản đó trên máy khác.",
+          "pick": "Chọn cho mọi dự án Python, đây là mức tối thiểu.",
+          "avoid": "",
+          "cost": "free",
+          "level": 1,
+          "fit": {},
+          "links": [
+            {
+              "title": "pip requirements files",
+              "url": "https://pip.pypa.io/en/stable/user_guide/"
+            }
+          ],
+          "setup": [
+            "python -m pip freeze > requirements.txt",
+            "python -m pip install -r requirements.txt"
+          ],
+          "task": "Môi trường ảo mới cài từ requirements.txt và chạy được code."
+        },
+        {
+          "id": "uv",
+          "name": "uv",
+          "kind": "Python project manager",
+          "summary": "Công cụ quản lý thư viện và môi trường Python, rất nhanh. File uv.lock khoá mọi phiên bản và được commit vào Git.",
+          "pick": "Chọn khi muốn môi trường tái lập chính xác cho người khác hoặc cho máy chủ.",
+          "avoid": "Tránh khi nền tảng host chỉ đọc requirements.txt và bạn chưa muốn thêm bước xuất file.",
+          "cost": "free",
+          "level": 1,
+          "fit": {
+            "users": [
+              "few",
+              "public"
+            ]
+          },
+          "links": [
+            {
+              "title": "Install uv",
+              "url": "https://docs.astral.sh/uv/getting-started/installation/"
+            },
+            {
+              "title": "Working on projects",
+              "url": "https://docs.astral.sh/uv/guides/projects/"
+            }
+          ],
+          "setup": [
+            "pip install uv",
+            "uv init",
+            "uv add pandas scikit-learn",
+            "uv sync"
+          ],
+          "task": "Repo có pyproject.toml và uv.lock, uv sync trên máy sạch chạy được code."
+        },
+        {
+          "id": "docker",
+          "name": "Docker",
+          "kind": "Container image",
+          "summary": "Đóng gói code, thư viện và cả hệ điều hành nền thành một image. Image chạy giống nhau trên máy bạn và trên máy chủ.",
+          "pick": "Chọn khi triển khai API hoặc app lên Cloud Run, Render hay VPS.",
+          "avoid": "Tránh khi host chỉ cần file .py và requirements, như Streamlit Community Cloud.",
+          "cost": "free",
+          "level": 2,
+          "fit": {
+            "latency": [
+              "online",
+              "batch"
+            ],
+            "users": [
+              "few",
+              "public"
+            ]
+          },
+          "links": [
+            {
+              "title": "docker init",
+              "url": "https://docs.docker.com/reference/cli/docker/init/"
+            },
+            {
+              "title": "Write a Dockerfile",
+              "url": "https://docs.docker.com/get-started/docker-concepts/building-images/writing-a-dockerfile/"
+            }
+          ],
+          "setup": [
+            "docker init",
+            "docker compose up --build"
+          ],
+          "task": "docker compose up --build chạy app và mở được trên trình duyệt."
+        },
+        {
+          "id": "github-actions",
+          "name": "GitHub Actions",
+          "kind": "CI/CD workflows",
+          "summary": "Workflow YAML trong repo GitHub, tự chạy khi push, khi gộp pull request hoặc theo lịch. Runner chuẩn miễn phí cho repo public.",
+          "pick": "Chọn khi muốn test tự chạy mỗi lần push và tự triển khai khi gộp vào main.",
+          "avoid": "Tránh đưa khoá bí mật vào file YAML, hãy dùng GitHub secrets.",
+          "cost": "freemium",
+          "level": 2,
+          "fit": {
+            "users": [
+              "few",
+              "public"
+            ]
+          },
+          "links": [
+            {
+              "title": "Quickstart",
+              "url": "https://docs.github.com/en/actions/get-started/quickstart"
+            },
+            {
+              "title": "Building and testing Python",
+              "url": "https://docs.github.com/en/actions/tutorials/build-and-test-code/python"
+            },
+            {
+              "title": "Actions billing",
+              "url": "https://docs.github.com/en/billing/concepts/product-billing/github-actions"
+            }
+          ],
+          "setup": [],
+          "task": "Push một commit làm workflow chạy pytest và báo xanh."
+        }
+      ]
+    },
+    {
+      "id": "host",
+      "title": "Hosting",
+      "lane": "ops",
+      "question": "App hoặc báo cáo của bạn chạy ở đâu trên mạng?",
+      "guide": "Hosting là máy chủ chạy app để người khác mở bằng một đường link.\nGói miễn phí thường cho app ngủ khi không ai dùng, lần mở sau phải chờ khởi động lại.\nChọn theo loại thứ cần chạy: trang tĩnh, app Streamlit hay Gradio, hay API trong Docker.\nSau khi lên mạng, bước Monitoring theo dõi nó.",
+      "multi": false,
+      "skipWhen": "Bỏ qua khi chỉ bạn xem kết quả trên máy của mình.",
+      "options": [
+        {
+          "id": "streamlit-cloud",
+          "name": "Streamlit Community Cloud",
+          "kind": "Free Streamlit hosting",
+          "summary": "Dịch vụ miễn phí chạy app Streamlit từ repo GitHub. App không có truy cập trong 12 giờ sẽ ngủ, ai mở link cũng đánh thức được.",
+          "pick": "Chọn khi giao diện là Streamlit và chỉ bạn hoặc vài người dùng.",
+          "avoid": "Tránh khi cần API cho app khác gọi, vì dịch vụ này chỉ chạy app Streamlit.",
+          "cost": "free",
+          "level": 1,
+          "fit": {
+            "latency": [
+              "online",
+              "batch"
+            ],
+            "users": [
+              "me",
+              "few"
+            ],
+            "gpu": [
+              "no"
+            ]
+          },
+          "links": [
+            {
+              "title": "Community Cloud",
+              "url": "https://docs.streamlit.io/deploy/streamlit-community-cloud"
+            },
+            {
+              "title": "App hibernation",
+              "url": "https://docs.streamlit.io/deploy/streamlit-community-cloud/manage-your-app"
+            }
+          ],
+          "setup": [],
+          "task": "App có link công khai và mở được từ máy khác."
+        },
+        {
+          "id": "hf-spaces",
+          "name": "Hugging Face Spaces",
+          "kind": "ML demo hosting",
+          "summary": "Nơi host demo ML dưới dạng repo Git. Space tĩnh miễn phí cho mọi người. Space Gradio hay Docker cần gói trả phí, trừ vài Space Gradio chạy ZeroGPU cho tài khoản miễn phí.",
+          "pick": "Chọn khi demo một mô hình deep learning bằng Gradio và cần GPU miễn phí theo hạn mức.",
+          "avoid": "Tránh khi cần app chạy liên tục mà không trả phí, vì Space trên phần cứng miễn phí sẽ ngủ khi không dùng.",
+          "cost": "freemium",
+          "level": 2,
+          "fit": {
+            "latency": [
+              "online"
+            ],
+            "gpu": [
+              "yes"
+            ]
+          },
+          "links": [
+            {
+              "title": "Spaces overview",
+              "url": "https://huggingface.co/docs/hub/spaces-overview"
+            },
+            {
+              "title": "ZeroGPU",
+              "url": "https://huggingface.co/docs/hub/spaces-zerogpu"
+            },
+            {
+              "title": "Pricing",
+              "url": "https://huggingface.co/pricing"
+            }
+          ],
+          "setup": [],
+          "task": "Space chạy app Gradio và trả về dự đoán qua link hf.space."
+        },
+        {
+          "id": "render",
+          "name": "Render",
+          "kind": "Managed web service",
+          "summary": "Nền tảng chạy web service từ repo GitHub hoặc Docker. Có instance Free, tự ngủ sau 15 phút không có request.",
+          "pick": "Chọn khi cần đưa một API FastAPI lên mạng miễn phí để thử với web hoặc mobile app.",
+          "avoid": "Tránh khi người dùng không chấp nhận chờ lâu ở lần gọi đầu sau lúc app ngủ.",
+          "cost": "freemium",
+          "level": 2,
+          "fit": {
+            "latency": [
+              "online"
+            ],
+            "budget": [
+              "free",
+              "low"
+            ],
+            "gpu": [
+              "no"
+            ]
+          },
+          "links": [
+            {
+              "title": "Deploy for free",
+              "url": "https://render.com/docs/free"
+            },
+            {
+              "title": "Deploy a FastAPI app",
+              "url": "https://render.com/docs/deploy-fastapi"
+            }
+          ],
+          "setup": [],
+          "task": "API có URL onrender.com và /docs mở được."
+        },
+        {
+          "id": "cloud-run",
+          "name": "Google Cloud Run",
+          "kind": "Serverless containers",
+          "summary": "Dịch vụ Google Cloud chạy container, tự co về không khi không có request. Có hạn mức miễn phí hằng tháng nhưng cần tài khoản thanh toán.",
+          "pick": "Chọn khi API phục vụ nhiều người và bạn chấp nhận trả theo mức dùng.",
+          "avoid": "Tránh khi không muốn gắn thẻ thanh toán vào tài khoản đám mây.",
+          "cost": "freemium",
+          "level": 3,
+          "fit": {
+            "latency": [
+              "online",
+              "batch"
+            ],
+            "users": [
+              "few",
+              "public"
+            ],
+            "budget": [
+              "low",
+              "cloud"
+            ]
+          },
+          "links": [
+            {
+              "title": "Deploy a FastAPI service",
+              "url": "https://docs.cloud.google.com/run/docs/quickstarts/build-and-deploy/deploy-python-fastapi-service"
+            },
+            {
+              "title": "Free tier",
+              "url": "https://docs.cloud.google.com/free/docs/free-cloud-features"
+            }
+          ],
+          "setup": [
+            "gcloud run deploy --source ."
+          ],
+          "task": "Service có URL run.app và trả về dự đoán."
+        },
+        {
+          "id": "vps-docker",
+          "name": "VPS + Docker",
+          "kind": "Self-managed server",
+          "summary": "Một máy chủ ảo thuê theo tháng, cài Docker và chạy app của bạn. Bạn tự lo cập nhật, bảo mật và sao lưu.",
+          "pick": "Chọn khi cần app chạy liên tục, có job theo lịch, với chi phí cố định thấp.",
+          "avoid": "Tránh khi chưa quen quản trị Linux qua SSH.",
+          "cost": "paid",
+          "level": 3,
+          "fit": {
+            "users": [
+              "few",
+              "public"
+            ],
+            "budget": [
+              "low",
+              "cloud"
+            ]
+          },
+          "links": [
+            {
+              "title": "Install Docker Engine",
+              "url": "https://docs.docker.com/engine/install/ubuntu/"
+            },
+            {
+              "title": "docker init",
+              "url": "https://docs.docker.com/reference/cli/docker/init/"
+            }
+          ],
+          "setup": [
+            "curl -fsSL https://get.docker.com -o get-docker.sh",
+            "sudo sh get-docker.sh",
+            "docker compose up --build"
+          ],
+          "task": "App chạy trên VPS và mở được qua địa chỉ IP hoặc tên miền."
+        },
+        {
+          "id": "github-pages",
+          "name": "GitHub Pages",
+          "kind": "Static site hosting",
+          "summary": "Host file tĩnh (HTML, CSS, JS) từ repo GitHub. Không chạy được Python phía server.",
+          "pick": "Chọn khi sản phẩm là báo cáo Quarto hoặc trang tĩnh đọc file kết quả batch.",
+          "avoid": "Tránh khi cần dự đoán online, vì GitHub Pages không chạy được mô hình phía server.",
+          "cost": "free",
+          "level": 1,
+          "fit": {
+            "latency": [
+              "report",
+              "batch"
+            ]
+          },
+          "links": [
+            {
+              "title": "Create a Pages site",
+              "url": "https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site"
+            },
+            {
+              "title": "Quarto on GitHub Pages",
+              "url": "https://quarto.org/docs/publishing/github-pages.html"
+            }
+          ],
+          "setup": [
+            "quarto publish gh-pages"
+          ],
+          "task": "Báo cáo mở được qua link github.io."
+        }
+      ]
+    },
+    {
+      "id": "monitor",
+      "title": "Monitoring",
+      "lane": "ops",
+      "question": "Sau khi triển khai, bạn biết app còn chạy và mô hình còn đúng bằng cách nào?",
+      "guide": "Monitoring kiểm tra hai việc: app còn chạy không, và mô hình còn dự đoán đúng không.\nDữ liệu thật thay đổi theo thời gian nên độ chính xác có thể giảm dần.\nKết quả theo dõi cho biết khi nào cần quay lại bước huấn luyện.",
+      "multi": true,
+      "skipWhen": "Bỏ qua khi không triển khai gì lên mạng và dữ liệu không đổi.",
+      "options": [
+        {
+          "id": "logs-weekly",
+          "name": "Logs + weekly check",
+          "kind": "Manual log review",
+          "summary": "App ghi log mỗi request, lỗi và dự đoán bằng module logging. Mỗi tuần bạn đọc log và xem lại vài dự đoán.",
+          "pick": "Chọn khi app nhỏ, ít người dùng, cần một thói quen kiểm tra đơn giản.",
+          "avoid": "Tránh dựa hẳn vào cách này khi có nhiều người dùng, vì lỗi có thể nằm im cả tuần.",
+          "cost": "free",
+          "level": 1,
+          "fit": {},
+          "links": [
+            {
+              "title": "Logging HOWTO",
+              "url": "https://docs.python.org/3/howto/logging.html"
+            }
+          ],
+          "setup": [],
+          "task": "App ghi log ra file và lịch có một mục kiểm tra log hằng tuần."
+        },
+        {
+          "id": "re-eval",
+          "name": "Scheduled re-evaluation",
+          "kind": "Periodic model evaluation",
+          "summary": "Script tính lại chỉ số của mô hình trên dữ liệu mới đã có nhãn. Chạy theo lịch và so với chỉ số lúc huấn luyện.",
+          "pick": "Chọn khi dữ liệu mới về đều và sau đó có nhãn thật để so.",
+          "avoid": "Tránh khi dữ liệu cố định, vì không có gì mới để đánh giá.",
+          "cost": "free",
+          "level": 2,
+          "fit": {
+            "fresh": [
+              "batch",
+              "stream"
+            ]
+          },
+          "links": [
+            {
+              "title": "Metrics and scoring",
+              "url": "https://scikit-learn.org/stable/modules/model_evaluation.html"
+            },
+            {
+              "title": "GitHub Actions schedule",
+              "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule"
+            }
+          ],
+          "setup": [],
+          "task": "Job theo lịch ghi chỉ số mới vào bảng và báo khi chỉ số giảm quá ngưỡng."
+        },
+        {
+          "id": "evidently",
+          "name": "Evidently",
+          "kind": "Data drift reports",
+          "summary": "Thư viện mã nguồn mở so dữ liệu mới với dữ liệu huấn luyện. Báo cáo cho biết cột nào đã đổi phân phối (data drift).",
+          "pick": "Chọn khi dữ liệu mới về đều nhưng nhãn đến chậm, cần dấu hiệu sớm.",
+          "avoid": "Tránh khi dữ liệu cố định, vì không có dữ liệu mới để so.",
+          "cost": "free",
+          "level": 2,
+          "fit": {
+            "fresh": [
+              "batch",
+              "stream"
+            ]
+          },
+          "links": [
+            {
+              "title": "Quickstart",
+              "url": "https://docs.evidentlyai.com/quickstart_ml"
+            },
+            {
+              "title": "Library overview",
+              "url": "https://docs.evidentlyai.com/docs/library/overview"
+            }
+          ],
+          "setup": [
+            "pip install evidently"
+          ],
+          "task": "Báo cáo DataDriftPreset so tập huấn luyện với lô dữ liệu mới nhất."
+        },
+        {
+          "id": "uptime",
+          "name": "UptimeRobot",
+          "kind": "Uptime monitoring",
+          "summary": "Dịch vụ gọi URL của app theo chu kỳ và báo qua email khi app không trả lời. Có gói miễn phí.",
+          "pick": "Chọn khi app hoặc API online có người khác dựa vào.",
+          "avoid": "Tránh khi app được phép ngủ, vì lệnh gọi định kỳ sẽ báo lỗi giả hoặc giữ app thức.",
+          "cost": "freemium",
+          "level": 1,
+          "fit": {
+            "latency": [
+              "online"
+            ],
+            "users": [
+              "few",
+              "public"
+            ]
+          },
+          "links": [
+            {
+              "title": "Pricing",
+              "url": "https://uptimerobot.com/pricing/"
+            }
+          ],
+          "setup": [],
+          "task": "Có một monitor cho URL của app và email báo khi app ngừng."
+        },
+        {
+          "id": "prometheus-grafana",
+          "name": "Prometheus + Grafana",
+          "kind": "Metrics and dashboards",
+          "summary": "Prometheus thu số đo của app theo thời gian. Grafana vẽ dashboard và đặt cảnh báo từ số đo đó.",
+          "pick": "Chọn khi app phục vụ nhiều người và bạn cần theo dõi độ trễ, lỗi, tải liên tục.",
+          "avoid": "Tránh khi dự án cá nhân, vì phải dựng và bảo trì thêm hai dịch vụ.",
+          "cost": "free",
+          "level": 3,
+          "fit": {
+            "latency": [
+              "online"
+            ],
+            "users": [
+              "public"
+            ],
+            "budget": [
+              "cloud"
+            ]
+          },
+          "links": [
+            {
+              "title": "Prometheus first steps",
+              "url": "https://prometheus.io/docs/introduction/first_steps/"
+            },
+            {
+              "title": "Grafana with Prometheus",
+              "url": "https://grafana.com/docs/grafana/latest/getting-started/get-started-grafana-prometheus/"
+            }
+          ],
+          "setup": [
+            "./prometheus --config.file=prometheus.yml"
+          ],
+          "task": "Dashboard Grafana hiện số request và tỉ lệ lỗi của app."
+        }
+      ]
+    }
+  ]
+}

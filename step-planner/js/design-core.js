@@ -1,0 +1,223 @@
+/* Thiết kế hệ thống của một dự án (PLAN-016) — logic thuần, không DOM, chạy được trong Node.
+ * Danh mục (data/system-design.json): hồ sơ dự án (câu hỏi → lựa chọn) và các khâu theo đường đi của dữ liệu, mỗi khâu
+ * nhiều phương án có `fit` (khoá hồ sơ → các câu trả lời hợp). Dự án giữ `design = {profile, stages}`; không có gì thì null. */
+
+const ID = /^[a-z0-9][a-z0-9-]{0,39}$/;
+const isObj = (/** @type {any} */ v) => !!v && typeof v === 'object' && !Array.isArray(v);
+const line = (/** @type {any} */ s) => (typeof s === 'string' ? s : '').replace(/\s+/g, ' ').trim();
+const lines = (/** @type {any} */ s) => (typeof s === 'string' ? s : '').replace(/\r\n?/g, '\n').split('\n')
+  .map((l) => l.replace(/\s+$/, '')).join('\n').replace(/^\n+|\n+$/g, '');
+export const OWN_MAX = 120;
+
+/** @param {any} v @returns {string[]} */
+const idList = (v) => (Array.isArray(v) ? [...new Set(v.filter((x) => typeof x === 'string' && ID.test(x)))] : []);
+
+/**
+ * Khoá và id chỉ là chữ thường, số, gạch nối (id lạ của danh mục cũ vẫn giữ: giao diện bỏ qua cái không còn).
+ * Khâu "không cần" (`skip`) không giữ phương án đã chọn. Khâu trống bị bỏ; dự án không còn gì thì null.
+ * @param {any} o
+ * @returns {null | {profile: Record<string,string>, stages: Record<string,{pick:string[], skip:boolean, own:string, note:string}>}}
+ */
+export function normDesign(o) {
+  if (!isObj(o)) return null;
+  /** @type {Record<string,string>} */
+  const profile = {};
+  if (isObj(o.profile)) for (const [k, v] of Object.entries(o.profile)) if (ID.test(k) && typeof v === 'string' && ID.test(v)) profile[k] = v;
+  /** @type {Record<string,any>} */
+  const stages = {};
+  if (isObj(o.stages)) {
+    for (const [k, v] of Object.entries(o.stages)) {
+      if (!ID.test(k) || !isObj(v)) continue;
+      const skip = v.skip === true;
+      const st = { pick: skip ? [] : idList(v.pick), skip, own: skip ? '' : line(v.own).slice(0, OWN_MAX), note: lines(v.note) };
+      if (st.pick.length || st.skip || st.own || st.note) stages[k] = st;
+    }
+  }
+  return Object.keys(profile).length || Object.keys(stages).length ? { profile, stages } : null;
+}
+
+/** Bản trống để sửa. @returns {{profile: Record<string,string>, stages: Record<string,any>}} */
+export const emptyDesign = () => ({ profile: {}, stages: {} });
+
+/** Trạng thái một khâu: 'done' (đã chọn hay tự ghi), 'skip' (không cần), 'open'. @param {any} design @param {string} id */
+export function stageState(design, id) {
+  const st = design && design.stages[id];
+  if (!st) return 'open';
+  if (st.skip) return 'skip';
+  return st.pick.length || st.own ? 'done' : 'open';
+}
+
+/**
+ * Phương án hợp hồ sơ không: mọi câu hồ sơ đã trả lời mà `fit` có nhắc tới đều phải khớp. `miss`: các khoá lệch.
+ * @param {any} opt @param {Record<string,string>} profile
+ * @returns {{ok: boolean, score: number, miss: string[]}}
+ */
+export function fitOf(opt, profile) {
+  const fit = isObj(opt.fit) ? opt.fit : {};
+  let score = 0;
+  /** @type {string[]} */
+  const miss = [];
+  for (const [k, allowed] of Object.entries(fit)) {
+    const ans = profile[k];
+    if (!ans || !Array.isArray(allowed)) continue;
+    if (allowed.includes(ans)) score++; else miss.push(k);
+  }
+  return { ok: miss.length === 0, score, miss };
+}
+
+/**
+ * Phương án của một khâu theo thứ tự gợi ý: hợp hồ sơ trước (khớp nhiều câu hơn, dễ hơn trước), rồi thứ tự danh mục.
+ * `top`: phương án đứng đầu khi đã có ít nhất một câu hồ sơ được trả lời và nó hợp.
+ * @param {any} stage @param {Record<string,string>} profile
+ */
+export function rankOptions(stage, profile) {
+  const answered = Object.keys(profile).length > 0;
+  const rows = stage.options.map((/** @type {any} */ o, /** @type {number} */ i) => ({ opt: o, i, ...fitOf(o, profile) }));
+  rows.sort((a, b) => (+b.ok - +a.ok) || (b.score - a.score) || ((a.opt.level || 2) - (b.opt.level || 2)) || (a.i - b.i));
+  return rows.map((r, k) => ({ ...r, top: answered && k === 0 && r.ok }));
+}
+
+/** Số khâu đã quyết (chọn, tự ghi hay không cần) trên tổng số khâu. @param {any} catalog @param {any} design */
+export function decidedCount(catalog, design) {
+  const ids = catalog.stages.map((/** @type {any} */ s) => s.id);
+  return { done: ids.filter((id) => stageState(design, id) !== 'open').length, total: ids.length };
+}
+
+/** Tên hiện của một khâu đã chọn: tên các phương án còn trong danh mục, rồi chữ tự ghi. @param {any} stage @param {any} st */
+export function pickNames(stage, st) {
+  if (!st || st.skip) return [];
+  const names = st.pick.map((/** @type {string} */ id) => stage.options.find((/** @type {any} */ o) => o.id === id)?.name).filter(Boolean);
+  if (st.own) names.push(st.own);
+  return names;
+}
+
+/* ── Sơ đồ: khâu theo đường đi của dữ liệu xếp kiểu rắn bò (hàng chẵn trái → phải, hàng lẻ phải → trái), nên hai khâu
+ * liền nhau luôn kề ngang hoặc thẳng dọc — mũi tên không bao giờ cắt nhau ở mọi số cột. ── */
+
+/** Ô (hàng, cột) của nút thứ i khi xếp `cols` cột kiểu rắn bò. @param {number} i @param {number} cols */
+export function snake(i, cols) {
+  const row = Math.floor(i / cols);
+  const c = i % cols;
+  return { row, col: row % 2 ? cols - 1 - c : c };
+}
+
+/**
+ * Các nút của sơ đồ: luồng (data, model, app theo thứ tự danh mục, bỏ khâu "không cần", cuối là người dùng) và vận hành
+ * (lane ops). Khâu chưa quyết vẫn hiện, đánh dấu `open`.
+ * @param {any} catalog @param {any} design
+ */
+export function diagramNodes(catalog, design) {
+  /** @type {any[]} */
+  const flow = [];
+  /** @type {any[]} */
+  const ops = [];
+  for (const s of catalog.stages) {
+    const state = stageState(design, s.id);
+    if (state === 'skip') continue;
+    const node = { id: s.id, title: s.title, lane: s.lane, names: pickNames(s, design && design.stages[s.id]), open: state === 'open' };
+    (s.lane === 'ops' ? ops : flow).push(node);
+  }
+  if (flow.length) flow.push({ id: 'users', title: 'Users', lane: 'end', names: [], open: false });
+  return { flow, ops };
+}
+
+/* ── Việc cho bảng: một bước "System build", mỗi khâu đã quyết một bước con (tên khâu: phương án), "Done when" là việc của
+ * phương án, ghi chú là lệnh bắt đầu, tài liệu là link chính thức. ── */
+
+export const PLAN_STEP = {
+  title: 'System build',
+  goal: 'Dựng hệ thống theo khung đã chọn ở System design.',
+  doneWhen: 'Mọi khâu đã chọn chạy nối tiếp nhau, từ nguồn dữ liệu tới người dùng.',
+  notes: 'Dựng một đường chạy thông sớm: dữ liệu thật, mô hình đơn giản nhất, giao diện thô, deploy được. Rồi mới làm tốt từng khâu.\n'
+    + 'Nguồn: Google, Rules of Machine Learning, rule #4: https://developers.google.com/machine-learning/guides/rules-of-ml',
+};
+
+/** @param {any} catalog @param {any} design */
+export function planTasks(catalog, design) {
+  /** @type {any[]} */
+  const out = [];
+  if (!design) return out;
+  for (const s of catalog.stages) {
+    const st = design.stages[s.id];
+    if (!st || st.skip) continue;
+    const opts = st.pick.map((/** @type {string} */ id) => s.options.find((/** @type {any} */ o) => o.id === id)).filter(Boolean);
+    const names = pickNames(s, st);
+    if (!names.length) continue;
+    const setup = opts.flatMap((/** @type {any} */ o) => o.setup || []);
+    const notes = [setup.length ? 'Lệnh bắt đầu:' : '', ...setup.map((/** @type {string} */ c) => '  ' + c), st.note].filter(Boolean).join('\n');
+    out.push({
+      title: `${s.title}: ${names.join(' + ')}`,
+      doneWhen: opts.map((/** @type {any} */ o) => o.task).filter(Boolean).join(' '),
+      notes,
+      docs: opts.flatMap((/** @type {any} */ o) => (o.links || []).map((/** @type {any} */ l) => ({ kind: 'link', title: `${o.name} · ${l.title}`, url: l.url }))),
+    });
+  }
+  return out;
+}
+
+/* ── Markdown: mục "## System design" (core.js gọi). Mỗi khâu một dòng: chữ đọc được, cuối dòng là `[khâu: id, id]`
+ * (hay `[khâu: skip]`) — trang chỉ đọc phần trong ngoặc. Dòng thụt: `Own: …` rồi ghi chú. ── */
+
+export const DESIGN_HEADING = 'System design';
+export const DESIGN_HEAD_RE = /^(?:system design|thiết kế hệ thống)$/i;
+const TAIL = /\[([a-z0-9][a-z0-9-]{0,39}):\s*([a-z0-9-]*(?:\s*,\s*[a-z0-9-]+)*)\s*\]\s*$/;
+
+/** @param {Record<string,string>} profile */
+export const profileLine = (profile) => 'Profile: ' + Object.entries(profile).map(([k, v]) => `${k} ${v}`).join(' · ');
+
+/** Đọc `Profile: size small · fresh once`. @param {string} rest */
+export function readProfile(rest) {
+  /** @type {Record<string,string>} */
+  const p = {};
+  for (const part of rest.split('·')) {
+    const m = /^\s*([a-z0-9][a-z0-9-]*)\s*[:=]?\s+([a-z0-9][a-z0-9-]*)\s*$/i.exec(part);
+    if (m) p[m[1].toLowerCase()] = m[2].toLowerCase();
+  }
+  return p;
+}
+
+/**
+ * Dòng khâu. `labels` (tuỳ chọn, từ danh mục) cho chữ đọc được trước ngoặc.
+ * @param {string} id @param {any} st @param {{stage?: string, names?: string[]}} [labels]
+ */
+export function stageLine(id, st, labels = {}) {
+  const tag = `[${id}: ${st.skip ? 'skip' : st.pick.join(', ')}]`;
+  const human = st.skip ? 'not needed' : (labels.names || []).filter(Boolean).join(' + ');
+  const head = labels.stage ? `${labels.stage}: ${human || '—'}` : human;
+  return `- ${head ? head + ' ' : ''}${tag}`;
+}
+
+/** Dòng gạch đầu dòng của mục System design → {id, pick, skip} hay null. @param {string} text */
+export function readStageLine(text) {
+  const m = TAIL.exec(text);
+  if (!m) return null;
+  const vals = m[2].split(',').map((x) => x.trim().toLowerCase()).filter(Boolean);
+  const skip = vals.length === 1 && vals[0] === 'skip';
+  return { id: m[1].toLowerCase(), pick: skip ? [] : vals, skip };
+}
+
+/* ── Kiểm danh mục (lint.py kiểm khuôn; hàm này cho test và cho trang báo lỗi rõ) ── */
+
+/** @param {any} cat @returns {string[]} lỗi */
+export function catalogErrors(cat) {
+  const err = [];
+  if (!isObj(cat) || !Array.isArray(cat.profile) || !Array.isArray(cat.stages)) return ['catalog needs profile[] and stages[]'];
+  const answers = new Map(cat.profile.map((/** @type {any} */ q) => [q.id, new Set((q.choices || []).map((/** @type {any} */ c) => c.id))]));
+  const seen = new Set();
+  for (const s of cat.stages) {
+    if (!ID.test(s.id) || seen.has(s.id)) err.push(`stage id: ${s.id}`);
+    seen.add(s.id);
+    if (!['data', 'model', 'app', 'ops'].includes(s.lane)) err.push(`${s.id}: lane ${s.lane}`);
+    const ids = new Set();
+    for (const o of s.options || []) {
+      if (!ID.test(o.id) || ids.has(o.id) || o.id === 'skip') err.push(`${s.id}: option id ${o.id}`);
+      ids.add(o.id);
+      for (const [k, v] of Object.entries(o.fit || {})) {
+        const ok = answers.get(k);
+        if (!ok) err.push(`${s.id}/${o.id}: fit key ${k}`);
+        else for (const a of /** @type {any[]} */ (v)) if (!ok.has(a)) err.push(`${s.id}/${o.id}: fit ${k}=${a}`);
+      }
+    }
+  }
+  return err;
+}

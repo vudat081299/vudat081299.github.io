@@ -1551,6 +1551,78 @@ const check = (name, ok, detail = '') => {
     && ov[1] === JSON.stringify(v1), oErr.join(' | '));
   await oldCtx.close();
 
+  /* ── System design (PLAN-016): hồ sơ đổi gợi ý, chọn lưu ngay, "không cần" bỏ khỏi sơ đồ, sơ đồ không tràn, việc sang
+   * bảng (Hoàn tác gỡ), Markdown xuất có mục và nhập lại giữ nguyên, 390px không tràn ngang ── */
+  for (const [w, hh] of [[1280, 900], [390, 844]]) {
+    const { ctx: sx, page: sp } = await open(w, hh);
+    const tag = `system design ${w}px`;
+    await sp.click('#start .tpl[data-tpl="crisp-dm"]');
+    await sp.waitForSelector('#sd-fig svg');
+    const cat = await sp.evaluate(async () => (await fetch('data/system-design.json')).json());
+    const n0 = await sp.$$eval('#sd-fig .sd-node', (ns) => ns.length);
+    check(`${tag}: sơ đồ trống vẽ mọi khâu (chưa quyết) và Users`, n0 === cat.stages.length + 1
+      && (await sp.$$eval('#sd-fig .sd-node.is-open', (ns) => ns.length)) === cat.stages.length);
+    await sp.click('#sd-btn');
+    await sp.click('#sd-open');
+    await sp.waitForSelector('#dlg-sd[open] .sd-prof');
+    const before = await sp.$$eval('#sd-nav .sd-nav-btn', (b) => b.length);
+    check(`${tag}: hộp có hồ sơ và mọi khâu`, before === cat.stages.length + 1);
+    await sp.click('input[data-q="size"][value="large"]', { force: true });
+    await sp.click('#sd-nav [data-at="4"]');
+    const proc = cat.stages[3];
+    const top = await sp.$eval('#sd-pane .sd-opt:has(.sd-tag.top)', (e) => e.dataset.opt).catch(() => '');
+    const want = proc.options.find((o) => !o.fit || !o.fit.size || o.fit.size.includes('large'));
+    check(`${tag}: dữ liệu lớn thì gợi ý ở ${proc.id} hợp cỡ lớn`, !!top && proc.options.find((o) => o.id === top).fit?.size?.includes('large') !== false && !!want, top);
+    await sp.click(`#sd-pane [data-opt="${top}"] input`);
+    let ws = await cur(sp);
+    check(`${tag}: chọn thì lưu ngay`, ws.design?.stages[proc.id]?.pick[0] === top && ws.design.profile.size === 'large');
+    check(`${tag}: đã chọn thì phương án khác gập lại`, await sp.$eval('#sd-pane .sd-more', (d) => !d.open && d.querySelectorAll('.sd-opt').length > 0));
+    check(`${tag}: focus ở lại ô vừa chọn`, await sp.evaluate((id) => document.activeElement?.closest('.sd-opt')?.dataset.opt === id, top));
+    await sp.click('#sd-next');
+    const ing = cat.stages[4].id;
+    await sp.click(`#sd-pane [data-skip="${ing}"]`);
+    await sp.fill('#sd-pane [data-note]', 'Own: lý do\n- không phải việc');
+    ws = await cur(sp);
+    check(`${tag}: "Not needed" và ghi chú lưu`, ws.design.stages[ing].skip && /không phải việc/.test(ws.design.stages[ing].note));
+    if (w === 390) check(`${tag}: hộp không tràn ngang`, await sp.$eval('#dlg-sd', (d) => d.scrollWidth <= d.clientWidth + 1));
+    await sp.keyboard.press('Escape');
+    check(`${tag}: sơ đồ bỏ khâu không cần, khâu đã chọn có tên`, !(await sp.$(`#sd-fig [data-stage="${ing}"]`))
+      && /\S/.test(await sp.$eval(`#sd-fig [data-stage="${proc.id}"]`, (g) => g.textContent)) && !(await sp.$(`#sd-fig [data-stage="${proc.id}"].is-open`)));
+    check(`${tag}: sơ đồ nằm trong khung, trang không tràn ngang`, await sp.$eval('#sd-fig', (f) => f.scrollWidth <= f.clientWidth + 1) && (await hOverflow(sp)) <= 0);
+    const steps0 = (await cur(sp)).steps.length;
+    await sp.click('#sd-plan');
+    ws = await cur(sp);
+    const build = ws.steps[1];
+    check(`${tag}: Add tasks to plan thêm bước System build ở vị trí 2, có link`, ws.steps.length === steps0 + 1 && build.title === 'System build'
+      && build.subs.length === 1 && build.subs[0].docs.length > 0 && build.subs[0].title.startsWith(proc.title));
+    await sp.click('#sd-plan');
+    check(`${tag}: bấm lại không thêm trùng`, (await cur(sp)).steps[1].subs.length === 1 && /already/.test(await sp.textContent('#toast-text')));
+    if (w === 1280) {
+      const [dl] = await Promise.all([sp.waitForEvent('download'), sp.click('#sd-svg')]);
+      const body = fs.readFileSync(await dl.path(), 'utf8');
+      check(`${tag}: tải SVG đứng một mình (màu chép vào thuộc tính)`, /^<\?xml/.test(body) && /<svg[^>]+xmlns=/.test(body) && !/class=/.test(body) && /fill="rgb/.test(body));
+      const md = await sp.evaluate(async () => {
+        const C = await import(new URL('js/core.js', location.href).href);
+        const s = JSON.parse(localStorage.getItem('stepPlanner.v2'));
+        return C.toMarkdown(s.workspaces.find((x) => x.id === s.lastId));
+      });
+      await sp.click('#export-btn');
+      const shown = await sp.$eval('#export-text', (e) => e.value);
+      check(`${tag}: Markdown xuất có mục System design kèm tên đọc được`, /## System design/.test(md) && md.includes(`[${proc.id}: ${top}]`)
+        && shown.includes(`- ${proc.title}: `) && shown.includes(`[${proc.id}: ${top}]`));
+      await sp.keyboard.press('Escape');
+      const rt = await sp.evaluate(async () => {
+        const C = await import(new URL('js/core.js', location.href).href);
+        const s = JSON.parse(localStorage.getItem('stepPlanner.v2'));
+        const w0 = s.workspaces.find((x) => x.id === s.lastId);
+        return JSON.stringify(C.shape(C.fromMarkdown(C.toMarkdown(w0)).workspace)) === JSON.stringify(C.shape(C.normWorkspace(w0)));
+      });
+      check(`${tag}: Markdown đi rồi về giữ nguyên thiết kế`, rt);
+    }
+    await sp.click('#toast-undo').catch(() => {});
+    await sx.close();
+  }
+
   /* ── Dữ liệu lưu bị hỏng ── */
   const bad = await browser.newContext();
   await bad.addInitScript(() => { if (!sessionStorage.getItem('x')) { sessionStorage.setItem('x', '1'); localStorage.setItem('stepPlanner.v2', '{hỏng'); } });
