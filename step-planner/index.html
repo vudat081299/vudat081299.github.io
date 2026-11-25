@@ -409,7 +409,8 @@
       <span class="md-hint"><code>#</code> heading · <code>**bold**</code> · <code>- list</code> · <code>`code`</code> · <code>[link](https://…)</code></span>
     </div>
     <div class="md-panes" id="md-panes" data-mode="view">
-      <label class="md-src"><span class="sr">Markdown content</span><textarea name="body" class="md-ta" spellcheck="false" placeholder="# Heading&#10;&#10;Write Markdown: **bold**, *italic*, - lists, `code`, [link](https://…)"></textarea></label>
+      <!-- Edit: ô chữ trong suốt đè lên bản tô màu cú pháp có số dòng (#md-hl, js/md.js renderSrc); cả hai cuộn cùng khung .md-src. -->
+      <label class="md-src" id="md-src"><span class="sr">Markdown content</span><span class="md-ed" id="md-ed"><span class="md-hl" id="md-hl" aria-hidden="true"></span><textarea name="body" class="md-ta" spellcheck="false" placeholder="# Heading&#10;&#10;Write Markdown: **bold**, *italic*, - lists, `code`, [link](https://…)"></textarea></span></label>
       <div class="md-view" id="md-view" tabindex="0" aria-label="Preview"></div>
     </div>
     <footer class="dlg-foot">

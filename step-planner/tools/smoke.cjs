@@ -762,6 +762,18 @@ const check = (name, ok, detail = '') => {
   let ms = await mdState();
   check('tài liệu văn bản mới: hộp lớn mở ở chế độ Sửa', ms.open && ms.mode === 'edit' && ms.sel === 'edit' && ms.src && !ms.view && ms.w > 1000, JSON.stringify(ms));
   await page.fill('#md-form [name="body"]', '# Cột thiếu\n\n**age** thiếu <img src=x onerror=alert(1)>\n\n- a\n  - b\n\n[xấu](javascript:alert(1)) [tốt](https://ok.example)\n\n````\n```\nlồng\n```\n````');
+  // Edit: bản tô màu dưới ô chữ trong suốt; chữ khớp từng dòng, cao bằng nhau (cùng chỗ xuống hàng), có số dòng, có màu.
+  const hlEd = await page.evaluate(() => {
+    const ta = document.querySelector('#md-form .md-ta'), hl = document.getElementById('md-hl'), lns = [...hl.children];
+    const tok = hl.querySelector('.sx-head'), num = getComputedStyle(lns[1], '::before');
+    return { same: lns.map((l) => l.textContent).join('\n') === ta.value, n: lns.length, h: [ta.scrollHeight, ta.clientHeight, hl.offsetHeight],
+      clear: getComputedStyle(ta).webkitTextFillColor, tok: !!tok && getComputedStyle(tok).color !== getComputedStyle(hl).color,
+      num: num.content, numSel: num.userSelect, taL: ta.getBoundingClientRect().left + parseFloat(getComputedStyle(ta).paddingLeft),
+      hlL: lns[1].getBoundingClientRect().left };
+  });
+  check('Edit: bản tô màu khớp ô chữ từng dòng, cùng cao, có số dòng và màu cú pháp, ô chữ trong suốt',
+    hlEd.same && hlEd.n === 14 && hlEd.h[0] === hlEd.h[1] && Math.abs(hlEd.h[1] - hlEd.h[2]) < 1 && /rgba\(0, 0, 0, 0\)|transparent/.test(hlEd.clear)
+    && hlEd.tok && hlEd.num === 'counter(ln)' && hlEd.numSel === 'none' && Math.abs(hlEd.taL - hlEd.hlL) < 1, JSON.stringify(hlEd));
   await page.click('#md-form button[type="submit"]');
   let st1 = (await cur(page)).steps[1];
   check('tài liệu văn bản: lưu', st1.docs.length === 2 && st1.docs[1].kind === 'md' && st1.docs[1].title === 'Ghi chép EDA' && /lồng/.test(st1.docs[1].body));
@@ -1219,6 +1231,9 @@ const check = (name, ok, detail = '') => {
   await m.page.fill('#doc-form [name="title"]', 'Ghi chép');
   await m.page.click('#doc-save');
   await m.page.fill('#md-form [name="body"]', '# Tiêu đề\n\n' + 'dòng dài '.repeat(60) + '\n\n| a | b | c | d | e | f |\n|---|---|---|---|---|---|\n| ' + 'x'.repeat(80) + ' | 2 | 3 | 4 | 5 | 6 |');
+  const mdWrap = await m.page.evaluate(() => { const ta = document.querySelector('#md-form .md-ta'), hl = document.getElementById('md-hl');
+    return [ta.scrollHeight, ta.clientHeight, hl.offsetHeight, hl.children[2].getBoundingClientRect().height / parseFloat(getComputedStyle(hl).lineHeight)]; });
+  check('390px Edit: dòng dài xuống hàng ở bản tô y như ô chữ (cùng cao), vẫn một số dòng', mdWrap[0] === mdWrap[1] && Math.abs(mdWrap[1] - mdWrap[2]) < 1 && mdWrap[3] > 3, mdWrap.join(','));
   await m.page.click('#dlg-md .tab[data-mode="view"]');
   const mdM = await m.page.evaluate(() => { const r = document.getElementById('dlg-md').getBoundingClientRect(); return [r.left, r.top, r.width, r.height, innerWidth, innerHeight]; });
   check('390px: hộp văn bản toàn màn, không tràn', mdM[0] === 0 && mdM[1] === 0 && mdM[2] === mdM[4] && Math.abs(mdM[3] - mdM[5]) < 2

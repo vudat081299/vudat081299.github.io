@@ -13,7 +13,7 @@
 | `index.html` | markup, hộp thoại, script theme trước lần vẽ đầu, script báo `file://` |
 | `css/planner.css` | token ở đầu (tới dòng `/* ── hết token ── */`), rồi từng component, mỗi khối mở bằng một dòng chú thích |
 | `js/core.js` | logic thuần: chuẩn hoá, ngày, tiến độ, việc tiếp theo, Markdown và JSON vào / ra; không DOM, chạy được trong Node |
-| `js/md.js` | Markdown của tài liệu văn bản → cây khối (`parseMd`, thuần) → DOM (`renderMd`, chỉ createElement / text node) |
+| `js/md.js` | Markdown của tài liệu văn bản → cây khối (`parseMd`, thuần) → DOM (`renderMd`, chỉ createElement / text node); khung Edit: token (`srcTokens`, thuần, chép md-annotate) → dòng có số (`renderSrc`) |
 | `js/store.js` | `localStorage` (dữ liệu, mẹo `stepPlanner.hintOff`, Compact `stepPlanner.compact`, theme `hub-theme`), `sessionStorage` (dự án của tab); mọi truy cập bọc try/catch |
 | `js/dropdown.js` | danh sách chọn tự dựng: `enhanceSelect` (thay giao diện `<select>`, giữ nó làm nguồn value và `change`), `openList` |
 | `js/drag.js` | kéo thả bằng pointer events (chuột, chạm, bút): bóng, ô "Drop here", FLIP, tự cuộn, Esc; mỗi khung hình một lượt, toạ độ đo một lần |

@@ -6,7 +6,7 @@ import {
   fromTemplate, toMarkdown, fromMarkdown, parseImport, toJSON, toBackup, shape, progress, nextActionIds, projectNextIds, slotsOf, subPlace, placeSub, takeSub, shiftTarget, liveLabels, redoCount, canReopen,
   nextStatus, setStatus, splitInline, normWorkspace, normSub, normLog, freshCopy, counts, slug, fold, parseDate, uniqueName, normDoc, safeUrl,
 } from '../js/core.js';
-import { parseMd, inline } from '../js/md.js';
+import { parseMd, inline, srcTokens } from '../js/md.js';
 
 let fails = 0;
 const check = (name, ok, detail = '') => {
@@ -228,6 +228,18 @@ const para = tree[1].c;
 check('md.js: link chỉ http(s); chữ HTML là chữ', para.some((n) => n.t === 'link' && n.href === 'https://a.b')
   && !para.some((n) => n.t === 'link' && /javascript/.test(n.href)) && para.some((n) => n.t === 'text' && n.v.includes('<b>')));
 check('md.js: url trần bỏ dấu câu cuối', eq(inline('xem https://a.b/c).'), [{ t: 'text', v: 'xem ' }, { t: 'link', href: 'https://a.b/c', c: [{ t: 'text', v: 'https://a.b/c' }] }, { t: 'text', v: ').' }]));
+
+/* Token tô màu của khung Edit: theo thứ tự, không chồng nhau, không vượt dòng; đúng loại ở các dấu chính. */
+const srcT = '# Tiêu **đậm**\n> trích `c`\n- [x] [l](https://a.b "t")\n```py\nx = "s" # **không**\n```\n| a | b |\nsnake_case *n* ~~g~~ <!-- c -->';
+const toks = srcTokens(srcT), at = (/** @type {string} */ frag, k = 0) => {
+  const i = srcT.indexOf(frag); const t = toks.find((x) => x.s <= i + k && i + k < x.e); return t ? t.c : null; };
+check('md.js srcTokens: theo thứ tự, không chồng, không qua dòng',
+  toks.every((t, i) => t.e > t.s && (!i || toks[i - 1].e <= t.s) && !srcT.slice(t.s, t.e).includes('\n')));
+check('md.js srcTokens: tiêu đề, trích dẫn, mục việc, link, khối rào, bảng, nghiêng, gạch, chú thích',
+  at('# ') === 'sx-punct' && at('Tiêu') === 'sx-head' && at('đậm') === 'sx-strong' && at('> ') === 'sx-quote' && at('trích') === 'sx-qtext'
+  && at('`c`') === 'sx-code' && at('[x]') === 'sx-punct' && at('[l]', 1) === 'sx-link' && at('https://a.b') === 'sx-url' && at('"t"') === 'sx-string'
+  && at('```py', 3) === 'sx-info' && at('x = ') === 'sx-code' && at('**không**') === 'sx-code' && at('| a', 0) === 'sx-punct'
+  && at('snake_case', 5) === null && at('*n*', 1) === 'sx-em' && at('~~g~~', 2) === 'sx-strike' && at('<!--') === 'sx-comment', JSON.stringify(toks));
 
 /* Vòng làm lại: dòng Quay lại có vòng; bước đã bỏ đánh dấu giữ vòng (dòng Vòng:); dòng cũ không vòng đọc là vòng 2. */
 const rounds = normWorkspace({ steps: [

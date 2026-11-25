@@ -318,3 +318,118 @@ export function renderMd(text) {
   putBlocks(f, parseMd(text));
   return f;
 }
+
+/* ── Khung Edit: token tô màu cú pháp (chép tokens() của md-annotate/js/core/tokens.js, thuần) ── */
+
+/** @typedef {{s:number, e:number, c:string}} Tok */
+/** @type {[RegExp, string[]][]} */
+const SRC_INLINE = [
+  [/(`+)([^`\n]|[^`\n][^\n]*?[^`\n])(\1)(?!`)/g, ['sx-code', 'sx-code', 'sx-code']],
+  [/(!?\[)([^\]\n]*)(\]\()([^)\s]*)((?:\s+"[^"\n]*")?)(\))/g, ['sx-punct', 'sx-link', 'sx-punct', 'sx-url', 'sx-string', 'sx-punct']],
+  [/(!?\[)([^\]\n]+)(\]\[)([^\]\n]*)(\])/g, ['sx-punct', 'sx-link', 'sx-punct', 'sx-url', 'sx-punct']],
+  [/(<(?:https?:\/\/|mailto:)[^>\s]+>)/g, ['sx-url']],
+  [/(<!--.*?-->)/g, ['sx-comment']],
+  [/(<\/?[A-Za-z][\w-]*(?:\s[^<>\n]*)?\/?>)/g, ['sx-tag']],
+  [/(\bhttps?:\/\/[^\s<>()[\]"']*[^\s<>()[\]"'.,;:!?])/g, ['sx-url']],
+  [/(\*\*|__)(?=\S)([^\n]*?\S)(\1)/g, ['sx-punct', 'sx-strong', 'sx-punct']],
+  /* _nhấn_ không bắt đầu giữa từ (snake_case). */
+  [/(\*|(?<![\p{L}\p{N}])_)(?=[^\s*_])([^\n]*?[^\s*_]|[^\s*_])(\1)(?![\w*])/gu, ['sx-punct', 'sx-em', 'sx-punct']],
+  [/(~~)(?=\S)([^\n]*?\S)(~~)/g, ['sx-punct', 'sx-strike', 'sx-punct']],
+  [/("[^"\n]{1,200}"|“[^”\n]{1,200}”)/g, ['sx-string']]
+];
+/** @type {[RegExp, string[]]} */
+const SRC_PIPE = [/(\|)/g, ['sx-punct']];
+
+/** Token trong một dòng; chỗ khớp kế của từng luật được nhớ, nên dòng dài vẫn tuyến tính.
+ * @param {string} line @param {number} off @param {string|null} base @param {Tok[]} out @param {boolean} table */
+function srcInline(line, off, base, out, table) {
+  const rules = table ? SRC_INLINE.concat([SRC_PIPE]) : SRC_INLINE;
+  /** @type {(RegExpExecArray|null|undefined)[]} */
+  const next = rules.map(() => undefined);
+  let pos = 0;
+  while (pos < line.length) {
+    /** @type {RegExpExecArray|null} */
+    let best = null, rule = null;
+    for (let r = 0; r < rules.length; r++) {
+      const cur = next[r];
+      if (cur === undefined || (cur && cur.index < pos)) { rules[r][0].lastIndex = pos; next[r] = rules[r][0].exec(line); }
+      const m = next[r];
+      if (m && m[0].length && (!best || m.index < best.index)) { best = m; rule = rules[r]; }
+    }
+    if (!best || !rule) break;
+    if (best.index > pos && base) out.push({ s: off + pos, e: off + best.index, c: base });
+    let at = off + best.index;
+    for (let g = 1; g < best.length; g++) {
+      const part = best[g] || '';
+      if (part) out.push({ s: at, e: at + part.length, c: rule[1][g - 1] });
+      at += part.length;
+    }
+    pos = best.index + best[0].length;
+  }
+  if (pos < line.length && base) out.push({ s: off + pos, e: off + line.length, c: base });
+}
+
+/** Token của nguồn Markdown: không chồng nhau, theo thứ tự. @param {string} text @returns {Tok[]} */
+export function srcTokens(text) {
+  /** @type {Tok[]} */
+  const out = [];
+  let off = 0, fence = '';
+  const push = (/** @type {string} */ c, /** @type {number} */ a, /** @type {number} */ b) => { if (b > a) out.push({ s: a, e: b, c }); };
+  for (const line of text.split('\n')) {
+    const L = line.length;
+    let m;
+    if (fence) {
+      m = line.match(/^ {0,3}(`{3,}|~{3,})[ \t]*$/);
+      if (m && m[1][0] === fence[0] && m[1].length >= fence.length) { push('sx-fence', off, off + L); fence = ''; }
+      else push('sx-code', off, off + L);
+    } else if ((m = line.match(FENCE)) && !(m[2][0] === '`' && m[3].includes('`'))) {
+      fence = m[2];
+      const a = off + m[1].length;
+      push('sx-fence', a, a + m[2].length);
+      push('sx-info', a + m[2].length, off + L);
+    } else if ((m = line.match(/^( {0,3})(#{1,6})(?=[ \t]|$)/))) {
+      push('sx-punct', off + m[1].length, off + m[0].length);
+      srcInline(line.slice(m[0].length), off + m[0].length, 'sx-head', out, false);
+    } else if (HR.test(line) || /^[ \t]*\|?[ \t]*:?-+:?[ \t]*(?:\|[ \t]*:?-+:?[ \t]*)+\|?[ \t]*$/.test(line)) {
+      push('sx-punct', off, off + L);
+    } else {
+      let p = 0, base = null;
+      if ((m = line.match(/^(?: {0,3}>[ ]?)+/))) { push('sx-quote', off, off + m[0].length); p = m[0].length; base = 'sx-qtext'; }
+      const rest = line.slice(p);
+      if ((m = rest.match(/^([ \t]*)([-*+]|\d{1,9}[.)])([ \t]+)(\[[ xX]\])?/))) {
+        const b = off + p + m[1].length;
+        push('sx-punct', b, b + m[2].length);
+        if (m[4]) push('sx-punct', b + m[2].length + m[3].length, b + m[2].length + m[3].length + m[4].length);
+        p += m[0].length;
+      }
+      srcInline(line.slice(p), off + p, base, out, /^[ \t]*\|/.test(line) || / \| /.test(line));
+    }
+    off += L + 1;
+  }
+  return out;
+}
+
+/** Nguồn → mỗi dòng một <span class="md-ln"> (số dòng là ::before của CSS, không phải chữ), token là <span class="sx-*">.
+ * Chữ của các dòng nối bằng \n đúng bằng nguồn. @param {string} text */
+export function renderSrc(text) {
+  const f = document.createDocumentFragment(), toks = srcTokens(text);
+  let k = 0, off = 0;
+  for (const line of text.split('\n')) {
+    const ln = el('span', { class: 'md-ln' }), end = off + line.length;
+    let pos = off;
+    while (k < toks.length && toks[k].s < end) {
+      const t = toks[k];
+      if (t.s > pos) ln.appendChild(document.createTextNode(text.slice(pos, t.s)));
+      const sp = el('span', { class: t.c });
+      sp.textContent = text.slice(t.s, Math.min(t.e, end));
+      ln.appendChild(sp);
+      pos = Math.min(t.e, end);
+      if (t.e > end) break;
+      k++;
+    }
+    if (pos < end) ln.appendChild(document.createTextNode(text.slice(pos, end)));
+    f.appendChild(ln);
+    off = end + 1;
+  }
+  return f;
+}

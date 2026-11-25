@@ -3,7 +3,7 @@
  * Chữ người dùng chỉ vào DOM qua textContent (hàm h), không bao giờ qua HTML. */
 import * as C from './core.js';
 import * as S from './store.js';
-import { renderMd } from './md.js';
+import { renderMd, renderSrc } from './md.js';
 import { enhanceSelect, openList, consumeJustClosed } from './dropdown.js';
 import { initDrag } from './drag.js';
 
@@ -1561,6 +1561,13 @@ function paintMdView() {
   const body = field($('md-form'), 'body').value;
   $('md-view').replaceChildren(body.trim() ? renderMd(body) : h('p', { class: 'muted' }, 'Nothing here yet. Choose "Edit" to write.'));
 }
+/* Edit: bản tô màu nằm dưới ô chữ trong suốt; vẽ lại ngay mỗi lần gõ (chữ mới không hiện tới khi vẽ). Lề số rộng theo số chữ số. */
+function paintMdSrc() {
+  const body = field($('md-form'), 'body').value;
+  $('md-hl').replaceChildren(renderSrc(body));
+  $('md-ed').style.setProperty('--gw', Math.max(2, String(body.split('\n').length).length) + 'ch');
+}
+field($('md-form'), 'body').addEventListener('input', paintMdSrc);
 /** @param {'edit'|'view'} mode */
 function setMdMode(mode) {
   $('md-panes').dataset.mode = mode;
@@ -1593,12 +1600,14 @@ function openMd(ctx, newTitle = '') {
   mdCtx = ctx;
   field(f, 'title').value = doc ? doc.title : newTitle;
   field(f, 'body').value = doc ? doc.body : '';
+  paintMdSrc();
   $('md-where').textContent = docWhere(ctx);
   $('md-del').hidden = !doc;
   const mode = doc && doc.body ? 'view' : 'edit';
   setMdMode(mode);
   openDlg($('dlg-md'));
   $('md-view').scrollTop = 0;
+  $('md-src').scrollTop = 0;
   focusField(mode === 'edit' ? (doc || newTitle ? field(f, 'body') : field(f, 'title')) : $('md-view'));
 }
 $('md-form').addEventListener('submit', (/** @type {any} */ e) => {
