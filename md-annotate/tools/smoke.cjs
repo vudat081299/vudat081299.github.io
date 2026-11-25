@@ -342,13 +342,16 @@ const cornerClash = (page) => page.evaluate(() => {
   // Lề số dòng của Edit: một dòng của lớp cho mỗi dòng nguồn, chữ khớp, cao bằng nội dung ô chữ (cùng chỗ xuống hàng), dời theo cuộn.
   const eln = await page.evaluate(() => {
     const ta = document.getElementById('src-input'), L = document.getElementById('ed-lines'), box = document.getElementById('ed-ln');
-    ta.style.height = '120px'; ta.scrollTop = 60; ta.dispatchEvent(new Event('scroll'));
+    ta.style.flex = '0 0 120px'; ta.scrollTop = 60; ta.dispatchEvent(new Event('scroll'));
     const r = { same: [...L.children].map((x) => x.textContent).join('\n') === ta.value, n: L.children.length, lines: ta.value.split('\n').length,
       num: getComputedStyle(L.children[0], '::before').content, shown: getComputedStyle(box).display !== 'none',
       dh: ta.scrollHeight - L.offsetHeight, moved: L.style.transform === 'translateY(-' + ta.scrollTop + 'px)', w: box.clientWidth === ta.clientWidth };
-    ta.style.height = '';
+    ta.style.flex = '';
     return r;
   });
+  const edH = await page.evaluate(() => { const p = document.getElementById('pane-edit'), ta = document.getElementById('src-input'), tools = document.getElementById('edit-tools');
+    return { h: p.offsetHeight, vh: innerHeight, gap: p.getBoundingClientRect().bottom - tools.getBoundingClientRect().bottom, fill: ta.offsetHeight > innerHeight / 2 }; });
+  check('Edit: khung cao một khung nhìn, ô chữ giãn hết, đáy còn đệm', Math.abs(edH.h - edH.vh) < 2 && edH.gap > 8 && edH.fill, JSON.stringify(edH));
   check('Edit: lề số dòng khớp từng dòng nguồn, cùng chỗ xuống hàng, theo cuộn', eln.same && eln.n === eln.lines && eln.num === 'counter(eln)' && eln.shown
     && eln.dh >= 0 && eln.dh < 8 && eln.moved && eln.w, JSON.stringify(eln));
   const o6 = await out(page);

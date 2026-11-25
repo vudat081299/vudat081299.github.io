@@ -22,6 +22,9 @@
 
 /* KHUNG EDIT: ô dán / sửa chữ (.ma-ta, base.css) và hàng công cụ. */
 .ma-edit { position: relative; padding: var(--s4); display: flex; flex-direction: column; gap: var(--s3); }
+/* Có chữ: khung cao đúng một khung nhìn, ô chữ giãn hết phần còn lại (cuộn bên trong), đáy chừa đệm dưới hàng công cụ. */
+.ma-edit.has-ln { height: 100vh; height: 100dvh; padding-bottom: var(--s5); }
+.ma-edit.has-ln #src-input { flex: 1 1 auto; min-height: 0; resize: none; }
 /* Lề số dòng (ui/edit-lines.js, mọi loại file): #ed-ln phủ đúng vùng đệm của ô chữ (JS đo), cắt phần ngoài; bên trong mỗi
    dòng chữ trong suốt cùng font, đệm, cách xuống hàng với ô chữ, số là ::before ở lề trái như Source. Văn bản trống: không lề. */
 @property --ed-gw { syntax: '<length>'; inherits: true; initial-value: 0px; }
