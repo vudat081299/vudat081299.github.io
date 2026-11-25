@@ -44,6 +44,7 @@
   <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
   <symbol id="i-grip" viewBox="0 0 24 24"><path d="M9 6h.01M15 6h.01M9 12h.01M15 12h.01M9 18h.01M15 18h.01"/></symbol>
   <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16v4z"/><path d="m13.5 6.5 4 4"/></symbol>
+  <symbol id="i-flow" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="8.5" y="16" width="7" height="5" rx="1.5"/><path d="M10 5.5h4M17.5 8v4H12v4"/></symbol>
   <symbol id="i-parallel" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="7" rx="2"/><rect x="4" y="14" width="16" height="7" rx="2"/></symbol>
 </svg>
 
@@ -114,6 +115,7 @@
     <span class="tools-gap"></span>
     <div class="tool-btns">
       <button type="button" class="btn quiet" id="compact-btn" aria-pressed="false" title="Hide Done when and notes on cards and steps"><svg class="i" aria-hidden="true"><use href="#i-compact"/></svg>Compact</button>
+      <button type="button" class="btn quiet" id="sd-btn" title="Go to the system design"><svg class="i" aria-hidden="true"><use href="#i-flow"/></svg>System</button>
       <button type="button" class="btn quiet" id="log-btn" title="Go to the decision log"><svg class="i" aria-hidden="true"><use href="#i-log"/></svg><span id="log-btn-text">Log</span></button>
       <button type="button" class="btn quiet" id="import-btn"><svg class="i" aria-hidden="true"><use href="#i-upload"/></svg>Import</button>
       <button type="button" class="btn warn" id="backup-nudge" hidden></button>
@@ -129,6 +131,25 @@
 
   <div class="board" id="board" tabindex="-1"></div>
   <button type="button" class="add-step" id="add-step"><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg>Add step</button>
+
+  <!-- System design (PLAN-016): cột trái tên, lời dẫn, nút; cột phải sơ đồ tự vẽ theo lựa chọn (js/design.js) -->
+  <section class="sd" id="sd" tabindex="-1" aria-labelledby="sd-title">
+    <header class="sd-head">
+      <h2 id="sd-title">System design <span class="log-count" id="sd-count"></span></h2>
+      <p class="log-lede">The tools for each stage of the data's path, from source to users. Pick them stage by stage; the diagram draws itself.</p>
+      <div class="sd-acts">
+        <button type="button" class="btn go" id="sd-open"><svg class="i" aria-hidden="true"><use href="#i-flow"/></svg><span id="sd-open-text">Design the system</span></button>
+        <button type="button" class="btn" id="sd-plan" hidden title="Add one sub-step per decided stage to the step System build"><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg>Add tasks to plan</button>
+        <button type="button" class="btn quiet" id="sd-svg" hidden><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Download SVG</button>
+      </div>
+    </header>
+    <div class="sd-main">
+      <div class="sd-fig" id="sd-fig"></div>
+      <ul class="sd-legend" aria-hidden="true">
+        <li class="lane-data">Data</li><li class="lane-model">Model</li><li class="lane-app">App</li><li class="lane-ops">Operations</li><li class="is-open">Not decided</li>
+      </ul>
+    </div>
+  </section>
 
   <!-- Nhật ký quyết định: cột trái tên và lời dẫn (thẳng cột tên bước), cột phải ô ghi (gập tới khi dùng) và dòng thời gian -->
   <section class="log" id="log" tabindex="-1" aria-labelledby="log-title">
@@ -571,6 +592,31 @@
 </dialog>
 
 <!-- Hỏi lại / nhập một dòng (thay alert / confirm / prompt) -->
+<!-- System design: hồ sơ dự án rồi từng khâu; lựa chọn lưu ngay (js/design.js) -->
+<dialog class="dlg sd-dlg" id="dlg-sd" aria-labelledby="dlg-sd-title" aria-describedby="sd-sub">
+  <div class="dlg-form">
+    <header class="dlg-head">
+      <div class="dlg-titles">
+        <p class="dlg-kicker">System design</p>
+        <h2 id="dlg-sd-title">Design the system</h2>
+        <p class="dlg-sub" id="sd-sub"></p>
+      </div>
+      <button type="button" class="icon-btn dlg-x" data-close aria-label="Close" title="Close"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button>
+    </header>
+    <div class="dlg-body sd-body">
+      <nav class="sd-nav" aria-label="Stages"><ol id="sd-nav"></ol></nav>
+      <section class="sd-pane" id="sd-pane" tabindex="-1" aria-live="polite"></section>
+    </div>
+    <footer class="dlg-foot">
+      <button type="button" class="btn" id="sd-prev">Back</button>
+      <span class="dlg-gap"></span>
+      <span class="sd-pos" id="sd-pos"></span>
+      <span class="dlg-gap"></span>
+      <button type="button" class="btn go" id="sd-next"><span id="sd-next-text">Next</span></button>
+    </footer>
+  </div>
+</dialog>
+
 <dialog class="dlg dlg-sm dlg-ask" id="dlg-ask" aria-labelledby="dlg-ask-title" aria-describedby="ask-text">
   <form method="dialog" id="ask-form" class="dlg-form">
     <header class="dlg-head">

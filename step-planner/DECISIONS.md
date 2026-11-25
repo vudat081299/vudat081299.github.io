@@ -16,6 +16,7 @@
 - PLAN-013 · Bước con chạy song song · `step-planner/`
 - PLAN-014 · Số thứ tự đứng yên tới khi tải lại trang · `step-planner/`
 - PLAN-015 · Tên trong mẫu là tiếng Anh theo tên gốc của chuẩn; nội dung mẫu tiếng Việt · `step-planner/data/templates.json`
+- PLAN-016 · Mỗi dự án có phần thiết kế hệ thống: chọn theo gợi ý, tự vẽ sơ đồ, đưa thành việc · `step-planner/`
 <!-- index:end -->
 
 ## PLAN-001 · Dự án là các bước có thứ tự, mỗi bước có bước con có thứ tự
@@ -92,3 +93,8 @@ Trong một lần mở trang, số của bước và bước con không đổi k
 24/11/2026 · `step-planner/data/templates.json`
 
 Tên mẫu, tên bước và tên bước con của các mẫu viết tiếng Anh, theo đúng tên gốc của chuẩn: pha và generic task của CRISP-DM 1.0, khâu và việc của PPDAC. Mục tiêu, tiêu chí xong, ghi chú và mô tả mẫu giữ tiếng Việt. Mẫu đồ án môn học giữ nguyên chữ của trang đồ án.
+
+## PLAN-016 · Mỗi dự án có phần thiết kế hệ thống: chọn theo gợi ý, tự vẽ sơ đồ, đưa thành việc
+25/11/2026 · `step-planner/`
+
+Ngoài các bước, mỗi dự án có phần System design cho người làm một mình từ dữ liệu tới sản phẩm. Người dùng trả lời hồ sơ dự án (cỡ dữ liệu, dữ liệu mới tới bao lâu, người dùng nhận kết quả thế nào, ai dùng, ngân sách, có cần GPU), rồi đi qua từng khâu theo đường đi của dữ liệu: nguồn, lấy dữ liệu, lưu thô, xử lý, kho truy vấn, huấn luyện, theo dõi mô hình, phục vụ dự đoán, giao diện, và ba khâu vận hành (đóng gói, nơi chạy, giám sát). Mỗi khâu có giải thích, các phương án thật kèm khi nào chọn, khi nào tránh, chi phí, độ khó, link chính thức và lệnh bắt đầu; phương án hợp hồ sơ được gợi ý. Người dùng chọn một hay nhiều phương án, tự ghi công cụ khác, đánh dấu khâu không cần, ghi lý do; phương án không chọn được gập đi. Lựa chọn tự thành sơ đồ luồng dữ liệu (tải được), và thành bước "System build" trên bảng, mỗi khâu một bước con có tiêu chí xong và link. Danh mục khâu và phương án nằm ở file dữ liệu, có nguồn chính thức. Thiết kế đi theo dự án khi xuất / nhập Markdown và JSON.

@@ -8,6 +8,8 @@
      Sinh lại:  python3 step-planner/tools/lint.py --write-course
   3. js/*.js: không innerHTML / outerHTML / insertAdjacentHTML / document.write — chữ người dùng chỉ qua textContent.
   4. css/planner.css: mã màu chỉ nằm trong khối token (từ đầu file tới dòng `/* ── hết token ── */`).
+  5. data/system-design.json (PLAN-016): khuôn hồ sơ, khâu, phương án; id không trùng; `fit` chỉ dùng câu và câu trả lời
+     có trong hồ sơ; link https; mỗi câu trả lời đơn lẻ của hồ sơ có ít nhất một phương án hợp ở mọi khâu.
 
 Chạy:  python3 step-planner/tools/lint.py
 """
@@ -26,6 +28,11 @@ COURSE_HTML = os.path.join(REPO, 'masters-degree/data-management-visualization/s
 COURSE_ID = 'it5425-sports'
 COURSE_URL = 'https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-project.html'
 TOKEN_END = '/* ── hết token ── */'
+DESIGN = os.path.join(HERE, 'data/system-design.json')
+LANES = ('data', 'model', 'app', 'ops')
+STAGE_KEYS = {'id', 'title', 'lane', 'question', 'guide', 'multi', 'skipWhen', 'options'}
+OPT_KEYS = {'id', 'name', 'kind', 'summary', 'pick', 'avoid', 'cost', 'level', 'fit', 'links', 'setup', 'task'}
+ID_RE = r'[a-z0-9]+(-[a-z0-9]+)*'
 
 errors = []
 
@@ -162,6 +169,80 @@ def check_templates(data):
         err(f'templates.json: mẫu {COURSE_ID} lệch trang đồ án — chạy python3 step-planner/tools/lint.py --write-course')
 
 
+def check_design(data):
+    w0 = 'system-design.json'
+    if set(data) != {'note', 'profile', 'stages'}:
+        err(f'{w0}: khoá gốc phải là note, profile, stages (đang có {sorted(data)})')
+        return
+    answers = {}
+    for i, q in enumerate(data['profile']):
+        w = f'{w0} profile[{i}]'
+        for k in ('id', 'label', 'help'):
+            need_str(w, q, k)
+        english(f'{w}.label', q.get('label', ''))
+        ch = q.get('choices') or []
+        if len(ch) < 2:
+            err(f'{w}: cần ít nhất hai lựa chọn')
+        for c in ch:
+            need_str(w, c, 'id')
+            need_str(w, c, 'label')
+            english(f'{w}.choices.label', c.get('label', ''))
+        answers[q.get('id')] = [c.get('id') for c in ch]
+    seen = set()
+    for i, s in enumerate(data['stages']):
+        sid = s.get('id', '')
+        w = f'{w0} stages[{i}] ({sid})'
+        if set(s) != STAGE_KEYS:
+            err(f'{w}: khoá phải là {sorted(STAGE_KEYS)} (đang có {sorted(s)})')
+        if not re.fullmatch(ID_RE, str(sid)) or sid in seen or sid == 'users':
+            err(f'{w}: id "{sid}" sai hoặc trùng')
+        seen.add(sid)
+        for k in ('title', 'question'):
+            need_str(w, s, k)
+        english(f'{w}.title', s.get('title', ''))
+        need_str(w, s, 'skipWhen', required=False)
+        if not isinstance(s.get('guide'), str) or not s['guide'].strip() or re.search(r'<[a-zA-Z/][^>]*>', s['guide']):
+            err(f'{w}: `guide` phải là chữ không rỗng, không thẻ HTML')
+        if s.get('lane') not in LANES:
+            err(f'{w}: lane phải thuộc {LANES}')
+        if not isinstance(s.get('multi'), bool):
+            err(f'{w}: `multi` phải là true / false')
+        opts = s.get('options') or []
+        if len(opts) < 2:
+            err(f'{w}: cần ít nhất hai phương án')
+        ids = set()
+        for j, o in enumerate(opts):
+            wo = f'{w}.options[{j}] ({o.get("id")})'
+            if set(o) != OPT_KEYS:
+                err(f'{wo}: khoá phải là {sorted(OPT_KEYS)} (đang có {sorted(o)})')
+            if not re.fullmatch(ID_RE, str(o.get('id'))) or o.get('id') in ids or o.get('id') == 'skip':
+                err(f'{wo}: id sai hoặc trùng')
+            ids.add(o.get('id'))
+            for k in ('name', 'kind', 'summary', 'pick', 'task'):
+                need_str(wo, o, k)
+            need_str(wo, o, 'avoid', required=False)
+            english(f'{wo}.kind', o.get('kind', ''))
+            if o.get('cost') not in ('free', 'freemium', 'paid'):
+                err(f'{wo}: cost phải là free / freemium / paid')
+            if o.get('level') not in (1, 2, 3):
+                err(f'{wo}: level phải là 1, 2 hoặc 3')
+            for k, v in (o.get('fit') or {}).items():
+                if k not in answers or not isinstance(v, list) or not v or set(v) - set(answers[k]):
+                    err(f'{wo}: fit.{k} = {v} không khớp hồ sơ')
+            links = o.get('links') or []
+            if not links:
+                err(f'{wo}: cần ít nhất một link chính thức')
+            for l in links:
+                if not str(l.get('url', '')).startswith('https://') or not str(l.get('title', '')).strip():
+                    err(f'{wo}: link cần title và url https')
+            if not all(isinstance(c, str) and c.strip() and '\n' not in c for c in o.get('setup') or []):
+                err(f'{wo}: setup là danh sách lệnh, mỗi lệnh một dòng')
+        for q, vals in answers.items():
+            for a in vals:
+                if not any(a in (o.get('fit') or {}).get(q, vals) for o in opts):
+                    err(f'{w}: không phương án nào hợp khi {q} = {a}')
+
+
 def check_code():
     for name in sorted(os.listdir(os.path.join(HERE, 'js'))):
         if not name.endswith('.js'):
@@ -191,13 +272,15 @@ def main():
             f.write('\n')
         print(f'step-planner: đã sinh lại mẫu {COURSE_ID}')
     check_templates(data)
+    design = json.load(open(DESIGN, encoding='utf-8'))
+    check_design(design)
     check_code()
     if errors:
         for e in errors:
             print(f'step-planner: {e}')
         print(f'step-planner: {len(errors)} lỗi.')
         return 1
-    print(f'step-planner: lint OK ({len(data["templates"])} mẫu).')
+    print(f'step-planner: lint OK ({len(data["templates"])} mẫu, {len(design["stages"])} khâu thiết kế).')
     return 0
 
 

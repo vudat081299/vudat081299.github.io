@@ -6,6 +6,7 @@ import * as S from './store.js';
 import { renderMd, renderSrc } from './md.js';
 import { enhanceSelect, openList, consumeJustClosed } from './dropdown.js';
 import { initDrag } from './drag.js';
+import { initDesign, renderSection as renderDesign, mdLabels } from './design.js';
 
 /** @param {string} id @returns {any} */
 const $ = (id) => document.getElementById(id);
@@ -183,6 +184,7 @@ function render(opt = {}) {
   renderWsNotes(ws);
   $('log-btn-text').textContent = `Log (${ws.log.length})`;
   renderBoard(ws, opt);
+  renderDesign();
   renderLog(ws, opt);
 }
 
@@ -910,6 +912,11 @@ $('hint-off').addEventListener('click', () => {
 $('compact-btn').addEventListener('click', () => {
   S.setCompact(!S.compactOn());
   render();
+});
+$('sd-btn').addEventListener('click', () => {
+  const sd = $('sd');
+  sd.scrollIntoView({ block: 'start' });
+  sd.focus({ preventScroll: true });
 });
 $('log-btn').addEventListener('click', () => {
   const log = $('log');
@@ -1837,7 +1844,7 @@ function deleteLog(/** @type {string} */ wsId, /** @type {string} */ id) {
 const exportKind = () => /** @type {any} */ (document.querySelector('input[name="export-kind"]:checked')).value;
 function exportText(kind = exportKind()) {
   const ws = cur();
-  if (kind === 'md') return { text: C.toMarkdown(ws), file: C.slug(ws.name) + '.md', type: 'text/markdown' };
+  if (kind === 'md') return { text: C.toMarkdown(ws, mdLabels()), file: C.slug(ws.name) + '.md', type: 'text/markdown' };
   if (kind === 'json') return { text: C.toJSON(ws), file: C.slug(ws.name) + '.json', type: 'application/json' };
   return { text: C.toBackup(state.workspaces), file: `step-planner-backup-${C.today()}.json`, type: 'application/json' };
 }
@@ -2049,4 +2056,5 @@ async function boot() {
   if (loaded.migrated) { persist(); flushSave(); } // khoá cũ: ghi ngay sang khoá mới
   render();
 }
+initDesign({ cur, findWs, commit, toast, h, icon, showDlg });
 boot();
