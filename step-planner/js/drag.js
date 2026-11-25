@@ -309,6 +309,8 @@ export function initDrag(board, api) {
     s.ph?.closest('.ph-slot')?.remove();
     s.ph?.remove();
     for (const n of board.querySelectorAll('.drag-src')) n.classList.remove('drag-src');
+    /* Bảng chỉ vẽ lại hàng đổi dữ liệu: trả dáng ô song song mà paint() đã đổi về đúng số thẻ thật của từng ô. */
+    for (const li of board.querySelectorAll('.cards > .slot')) li.classList.toggle('par', li.querySelectorAll('.card[data-sub]').length > 1);
     document.body.classList.remove('dragging-any');
   }
   function drop() {

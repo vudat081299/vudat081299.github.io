@@ -32,7 +32,9 @@ const check = (name, ok, detail = '') => {
     if (!res || res.status() !== 200) throw new Error('HTTP ' + (res && res.status()));
     return { ctx, page };
   };
-  const stored = (page) => page.evaluate(() => JSON.parse(localStorage.getItem('stepPlanner.v2') || 'null'));
+  /* Trang ghi bộ nhớ sau khung hình kế: chờ một khung hình rồi mới đọc. */
+  const afterSave = (page) => page.evaluate(() => new Promise((r) => requestAnimationFrame(() => setTimeout(r, 0))));
+  const stored = async (page) => { await afterSave(page); return page.evaluate(() => JSON.parse(localStorage.getItem('stepPlanner.v2') || 'null')); };
   const cur = async (page) => { const s = await stored(page); return s.workspaces.find((w) => w.id === s.lastId); };
   const shape = (page, ws) => page.evaluate(async (w) => (await import(new URL('js/core.js', location.href).href)).shape(w), ws);
   const subSel = (id, act) => `.card[data-sub="${id}"] [data-act="${act}"]`;
@@ -1298,6 +1300,56 @@ const check = (name, ok, detail = '') => {
   await m.page.keyboard.press('Escape');
   await m.ctx.close();
 
+  /* ── Vẽ lại theo hàng: một thay đổi chỉ dựng lại hàng đổi; hàng khác giữ nguyên nút DOM (thẻ đã "Show more" vẫn mở),
+   * "Next", chú giải, tiến độ vẫn đúng dù đổi sang bước khác; Hoàn tác, Compact, tìm không làm hỏng điều ấy ── */
+  const longN = Array.from({ length: 40 }, (_, i) => 'dòng ' + i).join('\n');
+  const part = { version: 2, lastId: 'wp', workspaces: [{ id: 'wp', name: 'Theo hàng', log: [], steps: [
+    { id: 'p1', title: 'Một', subs: [{ id: 'a1', title: 'A1', status: 'doing' }, { id: 'a2', title: 'A2', status: 'done' }] },
+    { id: 'p2', title: 'Hai', subs: [{ id: 'b1', title: 'B1', status: 'done' }, { id: 'b2', title: 'B2', status: 'skip', notes: longN }] },
+    { id: 'p3', title: 'Ba', subs: [{ id: 'c1', title: 'C1', status: 'todo' }, { id: 'c2', title: 'C2', status: 'todo' }] }] }] };
+  const pc = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+  await pc.addInitScript((d) => { if (!sessionStorage.getItem('x')) { sessionStorage.setItem('x', '1'); localStorage.setItem('stepPlanner.v2', d); } }, JSON.stringify(part));
+  const pp = await pc.newPage();
+  pp.on('pageerror', (e) => errors.push('theo hàng: ' + e));
+  await pp.goto(BASE);
+  await pp.waitForSelector('#app:not([hidden]) .card[data-sub]');
+  await pp.click('.card[data-sub="b2"] .more');
+  const mark = () => pp.evaluate(() => { for (const r of document.querySelectorAll('.step')) r.__keep = r.dataset.step; });
+  const rowState = () => pp.evaluate(() => ({
+    same: [...document.querySelectorAll('.step')].filter((r) => r.__keep === r.dataset.step).map((r) => r.dataset.step).join(','),
+    open: document.querySelector('.card[data-sub="b2"]')?.classList.contains('open') && document.querySelector('.card[data-sub="b2"] .more')?.textContent === 'Show less',
+    next: [...document.querySelectorAll('.card.next')].map((c) => c.dataset.sub).join(','),
+    legend: [...document.querySelectorAll('#legend li')].map((li) => li.textContent).join(','),
+    overall: document.querySelector('#overall-text').textContent,
+    chip: document.querySelector('.card[data-sub="a1"] .chip')?.textContent,
+  }));
+  await mark();
+  await pp.click('.card[data-sub="a1"] [data-act="status"]');
+  const pr1 = await rowState();
+  check('vẽ theo hàng: bấm chip ở bước 1 chỉ dựng lại hàng đổi, hàng 2 giữ nút và thẻ đã mở', pr1.same === 'p2' && pr1.open && pr1.chip === 'Done', JSON.stringify(pr1));
+  check('vẽ theo hàng: "Next" sang bước 3, chú giải và tiến độ đúng', pr1.next === 'c1' && pr1.legend === 'New2,In progress0,Pending0,Blocked0,Done3,Skipped1,Cancelled0'
+    && pr1.overall === '3/5 done · 60%', JSON.stringify(pr1));
+  check('vẽ theo hàng: bộ nhớ đã ghi', (await stored(pp)).workspaces[0].steps[0].subs[0].status === 'done');
+  await mark();
+  await pp.click('.card[data-sub="c1"] [data-act="sub-del"]');
+  await pp.click('#toast-undo');
+  const pr2 = await rowState();
+  check('vẽ theo hàng: xoá rồi hoàn tác ở bước 3, hàng 1 và 2 giữ nguyên, "Next" về c1', pr2.same === 'p1,p2' && pr2.open && pr2.next === 'c1'
+    && (await pp.$$('.step[data-step="p3"] .card[data-sub]')).length === 2, JSON.stringify(pr2));
+  await pp.fill('#q', 'dòng 3');
+  await mark();
+  await pp.fill('#q', 'dòng 39');
+  const pr3 = await rowState();
+  check('vẽ theo hàng: tìm thêm chữ mà kết quả không đổi thì không dựng lại', pr3.same === 'p2' && (await pp.$$('.card[data-sub]')).length === 1, JSON.stringify(pr3));
+  await pp.fill('#q', '');
+  await mark();
+  await pp.click('#compact-btn');
+  await pp.click('#compact-btn');
+  const pr4 = await rowState();
+  check('vẽ theo hàng: Compact bật / tắt không dựng lại hàng, thẻ dài vẫn cắt, có "Show more"', pr4.same === 'p1,p2,p3'
+    && await pp.$eval('.card[data-sub="b2"]', (c) => c.classList.contains('cut') && !!c.querySelector('.more')), JSON.stringify(pr4));
+  await pc.close();
+
   /* ── Bộ nhớ bị chặn ── */
   const blocked = await browser.newContext();
   await blocked.addInitScript(() => {
@@ -1347,6 +1399,7 @@ const check = (name, ok, detail = '') => {
   check('khoá cũ: mở trang là ghi ngay sang khoá mới, chưa cần sửa gì', !!ov0 && ov0.workspaces[0]?.id === 'w1' && ov0.lastId === 'w1'
     && !('owner' in ov0.workspaces[0].steps[0].subs[0]), JSON.stringify(ov0)?.slice(0, 120));
   await op.click('.card[data-sub] [data-act="status"]');
+  await afterSave(op);
   const ov = await op.evaluate(() => [JSON.parse(localStorage.getItem('stepPlanner.v2')), localStorage.getItem('stepPlanner.v1')]);
   check('khoá cũ có người làm: mở được, chuyển sang khoá mới không còn người, khoá cũ giữ nguyên',
     !oErr.length && (await op.textContent('#ws-name')) === 'Dự án cũ' && ov[0].workspaces[0].steps[0].subs[0].status === 'done'

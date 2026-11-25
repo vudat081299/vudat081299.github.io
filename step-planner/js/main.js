@@ -84,10 +84,22 @@ function setBanner(/** @type {string} */ key, /** @type {string} */ msg) {
   b.hidden = !banners.size;
 }
 
+/* Ghi bộ nhớ sau khung hình kế (chuỗi JSON của mọi dự án tốn vài ms, không nằm trên đường của một lần bấm); nhiều thay đổi
+ * liền nhau ghi một lần. Tab ẩn không có khung hình: hẹn giờ dự phòng. Rời trang, ẩn tab: ghi ngay. */
+let savePending = false;
 function persist() {
-  if (!storageOK) return;
+  if (!storageOK || savePending) return;
+  savePending = true;
+  requestAnimationFrame(() => setTimeout(flushSave, 0));
+  setTimeout(flushSave, 250);
+}
+function flushSave() {
+  if (!savePending) return;
+  savePending = false;
   setBanner('save', S.save(state) ? '' : 'Could not write to browser storage (full or blocked). New changes are not saved — back up as JSON to keep them.');
 }
+window.addEventListener('pagehide', flushSave);
+document.addEventListener('visibilitychange', () => { if (document.hidden) flushSave(); });
 
 /** Ghi lại, vẽ lại, rồi đưa focus về phần tử vừa thao tác. @param {string} [focusSel] @param {{preventScroll?:boolean}} [opt] */
 function commit(focusSel, opt = {}) {
@@ -153,7 +165,8 @@ document.addEventListener('keydown', (e) => {
 
 /* ── Vẽ ── */
 
-function render() {
+/** Vẽ đầu dự án, bảng (theo hàng, xem renderBoard), nhật ký. @param {{full?:boolean}} [opt] */
+function render(opt = {}) {
   dragCtl?.abort();
   const ws = cur();
   $('app').hidden = !ws;
@@ -169,12 +182,9 @@ function render() {
   renderLegend(ws);
   $('hint').hidden = S.hintHidden();
   renderWsNotes(ws);
-  const compact = S.compactOn();
-  $('board').classList.toggle('compact', compact);
-  $('compact-btn').setAttribute('aria-pressed', String(compact));
   $('log-btn-text').textContent = `Log (${ws.log.length})`;
-  renderBoard(ws);
-  renderLog(ws);
+  renderBoard(ws, opt);
+  renderLog(ws, opt);
 }
 
 /** Chú giải bảy trạng thái (chip mẫu + chữ + số bước con), cũng là tiến độ chi tiết của dự án. @param {any} ws */
@@ -203,120 +213,223 @@ function renderNudge() {
   $('backup-when').textContent = state.lastBackup ? `Last backup: ${fmtDate(state.lastBackup.slice(0, 10))}` : 'Never backed up.';
 }
 
-function renderBoard(/** @type {any} */ ws) {
+/* Bảng vẽ theo hàng: mỗi hàng (bước) mang một khoá tóm mọi thứ nó hiện (dữ liệu bước, số, thẻ "Next", lọc, hôm nay). Khoá
+ * không đổi thì giữ nguyên nút DOM của hàng (ghi chú đang mở, thẻ đã "Show more", chỗ cuộn ngang, focus đi theo nút); đổi
+ * thì dựng lại riêng hàng ấy. Thứ có thể đổi mà không đổi khoá (vị trí hàng, Compact) được vá riêng. */
+/** @type {WeakMap<Element, string>} */
+const rowKeys = new WeakMap();
+let boardWsId = '';
+
+/** @param {any} ws @param {{full?:boolean}} [opt] full: bỏ mọi hàng cũ, dựng lại cả bảng */
+function renderBoard(ws, opt = {}) {
   const board = $('board');
   const q = C.fold(ui.q.trim());
   const filtering = !!q;
-  board.classList.toggle('filtering', filtering);
   const todayStr = C.today();
   const nextIds = new Set(C.projectNextIds(ws));
   const labels = labelsOf(ws);
-  /* Vẽ lại không làm mất chỗ đang xem: ghi chú bước đang mở, thẻ đã "Xem thêm", chỗ cuộn ngang của từng hàng. */
-  const keep = { notes: new Set(), open: new Set(), left: new Map() };
-  for (const row of board.querySelectorAll('.step[data-step]')) {
-    if (row.querySelector('.step-notes')?.open) keep.notes.add(row.dataset.step);
-    const sc = row.querySelector('.cards-scroll');
-    if (sc && sc.scrollLeft) keep.left.set(row.dataset.step, sc.scrollLeft);
-  }
-  for (const c of board.querySelectorAll('.card.open[data-sub]')) keep.open.add(c.dataset.sub);
-  const rows = [];
+  const compact = S.compactOn();
+  const reuse = !opt.full && boardWsId === ws.id;
+  boardWsId = ws.id;
+  /** @type {Map<string, HTMLElement>} */
+  const old = new Map();
+  for (const row of /** @type {NodeListOf<HTMLElement>} */ (board.querySelectorAll(':scope > .step[data-step]'))) old.set(/** @type {string} */ (row.dataset.step), row);
+  const docTitles = (/** @type {any[]} */ docs) => docs.map((d) => d.title).join(' ');
+  /* 1. Dữ liệu: hàng nào hiện, khoá của nó, dùng lại được hàng cũ không. Chưa đọc, chưa ghi DOM. */
+  const plan = [];
   let shown = 0;
   ws.steps.forEach((/** @type {any} */ step, /** @type {number} */ i) => {
-    const docTitles = (/** @type {any[]} */ docs) => docs.map((d) => d.title).join(' ');
-    const stepHit = !!q && C.fold([step.title, step.goal, step.doneWhen, step.notes, step.revisit?.reason, docTitles(step.docs)].join(' ')).includes(q);
-    const visible = step.subs.filter((/** @type {any} */ x) => !q || stepHit || C.fold([x.title, x.doneWhen, x.notes, x.reason, docTitles(x.docs)].join(' ')).includes(q));
+    const stepHit = !!q && foldOf(step, () => [step.title, step.goal, step.doneWhen, step.notes, step.revisit?.reason, docTitles(step.docs)]).includes(q);
+    const visible = step.subs.filter((/** @type {any} */ x) => !q || stepHit || foldOf(x, () => [x.title, x.doneWhen, x.notes, x.reason, docTitles(x.docs)]).includes(q));
     if (filtering && !visible.length && !stepHit) return;
     shown += visible.length;
-    const prog = C.progress(step.subs);
-    const done = prog.total > 0 && prog.done === prog.total;
-    const head = h('div', { class: 'step-head' },
-      h('div', { class: 'step-top' },
-        !filtering && h('span', { class: 'step-grip', title: 'Drag to move the step (keyboard: Alt + ↑ ↓ on its name)', 'aria-hidden': 'true' }, icon('grip')),
-        numTag('step-num', labels.get(step.id)),
-        h('h2', { class: 'step-title', id: 'st-' + step.id },
-          h('button', { type: 'button', class: 'link', 'data-act': 'edit-step', 'aria-label': `Step ${labels.get(step.id) ?? '(added this session)'}: ${step.title}. Edit`, 'aria-keyshortcuts': 'Alt+ArrowUp Alt+ArrowDown' }, step.title))),
-      step.goal && h('p', { class: 'step-goal' }, step.goal),
-      step.doneWhen && h('p', { class: 'step-done' }, h('span', { class: 'lbl' }, 'Done when '), step.doneWhen),
-      step.notes && h('details', { class: 'step-notes', open: keep.notes.has(step.id) }, h('summary', {}, icon('chev'), 'Notes'), h('p', { class: 'notes-text' }, withLinks(step.notes))),
-      h('div', { class: 'prog' },
-        h('span', {}, `${prog.done}/${prog.total}`, h('span', { class: 'sr' }, ' sub-steps done')),
-        h('span', { class: 'bar-prog', 'aria-hidden': 'true' }, barFill(prog.pct))),
-      h('div', { class: 'acts' },
-        h('button', { type: 'button', class: 'btn small', 'data-act': 'add-sub' }, icon('plus'), 'Sub-step'),
-        !step.revisit && h('button', { type: 'button', class: 'btn small quiet aux', 'data-act': 'revisit', tabindex: '-1', title: 'A later step showed this one must be redone' }, icon('redo'), 'Reopen'),
-        !step.docs.length && h('button', { type: 'button', class: 'btn small quiet aux', 'data-act': 'add-doc', tabindex: '-1', title: 'Add a link or a Markdown note for the whole step' }, icon('plus'), 'Doc'),
-        iconBtn('trash', 'Delete step', 'del-step')));
-    /* Băng "Reopened": vòng, ngày, lý do (bấm để sửa), còn mấy việc phải làm lại; làm lại xong hết thì mời đóng vòng. */
-    const redo = C.redoCount(step);
-    const band = step.revisit && h('div', { class: 'revisit-band' + (redo.total && !redo.left ? ' all-redone' : '') },
-      icon('redo'),
-      h('button', { type: 'button', class: 'badge', 'data-act': 'revisit', title: 'Edit the reason' },
-        h('b', {}, 'Reopened'),
-        ' · Iteration ' + step.revisit.round,
-        step.revisit.date ? ' · ' + fmtDate(step.revisit.date) : '',
-        step.revisit.reason ? ' · ' + step.revisit.reason : ''),
-      redo.total > 0 && h('span', { class: 'redo-left' }, redo.left ? `${redo.left} of ${C.plural(redo.total, 'redo task')} left` : `All ${C.plural(redo.total, 'redo task')} done`),
-      h('button', { type: 'button', class: 'btn small' + (redo.total && !redo.left ? ' go' : ''), 'data-act': 'revisit-clear',
-        title: 'Finish this iteration: remove the band and the Redo marks' }, 'Close iteration'));
-    const card = (/** @type {any} */ x) => {
-      const overdue = x.due && x.due < todayStr && x.status !== 'done' && !C.outOfScope(x.status);
-      const isNext = nextIds.has(x.id);
-      return h('div', { class: `card st-${x.status}${isNext ? ' next' : ''}`, 'data-sub': x.id },
-        h('div', { class: 'card-top' },
-          numTag('num', labels.get(x.id)),
-          isNext && h('span', { class: 'next-tag' }, 'Next'),
-          x.redo && x.status !== 'done' && !C.outOfScope(x.status) && h('span', { class: 'redo-tag', title: `Sent back to redo in iteration ${step.revisit?.round}` }, icon('redo'), 'Redo'),
-          x.docs.length > 0 && h('button', { type: 'button', class: 'doc-tag', 'data-act': 'sub-docs', tabindex: '-1',
-            'aria-label': `${C.plural(x.docs.length, 'doc')}. Open the list`, title: x.docs.map((/** @type {any} */ d) => d.title).join('\n') },
-          icon('clip'), String(x.docs.length)),
-          statusChip(x)),
-        h('div', { class: 'card-body' },
-          h('h3', { class: 'card-title' }, h('button', { type: 'button', class: 'link', 'data-act': 'edit-sub', 'aria-keyshortcuts': 'Alt+ArrowLeft Alt+ArrowRight Alt+ArrowUp Alt+ArrowDown' }, x.title)),
-          x.due && h('p', { class: 'meta' },
-            h('span', { class: 'due' + (overdue ? ' overdue' : '') }, 'due ' + fmtDate(x.due) + (overdue ? ' (overdue)' : ''))),
-          x.reason && h('p', { class: 'card-reason' }, h('span', { class: 'lbl' }, C.REASON_LABEL[x.status] + ' '), withLinks(x.reason)),
-          x.doneWhen && h('p', { class: 'card-done' }, h('span', { class: 'lbl' }, 'Done when '), x.doneWhen),
-          x.notes && h('p', { class: 'card-notes' }, withLinks(x.notes))),
-        h('div', { class: 'acts' },
-          iconBtn('parallel', 'Add a parallel sub-step (runs alongside this one)', 'add-par'),
-          iconBtn('copy', 'Duplicate', 'sub-dup'),
-          iconBtn('trash', 'Delete', 'sub-del')));
-    };
-    /* Mỗi ô một cột của hàng; ô song song xếp chồng các thẻ của nó. */
-    const shownIds = new Set(visible.map((/** @type {any} */ x) => x.id));
-    const slots = C.slotsOf(step.subs).map((sl, si) => {
-      const vis = sl.filter((x) => shownIds.has(x.id));
-      return vis.length > 0 && h('li', { class: 'slot' + (sl.length > 1 ? ' par' : ''), 'data-slot': String(si),
-        'aria-label': sl.length > 1 ? `${sl.length} parallel sub-steps` : null }, vis.map(card));
-    });
-    /* Tài liệu của cả bước: dải chip ngay dưới băng Reopened (hay ở chỗ ấy khi không có băng), trên hàng thẻ. */
-    const docs = step.docs.length > 0 && h('div', { class: 'step-docs' },
-      h('ul', { class: 'doc-chips', 'aria-label': `Docs of step ${i + 1}` }, step.docs.map(docChip)),
-      h('button', { type: 'button', class: 'doc-chip add aux', 'data-act': 'add-doc', tabindex: '-1', 'aria-label': 'Add a doc to this step', title: 'Add a link or a Markdown note for the whole step' }, icon('plus'), 'Doc'));
-    /* Vạch chia phía trên bước: rê chuột vào thì hiện nút "Add step" chèn bước mới vào chỗ này (nút nổi, không đẩy bố cục). */
-    const gap = !filtering && h('div', { class: 'gap-add' + (i === 0 ? ' first' : '') },
-      h('button', { type: 'button', class: 'gap-add-btn', 'data-act': 'insert-step', 'data-at': String(i), tabindex: '-1',
-        'aria-label': `Add a step before step ${i + 1}`, title: `Add a step here (before step ${i + 1})` }, icon('plus'), h('span', {}, 'Add step')));
-    rows.push(h('section', { class: 'step' + (step.revisit ? ' revisit' : '') + (done ? ' is-done' : ''), 'data-step': step.id, 'aria-labelledby': 'st-' + step.id },
-      gap,
-      band,
-      docs,
-      head,
-      h('div', { class: 'cards-scroll' }, h('ol', { class: 'cards', 'aria-label': `Sub-steps of step ${labels.get(step.id) ?? step.title}` }, slots))));
+    const key = JSON.stringify([step, filtering ? visible.map((/** @type {any} */ x) => x.id) : null,
+      labels.get(step.id) ?? null, step.subs.map((/** @type {any} */ x) => [labels.get(x.id) ?? null, nextIds.has(x.id)]), todayStr]);
+    const prev = old.get(step.id);
+    plan.push({ step, i, visible, key, row: reuse && prev && rowKeys.get(prev) === key ? prev : null, prev });
   });
-  if (!ws.steps.length) rows.push(h('p', { class: 'empty' }, 'No steps yet. Click "Add step" below.'));
-  else if (!rows.length) rows.push(h('p', { class: 'empty' }, 'No sub-step matches. ',
+  /* 2. Đọc trạng thái người dùng đang xem của các hàng sắp dựng lại hay sắp dời chỗ (dời nút DOM làm mất chỗ cuộn ngang). */
+  const kids = [...board.children];
+  const moved = movedNodes(kids, plan.map((p) => p.row));
+  const keep = { notes: new Set(), open: new Set(), left: new Map() };
+  for (const p of plan) {
+    if (p.row && !moved.has(p.row)) continue;
+    const src = p.row || p.prev;
+    if (!src) continue;
+    if (!p.row && src.querySelector('.step-notes')?.open) keep.notes.add(p.step.id);
+    if (!p.row) for (const c of /** @type {NodeListOf<HTMLElement>} */ (src.querySelectorAll('.card.open[data-sub]'))) keep.open.add(/** @type {string} */ (c.dataset.sub));
+    const sc = src.querySelector('.cards-scroll');
+    if (sc && sc.scrollLeft) keep.left.set(p.step.id, sc.scrollLeft);
+  }
+  /* 3. Ghi: dựng hàng mới, xếp lại con của bảng (chỉ dời các hàng lệch chỗ), vá phần theo vị trí. */
+  board.classList.toggle('filtering', filtering);
+  const compactChanged = board.classList.contains('compact') !== compact;
+  board.classList.toggle('compact', compact);
+  $('compact-btn').setAttribute('aria-pressed', String(compact));
+  const ctx = { filtering, todayStr, nextIds, labels, keep };
+  /** @type {HTMLElement[]} */
+  const fresh = [];
+  const nodes = plan.map((p) => {
+    if (p.row) return p.row;
+    const row = stepRow(p.step, p.i, p.visible, ctx);
+    rowKeys.set(row, p.key);
+    fresh.push(row);
+    return row;
+  });
+  if (!ws.steps.length) nodes.push(h('p', { class: 'empty' }, 'No steps yet. Click "Add step" below.'));
+  else if (!plan.length) nodes.push(h('p', { class: 'empty' }, 'No sub-step matches. ',
     h('button', { type: 'button', class: 'btn', 'data-act': 'clear-filter' }, 'Clear search')));
-  board.replaceChildren(...rows);
+  placeChildren(board, nodes, moved);
+  for (const p of plan) if (p.row) patchRowIndex(p.row, p.i);
   $('renumber-btn').hidden = !labelsStale(ws);
   $('filter-note').textContent = filtering ? `${C.plural(shown, 'sub-step')} match · reordering is off while searching` : '';
   $('add-step').hidden = filtering;
-  markCutCards(keep.open);
+  /* 4. Đo: thẻ của hàng mới (Compact vừa đổi: mọi thẻ) — một lần dàn trang cho cả lượt. */
+  const cards = (/** @type {Element[]} */ rows) => rows.flatMap((r) => /** @type {HTMLElement[]} */ ([...r.querySelectorAll('.card[data-sub]')]));
+  if (compactChanged) markCutCards(cards(nodes), new Set([...keep.open, ...cards(nodes).filter((c) => c.classList.contains('open')).map((c) => /** @type {string} */ (c.dataset.sub))]));
+  else markCutCards(cards(fresh), keep.open);
+  const scrolls = [];
   for (const [id, left] of keep.left) {
     const sc = board.querySelector(`.step[data-step="${id}"] .cards-scroll`);
-    if (sc) sc.scrollLeft = left;
+    if (sc) { sc.scrollLeft = left; scrolls.push(sc); }
   }
-  updateScrollCues();
+  updateScrollCues([...fresh.map((r) => r.querySelector('.cards-scroll')), ...scrolls]);
+}
+
+/** Chữ đã bỏ dấu để tìm, nhớ theo đối tượng; nguồn đổi thì tính lại. @type {WeakMap<object, {src:string, folded:string}>} */
+const folds = new WeakMap();
+/** @param {object} o @param {() => any[]} parts */
+function foldOf(o, parts) {
+  const src = parts().join(' ');
+  const c = folds.get(o);
+  if (c && c.src === src) return c.folded;
+  const folded = C.fold(src);
+  folds.set(o, { src, folded });
+  return folded;
+}
+
+/** Các nút cũ phải dời chỗ để con của `parent` theo đúng thứ tự `want`: mọi nút cũ trừ dãy con tăng dài nhất (giữ đứng
+ * yên). Dời một nút DOM làm trình duyệt dàn lại cả nút ấy, nên dời càng ít càng tốt. @param {Element[]} kids @param {(Element|null)[]} want */
+function movedNodes(kids, want) {
+  const pos = new Map(kids.map((c, i) => [c, i]));
+  const seq = want.filter((n) => n && pos.has(n)).map((n) => /** @type {Element} */ (n));
+  const len = seq.map(() => 1), prev = seq.map(() => -1);
+  for (let i = 0; i < seq.length; i++) {
+    for (let j = 0; j < i; j++) {
+      if (/** @type {number} */ (pos.get(seq[j])) < /** @type {number} */ (pos.get(seq[i])) && len[j] + 1 > len[i]) { len[i] = len[j] + 1; prev[i] = j; }
+    }
+  }
+  const stay = new Set();
+  let k = len.indexOf(Math.max(0, ...len));
+  while (k >= 0) { stay.add(seq[k]); k = prev[k]; }
+  return new Set(seq.filter((n) => !stay.has(n)));
+}
+/** Con của `parent` thành đúng `nodes`: bỏ nút thừa, chèn nút mới và nút trong `moved`, các nút khác đứng yên.
+ * @param {Element} parent @param {Element[]} nodes @param {Set<Element>} moved */
+function placeChildren(parent, nodes, moved) {
+  const want = new Set(nodes);
+  for (const c of [...parent.children]) if (!want.has(c)) c.remove();
+  let next = null;
+  for (let i = nodes.length - 1; i >= 0; i--) {
+    const n = nodes[i];
+    if (n.parentNode !== parent || moved.has(n)) parent.insertBefore(n, next);
+    next = n;
+  }
+}
+/** Phần của hàng phụ thuộc chỉ số của bước (vạch chia "Add step", nhãn dải tài liệu): vá khi hàng dùng lại đổi chỗ.
+ * @param {HTMLElement} row @param {number} i */
+function patchRowIndex(row, i) {
+  const set = (/** @type {Element|null} */ el, /** @type {string} */ k, /** @type {string} */ v) => { if (el && el.getAttribute(k) !== v) el.setAttribute(k, v); };
+  const gap = row.querySelector(':scope > .gap-add');
+  if (gap && gap.classList.contains('first') !== (i === 0)) gap.classList.toggle('first', i === 0);
+  const btn = gap && gap.querySelector('.gap-add-btn');
+  set(btn, 'data-at', String(i));
+  set(btn, 'aria-label', `Add a step before step ${i + 1}`);
+  set(btn, 'title', `Add a step here (before step ${i + 1})`);
+  set(row.querySelector(':scope > .step-docs .doc-chips'), 'aria-label', `Docs of step ${i + 1}`);
+}
+
+/** Dựng một hàng (bước): đầu bước, băng Reopened, dải tài liệu, hàng thẻ theo ô.
+ * @param {any} step @param {number} i @param {any[]} visible
+ * @param {{filtering:boolean, todayStr:string, nextIds:Set<string>, labels:Map<string,string>, keep:{notes:Set<string>}}} ctx */
+function stepRow(step, i, visible, ctx) {
+  const { filtering, todayStr, nextIds, labels, keep } = ctx;
+  const prog = C.progress(step.subs);
+  const done = prog.total > 0 && prog.done === prog.total;
+  const head = h('div', { class: 'step-head' },
+    h('div', { class: 'step-top' },
+      !filtering && h('span', { class: 'step-grip', title: 'Drag to move the step (keyboard: Alt + ↑ ↓ on its name)', 'aria-hidden': 'true' }, icon('grip')),
+      numTag('step-num', labels.get(step.id)),
+      h('h2', { class: 'step-title', id: 'st-' + step.id },
+        h('button', { type: 'button', class: 'link', 'data-act': 'edit-step', 'aria-label': `Step ${labels.get(step.id) ?? '(added this session)'}: ${step.title}. Edit`, 'aria-keyshortcuts': 'Alt+ArrowUp Alt+ArrowDown' }, step.title))),
+    step.goal && h('p', { class: 'step-goal' }, step.goal),
+    step.doneWhen && h('p', { class: 'step-done' }, h('span', { class: 'lbl' }, 'Done when '), step.doneWhen),
+    step.notes && h('details', { class: 'step-notes', open: keep.notes.has(step.id) }, h('summary', {}, icon('chev'), 'Notes'), h('p', { class: 'notes-text' }, withLinks(step.notes))),
+    h('div', { class: 'prog' },
+      h('span', {}, `${prog.done}/${prog.total}`, h('span', { class: 'sr' }, ' sub-steps done')),
+      h('span', { class: 'bar-prog', 'aria-hidden': 'true' }, barFill(prog.pct))),
+    h('div', { class: 'acts' },
+      h('button', { type: 'button', class: 'btn small', 'data-act': 'add-sub' }, icon('plus'), 'Sub-step'),
+      !step.revisit && h('button', { type: 'button', class: 'btn small quiet aux', 'data-act': 'revisit', tabindex: '-1', title: 'A later step showed this one must be redone' }, icon('redo'), 'Reopen'),
+      !step.docs.length && h('button', { type: 'button', class: 'btn small quiet aux', 'data-act': 'add-doc', tabindex: '-1', title: 'Add a link or a Markdown note for the whole step' }, icon('plus'), 'Doc'),
+      iconBtn('trash', 'Delete step', 'del-step')));
+  /* Băng "Reopened": vòng, ngày, lý do (bấm để sửa), còn mấy việc phải làm lại; làm lại xong hết thì mời đóng vòng. */
+  const redo = C.redoCount(step);
+  const band = step.revisit && h('div', { class: 'revisit-band' + (redo.total && !redo.left ? ' all-redone' : '') },
+    icon('redo'),
+    h('button', { type: 'button', class: 'badge', 'data-act': 'revisit', title: 'Edit the reason' },
+      h('b', {}, 'Reopened'),
+      ' · Iteration ' + step.revisit.round,
+      step.revisit.date ? ' · ' + fmtDate(step.revisit.date) : '',
+      step.revisit.reason ? ' · ' + step.revisit.reason : ''),
+    redo.total > 0 && h('span', { class: 'redo-left' }, redo.left ? `${redo.left} of ${C.plural(redo.total, 'redo task')} left` : `All ${C.plural(redo.total, 'redo task')} done`),
+    h('button', { type: 'button', class: 'btn small' + (redo.total && !redo.left ? ' go' : ''), 'data-act': 'revisit-clear',
+      title: 'Finish this iteration: remove the band and the Redo marks' }, 'Close iteration'));
+  const card = (/** @type {any} */ x) => {
+    const overdue = x.due && x.due < todayStr && x.status !== 'done' && !C.outOfScope(x.status);
+    const isNext = nextIds.has(x.id);
+    return h('div', { class: `card st-${x.status}${isNext ? ' next' : ''}`, 'data-sub': x.id },
+      h('div', { class: 'card-top' },
+        numTag('num', labels.get(x.id)),
+        isNext && h('span', { class: 'next-tag' }, 'Next'),
+        x.redo && x.status !== 'done' && !C.outOfScope(x.status) && h('span', { class: 'redo-tag', title: `Sent back to redo in iteration ${step.revisit?.round}` }, icon('redo'), 'Redo'),
+        x.docs.length > 0 && h('button', { type: 'button', class: 'doc-tag', 'data-act': 'sub-docs', tabindex: '-1',
+          'aria-label': `${C.plural(x.docs.length, 'doc')}. Open the list`, title: x.docs.map((/** @type {any} */ d) => d.title).join('\n') },
+        icon('clip'), String(x.docs.length)),
+        statusChip(x)),
+      h('div', { class: 'card-body' },
+        h('h3', { class: 'card-title' }, h('button', { type: 'button', class: 'link', 'data-act': 'edit-sub', 'aria-keyshortcuts': 'Alt+ArrowLeft Alt+ArrowRight Alt+ArrowUp Alt+ArrowDown' }, x.title)),
+        x.due && h('p', { class: 'meta' },
+          h('span', { class: 'due' + (overdue ? ' overdue' : '') }, 'due ' + fmtDate(x.due) + (overdue ? ' (overdue)' : ''))),
+        x.reason && h('p', { class: 'card-reason' }, h('span', { class: 'lbl' }, C.REASON_LABEL[x.status] + ' '), withLinks(x.reason)),
+        x.doneWhen && h('p', { class: 'card-done' }, h('span', { class: 'lbl' }, 'Done when '), x.doneWhen),
+        x.notes && h('p', { class: 'card-notes' }, withLinks(x.notes))),
+      h('div', { class: 'acts' },
+        iconBtn('parallel', 'Add a parallel sub-step (runs alongside this one)', 'add-par'),
+        iconBtn('copy', 'Duplicate', 'sub-dup'),
+        iconBtn('trash', 'Delete', 'sub-del')));
+  };
+  /* Mỗi ô một cột của hàng; ô song song xếp chồng các thẻ của nó. */
+  const shownIds = new Set(visible.map((/** @type {any} */ x) => x.id));
+  const slots = C.slotsOf(step.subs).map((sl, si) => {
+    const vis = sl.filter((x) => shownIds.has(x.id));
+    return vis.length > 0 && h('li', { class: 'slot' + (sl.length > 1 ? ' par' : ''), 'data-slot': String(si),
+      'aria-label': sl.length > 1 ? `${sl.length} parallel sub-steps` : null }, vis.map(card));
+  });
+  /* Tài liệu của cả bước: dải chip ngay dưới băng Reopened (hay ở chỗ ấy khi không có băng), trên hàng thẻ. */
+  const docs = step.docs.length > 0 && h('div', { class: 'step-docs' },
+    h('ul', { class: 'doc-chips', 'aria-label': `Docs of step ${i + 1}` }, step.docs.map(docChip)),
+    h('button', { type: 'button', class: 'doc-chip add aux', 'data-act': 'add-doc', tabindex: '-1', 'aria-label': 'Add a doc to this step', title: 'Add a link or a Markdown note for the whole step' }, icon('plus'), 'Doc'));
+  /* Vạch chia phía trên bước: rê chuột vào thì hiện nút "Add step" chèn bước mới vào chỗ này (nút nổi, không đẩy bố cục). */
+  const gap = !filtering && h('div', { class: 'gap-add' + (i === 0 ? ' first' : '') },
+    h('button', { type: 'button', class: 'gap-add-btn', 'data-act': 'insert-step', 'data-at': String(i), tabindex: '-1',
+      'aria-label': `Add a step before step ${i + 1}`, title: `Add a step here (before step ${i + 1})` }, icon('plus'), h('span', {}, 'Add step')));
+  return h('section', { class: 'step' + (step.revisit ? ' revisit' : '') + (done ? ' is-done' : ''), 'data-step': step.id, 'aria-labelledby': 'st-' + step.id },
+    gap,
+    band,
+    docs,
+    head,
+    h('div', { class: 'cards-scroll' }, h('ol', { class: 'cards', 'aria-label': `Sub-steps of step ${labels.get(step.id) ?? step.title}` }, slots)));
 }
 
 /* ── Số đứng yên trong phiên: chụp số của mọi bước, bước con khi dự án hiện lần đầu trong lần mở trang này (và sau khi nhập
@@ -368,29 +481,39 @@ function docChip(d) {
     : h('button', { type: 'button', class: 'doc-chip', 'data-act': 'open-doc', 'data-doc': d.id, title: d.title }, icon('doc'), h('span', {}, d.title)));
 }
 
-/** @param {Set<string>} [keepOpen] thẻ đang mở trước lần vẽ này */
-function markCutCards(keepOpen = new Set()) {
-  for (const card of /** @type {NodeListOf<HTMLElement>} */ ($('board').querySelectorAll('.card[data-sub]'))) {
-    const body = /** @type {HTMLElement} */ (card.querySelector('.card-body'));
-    if (body.scrollHeight > body.clientHeight + 1) {
-      card.classList.add('cut');
-      const open = keepOpen.has(card.dataset.sub);
-      if (open) card.classList.add('open');
-      body.after(h('button', { type: 'button', class: 'more', 'data-act': 'more', 'aria-expanded': String(open), tabindex: '-1' }, open ? 'Show less' : 'Show more'));
-    }
+/** Đo các thẻ: đọc hết rồi mới ghi, nên cả lượt chỉ một lần dàn trang. Thẻ đã đo thì gỡ dấu cũ, đo lại.
+ * @param {HTMLElement[]} cards @param {Set<string>} [keepOpen] thẻ đang mở trước lần vẽ này */
+function markCutCards(cards, keepOpen = new Set()) {
+  for (const card of cards) {
+    if (!card.classList.contains('cut')) continue;
+    card.classList.remove('cut', 'open');
+    card.querySelector(':scope > .more')?.remove();
+  }
+  const bodies = cards.map((card) => /** @type {HTMLElement} */ (card.querySelector('.card-body')));
+  const cut = cards.filter((_, k) => bodies[k].scrollHeight > bodies[k].clientHeight + 1);
+  for (const card of cut) {
+    card.classList.add('cut');
+    const open = keepOpen.has(/** @type {string} */ (card.dataset.sub));
+    if (open) card.classList.add('open');
+    card.querySelector(':scope > .card-body')?.after(h('button', { type: 'button', class: 'more', 'data-act': 'more', 'aria-expanded': String(open), tabindex: '-1' }, open ? 'Show less' : 'Show more'));
   }
 }
 
-/** Hàng thẻ còn chỗ cuộn thì mờ dần ở mép ấy. */
-function updateScrollCues(/** @type {any} */ only = null) {
-  const list = only ? [only] : document.querySelectorAll('.cards-scroll');
-  for (const sc of /** @type {any} */ (list)) {
-    sc.classList.toggle('more-right', sc.scrollLeft + sc.clientWidth < sc.scrollWidth - 2);
-    sc.classList.toggle('more-left', sc.scrollLeft > 2);
+/** Hàng thẻ còn chỗ cuộn thì mờ dần ở mép ấy. Đọc hết rồi mới ghi. @param {Iterable<any>} [list] mặc định mọi hàng */
+function updateScrollCues(list = document.querySelectorAll('.cards-scroll')) {
+  const m = [...list].filter(Boolean).map((sc) => [sc, sc.scrollLeft + sc.clientWidth < sc.scrollWidth - 2, sc.scrollLeft > 2]);
+  for (const [sc, right, left] of m) {
+    sc.classList.toggle('more-right', right);
+    sc.classList.toggle('more-left', left);
   }
 }
-$('board').addEventListener('scroll', (/** @type {any} */ e) => { if (e.target.classList?.contains('cards-scroll')) updateScrollCues(e.target); }, true);
+$('board').addEventListener('scroll', (/** @type {any} */ e) => { if (e.target.classList?.contains('cards-scroll')) updateScrollCues([e.target]); }, true);
 window.addEventListener('resize', () => updateScrollCues());
+/* Hàng dùng lại không được đo lại: font tải xong sau lần vẽ đầu (chữ dàn lại) thì đo lại mọi thẻ, giữ thẻ đang mở. */
+document.fonts?.addEventListener('loadingdone', () => {
+  const cards = /** @type {HTMLElement[]} */ ([...$('board').querySelectorAll('.card[data-sub]')]);
+  markCutCards(cards, new Set(cards.filter((c) => c.classList.contains('open')).map((c) => /** @type {string} */ (c.dataset.sub))));
+});
 
 function barFill(/** @type {number} */ pct) {
   const i = h('i');
@@ -416,8 +539,15 @@ function fillStepSelect(sel, ws, value) {
   sel.value = ws.steps.some((/** @type {any} */ s) => s.id === value) ? value : '';
 }
 
-function renderLog(/** @type {any} */ ws) {
+/** Khoá của lần vẽ nhật ký gần nhất: không đổi thì giữ nguyên danh sách (khỏi dựng lại, khỏi đo "Show more"). */
+let logKey = '';
+/** @param {any} ws @param {{full?:boolean}} [opt] */
+function renderLog(ws, opt = {}) {
   if (!$('log-date').value) $('log-date').value = C.today();
+  const labels0 = labelsOf(ws);
+  const key = JSON.stringify([ws.id, ws.log, ws.steps.map((/** @type {any} */ s) => [s.id, s.title, labels0.get(s.id) ?? null]), [...logOpen]]);
+  if (!opt.full && key === logKey) return;
+  logKey = key;
   fillStepSelect($('log-step'), ws, $('log-step').value);
   $('log-count').textContent = ws.log.length ? String(ws.log.length) : '';
   const sorted = ws.log.map((/** @type {any} */ l, /** @type {number} */ i) => ({ l, i }))
@@ -623,7 +753,7 @@ function switchTo(/** @type {string} */ id) {
   ui.q = '';
   $('q').value = '';
   persist();
-  render();
+  render({ full: true });
 }
 
 $('start-templates').addEventListener('click', (/** @type {any} */ e) => {
@@ -1778,6 +1908,7 @@ $('import-go').addEventListener('click', () => {
     const nu = parsed.workspaces[0];
     Object.assign(ws, { ...nu, id: ws.id, createdAt: ws.createdAt });
     frozen.delete(ws.id);
+    boardWsId = '';
     commit();
     afterOpen();
     toast(`Replaced the content of "${before.name}".`, () => {
@@ -1785,6 +1916,7 @@ $('import-go').addEventListener('click', () => {
       if (i < 0) { toast('Cannot undo: the project was deleted.'); return; }
       state.workspaces[i] = before;
       frozen.delete(before.id);
+      boardWsId = '';
       if (curId !== before.id) switchTo(before.id);
       commit();
       afterOpen();
@@ -1838,6 +1970,7 @@ darkMq.addEventListener('change', paintThemeBtn);
 
 window.addEventListener('storage', (e) => {
   if (e.key !== S.KEY) return;
+  savePending = false; // tab kia ghi sau: bản của nó thắng, như khi hai tab ghi ngay
   state = S.load().state;
   if (!findWs(curId)) setCur(findWs(state.lastId) ? state.lastId : state.workspaces[0]?.id || '');
   render();
@@ -1861,7 +1994,7 @@ async function boot() {
   const tab = S.tabProject();
   curId = findWs(tab) ? tab : findWs(state.lastId) ? state.lastId : state.workspaces[0]?.id || '';
   if (curId) S.setTabProject(curId);
-  if (loaded.migrated) persist(); // khoá cũ: ghi ngay sang khoá mới
+  if (loaded.migrated) { persist(); flushSave(); } // khoá cũ: ghi ngay sang khoá mới
   render();
 }
 boot();
