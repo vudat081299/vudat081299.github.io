@@ -1,5 +1,5 @@
 /* Chế độ xem: Edit / Source / Preview / Split (setView); Preview và Split chỉ ở file markdown (viewFor, MDAN-067); file
-   khác chỉ có tab Source, Edit là nút bật / tắt #btn-edit (MDAN-074). Split chỉ khi đủ chỗ (splitOK); chiều cao hai khung
+   khác có hai tab Edit / Source (MDAN-089). Split chỉ khi đủ chỗ (splitOK); chiều cao hai khung
    (sizePanes, html.ma-fit), vách giữa (prefs.split), nút Syntax colors.
    longText(): kéo vách / mép cây / mép panel có dàn lại ngay không (dragBar).
    Xuất: initViews, isSplit, lastRead, longText, paneRoot, paneWrap, refreshSplit, setView, sizePanes, view.
@@ -33,15 +33,10 @@ export function setView(v) {
   /* Chế độ đọc chỉ nhớ ở file có đủ chế độ: Source ở file code không ghi đè Preview / Split đã chọn cho markdown. */
   if (want !== 'edit' && t.md) lastRead = want;
   prefs.view = want === 'edit' ? want : lastRead; prefs.read = lastRead; savePrefs();
-  /* File không phải markdown: tab Source luôn chọn, Edit bật trong nó (nút nhấn #btn-edit). */
-  var tab = t.md ? v : 'src';
   document.querySelectorAll('.ma-tab').forEach(function (b) {
-    b.setAttribute('aria-selected', String(b.dataset.view === tab));
-    b.tabIndex = b.dataset.view === tab ? 0 : -1;
+    b.setAttribute('aria-selected', String(b.dataset.view === v));
+    b.tabIndex = b.dataset.view === v ? 0 : -1;
   });
-  $('tab-edit').hidden = !t.md;
-  $('btn-edit').hidden = t.md;
-  $('btn-edit').setAttribute('aria-pressed', String(v === 'edit'));
   $('pane-edit').hidden = v !== 'edit';
   $('views').dataset.mode = v;
   $('wrap-src').hidden = !(v === 'src' || v === 'split');
@@ -90,8 +85,6 @@ function applySplit(r) {
   return r;
 }
 var splitR;
-/* Nút Edit của file không phải markdown: Edit ↔ Source. */
-function toggleEdit() { setView(view === 'edit' ? 'src' : 'edit'); }
 
 export function initViews() {
   document.querySelectorAll('.ma-tab').forEach(function (b) {
@@ -99,13 +92,11 @@ export function initViews() {
     b.addEventListener('keydown', function (e) {
       if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
       var tabs = Array.prototype.filter.call(document.querySelectorAll('.ma-tab'), shown);
-      if (tabs.length === 1) { toggleEdit(); return; }   // file không phải markdown: mũi tên bật / tắt Edit như trước
       var i = tabs.indexOf(b) + (e.key === 'ArrowRight' ? 1 : -1);
       var t = tabs[(i + tabs.length) % tabs.length];
       setView(t.dataset.view); t.focus();
     });
   });
-  $('btn-edit').addEventListener('click', toggleEdit);
   var later = function () { cancelAnimationFrame(rafSplit); rafSplit = requestAnimationFrame(refreshSplit); };
   window.addEventListener('resize', later);
   /* #doc đổi bề rộng mà cửa sổ không đổi (ẩn / hiện cột cây, kéo mép cây, thanh dọc): xét lại Split. */

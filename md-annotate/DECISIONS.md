@@ -46,7 +46,6 @@
 - MDAN-071 · Văn bản dài: đổi bề rộng vùng chữ không đứng hình · `md-annotate/`
 - MDAN-072 · Hộp prompt bôi đen được chữ của nó · `md-annotate/css/base.css`, `md-annotate/js/ui/selection.js`
 - MDAN-073 · File code không có Focus mode và đánh dấu đã đọc · `md-annotate/`
-- MDAN-074 · File không phải markdown: một tab Source, Edit là nút bật / tắt · `md-annotate/index.html`, `md-annotate/js/ui/views.js`, `md-annotate/css/views.css`
 - MDAN-075 · Ô lọc file: chờ gõ xong, mẫu chỉ thử phần đầu tên · `md-annotate/js/ui/tree-find.js`, `md-annotate/js/core/tree-find.js`
 - MDAN-076 · Cổng xanh thì push main ngay, smoke chạy sau · `md-annotate/`
 - MDAN-079 · Làn đánh dấu khối hiện tại và khối gợi ý, gợi ý thắng; viên thuốc Accept N · thay cho MDAN-077, MDAN-078 · `md-annotate/css/review.css`, `md-annotate/js/ui/review.js`, `md-annotate/js/ui/dwell.js`, `md-annotate/index.html`, `md-annotate/data/shortcuts.json`
@@ -59,6 +58,7 @@
 - MDAN-086 · Nhận xét đã lưu thành gợi ý ngay lần đầu · `md-annotate/js/core/hints.js`
 - MDAN-087 · Gợi ý không giới hạn độ dài, gợi ý dài chỉ hiện 80 ký tự đầu · `md-annotate/js/core/hints.js`, `md-annotate/js/ui/popup.js`, `md-annotate/js/ui/hints.js`
 - MDAN-088 · Gợi ý nhận xét riêng cho từng phiên · `md-annotate/js/core/hints.js`, `md-annotate/js/core/session.js`, `md-annotate/js/ui/hints.js`
+- MDAN-089 · File không phải markdown: hai tab Edit / Source · thay cho MDAN-074 · `md-annotate/index.html`, `md-annotate/js/ui/views.js`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Source tô màu cú pháp markdown kiểu VS Code
@@ -394,13 +394,6 @@ Focus mode và đánh dấu đã đọc (làn, phím X / J / K, tab Review, dả
 markdown. File code và chữ trơn không chia section, không có làn; tab Review nói rằng đánh dấu chỉ dành cho markdown.
 File không phải markdown không bị dựng hay tách khối như markdown (không tốn công, không sai).
 
-## MDAN-074 · File không phải markdown: một tab Source, Edit là nút bật / tắt
-21/11/2026 · `md-annotate/index.html`, `md-annotate/js/ui/views.js`, `md-annotate/css/views.css`
-
-File code và chữ trơn chỉ có tab Source; cạnh nó là nút Edit bật / tắt, bật thì chính khung ấy thành ô sửa chữ (ô Edit
-sẵn có), tắt hay bấm Source thì về Source. Phím mũi tên ở tab Source cũng bật / tắt Edit. File markdown giữ bốn tab. Chế
-độ đã chọn cho markdown (Preview, Split) vẫn được nhớ qua Edit / Source ở file code, kể cả sau khi tải lại trang.
-
 ## MDAN-075 · Ô lọc file: chờ gõ xong, mẫu chỉ thử phần đầu tên
 21/11/2026 · `md-annotate/js/ui/tree-find.js`, `md-annotate/js/core/tree-find.js`
 
@@ -493,3 +486,10 @@ Mỗi phiên có bộ gợi ý riêng: số lần dùng, gợi ý tự thêm, g�
 Đổi phiên thì hộp nhận xét và hộp Hints đổi theo ngay. Xoá phiên thì mất bộ gợi ý của nó; Undo dựng lại phiên thì có lại.
 Phiên lưu trước đó dựng bộ gợi ý từ nhận xét đã lưu của chính nó (mỗi nhận xét một lần, trừ nhận xét Mod + 1); số đếm
 chung cũ, kể cả gợi ý đã bỏ hay tự thêm, bị xoá, không chép sang phiên nào.
+
+## MDAN-089 · File không phải markdown: hai tab Edit / Source · thay cho MDAN-074
+25/11/2026 · `md-annotate/index.html`, `md-annotate/js/ui/views.js`
+
+File code và chữ trơn có hai tab Edit và Source như file markdown (không có Preview, Split); bỏ nút Edit bật / tắt. Tab
+đang chọn luôn là chế độ đang hiện: nút bật / tắt cũ để tab Source sáng cả khi đang sửa, người dùng không biết mình ở đâu.
+Chế độ đã chọn cho markdown (Preview, Split) vẫn được nhớ qua Edit / Source ở file code, kể cả sau khi tải lại trang.

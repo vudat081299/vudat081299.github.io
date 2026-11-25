@@ -4044,7 +4044,7 @@ const cornerClash = (page) => page.evaluate(() => {
     await mp.setInputFiles('#file-in', { name: 'main.rs', mimeType: 'text/plain', buffer: Buffer.from('fn main() {\n    let n = 1;\n}\n') });
     await mp.waitForTimeout(200);
     const rs = await state();
-    check('chế độ xem: file .rs chỉ có tab Source (Edit là nút), Split đã nhớ không bị ghi đè', rs.tabs === 'src' && rs.mode === 'src' && rs.pref === 'split', JSON.stringify(rs));
+    check('chế độ xem: file .rs có hai tab Edit / Source, Split đã nhớ không bị ghi đè', rs.tabs === 'edit,src' && rs.mode === 'src' && rs.pref === 'split', JSON.stringify(rs));
     await mp.focus('.ma-tab[data-view="src"]'); await mp.keyboard.press('ArrowRight'); await mp.waitForTimeout(100);
     const kEdit = await state();
     await mp.keyboard.press('ArrowRight'); await mp.waitForTimeout(100);
@@ -4072,27 +4072,24 @@ const cornerClash = (page) => page.evaluate(() => {
     const re = await state();
     await mp.click(rowSel('untitled.md')); await mp.waitForTimeout(200);
     const re2 = await state();
-    check('chế độ xem: tải lại với file .rs mở — Source; sang .md — Split', re.mode === 'src' && re.tabs === 'src' && re2.mode === 'split', JSON.stringify([re, re2]));
-    // D2: file .rs — nút Edit bật / tắt Edit trong tab Source (tab Source vẫn chọn); bấm tab Source cũng ra khỏi Edit.
+    check('chế độ xem: tải lại với file .rs mở — Source; sang .md — Split', re.mode === 'src' && re.tabs === 'edit,src' && re2.mode === 'split', JSON.stringify([re, re2]));
+    // D2: file .rs — tab Edit / Source như file .md: tab đang chọn (vạch) theo chế độ đang hiện (MDAN-089).
     await mp.click(rowSel('main.rs')); await mp.waitForTimeout(200);
-    const ed = () => mp.evaluate(() => ({ edit: !document.getElementById('pane-edit').hidden, pressed: document.getElementById('btn-edit').getAttribute('aria-pressed'),
-      src: document.querySelector('.ma-tab[data-view="src"]').getAttribute('aria-selected'), btn: !document.getElementById('btn-edit').hidden }));
-    await mp.click('#btn-edit'); await mp.waitForTimeout(100);
+    const ed = () => mp.evaluate(() => ({ edit: !document.getElementById('pane-edit').hidden,
+      sel: [...document.querySelectorAll('.ma-tab[aria-selected="true"]')].map((b) => b.dataset.view).join() }));
+    await mp.click('.ma-tab[data-view="edit"]'); await mp.waitForTimeout(100);
     const e1 = await ed();
-    await mp.click('#btn-edit'); await mp.waitForTimeout(100);
+    await mp.click('.ma-tab[data-view="src"]'); await mp.waitForTimeout(100);
     const e2 = await ed();
-    await mp.click('#btn-edit'); await mp.click('.ma-tab[data-view="src"]'); await mp.waitForTimeout(100);
-    const e3 = await ed();
-    check('D2: file .rs — nút Edit bật Edit (nhấn, tab Source vẫn chọn), bấm lại hay bấm Source thì về Source',
-      e1.btn && e1.edit && e1.pressed === 'true' && e1.src === 'true' && !e2.edit && e2.pressed === 'false' && !e3.edit, JSON.stringify([e1, e2, e3]));
+    check('D2: file .rs — bấm tab Edit thì sửa, tab Edit được chọn; bấm Source thì về Source', e1.edit && e1.sel === 'edit' && !e2.edit && e2.sel === 'src', JSON.stringify([e1, e2]));
     // Split đã nhớ sống qua Edit ở file code và tải lại: .rs → Edit → tải lại → Source → .md: Split.
-    await mp.click('#btn-edit'); await mp.waitForTimeout(100);
+    await mp.click('.ma-tab[data-view="edit"]'); await mp.waitForTimeout(100);
     await mp.reload(); await mp.waitForFunction(() => window.marked && window.DOMPurify); await mp.waitForTimeout(200);
     const r1 = await ed();
-    await mp.click('#btn-edit'); await mp.waitForTimeout(100);
+    await mp.click('.ma-tab[data-view="src"]'); await mp.waitForTimeout(100);
     await mp.click(rowSel('untitled.md')); await mp.waitForTimeout(200);
     const r2 = await state();
-    check('chế độ xem: .rs ở Edit, tải lại, về Source rồi sang .md — vẫn Split (prefs.read)', r1.edit && r2.mode === 'split' && r2.tabs === 'edit,src,view,split', JSON.stringify([r1, r2]));
+    check('chế độ xem: .rs ở Edit, tải lại, về Source rồi sang .md — vẫn Split (prefs.read)', r1.edit && r1.sel === 'edit' && r2.mode === 'split' && r2.tabs === 'edit,src,view,split', JSON.stringify([r1, r2]));
     await mc.close();
   }
   // ── end modes ──
