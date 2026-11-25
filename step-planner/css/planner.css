@@ -438,7 +438,7 @@ svg.i {
   padding: var(--s4) 0 var(--s6); border-top: var(--line-w) solid var(--line); position: relative;
 }
 .step:last-child { border-bottom: var(--line-w) solid var(--line); }
-.step-head { min-width: 0; display: flex; flex-direction: column; gap: var(--s2); }
+.step-head { min-width: 0; display: flex; flex-direction: column; gap: var(--s2); padding-inline-start: var(--s2); }
 @media (hover: hover) { .board:not(.filtering) .step-head { cursor: grab; } }
 .step-top { display: flex; gap: var(--s2); align-items: flex-start; }
 .step-num {
