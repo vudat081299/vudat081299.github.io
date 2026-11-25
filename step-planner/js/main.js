@@ -351,7 +351,7 @@ function patchRowIndex(row, i) {
 
 /** Dựng một hàng (bước): đầu bước, băng Reopened, dải tài liệu, hàng thẻ theo ô.
  * @param {any} step @param {number} i @param {any[]} visible
- * @param {{filtering:boolean, todayStr:string, nextIds:Set<string>, labels:Map<string,string>, keep:{notes:Set<string>}}} ctx */
+ * @param {{filtering:boolean, todayStr:string, nextIds:Set<string>, labels:Map<string,string>, keep:{notes:Set<string>, open:Set<string>}}} ctx */
 function stepRow(step, i, visible, ctx) {
   const { filtering, todayStr, nextIds, labels, keep } = ctx;
   const prog = C.progress(step.subs);
@@ -403,7 +403,7 @@ function stepRow(step, i, visible, ctx) {
           h('span', { class: 'due' + (overdue ? ' overdue' : '') }, 'due ' + fmtDate(x.due) + (overdue ? ' (overdue)' : ''))),
         x.reason && h('p', { class: 'card-reason' }, h('span', { class: 'lbl' }, C.REASON_LABEL[x.status] + ' '), withLinks(x.reason)),
         x.doneWhen && h('p', { class: 'card-done' }, h('span', { class: 'lbl' }, 'Done when '), x.doneWhen),
-        x.notes && h('p', { class: 'card-notes' }, withLinks(x.notes))),
+        x.notes && cardNotes(x.notes, keep.open.has(x.id))),
       h('div', { class: 'acts' },
         iconBtn('parallel', 'Add a parallel sub-step (runs alongside this one)', 'add-par'),
         iconBtn('copy', 'Duplicate', 'sub-dup'),
@@ -481,6 +481,26 @@ function docChip(d) {
     : h('button', { type: 'button', class: 'doc-chip', 'data-act': 'open-doc', 'data-doc': d.id, title: d.title }, icon('doc'), h('span', {}, d.title)));
 }
 
+/* Ghi chú dài trên thẻ chưa mở: chỉ dựng phần đầu (dàn chữ là phần tốn nhất khi vẽ). Phần đầu đủ dài để tràn xa quá chỗ
+ * cắt, nên thẻ trông y như khi dựng đủ; không tràn đủ xa thì dựng đủ rồi đo lại. "Show more" dựng đủ. */
+const NOTE_LINES = 16;
+const NOTE_CHARS = 1600;
+const CLIP_SLACK = 64; // px: phần đầu phải tràn quá chỗ cắt chừng này, dòng cuối (có thể bị cắt giữa chừng) mới chắc khuất
+/** @param {string} notes @param {boolean} full */
+function cardNotes(notes, full) {
+  const head = full ? notes : notes.split('\n', NOTE_LINES).join('\n').slice(0, NOTE_CHARS);
+  return h('p', { class: 'card-notes', 'data-clip': head !== notes }, withLinks(head));
+}
+/** Thẻ đang hiện phần đầu ghi chú: dựng đủ. @param {Element} card */
+function unclip(card) {
+  const p = card.querySelector('.card-notes[data-clip]');
+  if (!p) return;
+  const id = /** @type {HTMLElement} */ (card).dataset.sub;
+  const x = cur()?.steps.flatMap((/** @type {any} */ s) => s.subs).find((/** @type {any} */ y) => y.id === id);
+  p.removeAttribute('data-clip');
+  if (x) p.replaceChildren(...withLinks(x.notes));
+}
+
 /** Đo các thẻ: đọc hết rồi mới ghi, nên cả lượt chỉ một lần dàn trang. Thẻ đã đo thì gỡ dấu cũ, đo lại.
  * @param {HTMLElement[]} cards @param {Set<string>} [keepOpen] thẻ đang mở trước lần vẽ này */
 function markCutCards(cards, keepOpen = new Set()) {
@@ -490,7 +510,15 @@ function markCutCards(cards, keepOpen = new Set()) {
     card.querySelector(':scope > .more')?.remove();
   }
   const bodies = cards.map((card) => /** @type {HTMLElement} */ (card.querySelector('.card-body')));
-  const cut = cards.filter((_, k) => bodies[k].scrollHeight > bodies[k].clientHeight + 1);
+  let over = bodies.map((b) => b.scrollHeight - b.clientHeight);
+  /* Ghi chú chỉ có phần đầu mà tràn chưa đủ xa (Compact ẩn ghi chú thì không tính): dựng đủ, đo lại riêng các thẻ ấy. */
+  const compact = $('board').classList.contains('compact');
+  const short = compact ? [] : cards.filter((c, k) => over[k] < CLIP_SLACK && c.querySelector('.card-notes[data-clip]'));
+  if (short.length) {
+    short.forEach(unclip);
+    over = bodies.map((b, k) => (short.includes(cards[k]) ? b.scrollHeight - b.clientHeight : over[k]));
+  }
+  const cut = cards.filter((_, k) => over[k] > 1);
   for (const card of cut) {
     card.classList.add('cut');
     const open = keepOpen.has(/** @type {string} */ (card.dataset.sub));
@@ -906,6 +934,7 @@ $('board').addEventListener('click', (/** @type {any} */ e) => {
   if (act === 'clear-filter') { clearFilter(); return; }
   if (act === 'insert-step') { openStep(null, Number(b.dataset.at) || 0); return; }
   if (act === 'more') {
+    unclip(b.closest('.card'));
     const open = b.closest('.card').classList.toggle('open');
     b.textContent = open ? 'Show less' : 'Show more';
     b.setAttribute('aria-expanded', String(open));

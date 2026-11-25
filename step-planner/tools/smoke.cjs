@@ -134,7 +134,11 @@ const check = (name, ok, detail = '') => {
   check('thẻ cao theo nội dung, không kéo cao theo thẻ cao nhất hàng', ch.max > ch.min && ch.a >= ch.min - 1 && ch.a < ch.b - 40,
     JSON.stringify(ch));
   check('thẻ dài dừng ở max-height, cắt và có "Xem thêm"', Math.abs(ch.b - ch.max) < 1 && ch.cut && ch.more, JSON.stringify(ch));
+  const notesLines = () => page.$eval('.card.cut .card-notes', (p) => [p.hasAttribute('data-clip'), p.textContent.split('\n').length]);
+  const nl0 = await notesLines();
   await page.click('.card .more');
+  const nl1 = await notesLines();
+  check('thẻ bị cắt chỉ dựng phần đầu ghi chú; "Show more" dựng đủ 40 dòng', nl0[0] && nl0[1] < 40 && !nl1[0] && nl1[1] === 40, `${nl0} → ${nl1}`);
   // Không còn thẻ "+ Sub-step" cuối hàng: thêm bước con bằng nút ở cột tên bước.
   check('không có thẻ thêm cuối hàng', !(await page.$('.card.add, .add-sub')) && !!(await page.$('.step-head [data-act="add-sub"]')));
   // Vạch chia trên bước: rê chuột thì hiện "Add step" nổi, không xê dịch gì; bấm thì hộp thêm bước đặt sẵn vị trí.
@@ -1352,6 +1356,11 @@ const check = (name, ok, detail = '') => {
   const pr4 = await rowState();
   check('vẽ theo hàng: Compact bật / tắt không dựng lại hàng, thẻ dài vẫn cắt, có "Show more"', pr4.same === 'p1,p2,p3'
     && await pp.$eval('.card[data-sub="b2"]', (c) => c.classList.contains('cut') && !!c.querySelector('.more')), JSON.stringify(pr4));
+  // Thẻ cao hơn (token đổi) mà phần đầu ghi chú không tràn đủ xa: dựng đủ, không cắt.
+  await pp.addStyleTag({ content: ':root { --card-max: 4000px; }' });
+  await setSt(pp, 'b1', 'todo');
+  const tall = await pp.$eval('.card[data-sub="b2"]', (c) => [c.classList.contains('cut'), !!c.querySelector('.card-notes[data-clip]'), c.querySelector('.card-notes').textContent.split('\n').length]);
+  check('thẻ đủ chỗ: ghi chú dựng đủ, không cắt', !tall[0] && !tall[1] && tall[2] === 40, String(tall));
   await pc.close();
 
   /* ── Bộ nhớ bị chặn ── */

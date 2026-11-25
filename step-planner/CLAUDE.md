@@ -16,8 +16,8 @@
 | `js/md.js` | Markdown của tài liệu văn bản → cây khối (`parseMd`, thuần) → DOM (`renderMd`, chỉ createElement / text node) |
 | `js/store.js` | `localStorage` (dữ liệu, mẹo `stepPlanner.hintOff`, Compact `stepPlanner.compact`, theme `hub-theme`), `sessionStorage` (dự án của tab); mọi truy cập bọc try/catch |
 | `js/dropdown.js` | danh sách chọn tự dựng: `enhanceSelect` (thay giao diện `<select>`, giữ nó làm nguồn value và `change`), `openList` |
-| `js/drag.js` | kéo thả bằng pointer events (chuột, chạm, bút): bóng, ô "Drop here", FLIP, tự cuộn, Esc |
-| `js/main.js` | vẽ bảng, sự kiện, hộp thoại, kéo thả, toast Hoàn tác, nhắc sao lưu |
+| `js/drag.js` | kéo thả bằng pointer events (chuột, chạm, bút): bóng, ô "Drop here", FLIP, tự cuộn, Esc; mỗi khung hình một lượt, toạ độ đo một lần |
+| `js/main.js` | vẽ bảng theo hàng (`renderBoard`: khoá mỗi hàng, chỉ hàng đổi dựng lại), sự kiện, hộp thoại, kéo thả, toast Hoàn tác, nhắc sao lưu |
 
 ## Dữ liệu
 
@@ -74,15 +74,15 @@
   tác tìm lại dự án và bước theo id (tab khác có thể đã thay `state`).
 - Hộp sửa: mở thì focus ô đầu (cảm ứng: không tự focus ô chữ); tên tự cao, Enter lưu. Esc, ×, Close, Duplicate khi chữ
   đổi thì hỏi lại. Nút đóng ghi "Close", không "Cancel". Đóng hộp: focus về chỗ mở, không vòng tới lần Tab / mũi tên kế.
-- Ghi chú bước gập dưới tên. Thẻ cao theo nội dung, quá `--card-max` thì cắt, "Show more" mở cả thẻ; link trong ghi chú
-  bấm được. Vẽ lại giữ ghi chú đang mở, thẻ đã mở, chỗ cuộn ngang.
+- Ghi chú bước gập dưới tên. Thẻ cao theo nội dung, quá `--card-max` thì cắt (chỉ dựng phần đầu ghi chú), "Show more" mở cả
+  thẻ; link trong ghi chú bấm được. Vẽ lại giữ ghi chú đang mở, thẻ đã mở, chỗ cuộn ngang; hàng không đổi giữ nguyên nút DOM.
 - Tài liệu (PLAN-011): tài liệu của bước là dải chip rộng cả hàng ngay dưới băng Reopened (không băng thì ở chỗ ấy), trên
   hàng thẻ; nút phụ "Doc" ở cuối dải (bước chưa có tài liệu: ở cột tên bước). Thẻ chỉ có nhãn kẹp + số ở hàng đầu; bấm là
   mở hộp sửa bước con ở phần tài liệu. Thêm / sửa / xoá trong hộp sửa, lưu ngay; xoá khi hộp đang mở thì Hoàn tác là một
   hàng trong hộp. Link mở tab mới (`noopener noreferrer`); văn bản mở hộp lớn Edit / Preview (`#dlg-md`).
 - Nhật ký (PLAN-005): ô ghi gập tới khi bấm; mở thì focus Decision, ngày mặc định hôm nay, bước tuỳ chọn; Esc gập, giữ chữ.
   Mới nhất trước, nhóm theo tháng; lý do dài cắt, "Show more"; bấm mục là sửa; bấm chip bước là tới bước ấy (bỏ lọc nếu cần).
-- Tab khác sửa cùng khoá thì đọc lại (`storage`), giữ dự án của tab.
+- Ghi bộ nhớ sau khung hình kế (rời, ẩn trang: ghi ngay). Tab khác sửa cùng khoá thì đọc lại (`storage`), giữ dự án của tab.
 - Nhắc sao lưu: thay đổi chưa sao lưu ≥ 3 ngày thì nút nhắc hiện cạnh Export, bấm là tải sao lưu mọi dự án (mới đặt lại mốc).
 - Chữ người dùng chỉ vào DOM qua text node; không `innerHTML` ở `js/`. Không `alert` / `confirm` / `prompt` (`#dlg-ask`).
 
