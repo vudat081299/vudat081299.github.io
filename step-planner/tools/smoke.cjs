@@ -1071,6 +1071,7 @@ const check = (name, ok, detail = '') => {
   await page.fill('#import-text', '{"x":1}');
   check('nhập chữ lạ: báo lỗi, nút tắt', /Cannot read/.test(await page.textContent('#import-preview')) && await page.isDisabled('#import-go'));
   await page.click('#dlg-import [data-close]');
+  await page.click('#ask-ok'); // chữ đã dán: hỏi "Discard changes?"
 
   // Đổi tên, nhân bản, xoá dự án.
   await page.click('#ws-btn');
@@ -1175,6 +1176,7 @@ const check = (name, ok, detail = '') => {
   await page.fill('#import-text', '[1,2]');
   check('JSON không có dự án: nút nhập tắt', await page.isDisabled('#import-go'));
   await page.click('#dlg-import [data-close]');
+  await page.click('#ask-ok'); // chữ đã dán: hỏi "Discard changes?"
 
   // Nhắc sao lưu: thay đổi cũ hơn 3 ngày.
   await page.evaluate(() => {
@@ -3426,6 +3428,39 @@ const check = (name, ok, detail = '') => {
     r.stepEsc = await at(head);
     check('đóng hộp sửa sau khi thêm / xoá tài liệu, Evidence: focus về nút mở mới, không về body', r.subEsc && r.subProof && r.stepEsc, JSON.stringify(r));
     await fx.close();
+  });
+
+  /* ── Nhập: Esc, Close khi đã dán chữ thì hỏi lại như hộp sửa; chưa dán gì thì đóng ngay ── */
+  await section('Nhập hỏi lại khi đóng', async () => {
+    const { ctx: ix, page: ip } = await open(1280, 900);
+    await ip.click('#start .tpl[data-tpl="stats-report"]');
+    await ip.waitForSelector('.card[data-sub]');
+    const isOpen = (id) => ip.$eval(id, (d) => d.open);
+    await ip.click('#import-btn');
+    await ip.waitForSelector('#dlg-import[open]');
+    await ip.keyboard.press('Escape');
+    const emptyClosed = await waitTo(ip, 'hộp Nhập trống đóng ngay', () => !document.querySelector('#dlg-import').open);
+    await ip.click('#import-btn');
+    await ip.fill('#import-text', '# Dự án dán\n\n## 1. Bước\n- [ ] Việc');
+    await ip.keyboard.press('Escape');
+    await ip.waitForSelector('#dlg-ask[open]');
+    const title = await ip.textContent('#dlg-ask-title');
+    await ip.keyboard.press('Escape');
+    await waitTo(ip, 'hộp hỏi đóng', () => !document.querySelector('#dlg-ask').open);
+    const kept = (await isOpen('#dlg-import')) && (await ip.inputValue('#import-text')).startsWith('# Dự án dán');
+    await ip.click('#dlg-import .dlg-foot [data-close]');
+    await ip.waitForSelector('#dlg-ask[open]');
+    await ip.click('#ask-ok');
+    const gone = await waitTo(ip, 'Discard đóng hộp Nhập', () => !document.querySelector('#dlg-import').open);
+    check('Nhập: chưa dán gì thì Esc đóng ngay; đã dán thì Esc, Close hỏi "Discard changes?", đóng hộp hỏi thì chữ còn nguyên',
+      emptyClosed && title === 'Discard changes?' && kept && gone, JSON.stringify({ emptyClosed, title, kept, gone }));
+    /* Nhập xong không hỏi lại. */
+    await ip.click('#import-btn');
+    await ip.fill('#import-text', '# Dự án dán\n\n## 1. Bước\n- [ ] Việc');
+    await ip.click('#import-go');
+    const done = await waitTo(ip, 'Nhập xong đóng hộp', () => !document.querySelector('#dlg-import').open);
+    check('Nhập: bấm Import thì đóng, không hỏi lại', done && !(await isOpen('#dlg-ask')));
+    await ix.close();
   });
 
   /* ── Tab tới thẻ ở mép hàng (320px, 390px): cả thẻ vào trong scroll-padding, không nằm dưới mép mờ; bấm chuột không làm hàng nhảy ── */

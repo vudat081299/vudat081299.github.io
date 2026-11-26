@@ -13,10 +13,13 @@ import { refocus, stepOf } from './state.js';
 
 /* ── Hộp thoại: mở, focus ô đầu, hỏi lại khi đóng mà chữ chưa lưu ── */
 
-const snapshot = (/** @type {any} */ form) => JSON.stringify([...form.elements].filter((e) => e.name).map((e) => (e.type === 'radio' || e.type === 'checkbox' ? e.checked : e.value)));
+/* Khung chữ của hộp: <form>, hay .dlg-form khi hộp không gửi form (Import: ô theo id). */
+const formOf = (/** @type {any} */ dlg) => dlg.querySelector('form') || dlg.querySelector('.dlg-form');
+const snapshot = (/** @type {any} */ form) => JSON.stringify([...(form.elements || form.querySelectorAll('input, textarea, select'))]
+  .filter((e) => e.name || e.id).map((e) => (e.type === 'radio' || e.type === 'checkbox' ? e.checked : e.value)));
 /** @type {WeakMap<any, string>} */
 const snaps = new WeakMap();
-const GUARDED = ['dlg-sub', 'dlg-step', 'dlg-revisit', 'dlg-log', 'dlg-notes', 'dlg-doc', 'dlg-md'];
+const GUARDED = ['dlg-sub', 'dlg-step', 'dlg-revisit', 'dlg-log', 'dlg-notes', 'dlg-doc', 'dlg-md', 'dlg-import'];
 
 /* Màn cảm ứng: mở hộp không tự focus ô chữ (bàn phím ảo bật lên che hộp). showModal focus phần tử đầu tiên: mọi hộp
  * trừ #dlg-ask mở đầu bằng nút ×; #dlg-ask trên màn cảm ứng đặt autofocus vào nút OK. */
@@ -83,13 +86,13 @@ export function showDlg(dlg) {
 export function openDlg(dlg, focusEl) {
   showDlg(dlg);
   dlg.querySelectorAll('textarea.grow-title').forEach(autosize);
-  const form = dlg.querySelector('form');
+  const form = formOf(dlg);
   if (form && GUARDED.includes(dlg.id)) snaps.set(dlg, snapshot(form));
   focusField(focusEl, true);
 }
 /** Đóng hộp; chữ đã sửa mà chưa lưu thì hỏi lại. @param {any} dlg */
 export async function tryClose(dlg) {
-  const form = dlg.querySelector('form');
+  const form = formOf(dlg);
   if (form && snaps.has(dlg) && snapshot(form) !== snaps.get(dlg)) {
     const ok = await ask({ title: 'Discard changes?', text: 'Unsaved edits in this dialog will be lost.', ok: 'Discard', danger: true });
     if (ok === null) return false;
