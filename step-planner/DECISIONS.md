@@ -31,6 +31,7 @@
 - PLAN-029 · Mẫu nền tảng lakehouse mã nguồn mở: hạ tầng và dữ liệu trước, pipeline sau, có bước kiểm tuân thủ medallion · `step-planner/data/templates.json`
 - PLAN-030 · System design phủ lakehouse tự host: MinIO, Hudi, catalog cho Iceberg, medallion là cách chia tầng, hồ sơ chỉ mã nguồn mở · `step-planner/data/system-design.json`, `step-planner/js/design-core.js`
 - PLAN-031 · Sơ đồ System design kéo và thu phóng được; khung nhìn không lưu · `step-planner/js/design.js`, `step-planner/js/diagram-view.js`, `step-planner/js/view-math.js`
+- PLAN-032 · System design phủ nguồn đẩy, trang dựng bằng JavaScript, lag của consumer; báo công cụ đã nghỉ hưu và API hỏi theo chu kỳ dùng như luồng · `step-planner/data/system-design.json`
 <!-- index:end -->
 
 ## PLAN-001 · Dự án là các bước có thứ tự, mỗi bước có bước con có thứ tự
@@ -182,3 +183,8 @@ Danh mục đủ cho một nhóm tự dựng lakehouse mã nguồn mở: object 
 26/11/2026 · `step-planner/js/design.js`, `step-planner/js/diagram-view.js`, `step-planner/js/view-math.js`
 
 Sơ đồ System design là một khung nhìn: người dùng kéo và thu phóng để xem phần mình cần, bằng chuột, bàn phím hay cảm ứng, và về lại khung ban đầu bằng một thao tác. Khung nhìn chỉ sống trong một lần mở trang: vẽ lại sơ đồ (sửa thiết kế) giữ khung đang xem; tải lại trang luôn về cỡ thật và vị trí ban đầu; không ghi vào dự án, không ghi vào bộ nhớ, không xuất. Sơ đồ không giành cuộn của trang: cuộn thường chỉ kéo sơ đồ sau khi người dùng chọn vào sơ đồ, thu phóng cần phím bổ trợ hay hai ngón. Kéo để xem không tính là bấm vào khâu hay đường nối.
+
+## PLAN-032 · System design phủ nguồn đẩy, trang dựng bằng JavaScript, lag của consumer; báo công cụ đã nghỉ hưu và API hỏi theo chu kỳ dùng như luồng
+26/11/2026 · `step-planner/data/system-design.json`
+
+Khâu nguồn có thêm nguồn đẩy qua WebSocket (dùng được cho dữ liệu liên tục) và trình duyệt không giao diện cho trang chỉ hiện dữ liệu sau khi chạy JavaScript. Khâu giám sát có đo lag của consumer group Kafka cho dữ liệu liên tục. Oozie có trong danh mục như công cụ nên tránh: đã nghỉ hưu, vẫn tính là công cụ chạy theo lịch, chọn nó thì báo và chỉ sang cron hay Airflow. Dữ liệu liên tục mà nguồn chỉ là API hay trang web phải hỏi theo chu kỳ, không có nguồn đẩy đi kèm, thì báo: hạn mức gọi chặn độ mới. Kiến trúc Lambda nói cách gộp batch view và real-time view tại mốc as-of, và nhận consumer Python làm speed layer; kiến trúc streaming nhận nguồn WebSocket.

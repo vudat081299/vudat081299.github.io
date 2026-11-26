@@ -677,6 +677,21 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   check('luật: Kubernetes cho vài người thì báo, lời báo chỉ sang Docker Compose trên một máy',
     has(W({ host: P('kubernetes') }, { users: 'few' }), 'kubernetes-for-few-users') && !has(W({ host: P('kubernetes') }, { users: 'public' }), 'kubernetes-for-few-users')
     && /Docker Compose trên một máy/.test(cat.checks.find((x) => x.id === 'kubernetes-for-few-users').msg));
+  /* Luật mới (PLAN-032): công cụ đã nghỉ hưu; nguồn phải hỏi theo chu kỳ dùng như luồng. */
+  check('luật: Oozie báo đã nghỉ hưu, vẫn tính là công cụ chạy theo lịch; Airflow thì không báo',
+    has(W({ ingest: P('oozie') }), 'retired-scheduler') && !has(W({ ingest: P('airflow') }), 'retired-scheduler')
+    && !has(W({ ingest: P('oozie') }, { fresh: 'batch' }), 'schedule-without-scheduler')
+    && has(W({ ingest: P('oozie') }, { fresh: 'stream', latency: 'online' }), 'stream-with-batch-ingest'));
+  check('luật: API hay trang web dùng như luồng thì báo; có nguồn đẩy đi kèm, hay dữ liệu theo lịch, thì không',
+    has(W({ source: P('rest-api') }, { fresh: 'stream' }), 'polling-source-as-stream') && has(W({ source: P('playwright') }, { fresh: 'stream' }), 'polling-source-as-stream')
+    && !has(W({ source: P('rest-api', 'websocket-feed') }, { fresh: 'stream' }), 'polling-source-as-stream')
+    && !has(W({ source: P('rest-api') }, { fresh: 'batch' }), 'polling-source-as-stream') && !has(W({ source: P('websocket-feed') }, { fresh: 'stream' }), 'polling-source-as-stream'));
+  const optOf = (sid, oid) => cat.stages.find((x) => x.id === sid).options.find((o) => o.id === oid);
+  check('phương án: WebSocket, lag Kafka hợp dữ liệu liên tục, không hợp theo lịch; Playwright ngược lại; Apply path không chọn Oozie',
+    fitOf(optOf('source', 'websocket-feed'), { fresh: 'stream' }).ok && !fitOf(optOf('source', 'websocket-feed'), { fresh: 'batch' }).ok
+    && fitOf(optOf('monitor', 'kafka-lag'), { fresh: 'stream' }).ok && !fitOf(optOf('monitor', 'kafka-lag'), { fresh: 'once' }).ok
+    && fitOf(optOf('source', 'playwright'), { fresh: 'batch' }).ok && !fitOf(optOf('source', 'playwright'), { fresh: 'stream' }).ok
+    && cat.paths.every((pp) => !(applyPath(cat, { path: '', profile: { size: 'large', fresh: 'batch' }, stages: {}, edges: {} }, pp.id).next.stages.ingest?.pick || []).includes('oozie')));
   /* Mọi luật gợi ý tới được: dựng thiết kế thoả đúng `if` của luật thì luật ấy (không phải luật trước nó) thắng. */
   const shadowed = cat.architectures.flatMap((f) => f.rules.map((r, i) => {
     const stages = {}, profile = {};
