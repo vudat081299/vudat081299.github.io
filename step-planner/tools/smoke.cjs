@@ -1797,6 +1797,30 @@ const check = (name, ok, detail = '') => {
     await sx.close();
   }
 
+  /* ── System design, big data: luật mới báo khi bấm thật (MLlib cho dữ liệu nhỏ; cần trả lời ngay mà xử lý theo lô), hết khi đổi ── */
+  {
+    const { ctx: bx, page: bp } = await open(1280, 900);
+    await bp.click('#start .tpl[data-tpl="crisp-dm"]');
+    await bp.waitForSelector('#sd-fig svg');
+    await bp.click('#sd-open');
+    await bp.waitForSelector('#dlg-sd[open] .sd-paths');
+    const navTo = (title) => bp.click(`#sd-nav .sd-nav-btn:has-text("${title}")`);
+    await navTo('Project profile');
+    for (const [q, a] of [['size', 'small'], ['fresh', 'stream'], ['latency', 'online']]) await bp.click(`input[data-q="${q}"][value="${a}"]`, { force: true });
+    await navTo('Training environment');
+    await bp.click('#sd-pane [data-opt="spark-mllib"] input');
+    check('big data: Spark MLlib với dữ liệu vừa bộ nhớ thì báo', /Spark MLlib for data that fits in memory/.test(await bp.textContent('#sd-pane')));
+    await navTo('Processing & cleaning');
+    await bp.click('#sd-pane [data-opt="pandas"] input');
+    check('big data: dữ liệu liên tục, cần trả lời ngay, xử lý bằng pandas thì báo; dưới sơ đồ có cả hai luật',
+      /Answers in a second, processing in batches/.test(await bp.textContent('#sd-pane'))
+      && /Spark MLlib for data/.test(await bp.textContent('#sd-warns')) && /Answers in a second/.test(await bp.textContent('#sd-warns')));
+    await bp.click('#sd-pane .sd-more > summary');
+    await bp.click('#sd-pane [data-opt="python-consumer"] input');
+    check('big data: đổi sang consumer Python thì luật stream thôi báo', !/Answers in a second/.test(await bp.textContent('#sd-warns')));
+    await bx.close();
+  }
+
   /* ── Dấu Redo qua hộp sửa: chỉ sửa Notes thì giữ dấu và số "k of n"; chuyển sang bước khác thì bỏ dấu, Hoàn tác trả lại ── */
   {
     const seed = { version: 2, lastId: 'wr', workspaces: [{ id: 'wr', name: 'Redo', steps: [

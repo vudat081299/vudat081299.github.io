@@ -1017,8 +1017,8 @@
       "title": "Raw storage",
       "lane": "data",
       "question": "Dữ liệu gốc, chưa sửa, được cất ở đâu?",
-      "guide": "Kho thô giữ dữ liệu đúng như lúc tải về, không ai sửa tay.\nNhờ vậy khi code làm sạch có lỗi, bạn chạy lại từ bản gốc mà không phải tải lại.\nDữ liệu nhỏ để trong thư mục dự án; dữ liệu lớn hoặc nhiều máy cùng đọc thì để trên object storage.\nBước sau (Processing) đọc từ đây và ghi kết quả sạch ra chỗ khác.",
-      "multi": false,
+      "guide": "Kho thô giữ dữ liệu đúng như lúc tải về, không ai sửa tay.\nNhờ vậy khi code làm sạch có lỗi, bạn chạy lại từ bản gốc mà không phải tải lại.\nDữ liệu nhỏ để trong thư mục dự án; dữ liệu lớn hoặc nhiều máy cùng đọc thì để trên object storage.\nDữ liệu cỡ cụm máy: HDFS (hệ file phân tán của Hadoop) hoặc object storage. Chọn thêm một table format (Delta Lake, Iceberg) khi muốn thư mục file trên đó dùng như bảng có giao dịch và lịch sử phiên bản.\nBước sau (Processing) đọc từ đây và ghi kết quả sạch ra chỗ khác.",
+      "multi": true,
       "skipWhen": "",
       "task": "Dữ liệu thô nằm ở nơi đã chọn, không sửa tay; README ghi cách lấy lại từ đầu.",
       "when": {},
@@ -1175,6 +1175,97 @@
           "task": "Bucket raw đã có dữ liệu gốc, chặn truy cập công khai, và có cảnh báo chi phí trong AWS Budgets."
         },
         {
+          "id": "hdfs",
+          "name": "HDFS (Hadoop Distributed File System)",
+          "kind": "Distributed file system",
+          "summary": "Hệ file phân tán của Hadoop: chia file lớn thành block, rải và nhân bản trên nhiều máy (DataNode); một NameNode giữ danh mục file. Thiết kế cho file lớn, ghi một lần rồi đọc nhiều lần.",
+          "pick": "Chọn khi môn học, cụm có sẵn ở trường hay nơi làm dùng Hadoop, hoặc khi Spark, Hive chạy trên cùng cụm và đọc dữ liệu tại chỗ.",
+          "avoid": "Tránh cho dự án một người không có cụm: NameNode, DataNode phải luôn chạy. Dữ liệu lớn trên cloud thì object storage (R2, GCS, S3) không phải vận hành gì; dữ liệu vừa một ổ đĩa thì thư mục dự án.",
+          "cost": "free",
+          "level": 3,
+          "fit": {
+            "size": [
+              "large"
+            ]
+          },
+          "links": [
+            {
+              "title": "HDFS Architecture",
+              "url": "https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-hdfs/HdfsDesign.html"
+            },
+            {
+              "title": "Hadoop: Setting up a Single Node Cluster",
+              "url": "https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-common/SingleCluster.html"
+            }
+          ],
+          "setup": [
+            "bin/hdfs namenode -format",
+            "sbin/start-dfs.sh",
+            "bin/hdfs dfs -mkdir /user",
+            "bin/hdfs dfs -mkdir /user/<username>"
+          ],
+          "task": "Dữ liệu thô nằm trên HDFS (cụm một máy hay cụm thật), hdfs dfs -ls thấy đủ file, và job xử lý đọc được bằng đường dẫn hdfs://."
+        },
+        {
+          "id": "delta-lake",
+          "name": "Delta Lake",
+          "kind": "Open table format",
+          "summary": "Biến một thư mục file Parquet (trên máy hay object storage) thành bảng có giao dịch ACID nhờ transaction log: ghi dở không làm hỏng bảng, thêm, sửa, xoá từng dòng được, và đọc lại phiên bản cũ (time travel). Dùng từ Spark, hoặc từ Python không cần Spark qua thư viện deltalake (pandas, Polars, DuckDB).",
+          "pick": "Chọn khi dữ liệu được ghi thêm, sửa qua nhiều lần chạy và bạn muốn quay lại đúng bản đã dùng; đây là lớp lưu trữ của kiến trúc lakehouse. Chọn cùng chỗ lưu (thư mục dự án, R2, S3, HDFS).",
+          "avoid": "Tránh khi chỉ có vài file tải một lần: Parquet trong thư mục dự án là đủ. Engine bạn dùng chỉ đọc Iceberg thì chọn Iceberg.",
+          "cost": "free",
+          "level": 2,
+          "fit": {
+            "size": [
+              "medium",
+              "large"
+            ]
+          },
+          "links": [
+            {
+              "title": "Delta Lake quickstart",
+              "url": "https://docs.delta.io/quick-start/"
+            },
+            {
+              "title": "deltalake (Python, no Spark)",
+              "url": "https://delta-io.github.io/delta-rs/"
+            }
+          ],
+          "setup": [
+            "pip install deltalake pandas pyarrow tabulate"
+          ],
+          "task": "Dữ liệu được ghi thành bảng Delta (thư mục có _delta_log); một lần ghi thêm tạo phiên bản mới, và đọc lại được phiên bản trước."
+        },
+        {
+          "id": "iceberg",
+          "name": "Apache Iceberg",
+          "kind": "Open table format",
+          "summary": "Table format mở cho bảng phân tích rất lớn: file dữ liệu (Parquet) cộng metadata ghi snapshot, schema, partition. Nhiều engine (Spark, Trino, Flink, Presto, Hive) đọc ghi an toàn cùng một bảng cùng lúc. Cần một catalog (REST, Hive Metastore, SQL) để biết bảng nằm ở đâu.",
+          "pick": "Chọn khi nhiều engine khác nhau cùng dùng một bảng trên object storage (vd. Spark ghi, Trino truy vấn), hoặc khi môn học, nơi làm đã dùng Iceberg.",
+          "avoid": "Tránh cho dự án nhỏ một engine: phải dựng thêm catalog. Chỉ dùng Python hay Spark thì Delta Lake ít phần hơn; dữ liệu vừa một máy thì Parquet trong thư mục dự án.",
+          "cost": "free",
+          "level": 3,
+          "fit": {
+            "size": [
+              "large"
+            ]
+          },
+          "links": [
+            {
+              "title": "Apache Iceberg",
+              "url": "https://iceberg.apache.org/"
+            },
+            {
+              "title": "PyIceberg",
+              "url": "https://py.iceberg.apache.org/"
+            }
+          ],
+          "setup": [
+            "pip install \"pyiceberg[s3fs,hive]\""
+          ],
+          "task": "Bảng Iceberg đăng ký trong catalog; ghi một lô mới tạo snapshot mới, và truy vấn từ engine đã chọn trả đúng số dòng."
+        },
+        {
           "id": "postgres-raw",
           "name": "PostgreSQL (raw table)",
           "kind": "Database landing table",
@@ -1217,7 +1308,7 @@
       "title": "Processing & cleaning",
       "lane": "data",
       "question": "Bạn dùng công cụ nào để làm sạch và biến đổi dữ liệu?",
-      "guide": "Bước này đọc dữ liệu thô, sửa kiểu, bỏ trùng, xử lý thiếu, rồi ghép bảng.\nCông cụ một máy (pandas, Polars, DuckDB) chạy trên RAM và ổ đĩa của một máy, dễ cài, đủ cho phần lớn dự án.\nCông cụ phân tán (Dask, Spark) chia dữ liệu cho nhiều máy cùng xử lý, chỉ cần khi một máy không chứa nổi.\nKết quả sạch được ghi sang bước Analytical store.",
+      "guide": "Bước này đọc dữ liệu thô, sửa kiểu, bỏ trùng, xử lý thiếu, rồi ghép bảng.\nCông cụ một máy (pandas, Polars, DuckDB) chạy trên RAM và ổ đĩa của một máy, dễ cài, đủ cho phần lớn dự án.\nCông cụ phân tán (Dask, Spark) chia dữ liệu cho nhiều máy cùng xử lý, chỉ cần khi một máy không chứa nổi.\nDữ liệu tới liên tục mà cần kết quả ngay: công cụ stream (consumer Python, Spark Structured Streaming, Flink) xử lý từng sự kiện hay từng lô nhỏ khi nó tới.\nKết quả sạch được ghi sang bước Analytical store.",
       "multi": false,
       "skipWhen": "",
       "task": "Một lệnh biến dữ liệu thô thành bảng sạch trên dữ liệu mẫu, chạy lại ra cùng kết quả; README có lệnh ấy.",
@@ -1374,7 +1465,7 @@
           "kind": "Distributed processing engine",
           "summary": "Engine xử lý phân tán chuẩn của ngành dữ liệu lớn. Một driver chia việc cho nhiều executor trên nhiều máy; viết bằng PySpark hoặc Spark SQL.",
           "pick": "Chọn khi dữ liệu trên 100 GB hoặc nằm rải trên object storage, và bạn có cụm máy để chạy.",
-          "avoid": "Tránh khi dữ liệu nhỏ, vì thời gian khởi động và cấu hình lớn hơn thời gian xử lý.",
+          "avoid": "Tránh khi dữ liệu nhỏ, vì thời gian khởi động và cấu hình lớn hơn thời gian xử lý. Dữ liệu tới liên tục thì chọn Spark Structured Streaming.",
           "cost": "free",
           "level": 3,
           "fit": {
@@ -1382,8 +1473,8 @@
               "large"
             ],
             "fresh": [
-              "batch",
-              "stream"
+              "once",
+              "batch"
             ]
           },
           "links": [
@@ -1407,7 +1498,7 @@
           "kind": "Managed Spark notebooks",
           "summary": "Workspace Databricks không mất phí cho người học: notebook, Spark, SQL chạy serverless, có hạn mức. Thay cho Community Edition đã ngừng năm 2025.",
           "pick": "Chọn khi muốn học hay chạy Spark mà không tự dựng cụm, hoặc khi dữ liệu quá lớn cho một máy.",
-          "avoid": "Tránh làm nơi chạy pipeline của sản phẩm: bản Free có hạn mức và chỉ chạy serverless. Dữ liệu vừa một ổ đĩa thì DuckDB / Polars nhanh và đơn giản hơn.",
+          "avoid": "Tránh làm nơi chạy pipeline của sản phẩm: bản Free có hạn mức và chỉ chạy serverless. Dữ liệu vừa một ổ đĩa thì DuckDB / Polars nhanh và đơn giản hơn. Stream trên serverless chỉ chạy từng đợt (trigger availableNow), không chạy liên tục.",
           "cost": "free",
           "level": 2,
           "fit": {
@@ -1417,6 +1508,10 @@
             "budget": [
               "free",
               "low"
+            ],
+            "fresh": [
+              "once",
+              "batch"
             ]
           },
           "links": [
@@ -1453,6 +1548,101 @@
             "sbin/start-dfs.sh"
           ],
           "task": "Cụm giả lập trên một máy (pseudo-distributed) chạy, dữ liệu đưa được lên HDFS, và một job mẫu đọc ra kết quả."
+        },
+        {
+          "id": "python-consumer",
+          "name": "Python consumer (confluent-kafka)",
+          "kind": "Stream consumer library",
+          "summary": "Một tiến trình Python chạy suốt, đọc sự kiện từ topic Kafka, xử lý từng sự kiện rồi ghi kết quả ra file hay bảng. Thư viện confluent-kafka có sẵn producer và consumer.",
+          "pick": "Chọn khi luồng sự kiện nhỏ, mỗi sự kiện xử lý độc lập (làm sạch, gọi model, ghi một dòng) và bạn muốn ở lại với Python.",
+          "avoid": "Tránh khi cần gộp theo cửa sổ thời gian, join hai luồng hay giữ trạng thái qua lần khởi động lại: tự viết dễ sai, dùng Spark Structured Streaming hoặc Flink.",
+          "cost": "free",
+          "level": 2,
+          "fit": {
+            "fresh": [
+              "stream"
+            ],
+            "size": [
+              "small",
+              "medium"
+            ]
+          },
+          "links": [
+            {
+              "title": "Kafka Python client",
+              "url": "https://docs.confluent.io/kafka-clients/python/current/overview.html"
+            }
+          ],
+          "setup": [
+            "pip install confluent-kafka"
+          ],
+          "task": "Consumer chạy suốt đọc topic, ghi mỗi sự kiện hợp lệ ra kho thô hay bảng; khởi động lại thì đọc tiếp từ offset đã commit, và ghi lại một sự kiện không sinh dòng trùng (khoá sự kiện)."
+        },
+        {
+          "id": "spark-streaming",
+          "name": "Spark Structured Streaming",
+          "kind": "Stream processing engine",
+          "summary": "Phần stream của Spark: viết truy vấn DataFrame hay SQL như với batch, Spark chạy dần trên dữ liệu mới tới (mặc định theo từng micro-batch nhỏ). Đọc Kafka hay file mới trong thư mục; có cửa sổ thời gian, watermark cho sự kiện tới trễ, checkpoint để chạy lại không mất dữ liệu.",
+          "pick": "Chọn khi đã dùng PySpark, cần gộp theo cửa sổ thời gian hay join luồng, hoặc muốn cùng một code cho cả batch lẫn stream (kiến trúc Kappa).",
+          "avoid": "Tránh khi chỉ cần kết quả theo ngày: một job batch theo lịch đơn giản hơn. Luồng nhỏ, xử lý từng sự kiện độc lập thì một consumer Python ít phần hơn.",
+          "cost": "free",
+          "level": 3,
+          "fit": {
+            "fresh": [
+              "stream"
+            ],
+            "size": [
+              "medium",
+              "large"
+            ]
+          },
+          "links": [
+            {
+              "title": "Structured Streaming Programming Guide",
+              "url": "https://spark.apache.org/docs/latest/streaming/index.html"
+            },
+            {
+              "title": "Structured Streaming + Kafka Integration Guide",
+              "url": "https://spark.apache.org/docs/latest/streaming/structured-streaming-kafka-integration.html"
+            }
+          ],
+          "setup": [
+            "pip install pyspark"
+          ],
+          "task": "Truy vấn stream đọc topic Kafka (hay thư mục file mới), ghi kết quả ra Parquet hay Delta với checkpoint; dừng rồi chạy lại thì đọc tiếp đúng chỗ."
+        },
+        {
+          "id": "flink",
+          "name": "Apache Flink (PyFlink)",
+          "kind": "Stream processing engine",
+          "summary": "Engine phân tán cho tính toán có trạng thái trên luồng không giới hạn và có giới hạn: xử lý từng sự kiện khi nó tới, không gom micro-batch. Viết bằng Java, SQL hoặc Python (PyFlink).",
+          "pick": "Chọn khi cần độ trễ thấp cho từng sự kiện, trạng thái lớn (đếm, gộp theo phiên người dùng), hoặc nơi làm, môn học dùng Flink.",
+          "avoid": "Tránh cho dự án một người mới học stream: dựng cụm, quản lý trạng thái, và PyFlink ít ví dụ hơn PySpark. Đã dùng Spark thì Spark Structured Streaming đủ cho phần lớn đồ án.",
+          "cost": "free",
+          "level": 3,
+          "fit": {
+            "fresh": [
+              "stream"
+            ],
+            "size": [
+              "medium",
+              "large"
+            ]
+          },
+          "links": [
+            {
+              "title": "Flink architecture",
+              "url": "https://flink.apache.org/what-is-flink/flink-architecture/"
+            },
+            {
+              "title": "PyFlink installation",
+              "url": "https://nightlies.apache.org/flink/flink-docs-stable/api/python/getting_started/installation.html"
+            }
+          ],
+          "setup": [
+            "python -m pip install apache-flink"
+          ],
+          "task": "Job Flink đọc topic, gộp theo cửa sổ thời gian và ghi kết quả ra bảng; checkpoint bật, dừng giữa chừng rồi chạy lại không mất trạng thái."
         }
       ]
     },
@@ -1585,7 +1775,7 @@
       "title": "Analytical store & query",
       "lane": "data",
       "question": "Dữ liệu sạch được lưu ở đâu để truy vấn, phân tích và phục vụ app?",
-      "guide": "Kho phân tích giữ bảng sạch để notebook, dashboard và mô hình cùng đọc.\nDữ liệu nhỏ: một file Parquet hoặc SQLite, truy vấn chạy ngay trên máy bạn.\nDữ liệu vừa hoặc cần nhiều người truy cập: một server PostgreSQL nhận câu SQL qua mạng.\nDữ liệu lớn: warehouse trên cloud chia câu SQL cho nhiều máy chạy song song và tính phí theo lượng dữ liệu quét.\nApp cần thêm kho phục vụ (cache, tài liệu JSON) thì chọn thêm, cạnh kho phân tích.",
+      "guide": "Kho phân tích giữ bảng sạch để notebook, dashboard và mô hình cùng đọc.\nDữ liệu nhỏ: một file Parquet hoặc SQLite, truy vấn chạy ngay trên máy bạn.\nDữ liệu vừa hoặc cần nhiều người truy cập: một server PostgreSQL nhận câu SQL qua mạng.\nDữ liệu lớn: warehouse trên cloud chia câu SQL cho nhiều máy chạy song song và tính phí theo lượng dữ liệu quét.\nDữ liệu cỡ cụm nằm ở kho thô (HDFS, object storage): Hive, Trino chạy SQL thẳng trên các file ấy. Cassandra, HBase là NoSQL phân tán cho đọc ghi theo khoá rất nhanh, không phải kho phân tích.\nApp cần thêm kho phục vụ (cache, tài liệu JSON) thì chọn thêm, cạnh kho phân tích.",
       "multi": true,
       "skipWhen": "Bỏ qua khi bạn chỉ có một bảng nhỏ và đọc thẳng từ file sạch trong notebook.",
       "task": "Bảng sạch nạp vào kho đã chọn và một truy vấn mẫu trả đúng số dòng.",
@@ -1850,6 +2040,145 @@
             "./clickhouse client"
           ],
           "task": "Bảng sự kiện nạp vào ClickHouse; truy vấn gộp theo ngày trả đúng số đã đối chiếu."
+        },
+        {
+          "id": "hive",
+          "name": "Apache Hive (Metastore + SQL)",
+          "kind": "SQL on distributed files",
+          "summary": "Data warehouse trên Hadoop: khai bảng trên các file sẵn có ở HDFS hay object storage rồi truy vấn bằng SQL (HiveQL). Hive Metastore giữ danh mục bảng, cột, partition; Spark, Trino, Impala cũng đọc danh mục này.",
+          "pick": "Chọn khi cụm Hadoop có sẵn, môn học dạy Hive, hoặc cần một Metastore chung để Spark và Trino thấy cùng các bảng.",
+          "avoid": "Tránh khi không có cụm: HiveServer2 và Metastore là nhiều phần phải chạy. Truy vấn tương tác nhanh thì Trino; dữ liệu vừa một máy thì DuckDB đọc thẳng Parquet.",
+          "cost": "free",
+          "level": 3,
+          "fit": {
+            "size": [
+              "large"
+            ],
+            "latency": [
+              "report",
+              "batch"
+            ]
+          },
+          "links": [
+            {
+              "title": "Apache Hive",
+              "url": "https://hive.apache.org/"
+            },
+            {
+              "title": "Hive quickstart (Docker)",
+              "url": "https://hive.apache.org/development/quickstart/"
+            }
+          ],
+          "setup": [
+            "docker pull apache/hive:4.2.1",
+            "docker run -d -p 10000:10000 -p 10002:10002 --env SERVICE_NAME=hiveserver2 --name hive4 apache/hive:4.2.1"
+          ],
+          "task": "Bảng ngoài (external table) trỏ vào thư mục Parquet đã có; SELECT COUNT(*) qua beeline trả đúng số dòng, và partition theo ngày hiện trong Metastore."
+        },
+        {
+          "id": "trino",
+          "name": "Trino (Presto)",
+          "kind": "Distributed SQL query engine",
+          "summary": "Engine SQL phân tán truy vấn dữ liệu tại chỗ qua connector (Hive, Iceberg, Delta trên object storage; PostgreSQL; Kafka...), kể cả join giữa các nguồn. Trino là tên mới của PrestoSQL, do những người tạo ra Presto làm. Không lưu dữ liệu, không phải database cho app.",
+          "pick": "Chọn khi dữ liệu lớn nằm ở kho thô (HDFS, object storage) hay ở nhiều hệ khác nhau và bạn muốn truy vấn tương tác bằng SQL mà không chép sang warehouse.",
+          "avoid": "Tránh làm database cho app (Trino không dành cho OLTP) và khi dữ liệu vừa một máy: DuckDB làm cùng việc không cần máy chủ. Muốn thấy bảng trên file thì cần thêm catalog (Hive Metastore, Iceberg REST).",
+          "cost": "free",
+          "level": 3,
+          "fit": {
+            "size": [
+              "large"
+            ],
+            "latency": [
+              "report",
+              "batch"
+            ]
+          },
+          "links": [
+            {
+              "title": "Trino use cases",
+              "url": "https://trino.io/docs/current/overview/use-cases.html"
+            },
+            {
+              "title": "Trino in a Docker container",
+              "url": "https://trino.io/docs/current/installation/containers.html"
+            },
+            {
+              "title": "Rebranding PrestoSQL as Trino",
+              "url": "https://trino.io/blog/2020/12/27/announcing-trino.html"
+            }
+          ],
+          "setup": [
+            "docker run --name trino -d -p 8080:8080 trinodb/trino",
+            "docker exec -it trino trino"
+          ],
+          "task": "Trino có catalog trỏ tới dữ liệu sạch (Hive, Iceberg hay PostgreSQL); một truy vấn mẫu từ trino CLI trả đúng số dòng."
+        },
+        {
+          "id": "cassandra",
+          "name": "Apache Cassandra",
+          "kind": "Distributed wide-column NoSQL",
+          "summary": "Database NoSQL phân tán: chia bảng theo partition key lên nhiều máy, nhân bản không có máy chính, độ nhất quán chỉnh theo từng truy vấn (tunable consistency). Truy vấn bằng CQL, giống SQL nhưng chỉ lọc hiệu quả theo khoá đã thiết kế.",
+          "pick": "Chọn khi app ghi rất nhiều sự kiện (cảm biến, log, lượt xem) và đọc lại theo khoá biết trước (theo thiết bị, theo ngày), cần luôn ghi được kể cả khi một máy hỏng.",
+          "avoid": "Tránh làm kho phân tích: không join, gộp nhóm tuỳ ý thì chậm; bảng phải thiết kế theo từng câu truy vấn. Dữ liệu vừa một máy thì PostgreSQL.",
+          "cost": "free",
+          "level": 3,
+          "fit": {
+            "size": [
+              "large"
+            ],
+            "latency": [
+              "online"
+            ]
+          },
+          "links": [
+            {
+              "title": "Cassandra quickstart",
+              "url": "https://cassandra.apache.org/_/quickstart.html"
+            },
+            {
+              "title": "Architecture overview",
+              "url": "https://cassandra.apache.org/doc/latest/cassandra/architecture/overview.html"
+            }
+          ],
+          "setup": [
+            "docker pull cassandra:latest",
+            "docker network create cassandra",
+            "docker run --rm -d --name cassandra --hostname cassandra --network cassandra cassandra"
+          ],
+          "task": "Bảng thiết kế theo câu truy vấn chính (partition key, clustering key); ghi dữ liệu mẫu và truy vấn theo khoá trả đúng kết quả."
+        },
+        {
+          "id": "hbase",
+          "name": "Apache HBase",
+          "kind": "Wide-column NoSQL on HDFS",
+          "summary": "Database của Hadoop theo mô hình Bigtable: bảng rất lớn trên HDFS, đọc ghi ngẫu nhiên từng dòng theo row key trong thời gian thực, thao tác nhất quán chặt.",
+          "pick": "Chọn khi đã có cụm Hadoop và cần đọc, ghi từng dòng theo khoá trên bảng cực lớn (chuỗi thời gian, log, hồ sơ người dùng), hoặc môn học yêu cầu HBase.",
+          "avoid": "Tránh khi bảng chỉ vài triệu dòng: tài liệu HBase khuyên dùng RDBMS, vì dữ liệu chỉ nằm trên một hai máy còn cụm ngồi không. Không có SQL, join, index phụ, giao dịch nhiều dòng.",
+          "cost": "free",
+          "level": 3,
+          "fit": {
+            "size": [
+              "large"
+            ],
+            "latency": [
+              "online"
+            ]
+          },
+          "links": [
+            {
+              "title": "Apache HBase",
+              "url": "https://hbase.apache.org/"
+            },
+            {
+              "title": "HBase Reference Guide: Quick Start",
+              "url": "https://hbase.apache.org/book.html#quickstart"
+            }
+          ],
+          "setup": [
+            "bin/start-hbase.sh",
+            "./bin/hbase shell"
+          ],
+          "task": "Bảng HBase có row key thiết kế theo cách đọc (vd. thiết bị + thời gian); ghi dữ liệu mẫu và scan theo khoảng row key trả đúng các dòng."
         },
         {
           "id": "mongodb",
@@ -2134,6 +2463,69 @@
           ],
           "setup": [],
           "task": "Notebook chạy hết từ đầu với Save Version và lưu mô hình vào phần Output."
+        },
+        {
+          "id": "databricks",
+          "name": "Databricks Free Edition",
+          "kind": "Managed Spark notebooks",
+          "summary": "Notebook Databricks chạy serverless: PySpark, Spark ML (MLlib) và thư viện Python, không phải tự dựng cụm. Bản Free có hạn mức tính toán theo ngày, chỉ chạy serverless, và giới hạn cỡ mô hình Spark ML.",
+          "pick": "Chọn khi muốn train MLlib trên dữ liệu lớn mà không có cụm, hoặc dữ liệu đã nằm trong Databricks từ khâu Processing.",
+          "avoid": "Tránh làm nơi train thường xuyên của sản phẩm: vượt hạn mức thì máy tắt tới hết ngày. Dữ liệu vừa RAM thì laptop, Colab hay Kaggle đơn giản hơn.",
+          "cost": "free",
+          "level": 2,
+          "fit": {
+            "size": [
+              "large"
+            ],
+            "budget": [
+              "free",
+              "low"
+            ]
+          },
+          "links": [
+            {
+              "title": "Databricks Free Edition",
+              "url": "https://docs.databricks.com/aws/en/getting-started/free-edition"
+            },
+            {
+              "title": "Free Edition limitations",
+              "url": "https://docs.databricks.com/aws/en/getting-started/free-edition-limitations"
+            }
+          ],
+          "setup": [],
+          "task": "Notebook trên Free Edition đọc bảng sạch, train và ghi số đo trên tập test; notebook xuất về repo, mô hình lưu ra file hay registry."
+        },
+        {
+          "id": "spark-mllib",
+          "name": "Spark MLlib",
+          "kind": "Distributed ML library",
+          "summary": "Thư viện học máy của Spark: Pipeline, biến đổi đặc trưng, phân lớp, hồi quy, phân cụm, lọc cộng tác chạy song song trên DataFrame phân tán. API chính là pyspark.ml (DataFrame); API RDD cũ (spark.mllib) chỉ còn sửa lỗi.",
+          "pick": "Chọn khi bảng train quá lớn cho RAM một máy và dữ liệu đã nằm trong Spark, hoặc môn học yêu cầu MLlib. Chạy trên cụm Spark, Spark một máy hay Databricks.",
+          "avoid": "Tránh khi dữ liệu vừa RAM: scikit-learn, XGBoost trên laptop nhanh hơn, nhiều thuật toán, nhiều ví dụ hơn. Học sâu với ảnh, văn bản thì train bằng PyTorch hay TensorFlow trên GPU.",
+          "cost": "free",
+          "level": 3,
+          "fit": {
+            "size": [
+              "large"
+            ],
+            "gpu": [
+              "no"
+            ]
+          },
+          "links": [
+            {
+              "title": "MLlib guide",
+              "url": "https://spark.apache.org/docs/latest/ml-guide.html"
+            },
+            {
+              "title": "ML Pipelines",
+              "url": "https://spark.apache.org/docs/latest/ml-pipeline.html"
+            }
+          ],
+          "setup": [
+            "pip install pyspark"
+          ],
+          "task": "Pipeline pyspark.ml (biến đổi đặc trưng + mô hình) train trên tập train, đánh giá trên tập test bằng Evaluator, và mô hình lưu được bằng save()."
         },
         {
           "id": "compute-engine-gpu",
@@ -4370,13 +4762,15 @@
           "dask",
           "spark",
           "hadoop",
-          "databricks"
+          "databricks",
+          "spark-streaming",
+          "flink"
         ],
         "size": [
           "small"
         ]
       },
-      "msg": "Dữ liệu vừa bộ nhớ một máy: Spark, Dask, Hadoop tốn thời gian khởi động, cấu hình và gỡ lỗi hơn chính phép tính. pandas, Polars hay DuckDB chạy nhanh hơn và dễ kiểm hơn; học Spark thì cứ học, nhưng ghi rõ đó là mục tiêu học."
+      "msg": "Dữ liệu vừa bộ nhớ một máy: Spark, Dask, Hadoop, Flink tốn thời gian khởi động, cấu hình và gỡ lỗi hơn chính phép tính. pandas, Polars hay DuckDB chạy nhanh hơn và dễ kiểm hơn; luồng sự kiện nhỏ thì một consumer Python là đủ. Học Spark thì cứ học, nhưng ghi rõ đó là mục tiêu học."
     },
     {
       "id": "hadoop-on-one-disk",
@@ -4390,6 +4784,161 @@
         ]
       },
       "msg": "Dữ liệu vừa một ổ đĩa không cần một cụm HDFS + YARN: DuckDB hay Polars trên một máy, hoặc Spark chạy một máy, xử lý được với ít phần phải dựng hơn nhiều. Giữ Hadoop khi môn học yêu cầu."
+    },
+    {
+      "id": "single-machine-tool-for-large-data",
+      "title": "Single-machine DataFrame for data beyond one machine",
+      "if": {
+        "process": [
+          "pandas",
+          "polars"
+        ],
+        "size": [
+          "large"
+        ]
+      },
+      "msg": "Bạn trả lời dữ liệu cần hơn một máy, nhưng khâu Processing là thư viện chạy trên một máy: pandas đọc cả bảng vào RAM nên sẽ hết bộ nhớ; Polars chế độ lazy xử lý được vượt RAM nhưng vẫn chỉ trong một máy. Chọn Spark (hay Databricks Free Edition), hoặc chỉ đọc phần dữ liệu cần theo partition."
+    },
+    {
+      "id": "stream-without-stream-processor",
+      "title": "Answers in a second, processing in batches",
+      "if": {
+        "fresh": [
+          "stream"
+        ],
+        "latency": [
+          "online"
+        ]
+      },
+      "unless": {
+        "process": [
+          "python-consumer",
+          "spark-streaming",
+          "flink",
+          "own"
+        ]
+      },
+      "msg": "Dữ liệu tới liên tục và người dùng cần câu trả lời trong khoảng một giây, nhưng khâu Processing chạy theo lô: kết quả chỉ mới tới lần chạy gần nhất. Chọn một công cụ stream (consumer Python cho luồng nhỏ; Spark Structured Streaming hay Flink khi cần cửa sổ thời gian, trạng thái), hoặc ghi consumer tự viết ở ô \"Another tool\"."
+    },
+    {
+      "id": "kafka-without-consumer",
+      "title": "Nothing reads the Kafka topic",
+      "if": {
+        "ingest": [
+          "kafka"
+        ],
+        "latency": [
+          "report",
+          "batch"
+        ]
+      },
+      "unless": {
+        "process": [
+          "python-consumer",
+          "spark-streaming",
+          "flink",
+          "own"
+        ]
+      },
+      "msg": "Kafka giữ sự kiện trong topic tới hết thời gian giữ đã cấu hình rồi xoá; pandas, DuckDB, dbt đọc file và bảng, không đọc topic. Cần thứ đọc topic và ghi ra kho thô: một consumer Python hay Kafka Connect chạy suốt, hoặc job Spark Structured Streaming chạy theo lịch với trigger availableNow. Sau đó công cụ lô xử lý như thường."
+    },
+    {
+      "id": "stream-processor-for-batch-data",
+      "title": "Stream processor for data that does not stream",
+      "if": {
+        "process": [
+          "python-consumer",
+          "spark-streaming",
+          "flink"
+        ],
+        "fresh": [
+          "once",
+          "batch"
+        ]
+      },
+      "msg": "Công cụ stream chạy suốt để đón sự kiện mới; bạn trả lời dữ liệu tới một lần hay theo ngày. Một job batch theo lịch (pandas, DuckDB, Spark) đơn giản hơn, không có tiến trình nào phải chạy suốt."
+    },
+    {
+      "id": "hdfs-on-free-budget",
+      "title": "HDFS on a free budget",
+      "if": {
+        "raw": [
+          "hdfs"
+        ],
+        "budget": [
+          "free"
+        ]
+      },
+      "msg": "HDFS cần NameNode và các DataNode luôn chạy; ngân sách miễn phí thì chỉ chạy được cụm giả lập trên máy bạn. Ổn để học và nộp bài, nhưng job theo lịch hay máy khác không đọc được. Cần chỗ lưu chung miễn phí thì dùng object storage có gói miễn phí (Cloudflare R2); Spark đọc thẳng được."
+    },
+    {
+      "id": "cluster-store-on-free-budget",
+      "title": "Cluster database on a free budget",
+      "if": {
+        "store": [
+          "cassandra",
+          "hbase"
+        ],
+        "budget": [
+          "free"
+        ]
+      },
+      "msg": "Cassandra, HBase chạy thành cụm nhiều máy luôn bật (HBase phân tán còn cần HDFS và ZooKeeper); host miễn phí không chạy chúng. Ngân sách miễn phí thì chạy một node trên máy bạn (Docker, standalone) để học và demo; app cho người khác dùng mà dữ liệu chưa cỡ cụm thì PostgreSQL miễn phí (Supabase, Neon) là đủ."
+    },
+    {
+      "id": "cluster-store-on-app-host",
+      "title": "Cluster database on an app host",
+      "if": {
+        "store": [
+          "cassandra",
+          "hbase"
+        ],
+        "host": [
+          "streamlit-cloud",
+          "hf-spaces",
+          "render",
+          "railway",
+          "vercel",
+          "github-pages"
+        ]
+      },
+      "unless": {
+        "host": [
+          "vps-docker",
+          "kubernetes",
+          "own"
+        ]
+      },
+      "msg": "Host app đã chọn chỉ chạy app của bạn, không chạy kèm một cụm database. Cassandra, HBase phải chạy ở chỗ khác (dịch vụ được quản lý, VPS đủ RAM hay Kubernetes); ghi chỗ ấy vào khâu Hosting."
+    },
+    {
+      "id": "cluster-store-for-small-data",
+      "title": "Cluster SQL or NoSQL for data that fits in memory",
+      "if": {
+        "store": [
+          "hive",
+          "trino",
+          "cassandra",
+          "hbase"
+        ],
+        "size": [
+          "small"
+        ]
+      },
+      "msg": "Dữ liệu vừa bộ nhớ một máy: Hive, Trino, Cassandra, HBase sinh ra để chia việc cho nhiều máy, dựng và giữ chúng tốn công hơn chính truy vấn. DuckDB (phân tích) hay SQLite, PostgreSQL (app) làm cùng việc trên một máy; học công cụ cụm thì cứ học, nhưng ghi rõ đó là mục tiêu học."
+    },
+    {
+      "id": "mllib-for-small-data",
+      "title": "Spark MLlib for data that fits in memory",
+      "if": {
+        "train": [
+          "spark-mllib"
+        ],
+        "size": [
+          "small"
+        ]
+      },
+      "msg": "Bảng train vừa RAM: scikit-learn hay XGBoost trên laptop chạy nhanh hơn MLlib (không khởi động Spark, không chia dữ liệu), nhiều thuật toán và ví dụ hơn. Giữ MLlib khi môn học yêu cầu, và ghi rõ đó là mục tiêu học."
     },
     {
       "id": "scheduled-data-without-checks",

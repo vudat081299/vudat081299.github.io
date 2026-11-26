@@ -26,6 +26,7 @@
 - PLAN-023 · System design phủ kiểm dữ liệu, gán nhãn, tìm kiếm và LLM; giữ cả công cụ nên tránh, kèm lý do · `step-planner/data/system-design.json`, `step-planner/js/design-core.js`
 - PLAN-024 · Mẫu Data Science on big data: CRISP-DM cho dữ liệu quá lớn hay quá nhanh cho một máy · `step-planner/data/templates.json`
 - PLAN-025 · Mỗi bước và bước con cho thấy đầu vào, đầu ra đang ổn, lỗi hay không có · `step-planner/`
+- PLAN-026 · System design phủ big data: HDFS, table format, xử lý stream, SQL trên file, NoSQL phân tán, học máy phân tán · `step-planner/data/system-design.json`
 <!-- index:end -->
 
 ## PLAN-001 · Dự án là các bước có thứ tự, mỗi bước có bước con có thứ tự
@@ -152,3 +153,8 @@ Có mẫu Data Science cho big data, khung là sáu pha CRISP-DM, thêm một b�
 26/11/2026 · `step-planner/`
 
 Sau khi sắp xếp lại, người dùng nhìn bảng là biết bước, bước con nào có bàn giao hỏng mà không phải mở từng cái. Mỗi bước con cho thấy riêng trạng thái đầu vào và đầu ra: ổn, lỗi hay không có. Đầu vào lỗi khi một đầu vào đang treo (nguồn giờ đứng sau) hoặc trỏ tới đầu ra không còn. Đầu ra lỗi khi một đầu ra không có nơi nhận đang nối: không ai dùng, hoặc chỉ những nơi dùng đang treo. Bước xét đầu vào của chính nó theo cùng luật; đầu ra của bước gộp đầu ra của nó và của mọi bước con, lỗi chỉ khi không đầu ra nào có nơi nhận đang nối. Chỉ có một phía thì phía kia là không có; không có cả hai thì không hiện gì. Mỗi trạng thái nói được bằng chữ cái gì hỏng và vì sao; trạng thái đổi ngay sau mỗi lần dời, kéo, sửa đầu vào / đầu ra, xoá hay hoàn tác.
+
+## PLAN-026 · System design phủ big data: HDFS, table format, xử lý stream, SQL trên file, NoSQL phân tán, học máy phân tán
+26/11/2026 · `step-planner/data/system-design.json`
+
+Danh mục có các công cụ big data người học gặp trong môn dữ liệu lớn, mỗi cái kèm khi nào dùng, khi nào tránh, link chính thức: HDFS, Delta Lake và Iceberg ở kho thô (kho thô chọn được cả chỗ lưu lẫn table format), consumer Python, Spark Structured Streaming và Flink ở khâu xử lý, Hive, Trino, Cassandra, HBase ở kho, Spark MLlib và Databricks ở khâu huấn luyện. Luật phối hợp báo khi: dữ liệu cỡ cụm mà xử lý bằng thư viện một máy; dữ liệu liên tục cần trả lời ngay mà xử lý theo lô; Kafka mà không gì đọc topic; công cụ stream cho dữ liệu không stream; HDFS, Cassandra, HBase với ngân sách miễn phí hay trên host chỉ chạy app; công cụ cụm hay MLlib cho dữ liệu vừa một máy.
