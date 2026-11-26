@@ -1,8 +1,33 @@
 #!/bin/sh
 # Hook commit duy nhất của repo: chạy cổng gốc, rồi tools/check.sh của mọi project có file trong commit.
+# Cổng chạy trên đúng bản sắp commit (index, kể cả `commit -a`, `commit <file>`), không trên cây làm việc: dựng bản ấy thành
+# một worktree tạm, chạy cổng ở đó, xoá đi. Không đụng cây làm việc, index, stash; phần chưa add, file chưa track không lọt vào cổng.
 set -u
-cd "$(git rev-parse --show-toplevel)"
+TOP=$(git rev-parse --show-toplevel) || exit 1
+cd "$TOP" || exit 1
 STAGED=$(git diff --cached --name-only)
+TREE=$(git write-tree) || exit 1
+SNAP_COMMIT=$(git commit-tree "$TREE" -m 'pre-commit snapshot') || exit 1
+# Từ đây git dùng index của worktree tạm, không phải index đang commit (git đặt GIT_INDEX_FILE cho hook).
+unset GIT_INDEX_FILE GIT_DIR GIT_WORK_TREE GIT_PREFIX
+TMP=$(mktemp -d "${TMPDIR:-/tmp}/pre-commit.XXXXXX") || exit 1
+SNAP="$TMP/snap"
+cleanup() {
+  cd "$TOP" || return
+  git worktree remove --force "$SNAP" >/dev/null 2>&1
+  rm -rf "$TMP"
+  git worktree prune >/dev/null 2>&1
+}
+trap cleanup EXIT
+trap 'exit 1' INT TERM HUP
+git -c core.hooksPath=/dev/null worktree add --detach --quiet "$SNAP" "$SNAP_COMMIT" || exit 1
+# Thư viện đã cài (.gitignore bỏ, như cashy/node_modules) không có trong bản tạm: trỏ sang bản thật.
+for d in "$TOP"/*/node_modules "$TOP"/*/*/node_modules; do
+  [ -d "$d" ] || continue
+  rel=${d#"$TOP"/}
+  if [ -d "$SNAP/${rel%/node_modules}" ] && [ ! -e "$SNAP/$rel" ]; then ln -s "$d" "$SNAP/$rel"; fi
+done
+cd "$SNAP" || exit 1
 sh tools/check.sh || exit 1
 for c in $(git ls-files '*/tools/check.sh'); do
   dir=${c%/tools/check.sh}

@@ -84,8 +84,8 @@ quyết định và việc dở ở `DECISIONS.md` / `HANDOFF.md` gốc. Luật 
 ## Cổng (REPO-017)
 
 - Cổng của một project là `<project>/tools/check.sh`; cổng của gốc là `tools/check.sh`.
-- Commit: `tools/hooks/pre-commit` chạy cổng gốc và cổng của mọi project có file trong commit. Bật một lần
-  cho mỗi bản clone: `sh tools/install-hooks.sh` (phiên Claude Code tự chạy lúc bắt đầu).
+- Commit: `tools/hooks/pre-commit` chạy cổng gốc và cổng của mọi project có file trong commit, trên đúng bản trong index
+  (worktree tạm). Bật một lần cho mỗi bản clone: `sh tools/install-hooks.sh` (phiên Claude Code tự chạy lúc bắt đầu).
 - Push lên `main`: CI chạy mọi cổng; deploy chỉ chạy khi CI xanh (REPO-014).
 - Cổng không bấm nút. Trang có JS thì đo thêm trong trình duyệt thật: `tools/smoke-index.js`,
   `masters-degree/class-schedule/tools/smoke.cjs`, `step-planner/tools/smoke.cjs` (CI chạy cả ba).
