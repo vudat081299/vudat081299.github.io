@@ -2784,6 +2784,16 @@ const check = (name, ok, detail = '') => {
     const jumped = await hp.evaluate(() => ({ q: document.getElementById('q').value, act: document.activeElement.dataset.act, step: document.activeElement.closest('[data-step]')?.dataset.step }));
     check('bàn giao: tìm khớp tên đầu ra; chip Out liệt kê nơi dùng, nhảy tới bước bị lọc thì bỏ lọc', same(found, ['hA']) && /Used by.*Report/.test(usedTxt)
       && jumped.q === '' && jumped.act === 'edit-step' && jumped.step === 'h3', JSON.stringify({ found, usedTxt, jumped }));
+    // Nơi dùng bị lọc trạng thái ẩn (Done: bước Report không còn thẻ nào): nhảy tới thì bỏ cả lọc trạng thái.
+    await hp.click('.st-filter .dd-btn');
+    await hp.click('.dd-pop [role="option"][data-value="done"]');
+    const hiddenH3 = !(await hp.$('.step[data-step="h3"]'));
+    await hp.click('.step[data-step="h1"] [data-act="hand-out"]');
+    await hp.locator('#hand-list .hand-who', { hasText: 'Report' }).click();
+    const jumpedSt = await hp.evaluate(() => ({ st: document.querySelector('.st-filter .dd-btn').textContent.trim(), act: document.activeElement.dataset.act,
+      step: document.activeElement.closest('[data-step]')?.dataset.step }));
+    check('bàn giao: nhảy tới nơi dùng bị lọc trạng thái ẩn thì bỏ lọc trạng thái (All statuses), focus vào nó', hiddenH3
+      && jumpedSt.st === 'All statuses' && jumpedSt.act === 'edit-step' && jumpedSt.step === 'h3', JSON.stringify({ hiddenH3, jumpedSt }));
 
     // Đang kéo thẻ: mũi tên thu hẳn lại, các ô trong hàng khít nhau (không có khoảng trống rộng bằng thẻ); Esc huỷ, mũi tên về.
     await hp.locator('.card[data-sub="hA"]').scrollIntoViewIfNeeded();

@@ -47,8 +47,8 @@ export function renderNextWait(/** @type {any} */ ws) {
     `Show what can be done now (${more})`));
 }
 
-/* Tới một thẻ đang bị ô tìm ẩn: bỏ lọc, không lấy focus (Bàn giao đưa focus tới thẻ). */
-export const unfilter = () => { ui.q = ''; $('q').value = ''; render(); };
+/* Tới một thẻ đang bị ô tìm hay lọc trạng thái ẩn: bỏ cả hai, không lấy focus (Bàn giao đưa focus tới thẻ). */
+export const unfilter = () => { resetFilters(); render(); };
 
 /** Gắn sự kiện, chạy một lần lúc khởi động (main.js gọi theo thứ tự). */
 export function initFilter() {
