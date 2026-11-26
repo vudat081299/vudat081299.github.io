@@ -2,7 +2,7 @@
 
 /* ── Đầu dự án: tên (bấm để đổi), tiến độ chung, chú giải trạng thái có số đếm ── */
 .proj { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--s3) var(--s5); flex-wrap: wrap; padding: var(--s5) 0 var(--s4); }
-.proj-name { min-width: 0; flex: 1 1 320px; }
+.proj-name { min-width: 0; flex: 1 1 var(--proj-name-min); }
 .proj-k { font: 500 var(--fs-xs)/var(--lh-tight) var(--mono); color: var(--ink-3); letter-spacing: .04em; text-transform: uppercase; margin-bottom: var(--s1); }
 .top-name { font: inherit; min-width: 0; }
 .ws-btn {
@@ -110,4 +110,4 @@
 .ws-notes[open] summary { margin-bottom: var(--s2); }
 .ws-notes .notes-text { margin-bottom: var(--s2); }
 .notes-text { white-space: pre-line; overflow-wrap: anywhere; font-size: var(--fs-sm); color: var(--ink-2); }
-.notes-text a, .card-notes a { color: inherit; text-underline-offset: 3px; }
+.notes-text a, .card-notes a { color: inherit; text-underline-offset: var(--ul-offset); }

@@ -111,7 +111,7 @@ export function renderBoard(ws, opt = {}) {
     if (sc) { sc.scrollLeft = left; scrolls.push(sc); }
   }
   updateScrollCues([...fresh.map((r) => r.querySelector('.cards-scroll')), ...scrolls]);
-  fadeGapNames(board);
+  fadeGapNames(compactChanged ? nodes : fresh);
 }
 
 /** Chữ đã bỏ dấu để tìm, nhớ theo đối tượng; nguồn đổi thì tính lại. @type {WeakMap<object, {src:string, folded:string}>} */

@@ -92,13 +92,15 @@ export function renderLog(ws, opt = {}) {
     h('ol', { class: 'log-entries' }, ...list.map(item)))));
   measureLog();
 }
-/* "Show more" chỉ hiện khi lý do bị cắt (hay đang mở hết); đo lại khi font tải xong và khi đổi cỡ. */
+/* "Show more" chỉ hiện khi lý do bị cắt (hay đang mở hết); đo lại khi font tải xong và khi đổi cỡ. Đọc hết rồi mới ghi (một lần
+ * dàn trang). Lúc vẽ thì đo ngay (refocus vào nút ngay sau đó cần nút đã hiện); đổi cỡ, font về: một lần mỗi khung hình. */
 function measureLog() {
-  for (const p of $('log-list').querySelectorAll('.log-why')) {
-    const more = p.nextElementSibling;
-    if (more) more.hidden = !(p.closest('.log-item').classList.contains('open') || p.scrollHeight > p.clientHeight + 1);
-  }
+  const m = [...$('log-list').querySelectorAll('.log-why')].filter((p) => p.nextElementSibling)
+    .map((p) => /** @type {[HTMLElement, boolean]} */ ([p.nextElementSibling, p.closest('.log-item').classList.contains('open') || p.scrollHeight > p.clientHeight + 1]));
+  for (const [more, show] of m) more.hidden = !show;
 }
+let logFrame = 0;
+const measureLogSoon = () => { if (!logFrame) logFrame = requestAnimationFrame(() => { logFrame = 0; measureLog(); }); };
 
 /** Nhật ký trống: nói nên ghi gì, kèm một ví dụ. */
 function logEmpty() {
@@ -146,8 +148,8 @@ function deleteLog(/** @type {string} */ wsId, /** @type {string} */ id) {
 
 /** Gắn sự kiện, chạy một lần lúc khởi động (main.js gọi theo thứ tự). */
 export function initLog() {
-  document.fonts?.ready.then(measureLog);
-  window.addEventListener('resize', measureLog);
+  document.fonts?.ready.then(measureLogSoon);
+  window.addEventListener('resize', measureLogSoon);
 
   $('log-compose-open').addEventListener('click', openCompose);
   $('log-compose-close').addEventListener('click', () => closeCompose());

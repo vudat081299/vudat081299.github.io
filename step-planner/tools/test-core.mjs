@@ -280,14 +280,14 @@ check('md.js linkParts: dấu câu cuối, ")" thừa ở ngoài link; ngoặc �
 /* Token tô màu của khung Edit: theo thứ tự, không chồng nhau, không vượt dòng; đúng loại ở các dấu chính. */
 const srcT = '# Tiêu **đậm**\n> trích `c`\n- [x] [l](https://a.b "t")\n```py\nx = "s" # **không**\n```\n| a | b |\nsnake_case *n* ~~g~~ <!-- c -->';
 const toks = srcTokens(srcT), at = (/** @type {string} */ frag, k = 0) => {
-  const i = srcT.indexOf(frag); const t = toks.find((x) => x.s <= i + k && i + k < x.e); return t ? t.c : null; };
+  const i = srcT.indexOf(frag); const t = toks.find((x) => x.s <= i + k && i + k < x.e); return t ? t.k : null; };
 check('md.js srcTokens: theo thứ tự, không chồng, không qua dòng',
   toks.every((t, i) => t.e > t.s && (!i || toks[i - 1].e <= t.s) && !srcT.slice(t.s, t.e).includes('\n')));
 check('md.js srcTokens: tiêu đề, trích dẫn, mục việc, link, khối rào, bảng, nghiêng, gạch, chú thích',
-  at('# ') === 'sx-punct' && at('Tiêu') === 'sx-head' && at('đậm') === 'sx-strong' && at('> ') === 'sx-quote' && at('trích') === 'sx-qtext'
-  && at('`c`') === 'sx-code' && at('[x]') === 'sx-punct' && at('[l]', 1) === 'sx-link' && at('https://a.b') === 'sx-url' && at('"t"') === 'sx-string'
-  && at('```py', 3) === 'sx-info' && at('x = ') === 'sx-code' && at('**không**') === 'sx-code' && at('| a', 0) === 'sx-punct'
-  && at('snake_case', 5) === null && at('*n*', 1) === 'sx-em' && at('~~g~~', 2) === 'sx-strike' && at('<!--') === 'sx-comment', JSON.stringify(toks));
+  at('# ') === 'punct' && at('Tiêu') === 'head' && at('đậm') === 'strong' && at('> ') === 'quote' && at('trích') === 'qtext'
+  && at('`c`') === 'code' && at('[x]') === 'punct' && at('[l]', 1) === 'link' && at('https://a.b') === 'url' && at('"t"') === 'string'
+  && at('```py', 3) === 'info' && at('x = ') === 'code' && at('**không**') === 'code' && at('| a', 0) === 'punct'
+  && at('snake_case', 5) === null && at('*n*', 1) === 'em' && at('~~g~~', 2) === 'strike' && at('<!--') === 'comment', JSON.stringify(toks));
 
 /* Vòng làm lại: dòng Quay lại có vòng; bước đã bỏ đánh dấu giữ vòng (dòng Vòng:); dòng cũ không vòng đọc là vòng 2. */
 const rounds = normWorkspace({ steps: [
@@ -1224,14 +1224,14 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   check('bàn giao: consumersOf — bên nhận của bước và bước con làm lại, trừ chính chúng', eq(H.consumersOf(ws, [ws.steps[0], ws.steps[0].subs[2]]).map(H.holderTitle), ['Backend', 'A', 'API']));
 }
 
-/* Hộp sửa: đầu vào treo tính theo chỗ đang chọn (heldAt, heldKeysAt), không đổi dữ liệu thật. */
+/* Hộp sửa: đầu vào treo tính theo chỗ đang chọn (heldInfoAt, handoffsAt), không đổi dữ liệu thật. */
 {
   const ws = normWorkspace({ steps: [
     { id: 't1', title: 'First', subs: [{ id: 'a', title: 'A' }] },
     { id: 't2', title: 'Second', outs: [{ id: 'os', name: 's' }], subs: [{ id: 'b', title: 'B', outs: [{ id: 'ob', name: 'm' }] }, { id: 'c', title: 'C', ins: ['ob'] }] },
     { id: 't3', title: 'Third', subs: [{ id: 'd', title: 'D' }] }] });
   const before = JSON.stringify(ws);
-  const at = (...a) => [...CORE.heldAt(ws, ...a)].sort();
+  const at = (...a) => [...CORE.heldInfoAt(ws, ...a).held].sort();
   check('heldAt: bước con giữ chỗ — đầu ra của bước sau thì treo', eq(at('sub', 'a', ['os', 'ob'], null), ['ob', 'os']));
   check('heldAt: bước con đổi sang bước sau bên giao — không treo', eq(at('sub', 'a', ['os', 'ob'], { stepId: 't3', slot: 0, join: false }), []));
   check('heldAt: cùng hàng, đổi ô lên trước bên giao — treo; đầu ra của cả bước cùng hàng không treo',
@@ -1239,8 +1239,8 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   check('heldAt: bước con mới, bước mới theo chỗ đặt', eq(at('sub', '', ['ob'], { stepId: 't1', slot: 1, join: false }), ['ob'])
     && eq(at('step', '', ['ob'], 0), ['ob']) && eq(at('step', '', ['ob'], 3), []));
   check('heldAt: bước đổi Vị trí', eq(at('step', 't1', ['ob'], null), ['ob']) && eq(at('step', 't1', ['ob'], 2), []));
-  check('heldKeysAt: dời bên giao ra sau nơi dùng', eq([...CORE.heldKeysAt(ws, 'sub', 'b', { stepId: 't3', slot: 0, join: false })], ['c>ob'])
-    && !CORE.heldKeysAt(ws, 'sub', 'b', null).size);
+  check('handoffsAt: dời bên giao ra sau nơi dùng', eq([...CORE.handoffsAt(ws, 'sub', 'b', { stepId: 't3', slot: 0, join: false }).heldKeys], ['c>ob'])
+    && !CORE.handoffsAt(ws, 'sub', 'b', null).heldKeys.size);
   const joined = CORE.heldInfoAt(ws, 'sub', 'c', ['ob', 'os'], { stepId: 't2', slot: 0, join: true });
   const ha = CORE.handoffsAt(ws, 'sub', 'b', { stepId: 't2', slot: 0, join: true });
   check('heldInfoAt: nhập ô của bên giao — treo, ghi là cùng ô; đầu ra của cả bước không treo; handoffsAt: parKeys theo chỗ đặt',
@@ -1484,6 +1484,65 @@ function designSnapshot(cat) {
   check('view-math: lerpView đi từ a tới b, kẹp t', JSON.stringify(V.lerpView(v0, V.HOME, 0)) === JSON.stringify(v0)
     && JSON.stringify(V.lerpView(v0, V.HOME, 2)) === JSON.stringify(V.HOME) && near(V.lerpView(V.HOME, { x: 10, y: 0, k: 2 }, 0.5).k, 1.5));
   check('view-math: isHome, zoomPct', V.isHome({ x: 0, y: 0, k: 1 }) && !V.isHome(v0) && V.zoomPct(1.25) === '125%' && V.zoomPct(0.333) === '33%');
+}
+
+/* Ca nhỏ, mỗi ca giữ đúng một nhánh của logic (danh mục, dự án tự dựng; không phụ thuộc dữ liệu mẫu). */
+{
+  const pre = { path: 'report', profile: { size: 'small', users: 'me' } };
+  check('isPreset: lối khác thì không còn là bộ đặt sẵn', isPreset({ ...pre, stages: {}, edges: {} }, pre)
+    && !isPreset({ ...pre, path: 'pipeline', stages: {}, edges: {} }, pre) && !isPreset({ ...pre, path: '', stages: {}, edges: {} }, pre));
+  check('isPreset: trả lời thêm một câu, hay bỏ trống một câu của bộ đặt sẵn, thì không còn là bộ đặt sẵn',
+    !isPreset({ ...pre, profile: { ...pre.profile, budget: 'free' }, stages: {}, edges: {} }, pre)
+    && !isPreset({ ...pre, profile: { size: 'small' }, stages: {}, edges: {} }, pre));
+
+  /* Danh mục tí hon: khâu a có hai phương án đều hợp, a1 đứng đầu gợi ý nhưng làm luật báo; khâu r xếp theo level. */
+  const mini = {
+    paths: [{ id: 'p', label: 'P', implies: {}, stages: { a: 'need' }, suggest: { a: ['a1', 'a2'] } }],
+    profile: [], checks: [{ id: 'x', title: 'X', msg: 'm', if: { a: ['a1'] } }],
+    stages: [{ id: 'a', lane: 'data', options: [{ id: 'a1' }, { id: 'a2' }] },
+      { id: 'r', lane: 'data', options: [{ id: 'hard', level: 3 }, { id: 'plain' }, { id: 'easy', level: 1 }] }],
+  };
+  const ap = applyPath(mini, null, 'p');
+  check('applyPath: chọn phương án hợp làm ít luật báo nhất, không phải phương án hợp đầu tiên', eq(ap.next.stages.a?.pick, ['a2']) && eq(ap.filled, ['a']),
+    JSON.stringify(ap));
+  check('rankOptions: cùng hạng thì dễ trước (level 1, không ghi = 2, rồi 3)',
+    eq(rankOptions(mini.stages[1], {}).map((x) => x.opt.id), ['easy', 'plain', 'hard']));
+
+  /* Bước X giao ox cho bước con P của chính nó; P giao op cho Q. Bên nhận của {X, P}: chỉ Q (P là một trong các chủ). */
+  const own = normWorkspace({ steps: [{ id: 'X', title: 'X', outs: [{ id: 'ox', name: 'ox' }], subs: [
+    { id: 'P', title: 'P', ins: ['ox'], outs: [{ id: 'op', name: 'op' }] }, { id: 'Q', title: 'Q', ins: ['op'] }] }] });
+  check('consumersOf: chủ nhận đầu ra của chủ khác (cùng nhóm làm lại) không tính là bên nhận',
+    eq(CORE.consumersOf(own, [own.steps[0], own.steps[0].subs[0]]).map(CORE.holderTitle), ['Q']));
+
+  /* Xoá bên giao, rồi người dùng thêm đầu vào mới cho bên nhận; Hoàn tác gắn lại đầu vào cũ, giữ đầu vào mới ở cuối. */
+  const mk = () => normWorkspace({ steps: [{ id: 's1', title: 'S1', subs: [{ id: 'g', title: 'G', outs: [{ id: 'og', name: 'og' }] },
+    { id: 'n', title: 'N', outs: [{ id: 'on', name: 'on' }] }] }, { id: 's2', title: 'S2', subs: [{ id: 'u', title: 'U', ins: ['og'] }] }] });
+  const wb = mk();
+  const relink = CORE.insBackup(wb, [wb.steps[0].subs[0]]);
+  wb.steps[0].subs.splice(0, 1);
+  wb.steps[1].subs[0].ins = ['og', 'on'];
+  wb.steps[0].subs.unshift(mk().steps[0].subs[0]);
+  relink(wb);
+  check('insBackup: Hoàn tác giữ đầu vào thêm sau khi xoá', eq(wb.steps[1].subs[0].ins, ['og', 'on']), JSON.stringify(wb.steps[1].subs[0].ins));
+  const wc = mk();
+  const relink2 = CORE.insBackup(wc, [wc.steps[0].subs[0]]);
+  wc.steps[1].subs[0].ins = ['on'];
+  relink2(wc);
+  check('insBackup: Hoàn tác gắn lại đầu vào cũ trước, đầu vào mới sau', eq(wc.steps[1].subs[0].ins, ['og', 'on']), JSON.stringify(wc.steps[1].subs[0].ins));
+}
+
+{
+  const two = fromMarkdown('# A\n## 1. S\n- [x] T · done 2026-01-02 · done 2026-01-05\n').workspace.steps[0].subs[0];
+  check('Markdown viết tay: hai "· done" thì lấy cái đầu, cái sau giữ trong tên', two.doneAt === '2026-01-02' && two.title === 'T · done 2026-01-05',
+    JSON.stringify({ doneAt: two.doneAt, title: two.title }));
+}
+
+{
+  const V = await import('../js/core/view-math.js');
+  /* Sơ đồ hẹp hơn KEEP: kéo hết cỡ vẫn thấy trọn sơ đồ (KEEP bị cắt về bề rộng sơ đồ). */
+  const lo = V.clampPan({ x: -500, y: -500, k: 1 }, 30, 20, 800, 400), hi = V.clampPan({ x: 5000, y: 5000, k: 1 }, 30, 20, 800, 400);
+  check('view-math: clampPan — sơ đồ hẹp hơn KEEP thì kéo hết cỡ vẫn thấy trọn', lo.x === 0 && lo.y === 0 && hi.x === 770 && hi.y === 380,
+    JSON.stringify({ lo, hi }));
 }
 
 if (fails) { console.log(`test-core: ${fails} LỖI`); process.exit(1); }

@@ -1,9 +1,9 @@
 // @ts-check
 /* Bàn giao (outs / ins), thuần: ai giữ đầu ra, đầu vào (holders, outIndex), cặp bên giao → bên nhận theo hàng và ô,
    đầu vào treo (handoffs), trạng thái đầu vào / đầu ra (ioStatus), nơi dùng (consumersOf, insBackup), "on hold" theo chỗ chưa
-   lưu của hộp sửa (heldAt, heldInfoAt, handoffsAt, heldKeysAt).
-   Xuất: holders, outIndex, holderTitle, heldKey, handoffs, ioStatus, insBackup, consumersOf, heldAt, heldInfoAt,
-     handoffsAt, heldKeysAt.
+   lưu của hộp sửa (heldInfoAt, handoffsAt).
+   Xuất: holders, outIndex, holderTitle, heldKey, handoffs, ioStatus, insBackup, consumersOf, heldInfoAt,
+     handoffsAt.
    Dùng: core/board.js. */
 import { placeSub, slotsOf } from './board.js';
 
@@ -214,13 +214,9 @@ function placedCopy(ws, kind, id, place) {
   }
   return { c, h };
 }
-/** Các đầu ra trong `outIds` sẽ là đầu vào treo của mục đang sửa. @param {{steps:any[]}} ws @param {'sub'|'step'} kind @param {string} id
- * @param {string[]} outIds @param {any} place @returns {Set<string>} */
-export function heldAt(ws, kind, id, outIds, place) {
-  return heldInfoAt(ws, kind, id, outIds, place).held;
-}
-/** Như `heldAt`, kèm `par`: phần treo vì cùng ô song song với bên giao. @param {{steps:any[]}} ws @param {'sub'|'step'} kind
- * @param {string} id @param {string[]} outIds @param {any} place @returns {{held:Set<string>, par:Set<string>}} */
+/** Các đầu ra trong `outIds` sẽ là đầu vào treo của mục đang sửa (`held`), và phần treo vì cùng ô song song với bên giao (`par`).
+ * @param {{steps:any[]}} ws @param {'sub'|'step'} kind @param {string} id @param {string[]} outIds @param {any} place
+ * @returns {{held:Set<string>, par:Set<string>}} */
 export function heldInfoAt(ws, kind, id, outIds, place) {
   const p = placedCopy(ws, kind, id, place);
   if (!p) return { held: new Set(), par: new Set() };
@@ -234,9 +230,4 @@ export function heldInfoAt(ws, kind, id, outIds, place) {
 export function handoffsAt(ws, kind, id, place) {
   const p = placedCopy(ws, kind, id, place);
   return p ? handoffs(p.c) : null;
-}
-/** `heldKeys` của cả dự án khi mục đang sửa đứng ở chỗ `place` (nơi dùng đầu ra của nó có treo không).
- * @param {{steps:any[]}} ws @param {'sub'|'step'} kind @param {string} id @param {any} place @returns {Set<string>} */
-export function heldKeysAt(ws, kind, id, place) {
-  return handoffsAt(ws, kind, id, place)?.heldKeys ?? new Set();
 }

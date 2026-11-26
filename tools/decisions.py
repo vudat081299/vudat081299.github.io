@@ -28,8 +28,10 @@ START, END = '<!-- index:start -->', '<!-- index:end -->'
 
 
 def git_files(*patterns):
-    out = subprocess.check_output(['git', '-C', ROOT, 'ls-files', '--', *patterns], text=True)
-    return out.split()
+    """File của repo: đã track và chưa track mà không bị .gitignore bỏ. `check` và `write` cùng dùng, nên sổ mới chưa `git add`
+    vào mục lục ngay từ `write`."""
+    out = subprocess.check_output(['git', '-C', ROOT, 'ls-files', '--cached', '--others', '--exclude-standard', '--', *patterns], text=True)
+    return sorted(set(out.split()))
 
 
 def glob_re(g):

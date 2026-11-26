@@ -26,7 +26,7 @@
 .doc-link svg.i { color: var(--ink-3); }
 .doc-link span { min-width: 0; overflow-wrap: anywhere; }
 .doc-link small { font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-3); white-space: nowrap; }
-@media (hover: hover) { .doc-link:hover span { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; } }
+@media (hover: hover) { .doc-link:hover span { color: var(--ink); text-decoration: underline; text-underline-offset: var(--ul-offset); } }
 .doc-tag {
   position: relative; display: inline-flex; align-items: center; gap: var(--s1); min-height: var(--h-xs); padding: 0 var(--s2);
   font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-2); cursor: pointer;
@@ -69,4 +69,4 @@
 .doc-row.undo { justify-content: space-between; padding: var(--s1) var(--s1) var(--s1) var(--s3); font-size: var(--fs-sm); color: var(--ink-2); background: var(--chip); border-style: dashed; }
 .docs-note { font-size: var(--fs-xs); color: var(--ink-3); }
 .docs-note:empty { display: none; }
-.doc-open { display: inline-flex; align-items: center; gap: var(--s2); min-height: var(--hit); align-self: flex-start; font-weight: 600; color: var(--green); text-underline-offset: 3px; }
+.doc-open { display: inline-flex; align-items: center; gap: var(--s2); min-height: var(--hit); align-self: flex-start; font-weight: 600; color: var(--green); text-underline-offset: var(--ul-offset); }

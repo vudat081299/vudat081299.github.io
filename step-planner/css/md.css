@@ -120,7 +120,7 @@
 .md-view li:has(> input[type="checkbox"]) { list-style: none; }
 .md-view li > input[type="checkbox"] { margin: 0 .3em .2em -1.5em; vertical-align: middle; accent-color: var(--done-edge); }
 .md-view strong { font-weight: 600; }
-.md-view a { color: var(--green); text-decoration-thickness: var(--line-w); text-underline-offset: 3px; }
+.md-view a { color: var(--green); text-decoration-thickness: var(--line-w); text-underline-offset: var(--ul-offset); }
 .md-view blockquote { margin-left: 0; margin-right: 0; padding: .6em 1em; color: var(--ink-2); background: var(--field-bg); border: var(--line-w) solid var(--line-2); border-radius: var(--r-sm); }
 .md-view blockquote > :last-child { margin-bottom: 0; }
 .md-view code { padding: .15em .4em; font: 500 .85em var(--mono); white-space: break-spaces; background: var(--chip); border-radius: var(--r-xs); }

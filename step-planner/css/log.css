@@ -16,7 +16,7 @@
 .log-count:empty { display: none; }
 .log-lede { font-size: var(--fs-sm); color: var(--ink-3); }
 .log-main { min-width: 0; display: flex; flex-direction: column; gap: var(--s5); }
-.log-why a { color: inherit; text-underline-offset: 3px; }
+.log-why a { color: inherit; text-underline-offset: var(--ul-offset); }
 /* Ô ghi: gập là một nút trông như ô nhập; mở là thẻ có Decision, Why, ngày, bước. */
 .log-open {
   display: flex; align-items: center; gap: var(--s3); width: 100%; min-height: calc(var(--ctl) + var(--s2)); padding: 0 var(--s4) 0 var(--s2);
@@ -70,7 +70,7 @@
 }
 .log-item.auto .log-dot {
   display: grid; place-items: center; width: var(--h-xs); height: var(--h-xs); margin-top: calc(-1 * var(--line-w)); box-sizing: border-box;
-  border: var(--line-w) solid var(--amber-line); background: color-mix(in srgb, var(--amber-soft), var(--bg)); color: var(--amber);
+  border: var(--line-w) solid var(--amber-line); background: var(--log-auto-bg); color: var(--amber);
 }
 .log-item.auto .log-dot svg.i { width: var(--fs-sm); height: var(--fs-sm); }
 /* Thân là display: contents để hàng đầu (ngày, bước) chung hàng với nút, chữ dưới trải hết bề rộng. */

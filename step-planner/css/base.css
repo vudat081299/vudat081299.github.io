@@ -92,7 +92,7 @@ svg.i {
 .btn.go:disabled { opacity: 1; background: var(--chip); border-color: transparent; color: var(--ink-3); }
 .icon-btn:disabled { background: transparent; }
 .link { font: inherit; color: inherit; background: none; border: 0; padding: 0; margin: 0; cursor: pointer; text-align: left; line-height: inherit; }
-@media (hover: hover) { .link:hover { text-decoration: underline; text-underline-offset: 3px; } }
+@media (hover: hover) { .link:hover { text-decoration: underline; text-underline-offset: var(--ul-offset); } }
 
 /* ── Ô nhập (chép từ md-annotate: .ma-input, .ma-ta): viền --line, gõ thì viền --ring + quầng xanh ── */
 .field { display: flex; flex-direction: column; gap: var(--s1); font-size: var(--fs-sm); color: var(--ink-2); min-width: 0; }
@@ -106,7 +106,7 @@ svg.i {
 .field textarea { resize: vertical; line-height: var(--lh); }
 .field textarea.code { font: 500 var(--fs-sm)/var(--lh) var(--mono); font-variant-ligatures: none; background: var(--bg); }
 .field textarea.grow-title { resize: none; overflow: hidden; }
-.input:focus, .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--ring); box-shadow: 0 0 0 3px var(--accent-soft); }
+.input:focus, .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--ring); box-shadow: 0 0 0 var(--halo-w) var(--accent-soft); }
 /* Safari iOS phóng to trang khi focus ô chữ nhỏ hơn 16px. */
 @media (pointer: coarse) { .input, .field input, .field select, .field textarea { font-size: var(--fs-lg); } }
 .tools-gap { flex: 1 1 0; }

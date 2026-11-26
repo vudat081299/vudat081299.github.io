@@ -16,9 +16,9 @@
      outs / ins của nó suy từ đường dẫn trong `io_html` từng pha (`course_flow`).
      Sinh lại:  python3 step-planner/tools/lint.py --write-course
   3. js/**/*.js: không innerHTML / outerHTML / insertAdjacentHTML / document.write — chữ người dùng chỉ qua textContent.
-     Import trỏ tới file có thật; mọi file trừ main.js có nơi import (không mồ côi).
-     js/core/ là logic thuần: code (bỏ chú thích) không chạm document, window, localStorage, sessionStorage, navigator,
-     không gọi querySelector, addEventListener, createElement, getBoundingClientRect, không đọc classList; chỉ import js/core/.
+     Import (cả `export … from`) trỏ tới file có thật; `import(…)` chỉ nhận chuỗi cố định; mọi file trừ main.js có nơi import
+     (không mồ côi). js/core/ là logic thuần: code (đọc bằng `js_scan`: bỏ chú thích, chữ trong chuỗi không tính) không gọi tên
+     toàn cục của trình duyệt (`PURE_GLOBALS`), không đọc thuộc tính DOM (`PURE_PROPS`, cả `x['…']`); chỉ import js/core/.
   4. css/: mỗi file css/*.css được link đúng một lần trong index.html, tokens.css trước hết (thứ tự link là cascade); mã màu
      chỉ nằm trong css/tokens.css.
   5. data/system-design.json (PLAN-016): khuôn hồ sơ, khâu, phương án; id không trùng; `fit` chỉ dùng câu và câu trả lời
@@ -587,12 +587,18 @@ def js_files(js_dir):
     return sorted(out)
 
 
-# js/core/ thuần (dữ liệu vào, dữ liệu ra): không chạm trình duyệt. Chữ "document" trong chuỗi không tính: chỉ bắt tên dùng như đối tượng
-# (`document.`, `window[`), lời gọi (`querySelector(`) và `.classList`.
-PURE_BANNED = re.compile(r'\b(?:document|window|globalThis|localStorage|sessionStorage|navigator)\s*[.\[]'
-                         r'|\b(?:querySelector\w*|addEventListener|createElement\w*|getBoundingClientRect)\s*\('
-                         r'|\.classList\b')
-IMPORT_RE = re.compile(r'''^\s*import\s+(?:[^'";]+?\s+from\s+)?['"]([^'"]+)['"]|(?<![\w$.])import\(\s*['"]([^'"]+)['"]\s*\)''', re.M)
+# js/core/ thuần (dữ liệu vào, dữ liệu ra): không chạm trình duyệt. Đọc trên `js_mask` nên chữ trong chuỗi, chú thích không tính.
+# Tên toàn cục: bắt khi đứng trần (không sau `.`, không là khoá `tên:`), nên bí danh (`const g = globalThis`) và `?.` cũng bị bắt.
+PURE_GLOBALS = ('document', 'window', 'globalThis', 'self', 'top', 'localStorage', 'sessionStorage', 'indexedDB', 'navigator',
+                'location', 'fetch', 'XMLHttpRequest', 'matchMedia', 'requestAnimationFrame', 'cancelAnimationFrame',
+                'getComputedStyle', 'Function', 'eval')
+# Thuộc tính DOM: bắt sau `.` / `?.` hay trong `x['…']`.
+PURE_PROPS = ('classList', 'style', 'dataset', 'querySelector', 'querySelectorAll', 'addEventListener', 'removeEventListener',
+              'createElement', 'createElementNS', 'createTextNode', 'getBoundingClientRect')
+PURE_GLOBAL_RE = re.compile(r'(?<![\w$.])(?:' + '|'.join(PURE_GLOBALS) + r')(?![\w$])(?!\s*:)')
+PURE_PROP_RE = re.compile(r'\.\s*(?:' + '|'.join(PURE_PROPS) + r')(?![\w$])|\[\s*"#(\d+)"\s*\]')
+# Trên `js_mask`: chuỗi cố định là "#k". `from "#k"` chỉ có ở import / export … from; `import(` không theo sau bởi "#k" là động.
+SPEC_RE = re.compile(r'(?<![\w$.])(?:from|import)\s*"#(\d+)"|(?<![\w$.])import\s*\(\s*(?:"#(\d+)"\s*[,)])?')
 
 
 def check_code():
@@ -604,9 +610,13 @@ def check_code():
         for bad in ('innerHTML', 'outerHTML', 'insertAdjacentHTML', 'document.write'):
             if bad in src:
                 err(f'js/{name}: có `{bad}` — dựng DOM bằng createElement / textContent')
-        code = re.sub(r'/\*.*?\*/', lambda m: '\n' * m.group(0).count('\n'), src, flags=re.S)
-        code = re.sub(r'(^|\s)//.*$', r'\1', code, flags=re.M)
-        for spec in (a or b for a, b in IMPORT_RE.findall(code)):
+        code, strs = js_mask(src)
+        for m in SPEC_RE.finditer(code):
+            k = m.group(1) or m.group(2)
+            if k is None:
+                err(f'js/{name}: `import(…)` với chữ tính lúc chạy — chỉ import chuỗi cố định (lint mới kiểm được file)')
+                continue
+            spec = strs[int(k)]
             target = os.path.normpath(os.path.join(os.path.dirname(name), spec)).replace(os.sep, '/')
             imported.add(target)
             if target not in files:
@@ -614,8 +624,14 @@ def check_code():
             elif name.startswith('core/') and not target.startswith('core/'):
                 err(f'js/{name}: module thuần import js/{target} — js/core/ chỉ import js/core/')
         if name.startswith('core/'):
-            for m in sorted({m.group(0).strip() for m in PURE_BANNED.finditer(code)}):
-                err(f'js/{name}: module thuần dùng `{m}` — việc chạm trình duyệt thuộc js/ui/')
+            hits = {m.group(0) for m in PURE_GLOBAL_RE.finditer(code)}
+            for m in PURE_PROP_RE.finditer(code):
+                if m.group(1) is None:
+                    hits.add('.' + m.group(0).lstrip('.').strip())
+                elif strs[int(m.group(1))] in PURE_PROPS + PURE_GLOBALS:
+                    hits.add(f"['{strs[int(m.group(1))]}']")
+            for h in sorted(hits):
+                err(f'js/{name}: module thuần dùng `{h}` — việc chạm trình duyệt thuộc js/ui/')
     for name in files:
         if name != 'main.js' and name not in imported:
             err(f'js/{name}: không ai import (file mồ côi)')
@@ -630,9 +646,32 @@ def check_code():
         if f == 'tokens.css':
             continue
         code = re.sub(r'/\*.*?\*/', lambda m: '\n' * m.group(0).count('\n'), open(os.path.join(HERE, 'css', f), encoding='utf-8').read(), flags=re.S)
+        code = re.sub(r'"[^"\n]*"|\'[^\'\n]*\'', '""', code)  # tên font, content: chữ trong chuỗi không tính
         for n, line in enumerate(code.split('\n'), 1):
-            if re.search(r'#[0-9a-fA-F]{3,8}\b|\brgba?\(|\bhsla?\(', line):
-                err(f'css/{f}:{n}: mã màu ngoài css/tokens.css')
+            m = CSS_COLOR.search(line)
+            if m:
+                err(f'css/{f}:{n}: mã màu ngoài css/tokens.css (`{m.group(0)}`)')
+
+
+# Màu chỉ khai ở css/tokens.css: mã hex, hàm màu (rgb, hsl, hwb, lab, lch, oklab, oklch, color, color-mix) và tên màu của CSS.
+# `transparent`, `currentColor` không phải màu của bảng màu nên được dùng. Tên màu chỉ tính khi đứng riêng (không là một phần
+# của tên lớp, token hay thuộc tính: `.green`, `var(--green)`, `white-space`).
+CSS_NAMED = ('aliceblue antiquewhite aqua aquamarine azure beige bisque black blanchedalmond blue blueviolet brown burlywood '
+             'cadetblue chartreuse chocolate coral cornflowerblue cornsilk crimson cyan darkblue darkcyan darkgoldenrod darkgray '
+             'darkgreen darkgrey darkkhaki darkmagenta darkolivegreen darkorange darkorchid darkred darksalmon darkseagreen '
+             'darkslateblue darkslategray darkslategrey darkturquoise darkviolet deeppink deepskyblue dimgray dimgrey dodgerblue '
+             'firebrick floralwhite forestgreen fuchsia gainsboro ghostwhite gold goldenrod gray green greenyellow grey honeydew '
+             'hotpink indianred indigo ivory khaki lavender lavenderblush lawngreen lemonchiffon lightblue lightcoral lightcyan '
+             'lightgoldenrodyellow lightgray lightgreen lightgrey lightpink lightsalmon lightseagreen lightskyblue lightslategray '
+             'lightslategrey lightsteelblue lightyellow lime limegreen linen magenta maroon mediumaquamarine mediumblue '
+             'mediumorchid mediumpurple mediumseagreen mediumslateblue mediumspringgreen mediumturquoise mediumvioletred '
+             'midnightblue mintcream mistyrose moccasin navajowhite navy oldlace olive olivedrab orange orangered orchid '
+             'palegoldenrod palegreen paleturquoise palevioletred papayawhip peachpuff peru pink plum powderblue purple '
+             'rebeccapurple red rosybrown royalblue saddlebrown salmon sandybrown seagreen seashell sienna silver skyblue '
+             'slateblue slategray slategrey snow springgreen steelblue tan teal thistle tomato turquoise violet wheat white '
+             'whitesmoke yellow yellowgreen').split()
+CSS_COLOR = re.compile(r'#[0-9a-fA-F]{3,8}\b|\b(?:rgba?|hsla?|hwb|lab|lch|oklab|oklch|color|color-mix)\('
+                       r'|(?<![\w.#-])(?:' + '|'.join(CSS_NAMED) + r')(?![\w-])', re.I)
 
 
 # ── Ngôn ngữ (PLAN-028): chữ giao diện tiếng Anh, nội dung mẫu và lời giải thích tiếng Việt ──
@@ -700,31 +739,31 @@ def check_design_language(data):
             err(f'system-design.json {path}: lời giải thích phải tiếng Việt: "{s[:60]}"')
 
 
-def js_strings(src, comments=None):
-    """[(dòng mở, chữ, dòng đóng, số chuỗi)] của mọi chuỗi trong code JS ('…', "…", phần chữ của `…`), bỏ regex literal.
-    Các phần chữ của một `…` chung dòng mở và số chuỗi.
-    Chú thích không phải chuỗi; truyền `comments` (list) thì nhận thêm [(dòng, chữ)] của từng chú thích (khối nhiều dòng: dòng cuối)."""
+def js_scan(src):
+    """Đọc code JS một lượt, trả [(loại, chữ, dòng mở, dòng đóng, số chuỗi, trọn)]; loại: code, comment, str, regex.
+    `str`: chuỗi '…', "…" hay một phần chữ của `…` (các phần của một `…` chung số chuỗi); `trọn`: chuỗi không có ${ }.
+    Chú thích, regex literal không phải chuỗi; `//` trong chuỗi không mở chú thích."""
     out, i, n, line, prev, stack = [], 0, len(src), 1, '', []  # stack: độ sâu { } trong từng ${ } đang mở
     lits, lid = [], 0  # lits: (số chuỗi, dòng mở) của từng `…` đang chờ sau ${ }
     while i < n:
         c = src[i]
         if c == '\n':
+            out.append(('code', c, line, line, None, False))
             line, i = line + 1, i + 1
         elif c in ' \t\r':
+            out.append(('code', c, line, line, None, False))
             i += 1
         elif src.startswith('//', i):
             j = src.find('\n', i)
             j = n if j < 0 else j
-            if comments is not None:
-                comments.append((line, src[i:j]))
+            out.append(('comment', src[i:j], line, line, None, False))
             i = j
         elif src.startswith('/*', i):
             j = src.find('*/', i + 2)
             j = n if j < 0 else j + 2
             body = src[i:j]
+            out.append(('comment', body, line, line + body.count('\n'), None, False))
             line, i = line + body.count('\n'), j
-            if comments is not None:
-                comments.append((line, body))
         elif c in '\'"`' or (c == '}' and stack and stack[-1] == 0):
             end = c if c != '}' else '`'
             if c == '}':
@@ -741,8 +780,9 @@ def js_strings(src, comments=None):
                 line += src[j] == '\n'
                 buf.append(src[j])
                 j += 1
-            out.append((start, ''.join(buf), line, cur))
-            if end == '`' and src.startswith('${', j):
+            interp = end == '`' and src.startswith('${', j)
+            out.append(('str', ''.join(buf), start, line, cur, c != '}' and not interp))
+            if interp:
                 stack.append(0)
                 lits.append((cur, start))
                 i = j + 2
@@ -754,12 +794,14 @@ def js_strings(src, comments=None):
             while j < n and src[j] != '\n' and (src[j] != '/' or cls):
                 cls = (cls or src[j] == '[') and src[j] != ']'
                 j += 2 if src[j] == '\\' else 1
-            i = j + 1
+            i0, i = i, j + 1
             while i < n and src[i].isalpha():
                 i += 1
+            out.append(('regex', src[i0:i], line, line, None, False))
             prev = 'a'
         elif re.match(r'[A-Za-z0-9_$]', c):
             word = re.match(r'[A-Za-z0-9_$]+', src[i:]).group(0)
+            out.append(('code', word, line, line, None, False))
             i += len(word)
             prev = '(' if word in ('return', 'typeof', 'case', 'of', 'in', 'yield', 'await', 'else', 'do') else 'a'
         else:
@@ -767,9 +809,41 @@ def js_strings(src, comments=None):
                 stack[-1] += 1
             elif c == '}' and stack:
                 stack[-1] -= 1
+            out.append(('code', c, line, line, None, False))
             prev = 'a' if c in ')]' else c
             i += 1
     return out
+
+
+def js_strings(src, comments=None):
+    """[(dòng mở, chữ, dòng đóng, số chuỗi)] của mọi chuỗi trong code JS ('…', "…", phần chữ của `…`), bỏ regex literal.
+    Các phần chữ của một `…` chung dòng mở và số chuỗi.
+    Chú thích không phải chuỗi; truyền `comments` (list) thì nhận thêm [(dòng, chữ)] của từng chú thích (khối nhiều dòng: dòng cuối)."""
+    out = []
+    for kind, s, a, b, k, _ in js_scan(src):
+        if kind == 'str':
+            out.append((a, s, b, k))
+        elif kind == 'comment' and comments is not None:
+            comments.append((b, s))
+    return out
+
+
+def js_mask(src):
+    """(code, strs): code JS bỏ chú thích (giữ xuống dòng), regex literal thành /R/, chuỗi trọn thành "#k" (strs[k] là chữ),
+    phần chữ của `…` có ${ } thành "#T" (code trong ${ } giữ nguyên)."""
+    parts, strs = [], []
+    for kind, s, _, _, _, whole in js_scan(src):
+        if kind == 'code':
+            parts.append(s)
+        elif kind == 'regex':
+            parts.append('/R/')
+        elif kind == 'comment':
+            parts.append(' ' + '\n' * s.count('\n'))
+        else:
+            parts.append(('"#%d"' % len(strs) if whole else '"#T"') + '\n' * s.count('\n'))
+            if whole:
+                strs.append(s)
+    return ''.join(parts), strs
 
 
 def check_ui_language(js_dir=None):
@@ -893,15 +967,48 @@ def self_test():
         ('design: tên trang ngoài bị dịch', design(lambda d: d['stages'][0]['options'][0]['links'][0].update(title='Trang chủ')), 'không dịch'),
         ('design: nhãn giao diện tiếng Việt', design(lambda d: d['stages'][0].update(title='Nguồn dữ liệu')), 'phải tiếng Anh'),
         ('mẫu: tên bước con tiếng Anh', tpl, 'nội dung mẫu phải tiếng Việt'),
-        ('js/core: chạm DOM', core_js("export const __h = () => document.body;"), 'module thuần dùng `document.`'),
-        ('js/core: đọc localStorage', core_js("export const __i = () => localStorage['k'];"), 'module thuần dùng `localStorage['),
+        ('js/core: chạm DOM', core_js("export const __h = () => document.body;"), 'module thuần dùng `document`'),
+        ('js/core: đọc localStorage', core_js("export const __i = () => localStorage['k'];"), 'module thuần dùng `localStorage`'),
         ('js/core: đổi lớp CSS', core_js("export const __j = (el) => el.classList.add('x');"), 'module thuần dùng `.classList`'),
+        ('js/core: bí danh globalThis', core_js("const g = globalThis;\nexport const __o = () => g.document;"), 'module thuần dùng `globalThis`'),
+        ('js/core: globalThis?.document', core_js("export const __p = () => globalThis?.document;"), 'module thuần dùng `globalThis`'),
+        ('js/core: document?.body', core_js("export const __q = () => document?.body;"), 'module thuần dùng `document`'),
+        ('js/core: self', core_js("export const __r = () => self.x;"), 'module thuần dùng `self`'),
+        ('js/core: top', core_js("export const __ra = () => top.x;"), 'module thuần dùng `top`'),
+        ('js/core: location', core_js("export const __rb = () => location.href;"), 'module thuần dùng `location`'),
+        ('js/core: fetch(', core_js("export const __s = (u) => fetch(u);"), 'module thuần dùng `fetch`'),
+        ('js/core: requestAnimationFrame', core_js("export const __t = (f) => requestAnimationFrame(f);"), 'module thuần dùng `requestAnimationFrame`'),
+        ('js/core: matchMedia', core_js("export const __u = () => matchMedia('(min-width: 1px)');"), 'module thuần dùng `matchMedia`'),
+        ("js/core: el['classList']", core_js("export const __v = (el) => el['classList'];"), "module thuần dùng `['classList']`"),
+        ('js/core: el?.classList', core_js("export const __w = (el) => el?.classList;"), 'module thuần dùng `.classList`'),
+        ('js/core: .style.', core_js("export const __x = (el) => { el.style.color = 'red'; };"), 'module thuần dùng `.style`'),
+        ('js/core: new Function', core_js("export const __y = new Function('return 1');"), 'module thuần dùng `Function`'),
+        ('js/core: chuỗi có // không che code sau nó', core_js("export const __z = 'http://a' + document.title;"), 'module thuần dùng `document`'),
+        ('js/core: chuỗi có /* không che code sau nó', core_js("export const __za = '/*' + document.title + '*/';"), 'module thuần dùng `document`'),
         ('js/core: import js/ui/', core_js("import { KEY } from '../ui/store.js';\nexport const __k = KEY;"), 'chỉ import js/core/'),
+        ('js/core: from"…" không khoảng trắng', core_js("import { KEY } from'../ui/store.js';\nexport const __k = KEY;"), 'chỉ import js/core/'),
+        ('js/core: export {…} from js/ui/', core_js("export { KEY as __kb } from '../ui/store.js';"), 'chỉ import js/core/'),
+        ('js/core: export * from js/ui/', core_js("export * from '../ui/store.js';"), 'chỉ import js/core/'),
+        ('js/core: import() động trỏ js/ui/', core_js("export const __kc = () => import('../ui/store.js');"), 'chỉ import js/core/'),
+        ('js: import() với chữ ghép', core_js("export const __kd = () => import('../ui/' + 'store.js');"), 'chữ tính lúc chạy'),
+        ('js: import() với `…${}`', core_js("export const __ke = (x) => import(`./${x}.js`);"), 'chữ tính lúc chạy'),
         ('js/core: chữ "document", "window." trong chuỗi, chú thích không tính', core_js("export const __l = 'a document'; // window.x\n/* document.body */"), None),
+        ('js/core: khoá top:, thuộc tính .self, Date.now, Math.random vẫn được', core_js("export const __lb = (r) => ({ top: r.self, at: Date.now(), k: Math.random() });"), None),
         ('js: import file không có', core_js("import { x } from './khong-co.js';\nexport const __m = x;"), 'không có file'),
+        ('js: export … from file không có', core_js("export { x } from './khong-co.js';"), 'không có file'),
+        ('js: file chỉ được export … from thì không mồ côi', lambda root: (
+            open(os.path.join(root, 'js', 'core', 'zz-leaf.js'), 'w', encoding='utf-8').write('export const __zl = 1;\n'),
+            open(os.path.join(root, 'js', 'core', 'io.js'), 'a', encoding='utf-8').write("\nexport { __zl } from './zz-leaf.js';\n")), None),
         ('js: file không ai import', new_js('ui/mo-coi.js', 'export const __n = 1;'), 'file mồ côi'),
         ('css: mã màu trong file component', css('board.css', '.x { color: #fff; }'), 'mã màu ngoài css/tokens.css'),
         ('css: mã màu trong chú thích không tính', css('board.css', '/* #fff */'), None),
+        ('css: tên màu trong file component', css('board.css', '.x { border: 1px solid white; }'), 'mã màu ngoài css/tokens.css'),
+        ('css: tên màu viết hoa', css('board.css', '.x { color: Red; }'), 'mã màu ngoài css/tokens.css'),
+        ('css: color-mix trong file component', css('board.css', '.x { background: color-mix(in srgb, var(--bg) 10%, transparent); }'), 'mã màu ngoài css/tokens.css'),
+        ('css: oklch trong file component', css('board.css', '.x { color: oklch(70% .1 120); }'), 'mã màu ngoài css/tokens.css'),
+        ('css: lab, hwb trong file component', css('board.css', '.x { color: lab(50% 10 10); outline-color: hwb(10 10% 10%); }'), 'mã màu ngoài css/tokens.css'),
+        ('css: token tên màu, thuộc tính, lớp, chuỗi, transparent không tính',
+         css('board.css', '.green .white-x { color: var(--green); white-space: nowrap; background: transparent; border-color: currentColor; content: "red"; }'), None),
         ('css: file không được link', css('extra.css', '.x { color: var(--ink); }'), 'được link đúng một lần'),
     ]
     bad = 0

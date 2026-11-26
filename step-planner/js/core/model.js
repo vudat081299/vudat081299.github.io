@@ -4,7 +4,7 @@
    tên không trùng, tạo dự án từ mẫu (fromTemplate).
    Xuất: STATUSES, STATUS_LABEL, MARK, FROM_MARK, STATUS_HINT, REASON_LABEL, hasReason, outOfScope, nextStatus, setStatus,
      needsEvidence, FORMAT, VERSION, MD_VERSION, APP_NAME, LOG_HEADING, LOOSE_STEP, uid, today, parseDate, isObj, oneLine,
-     multiLine, DOC_KINDS, safeUrl, normDoc, normOut, SD_KEPT, normSub, normStep, normLog, normWorkspace, EDIT_FIELDS, pick,
+     multiLine, safeUrl, normDoc, normOut, SD_KEPT, normSub, normStep, normLog, normWorkspace, EDIT_FIELDS, pick,
      mergeEdit, freshCopy, uniqueName, fromTemplate.
    Dùng: core/design.js, core/handoffs.js. */
 import { normDesign, presetDesign } from './design.js';
@@ -86,7 +86,6 @@ const objs = (/** @type {any} */ a) => (Array.isArray(a) ? a.filter(isObj) : [])
 const idOr = (/** @type {any} */ id, /** @type {string} */ p) => (typeof id === 'string' && id ? id : uid(p));
 
 /* Tài liệu của bước / bước con: link (chỉ http(s)) hoặc văn bản Markdown. */
-export const DOC_KINDS = ['link', 'md'];
 /** URL http(s) một dòng, không khoảng trắng; `<` `>` mã hoá để ghi được trong Markdown. Khác thì ''. @param {any} u */
 export function safeUrl(u) {
   const s = oneLine(u).replace(/</g, '%3C').replace(/>/g, '%3E');

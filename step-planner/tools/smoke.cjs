@@ -1635,12 +1635,19 @@ const check = (name, ok, detail = '') => {
     await lp.keyboard.press('Enter');
     const h2 = await st('.step[data-step="l1"] .notes-text');
     check('chữ dài: Enter lần nữa cắt lại', !h2.open && h2.clip && h2.expanded === 'false', JSON.stringify(h2));
-    // 320px: không tràn ngang, đầu bước vẫn cắt.
+    // 320px: không tràn ngang, đầu bước vẫn cắt. Đổi cỡ phải đo lại thật: một luật chỉ áp ở màn hẹp làm mục tiêu ngắn của l2 tràn
+    // (không có sự kiện nào khác ngoài resize), về màn rộng thì hết tràn.
+    await lp.addStyleTag({ content: '@media (max-width: 400px) { .step[data-step="l2"] .step-goal { max-width: 2ch; word-break: break-all; } }' });
+    const l2cut0 = await lp.$eval('.step[data-step="l2"] .step-goal', (el) => el.classList.contains('clip'));
     await lp.setViewportSize({ width: 320, height: 700 });
+    const l2cut1 = await waitTo(lp, 'đo lại khi đổi cỡ (khối mới tràn)', () => document.querySelector('.step[data-step="l2"] .step-goal.clip'));
     await waitTo(lp, 'đo lại khi đổi cỡ', () => document.querySelector('.step[data-step="l1"] .step-title .clamp.clip'));
     const w320 = await st('.step[data-step="l1"] .step-title .clamp');
     check('chữ dài: 320px không tràn ngang, tên bước vẫn dừng ở số dòng của nó', (await hOverflow(lp)) <= 0 && Math.abs(w320.rows - ltitle) < 0.1 && w320.clip,
       `${await hOverflow(lp)} ${JSON.stringify(w320)}`);
+    await lp.setViewportSize({ width: 1280, height: 900 });
+    const l2cut2 = await waitTo(lp, 'đo lại khi đổi cỡ (khối hết tràn)', () => !document.querySelector('.step[data-step="l2"] .step-goal.clip'));
+    check('chữ dài: đổi cỡ cửa sổ đo lại — khối vừa tràn thì cắt, hết tràn thì bỏ cắt', !l2cut0 && l2cut1 && l2cut2, JSON.stringify({ l2cut0, l2cut1, l2cut2 }));
     await lc.close();
   });
 
@@ -1850,15 +1857,15 @@ const check = (name, ok, detail = '') => {
     await gp.goto(BASE);
     await gp.waitForSelector('#app:not([hidden]) .card[data-sub]');
     const m = await gp.evaluate(() => [...document.querySelectorAll('#board > .step')].slice(0, 2).map((s) => {
-      const b = s.querySelector(':scope > .gap-add .gap-add-btn').getBoundingClientRect();
+      const b = s.querySelector(':scope > .gap-add .gap-add-btn').getBoundingClientRect(), g = s.querySelector(':scope > .gap-add').getBoundingClientRect();
       const line = s.getBoundingClientRect().top + parseFloat(getComputedStyle(s).borderTopWidth) / 2;
-      return { cx: b.left + b.width / 2, dy: b.top + b.height / 2 - line, w: b.width, h: b.height };
+      return { cx: b.left + b.width / 2, dx: b.left + b.width / 2 - (g.left + g.width / 2), dy: b.top + b.height / 2 - line, w: b.width, h: b.height };
     }));
     const compactOn = await gp.$eval('#board', (bd) => bd.classList.contains('compact'));
     const [a, b] = m;
     const near = (x, y) => Math.abs(x - y) <= 1;
-    check(`vạch chia ${w}px ${scheme}${compactOn ? ' Compact' : ''}${touch ? ' cảm ứng' : ''}: nút "Add step" của vạch đầu bảng thẳng hàng vạch thứ hai, tâm trên vạch`,
-      m.length === 2 && compactOn === compact && near(a.cx, b.cx) && near(a.dy, b.dy) && near(a.w, b.w) && near(a.h, b.h) && Math.abs(a.dy) <= 1,
+    check(`vạch chia ${w}px ${scheme}${compactOn ? ' Compact' : ''}${touch ? ' cảm ứng' : ''}: nút "Add step" của vạch đầu bảng thẳng hàng vạch thứ hai, tâm trên vạch, giữa vạch theo chiều ngang`,
+      m.length === 2 && compactOn === compact && near(a.cx, b.cx) && near(a.dy, b.dy) && near(a.w, b.w) && near(a.h, b.h) && Math.abs(a.dy) <= 1 && Math.abs(a.dx) <= 1,
       JSON.stringify(m.map((x) => Object.fromEntries(Object.entries(x).map(([k, v]) => [k, Math.round(v * 10) / 10])))));
     await gc.close();
   }
@@ -2416,6 +2423,19 @@ const check = (name, ok, detail = '') => {
     await vp.mouse.move(n2.x + 12, n2.y + 4, { steps: 3 });
     await vp.mouse.up();
     check('Kéo nút trái trơn trên nút: khung đứng yên, không mở hộp', JSON.stringify(await camView(vp)) === JSON.stringify(v3) && !(await dlgOpen(vp)));
+    /* Giữ Space, sơ đồ không có focus (con trỏ trên sơ đồ): bánh xe trơn kéo khung, trang đứng yên. */
+    const prevFocus = await vp.evaluateHandle(() => document.activeElement);
+    await vp.evaluate(() => /** @type {any} */ (document.activeElement)?.blur());
+    await vp.mouse.move(node.x, node.y);
+    const syS = await vp.evaluate(() => scrollY);
+    await vp.keyboard.down('Space');
+    await vp.mouse.wheel(0, 70);
+    await vp.mouse.wheel(0, 0);
+    await vp.keyboard.up('Space');
+    const vS = await camView(vp);
+    check('Giữ Space + bánh xe trơn (sơ đồ không có focus): kéo khung, trang đứng yên', Math.abs(vS.y - (v3.y - 70)) < 1 && Math.abs(vS.x - v3.x) < 1
+      && (await vp.evaluate(() => scrollY)) === syS && !(await dlgOpen(vp)), JSON.stringify({ vS, v3 }));
+    await prevFocus.evaluate((e) => e.focus({ preventScroll: true }));
     /* Bấm thường (không kéo) trên nút vẫn mở hộp. */
     await vp.keyboard.press('0');
     await vp.click('#sd-zoom-in');
@@ -3055,7 +3075,7 @@ const check = (name, ok, detail = '') => {
         { id: 'gN', title: 'Neither' }, { id: 'gB', title: 'Spec', outs: [{ id: 'oU', name: 'unused.md' }] }] },
       { id: 'g2', title: 'Model', ins: ['oF'], subs: [{ id: 'gC', title: 'Train', ins: ['oF'], outs: [{ id: 'oM', name: 'model.pkl' }] }, { id: 'gD', title: 'Late input', ins: ['oL'] }] },
       { id: 'g3', title: 'Ship', subs: [{ id: 'gE', title: 'Late producer', outs: [{ id: 'oL', name: 'late.json' }] }, { id: 'gF', title: 'Deploy', ins: ['oM'] }] },
-      { id: 'g4', title: 'Orphan', subs: [{ id: 'gG', title: 'Dead end', outs: [{ id: 'oZ', name: 'z.bin' }] }] },
+      { id: 'g4', title: 'Orphan', subs: [{ id: 'gG', title: 'Dead end', outs: [{ id: 'oZ', name: 'z.bin' }, { id: 'oZ2', name: 'z2.bin' }] }] },
     ], log: [] };
     const ic = await browser.newContext({ viewport: { width: 1600, height: 1400 }, deviceScaleFactor: 1 });
     await ic.addInitScript(seedInit, ioSeed);
@@ -3064,9 +3084,19 @@ const check = (name, ok, detail = '') => {
     ip.on('pageerror', (e) => errors.push(String(e)));
     await ip.goto(BASE);
     await ip.waitForSelector('.card[data-sub="gA"]');
+    /* Trạng thái đọc từ chấm thấy được: chấm trái là `.io-dot.in`, chấm phải là `.io-dot.out` (theo vị trí trên màn hình), lớp
+     * ok / bad / none của từng chấm; lệch với data-io-in / data-io-out của khối thì ghi rõ chỗ lệch. */
     const ioOf = () => ip.evaluate(() => {
       const o = {};
-      const read = (el, k) => { const io = el.querySelector(':scope > .io'); o[k] = io ? `${io.dataset.ioIn}/${io.dataset.ioOut}` : '-'; };
+      const st = (d) => ['ok', 'bad', 'none'].filter((c) => d.classList.contains(c)).join('+') || '?';
+      const read = (el, k) => {
+        const io = el.querySelector(':scope > .io');
+        if (!io) { o[k] = '-'; return; }
+        const [l, r, ...rest] = [...io.querySelectorAll('.io-dot')].sort((a, b) => a.getBoundingClientRect().left - b.getBoundingClientRect().left);
+        const data = `${io.dataset.ioIn}/${io.dataset.ioOut}`;
+        if (rest.length || !r || !l.classList.contains('in') || !r.classList.contains('out') || l.getBoundingClientRect().right > r.getBoundingClientRect().left) o[k] = `${data}: sides`;
+        else o[k] = `${st(l)}/${st(r)}` === data ? data : `${data}: dots ${st(l)}/${st(r)}`;
+      };
       for (const c of document.querySelectorAll('.card[data-sub]')) read(c.querySelector('.card-top'), c.dataset.sub);
       for (const s of document.querySelectorAll('.step[data-step]')) read(s.querySelector('.step-top'), s.dataset.step);
       return o;
@@ -3082,6 +3112,26 @@ const check = (name, ok, detail = '') => {
     const s2In = await labelOf('.step[data-step="g2"] .step-top .io-dot.in');
     const arrowHidden = await ip.$eval('.card[data-sub="gA"] .io-arrow', (el) => el.getAttribute('aria-hidden') === 'true');
     check('đầu vào / đầu ra: mỗi trạng thái trên thẻ và đầu bước (ổn, lỗi, không có), không có cả hai thì không có chấm', same(io0, want0), JSON.stringify(io0));
+    /* Ba trạng thái trông khác nhau (không chỉ khác lớp): ổn chấm tròn đặc, lỗi hình thoi đặc, không có vòng rỗng nét mảnh. */
+    const looks = await ip.evaluate(() => {
+      const by = {};
+      for (const d of document.querySelectorAll('.io-dot')) {
+        const c = getComputedStyle(d), k = ['ok', 'bad', 'none'].find((x) => d.classList.contains(x));
+        (by[k] ||= new Set()).add(JSON.stringify({ bg: c.backgroundColor, r: c.borderRadius, t: c.transform, bw: c.borderTopWidth, bc: c.borderTopColor }));
+      }
+      return Object.fromEntries(Object.entries(by).map(([k, v]) => [k, [...v].map((x) => JSON.parse(x))]));
+    });
+    const one = (k) => looks[k]?.length === 1 ? looks[k][0] : null;
+    const [lOk, lBad, lNone] = [one('ok'), one('bad'), one('none')];
+    const clear = (c) => /^rgba\(0, 0, 0, 0\)$|^transparent$/.test(c);
+    check('đầu vào / đầu ra: ổn chấm tròn đặc, lỗi hình thoi đặc khác màu, không có vòng rỗng mảnh hơn; mỗi trạng thái một dáng',
+      !!(lOk && lBad && lNone) && !clear(lOk.bg) && lOk.t === 'none' && parseFloat(lOk.r) > 0 && !clear(lBad.bg) && lBad.bg !== lOk.bg && lBad.t !== 'none'
+      && parseFloat(lBad.r) === 0 && clear(lNone.bg) && lNone.t === 'none' && parseFloat(lNone.bw) < parseFloat(lOk.bw), JSON.stringify(looks));
+    const s4Out = await labelOf('.step[data-step="g4"] .step-top .io-dot.out');
+    const gGOut = await labelOf('.card[data-sub="gG"] .io-dot.out');
+    check('đầu vào / đầu ra: chấm đầu ra của bước nói "không đầu ra nào của bước được dùng", của thẻ thì nêu từng đầu ra',
+      s4Out.a === 'Output: broken. None of the step\'s outputs is used: "z.bin" is not used by any later step; "z2.bin" is not used by any later step'
+      && gGOut.a === 'Output: broken. "z.bin" is not used by any later step; "z2.bin" is not used by any later step', JSON.stringify({ s4Out, gGOut }));
     check('đầu vào / đầu ra: chấm có nhãn đọc được, nói vì sao; mũi tên chỉ để trang trí',
       dIn.role === 'img' && dIn.a === dIn.t && /^Input: broken\. "late\.json" on hold: "Late producer" now comes after this$/.test(dIn.a)
       && /^Output: broken\. "late\.json" is only used by "Late input", which now comes before it \(on hold\)$/.test(eOut.a)
@@ -3383,16 +3433,19 @@ const check = (name, ok, detail = '') => {
     const lc = await browser.newContext({ viewport: { width: 1280, height: 900 }, deviceScaleFactor: 1 });
     await noFonts(lc);
     await lc.addInitScript(seedWs, { id: 'wl', name: 'Late font', steps: [{ id: 'l1', title: 'A', subs: [
-      { id: 'lA', title: 'Give', outs: [{ id: 'oa', name: 'teams.csv' }] }, { id: 'lB', title: 'Take', ins: ['oa'] }] }], log: [] });
+      { id: 'lA', title: 'Give', notes: 'một hai ba', outs: [{ id: 'oa', name: 'teams.csv' }] }, { id: 'lB', title: 'Take', ins: ['oa'] }] }], log: [] });
     const lp = await lc.newPage();
     lp.on('pageerror', (e) => errors.push('font muộn: ' + e));
     await lp.goto(BASE);
     await lp.waitForSelector('.hand-gap .hand-btn-name');
     const fit0 = await lp.$eval('.hand-gap .hand-btn-name', (n) => n.classList.contains('cut') || n.scrollWidth > n.clientWidth);
+    const note0 = await lp.$eval('.card[data-sub="lA"] .card-notes', (n) => n.classList.contains('clip'));
     await lp.addStyleTag({ content: "@font-face { font-family: 'Be Vietnam Pro'; src: local('DejaVu Sans'), local('Liberation Sans'), local('FreeSans'), local('Arial'), local('Helvetica'); size-adjust: 400%; }" });
     const loaded = await lp.evaluate(() => document.fonts.ready.then(() => [...document.fonts].some((f) => f.family.replace(/"/g, '') === 'Be Vietnam Pro' && f.status === 'loaded')));
     const cut1 = await lp.waitForFunction(() => document.querySelector('.hand-gap .hand-btn-name.cut'), null, { timeout: 2000 }).then(() => true, () => false);
     check('font tải muộn: tên vừa chỗ thì không mờ; font về làm tên tràn thì đo lại và mờ', !fit0 && loaded && cut1, JSON.stringify({ fit0, loaded, cut1 }));
+    const note1 = await lp.waitForFunction(() => document.querySelector('.card[data-sub="lA"] .card-notes.clip'), null, { timeout: 2000 }).then(() => true, () => false);
+    check('font tải muộn: ghi chú vừa chỗ thì không cắt; font về làm ghi chú tràn thì đo lại và cắt', !note0 && note1, JSON.stringify({ note0, note1 }));
     await lc.close();
 
     // Architecture: mới chọn thứ bàn giao thì chỉ nhóm app có gợi ý — mục ấy chưa xong ("k of n recommended", k < n).
@@ -3557,6 +3610,76 @@ const check = (name, ok, detail = '') => {
       }
       await tx.close();
     }
+  });
+
+  /* ── Focus sau Lưu, refocus, Ctrl + Z khi đang gõ, gõ chữ đầu trong danh sách ── */
+  await section('Focus, phím tắt, gõ chữ trong danh sách', async () => {
+    const fws = { id: 'wf', name: 'Focus', log: [], steps: [
+      { id: 'f1', title: 'Alpha', subs: [{ id: 'fa', title: 'Một' }, { id: 'fb', title: 'Hai' }] },
+      { id: 'f2', title: 'Beta', subs: [{ id: 'fc', title: 'Ba' }] }] };
+    const fc = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+    await fc.addInitScript((d) => { if (!sessionStorage.getItem('seeded')) { sessionStorage.setItem('seeded', '1'); localStorage.setItem('stepPlanner.v2', JSON.stringify({ version: 2, workspaces: [d], lastId: d.id })); } }, fws);
+    const fp = await fc.newPage();
+    fp.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
+    fp.on('pageerror', (e) => errors.push('focus: ' + e));
+    await fp.goto(BASE);
+    await fp.waitForSelector('.card[data-sub="fc"]');
+
+    // Lưu hộp sửa bước: focus về nút tên của chính bước ấy (không về ô tìm).
+    await fp.click('.step[data-step="f2"] .step-head [data-act="edit-step"]');
+    await fp.fill('#step-form [name="title"]', 'Beta 2');
+    await fp.click('#step-form button[type="submit"]');
+    await waitTo(fp, 'hộp sửa bước đóng', () => !document.querySelector('#dlg-step[open]'));
+    const back = await fp.evaluate(() => ({ step: document.activeElement?.closest('.step')?.dataset.step, act: document.activeElement?.dataset.act }));
+    check('hộp sửa bước: Lưu thì focus về tên bước vừa sửa', back.step === 'f2' && back.act === 'edit-step', JSON.stringify(back));
+
+    // refocus: bỏ qua phần tử ẩn, phần tử tắt; không trúng gì thì về bảng.
+    const rf = await fp.evaluate(async () => {
+      const { refocus } = await import(new URL('js/ui/state.js', location.href).href);
+      const mk = (id, set) => { const b = document.createElement('button'); b.id = id; set(b); document.getElementById('app').append(b); };
+      mk('rf-hidden', (b) => { b.hidden = true; });
+      mk('rf-off', (b) => { b.disabled = true; });
+      mk('rf-ok', () => {});
+      refocus('#rf-hidden || #rf-off || #rf-ok');
+      const a = document.activeElement?.id;
+      refocus('#rf-hidden || #rf-off');
+      const b = document.activeElement?.id;
+      document.querySelectorAll('[id^="rf-"]').forEach((x) => x.remove());
+      return { a, b };
+    });
+    check('refocus: bỏ qua phần tử ẩn và phần tử tắt; không trúng thì về bảng', rf.a === 'rf-ok' && rf.b === 'board', JSON.stringify(rf));
+
+    // Xoá bước con: toast có Hoàn tác. Ctrl + Z khi đang ở ô chữ là của ô chữ, không hoàn tác; ra khỏi ô chữ thì hoàn tác.
+    const subsOf = async () => (await cur(fp)).steps[0].subs.map((x) => x.id).join();
+    await fp.click(subSel('fb', 'sub-del'), { force: true });
+    await waitTo(fp, 'toast xoá có Hoàn tác', () => !document.getElementById('toast').hidden && !document.getElementById('toast-undo').hidden);
+    const del = await subsOf();
+    await fp.focus('#q');
+    await fp.keyboard.press('Control+z');
+    const typingZ = await subsOf();
+    const toastOn = await fp.evaluate(() => !document.getElementById('toast').hidden);
+    await fp.evaluate(() => /** @type {any} */ (document.activeElement)?.blur());
+    await fp.keyboard.press('Control+z');
+    const undone = await subsOf();
+    check('Ctrl + Z trong ô chữ không bấm Hoàn tác của toast; ngoài ô chữ thì có', del === 'fa' && typingZ === 'fa' && toastOn && undone === 'fa,fb',
+      JSON.stringify({ del, typingZ, toastOn, undone }));
+
+    // Danh sách tự dựng: gõ "d" nhảy tới mục mở đầu bằng "Đ" (bỏ dấu, đ → d).
+    const dd = await fp.evaluate(async () => {
+      const { openList } = await import(new URL('js/ui/dropdown.js', location.href).href);
+      const a = document.createElement('button');
+      a.id = 'dd-probe';
+      a.textContent = 'Probe';
+      document.getElementById('app').append(a);
+      openList(a, [{ value: 'a', label: 'Alpha' }, { value: 'b', label: 'Beta' }, { value: 'd', label: 'Đánh giá' }, { value: 'e', label: 'Delta' }], () => {});
+      return true;
+    });
+    await fp.keyboard.press('d');
+    const act = await fp.$eval('.dd-pop [role="option"].active', (o) => o.dataset.value);
+    await fp.keyboard.press('Escape');
+    await fp.$eval('#dd-probe', (a) => a.remove());
+    check('danh sách: gõ chữ đầu khớp cả chữ có dấu, "d" khớp "Đ"', dd && act === 'd', act);
+    await fc.close();
   });
 
   /* ── Dữ liệu lưu bị hỏng ── */
