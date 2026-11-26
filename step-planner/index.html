@@ -31,6 +31,7 @@
   <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
   <symbol id="i-chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
   <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
   <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol>
   <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 15V4M8 8l4-4 4 4M5 20h14"/></symbol>
   <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11M8 11l4 4 4-4M5 20h14"/></symbol>
@@ -164,10 +165,20 @@
       </div>
     </header>
     <div class="sd-main">
-      <div class="sd-fig" id="sd-fig"></div>
-      <ul class="sd-legend" aria-hidden="true">
-        <li class="lane-data">Data</li><li class="lane-model">Model</li><li class="lane-app">App</li><li class="lane-ops">Operations</li><li class="is-open">Not decided</li>
-      </ul>
+      <!-- Khung nhìn (js/diagram-view.js): kéo, thu phóng; không lưu, tải lại về khung ban đầu (PLAN-031) -->
+      <div class="sd-fig" id="sd-fig" tabindex="0" aria-label="System diagram. Ctrl + scroll, + or - to zoom; arrow keys, scroll or Space + drag to pan; 0 resets the view; Esc gives scrolling back to the page"></div>
+      <div class="sd-under">
+        <ul class="sd-legend" aria-hidden="true">
+          <li class="lane-data">Data</li><li class="lane-model">Model</li><li class="lane-app">App</li><li class="lane-ops">Operations</li><li class="is-open">Not decided</li>
+        </ul>
+        <div class="sd-zoom" id="sd-zoom" role="group" aria-label="Diagram view" hidden>
+          <span class="sd-zoom-hint" id="sd-zoom-hint" aria-hidden="true"></span>
+          <button type="button" class="icon-btn" id="sd-zoom-out" aria-label="Zoom out" title="Zoom out (-)"><svg class="i" aria-hidden="true"><use href="#i-minus"/></svg></button>
+          <button type="button" class="btn quiet small sd-zoom-pct" id="sd-zoom-pct" aria-label="Zoom 100%. Reset to 100%" title="Reset zoom to 100%">100%</button>
+          <button type="button" class="icon-btn" id="sd-zoom-in" aria-label="Zoom in" title="Zoom in (+)"><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg></button>
+          <button type="button" class="btn small" id="sd-view-reset" title="Back to the original size and position (0)">Reset view</button>
+        </div>
+      </div>
       <ul class="sd-warns" id="sd-warns" hidden aria-label="Warnings"></ul>
     </div>
   </section>

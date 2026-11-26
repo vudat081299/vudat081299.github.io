@@ -2150,6 +2150,276 @@ const check = (name, ok, detail = '') => {
   }
   });
 
+  /* ── Sơ đồ System design như khung nhìn: nhịp dọc của hộp (Handoffs, "Show other options"), nhãn bàn giao trên đường nối,
+   * kéo, thu phóng, về khung ban đầu. Thiết kế gieo thẳng vào bộ nhớ rồi tải lại. ── */
+  await section('System diagram view', async () => {
+    const pk = (id) => ({ pick: [id], skip: false, own: '', note: '' });
+    const no = { pick: [], skip: true, own: '', note: '' };
+    const seedDesign = (page) => page.evaluate((d) => {
+      const s = JSON.parse(localStorage.getItem('stepPlanner.v2'));
+      s.workspaces.find((x) => x.id === s.lastId).design = d;
+      localStorage.setItem('stepPlanner.v2', JSON.stringify(s));
+    }, { path: '', profile: {}, stages: { source: pk('kaggle-datasets'), ingest: pk('notebook-script'), raw: pk('project-folder'), process: pk('pandas'),
+      validate: pk('pandera'), store: pk('parquet-duckdb'), label: no, train: pk('local'), track: pk('mlflow'), search: no, serve: pk('fastapi'), app: pk('streamlit') },
+    edges: { 'source>ingest': { via: 'results', what: 'scores.csv', where: '', promise: '', check: '' }, 'raw>process': { via: 'file', what: 'raw/*.csv', where: '', promise: '', check: '' } } });
+    const { ctx: vx, page: vp } = await open(1280, 900);
+    await vp.click('#start .tpl[data-tpl="crisp-dm"]');
+    await vp.waitForSelector('#sd-fig svg');
+    await seedDesign(vp);
+    await vp.reload();
+    await vp.waitForSelector('#sd-fig .sd-hand');
+    const s4 = await vp.evaluate(() => parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--s4')));
+    const s3 = await vp.evaluate(() => parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--s3')));
+    /* Hộp Handoffs: đáy mỗi ô cách nhãn ô sau ít nhất --s4; nhãn đứng trên ô của nó. */
+    await vp.click('#sd-fig .sd-hand[data-edge="raw>process"]');
+    await vp.waitForSelector('#dlg-sd[open] [data-edge-item="raw>process"][open]');
+    const rhythm = await vp.$$eval('[data-edge-item="raw>process"] .field', (fs) => fs.map((f) => {
+      const lab = f.querySelector('span').getBoundingClientRect(), box = f.querySelector('input, textarea').getBoundingClientRect();
+      return { labTop: lab.top, labBottom: lab.bottom, boxTop: box.top, boxBottom: box.bottom };
+    }));
+    const gaps = rhythm.slice(1).map((r, i) => Math.round(r.labTop - rhythm[i].boxBottom));
+    check('Handoffs: đáy ô cách nhãn ô sau ≥ --s4, nhãn đứng trên ô', rhythm.length === 4 && gaps.every((g) => g >= s4) && rhythm.every((r) => r.boxTop >= r.labBottom), gaps.join());
+    await vp.keyboard.press('Escape');
+    /* "Show other options" mở ra: các phương án cách nhau như danh sách chính (--s3). */
+    await vp.click('#sd-fig [data-stage="process"]');
+    await vp.click('#sd-pane .sd-more > summary');
+    const more = await vp.$$eval('#sd-pane .sd-more .sd-opt', (os) => os.slice(1).map((o, i) => Math.round(o.getBoundingClientRect().top - os[i].getBoundingClientRect().bottom)));
+    check('"Show other options": các phương án cách nhau --s3 như danh sách chính', more.length > 1 && more.every((g) => g === s3), more.join());
+    await vp.keyboard.press('Escape');
+    /* Dấu + của đường trống: ẩn, rê lên đường (không phải lên dấu) thì hiện; không ở vòng Tab (bàn phím: trang Handoffs). */
+    const along = (key, t) => vp.$eval(`#sd-fig .sd-wire[data-edge="${key}"] .sd-hit`, (p, k) => {
+      const pt = p.getPointAtLength(p.getTotalLength() * k), m = p.getScreenCTM();
+      return { x: pt.x * m.a + pt.y * m.c + m.e, y: pt.x * m.b + pt.y * m.d + m.f };
+    }, t);
+    const plusOp = (key) => vp.$eval(`#sd-fig .sd-hand.is-empty[data-edge="${key}"]`, (g) => getComputedStyle(g).opacity);
+    const emptyKey = await vp.$eval('#sd-fig .sd-hand.is-empty', (g) => g.dataset.edge);
+    await vp.mouse.move(5, 5);
+    const op0 = await plusOp(emptyKey);
+    let at = await along(emptyKey, 0.2);
+    await vp.mouse.move(at.x, at.y);
+    const shown = await waitTo(vp, 'dấu + hiện khi rê đường', (k) => getComputedStyle(document.querySelector(`#sd-fig .sd-hand.is-empty[data-edge="${k}"]`)).opacity === '1', emptyKey);
+    check('Dấu + của đường trống ẩn, rê lên đường thì hiện, không nhận Tab', op0 === '0' && shown
+      && await vp.$$eval('#sd-fig .sd-hand.is-empty', (l) => l.every((g) => !g.hasAttribute('tabindex') && g.getAttribute('aria-hidden') === 'true')), op0);
+    /* Rê đường có hợp đồng: nhãn vẫn ở trên nét (điểm giữa nhãn thuộc nhãn), nền nhãn đặc, nét đổi màu. */
+    const capKey = 'source>ingest';
+    at = await along(capKey, 0.1);
+    await vp.mouse.move(at.x, at.y);
+    await waitTo(vp, 'nét đường đang rê đổi màu', (k) => {
+      const w = document.querySelector(`#sd-fig .sd-wire[data-edge="${k}"]`);
+      return getComputedStyle(w.querySelector('.sd-edge')).stroke === getComputedStyle(w.querySelector('.sd-hand-box')).stroke;
+    }, capKey);
+    const top = await vp.$eval(`#sd-fig .sd-hand[data-edge="${capKey}"]`, (g) => {
+      const r = g.getBoundingClientRect(), hit = document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2);
+      const fill = getComputedStyle(g.querySelector('.sd-hand-box')).fill;
+      return { above: !!hit && g.contains(hit), last: g.parentNode.lastElementChild === g, fill };
+    });
+    check('Rê đường có hợp đồng: nhãn ở trên nét, nền đặc', top.above && top.last && /^rgb\(/.test(top.fill), JSON.stringify(top));
+    await vp.mouse.move(5, 5);
+    /* Nhãn rộng nhất nửa chiều dài đường; chữ dài hơn thì mờ ở đuôi (mask), đủ chữ trong tooltip. Ép nhãn tràn bằng token. */
+    const halves = await vp.$$eval('#sd-fig .sd-wire', (ws) => ws.filter((w) => w.querySelector('.sd-hand:not(.is-empty)')).map((w) => {
+      const b = w.querySelector('.sd-edge').getBBox(), cap = w.querySelector('.sd-hand-box').getBBox();
+      return b.width > b.height ? cap.width <= (b.width + 3) / 2 + 0.5 : true;
+    }));
+    check('Nhãn bàn giao không rộng quá nửa đường nối ngang', halves.length === 2 && halves.every(Boolean), halves.join());
+    await vp.$eval('#sd-fig', (f) => f.style.setProperty('--sd-hand-cap', '.22'));
+    await vp.setViewportSize({ width: 1279, height: 900 });
+    await vp.waitForSelector('#sd-fig .sd-hand.is-cut');
+    const cut = await vp.$eval(`#sd-fig .sd-hand.is-cut[data-edge="${capKey}"]`, (g) => {
+      const t = g.querySelector('text'), box = g.querySelector('.sd-hand-box').getBBox();
+      const mask = t.getAttribute('mask') && document.querySelector(t.getAttribute('mask').slice(4, -1));
+      return { masked: !!mask, overflow: t.getComputedTextLength() > box.width, title: g.querySelector('title').textContent };
+    });
+    check('Nhãn dài bị chặn và mờ ở đuôi, tooltip đủ chữ', cut.masked && cut.overflow && /: Results \(Precomputed results/.test(cut.title), JSON.stringify(cut));
+    await vp.$eval('#sd-fig', (f) => f.style.removeProperty('--sd-hand-cap'));
+    await vp.setViewportSize({ width: 1280, height: 900 });
+    await vp.waitForFunction(() => !document.querySelector('#sd-fig .sd-hand.is-cut'));
+
+    /* Khung nhìn: đọc {x, y, k} từ transform của nhóm `.sd-cam`; điểm của sơ đồ dưới một điểm màn hình. */
+    const camView = (page) => page.$eval('#sd-fig .sd-cam', (g) => {
+      const t = getComputedStyle(g).transform;
+      const m = t === 'none' ? [1, 0, 0, 1, 0, 0] : t.slice(t.indexOf('(') + 1, -1).split(',').map(Number);
+      return { k: m[0], x: m[4], y: m[5] };
+    });
+    const svgAt = (page, fx, fy) => page.$eval('#sd-fig svg', (s, [a, b]) => { const r = s.getBoundingClientRect(); return { x: r.left + r.width * a, y: r.top + r.height * b, left: r.left, top: r.top }; }, [fx, fy]);
+    const isHome = (v) => Math.abs(v.k - 1) < 1e-6 && Math.abs(v.x) < 0.5 && Math.abs(v.y) < 0.5;
+    const settled = (page) => page.waitForFunction(() => !document.querySelector('#sd-fig .sd-cam.is-easing') || document.querySelector('#sd-fig .sd-cam').getAnimations().every((a) => a.playState !== 'running'));
+    const dlgOpen = (page) => page.$eval('#dlg-sd', (d) => d.open);
+    await vp.mouse.move(5, 5);
+    await vp.$eval('#sd', (s) => s.scrollIntoView({ block: 'start' }));
+    check('Khung nhìn: mở trang ở cỡ thật, góc trên trái; cụm nút hiện 100%', isHome(await camView(vp)) && (await vp.textContent('#sd-zoom-pct')).trim() === '100%'
+      && !(await vp.$eval('#sd-zoom', (z) => z.hidden)));
+    /* Ctrl + bánh xe (pinch của trackpad tới như thế): phóng quanh con trỏ, trang không cuộn. */
+    const P = await svgAt(vp, 0.4, 0.3);
+    let v = await camView(vp);
+    const u0 = { x: (P.x - P.left - v.x) / v.k, y: (P.y - P.top - v.y) / v.k };
+    const sy0 = await vp.evaluate(() => scrollY);
+    await vp.mouse.move(P.x, P.y);
+    await vp.keyboard.down('Control');
+    await vp.mouse.wheel(0, -240);
+    await vp.keyboard.up('Control');
+    await waitTo(vp, 'Ctrl + bánh xe đổi tỉ lệ', () => !/^matrix\(1, 0, 0, 1, 0, 0\)$|^none$/.test(getComputedStyle(document.querySelector('#sd-fig .sd-cam')).transform));
+    v = await camView(vp);
+    const u1 = { x: (P.x - P.left - v.x) / v.k, y: (P.y - P.top - v.y) / v.k };
+    check('Ctrl + bánh xe: phóng to quanh con trỏ (điểm dưới con trỏ đứng yên), trang không cuộn', v.k > 1.2 && Math.abs(u1.x - u0.x) < 0.5 && Math.abs(u1.y - u0.y) < 0.5
+      && (await vp.evaluate(() => scrollY)) === sy0 && /^\d+%$/.test(await vp.textContent('#sd-zoom-pct')) && (await vp.textContent('#sd-zoom-pct')).trim() !== '100%', JSON.stringify({ v, u0, u1 }));
+    /* Bánh xe trơn: sơ đồ chưa có focus thì trang cuộn, khung đứng yên; bấm vào sơ đồ rồi thì bánh xe kéo khung, trang đứng yên. */
+    let v1 = await camView(vp);
+    await vp.mouse.wheel(0, 120);
+    await waitTo(vp, 'trang cuộn bằng bánh xe trơn', (y0) => scrollY !== y0, sy0);
+    const sy1 = await vp.evaluate(() => scrollY);
+    check('Bánh xe trơn khi sơ đồ chưa có focus: trang cuộn, khung đứng yên', sy1 !== sy0 && JSON.stringify(await camView(vp)) === JSON.stringify(v1));
+    await vp.click('#sd-view-reset');
+    await settled(vp);
+    check('Reset view: về cỡ thật, góc trên trái', isHome(await camView(vp)) && (await vp.textContent('#sd-zoom-pct')).trim() === '100%', JSON.stringify(await camView(vp)));
+    const pad = await vp.$eval('#sd-fig', (f) => { const r = f.getBoundingClientRect(); return { x: r.left + 4, y: r.bottom - 4 }; });
+    await vp.mouse.click(pad.x, pad.y);
+    check('Bấm vào sơ đồ: khung có focus, không mở hộp', await vp.evaluate(() => document.activeElement?.id === 'sd-fig') && !(await dlgOpen(vp)));
+    v1 = await camView(vp);
+    const Q = await svgAt(vp, 0.5, 0.4);
+    await vp.mouse.move(Q.x, Q.y);
+    await vp.mouse.wheel(30, 90);
+    await vp.mouse.wheel(0, 0);
+    v = await camView(vp);
+    check('Bánh xe trơn khi sơ đồ có focus: kéo khung dọc và ngang, trang đứng yên', Math.abs(v.y - (v1.y - 90)) < 1 && Math.abs(v.x - (v1.x - 30)) < 1 && v.k === v1.k
+      && (await vp.evaluate(() => scrollY)) === sy1, JSON.stringify({ v, v1 }));
+    await vp.keyboard.down('Shift');
+    await vp.mouse.wheel(0, 50);
+    await vp.keyboard.up('Shift');
+    const vs = await camView(vp);
+    check('Shift + bánh xe: kéo ngang', Math.abs(vs.x - (v.x - 50)) < 1 && Math.abs(vs.y - v.y) < 1, JSON.stringify({ vs, v }));
+    /* Space + kéo, bắt đầu trên một nút: khung dời đúng bằng đường kéo, nút không mở hộp; con trỏ bàn tay. */
+    await vp.$eval('#sd-fig', (f) => f.scrollIntoView({ block: 'center' }));
+    const node = await vp.$eval('#sd-fig [data-stage="validate"]', (g) => { const r = g.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; });
+    const v2 = await camView(vp);
+    await vp.mouse.move(node.x, node.y);
+    await vp.keyboard.down('Space');
+    const grab = await vp.$eval('#sd-fig', (f) => f.classList.contains('is-grab') && getComputedStyle(f.querySelector('.sd-node')).cursor === 'grab');
+    await vp.mouse.down();
+    await vp.mouse.move(node.x + 30, node.y + 20, { steps: 3 });
+    await vp.mouse.move(node.x + 60, node.y + 40, { steps: 3 });
+    const grabbing = await vp.$eval('#sd-fig', (f) => getComputedStyle(f).cursor === 'grabbing');
+    await vp.mouse.up();
+    await vp.keyboard.up('Space');
+    v = await camView(vp);
+    check('Space + kéo: khung dời theo chuột, con trỏ bàn tay / nắm', Math.abs(v.x - (v2.x + 60)) < 1 && Math.abs(v.y - (v2.y + 40)) < 1 && grab && grabbing, JSON.stringify({ v, v2, grab, grabbing }));
+    check('Kéo bắt đầu trên một nút không mở hộp', !(await dlgOpen(vp)));
+    /* Nút giữa: kéo khung, không mở hộp. */
+    await vp.mouse.move(node.x, node.y);
+    await vp.mouse.down({ button: 'middle' });
+    await vp.mouse.move(node.x - 40, node.y - 10, { steps: 4 });
+    await vp.mouse.up({ button: 'middle' });
+    const v3 = await camView(vp);
+    check('Kéo bằng nút giữa: khung dời, không mở hộp', Math.abs(v3.x - (v.x - 40)) < 1 && Math.abs(v3.y - (v.y - 10)) < 1 && !(await dlgOpen(vp)), JSON.stringify({ v3, v }));
+    /* Bấm thường (không kéo) trên nút vẫn mở hộp. */
+    await vp.keyboard.press('0');
+    await vp.click('#sd-zoom-in');
+    await settled(vp);
+    const v4 = await camView(vp);
+    await vp.click('#sd-fig [data-stage="store"]');
+    check('Bấm thường trên nút vẫn mở hộp', await dlgOpen(vp));
+    /* Vẽ lại sơ đồ (đổi lựa chọn trong hộp) giữ khung đang xem. */
+    await vp.$eval('#sd-fig svg', (s) => { s.__old = true; });
+    await vp.click('#sd-pane .sd-opt.is-on input');
+    await vp.keyboard.press('Escape');
+    await vp.waitForFunction(() => !document.querySelector('#dlg-sd').open);
+    check('Vẽ lại sơ đồ giữ khung đang xem', !(await vp.$eval('#sd-fig svg', (s) => !!s.__old)) && JSON.stringify(await camView(vp)) === JSON.stringify(v4),
+      JSON.stringify(await camView(vp)));
+    /* Phím khi sơ đồ có focus: + phóng, - thu, mũi tên kéo, 0 về khung ban đầu. */
+    await vp.click('#sd-view-reset');
+    await settled(vp);
+    check('Reset view sau khi phóng: về khung ban đầu', isHome(await camView(vp)));
+    await vp.focus('#sd-fig');
+    await vp.keyboard.press('+');
+    await settled(vp);
+    const kz = (await camView(vp)).k;
+    await vp.keyboard.press('ArrowRight');
+    await settled(vp);
+    const ka = await camView(vp);
+    await vp.keyboard.press('-');
+    await settled(vp);
+    const km = (await camView(vp)).k;
+    await vp.keyboard.press('0');
+    await settled(vp);
+    check('Phím: + phóng, mũi tên kéo, - thu, 0 về khung ban đầu', kz > 1 && ka.x < 0 && Math.abs(km - 1) < 1e-6 && isHome(await camView(vp)), JSON.stringify({ kz, ka, km }));
+    /* Cụm nút: phóng to, bấm phần trăm về 100%, thu nhỏ. */
+    await vp.click('#sd-zoom-in');
+    await vp.click('#sd-zoom-in');
+    await settled(vp);
+    const kb = (await camView(vp)).k;
+    await vp.click('#sd-zoom-pct');
+    await settled(vp);
+    const kp = (await camView(vp)).k;
+    await vp.click('#sd-zoom-out');
+    await settled(vp);
+    check('Cụm nút: Zoom in, bấm phần trăm về 100%, Zoom out', kb > 1.5 && Math.abs(kp - 1) < 1e-6 && (await camView(vp)).k < 1
+      && /Zoom \d+%/.test(await vp.getAttribute('#sd-zoom-pct', 'aria-label')), JSON.stringify({ kb, kp }));
+    /* Tải lại trang: luôn về khung ban đầu (không lưu khung nhìn). */
+    await vp.click('#sd-zoom-in');
+    await vp.click('#sd-zoom-in');
+    await vp.focus('#sd-fig');
+    await vp.keyboard.press('ArrowDown');
+    await settled(vp);
+    check('Trước khi tải lại khung đã đổi', !isHome(await camView(vp)));
+    await vp.reload();
+    await vp.waitForSelector('#sd-fig .sd-cam');
+    check('Tải lại trang: về cỡ thật, góc trên trái, 100%', isHome(await camView(vp)) && (await vp.textContent('#sd-zoom-pct')).trim() === '100%'
+      && !Object.keys(await vp.evaluate(() => ({ ...localStorage }))).some((k) => /view|zoom/i.test(k)));
+    /* Tải SVG: không mang transform của khung nhìn. */
+    await vp.click('#sd-zoom-in');
+    const [dl] = await Promise.all([vp.waitForEvent('download'), vp.click('#sd-svg')]);
+    const body = fs.readFileSync(await dl.path(), 'utf8');
+    check('Tải SVG đang phóng: không mang transform của khung nhìn', !/scale\(/.test(body) && /viewBox="0 0 /.test(body));
+    await vx.close();
+    /* 320px, theme tối: cụm nút nằm trong khung, trang không cuộn ngang, phóng được. */
+    const { ctx: nx2, page: np } = await open(320, 700, { colorScheme: 'dark' });
+    await np.click('#start .tpl[data-tpl="crisp-dm"]');
+    await np.waitForSelector('#sd-fig svg');
+    await seedDesign(np);
+    await np.reload();
+    await np.waitForSelector('#sd-fig .sd-cam');
+    await np.click('#sd-zoom-in');
+    await settled(np);
+    const narrow = await np.evaluate(() => {
+      const z = document.querySelector('#sd-zoom').getBoundingClientRect();
+      const bg = getComputedStyle(document.querySelector('#sd-fig')).backgroundColor.match(/\d+/g).slice(0, 3).map(Number);
+      return { right: z.right, vw: innerWidth, dark: Math.max(...bg) < 64 };
+    });
+    check('320px, theme tối: cụm nút trong khung, trang không cuộn ngang, phóng được', narrow.right <= narrow.vw && (await hOverflow(np)) <= 0
+      && (await camView(np)).k > 1 && narrow.dark, JSON.stringify(narrow));
+    await nx2.close();
+    /* Cảm ứng: không có dấu + (không rê được); nhãn có hợp đồng vẫn bấm được. */
+    const { ctx: tx, page: tp } = await open(390, 844, { hasTouch: true, isMobile: true });
+    await tp.click('#start .tpl[data-tpl="crisp-dm"]');
+    await tp.waitForSelector('#sd-fig svg');
+    await seedDesign(tp);
+    await tp.reload();
+    await tp.waitForSelector('#sd-fig .sd-hand');
+    check('Cảm ứng: đường trống không có dấu +, nhãn có hợp đồng vẫn hiện', await tp.$$eval('#sd-fig .sd-hand', (l) => l.every((g) =>
+      (getComputedStyle(g).display === 'none') === g.classList.contains('is-empty'))));
+    /* Chạm thật (CDP): một ngón kéo ngang dời khung, không mở nút dưới ngón; hai ngón xa nhau thì phóng; chạm nhẹ vẫn mở nút. */
+    const cdp = await tx.newCDPSession(tp);
+    const touch = (type, points) => cdp.send('Input.dispatchTouchEvent', { type, touchPoints: points.map(([x, y], id) => ({ x, y, id })) });
+    await tp.$eval('#sd-fig [data-stage="process"]', (g) => g.scrollIntoView({ block: 'center' }));
+    const tn = await tp.$eval('#sd-fig [data-stage="process"]', (g) => { const r = g.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; });
+    const tv0 = await camView(tp);
+    await touch('touchStart', [[tn.x, tn.y]]);
+    for (let i = 1; i <= 6; i++) await touch('touchMove', [[tn.x - 10 * i, tn.y]]);
+    await touch('touchEnd', []);
+    const tv1 = await camView(tp);
+    check('Chạm: một ngón kéo ngang dời khung, không mở nút dưới ngón', Math.abs(tv1.x - (tv0.x - 60)) < 1 && !(await dlgOpen(tp)), JSON.stringify({ tv0, tv1 }));
+    const c = await svgAt(tp, 0.5, 0.2);
+    await touch('touchStart', [[c.x - 20, c.y], [c.x + 20, c.y]]);
+    for (let i = 1; i <= 5; i++) await touch('touchMove', [[c.x - 20 - 8 * i, c.y], [c.x + 20 + 8 * i, c.y]]);
+    await touch('touchEnd', []);
+    const tv2 = await camView(tp);
+    check('Chạm: hai ngón xa nhau thì phóng to', tv2.k > 1.8 && !(await dlgOpen(tp)), JSON.stringify(tv2));
+    await tp.click('#sd-view-reset');
+    await settled(tp);
+    await tp.tap('#sd-fig [data-stage="process"]');
+    check('Chạm nhẹ trên nút vẫn mở hộp', await dlgOpen(tp));
+    await tx.close();
+  });
+
   /* ── Dấu Redo qua hộp sửa: chỉ sửa Notes thì giữ dấu và số "k of n"; chuyển sang bước khác thì bỏ dấu, Hoàn tác trả lại ── */
   await section('Dấu Redo qua hộp sửa', async () => {
     const seed = { version: 2, lastId: 'wr', workspaces: [{ id: 'wr', name: 'Redo', steps: [

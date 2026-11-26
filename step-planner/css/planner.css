@@ -138,7 +138,12 @@
   --ws-prog-w: 140px;                  /* thanh tiến độ của một dự án trong hộp Dự án */
   /* Sơ đồ System design (js/design.js đọc các token này để xếp nút) và cột trái của hộp chọn. */
   --sd-node-max: 220px; --sd-gap-x: 64px; --sd-gap-y: 36px; --sd-pad: 12px; --sd-head: 30px; --sd-line: 20px;
-  --sd-nav-w: 250px; --sd-dash: 5 4; --sd-badge-h: 20px; --sd-faint: .55;
+  --sd-nav-w: 250px; --sd-dash: 5 4; --sd-badge-h: 20px;
+  /* Đường nối có bàn giao: khoảng cột tối thiểu, nhãn dài nhất (phần chiều dài đường), độ mờ đuôi, vùng rê, dấu +. */
+  --sd-gap-hand: 128px; --sd-hand-cap: .5; --sd-hand-fade: var(--s4); --sd-hit: 16px; --sd-plus: 16px;
+  --sd-hand-hover: color-mix(in srgb, var(--accent) 12%, var(--surface)); /* nền đặc: nét đường nối không lộ qua nhãn */
+  --sd-fig-pad: var(--s4);             /* lề trong khung sơ đồ: vẽ trong <svg>, nên sơ đồ phóng to chạm tới viền khung */
+  --sd-pct-w: 52px;                    /* nút phần trăm của khung nhìn: "300%" không làm cụm nút nhảy */
   --sa-b: env(safe-area-inset-bottom, 0px);
 
   /* Cỡ điều khiển thật: máy tính dùng cao thường; cảm ứng và điện thoại ≥ --h-touch. */
@@ -147,7 +152,7 @@
   --hit: var(--h-sm);
 }
 @media (pointer: coarse), (max-width: 640px) {
-  :root { --ctl: var(--h-touch); --ctl-sm: var(--h-touch); --hit: var(--h-touch); --pad: 16px; }
+  :root { --ctl: var(--h-touch); --ctl-sm: var(--h-touch); --hit: var(--h-touch); --pad: 16px; --sd-fig-pad: var(--s3); }
 }
 
 @media (prefers-color-scheme: dark) {
@@ -928,11 +933,12 @@ span.chip::after { content: none; }
 .sd-acts { display: flex; flex-direction: column; align-items: stretch; gap: var(--s2); margin-top: var(--s2); }
 .sd-main { min-width: 0; display: flex; flex-direction: column; gap: var(--s3); }
 .sd-fig {
-  min-width: 0; overflow-x: auto; padding: var(--s4); background: var(--surface);
+  min-width: 0; overflow: hidden; padding: 0; background: var(--surface);
   border: var(--line-w) solid var(--line); border-radius: var(--r); box-shadow: var(--shadow-1);
+  transition: border-color var(--dur) var(--ease);
 }
-.sd-empty { font-size: var(--fs-sm); color: var(--ink-3); }
-.sd-svg { display: block; max-width: none; overflow: visible; }
+.sd-empty { padding: var(--sd-fig-pad); font-size: var(--fs-sm); color: var(--ink-3); }
+.sd-svg { display: block; max-width: none; overflow: hidden; }
 .sd-box { fill: var(--surface); stroke: var(--line); stroke-width: var(--line-w); transition: stroke var(--dur) var(--ease); }
 .sd-bar { fill: var(--ink-4); }
 .lane-data .sd-bar { fill: var(--blue); }
@@ -954,21 +960,41 @@ span.chip::after { content: none; }
 .sd-node:focus { outline: none; }
 .sd-node:focus-visible .sd-box { stroke: var(--ring); stroke-width: var(--ring-w); stroke-dasharray: none; }
 @media (hover: hover) { .sd-node[data-stage]:hover .sd-box { stroke: var(--ink-2); } }
-/* Bàn giao trên đường nối: nhãn viên thuốc (đã ghi) hay dấu + (trống, hiện khi rê chuột; cảm ứng: luôn hiện mờ). */
+/* Bàn giao trên đường nối (`.sd-wire`: vùng rê rộng, nét, nhãn trên cùng). Nhãn viên thuốc nền đặc che nét; chữ dài mờ ở đuôi
+   (mask trong design.js). Đường trống: dấu + chỉ hiện khi rê đường; cảm ứng không có (trang Handoffs của hộp thay). */
+.sd-hit { fill: none; stroke: transparent; stroke-width: var(--sd-hit); pointer-events: stroke; cursor: pointer; }
+.sd-wire .sd-edge { transition: stroke var(--dur) var(--ease); }
+.sd-arrow.is-on { stroke: var(--accent); }
 .sd-hand { cursor: pointer; }
-.sd-hand-box { fill: var(--surface); stroke: var(--accent); stroke-width: var(--mark-w); }
+.sd-hand-box { fill: var(--surface); stroke: var(--accent); stroke-width: var(--mark-w); transition: fill var(--dur) var(--ease); }
 .sd-hand-txt { font: 600 var(--fs-xs)/1 var(--sans); fill: var(--green); }
-.sd-hand-plus { fill: none; stroke: var(--green); stroke-width: var(--mark-w); stroke-linecap: round; }
 .sd-hand:focus { outline: none; }
 .sd-hand:focus-visible .sd-hand-box { stroke: var(--ring); stroke-width: var(--ring-w); }
+.sd-wire:has(.sd-hand:focus-visible) .sd-edge { stroke: var(--accent); marker-end: url(#sd-arrow-on); }
 .sd-hand.is-empty { opacity: 0; transition: opacity var(--dur) var(--ease); }
-.sd-hand.is-empty .sd-hand-box { stroke: var(--accent-line); }
+.sd-hand.is-empty .sd-hand-box { fill: var(--accent); stroke: var(--surface); stroke-width: var(--mark-w); }
+.sd-hand-plus { fill: none; stroke: var(--on-accent); stroke-width: var(--mark-w); stroke-linecap: round; }
 @media (hover: hover) {
-  .sd-fig:hover .sd-hand.is-empty { opacity: var(--sd-faint); }
-  .sd-hand.is-empty:hover { opacity: 1; }
-  .sd-hand:hover .sd-hand-box { fill: var(--accent-soft); }
+  .sd-wire:hover .sd-edge { stroke: var(--accent); marker-end: url(#sd-arrow-on); }
+  .sd-wire:hover .sd-hand.is-empty { opacity: 1; }
+  .sd-hand:not(.is-empty):hover .sd-hand-box { fill: var(--sd-hand-hover); }
 }
-@media (hover: none) { .sd-hand.is-empty { opacity: var(--sd-faint); } }
+@media (hover: none) { .sd-hand.is-empty { display: none; } }
+/* Khung nhìn (js/diagram-view.js): khung có focus thì bánh xe kéo khung (viền đậm báo); giữ Space: bàn tay; đang kéo: nắm.
+   Chạm: một ngón dọc cuộn trang tới khi chạm vào chỗ trống của sơ đồ, rồi một ngón kéo khung; hai ngón luôn thu phóng. */
+.sd-fig:focus { outline: none; border-color: var(--ink-4); }
+.sd-fig:focus-visible { outline: var(--ring-w) solid var(--ring); outline-offset: var(--mark-w); }
+.sd-svg { touch-action: pan-y; -webkit-user-select: none; user-select: none; }
+.sd-fig:focus .sd-svg { touch-action: none; }
+.sd-fig.is-grab, .sd-fig.is-grab * { cursor: grab; }
+.sd-fig.is-panning, .sd-fig.is-panning * { cursor: grabbing; }
+.sd-cam.is-easing { transition: transform var(--dur-sheet) var(--ease); }
+.sd-under { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--s2) var(--s4); }
+.sd-zoom { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--s1); margin-left: auto; }
+.sd-zoom .icon-btn { width: var(--ctl-sm); height: var(--ctl-sm); }
+.sd-zoom-pct { min-width: var(--sd-pct-w); padding: 0 var(--s1); font: 500 var(--fs-xs)/1 var(--mono); font-variant-numeric: tabular-nums; }
+.sd-zoom-hint { margin-right: var(--s2); font-size: var(--fs-xs); color: var(--ink-3); }
+@media (hover: none), (max-width: 640px) { .sd-zoom-hint { display: none; } }
 .sd-legend { display: flex; flex-wrap: wrap; gap: var(--s1) var(--s4); list-style: none; font: 500 var(--fs-xs)/var(--lh-tight) var(--mono); color: var(--ink-3); }
 .sd-legend li { display: inline-flex; align-items: center; gap: var(--s2); }
 .sd-legend li::before { content: ''; width: var(--s3); height: var(--s3); border-radius: var(--r-xs); background: var(--ink-4); }
@@ -1046,6 +1072,10 @@ span.chip::after { content: none; }
 .sd-det > summary svg.i, .sd-more > summary svg.i { width: var(--s4); height: var(--s4); transform: rotate(-90deg); transition: transform var(--dur) var(--ease); }
 .sd-det[open] > summary svg.i, .sd-more[open] > summary svg.i { transform: none; }
 .sd-more[open] { gap: var(--s3); }
+/* Phần mở của mọi khối gập (design.js `fold`): <details> không chia gap cho nội dung, nên nhịp dọc nằm ở div này. */
+.sd-fold { min-width: 0; display: flex; flex-direction: column; gap: var(--s2); }
+.sd-more > .sd-fold { gap: var(--s3); }
+.sd-more[data-more="profile-rest"] > .sd-fold { gap: var(--s4); }
 .sd-links { display: flex; flex-direction: column; gap: var(--s1); list-style: none; font-size: var(--fs-sm); }
 .sd-links a { display: inline-flex; align-items: center; gap: var(--s1); color: var(--blue-fg); text-underline-offset: 3px; }
 .sd-links svg.i { width: var(--s4); height: var(--s4); }
@@ -1080,6 +1110,10 @@ span.chip::after { content: none; }
 .sd-edge-name b { font: 600 var(--fs-md)/var(--lh-tight) var(--display); }
 .sd-edge-name small { font-size: var(--fs-sm); color: var(--ink-3); overflow-wrap: anywhere; }
 .sd-edge-item > :not(summary) { margin-left: calc(var(--s4) + var(--s2)); }
+/* Hợp đồng đang mở: một vạch ngăn với tên đường nối, mỗi ô cách nhãn ô sau --s4. */
+.sd-edge-item > .sd-fold { gap: var(--s4); padding-top: var(--s4); border-top: var(--line-w) solid var(--line-2); }
+.sd-edge-item[open] { border-color: var(--ink-4); }
+.sd-edge-item.is-set[open] { border-color: var(--accent); }
 /* Hộp "Update plan" (#dlg-sdp): nhóm New / Changed / No longer in the design, mỗi mục một dòng kèm lựa chọn. */
 .sdp-groups { display: flex; flex-direction: column; gap: var(--s5); }
 .sdp-group { display: flex; flex-direction: column; gap: var(--s2); }
@@ -1158,7 +1192,6 @@ li.sd-warnbox { display: block; }
   .sd { grid-template-columns: minmax(0, 1fr); padding-top: var(--s5); }
   .sd-acts { flex-direction: row; flex-wrap: wrap; }
   .sd-acts .btn { flex: 1 1 auto; }
-  .sd-fig { padding: var(--s3); }
   .dlg.sd-dlg { width: 100vw; height: 100dvh; max-height: 100dvh; margin: 0; border-radius: 0; border-width: 0; }
   .dlg.sd-dlg .dlg-head::before { content: none; }
   .dlg.sd-dlg .dlg-head { padding: var(--s3) var(--s2) var(--s3) var(--s4); }

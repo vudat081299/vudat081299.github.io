@@ -3,6 +3,7 @@
  * Danh mục: data/system-design.json. Logic thuần: design-core.js. Chữ người dùng chỉ vào DOM qua text node. */
 import * as D from './design-core.js';
 import * as C from './core.js';
+import { initDiagramView, attach as attachView, resetView } from './diagram-view.js';
 
 const NS = 'http://www.w3.org/2000/svg';
 const LANE_LABEL = { data: 'Data', model: 'Model', app: 'App', ops: 'Operations' };
@@ -52,6 +53,10 @@ function edit(fn) {
 /** Trạng thái lưu của một khâu (bản sửa được). @param {any} d @param {string} id */
 const stageRec = (d, id) => (d.stages[id] = d.stages[id] || { pick: [], skip: false, own: '', note: '' });
 
+/** Khối gập của hộp: phần mở nằm trong một div (`.sd-fold`), vì nội dung của <details> không nhận gap của flex.
+ * @param {Record<string, any>} attrs @param {any} summary @param {...any} kids */
+const fold = (attrs, summary, ...kids) => deps.h('details', attrs, summary, deps.h('div', { class: 'sd-fold' }, ...kids));
+
 /** Bàn giao của một đường nối (bản sửa được). @param {any} d @param {string} key */
 const edgeRec = (d, key) => ((d.edges = d.edges || {})[key] = d.edges[key] || { via: '', what: '', where: '', promise: '', check: '' });
 
@@ -64,6 +69,7 @@ export function renderSection() {
     $('sd-count').textContent = '';
     $('sd-open').disabled = true;
     $('sd-fig').replaceChildren(deps.h('p', { class: 'sd-empty' }, catError || 'Loading the stage list…'));
+    attachView(null, 0, 0);
     return;
   }
   const n = D.decidedCount(cat, w.design);
@@ -119,15 +125,35 @@ function textW(text, font) {
   return measureCtx.measureText(text).width;
 }
 
+let viewWs = '';                  // dự án của khung nhìn đang xem: đổi dự án thì về khung ban đầu
+
 function drawDiagram() {
   const fig = $('sd-fig');
   const { flow, ops } = D.diagramNodes(cat, design());
   const cs = getComputedStyle(fig);
-  const W = Math.max(fig.clientWidth - px(cs, 'padding-left', 0) - px(cs, 'padding-right', 0) - 4, 240);
+  /* Lề trong khung nằm trong <svg> (--sd-fig-pad): sơ đồ phóng to, kéo đi chạm tới viền khung chứ không bị cắt giữa lề. */
+  const fp = px(cs, '--sd-fig-pad', 16);
+  const W = Math.max(fig.clientWidth - 2 * fp - 4, 240);
   const gx = px(cs, '--sd-gap-x', 40), gy = px(cs, '--sd-gap-y', 36), maxW = px(cs, '--sd-node-max', 220);
   const pad = px(cs, '--sd-pad', 12), head = px(cs, '--sd-head', 30), lh = px(cs, '--sd-line', 20);
-  const cols = Math.max(1, Math.min(5, Math.floor((W + gx) / (Math.min(maxW, 180) + gx))));
-  const nw = Math.min(maxW, (W - (cols - 1) * gx) / cols);
+  const gxHand = Math.max(gx, px(cs, '--sd-gap-hand', 128));
+  const edges = new Map(D.flowEdges(cat, design()).map((e) => [e.key, e]));
+  /* Khoảng giữa cột c và c + 1: một đường nối ngang qua đó có hợp đồng thì nới tới --sd-gap-hand, để nhãn không chiếm cả đường.
+   * Số cột: nhiều nhất (≤ 5) mà nút còn rộng ≥ min(--sd-node-max, 180). */
+  const gapsFor = (/** @type {number} */ k) => {
+    const g = Array(Math.max(0, k - 1)).fill(gx);
+    for (let i = 1; i < flow.length; i++) {
+      const a = D.snake(i - 1, k), b = D.snake(i, k);
+      if (a.row === b.row && edges.get(`${flow[i - 1].id}>${flow[i].id}`)?.c) g[Math.min(a.col, b.col)] = gxHand;
+    }
+    return g;
+  };
+  const sum = (/** @type {number[]} */ a) => a.reduce((t, x) => t + x, 0);
+  const minNode = Math.min(maxW, 180);
+  let cols = 5, gaps = gapsFor(cols);
+  while (cols > 1 && cols * minNode + sum(gaps) > W) gaps = gapsFor(--cols);
+  const nw = Math.min(maxW, (W - sum(gaps)) / cols);
+  const colX = gaps.reduce((xs, g, c) => [...xs, xs[c] + nw + g], [0]);
   const nameFont = `600 ${cs.getPropertyValue('--fs-sm').trim() || '13px'} ${cs.getPropertyValue('--sans').trim()}`;
   const titleFont = `500 ${cs.getPropertyValue('--fs-xs').trim() || '12px'} ${cs.getPropertyValue('--mono').trim()}`;
   const lineCount = (/** @type {any} */ n) => (n.lane === 'end' ? 1 : Math.max(1, Math.min(n.names.length, MAX_NAMES + 1)));
@@ -137,30 +163,36 @@ function drawDiagram() {
   const rows = /** @type {number[]} */ ([]);
   flow.forEach((n, i) => { const r = D.snake(i, cols).row; rows[r] = Math.max(rows[r] || 0, nodeH(n)); });
   const rowY = rows.map((_, r) => rows.slice(0, r).reduce((a, b) => a + b + gy, 0));
-  const pos = flow.map((n, i) => { const p = D.snake(i, cols); return { n, x: p.col * (nw + gx), y: rowY[p.row], h: rows[p.row], row: p.row }; });
+  const pos = flow.map((n, i) => { const p = D.snake(i, cols); return { n, x: colX[p.col], y: rowY[p.row], h: rows[p.row], row: p.row }; });
   let y = rowY.length ? rowY[rowY.length - 1] + rows[rows.length - 1] : 0;
 
   const g = svg('g', { class: 'sd-flow' });
-  const hands = svg('g', { class: 'sd-hands' });
-  const edges = new Map(D.flowEdges(cat, design()).map((e) => [e.key, e]));
-  const badgeFont = `600 ${cs.getPropertyValue('--fs-xs').trim() || '12px'} ${cs.getPropertyValue('--sans').trim()}`;
-  const bh = px(cs, '--sd-badge-h', 20);
+  const fonts = { name: nameFont, title: titleFont };
+  for (const p of pos) g.append(nodeEl(p.n, p.x, p.y, nw, p.h, head, lh, pad, fonts));
+  /* Đường nối vẽ sau nút. Đường có bàn giao là một nhóm: vùng rê rộng dọc đường, nét, rồi nhãn trên cùng (nhãn nền đặc che nét). */
+  const links = svg('g', { class: 'sd-wires' });
+  const dim = {
+    bh: px(cs, '--sd-badge-h', 20), plus: px(cs, '--sd-plus', 16), fade: px(cs, '--sd-hand-fade', 16), cap: px(cs, '--sd-hand-cap', 0.5),
+    font: `600 ${cs.getPropertyValue('--fs-xs').trim() || '12px'} ${cs.getPropertyValue('--sans').trim()}`,
+  };
   for (let i = 1; i < pos.length; i++) {
     const a = pos[i - 1], b = pos[i];
     const same = a.row === b.row;
+    const key = `${a.n.id}>${b.n.id}`;
     const d = same
       ? (b.x > a.x ? `M${a.x + nw} ${a.y + a.h / 2}H${b.x - 3}` : `M${a.x} ${a.y + a.h / 2}H${b.x + nw + 3}`)
       : `M${a.x + nw / 2} ${a.y + a.h}V${b.y - 3}`;
     /* Nét liền khi cả hai đầu đã quyết, còn lại nét đứt; đầu mũi tên luôn liền. */
-    g.append(svg('path', { class: `sd-edge${D.bothDecided(a.n, b.n) ? '' : ' is-open'}`, d, 'data-pair': `${a.n.id}>${b.n.id}`, 'marker-end': 'url(#sd-arrow)' }));
-    /* Bàn giao: đường đã ghi có nhãn bấm được (Tab tới được); đường trống có dấu + khi rê chuột (bàn phím: trang Handoffs). */
-    const e = edges.get(`${a.n.id}>${b.n.id}`);
-    if (e) hands.append(handEl(e, same ? Math.min(a.x, b.x) + nw + gx / 2 : a.x + nw / 2, same ? a.y + a.h / 2 : a.y + a.h + gy / 2,
-      same ? gx - 6 : nw, bh, badgeFont));
+    const line = svg('path', { class: `sd-edge${D.bothDecided(a.n, b.n) ? '' : ' is-open'}`, d, 'data-pair': key, 'marker-end': 'url(#sd-arrow)' });
+    const e = edges.get(key);
+    if (!e) { links.append(line); continue; }
+    /* Nhãn ở giữa khoảng trống giữa hai nút; dài nhất --sd-hand-cap lần chiều dài đường (đường dọc: lần bề rộng nút). */
+    const x0 = Math.min(a.x, b.x) + nw, x1 = Math.max(a.x, b.x);
+    links.append(svg('g', { class: 'sd-wire', 'data-edge': key },
+      svg('path', { class: 'sd-hit', d }), line,
+      handEl(e, same ? (x0 + x1) / 2 : a.x + nw / 2, same ? a.y + a.h / 2 : a.y + a.h + gy / 2, (same ? x1 - x0 : nw) * dim.cap, dim, i)));
   }
-  const fonts = { name: nameFont, title: titleFont };
-  for (const p of pos) g.append(nodeEl(p.n, p.x, p.y, nw, p.h, head, lh, pad, fonts));
-  g.append(hands);
+  g.append(links);
 
   /* Vận hành: dải riêng dưới luồng, không mũi tên — chạy song song với mọi khâu. */
   const og = svg('g', { class: 'sd-ops' });
@@ -171,39 +203,56 @@ function drawDiagram() {
     const oh = Math.max(...ops.map(nodeH));
     ops.forEach((n, i) => {
       const c = i % cols, r = Math.floor(i / cols);
-      og.append(nodeEl(n, c * (nw + gx), y + r * (oh + gy / 2), nw, oh, head, lh, pad, fonts));
+      og.append(nodeEl(n, colX[c], y + r * (oh + gy / 2), nw, oh, head, lh, pad, fonts));
     });
     y += Math.ceil(ops.length / cols) * (oh + gy / 2) - gy / 2;
   }
-  const width = cols * nw + (cols - 1) * gx;
+  const width = colX[cols - 1] + nw;
   const label = 'System diagram: ' + flow.map((n) => n.names.length ? `${n.title} (${n.names.join(', ')})` : n.title).join(' → ');
-  const el = svg('svg', { class: 'sd-svg', viewBox: `-2 -2 ${width + 4} ${y + 4}`, width: width + 4, height: y + 4, role: 'img', 'aria-label': label },
-    /* Đầu mũi tên chữ V hở; đơn vị theo sơ đồ để nét bằng nét đường nối. */
-    svg('defs', {}, svg('marker', { id: 'sd-arrow', viewBox: '0 0 12 12', refX: 10, refY: 6, markerWidth: 12, markerHeight: 12, markerUnits: 'userSpaceOnUse', orient: 'auto-start-reverse' },
-      svg('path', { class: 'sd-arrow', d: 'M4 2L10 6L4 10' }))),
-    g, og);
+  /* Đầu mũi tên chữ V hở; đơn vị theo sơ đồ để nét bằng nét đường nối. Bản `-on`: đường đang rê. */
+  const arrow = (/** @type {string} */ id, /** @type {string} */ cls) => svg('marker', { id, viewBox: '0 0 12 12', refX: 10, refY: 6, markerWidth: 12, markerHeight: 12, markerUnits: 'userSpaceOnUse', orient: 'auto-start-reverse' },
+    svg('path', { class: cls, d: 'M4 2L10 6L4 10' }));
+  /* <svg> rộng bằng khung (1 đơn vị = 1 px); sơ đồ trong nhóm `.sd-cam`, diagram-view.js đặt transform kéo / thu phóng lên đó. */
+  const vw = Math.max(W, width) + 4 + 2 * fp, cw = width + 4 + 2 * fp, chh = y + 4 + 2 * fp;
+  const el = svg('svg', { class: 'sd-svg', viewBox: `0 0 ${vw} ${chh}`, width: vw, height: chh, role: 'img', 'aria-label': label, 'data-w': cw },
+    svg('defs', {}, arrow('sd-arrow', 'sd-arrow'), arrow('sd-arrow-on', 'sd-arrow is-on')),
+    svg('g', { class: 'sd-cam' }, svg('g', { transform: `translate(${fp + 2} ${fp + 2})` }, g, og)));
   fig.replaceChildren(el);
+  if (ws().id !== viewWs) { viewWs = ws().id; resetView(false); }
+  attachView(el, cw, chh);
 }
 
-/** Nhãn bàn giao trên đường nối, tâm (cx, cy). @param {any} e @param {number} cx @param {number} cy @param {number} maxW @param {number} bh @param {string} font */
-function handEl(e, cx, cy, maxW, bh, font) {
+/** Nhãn bàn giao trên đường nối, tâm (cx, cy), rộng nhất `cap`. Đường trống: dấu + chỉ cho chuột, hiện khi rê đường (bàn phím,
+ * cảm ứng: trang Handoffs của hộp liệt kê mọi đường). Chữ dài hơn `cap` thì mờ dần ở đuôi (mask), đủ chữ ở tooltip.
+ * @param {any} e @param {number} cx @param {number} cy @param {number} cap
+ * @param {{bh: number, plus: number, fade: number, font: string}} dim @param {number} n số thứ tự, cho id của mask */
+function handEl(e, cx, cy, cap, dim, n) {
   const name = `${e.from.title} → ${e.to.title}`;
   if (!e.c) {
-    const r = bh / 2;
+    const r = dim.plus / 2, k = r / 2;
     return svg('g', { class: 'sd-hand is-empty', transform: `translate(${cx} ${cy})`, 'data-edge': e.key, 'aria-hidden': 'true' },
       svg('title', {}, `Describe the handoff ${name}`),
       svg('circle', { class: 'sd-hand-box', r }),
-      svg('path', { class: 'sd-hand-plus', d: `M${-r / 2} 0H${r / 2}M0 ${-r / 2}V${r / 2}` }));
+      svg('path', { class: 'sd-hand-plus', d: `M${-k} 0H${k}M0 ${-k}V${k}` }));
   }
-  const bp = bh / 3;
-  const label = fitText(D.VIA.find((v) => v.id === e.c.via)?.short || 'Spec', maxW - 2 * bp, font);
-  const w = Math.min(maxW, textW(label, font) + 2 * bp);
+  const bh = dim.bh, bp = bh / 3;
+  const label = D.VIA.find((v) => v.id === e.c.via)?.short || 'Spec';
+  const tw = textW(label, dim.font);
+  const cut = tw + 2 * bp > cap;
+  const w = Math.max(bh, cut ? cap : tw + 2 * bp);
   const what = [D.viaLabel(e.c.via), e.c.what].filter(Boolean).join(', ');
-  return svg('g', { class: 'sd-hand', transform: `translate(${cx - w / 2} ${cy - bh / 2})`, 'data-edge': e.key, tabindex: 0, role: 'button',
+  const id = `sd-fade-${n}`;
+  const f = Math.min(dim.fade, (w - 2 * bp) / 2);
+  return svg('g', { class: `sd-hand${cut ? ' is-cut' : ''}`, transform: `translate(${cx - w / 2} ${cy - bh / 2})`, 'data-edge': e.key, tabindex: 0, role: 'button',
     'aria-label': `Handoff ${name}${what ? ': ' + what : ''}. Edit` },
-  svg('title', {}, `Handoff ${name}${what ? ': ' + what : ''}`),
+  svg('title', {}, `Handoff ${name}: ${label}${what ? ` (${what})` : ''}`),
   svg('rect', { class: 'sd-hand-box', width: w, height: bh, rx: bh / 2 }),
-  svg('text', { class: 'sd-hand-txt', x: w / 2, y: bh / 2, 'text-anchor': 'middle', 'dominant-baseline': 'central' }, label));
+  cut ? svg('defs', {},
+    svg('linearGradient', { id: id + '-g', gradientUnits: 'userSpaceOnUse', x1: w - bp - f, y1: 0, x2: w - bp, y2: 0 },
+      svg('stop', { offset: 0 }), svg('stop', { offset: 1, 'stop-opacity': 0 })),
+    svg('mask', { id, maskUnits: 'userSpaceOnUse', x: 0, y: 0, width: w, height: bh, 'mask-type': 'alpha' },
+      svg('rect', { width: w, height: bh, fill: `url(#${id}-g)` }))) : null,
+  svg('text', { class: 'sd-hand-txt', x: cut ? bp : w / 2, y: bh / 2, 'text-anchor': cut ? 'start' : 'middle', 'dominant-baseline': 'central', mask: cut ? `url(#${id})` : null }, label));
 }
 
 /** @param {any} n @param {number} x @param {number} y @param {number} w @param {number} hh @param {number} head @param {number} lh @param {number} pad @param {{name: string, title: string}} font */
@@ -231,6 +280,8 @@ function downloadSvg() {
   if (!src) return;
   const out = /** @type {SVGSVGElement} */ (src.cloneNode(true));
   const a = [src, ...src.querySelectorAll('*')], b = [out, ...out.querySelectorAll('*')];
+  const drop = b.filter((_, i) => a[i].matches('.sd-hit, .sd-hand.is-empty'));
+  const camOut = b[a.findIndex((x) => x.matches('.sd-cam'))];
   const props = ['fill', 'stroke', 'stroke-width', 'stroke-dasharray', 'stroke-linecap', 'stroke-linejoin', 'font-family', 'font-size', 'font-weight', 'letter-spacing', 'opacity'];
   a.forEach((el, i) => {
     const cs = getComputedStyle(el);
@@ -239,6 +290,12 @@ function downloadSvg() {
     b[i].removeAttribute('tabindex');
     b[i].removeAttribute('role');
   });
+  for (const x of drop) x.remove();
+  camOut?.removeAttribute('style');
+  const cw = src.getAttribute('data-w') || src.getAttribute('width') || '0', chh = src.getAttribute('height') || '0';
+  out.setAttribute('width', cw);
+  out.setAttribute('viewBox', `0 0 ${cw} ${chh}`);
+  out.removeAttribute('data-w');
   out.setAttribute('xmlns', NS);
   const vb = out.getAttribute('viewBox')?.split(' ').map(Number) || [0, 0, 0, 0];
   out.insertBefore(svg('rect', { x: vb[0], y: vb[1], width: vb[2], height: vb[3], fill: getComputedStyle(document.body).backgroundColor }), out.firstChild);
@@ -508,7 +565,7 @@ function profilePane() {
     h('h3', { class: 'sd-h' }, 'Project profile'),
     h('p', { class: 'sd-q' }, 'Trả lời những câu bạn biết; câu nào chưa chắc thì để "Not sure". Gợi ý ở từng khâu đổi theo câu trả lời.'), // lang: vi — lời giải thích, nội dung
     ...asked.map(q2),
-    rest.length ? h('details', { class: 'sd-more', 'data-more': 'profile-rest', open: moreOpen.has('profile-rest') },
+    rest.length ? fold({ class: 'sd-more', 'data-more': 'profile-rest', open: moreOpen.has('profile-rest') },
       h('summary', {}, deps.icon('chev'), `${C.plural(rest.length, 'question')} the ${p.label} path doesn't need`),
       ...rest.map(q2)) : null,
   ];
@@ -563,7 +620,7 @@ function archItem(e, on, d) {
     const names = /** @type {string[]} */ (ids).map((oid) => s.options.find((/** @type {any} */ o) => o.id === oid)?.name).filter(Boolean);
     return h('li', {}, h('button', { type: 'button', class: 'sd-link', 'data-at': stagePage(sid) }, s.title), `: ${names.join(', ')}`);
   }).filter(Boolean);
-  return h('details', { class: `sd-arch${on ? ' is-rec' : ''}`, 'data-more': id, 'data-arch': e.id, open: moreOpen.has(id) },
+  return fold({ class: `sd-arch${on ? ' is-rec' : ''}`, 'data-more': id, 'data-arch': e.id, open: moreOpen.has(id) },
     h('summary', {}, deps.icon('chev'), h('span', { class: 'sd-arch-name' },
       h('span', { class: 'sd-arch-head' }, h('b', {}, e.name),
         on ? h('span', { class: 'sd-tag top' }, 'Recommended') : null, mine ? h('span', { class: 'sd-tag' }, 'Your deliverable') : null),
@@ -605,7 +662,7 @@ function edgeItem(e) {
     f === 'promise'
       ? h('textarea', { rows: 3, 'data-ef': f, 'data-edge': e.key, placeholder: ph }, c[f] || '')
       : h('input', { type: 'text', class: 'input', maxlength: D.EDGE_MAX, value: c[f] || '', 'data-ef': f, 'data-edge': e.key, placeholder: ph }));
-  return h('details', { class: `sd-edge-item${e.c ? ' is-set' : ''}`, 'data-more': id, 'data-edge-item': e.key, open: moreOpen.has(id) },
+  return fold({ class: `sd-edge-item${e.c ? ' is-set' : ''}`, 'data-more': id, 'data-edge-item': e.key, open: moreOpen.has(id) },
     h('summary', {}, deps.icon('chev'), h('span', { class: 'sd-edge-name' }, h('b', {}, `${e.from.title} → ${e.to.title}`), h('small', {}, sum))),
     h('fieldset', { class: 'sd-prof' }, h('legend', {}, 'Handed over as'),
       h('div', { class: 'sd-pills' }, ...[...D.VIA, { id: '', label: 'Not set' }].map((v) => h('label', { class: 'sd-pill' },
@@ -668,7 +725,7 @@ function stagePane(s) {
       s.skipWhen ? h('span', { class: 'sd-help' }, s.skipWhen) : null),
     st.skip ? null : h('div', { class: 'sd-opts', role: 'group', 'aria-label': s.multi ? 'Options (pick one or more)' : 'Options (pick one)' },
       ...(hasPick ? picked : ranked).map(card),
-      hasPick && rest.length ? h('details', { class: 'sd-more', 'data-more': s.id, open: moreOpen.has(s.id) },
+      hasPick && rest.length ? fold({ class: 'sd-more', 'data-more': s.id, open: moreOpen.has(s.id) },
         h('summary', {}, deps.icon('chev'), `Show ${C.plural(rest.length, 'other option')}`),
         ...rest.map(card)) : null),
     st.skip ? null : h('label', { class: 'field' }, h('span', {}, 'Another tool (not in the list)'),
@@ -699,7 +756,7 @@ function optionCard(s, r, on, answered, prof) {
     h('p', { class: 'sd-sum' }, o.summary),
     h('p', { class: 'sd-when' }, h('span', { class: 'sd-k' }, 'Pick when'), o.pick),
     answered && !r.ok ? h('p', { class: 'sd-when sd-warn' }, h('span', { class: 'sd-k' }, 'Not a fit'), miss.join(' · ')) : null,
-    h('details', { class: 'sd-det' },
+    fold({ class: 'sd-det' },
       h('summary', {}, deps.icon('chev'), 'Details, links, first commands'),
       o.avoid ? h('p', { class: 'sd-when' }, h('span', { class: 'sd-k' }, 'Avoid when'), o.avoid) : null,
       o.task ? h('p', { class: 'sd-when' }, h('span', { class: 'sd-k' }, 'Done when'), o.task) : null,
@@ -748,7 +805,10 @@ function wire() {
     const b = e.target.closest('[data-warn-stage]');
     if (b && cat) openDesign(b.dataset.warnStage ? stagePage(b.dataset.warnStage) : extraPage('checks'));
   });
-  fig.addEventListener('keydown', (/** @type {KeyboardEvent} */ e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openNode(e); } });
+  /* Enter mở nút / nhãn có focus; Space do diagram-view.js lo (giữ Space là kéo, thả mà chưa kéo mới là bấm). */
+  fig.addEventListener('keydown', (/** @type {KeyboardEvent} */ e) => { if (e.key === 'Enter') { e.preventDefault(); openNode(e); } });
+  initDiagramView({ fig, bar: $('sd-zoom'), out: $('sd-zoom-out'), in: $('sd-zoom-in'), pct: $('sd-zoom-pct'), reset: $('sd-view-reset'), hint: $('sd-zoom-hint'),
+    activate: (el) => openNode({ target: el }) });
   let lastW = 0;
   new ResizeObserver(() => {
     const w = fig.clientWidth;

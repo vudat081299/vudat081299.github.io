@@ -19,6 +19,7 @@
 | `js/md.js` | Markdown của tài liệu văn bản → cây khối (`parseMd`, thuần) → DOM (`renderMd`, chỉ createElement / text node); URL trần trong chữ thường (`linkParts`, thuần, dấu câu cuối ở ngoài); khung Edit: token (`srcTokens`, thuần) → dòng có số (`renderSrc`) |
 | `js/design-core.js` | System design, thuần: `normDesign`, `rankOptions`, `applyPath`, `warnings`, `archAdvice`, `flowEdges`, `diagramNodes`, `planTasks`, `planDiff`, `applyPlan`, `designMd`, `designReader` (core.js chỉ gọi hai hàm cuối) |
 | `js/design.js` | System design, UI: mục trên trang, sơ đồ SVG, hộp `#dlg-sd`, hộp xem trước Update plan; nhận hàm chung qua `initDesign` |
+| `js/view-math.js`, `js/diagram-view.js` | khung nhìn của sơ đồ: toán thuần (thu phóng quanh điểm, kẹp, hai ngón, vừa khung; hằng ở đầu file); DOM (bánh xe, kéo, phím, cụm nút; `attach` sau mỗi lần vẽ) |
 | `js/hand.js` | bàn giao, UI: chip In / Out của bước, hai chấm đầu vào / đầu ra (`ioDots`), mũi tên trên bước nhận và trước ô nhận, hộp `#dlg-hand`, phần Inputs / Outputs của hộp sửa, hộp `#dlg-pick`; nhận hàm chung qua `initHand` |
 | `js/store.js` | `localStorage` (dữ liệu, mẹo `stepPlanner.hintOff`, Compact `stepPlanner.compact`, theme `hub-theme`), `sessionStorage` (dự án của tab); mọi truy cập bọc try/catch |
 | `js/dropdown.js` | danh sách chọn tự dựng: `enhanceSelect` (thay giao diện `<select>`, giữ nó làm nguồn value và `change`), `openList` |
@@ -171,6 +172,7 @@
   Kiến trúc được gợi ý phải có ở mỗi khâu một công cụ không làm luật báo với hồ sơ ấy (`test-core`); hồ sơ nói ngược khâu đã quyết thì luật hồ sơ đứng trước.
 - Bàn giao (`edges`): đường nối hai khâu liền nhau của luồng, cả hai đã quyết (`flowEdges`). Hợp đồng giữ cả khi đường nối không còn.
 - Sơ đồ: đường nối nét liền khi cả hai khâu đã quyết (`bothDecided`, cùng luật với `flowEdges`), còn lại nét đứt.
+- Sơ đồ là khung nhìn (PLAN-031): không lưu, tải lại về khung ban đầu; bánh xe trơn chỉ kéo khung khi khung có focus hay giữ Space. Luật đủ: đầu `diagram-view.js`.
 - "Add tasks to plan" / "Update plan": luôn xem trước New / Changed / No longer in the design, chọn từng mục và bước nhận
   (mặc định "System build", chưa có thì tạo ở vị trí 2). Mỗi khâu đã quyết một việc, mỗi bàn giao đã ghi một việc `Handoff: A → B`.
 - Đối chiếu theo `sd`; bước con chưa có `sd` thì theo tên trong bước "System build".
@@ -190,7 +192,7 @@
 - `tools/lint.py`: khuôn mẫu và bàn giao trong mẫu, ngôn ngữ (giao diện, mẫu, System design), danh mục System design, mẫu đồ án khớp nguồn và neo, không `innerHTML`, mã màu chỉ trong khối token.
   `lint.py --self-test`: cài lỗi vào bản sao tạm, mỗi lỗi phải bị bắt.
 - `node --input-type=module --check < file` cho `js/*.js` (`node --check file.js` bỏ sót lỗi của module).
-- `tools/test-core.mjs`: logic thuần của `core.js`, `md.js`, `design-core.js`; danh sách ở chính file.
+- `tools/test-core.mjs`: logic thuần của `core.js`, `md.js`, `design-core.js`, `view-math.js`; danh sách ở chính file.
   Gợi ý kiến trúc và luật báo so với ảnh chụp `tools/design-snapshot.json`; đổi danh mục có chủ ý thì sinh lại: `node step-planner/tools/test-core.mjs --write-snapshot`.
 - `tools/smoke.cjs` (cổng tự dựng máy chủ tạm; thiếu playwright thì bỏ qua, CI chạy ở job smoke): bấm thật các hành vi trên,
   hai tab, 390px, bộ nhớ bị chặn / hỏng / khoá cũ, lỗi console; số mẫu đọc từ `templates.json`. Chạy tay: `node <file> <url>`.
