@@ -1,7 +1,7 @@
 # Lợi thế sân nhà ở Premier League: ngoại lai, ANOM, CUSUM, SPRT
 
-Repo khung cho đồ án nhóm IT5425 (đề tài A). Clone về, cài, tải dữ liệu, chạy một lệnh.
-Cách làm từng bước và lý do mỗi lựa chọn: trang “Làm đề tài A” của đồ án
+Repo khung cho đồ án nhóm IT5425 (giám sát lợi thế sân nhà ở Premier League). Clone về, cài, tải dữ liệu, chạy một lệnh.
+Cách làm từng bước và lý do mỗi lựa chọn: trang “Giám sát lợi thế sân nhà ở Premier League” của đồ án
 (https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-build.html).
 
 ## Dữ liệu và điều khoản

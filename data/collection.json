@@ -122,7 +122,7 @@
                   "icon": "query_stats",
                   "href": "masters-degree/data-management-visualization/sports-monitoring-project.html",
                   "title": "Sports Monitoring — Project",
-                  "sub": "Đồ án nhóm: chọn đề tài, rồi làm đề tài A từ đầu tới cuối (ngoại lai, ANOM, CUSUM, SPRT)",
+                  "sub": "Đồ án nhóm: chọn đề tài, rồi giám sát lợi thế sân nhà ở Premier League từ đầu tới cuối (ngoại lai, ANOM, CUSUM, SPRT)",
                   "tags": "Group project · outlier detection · Grubbs · analysis of means · ANOM · CUSUM · SPRT · Wald · sports analytics · football-data · Formula 1 · data lineage · provenance · source review · data pipeline · DuckDB · Streamlit · project skeleton"
                 }
               ]

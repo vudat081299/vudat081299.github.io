@@ -864,7 +864,7 @@
     {"id": "top-3", "name": "So phương án", "out": "ba phương án, mỗi cái một bộ dữ liệu"},
     {"id": "chon", "name": "Chọn", "out": "một phương án và một đường lui"},
     {"id": "truoc-khi-lam", "name": "Chốt trước khi làm", "out": "điều cả nhóm thống nhất, câu hỏi nghiên cứu"},
-    {"href": "sports-monitoring-build.html", "name": "Làm đề tài A", "out": "trang 2: từ repo trống tới demo"}
+    {"href": "sports-monitoring-build.html", "name": "Giám sát lợi thế sân nhà", "out": "trang 2: từ repo trống tới demo"}
   ],
   "roles": [
     {"id": "dữ liệu", "why": "Để chạy bốn phương pháp. Thiếu loại này thì không có đồ án."},
