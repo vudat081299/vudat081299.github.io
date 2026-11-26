@@ -755,6 +755,33 @@
           "task": "Script cào được ít nhất một trang, lưu HTML gốc và bảng đã tách vào data/raw."
         },
         {
+          "id": "playwright",
+          "name": "Playwright (headless browser)",
+          "kind": "Browser automation scraper",
+          "summary": "Điều khiển một trình duyệt không giao diện để đọc trang dựng bằng JavaScript, nơi HTML tải về chưa có dữ liệu.",
+          "pick": "Chọn khi trang chỉ hiện dữ liệu sau khi chạy JavaScript và không tìm được API mà trang gọi.",
+          "avoid": "Tránh khi Beautiful Soup đọc được HTML tải về: trình duyệt tốn RAM và chậm hơn nhiều. Tránh khi điều khoản của trang hoặc robots.txt cấm cào dữ liệu.",
+          "cost": "free",
+          "level": 3,
+          "fit": {
+            "fresh": [
+              "once",
+              "batch"
+            ]
+          },
+          "links": [
+            {
+              "title": "Getting started - Library",
+              "url": "https://playwright.dev/python/docs/library"
+            }
+          ],
+          "setup": [
+            "pip install playwright",
+            "playwright install chromium"
+          ],
+          "task": "Script mở trang, chờ dữ liệu hiện ra, lưu HTML gốc và bảng đã tách vào data/raw; giãn cách giữa các trang."
+        },
+        {
           "id": "app-db",
           "name": "PostgreSQL / MySQL (app database)",
           "kind": "Existing app database",
@@ -806,6 +833,35 @@
           ],
           "setup": [],
           "task": "Đã viết ra định dạng một sự kiện (các trường, kiểu, thời gian) và nơi app gửi nó tới; chưa có nguồn thật thì script replay gửi CSV vào topic với nhịp ghi trong README."
+        },
+        {
+          "id": "websocket-feed",
+          "name": "WebSocket feed (websockets)",
+          "kind": "Push API client",
+          "summary": "Nguồn đẩy dữ liệu qua một kết nối giữ mở (giá, tỉ giá, sự kiện) thay vì để bạn hỏi lại theo chu kỳ. Client của thư viện websockets tự kết nối lại khi lỗi, chờ theo backoff mũ.",
+          "pick": "Chọn khi nguồn có API WebSocket và kết quả cần mới trong vài giây.",
+          "avoid": "Tránh khi nguồn chỉ cho ít kết nối, ít kênh hơn số khoá cần theo dõi: đẩy realtime cho một tập khoá, phần còn lại lấy theo lô. Thông điệp lỡ lúc mất kết nối thường không lấy lại được.",
+          "cost": "free",
+          "level": 3,
+          "fit": {
+            "fresh": [
+              "stream"
+            ]
+          },
+          "links": [
+            {
+              "title": "websockets documentation",
+              "url": "https://websockets.readthedocs.io/en/stable/"
+            },
+            {
+              "title": "Client (asyncio)",
+              "url": "https://websockets.readthedocs.io/en/stable/reference/asyncio/client.html"
+            }
+          ],
+          "setup": [
+            "python -m pip install websockets"
+          ],
+          "task": "Client giữ kết nối, tự kết nối lại khi rớt, ghi mỗi thông điệp vào Kafka hay kho thô kèm giờ nhận; các khoảng mất kết nối được ghi lại."
         }
       ]
     },
@@ -1010,6 +1066,32 @@
             "airflow standalone"
           ],
           "task": "Một DAG ingest hiện trên giao diện Airflow, có lịch, và đã chạy xanh ít nhất một lần."
+        },
+        {
+          "id": "oozie",
+          "name": "Apache Oozie",
+          "kind": "Hadoop workflow scheduler (retired)",
+          "summary": "Bộ lập lịch workflow của Hadoop mà nhiều giáo trình big data còn dạy. Dự án đã nghỉ hưu, chuyển vào Apache Attic.",
+          "pick": "Chỉ khi cụm có sẵn ở trường hay nơi làm vẫn chạy Oozie và bạn phải dùng nó.",
+          "avoid": "Tránh cho dự án mới: không còn bản phát hành hay bản vá, và cần cả cụm Hadoop chạy suốt. Vài job theo lịch thì cron; nhiều bước phụ thuộc nhau thì Airflow.",
+          "cost": "free",
+          "level": 3,
+          "fit": {
+            "fresh": [
+              "batch"
+            ],
+            "size": [
+              "large"
+            ]
+          },
+          "links": [
+            {
+              "title": "Oozie | The Apache Attic",
+              "url": "https://attic.apache.org/projects/oozie.html"
+            }
+          ],
+          "setup": [],
+          "task": "Không dùng cho dự án mới; ghi lý do và công cụ thay vào nhật ký quyết định."
         },
         {
           "id": "kafka",
@@ -3150,7 +3232,7 @@
       "title": "Search & retrieval",
       "lane": "app",
       "question": "Người dùng tìm trong dữ liệu bằng cách nào?",
-      "guide": "Khâu này dựng chỉ mục để tìm nhanh trong nhiều bản ghi hay tài liệu.\nTìm theo từ khoá (full-text): tách từ, chuẩn hoá, xếp hạng theo độ khớp, như ô tìm kiếm của một trang web.\nTìm theo nghĩa: một model đổi văn bản thành vector (embedding), rồi tìm vector gần nhất. Đây là chữ R của RAG: LLM đọc các đoạn tìm được rồi trả lời.\nDữ liệu sạch đổi thì dựng lại chỉ mục; câu hỏi phải được embed bằng đúng model đã embed tài liệu.",
+      "guide": "Khâu này dựng chỉ mục để tìm nhanh trong nhiều bản ghi hay tài liệu.\nTìm theo từ khoá (full-text): tách từ, chuẩn hoá, xếp hạng theo độ khớp, như ô tìm kiếm của một trang web.\nTìm theo nghĩa: một model đổi văn bản thành vector (embedding), rồi tìm vector gần nhất. Đây là chữ R của RAG: LLM đọc các đoạn tìm được rồi trả lời.\nDữ liệu sạch đổi thì dựng lại chỉ mục; câu hỏi phải được embed bằng đúng model đã embed tài liệu.\nVăn bản tiếng Việt: người dùng hay gõ không dấu. Dùng bộ lọc bỏ dấu cả lúc đánh chỉ mục lẫn lúc tìm: asciifolding của Elasticsearch, OpenSearch; unaccent của PostgreSQL. Cả hai đổi cả đ thành d.",
       "multi": false,
       "skipWhen": "Bỏ qua khi sản phẩm không có ô tìm kiếm, không có RAG hay chatbot trên tài liệu.",
       "task": "Chỉ mục dựng được từ dữ liệu sạch bằng một lệnh; một bộ câu hỏi mẫu có đáp án biết trước tìm ra đúng tài liệu trong vài kết quả đầu.",
@@ -3212,6 +3294,10 @@
             {
               "title": "Full text search: introduction",
               "url": "https://www.postgresql.org/docs/current/textsearch-intro.html"
+            },
+            {
+              "title": "unaccent — a text search dictionary which removes diacritics",
+              "url": "https://www.postgresql.org/docs/current/unaccent.html"
             }
           ],
           "setup": [
@@ -3246,6 +3332,10 @@
             {
               "title": "Licensing FAQ",
               "url": "https://www.elastic.co/pricing/faq/licensing"
+            },
+            {
+              "title": "ASCII folding token filter",
+              "url": "https://www.elastic.co/docs/reference/text-analysis/analysis-asciifolding-tokenfilter"
             }
           ],
           "setup": [
@@ -4226,7 +4316,7 @@
           "kind": "Multi-container setup",
           "summary": "Một file compose.yaml khai mọi service (API, PostgreSQL, MinIO, Spark…) kèm mạng và volume; docker compose up chạy cả bộ trên một máy (một Docker Engine).",
           "pick": "Chọn khi app cần vài service chạy cùng nhau trên một máy: API + database, hay cả bộ lakehouse (MinIO, catalog, Spark, Superset) trên laptop, máy lab hoặc một VPS. Đây là cách mặc định cho đồ án, demo trên lớp và nhóm sinh viên tự dựng hạ tầng.",
-          "avoid": "Tránh khi chỉ có một app Python: một Dockerfile hay file phụ thuộc là đủ. Compose không trải service ra nhiều máy; chỉ khi thật sự cần nhiều node (một máy không đủ RAM, đĩa, hay phải chạy tiếp khi một máy hỏng) mới tính Kubernetes.",
+          "avoid": "Tránh khi chỉ có một app Python: một Dockerfile hay file phụ thuộc là đủ. Compose không trải service ra nhiều máy; chỉ khi thật sự cần nhiều node (một máy không đủ RAM, đĩa, hay phải chạy tiếp khi một máy hỏng) mới tính Kubernetes. Nhiều dịch vụ JVM (Kafka, Elasticsearch, Hadoop, Spark) trên một máy: cộng RAM của từng cái trước khi dựng.",
           "cost": "free",
           "level": 2,
           "fit": {},
@@ -4238,12 +4328,16 @@
             {
               "title": "Docker Compose overview",
               "url": "https://docs.docker.com/compose/"
+            },
+            {
+              "title": "Port publishing and mapping",
+              "url": "https://docs.docker.com/engine/network/port-publishing/"
             }
           ],
           "setup": [
             "docker compose up"
           ],
-          "task": "docker compose up trên máy sạch dựng đủ service; app gọi được database trong compose."
+          "task": "docker compose up trên máy sạch dựng đủ service; app gọi được database trong compose; cổng chỉ mở ở 127.0.0.1, trừ cổng người dùng cần."
         },
         {
           "id": "github-actions",
@@ -4948,6 +5042,31 @@
           "task": "Job gọi ping khi chạy xong; cố ý bỏ một lượt chạy thì cảnh báo tới."
         },
         {
+          "id": "kafka-lag",
+          "name": "Kafka consumer lag",
+          "kind": "Stream lag check",
+          "summary": "Đo mỗi consumer group còn cách cuối log bao xa (LAG từng partition) bằng công cụ có sẵn của Kafka. Lag tăng mãi là consumer chậm hơn tốc độ vào, hay đã chết.",
+          "pick": "Chọn khi có consumer đọc Kafka chạy suốt (consumer Python, sink ghi ra kho).",
+          "avoid": "Không thấy được job Spark Structured Streaming: Spark giữ offset trong checkpoint, đo bằng tiến độ của query.",
+          "cost": "free",
+          "level": 2,
+          "fit": {
+            "fresh": [
+              "stream"
+            ]
+          },
+          "links": [
+            {
+              "title": "Basic Kafka Operations",
+              "url": "https://kafka.apache.org/44/operations/basic-kafka-operations/"
+            }
+          ],
+          "setup": [
+            "bin/kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group my-group"
+          ],
+          "task": "Một job đọc LAG của mọi group theo chu kỳ, gửi cảnh báo khi lag tăng liên tục; cố ý dừng một consumer thì cảnh báo tới."
+        },
+        {
           "id": "langfuse",
           "name": "Langfuse",
           "kind": "LLM observability",
@@ -5158,6 +5277,7 @@
           "prefect",
           "dagster",
           "airflow",
+          "oozie",
           "own"
         ]
       },
@@ -5179,7 +5299,8 @@
           "github-actions",
           "prefect",
           "dagster",
-          "airflow"
+          "airflow",
+          "oozie"
         ]
       },
       "msg": "Dữ liệu tới liên tục và người dùng cần câu trả lời trong khoảng một giây, nhưng khâu Ingestion chạy theo lịch hay chạy tay: kết quả chỉ mới tới lần chạy gần nhất. Cần một consumer chạy liên tục, như Kafka. Người dùng xem theo lịch thì nạp theo lịch là đủ."
@@ -5433,6 +5554,37 @@
         ]
       },
       "msg": "Công cụ stream chạy suốt để đón sự kiện mới; bạn trả lời dữ liệu tới một lần hay theo ngày. Một job batch theo lịch (pandas, DuckDB, Spark) đơn giản hơn, không có tiến trình nào phải chạy suốt."
+    },
+    {
+      "id": "polling-source-as-stream",
+      "title": "Polled API used as a live stream",
+      "if": {
+        "source": [
+          "rest-api",
+          "web-scraping",
+          "playwright"
+        ],
+        "fresh": [
+          "stream"
+        ]
+      },
+      "unless": {
+        "source": [
+          "event-stream",
+          "websocket-feed"
+        ]
+      },
+      "msg": "API và trang web chỉ trả dữ liệu khi bạn hỏi, và hạn mức gọi chặn độ mới làm được. Tính số lượt cần (số khoá × số lần mỗi giờ) rồi so với hạn mức; vượt thì giảm tần suất, chỉ theo dõi một tập khoá, hay tìm nguồn đẩy (WebSocket). Gọi quá nhiều thì nhận HTTP 429."
+    },
+    {
+      "id": "retired-scheduler",
+      "title": "Retired scheduler",
+      "if": {
+        "ingest": [
+          "oozie"
+        ]
+      },
+      "msg": "Oozie đã nghỉ hưu (Apache Attic): không còn bản vá, và cần cả cụm Hadoop. Vài job theo lịch thì cron; nhiều bước phụ thuộc nhau thì Airflow, Dagster hay Prefect."
     },
     {
       "id": "iceberg-without-catalog",
@@ -5730,7 +5882,8 @@
           "github-actions",
           "prefect",
           "dagster",
-          "airflow"
+          "airflow",
+          "oozie"
         ]
       },
       "msg": "Sentry nhận lỗi từ code đang chạy ở đâu đó (app, API, job theo lịch). Không triển khai gì và không có job theo lịch thì không có gì gửi lỗi; chạy notebook bằng tay thì lỗi hiện ngay trước mắt."
@@ -6268,7 +6421,8 @@
           ],
           "tools": {
             "source": [
-              "event-stream"
+              "event-stream",
+              "websocket-feed"
             ],
             "ingest": [
               "kafka"
@@ -6298,7 +6452,7 @@
         {
           "id": "lambda",
           "name": "Lambda architecture",
-          "what": "Hai đường song song trên cùng dữ liệu gốc chỉ ghi thêm: batch layer định kỳ tính lại toàn bộ cho kết quả đúng, speed layer tính phần sự kiện batch chưa kịp tính cho kết quả ngay; serving layer lưu và đánh chỉ mục batch view. Truy vấn đọc cả batch view lẫn real-time view rồi gộp. Batch view mới xong thì phần real-time view nó đã phủ bị bỏ.",
+          "what": "Hai đường song song trên cùng dữ liệu gốc chỉ ghi thêm: batch layer định kỳ tính lại toàn bộ cho kết quả đúng, speed layer tính phần sự kiện batch chưa kịp tính cho kết quả ngay; serving layer lưu và đánh chỉ mục batch view. Truy vấn đọc cả batch view lẫn real-time view rồi gộp. Batch view mới xong thì phần real-time view nó đã phủ bị bỏ. Mỗi batch view mang mốc batch_as_of, real-time view chỉ tính sau mốc ấy: số chụp nhanh lấy bên mới hơn, số cộng được thì cộng hai bên.",
           "use": "Cần cả kết quả tức thì lẫn kết quả tính lại chính xác trên toàn bộ lịch sử, và đường batch (Hadoop, Spark) đã có sẵn; môn học yêu cầu.",
           "avoid": "Đồ án một người: phải viết và giữ cùng một logic ở hai hệ khác nhau sao cho ra cùng kết quả, chính điểm đau mà bài phê bình của Kreps nêu. Kappa, hay chỉ batch, thường đủ.",
           "flow": [
@@ -6318,6 +6472,7 @@
             "process": [
               "spark",
               "hadoop",
+              "python-consumer",
               "spark-streaming",
               "flink"
             ],

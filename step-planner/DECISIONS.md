@@ -30,6 +30,7 @@
 - PLAN-028 · Chữ giao diện tiếng Anh, mọi nội dung mẫu tiếng Việt, tên chuẩn giữ trong ngoặc · `step-planner/`
 - PLAN-029 · Mẫu nền tảng lakehouse mã nguồn mở: hạ tầng và dữ liệu trước, pipeline sau, có bước kiểm tuân thủ medallion · `step-planner/data/templates.json`
 - PLAN-030 · System design phủ lakehouse tự host: MinIO, Hudi, catalog cho Iceberg, medallion là cách chia tầng, hồ sơ chỉ mã nguồn mở · `step-planner/data/system-design.json`, `step-planner/js/design-core.js`
+- PLAN-032 · System design phủ nguồn đẩy, trang dựng bằng JavaScript, lag của consumer; báo công cụ đã nghỉ hưu và API hỏi theo chu kỳ dùng như luồng · `step-planner/data/system-design.json`
 <!-- index:end -->
 
 ## PLAN-001 · Dự án là các bước có thứ tự, mỗi bước có bước con có thứ tự
@@ -176,3 +177,8 @@ Có mẫu cho dự án dựng nền tảng dữ liệu lakehouse tự chạy b�
 26/11/2026 · `step-planner/data/system-design.json`, `step-planner/js/design-core.js`
 
 Danh mục đủ cho một nhóm tự dựng lakehouse mã nguồn mở: object storage tự host (MinIO, nói rõ bản cộng đồng đã ngừng bảo trì, chỉ còn mã nguồn, và lựa chọn thay), Hudi bên cạnh Delta Lake và Iceberg, DuckDB truy vấn bảng trên object storage, máy của nhóm làm nơi chạy, và Data Studio, Power BI, Looker bên cạnh Superset, Metabase, mỗi công cụ BI nói rõ cách nối với DuckDB, Trino. Catalog cho Iceberg (Polaris, Hive Metastore, Nessie, JDBC) chọn ngay ở khâu lưu thô, cùng chỗ lưu và table format, không thêm khâu mới; Iceberg không có catalog thì báo. Hồ sơ có câu "chỉ mã nguồn mở, tự host": trả lời có thì dịch vụ được quản lý không hợp, và dữ liệu lớn được gợi ý lakehouse tự host thay warehouse. Medallion (bronze / silver / gold) là một nhóm kiến trúc riêng: cách chia tầng theo chất lượng, độc lập với nơi lưu; gợi ý khi dữ liệu tới đều, lớn hay đã có table format, còn bộ dữ liệu cố định thì hai tầng thô + sạch. dbt nói chọn adapter theo engine; Docker Compose cho một máy, Kubernetes chỉ khi thật sự cần nhiều node; chưa có nguồn stream thật thì giả lập bằng script phát lại CSV vào Kafka. Luật mới nhắc MinIO trên host không giữ đĩa và file DuckDB dùng chung với Superset, báo DuckDB không đọc được Hudi. Áp lối không lấy phương án nào vẫn làm luật báo: khi ấy khâu để trống cho người dùng quyết.
+
+## PLAN-032 · System design phủ nguồn đẩy, trang dựng bằng JavaScript, lag của consumer; báo công cụ đã nghỉ hưu và API hỏi theo chu kỳ dùng như luồng
+26/11/2026 · `step-planner/data/system-design.json`
+
+Khâu nguồn có thêm nguồn đẩy qua WebSocket (dùng được cho dữ liệu liên tục) và trình duyệt không giao diện cho trang chỉ hiện dữ liệu sau khi chạy JavaScript. Khâu giám sát có đo lag của consumer group Kafka cho dữ liệu liên tục. Oozie có trong danh mục như công cụ nên tránh: đã nghỉ hưu, vẫn tính là công cụ chạy theo lịch, chọn nó thì báo và chỉ sang cron hay Airflow. Dữ liệu liên tục mà nguồn chỉ là API hay trang web phải hỏi theo chu kỳ, không có nguồn đẩy đi kèm, thì báo: hạn mức gọi chặn độ mới. Kiến trúc Lambda nói cách gộp batch view và real-time view tại mốc as-of, và nhận consumer Python làm speed layer; kiến trúc streaming nhận nguồn WebSocket.
