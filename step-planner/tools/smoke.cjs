@@ -1656,6 +1656,96 @@ const check = (name, ok, detail = '') => {
     await rc.close();
   }
 
+  /* ── Hai tab sửa cùng một mục: Lưu chỉ ghi trường đã đổi; cùng trường thì hỏi; mục đã bị xoá thì hỏi tạo lại ── */
+  {
+    const seed = { version: 2, lastId: 'wm', workspaces: [{ id: 'wm', name: 'Gộp', steps: [
+      { id: 'tm1', title: 'Một', goal: 'g', subs: [{ id: 'sm1', title: 'Việc', status: 'todo', doneWhen: 'gốc' }, { id: 'sm2', title: 'Việc hai', status: 'todo' }] }],
+    log: [{ id: 'lm1', date: '2026-11-01', decision: 'Chọn A', why: 'vì' }] }] };
+    const mc = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+    await mc.addInitScript((d) => { if (!localStorage.getItem('stepPlanner.v2')) localStorage.setItem('stepPlanner.v2', d); }, JSON.stringify(seed));
+    const [A, B] = [await mc.newPage(), await mc.newPage()];
+    for (const [n, pg] of [['A', A], ['B', B]]) { pg.on('pageerror', (e) => errors.push(n + ' ' + e)); await pg.goto(BASE); await pg.waitForSelector('.card[data-sub="sm1"]'); }
+    const sm = async (id) => (await cur(A)).steps.flatMap((x) => x.subs).find((x) => x.id === id);
+    // 1. A sửa Notes (chưa lưu), B đổi Done when và lưu, A lưu: giữ cả hai, không hỏi.
+    await A.click(subSel('sm1', 'edit-sub'));
+    await A.fill('#sub-form [name="notes"]', 'ghi chú của A');
+    await B.click(subSel('sm1', 'edit-sub'));
+    await B.fill('#sub-form [name="doneWhen"]', 'của B');
+    await B.click('#sub-form button[type="submit"]');
+    await A.waitForTimeout(200);
+    await A.click('#sub-form button[type="submit"]');
+    let x = await sm('sm1');
+    check('hai tab: trường khác nhau thì giữ cả hai (Done when của tab kia không bị trả về)', x.doneWhen === 'của B' && x.notes === 'ghi chú của A'
+      && !(await A.isVisible('#dlg-ask')) && !(await A.isVisible('#dlg-sub')), JSON.stringify(x));
+    // 2. Cùng trường: A thấy hộp hỏi liệt kê trường, Close thì hộp sửa vẫn mở; Keep the other tab's thì giữ của B, trường khác của A vẫn ghi.
+    await B.waitForTimeout(100);
+    await A.click(subSel('sm1', 'edit-sub'));
+    await A.fill('#sub-form [name="doneWhen"]', 'của A');
+    await A.fill('#sub-form [name="title"]', 'Việc (A)');
+    await B.click(subSel('sm1', 'edit-sub'));
+    await B.fill('#sub-form [name="doneWhen"]', 'của B lần hai');
+    await B.click('#sub-form button[type="submit"]');
+    await A.waitForTimeout(200);
+    await A.click('#sub-form button[type="submit"]');
+    await A.waitForSelector('#dlg-ask[open]');
+    const askTxt = await A.textContent('#ask-list');
+    await A.click('#dlg-ask [data-close]');
+    const stillOpen = await A.isVisible('#dlg-sub') && (await A.inputValue('#sub-form [name="doneWhen"]')) === 'của A';
+    await A.click('#sub-form button[type="submit"]');
+    await A.click('#ask-alt');
+    x = await sm('sm1');
+    check('hai tab: cùng trường thì hỏi (Yours / Other tab), Close giữ hộp sửa, chọn tab kia thì giữ của nó, trường khác của mình vẫn ghi',
+      /Done when/.test(askTxt) && /Yours: của A/.test(askTxt) && /Other tab: của B lần hai/.test(askTxt) && !/Title/.test(askTxt) && stillOpen
+      && x.doneWhen === 'của B lần hai' && x.title === 'Việc (A)', `${askTxt} ${JSON.stringify(x)}`);
+    // Keep mine.
+    await A.click(subSel('sm1', 'edit-sub'));
+    await A.fill('#sub-form [name="doneWhen"]', 'A thắng');
+    await B.click(subSel('sm1', 'edit-sub'));
+    await B.fill('#sub-form [name="doneWhen"]', 'B thua');
+    await B.click('#sub-form button[type="submit"]');
+    await A.waitForTimeout(200);
+    await A.click('#sub-form button[type="submit"]');
+    await A.click('#ask-ok');
+    await B.waitForTimeout(200);
+    check('hai tab: "Keep mine" ghi của mình, tab kia đọc lại thấy', (await sm('sm1')).doneWhen === 'A thắng'
+      && /A thắng/.test(await B.textContent('.card[data-sub="sm1"]')));
+    // 3. Tab kia xoá bước con trong lúc sửa: hỏi; Re-create trả nó về với chữ đã sửa.
+    await A.click(subSel('sm2', 'edit-sub'));
+    await A.fill('#sub-form [name="notes"]', 'đang viết');
+    await B.click(subSel('sm2', 'sub-del'));
+    await A.waitForTimeout(200);
+    await A.click('#sub-form button[type="submit"]');
+    await A.waitForSelector('#dlg-ask[open]');
+    const delTitle = await A.textContent('#dlg-ask-title');
+    await A.click('#ask-ok');
+    x = await sm('sm2');
+    check('hai tab: bước con bị xoá ở tab kia thì hỏi, Re-create trả về với chữ đã sửa', /Deleted in another tab/.test(delTitle) && x?.notes === 'đang viết'
+      && !!(await A.$('.card[data-sub="sm2"]')), delTitle);
+    // 4. Hộp bước: A đổi Goal, B đổi Notes của bước: giữ cả hai.
+    await B.waitForTimeout(100);
+    await A.click('.step[data-step="tm1"] [data-act="edit-step"]');
+    await A.fill('#step-form [name="goal"]', 'mục tiêu A');
+    await B.click('.step[data-step="tm1"] [data-act="edit-step"]');
+    await B.fill('#step-form [name="notes"]', 'ghi chú B');
+    await B.click('#step-form button[type="submit"]');
+    await A.waitForTimeout(200);
+    await A.click('#step-form button[type="submit"]');
+    const st = (await cur(A)).steps[0];
+    check('hai tab: hộp bước gộp trường khác nhau', st.goal === 'mục tiêu A' && st.notes === 'ghi chú B' && !(await A.isVisible('#dlg-ask')), JSON.stringify(st).slice(0, 160));
+    // 5. Hộp quyết định: A sửa Why, B sửa Decision: giữ cả hai.
+    await B.waitForTimeout(100);
+    await A.click('.log-item[data-log="lm1"] [data-act="edit-log"]');
+    await A.fill('#log-edit-form [name="why"]', 'lý do A');
+    await B.click('.log-item[data-log="lm1"] [data-act="edit-log"]');
+    await B.fill('#log-edit-form [name="decision"]', 'Chọn B');
+    await B.click('#log-edit-form button[type="submit"]');
+    await A.waitForTimeout(200);
+    await A.click('#log-edit-form button[type="submit"]');
+    const lg = (await cur(A)).log[0];
+    check('hai tab: hộp quyết định gộp trường khác nhau', lg.decision === 'Chọn B' && lg.why === 'lý do A', JSON.stringify(lg));
+    await mc.close();
+  }
+
   /* ── Dữ liệu lưu bị hỏng ── */
   const bad = await browser.newContext();
   await bad.addInitScript(() => { if (!sessionStorage.getItem('x')) { sessionStorage.setItem('x', '1'); localStorage.setItem('stepPlanner.v2', '{hỏng'); } });

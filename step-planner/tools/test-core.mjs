@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import {
   fromTemplate, toMarkdown, fromMarkdown, parseImport, toJSON, toBackup, shape, progress, nextActionIds, projectNextIds, slotsOf, subPlace, placeSub, takeSub, shiftTarget, liveLabels, redoCount, canReopen,
-  nextStatus, setStatus, splitInline, normWorkspace, normSub, normLog, freshCopy, counts, slug, fold, parseDate, uniqueName, normDoc, safeUrl,
+  nextStatus, setStatus, splitInline, mergeEdit, pick, EDIT_FIELDS, normWorkspace, normSub, normLog, freshCopy, counts, slug, fold, parseDate, uniqueName, normDoc, safeUrl,
 } from '../js/core.js';
 import { parseMd, inline, srcTokens } from '../js/md.js';
 import { normDesign, rankOptions, snake, planTasks, diagramNodes, decidedCount, catalogErrors, readStageLine } from '../js/design-core.js';
@@ -493,6 +493,22 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   const back = fromMarkdown(md);
   check('thiết kế: Markdown viết tay — dòng không có [khâu: …] thì cảnh báo, không thành bước', back.workspace.steps.length === 0
     && eq(back.workspace.design, { profile: { size: 'small', budget: 'free' }, stages: { serve: { pick: ['fastapi'], skip: false, own: '', note: '' } } }) && back.warnings.length === 1);
+}
+
+/* Sửa cùng lúc ở hai tab: chỉ trường mình đổi đè lên bản mới nhất; cùng trường khác giá trị là xung đột. */
+{
+  const snap = { title: 'A', notes: '', doneWhen: 'x', status: 'todo' };
+  const r1 = mergeEdit(snap, { ...snap, notes: 'của tôi' }, { ...snap, doneWhen: 'tab kia' });
+  check('gộp: trường khác nhau thì giữ cả hai, không xung đột', eq(r1, { merged: { title: 'A', notes: 'của tôi', doneWhen: 'tab kia', status: 'todo' }, conflicts: [] }), JSON.stringify(r1));
+  const r2 = mergeEdit(snap, { ...snap, doneWhen: 'tôi' }, { ...snap, doneWhen: 'tab kia', status: 'done' });
+  check('gộp: cùng trường khác giá trị là xung đột, tạm giữ của mình; trường tab kia đổi vẫn lấy', eq(r2.conflicts, ['doneWhen']) && r2.merged.doneWhen === 'tôi' && r2.merged.status === 'done');
+  const r3 = mergeEdit(snap, { ...snap, doneWhen: 'y' }, { ...snap, doneWhen: 'y' });
+  check('gộp: hai bên đổi cùng một giá trị thì không xung đột', !r3.conflicts.length && r3.merged.doneWhen === 'y');
+  const r4 = mergeEdit({ stepId: '' }, { stepId: '' }, { stepId: 't1' });
+  check('gộp: không đổi gì thì lấy hết bản mới nhất', eq(r4.merged, { stepId: 't1' }) && !r4.conflicts.length);
+  const sub = normSub({ id: 's', title: 'T', docs: [{ kind: 'link', title: 'x', url: 'https://a.b' }], redo: true });
+  const p = pick(sub, EDIT_FIELDS.sub);
+  check('gộp: hộp bước con chỉ ghi trường của hộp (không docs, par, redo)', eq(Object.keys(p), EDIT_FIELDS.sub) && !('docs' in p) && !('redo' in p));
 }
 
 if (fails) { console.log(`test-core: ${fails} LỖI`); process.exit(1); }

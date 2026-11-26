@@ -627,10 +627,12 @@
     </header>
     <div class="dlg-body">
       <label class="field" id="ask-field"><span id="ask-label"></span><input type="text" id="ask-input" maxlength="120"></label>
+      <ul class="ask-list" id="ask-list" hidden></ul>
     </div>
     <footer class="dlg-foot">
       <span class="dlg-gap"></span>
       <button type="button" class="btn" data-close>Close</button>
+      <button type="submit" class="btn" id="ask-alt" value="alt" hidden></button>
       <button type="submit" class="btn go" id="ask-ok" value="ok">OK</button>
     </footer>
   </form>

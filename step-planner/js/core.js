@@ -171,6 +171,36 @@ export function normWorkspace(o) {
   };
 }
 
+/* ── Sửa cùng lúc ở hai tab ──
+ * Hộp sửa chụp các trường của mục lúc mở; lúc Lưu chỉ ghi trường người dùng đã đổi lên bản mới nhất (tab khác có thể đã
+ * ghi). Hai bên cùng đổi một trường sang hai giá trị khác nhau là xung đột: trang hỏi giữ bên nào. */
+/** Trường mà hộp sửa của từng loại mục ghi. */
+export const EDIT_FIELDS = {
+  sub: ['title', 'status', 'reason', 'due', 'doneWhen', 'notes'],
+  step: ['title', 'goal', 'doneWhen', 'notes'],
+  log: ['date', 'decision', 'why', 'stepId'],
+};
+/** Bản sao các trường `keys` của o. @param {any} o @param {string[]} keys @returns {Record<string, any>} */
+export const pick = (o, keys) => Object.fromEntries(keys.map((k) => [k, JSON.parse(JSON.stringify(o[k] ?? null))]));
+/**
+ * Gộp: trường mình đổi (so với `snap`) lấy của mình, còn lại lấy `latest`. Cả hai cùng đổi một trường sang hai giá trị
+ * khác nhau: tên trường vào `conflicts`, `merged` tạm giữ của mình.
+ * @param {Record<string, any>} snap lúc mở hộp @param {Record<string, any>} mine trong hộp lúc Lưu @param {Record<string, any>} latest đang lưu
+ * @returns {{merged: Record<string, any>, conflicts: string[]}}
+ */
+export function mergeEdit(snap, mine, latest) {
+  const same = (/** @type {any} */ a, /** @type {any} */ b) => JSON.stringify(a ?? null) === JSON.stringify(b ?? null);
+  /** @type {Record<string, any>} */
+  const merged = {};
+  const conflicts = [];
+  for (const k of Object.keys(mine)) {
+    const m = !same(snap[k], mine[k]), t = !same(snap[k], latest[k]);
+    merged[k] = m ? mine[k] : latest[k];
+    if (m && t && !same(mine[k], latest[k])) conflicts.push(k);
+  }
+  return { merged, conflicts };
+}
+
 /** Bản sao sâu với id mới cho mọi thứ — dùng khi nhân bản và khi nhập. @param {any} ws */
 export function freshCopy(ws) {
   const c = normWorkspace(JSON.parse(JSON.stringify(normWorkspace(ws))));

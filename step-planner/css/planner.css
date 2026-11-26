@@ -1156,8 +1156,13 @@ html { scrollbar-gutter: stable; }   /* khoá cuộn không làm trang nhảy ng
 }
 /* Hộp hỏi lại: nhỏ, giữa màn ở mọi khổ; đầu không gạch dưới khi không có thân. */
 .dlg-ask .dlg-head { padding-bottom: var(--s3); }
-.dlg-ask:has(#ask-field[hidden]) .dlg-head { border-bottom: 0; padding-bottom: var(--s5); }
+.dlg-ask:has(#ask-field[hidden]):has(#ask-list[hidden]) .dlg-head { border-bottom: 0; padding-bottom: var(--s5); }
 .dlg-ask .dlg-sub { font-size: var(--fs-md); color: var(--ink-2); }
+/* Xung đột giữa hai tab: mỗi trường một mục, giá trị của mình và của tab kia. */
+.ask-list { display: grid; gap: var(--s3); margin: 0; padding: 0; list-style: none; font-size: var(--fs-sm); }
+.ask-list li { display: grid; gap: var(--s1); min-width: 0; }
+.ask-list b { color: var(--ink); }
+.ask-list p { margin: 0; color: var(--ink-2); overflow-wrap: anywhere; }
 @keyframes dlg-in { from { opacity: 0; } to { opacity: 1; } }
 @keyframes sheet-in { from { transform: translateY(var(--s5)); opacity: 0; } to { transform: none; opacity: 1; } }
 @media (prefers-reduced-motion: no-preference) { .dlg[open] { animation: dlg-in var(--dur-sheet) var(--ease); } }
@@ -1183,6 +1188,9 @@ html { scrollbar-gutter: stable; }   /* khoá cuộn không làm trang nhảy ng
   .dlg-foot .dlg-status:empty { display: none; }
   .backup-row .btn { flex: 1 1 100%; }
   #dlg-export .dlg-foot { flex-wrap: wrap; }
+  /* Hộp hỏi có ba nút (xung đột giữa hai tab): hai hàng, nút chính cả hàng dưới. */
+  .dlg-ask .dlg-foot:has(#ask-alt:not([hidden])) { flex-wrap: wrap; }
+  .dlg-ask .dlg-foot:has(#ask-alt:not([hidden])) #ask-ok { flex-basis: 100%; }
   .field-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   .place-row .f-step { grid-column: 1 / -1; grid-row: 1; }
   .title-row { grid-template-columns: minmax(0, 1fr) var(--pos-w); }
