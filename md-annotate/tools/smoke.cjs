@@ -2739,7 +2739,7 @@ const cornerClash = (page) => page.evaluate(() => {
     check('cây: Home tới hàng đầu', (await focusName(tp)) === 'archive', await focusName(tp));
     await tp.keyboard.press('r');
     check('cây: gõ chữ nhảy tới tên', (await focusName(tp)) === 'README.md', await focusName(tp));
-    await tp.keyboard.press('Enter'); await tp.waitForTimeout(250);   // nền chuyển màu --dur
+    await tp.keyboard.press(' '); await tp.waitForTimeout(250);   // nền chuyển màu --dur
     const sel = await tp.$eval(row('README.md'), (l) => {
       const a = getComputedStyle(l, '::before'), r = l.getBoundingClientRect(), ic = l.querySelector('.ma-trow__ic').getBoundingClientRect();
       const L = r.left + parseFloat(a.left), R = r.right - parseFloat(a.right);
@@ -2750,7 +2750,7 @@ const cornerClash = (page) => page.evaluate(() => {
         border: [a.borderTopWidth, a.borderRightWidth, a.borderBottomWidth, a.borderLeftWidth, a.borderTopStyle].join(' '), insetL: +(ic.left - L).toFixed(1), w: +(R - L).toFixed(1), rowW: r.width,
         bodyL: document.getElementById('tree-body').getBoundingClientRect().left, L, after: getComputedStyle(l, '::after').content, shadow: getComputedStyle(l).boxShadow, outline: [a.outlineStyle, a.boxShadow].join(' '), moreIn };
     });
-    check('cây: Enter mở file, hàng thành thẻ chọn: bo, không viền, không vòng, nền nhạt, lùi vào trong (bắt đầu trước biểu tượng, không trọn hàng), hàng không tô, không vạch riêng, ⋯ gọn trong thẻ (lùi ≥ 2px mọi cạnh)',
+    check('cây: Space mở file, hàng thành thẻ chọn: bo, không viền, không vòng, nền nhạt, lùi vào trong (bắt đầu trước biểu tượng, không trọn hàng), hàng không tô, không vạch riêng, ⋯ gọn trong thẻ (lùi ≥ 2px mọi cạnh)',
       JSON.stringify(await tl()) === JSON.stringify(['open', ids['README.md']]) && sel.sel === 'true' && /rgba\(0, 0, 0, 0\)|transparent/.test(sel.rowBg) && !/, 0\)$|transparent/.test(sel.fill)
       && sel.radius >= 4 && sel.border === '0px 0px 0px 0px none' && / none$/.test(sel.outline) && sel.insetL > 0 && sel.insetL <= 12 && sel.w < sel.rowW - 8 && sel.L - sel.bodyL >= 8 && sel.after === 'none' && sel.shadow === 'none' && sel.moreIn.every((v) => v >= 2), JSON.stringify(sel));
     /* Tương phản trên hàng đang chọn (nền pha nhiều lớp): chữ ≥ 4,5:1, nền thẻ tách khỏi nền thân, cả hai theme. */
@@ -2808,6 +2808,10 @@ const cornerClash = (page) => page.evaluate(() => {
     check('cây: bấm đúp file mở ô đổi tên', rn && rn.v === 'old.md', JSON.stringify(rn));
     await tp.keyboard.press('Control+A'); await tp.keyboard.type('older.md'); await tp.keyboard.press('Enter'); await tp.waitForTimeout(80);
     check('cây: Enter lưu tên mới', !(await ren()) && (await nameOf(row('old.md'))) === 'older.md' && JSON.stringify(await tl()).includes('older.md'));
+    await tp.focus(row('README.md')); await tp.keyboard.press('Enter');
+    rn = await ren();
+    check('cây: Enter trên hàng mở ô đổi tên (không mở file)', rn && rn.v === 'README.md' && rn.f && (await tl())[0] !== 'open', JSON.stringify(rn));
+    await tp.keyboard.press('Escape');
     const expOf = () => tp.$eval(row('archive'), (li) => li.getAttribute('aria-expanded'));
     const exp0 = await expOf();
     await tp.dblclick(row('archive')); await tp.waitForTimeout(120);

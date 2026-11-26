@@ -17,7 +17,7 @@
    Download .zip, Collapse all, theo mẫu menu button), dưới là ô lọc file (ui/tree-find.js: đang lọc thì chỉ hiện file khớp và
    folder tổ tiên, folder nào cũng mở, bấm folder không gập); phiên ≤ 1 mục thì #tree.is-sparse hiện gợi ý thả / nạp folder. Thụt
    đều mọi cấp: vạch thụt là phần tử riêng (#tree-guides), cây sâu thì thân cuộn ngang (--dmax), tự cuộn tới tên hàng hiện tại; hàng
-   chật thì ẩn huy hiệu (.is-cramp); đổi tên là ô nhập trong suốt đúng chỗ tên.
+   chật thì ẩn huy hiệu (.is-cramp); đổi tên là ô nhập trong suốt đúng chỗ tên (Enter, F2, bấm đúp).
    Xuất: editName, focusRow, initTree, renderTree, revealTree.
    Dùng: core/tree.js, core/session.js, core/place.js, core/text.js, ui/store.js, ui/dom.js, ui/views.js, ui/tree-find.js. */
 import { canMove, moveTargets, visibleRows } from '../core/tree.js';
@@ -501,7 +501,7 @@ function initHead() {
   $('tree-hint-import').addEventListener('click', function () { $('tree-dir-in').click(); });
 }
 
-/* BÀN PHÍM của cây (WAI-ARIA tree): ↑ ↓ Home End, → mở / vào con, ← gập / lên cha, Enter / Space, F2, Delete,
+/* BÀN PHÍM của cây (WAI-ARIA tree): ↑ ↓ Home End, → mở / vào con, ← gập / lên cha, Space mở, Enter / F2 đổi tên, Delete,
    Shift+F10 / phím Menu, gõ chữ nhảy tới tên. Phím đã xử lý không lan ra phím tắt của trang (X, J, K, ?). */
 function treeKey(e) {
   if (editing) return;
@@ -522,8 +522,8 @@ function treeKey(e) {
   } else if (k === 'ArrowLeft') {
     if (n.kind === 'dir' && li.getAttribute('aria-expanded') === 'true' && !found) call('toggle', id);
     else if (n.parent != null && n.parent in at) go(at[n.parent]);
-  } else if (k === 'Enter' || k === ' ') activate(id);
-  else if (k === 'F2') editName(id);
+  } else if (k === ' ') activate(id);
+  else if (k === 'Enter' || k === 'F2') editName(id);
   else if (del) call('remove', id);
   else if (k === 'ContextMenu' || (k === 'F10' && e.shiftKey)) openMenu(id);
   else if (k === '/') { if (!focusFind()) return; }

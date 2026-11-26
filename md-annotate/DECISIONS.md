@@ -59,6 +59,7 @@
 - MDAN-087 · Gợi ý không giới hạn độ dài, gợi ý dài chỉ hiện 80 ký tự đầu · `md-annotate/js/core/hints.js`, `md-annotate/js/ui/popup.js`, `md-annotate/js/ui/hints.js`
 - MDAN-088 · Gợi ý nhận xét riêng cho từng phiên · `md-annotate/js/core/hints.js`, `md-annotate/js/core/session.js`, `md-annotate/js/ui/hints.js`
 - MDAN-089 · File không phải markdown: hai tab Edit / Source · thay cho MDAN-074 · `md-annotate/index.html`, `md-annotate/js/ui/views.js`
+- MDAN-090 · Cây file: Enter đổi tên, Space mở · `md-annotate/js/ui/tree.js`, `md-annotate/data/shortcuts.json`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Source tô màu cú pháp markdown kiểu VS Code
@@ -493,3 +494,9 @@ chung cũ, kể cả gợi ý đã bỏ hay tự thêm, bị xoá, không chép 
 File code và chữ trơn có hai tab Edit và Source như file markdown (không có Preview, Split); bỏ nút Edit bật / tắt. Tab
 đang chọn luôn là chế độ đang hiện: nút bật / tắt cũ để tab Source sáng cả khi đang sửa, người dùng không biết mình ở đâu.
 Chế độ đã chọn cho markdown (Preview, Split) vẫn được nhớ qua Edit / Source ở file code, kể cả sau khi tải lại trang.
+
+## MDAN-090 · Cây file: Enter đổi tên, Space mở
+26/11/2026 · `md-annotate/js/ui/tree.js`, `md-annotate/data/shortcuts.json`
+
+Enter trên một hàng của cây (file hay folder) mở ô đổi tên, như F2 và bấm đúp, như Finder; Enter trong ô thì lưu. Space
+mở file, hay mở / gập folder; bấm chuột như cũ.
