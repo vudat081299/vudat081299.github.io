@@ -8,6 +8,7 @@
      Bàn giao: bước hay bước con có thể có `outs` [{key, name, ref?, note?}] và `ins` [key]. Khoá dạng `[a-z0-9][a-z0-9-]*`
      (≤ 40), không trùng trong một mẫu; `ins` trỏ tới đầu ra có thật, không phải của chính nó, khai ở bước trước hoặc ở bước
      con đứng trước trong cùng bước (dữ liệu chỉ chảy xuôi). `ref`: đường dẫn hay link https, một dòng.
+     Link tới trang của repo (https://vudat081299.github.io/…): file có trong repo, neo `#id` có trên trang.
   2. Mẫu `it5425-sports` khớp từng chữ với bản sinh từ trang đồ án môn (COURSE_JSON, COURSE_HTML): không thêm nội dung.
      outs / ins của nó suy từ đường dẫn trong `io_html` từng pha (`course_flow`).
      Sinh lại:  python3 step-planner/tools/lint.py --write-course
@@ -222,6 +223,19 @@ def check_flow(w, steps):
                         + ' — đầu vào chỉ lấy từ bước trước hoặc bước con đứng trước trong cùng bước')
 
 
+SITE_RE = re.compile(r'https://vudat081299\.github\.io/([^\s#?]+)(?:#([\w-]+))?')
+
+
+def check_site_links(where, s):
+    """Link tới trang của chính repo trong mẫu: file phải có trong repo, neo `#id` phải có trên trang."""
+    for path, anchor in SITE_RE.findall(s):
+        f = os.path.join(REPO, path)
+        if not os.path.isfile(f):
+            err(f'{where}: link tới {path} nhưng repo không có file này')
+        elif anchor and f'id="{anchor}"' not in open(f, encoding='utf-8').read():
+            err(f'{where}: {path} không có neo #{anchor}')
+
+
 def check_templates(data):
     if set(data) != {'note', 'templates'}:
         err(f'templates.json: khoá gốc phải là note, templates (đang có {sorted(data)})')
@@ -279,6 +293,7 @@ def check_templates(data):
                 for key in ('doneWhen', 'notes'):
                     need_str(wss, sub, key, required=False)
         check_flow(f'{w} ({tid})', steps)
+        check_site_links(f'{w} ({tid})', json.dumps(t, ensure_ascii=False))
     if blanks != 1:
         err(f'templates.json: cần đúng một mẫu trống (steps rỗng), đang có {blanks}')
     course = next((t for t in tpls if t.get('id') == COURSE_ID), None)
