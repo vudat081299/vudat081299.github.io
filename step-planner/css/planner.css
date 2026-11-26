@@ -618,6 +618,10 @@ svg.i {
 .card-title { font-size: var(--fs-md); font-weight: 600; line-height: 1.35; overflow-wrap: anywhere; }
 .meta { display: flex; gap: var(--s1) var(--s2); flex-wrap: wrap; font-size: var(--fs-xs); color: var(--ink-2); }
 .due.overdue { color: var(--danger); font-weight: 600; }
+.done-at { color: var(--ink-3); }
+/* Dấu bằng chứng: thẻ xong có tài liệu đánh dấu Evidence. */
+.proof-tag { display: inline-flex; align-items: center; color: var(--done-edge); }
+.proof-tag svg.i { width: var(--fs-sm); height: var(--fs-sm); }
 .card-done, .card-notes { font-size: var(--fs-xs); color: var(--ink-2); overflow-wrap: anywhere; }
 .card-notes { white-space: pre-line; }
 .more {
@@ -1301,6 +1305,19 @@ html { scrollbar-gutter: stable; }   /* khoá cuộn không làm trang nhảy ng
 .doc-row .doc-link span { flex: 0 1 auto; color: var(--ink); }
 .doc-row .icon-btn { color: var(--ink-3); }
 @media (hover: hover) { .doc-row .icon-btn:hover { color: var(--danger); } }
+/* Nút Evidence của một tài liệu: bật thì viền và chữ xanh. */
+.proof-btn {
+  display: inline-flex; align-items: center; gap: var(--s1); flex: 0 0 auto; min-height: var(--ctl-sm); padding: 0 var(--s2);
+  font: 600 var(--fs-xs)/1 var(--sans); color: var(--ink-3); cursor: pointer;
+  background: none; border: var(--line-w) dashed var(--line); border-radius: var(--r-pill);
+}
+.proof-btn svg.i { width: var(--fs-sm); height: var(--fs-sm); }
+.proof-btn[aria-pressed="true"] { color: var(--green); background: var(--accent-soft); border: var(--line-w) solid var(--accent-line); }
+@media (hover: hover) { .proof-btn:hover { color: var(--ink); border-color: var(--ink-4); } .proof-btn[aria-pressed="true"]:hover { color: var(--green); } }
+@media (max-width: 640px) {
+  .proof-btn { justify-content: center; min-width: var(--hit); padding: 0; }
+  .proof-btn span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+}
 .doc-row.undo { justify-content: space-between; padding: var(--s1) var(--s1) var(--s1) var(--s3); font-size: var(--fs-sm); color: var(--ink-2); background: var(--chip); border-style: dashed; }
 .docs-note { font-size: var(--fs-xs); color: var(--ink-3); }
 .docs-note:empty { display: none; }

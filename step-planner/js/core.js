@@ -27,11 +27,17 @@ const NEXT = { todo: 'doing', doing: 'done' };
 export const outOfScope = (s) => s === 'skip' || s === 'cancel';
 export const nextStatus = (/** @type {string} */ s) => NEXT[s] || '';
 /** Đổi trạng thái một bước con: sang trạng thái không có lý do thì bỏ lý do; giữa Pending, Blocked, Cancelled thì giữ.
- * @param {any} sub @param {string} st */
-export function setStatus(sub, st) {
+ * Vừa sang Done: `doneAt` là hôm nay (`day`); rời Done: bỏ `doneAt`.
+ * @param {any} sub @param {string} st @param {string} [day] */
+export function setStatus(sub, st, day = today()) {
+  const was = sub.status;
   sub.status = STATUSES.includes(st) ? st : 'todo';
   if (!hasReason(sub.status)) sub.reason = '';
+  if (sub.status !== 'done') sub.doneAt = '';
+  else if (was !== 'done') sub.doneAt = day;
 }
+/** Bước con xong mà chưa có tài liệu bằng chứng (`proof`) cho "Done when" của nó: trang gợi ý thêm (không chặn). @param {any} sub */
+export const needsEvidence = (sub) => sub.status === 'done' && !!sub.doneWhen && !sub.docs.some((/** @type {any} */ d) => d.proof);
 
 export const FORMAT = 'step-planner';
 export const VERSION = 3;
@@ -88,9 +94,9 @@ export function normDoc(o) {
   const kind = o.kind === 'link' || (o.kind !== 'md' && typeof o.url === 'string' && o.url) ? 'link' : 'md';
   if (kind === 'link') {
     const url = safeUrl(o.url);
-    return url ? { id: idOr(o.id, 'd'), kind, title: oneLine(o.title) || url, url } : null;
+    return url ? { id: idOr(o.id, 'd'), kind, title: oneLine(o.title) || url, url, proof: o.proof === true } : null;
   }
-  return { id: idOr(o.id, 'd'), kind, title: oneLine(o.title) || 'Document', body: mdBody(o.body) };
+  return { id: idOr(o.id, 'd'), kind, title: oneLine(o.title) || 'Document', body: mdBody(o.body), proof: o.proof === true };
 }
 const docsOf = (/** @type {any} */ a) => (Array.isArray(a) ? a.map(normDoc).filter(Boolean) : []);
 
@@ -104,6 +110,7 @@ export function normSub(o) {
     status,
     reason: hasReason(status) ? multiLine(typeof x.reason === 'string' ? x.reason : x.cancelReason) : '', // cancelReason: dữ liệu cũ
     due: parseDate(x.due),
+    doneAt: status === 'done' ? parseDate(x.doneAt) : '', // ngày sang Done (setStatus); dữ liệu cũ: rỗng, không bịa ngày
     doneWhen: oneLine(x.doneWhen),
     notes: multiLine(x.notes),
     docs: docsOf(x.docs),
@@ -446,6 +453,13 @@ const hardBreaks = (/** @type {string[]} */ lines) => lines.map((l, i) => (i < l
  * khối rào thụt thêm hai bậc; rào dài hơn chuỗi ` dài nhất trong thân, nên thân chứa ``` hay dòng #, -, nhãn vẫn
  * nguyên. Trong tên: `\`, `[`, `]` thoát bằng `\`. */
 const escDoc = (/** @type {string} */ s) => s.replace(/[\\[\]]/g, '\\$&');
+/* Tài liệu là bằng chứng: tên mở bằng `Evidence: ` (trang cũ đọc thành một phần tên, không mất gì). Tên thật mở bằng chữ ấy
+ * mà không là bằng chứng thì thêm `\` phía trước. */
+const PROOF = /^Evidence:[ \t]*/i;
+const docTitle = (/** @type {any} */ d) => (d.proof ? 'Evidence: ' : PROOF.test(d.title) ? '\\' : '') + escDoc(d.title);
+/** Tên tài liệu đọc từ Markdown (chưa bỏ thoát) → tên, bằng chứng không. @param {string} raw */
+const readDocTitle = (raw) => (PROOF.test(raw) ? { title: unescDoc(raw.replace(PROOF, '')), proof: true }
+  : { title: unescDoc(/^\\evidence:/i.test(raw) ? raw.slice(1) : raw), proof: false });
 const unescDoc = (/** @type {string} */ s) => s.replace(/\\([\\[\]])/g, '$1');
 const DOC_LINK = /^\[((?:\\.|[^\]\\])*)\]\((?:<([^<>]*)>|(\S+))\)$/;
 const DOC_ITEM = /^(\s*)[-*+][ \t]+(.*)$/;
@@ -455,13 +469,13 @@ function docLines(docs, ind) {
   const out = [];
   for (const d of docs) {
     if (d.kind === 'link') {
-      out.push(`${ind}  - [${escDoc(d.title)}](${/[()]/.test(d.url) ? '<' + d.url + '>' : d.url})`);
+      out.push(`${ind}  - [${docTitle(d)}](${/[()]/.test(d.url) ? '<' + d.url + '>' : d.url})`);
       continue;
     }
     const longest = Math.max(0, ...(d.body.match(/`+/g) || []).map((r) => r.length));
     const fence = '`'.repeat(Math.max(3, longest + 1));
     const fi = ind + '    ';
-    out.push(`${ind}  - ${escDoc(d.title)}`, fi + fence + 'markdown',
+    out.push(`${ind}  - ${docTitle(d)}`, fi + fence + 'markdown',
       ...(d.body ? d.body.split('\n').map((l) => (l ? fi + l : '')) : []), fi + fence);
   }
   return out;
@@ -492,8 +506,8 @@ function readDocs(lines, i, docs, warnings, min) {
     const text = /** @type {RegExpExecArray} */ (DOC_ITEM.exec(lines[i]))[2].trim();
     const lk = DOC_LINK.exec(text);
     if (lk) {
-      const title = unescDoc(lk[1]), url = lk[2] ?? lk[3];
-      const d = normDoc({ kind: 'link', title, url });
+      const { title, proof } = readDocTitle(lk[1]), url = lk[2] ?? lk[3];
+      const d = normDoc({ kind: 'link', title, url, proof });
       if (d) docs.push(d); else warnings.push(`Link is not http(s), skipped: ${title || url}`);
       i++;
       continue;
@@ -503,9 +517,9 @@ function readDocs(lines, i, docs, warnings, min) {
     const body = [];
     let k = i + 2;
     while (k < lines.length && !close.test(lines[k])) body.push(dedent(lines[k++], f[1].length));
-    const title = unescDoc(text);
+    const { title, proof } = readDocTitle(text);
     if (k >= lines.length) warnings.push(`Document "${title}" has no closing fence; read to the end of the file.`);
-    docs.push(normDoc({ kind: 'md', title, body: body.join('\n') }));
+    docs.push(normDoc({ kind: 'md', title, body: body.join('\n'), proof }));
     i = k + 1;
   }
   return i;
@@ -534,6 +548,7 @@ export function toMarkdown(ws, labels = null) {
       if (x.par) line += ' · parallel';
       if (x.redo) line += ' · redo';
       if (x.due) line += ` · due ${x.due}`;
+      if (x.status === 'done' && x.doneAt) line += ` · done ${x.doneAt}`;
       const more = [];
       if (x.doneWhen) more.push(`  Done when: ${x.doneWhen}`);
       if (hasReason(x.status) && x.reason) {
@@ -577,6 +592,7 @@ const ITEM = /^(?:[-*+]|\d+[.)])\s+(?:\[(.?)\]\s*)?(.*)$/;
 const STEP_PREFIX = /^(?:(?:bước|step)\s*)?\d+(?:\s*[.):]\s*|\s+)/i;
 const DATE_TOKEN = '(\\d{4}-\\d{1,2}-\\d{1,2}|\\d{1,2}\\/\\d{1,2}\\/\\d{4})';
 const META_DUE = new RegExp(`^(?:hạn|due):?\\s+${DATE_TOKEN}$`, 'i');
+const META_DONE = new RegExp(`^done:?\\s+${DATE_TOKEN}$`, 'i'); // ngày xong (`doneAt`)
 const TITLE_DUE = new RegExp(`(^|[\\s(\\[,;])(?:hạn|due):?\\s+(\\d{1,4}[-\\/]\\d{1,2}[-\\/]\\d{1,4})`, 'gi');
 const LOG_DATE = new RegExp(`^${DATE_TOKEN}\\s*(?:·|–|-|:)?\\s*(.*)$`);
 
@@ -591,12 +607,14 @@ function parseSubText(raw, warnings) {
   let due = '';
   let par = false;
   let redo = false;
+  let doneAt = '';
   for (const part of parts.slice(1)) {
     const t = part.trim();
     let m;
     if (/^`@[^`]+`$/.test(t) || /^@.+$/.test(t)) continue; // người làm của file cũ: bỏ
     if (/^(?:parallel|song song)$/i.test(restore(t))) { par = true; continue; }
     if (/^(?:redo|làm lại)$/i.test(restore(t))) { redo = true; continue; }
+    if ((m = META_DONE.exec(restore(t))) && parseDate(m[1]) && !doneAt) { doneAt = parseDate(m[1]); continue; }
     if ((m = META_DUE.exec(restore(t))) && parseDate(m[1]) && !due) due = parseDate(m[1]);
     else {
       if (/^(?:hạn|due)\b/i.test(restore(t))) warnings.push(`Due date not readable, kept in the title: ${restore(t)}`);
@@ -614,7 +632,7 @@ function parseSubText(raw, warnings) {
     return pre;
   });
   if (changed) title = title.replace(/\(\s*(?:[,;]\s*)*\)/g, '').replace(/\s+/g, ' ').replace(/^[\s,;·:-]+|[\s,;·:-]+$/g, '');
-  return { title: restore(title).trim(), due, par, redo };
+  return { title: restore(title).trim(), due, par, redo, doneAt };
 }
 
 /**
@@ -645,7 +663,7 @@ export function fromMarkdown(text) {
   const newSub = (/** @type {string} */ mark, /** @type {string} */ rest) => {
     if (!step) { step = { title: LOOSE_STEP, subs: [] }; ws.steps.push(step); }
     const p = parseSubText(rest, warnings);
-    sub = { title: p.title, status: FROM_MARK[mark ?? ' '] || 'todo', due: p.due, par: p.par, redo: p.redo };
+    sub = { title: p.title, status: FROM_MARK[mark ?? ' '] || 'todo', due: p.due, par: p.par, redo: p.redo, doneAt: p.doneAt };
     if (mark != null && !(mark in FROM_MARK)) warnings.push(`Unknown mark [${mark}], read as New: ${p.title}`);
     step.subs.push(sub);
     block = 'sub'; blockFirst = true;
@@ -864,14 +882,14 @@ export function slug(/** @type {string} */ s) {
   return fold(s).replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60) || 'project';
 }
 
-const docShape = (/** @type {any} */ d) => (d.kind === 'link' ? { kind: d.kind, title: d.title, url: d.url } : { kind: d.kind, title: d.title, body: d.body });
+const docShape = (/** @type {any} */ d) => (d.kind === 'link' ? { kind: d.kind, title: d.title, url: d.url, proof: d.proof } : { kind: d.kind, title: d.title, body: d.body, proof: d.proof });
 /** Phần so được khi kiểm Markdown đi rồi về: bỏ id và mốc thời gian. @param {any} ws */
 export function shape(ws) {
   return {
     name: ws.name, templateId: ws.templateId, notes: ws.notes,
     steps: ws.steps.map((/** @type {any} */ s) => ({
       title: s.title, goal: s.goal, doneWhen: s.doneWhen, notes: s.notes, revisit: s.revisit, round: s.round, docs: s.docs.map(docShape),
-      subs: s.subs.map((/** @type {any} */ x) => ({ title: x.title, status: x.status, reason: x.reason, due: x.due, doneWhen: x.doneWhen, notes: x.notes, par: x.par, redo: x.redo, docs: x.docs.map(docShape) })),
+      subs: s.subs.map((/** @type {any} */ x) => ({ title: x.title, status: x.status, reason: x.reason, due: x.due, doneAt: x.doneAt, doneWhen: x.doneWhen, notes: x.notes, par: x.par, redo: x.redo, docs: x.docs.map(docShape) })),
     })),
     log: ws.log.map((/** @type {any} */ l) => ({ date: l.date, decision: l.decision, why: l.why, step: ws.steps.findIndex((/** @type {any} */ s) => s.id === l.stepId) })),
     design: ws.design,

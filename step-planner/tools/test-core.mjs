@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import {
   fromTemplate, toMarkdown, fromMarkdown, parseImport, toJSON, toBackup, shape, progress, nextActionIds, projectNextIds, slotsOf, subPlace, placeSub, takeSub, shiftTarget, liveLabels, redoCount, canReopen,
-  nextStatus, setStatus, splitInline, mergeEdit, pick, EDIT_FIELDS, nextWaitingOn, inGroup, normWorkspace, normSub, normLog, freshCopy, counts, slug, fold, parseDate, uniqueName, normDoc, safeUrl,
+  nextStatus, setStatus, splitInline, mergeEdit, pick, EDIT_FIELDS, nextWaitingOn, inGroup, needsEvidence, normWorkspace, normSub, normLog, freshCopy, counts, slug, fold, parseDate, uniqueName, normDoc, safeUrl,
 } from '../js/core.js';
 import { parseMd, inline, srcTokens } from '../js/md.js';
 import { normDesign, rankOptions, snake, planTasks, diagramNodes, decidedCount, catalogErrors, readStageLine } from '../js/design-core.js';
@@ -519,6 +519,32 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   check('Next chờ: ô có thẻ làm được thì không báo', eq(ids(ws([{ title: 'p', status: 'pending' }, { title: 'n', par: true }])), [])
     && eq(ids(ws([{ title: 'n' }])), []) && eq(nextWaitingOn(normWorkspace({ steps: [] })), []));
   check('lọc trạng thái: nhóm', inGroup('', 'cancel') && inGroup('act', 'doing') && !inGroup('act', 'pending') && inGroup('wait', 'blocked') && inGroup('out', 'skip') && !inGroup('done', 'todo'));
+}
+
+/* Bằng chứng nghiệm thu: tài liệu `proof`, ngày xong `doneAt`; Markdown và JSON đi rồi về; file cũ vẫn đọc. */
+{
+  const x = normSub({ title: 'T', doneWhen: 'Có báo cáo' });
+  setStatus(x, 'done', '2026-11-20');
+  const d1 = x.doneAt;
+  setStatus(x, 'done', '2026-11-21');
+  check('doneAt: sang Done ghi ngày, Done lại không đổi ngày, rời Done thì bỏ', d1 === '2026-11-20' && x.doneAt === '2026-11-20'
+    && (setStatus(x, 'doing'), x.doneAt === '') && normSub({ status: 'todo', doneAt: '2026-01-01' }).doneAt === '' && normSub({ status: 'done' }).doneAt === '');
+  setStatus(x, 'done', '2026-11-22');
+  check('bằng chứng: xong, có Done when, chưa có tài liệu proof thì gợi ý; có rồi thì thôi', needsEvidence(x)
+    && !needsEvidence({ ...x, docs: [normDoc({ kind: 'link', title: 'r', url: 'https://a.b', proof: true })] }) && !needsEvidence({ ...x, doneWhen: '' }));
+  const ws = normWorkspace({ name: 'P', steps: [{ title: 'A', docs: [{ kind: 'md', title: 'Evidence: tên thật', body: 'x' }, { kind: 'link', title: 'Chạy', url: 'https://r.example/1', proof: true }],
+    subs: [{ title: 'Huấn luyện · done 2026-01-01', status: 'done', doneAt: '2026-11-20', due: '2026-11-30', doneWhen: 'AUC ≥ 0,8',
+      docs: [{ kind: 'link', title: 'Evidence: [run] 12', url: 'https://r.example/12', proof: true }, { kind: 'md', title: 'Notebook', body: '# a', proof: true }, { kind: 'link', title: 'Brief', url: 'https://b.example' }] },
+    { title: 'Chưa xong', status: 'doing', doneAt: '2026-11-20' }] }] });
+  const md = toMarkdown(ws);
+  check('Markdown: dòng bước con có "· done YYYY-MM-DD", tài liệu bằng chứng mở bằng "Evidence: ", tên thật trùng chữ ấy thì thoát',
+    md.includes(' · due 2026-11-30 · done 2026-11-20') && md.includes('- [Evidence: Evidence: \\[run\\] 12](https://r.example/12)') && md.includes('    - Evidence: Notebook\n')
+    && md.includes('- \\Evidence: tên thật\n') && md.includes('- [Evidence: Chạy](https://r.example/1)') && md.includes('- [Brief](https://b.example)'));
+  check('Markdown: bằng chứng và ngày xong đi rồi về giữ nguyên', eq(shape(ws), roundTrip(ws)), firstDiff(shape(ws), roundTrip(ws)));
+  check('JSON: bằng chứng và ngày xong đi rồi về giữ nguyên', eq(shape(ws), shape(parseImport(toJSON(ws)).workspaces[0])));
+  const old = fromMarkdown('# P\n\n## A\n\n- [x] Xong · due 2026-11-30\n  Docs:\n    - [Run](https://r.example)\n');
+  const o = old.workspace.steps[0].subs[0];
+  check('Markdown cũ: không ngày xong, tài liệu không là bằng chứng', o.doneAt === '' && o.docs[0].proof === false && !old.warnings.length);
 }
 
 /* Sửa cùng lúc ở hai tab: chỉ trường mình đổi đè lên bản mới nhất; cùng trường khác giá trị là xung đột. */

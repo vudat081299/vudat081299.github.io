@@ -131,10 +131,16 @@ const stepSel = (/** @type {string} */ id, /** @type {string} */ act) => `.step[
 let toastUndo = null;
 let toastTimer = 0;
 let toastBack = '';
-/* Xoá: focus nhảy vào Hoàn tác. Dời chỗ (focusUndo = false): focus ở lại thẻ vừa dời, Ctrl/Cmd + Z vẫn hoàn tác. */
-function toast(/** @type {string} */ text, /** @type {null | (() => void)} */ undo = null, back = '', focusUndo = true) {
+/** Nút của toast không phải Hoàn tác (vd. "Add evidence"): Ctrl/Cmd + Z không bấm nó. */
+let toastAction = false;
+/* Xoá: focus nhảy vào Hoàn tác. Dời chỗ (focusUndo = false): focus ở lại thẻ vừa dời, Ctrl/Cmd + Z vẫn hoàn tác.
+ * label: chữ của nút khi nó làm việc khác Hoàn tác. */
+function toast(/** @type {string} */ text, /** @type {null | (() => void)} */ undo = null, back = '', focusUndo = true, label = '') {
   $('toast-text').textContent = text;
   $('toast-undo').hidden = !undo;
+  $('toast-undo').textContent = label || 'Undo';
+  if (label) $('toast-undo').removeAttribute('aria-keyshortcuts'); else $('toast-undo').setAttribute('aria-keyshortcuts', 'Control+Z Meta+Z');
+  toastAction = !!label;
   toastUndo = undo;
   toastBack = back;
   $('toast').hidden = false;
@@ -158,7 +164,7 @@ $('toast-undo').addEventListener('click', runUndo);
 const typing = (/** @type {any} */ el) => !!el && (el.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName));
 document.addEventListener('keydown', (e) => {
   if ((e.ctrlKey || e.metaKey) && !e.shiftKey && !e.altKey && e.key.toLowerCase() === 'z'
-    && toastUndo && !typing(e.target) && !document.querySelector('dialog[open]')) {
+    && toastUndo && !toastAction && !typing(e.target) && !document.querySelector('dialog[open]')) {
     e.preventDefault();
     runUndo();
   }
@@ -399,6 +405,7 @@ function stepRow(step, i, visible, ctx) {
   const card = (/** @type {any} */ x) => {
     const overdue = x.due && x.due < todayStr && x.status !== 'done' && !C.outOfScope(x.status);
     const isNext = nextIds.has(x.id);
+    const doneOn = x.status === 'done' && x.doneAt;
     return h('div', { class: `card st-${x.status}${isNext ? ' next' : ''}`, 'data-sub': x.id },
       h('div', { class: 'card-top' },
         numTag('num', labels.get(x.id)),
@@ -407,11 +414,13 @@ function stepRow(step, i, visible, ctx) {
         x.docs.length > 0 && h('button', { type: 'button', class: 'doc-tag', 'data-act': 'sub-docs', tabindex: '-1',
           'aria-label': `${C.plural(x.docs.length, 'doc')}. Open the list`, title: x.docs.map((/** @type {any} */ d) => d.title).join('\n') },
         icon('clip'), String(x.docs.length)),
+        proofTag(x),
         statusChip(x)),
       h('div', { class: 'card-body' },
         h('h3', { class: 'card-title' }, h('button', { type: 'button', class: 'link', 'data-act': 'edit-sub', 'aria-keyshortcuts': 'Alt+ArrowLeft Alt+ArrowRight Alt+ArrowUp Alt+ArrowDown' }, x.title)),
-        x.due && h('p', { class: 'meta' },
-          h('span', { class: 'due' + (overdue ? ' overdue' : '') }, 'due ' + fmtDate(x.due) + (overdue ? ' (overdue)' : ''))),
+        (x.due || doneOn) && h('p', { class: 'meta' },
+          x.due && h('span', { class: 'due' + (overdue ? ' overdue' : '') }, 'due ' + fmtDate(x.due) + (overdue ? ' (overdue)' : '')),
+          doneOn && h('span', { class: 'done-at', title: `Marked Done on ${fmtDate(x.doneAt)}` }, 'done ' + fmtDate(x.doneAt))),
         x.reason && h('p', { class: 'card-reason' }, h('span', { class: 'lbl' }, C.REASON_LABEL[x.status] + ' '), withLinks(x.reason)),
         x.doneWhen && h('p', { class: 'card-done' }, h('span', { class: 'lbl' }, 'Done when '), x.doneWhen),
         x.notes && cardNotes(x.notes, keep.open.has(x.id))),
@@ -481,6 +490,14 @@ function statusChip(x) {
   const how = nx ? `Click: ${C.STATUS_LABEL[nx]}. Shift-click or Alt+Down: all statuses` : 'Click: choose a status';
   return h('button', { type: 'button', class: `chip st-${x.status}`, 'data-act': 'status', 'aria-haspopup': nx ? null : 'listbox',
     'aria-expanded': nx ? null : 'false', 'aria-keyshortcuts': 'Alt+ArrowDown', 'aria-label': `Status: ${label}. ${how}`, title: how }, label);
+}
+
+/** Dấu bằng chứng trên thẻ xong có tài liệu `proof` (mốc nghiệm thu có đầu ra kiểm được). @param {any} x */
+function proofTag(x) {
+  const proof = x.status === 'done' ? x.docs.filter((/** @type {any} */ d) => d.proof) : [];
+  if (!proof.length) return null;
+  const t = `Evidence: ${proof.map((/** @type {any} */ d) => d.title).join(', ')}`;
+  return h('span', { class: 'proof-tag', role: 'img', 'aria-label': t, title: t }, icon('proof'));
 }
 
 /** Thẻ chạm --card-max thì thân bị cắt: mờ dần ở đáy và thêm nút "Xem thêm" (mở cả thẻ). Nút ngoài vòng Tab:
@@ -1025,7 +1042,7 @@ $('board').addEventListener('click', (/** @type {any} */ e) => {
     case 'status': {
       if (consumeJustClosed(b)) break;
       const nx = C.nextStatus(sub.status);
-      if (nx && !e.shiftKey) { C.setStatus(sub, nx); commit(subSel(sub.id, 'status')); } else openStatusMenu(b, step, sub);
+      if (nx && !e.shiftKey) { C.setStatus(sub, nx); commit(subSel(sub.id, 'status')); evidenceHint(step, sub); } else openStatusMenu(b, step, sub);
       break;
     }
     case 'edit-sub': openSub(step, sub); break;
@@ -1033,6 +1050,21 @@ $('board').addEventListener('click', (/** @type {any} */ e) => {
     case 'sub-del': deleteSub(ws.id, step.id, sub.id); break;
   }
 });
+
+/** Vừa xong mà "Done when" chưa có tài liệu bằng chứng: toast gợi ý, nút mở hộp sửa ở phần tài liệu. Không chặn.
+ * @param {any} step @param {any} sub */
+function evidenceHint(step, sub) {
+  if (!C.needsEvidence(sub)) return;
+  const ids = { wsId: curId, stepId: step.id, subId: sub.id };
+  toast(`Done. Add evidence for "${sub.title.length > 40 ? sub.title.slice(0, 39) + '…' : sub.title}"? (a run, report, commit link)`, () => {
+    const ws = findWs(ids.wsId);
+    const st = ws && ws.steps.find((/** @type {any} */ s) => s.subs.some((/** @type {any} */ x) => x.id === ids.subId));
+    const x = st && st.subs.find((/** @type {any} */ y) => y.id === ids.subId);
+    if (!x) return;
+    if (curId !== ids.wsId) switchTo(ids.wsId);
+    openSub(st, x, { toDocs: true });
+  }, subSel(sub.id, 'status'), false, 'Add evidence');
+}
 
 /** Danh sách mọi trạng thái, mở dưới chip. Chọn Cancelled: mở hộp sửa ở ô lý do (lưu mới huỷ); Pending, Blocked đặt ngay
  * (lý do không bắt buộc, sửa trong hộp). @param {any} chip @param {any} step @param {any} sub */
@@ -1046,6 +1078,7 @@ function openStatusMenu(chip, step, sub) {
     if (v === x.status) return;
     C.setStatus(x, v);
     commit(subSel(x.id, 'status'));
+    evidenceHint(s, x);
   }, { label: `Status of "${sub.title}"`, className: 'dd-status' });
 }
 
@@ -1359,18 +1392,30 @@ $('sub-form').addEventListener('submit', async (/** @type {any} */ e) => {
     if (again === null) return;
     if (!again) { closeSaved($('dlg-sub')); return; }
     ({ ws, step, sub } = subFromCtx());
-    if (!sub) item = C.normSub({ ...ctx.orig, ...mine, redo: false });
+    if (!sub) {
+      item = C.normSub({ ...ctx.orig, ...mine, status: ctx.orig.status, redo: false });
+      C.setStatus(item, mine.status);
+      item.reason = mine.reason;
+    }
   }
   if (ws && sub) {
     const merged = await mergeSaved(ws, C.pick(ctx.orig, F), mine, () => C.pick(subFromCtx().sub || {}, F));
     if (!merged) return;
     ({ ws, step, sub } = subFromCtx());
-    if (sub) Object.assign(sub, C.pick(C.normSub({ ...sub, ...merged }), F));
+    if (sub) {
+      const n = C.normSub({ ...sub, ...merged });
+      C.setStatus(sub, n.status); // doneAt theo lần đổi trạng thái
+      Object.assign(sub, C.pick(n, F));
+    }
   }
   const target = ws && (stepOf(ws, field(f, 'step').value) || step || stepOf(ws, ctx.stepId));
   closeSaved($('dlg-sub'));
   if (!ws || !target || (ctx.subId && !sub && !item)) { toast('Not saved: the step was deleted elsewhere.'); return; }
-  if (!ctx.subId) item = C.normSub({ ...mine, redo: false });
+  if (!ctx.subId) {
+    item = C.normSub({ ...mine, status: 'todo', redo: false });
+    C.setStatus(item, mine.status);
+    item.reason = mine.reason;
+  }
   const pos = String(field(f, 'pos').value || 'n:999');
   const to = { stepId: target.id, slot: Number(pos.slice(2)) || 0, join: pos[0] === 'j', at: Infinity };
   if (sub) item = sub;
@@ -1381,7 +1426,8 @@ $('sub-form').addEventListener('submit', async (/** @type {any} */ e) => {
     if (!sub) C.placeSub(ws, item, to);
     commit(focusSel);
   }
-  if (!document.querySelector(`.card[data-sub="${item.id}"]`)) toast(sub ? 'Saved — hidden by the search filter.' : 'Added — hidden by the search filter.');
+  if (!document.querySelector(`.card[data-sub="${item.id}"]`)) toast(sub ? 'Saved — hidden by the filter.' : 'Added — hidden by the filter.');
+  else if (item.status === 'done' && ctx.orig?.status !== 'done') evidenceHint(target, item);
 });
 /* Nhân bản bản đã lưu; chữ đang sửa chưa lưu thì hỏi lại như Đóng. */
 $('sub-dup').addEventListener('click', async () => {
@@ -1515,6 +1561,8 @@ function renderDocsEdit(where) {
   const rows = owner ? owner.docs.map((/** @type {any} */ d) => h('li', { class: 'doc-row', 'data-doc': d.id },
     h('button', { type: 'button', class: 'doc-link', 'data-doc-act': 'open' }, icon(d.kind === 'link' ? 'link' : 'doc'), h('span', {}, d.title),
       d.kind === 'link' && h('small', {}, d.url.replace(/^https?:\/\/(www\.)?/i, '').split(/[/?#]/)[0])),
+    h('button', { type: 'button', class: 'proof-btn', 'data-doc-act': 'proof', 'aria-pressed': String(d.proof),
+      title: d.proof ? 'Evidence for Done when. Click to unmark' : 'Mark as evidence for Done when (a run, report, test, commit)' }, icon('proof'), h('span', {}, 'Evidence')),
     h('button', { type: 'button', class: 'icon-btn', 'data-doc-act': 'del', 'aria-label': `Delete doc ${d.title}`, title: 'Delete doc' }, icon('trash')))) : [];
   if (docUndo && docUndo.where === where) {
     rows.push(h('li', { class: 'doc-row undo' }, h('span', {}, `Deleted "${docUndo.title}".`),
@@ -1545,6 +1593,13 @@ for (const where of /** @type {('sub'|'step')[]} */ (['sub', 'step'])) {
     const doc = owner && owner.docs.find((/** @type {any} */ d) => d.id === id);
     if (!doc) return;
     const c = { ...ctx, docId: id };
+    if (b.dataset.docAct === 'proof') {
+      doc.proof = !doc.proof;
+      commit();
+      refreshDocLists();
+      refocus(`#${where}-docs [data-doc="${id}"] [data-doc-act="proof"]`);
+      return;
+    }
     if (b.dataset.docAct === 'del') deleteDoc(c);
     else if (doc.kind === 'link') openLinkEdit(c, doc);
     else openMd(c);
@@ -1639,7 +1694,7 @@ $('doc-form').addEventListener('submit', (/** @type {any} */ e) => {
   closeSaved($('dlg-doc'));
   if (!owner) { toast('Not saved: the step was deleted elsewhere.'); return; }
   const old = ctx.docId ? owner.docs.find((/** @type {any} */ d) => d.id === ctx.docId) : null;
-  const doc = C.normDoc({ id: old ? old.id : '', kind: 'link', title, url });
+  const doc = C.normDoc({ id: old ? old.id : '', kind: 'link', title, url, proof: !!old?.proof });
   if (old) Object.assign(old, doc); else owner.docs.push(doc);
   commit();
   refreshDocLists();
@@ -1717,7 +1772,7 @@ $('md-form').addEventListener('submit', (/** @type {any} */ e) => {
   closeSaved($('dlg-md'));
   if (!owner) { toast('Not saved: the step was deleted elsewhere.'); return; }
   const old = ctx.docId ? owner.docs.find((/** @type {any} */ d) => d.id === ctx.docId) : null;
-  const doc = C.normDoc({ id: old ? old.id : '', kind: 'md', title: field(f, 'title').value, body: field(f, 'body').value });
+  const doc = C.normDoc({ id: old ? old.id : '', kind: 'md', title: field(f, 'title').value, body: field(f, 'body').value, proof: !!old?.proof });
   if (old) Object.assign(old, doc); else owner.docs.push(doc);
   commit();
   refreshDocLists();
@@ -1761,8 +1816,8 @@ $('revisit-all-done').addEventListener('click', () => {
   for (const cb of /** @type {any} */ ($('revisit-list').querySelectorAll('input[name="reset"]'))) cb.checked = true;
 });
 /** Trạng thái, dấu Redo của các bước con, để Hoàn tác. @param {any} step */
-const subMarks = (step) => new Map(step.subs.map((/** @type {any} */ x) => [x.id, { status: x.status, redo: x.redo }]));
-/** @param {any} step @param {Map<string, {status:string, redo:boolean}>} marks */
+const subMarks = (step) => new Map(step.subs.map((/** @type {any} */ x) => [x.id, { status: x.status, redo: x.redo, doneAt: x.doneAt }]));
+/** @param {any} step @param {Map<string, {status:string, redo:boolean, doneAt:string}>} marks */
 const restoreMarks = (step, marks) => { for (const x of step.subs) if (marks.has(x.id)) Object.assign(x, marks.get(x.id)); };
 /* Mở lại: vòng mới, bước con đã chọn về New và mang dấu Redo, ghi một dòng nhật ký; một Hoàn tác trả hết. */
 $('revisit-form').addEventListener('submit', (/** @type {any} */ e) => {

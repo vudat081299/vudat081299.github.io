@@ -1072,7 +1072,7 @@ const check = (name, ok, detail = '') => {
   await page.click('.step:first-child .step-head [data-act="add-sub"]');
   await page.fill('#sub-form [name="title"]', 'Không khớp tìm');
   await page.click('#sub-form button[type="submit"]');
-  check('thêm mà bộ lọc ẩn: báo, focus không về body', /hidden by the search filter/.test(await page.textContent('#toast-text'))
+  check('thêm mà bộ lọc ẩn: báo, focus không về body', /hidden by the filter/.test(await page.textContent('#toast-text'))
     && await page.evaluate(() => document.activeElement !== document.body));
   await page.fill('#q', '');
 
@@ -1784,6 +1784,55 @@ const check = (name, ok, detail = '') => {
       && (await shownIds()).split(',').length === 5);
     check(`${tag}: trang không tràn ngang`, (await hOverflow(np)) <= 0);
     await nc.close();
+  }
+
+  /* ── Bằng chứng nghiệm thu: xong mà "Done when" chưa có bằng chứng thì toast gợi ý (không chặn); tài liệu đánh dấu Evidence;
+   * thẻ xong có dấu bằng chứng và ngày xong; rời Done thì bỏ ngày ── */
+  {
+    const seed = { version: 2, lastId: 'we', workspaces: [{ id: 'we', name: 'Bằng chứng', steps: [{ id: 'te1', title: 'Mô hình', subs: [
+      { id: 'se1', title: 'Huấn luyện', status: 'doing', doneWhen: 'AUC ≥ 0,8 trên tập kiểm định', docs: [{ id: 'de1', kind: 'link', title: 'Lần chạy 12', url: 'https://runs.example/12' }] },
+      { id: 'se2', title: 'Không tiêu chí', status: 'doing' }] }], log: [] }] };
+    const ec = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+    await ec.addInitScript((d) => { if (!localStorage.getItem('stepPlanner.v2')) localStorage.setItem('stepPlanner.v2', d); }, JSON.stringify(seed));
+    const ep = await ec.newPage();
+    ep.on('pageerror', (e) => errors.push(String(e)));
+    await ep.goto(BASE);
+    await ep.waitForSelector('.card[data-sub="se1"]');
+    const today = await ep.evaluate(async () => (await import(new URL('js/core.js', location.href).href)).today());
+    const se = async (id) => (await cur(ep)).steps[0].subs.find((x) => x.id === id);
+    await ep.click(subSel('se2', 'status'));
+    check('bằng chứng: xong mà không có Done when thì không gợi ý', !(await ep.isVisible('#toast')) && (await se('se2')).doneAt === today);
+    await ep.click(subSel('se1', 'status'));
+    const t1 = { text: await ep.textContent('#toast-text'), btn: await ep.textContent('#toast-undo'), x: await se('se1') };
+    await ep.keyboard.press('Control+z');
+    check('bằng chứng: xong mà Done when chưa có bằng chứng thì toast "Add evidence", không chặn; ghi ngày xong; Ctrl+Z không bấm nút ấy',
+      /Add evidence for "Huấn luyện"/.test(t1.text) && t1.btn === 'Add evidence' && t1.x.status === 'done' && t1.x.doneAt === today
+      && (await se('se1')).status === 'done' && !(await ep.$('.card[data-sub="se1"] .proof-tag')), JSON.stringify(t1).slice(0, 200));
+    await ep.click('#toast-undo');
+    check('bằng chứng: nút của toast mở hộp sửa ở phần tài liệu', await ep.isVisible('#dlg-sub') && await ep.evaluate(() => !!document.activeElement?.closest('#sub-docs')));
+    await ep.click('#sub-docs [data-doc="de1"] [data-doc-act="proof"]');
+    const pressed = await ep.getAttribute('#sub-docs [data-doc="de1"] [data-doc-act="proof"]', 'aria-pressed');
+    // Sửa link đã đánh dấu: vẫn là bằng chứng.
+    await ep.click('#sub-docs [data-doc="de1"] [data-doc-act="open"]');
+    await ep.fill('#doc-form [name="title"]', 'Lần chạy 12 (AUC 0,83)');
+    await ep.click('#doc-form button[type="submit"]');
+    await ep.keyboard.press('Escape');
+    const d1 = (await se('se1')).docs[0];
+    const tag = await ep.getAttribute('.card[data-sub="se1"] .proof-tag', 'aria-label');
+    const doneTxt = await ep.textContent('.card[data-sub="se1"] .done-at');
+    check('bằng chứng: bật Evidence lưu ngay, sửa link vẫn giữ; thẻ xong có dấu bằng chứng (aria-label) và ngày xong',
+      pressed === 'true' && d1.proof === true && d1.title === 'Lần chạy 12 (AUC 0,83)' && tag === 'Evidence: Lần chạy 12 (AUC 0,83)'
+      && /^done \d{1,2} \w{3} \d{4}$/.test(doneTxt), `${pressed} ${tag} ${doneTxt}`);
+    const md = await ep.evaluate(async () => {
+      const C = await import(new URL('js/core.js', location.href).href);
+      const s = JSON.parse(localStorage.getItem('stepPlanner.v2'));
+      return C.toMarkdown(s.workspaces[0]);
+    });
+    check('bằng chứng: Markdown xuất "· done YYYY-MM-DD" và "[Evidence: …](…)"', md.includes(`- [x] Huấn luyện · done ${today}`) && md.includes('- [Evidence: Lần chạy 12 (AUC 0,83)](https://runs.example/12)'), md.slice(0, 300));
+    await setSt(ep, 'se1', 'doing');
+    check('bằng chứng: rời Done thì bỏ ngày xong và dấu bằng chứng (tài liệu vẫn là bằng chứng)', (await se('se1')).doneAt === ''
+      && !(await ep.$('.card[data-sub="se1"] .proof-tag')) && !(await ep.$('.card[data-sub="se1"] .done-at')) && (await se('se1')).docs[0].proof);
+    await ec.close();
   }
 
   /* ── Dữ liệu lưu bị hỏng ── */
