@@ -4,7 +4,8 @@
   đúng thứ tự mười ba file slide (1, 2.1, 2.2, 3 … 12). Mở thẳng là chạy.
 - Đồ án nhóm (ngoại lai, ANOM, CUSUM, SPRT trên dữ liệu thể thao) có hai trang con (DMV-005):
   trang 1 `sports-monitoring-project.html` (từ đề tài tới phương án, chốt gì trước khi làm) và
-  trang 2 `sports-monitoring-build.html` (làm đề tài A từ đầu tới cuối). Chữ lặp ở `data/<tên trang>.json`.
+  trang 2 `sports-monitoring-build.html` (giám sát lợi thế sân nhà ở Premier League, từ đầu tới cuối).
+  Chữ lặp ở `data/<tên trang>.json`.
 - Chỉ nạp font Google. Không build. Trang chủ có mục trang môn và mục đồ án (trỏ trang 1); hero trang môn có nút
   sang trang 1.
 - Không có cổng riêng. Cổng tĩnh của `pages/` chạy tay được, với đường dẫn tuyệt đối:
@@ -79,8 +80,8 @@
 
 ## Đồ án: hai trang con (DMV-005)
 
-- Hai trang có chung `nav.subpages` ngay dưới `header.top` ("1 · Chọn đề tài", "2 · Làm đề tài A") và khối CSS
-  `/* ═══ TRANG CON ═══ */`; sửa ở trang này thì sửa y hệt trang kia.
+- Hai trang có chung `nav.subpages` ngay dưới `header.top` ("1 · Chọn đề tài", "2 · Giám sát lợi thế sân nhà")
+  và khối CSS `/* ═══ TRANG CON ═══ */`; sửa ở trang này thì sửa y hệt trang kia.
 - Trang đọc JSON bằng `fetch`: chạy `python3 -m http.server` ở gốc repo. Mở bằng `file://` thì `#notice` hiện.
 - Chỉ trường tên kết thúc bằng `_html` vào `innerHTML`, kể cả mảng; JS ném lỗi nếu trường khác bị đưa vào.
 - Thuật ngữ và nguồn gập chung trong `details#phu-luc`; link hay hash tới đích trong khối gập thì `openTo` mở khối.
@@ -114,7 +115,7 @@
 - Mỗi bước: phần luôn hiện (câu hỏi, tên chung, vào → ra, sơ đồ, các dòng "Chốt", "Xong khi"); phần gập (phương án khác
   của từng chốt: vì sao không, khi nào nên chọn; việc, file, vai, bài môn; code; bẫy; dùng lại). `h2` trùng `steps[].title`.
 - Mỗi chỗ phải chốt thì chốt một phương án và liệt kê phương án khác; không để "tuỳ nhóm".
-- Số kết quả lấy từ lần chạy thử đề tài A (results/*.csv); chạy lại thì sinh lại JSON, đừng sửa tay. Hình kết quả ghi
+- Số kết quả lấy từ lần chạy thử đồ án (results/*.csv); chạy lại thì sinh lại JSON, đừng sửa tay. Hình kết quả ghi
   nhãn "Số thật"; hình giả lập ghi "minh hoạ, số giả lập".
 - Sơ đồ mô tả bằng toạ độ trong `DG` của JS; chữ tràn hộp thì console báo "Chữ tràn hộp".
 - `phases`: `start`, `len` là phần trăm tổng thời gian; nút số tuần chỉ đổi nhãn tuần và số ngày. Pha của mỗi vai suy từ
