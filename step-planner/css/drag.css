@@ -1,0 +1,56 @@
+/* Kéo thả (js/ui/drag.js) và dấu "vừa dời". Chỉ dùng token của tokens.css. */
+
+/* ── Kéo thả (js/drag.js): bóng đi theo con trỏ; chỗ thả là ô viền đứt cỡ thẻ đang kéo, chữ mờ ở giữa; tay nắm của bước ── */
+/* Tấm phủ trong suốt khi đang kéo: con trỏ "grabbing" khắp trang, không phải đổi kiểu từng phần tử của bảng. */
+.drag-cover { position: fixed; inset: 0; z-index: 95; cursor: grabbing; }
+.dragging-any .gap-add { display: none; }
+.drag-src { display: none !important; }
+.drag-ghost {
+  position: fixed; left: 0; top: 0; z-index: 95; margin: 0; pointer-events: none; will-change: translate;
+  box-shadow: var(--shadow-pop); rotate: var(--drag-tilt); scale: var(--drag-scale); /* tâm xoay, thu nhỏ: điểm nắm (drag.js) */
+}
+/* Bóng thẻ nằm ngoài bảng: cao đúng bằng thẻ gốc (drag.js đặt), kể cả ở chế độ Gọn; không mang hàng nút. */
+.card.drag-ghost { min-height: 0; }
+.card.drag-ghost .acts { display: none; }
+.step-head.drag-ghost { padding: var(--s3); background: var(--surface); border: var(--line-w) solid var(--line); border-radius: var(--r); }
+.drop-ph, .step-ph {
+  display: flex; align-items: center; justify-content: center; text-align: center; padding: var(--s3);
+  border: var(--mark-w) dashed var(--ink-4); border-radius: var(--r); background: var(--chip);
+  font: 600 var(--fs-sm)/var(--lh-tight) var(--sans); color: var(--ink-3);
+}
+.drop-ph span, .step-ph span { opacity: .75; }
+.drop-ph.join { border-color: var(--accent-line); background: var(--accent-soft); color: var(--green); }
+.step-ph { min-height: var(--step-ph); margin: var(--s2) 0; }
+@media (prefers-reduced-motion: no-preference) { .drop-ph, .step-ph { animation: ph-in var(--dur) var(--ease); } }
+@keyframes ph-in { from { opacity: 0; } to { opacity: 1; } }
+/* Tay nắm kéo bước (chạm: kéo ngay, không cần giữ); thẻ chạm giữ để kéo nên không bôi chữ, không hiện menu chạm giữ. */
+.step-grip {
+  position: relative; display: inline-grid; place-items: center; flex: none; width: var(--h-xs); height: var(--h-xs); margin-top: 1px;
+  color: var(--ink-4); cursor: grab; touch-action: none; border-radius: var(--r-xs);
+}
+.step-grip::after { content: ''; position: absolute; left: 50%; top: 50%; width: var(--hit); height: var(--hit); transform: translate(-50%, -50%); }
+@media (hover: hover) { .step-grip:hover { color: var(--ink-2); background: var(--chip); } }
+@media (pointer: coarse) { .card[data-sub] { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; } }
+
+/* ── Vừa dời: thẻ / hàng vừa di chuyển nổi lên rồi mờ dần; thẻ bị đổi chỗ với nó nhạt hơn ── */
+/* Vòng tô nằm trong viền thẻ (inset): hàng thẻ cuộn ngang cắt mọi thứ vẽ ra ngoài. Chỉ có `from` để mờ về đúng kiểu đang có (vd .next). */
+@keyframes moved-card {
+  from { background-color: var(--flash); border-color: var(--flash-ring); box-shadow: inset 0 0 0 calc(var(--mark-w) - var(--line-w)) var(--flash-ring), var(--shadow-1); }
+}
+@keyframes swapped-card {
+  from { background-color: var(--flash-2); border-color: var(--flash-ring-2); }
+}
+@keyframes moved-row { from { background-color: var(--flash); } to { background-color: transparent; } }
+@keyframes swapped-row { from { background-color: var(--flash-2); } to { background-color: transparent; } }
+.card.moved { animation: moved-card var(--flash-dur) var(--ease) both; }
+.card.swapped { animation: swapped-card var(--flash-dur) var(--ease) both; }
+.step.moved { animation: moved-row var(--flash-dur) var(--ease) both; }
+.step.swapped { animation: swapped-row var(--flash-dur) var(--ease) both; }
+/* Giảm chuyển động: đánh dấu đứng yên trong --flash-dur (main.js gỡ lớp), không mờ dần. */
+@media (prefers-reduced-motion: reduce) {
+  .card.moved, .card.swapped, .step.moved, .step.swapped { animation: none; }
+  .card.moved { background-color: var(--flash); border-color: var(--flash-ring); box-shadow: inset 0 0 0 calc(var(--mark-w) - var(--line-w)) var(--flash-ring), var(--shadow-1); }
+  .card.swapped { background-color: var(--flash-2); border-color: var(--flash-ring-2); }
+  .step.moved { background-color: var(--flash); }
+  .step.swapped { background-color: var(--flash-2); }
+}

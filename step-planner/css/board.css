@@ -1,0 +1,139 @@
+/* Bảng: hàng bước, đầu bước, hàng thẻ cuộn ngang, vạch "Add step", băng Reopened và hộp "Reopen step". Chỉ dùng token của tokens.css. */
+
+/* ── Bảng: mỗi bước một hàng; cột tên bước cố định bên trái, thẻ bước con chạy sang phải ── */
+.board { display: flex; flex-direction: column; }
+.board:focus { outline: none; }
+.board .empty { display: flex; align-items: center; gap: var(--s3); flex-wrap: wrap; padding: var(--s5) 0; color: var(--ink-3); }
+.step {
+  display: grid; grid-template-columns: var(--head-w) minmax(0, 1fr); gap: var(--s3) var(--s4);
+  padding: var(--s4) 0 var(--s6) var(--s2); border-top: var(--line-w) solid var(--line); position: relative;
+}
+.step:last-child { border-bottom: var(--line-w) solid var(--line); }
+.step-head { min-width: 0; display: flex; flex-direction: column; gap: var(--s2); }
+@media (hover: hover) { .board:not(.filtering) .step-head { cursor: grab; } }
+.step-top { display: flex; gap: var(--s2); align-items: flex-start; }
+.step-num {
+  display: inline-grid; place-items: center; flex: none; min-width: var(--h-xs); height: var(--h-xs); padding: 0 var(--s1); margin-top: 1px;
+  font: 500 var(--fs-xs)/1 var(--mono); border-radius: var(--r-xs); background: var(--chip); color: var(--ink-2);
+}
+.step.is-done .step-num { background: var(--accent); color: var(--on-accent); }
+.step-title { font: 600 var(--fs-lg)/var(--lh-tight) var(--display); min-width: 0; overflow-wrap: anywhere; }
+/* Vòng đã đóng (không còn băng Reopened): nhãn trơn "Iteration N" dưới tên, giữ dấu lịch sử. */
+.step-iter {
+  align-self: flex-start; display: inline-flex; align-items: center; gap: var(--s1); min-height: var(--h-xs); padding: 0 var(--s2);
+  font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-3); background: var(--chip); border-radius: var(--r-pill);
+}
+.step-iter svg.i { width: var(--fs-sm); height: var(--fs-sm); }
+/* Tên bước, nhãn "Ghi chú" là chữ bấm được: vùng bấm nới tới --hit bằng lớp giả, không đổi bố cục. */
+.step-title .link, .more, .step-notes summary { position: relative; }
+.step-title .link::after, .more::after, .step-notes summary::after {
+  content: ''; position: absolute; left: 0; right: 0; top: 50%; height: max(100%, var(--hit)); transform: translateY(-50%);
+}
+.step-goal, .step-done { font-size: var(--fs-sm); color: var(--ink-2); overflow-wrap: anywhere; }
+.lbl { color: var(--ink-3); font-weight: 600; }
+.prog { display: flex; align-items: center; gap: var(--s2); font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-3); }
+.prog .bar-prog { flex: 1; }
+.step-notes summary {
+  display: inline-flex; align-items: center; gap: var(--s1); list-style: none; cursor: pointer;
+  font-size: var(--fs-sm); font-weight: 600; color: var(--ink-2);
+}
+.step-notes summary::-webkit-details-marker { display: none; }
+.step-notes summary svg.i { transform: rotate(-90deg); transition: transform var(--dur) var(--ease); color: var(--ink-3); }
+.step-notes[open] summary svg.i { transform: none; }
+.step-notes .notes-text { margin-top: calc(var(--s1) - var(--clamp-pad)); }
+.acts { display: flex; gap: var(--s1); flex-wrap: wrap; align-items: center; }
+/* Nút phụ (dời, nhân bản, xoá, cần làm lại) hiện khi rê chuột hoặc focus; máy cảm ứng luôn hiện. */
+@media (hover: hover) {
+  .card .acts, .step-head .acts .aux { opacity: 0; transition: opacity var(--dur) var(--ease); }
+  .card:hover .acts, .card:focus-within .acts, .step-head:hover .acts .aux, .step-head:focus-within .acts .aux { opacity: 1; }
+}
+/* Hàng thẻ cuộn ngang bằng con lăn, bàn di, chạm, bàn phím; không hiện thanh cuộn, mép mờ báo còn thẻ.
+   Cuộn ngang thì cắt cả chiều dọc: hàng chừa --par-out ở trên và hai bên cho nền ô song song, lề âm trả lại, thẻ không xê dịch;
+   mép mờ, scroll-padding tính từ mép cũ. */
+.cards-scroll {
+  min-width: 0; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none;
+  padding: var(--par-out) var(--par-out) var(--s2); margin: calc(-1 * var(--par-out)) calc(-1 * var(--par-out)) 0;
+  scroll-padding-inline: calc(var(--fade) + var(--par-out));
+}
+.cards-scroll::-webkit-scrollbar { display: none; }
+.cards-scroll.more-right { mask-image: linear-gradient(to right, var(--mask) calc(100% - var(--par-out) - var(--fade)), transparent calc(100% - var(--par-out))); }
+.cards-scroll.more-left { mask-image: linear-gradient(to left, var(--mask) calc(100% - var(--par-out) - var(--fade)), transparent calc(100% - var(--par-out))); }
+.cards-scroll.more-left.more-right {
+  mask-image: linear-gradient(to right, transparent var(--par-out), var(--mask) calc(var(--par-out) + var(--fade)),
+    var(--mask) calc(100% - var(--par-out) - var(--fade)), transparent calc(100% - var(--par-out)));
+}
+/* Thẻ không bị kéo cao bằng thẻ cao nhất hàng: mỗi thẻ cao theo nội dung (--card-min … --card-max).
+   Rộng theo thẻ: lề phải của hàng cuộn mới được tính vào đoạn cuộn. */
+.cards { display: flex; gap: var(--s3); align-items: flex-start; width: max-content; min-width: 100%; }
+/* Một cột: bước đọc liền một khối — đầu bước (số, tên) trước, rồi băng Reopened, dải tài liệu, hàng thẻ. */
+@media (max-width: 640px) {
+  .step { grid-template-columns: minmax(0, 1fr); }
+  .step-head { order: -1; }
+  .step-head .acts { gap: 0; }
+  .step-head .acts .btn.small { padding: 0 var(--s2); }
+}
+
+/* ── Vạch chia giữa hai bước: rê chuột vào thì hiện nút "Add step" nổi trên vạch (tuyệt đối, không đẩy bố cục).
+   Màn cảm ứng không rê được: nút tròn nhỏ luôn hiện, lề trên của bước nới để vùng chạm không đè lên nội dung.
+   Mọi vạch, cả vạch đầu bảng, cùng một luật: tâm dải nằm trên giữa viền trên của bước (top tính từ mép trong viền). ── */
+.gap-add {
+  position: absolute; z-index: 3; left: 0; right: 0; top: calc(-1 * (var(--gap-add) + var(--line-w)) / 2); height: var(--gap-add);
+  display: flex; align-items: center; justify-content: center;
+}
+.gap-add::before {
+  content: ''; position: absolute; left: 0; right: 0; top: 50%; height: var(--mark-w); transform: translateY(-50%);
+  background: var(--accent); opacity: 0; transition: opacity var(--dur) var(--ease);
+}
+.gap-add-btn {
+  position: relative; display: inline-flex; align-items: center; gap: var(--s1); min-height: var(--h-xs); padding: 0 var(--s3) 0 var(--s2);
+  font: 600 var(--fs-xs)/1 var(--sans); color: var(--on-accent); background: var(--accent); border: 0; border-radius: var(--r-pill);
+  cursor: pointer; opacity: 0; transition: opacity var(--dur) var(--ease); box-shadow: var(--lift);
+}
+.gap-add-btn svg.i { width: var(--fs-sm); height: var(--fs-sm); }
+.gap-add:hover::before, .gap-add:hover .gap-add-btn, .gap-add-btn:focus-visible { opacity: 1; }
+@media (hover: none) {
+  .step { padding-top: var(--s5); }
+  /* Chỉ nút nhận chạm: vạch không che vùng bấm của tên bước ngay dưới nó. */
+  .gap-add { pointer-events: none; }
+  .gap-add-btn { pointer-events: auto; }
+  .gap-add-btn { opacity: .7; width: var(--h-xs); padding: 0; justify-content: center; color: var(--ink-3); background: var(--surface); border: var(--line-w) solid var(--line); box-shadow: none; }
+  .gap-add-btn span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .gap-add-btn::after { content: ''; position: absolute; left: 50%; top: 50%; width: var(--hit); height: var(--hit); transform: translate(-50%, -50%); }
+}
+
+/* ── Băng "Reopened" của một bước (step.revisit): vòng, ngày, lý do, còn mấy việc phải làm lại; xong hết thì mời đóng vòng ── */
+.revisit-band {
+  grid-column: 1 / -1; display: flex; align-items: center; gap: var(--s2) var(--s3); flex-wrap: wrap;
+  padding: var(--s1) var(--s1) var(--s1) var(--s3); border: var(--line-w) solid var(--amber-line); border-radius: var(--r);
+  background: var(--amber-soft); color: var(--amber-fg); font-size: var(--fs-sm);
+}
+.revisit-band > svg.i { color: var(--amber); }
+.badge {
+  flex: 1 1 0; min-width: 0; min-height: var(--ctl-sm); text-align: left; overflow-wrap: anywhere;
+  font: inherit; color: inherit; background: none; border: 0; padding: var(--s1) 0; cursor: pointer;
+}
+.badge b { font-weight: 600; }
+@media (hover: hover) { .badge:hover { text-decoration: underline; text-underline-offset: 3px; } }
+.revisit-band .btn { background: var(--surface); border-color: var(--amber-line); color: var(--amber-fg); }
+.revisit-band .btn.go { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.redo-left { flex: none; font: 600 var(--fs-xs)/1 var(--sans); white-space: nowrap; }
+.revisit-band.all-redone .redo-left { color: var(--green); }
+@media (max-width: 640px) { .revisit-band { padding: var(--s1) var(--s2) var(--s2) var(--s3); } .revisit-band .btn { flex: 1 1 100%; } }
+
+/* ── Hộp "Reopen step": danh sách bước con đã xong để gửi lại làm ── */
+.reset-subs { display: flex; flex-direction: column; gap: var(--s2); }
+.reset-head { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); flex-wrap: wrap; font-size: var(--fs-sm); }
+.reset-list {
+  display: flex; flex-direction: column; max-height: calc(var(--card-max) * 1.2); overflow: auto;
+  border: var(--line-w) solid var(--line); border-radius: var(--r-sm); background: var(--surface);
+}
+.reset-list li + li { border-top: var(--line-w) solid var(--line-2); }
+.reset-item {
+  display: flex; align-items: center; gap: var(--s3); min-height: calc(var(--hit) + var(--s1)); padding: var(--s1) var(--s3);
+  font-size: var(--fs-sm); cursor: pointer; transition: background var(--dur) var(--ease);
+}
+@media (hover: hover) { .reset-item:not(:has(input:disabled)):hover { background: var(--chip); } }
+.reset-item:has(input:checked) { background: var(--accent-soft); }
+.reset-item input { flex: none; width: var(--icon); height: var(--icon); margin: 0; accent-color: var(--done-edge); }
+.reset-item:has(input:disabled) { cursor: default; color: var(--ink-3); }
+.reset-title { flex: 1 1 auto; min-width: 0; overflow-wrap: anywhere; }

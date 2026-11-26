@@ -1,0 +1,72 @@
+/* Tài liệu: dải chip của bước, nhãn kẹp trên thẻ, phần Tài liệu trong hộp sửa. Chỉ dùng token của tokens.css. */
+
+/* ── Tài liệu: dải chip của bước (trên hàng thẻ), nhãn kẹp trên thẻ, phần Tài liệu trong hộp sửa ── */
+.step-docs { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); min-width: 0; }
+.doc-chips { display: contents; }
+.doc-chip {
+  position: relative; display: inline-flex; align-items: center; gap: var(--s1); max-width: var(--chip-max); min-height: var(--h-sm);
+  padding: 0 var(--s3) 0 var(--s2); font: 600 var(--fs-sm)/1 var(--sans); color: var(--ink-2); text-decoration: none; cursor: pointer;
+  background: var(--surface); border: var(--line-w) solid var(--line); border-radius: var(--r-pill);
+  transition: border-color var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+.doc-chip svg.i { width: var(--fs-lg); height: var(--fs-lg); color: var(--ink-3); }
+.doc-chip span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.doc-chip::after { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: max(100%, var(--hit)); transform: translateY(-50%); }
+.doc-chip.add { color: var(--ink-3); background: transparent; border-style: dashed; border-color: var(--ink-4); }
+@media (hover: hover) {
+  .doc-chip:hover { color: var(--ink); border-color: var(--ink-4); }
+  .doc-chip.add { opacity: 0; transition: opacity var(--dur) var(--ease); }
+  .step:hover .doc-chip.add, .step-docs:focus-within .doc-chip.add { opacity: 1; }
+}
+.doc-link {
+  position: relative; display: inline-flex; align-items: center; gap: var(--s2); max-width: 100%; min-height: var(--h-xs);
+  padding: var(--s1) 0; font: 600 var(--fs-sm)/var(--lh-tight) var(--sans); color: var(--ink-2); text-align: left;
+  background: none; border: 0; cursor: pointer; text-decoration: none;
+}
+.doc-link svg.i { color: var(--ink-3); }
+.doc-link span { min-width: 0; overflow-wrap: anywhere; }
+.doc-link small { font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-3); white-space: nowrap; }
+@media (hover: hover) { .doc-link:hover span { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; } }
+.doc-tag {
+  position: relative; display: inline-flex; align-items: center; gap: var(--s1); min-height: var(--h-xs); padding: 0 var(--s2);
+  font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-2); cursor: pointer;
+  background: var(--chip); border: 0; border-radius: var(--r-pill);
+}
+.doc-tag svg.i { width: var(--fs-sm); height: var(--fs-sm); color: var(--ink-3); }
+.doc-tag::after { content: ''; position: absolute; left: 50%; top: 50%; width: max(100%, var(--hit)); height: max(100%, var(--hit)); transform: translate(-50%, -50%); }
+@media (hover: hover) { .doc-tag:hover { color: var(--ink); background: var(--surface-2); } }
+/* Phần Tài liệu trong hộp sửa: nhãn nhóm + nút Thêm; mỗi tài liệu một hàng có viền, biểu tượng trong ô nhỏ, tên miền mono. */
+.docs-edit { display: flex; flex-direction: column; gap: var(--s2); padding-top: var(--s4); border-top: var(--line-w) solid var(--line-2); }
+.docs-edit-head { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); }
+.doc-list { display: flex; flex-direction: column; gap: var(--s1); }
+.doc-list:empty { display: none; }
+.doc-row {
+  display: flex; align-items: center; gap: var(--s1); min-height: calc(var(--hit) + var(--s2)); padding: 0 var(--s1) 0 var(--s2);
+  background: var(--surface); border: var(--line-w) solid var(--line); border-radius: var(--r-sm);
+  transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease);
+}
+@media (hover: hover) { .doc-row:not(.undo):hover { border-color: var(--ink-4); } }
+.doc-row .doc-link { flex: 1 1 auto; min-width: 0; min-height: var(--hit); gap: var(--s3); }
+.doc-row .doc-link svg.i {
+  box-sizing: content-box; padding: var(--s1); border-radius: var(--r-xs); background: var(--chip); color: var(--ink-2);
+}
+.doc-row .doc-link span { flex: 0 1 auto; color: var(--ink); }
+.doc-row .icon-btn { color: var(--ink-3); }
+@media (hover: hover) { .doc-row .icon-btn:hover { color: var(--danger); } }
+/* Nút Evidence của một tài liệu: bật thì viền và chữ xanh. */
+.proof-btn {
+  display: inline-flex; align-items: center; gap: var(--s1); flex: 0 0 auto; min-height: var(--ctl-sm); padding: 0 var(--s2);
+  font: 600 var(--fs-xs)/1 var(--sans); color: var(--ink-3); cursor: pointer;
+  background: none; border: var(--line-w) dashed var(--line); border-radius: var(--r-pill);
+}
+.proof-btn svg.i { width: var(--fs-sm); height: var(--fs-sm); }
+.proof-btn[aria-pressed="true"] { color: var(--green); background: var(--accent-soft); border: var(--line-w) solid var(--accent-line); }
+@media (hover: hover) { .proof-btn:hover { color: var(--ink); border-color: var(--ink-4); } .proof-btn[aria-pressed="true"]:hover { color: var(--green); } }
+@media (max-width: 640px) {
+  .proof-btn { justify-content: center; min-width: var(--hit); padding: 0; }
+  .proof-btn span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+}
+.doc-row.undo { justify-content: space-between; padding: var(--s1) var(--s1) var(--s1) var(--s3); font-size: var(--fs-sm); color: var(--ink-2); background: var(--chip); border-style: dashed; }
+.docs-note { font-size: var(--fs-xs); color: var(--ink-3); }
+.docs-note:empty { display: none; }
+.doc-open { display: inline-flex; align-items: center; gap: var(--s2); min-height: var(--hit); align-self: flex-start; font-weight: 600; color: var(--green); text-underline-offset: 3px; }

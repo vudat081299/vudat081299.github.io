@@ -16,7 +16,8 @@
      outs / ins của nó suy từ đường dẫn trong `io_html` từng pha (`course_flow`).
      Sinh lại:  python3 step-planner/tools/lint.py --write-course
   3. js/*.js: không innerHTML / outerHTML / insertAdjacentHTML / document.write — chữ người dùng chỉ qua textContent.
-  4. css/planner.css: mã màu chỉ nằm trong khối token (từ đầu file tới dòng `/* ── hết token ── */`).
+  4. css/: mỗi file css/*.css được link đúng một lần trong index.html, tokens.css trước hết (thứ tự link là cascade); mã màu
+     chỉ nằm trong css/tokens.css.
   5. data/system-design.json (PLAN-016): khuôn hồ sơ, khâu, phương án; id không trùng; `fit` chỉ dùng câu và câu trả lời
      có trong hồ sơ; link https; mỗi câu trả lời đơn lẻ của hồ sơ có ít nhất một phương án hợp ở mọi khâu.
      `architectures`: nhóm kiến trúc {id, label, question, note?, sources?, entries, rules}; kiến trúc {id, name, what, use,
@@ -48,7 +49,6 @@ PLAN_HTML = os.path.join(REPO, 'masters-degree/data-management-visualization/spo
 COURSE_ID = 'it5425-sports'
 COURSE_URL = 'https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-build.html'
 PLAN_URL = 'https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-project.html'
-TOKEN_END = '/* ── hết token ── */'
 DESIGN = os.path.join(HERE, 'data/system-design.json')
 LANES = ('data', 'model', 'app', 'ops')
 STAGE_KEYS = {'id', 'title', 'lane', 'question', 'guide', 'multi', 'skipWhen', 'task', 'when', 'options'}
@@ -584,14 +584,20 @@ def check_code():
         for bad in ('innerHTML', 'outerHTML', 'insertAdjacentHTML', 'document.write'):
             if bad in src:
                 err(f'js/{name}: có `{bad}` — dựng DOM bằng createElement / textContent')
-    css = open(os.path.join(HERE, 'css/planner.css'), encoding='utf-8').read()
-    if TOKEN_END not in css:
-        err(f'css/planner.css: thiếu dòng {TOKEN_END}')
-    else:
-        body = css.split(TOKEN_END, 1)[1]
-        for n, line in enumerate(body.split('\n'), css.split(TOKEN_END)[0].count('\n') + 1):
+    css_files = sorted(f for f in os.listdir(os.path.join(HERE, 'css')) if f.endswith('.css'))
+    links = re.findall(r'<link rel="stylesheet" href="css/([^"]+)">', open(os.path.join(HERE, 'index.html'), encoding='utf-8').read())
+    for f in sorted(set(css_files) | set(links)):
+        if links.count(f) != 1 or f not in css_files:
+            err(f'css/{f}: phải có file và được link đúng một lần trong index.html (đang {links.count(f)} lần)')
+    if links[:1] != ['tokens.css']:
+        err('index.html: css/tokens.css phải là stylesheet đầu tiên (token trước mọi component)')
+    for f in css_files:
+        if f == 'tokens.css':
+            continue
+        code = re.sub(r'/\*.*?\*/', lambda m: '\n' * m.group(0).count('\n'), open(os.path.join(HERE, 'css', f), encoding='utf-8').read(), flags=re.S)
+        for n, line in enumerate(code.split('\n'), 1):
             if re.search(r'#[0-9a-fA-F]{3,8}\b|\brgba?\(|\bhsla?\(', line):
-                err(f'css/planner.css:{n}: mã màu ngoài khối token')
+                err(f'css/{f}:{n}: mã màu ngoài css/tokens.css')
 
 
 # ── Ngôn ngữ (PLAN-028): chữ giao diện tiếng Anh, nội dung mẫu và lời giải thích tiếng Việt ──
@@ -788,6 +794,9 @@ def self_test():
     def js(code):
         return lambda root: open(os.path.join(root, 'js', 'main.js'), 'a', encoding='utf-8').write('\n' + code + '\n')
 
+    def css(name, code):
+        return lambda root: open(os.path.join(root, 'css', name), 'a', encoding='utf-8').write('\n' + code + '\n')
+
     def design(fn):
         def run(root):
             p = os.path.join(root, 'data', 'system-design.json')
@@ -845,6 +854,9 @@ def self_test():
         ('design: tên trang ngoài bị dịch', design(lambda d: d['stages'][0]['options'][0]['links'][0].update(title='Trang chủ')), 'không dịch'),
         ('design: nhãn giao diện tiếng Việt', design(lambda d: d['stages'][0].update(title='Nguồn dữ liệu')), 'phải tiếng Anh'),
         ('mẫu: tên bước con tiếng Anh', tpl, 'nội dung mẫu phải tiếng Việt'),
+        ('css: mã màu trong file component', css('board.css', '.x { color: #fff; }'), 'mã màu ngoài css/tokens.css'),
+        ('css: mã màu trong chú thích không tính', css('board.css', '/* #fff */'), None),
+        ('css: file không được link', css('extra.css', '.x { color: var(--ink); }'), 'được link đúng một lần'),
     ]
     bad = 0
     for name, plant, want in cases:

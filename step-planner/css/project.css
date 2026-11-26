@@ -1,0 +1,113 @@
+/* Đầu dự án và thanh công cụ: tên, tiến độ chung, chú giải, banner, mẹo, tìm và lọc, chế độ Gọn, ghi chú dự án, dòng "Next waits on". Chỉ dùng token của tokens.css. */
+
+/* ── Đầu dự án: tên (bấm để đổi), tiến độ chung, chú giải trạng thái có số đếm ── */
+.proj { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--s3) var(--s5); flex-wrap: wrap; padding: var(--s5) 0 var(--s4); }
+.proj-name { min-width: 0; flex: 1 1 320px; }
+.proj-k { font: 500 var(--fs-xs)/var(--lh-tight) var(--mono); color: var(--ink-3); letter-spacing: .04em; text-transform: uppercase; margin-bottom: var(--s1); }
+.top-name { font: inherit; min-width: 0; }
+.ws-btn {
+  display: inline-flex; align-items: center; gap: var(--s2); max-width: 100%; min-width: 0; min-height: var(--ctl);
+  margin-left: calc(-1 * var(--s2)); padding: var(--s1) var(--s2);
+  font: 600 var(--fs-2xl)/var(--lh-tight) var(--display); letter-spacing: -.01em; color: var(--ink);
+  background: none; border: 0; border-radius: var(--r-sm); cursor: pointer; text-align: left;
+}
+.ws-btn svg.i { color: var(--ink-3); }
+@media (hover: hover) { .ws-btn:hover { background: var(--chip); } }
+.ws-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.overall { display: flex; flex-direction: column; gap: var(--s2); flex: 0 1 auto; min-width: 0; }
+.overall-row { display: flex; align-items: center; gap: var(--s3); }
+.overall-text { font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-2); white-space: nowrap; }
+.overall-row .bar-prog { flex: 1 1 auto; min-width: calc(var(--card-w) * .6); }
+.legend { display: flex; flex-wrap: wrap; gap: var(--s1) var(--s3); }
+.legend li { display: inline-flex; align-items: center; gap: var(--s1); font-size: var(--fs-xs); color: var(--ink-3); }
+.legend b { font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-2); }
+@media (max-width: 640px) {
+  .proj { padding: var(--s4) 0 var(--s3); }
+  .ws-btn { font-size: var(--fs-xl); }
+  .overall { flex: 1 1 100%; }
+}
+
+/* ── Thanh tiến độ (đầu dự án, mỗi bước) ── */
+.bar-prog { display: block; height: var(--prog-h); background: var(--surface-2); border-radius: var(--r-pill); overflow: hidden; }
+.bar-prog i { display: block; height: 100%; background: var(--accent); border-radius: var(--r-pill); transition: width var(--dur) var(--ease); }
+
+/* ── Banner: bộ nhớ bị chặn, file://, không tải được mẫu ── */
+.banner {
+  max-width: var(--wrap); margin: var(--s3) auto 0; padding: var(--s3) var(--pad);
+  background: var(--amber-soft); color: var(--ink); font-size: var(--fs-sm);
+}
+.banner p + p { margin-top: var(--s1); }
+
+/* ── Mẹo cho người mới (tắt được) ── */
+.hint {
+  display: flex; align-items: center; gap: var(--s3); margin-bottom: var(--s3); padding: var(--s1) var(--s1) var(--s1) var(--s3);
+  background: var(--surface); border: var(--line-w) solid var(--line); border-radius: var(--r); font-size: var(--fs-sm); color: var(--ink-2);
+}
+.hint > svg.i { color: var(--ink-3); }
+.hint p { flex: 1 1 auto; min-width: 0; padding: var(--s1) 0; }
+.hint b { color: var(--ink); font-weight: 600; }
+
+/* ── Công cụ: lọc bên trái, hành động bên phải (Xuất là nút chính) ── */
+.tools { display: flex; align-items: center; gap: var(--s2); flex-wrap: wrap; padding: 0 0 var(--s3); }
+.search { position: relative; flex: 0 1 var(--search-w); min-width: 0; display: flex; align-items: center; }
+.search svg.i { position: absolute; left: var(--s3); color: var(--ink-3); pointer-events: none; }
+.search .input { padding-left: calc(var(--s3) + var(--icon) + var(--s2)); }
+/* Nút xoá chữ của ô tìm: thay dấu × màu xanh của trình duyệt bằng × của bộ biểu tượng, màu chữ phụ. */
+.search .input::-webkit-search-cancel-button {
+  -webkit-appearance: none; appearance: none; width: var(--fs-sm); height: var(--fs-sm); cursor: pointer; background: var(--ink-3);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M6 6l12 12M18 6 6 18'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M6 6l12 12M18 6 6 18'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+@media (hover: hover) { .search .input::-webkit-search-cancel-button:hover { background: var(--ink); } }
+/* Lọc trạng thái: danh sách tự dựng cạnh ô tìm. */
+.st-filter { position: relative; flex: 0 0 var(--filter-w); min-width: 0; }
+.filter-note { font-size: var(--fs-sm); color: var(--ink-3); }
+.tool-btns { display: flex; align-items: center; gap: var(--s1); flex-wrap: wrap; }
+/* Nút bật / tắt (Gọn): đang bật thì nền rãnh, chữ đậm. */
+.btn[aria-pressed="true"] { color: var(--ink); background: var(--surface-2); border-color: var(--line); }
+@media (max-width: 640px) {
+  .search { flex: 1 1 100%; }
+  .st-filter { flex: 1 1 100%; }
+  .tools-gap { display: none; }
+  .tool-btns { flex: 1 1 100%; }
+  .tool-btns .btn { flex: 1 1 0; padding: 0 var(--s2); }
+}
+
+/* ── Chế độ Gọn: thẻ và cột bước chỉ còn số, tên, chip, hạn, nhãn tài liệu; thẻ co theo nội dung, hàng sát hơn ── */
+.board.compact :is(.card-done, .card-notes, .card-reason, .step-done, .step-notes) { display: none; }
+.board.compact .step { padding-bottom: var(--s4); }
+.board.compact .step-goal { --lines: var(--goal-clamp); }
+.board.compact .card { min-height: var(--card-min-compact); }
+/* Chuột: nút của thẻ nổi ở góc dưới khi rê hay focus, không giữ chỗ một hàng trống. Cảm ứng: ẩn (song song, nhân bản, xoá
+   có trong hộp sửa, chạm thẻ là mở). */
+@media (hover: hover) {
+  .board.compact .card .acts {
+    position: absolute; right: var(--s1); bottom: var(--s1); margin: 0;
+    background: var(--surface); border-radius: var(--r-sm); box-shadow: var(--lift);
+  }
+}
+@media (hover: none) { .board.compact .card .acts { display: none; } }
+
+/* ── Ghi chú dự án (gập) ── */
+/* ── "Next" đang chờ: một dòng trên bảng, tên thẻ bấm được, nút lọc việc làm được ngay ── */
+.next-wait {
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: var(--s2) var(--s3); margin: 0 0 var(--s3); padding: var(--s2) var(--s3);
+  font-size: var(--fs-sm); color: var(--ink-2); background: var(--violet-soft); border: var(--line-w) solid var(--violet-line); border-radius: var(--r);
+}
+.next-wait > svg.i { color: var(--violet-fg); flex: 0 0 auto; }
+.next-wait > span { min-width: 0; overflow-wrap: anywhere; }
+@media (max-width: 640px) { .next-wait > .btn { grid-column: 2 / -1; justify-self: start; } }
+.next-wait b { color: var(--ink); font-weight: 600; }
+.next-wait .link { color: var(--ink); text-decoration: underline; text-underline-offset: 2px; }
+.ws-notes { padding: 0 0 var(--s3); font-size: var(--fs-sm); }
+.ws-notes summary {
+  display: inline-flex; align-items: center; gap: var(--s1); min-height: var(--ctl-sm); cursor: pointer; list-style: none;
+  color: var(--ink-2); font-weight: 600;
+}
+.ws-notes summary::-webkit-details-marker { display: none; }
+.ws-notes summary svg.i { transform: rotate(-90deg); transition: transform var(--dur) var(--ease); color: var(--ink-3); }
+.ws-notes[open] summary svg.i { transform: none; }
+.ws-notes[open] summary { margin-bottom: var(--s2); }
+.ws-notes .notes-text { margin-bottom: var(--s2); }
+.notes-text { white-space: pre-line; overflow-wrap: anywhere; font-size: var(--fs-sm); color: var(--ink-2); }
+.notes-text a, .card-notes a { color: inherit; text-underline-offset: 3px; }

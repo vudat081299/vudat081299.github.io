@@ -1,0 +1,132 @@
+/* Nền chung: hộp, chữ, biểu tượng, thanh trên, nút, ô nhập, nhóm chọn. Chỉ dùng token của tokens.css. */
+
+/* ── Nền ── */
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+/* Cuộn tới focus / thẻ vừa dời: chừa chỗ thanh trên dính. */
+html { -webkit-text-size-adjust: 100%; background-color: var(--bg); scroll-padding-top: calc(var(--bar-h) + var(--s3)); }
+body {
+  margin: 0; min-height: 100vh; background: var(--bg); color: var(--ink);
+  font: 400 var(--fs-md)/var(--lh) var(--sans); -webkit-font-smoothing: antialiased;
+  font-variant-numeric: tabular-nums;
+}
+h1, h2, h3, p, ol, ul, fieldset { margin: 0; }
+ol, ul { padding: 0; list-style: none; }
+fieldset { border: 0; padding: 0; min-width: 0; }
+button, input, textarea, select { font: inherit; color: inherit; }
+input::placeholder, textarea::placeholder { color: var(--ink-3); opacity: 1; }
+a { color: inherit; }
+code { font: 500 .88em var(--mono); }
+::selection { background: var(--accent); color: var(--on-accent); }
+* { scrollbar-width: thin; scrollbar-color: var(--sb-thumb) transparent; }
+.wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 var(--pad); }
+.muted { color: var(--ink-3); }
+.sr { position: absolute; top: 0; left: 0; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+.skip { position: absolute; left: var(--pad); top: calc(-2 * var(--bar-h)); background: var(--ink); color: var(--bg); padding: var(--s2) var(--s3); border-radius: var(--r-sm); z-index: 40; }
+.skip:focus { top: var(--s2); }
+:focus { outline: none; }
+:focus-visible { outline: var(--ring-w) solid var(--ring); outline-offset: var(--mark-w); }
+/* Đóng hộp thoại (Esc, Close, Save): focus về nút mở nhưng không vẽ vòng, tới lần bấm Tab / mũi tên kế (main.js). */
+:root.quiet-focus :focus-visible, :root.quiet-focus :focus-visible + span { outline: none; }
+/* Chữ chỉ cho chuột / bàn phím và chỉ cho màn cảm ứng. */
+.only-touch { display: none; }
+@media (pointer: coarse) { .only-touch { display: revert; } .only-mouse { display: none; } }
+@media (prefers-reduced-motion: reduce) { *, ::before, ::after { transition: none !important; scroll-behavior: auto !important; } }
+
+/* ── Biểu tượng: một bộ (sprite trong index.html), cùng viewBox, cùng nét, cùng cỡ trong mọi nút ── */
+.sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+svg.i {
+  width: var(--icon); height: var(--icon); flex: none;
+  fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+.theme-sun { display: none; }
+:root[data-theme="dark"] .theme-sun { display: inline; }
+:root[data-theme="dark"] .theme-moon { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-sun { display: inline; }
+  :root:not([data-theme="light"]) .theme-moon { display: none; }
+}
+
+/* ── Thanh trên (chép từ md-annotate: .ma-bar, .ma-brand): dính, nền đặc (nội dung cuộn dưới không loang màu qua), dấu nhãn,
+   nút theme ── */
+.bar { position: sticky; top: 0; z-index: 30; background: var(--bg); border-bottom: var(--line-w) solid var(--line); }
+.bar-in { display: flex; align-items: center; gap: var(--s2); min-height: var(--bar-h); }
+.brand {
+  display: inline-flex; align-items: center; gap: var(--s3); min-width: 0; min-height: var(--h-touch);
+  font: 500 var(--fs-xs)/1 var(--mono); text-decoration: none; color: var(--ink-3);
+}
+.brand-mark { position: relative; width: var(--icon-xl); height: var(--icon-xl); flex: none; border-radius: var(--r-sm); background: var(--ink); }
+.brand-mark::after {
+  content: ''; position: absolute; left: calc(var(--icon-xl) / 4); bottom: calc(var(--icon-xl) / 4);
+  width: calc(var(--icon-xl) * .375); height: calc(var(--s1) - 1px); border-radius: 1px; background: var(--accent);
+}
+.brand b { font-weight: 500; color: var(--ink); }
+/* Tên đầy đủ, không cắt bằng "…": hẹp thì xuống dòng. */
+.brand-txt { min-width: 0; line-height: var(--lh-tight); overflow-wrap: anywhere; }
+.bar-sp { flex: 1; }
+@media (max-width: 640px) { .brand-own { display: block; } }
+
+/* ── Nút (chép từ md-annotate: .ma-btn, .ma-icbtn) — chính (go), phụ (mặc định), trơn (quiet), cảnh báo, chỉ biểu tượng ── */
+.btn, .icon-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--s2); flex: none;
+  min-height: var(--ctl); padding: 0 var(--s4);
+  font: 600 var(--fs-md)/1 var(--sans); color: var(--ink-2); text-decoration: none; white-space: nowrap; cursor: pointer;
+  background: var(--surface); border: var(--line-w) solid var(--line); border-radius: var(--r-sm);
+  transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease), background var(--dur) var(--ease), filter var(--dur) var(--ease);
+}
+.btn.small { min-height: var(--ctl-sm); padding: 0 var(--s3); font-size: var(--fs-sm); gap: var(--s1); }
+.btn.quiet, .icon-btn { background: transparent; border-color: transparent; }
+.btn.go { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.btn.danger { color: var(--danger); }
+.btn.warn { background: var(--amber-soft); border-color: var(--amber-line); color: var(--amber-fg); }
+/* Nút biểu tượng: một cỡ cho mọi chỗ (thanh trên, hộp thoại, bước, thẻ, nhật ký). */
+.icon-btn { width: var(--hit); height: var(--hit); min-height: 0; padding: 0; color: var(--ink-3); }
+@media (hover: hover) {
+  .btn:hover { color: var(--ink); background: var(--surface-2); }
+  .btn.quiet:hover, .icon-btn:hover { color: var(--ink); background: var(--chip); }
+  .btn.danger:hover { color: var(--danger); }
+  .btn.go:hover { color: var(--on-accent); background: var(--accent); filter: brightness(1.06); }
+  .btn.warn:hover { color: var(--amber-fg); background: var(--amber-soft); filter: brightness(1.04); }
+}
+.btn:disabled, .icon-btn:disabled { opacity: .45; cursor: default; filter: none; }
+.btn.go:disabled { opacity: 1; background: var(--chip); border-color: transparent; color: var(--ink-3); }
+.icon-btn:disabled { background: transparent; }
+.link { font: inherit; color: inherit; background: none; border: 0; padding: 0; margin: 0; cursor: pointer; text-align: left; line-height: inherit; }
+@media (hover: hover) { .link:hover { text-decoration: underline; text-underline-offset: 3px; } }
+
+/* ── Ô nhập (chép từ md-annotate: .ma-input, .ma-ta): viền --line, gõ thì viền --ring + quầng xanh ── */
+.field { display: flex; flex-direction: column; gap: var(--s1); font-size: var(--fs-sm); color: var(--ink-2); min-width: 0; }
+.input, .field input, .field select, .field textarea {
+  width: 100%; min-width: 0; min-height: var(--ctl); padding: var(--s2) var(--s3);
+  font: inherit; font-size: var(--fs-md); color: var(--ink);
+  background: var(--surface); border: var(--line-w) solid var(--line); border-radius: var(--r-sm);
+  transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+.field input[type="file"] { padding: var(--s2); }
+.field textarea { resize: vertical; line-height: var(--lh); }
+.field textarea.code { font: 500 var(--fs-sm)/var(--lh) var(--mono); font-variant-ligatures: none; background: var(--bg); }
+.field textarea.grow-title { resize: none; overflow: hidden; }
+.input:focus, .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--ring); box-shadow: 0 0 0 3px var(--accent-soft); }
+/* Safari iOS phóng to trang khi focus ô chữ nhỏ hơn 16px. */
+@media (pointer: coarse) { .input, .field input, .field select, .field textarea { font-size: var(--fs-lg); } }
+.tools-gap { flex: 1 1 0; }
+
+/* ── Nhóm chọn (chép từ md-annotate: .ma-fmt): rãnh xám, mục chọn nổi ── */
+.seg { display: flex; flex-wrap: wrap; gap: 0; padding: var(--s1); background: var(--surface-2); border-radius: var(--r-sm); width: fit-content; max-width: 100%; }
+.seg label { position: relative; display: inline-flex; cursor: pointer; }
+/* Ô chọn thật phủ trọn nhãn, trong suốt: bấm, bàn phím, trình đọc màn hình vẫn dùng nó. */
+.seg input { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.seg input:disabled { cursor: default; }
+.seg span {
+  display: inline-flex; align-items: center; min-height: var(--ctl-sm); padding: 0 var(--s3); border-radius: var(--r-xs);
+  font: 600 var(--fs-sm)/1 var(--sans); color: var(--ink-3); white-space: nowrap;
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+@media (hover: hover) { .seg label:hover span { color: var(--ink); } }
+.seg input:checked + span { background: var(--tab-on); color: var(--ink); box-shadow: var(--tab-ring); }
+.seg input:focus-visible + span { outline: var(--ring-w) solid var(--ring); outline-offset: -2px; }
+.seg input:disabled + span { opacity: .45; cursor: default; }
+/* Nhóm chọn trải hết bề rộng (trong hộp thoại): mục chia đều, chữ dài xuống dòng. */
+.seg-full { width: 100%; flex-wrap: nowrap; }
+.seg-full label { flex: 1 1 0; min-width: 0; }
+.seg-full span { flex: 1 1 auto; justify-content: center; gap: var(--s2); padding: var(--s1) var(--s2); white-space: normal; text-align: center; line-height: var(--lh-tight); }

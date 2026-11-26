@@ -1,0 +1,134 @@
+/* Hộp văn bản Markdown: tab Edit / Preview, khung Edit, bản xem. Chỉ dùng token của tokens.css. */
+
+/* ── Hộp văn bản Markdown (dáng md-annotate: tab gạch chân Edit / Preview, bản xem kiểu GitHub). Gần toàn màn; điện
+   thoại: toàn màn. Đầu: biểu tượng, tên sửa tại chỗ, dòng ngữ cảnh ── */
+.dlg.md-dlg { width: min(var(--dlg-md), calc(100vw - 2 * var(--s5))); height: min(92dvh, calc(100dvh - 2 * var(--s5))); max-height: none; }
+.md-dlg .dlg-form { height: 100%; max-height: none; }
+.md-head { align-items: center; gap: var(--s3); padding: var(--s5) var(--s4) var(--s5) var(--s5); }
+.md-ic {
+  display: inline-flex; align-items: center; justify-content: center; flex: none; width: var(--icon-box); height: var(--icon-box);
+  border-radius: var(--r); background: var(--accent-soft); color: var(--green);
+}
+.md-ic svg.i { width: var(--icon-xl); height: var(--icon-xl); }
+.md-head .dlg-titles { gap: 0; }
+.md-name { min-width: 0; margin-left: calc(-1 * var(--s2)); }
+.md-name .input {
+  min-height: var(--ctl); padding: var(--s1) var(--s2); font: 600 var(--fs-xl)/var(--lh-tight) var(--display); letter-spacing: -.01em;
+  background: transparent; border-color: transparent;
+}
+@media (hover: hover) { .md-name .input:not(:focus):hover { border-color: var(--line); } }
+.md-head .dlg-sub { padding-left: 0; }
+.md-head .dlg-x { margin: 0; }
+/* Tab gạch chân (chép .ma-tabs--line): không rãnh, tab cao hết thanh, tab đang chọn có vạch --accent ở mép dưới. */
+.dlg-bar {
+  flex: none; display: flex; align-items: stretch; gap: var(--s4); padding: 0 var(--s5);
+  border-bottom: var(--line-w) solid var(--line-2);
+}
+.tabs { display: flex; gap: var(--s1); }
+.tab {
+  position: relative; display: inline-flex; align-items: center; justify-content: center; min-height: var(--h); padding: 0 var(--s3);
+  border: 0; background: transparent; cursor: pointer;
+  font: 600 var(--fs-sm)/1 var(--sans); color: var(--ink-3); white-space: nowrap; transition: color var(--dur) var(--ease);
+}
+.tab::after {
+  content: ''; position: absolute; left: var(--s2); right: var(--s2); bottom: calc(-1 * var(--line-w)); height: var(--mark-w);
+  border-radius: var(--r-pill); background: transparent; transition: background var(--dur) var(--ease);
+}
+@media (hover: hover) { .tab:hover { color: var(--ink); } .tab:not([aria-selected="true"]):hover::after { background: var(--line); } }
+.tab[aria-selected="true"] { color: var(--ink); }
+.tab[aria-selected="true"]::after { background: var(--accent); }
+.tab:focus-visible { outline-offset: calc(-1 * var(--ring-w)); border-radius: var(--r-xs); }
+.md-hint { margin-left: auto; align-self: center; min-width: 0; font-size: var(--fs-xs); color: var(--ink-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.md-hint code { color: var(--ink-2); }
+.md-dlg:has(#md-panes[data-mode="view"]) .md-hint { visibility: hidden; }
+.md-panes { flex: 1 1 auto; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr); }
+.md-panes[data-mode="edit"] .md-view, .md-panes[data-mode="view"] .md-src { display: none; }
+/* Edit (chép khung Source của md-annotate): ô chữ trong suốt chồng đúng lên bản tô màu #md-hl cùng một ô lưới, cùng font,
+   đệm, cách xuống hàng; ô chữ cao theo bản tô, khung .md-src cuộn cả hai. Bản tô chỉ đổi màu, không đổi độ đậm / nghiêng
+   (đổi bề rộng chữ là con trỏ lệch). Số dòng: ::before của mỗi .md-ln, thụt vào lề trái; dòng dài xuống hàng vẫn một số. */
+@property --gw { syntax: '<length>'; inherits: true; initial-value: 0px; }
+.md-src { display: block; min-height: 0; overflow: auto; overscroll-behavior: contain; background: var(--field-bg); }
+.md-ed {
+  --gut: calc(var(--gw) + var(--s4));
+  display: grid; min-height: 100%;
+  font: 500 var(--fs-md)/var(--lh-read) var(--mono); font-variant-ligatures: none; tab-size: 4;
+}
+.md-hl, .md-ta {
+  grid-area: 1 / 1; min-width: 0; margin: 0;
+  padding: var(--s5) max(var(--s5), calc((100% - var(--md-max)) / 2)) var(--s5) max(calc(var(--s5) + var(--gut)), calc((100% - var(--md-max)) / 2));
+  font: inherit; letter-spacing: 0; white-space: pre-wrap; overflow-wrap: anywhere; word-break: normal;
+}
+.md-hl { display: block; color: var(--ink); pointer-events: none; counter-reset: ln; }
+.md-ln { display: block; }
+.md-ln::before {
+  counter-increment: ln; content: counter(ln);
+  display: inline-block; vertical-align: top; width: var(--gw); margin: 0 var(--s4) 0 calc(-1 * var(--gut));
+  text-align: right; font-size: var(--fs-xs); color: var(--ink-3); font-variant-numeric: tabular-nums;
+  -webkit-user-select: none; user-select: none;
+}
+.md-ta {
+  height: 100%; min-height: 0; resize: none; overflow: hidden;
+  color: transparent; caret-color: var(--ink); -webkit-text-fill-color: transparent;
+  background: transparent; border: 0; border-radius: 0;
+}
+.md-ta::placeholder { color: var(--ink-3); -webkit-text-fill-color: var(--ink-3); }
+.md-ta::selection { color: transparent; -webkit-text-fill-color: transparent; background: var(--accent-line); }
+.md-ta:focus { outline: none; }
+.sx-head { color: var(--sx-head); }
+.sx-punct, .sx-quote { color: var(--sx-punct); }
+.sx-qtext, .sx-comment { color: var(--ink-2); }
+.sx-link { color: var(--sx-link); }
+.sx-url { color: var(--sx-url); text-decoration: underline; text-underline-offset: 2px; }
+.sx-code, .sx-fence, .sx-info { color: var(--sx-code); }
+.sx-tag { color: var(--sx-tag); }
+.sx-string { color: var(--sx-string); }
+.sx-strike { text-decoration: line-through; }
+.md-view { min-height: 0; overflow: auto; padding: var(--s6) max(var(--s5), calc((100% - var(--md-max)) / 2)); }
+.md-view:focus-visible { outline-offset: calc(-1 * var(--ring-w)); }
+@media (max-width: 640px) {
+  .dlg.md-dlg { width: 100vw; height: 100dvh; max-height: 100dvh; margin: 0; border-radius: 0; border-width: 0; }
+  .dlg.md-dlg .md-head { padding: var(--s3) var(--s2) var(--s3) var(--s4); }
+  .dlg.md-dlg .md-head::before { content: none; }
+  .md-ic { display: none; }
+  .md-name .input { font-size: var(--fs-lg); }
+  .dlg-bar { padding: 0 var(--s2); }
+  .dlg-bar .tabs { flex: 1 1 auto; }
+  .dlg-bar .tab { flex: 1 1 0; min-height: var(--h-touch); }
+  .md-hint { display: none; }
+  .md-hl, .md-ta { padding: var(--s4) var(--s4) var(--s4) calc(var(--s3) + var(--gut)); }
+  .md-ed { --gut: calc(var(--gw) + var(--s3)); }
+  .md-ln::before { margin-right: var(--s3); }
+  .md-view { padding: var(--s4); }
+}
+@media (pointer: coarse) { .md-ed { font-size: var(--fs-lg); } }
+/* Bản xem: chép từ .ma-md của md-annotate (kiểu GitHub), cột đọc --md-max ở giữa, màu theo token của trang này. */
+.md-view > :first-child { margin-top: 0; }
+.md-view > :last-child { margin-bottom: 0; }
+.md-view { color: var(--ink); font-size: var(--fs-lg); line-height: var(--lh-read); overflow-wrap: break-word; }
+.md-view :is(p, blockquote, ul, ol, table, pre) { margin: 0 0 1em; }
+.md-view :is(h1, h2, h3, h4, h5, h6) { margin: 1.6em 0 .6em; font-family: var(--display); font-weight: 600; line-height: var(--lh-tight); letter-spacing: -.01em; }
+.md-view h1 { font-size: 1.9em; padding-bottom: .3em; border-bottom: var(--line-w) solid var(--line); }
+.md-view h2 { font-size: 1.4em; padding-bottom: .3em; border-bottom: var(--line-w) solid var(--line-2); }
+.md-view h3 { font-size: 1.2em; }
+.md-view :is(h4, h5, h6) { font-size: 1em; }
+.md-view :is(ul, ol) { padding-left: 1.6em; }
+.md-view ul { list-style: disc; }
+.md-view ol { list-style: decimal; }
+.md-view li::marker { color: var(--ink-3); }
+.md-view li + li { margin-top: .3em; }
+.md-view li > :is(ul, ol) { margin: .3em 0 0; }
+.md-view li:has(> input[type="checkbox"]) { list-style: none; }
+.md-view li > input[type="checkbox"] { margin: 0 .3em .2em -1.5em; vertical-align: middle; accent-color: var(--done-edge); }
+.md-view strong { font-weight: 600; }
+.md-view a { color: var(--green); text-decoration-thickness: var(--line-w); text-underline-offset: 3px; }
+.md-view blockquote { margin-left: 0; margin-right: 0; padding: .6em 1em; color: var(--ink-2); background: var(--field-bg); border: var(--line-w) solid var(--line-2); border-radius: var(--r-sm); }
+.md-view blockquote > :last-child { margin-bottom: 0; }
+.md-view code { padding: .15em .4em; font: 500 .85em var(--mono); white-space: break-spaces; background: var(--chip); border-radius: var(--r-xs); }
+.md-view pre { padding: 1em 1.2em; overflow: auto; font-size: .85em; line-height: 1.55; background: var(--field-bg); border: var(--line-w) solid var(--line-2); border-radius: var(--r-sm); }
+.md-view pre code { padding: 0; font-size: 100%; white-space: pre; background: transparent; }
+.md-view table { display: block; width: max-content; max-width: 100%; overflow: auto; border-collapse: collapse; font-size: .92em; }
+.md-view :is(th, td) { padding: .45em .9em; border: var(--line-w) solid var(--line); }
+.md-view th { font-weight: 600; text-align: left; background: var(--field-bg); }
+.md-view tbody tr:nth-child(2n) { background: var(--chip); }
+.md-view hr { height: var(--line-w); margin: 2em 0; background: var(--line); border: 0; }
+.md-view del { color: var(--ink-3); }

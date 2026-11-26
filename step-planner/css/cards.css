@@ -1,0 +1,112 @@
+/* Thẻ bước con: ô, thẻ, chữ dài bị cắt (.clamp), nút "Add step" cuối bảng, chip trạng thái. Chỉ dùng token của tokens.css. */
+
+/* ── Ô của hàng thẻ: mỗi ô một cột; ô song song xếp chồng thẻ trên một nền chung, bề rộng ngoài vẫn thẳng cột ── */
+.slot { flex: 0 0 var(--card-w); min-width: 0; display: flex; flex-direction: column; gap: var(--s2); }
+.slot.par {
+  flex-basis: calc(var(--card-w) + 2 * var(--par-out)); margin: calc(-1 * var(--par-out)); padding: var(--par-out);
+  background: var(--chip); border-radius: calc(var(--r) + var(--par-out));
+}
+
+/* ── Thẻ bước con ── */
+.card {
+  flex: none; min-height: var(--card-min); max-height: var(--card-max);
+  display: flex; flex-direction: column; gap: var(--s2); position: relative; cursor: pointer;
+  background: var(--surface); border: var(--line-w) solid var(--line); border-radius: var(--r); padding: var(--s3);
+  box-shadow: var(--shadow-1); transition: border-color var(--dur) var(--ease);
+}
+@media (hover: hover) { .card[data-sub]:hover { border-color: var(--ink-4); } }
+.card.open { max-height: none; }
+.card.next { border-color: var(--accent-line); box-shadow: inset 0 0 0 var(--line-w) var(--accent-line), var(--shadow-1); }
+/* Hàng đầu chật (số, "Tiếp theo", nhãn kẹp, chip dài) thì chip xuống dòng, không bẻ chữ. */
+.card-top { flex: none; display: flex; flex-wrap: wrap; align-items: center; gap: var(--s1) var(--s2); min-height: var(--h-sm); }
+.card-top > * { white-space: nowrap; }
+.num { font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-3); }
+/* Thêm trong phiên, chưa đánh số (số đứng yên tới khi tải lại hay "Renumber"): một chấm thay cho số. */
+.num.fresh, .step-num.fresh { display: inline-grid; place-items: center; min-width: var(--h-xs); min-height: var(--fs-xs); }
+.num.fresh::before, .step-num.fresh::before { content: ''; width: var(--dot); height: var(--dot); border-radius: var(--r-pill); background: var(--accent); }
+.next-tag { font: 600 var(--fs-xs)/1 var(--sans); color: var(--green); }
+/* Dấu "Redo": bước con được gửi lại làm trong vòng đang mở, tới khi xong lại. */
+.redo-tag { display: inline-flex; align-items: center; gap: var(--s1); font: 600 var(--fs-xs)/1 var(--sans); color: var(--amber-fg); }
+.redo-tag svg.i { width: var(--fs-sm); height: var(--fs-sm); color: var(--amber); }
+.card-top .chip { margin-left: auto; }
+/* Thân thẻ co lại khi thẻ chạm --card-max; chữ thừa mờ dần, nút "Xem thêm" mở cả thẻ.
+   Vùng cắt nới ra --ring-out mỗi bên (đệm bù lề âm, chữ không xê dịch) để vòng focus của tên thẻ hiện đủ; vệt mờ giữ đúng chỗ cũ. */
+.card-body {
+  flex: 0 1 auto; min-height: 0; overflow: hidden; display: flex; flex-direction: column; gap: var(--s2);
+  padding: var(--ring-out); margin: calc(-1 * var(--ring-out));
+}
+.card-body.clip { mask-image: linear-gradient(to bottom, var(--mask) calc(100% - var(--ring-out) - var(--fade)), transparent calc(100% - var(--ring-out))); }
+.card.open .card-body { mask-image: none; }
+.card-title { font-size: var(--fs-md); font-weight: 600; line-height: 1.35; overflow-wrap: anywhere; }
+.meta { display: flex; gap: var(--s1) var(--s2); flex-wrap: wrap; font-size: var(--fs-xs); color: var(--ink-2); }
+.due.overdue { color: var(--danger); font-weight: 600; }
+.done-at { color: var(--ink-3); }
+/* Dấu bằng chứng: thẻ xong có tài liệu đánh dấu Evidence. */
+.proof-tag { display: inline-flex; align-items: center; color: var(--done-edge); }
+.proof-tag svg.i { width: var(--fs-sm); height: var(--fs-sm); }
+.card-done, .card-notes { font-size: var(--fs-xs); color: var(--ink-2); overflow-wrap: anywhere; }
+.card-notes { white-space: pre-line; }
+.more {
+  flex: none; align-self: flex-start; min-height: var(--h-xs); padding: 0;
+  font: 600 var(--fs-xs)/1 var(--sans); color: var(--ink-2); background: none; border: 0; cursor: pointer;
+  text-decoration: underline; text-underline-offset: 3px;
+}
+.card .acts { flex: none; margin-top: auto; gap: 0; margin-inline: calc(-1 * var(--s1)); margin-bottom: calc(-1 * var(--s1)); }
+.card.st-done .card-title, .card.st-skip .card-title { color: var(--ink-3); }
+/* Nút tên là inline-block: nét gạch của h3 không vẽ qua nó, nên gạch trên chính nút. */
+.card.st-skip .card-title .link, .card.st-cancel .card-title .link { text-decoration: line-through; }
+.card.st-cancel .card-title { color: var(--ink-3); }
+.card-reason { font-size: var(--fs-xs); color: var(--ink-2); white-space: pre-line; overflow-wrap: anywhere; }
+
+/* ── Chữ dài trên bảng (main.js markCut): mỗi khối .clamp dừng ở --lines dòng; tràn thì main.js gắn .clip, dòng cuối mờ dần,
+   thẻ và đầu bước có nút "Show more" (.open mở hết). Khối có thể chứa link chừa --ring-out mỗi bên (lề âm trả lại, chữ không
+   xê dịch) để vòng focus của link hiện đủ; tên nằm trong nút nên vòng focus ở ngoài khối, không cần chừa. ── */
+.clamp {
+  --lines: var(--lines-text); --clamp-pad: var(--ring-out);
+  display: block; flex: none; max-height: calc(var(--lines) * 1lh + 2 * var(--clamp-pad)); overflow: hidden;
+  padding: var(--clamp-pad); margin: calc(-1 * var(--clamp-pad));
+}
+.clamp.clip { mask-image: linear-gradient(to bottom, var(--mask) calc(100% - var(--clamp-pad) - 1lh), transparent calc(100% - var(--clamp-pad))); }
+:is(.card, .step-head).open .clamp { max-height: none; mask-image: none; }
+:is(.card-title, .step-title, .badge) .clamp { --clamp-pad: 0px; }
+:is(.card-title, .step-title) .clamp { --lines: var(--lines-title); }
+.step-notes .notes-text { --lines: var(--lines-notes); }
+/* Nút "Show more" của đầu bước: ngay dưới khối bị cắt; cách nhãn Notes, chip In / Out đủ để hai vùng bấm --hit không chồng. */
+.step-head > .more + :is(.step-notes, .hand-tags) { margin-top: calc(var(--hit) - var(--h-xs) - var(--s1)); }
+.add-step {
+  display: flex; align-items: center; justify-content: center; gap: var(--s2); width: 100%; min-height: var(--h-touch); margin: var(--s4) 0 var(--s6);
+  font: 600 var(--fs-md)/1 var(--sans); color: var(--ink-2); background: none; cursor: pointer;
+  border: var(--line-w) dashed var(--ink-4); border-radius: var(--r);
+}
+@media (hover: hover) { .add-step:hover { background: var(--chip); color: var(--ink); } }
+
+/* ── Chip trạng thái: bấm New → In progress → Done; Done và trạng thái khác mở danh sách. Chấm (.st-dot cũng dùng trong
+   danh sách chọn) có hình riêng cho mỗi trạng thái, không chỉ màu. Cảm ứng: vùng bấm ≥ --hit ── */
+.chip {
+  position: relative; display: inline-flex; align-items: center; gap: var(--s1); flex: none;
+  min-height: calc(var(--h-sm) - var(--s2)); padding: 0 var(--s2); border-radius: var(--r-pill);
+  font: 600 var(--fs-xs)/1 var(--sans); white-space: nowrap; cursor: pointer;
+  color: var(--ink-2); background: var(--surface); border: var(--line-w) solid var(--line);
+}
+.chip::before, .st-dot {
+  content: ''; width: var(--dot); height: var(--dot); border-radius: var(--r-pill); flex: none;
+  border: var(--mark-w) solid var(--ink-4); background: transparent;
+}
+.chip::after { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: var(--hit); transform: translateY(-50%); }
+@media (hover: hover) { button.chip:hover { border-color: var(--ink-4); color: var(--ink); } }
+.chip.st-doing { color: var(--blue-fg); background: var(--blue-soft); border-color: var(--blue-line); }
+.chip.st-doing::before, .st-dot.st-doing { border-color: var(--blue); background: linear-gradient(90deg, var(--blue) 50%, transparent 50%); }
+/* Chờ: vòng có chấm giữa. */
+.chip.st-pending { color: var(--violet-fg); background: var(--violet-soft); border-color: var(--violet-line); }
+.chip.st-pending::before, .st-dot.st-pending { border-color: var(--violet); background: radial-gradient(circle closest-side, var(--violet) 0 60%, transparent 70%); }
+.chip.st-done { color: var(--green); background: var(--accent-soft); border-color: var(--accent-line); }
+.chip.st-done::before, .st-dot.st-done { border-color: var(--done-edge); background: var(--done-edge); }
+.chip.st-blocked { color: var(--amber-fg); background: var(--amber-soft); border-color: var(--amber-line); }
+.chip.st-blocked::before, .st-dot.st-blocked { border-radius: var(--r-xs); border-color: var(--amber); background: var(--amber); }
+.chip.st-skip { color: var(--ink-3); border-style: dashed; }
+.chip.st-skip::before, .st-dot.st-skip { border-style: dashed; }
+/* Huỷ: chấm tròn có vạch chéo. */
+.chip.st-cancel { color: var(--danger); background: var(--red-soft); border-color: var(--red-line); }
+.chip.st-cancel::before, .st-dot.st-cancel { border-color: var(--danger); background: linear-gradient(135deg, transparent 38%, var(--danger) 38% 62%, transparent 62%); }
+span.chip { cursor: default; }
+span.chip::after { content: none; }

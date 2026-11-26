@@ -1,0 +1,43 @@
+/* Danh sách chọn tự dựng (js/ui/dropdown.js). Chỉ dùng token của tokens.css. */
+
+/* ── Danh sách chọn tự dựng (js/dropdown.js): nút thay <select>, danh sách nổi ở lớp trên cùng, không đẩy bố cục ── */
+select.dd-native {
+  position: absolute; width: 1px; height: 1px; min-height: 0; padding: 0; margin: 0; border: 0;
+  opacity: 0; pointer-events: none; clip-path: inset(50%);
+}
+.field:has(> select.dd-native) { position: relative; }
+.dd-btn {
+  display: flex; align-items: center; gap: var(--s2); width: 100%; min-width: 0; min-height: var(--ctl); padding: var(--s2) var(--s2) var(--s2) var(--s3);
+  font: inherit; font-size: var(--fs-md); color: var(--ink); text-align: left; cursor: pointer;
+  background: var(--surface); border: var(--line-w) solid var(--line); border-radius: var(--r-sm);
+  transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+.dd-btn > svg.i { margin-left: auto; color: var(--ink-3); transition: transform var(--dur) var(--ease); }
+.dd-btn[aria-expanded="true"] { border-color: var(--ring); box-shadow: 0 0 0 3px var(--accent-soft); }
+.dd-btn[aria-expanded="true"] > svg.i { transform: rotate(180deg); }
+.dd-btn:focus-visible { outline: none; border-color: var(--ring); box-shadow: 0 0 0 3px var(--accent-soft); }
+.dd-btn:disabled { opacity: .45; cursor: default; }
+@media (hover: hover) { .dd-btn:hover:not(:disabled) { border-color: var(--ink-4); } }
+@media (pointer: coarse) { .dd-btn { font-size: var(--fs-lg); } }
+.dd-val { display: flex; align-items: center; gap: var(--s2); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dd-pop {
+  position: fixed; inset: auto; margin: 0; z-index: 90; min-width: var(--dd-min); max-width: min(var(--dd-max), calc(100vw - 2 * var(--s2)));
+  overflow: auto; overscroll-behavior: contain; padding: var(--s1);
+  background: var(--surface); color: var(--ink); border: var(--line-w) solid var(--line); border-radius: var(--r);
+  box-shadow: var(--shadow-pop);
+}
+.dd-pop:focus { outline: none; }
+@media (prefers-reduced-motion: no-preference) { .dd-pop { animation: dd-in var(--dur) var(--ease); } }
+@keyframes dd-in { from { opacity: 0; translate: 0 calc(-1 * var(--s1)); } to { opacity: 1; translate: 0 0; } }
+.dd-pop[data-side="up"] { transform-origin: bottom; }
+.dd-opt {
+  display: flex; align-items: center; gap: var(--s2); min-height: var(--hit); padding: var(--s1) var(--s2); border-radius: var(--r-sm);
+  font-size: var(--fs-sm); cursor: pointer;
+}
+.dd-opt.active { background: var(--chip); }
+.dd-opt[aria-selected="true"] .dd-label { font-weight: 600; }
+.dd-opt[aria-disabled="true"] { opacity: .45; cursor: default; }
+.dd-opt > svg.i { margin-left: auto; color: var(--green); }
+.dd-text { display: flex; flex-direction: column; min-width: 0; }
+.dd-label { overflow-wrap: anywhere; }
+.dd-hint { font-size: var(--fs-xs); color: var(--ink-3); line-height: var(--lh-tight); }

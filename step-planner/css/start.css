@@ -1,0 +1,86 @@
+/* Danh sách dự án, thẻ mẫu, màn đầu. Chỉ dùng token của tokens.css. */
+
+/* ── Danh sách dự án và thẻ mẫu ── */
+.ws-list { display: flex; flex-direction: column; gap: var(--s2); }
+.ws-item {
+  display: flex; align-items: center; gap: var(--s1); padding: var(--s1) var(--s1) var(--s1) 0;
+  background: var(--surface); border: var(--line-w) solid var(--line); border-radius: var(--r);
+  transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease);
+}
+@media (hover: hover) { .ws-item:not(.now):hover { border-color: var(--ink-4); } }
+.ws-item.now { border-color: var(--accent-line); background: var(--accent-soft); }
+.ws-open {
+  flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: var(--s1); padding: var(--s2) var(--s3);
+  text-align: left; cursor: pointer; font: inherit; color: inherit; background: none; border: 0; border-radius: var(--r-sm);
+}
+.ws-top { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s1) var(--s2); min-width: 0; }
+.ws-title { min-width: 0; font: 600 var(--fs-md)/var(--lh-tight) var(--display); overflow-wrap: anywhere; }
+.ws-now {
+  flex: none; display: inline-flex; align-items: center; min-height: var(--h-xs); padding: 0 var(--s2);
+  font: 600 var(--fs-xs)/1 var(--sans); color: var(--green); border: var(--line-w) solid var(--accent-line); border-radius: var(--r-pill);
+}
+.ws-meta { font: 500 var(--fs-xs)/var(--lh-tight) var(--mono); color: var(--ink-3); overflow-wrap: anywhere; }
+.ws-prog { display: flex; align-items: center; gap: var(--s2); }
+.ws-prog .bar-prog { flex: 0 1 var(--ws-prog-w); min-width: 0; }
+.ws-prog small { flex: none; font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-2); }
+.ws-acts { flex: none; display: flex; }
+@media (hover: hover) { .ws-acts .del:hover { color: var(--danger); } }
+.ws-empty { padding: var(--s5) var(--s4); text-align: center; font-size: var(--fs-sm); color: var(--ink-3); border: var(--line-w) dashed var(--line); border-radius: var(--r); }
+.tab-n { margin-left: var(--s1); font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-3); }
+/* Thẻ mẫu (màn đầu và hộp Dự án): tên, mô tả, số bước; trong hộp là radio phủ cả thẻ, dấu chọn ở góc. */
+.tpl-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--tpl-min)), 1fr)); gap: var(--s3); }
+.tpl {
+  position: relative; display: flex; flex-direction: column; gap: var(--s2); padding: var(--s4); text-align: left;
+  font: inherit; color: inherit; cursor: pointer;
+  background: var(--surface); border: var(--line-w) solid var(--line); border-radius: var(--r);
+  box-shadow: var(--shadow-1); transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease);
+}
+@media (hover: hover) { .tpl:hover { border-color: var(--ink-4); } }
+.tpl > span:first-of-type { display: flex; flex-direction: column; gap: var(--s1); min-width: 0; flex: 1 1 auto; }
+.tpl b { font: 600 var(--fs-md)/var(--lh-tight) var(--display); }
+.tpl small { color: var(--ink-2); font-size: var(--fs-sm); line-height: var(--lh); }
+.tpl-n { margin-top: auto; padding-top: var(--s1); font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-3); }
+.tpl input { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.tpl:has(input:checked) { border-color: var(--accent-line); background: var(--accent-soft); }
+.tpl:has(input:focus-visible) { outline: var(--ring-w) solid var(--ring); outline-offset: var(--mark-w); }
+:root.quiet-focus .tpl:has(input:focus-visible) { outline: none; }
+.tpl-check {
+  position: absolute; top: var(--s3); right: var(--s3); display: inline-flex; align-items: center; justify-content: center;
+  width: var(--h-xs); height: var(--h-xs); border: var(--line-w) solid var(--line); border-radius: var(--r-pill); background: var(--surface);
+}
+.tpl-check svg.i { width: var(--fs-sm); height: var(--fs-sm); stroke-width: 3; opacity: 0; }
+.tpl:has(input:checked) .tpl-check { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.tpl:has(input:checked) .tpl-check svg.i { opacity: 1; }
+/* Trong hộp: mô tả gọn hai dòng (cả câu ở title của thẻ). */
+.tpl-pick { grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--tpl-pick)), 1fr)); }
+.tpl-pick .tpl { padding: var(--s3) var(--s4); }
+.tpl-pick .tpl b { padding-right: var(--s5); }
+.tpl-pick small { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
+
+/* ── Màn đầu: chưa có dự án (dáng .ma-start của md-annotate: biểu tượng, câu giới thiệu, ba bước đánh số) ── */
+.start { padding-top: var(--s5); padding-bottom: var(--s6); display: flex; flex-direction: column; gap: var(--s4); }
+.page-h { font: 600 var(--fs-xl)/var(--lh-tight) var(--display); letter-spacing: -.01em; }
+.start-card {
+  display: flex; flex-direction: column; align-items: center; gap: var(--s3); text-align: center;
+  padding: var(--s6) var(--s5); background: var(--surface); border: var(--line-w) solid var(--line); border-radius: var(--r-lg);
+  box-shadow: var(--shadow-1);
+}
+.start-icon { display: grid; place-items: center; width: var(--icon-box); height: var(--icon-box); border-radius: var(--r); background: var(--accent-soft); color: var(--ink); }
+.start-icon svg.i { width: var(--icon-xl); height: var(--icon-xl); }
+.start-card h2 { margin-top: var(--s2); font: 600 var(--fs-xl)/var(--lh-tight) var(--display); letter-spacing: -.01em; }
+.start-card > p { max-width: 52ch; color: var(--ink-2); }
+.how { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s4); width: 100%; max-width: var(--how-w); margin-top: var(--s3); text-align: left; }
+.how li { display: flex; gap: var(--s2); align-items: flex-start; font-size: var(--fs-sm); color: var(--ink-2); }
+.how b { color: var(--ink); font-weight: 600; }
+.how-n {
+  display: inline-grid; place-items: center; flex: none; min-width: var(--h-xs); height: var(--h-xs); padding: 0 var(--s1);
+  font: 500 var(--fs-xs)/1 var(--mono); border-radius: var(--r-xs); background: var(--accent); color: var(--on-accent);
+}
+.sec-h { font: 600 var(--fs-lg)/var(--lh-tight) var(--display); margin-top: var(--s2); }
+.start .tpl { flex-direction: column; min-height: calc(var(--card-min) + var(--s5)); }
+.start-foot { display: flex; align-items: center; gap: var(--s3); flex-wrap: wrap; font-size: var(--fs-sm); }
+@media (max-width: 640px) {
+  .start-card { padding: var(--s5) var(--s4); }
+  .how { grid-template-columns: 1fr; gap: var(--s2); }
+  .start .tpl { min-height: 0; }
+}

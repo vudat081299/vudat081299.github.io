@@ -1,0 +1,141 @@
+/* Bàn giao: hai chấm đầu vào / đầu ra, chip In / Out, mũi tên, hộp danh sách, phần Inputs / Outputs, hộp chọn đầu ra. Chỉ dùng token của tokens.css. */
+
+/* ── Hai chấm đầu vào → đầu ra (Hd.ioDots): trên thẻ trước chip trạng thái, ở đầu bước cuối dòng tên. Hình riêng cho mỗi
+   trạng thái, không chỉ màu: ổn tròn đặc, lỗi hình thoi, không có vòng rỗng nét mảnh ── */
+/* Lề hai bên: hình thoi xoay vượt khung của nó, vẫn nằm trong .io. */
+.io { display: inline-flex; align-items: center; gap: var(--s1); min-height: var(--h-xs); padding-inline: var(--mark-w); flex: none; }
+.card-top .io { margin-left: auto; }
+.card-top .io + .chip { margin-left: 0; }
+.step-top .io { margin-left: auto; margin-top: 1px; }
+.io-dot { flex: none; width: var(--dot); height: var(--dot); border-radius: var(--r-pill); border: var(--mark-w) solid var(--ink-4); }
+.io-dot.ok { border-color: var(--done-edge); background: var(--done-edge); }
+.io-dot.bad { border-radius: 0; transform: rotate(45deg); border-color: var(--danger); background: var(--danger); }
+.io-dot.none { border-width: var(--line-w); }
+.io-arrow { position: relative; flex: none; width: var(--s3); height: var(--line-w); background: var(--ink-4); }
+.io-arrow::after {
+  content: ''; position: absolute; right: 0; top: 50%; width: var(--s1); height: var(--s1);
+  border-top: var(--line-w) solid var(--ink-4); border-right: var(--line-w) solid var(--ink-4); transform: translateY(-50%) rotate(45deg);
+}
+
+/* ── Bàn giao (js/hand.js): chip In / Out ở cột tên bước, mũi tên nét đứt trên bước nhận và trước ô nhận, tô hai bên,
+   hộp danh sách (#dlg-hand), phần Inputs / Outputs trong hộp sửa, hộp chọn đầu ra (#dlg-pick) ── */
+.hand-tags { display: flex; flex-wrap: wrap; gap: var(--s2); }
+/* Chip ngay dưới nhãn Notes của bước: cách đủ để hai vùng bấm --hit không chồng nhau. */
+.step-notes + .hand-tags { margin-top: calc(var(--hit) - var(--h-xs) - var(--s1)); }
+.hand-tag {
+  position: relative; display: inline-flex; align-items: center; gap: var(--s1); min-height: var(--h-xs); padding: 0 var(--s2);
+  font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-2); cursor: pointer;
+  background: var(--chip); border: 0; border-radius: var(--r-pill);
+}
+.hand-tag svg.i { width: var(--fs-sm); height: var(--fs-sm); color: var(--ink-3); }
+.hand-tag::after { content: ''; position: absolute; left: 50%; top: 50%; width: max(100%, var(--hit)); height: max(100%, var(--hit)); transform: translate(-50%, -50%); }
+@media (hover: hover) { .hand-tag:hover { color: var(--ink); background: var(--surface-2); } }
+/* Nút thông tin giữa mũi tên: tên đầu ra đầu tiên, "+n"; nền che nét đứt; vùng bấm nới tới --hit bằng lớp giả. */
+.hand-btn {
+  position: relative; z-index: 1; display: inline-flex; align-items: center; gap: var(--s1); max-width: 100%; min-height: var(--h-xs); padding: 0 var(--s2);
+  font: 600 var(--fs-xs)/1 var(--sans); color: var(--ink-2); white-space: nowrap; cursor: pointer;
+  background: var(--surface); border: var(--line-w) solid var(--ink-4); border-radius: var(--r-pill);
+}
+.hand-btn svg.i { flex: none; width: var(--fs-sm); height: var(--fs-sm); color: var(--ink-3); }
+.hand-btn-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; font-weight: 500; }
+.hand-btn-more { flex: none; color: var(--ink-3); }
+.hand-btn::after { content: ''; position: absolute; left: 50%; top: 50%; width: max(100%, var(--hit)); height: max(100%, var(--hit)); transform: translate(-50%, -50%); }
+@media (hover: hover) { .hand-btn:hover { color: var(--ink); border-color: var(--ink-2); } .hand-btn:hover svg.i { color: var(--ink); } }
+/* Mũi tên nét đứt: thân là viền đứt (::before), đầu là góc vuông hai cạnh xoay (::after). */
+.hand-row, .hand-gap { position: relative; display: flex; align-items: center; justify-content: center; }
+.hand-row::before, .hand-gap::before { content: ''; position: absolute; }
+.hand-row::after, .hand-gap::after {
+  content: ''; position: absolute; width: var(--s2); height: var(--s2);
+  border: solid var(--ink-4); border-width: var(--mark-w) var(--mark-w) 0 0;
+}
+/* Trên bước nhận: dải cao bằng một thẻ ở cột tên bước, mũi tên từ vạch chia xuống, nút ở giữa. */
+.hand-row { grid-column: 1 / -1; order: -2; width: var(--head-w); max-width: 100%; height: var(--card-min); }
+.board.compact .hand-row { height: var(--card-min-compact); }
+.hand-row::before { top: calc(-1 * var(--s4)); bottom: var(--mark-w); left: 50%; border-left: var(--mark-w) dashed var(--ink-4); transform: translateX(-50%); }
+.hand-row::after { bottom: var(--mark-w); left: 50%; transform: translateX(-50%) rotate(135deg); }
+/* Trước ô nhận: một ô rộng bằng thẻ, mũi tên trái sang phải ngang nửa thẻ thấp nhất, nút ở giữa. */
+.hand-gap { flex: 0 0 var(--card-w); min-width: 0; height: var(--card-min); padding-inline: var(--s2); }
+.board.compact .hand-gap { height: var(--card-min-compact); }
+.hand-gap::before { left: var(--s1); right: var(--s1); top: 50%; border-top: var(--mark-w) dashed var(--ink-4); transform: translateY(-50%); }
+.hand-gap::after { right: var(--s1); top: 50%; transform: translateY(-50%) rotate(45deg); }
+/* Nút giữa hai ô dài tối đa nửa nét đứt: nét = ô − 2·--s1, còn % tính trên phần nội dung = ô − 2·--s2.
+   Tên tràn thì mờ dần ở đuôi thay dấu "…" (hand.js gắn .cut khi chữ tràn); icon và "+n" luôn hiện đủ. */
+.hand-gap .hand-btn { max-width: calc((100% + 2 * var(--s2) - 2 * var(--s1)) / 2); }
+.hand-gap .hand-btn-name { text-overflow: clip; }
+.hand-gap .hand-btn-name.cut { mask-image: linear-gradient(to right, var(--mask) calc(100% - var(--s5)), transparent); }
+/* Đang kéo: thu hẳn lại (drag.js cho các khối trượt khít vào), thả xong bảng vẽ lại. */
+.dragging-any :is(.hand-row, .hand-gap) { display: none; }
+/* Tô bên giao và bên nhận khi nhảy tới (main.js gỡ lớp sau --flash-dur). */
+@keyframes hand-head { from { background-color: var(--flash); box-shadow: 0 0 0 var(--s2) var(--flash); } to { background-color: transparent; box-shadow: 0 0 0 var(--s2) transparent; } }
+.card.hand-hi { animation: moved-card var(--flash-dur) var(--ease) both; }
+.step-head.hand-hi { border-radius: var(--r-xs); animation: hand-head var(--flash-dur) var(--ease) both; }
+@media (prefers-reduced-motion: reduce) {
+  .card.hand-hi, .step-head.hand-hi { animation: none; background-color: var(--flash); }
+  .card.hand-hi { border-color: var(--flash-ring); }
+}
+/* Hộp danh sách: mỗi đầu ra / mỗi cặp một khối; bên giao, bên nhận là nút nhảy tới thẻ. */
+.hand-list { display: flex; flex-direction: column; gap: var(--s3); }
+.hand-item {
+  display: flex; flex-direction: column; align-items: flex-start; gap: var(--s2); padding: var(--s3);
+  background: var(--surface); border: var(--line-w) solid var(--line); border-radius: var(--r-sm);
+}
+.hand-name { display: flex; align-items: flex-start; gap: var(--s2); font-size: var(--fs-md); line-height: var(--lh-tight); overflow-wrap: anywhere; }
+.hand-name svg.i { flex: none; color: var(--ink-3); }
+.hand-name b { font-weight: 600; min-width: 0; }
+.hand-ref { max-width: 100%; font-size: var(--fs-sm); overflow-wrap: anywhere; }
+.hand-ref code { font: 500 var(--fs-xs)/var(--lh) var(--mono); padding: 0 var(--s1); color: var(--ink-2); background: var(--chip); border-radius: var(--r-xs); }
+.hand-ref a { display: inline-flex; align-items: center; gap: var(--s1); max-width: 100%; font-weight: 600; color: var(--green); text-underline-offset: 3px; }
+.hand-ref a span { min-width: 0; overflow-wrap: anywhere; }
+.hand-note { font-size: var(--fs-sm); color: var(--ink-2); overflow-wrap: anywhere; }
+.hand-used { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); font-size: var(--fs-sm); }
+.hand-who, .hand-pair {
+  display: flex; flex-direction: column; align-items: flex-start; gap: var(--s1); min-height: var(--hit); max-width: 100%; padding: var(--s1) var(--s3);
+  font: inherit; text-align: left; color: var(--ink); cursor: pointer;
+  background: var(--chip); border: var(--line-w) solid transparent; border-radius: var(--r-sm);
+  transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease);
+}
+@media (hover: hover) { :is(.hand-who, .hand-pair):hover { border-color: var(--ink-4); background: var(--surface-2); } }
+.hand-who b, .hand-end b { font-size: var(--fs-sm); font-weight: 600; overflow-wrap: anywhere; }
+.hand-who small, .hand-end small { font-size: var(--fs-xs); color: var(--ink-3); overflow-wrap: anywhere; }
+.hand-pair { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: var(--s2); width: 100%; padding: var(--s2) var(--s3); }
+.hand-end { display: flex; flex-direction: column; gap: var(--s1); min-width: 0; }
+.hand-arrow { display: inline-flex; color: var(--ink-3); }
+.hand-outs { display: flex; flex-direction: column; gap: var(--s2); width: 100%; padding-left: var(--s2); }
+.hand-outs > li { display: flex; flex-direction: column; gap: var(--s1); }
+/* Phần sửa: như phần Tài liệu (nhãn nhóm + nút); đầu vào là chip có nút gỡ, đầu ra là khối ba ô. */
+.hand-edit { display: flex; flex-direction: column; gap: var(--s2); padding-top: var(--s4); border-top: var(--line-w) solid var(--line-2); }
+.hand-edit .docs-edit-head + * { margin-top: calc(-1 * var(--s1)); }
+.hand-edit .docs-note + .docs-edit-head, .hand-edit ul + .docs-edit-head { margin-top: var(--s2); }
+.in-chips { display: flex; flex-wrap: wrap; gap: var(--s2); }
+.in-chips:empty, .out-list:empty { display: none; }
+.in-chip {
+  display: inline-flex; align-items: center; gap: var(--s2); max-width: 100%; padding: 0 0 0 var(--s3); font-size: var(--fs-sm);
+  background: var(--surface); border: var(--line-w) solid var(--line); border-radius: var(--r-sm);
+}
+.in-chip > svg.i { flex: none; color: var(--ink-3); }
+.in-text { display: flex; flex-direction: column; min-width: 0; padding: var(--s1) 0; line-height: var(--lh-tight); overflow-wrap: anywhere; }
+.in-text b { font-weight: 600; color: var(--ink); }
+.in-text small { font-size: var(--fs-xs); color: var(--ink-3); }
+.in-chip .icon-btn { flex: none; }
+/* Đầu vào treo (bên giao đã bị xếp ra sau): viền đứt, chữ hổ phách; liên kết vẫn giữ. */
+.in-chip.held { border-style: dashed; border-color: var(--amber-line); background: var(--amber-soft); }
+.in-chip.held .in-text small, .hand-who.held small, .hand-held { color: var(--amber-fg); }
+.hand-held { font-size: var(--fs-sm); overflow-wrap: anywhere; }
+/* Đầu vào mất nguồn (bên giao đã xoá): đỏ như chấm lỗi; gỡ bằng nút x. */
+.in-chip.gone { border-color: var(--red-line); background: var(--red-soft); }
+.in-chip.gone .in-text small, .hand-gone { color: var(--danger); }
+.hand-gone { font-size: var(--fs-sm); overflow-wrap: anywhere; }
+@media (hover: hover) { .in-chip .icon-btn:hover, .out-row .icon-btn:hover { color: var(--danger); } }
+.out-list { display: flex; flex-direction: column; gap: var(--s2); }
+.out-row {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--s2); align-items: start; padding: var(--s3);
+  background: var(--surface); border: var(--line-w) solid var(--line); border-radius: var(--r-sm);
+}
+.out-fields { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--s2) var(--s3); }
+.out-fields .field:first-child { grid-column: 1 / -1; }
+.out-used { grid-column: 1 / -1; font-size: var(--fs-xs); color: var(--ink-2); overflow-wrap: anywhere; }
+@media (max-width: 640px) { .out-fields { grid-template-columns: minmax(0, 1fr); } }
+/* Hộp chọn: mỗi bước một nhóm, mỗi đầu ra một hàng có ô chọn (dáng danh sách của hộp Reopen). */
+.pick-group { display: flex; flex-direction: column; }
+.pick-group .reset-title b { display: block; font-weight: 600; }
+.pick-group .reset-title small { display: block; font-size: var(--fs-xs); color: var(--ink-3); }

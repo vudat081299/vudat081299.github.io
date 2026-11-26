@@ -1,0 +1,289 @@
+/* System design: mục trên trang, sơ đồ, khung nhìn, hộp chọn, hộp Update plan. Chỉ dùng token của tokens.css. */
+
+/* ── System design (PLAN-016): mục trên trang như nhật ký (cột trái tên, lời dẫn, nút; cột phải sơ đồ), sơ đồ SVG (mỗi làn
+   một màu ở vạch trái của nút; khâu chưa quyết viền đứt), hộp chọn (cột trái các khâu theo làn, phải là khâu đang xem) ── */
+.sd {
+  display: grid; grid-template-columns: var(--head-w) minmax(0, 1fr); gap: var(--s4);
+  padding: var(--s6) 0 0 var(--s2);
+}
+.sd:focus { outline: none; }
+.sd-head { display: flex; flex-direction: column; gap: var(--s2); }
+.sd-head h2 { display: flex; align-items: center; gap: var(--s2); font: 600 var(--fs-xl)/var(--lh-tight) var(--display); }
+.sd-acts { display: flex; flex-direction: column; align-items: stretch; gap: var(--s2); margin-top: var(--s2); }
+.sd-main { min-width: 0; display: flex; flex-direction: column; gap: var(--s3); }
+.sd-fig {
+  min-width: 0; overflow: hidden; padding: 0; background: var(--surface);
+  border: var(--line-w) solid var(--line); border-radius: var(--r); box-shadow: var(--shadow-1);
+  transition: border-color var(--dur) var(--ease);
+}
+.sd-empty { padding: var(--sd-fig-pad); font-size: var(--fs-sm); color: var(--ink-3); }
+.sd-svg { display: block; max-width: none; overflow: hidden; }
+.sd-box { fill: var(--surface); stroke: var(--line); stroke-width: var(--line-w); transition: stroke var(--dur) var(--ease); }
+.sd-bar { fill: var(--ink-4); }
+.lane-data .sd-bar { fill: var(--blue); }
+.lane-model .sd-bar { fill: var(--violet); }
+.lane-app .sd-bar { fill: var(--accent); }
+.lane-ops .sd-bar { fill: var(--amber); }
+.lane-end .sd-box { fill: var(--accent-soft); stroke: var(--accent-line); }
+.lane-end .sd-bar { fill: var(--green); }
+.sd-node.is-open .sd-box { fill: none; stroke: var(--ink-4); stroke-dasharray: var(--sd-dash); }
+.sd-node.is-open .sd-bar { fill: var(--line); }
+.sd-title { font: 500 var(--fs-xs)/1 var(--mono); letter-spacing: .04em; fill: var(--ink-3); }
+.sd-name { font: 600 var(--fs-sm)/1 var(--sans); fill: var(--ink); }
+.sd-name.muted { font-weight: 400; font-style: italic; fill: var(--ink-3); }
+.sd-band { font: 500 var(--fs-xs)/1 var(--mono); letter-spacing: var(--track); text-transform: uppercase; fill: var(--ink-3); }
+.sd-edge { fill: none; stroke: var(--ink-4); stroke-width: var(--mark-w); }
+.sd-edge.is-open { stroke-dasharray: var(--sd-dash); }
+.sd-arrow { fill: none; stroke: var(--ink-4); stroke-width: var(--mark-w); stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: none; }
+.sd-node[data-stage] { cursor: pointer; }
+.sd-node:focus { outline: none; }
+.sd-node:focus-visible .sd-box { stroke: var(--ring); stroke-width: var(--ring-w); stroke-dasharray: none; }
+@media (hover: hover) { .sd-node[data-stage]:hover .sd-box { stroke: var(--ink-2); } }
+/* Bàn giao trên đường nối (`.sd-wire`: vùng rê rộng, nét, nhãn trên cùng). Nhãn viên thuốc nền đặc che nét; chữ dài mờ ở đuôi
+   (mask trong design.js). Đường trống: dấu + chỉ hiện khi rê đường; cảm ứng không có (trang Handoffs của hộp thay). */
+.sd-hit { fill: none; stroke: transparent; stroke-width: var(--sd-hit); pointer-events: stroke; cursor: pointer; }
+.sd-wire .sd-edge { transition: stroke var(--dur) var(--ease); }
+.sd-arrow.is-on { stroke: var(--accent); }
+.sd-hand { cursor: pointer; }
+.sd-hand-box { fill: var(--surface); stroke: var(--accent); stroke-width: var(--mark-w); transition: fill var(--dur) var(--ease); }
+.sd-hand-txt { font: 600 var(--fs-xs)/1 var(--sans); fill: var(--green); }
+.sd-hand:focus { outline: none; }
+.sd-hand:focus-visible .sd-hand-box { stroke: var(--ring); stroke-width: var(--ring-w); }
+.sd-wire:has(.sd-hand:focus-visible) .sd-edge { stroke: var(--accent); marker-end: url(#sd-arrow-on); }
+.sd-hand.is-empty { opacity: 0; transition: opacity var(--dur) var(--ease); }
+.sd-hand.is-empty .sd-hand-box { fill: var(--accent); stroke: var(--surface); stroke-width: var(--mark-w); }
+.sd-hand-plus { fill: none; stroke: var(--on-accent); stroke-width: var(--mark-w); stroke-linecap: round; }
+@media (hover: hover) {
+  .sd-wire:hover .sd-edge { stroke: var(--accent); marker-end: url(#sd-arrow-on); }
+  .sd-wire:hover .sd-hand.is-empty { opacity: 1; }
+  .sd-hand:not(.is-empty):hover .sd-hand-box { fill: var(--sd-hand-hover); }
+}
+@media (hover: none) { .sd-hand.is-empty { display: none; } }
+/* Khung nhìn (js/diagram-view.js): khung có focus thì bánh xe kéo khung (viền đậm báo); giữ Space: bàn tay; đang kéo: nắm.
+   Chạm: một ngón dọc cuộn trang tới khi chạm vào chỗ trống của sơ đồ, rồi một ngón kéo khung; hai ngón luôn thu phóng. */
+.sd-fig:focus { outline: none; border-color: var(--ink-4); }
+.sd-fig:focus-visible { outline: var(--ring-w) solid var(--ring); outline-offset: var(--mark-w); }
+.sd-svg { touch-action: pan-y; -webkit-user-select: none; user-select: none; }
+.sd-fig:focus .sd-svg { touch-action: none; }
+.sd-fig.is-grab, .sd-fig.is-grab * { cursor: grab; }
+.sd-fig.is-panning, .sd-fig.is-panning * { cursor: grabbing; }
+.sd-cam.is-easing { transition: transform var(--dur-sheet) var(--ease); }
+.sd-under { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--s2) var(--s4); }
+.sd-zoom { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--s1); margin-left: auto; }
+.sd-zoom .icon-btn { width: var(--ctl-sm); height: var(--ctl-sm); }
+.sd-zoom-pct { min-width: var(--sd-pct-w); padding: 0 var(--s1); font: 500 var(--fs-xs)/1 var(--mono); font-variant-numeric: tabular-nums; }
+.sd-zoom-hint { margin-right: var(--s2); font-size: var(--fs-xs); color: var(--ink-3); }
+@media (hover: none), (max-width: 640px) { .sd-zoom-hint { display: none; } }
+.sd-legend { display: flex; flex-wrap: wrap; gap: var(--s1) var(--s4); list-style: none; font: 500 var(--fs-xs)/var(--lh-tight) var(--mono); color: var(--ink-3); }
+.sd-legend li { display: inline-flex; align-items: center; gap: var(--s2); }
+.sd-legend li::before { content: ''; width: var(--s3); height: var(--s3); border-radius: var(--r-xs); background: var(--ink-4); }
+.sd-legend .lane-data::before { background: var(--blue); }
+.sd-legend .lane-model::before { background: var(--violet); }
+.sd-legend .lane-app::before { background: var(--accent); }
+.sd-legend .lane-ops::before { background: var(--amber); }
+.sd-legend .is-open::before { background: none; border: var(--line-w) dashed var(--ink-4); }
+/* Hộp chọn: gần toàn màn; thân không cuộn, cột trái và khâu đang xem cuộn riêng. */
+.dlg.sd-dlg { width: min(var(--dlg-md), calc(100vw - 2 * var(--s5))); height: min(92dvh, calc(100dvh - 2 * var(--s5))); max-height: none; }
+.sd-dlg .dlg-form { height: 100%; max-height: none; }
+.dlg-body.sd-body { display: grid; grid-template-columns: var(--sd-nav-w) minmax(0, 1fr); gap: 0; padding: 0; overflow: hidden; }
+.sd-nav { min-height: 0; overflow: auto; overscroll-behavior: contain; padding: var(--s3); border-right: var(--line-w) solid var(--line-2); background: var(--foot-bg); }
+.sd-nav ol { display: flex; flex-direction: column; gap: var(--s1); list-style: none; }
+.sd-nav-lane { padding: var(--s3) var(--s2) var(--s1); font: 500 var(--fs-xs)/1 var(--mono); letter-spacing: var(--track); text-transform: uppercase; color: var(--ink-3); }
+.sd-nav-btn {
+  display: flex; align-items: flex-start; gap: var(--s2); width: 100%; min-height: var(--ctl-sm); padding: var(--s2);
+  font: inherit; color: var(--ink-2); text-align: left; cursor: pointer; background: none; border: var(--line-w) solid transparent; border-radius: var(--r-sm);
+}
+@media (hover: hover) { .sd-nav-btn:hover { background: var(--chip); color: var(--ink); } }
+.sd-nav-btn[aria-current] { background: var(--surface); border-color: var(--line); color: var(--ink); box-shadow: var(--shadow-1); }
+.sd-nav-txt { min-width: 0; display: flex; flex-direction: column; gap: var(--mark-w); font-size: var(--fs-sm); font-weight: 500; }
+.sd-nav-txt small { font-size: var(--fs-xs); font-weight: 400; color: var(--ink-3); overflow-wrap: anywhere; }
+.sd-dot {
+  flex: none; display: grid; place-items: center; width: var(--icon); height: var(--icon); margin-top: var(--line-w);
+  border: var(--mark-w) solid var(--ink-4); border-radius: var(--r-pill); color: var(--on-accent);
+}
+.sd-dot svg.i { width: var(--s3); height: var(--s3); }
+.is-done .sd-dot { background: var(--accent); border-color: var(--accent); }
+.is-skip .sd-dot { border-style: dashed; }
+.is-skip .sd-nav-txt > span:first-child { text-decoration: line-through; color: var(--ink-3); }
+.sd-pane { min-height: 0; overflow: auto; overscroll-behavior: contain; display: flex; flex-direction: column; gap: var(--s4); padding: var(--s5) max(var(--s5), calc((100% - var(--md-max)) / 2)) var(--s6); }
+.sd-pane > * { flex-shrink: 0; }
+.sd-pane:focus { outline: none; }
+.sd-pane .dlg-kicker { margin-bottom: calc(-1 * var(--s3)); }
+.sd-h { font: 600 var(--fs-2xl)/var(--lh-tight) var(--display); letter-spacing: -.01em; }
+.sd-q { font-size: var(--fs-lg); line-height: var(--lh); font-weight: 500; }
+.sd-guide { display: flex; flex-direction: column; gap: var(--s1); font-size: var(--fs-md); line-height: var(--lh-read); color: var(--ink-2); }
+.sd-help { font-size: var(--fs-sm); line-height: var(--lh); color: var(--ink-3); }
+.sd-tip { padding: var(--s3); font-size: var(--fs-sm); color: var(--blue-fg); background: var(--blue-soft); border-radius: var(--r-sm); }
+.sd-link { padding: 0; font: inherit; font-weight: 600; color: inherit; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; background: none; border: 0; }
+.sd-skip { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2) var(--s3); }
+.sd-opts { display: flex; flex-direction: column; gap: var(--s3); }
+.sd-opt {
+  display: flex; flex-direction: column; gap: var(--s2); padding: var(--s3) var(--s4) var(--s3) var(--s3);
+  background: var(--surface); border: var(--line-w) solid var(--line); border-radius: var(--r); box-shadow: var(--shadow-1);
+  transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease);
+}
+.sd-opt.is-fit { border-color: var(--accent-line); }
+.sd-opt.is-on { border-color: var(--accent); background: var(--accent-soft); }
+.sd-opt-top { display: flex; align-items: flex-start; gap: var(--s3); cursor: pointer; }
+.sd-opt-top input { flex: none; width: var(--icon); height: var(--icon); margin-top: var(--mark-w); accent-color: var(--green); }
+.sd-opt-name { flex: 1 1 auto; min-width: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 var(--s2); }
+.sd-opt-name b { font: 600 var(--fs-lg)/var(--lh-tight) var(--display); }
+.sd-opt-name small { font: 500 var(--fs-xs)/var(--lh-tight) var(--mono); color: var(--ink-3); }
+.sd-tags { flex: none; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--s1); max-width: 50%; }
+.sd-tag {
+  display: inline-flex; align-items: center; min-height: var(--h-xs); padding: 0 var(--s2);
+  font: 500 var(--fs-xs)/1 var(--sans); color: var(--ink-2); background: var(--chip); border-radius: var(--r-pill); white-space: nowrap;
+}
+.sd-tag:empty { display: none; }
+.sd-tag.top { color: var(--on-accent); background: var(--accent); font-weight: 600; }
+.sd-tag.fit { color: var(--green); background: var(--accent-soft); }
+.sd-opt > p, .sd-det { margin-left: calc(var(--icon) + var(--s3)); }
+.sd-sum { font-size: var(--fs-md); line-height: var(--lh); }
+.sd-when { font-size: var(--fs-sm); line-height: var(--lh); color: var(--ink-2); }
+.sd-k { display: inline-block; margin-right: var(--s2); font: 600 var(--fs-xs)/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: var(--ink-3); }
+.sd-warn, .sd-warn .sd-k { color: var(--amber-fg); }
+.sd-det, .sd-more { display: flex; flex-direction: column; gap: var(--s2); }
+.sd-det > summary, .sd-more > summary {
+  display: inline-flex; align-items: center; gap: var(--s1); width: fit-content; min-height: var(--ctl-sm); cursor: pointer; list-style: none;
+  font-size: var(--fs-sm); font-weight: 500; color: var(--ink-2);
+}
+.sd-det > summary::-webkit-details-marker, .sd-more > summary::-webkit-details-marker { display: none; }
+.sd-det > summary svg.i, .sd-more > summary svg.i { width: var(--s4); height: var(--s4); transform: rotate(-90deg); transition: transform var(--dur) var(--ease); }
+.sd-det[open] > summary svg.i, .sd-more[open] > summary svg.i { transform: none; }
+.sd-more[open] { gap: var(--s3); }
+/* Phần mở của mọi khối gập (design.js `fold`): <details> không chia gap cho nội dung, nên nhịp dọc nằm ở div này. */
+.sd-fold { min-width: 0; display: flex; flex-direction: column; gap: var(--s2); }
+.sd-more > .sd-fold { gap: var(--s3); }
+.sd-more[data-more="profile-rest"] > .sd-fold { gap: var(--s4); }
+.sd-links { display: flex; flex-direction: column; gap: var(--s1); list-style: none; font-size: var(--fs-sm); }
+.sd-links a { display: inline-flex; align-items: center; gap: var(--s1); color: var(--blue-fg); text-underline-offset: 3px; }
+.sd-links svg.i { width: var(--s4); height: var(--s4); }
+.sd-cmd {
+  overflow-x: auto; padding: var(--s2) var(--s3); font: 500 var(--fs-sm)/var(--lh) var(--mono); font-variant-ligatures: none;
+  background: var(--field-bg); border: var(--line-w) solid var(--line-2); border-radius: var(--r-sm);
+}
+.sd-prof { display: flex; flex-direction: column; gap: var(--s2); border: 0; padding: 0; }
+.sd-prof legend { font: 600 var(--fs-md)/var(--lh-tight) var(--sans); color: var(--ink); }
+.sd-pills { display: flex; flex-wrap: wrap; gap: var(--s2); }
+.sd-pill { position: relative; display: inline-flex; cursor: pointer; }
+.sd-pill input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.sd-pill span {
+  display: inline-flex; align-items: center; min-height: var(--ctl-sm); padding: 0 var(--s3); font-size: var(--fs-sm);
+  color: var(--ink-2); background: var(--surface); border: var(--line-w) solid var(--line); border-radius: var(--r-pill);
+}
+.sd-pill input:checked + span { color: var(--on-accent); background: var(--accent); border-color: var(--accent); font-weight: 600; }
+.sd-pill input:focus-visible + span { outline: var(--ring-w) solid var(--ring); outline-offset: var(--mark-w); }
+.sd-pos { font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-3); }
+/* Trang Handoffs: mỗi đường nối một khối gập. */
+.sd-edge-item {
+  display: flex; flex-direction: column; gap: var(--s3); padding: var(--s3) var(--s4) var(--s3) var(--s3);
+  background: var(--surface); border: var(--line-w) solid var(--line); border-radius: var(--r); box-shadow: var(--shadow-1);
+}
+.sd-edge-item.is-set { border-color: var(--accent-line); }
+.sd-edge-item[open] { padding-bottom: var(--s4); }
+.sd-edge-item > summary { display: flex; align-items: flex-start; gap: var(--s2); min-height: var(--ctl-sm); cursor: pointer; list-style: none; }
+.sd-edge-item > summary::-webkit-details-marker { display: none; }
+.sd-edge-item > summary svg.i { flex: none; width: var(--s4); height: var(--s4); margin-top: var(--s1); transform: rotate(-90deg); transition: transform var(--dur) var(--ease); }
+.sd-edge-item[open] > summary svg.i { transform: none; }
+.sd-edge-name { min-width: 0; display: flex; flex-direction: column; gap: var(--mark-w); }
+.sd-edge-name b { font: 600 var(--fs-md)/var(--lh-tight) var(--display); }
+.sd-edge-name small { font-size: var(--fs-sm); color: var(--ink-3); overflow-wrap: anywhere; }
+.sd-edge-item > :not(summary) { margin-left: calc(var(--s4) + var(--s2)); }
+/* Hợp đồng đang mở: một vạch ngăn với tên đường nối, mỗi ô cách nhãn ô sau --s4. */
+.sd-edge-item > .sd-fold { gap: var(--s4); padding-top: var(--s4); border-top: var(--line-w) solid var(--line-2); }
+.sd-edge-item[open] { border-color: var(--ink-4); }
+.sd-edge-item.is-set[open] { border-color: var(--accent); }
+/* Hộp "Update plan" (#dlg-sdp): nhóm New / Changed / No longer in the design, mỗi mục một dòng kèm lựa chọn. */
+.sdp-groups { display: flex; flex-direction: column; gap: var(--s5); }
+.sdp-group { display: flex; flex-direction: column; gap: var(--s2); }
+.sdp-list { display: flex; flex-direction: column; gap: var(--s2); }
+.sdp-item {
+  display: flex; flex-direction: column; gap: var(--s2); padding: var(--s3);
+  background: var(--surface); border: var(--line-w) solid var(--line); border-radius: var(--r-sm);
+}
+.sdp-check { display: flex; align-items: flex-start; gap: var(--s3); cursor: pointer; }
+.sdp-check input { flex: none; width: var(--icon); height: var(--icon); margin-top: var(--mark-w); accent-color: var(--green); }
+.sdp-txt { min-width: 0; display: flex; flex-direction: column; gap: var(--s1); font-size: var(--fs-sm); line-height: var(--lh); }
+.sdp-txt b { font-weight: 600; color: var(--ink); overflow-wrap: anywhere; }
+.sdp-txt small { color: var(--ink-3); overflow-wrap: anywhere; }
+.sdp-txt small.sd-warn { color: var(--amber-fg); }
+/* Cảnh báo phối hợp (danh mục `checks`): trên trang dưới sơ đồ, trong hộp ở khâu liên quan và ở trang Checks. */
+.sd-warns { display: flex; flex-direction: column; gap: var(--s2); list-style: none; }
+.sd-warnbox {
+  display: flex; flex-direction: column; gap: var(--s1); padding: var(--s3); font-size: var(--fs-sm); line-height: var(--lh);
+  color: var(--ink); background: var(--amber-soft); border: var(--line-w) solid var(--amber-line); border-radius: var(--r-sm);
+}
+li.sd-warnbox { display: block; }
+.sd-warnbox b { font-weight: 600; color: var(--amber-fg); }
+.sd-warnbox .sd-link { color: var(--amber-fg); }
+.sd-warn-go { display: flex; flex-wrap: wrap; gap: var(--s2); margin-top: var(--s1); }
+.sd-nav-btn.has-warn .sd-dot { border-color: var(--amber); box-shadow: 0 0 0 var(--mark-w) var(--amber-soft); }
+.sd-deliv { font: 500 var(--fs-xs)/var(--lh-tight) var(--mono); letter-spacing: var(--track); text-transform: uppercase; color: var(--green); }
+/* Lối bắt đầu: thẻ radio, rồi luồng tối thiểu, mốc nghiệm thu, nút Apply path. */
+.sd-paths { display: grid; grid-template-columns: repeat(auto-fill, minmax(var(--tpl-min), 1fr)); gap: var(--s3); border: 0; padding: 0; }
+.sd-path-card {
+  position: relative; display: flex; align-items: flex-start; gap: var(--s3); padding: var(--s3); cursor: pointer;
+  background: var(--surface); border: var(--line-w) solid var(--line); border-radius: var(--r); box-shadow: var(--shadow-1);
+}
+.sd-path-card input { flex: none; width: var(--icon); height: var(--icon); margin-top: var(--mark-w); accent-color: var(--green); }
+.sd-path-card:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); }
+.sd-path-txt { min-width: 0; display: flex; flex-direction: column; gap: var(--s1); }
+.sd-path-txt b { font: 600 var(--fs-md)/var(--lh-tight) var(--display); }
+.sd-path-txt small { font-size: var(--fs-sm); line-height: var(--lh); color: var(--ink-2); }
+.sd-path-det { display: flex; flex-direction: column; gap: var(--s3); }
+.sd-h4 { margin: 0; font: 600 var(--fs-lg)/var(--lh-tight) var(--display); }
+.sd-flowlist, .sd-accept { display: flex; flex-direction: column; gap: var(--s1); padding-left: var(--s5); font-size: var(--fs-md); line-height: var(--lh); }
+.sd-flowlist { list-style: decimal; }
+.sd-accept { list-style: disc; }
+.sd-apply { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2) var(--s3); }
+.sd-applied { padding: var(--s3); font-size: var(--fs-sm); color: var(--ink); background: var(--accent-soft); border-radius: var(--r-sm); }
+/* Trang Architecture: mỗi nhóm một mục (tên, câu hỏi, dòng gợi ý), mỗi kiến trúc một khối gập; kiến trúc được gợi ý viền xanh. */
+.sd-fam { display: flex; flex-direction: column; gap: var(--s2); }
+.sd-fam + .sd-fam { padding-top: var(--s4); border-top: var(--line-w) solid var(--line-2); }
+.sd-rec { padding: var(--s3); font-size: var(--fs-sm); line-height: var(--lh); color: var(--ink); background: var(--accent-soft); border-radius: var(--r-sm); }
+.sd-rec b { font-weight: 600; }
+.sd-rec.is-none { color: var(--ink-2); background: var(--chip); }
+.sd-archs { display: flex; flex-direction: column; gap: var(--s2); }
+.sd-arch {
+  display: flex; flex-direction: column; gap: var(--s2); padding: var(--s2) var(--s4) var(--s2) var(--s3);
+  background: var(--surface); border: var(--line-w) solid var(--line); border-radius: var(--r); box-shadow: var(--shadow-1);
+}
+.sd-arch.is-rec { border-color: var(--accent); }
+.sd-arch[open] { padding-bottom: var(--s4); }
+.sd-arch > summary { display: flex; align-items: flex-start; gap: var(--s2); min-height: var(--ctl-sm); padding-top: var(--s1); cursor: pointer; list-style: none; }
+.sd-arch > summary::-webkit-details-marker { display: none; }
+.sd-arch > summary svg.i { flex: none; width: var(--s4); height: var(--s4); margin-top: var(--mark-w); transform: rotate(-90deg); transition: transform var(--dur) var(--ease); }
+.sd-arch[open] > summary svg.i { transform: none; }
+.sd-arch > :not(summary) { margin-left: calc(var(--s4) + var(--s2)); }
+.sd-arch-name { min-width: 0; display: flex; flex-direction: column; gap: var(--s1); }
+.sd-arch-head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s1) var(--s2); }
+.sd-arch-head b { font: 600 var(--fs-md)/var(--lh-tight) var(--display); }
+.sd-arch-name small { font-size: var(--fs-sm); line-height: var(--lh); color: var(--ink-2); }
+.sd-chain { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s1); margin-top: var(--s1); list-style: none; }
+.sd-chain li { display: inline-flex; align-items: center; gap: var(--s1); min-width: 0; }
+.sd-chain li + li::before {
+  content: ''; flex: none; width: var(--s2); height: var(--s2); margin-right: var(--s1);
+  border-top: var(--mark-w) solid var(--ink-4); border-right: var(--mark-w) solid var(--ink-4); transform: rotate(45deg);
+}
+.sd-chain span { padding: var(--s1) var(--s2); font: 500 var(--fs-xs)/var(--lh-tight) var(--sans); color: var(--ink-2); background: var(--chip); border-radius: var(--r-sm); }
+.sd-arch-tools { display: flex; flex-direction: column; gap: var(--s1); margin-top: var(--s1); list-style: none; }
+@media (max-width: 640px) {
+  .sd { grid-template-columns: minmax(0, 1fr); padding-top: var(--s5); }
+  .sd-acts { flex-direction: row; flex-wrap: wrap; }
+  .sd-acts .btn { flex: 1 1 auto; }
+  .dlg.sd-dlg { width: 100vw; height: 100dvh; max-height: 100dvh; margin: 0; border-radius: 0; border-width: 0; }
+  .dlg.sd-dlg .dlg-head::before { content: none; }
+  .dlg.sd-dlg .dlg-head { padding: var(--s3) var(--s2) var(--s3) var(--s4); }
+  .dlg-body.sd-body { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); }
+  .sd-nav { padding: var(--s2); border-right: 0; border-bottom: var(--line-w) solid var(--line-2); }
+  .sd-nav ol { flex-direction: row; overflow-x: auto; scrollbar-width: none; }
+  .sd-nav-lane, .sd-nav-txt small { display: none; }
+  .sd-nav-btn { flex: none; width: auto; align-items: center; min-height: var(--hit); white-space: nowrap; }
+  .sd-pane { padding: var(--s4) var(--s4) var(--s6); }
+  .sd-h { font-size: var(--fs-xl); }
+  .sd-tags { max-width: none; justify-content: flex-start; }
+  .sd-opt-top { flex-wrap: wrap; }
+  .sd-tags { flex: 1 1 100%; margin-left: calc(var(--icon) + var(--s3)); }
+  .sd-opt > p, .sd-det { margin-left: 0; }
+  .sd-pos { display: none; }
+}

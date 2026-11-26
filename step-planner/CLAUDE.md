@@ -14,7 +14,7 @@
 | File | Việc |
 |---|---|
 | `index.html` | markup, hộp thoại, bộ biểu tượng `<symbol id="i-…">`, script theme trước lần vẽ đầu, script báo `file://` |
-| `css/planner.css` | token ở đầu (tới dòng `/* ── hết token ── */`), rồi từng component, mỗi khối mở bằng một dòng chú thích |
+| `css/*.css` | `tokens` → `base` → `project` → `board` → `cards` → `drag` → `foot` → `log` → `design` → `dropdown` → `dialogs` → `docs` → `hand` → `md` → `start` → `toast`; thứ tự link là cascade; mỗi khối mở bằng một dòng chú thích |
 | `js/core.js` | logic thuần: chuẩn hoá, gộp khi lưu, ngày, tiến độ, việc tiếp theo, bàn giao (`holders`, `handoffs`, `ioStatus`, `consumersOf`), Markdown và JSON vào / ra; không DOM, chạy được trong Node |
 | `js/md.js` | Markdown của tài liệu văn bản → cây khối (`parseMd`, thuần) → DOM (`renderMd`, chỉ createElement / text node); URL trần trong chữ thường (`linkParts`, thuần, dấu câu cuối ở ngoài); khung Edit: token (`srcTokens`, thuần) → dòng có số (`renderSrc`) |
 | `js/design-core.js` | System design, thuần: `normDesign`, `rankOptions`, `applyPath`, `warnings`, `archAdvice`, `flowEdges`, `diagramNodes`, `planTasks`, `planDiff`, `applyPlan`, `designMd`, `designReader`, `presetDesign`, `isPreset` (core.js chỉ gọi `normDesign`, `presetDesign`, `designMd`, `designReader`) |
@@ -181,7 +181,7 @@
 
 ## Giao diện
 
-- Màu, cỡ, khoảng cách chỉ ở token đầu `css/planner.css` (REPO-028, REPO-023); dáng chung chép từ `md-annotate/`.
+- Màu, cỡ, khoảng cách chỉ ở token `css/tokens.css` (REPO-028, REPO-023); dáng chung chép từ `md-annotate/`.
 - Theme theo hệ điều hành tới khi bấm nút (REPO-024), khoá `hub-theme`.
 - Biểu tượng: `<symbol id="i-…">` trong `index.html` qua `<use>`, không ký tự unicode; nút chỉ biểu tượng có `aria-label`, `title`.
 - Mọi `<select>` chọn thứ có nghĩa dùng danh sách tự dựng (↑ ↓, gõ chữ đầu, Enter, Esc); ô chỉ chọn số giữ `<select>` gốc (`data-native`).
@@ -189,7 +189,7 @@
 
 ## Cổng: `sh step-planner/tools/check.sh`
 
-- `tools/lint.py`: khuôn mẫu và bàn giao trong mẫu, ngôn ngữ (giao diện, mẫu, System design), danh mục System design, mẫu đồ án khớp nguồn và neo, không `innerHTML`, mã màu chỉ trong khối token.
+- `tools/lint.py`: khuôn mẫu và bàn giao trong mẫu, ngôn ngữ (giao diện, mẫu, System design), danh mục System design, mẫu đồ án khớp nguồn và neo, không `innerHTML`, mã màu chỉ trong `css/tokens.css`, mọi file CSS được link.
   `lint.py --self-test`: cài lỗi vào bản sao tạm, mỗi lỗi phải bị bắt.
 - `node --input-type=module --check < file` cho `js/*.js` (`node --check file.js` bỏ sót lỗi của module).
 - `tools/test-core.mjs`: logic thuần của `core.js`, `md.js`, `design-core.js`, `view-math.js`; danh sách ở chính file.
