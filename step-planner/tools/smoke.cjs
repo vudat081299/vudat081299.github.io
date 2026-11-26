@@ -61,7 +61,8 @@ const check = (name, ok, detail = '') => {
   const { ctx, page } = await open(1280, 900, { permissions: ['clipboard-read', 'clipboard-write'] });
   await page.waitForSelector('#start:not([hidden]) .tpl');
   const tplIds = await page.$$eval('#start .tpl', (bs) => bs.map((b) => b.dataset.tpl));
-  check('màn đầu: đủ năm mẫu', tplIds.length === 5, tplIds.join(','));
+  const nTpl = (await page.evaluate(async () => (await (await fetch('data/templates.json')).json()).templates)).length;
+  check('màn đầu: đủ mẫu như templates.json', tplIds.length === nTpl && nTpl >= 5, tplIds.join(','));
   // Nút đóng hộp không lưu ghi "Close": "Cancelled" là tên một trạng thái.
   const closeBtns = await page.$$eval('dialog button', (bs) => bs.filter((b) => b.textContent.trim() && (b.hasAttribute('data-close') || /^Cancel/.test(b.textContent.trim())))
     .map((b) => b.textContent.trim()));
@@ -86,7 +87,7 @@ const check = (name, ok, detail = '') => {
     return w && w.steps.length === t.steps.length
       && w.steps.every((st, i) => st.subs.length === t.steps[i].subs.length && st.title === t.steps[i].title);
   });
-  check('tạo từ mỗi mẫu: đúng bước và bước con', s0.workspaces.length === 5 && okTpl);
+  check('tạo từ mỗi mẫu: đúng bước và bước con', s0.workspaces.length === nTpl && okTpl);
   check('dự án trống: báo chưa có bước', /No steps yet/.test(await page.textContent('#board')));
   // Hộp Dự án: tab Open mặc định, dòng dự án đang mở được đánh dấu, nút Create chỉ ở tab New; thẻ mẫu có dấu chọn.
   await page.click('#ws-btn');
@@ -107,8 +108,8 @@ const check = (name, ok, detail = '') => {
     checked: document.querySelectorAll('#ws-new-templates .tpl:has(input:checked)').length, cards: document.querySelectorAll('#ws-new-templates .tpl').length }), scrolled);
   await page.setViewportSize({ width: 1280, height: 900 });
   check('hộp Dự án: tab Open, dòng đang mở đánh dấu, hành động gọn; tab New có Create và thẻ mẫu',
-    wsd.open === 'true' && wsd.rows === 5 && wsd.count === '5' && wsd.now === 1 && wsd.create && wsd.acts === 'Rename,Duplicate,Delete' && wsd.dupName === 0
-    && !wsn.create && wsn.list && wsn.checked === 1 && wsn.top === 0 && wsn.cards === 5, JSON.stringify({ wsd, wsn }));
+    wsd.open === 'true' && wsd.rows === nTpl && wsd.count === String(nTpl) && wsd.now === 1 && wsd.create && wsd.acts === 'Rename,Duplicate,Delete' && wsd.dupName === 0
+    && !wsn.create && wsn.list && wsn.checked === 1 && wsn.top === 0 && wsn.cards === nTpl, JSON.stringify({ wsd, wsn }));
   await page.keyboard.press('Escape');
   // Số bước / bước con của CRISP-DM đọc từ templates.json, không ghi tay (mẫu đổi thì smoke theo).
   const crisp = tplData.find((t) => t.id === 'crisp-dm');
