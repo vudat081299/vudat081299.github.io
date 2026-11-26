@@ -101,7 +101,7 @@
             {
               "title": "Ghép dữ liệu (Integrate Data)",
               "doneWhen": "Bảng đã ghép: khoá chuẩn hoá, số dòng trước và sau mỗi lần ghép đã đối chiếu.",
-              "notes": "Gồm cả gộp nhiều dòng thành một (aggregation), ví dụ từ bảng giao dịch ra một dòng mỗi khách.\nGộp theo thời gian thì chỉ dùng dữ liệu trước mốc dự đoán.",
+              "notes": "Gồm cả gộp nhiều dòng thành một (aggregation), ví dụ từ bảng giao dịch ra một dòng mỗi khách.\nGộp theo thời gian thì chỉ dùng dữ liệu trước mốc dự đoán.\nLưu bảng trung gian bằng Parquet thay vì CSV: lưu theo cột, nén, schema (tên, kiểu cột) nằm trong file nên đọc lại không phải đoán kiểu: https://parquet.apache.org/docs/overview/",
               "outs": [
                 {
                   "key": "analysis-table",
@@ -203,7 +203,7 @@
             {
               "title": "Bảo đảm tái lập (Assure Reproducibility; theo CRISP-ML(Q))",
               "doneWhen": "Mỗi lần chạy nối được với: phiên bản dữ liệu (SHA-256 hay commit dữ liệu), commit code, seed, phiên bản thư viện, tham số, chỉ số, file mô hình; chạy lại ra cùng số.",
-              "notes": "MLflow Tracking ghi cho mỗi run: tham số, chỉ số, artifact, dataset, commit git khi chạy trong repo git: https://mlflow.org/docs/latest/ml/tracking/tracking-api/\nÍt lần chạy: một bảng tính có cột run id, commit, SHA-256 dữ liệu là đủ.\nBáo điểm trung bình và độ lệch qua nhiều seed hay fold, không chỉ lần chạy đẹp nhất."
+              "notes": "MLflow Tracking ghi cho mỗi run: tham số, chỉ số, artifact, dataset, commit git khi chạy trong repo git: https://mlflow.org/docs/latest/ml/tracking/tracking-api/\nÍt lần chạy: một bảng tính có cột run id, commit, SHA-256 dữ liệu là đủ.\nBáo điểm trung bình và độ lệch qua nhiều seed hay fold, không chỉ lần chạy đẹp nhất.\nDịch vụ đi kèm (database, MLflow) và phiên bản của chúng ghim trong một file Docker Compose: người khác dựng lại đúng môi trường bằng một lệnh: https://docs.docker.com/compose/"
             }
           ]
         },
@@ -364,7 +364,7 @@
             {
               "title": "Lập kế hoạch dự án (Produce Project Plan)",
               "doneWhen": "Kế hoạch có các pha, đầu vào và đầu ra, môi trường chạy (Spark local trên mẫu, rồi cụm), giới hạn tài nguyên, điều kiện dừng.",
-              "notes": "Viết và thử code trên một máy với master local[*] (mọi nhân của máy) và một mẫu nhỏ; chỉ lên cụm khi code đã đúng: https://spark.apache.org/docs/latest/submitting-applications.html\nGhi trước giới hạn tài nguyên (số executor, số giờ máy mỗi lần chạy). Vượt thì thu hẹp dữ liệu hay đổi cách làm, đừng thêm máy mãi.",
+              "notes": "Viết và thử code trên một máy với master local[*] (mọi nhân của máy) và một mẫu nhỏ; chỉ lên cụm khi code đã đúng: https://spark.apache.org/docs/latest/submitting-applications.html\nGhi trước giới hạn tài nguyên (số executor, số giờ máy mỗi lần chạy). Vượt thì thu hẹp dữ liệu hay đổi cách làm, đừng thêm máy mãi.\nSpark, Kafka chạy thử trên máy bằng Docker Compose, image ghim phiên bản; healthcheck với depends_on để dịch vụ chờ nhau sẵn sàng: https://docs.docker.com/compose/how-tos/startup-order/",
               "ins": [
                 "scale-decision",
                 "latency-reqs",
@@ -395,7 +395,7 @@
             {
               "title": "Chọn định dạng lưu trữ và cách phân vùng (Storage Format, Partitioning; Delta Lake)",
               "doneWhen": "Đã chọn nơi lưu (HDFS hay object storage), định dạng (Parquet hay Delta), cột phân vùng, đường dẫn ba vùng bronze / silver / gold; mỗi lựa chọn có lý do.",
-              "notes": "Parquet lưu theo cột: truy vấn chỉ đọc cột cần. Bài giảng, định dạng tệp: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b3-3-fig-rowcol\nDelta Lake thêm trên Parquet: giao dịch ACID, chặn ghi sai schema (schema enforcement), time travel để đọc lại phiên bản cũ và tái lập thí nghiệm (có thời hạn, xem thẻ Bảo đảm tái lập): https://docs.delta.io/latest/index.html\nCột phân vùng thường là ngày. Đừng phân vùng theo cột nhiều giá trị (user_id); chỉ phân vùng khi mỗi phân vùng có ít nhất khoảng 1 GB (Delta Lake, Best practices): https://docs.delta.io/latest/best-practices.html\nNhiều tệp nhỏ làm đọc chậm; trên HDFS mỗi tệp còn chiếm RAM của NameNode. Streaming ghi mỗi micro-batch thành tệp mới: lên lịch gộp tệp (compaction).",
+              "notes": "Parquet lưu theo cột: truy vấn chỉ đọc cột cần. Bài giảng, định dạng tệp: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b3-3-fig-rowcol\nDelta Lake thêm trên Parquet: giao dịch ACID, chặn ghi sai schema (schema enforcement), time travel để đọc lại phiên bản cũ và tái lập thí nghiệm (có thời hạn, xem thẻ Bảo đảm tái lập): https://docs.delta.io/latest/index.html\nCột phân vùng thường là ngày. Đừng phân vùng theo cột nhiều giá trị (user_id); chỉ phân vùng khi mỗi phân vùng có ít nhất khoảng 1 GB (Delta Lake, Best practices): https://docs.delta.io/latest/best-practices.html\nNhiều tệp nhỏ làm đọc chậm; trên HDFS mỗi tệp còn chiếm RAM của NameNode. Streaming ghi mỗi micro-batch thành tệp mới: lên lịch gộp tệp (compaction).\nTable format cần một catalog để mọi engine (Spark, Trino, DuckDB) thấy cùng một bảng và bản hiện hành: Hive Metastore, hay Iceberg REST Catalog như Apache Polaris: https://polaris.apache.org/\nObject storage tự chạy: repo cộng đồng của MinIO đã ngừng bảo trì, archived (https://github.com/minio/minio); chọn bản còn bảo trì hay ghi rủi ro. Dựng cả một lakehouse tự chạy: mẫu Nền tảng lakehouse mã nguồn mở.",
               "outs": [
                 {
                   "key": "storage-layout",
@@ -1668,12 +1668,12 @@
             {
               "title": "Chọn nơi lưu dữ liệu thô và dữ liệu sạch",
               "doneWhen": "Đã chọn nơi lưu (thư mục, object storage, cơ sở dữ liệu) và định dạng (ví dụ Parquet) cho vùng thô và vùng sạch, kèm lý do.",
-              "notes": "Vùng thô chỉ thêm, không sửa: lô nào cũng dựng lại được từ đây."
+              "notes": "Vùng thô chỉ thêm, không sửa: lô nào cũng dựng lại được từ đây.\nParquet hơn CSV cho vùng sạch: lưu theo cột, nén, schema nằm trong file: https://parquet.apache.org/docs/overview/\nVùng thô / sạch / công bố ứng với bronze / silver / gold của medallion architecture: https://docs.databricks.com/aws/en/lakehouse/medallion\nObject storage tự chạy (tương thích S3): kiểm tình trạng bảo trì, không chỉ giấy phép; repo cộng đồng của MinIO đã ngừng bảo trì, archived: https://github.com/minio/minio"
             },
             {
               "title": "Bố cục phân vùng và phiên bản (theo Airflow)",
               "doneWhen": "Vùng thô phân vùng theo khoảng dữ liệu (ví dụ theo ngày); vùng sạch có phiên bản; có con trỏ tới bản sạch đang công bố.",
-              "notes": "Airflow, Best practices: đọc và ghi theo một phân vùng cụ thể (ví dụ lấy data_interval_start làm phân vùng), không đọc \"dữ liệu mới nhất\" trong task: https://airflow.apache.org/docs/apache-airflow/stable/best-practices.html",
+              "notes": "Airflow, Best practices: đọc và ghi theo một phân vùng cụ thể (ví dụ lấy data_interval_start làm phân vùng), không đọc \"dữ liệu mới nhất\" trong task: https://airflow.apache.org/docs/apache-airflow/stable/best-practices.html\nTable format (Iceberg, Delta Lake) cộng một catalog làm sẵn phần phiên bản và con trỏ: mỗi lần ghi là một snapshot, catalog trỏ bản hiện hành, lùi về bản tốt được (rollback): https://iceberg.apache.org/",
               "outs": [
                 {
                   "key": "storage-layout",
@@ -1742,7 +1742,8 @@
               ],
               "ins": [
                 "raw-batch"
-              ]
+              ],
+              "notes": "dbt: mỗi model là một câu SELECT trong file .sql; ref() nối các model thành DAG nên dbt tự biết thứ tự chạy: https://docs.getdbt.com/docs/build/sql-models"
             },
             {
               "title": "Test chất lượng dữ liệu (theo dbt)",
@@ -1802,7 +1803,7 @@
           "title": "Mạch ngầm (Undercurrents)",
           "goal": "Job tự chạy đúng lịch, hỏng thì biết ngay, sửa và chạy bù được.",
           "doneWhen": "Có lịch chạy, nhật ký mỗi lần chạy, cảnh báo, runbook; đã thử một lần backfill.",
-          "notes": "Mạch ngầm (undercurrents) chạy qua mọi khâu. Mẫu giữ Orchestration, DataOps, Security; Data Management nằm ở hợp đồng nguồn và test chất lượng.",
+          "notes": "Mạch ngầm (undercurrents) chạy qua mọi khâu. Mẫu giữ Orchestration, DataOps, Security; Data Management nằm ở hợp đồng nguồn và test chất lượng.\nMôi trường của job (database, orchestrator, phiên bản) ghim trong một file Docker Compose: máy dev và máy chạy lịch dựng giống nhau bằng một lệnh: https://docs.docker.com/compose/",
           "subs": [
             {
               "title": "Điều phối (Orchestration): lịch chạy và phụ thuộc",
