@@ -59,7 +59,7 @@
   .sd-hand:not(.is-empty):hover .sd-hand-box { fill: var(--sd-hand-hover); }
 }
 @media (hover: none) { .sd-hand.is-empty { display: none; } }
-/* Khung nhìn (js/diagram-view.js): khung có focus thì bánh xe kéo khung (viền đậm báo); giữ Space: bàn tay; đang kéo: nắm.
+/* Khung nhìn (js/ui/diagram-view.js): khung có focus thì bánh xe kéo khung (viền đậm báo); giữ Space: bàn tay; đang kéo: nắm.
    Chạm: một ngón dọc cuộn trang tới khi chạm vào chỗ trống của sơ đồ, rồi một ngón kéo khung; hai ngón luôn thu phóng. */
 .sd-fig:focus { outline: none; border-color: var(--ink-4); }
 .sd-fig:focus-visible { outline: var(--ring-w) solid var(--ring); outline-offset: var(--mark-w); }

@@ -1,12 +1,19 @@
 // @ts-check
 /* System design (PLAN-016): mục trên trang (sơ đồ tự vẽ, nút) và hộp chọn từng khâu (#dlg-sd).
- * Danh mục: data/system-design.json. Logic thuần: core/design.js, core/design-plan.js. Chữ người dùng chỉ vào DOM qua text node. */
+ * Danh mục: data/system-design.json. Logic thuần: core/design.js, core/design-plan.js. Chữ người dùng chỉ vào DOM qua text node.
+ * Xuất: renderSection, initDesign, mdLabels.
+ * Dùng: core/board.js, core/design-plan.js, core/design.js, core/io.js, core/model.js, ui/diagram-view.js, ui/dialogs.js,
+ *   ui/dom.js, ui/state.js, ui/toast.js. */
 import { fold as foldText } from '../core/board.js';
 import { initDiagramView, attach as attachView, resetView } from './diagram-view.js';
 import { PLAN_STEP, applyPlan, bothDecided, diagramNodes, flowEdges, planDiff, snake, viaLabel } from '../core/design-plan.js';
 import { EDGE_MAX, OWN_MAX, VIA, applyPath, archAdvice, catalogErrors, decidedCount, effProfile, emptyDesign, isPreset, normDesign, notNeededBy, pathOf, pickNames, presetDesign, rankOptions, stageState, warnings } from '../core/design.js';
 import { plural, slug } from '../core/io.js';
 import { normStep, normSub } from '../core/model.js';
+import { showDlg } from './dialogs.js';
+import { $, h, icon } from './dom.js';
+import { commit, cur, findWs, tplOf } from './state.js';
+import { toast } from './toast.js';
 
 const NS = 'http://www.w3.org/2000/svg';
 const LANE_LABEL = { data: 'Data', model: 'Model', app: 'App', ops: 'Operations' };
@@ -15,7 +22,6 @@ const LEVEL_LABEL = { 1: 'Beginner', 2: 'Some setup', 3: 'Advanced' };
 
 /** @type {any} */ let cat = null;
 let catError = '';
-/** @type {any} */ let deps = null;
 let at = 0;                       // trang của hộp: 0 = lối bắt đầu, 1 = hồ sơ dự án, 2 = kiến trúc, k ≥ 3 = khâu thứ k − 2
 const moreOpen = new Set();       // khâu đang mở "Show other options"
 /** Lần "Apply path" gần nhất (Hoàn tác là một dòng trong hộp: toast bị hộp modal che). @type {any} */
@@ -23,7 +29,6 @@ let applied = null;
 const ARCH_PAGE = 2;
 const FIRST_STAGE = 3;
 
-const $ = (/** @type {string} */ id) => /** @type {any} */ (document.getElementById(id));
 
 /** @param {string} tag @param {Record<string, any>} [attrs] @param {...any} kids */
 function svg(tag, attrs = {}, ...kids) {
@@ -33,7 +38,7 @@ function svg(tag, attrs = {}, ...kids) {
   return el;
 }
 
-const ws = () => deps.cur();
+const ws = () => cur();
 const design = () => ws()?.design || null;
 const stageAt = (/** @type {number} */ k) => cat.stages[k - FIRST_STAGE];
 /* Sau các khâu: trang xem lại (luật phối hợp). */
@@ -50,7 +55,7 @@ function edit(fn) {
   const d = w.design ? w.design : emptyDesign();
   fn(d);
   w.design = normDesign(d);
-  deps.commit();
+  commit();
 }
 
 /** Trạng thái lưu của một khâu (bản sửa được). @param {any} d @param {string} id */
@@ -58,7 +63,7 @@ const stageRec = (d, id) => (d.stages[id] = d.stages[id] || { pick: [], skip: fa
 
 /** Khối gập của hộp: phần mở nằm trong một div (`.sd-fold`), vì nội dung của <details> không nhận gap của flex.
  * @param {Record<string, any>} attrs @param {any} summary @param {...any} kids */
-const fold = (attrs, summary, ...kids) => deps.h('details', attrs, summary, deps.h('div', { class: 'sd-fold' }, ...kids));
+const fold = (attrs, summary, ...kids) => h('details', attrs, summary, h('div', { class: 'sd-fold' }, ...kids));
 
 /** Bàn giao của một đường nối (bản sửa được). @param {any} d @param {string} key */
 const edgeRec = (d, key) => ((d.edges = d.edges || {})[key] = d.edges[key] || { via: '', what: '', where: '', promise: '', check: '' });
@@ -71,7 +76,7 @@ export function renderSection() {
   if (!cat) {
     $('sd-count').textContent = '';
     $('sd-open').disabled = true;
-    $('sd-fig').replaceChildren(deps.h('p', { class: 'sd-empty' }, catError || 'Loading the stage list…'));
+    $('sd-fig').replaceChildren(h('p', { class: 'sd-empty' }, catError || 'Loading the stage list…'));
     attachView(null, 0, 0);
     return;
   }
@@ -90,8 +95,8 @@ export function renderSection() {
   drawDiagram();
   const warns = warnings(cat, w.design);
   $('sd-warns').hidden = !warns.length;
-  $('sd-warns').replaceChildren(...warns.map((x) => deps.h('li', { class: 'sd-warnbox' },
-    deps.h('button', { type: 'button', class: 'sd-link', 'data-warn-stage': x.stages[0] || '' }, x.title), ' ', x.msg)));
+  $('sd-warns').replaceChildren(...warns.map((x) => h('li', { class: 'sd-warnbox' },
+    h('button', { type: 'button', class: 'sd-link', 'data-warn-stage': x.stages[0] || '' }, x.title), ' ', x.msg)));
 }
 
 /** Dòng kiến trúc trên trang: tên các kiến trúc gợi ý (bấm là mở trang Architecture của hộp). @param {any} d */
@@ -100,7 +105,7 @@ function renderArchLine(d) {
   const fams = Array.isArray(cat.architectures) ? cat.architectures : [];
   el.hidden = !fams.length;
   const names = archAdvice(cat, d).map((a, i) => fams[i].entries.find((/** @type {any} */ e) => e.id === a.id)?.name).filter(Boolean);
-  el.replaceChildren(deps.h('button', { type: 'button', class: 'sd-link', 'data-arch-open': '1' }, names.length ? 'Architecture' : 'Architecture guide'),
+  el.replaceChildren(h('button', { type: 'button', class: 'sd-link', 'data-arch-open': '1' }, names.length ? 'Architecture' : 'Architecture guide'),
     names.length ? `: ${names.join(' · ')}` : ': answer the profile for a recommendation');
 }
 
@@ -304,7 +309,7 @@ function downloadSvg() {
   out.insertBefore(svg('rect', { x: vb[0], y: vb[1], width: vb[2], height: vb[3], fill: getComputedStyle(document.body).backgroundColor }), out.firstChild);
   const blob = new Blob(['<?xml version="1.0" encoding="UTF-8"?>\n' + new XMLSerializer().serializeToString(out)], { type: 'image/svg+xml' });
   const url = URL.createObjectURL(blob);
-  const link = deps.h('a', { href: url, download: slug(ws().name) + '-system.svg' });
+  const link = h('a', { href: url, download: slug(ws().name) + '-system.svg' });
   document.body.append(link);
   link.click();
   link.remove();
@@ -322,7 +327,6 @@ const diffKey = (/** @type {any[]} */ items) => items.map((x) => `${x.kind}:${x.
 function openPlan() {
   const w = ws();
   if (!w || !cat) return;
-  const h = deps.h;
   const items = planDiff(cat, w);
   planCtx = { wsId: w.id, items, key: diffKey(items) };
   const build = w.steps.find((/** @type {any} */ s) => foldText(s.title) === foldText(PLAN_STEP.title));
@@ -363,7 +367,7 @@ function openPlan() {
   $('sdp-sub').textContent = todo ? 'Pick what to do with each task. One Undo reverts everything.' : 'Every task already matches the design.';
   $('sdp-step-field').hidden = !items.some((x) => x.kind === 'new' || x.kind === 'changed');
   $('sdp-go').disabled = !todo;
-  deps.showDlg($('dlg-sdp'));
+  showDlg($('dlg-sdp'));
   ($('sdp-list').querySelector('input') || $('dlg-sdp').querySelector('[data-close]')).focus({ preventScroll: true });
 }
 
@@ -371,10 +375,10 @@ function applyPlanNow() {
   const ctx = planCtx;
   planCtx = null;
   $('dlg-sdp').close();
-  const w = ctx && deps.findWs(ctx.wsId);
+  const w = ctx && findWs(ctx.wsId);
   if (!w) return;
   /* Tab khác đổi dự án trong lúc hộp mở: bản so không còn đúng. */
-  if (diffKey(planDiff(cat, w)) !== ctx.key) { deps.toast('The plan changed meanwhile; open "Update plan" again.'); return; }
+  if (diffKey(planDiff(cat, w)) !== ctx.key) { toast('The plan changed meanwhile; open "Update plan" again.'); return; }
   const list = $('sdp-list');
   const choices = ctx.items.map((it, i) => (it.kind === 'new'
     ? (list.querySelector(`input[type="checkbox"][data-i="${i}"]`)?.checked ? 'add' : 'skip')
@@ -390,15 +394,15 @@ function applyPlanNow() {
   if (created && !step.subs.length) { w.steps = w.steps.filter((/** @type {any} */ s) => s !== step); created = false; }
   const n = r.counts;
   const parts = [n.added ? `${n.added} added` : '', n.updated ? `${n.updated} updated` : '', n.cancelled ? `${n.cancelled} cancelled` : ''].filter(Boolean);
-  deps.commit();
-  if (!parts.length && !r.before.size) { deps.toast('Nothing changed.'); return; }
+  commit();
+  if (!parts.length && !r.before.size) { toast('Nothing changed.'); return; }
   const wsId = w.id, stepId = step.id, added = new Set(r.added), before = r.before;
-  deps.toast(`Plan updated: ${parts.join(', ') || 'tasks linked to the design'}.${n.reset ? ` ${plural(n.reset, 'done task')} set back to New.` : ''}`, () => {
-    const ww = deps.findWs(wsId);
+  toast(`Plan updated: ${parts.join(', ') || 'tasks linked to the design'}.${n.reset ? ` ${plural(n.reset, 'done task')} set back to New.` : ''}`, () => {
+    const ww = findWs(wsId);
     if (!ww) return;
     for (const s of ww.steps) s.subs = s.subs.filter((/** @type {any} */ x) => !added.has(x.id)).map((/** @type {any} */ x) => (before.has(x.id) ? normSub(before.get(x.id)) : x));
     if (created) ww.steps = ww.steps.filter((/** @type {any} */ s) => s.id !== stepId || s.subs.length);
-    deps.commit('#sd-plan');
+    commit('#sd-plan');
   }, '#sd-plan');
 }
 
@@ -411,7 +415,7 @@ function openDesign(k = 0, edgeKey = '') {
   applied = null;
   if (edgeKey) moreOpen.add('edge:' + edgeKey);
   paint();
-  deps.showDlg($('dlg-sd'));
+  showDlg($('dlg-sd'));
   const item = edgeKey && $('sd-pane').querySelector(`[data-edge-item="${edgeKey}"]`);
   if (item) {
     item.scrollIntoView({ block: 'start' });
@@ -442,7 +446,6 @@ function paintNav() {
   const d = design();
   const warns = warnings(cat, d);
   const warned = new Set(warns.flatMap((x) => x.stages));
-  const h = deps.h;
   /** @type {any[]} */
   const p = pathOf(cat, d);
   const items = [h('li', {}, navBtn(0, 'Deliverable', p ? 'done' : 'open', p ? p.label : '')),
@@ -467,9 +470,8 @@ function paintNav() {
 
 /** @param {number} k @param {string} title @param {string} state @param {string} sub @param {boolean} [warn] */
 function navBtn(k, title, state, sub, warn = false) {
-  const h = deps.h;
   return h('button', { type: 'button', class: `sd-nav-btn is-${state}${warn ? ' has-warn' : ''}`, 'data-at': k, 'aria-current': k === at ? 'step' : null },
-    h('span', { class: 'sd-dot', 'aria-hidden': 'true' }, state === 'done' ? deps.icon('check') : null),
+    h('span', { class: 'sd-dot', 'aria-hidden': 'true' }, state === 'done' ? icon('check') : null),
     h('span', { class: 'sd-nav-txt' }, h('span', {}, title), sub ? h('small', {}, sub) : null,
       h('span', { class: 'sr' }, (state === 'done' ? ' (decided)' : state === 'skip' ? ' (not needed)' : ' (open)') + (warn ? ', has a warning' : ''))));
 }
@@ -485,15 +487,14 @@ function paintPane() {
 /** Dòng "Preset from template" (PLAN-033): hồ sơ, lối còn đúng như mẫu của dự án đặt sẵn; đổi một câu là ẩn. */
 function presetNote() {
   const w = ws();
-  const t = w && w.templateId ? deps.tplOf(w.templateId) : null;
+  const t = w && w.templateId ? tplOf(w.templateId) : null;
   return t && isPreset(w.design, presetDesign(t))
-    ? deps.h('p', { class: 'sd-tip', 'data-preset': t.id }, `Preset from template "${t.name}" — change any answer.`) : null;
+    ? h('p', { class: 'sd-tip', 'data-preset': t.id }, `Preset from template "${t.name}" — change any answer.`) : null;
 }
 
 /* ── Lối bắt đầu: "What do you deliver?" — luồng tối thiểu, vì sao hợp, khi nào đổi lối, khâu cần / bỏ, mốc nghiệm thu ── */
 
 function pathPane() {
-  const h = deps.h;
   const d = design();
   const p = pathOf(cat, d);
   return [
@@ -511,7 +512,6 @@ function pathPane() {
 
 /** @param {any} p */
 function pathDetail(p) {
-  const h = deps.h;
   const by = (/** @type {string} */ need) => cat.stages.filter((/** @type {any} */ s) => p.stages[s.id] === need).map((/** @type {any} */ s) => s.title).join(', ');
   const row = (/** @type {string} */ k, /** @type {string} */ v) => (v ? h('p', { class: 'sd-when' }, h('span', { class: 'sd-k' }, k), v) : null);
   const mine = applied && applied.wsId === ws()?.id ? applied : null;
@@ -523,7 +523,7 @@ function pathDetail(p) {
     h('h4', { class: 'sd-h4' }, 'Acceptance checkpoints'),
     h('ul', { class: 'sd-accept' }, ...p.accept.map((/** @type {string} */ a) => h('li', {}, a))),
     h('div', { class: 'sd-apply' },
-      h('button', { type: 'button', class: 'btn go', 'data-apply': p.id }, deps.icon('check'), 'Apply path'),
+      h('button', { type: 'button', class: 'btn go', 'data-apply': p.id }, icon('check'), 'Apply path'),
       h('span', { class: 'sd-help' }, 'Fills undecided stages with the suggested tool and marks the stages this path or your profile skips as Not needed. Stages you already decided stay as they are.')),
     mine ? h('p', { class: 'sd-applied', role: 'status' }, mine.text, ' ',
       mine.prev ? h('button', { type: 'button', class: 'sd-link', 'data-unapply': '1' }, 'Undo') : null) : null);
@@ -540,7 +540,7 @@ function applyPathNow(id) {
   const prev = {};
   for (const k of ids) prev[k] = before?.stages[k] || null;
   w.design = r.next;
-  deps.commit();
+  commit();
   applied = { wsId: w.id, prev: ids.length ? prev : null, text: ids.length
     ? `Filled ${plural(r.filled.length, 'stage')}; marked ${r.skipped.length} Not needed.` : 'Nothing to fill: every stage is already decided.' };
 }
@@ -554,7 +554,6 @@ function undoApply() {
 }
 
 function profilePane() {
-  const h = deps.h;
   const d = design();
   const prof = d?.profile || {};
   const p = pathOf(cat, d);
@@ -579,7 +578,7 @@ function profilePane() {
     h('p', { class: 'sd-q' }, 'Trả lời những câu bạn biết; câu nào chưa chắc thì để "Not sure". Gợi ý ở từng khâu đổi theo câu trả lời.'), // lang: vi — lời giải thích, nội dung
     ...asked.map(q2),
     rest.length ? fold({ class: 'sd-more', 'data-more': 'profile-rest', open: moreOpen.has('profile-rest') },
-      h('summary', {}, deps.icon('chev'), `${plural(rest.length, 'question')} the ${p.label} path doesn't need`),
+      h('summary', {}, icon('chev'), `${plural(rest.length, 'question')} the ${p.label} path doesn't need`),
       ...rest.map(q2)) : null,
   ];
 }
@@ -588,7 +587,6 @@ function profilePane() {
  * mỗi kiến trúc gập: khi dùng, khi tránh, luồng, công cụ theo khâu (bấm tới khâu), lối tương ứng, nguồn ── */
 
 function archPane() {
-  const h = deps.h;
   const d = design();
   const fams = Array.isArray(cat.architectures) ? cat.architectures : [];
   const adv = archAdvice(cat, d);
@@ -604,7 +602,6 @@ function archPane() {
 
 /** @param {any} f @param {{id: string | null, why: string}} a @param {any} d */
 function archFamily(f, a, d) {
-  const h = deps.h;
   const rec = a.id ? f.entries.find((/** @type {any} */ e) => e.id === a.id) : null;
   return h('section', { class: 'sd-fam', 'data-fam': f.id, 'aria-labelledby': `sd-fam-${f.id}` },
     h('h4', { class: 'sd-h4', id: `sd-fam-${f.id}` }, f.label),
@@ -617,12 +614,11 @@ function archFamily(f, a, d) {
 }
 
 /** @param {any[]} list */
-const archLinks = (list) => deps.h('ul', { class: 'sd-links' }, ...list.map((/** @type {any} */ l) =>
-  deps.h('li', {}, deps.h('a', { href: l.url, target: '_blank', rel: 'noopener noreferrer' }, deps.icon('link'), l.title))));
+const archLinks = (list) => h('ul', { class: 'sd-links' }, ...list.map((/** @type {any} */ l) =>
+  h('li', {}, h('a', { href: l.url, target: '_blank', rel: 'noopener noreferrer' }, icon('link'), l.title))));
 
 /** @param {any} e @param {boolean} on kiến trúc được gợi ý @param {any} d */
 function archItem(e, on, d) {
-  const h = deps.h;
   const id = 'arch:' + e.id;
   const p = e.path ? cat.paths.find((/** @type {any} */ x) => x.id === e.path) : null;
   const mine = !!p && d?.path === p.id;
@@ -634,7 +630,7 @@ function archItem(e, on, d) {
     return h('li', {}, h('button', { type: 'button', class: 'sd-link', 'data-at': stagePage(sid) }, s.title), `: ${names.join(', ')}`);
   }).filter(Boolean);
   return fold({ class: `sd-arch${on ? ' is-rec' : ''}`, 'data-more': id, 'data-arch': e.id, open: moreOpen.has(id) },
-    h('summary', {}, deps.icon('chev'), h('span', { class: 'sd-arch-name' },
+    h('summary', {}, icon('chev'), h('span', { class: 'sd-arch-name' },
       h('span', { class: 'sd-arch-head' }, h('b', {}, e.name),
         on ? h('span', { class: 'sd-tag top' }, 'Recommended') : null, mine ? h('span', { class: 'sd-tag' }, 'Your deliverable') : null),
       h('small', {}, e.what))),
@@ -651,7 +647,6 @@ function archItem(e, on, d) {
 /* ── Bàn giao: mỗi đường nối giữa hai khâu đã quyết liền nhau — đi qua gì, giao gì, bên sau đọc ở đâu, hứa gì, kiểm thế nào ── */
 
 function handoffsPane() {
-  const h = deps.h;
   const d = design();
   const edges = flowEdges(cat, d);
   const kept = Object.keys(d?.edges || {}).filter((k) => !edges.some((e) => e.key === k)).length;
@@ -667,7 +662,6 @@ function handoffsPane() {
 
 /** @param {any} e */
 function edgeItem(e) {
-  const h = deps.h;
   const c = e.c || {};
   const id = 'edge:' + e.key;
   const sum = e.c ? [viaLabel(c.via), c.what].filter(Boolean).join(' · ') || 'Described' : 'Not described yet';
@@ -676,7 +670,7 @@ function edgeItem(e) {
       ? h('textarea', { rows: 3, 'data-ef': f, 'data-edge': e.key, placeholder: ph }, c[f] || '')
       : h('input', { type: 'text', class: 'input', maxlength: EDGE_MAX, value: c[f] || '', 'data-ef': f, 'data-edge': e.key, placeholder: ph }));
   return fold({ class: `sd-edge-item${e.c ? ' is-set' : ''}`, 'data-more': id, 'data-edge-item': e.key, open: moreOpen.has(id) },
-    h('summary', {}, deps.icon('chev'), h('span', { class: 'sd-edge-name' }, h('b', {}, `${e.from.title} → ${e.to.title}`), h('small', {}, sum))),
+    h('summary', {}, icon('chev'), h('span', { class: 'sd-edge-name' }, h('b', {}, `${e.from.title} → ${e.to.title}`), h('small', {}, sum))),
     h('fieldset', { class: 'sd-prof' }, h('legend', {}, 'Handed over as'),
       h('div', { class: 'sd-pills' }, ...[...VIA, { id: '', label: 'Not set' }].map((v) => h('label', { class: 'sd-pill' },
         h('input', { type: 'radio', name: `sd-via-${e.key}`, value: v.id, 'data-via': e.key, checked: (c.via || '') === v.id }), h('span', {}, v.label))))),
@@ -689,7 +683,6 @@ function edgeItem(e) {
 /* ── Xem lại: các luật phối hợp đang báo (danh mục `checks`), mỗi cái kèm lối tới khâu liên quan ── */
 
 function checksPane() {
-  const h = deps.h;
   const warns = warnings(cat, design());
   const title = (/** @type {string} */ id) => cat.stages.find((/** @type {any} */ s) => s.id === id)?.title || id;
   return [
@@ -705,7 +698,6 @@ function checksPane() {
 
 /** @param {any} s */
 function stagePane(s) {
-  const h = deps.h;
   const d = design();
   const prof = effProfile(cat, d);
   const p = pathOf(cat, d);
@@ -739,7 +731,7 @@ function stagePane(s) {
     st.skip ? null : h('div', { class: 'sd-opts', role: 'group', 'aria-label': s.multi ? 'Options (pick one or more)' : 'Options (pick one)' },
       ...(hasPick ? picked : ranked).map(card),
       hasPick && rest.length ? fold({ class: 'sd-more', 'data-more': s.id, open: moreOpen.has(s.id) },
-        h('summary', {}, deps.icon('chev'), `Show ${plural(rest.length, 'other option')}`),
+        h('summary', {}, icon('chev'), `Show ${plural(rest.length, 'other option')}`),
         ...rest.map(card)) : null),
     st.skip ? null : h('label', { class: 'field' }, h('span', {}, 'Another tool (not in the list)'),
       h('input', { type: 'text', class: 'input', maxlength: OWN_MAX, value: st.own, 'data-own': s.id, placeholder: 'e.g. a tool your class or team already uses' })),
@@ -750,7 +742,6 @@ function stagePane(s) {
 
 /** @param {any} s @param {any} r @param {boolean} on @param {boolean} answered @param {Record<string,string>} prof */
 function optionCard(s, r, on, answered, prof) {
-  const h = deps.h;
   const o = r.opt;
   const miss = r.miss.map((/** @type {string} */ k) => {
     const q = cat.profile.find((/** @type {any} */ x) => x.id === k);
@@ -770,11 +761,11 @@ function optionCard(s, r, on, answered, prof) {
     h('p', { class: 'sd-when' }, h('span', { class: 'sd-k' }, 'Pick when'), o.pick),
     answered && !r.ok ? h('p', { class: 'sd-when sd-warn' }, h('span', { class: 'sd-k' }, 'Not a fit'), miss.join(' · ')) : null,
     fold({ class: 'sd-det' },
-      h('summary', {}, deps.icon('chev'), 'Details, links, first commands'),
+      h('summary', {}, icon('chev'), 'Details, links, first commands'),
       o.avoid ? h('p', { class: 'sd-when' }, h('span', { class: 'sd-k' }, 'Avoid when'), o.avoid) : null,
       o.task ? h('p', { class: 'sd-when' }, h('span', { class: 'sd-k' }, 'Done when'), o.task) : null,
       (o.links || []).length ? h('ul', { class: 'sd-links' }, ...o.links.map((/** @type {any} */ l) =>
-        h('li', {}, h('a', { href: l.url, target: '_blank', rel: 'noopener noreferrer' }, deps.icon('link'), l.title)))) : null,
+        h('li', {}, h('a', { href: l.url, target: '_blank', rel: 'noopener noreferrer' }, icon('link'), l.title)))) : null,
       (o.setup || []).length ? h('pre', { class: 'sd-cmd' }, h('code', {}, o.setup.join('\n'))) : null));
 }
 
@@ -899,11 +890,9 @@ function wire() {
   });
 }
 
-/* ── Khởi động: main.js trao các hàm dùng chung, rồi nạp danh mục ── */
+/* ── Khởi động: gắn sự kiện, rồi nạp danh mục ── */
 
-/** @param {any} d */
-export async function initDesign(d) {
-  deps = d;
+export async function initDesign() {
   wire();
   try {
     const res = await fetch('data/system-design.json');

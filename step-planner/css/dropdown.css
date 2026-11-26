@@ -1,6 +1,6 @@
 /* Danh sách chọn tự dựng (js/ui/dropdown.js). Chỉ dùng token của tokens.css. */
 
-/* ── Danh sách chọn tự dựng (js/dropdown.js): nút thay <select>, danh sách nổi ở lớp trên cùng, không đẩy bố cục ── */
+/* ── Danh sách chọn tự dựng (js/ui/dropdown.js): nút thay <select>, danh sách nổi ở lớp trên cùng, không đẩy bố cục ── */
 select.dd-native {
   position: absolute; width: 1px; height: 1px; min-height: 0; padding: 0; margin: 0; border: 0;
   opacity: 0; pointer-events: none; clip-path: inset(50%);

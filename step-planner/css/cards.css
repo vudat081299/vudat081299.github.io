@@ -58,7 +58,7 @@
 .card.st-cancel .card-title { color: var(--ink-3); }
 .card-reason { font-size: var(--fs-xs); color: var(--ink-2); white-space: pre-line; overflow-wrap: anywhere; }
 
-/* ── Chữ dài trên bảng (main.js markCut): mỗi khối .clamp dừng ở --lines dòng; tràn thì main.js gắn .clip, dòng cuối mờ dần,
+/* ── Chữ dài trên bảng (markCut của js/ui/clamp.js): mỗi khối .clamp dừng ở --lines dòng; tràn thì nó gắn .clip, dòng cuối mờ dần,
    thẻ và đầu bước có nút "Show more" (.open mở hết). Khối có thể chứa link chừa --ring-out mỗi bên (lề âm trả lại, chữ không
    xê dịch) để vòng focus của link hiện đủ; tên nằm trong nút nên vòng focus ở ngoài khối, không cần chừa. ── */
 .clamp {

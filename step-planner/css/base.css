@@ -26,7 +26,7 @@ code { font: 500 .88em var(--mono); }
 .skip:focus { top: var(--s2); }
 :focus { outline: none; }
 :focus-visible { outline: var(--ring-w) solid var(--ring); outline-offset: var(--mark-w); }
-/* Đóng hộp thoại (Esc, Close, Save): focus về nút mở nhưng không vẽ vòng, tới lần bấm Tab / mũi tên kế (main.js). */
+/* Đóng hộp thoại (Esc, Close, Save): focus về nút mở nhưng không vẽ vòng, tới lần bấm Tab / mũi tên kế (js/ui/dialogs.js). */
 :root.quiet-focus :focus-visible, :root.quiet-focus :focus-visible + span { outline: none; }
 /* Chữ chỉ cho chuột / bàn phím và chỉ cho màn cảm ứng. */
 .only-touch { display: none; }

@@ -7,7 +7,9 @@
  *   mọi hướng khi khung có focus (chưa thì một ngón dọc cuộn trang, CSS touch-action).
  * - Phím khi sơ đồ có focus: + / - thu phóng, 0 về khung ban đầu, mũi tên kéo, Esc trả bánh xe cho trang.
  * - Kéo xong không tính là bấm: nút, đường nối dưới con trỏ không mở hộp.
- * Khung nhìn chỉ ở bộ nhớ của trang: vẽ lại sơ đồ giữ khung, tải lại trang về khung ban đầu. */
+ * Khung nhìn chỉ ở bộ nhớ của trang: vẽ lại sơ đồ giữ khung, tải lại trang về khung ban đầu.
+ * Xuất: resetView, attach, initDiagramView.
+ * Dùng: core/view-math.js. */
 import { DRAG_SLOP, HOME, PAN_STEP, ZOOM_MAX, ZOOM_MIN, ZOOM_STEP, clampPan, clampZoom, panBy, pinch, wheelPan, wheelPx, wheelZoom, zoomAt, zoomPct } from '../core/view-math.js';
 /** @typedef {import('../core/view-math.js').View} View */
 

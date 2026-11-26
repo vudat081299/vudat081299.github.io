@@ -50,7 +50,7 @@
   --shadow-pop: 0 20px 48px -16px rgba(11, 15, 12, .30), 0 6px 14px -6px rgba(11, 15, 12, .12);
   --tab-on:    var(--surface);
   --tab-ring:  var(--lift);
-  /* Vừa dời: thẻ / hàng vừa di chuyển và thẻ bị đổi chỗ với nó (mờ dần trong --flash-dur; main.js đọc token này). */
+  /* Vừa dời: thẻ / hàng vừa di chuyển và thẻ bị đổi chỗ với nó (mờ dần trong --flash-dur; js/ui/move.js đọc token này). */
   --flash:      color-mix(in srgb, var(--accent) 24%, transparent);
   --flash-ring: var(--accent);
   --flash-2:    color-mix(in srgb, var(--ink) 8%, transparent);
@@ -137,7 +137,7 @@
   --log-clamp: 3;                      /* số dòng lý do trước "Show more" */
   --tpl-pick: 220px;                   /* thẻ mẫu trong hộp Dự án */
   --ws-prog-w: 140px;                  /* thanh tiến độ của một dự án trong hộp Dự án */
-  /* Sơ đồ System design (js/design.js đọc các token này để xếp nút) và cột trái của hộp chọn. */
+  /* Sơ đồ System design (js/ui/design.js đọc các token này để xếp nút) và cột trái của hộp chọn. */
   --sd-node-max: 220px; --sd-gap-x: 64px; --sd-gap-y: 36px; --sd-pad: 12px; --sd-head: 30px; --sd-line: 20px;
   --sd-nav-w: 250px; --sd-dash: 5 4; --sd-badge-h: 20px;
   /* Đường nối có bàn giao: khoảng cột tối thiểu, nhãn dài nhất (phần chiều dài đường), độ mờ đuôi, vùng rê, dấu +. */

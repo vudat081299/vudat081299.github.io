@@ -1,22 +1,33 @@
 // @ts-check
 /* Bàn giao (handoff) trên bảng: chip "In n" / "Out n" (cột tên bước), dải mũi tên trên bước nhận, ô mũi tên trước ô nhận, hộp danh
  * sách (#dlg-hand) có lối nhảy tới bên giao / bên nhận, phần Inputs / Outputs trong hộp sửa, hộp chọn đầu ra (#dlg-pick).
- * Logic thuần: core/handoffs.js. Chữ người dùng chỉ vào DOM qua text node. */
+ * Logic thuần: core/handoffs.js. Chữ người dùng chỉ vào DOM qua text node.
+ * Xuất: initHand, tags, ioDots, rowMarker, gapItem, fadeGapNames, boardAct, jump, readEdit, paintEdit, focusEdit,
+ *   repaintPlace, alsoCheck, newlyHeld.
+ * Dùng: core/handoffs.js, core/io.js, core/model.js, ui/board.js, ui/dialogs.js, ui/dom.js, ui/filter.js, ui/move.js,
+ *   ui/state.js, ui/step-dialog.js, ui/sub-dialog.js, ui/toast.js. */
 import { consumersOf, handoffs, handoffsAt, heldInfoAt, heldKey, holderTitle, outIndex } from '../core/handoffs.js';
 import { plural } from '../core/io.js';
 import { safeUrl, uid } from '../core/model.js';
+import { labelsOf } from './board.js';
+import { focusField, showDlg } from './dialogs.js';
+import { $, h, icon } from './dom.js';
+import { unfilter } from './filter.js';
+import { flashMs } from './move.js';
+import { cur, findWs } from './state.js';
+import { openStep } from './step-dialog.js';
+import { openSub } from './sub-dialog.js';
+import { toast } from './toast.js';
+/** @typedef {import('../core/handoffs.js').Holder} Holder */
 /** @typedef {import('../core/handoffs.js').InWhy} InWhy */
 /** @typedef {import('../core/handoffs.js').OutWhy} OutWhy */
 /** @typedef {import('../core/handoffs.js').IoStatus} IoStatus */
 /** @typedef {import('../core/handoffs.js').Pair} Pair */
 
-/** @type {any} */ let deps = null;
-const $ = (/** @type {string} */ id) => /** @type {any} */ (document.getElementById(id));
 const quote = (/** @type {string} */ t) => `"${t}"`;
 
-/** Hàm chung của main.js: h, icon, cur, findWs, labelsOf, openSub, openStep, unfilter, flashMs, focusField, showDlg, toast. @param {any} d */
-export function initHand(d) {
-  deps = d;
+/** Gắn sự kiện của hộp danh sách, phần Inputs / Outputs của hai hộp sửa, hộp chọn đầu ra; chạy một lần lúc khởi động. */
+export function initHand() {
   wireList();
   for (const where of /** @type {('sub'|'step')[]} */ (['sub', 'step'])) wireEdit(where);
   wirePick();
@@ -27,7 +38,6 @@ export function initHand(d) {
 /** Chip "In n" / "Out n" của một bước (thẻ bước con không có chip: xem trong hộp sửa). Ngoài vòng Tab như nút phụ khác: bàn phím xem trong hộp sửa.
  * n đếm mọi đầu vào, kể cả đầu vào treo và đầu vào mất nguồn (danh sách của chip nêu chúng). @param {any} x */
 export function tags(x) {
-  const { h, icon } = deps;
   const insN = x.ins.length;
   const tag = (/** @type {string} */ act, /** @type {string} */ ic, /** @type {string} */ text, /** @type {string} */ label) =>
     h('button', { type: 'button', class: 'hand-tag', 'data-act': act, tabindex: '-1', 'aria-label': label, title: label }, icon(ic), text);
@@ -71,7 +81,6 @@ function ioLabels(s, step) {
  * hai: không vẽ gì. @param {IoStatus|undefined} s @param {boolean} step */
 export function ioDots(s, step) {
   if (!s || (s.in === 'none' && s.out === 'none')) return null;
-  const { h } = deps;
   const { input, output } = ioLabels(s, step);
   const dot = (/** @type {string} */ side, /** @type {string} */ st, /** @type {string} */ label) =>
     h('span', { class: `io-dot ${side} ${st}`, role: 'img', 'aria-label': label, title: label });
@@ -83,7 +92,6 @@ const outNames = (pairs) => [...new Set(pairs.flatMap((p) => p.outs.map((/** @ty
 /** Nút thông tin nằm giữa mũi tên: tên đầu ra đầu tiên, "+n" nếu còn; tên đủ ở aria-label, title.
  * @param {string} act @param {Pair[]} pairs @param {string} lead @param {Record<string, string>} [extra] */
 function infoBtn(act, pairs, lead, extra = {}) {
-  const { h, icon } = deps;
   const names = outNames(pairs);
   const label = `${lead}: ${names.join(', ')}. Show details`;
   return h('button', { type: 'button', class: 'hand-btn', 'data-act': act, tabindex: '-1', 'aria-label': label, title: label, ...extra },
@@ -92,11 +100,11 @@ function infoBtn(act, pairs, lead, extra = {}) {
 /** Dải trên bước này: mũi tên nét đứt từ bước trên xuống, nút thông tin ở giữa (cặp từ mọi bước trước vào bước này).
  * @param {Pair[]} pairs */
 export function rowMarker(pairs) {
-  return deps.h('div', { class: 'hand-row' }, infoBtn('hand-row', pairs, 'Handoff into this step'));
+  return h('div', { class: 'hand-row' }, infoBtn('hand-row', pairs, 'Handoff into this step'));
 }
 /** Ô trống rộng bằng một thẻ trước ô k + 1: mũi tên nét đứt trái sang phải, nút thông tin ở giữa. @param {number} k @param {Pair[]} pairs */
 export function gapItem(k, pairs) {
-  return deps.h('li', { class: 'hand-gap' }, infoBtn('hand-gap', pairs, 'Handoff into the next column', { 'data-gap': String(k) }));
+  return h('li', { class: 'hand-gap' }, infoBtn('hand-gap', pairs, 'Handoff into the next column', { 'data-gap': String(k) }));
 }
 
 /** Tên trên nút giữa hai ô dài hơn chỗ của nó thì mờ dần ở đuôi (lớp .cut); CSS không tự biết chữ có tràn hay không.
@@ -109,7 +117,7 @@ export function fadeGapNames(root = document) {
 
 /** Bấm trên bảng: trả true nếu là việc của bàn giao. @param {string} act @param {any} b @param {any} step @param {any} sub */
 export function boardAct(act, b, step, sub) {
-  const ws = deps.cur();
+  const ws = cur();
   if (!ws || !step) return false;
   const hd = { h: sub || step, step, sub: sub || null, i: ws.steps.indexOf(step) };
   if (act === 'hand-in') showIns(ws, hd);
@@ -137,23 +145,22 @@ const jumps = new WeakMap();
 /** @type {null | {wsId:string, stepId:string, subId:string|null, which:'ins'|'outs'}} */
 let listCtx = null;
 
-/** "Tên" và dòng ngữ cảnh của một bên (bước con: bước chứa nó; bước: "Whole step"). @param {any} ws @param {C.Holder} hd */
+/** "Tên" và dòng ngữ cảnh của một bên (bước con: bước chứa nó; bước: "Whole step"). @param {any} ws @param {Holder} hd */
 function who(ws, hd) {
-  const lb = deps.labelsOf(ws);
+  const lb = labelsOf(ws);
   const n = lb.get(hd.step.id) ?? '·';
   return hd.sub
     ? { title: hd.sub.title, ctx: `Step ${n} · ${hd.step.title}` + (lb.has(hd.sub.id) ? ` · card ${lb.get(hd.sub.id)}` : '') }
     : { title: hd.step.title, ctx: `Step ${n} · whole step` };
 }
-const target = (/** @type {C.Holder} */ hd) => ({ stepId: hd.step.id, subId: hd.sub ? hd.sub.id : null });
-/** Nút nhảy tới một bên (hay một cặp: bên đầu là chỗ focus). @param {Element} el @param {C.Holder[]} hds @param {boolean} [scroll] */
+const target = (/** @type {Holder} */ hd) => ({ stepId: hd.step.id, subId: hd.sub ? hd.sub.id : null });
+/** Nút nhảy tới một bên (hay một cặp: bên đầu là chỗ focus). @param {Element} el @param {Holder[]} hds @param {boolean} [scroll] */
 function jumpBtn(el, hds, scroll = true) {
   jumps.set(el, { targets: hds.map(target), scroll });
   return el;
 }
 /** Đường dẫn / link và hợp đồng của một đầu ra. Link chỉ khi http(s); đường dẫn file là chữ mono. @param {any} o */
 function outDetail(o) {
-  const { h, icon } = deps;
   const url = safeUrl(o.ref);
   return [
     o.ref && h('p', { class: 'hand-ref' }, url
@@ -162,9 +169,8 @@ function outDetail(o) {
     o.note && h('p', { class: 'hand-note' }, h('span', { class: 'lbl' }, 'Contract '), o.note),
   ];
 }
-/** Nút một bên: tên đậm, ngữ cảnh mờ. @param {any} ws @param {C.Holder} hd @param {string} [pre] */
+/** Nút một bên: tên đậm, ngữ cảnh mờ. @param {any} ws @param {Holder} hd @param {string} [pre] */
 function whoBtn(ws, hd, pre = '', held = false) {
-  const { h } = deps;
   const w = who(ws, hd);
   return jumpBtn(h('button', { type: 'button', class: 'hand-who' + (held ? ' held' : ''), title: 'Go to it on the board' },
     h('b', {}, pre && h('span', { class: 'lbl' }, pre), w.title), h('small', {}, w.ctx + (held ? ' · on hold' : ''))), [hd]);
@@ -182,12 +188,11 @@ function openList(kicker, title, where, items, ctx) {
   $('hand-list').replaceChildren(...items);
   $('hand-edit').hidden = !ctx;
   if (ctx) $('hand-edit').textContent = ctx.subId ? 'Edit sub-step' : 'Edit step';
-  deps.showDlg($('dlg-hand'));
+  showDlg($('dlg-hand'));
 }
-const ctxOf = (/** @type {any} */ ws, /** @type {C.Holder} */ hd, /** @type {'ins'|'outs'} */ which) => ({ wsId: ws.id, stepId: hd.step.id, subId: hd.sub ? hd.sub.id : null, which });
-/** Đầu vào của một bên: mỗi đầu vào, đường dẫn, hợp đồng, bên giao (nhảy tới). @param {any} ws @param {C.Holder} hd */
+const ctxOf = (/** @type {any} */ ws, /** @type {Holder} */ hd, /** @type {'ins'|'outs'} */ which) => ({ wsId: ws.id, stepId: hd.step.id, subId: hd.sub ? hd.sub.id : null, which });
+/** Đầu vào của một bên: mỗi đầu vào, đường dẫn, hợp đồng, bên giao (nhảy tới). @param {any} ws @param {Holder} hd */
 function showIns(ws, hd) {
-  const { h, icon } = deps;
   const { idx, heldKeys, parKeys } = handoffs(ws);
   const items = hd.h.ins.map((/** @type {string} */ id) => idx.get(id)).map((/** @type {any} */ src) => {
     if (!src) return h('li', { class: 'hand-item' }, h('p', { class: 'hand-name' }, icon('in'), h('b', {}, GONE)), h('p', { class: 'hand-gone' }, goneText));
@@ -199,9 +204,8 @@ function showIns(ws, hd) {
   const w = who(ws, hd);
   openList('Inputs', `Inputs of ${quote(w.title)}`, w.ctx, items, ctxOf(ws, hd, 'ins'));
 }
-/** Đầu ra của một bên: đường dẫn (link mở tab mới), hợp đồng, nơi dùng (nhảy tới). @param {any} ws @param {C.Holder} hd */
+/** Đầu ra của một bên: đường dẫn (link mở tab mới), hợp đồng, nơi dùng (nhảy tới). @param {any} ws @param {Holder} hd */
 function showOuts(ws, hd) {
-  const { h, icon } = deps;
   const { usedBy: used, heldKeys } = handoffs(ws);
   const items = hd.h.outs.map((/** @type {any} */ o) => {
     const by = used.get(o.id) || [];
@@ -215,7 +219,6 @@ function showOuts(ws, hd) {
 }
 /** Các cặp bên giao → bên nhận (vạch giữa hai hàng, nút giữa hai ô): chọn một dòng là tô cả hai. @param {any} ws @param {Pair[]} pairs @param {string} title @param {string} where */
 function showPairs(ws, pairs, title, where) {
-  const { h, icon } = deps;
   const items = pairs.map((p) => {
     const a = who(ws, p.from), b = who(ws, p.to);
     return h('li', { class: 'hand-item' },
@@ -234,7 +237,7 @@ function hilite(els) {
   clearTimeout(hiTimer);
   document.querySelectorAll('.hand-hi').forEach((e) => e.classList.remove('hand-hi'));
   for (const e of els) e.classList.add('hand-hi');
-  hiTimer = window.setTimeout(() => els.forEach((e) => e.classList.remove('hand-hi')), deps.flashMs());
+  hiTimer = window.setTimeout(() => els.forEach((e) => e.classList.remove('hand-hi')), flashMs());
 }
 /** Một bên nằm ngoài chỗ nhìn thấy (khung nhìn dưới thanh trên, và khung cuộn ngang của hàng thẻ) thì ở hướng nào; trong
  * tầm nhìn (dù chỉ một phần) thì ''. @param {HTMLElement} el */
@@ -248,7 +251,7 @@ function offSide(el) {
 }
 /** Tên của một bên trên bảng (tên bước con, hay tên bước). @param {{stepId:string, subId:string|null}} t */
 function targetTitle(t) {
-  const step = deps.cur()?.steps.find((/** @type {any} */ s) => s.id === t.stepId);
+  const step = cur()?.steps.find((/** @type {any} */ s) => s.id === t.stepId);
   const sub = t.subId ? step?.subs.find((/** @type {any} */ x) => x.id === t.subId) : null;
   return (t.subId ? sub?.title : step?.title) || '';
 }
@@ -261,7 +264,7 @@ export function jump(targets, { scroll = true } = {}) {
   const sel = (/** @type {{stepId:string, subId:string|null}} */ t) => (t.subId ? `.card[data-sub="${t.subId}"]` : `.step[data-step="${t.stepId}"] > .step-head`);
   const find = () => targets.map((t) => /** @type {HTMLElement|null} */ (document.querySelector(sel(t))));
   let els = find();
-  if (els.some((e) => !e)) { deps.unfilter(); els = find(); }
+  if (els.some((e) => !e)) { unfilter(); els = find(); }
   const found = /** @type {HTMLElement[]} */ (els.filter(Boolean));
   if (!found.length) return;
   if (scroll) {
@@ -276,7 +279,7 @@ export function jump(targets, { scroll = true } = {}) {
   const text = (off.length > 1 && off[0].side === off[1].side ? `${off.map((o) => quote(targetTitle(o.t))).join(' and ')} are ${off[0].side}`
     : off.map((o) => `${quote(targetTitle(o.t))} is ${o.side}`).join(' and ')) + ', off screen';
   const first = off[0];
-  deps.toast(text, () => {
+  toast(text, () => {
     const el = /** @type {HTMLElement|null} */ (document.querySelector(sel(first.t)));
     if (!el) return;
     el.scrollIntoView({ block: 'center', inline: 'nearest' });
@@ -296,12 +299,12 @@ function wireList() {
   $('hand-edit').addEventListener('click', () => {
     const c = listCtx;
     $('dlg-hand').close();
-    const ws = c && deps.findWs(c.wsId);
+    const ws = c && findWs(c.wsId);
     const step = ws && ws.steps.find((/** @type {any} */ s) => s.id === c.stepId);
     if (!step) return;
     const sub = c.subId ? step.subs.find((/** @type {any} */ x) => x.id === c.subId) : null;
     if (c.subId && !sub) return;
-    if (sub) deps.openSub(step, sub, { toHand: c.which }); else deps.openStep(step, undefined, { toHand: c.which });
+    if (sub) openSub(step, sub, { toHand: c.which }); else openStep(step, undefined, { toHand: c.which });
   });
 }
 
@@ -309,7 +312,7 @@ function wireList() {
  * mà chưa lưu như các ô khác) ── */
 
 /** id: bước / bước con đang sửa (rỗng khi thêm mới). place: chỗ đang chọn trong hộp (ô Bước / Vị trí), null = giữ chỗ cũ
- * (C.heldAt). @type {Record<'sub'|'step', {wsId:string, id:string, own:Set<string>, ins:string[], outs:any[], place:() => any}>} */
+ * (heldAt). @type {Record<'sub'|'step', {wsId:string, id:string, own:Set<string>, ins:string[], outs:any[], place:() => any}>} */
 const draft = { sub: { wsId: '', id: '', own: new Set(), ins: [], outs: [], place: () => null }, step: { wsId: '', id: '', own: new Set(), ins: [], outs: [], place: () => null } };
 const sec = (/** @type {'sub'|'step'} */ where) => $(where + '-hand');
 const form = (/** @type {'sub'|'step'} */ where) => $(where + '-form');
@@ -364,14 +367,13 @@ const heldInfoNow = (where, ws, ids) => (ws ? heldInfoAt(ws, where, draft[where]
 
 /** Ứng viên làm đầu vào: mọi đầu ra trong dự án trừ của chính nó, theo thứ tự trên bảng. @param {'sub'|'step'} where */
 function candidates(where) {
-  const ws = deps.findWs(draft[where].wsId);
+  const ws = findWs(draft[where].wsId);
   return ws ? [...outIndex(ws).values()].filter((x) => !draft[where].own.has(x.out.id)) : [];
 }
 
 /** @param {'sub'|'step'} where */
 function paintIns(where) {
-  const { h, icon } = deps;
-  const ws = deps.findWs(draft[where].wsId);
+  const ws = findWs(draft[where].wsId);
   const idx = ws ? outIndex(ws) : new Map();
   const { held, par } = heldInfoNow(where, ws, draft[where].ins);
   const s = sec(where);
@@ -394,8 +396,7 @@ function paintIns(where) {
 }
 /** @param {'sub'|'step'} where */
 function paintOuts(where) {
-  const { h, icon } = deps;
-  const ws = deps.findWs(draft[where].wsId);
+  const ws = findWs(draft[where].wsId);
   const used = ws ? handoffs(ws).usedBy : new Map();
   const at = ws ? handoffsAt(ws, where, draft[where].id, draft[where].place()) : null;
   const heldKeys = at ? at.heldKeys : new Set(), parKeys = at ? at.parKeys : new Set();
@@ -438,7 +439,7 @@ function wireEdit(where) {
       draft[where].outs.push({ id: uid('o'), name: '', ref: '', note: '' });
       sync(where);
       paintOuts(where);
-      deps.focusField(s.querySelector('.out-row:last-child [data-k="name"]'));
+      focusField(s.querySelector('.out-row:last-child [data-k="name"]'));
     } else if (t.closest('[data-out-del]')) {
       const id = t.closest('[data-out]').dataset.out;
       draft[where].outs = draft[where].outs.filter((o) => o.id !== id);
@@ -461,9 +462,8 @@ function wireEdit(where) {
 let pickFor = 'sub';
 /** @param {'sub'|'step'} where */
 function openPick(where) {
-  const { h } = deps;
   pickFor = where;
-  const ws = deps.findWs(draft[where].wsId);
+  const ws = findWs(draft[where].wsId);
   const chosen = new Set(draft[where].ins);
   const byStep = new Map();
   const cands = candidates(where);
@@ -472,7 +472,7 @@ function openPick(where) {
     if (!byStep.has(c.step)) byStep.set(c.step, []);
     byStep.get(c.step).push(c);
   }
-  const lb = ws ? deps.labelsOf(ws) : new Map();
+  const lb = ws ? labelsOf(ws) : new Map();
   const groups = [...byStep].map(([step, list]) => h('fieldset', { class: 'pick-group' },
     h('legend', {}, `Step ${lb.get(step.id) ?? '·'} · ${step.title}`),
     h('ul', { class: 'reset-list' }, list.map((/** @type {any} */ c) => h('li', {},
@@ -483,7 +483,7 @@ function openPick(where) {
             : later.held.has(c.out.id) ? ' (comes after this — will be on hold)' : '')))))))));
   $('pick-groups').replaceChildren(...(groups.length ? groups : [h('p', { class: 'muted' }, 'No outputs declared yet.')]));
   $('pick-ok').disabled = !groups.length;
-  deps.showDlg($('dlg-pick'));
+  showDlg($('dlg-pick'));
 }
 function wirePick() {
   $('pick-form').addEventListener('submit', (/** @type {any} */ e) => {

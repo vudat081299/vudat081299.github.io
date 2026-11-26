@@ -14,7 +14,9 @@
  *   trang và toạ độ trong hàng cuộn, nên cuộn không làm cũ); đo lại khi ô viền đứt đổi chỗ, ngay sau khi dàn trang, trước
  *   khi FLIP chạy. Tấm phủ trong suốt giữ con trỏ "grabbing" (không đổi kiểu cả bảng); chặn mousemove để không bôi chữ.
  *   Mọi đường kết thúc (thả, Esc, pointercancel, mất pointer capture, rời cửa sổ, nút đã nhả mà pointerup bị nuốt, abort)
- *   qua cleanup: gỡ bóng, ô viền đứt, lớp drag-src, dừng mọi animation của lần kéo ấy. */
+ *   qua cleanup: gỡ bóng, ô viền đứt, lớp drag-src, dừng mọi animation của lần kéo ấy.
+ * Xuất: initDrag.
+ * Dùng: không. */
 
 /** @typedef {{stepId:string, slot:number, join:boolean, at:number}} Place */
 
@@ -122,7 +124,7 @@ export function initDrag(board, api) {
     document.body.append(st.cover);
     try { board.setPointerCapture(st.pointerId); } catch (e) { /* ngón đã nhấc */ }
     if (st.type === 'touch' && navigator.vibrate) navigator.vibrate(10);
-    /* Chỉ một bóng: bóng sót (nếu có) bị gỡ trước. Bản sao bỏ id và khoá dữ liệu (không truy vấn nào của main.js chạm tới
+    /* Chỉ một bóng: bóng sót (nếu có) bị gỡ trước. Bản sao bỏ id và khoá dữ liệu (không truy vấn nào của js/ui/ chạm tới
        nó), bỏ nút "Show more" (bóng chỉ để nhìn). */
     for (const g of document.querySelectorAll('.drag-ghost')) g.remove();
     const ghost = /** @type {HTMLElement} */ (src.cloneNode(true));

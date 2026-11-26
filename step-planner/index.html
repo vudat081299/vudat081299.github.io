@@ -167,7 +167,7 @@
   <div class="board" id="board" tabindex="-1"></div>
   <button type="button" class="add-step" id="add-step"><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg>Add step</button>
 
-  <!-- System design (PLAN-016): cột trái tên, lời dẫn, nút; cột phải sơ đồ tự vẽ theo lựa chọn (js/design.js) -->
+  <!-- System design (PLAN-016): cột trái tên, lời dẫn, nút; cột phải sơ đồ tự vẽ theo lựa chọn (js/ui/design.js) -->
   <section class="sd" id="sd" tabindex="-1" aria-labelledby="sd-title">
     <header class="sd-head">
       <h2 id="sd-title">System design <span class="log-count" id="sd-count"></span></h2>
@@ -181,7 +181,7 @@
       </div>
     </header>
     <div class="sd-main">
-      <!-- Khung nhìn (js/diagram-view.js): kéo, thu phóng; không lưu, tải lại về khung ban đầu (PLAN-031) -->
+      <!-- Khung nhìn (js/ui/diagram-view.js): kéo, thu phóng; không lưu, tải lại về khung ban đầu (PLAN-031) -->
       <div class="sd-fig" id="sd-fig" tabindex="0" aria-label="System diagram. Ctrl + scroll, + or - to zoom; arrow keys, scroll or Space + drag to pan; 0 resets the view; Esc gives scrolling back to the page"></div>
       <div class="sd-under">
         <ul class="sd-legend" aria-hidden="true">
@@ -371,7 +371,7 @@
       </div>
       <label class="field"><span>Done when</span><input type="text" name="doneWhen" maxlength="300" placeholder="The output that shows this is finished"></label>
       <label class="field"><span>Notes</span><textarea name="notes" rows="4" placeholder="Questions, pitfalls, links…"></textarea></label>
-      <!-- Bàn giao (js/hand.js): lưu cùng nút Save qua hai ô ẩn mang JSON -->
+      <!-- Bàn giao (js/ui/hand.js): lưu cùng nút Save qua hai ô ẩn mang JSON -->
       <section class="hand-edit" id="sub-hand" aria-label="Handoff: inputs and outputs">
         <div class="docs-edit-head">
           <h3 class="dlg-sec-h" id="sub-ins-h">Inputs</h3>
@@ -675,7 +675,7 @@
 </dialog>
 
 <!-- Hỏi lại / nhập một dòng (thay alert / confirm / prompt) -->
-<!-- System design: hồ sơ dự án rồi từng khâu; lựa chọn lưu ngay (js/design.js) -->
+<!-- System design: hồ sơ dự án rồi từng khâu; lựa chọn lưu ngay (js/ui/design.js) -->
 <dialog class="dlg sd-dlg" id="dlg-sd" aria-labelledby="dlg-sd-title" aria-describedby="sd-sub">
   <div class="dlg-form">
     <header class="dlg-head">
@@ -700,7 +700,7 @@
   </div>
 </dialog>
 
-<!-- System design → bảng: xem trước việc mới / đổi / không còn trong thiết kế (js/design.js) -->
+<!-- System design → bảng: xem trước việc mới / đổi / không còn trong thiết kế (js/ui/design.js) -->
 <dialog class="dlg sdp-dlg" id="dlg-sdp" aria-labelledby="dlg-sdp-title" aria-describedby="sdp-sub">
   <form method="dialog" id="sdp-form" class="dlg-form">
     <header class="dlg-head">
@@ -723,7 +723,7 @@
   </form>
 </dialog>
 
-<!-- Bàn giao: đầu vào / đầu ra của một thẻ, các cặp giữa hai hàng hay hai ô (js/hand.js) -->
+<!-- Bàn giao: đầu vào / đầu ra của một thẻ, các cặp giữa hai hàng hay hai ô (js/ui/hand.js) -->
 <dialog class="dlg dlg-sm" id="dlg-hand" aria-labelledby="dlg-hand-title" aria-describedby="hand-where">
   <div class="dlg-form">
     <header class="dlg-head">

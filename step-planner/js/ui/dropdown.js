@@ -1,11 +1,13 @@
 // @ts-check
 /* Danh sách chọn tự dựng (mẫu listbox): một nút mở một danh sách nổi. Dùng cho mọi <select> có nghĩa (enhanceSelect: <select>
  * vẫn ở trong DOM, vẫn giữ value, vẫn phát `change`) và cho menu trạng thái của chip (openList).
- * Danh sách nằm trong lớp trên cùng (popover) nên không đẩy bố cục, nổi được cả trên hộp thoại modal. Chữ chỉ qua text node. */
+ * Danh sách nằm trong lớp trên cùng (popover) nên không đẩy bố cục, nổi được cả trên hộp thoại modal. Chữ chỉ qua text node.
+ * Xuất: isOpenFor, closeList, openList, consumeJustClosed, enhanceSelect.
+ * Dùng: ui/dom.js. */
+import { icon } from './dom.js';
 
 /** @typedef {{value:string, label:string, hint?:string, dot?:string, selected?:boolean, disabled?:boolean}} Item */
 
-const NS = 'http://www.w3.org/2000/svg';
 let seq = 0;
 /** @type {null | {pop:HTMLElement, anchor:HTMLElement, items:Item[], active:number, onPick:(v:string)=>void, onClose:()=>void}} */
 let cur = null;
@@ -18,16 +20,6 @@ function el(tag, attrs = {}, ...kids) {
   for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
   e.append(...kids);
   return e;
-}
-/** @param {string} name */
-function icon(name) {
-  const svg = document.createElementNS(NS, 'svg');
-  svg.setAttribute('class', 'i');
-  svg.setAttribute('aria-hidden', 'true');
-  const use = document.createElementNS(NS, 'use');
-  use.setAttribute('href', '#i-' + name);
-  svg.append(use);
-  return svg;
 }
 const fold = (/** @type {string} */ s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[đĐ]/g, 'd').toLowerCase();
 

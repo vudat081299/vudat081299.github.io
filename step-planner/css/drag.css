@@ -1,6 +1,6 @@
 /* Kéo thả (js/ui/drag.js) và dấu "vừa dời". Chỉ dùng token của tokens.css. */
 
-/* ── Kéo thả (js/drag.js): bóng đi theo con trỏ; chỗ thả là ô viền đứt cỡ thẻ đang kéo, chữ mờ ở giữa; tay nắm của bước ── */
+/* ── Kéo thả (js/ui/drag.js): bóng đi theo con trỏ; chỗ thả là ô viền đứt cỡ thẻ đang kéo, chữ mờ ở giữa; tay nắm của bước ── */
 /* Tấm phủ trong suốt khi đang kéo: con trỏ "grabbing" khắp trang, không phải đổi kiểu từng phần tử của bảng. */
 .drag-cover { position: fixed; inset: 0; z-index: 95; cursor: grabbing; }
 .dragging-any .gap-add { display: none; }
@@ -46,7 +46,7 @@
 .card.swapped { animation: swapped-card var(--flash-dur) var(--ease) both; }
 .step.moved { animation: moved-row var(--flash-dur) var(--ease) both; }
 .step.swapped { animation: swapped-row var(--flash-dur) var(--ease) both; }
-/* Giảm chuyển động: đánh dấu đứng yên trong --flash-dur (main.js gỡ lớp), không mờ dần. */
+/* Giảm chuyển động: đánh dấu đứng yên trong --flash-dur (js/ui/move.js gỡ lớp), không mờ dần. */
 @media (prefers-reduced-motion: reduce) {
   .card.moved, .card.swapped, .step.moved, .step.swapped { animation: none; }
   .card.moved { background-color: var(--flash); border-color: var(--flash-ring); box-shadow: inset 0 0 0 calc(var(--mark-w) - var(--line-w)) var(--flash-ring), var(--shadow-1); }

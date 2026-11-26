@@ -1,6 +1,6 @@
 /* Bàn giao: hai chấm đầu vào / đầu ra, chip In / Out, mũi tên, hộp danh sách, phần Inputs / Outputs, hộp chọn đầu ra. Chỉ dùng token của tokens.css. */
 
-/* ── Hai chấm đầu vào → đầu ra (Hd.ioDots): trên thẻ trước chip trạng thái, ở đầu bước cuối dòng tên. Hình riêng cho mỗi
+/* ── Hai chấm đầu vào → đầu ra (ioDots của js/ui/hand.js): trên thẻ trước chip trạng thái, ở đầu bước cuối dòng tên. Hình riêng cho mỗi
    trạng thái, không chỉ màu: ổn tròn đặc, lỗi hình thoi, không có vòng rỗng nét mảnh ── */
 /* Lề hai bên: hình thoi xoay vượt khung của nó, vẫn nằm trong .io. */
 .io { display: inline-flex; align-items: center; gap: var(--s1); min-height: var(--h-xs); padding-inline: var(--mark-w); flex: none; }
@@ -17,7 +17,7 @@
   border-top: var(--line-w) solid var(--ink-4); border-right: var(--line-w) solid var(--ink-4); transform: translateY(-50%) rotate(45deg);
 }
 
-/* ── Bàn giao (js/hand.js): chip In / Out ở cột tên bước, mũi tên nét đứt trên bước nhận và trước ô nhận, tô hai bên,
+/* ── Bàn giao (js/ui/hand.js): chip In / Out ở cột tên bước, mũi tên nét đứt trên bước nhận và trước ô nhận, tô hai bên,
    hộp danh sách (#dlg-hand), phần Inputs / Outputs trong hộp sửa, hộp chọn đầu ra (#dlg-pick) ── */
 .hand-tags { display: flex; flex-wrap: wrap; gap: var(--s2); }
 /* Chip ngay dưới nhãn Notes của bước: cách đủ để hai vùng bấm --hit không chồng nhau. */
@@ -65,7 +65,7 @@
 .hand-gap .hand-btn-name.cut { mask-image: linear-gradient(to right, var(--mask) calc(100% - var(--s5)), transparent); }
 /* Đang kéo: thu hẳn lại (drag.js cho các khối trượt khít vào), thả xong bảng vẽ lại. */
 .dragging-any :is(.hand-row, .hand-gap) { display: none; }
-/* Tô bên giao và bên nhận khi nhảy tới (main.js gỡ lớp sau --flash-dur). */
+/* Tô bên giao và bên nhận khi nhảy tới (js/ui/hand.js gỡ lớp sau --flash-dur). */
 @keyframes hand-head { from { background-color: var(--flash); box-shadow: 0 0 0 var(--s2) var(--flash); } to { background-color: transparent; box-shadow: 0 0 0 var(--s2) transparent; } }
 .card.hand-hi { animation: moved-card var(--flash-dur) var(--ease) both; }
 .step-head.hand-hi { border-radius: var(--r-xs); animation: hand-head var(--flash-dur) var(--ease) both; }

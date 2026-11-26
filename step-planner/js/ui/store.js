@@ -1,6 +1,9 @@
 // @ts-check
 /* Bộ nhớ trình duyệt. Mọi lần đọc / ghi bọc try/catch: chặn bộ nhớ (chế độ riêng tư, chính sách) thì trang
- * vẫn chạy trong bộ nhớ tạm và báo bằng banner. */
+ * vẫn chạy trong bộ nhớ tạm và báo bằng banner.
+ * Xuất: KEY, OLD_KEYS, available, load, save, tabProject, setTabProject, askPersist, saveTheme, compactOn, setCompact,
+ *   hintHidden, hideHint.
+ * Dùng: core/model.js. */
 import { normWorkspace } from '../core/model.js';
 
 export const KEY = 'stepPlanner.v2';
