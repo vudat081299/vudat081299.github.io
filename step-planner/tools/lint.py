@@ -646,9 +646,32 @@ def check_code():
         if f == 'tokens.css':
             continue
         code = re.sub(r'/\*.*?\*/', lambda m: '\n' * m.group(0).count('\n'), open(os.path.join(HERE, 'css', f), encoding='utf-8').read(), flags=re.S)
+        code = re.sub(r'"[^"\n]*"|\'[^\'\n]*\'', '""', code)  # tên font, content: chữ trong chuỗi không tính
         for n, line in enumerate(code.split('\n'), 1):
-            if re.search(r'#[0-9a-fA-F]{3,8}\b|\brgba?\(|\bhsla?\(', line):
-                err(f'css/{f}:{n}: mã màu ngoài css/tokens.css')
+            m = CSS_COLOR.search(line)
+            if m:
+                err(f'css/{f}:{n}: mã màu ngoài css/tokens.css (`{m.group(0)}`)')
+
+
+# Màu chỉ khai ở css/tokens.css: mã hex, hàm màu (rgb, hsl, hwb, lab, lch, oklab, oklch, color, color-mix) và tên màu của CSS.
+# `transparent`, `currentColor` không phải màu của bảng màu nên được dùng. Tên màu chỉ tính khi đứng riêng (không là một phần
+# của tên lớp, token hay thuộc tính: `.green`, `var(--green)`, `white-space`).
+CSS_NAMED = ('aliceblue antiquewhite aqua aquamarine azure beige bisque black blanchedalmond blue blueviolet brown burlywood '
+             'cadetblue chartreuse chocolate coral cornflowerblue cornsilk crimson cyan darkblue darkcyan darkgoldenrod darkgray '
+             'darkgreen darkgrey darkkhaki darkmagenta darkolivegreen darkorange darkorchid darkred darksalmon darkseagreen '
+             'darkslateblue darkslategray darkslategrey darkturquoise darkviolet deeppink deepskyblue dimgray dimgrey dodgerblue '
+             'firebrick floralwhite forestgreen fuchsia gainsboro ghostwhite gold goldenrod gray green greenyellow grey honeydew '
+             'hotpink indianred indigo ivory khaki lavender lavenderblush lawngreen lemonchiffon lightblue lightcoral lightcyan '
+             'lightgoldenrodyellow lightgray lightgreen lightgrey lightpink lightsalmon lightseagreen lightskyblue lightslategray '
+             'lightslategrey lightsteelblue lightyellow lime limegreen linen magenta maroon mediumaquamarine mediumblue '
+             'mediumorchid mediumpurple mediumseagreen mediumslateblue mediumspringgreen mediumturquoise mediumvioletred '
+             'midnightblue mintcream mistyrose moccasin navajowhite navy oldlace olive olivedrab orange orangered orchid '
+             'palegoldenrod palegreen paleturquoise palevioletred papayawhip peachpuff peru pink plum powderblue purple '
+             'rebeccapurple red rosybrown royalblue saddlebrown salmon sandybrown seagreen seashell sienna silver skyblue '
+             'slateblue slategray slategrey snow springgreen steelblue tan teal thistle tomato turquoise violet wheat white '
+             'whitesmoke yellow yellowgreen').split()
+CSS_COLOR = re.compile(r'#[0-9a-fA-F]{3,8}\b|\b(?:rgba?|hsla?|hwb|lab|lch|oklab|oklch|color|color-mix)\('
+                       r'|(?<![\w.#-])(?:' + '|'.join(CSS_NAMED) + r')(?![\w-])', re.I)
 
 
 # ── Ngôn ngữ (PLAN-028): chữ giao diện tiếng Anh, nội dung mẫu và lời giải thích tiếng Việt ──
@@ -979,6 +1002,13 @@ def self_test():
         ('js: file không ai import', new_js('ui/mo-coi.js', 'export const __n = 1;'), 'file mồ côi'),
         ('css: mã màu trong file component', css('board.css', '.x { color: #fff; }'), 'mã màu ngoài css/tokens.css'),
         ('css: mã màu trong chú thích không tính', css('board.css', '/* #fff */'), None),
+        ('css: tên màu trong file component', css('board.css', '.x { border: 1px solid white; }'), 'mã màu ngoài css/tokens.css'),
+        ('css: tên màu viết hoa', css('board.css', '.x { color: Red; }'), 'mã màu ngoài css/tokens.css'),
+        ('css: color-mix trong file component', css('board.css', '.x { background: color-mix(in srgb, var(--bg) 10%, transparent); }'), 'mã màu ngoài css/tokens.css'),
+        ('css: oklch trong file component', css('board.css', '.x { color: oklch(70% .1 120); }'), 'mã màu ngoài css/tokens.css'),
+        ('css: lab, hwb trong file component', css('board.css', '.x { color: lab(50% 10 10); outline-color: hwb(10 10% 10%); }'), 'mã màu ngoài css/tokens.css'),
+        ('css: token tên màu, thuộc tính, lớp, chuỗi, transparent không tính',
+         css('board.css', '.green .white-x { color: var(--green); white-space: nowrap; background: transparent; border-color: currentColor; content: "red"; }'), None),
         ('css: file không được link', css('extra.css', '.x { color: var(--ink); }'), 'được link đúng một lần'),
     ]
     bad = 0

@@ -13,7 +13,7 @@
 @media (hover: hover) { .board:not(.filtering) .step-head { cursor: grab; } }
 .step-top { display: flex; gap: var(--s2); align-items: flex-start; }
 .step-num {
-  display: inline-grid; place-items: center; flex: none; min-width: var(--h-xs); height: var(--h-xs); padding: 0 var(--s1); margin-top: 1px;
+  display: inline-grid; place-items: center; flex: none; min-width: var(--h-xs); height: var(--h-xs); padding: 0 var(--s1); margin-top: var(--nudge);
   font: 500 var(--fs-xs)/1 var(--mono); border-radius: var(--r-xs); background: var(--chip); color: var(--ink-2);
 }
 .step.is-done .step-num { background: var(--accent); color: var(--on-accent); }
@@ -113,7 +113,7 @@
   font: inherit; color: inherit; background: none; border: 0; padding: var(--s1) 0; cursor: pointer;
 }
 .badge b { font-weight: 600; }
-@media (hover: hover) { .badge:hover { text-decoration: underline; text-underline-offset: 3px; } }
+@media (hover: hover) { .badge:hover { text-decoration: underline; text-underline-offset: var(--ul-offset); } }
 .revisit-band .btn { background: var(--surface); border-color: var(--amber-line); color: var(--amber-fg); }
 .revisit-band .btn.go { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
 .redo-left { flex: none; font: 600 var(--fs-xs)/1 var(--sans); white-space: nowrap; }

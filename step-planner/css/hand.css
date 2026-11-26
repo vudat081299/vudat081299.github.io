@@ -6,7 +6,7 @@
 .io { display: inline-flex; align-items: center; gap: var(--s1); min-height: var(--h-xs); padding-inline: var(--mark-w); flex: none; }
 .card-top .io { margin-left: auto; }
 .card-top .io + .chip { margin-left: 0; }
-.step-top .io { margin-left: auto; margin-top: 1px; }
+.step-top .io { margin-left: auto; margin-top: var(--nudge); }
 .io-dot { flex: none; width: var(--dot); height: var(--dot); border-radius: var(--r-pill); border: var(--mark-w) solid var(--ink-4); }
 .io-dot.ok { border-color: var(--done-edge); background: var(--done-edge); }
 .io-dot.bad { border-radius: 0; transform: rotate(45deg); border-color: var(--danger); background: var(--danger); }
@@ -84,7 +84,7 @@
 .hand-name b { font-weight: 600; min-width: 0; }
 .hand-ref { max-width: 100%; font-size: var(--fs-sm); overflow-wrap: anywhere; }
 .hand-ref code { font: 500 var(--fs-xs)/var(--lh) var(--mono); padding: 0 var(--s1); color: var(--ink-2); background: var(--chip); border-radius: var(--r-xs); }
-.hand-ref a { display: inline-flex; align-items: center; gap: var(--s1); max-width: 100%; font-weight: 600; color: var(--green); text-underline-offset: 3px; }
+.hand-ref a { display: inline-flex; align-items: center; gap: var(--s1); max-width: 100%; font-weight: 600; color: var(--green); text-underline-offset: var(--ul-offset); }
 .hand-ref a span { min-width: 0; overflow-wrap: anywhere; }
 .hand-note { font-size: var(--fs-sm); color: var(--ink-2); overflow-wrap: anywhere; }
 .hand-used { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); font-size: var(--fs-sm); }

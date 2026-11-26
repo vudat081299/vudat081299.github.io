@@ -114,7 +114,7 @@
 .sd-guide { display: flex; flex-direction: column; gap: var(--s1); font-size: var(--fs-md); line-height: var(--lh-read); color: var(--ink-2); }
 .sd-help { font-size: var(--fs-sm); line-height: var(--lh); color: var(--ink-3); }
 .sd-tip { padding: var(--s3); font-size: var(--fs-sm); color: var(--blue-fg); background: var(--blue-soft); border-radius: var(--r-sm); }
-.sd-link { padding: 0; font: inherit; font-weight: 600; color: inherit; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; background: none; border: 0; }
+.sd-link { padding: 0; font: inherit; font-weight: 600; color: inherit; text-decoration: underline; text-underline-offset: var(--ul-offset); cursor: pointer; background: none; border: 0; }
 .sd-skip { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2) var(--s3); }
 .sd-opts { display: flex; flex-direction: column; gap: var(--s3); }
 .sd-opt {
@@ -156,7 +156,7 @@
 .sd-more > .sd-fold { gap: var(--s3); }
 .sd-more[data-more="profile-rest"] > .sd-fold { gap: var(--s4); }
 .sd-links { display: flex; flex-direction: column; gap: var(--s1); list-style: none; font-size: var(--fs-sm); }
-.sd-links a { display: inline-flex; align-items: center; gap: var(--s1); color: var(--blue-fg); text-underline-offset: 3px; }
+.sd-links a { display: inline-flex; align-items: center; gap: var(--s1); color: var(--blue-fg); text-underline-offset: var(--ul-offset); }
 .sd-links svg.i { width: var(--s4); height: var(--s4); }
 .sd-cmd {
   overflow-x: auto; padding: var(--s2) var(--s3); font: 500 var(--fs-sm)/var(--lh) var(--mono); font-variant-ligatures: none;
