@@ -1031,11 +1031,11 @@
       "id": "raw",
       "title": "Raw storage",
       "lane": "data",
-      "question": "Dữ liệu gốc, chưa sửa, được cất ở đâu?",
-      "guide": "Kho thô giữ dữ liệu đúng như lúc tải về, không ai sửa tay.\nNhờ vậy khi code làm sạch có lỗi, bạn chạy lại từ bản gốc mà không phải tải lại.\nDữ liệu nhỏ để trong thư mục dự án; dữ liệu lớn hoặc nhiều máy cùng đọc thì để trên object storage (dịch vụ cloud như R2, S3, GCS, hay tự chạy trên máy của nhóm như MinIO).\nDữ liệu cỡ cụm máy: HDFS (hệ file phân tán của Hadoop) hoặc object storage. Chọn thêm một table format (Delta Lake, Iceberg, Hudi) khi muốn thư mục file trên đó dùng như bảng có giao dịch và lịch sử phiên bản.\nBước sau (Processing) đọc từ đây và ghi kết quả sạch ra chỗ khác.",
+      "question": "Dữ liệu gốc, chưa sửa, được cất ở đâu, dưới dạng gì, và cái gì giữ danh mục bảng?",
+      "guide": "Kho thô giữ dữ liệu đúng như lúc tải về, không ai sửa tay.\nNhờ vậy khi code làm sạch có lỗi, bạn chạy lại từ bản gốc mà không phải tải lại.\nDữ liệu nhỏ để trong thư mục dự án; dữ liệu lớn hoặc nhiều máy cùng đọc thì để trên object storage (dịch vụ cloud như R2, S3, GCS, hay tự chạy trên máy của nhóm như MinIO).\nDữ liệu cỡ cụm máy: HDFS (hệ file phân tán của Hadoop) hoặc object storage. Chọn thêm một table format (Delta Lake, Iceberg, Hudi) khi muốn thư mục file trên đó dùng như bảng có giao dịch và lịch sử phiên bản.\nIceberg cần thêm một catalog: nơi giữ danh sách bảng và con trỏ tới metadata hiện tại của từng bảng, để mọi engine thấy cùng một bảng. Chọn nó ngay ở khâu này, cùng chỗ lưu và table format: Polaris (chuẩn Iceberg REST), Hive Metastore, Nessie, hay một catalog JDBC trong SQLite, PostgreSQL. Delta Lake, Hudi đọc được theo đường dẫn, không bắt buộc catalog.\nBước sau (Processing) đọc từ đây và ghi kết quả sạch ra chỗ khác.",
       "multi": true,
       "skipWhen": "",
-      "task": "Dữ liệu thô nằm ở nơi đã chọn, không sửa tay; README ghi cách lấy lại từ đầu.",
+      "task": "Dữ liệu thô nằm ở nơi đã chọn, không sửa tay; bảng (nếu có table format) đăng ký trong catalog đã chọn; README ghi cách lấy lại từ đầu.",
       "when": {},
       "options": [
         {
@@ -1295,9 +1295,9 @@
           "id": "iceberg",
           "name": "Apache Iceberg",
           "kind": "Open table format",
-          "summary": "Table format mở cho bảng phân tích rất lớn: file dữ liệu (Parquet) cộng metadata ghi snapshot, schema, partition. Nhiều engine (Spark, Trino, Flink, Presto, Hive) đọc ghi an toàn cùng một bảng cùng lúc. Cần một catalog (REST, Hive Metastore, SQL) để biết bảng nằm ở đâu.",
+          "summary": "Table format mở cho bảng phân tích rất lớn: file dữ liệu (Parquet) cộng metadata ghi snapshot, schema, partition. Nhiều engine (Spark, Trino, Flink, DuckDB, PyIceberg) đọc ghi an toàn cùng một bảng cùng lúc. Cần một catalog để biết bảng nằm ở đâu: chọn kèm ở khâu này (Polaris hay Iceberg REST khác, Hive Metastore, Nessie, JDBC).",
           "pick": "Chọn khi nhiều engine khác nhau cùng dùng một bảng trên object storage (vd. Spark ghi, Trino truy vấn), hoặc khi môn học, nơi làm đã dùng Iceberg.",
-          "avoid": "Tránh cho dự án nhỏ một engine: phải dựng thêm catalog. Chỉ dùng Python hay Spark thì Delta Lake ít phần hơn; dữ liệu vừa một máy thì Parquet trong thư mục dự án.",
+          "avoid": "Tránh cho dự án nhỏ một engine: phải dựng thêm catalog. Chỉ dùng Python hay Spark thì Delta Lake ít phần hơn; dữ liệu vừa một máy thì Parquet trong thư mục dự án. Nhiều upsert theo khoá và cần đọc tăng dần thì xem Hudi.",
           "cost": "free",
           "level": 3,
           "fit": {
@@ -1351,6 +1351,138 @@
           ],
           "setup": [],
           "task": "Bảng Hudi có khoá bản ghi; ghi lại một lô có dòng sửa thì số dòng không tăng (upsert), và truy vấn incremental từ mốc trước chỉ trả các dòng mới đổi."
+        },
+        {
+          "id": "polaris",
+          "name": "Apache Polaris",
+          "kind": "Iceberg REST catalog",
+          "summary": "Catalog mã nguồn mở (Apache 2.0) theo chuẩn Iceberg REST: giữ namespace, bảng và con trỏ tới metadata hiện tại, để Spark, Trino, Flink, DuckDB, PyIceberg cùng thấy một bộ bảng. Có phân quyền chi tiết theo vai trò và cấp khoá tạm cho engine đọc file trên object storage (credential vending). Polaris rời Apache Incubator, thành dự án cấp cao nhất (Top-Level Project) của Apache Software Foundation từ tháng 2 năm 2026.",
+          "pick": "Chọn khi bảng Iceberg trên MinIO, S3 được nhiều engine đọc ghi (Spark ghi bronze, silver; Trino hay DuckDB đọc gold) và cần một catalog chuẩn REST, mã nguồn mở, tự host. DuckDB chỉ gắn được catalog kiểu Iceberg REST, nên muốn DuckDB đọc ghi bảng Iceberg qua catalog thì cần một catalog như Polaris.",
+          "avoid": "Tránh khi chỉ một người, một engine dùng bảng: catalog JDBC (SQLite, PostgreSQL) qua PyIceberg ít phần hơn. Quickstart dùng metastore trong bộ nhớ, tắt là mất danh mục bảng: chạy thật thì dùng backend JDBC với PostgreSQL. Bảng Delta, Hudi chỉ đăng ký được như bảng chung (generic table, đang beta), Polaris không cập nhật chúng.",
+          "cost": "free",
+          "level": 3,
+          "fit": {
+            "size": [
+              "medium",
+              "large"
+            ]
+          },
+          "links": [
+            {
+              "title": "Apache Polaris",
+              "url": "https://polaris.apache.org/"
+            },
+            {
+              "title": "Quickstart",
+              "url": "https://polaris.apache.org/guides/quickstart/"
+            },
+            {
+              "title": "Apache Polaris graduates to Top Level Project",
+              "url": "https://polaris.apache.org/blog/2026/02/19/apache-polaris-graduates-to-top-level-project/"
+            },
+            {
+              "title": "Generic Table",
+              "url": "https://polaris.apache.org/releases/1.9.0/generic-table/"
+            },
+            {
+              "title": "DuckDB: Iceberg REST catalogs",
+              "url": "https://duckdb.org/docs/stable/core_extensions/iceberg/catalogs"
+            }
+          ],
+          "setup": [
+            "curl -s https://raw.githubusercontent.com/apache/polaris/refs/heads/main/site/content/guides/quickstart/docker-compose.yml | docker compose -p polaris-quickstart -f - up -d",
+            "docker compose -p polaris-quickstart logs"
+          ],
+          "task": "Polaris chạy với backend bền (PostgreSQL), một catalog trỏ tới bucket trên MinIO hay S3; Spark tạo bảng qua catalog, Trino hay DuckDB thấy cùng bảng và đếm đúng số dòng; khởi động lại Polaris thì bảng vẫn còn."
+        },
+        {
+          "id": "hive-metastore",
+          "name": "Hive Metastore (standalone)",
+          "kind": "Table catalog service",
+          "summary": "Dịch vụ danh mục của Hive chạy riêng (Thrift, cổng 9083), không cần HiveServer2: giữ bảng, cột, partition trong một database (Derby khi thử, PostgreSQL khi chạy thật). Iceberg dùng nó làm catalog kiểu hive; Spark, Trino đọc chung; Trino đọc Hudi cũng cần nó.",
+          "pick": "Chọn khi môn học, cụm có sẵn dùng Hive, khi Trino phải đọc bảng Hudi, hay khi bảng Iceberg và bảng Hive thường phải nằm chung một danh mục.",
+          "avoid": "Tránh khi bắt đầu mới chỉ với Iceberg: catalog REST (Polaris) là chuẩn chung hơn, và DuckDB không gắn được Hive Metastore. Bản Derby của quickstart mất hết khi container dừng: chạy thật thì nối PostgreSQL và gắn volume.",
+          "cost": "free",
+          "level": 3,
+          "fit": {
+            "size": [
+              "medium",
+              "large"
+            ]
+          },
+          "links": [
+            {
+              "title": "Hive quickstart (Docker)",
+              "url": "https://hive.apache.org/development/quickstart/"
+            },
+            {
+              "title": "Iceberg Spark configuration",
+              "url": "https://iceberg.apache.org/docs/latest/spark-configuration/"
+            }
+          ],
+          "setup": [
+            "docker run -d -p 9083:9083 --env SERVICE_NAME=metastore --name metastore-standalone apache/hive:4.2.1"
+          ],
+          "task": "Metastore chạy với PostgreSQL; Spark tạo bảng Iceberg qua catalog kiểu hive, Trino thấy cùng bảng; dừng rồi chạy lại container thì bảng vẫn còn."
+        },
+        {
+          "id": "nessie",
+          "name": "Project Nessie",
+          "kind": "Versioned table catalog",
+          "summary": "Catalog cho bảng Iceberg có phiên bản kiểu Git: branch, tag, commit, merge trên cả danh mục, giao dịch nhiều bảng cùng lúc. Có API Iceberg REST nên engine nối như một catalog REST. Mã nguồn mở, chạy bằng Docker.",
+          "pick": "Chọn khi muốn ghi thử dữ liệu trên một branch rồi mới merge vào main (như Git cho bảng), hay giữ một trạng thái của cả danh mục để chạy lại đúng.",
+          "avoid": "Tránh khi chưa cần branch dữ liệu: thêm một khái niệm phải học, Polaris hay catalog JDBC đơn giản hơn. Image mặc định giữ dữ liệu trong bộ nhớ (IN_MEMORY), tắt là mất: chạy thật phải cấu hình nơi lưu bền.",
+          "cost": "free",
+          "level": 3,
+          "fit": {
+            "size": [
+              "medium",
+              "large"
+            ]
+          },
+          "links": [
+            {
+              "title": "Project Nessie",
+              "url": "https://projectnessie.org/"
+            },
+            {
+              "title": "Nessie in Docker",
+              "url": "https://projectnessie.org/guides/docker/"
+            },
+            {
+              "title": "Getting Started with Nessie and Iceberg REST",
+              "url": "https://projectnessie.org/guides/iceberg-rest/"
+            }
+          ],
+          "setup": [
+            "docker run -p 19120:19120 ghcr.io/projectnessie/nessie"
+          ],
+          "task": "Nessie chạy với nơi lưu bền; Spark ghi bảng Iceberg trên một branch rồi merge vào main, và engine đọc thấy bảng trên main."
+        },
+        {
+          "id": "iceberg-jdbc",
+          "name": "JDBC / SQL catalog",
+          "kind": "Catalog in a SQL database",
+          "summary": "Catalog đơn giản nhất của Iceberg: một bảng trong database quan hệ (SQLite, PostgreSQL) giữ con trỏ tới metadata của từng bảng; database phải có giao dịch nguyên tử. PyIceberg gọi là SQL catalog; Spark, Flink, Trino dùng qua JDBC.",
+          "pick": "Chọn khi một người hay một engine dùng bảng Iceberg (PyIceberg, Spark một máy) và không muốn dựng thêm service: SQLite cho một máy, PostgreSQL khi nhiều máy cùng ghi.",
+          "avoid": "Tránh khi DuckDB phải gắn catalog (DuckDB chỉ gắn catalog Iceberg REST) hay cần phân quyền theo người: chọn Polaris. SQLite chỉ hợp một máy.",
+          "cost": "free",
+          "level": 2,
+          "fit": {},
+          "links": [
+            {
+              "title": "JDBC Catalog",
+              "url": "https://iceberg.apache.org/docs/latest/jdbc/"
+            },
+            {
+              "title": "PyIceberg configuration",
+              "url": "https://py.iceberg.apache.org/configuration/"
+            }
+          ],
+          "setup": [
+            "pip install \"pyiceberg[sql-sqlite]\""
+          ],
+          "task": "Catalog SQL tạo được bảng Iceberg; ghi một lô tạo snapshot mới, và mở lại catalog từ tiến trình khác thấy đúng bảng ấy."
         },
         {
           "id": "postgres-raw",
