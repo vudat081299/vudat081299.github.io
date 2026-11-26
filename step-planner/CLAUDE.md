@@ -4,7 +4,8 @@
 - Một trang, `index.html`: dự án chia thành bước (hàng) và bước con (thẻ), trạng thái, hạn, tài liệu, bàn giao, nhật ký quyết
   định, System design, xuất / nhập Markdown và JSON. Ưu tiên dự án dữ liệu, dùng được cho dự án bất kỳ. Không có người làm (PLAN-010).
 - Chữ giao diện tiếng Anh, ngắn kiểu ghi chú (PLAN-012); nội dung mẫu, lời giải thích, tài liệu repo tiếng Việt (PLAN-028).
-  Chuỗi tiếng Việt có chủ ý trong `js/` mang chú thích `lang: vi — lý do` trên dòng mở chuỗi. Quyết định: [DECISIONS.md](DECISIONS.md).
+  Chuỗi tiếng Việt có chủ ý trong `js/` mang chú thích `lang: vi — lý do` trên dòng mở hoặc dòng đóng chuỗi; một chú thích miễn đúng một
+  chuỗi (hai chuỗi tiếng Việt thì tách dòng). Quyết định: [DECISIONS.md](DECISIONS.md).
 - Khuôn Markdown và JSON: [FORMAT.md](FORMAT.md). Đổi khuôn thì sửa file ấy cùng commit.
 - Không build. Mở qua HTTP: `python3 -m http.server` ở gốc repo, `http://localhost:8000/step-planner/` (`file://`: trang báo).
 
@@ -140,7 +141,8 @@
 ## System design (`data/system-design.json`, PLAN-016)
 
 - Danh mục `{note, paths[], profile[], stages[], checks[], architectures[]}`; khuôn, độ phủ, luật: `lint.py`. Số khâu, phương án, luật đọc từ file.
-- `label`, `title`, `kind`, `name`, `flow` của kiến trúc tiếng Anh (giao diện); chữ khác tiếng Việt (lời giải thích). Link chỉ trang chính thức đã mở được; không ghi giá, hạn mức bằng số; lệnh chép từ quickstart.
+- `label`, `title`, `kind`, `name`, `flow` của kiến trúc tiếng Anh (giao diện); tên trang ngoài (`links[].title`, `sources[].title`) giữ chữ
+  của trang ấy; id, URL, lệnh không xét; mọi chữ khác, cả trường mới, tiếng Việt (lời giải thích). Link chỉ trang chính thức đã mở được; không ghi giá, hạn mức bằng số; lệnh chép từ quickstart.
 - Hộp mở ở "What do you deliver?" (lối), rồi hồ sơ, Architecture, từng khâu, Handoffs, Checks. Câu hồ sơ ngoài `ask` của lối gập lại, vẫn trả lời được.
 - Gợi ý: câu chưa trả lời lấy theo `implies` của lối; xếp hợp hồ sơ trước, rồi `suggest` của lối theo đúng thứ tự, rồi khớp nhiều câu,
   dễ hơn, thứ tự danh mục. Lựa chọn lưu ngay. `fit` nghĩa là "dùng được", không thêm khoá `fit` chỉ để đẩy hạng.
@@ -175,7 +177,9 @@
 ## Cổng: `sh step-planner/tools/check.sh`
 
 - `tools/lint.py`: khuôn mẫu và bàn giao trong mẫu, ngôn ngữ (giao diện, mẫu, System design), danh mục System design, mẫu đồ án khớp nguồn và neo, không `innerHTML`, mã màu chỉ trong khối token.
+  `lint.py --self-test`: cài lỗi vào bản sao tạm, mỗi lỗi phải bị bắt.
 - `node --input-type=module --check < file` cho `js/*.js` (`node --check file.js` bỏ sót lỗi của module).
 - `tools/test-core.mjs`: logic thuần của `core.js`, `md.js`, `design-core.js`; danh sách ở chính file.
+  Gợi ý kiến trúc và luật báo so với ảnh chụp `tools/design-snapshot.json`; đổi danh mục có chủ ý thì sinh lại: `node step-planner/tools/test-core.mjs --write-snapshot`.
 - `tools/smoke.cjs` (cổng tự dựng máy chủ tạm; thiếu playwright thì bỏ qua, CI chạy ở job smoke): bấm thật các hành vi trên,
   hai tab, 390px, bộ nhớ bị chặn / hỏng / khoá cũ, lỗi console; số mẫu đọc từ `templates.json`. Chạy tay: `node <file> <url>`.

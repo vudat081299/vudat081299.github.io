@@ -20,9 +20,11 @@
      dùng cùng khoá điều kiện với `checks`, `arch` là kiến trúc của nhóm ("" = nhóm không cần).
      Luật báo {id, title, if, unless?, msg, caveat?}: `caveat: true` = luật nhắc cách dùng, phương án vẫn đúng (Apply path
      không né nó).
-  6. Ngôn ngữ (PLAN-028): mọi chữ của mẫu có chữ Việt (trừ chuỗi chỉ là đường dẫn, tên file, và LATIN_OK); lời giải thích của
-     system-design.json (DESIGN_VI) tiếng Việt, nhãn và tên tiếng Anh (`english`); chuỗi trong js/*.js và chữ của index.html
-     không có chữ Việt, trừ dòng có chú thích `lang: vi — lý do` (nội dung sinh ra, nhãn nhập định dạng cũ).
+  6. Ngôn ngữ (PLAN-028): mọi chữ của mẫu có chữ Việt (trừ chuỗi chỉ là đường dẫn, tên file, và LATIN_OK); mọi chuỗi của
+     system-design.json là lời giải thích tiếng Việt, trừ nhãn và tên (DESIGN_EN, tiếng Anh), tên trang ngoài (DESIGN_TITLES,
+     giữ chữ của trang), id, URL, lệnh (DESIGN_CODE); chuỗi trong js/*.js và chữ của index.html không có chữ Việt, trừ chuỗi
+     có chú thích `lang: vi — lý do` trên dòng mở hoặc dòng đóng (một chú thích miễn đúng một chuỗi).
+  Tự kiểm cổng này: python3 step-planner/tools/lint.py --self-test (cài lỗi vào bản sao tạm, mỗi lỗi phải bị bắt).
 
 Chạy:  python3 step-planner/tools/lint.py
 """
@@ -571,12 +573,17 @@ VI_RE = re.compile('[À-ÃÈ-ÊÌÍÒ-ÕÙÚÝà-ãè-êìíò-õùúýĂăĐđ�
 TPL_TEXT = ('name', 'description', 'output', 'title', 'goal', 'doneWhen', 'notes')  # + outs[].name, outs[].note
 # Chuỗi của mẫu được phép không có chữ Việt (ngoài đường dẫn, tên file): tên pha giữ chữ của trang đồ án.
 LATIN_OK = {'P3 · EDA', 'P7 · Demo'}
-# Trường lời giải thích của system-design.json: phải tiếng Việt (chuỗi rỗng bỏ qua). Nhãn, tên: `english` ở check_design.
-DESIGN_VI = {'note', 'stages[].question', 'stages[].guide', 'stages[].task', 'stages[].skipWhen', 'stages[].options[].summary',
-             'stages[].options[].pick', 'stages[].options[].avoid', 'stages[].options[].task', 'checks[].msg', 'paths[].summary',
-             'paths[].why', 'paths[].switch', 'paths[].flow[]', 'paths[].accept[]', 'profile[].help', 'architectures[].question',
-             'architectures[].note', 'architectures[].entries[].what', 'architectures[].entries[].use',
-             'architectures[].entries[].avoid', 'architectures[].rules[].why'}
+# system-design.json: mọi chuỗi là lời giải thích tiếng Việt (trường mới cũng vậy), trừ ba loại dưới (đường dẫn: khoá nối
+# bằng `.`, phần tử danh sách thêm `[]`, khoá dưới `if`, `unless`, `when`, `fit`, `implies`, `suggest`, `tools`, `paths[].stages` là `*`).
+# Nhãn, tên giao diện: tiếng Anh (`english`).
+DESIGN_EN = {'stages[].title', 'stages[].options[].name', 'stages[].options[].kind', 'checks[].title', 'paths[].label',
+             'profile[].label', 'profile[].choices[].label', 'architectures[].label', 'architectures[].entries[].name',
+             'architectures[].entries[].flow[]'}
+# Tên trang ngoài (link, nguồn): giữ đúng tên trang ấy ghi, nên không đòi tiếng Việt; không có chữ Việt trừ trang của repo hay .vn.
+DESIGN_TITLES = {'stages[].options[].links[].title', 'architectures[].sources[].title', 'architectures[].entries[].sources[].title'}
+# Id, giá trị liệt kê, URL, lệnh: không xét ngôn ngữ.
+DESIGN_CODE = re.compile(r'(^|\.)(id|arch|path|lane|cost|url)$|\.setup\[\]$|^paths\[\]\.ask\[\]$'
+                         r'|\.(if|unless|when|fit|implies|suggest|tools)\.\*(\[\])?$|^paths\[\]\.stages\.\*$')
 JS_VI_MARK = 'lang: vi'  # chú thích trên dòng mở chuỗi: chuỗi tiếng Việt có chủ ý (nội dung sinh ra, nhãn nhập định dạng cũ)
 
 
@@ -601,26 +608,36 @@ def check_tpl_language(data):
 
 
 def check_design_language(data):
-    """Lời giải thích của System design tiếng Việt; tên phương án tiếng Anh (nhãn, tên khâu, kind: check_design)."""
-    def walk(o, path):
+    """Mọi chuỗi của System design là lời giải thích tiếng Việt, trừ nhãn, tên (tiếng Anh), tên trang ngoài, id, URL, lệnh."""
+    def walk(o, path, url=''):
         if isinstance(o, dict):
             for k, v in o.items():
-                yield from walk(v, f'{path}.{k}' if path else k)
+                key = '*' if re.search(r'(^|\.)(if|unless|when|fit|implies|suggest|tools)$|^paths\[\]\.stages$', path) else k
+                yield from walk(v, f'{path}.{key}' if path else key, str(o.get('url', '')))
         elif isinstance(o, list):
             for v in o:
-                yield from walk(v, path + '[]')
+                yield from walk(v, path + '[]', url)
         elif isinstance(o, str):
-            yield path, o
-    for path, s in walk(data, ''):
-        if path in DESIGN_VI and s.strip() and not VI_RE.search(s):
+            yield path, o, url
+    for path, s, url in walk(data, ''):
+        if DESIGN_CODE.search(path):
+            continue
+        if path in DESIGN_EN:
+            if path == 'stages[].options[].name':  # nhãn khác: `english` ở check_design
+                english(f'system-design.json {path}', s)
+        elif path in DESIGN_TITLES:
+            if VI_RE.search(s) and not re.match(r'https://([\w-]+\.)*(vudat081299\.github\.io|[\w-]+\.vn)(/|$)', url):
+                err(f'system-design.json {path}: tên trang ngoài giữ đúng chữ của trang ấy, không dịch: "{s[:60]}" ({url})')
+        elif s.strip() and not VI_RE.search(s):
             err(f'system-design.json {path}: lời giải thích phải tiếng Việt: "{s[:60]}"')
-        elif path == 'stages[].options[].name':
-            english(f'system-design.json {path}', s)
 
 
-def js_strings(src):
-    """[(dòng, chữ)] của mọi chuỗi trong code JS ('…', "…", phần chữ của `…`), bỏ chú thích và regex literal."""
+def js_strings(src, comments=None):
+    """[(dòng mở, chữ, dòng đóng, số chuỗi)] của mọi chuỗi trong code JS ('…', "…", phần chữ của `…`), bỏ regex literal.
+    Các phần chữ của một `…` chung dòng mở và số chuỗi.
+    Chú thích không phải chuỗi; truyền `comments` (list) thì nhận thêm [(dòng, chữ)] của từng chú thích (khối nhiều dòng: dòng cuối)."""
     out, i, n, line, prev, stack = [], 0, len(src), 1, '', []  # stack: độ sâu { } trong từng ${ } đang mở
+    lits, lid = [], 0  # lits: (số chuỗi, dòng mở) của từng `…` đang chờ sau ${ }
     while i < n:
         c = src[i]
         if c == '\n':
@@ -629,16 +646,25 @@ def js_strings(src):
             i += 1
         elif src.startswith('//', i):
             j = src.find('\n', i)
-            i = n if j < 0 else j
+            j = n if j < 0 else j
+            if comments is not None:
+                comments.append((line, src[i:j]))
+            i = j
         elif src.startswith('/*', i):
             j = src.find('*/', i + 2)
             j = n if j < 0 else j + 2
-            line, i = line + src.count('\n', i, j), j
+            body = src[i:j]
+            line, i = line + body.count('\n'), j
+            if comments is not None:
+                comments.append((line, body))
         elif c in '\'"`' or (c == '}' and stack and stack[-1] == 0):
             end = c if c != '}' else '`'
             if c == '}':
                 stack.pop()
-            j, buf, start = i + 1, [], line
+                cur, start = lits.pop()
+            else:
+                cur, start, lid = lid, line, lid + 1
+            j, buf = i + 1, []
             while j < n and src[j] != end and not (end == '`' and src.startswith('${', j)):
                 if src[j] == '\\':
                     buf.append(src[j:j + 2])
@@ -647,9 +673,10 @@ def js_strings(src):
                 line += src[j] == '\n'
                 buf.append(src[j])
                 j += 1
-            out.append((start, ''.join(buf)))
+            out.append((start, ''.join(buf), line, cur))
             if end == '`' and src.startswith('${', j):
                 stack.append(0)
+                lits.append((cur, start))
                 i = j + 2
             else:
                 i = j + 1
@@ -677,21 +704,46 @@ def js_strings(src):
     return out
 
 
-def check_ui_language():
+def check_ui_language(js_dir=None):
     """(b) Chữ giao diện tiếng Anh: chuỗi trong js/*.js và chữ của index.html (ngoài chú thích) không có chữ Việt.
-    Chuỗi tiếng Việt có chủ ý (nội dung việc System design sinh ra, lời giải thích, nhãn nhập của định dạng cũ): dòng mở
-    chuỗi mang chú thích `lang: vi — lý do`."""
-    for name in sorted(os.listdir(os.path.join(HERE, 'js'))):
+    Chuỗi tiếng Việt có chủ ý (nội dung việc System design sinh ra, lời giải thích, nhãn nhập của định dạng cũ): chú thích
+    `lang: vi — lý do` trên dòng mở hoặc dòng đóng của chuỗi. Một chú thích miễn đúng một chuỗi có chữ Việt: dòng có hai
+    chuỗi như thế thì tách dòng; chú thích không còn chuỗi nào để miễn thì xoá."""
+    js_dir = js_dir or os.path.join(HERE, 'js')
+    for name in sorted(os.listdir(js_dir)):
         if not name.endswith('.js'):
             continue
-        src = open(os.path.join(HERE, 'js', name), encoding='utf-8').read()
-        lines = src.split('\n')
-        for ln, s in js_strings(src):
-            if VI_RE.search(s) and JS_VI_MARK not in lines[ln - 1]:
+        src = open(os.path.join(js_dir, name), encoding='utf-8').read()
+        comments = []
+        strs = js_strings(src, comments)
+        marks = {}
+        for ln, c in comments:
+            if JS_VI_MARK in c:
+                marks[ln] = 0
+                if not re.search(JS_VI_MARK + r'\s*[—–-]\s*\S', c):
+                    err(f'js/{name}:{ln}: chú thích `{JS_VI_MARK}` thiếu lý do (`// {JS_VI_MARK} — lý do`)')
+        lit = {}  # số chuỗi → [dòng mở, chữ tiếng Việt, dòng đóng]
+        for ln, s, end, k in strs:
+            x = lit.setdefault(k, [ln, '', end])
+            x[2] = end
+            if VI_RE.search(s):
+                x[1] = x[1] or s
+        for ln, s, end in lit.values():
+            if not s:
+                continue
+            at = ln if ln in marks else end if end in marks else None
+            if at is None:
                 err(f'js/{name}:{ln}: chữ giao diện phải tiếng Anh (nội dung có chủ ý: thêm chú thích `// {JS_VI_MARK} — lý do`): "{s[:60]}"')
+            else:
+                marks[at] += 1
+        for ln, k in marks.items():
+            if k > 1:
+                err(f'js/{name}:{ln}: một chú thích `{JS_VI_MARK}` miễn đúng một chuỗi, dòng này có {k} chuỗi tiếng Việt: tách dòng')
+            elif k == 0:
+                err(f'js/{name}:{ln}: chú thích `{JS_VI_MARK}` không có chuỗi tiếng Việt nào để miễn: xoá')
     page = open(os.path.join(HERE, 'index.html'), encoding='utf-8').read()
     for m in re.finditer(r'<!--.*?-->|<script\b[^>]*>(.*?)</script>', page, re.S):
-        if m.group(1) and any(VI_RE.search(s) for _, s in js_strings(m.group(1))):
+        if m.group(1) and any(VI_RE.search(x[1]) for x in js_strings(m.group(1))):
             err(f'index.html:{page.count(chr(10), 0, m.start()) + 1}: chuỗi tiếng Việt trong <script>')
     bare = re.sub(r'<!--.*?-->|<script\b[^>]*>.*?</script>', lambda m: '\n' * m.group(0).count('\n'), page, flags=re.S)
     for n, l in enumerate(bare.split('\n'), 1):
@@ -699,7 +751,67 @@ def check_ui_language():
             err(f'index.html:{n}: chữ giao diện phải tiếng Anh: "{l.strip()[:60]}"')
 
 
+def self_test():
+    """Cài từng lỗi vào một bản sao tạm của step-planner/ (thư mục khác của repo: symlink), chạy lint trên bản sao: mỗi lỗi phải
+    bị bắt đúng câu báo; bản sao có chuỗi tiếng Việt hợp lệ (nhiều dòng, chú thích ở dòng đóng) thì sạch."""
+    import shutil
+    import subprocess
+    import tempfile
+
+    def js(code):
+        return lambda root: open(os.path.join(root, 'js', 'main.js'), 'a', encoding='utf-8').write('\n' + code + '\n')
+
+    def design(fn):
+        def run(root):
+            p = os.path.join(root, 'data', 'system-design.json')
+            d = json.load(open(p, encoding='utf-8'))
+            fn(d)
+            json.dump(d, open(p, 'w', encoding='utf-8'), ensure_ascii=False)
+        return run
+
+    def tpl(root):
+        p = os.path.join(root, 'data', 'templates.json')
+        d = json.load(open(p, encoding='utf-8'))
+        next(t for t in d['templates'] if t.get('steps'))['steps'][0]['subs'][0]['title'] = 'Collect data'
+        json.dump(d, open(p, 'w', encoding='utf-8'), ensure_ascii=False)
+
+    cases = [
+        ('js: chuỗi tiếng Việt không chú thích', js("export const __a = 'Tới chỗ này';"), 'chữ giao diện phải tiếng Anh'),
+        ('js: một chú thích, hai chuỗi tiếng Việt', js("export const __b = ['Một', 'Hải']; // lang: vi — thử"), 'miễn đúng một chuỗi'),
+        ('js: chú thích thiếu lý do', js("export const __c = 'Một'; // lang: vi"), 'thiếu lý do'),
+        ('js: chữ "lang: vi" trong chuỗi không phải chú thích', js("export const __d = 'Một // lang: vi — giả';"), 'chữ giao diện phải tiếng Anh'),
+        ('js: chú thích không còn chuỗi để miễn', js("export const __e = 'One'; // lang: vi — thử"), 'không có chuỗi tiếng Việt nào'),
+        ('js: chuỗi nhiều dòng, chú thích ở dòng đóng; một `…` nhiều phần', js("export const __f = `một\nhai ở đây`; // lang: vi — thử\n"
+                                                                                "export const __g = (x) => `${x} một ${x} hai ở`; // lang: vi — thử"), None),
+        ('design: trường mới chưa khai, chữ tiếng Anh', design(lambda d: d['profile'][0].update(tip='Pick the closest one')), 'phải tiếng Việt'),
+        ('design: lời giải thích của luật gợi ý tiếng Anh', design(lambda d: d['architectures'][0]['rules'][0].update(why='Use it.')), 'phải tiếng Việt'),
+        ('design: tên trang ngoài bị dịch', design(lambda d: d['stages'][0]['options'][0]['links'][0].update(title='Trang chủ')), 'không dịch'),
+        ('design: nhãn giao diện tiếng Việt', design(lambda d: d['stages'][0].update(title='Nguồn dữ liệu')), 'phải tiếng Anh'),
+        ('mẫu: tên bước con tiếng Anh', tpl, 'nội dung mẫu phải tiếng Việt'),
+    ]
+    bad = 0
+    for name, plant, want in cases:
+        tmp = tempfile.mkdtemp(prefix='lint-self-')
+        try:
+            for e in os.listdir(REPO):
+                if e not in ('step-planner', '.' + 'git'):
+                    os.symlink(os.path.join(REPO, e), os.path.join(tmp, e))
+            root = os.path.join(tmp, 'step-planner')
+            shutil.copytree(HERE, root, ignore=shutil.ignore_patterns('__pycache__'))
+            plant(root)
+            r = subprocess.run([sys.executable, os.path.join(root, 'tools', 'lint.py')], capture_output=True, text=True)
+            ok = (r.returncode == 0) if want is None else (r.returncode != 0 and want in r.stdout)
+        finally:
+            shutil.rmtree(tmp, ignore_errors=True)
+        bad += not ok
+        print(f'{"  ok  " if ok else "  LỖI"} lint tự kiểm: {name}' + ('' if ok else f'  — {r.stdout.strip()[-300:]}'))
+    print(f'step-planner: lint tự kiểm {"OK" if not bad else f"{bad} LỖI"} ({len(cases)} ca).')
+    return 1 if bad else 0
+
+
 def main():
+    if '--self-test' in sys.argv:
+        return self_test()
     data = json.load(open(TEMPLATES, encoding='utf-8'))
     if '--write-course' in sys.argv:
         tpls = data['templates']

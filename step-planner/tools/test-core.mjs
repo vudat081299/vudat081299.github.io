@@ -1,6 +1,6 @@
 /* Bài thử của js/core.js (logic thuần), chạy bằng node:  node step-planner/tools/test-core.mjs
  * Mọi mẫu trong data/templates.json phải đi Markdown → về mà không mất gì; JSON cũng vậy. */
-import { readFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import {
   fromTemplate, toMarkdown, fromMarkdown, parseImport, toJSON, toBackup, shape, progress, nextActionIds, projectNextIds, slotsOf, subPlace, placeSub, takeSub, shiftTarget, liveLabels, redoCount, canReopen,
@@ -561,24 +561,28 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
     !W({}, { fresh: 'batch' }).includes('schedule-without-scheduler') && W({ ingest: { skip: true } }, { fresh: 'batch' }).includes('schedule-without-scheduler')
     && !W({ ingest: P('cron') }, { fresh: 'batch' }).includes('schedule-without-scheduler'));
   check('thiết kế: luật — câu hồ sơ lối giả định cũng tính', W({ host: P('render') }, {}, 'demo').includes('free-host-sleeps'));
-  /* Mọi luật trong danh mục bắn được: dựng thiết kế thoả `if`, khâu trong `unless` quyết bằng thứ không khớp. */
+  /* Mọi luật trong danh mục bắn được với từng giá trị nêu trong `if` (giá trị ấy ở khoá ấy, khoá khác lấy giá trị đầu), khâu
+   * trong `unless` quyết bằng thứ không khớp. */
   const stageIds = new Set(cat.stages.map((x) => x.id));
-  const dead = cat.checks.filter((c) => {
+  const fires = (c, pickOf) => {
     const stages = {}, profile = {};
     let path = '';
-    for (const [k, v] of Object.entries(c.if)) {
-      if (k === 'path') path = v[0];
-      else if (!stageIds.has(k)) profile[k] = v[0];
-      else stages[k] = v[0] === 'skip' ? { skip: true } : v[0] === 'own' ? { own: 'x' } : P(v[0]);
+    for (const [k, vs] of Object.entries(c.if)) {
+      const v = pickOf(k, vs);
+      if (k === 'path') path = v;
+      else if (!stageIds.has(k)) profile[k] = v;
+      else stages[k] = v === 'skip' ? { skip: true } : v === 'own' ? { own: 'x' } : P(v);
     }
     for (const [k, v] of Object.entries(c.unless || {})) {
       if (!stageIds.has(k) || stages[k]) continue;
       const other = cat.stages.find((x) => x.id === k).options.find((o) => !v.includes(o.id));
       stages[k] = other ? P(other.id) : { skip: true };
     }
-    return !W(stages, profile, path).includes(c.id);
-  });
-  check('thiết kế: luật — mọi luật trong danh mục bắn được', !dead.length, dead.map((c) => c.id).join());
+    return W(stages, profile, path).includes(c.id);
+  };
+  const dead = cat.checks.flatMap((c) => Object.entries(c.if).flatMap(([key, vals]) => vals
+    .filter((val) => !fires(c, (k, vs) => (k === key ? val : vs[0]))).map((val) => `${c.id} ${key}=${val}`)));
+  check('thiết kế: luật — mọi luật trong danh mục bắn được, với mọi giá trị nêu trong `if`', !dead.length, dead.join(', '));
   /* Kiến trúc: mỗi nhóm gợi ý một kiến trúc theo hồ sơ, lối và các khâu đã quyết; chưa đủ câu trả lời thì chưa gợi ý. */
   const A = (stages = {}, profile = {}, path = '') => Object.fromEntries(archAdvice(cat, normDesign({ path, profile, stages })).map((x) => [x.family, x.id]));
   check('kiến trúc: chưa trả lời gì thì mọi nhóm chưa gợi ý', Object.values(A()).every((x) => x === null) && archAdvice(cat, null).length === cat.architectures.length);
@@ -651,6 +655,7 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
     }
   }
   check('kiến trúc: kiến trúc được gợi ý có công cụ không làm luật báo ở mọi khâu của nó', !badArch.size, [...badArch].slice(0, 5).join(' | '));
+  designSnapshot(cat);
   /* Bàn giao trên đường nối: chuẩn hoá, chỉ đường giữa hai khâu đã quyết liền nhau, việc tích hợp, Markdown đi rồi về. */
   check('thiết kế: bàn giao — bỏ khoá sai, via lạ, mục trống; giữ cả khi khâu chưa quyết', eq(normDesign({ edges: {
     'process>store': { via: 'file', what: ' matches.parquet ', promise: 'a\n\nb', check: 'x' }, 'a b>c': { via: 'file' }, 'raw>process': { via: 'fax' } } }).edges,
@@ -895,6 +900,83 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   e.steps.reverse();
   const es = io(e);
   check('io: dời về đúng thứ tự thì cả hai bên ok', st(es, 'k1') === 'ok/none' && st(es, 'm') === 'none/ok');
+}
+
+/* ── Ảnh chụp gợi ý của System design (tools/design-snapshot.json) ──
+ * Bắt mọi thay đổi kết quả của `archAdvice` và `warnings` mà luật khác không thấy (đổi thứ tự luật, bớt một giá trị trong `if`).
+ * Lưới, suy từ danh mục, mỗi giá trị theo thứ tự danh mục:
+ *  - gợi ý, từng nhóm: lối (chưa chọn, mọi lối) × mỗi câu hồ sơ luật của nhóm đọc (chưa trả lời, mọi câu trả lời) ×
+ *    (không khâu nào, hoặc một khâu luật của nhóm đọc: từng phương án luật nêu, một phương án luật không nêu, Not needed);
+ *  - luật báo: lối × (không hồ sơ, hoặc một câu luật báo đọc với một câu trả lời) × một khâu luật báo đọc (mọi phương án, Not needed);
+ *    chỉ ghi thiết kế có luật báo.
+ * Đổi danh mục có chủ ý thì sinh lại: node step-planner/tools/test-core.mjs --write-snapshot, xem diff, commit cùng. */
+function designSnapshot(cat) {
+  const file = fileURLToPath(new URL('./design-snapshot.json', import.meta.url));
+  const stageIds = new Set(cat.stages.map((x) => x.id));
+  const paths = ['', ...cat.paths.map((p) => p.id)];
+  const answers = (q) => cat.profile.find((x) => x.id === q).choices.map((c) => c.id);
+  const inOrder = (all, keys) => all.filter((k) => keys.has(k));
+  const pick = (v) => (v === 'skip' ? { skip: true } : { pick: [v] });
+  const label = (path, profile, stages) => [path, ...Object.entries(profile).map(([k, v]) => `${k}=${v}`), ...Object.entries(stages).map(([k, v]) => `${k}=${v}`)].join('|');
+  const advice = {}, grids = {};
+  for (const f of cat.architectures) {
+    const keys = new Set(f.rules.flatMap((r) => Object.keys(r.if)));
+    const qs = inOrder(cat.profile.map((x) => x.id), keys);
+    const stages = Object.fromEntries(inOrder(cat.stages.map((x) => x.id), keys).map((sid) => {
+      const listed = new Set(f.rules.flatMap((r) => r.if[sid] || []));
+      const opts = cat.stages.find((x) => x.id === sid).options.map((o) => o.id);
+      return [sid, [...opts.filter((o) => listed.has(o)), ...opts.filter((o) => !listed.has(o)).slice(0, 1), 'skip']];
+    }));
+    const profiles = qs.reduce((acc, q) => acc.flatMap((p) => [p, ...answers(q).map((a) => ({ ...p, [q]: a }))]), [{}]);
+    const variants = [{}, ...Object.entries(stages).flatMap(([sid, vs]) => vs.map((v) => ({ [sid]: v })))];
+    const ids = [null, '', ...f.entries.map((e) => e.id)];
+    const rows = [];
+    for (const path of paths) for (const profile of profiles) for (const st of variants) {
+      const st2 = Object.fromEntries(Object.entries(st).map(([k, v]) => [k, pick(v)]));
+      const a = archAdvice(cat, normDesign({ path, profile, stages: st2 })).find((x) => x.family === f.id);
+      rows.push({ at: label(path, profile, st), id: a.id });
+    }
+    grids[f.id] = { paths, profile: Object.fromEntries(qs.map((q) => [q, answers(q)])), stages, ids };
+    advice[f.id] = rows;
+  }
+  const wKeys = new Set(cat.checks.flatMap((c) => Object.keys(c.if)));
+  const wStages = inOrder(cat.stages.map((x) => x.id), wKeys);
+  const wProfiles = [{}, ...inOrder(cat.profile.map((x) => x.id), wKeys).flatMap((q) => answers(q).map((a) => ({ [q]: a })))];
+  const warn = {};
+  for (const path of paths) for (const profile of wProfiles) for (const sid of wStages) {
+    for (const v of [...cat.stages.find((x) => x.id === sid).options.map((o) => o.id), 'skip']) {
+      const ids = warnings(cat, normDesign({ path, profile, stages: { [sid]: pick(v) } })).map((x) => x.id);
+      if (ids.length) warn[label(path, profile, { [sid]: v })] = ids.join(',');
+    }
+  }
+  /* Mỗi nhóm một chuỗi, một chữ mỗi thiết kế (chữ thứ i của `ids`), cắt dòng 100 chữ cho diff dễ đọc. */
+  const enc = (fid) => advice[fid].map((r) => String.fromCharCode(97 + grids[fid].ids.indexOf(r.id))).join('').match(/.{1,100}/g);
+  const now = { note: 'Sinh bởi node step-planner/tools/test-core.mjs --write-snapshot; lưới ở designSnapshot() trong file ấy. Không sửa tay.',
+    advice: Object.fromEntries(Object.keys(advice).map((fid) => [fid, { ...grids[fid], grid: enc(fid) }])), warnings: warn };
+  if (process.argv.includes('--write-snapshot')) {
+    writeFileSync(file, JSON.stringify(now, null, 1) + '\n');
+    check('ảnh chụp System design: đã sinh lại tools/design-snapshot.json', true, `${Object.values(advice).flat().length} gợi ý, ${Object.keys(warn).length} thiết kế có luật báo`);
+    return;
+  }
+  let old = null;
+  try { old = JSON.parse(readFileSync(file, 'utf8')); } catch (e) { /* chưa có file: báo bên dưới */ }
+  if (!old) { check('ảnh chụp System design: có tools/design-snapshot.json', false, 'chạy: node step-planner/tools/test-core.mjs --write-snapshot'); return; }
+  const diffs = [];
+  for (const [fid, rows] of Object.entries(advice)) {
+    const o = old.advice[fid];
+    const { grid: _g, ...was } = o || {};
+    if (!o || !eq(was, grids[fid])) { diffs.push(`${fid}: lưới đổi (danh mục đổi khâu, câu hay kiến trúc)`); continue; }
+    const s = o.grid.join('');
+    rows.forEach((r, i) => {
+      const before = o.ids[s.charCodeAt(i) - 97];
+      if (before !== r.id) diffs.push(`${fid} @ ${r.at || '(trống)'}: ${JSON.stringify(before)} → ${JSON.stringify(r.id)}`);
+    });
+  }
+  for (const k of new Set([...Object.keys(old.warnings), ...Object.keys(warn)])) {
+    if (old.warnings[k] !== warn[k]) diffs.push(`luật báo @ ${k}: ${old.warnings[k] || '—'} → ${warn[k] || '—'}`);
+  }
+  check('ảnh chụp System design: gợi ý kiến trúc và luật báo khớp tools/design-snapshot.json (đổi có chủ ý: --write-snapshot)',
+    !diffs.length, `${diffs.length} khác: ${diffs.slice(0, 6).join(' | ')}`);
 }
 
 if (fails) { console.log(`test-core: ${fails} LỖI`); process.exit(1); }

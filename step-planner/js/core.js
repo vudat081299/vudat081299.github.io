@@ -629,8 +629,13 @@ export const splitInline = (line) => splitDots(protect(line)).map(restore);
 /* Nhãn Markdown: xuất nhãn tiếng Anh (định dạng 3); nhập nhận cả nhãn tiếng Việt của định dạng 2, không phân biệt hoa
  * thường. */
 const LABELS = {
-  goal: ['Goal', 'Mục tiêu'], doneWhen: ['Done when', 'Xong khi'], reopened: ['Reopened', 'Quay lại'], iteration: ['Iteration', 'Vòng'], // lang: vi — nhãn định dạng 2, chỉ để nhập
-  notes: ['Notes', 'Ghi chú'], docs: ['Docs', 'Tài liệu'], why: ['Why', 'Vì sao'], // lang: vi — nhãn định dạng 2, chỉ để nhập
+  goal: ['Goal', 'Mục tiêu'], // lang: vi — nhãn định dạng 2, chỉ để nhập
+  doneWhen: ['Done when', 'Xong khi'],
+  reopened: ['Reopened', 'Quay lại'], // lang: vi — nhãn định dạng 2, chỉ để nhập
+  iteration: ['Iteration', 'Vòng'], // lang: vi — nhãn định dạng 2, chỉ để nhập
+  notes: ['Notes', 'Ghi chú'], // lang: vi — nhãn định dạng 2, chỉ để nhập
+  docs: ['Docs', 'Tài liệu'], // lang: vi — nhãn định dạng 2, chỉ để nhập
+  why: ['Why', 'Vì sao'], // lang: vi — nhãn định dạng 2, chỉ để nhập
   /* Lý do của bước con: xuất nhãn theo trạng thái (REASON_LABEL); nhập nhận nhãn nào cũng được nếu trạng thái có lý do. */
   reason: ['Cancelled because', 'Huỷ vì', 'Blocked by', 'Waiting on'], // lang: vi — nhãn định dạng 2, chỉ để nhập
   step: ['Step', 'Bước'], // lang: vi — nhãn định dạng 2, chỉ để nhập
