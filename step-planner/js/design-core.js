@@ -117,8 +117,19 @@ export function rankOptions(stage, profile, path = null) {
 }
 
 /**
- * Áp lối vào thiết kế: chỉ khâu chưa quyết. Khâu lối bỏ (`skip`) thành "không cần"; khâu lối cần (`need`) có gợi ý thì chọn
- * phương án đứng đầu (hợp hồ sơ, ưu tiên gợi ý của lối). Khâu `maybe` để người dùng tự quyết. Không đụng khâu đã quyết.
+ * Khâu chỉ cần khi hồ sơ khớp (`when` của khâu: câu hồ sơ → các câu trả lời). Trả các câu đã trả lời mà không khớp
+ * (rỗng: khâu cần, hoặc chưa biết vì câu chưa trả lời). @param {any} stage @param {Record<string,string>} profile
+ * @returns {string[]}
+ */
+export function notNeededBy(stage, profile) {
+  const when = isObj(stage.when) ? stage.when : {};
+  return Object.entries(when).filter(([k, v]) => profile[k] && Array.isArray(v) && !v.includes(profile[k])).map(([k]) => k);
+}
+
+/**
+ * Áp lối vào thiết kế: chỉ khâu chưa quyết. Khâu lối bỏ (`skip`) hay hồ sơ cho là không cần (`when`) thành "không cần"; khâu
+ * lối cần (`need`) có gợi ý thì chọn phương án đứng đầu (hợp hồ sơ, ưu tiên gợi ý của lối). Khâu `maybe` để người dùng tự
+ * quyết. Không đụng khâu đã quyết.
  * @param {any} cat @param {any} design @param {string} pathId
  * @returns {{next: any, filled: string[], skipped: string[]}}
  */
@@ -134,7 +145,7 @@ export function applyPath(cat, design, pathId) {
     if (stageState(d, s.id) !== 'open') continue;
     const need = path.stages[s.id];
     const rec = d.stages[s.id] || { pick: [], skip: false, own: '', note: '' };
-    if (need === 'skip') {
+    if (need === 'skip' || notNeededBy(s, prof).length) {
       rec.skip = true;
       skipped.push(s.id);
     } else if (need === 'need' && path.suggest[s.id]) {
@@ -473,6 +484,10 @@ export function catalogErrors(cat) {
     if (!ID.test(s.id) || seen.has(s.id)) err.push(`stage id: ${s.id}`);
     seen.add(s.id);
     if (!['data', 'model', 'app', 'ops'].includes(s.lane)) err.push(`${s.id}: lane ${s.lane}`);
+    for (const [k, v] of Object.entries(isObj(s.when) ? s.when : {})) {
+      const ok = answers.get(k);
+      if (!ok || !Array.isArray(v) || v.some((a) => !ok.has(a))) err.push(`${s.id}: when ${k}`);
+    }
     const ids = new Set();
     for (const o of s.options || []) {
       if (!ID.test(o.id) || ids.has(o.id) || o.id === 'skip' || o.id === 'own') err.push(`${s.id}: option id ${o.id}`);

@@ -15,6 +15,7 @@
       "switch": "Đổi sang Interactive demo khi người xem cần tự lọc, kéo thanh trượt hay nhập dữ liệu. Đổi sang Scheduled pipeline khi báo cáo phải làm lại theo lịch với dữ liệu mới.",
       "ask": [
         "size",
+        "kind",
         "fresh",
         "gpu"
       ],
@@ -26,9 +27,12 @@
         "ingest": "maybe",
         "raw": "need",
         "process": "need",
+        "validate": "maybe",
         "store": "maybe",
+        "label": "maybe",
         "train": "maybe",
         "track": "maybe",
+        "search": "skip",
         "serve": "skip",
         "app": "need",
         "package": "need",
@@ -46,6 +50,10 @@
           "pandas",
           "duckdb",
           "polars"
+        ],
+        "validate": [
+          "assert-checks",
+          "pandera"
         ],
         "store": [
           "parquet-duckdb"
@@ -88,7 +96,9 @@
       "switch": "Đổi sang Separate frontend + backend khi một app khác (web, mobile) cũng cần gọi model, hay khi nhiều người dùng cùng lúc. Đổi sang Notebook & report khi người xem không cần tương tác.",
       "ask": [
         "size",
+        "kind",
         "fresh",
+        "ai",
         "users",
         "budget",
         "gpu"
@@ -101,9 +111,12 @@
         "ingest": "maybe",
         "raw": "need",
         "process": "need",
+        "validate": "maybe",
         "store": "maybe",
+        "label": "maybe",
         "train": "maybe",
         "track": "maybe",
+        "search": "maybe",
         "serve": "maybe",
         "app": "need",
         "package": "need",
@@ -122,6 +135,10 @@
           "duckdb",
           "polars"
         ],
+        "validate": [
+          "assert-checks",
+          "pandera"
+        ],
         "store": [
           "parquet-duckdb"
         ],
@@ -132,8 +149,15 @@
         "track": [
           "git-results"
         ],
+        "search": [
+          "sqlite-fts5",
+          "chroma",
+          "faiss"
+        ],
         "serve": [
-          "in-app"
+          "in-app",
+          "llm-api",
+          "hf-inference"
         ],
         "app": [
           "streamlit",
@@ -148,7 +172,8 @@
           "hf-spaces"
         ],
         "monitor": [
-          "logs-weekly"
+          "logs-weekly",
+          "sentry"
         ]
       },
       "accept": [
@@ -172,8 +197,10 @@
       "switch": "Lùi về Interactive demo khi chỉ có một giao diện Python và vài người dùng: bớt hẳn một service phải deploy. Thêm Scheduled pipeline khi bảng sạch phải làm mới theo lịch.",
       "ask": [
         "size",
+        "kind",
         "fresh",
         "latency",
+        "ai",
         "users",
         "budget",
         "gpu"
@@ -186,9 +213,12 @@
         "ingest": "maybe",
         "raw": "need",
         "process": "need",
+        "validate": "maybe",
         "store": "need",
+        "label": "maybe",
         "train": "maybe",
         "track": "maybe",
+        "search": "maybe",
         "serve": "need",
         "app": "need",
         "package": "need",
@@ -209,6 +239,10 @@
           "polars",
           "pandas"
         ],
+        "validate": [
+          "pandera",
+          "assert-checks"
+        ],
         "store": [
           "parquet-duckdb",
           "postgresql",
@@ -223,9 +257,16 @@
           "git-results",
           "mlflow"
         ],
+        "search": [
+          "postgres-fts",
+          "pgvector",
+          "qdrant"
+        ],
         "serve": [
           "fastapi",
-          "serverless"
+          "serverless",
+          "llm-api",
+          "hf-inference"
         ],
         "app": [
           "web-app",
@@ -234,16 +275,20 @@
         "package": [
           "uv",
           "docker",
+          "docker-compose",
           "github-actions",
           "requirements"
         ],
         "host": [
           "render",
           "cloud-run",
-          "vps-docker"
+          "fly-io",
+          "vps-docker",
+          "vercel"
         ],
         "monitor": [
           "uptime",
+          "sentry",
           "logs-weekly"
         ]
       },
@@ -269,6 +314,7 @@
       "switch": "Lùi về Notebook & report khi thực ra chỉ chạy vài lần bằng tay. Thêm Separate frontend + backend khi người dùng cần hỏi dữ liệu theo yêu cầu.",
       "ask": [
         "size",
+        "kind",
         "fresh",
         "latency",
         "users",
@@ -282,9 +328,12 @@
         "ingest": "need",
         "raw": "need",
         "process": "need",
+        "validate": "need",
         "store": "need",
+        "label": "maybe",
         "train": "maybe",
         "track": "maybe",
+        "search": "maybe",
         "serve": "maybe",
         "app": "maybe",
         "package": "need",
@@ -296,6 +345,7 @@
           "github-actions",
           "prefect",
           "cron",
+          "dagster",
           "airflow"
         ],
         "raw": [
@@ -311,6 +361,11 @@
           "dbt",
           "pandas"
         ],
+        "validate": [
+          "pandera",
+          "dbt-tests",
+          "great-expectations"
+        ],
         "store": [
           "parquet-duckdb",
           "postgresql",
@@ -322,6 +377,11 @@
         "track": [
           "mlflow",
           "git-results"
+        ],
+        "search": [
+          "postgres-fts",
+          "pgvector",
+          "elasticsearch"
         ],
         "serve": [
           "batch-file"
@@ -342,6 +402,7 @@
           "cloud-run"
         ],
         "monitor": [
+          "healthchecks",
           "logs-weekly",
           "re-eval",
           "evidently"
@@ -372,6 +433,25 @@
         {
           "id": "large",
           "label": "More than one machine (> 100 GB)"
+        }
+      ]
+    },
+    {
+      "id": "kind",
+      "label": "What kind of data?",
+      "help": "Bảng (hàng, cột) thường có sẵn cột nhãn và hợp phần lớn công cụ. Văn bản, ảnh, âm thanh thường phải gán nhãn tay, cần nhiều chỗ lưu file và model học sâu.",
+      "choices": [
+        {
+          "id": "tables",
+          "label": "Tables (rows and columns)"
+        },
+        {
+          "id": "text",
+          "label": "Text or documents"
+        },
+        {
+          "id": "media",
+          "label": "Images, audio or video"
         }
       ]
     },
@@ -410,6 +490,25 @@
         {
           "id": "online",
           "label": "An answer on request, in about a second"
+        }
+      ]
+    },
+    {
+      "id": "ai",
+      "label": "Search or LLM in the product?",
+      "help": "Tìm theo từ khoá cần một chỉ mục full-text. Tìm theo nghĩa (embeddings), RAG hay chatbot trên tài liệu cần một chỉ mục vector và một model chạy ở đâu đó. Không có thì khâu Search & retrieval không cần.",
+      "choices": [
+        {
+          "id": "none",
+          "label": "No"
+        },
+        {
+          "id": "keyword",
+          "label": "Keyword search over records"
+        },
+        {
+          "id": "llm",
+          "label": "An LLM or search by meaning (RAG, embeddings)"
         }
       ]
     },
@@ -477,6 +576,7 @@
       "multi": true,
       "skipWhen": "",
       "task": "Có bản dữ liệu thô đầu tiên lấy từ nguồn đã chọn; README ghi nguồn, ngày lấy và quyền sử dụng.",
+      "when": {},
       "options": [
         {
           "id": "kaggle-datasets",
@@ -691,6 +791,7 @@
       "multi": false,
       "skipWhen": "Bỏ qua khi bạn chỉ tải một file về bằng trình duyệt và không cần tải lại.",
       "task": "Một lệnh lấy dữ liệu mới chạy được từ đầu tới cuối bằng công cụ đã chọn; README có lệnh chạy lại.",
+      "when": {},
       "options": [
         {
           "id": "notebook-script",
@@ -821,6 +922,38 @@
           "task": "Flow ingest đã được deploy với lịch chạy và giao diện Prefect hiện một lượt chạy thành công."
         },
         {
+          "id": "dagster",
+          "name": "Dagster",
+          "kind": "Asset-based orchestrator",
+          "summary": "Điều phối pipeline theo tài sản dữ liệu (bảng, file, model) thay vì theo task; giao diện web cho thấy tài sản nào cũ, lần chạy nào hỏng.",
+          "pick": "Chọn khi pipeline có nhiều bảng phụ thuộc nhau và bạn muốn thấy bảng nào đã cập nhật, bảng nào cần chạy lại.",
+          "avoid": "Tránh khi chỉ có một script chạy mỗi ngày: cron hay GitHub Actions là đủ.",
+          "cost": "free",
+          "level": 2,
+          "fit": {
+            "fresh": [
+              "batch"
+            ],
+            "size": [
+              "medium",
+              "large"
+            ]
+          },
+          "links": [
+            {
+              "title": "Quickstart",
+              "url": "https://dagster.io/docs/getting-started/quickstart"
+            }
+          ],
+          "setup": [
+            "uvx create-dagster@latest project dagster-quickstart",
+            "cd dagster-quickstart",
+            "source .venv/bin/activate",
+            "dg dev"
+          ],
+          "task": "Một asset ingest có lịch chạy, hiện trên giao diện Dagster và đã chạy xanh ít nhất một lần."
+        },
+        {
           "id": "airflow",
           "name": "Apache Airflow",
           "kind": "Workflow orchestrator (DAG)",
@@ -893,6 +1026,7 @@
       "multi": false,
       "skipWhen": "",
       "task": "Dữ liệu thô nằm ở nơi đã chọn, không sửa tay; README ghi cách lấy lại từ đầu.",
+      "when": {},
       "options": [
         {
           "id": "project-folder",
@@ -1062,6 +1196,10 @@
             "fresh": [
               "batch",
               "stream"
+            ],
+            "kind": [
+              "tables",
+              "text"
             ]
           },
           "links": [
@@ -1088,6 +1226,7 @@
       "multi": false,
       "skipWhen": "",
       "task": "Một lệnh biến dữ liệu thô thành bảng sạch trên dữ liệu mẫu, chạy lại ra cùng kết quả; README có lệnh ấy.",
+      "when": {},
       "options": [
         {
           "id": "pandas",
@@ -1262,6 +1401,187 @@
             "pip install pyspark"
           ],
           "task": "Job PySpark đọc dữ liệu thô từ object storage, làm sạch, và ghi Parquet chia partition theo ngày."
+        },
+        {
+          "id": "databricks",
+          "name": "Databricks Free Edition",
+          "kind": "Managed Spark notebooks",
+          "summary": "Workspace Databricks không mất phí cho người học: notebook, Spark, SQL chạy serverless, có hạn mức. Thay cho Community Edition đã ngừng năm 2025.",
+          "pick": "Chọn khi muốn học hay chạy Spark mà không tự dựng cụm, hoặc khi dữ liệu quá lớn cho một máy.",
+          "avoid": "Tránh làm nơi chạy pipeline của sản phẩm: bản Free có hạn mức và chỉ chạy serverless. Dữ liệu vừa một ổ đĩa thì DuckDB / Polars nhanh và đơn giản hơn.",
+          "cost": "free",
+          "level": 2,
+          "fit": {
+            "size": [
+              "large"
+            ],
+            "budget": [
+              "free",
+              "low"
+            ]
+          },
+          "links": [
+            {
+              "title": "Databricks Free Edition",
+              "url": "https://docs.databricks.com/aws/en/getting-started/free-edition"
+            }
+          ],
+          "setup": [],
+          "task": "Notebook trên Free Edition đọc dữ liệu thô, biến đổi bằng PySpark hoặc SQL, ghi bảng sạch; notebook được xuất về repo."
+        },
+        {
+          "id": "hadoop",
+          "name": "Apache Hadoop (HDFS, YARN, MapReduce)",
+          "kind": "Distributed storage + batch compute",
+          "summary": "Hệ sinh thái gốc của big data: HDFS chia file lên nhiều máy, YARN cấp tài nguyên, MapReduce chạy job theo lô. Nay chủ yếu gặp ở cụm cũ của doanh nghiệp và trong giáo trình.",
+          "pick": "Chọn khi môn học hay nơi làm yêu cầu Hadoop, hoặc khi muốn hiểu HDFS, MapReduce mà Spark và các kho dữ liệu sau này kế thừa.",
+          "avoid": "Tránh cho dự án một người: dựng cụm cần Java, ssh, cấu hình nhiều daemon, và job MapReduce viết dài hơn Spark nhiều. Dữ liệu lớn thì Spark (trên một máy hay Databricks Free Edition); vừa một ổ đĩa thì DuckDB / Polars.",
+          "cost": "free",
+          "level": 3,
+          "fit": {
+            "size": [
+              "large"
+            ]
+          },
+          "links": [
+            {
+              "title": "Hadoop: Setting up a Single Node Cluster",
+              "url": "https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-common/SingleCluster.html"
+            }
+          ],
+          "setup": [
+            "bin/hdfs namenode -format",
+            "sbin/start-dfs.sh"
+          ],
+          "task": "Cụm giả lập trên một máy (pseudo-distributed) chạy, dữ liệu đưa được lên HDFS, và một job mẫu đọc ra kết quả."
+        }
+      ]
+    },
+    {
+      "id": "validate",
+      "title": "Data validation",
+      "lane": "data",
+      "question": "Bạn kiểm bảng sạch bằng gì trước khi bước sau dùng nó?",
+      "guide": "Kiểm dữ liệu là viết thành luật những điều bảng sạch phải đúng: đủ cột, đúng kiểu, khoá không trùng, giá trị trong khoảng hợp lý, số dòng không tụt bất thường.\nLuật chạy mỗi lần làm sạch; trượt thì dừng và giữ bản sạch cũ, không công bố bản lỗi.\nDữ liệu cố định thì vài câu assert là đủ; dữ liệu mới tới theo lịch thì cần một cổng chất lượng thật sự.\nBước sau (Analytical store) chỉ nhận bản đã qua kiểm.",
+      "multi": false,
+      "skipWhen": "Bỏ qua khi chỉ phân tích một lần một bảng nhỏ và bạn đã tự xem từng cột trong notebook.",
+      "task": "Luật kiểm chạy được trên bảng sạch; một bản cố ý sai (thiếu cột, khoá trùng) bị chặn kèm thông báo rõ.",
+      "when": {},
+      "options": [
+        {
+          "id": "assert-checks",
+          "name": "assert + pytest",
+          "kind": "Checks in plain Python",
+          "summary": "Vài câu assert ngay sau bước làm sạch (đủ cột, khoá không trùng, không âm) và vài test pytest chạy trên dữ liệu mẫu. Không phải học thêm thư viện.",
+          "pick": "Chọn khi dữ liệu cố định hoặc nhỏ, và bạn chỉ cần chắc vài điều quan trọng nhất luôn đúng.",
+          "avoid": "Tránh làm cổng chính của pipeline chạy theo lịch với nhiều bảng: assert dừng ở lỗi đầu tiên, không cho báo cáo gọn những gì đã trượt.",
+          "cost": "free",
+          "level": 1,
+          "fit": {
+            "fresh": [
+              "once"
+            ],
+            "size": [
+              "small",
+              "medium"
+            ]
+          },
+          "links": [
+            {
+              "title": "pytest: Get started",
+              "url": "https://docs.pytest.org/en/stable/getting-started.html"
+            }
+          ],
+          "setup": [
+            "pip install -U pytest",
+            "pytest"
+          ],
+          "task": "Có file test kiểm cột, kiểu, khoá của bảng sạch; pytest xanh trên dữ liệu mẫu và đỏ trên một bản cố ý sai."
+        },
+        {
+          "id": "pandera",
+          "name": "Pandera",
+          "kind": "DataFrame schema validation",
+          "summary": "Thư viện khai schema cho DataFrame: cột, kiểu, khoảng giá trị, luật tuỳ ý (Check). Kiểm pandas, Polars, PySpark; chế độ lazy báo mọi lỗi trong một lượt.",
+          "pick": "Chọn khi làm sạch bằng pandas hay Polars và muốn một schema rõ ràng làm hợp đồng cho bảng sạch, chạy được trong script lẫn test.",
+          "avoid": "Tránh khi phép biến đổi viết bằng SQL trong dbt: dùng dbt tests cho luật nằm cùng một chỗ.",
+          "cost": "free",
+          "level": 1,
+          "fit": {
+            "size": [
+              "small",
+              "medium"
+            ]
+          },
+          "links": [
+            {
+              "title": "Pandera docs",
+              "url": "https://pandera.readthedocs.io/en/stable/"
+            }
+          ],
+          "setup": [
+            "pip install 'pandera[pandas]'"
+          ],
+          "task": "Schema của bảng sạch nằm trong code, chạy mỗi lần làm sạch; bản thiếu cột hay sai kiểu bị chặn kèm danh sách lỗi."
+        },
+        {
+          "id": "dbt-tests",
+          "name": "dbt tests",
+          "kind": "SQL data tests",
+          "summary": "Luật khai trong file .yml cạnh model dbt (unique, not_null, accepted_values, relationships) hoặc một câu SELECT trả về các dòng sai; dbt test chạy tất cả.",
+          "pick": "Chọn khi bước Processing dùng dbt: luật nằm cạnh model và chạy cùng pipeline.",
+          "avoid": "Tránh khi không dùng dbt: cài dbt chỉ để kiểm thì nặng hơn Pandera hay assert.",
+          "cost": "free",
+          "level": 2,
+          "fit": {
+            "fresh": [
+              "batch"
+            ]
+          },
+          "links": [
+            {
+              "title": "Data tests",
+              "url": "https://docs.getdbt.com/docs/build/data-tests"
+            }
+          ],
+          "setup": [
+            "dbt test"
+          ],
+          "task": "Model sạch có test unique và not_null trên khoá; dbt test xanh, và đỏ khi cố ý chèn một dòng trùng khoá."
+        },
+        {
+          "id": "great-expectations",
+          "name": "Great Expectations (GX Core)",
+          "kind": "Data quality framework",
+          "summary": "Thư viện Python khai các Expectation (luật về dữ liệu) rồi chạy thành lượt kiểm trên pandas, Spark hay SQL; GX Core là bản mã nguồn mở.",
+          "pick": "Chọn khi pipeline có nhiều bảng, nhiều nguồn, và bạn muốn một bộ luật kiểm tập trung kèm kết quả cho người khác đọc.",
+          "avoid": "Tránh khi chỉ có một hai bảng: phải học nhiều khái niệm (context, data source, checkpoint) trước khi chạy được luật đầu tiên.",
+          "cost": "free",
+          "level": 3,
+          "fit": {
+            "fresh": [
+              "batch",
+              "stream"
+            ],
+            "size": [
+              "medium",
+              "large"
+            ]
+          },
+          "links": [
+            {
+              "title": "Install GX Core",
+              "url": "https://docs.greatexpectations.io/docs/core/set_up_a_gx_environment/install_gx"
+            },
+            {
+              "title": "GX Core introduction",
+              "url": "https://docs.greatexpectations.io/docs/core/introduction/"
+            }
+          ],
+          "setup": [
+            "pip install great_expectations"
+          ],
+          "task": "Một bộ Expectation cho bảng sạch chạy trong pipeline; lượt kiểm trượt thì pipeline dừng và kết quả xem lại được."
         }
       ]
     },
@@ -1269,11 +1589,12 @@
       "id": "store",
       "title": "Analytical store & query",
       "lane": "data",
-      "question": "Dữ liệu sạch được lưu ở đâu để truy vấn và phân tích?",
-      "guide": "Kho phân tích giữ bảng sạch để notebook, dashboard và mô hình cùng đọc.\nDữ liệu nhỏ: một file Parquet hoặc SQLite, truy vấn chạy ngay trên máy bạn.\nDữ liệu vừa hoặc cần nhiều người truy cập: một server PostgreSQL nhận câu SQL qua mạng.\nDữ liệu lớn: warehouse trên cloud chia câu SQL cho nhiều máy chạy song song và tính phí theo lượng dữ liệu quét.",
-      "multi": false,
+      "question": "Dữ liệu sạch được lưu ở đâu để truy vấn, phân tích và phục vụ app?",
+      "guide": "Kho phân tích giữ bảng sạch để notebook, dashboard và mô hình cùng đọc.\nDữ liệu nhỏ: một file Parquet hoặc SQLite, truy vấn chạy ngay trên máy bạn.\nDữ liệu vừa hoặc cần nhiều người truy cập: một server PostgreSQL nhận câu SQL qua mạng.\nDữ liệu lớn: warehouse trên cloud chia câu SQL cho nhiều máy chạy song song và tính phí theo lượng dữ liệu quét.\nApp cần thêm kho phục vụ (cache, tài liệu JSON) thì chọn thêm, cạnh kho phân tích.",
+      "multi": true,
       "skipWhen": "Bỏ qua khi bạn chỉ có một bảng nhỏ và đọc thẳng từ file sạch trong notebook.",
       "task": "Bảng sạch nạp vào kho đã chọn và một truy vấn mẫu trả đúng số dòng.",
+      "when": {},
       "options": [
         {
           "id": "parquet-duckdb",
@@ -1503,6 +1824,219 @@
           ],
           "setup": [],
           "task": "Warehouse có auto-suspend, bảng sạch đã nạp, và có resource monitor giới hạn chi phí."
+        },
+        {
+          "id": "clickhouse",
+          "name": "ClickHouse",
+          "kind": "Column-oriented OLAP database",
+          "summary": "CSDL SQL cho truy vấn phân tích nhanh trên bảng sự kiện, log rất lớn; chạy một file nhị phân trên máy bạn hoặc dùng ClickHouse Cloud.",
+          "pick": "Chọn khi sự kiện, log đổ về liên tục và dashboard phải truy vấn chúng nhanh.",
+          "avoid": "Tránh khi dữ liệu vừa vài file Parquet: DuckDB cho cùng kiểu SQL phân tích mà không cần máy chủ.",
+          "cost": "free",
+          "level": 3,
+          "fit": {
+            "fresh": [
+              "stream"
+            ],
+            "size": [
+              "medium",
+              "large"
+            ]
+          },
+          "links": [
+            {
+              "title": "Quick install",
+              "url": "https://clickhouse.com/docs/install/quick-install-curl"
+            }
+          ],
+          "setup": [
+            "curl https://clickhouse.com/ | sh",
+            "./clickhouse server",
+            "./clickhouse client"
+          ],
+          "task": "Bảng sự kiện nạp vào ClickHouse; truy vấn gộp theo ngày trả đúng số đã đối chiếu."
+        },
+        {
+          "id": "mongodb",
+          "name": "MongoDB (Atlas)",
+          "kind": "Document database",
+          "summary": "Lưu bản ghi dạng JSON lồng nhau, không cần khai bảng trước. Atlas CLI dựng một cụm miễn phí trên cloud hoặc một bản chạy trên máy bằng Docker.",
+          "pick": "Chọn khi app ghi và đọc tài liệu JSON có cấu trúc hay đổi (dữ liệu API, bài viết), hoặc khi đồ án yêu cầu NoSQL.",
+          "avoid": "Tránh làm kho phân tích: gộp nhóm, join trên bảng phẳng (Parquet, PostgreSQL) dễ hơn nhiều; làm phẳng JSON ở bước Processing rồi phân tích.",
+          "cost": "freemium",
+          "level": 2,
+          "fit": {
+            "kind": [
+              "text"
+            ]
+          },
+          "links": [
+            {
+              "title": "Get started with Atlas",
+              "url": "https://www.mongodb.com/docs/atlas/getting-started/"
+            }
+          ],
+          "setup": [
+            "brew install mongodb-atlas",
+            "atlas setup --clusterName myDeployment --provider AWS --region us-east-1 --skipSampleData --username <database username> --password <database user password> --connectWith skip --force"
+          ],
+          "task": "Collection chứa tài liệu thật, có index cho trường hay lọc; một truy vấn mẫu trả đúng số tài liệu."
+        },
+        {
+          "id": "redis",
+          "name": "Redis",
+          "kind": "In-memory key-value store",
+          "summary": "Kho key-value trong RAM, trả lời rất nhanh; hay dùng làm cache kết quả, hàng đợi việc, đếm giới hạn request. Từ Redis 8 có thêm lựa chọn giấy phép AGPLv3 bên cạnh RSALv2 và SSPLv1.",
+          "pick": "Chọn thêm cạnh kho chính khi API phải trả lời lặp lại một phép tính nặng (cache) hay đẩy việc chạy lâu ra hàng đợi.",
+          "avoid": "Tránh làm kho chính hay kho phân tích: dữ liệu nằm trong RAM, không có SQL. App một tiến trình thì cache của framework (st.cache_data, functools.lru_cache) là đủ.",
+          "cost": "free",
+          "level": 2,
+          "fit": {
+            "users": [
+              "public"
+            ]
+          },
+          "links": [
+            {
+              "title": "Run Redis on Docker",
+              "url": "https://redis.io/docs/latest/operate/oss_and_stack/install/install-stack/docker/"
+            },
+            {
+              "title": "Licenses",
+              "url": "https://redis.io/legal/licenses/"
+            }
+          ],
+          "setup": [
+            "docker run -d --name redis -p 6379:6379 redis:<version>",
+            "docker exec -it redis redis-cli"
+          ],
+          "task": "API đọc cache trước, tính và ghi cache khi chưa có; lần gọi thứ hai cùng đầu vào nhanh hơn rõ và trả cùng kết quả."
+        },
+        {
+          "id": "feast",
+          "name": "Feast",
+          "kind": "Feature store",
+          "summary": "Khai feature một lần, lấy bản lịch sử để train (join theo thời điểm, không lộ giá trị tương lai) và bản mới nhất để dự đoán online.",
+          "pick": "Chọn khi nhiều model, nhiều người dùng chung một bộ feature, và dự đoán online phải dùng đúng giá trị feature như lúc train.",
+          "avoid": "Tránh cho dự án một người, một model: một hàm tạo feature dùng chung cho train và predict, kèm test, đạt cùng mục đích mà không thêm hệ thống.",
+          "cost": "free",
+          "level": 3,
+          "fit": {
+            "latency": [
+              "online"
+            ],
+            "users": [
+              "public"
+            ]
+          },
+          "links": [
+            {
+              "title": "Quickstart",
+              "url": "https://docs.feast.dev/getting-started/quickstart"
+            }
+          ],
+          "setup": [
+            "pip install feast",
+            "feast init my_project",
+            "cd my_project/feature_repo",
+            "feast apply"
+          ],
+          "task": "Feature view khai trong repo; feast apply chạy được; bảng train lấy theo thời điểm và lời gọi online trả cùng giá trị feature."
+        }
+      ]
+    },
+    {
+      "id": "label",
+      "title": "Labeling",
+      "lane": "model",
+      "question": "Nhãn để train mô hình lấy từ đâu?",
+      "guide": "Học có giám sát cần nhãn: đáp án đúng cho từng mẫu (thư rác hay không, trong ảnh là vật gì).\nDữ liệu bảng thường có sẵn nhãn là một cột; văn bản, ảnh, âm thanh thường phải gán tay.\nViết hướng dẫn gán trước, gán thử một phần nhỏ hai lần và so độ khớp, rồi mới gán nhiều.\nNhãn xong được xuất thành file để bước Training đọc.",
+      "multi": false,
+      "skipWhen": "Bỏ qua khi dữ liệu đã có cột nhãn, hoặc dự án không train mô hình có giám sát.",
+      "task": "Có file nhãn kèm hướng dẫn gán; một mẫu nhỏ được gán hai lần và độ khớp đã ghi lại.",
+      "when": {
+        "kind": [
+          "text",
+          "media"
+        ]
+      },
+      "options": [
+        {
+          "id": "spreadsheet-labels",
+          "name": "Spreadsheet / CSV",
+          "kind": "Manual labels in a table",
+          "summary": "Thêm một cột nhãn vào file CSV hay bảng tính, mỗi dòng một mẫu (đoạn văn ngắn, hoặc đường dẫn tới ảnh). Không cài gì thêm.",
+          "pick": "Chọn khi số mẫu ít, văn bản ngắn, và một mình bạn gán.",
+          "avoid": "Tránh với ảnh cần khoanh vùng, âm thanh, hay khi nhiều người cùng gán: không có giao diện xem mẫu, không ghi ai gán gì.",
+          "cost": "free",
+          "level": 1,
+          "fit": {
+            "kind": [
+              "tables",
+              "text"
+            ],
+            "size": [
+              "small"
+            ]
+          },
+          "links": [
+            {
+              "title": "Datasets: Labels (Google ML Crash Course)",
+              "url": "https://developers.google.com/machine-learning/crash-course/overfitting/labels"
+            }
+          ],
+          "setup": [],
+          "task": "File nhãn có một cột nhãn lấy từ danh sách giá trị cố định; một phần mẫu được gán lại lần hai để so độ khớp."
+        },
+        {
+          "id": "label-studio",
+          "name": "Label Studio",
+          "kind": "Open-source labeling tool",
+          "summary": "Giao diện web chạy trên máy bạn để gán nhãn văn bản, ảnh, âm thanh; xuất nhãn ra file cho script train. Có Community Edition miễn phí và bản Enterprise.",
+          "pick": "Chọn khi cần giao diện gán nhãn cho văn bản hay ảnh, kể cả gán thực thể trong câu hay khoanh vùng trong ảnh.",
+          "avoid": "Tránh khi nhãn đã có sẵn trong dữ liệu. Nhớ sao lưu dữ liệu của Label Studio, vì nhãn nằm ở đó cho tới khi bạn xuất.",
+          "cost": "free",
+          "level": 2,
+          "fit": {
+            "kind": [
+              "text",
+              "media"
+            ]
+          },
+          "links": [
+            {
+              "title": "Quick start",
+              "url": "https://labelstud.io/guide/quick_start"
+            }
+          ],
+          "setup": [
+            "pip install label-studio",
+            "label-studio start"
+          ],
+          "task": "Một project Label Studio có hướng dẫn gán, đã gán và xuất được file nhãn mà script train đọc được."
+        },
+        {
+          "id": "cvat",
+          "name": "CVAT",
+          "kind": "Image and video annotation",
+          "summary": "Nền tảng gán nhãn cho thị giác máy tính: ảnh, video, 3D, âm thanh. Có CVAT Online (có gói Free) và bản Community tự cài, mã nguồn MIT.",
+          "pick": "Chọn khi cần vẽ khung, đa giác hay theo dấu vật thể qua các khung hình video.",
+          "avoid": "Tránh với văn bản hay bảng: Label Studio hoặc một file CSV gọn hơn.",
+          "cost": "freemium",
+          "level": 2,
+          "fit": {
+            "kind": [
+              "media"
+            ]
+          },
+          "links": [
+            {
+              "title": "CVAT overview",
+              "url": "https://docs.cvat.ai/docs/getting_started/overview/"
+            }
+          ],
+          "setup": [],
+          "task": "Một task CVAT có nhãn trên tập ảnh mẫu, xuất được theo định dạng mà code train của bạn đọc."
         }
       ]
     },
@@ -1515,6 +2049,7 @@
       "multi": false,
       "skipWhen": "Bỏ qua khi dự án chỉ phân tích và báo cáo, không train mô hình.",
       "task": "Huấn luyện chạy được ở môi trường đã chọn trên dữ liệu mẫu; README có lệnh chạy lại.",
+      "when": {},
       "options": [
         {
           "id": "local",
@@ -1707,6 +2242,7 @@
       "multi": true,
       "skipWhen": "",
       "task": "Mỗi lần chạy ghi lại tham số, số đo và file model; tìm lại được lần chạy đã nghiệm thu.",
+      "when": {},
       "options": [
         {
           "id": "git-results",
@@ -1854,14 +2390,285 @@
       ]
     },
     {
+      "id": "search",
+      "title": "Search & retrieval",
+      "lane": "app",
+      "question": "Người dùng tìm trong dữ liệu bằng cách nào?",
+      "guide": "Khâu này dựng chỉ mục để tìm nhanh trong nhiều bản ghi hay tài liệu.\nTìm theo từ khoá (full-text): tách từ, chuẩn hoá, xếp hạng theo độ khớp, như ô tìm kiếm của một trang web.\nTìm theo nghĩa: một model đổi văn bản thành vector (embedding), rồi tìm vector gần nhất. Đây là chữ R của RAG: LLM đọc các đoạn tìm được rồi trả lời.\nDữ liệu sạch đổi thì dựng lại chỉ mục; câu hỏi phải được embed bằng đúng model đã embed tài liệu.",
+      "multi": false,
+      "skipWhen": "Bỏ qua khi sản phẩm không có ô tìm kiếm, không có RAG hay chatbot trên tài liệu.",
+      "task": "Chỉ mục dựng được từ dữ liệu sạch bằng một lệnh; một bộ câu hỏi mẫu có đáp án biết trước tìm ra đúng tài liệu trong vài kết quả đầu.",
+      "when": {
+        "ai": [
+          "keyword",
+          "llm"
+        ]
+      },
+      "options": [
+        {
+          "id": "sqlite-fts5",
+          "name": "SQLite FTS5",
+          "kind": "Embedded full-text index",
+          "summary": "Bảng ảo FTS5 trong một file SQLite: tìm theo từ khoá, cụm từ, có xếp hạng bm25 dựng sẵn. Không cần máy chủ.",
+          "pick": "Chọn khi dữ liệu nhỏ, app chỉ đọc, và bạn muốn một ô tìm kiếm mà không thêm dịch vụ nào.",
+          "avoid": "Tránh khi cần tìm theo nghĩa (từ đồng nghĩa, câu hỏi tự nhiên) hay nhiều người cùng ghi.",
+          "cost": "free",
+          "level": 1,
+          "fit": {
+            "ai": [
+              "keyword"
+            ],
+            "size": [
+              "small"
+            ]
+          },
+          "links": [
+            {
+              "title": "SQLite FTS5",
+              "url": "https://sqlite.org/fts5.html"
+            }
+          ],
+          "setup": [
+            "CREATE VIRTUAL TABLE email USING fts5(sender, title, body);",
+            "SELECT * FROM email WHERE email MATCH 'fts5';"
+          ],
+          "task": "File SQLite có bảng FTS5 dựng từ dữ liệu sạch; truy vấn MATCH trả kết quả xếp theo bm25."
+        },
+        {
+          "id": "postgres-fts",
+          "name": "PostgreSQL full-text search",
+          "kind": "Full-text search in Postgres",
+          "summary": "tsvector, tsquery và toán tử @@ có sẵn trong PostgreSQL: chuẩn hoá từ, bỏ stop word, xếp hạng theo độ khớp, có index. Không thêm dịch vụ nếu đã có Postgres (kể cả Supabase, Neon).",
+          "pick": "Chọn khi dữ liệu đã ở PostgreSQL và cần tìm theo từ khoá kèm lọc theo cột khác trong cùng một câu SQL.",
+          "avoid": "Tránh khi tìm kiếm là tính năng chính, cần tìm mờ, gợi ý khi gõ sai: Elasticsearch / OpenSearch mạnh hơn.",
+          "cost": "free",
+          "level": 2,
+          "fit": {
+            "ai": [
+              "keyword"
+            ],
+            "users": [
+              "few",
+              "public"
+            ]
+          },
+          "links": [
+            {
+              "title": "Full text search: introduction",
+              "url": "https://www.postgresql.org/docs/current/textsearch-intro.html"
+            }
+          ],
+          "setup": [
+            "SELECT to_tsvector('fat cats ate fat rats') @@ to_tsquery('fat & rat');"
+          ],
+          "task": "Cột tsvector có index; truy vấn mẫu trả đúng bản ghi, sắp theo độ khớp."
+        },
+        {
+          "id": "elasticsearch",
+          "name": "Elasticsearch",
+          "kind": "Search engine server",
+          "summary": "Máy chủ tìm kiếm: full-text, lọc, gộp nhóm, cả tìm vector; chạy trên JVM, kèm Kibana để xem dữ liệu. Mã nguồn chọn được giữa SSPL, AGPLv3 và Elastic License 2.0; có Elastic Cloud.",
+          "pick": "Chọn khi tìm kiếm là tính năng chính (nhiều tài liệu, tìm mờ, lọc nhiều chiều), hoặc khi muốn học công cụ nhiều đội dùng cho tìm kiếm và log.",
+          "avoid": "Tránh cho dự án nhỏ một người: một cụm Elasticsearch tốn nhiều RAM và công vận hành. Lệnh start-local chỉ dành cho máy phát triển và kèm license dùng thử.",
+          "cost": "free",
+          "level": 3,
+          "fit": {
+            "ai": [
+              "keyword",
+              "llm"
+            ],
+            "size": [
+              "medium",
+              "large"
+            ]
+          },
+          "links": [
+            {
+              "title": "Local development quickstart",
+              "url": "https://www.elastic.co/docs/deploy-manage/deploy/self-managed/local-development-installation-quickstart"
+            },
+            {
+              "title": "Licensing FAQ",
+              "url": "https://www.elastic.co/pricing/faq/licensing"
+            }
+          ],
+          "setup": [
+            "curl -fsSL https://elastic.co/start-local | sh"
+          ],
+          "task": "Một index có mapping khai rõ nạp được dữ liệu sạch; truy vấn mẫu trả đúng tài liệu; README ghi cách dựng lại index từ đầu."
+        },
+        {
+          "id": "opensearch",
+          "name": "OpenSearch",
+          "kind": "Search engine server",
+          "summary": "Nhánh mã nguồn mở tách từ Elasticsearch, giấy phép Apache 2.0, là dự án của Linux Foundation: full-text, tìm vector, OpenSearch Dashboards.",
+          "pick": "Chọn khi cần một máy chủ tìm kiếm cỡ Elasticsearch nhưng muốn giấy phép Apache 2.0 rõ ràng.",
+          "avoid": "Tránh cho dự án nhỏ một người: cụm cần nhiều RAM, cấu hình máy (vm.max_map_count, tắt swap) và mật khẩu admin trước khi chạy được.",
+          "cost": "free",
+          "level": 3,
+          "fit": {
+            "ai": [
+              "keyword",
+              "llm"
+            ],
+            "size": [
+              "medium",
+              "large"
+            ]
+          },
+          "links": [
+            {
+              "title": "Installation quickstart",
+              "url": "https://docs.opensearch.org/latest/getting-started/quickstart/"
+            },
+            {
+              "title": "OpenSearch project",
+              "url": "https://opensearch.org/"
+            }
+          ],
+          "setup": [
+            "curl -O https://raw.githubusercontent.com/opensearch-project/documentation-website/3.10/assets/examples/docker-compose.yml",
+            "docker compose up -d"
+          ],
+          "task": "Một index nạp được dữ liệu sạch; truy vấn mẫu trả đúng tài liệu; README ghi cách dựng lại index từ đầu."
+        },
+        {
+          "id": "chroma",
+          "name": "Chroma",
+          "kind": "Embedded vector database",
+          "summary": "Vector DB chạy ngay trong Python: thêm tài liệu là Chroma tự embed và đánh chỉ mục. Có client lưu ra đĩa, chế độ server và Chroma Cloud.",
+          "pick": "Chọn khi làm bản thử RAG một mình và muốn ít bước nhất từ tài liệu tới tìm được.",
+          "avoid": "Tránh để client trong bộ nhớ khi deploy (tắt chương trình là mất dữ liệu). Khi chất lượng tìm quan trọng, tự chọn model embedding hợp ngôn ngữ của tài liệu thay vì để mặc định.",
+          "cost": "free",
+          "level": 1,
+          "fit": {
+            "ai": [
+              "llm"
+            ],
+            "size": [
+              "small"
+            ]
+          },
+          "links": [
+            {
+              "title": "Getting started",
+              "url": "https://docs.trychroma.com/docs/overview/getting-started"
+            }
+          ],
+          "setup": [
+            "pip install chromadb"
+          ],
+          "task": "Collection lưu ra đĩa, nạp lại được sau khi khởi động lại; câu hỏi mẫu tìm đúng tài liệu."
+        },
+        {
+          "id": "faiss",
+          "name": "FAISS",
+          "kind": "Vector similarity library",
+          "summary": "Thư viện tìm vector gần nhất trong bộ nhớ, rất nhanh, chạy CPU hoặc GPU. Chỉ là chỉ mục: bạn tự tạo embedding và tự lưu văn bản, id, file index.",
+          "pick": "Chọn khi tìm theo nghĩa trên một tập tài liệu ít đổi, chạy trong cùng tiến trình với app, không muốn thêm máy chủ.",
+          "avoid": "Tránh khi tài liệu thêm, sửa, xoá thường xuyên hay cần lọc theo thuộc tính: một vector DB (pgvector, Qdrant) đỡ việc hơn.",
+          "cost": "free",
+          "level": 2,
+          "fit": {
+            "ai": [
+              "llm"
+            ]
+          },
+          "links": [
+            {
+              "title": "Installing Faiss",
+              "url": "https://github.com/facebookresearch/faiss/blob/main/INSTALL.md"
+            }
+          ],
+          "setup": [
+            "conda install -c pytorch -c conda-forge faiss-cpu=1.16.0"
+          ],
+          "task": "File index dựng từ embedding của tài liệu, nạp lại khi app khởi động; câu hỏi mẫu trả đúng tài liệu trong vài kết quả đầu."
+        },
+        {
+          "id": "pgvector",
+          "name": "pgvector",
+          "kind": "Vector search in Postgres",
+          "summary": "Extension của PostgreSQL thêm kiểu vector, tìm gần nhất bằng toán tử <->, index HNSW hay IVFFlat. Supabase và Neon bật được ngay.",
+          "pick": "Chọn khi dữ liệu đã ở PostgreSQL (kể cả Supabase, Neon): vector nằm cạnh bảng, lọc bằng SQL thường, ghép được với full-text.",
+          "avoid": "Tránh khi chưa có Postgres và chỉ cần bản thử: Chroma bắt đầu nhanh hơn.",
+          "cost": "free",
+          "level": 2,
+          "fit": {
+            "ai": [
+              "llm"
+            ],
+            "users": [
+              "few",
+              "public"
+            ]
+          },
+          "links": [
+            {
+              "title": "pgvector",
+              "url": "https://github.com/pgvector/pgvector"
+            },
+            {
+              "title": "pgvector on Supabase",
+              "url": "https://supabase.com/docs/guides/database/extensions/pgvector"
+            },
+            {
+              "title": "pgvector on Neon",
+              "url": "https://neon.com/docs/extensions/pgvector"
+            }
+          ],
+          "setup": [
+            "CREATE EXTENSION vector;",
+            "CREATE TABLE items (id bigserial PRIMARY KEY, embedding vector(3));",
+            "SELECT * FROM items ORDER BY embedding <-> '[3,1,2]' LIMIT 5;"
+          ],
+          "task": "Bảng có cột vector và index HNSW; truy vấn gần nhất cho câu hỏi mẫu trả đúng tài liệu."
+        },
+        {
+          "id": "qdrant",
+          "name": "Qdrant",
+          "kind": "Vector database server",
+          "summary": "Vector DB chạy bằng Docker hoặc Qdrant Cloud (có cụm miễn phí): lọc theo payload, nhiều collection, API REST và gRPC.",
+          "pick": "Chọn khi app công khai cần vector search riêng, lọc theo thuộc tính, và tài liệu thêm bớt liên tục.",
+          "avoid": "Tránh khi đã có Postgres (pgvector đủ) hay chỉ làm bản thử (Chroma).",
+          "cost": "freemium",
+          "level": 2,
+          "fit": {
+            "ai": [
+              "llm"
+            ],
+            "users": [
+              "public"
+            ],
+            "size": [
+              "medium",
+              "large"
+            ]
+          },
+          "links": [
+            {
+              "title": "Local quickstart",
+              "url": "https://qdrant.tech/documentation/quickstart/"
+            }
+          ],
+          "setup": [
+            "docker pull qdrant/qdrant",
+            "docker run -p 6333:6333 -p 6334:6334 -v \"$(pwd)/qdrant_storage:/qdrant/storage:z\" qdrant/qdrant"
+          ],
+          "task": "Collection chứa dữ liệu thật, truy vấn kèm bộ lọc trả đúng; README ghi cách dựng lại collection từ dữ liệu sạch."
+        }
+      ]
+    },
+    {
       "id": "serve",
       "title": "Serving",
       "lane": "app",
       "question": "Dự đoán của mô hình đến tay người dùng theo cách nào?",
-      "guide": "Serving là cách đưa mô hình đã huấn luyện ra để tạo dự đoán.\nBatch: chạy mô hình theo lịch, ghi kết quả ra file hoặc bảng, người dùng đọc kết quả có sẵn.\nOnline: người dùng gửi dữ liệu và nhận dự đoán ngay, trong khoảng một giây.\nMô hình lấy từ bước tracking; giao diện ở bước sau đọc kết quả hoặc gọi API ở đây.",
-      "multi": false,
+      "guide": "Serving là cách đưa mô hình đã huấn luyện ra để tạo dự đoán.\nBatch: chạy mô hình theo lịch, ghi kết quả ra file hoặc bảng, người dùng đọc kết quả có sẵn.\nOnline: người dùng gửi dữ liệu và nhận dự đoán ngay, trong khoảng một giây.\nMô hình lấy từ bước tracking; giao diện ở bước sau đọc kết quả hoặc gọi API ở đây.\nSản phẩm có LLM thì chọn thêm chỗ chạy LLM (API hay tự host) cạnh backend của bạn.",
+      "multi": true,
       "skipWhen": "Bỏ qua khi dự án chỉ phân tích dữ liệu, không có mô hình dự đoán.",
       "task": "Model đã lưu trả về dự đoán cho một mẫu đầu vào bằng công cụ đã chọn; README có lệnh chạy lại.",
+      "when": {},
       "options": [
         {
           "id": "batch-file",
@@ -2026,6 +2833,142 @@
           ],
           "setup": [],
           "task": "Gọi URL của function với dữ liệu mẫu và nhận về dự đoán."
+        },
+        {
+          "id": "llm-api",
+          "name": "Hosted LLM API",
+          "kind": "LLM provider API",
+          "summary": "Gọi model của nhà cung cấp (OpenAI, Anthropic Claude, Google Gemini) qua HTTP bằng SDK Python, trả theo lượng token dùng. Không phải tự chạy GPU.",
+          "pick": "Chọn khi sản phẩm cần LLM trả lời (chat, RAG, tóm tắt) và bạn không có GPU: nhanh nhất để có bản chạy được.",
+          "avoid": "Tránh gửi dữ liệu nhạy cảm khi chưa đọc điều khoản dữ liệu của nhà cung cấp. Đặt giới hạn chi tiêu, để API key trong biến môi trường, không commit vào repo.",
+          "cost": "freemium",
+          "level": 1,
+          "fit": {
+            "ai": [
+              "llm"
+            ]
+          },
+          "links": [
+            {
+              "title": "OpenAI API quickstart",
+              "url": "https://developers.openai.com/api/docs/quickstart"
+            },
+            {
+              "title": "Claude: Get started",
+              "url": "https://platform.claude.com/docs/en/get-started"
+            },
+            {
+              "title": "Gemini API: Get started",
+              "url": "https://aistudio.google.com/docs/get-started"
+            }
+          ],
+          "setup": [
+            "pip install openai",
+            "pip install anthropic",
+            "pip install -U google-genai"
+          ],
+          "task": "Một hàm gọi LLM đọc API key từ biến môi trường và trả lời đúng một bộ câu hỏi mẫu; lỗi mạng hay hết hạn mức được bắt và báo rõ."
+        },
+        {
+          "id": "hf-inference",
+          "name": "Hugging Face Inference Providers",
+          "kind": "Serverless open-model API",
+          "summary": "Gọi model mở (LLM, embedding, ảnh) bằng một token Hugging Face, API tương thích OpenAI, trả theo dùng. Cần máy riêng cho model của bạn thì có Inference Endpoints.",
+          "pick": "Chọn khi muốn dùng model mở hay model embedding mà không tự chạy GPU.",
+          "avoid": "Tránh khi cần chắc chắn một model cố định luôn sẵn: nhà cung cấp phía sau có thể đổi; Inference Endpoints (máy riêng) hợp hơn.",
+          "cost": "freemium",
+          "level": 1,
+          "fit": {
+            "ai": [
+              "llm"
+            ]
+          },
+          "links": [
+            {
+              "title": "Inference Providers",
+              "url": "https://huggingface.co/docs/inference-providers/index"
+            },
+            {
+              "title": "Inference Endpoints",
+              "url": "https://huggingface.co/docs/inference-endpoints/index"
+            }
+          ],
+          "setup": [
+            "pip install huggingface_hub",
+            "hf auth login"
+          ],
+          "task": "App gọi một model mở qua Inference Providers bằng token trong biến môi trường; bộ câu hỏi mẫu trả lời đúng định dạng."
+        },
+        {
+          "id": "ollama",
+          "name": "Ollama",
+          "kind": "Local LLM runner",
+          "summary": "Chạy LLM mở trên máy bạn bằng một lệnh, mở API cục bộ ở cổng 11434 (có endpoint tương thích OpenAI). Model càng lớn càng cần nhiều RAM hay VRAM.",
+          "pick": "Chọn để thử LLM miễn phí, offline trên laptop đủ mạnh, hoặc khi dữ liệu không được rời máy.",
+          "avoid": "Tránh làm chỗ chạy LLM khi deploy lên host gói thường: model không vừa RAM, chạy CPU rất chậm. Khi deploy thì gọi API (Inference Providers, LLM API).",
+          "cost": "free",
+          "level": 2,
+          "fit": {
+            "ai": [
+              "llm"
+            ],
+            "users": [
+              "me"
+            ],
+            "budget": [
+              "free"
+            ]
+          },
+          "links": [
+            {
+              "title": "Quickstart",
+              "url": "https://docs.ollama.com/quickstart"
+            },
+            {
+              "title": "Download for Linux",
+              "url": "https://ollama.com/download/linux"
+            }
+          ],
+          "setup": [
+            "curl -fsSL https://ollama.com/install.sh | sh",
+            "ollama run gemma4:e2b"
+          ],
+          "task": "Model chạy cục bộ trả lời bộ câu hỏi mẫu qua API ở localhost; README ghi tên model và lệnh tải."
+        },
+        {
+          "id": "vllm",
+          "name": "vLLM",
+          "kind": "LLM inference server",
+          "summary": "Máy chủ phục vụ LLM thông lượng cao, API tương thích OpenAI; chạy trên Linux với GPU.",
+          "pick": "Chọn khi tự host một LLM mở trên GPU cho nhiều người dùng cùng lúc.",
+          "avoid": "Tránh khi không có GPU Linux hay chỉ vài người dùng: gọi API có sẵn rẻ và đơn giản hơn.",
+          "cost": "free",
+          "level": 3,
+          "fit": {
+            "ai": [
+              "llm"
+            ],
+            "gpu": [
+              "yes"
+            ],
+            "users": [
+              "public"
+            ],
+            "budget": [
+              "cloud"
+            ]
+          },
+          "links": [
+            {
+              "title": "Quickstart",
+              "url": "https://docs.vllm.ai/en/latest/getting_started/quickstart.html"
+            }
+          ],
+          "setup": [
+            "uv pip install vllm --torch-backend=auto",
+            "vllm serve Qwen/Qwen2.5-1.5B-Instruct"
+          ],
+          "task": "vllm serve chạy trên máy GPU, endpoint /v1/chat/completions trả lời bộ câu hỏi mẫu; đo được độ trễ khi nhiều request cùng lúc."
         }
       ]
     },
@@ -2038,6 +2981,7 @@
       "multi": false,
       "skipWhen": "",
       "task": "Giao diện mở được và hiện kết quả từ dữ liệu hoặc model thật, không phải số giả.",
+      "when": {},
       "options": [
         {
           "id": "notebook-report",
@@ -2248,6 +3192,39 @@
             "flutter run"
           ],
           "task": "App trên máy thật gọi API và hiện dự đoán."
+        },
+        {
+          "id": "superset",
+          "name": "Apache Superset",
+          "kind": "Open-source BI platform",
+          "summary": "Nền tảng BI mã nguồn mở: kết nối CSDL SQL, dựng chart và dashboard, có SQL Lab để truy vấn. Tự host bằng Docker.",
+          "pick": "Chọn khi muốn dashboard BI tự host, miễn phí, đọc thẳng từ PostgreSQL hay ClickHouse, hoặc muốn học công cụ BI mã nguồn mở.",
+          "avoid": "Tránh khi chỉ cần vài biểu đồ: cấu hình Docker Compose của quickstart không dành cho production, deploy thật cần nhiều thành phần. Data Studio, Metabase hay Streamlit nhanh hơn.",
+          "cost": "free",
+          "level": 3,
+          "fit": {
+            "latency": [
+              "report",
+              "batch"
+            ],
+            "users": [
+              "few",
+              "public"
+            ]
+          },
+          "links": [
+            {
+              "title": "Quickstart",
+              "url": "https://superset.apache.org/docs/quickstart"
+            }
+          ],
+          "setup": [
+            "git clone https://github.com/apache/superset",
+            "cd superset",
+            "git checkout tags/6.0.0",
+            "docker compose -f docker-compose-image-tag.yml up"
+          ],
+          "task": "Dashboard Superset đọc bảng sạch thật; chart chính khớp số đã đối chiếu trong notebook."
         }
       ]
     },
@@ -2260,6 +3237,7 @@
       "multi": true,
       "skipWhen": "",
       "task": "Máy khác cài lại được môi trường từ repo bằng lệnh ghi trong README.",
+      "when": {},
       "options": [
         {
           "id": "requirements",
@@ -2352,6 +3330,32 @@
           "task": "docker compose up --build chạy app và mở được trên trình duyệt."
         },
         {
+          "id": "docker-compose",
+          "name": "Docker Compose",
+          "kind": "Multi-container setup",
+          "summary": "Một file compose.yaml khai mọi service (API, PostgreSQL, Redis…) kèm mạng và volume; docker compose up chạy cả bộ.",
+          "pick": "Chọn khi app cần vài service chạy cùng nhau (API + database) trên máy bạn hay trên một VPS.",
+          "avoid": "Tránh khi chỉ có một app Python: một Dockerfile hay file phụ thuộc là đủ.",
+          "cost": "free",
+          "level": 2,
+          "fit": {
+            "users": [
+              "few",
+              "public"
+            ]
+          },
+          "links": [
+            {
+              "title": "Docker Compose quickstart",
+              "url": "https://docs.docker.com/compose/gettingstarted/"
+            }
+          ],
+          "setup": [
+            "docker compose up"
+          ],
+          "task": "docker compose up trên máy sạch dựng đủ service; app gọi được database trong compose."
+        },
+        {
           "id": "github-actions",
           "name": "GitHub Actions",
           "kind": "CI/CD workflows",
@@ -2390,10 +3394,11 @@
       "title": "Hosting",
       "lane": "ops",
       "question": "App hoặc báo cáo của bạn chạy ở đâu trên mạng?",
-      "guide": "Hosting là máy chủ chạy app để người khác mở bằng một đường link.\nGói miễn phí thường cho app ngủ khi không ai dùng, lần mở sau phải chờ khởi động lại.\nChọn theo loại thứ cần chạy: trang tĩnh, app Streamlit hay Gradio, hay API trong Docker.\nSau khi lên mạng, bước Monitoring theo dõi nó.",
-      "multi": false,
+      "guide": "Hosting là máy chủ chạy app để người khác mở bằng một đường link.\nGói miễn phí thường cho app ngủ khi không ai dùng, lần mở sau phải chờ khởi động lại.\nChọn theo loại thứ cần chạy: trang tĩnh, app Streamlit hay Gradio, hay API trong Docker.\nSau khi lên mạng, bước Monitoring theo dõi nó.\nFrontend web và backend thường ở hai nơi khác nhau: chọn cả hai.",
+      "multi": true,
       "skipWhen": "Bỏ qua khi chỉ bạn xem kết quả trên máy của mình.",
       "task": "Sản phẩm có link mở được từ máy khác.",
+      "when": {},
       "options": [
         {
           "id": "streamlit-cloud",
@@ -2613,6 +3618,160 @@
             "quarto publish gh-pages"
           ],
           "task": "Báo cáo mở được qua link github.io."
+        },
+        {
+          "id": "fly-io",
+          "name": "Fly.io",
+          "kind": "Container hosting",
+          "summary": "Chạy app từ Dockerfile trên máy ảo nhỏ; fly launch tạo cấu hình, fly deploy đẩy bản mới. Tài khoản mới ở gói Free với hạn mức nhỏ, thêm thẻ thì có hạn mức hằng tháng, phần vượt tính theo dùng.",
+          "pick": "Chọn khi API hay app trong Docker cần chạy suốt, và bạn chấp nhận nhập thẻ thanh toán.",
+          "avoid": "Tránh khi chưa quen Docker và chỉ có app Streamlit: Streamlit Community Cloud đơn giản hơn.",
+          "cost": "freemium",
+          "level": 2,
+          "fit": {
+            "latency": [
+              "online"
+            ],
+            "users": [
+              "few",
+              "public"
+            ],
+            "budget": [
+              "low",
+              "cloud"
+            ]
+          },
+          "links": [
+            {
+              "title": "Launch a new app",
+              "url": "https://docs.fly.io/getting-started/launch"
+            },
+            {
+              "title": "Pricing",
+              "url": "https://docs.fly.io/about/pricing"
+            },
+            {
+              "title": "Install flyctl",
+              "url": "https://docs.fly.io/flyctl/install/"
+            }
+          ],
+          "setup": [
+            "curl -L https://fly.io/install.sh | sh",
+            "fly launch",
+            "fly deploy"
+          ],
+          "task": "App có link mở được từ máy khác; fly deploy từ repo đẩy được bản mới."
+        },
+        {
+          "id": "railway",
+          "name": "Railway",
+          "kind": "Managed app platform",
+          "summary": "Đẩy repo hay thư mục bằng railway up, Railway tự build và chạy. Gói Free cho app nhỏ và ngủ khi không ai dùng; gói Hobby, Pro trả phí.",
+          "pick": "Chọn khi muốn deploy API kèm database trong một chỗ với ít cấu hình.",
+          "avoid": "Tránh khi cần luôn trả lời nhanh mà chỉ dùng gói Free: app ngủ khi rảnh.",
+          "cost": "freemium",
+          "level": 2,
+          "fit": {
+            "latency": [
+              "online"
+            ],
+            "users": [
+              "few"
+            ],
+            "budget": [
+              "free",
+              "low"
+            ]
+          },
+          "links": [
+            {
+              "title": "Quick start",
+              "url": "https://docs.railway.com/quick-start"
+            },
+            {
+              "title": "Plans",
+              "url": "https://docs.railway.com/reference/pricing/plans"
+            },
+            {
+              "title": "CLI",
+              "url": "https://docs.railway.com/cli"
+            }
+          ],
+          "setup": [
+            "npm i -g @railway/cli",
+            "railway login",
+            "railway init",
+            "railway up"
+          ],
+          "task": "Service chạy trên Railway có link mở được từ máy khác; railway up đẩy được bản mới."
+        },
+        {
+          "id": "vercel",
+          "name": "Vercel",
+          "kind": "Frontend hosting + functions",
+          "summary": "Host frontend web (React, Vue, Next.js) từ repo, mỗi lần push có bản xem trước; backend Python (FastAPI, Flask) chạy thành Vercel Functions.",
+          "pick": "Chọn cho frontend web của lối Separate frontend + backend, kèm một API Python nhẹ nếu cần.",
+          "avoid": "Tránh cho app Streamlit hay Gradio, job chạy lâu, file model lớn, hay ghi file bền: function có giới hạn thời gian chạy và cỡ gói.",
+          "cost": "freemium",
+          "level": 2,
+          "fit": {
+            "users": [
+              "few",
+              "public"
+            ],
+            "latency": [
+              "online",
+              "batch"
+            ]
+          },
+          "links": [
+            {
+              "title": "Deploy a FastAPI app on Vercel",
+              "url": "https://vercel.com/docs/frameworks/backend/fastapi"
+            },
+            {
+              "title": "Python runtime",
+              "url": "https://vercel.com/docs/functions/runtimes/python"
+            }
+          ],
+          "setup": [
+            "vc init fastapi",
+            "vc deploy"
+          ],
+          "task": "Frontend có link mở được từ máy khác và gọi được API thật; bản xem trước tạo ra cho mỗi lần push."
+        },
+        {
+          "id": "kubernetes",
+          "name": "Kubernetes",
+          "kind": "Container orchestration",
+          "summary": "Nền tảng chạy và điều phối nhiều container trên một cụm máy: tự khởi động lại, mở rộng, cập nhật dần. Các cloud lớn có dịch vụ Kubernetes được quản lý.",
+          "pick": "Chọn khi muốn học công cụ mà đội hạ tầng dùng, hoặc khi nhiều service phải chạy cùng nhau và luôn sẵn sàng.",
+          "avoid": "Tránh cho dự án một người: cụm, manifest, mạng, lưu trữ là cả một nghề. Cloud Run, Render hay một VPS + Docker Compose đủ cho phần lớn dự án; muốn học thì chạy minikube trên máy.",
+          "cost": "paid",
+          "level": 3,
+          "fit": {
+            "users": [
+              "public"
+            ],
+            "budget": [
+              "cloud"
+            ]
+          },
+          "links": [
+            {
+              "title": "Learn Kubernetes Basics",
+              "url": "https://kubernetes.io/docs/tutorials/kubernetes-basics/"
+            },
+            {
+              "title": "minikube start",
+              "url": "https://minikube.sigs.k8s.io/docs/start/"
+            }
+          ],
+          "setup": [
+            "minikube start",
+            "kubectl get po -A"
+          ],
+          "task": "Deployment và Service của app chạy trên cụm, mở được qua một địa chỉ; xoá một pod thì app tự lên lại."
         }
       ]
     },
@@ -2625,6 +3784,7 @@
       "multi": true,
       "skipWhen": "Bỏ qua khi không triển khai gì lên mạng và dữ liệu không đổi.",
       "task": "Có cách biết khi app hỏng hay dữ liệu cũ, và đã thử cách ấy một lần.",
+      "when": {},
       "options": [
         {
           "id": "logs-weekly",
@@ -2732,9 +3892,9 @@
         },
         {
           "id": "prometheus-grafana",
-          "name": "Prometheus + Grafana",
+          "name": "Prometheus + Grafana (+ Loki)",
           "kind": "Metrics and dashboards",
-          "summary": "Prometheus thu số đo của app theo thời gian. Grafana vẽ dashboard và đặt cảnh báo từ số đo đó.",
+          "summary": "Prometheus thu số đo của app theo thời gian. Grafana vẽ dashboard và đặt cảnh báo từ số đo đó. Loki gom log để xem cùng chỗ trong Grafana; Grafana Cloud có gói free.",
           "pick": "Chọn khi app phục vụ nhiều người và bạn cần theo dõi độ trễ, lỗi, tải liên tục.",
           "avoid": "Tránh khi dự án cá nhân, vì phải dựng và bảo trì thêm hai dịch vụ.",
           "cost": "free",
@@ -2758,12 +3918,149 @@
             {
               "title": "Grafana with Prometheus",
               "url": "https://grafana.com/docs/grafana/latest/getting-started/get-started-grafana-prometheus/"
+            },
+            {
+              "title": "Loki overview",
+              "url": "https://grafana.com/docs/loki/latest/get-started/overview/"
+            },
+            {
+              "title": "Grafana pricing",
+              "url": "https://grafana.com/pricing/"
             }
           ],
           "setup": [
             "./prometheus --config.file=prometheus.yml"
           ],
           "task": "Dashboard Grafana hiện số request và tỉ lệ lỗi của app."
+        },
+        {
+          "id": "sentry",
+          "name": "Sentry",
+          "kind": "Error tracking",
+          "summary": "SDK gửi lỗi (stack trace, request, phiên bản) từ app, API hay job về Sentry, gom lỗi trùng, báo qua email. Gói Developer miễn phí cho một người; có cả Crons theo dõi job theo lịch.",
+          "pick": "Chọn khi app hay API có người khác dùng: biết lỗi trước khi người dùng báo, kèm đúng dòng code hỏng.",
+          "avoid": "Tránh gửi dữ liệu cá nhân của người dùng khi chưa cần. Notebook chạy tay thì lỗi đã hiện ngay trước mắt, không cần Sentry.",
+          "cost": "freemium",
+          "level": 1,
+          "fit": {
+            "users": [
+              "few",
+              "public"
+            ],
+            "latency": [
+              "online"
+            ]
+          },
+          "links": [
+            {
+              "title": "Sentry for Python",
+              "url": "https://docs.sentry.io/platforms/python/"
+            },
+            {
+              "title": "Crons",
+              "url": "https://docs.sentry.io/product/crons/"
+            },
+            {
+              "title": "Pricing",
+              "url": "https://sentry.io/pricing/"
+            }
+          ],
+          "setup": [
+            "pip install \"sentry-sdk\""
+          ],
+          "task": "Một lỗi cố ý ném ra trong app hiện trên Sentry kèm stack trace, và email báo đã tới."
+        },
+        {
+          "id": "healthchecks",
+          "name": "Healthchecks.io",
+          "kind": "Cron job monitoring",
+          "summary": "Mỗi job theo lịch gọi một URL ping khi chạy xong; quá hạn mà không có ping thì Healthchecks báo. Có gói Hobbyist miễn phí và có hướng dẫn tự host.",
+          "pick": "Chọn khi pipeline chạy theo lịch (cron, GitHub Actions): biết ngay khi job không chạy hay chạy hỏng, kể cả khi máy chạy job đã tắt.",
+          "avoid": "Tránh khi không có job theo lịch nào.",
+          "cost": "freemium",
+          "level": 1,
+          "fit": {
+            "fresh": [
+              "batch"
+            ]
+          },
+          "links": [
+            {
+              "title": "Docs",
+              "url": "https://healthchecks.io/docs/"
+            },
+            {
+              "title": "Shell scripts",
+              "url": "https://healthchecks.io/docs/bash/"
+            },
+            {
+              "title": "Pricing",
+              "url": "https://healthchecks.io/pricing/"
+            }
+          ],
+          "setup": [
+            "curl -fsS -m 10 --retry 5 -o /dev/null https://hc-ping.com/your-uuid-here"
+          ],
+          "task": "Job gọi ping khi chạy xong; cố ý bỏ một lượt chạy thì cảnh báo tới."
+        },
+        {
+          "id": "langfuse",
+          "name": "Langfuse",
+          "kind": "LLM observability",
+          "summary": "Ghi từng lời gọi LLM (prompt, trả lời, token, độ trễ) thành trace, chấm điểm câu trả lời, quản lý prompt. Mã nguồn mở, tự host được hoặc dùng Langfuse Cloud; thuộc ClickHouse từ 2026.",
+          "pick": "Chọn khi sản phẩm gọi LLM (RAG, chatbot): xem câu trả lời sai đến từ đoạn tìm sai hay từ prompt, và so các phiên bản prompt.",
+          "avoid": "Tránh khi sản phẩm không dùng LLM.",
+          "cost": "freemium",
+          "level": 2,
+          "fit": {
+            "ai": [
+              "llm"
+            ]
+          },
+          "links": [
+            {
+              "title": "Docs",
+              "url": "https://langfuse.com/docs"
+            },
+            {
+              "title": "Get started with tracing",
+              "url": "https://langfuse.com/docs/observability/get-started"
+            },
+            {
+              "title": "Langfuse joins ClickHouse",
+              "url": "https://langfuse.com/blog/joining-clickhouse"
+            }
+          ],
+          "setup": [
+            "pip install langfuse"
+          ],
+          "task": "Mỗi lời gọi LLM của app hiện thành một trace có prompt, câu trả lời, độ trễ; bộ câu hỏi mẫu có điểm đánh giá."
+        },
+        {
+          "id": "opentelemetry",
+          "name": "OpenTelemetry",
+          "kind": "Vendor-neutral telemetry",
+          "summary": "Chuẩn và thư viện để app phát trace, metric, log theo một định dạng chung, rồi gửi tới một backend để xem (ví dụ Grafana).",
+          "pick": "Chọn khi có nhiều service gọi nhau (frontend, API, worker) và cần lần theo một request qua từng service.",
+          "avoid": "Tránh cho app một tiến trình: tự nó không lưu hay hiển thị gì, còn phải dựng backend. Log + Sentry đủ cho dự án một người.",
+          "cost": "free",
+          "level": 3,
+          "fit": {
+            "users": [
+              "public"
+            ]
+          },
+          "links": [
+            {
+              "title": "Python: Getting started",
+              "url": "https://opentelemetry.io/docs/languages/python/getting-started/"
+            }
+          ],
+          "setup": [
+            "pip install opentelemetry-distro",
+            "pip install opentelemetry-exporter-otlp"
+          ],
+          "task": "Một request đi qua API hiện thành trace đầy đủ ở backend đã chọn."
         }
       ]
     }
@@ -2783,10 +4080,17 @@
       },
       "unless": {
         "host": [
+          "render",
+          "cloud-run",
+          "vps-docker",
+          "fly-io",
+          "railway",
+          "vercel",
+          "kubernetes",
           "own"
         ]
       },
-      "msg": "API cần một máy chủ chạy Python suốt; GitHub Pages là dịch vụ host trang tĩnh, chỉ phục vụ file HTML, CSS, JS. Frontend để trên Pages được, nhưng API phải chạy ở host khác (Render, Cloud Run, VPS); ghi host ấy vào ô \"Another tool\" của khâu Hosting."
+      "msg": "API cần một máy chủ chạy Python suốt; GitHub Pages là dịch vụ host trang tĩnh, chỉ phục vụ file HTML, CSS, JS. Frontend để trên Pages được, nhưng API phải chạy ở host khác: chọn thêm Render, Cloud Run, Fly.io hay VPS ở khâu Hosting."
     },
     {
       "id": "python-app-on-static-host",
@@ -2794,7 +4098,8 @@
       "if": {
         "app": [
           "streamlit",
-          "gradio"
+          "gradio",
+          "superset"
         ],
         "host": [
           "github-pages"
@@ -2802,10 +4107,18 @@
       },
       "unless": {
         "host": [
+          "streamlit-cloud",
+          "hf-spaces",
+          "render",
+          "cloud-run",
+          "vps-docker",
+          "fly-io",
+          "railway",
+          "kubernetes",
           "own"
         ]
       },
-      "msg": "App Streamlit hay Gradio là một tiến trình Python phải chạy trên máy chủ; GitHub Pages chỉ phục vụ file tĩnh. Chọn host chạy được app Python (Streamlit Community Cloud, Hugging Face Spaces, Render)."
+      "msg": "App Streamlit, Gradio hay Superset là một tiến trình phải chạy trên máy chủ; GitHub Pages chỉ phục vụ file tĩnh. Chọn thêm host chạy được app Python (Streamlit Community Cloud, Hugging Face Spaces, Render)."
     },
     {
       "id": "api-on-streamlit-cloud",
@@ -2821,10 +4134,17 @@
       },
       "unless": {
         "host": [
+          "render",
+          "cloud-run",
+          "vps-docker",
+          "fly-io",
+          "railway",
+          "vercel",
+          "kubernetes",
           "own"
         ]
       },
-      "msg": "Streamlit Community Cloud để deploy app Streamlit, không phải để mở một API cho app khác gọi. API FastAPI / BentoML cần host chạy web service (Render, Cloud Run, VPS + Docker)."
+      "msg": "Streamlit Community Cloud để deploy app Streamlit, không phải để mở một API cho app khác gọi. API FastAPI / BentoML cần thêm host chạy web service (Render, Cloud Run, Fly.io, VPS + Docker)."
     },
     {
       "id": "non-streamlit-ui-on-streamlit-cloud",
@@ -2833,7 +4153,8 @@
         "app": [
           "gradio",
           "web-app",
-          "bi-dashboard"
+          "bi-dashboard",
+          "superset"
         ],
         "host": [
           "streamlit-cloud"
@@ -2841,10 +4162,19 @@
       },
       "unless": {
         "host": [
+          "hf-spaces",
+          "github-pages",
+          "render",
+          "cloud-run",
+          "vps-docker",
+          "fly-io",
+          "railway",
+          "vercel",
+          "kubernetes",
           "own"
         ]
       },
-      "msg": "Streamlit Community Cloud để deploy app Streamlit. Giao diện đã chọn cần nơi chạy khác: Gradio lên Hugging Face Spaces, bản build tĩnh của web Vue / React lên GitHub Pages; Data Studio, Power BI chạy trên dịch vụ của chính chúng, Metabase cần máy chủ riêng."
+      "msg": "Streamlit Community Cloud để deploy app Streamlit. Giao diện đã chọn cần nơi chạy khác: Gradio lên Hugging Face Spaces, bản build tĩnh của web Vue / React lên GitHub Pages hay Vercel; Data Studio, Power BI chạy trên dịch vụ của chính chúng, Metabase và Superset cần máy chủ riêng."
     },
     {
       "id": "docker-only-on-streamlit-cloud",
@@ -2878,11 +4208,12 @@
           "cron",
           "github-actions",
           "prefect",
+          "dagster",
           "airflow",
           "own"
         ]
       },
-      "msg": "Dữ liệu mới tới hằng ngày hay hằng tuần nhưng khâu Ingestion không có công cụ chạy theo lịch: phải nhớ chạy tay, và không có log của từng lần chạy. Chọn cron, GitHub Actions, Prefect hoặc Airflow."
+      "msg": "Dữ liệu mới tới hằng ngày hay hằng tuần nhưng khâu Ingestion không có công cụ chạy theo lịch: phải nhớ chạy tay, và không có log của từng lần chạy. Chọn cron, GitHub Actions, Prefect, Dagster hoặc Airflow."
     },
     {
       "id": "stream-with-batch-ingest",
@@ -2896,6 +4227,7 @@
           "cron",
           "github-actions",
           "prefect",
+          "dagster",
           "airflow"
         ]
       },
@@ -2972,7 +4304,15 @@
           "skip"
         ]
       },
-      "msg": "Có khâu phục vụ model nhưng khâu Experiment tracking & model registry là Not needed: app không biết chắc đang nạp file model nào. Tối thiểu lưu file model kèm phiên bản (git tag, DVC hoặc Hugging Face Hub) và số đo lúc nghiệm thu."
+      "unless": {
+        "serve": [
+          "llm-api",
+          "hf-inference",
+          "ollama",
+          "vllm"
+        ]
+      },
+      "msg": "Có khâu phục vụ model nhưng khâu Experiment tracking & model registry là Not needed: app không biết chắc đang nạp file model nào. Tối thiểu lưu file model kèm phiên bản (git tag, DVC hoặc Hugging Face Hub) và số đo lúc nghiệm thu. (Chỉ gọi LLM qua API thì không có file model; khi ấy ghi lại tên và phiên bản model ở README.)"
     },
     {
       "id": "public-without-monitoring",
@@ -2997,10 +4337,11 @@
         "host": [
           "streamlit-cloud",
           "render",
-          "hf-spaces"
+          "hf-spaces",
+          "railway"
         ]
       },
-      "msg": "Ở gói miễn phí, app ngủ khi không có truy cập một thời gian; người mở đầu tiên sau đó phải chờ app khởi động lại (Render ghi khoảng một phút), xa với \"trả lời trong khoảng một giây\". Ổn cho demo; cần luôn nhanh thì dùng gói trả phí không ngủ hoặc host khác."
+      "msg": "Ở gói miễn phí, app ngủ khi không có truy cập một thời gian (Streamlit Community Cloud, Render Free, Hugging Face Spaces, Railway Free); người mở đầu tiên sau đó phải chờ app khởi động lại, xa với \"trả lời trong khoảng một giây\". Ổn cho demo; cần luôn nhanh thì dùng gói trả phí không ngủ hoặc host khác."
     },
     {
       "id": "in-app-model-for-web-client",
@@ -3015,6 +4356,215 @@
         ]
       },
       "msg": "Model inside the UI app nghĩa là model chạy trong tiến trình Python của app Streamlit hay Gradio. Web Vue / React và app mobile chạy trên máy người dùng, nên cần một API (FastAPI, serverless) để gọi model."
+    },
+    {
+      "id": "kafka-for-batch-data",
+      "title": "Kafka for data that does not stream",
+      "if": {
+        "ingest": [
+          "kafka"
+        ],
+        "fresh": [
+          "once",
+          "batch"
+        ]
+      },
+      "msg": "Kafka là nền tảng cho sự kiện tới liên tục; bạn trả lời dữ liệu tới một lần hay theo ngày. Một job theo lịch (cron, GitHub Actions) đơn giản hơn nhiều, không có máy chủ nào phải chạy suốt."
+    },
+    {
+      "id": "distributed-for-small-data",
+      "title": "Cluster tools for data that fits in memory",
+      "if": {
+        "process": [
+          "dask",
+          "spark",
+          "hadoop",
+          "databricks"
+        ],
+        "size": [
+          "small"
+        ]
+      },
+      "msg": "Dữ liệu vừa bộ nhớ một máy: Spark, Dask, Hadoop tốn thời gian khởi động, cấu hình và gỡ lỗi hơn chính phép tính. pandas, Polars hay DuckDB chạy nhanh hơn và dễ kiểm hơn; học Spark thì cứ học, nhưng ghi rõ đó là mục tiêu học."
+    },
+    {
+      "id": "hadoop-on-one-disk",
+      "title": "Hadoop for data that fits on one disk",
+      "if": {
+        "process": [
+          "hadoop"
+        ],
+        "size": [
+          "medium"
+        ]
+      },
+      "msg": "Dữ liệu vừa một ổ đĩa không cần một cụm HDFS + YARN: DuckDB hay Polars trên một máy, hoặc Spark chạy một máy, xử lý được với ít phần phải dựng hơn nhiều. Giữ Hadoop khi môn học yêu cầu."
+    },
+    {
+      "id": "scheduled-data-without-checks",
+      "title": "New data, no quality gate",
+      "if": {
+        "fresh": [
+          "batch",
+          "stream"
+        ],
+        "validate": [
+          "skip"
+        ]
+      },
+      "msg": "Dữ liệu mới tới theo lịch mà khâu Data validation là Not needed: một lô sai schema hay thiếu dòng sẽ được công bố và lan sang báo cáo, model. Tối thiểu kiểm cột, kiểu, khoá trùng và số dòng trước khi ghi bản sạch mới."
+    },
+    {
+      "id": "vector-index-for-keyword-search",
+      "title": "Vector index for keyword search",
+      "if": {
+        "ai": [
+          "keyword"
+        ],
+        "search": [
+          "chroma",
+          "faiss",
+          "pgvector",
+          "qdrant"
+        ]
+      },
+      "msg": "Bạn cần tìm theo từ khoá nhưng chọn chỉ mục vector: tìm theo nghĩa hay bỏ sót mã, tên riêng, con số chính xác, và cần thêm một model embedding. Dùng full-text (SQLite FTS5, PostgreSQL), hoặc ghép full-text với vector nếu cần cả hai."
+    },
+    {
+      "id": "llm-without-model-serving",
+      "title": "LLM or semantic search with nowhere to run the model",
+      "if": {
+        "ai": [
+          "llm"
+        ]
+      },
+      "unless": {
+        "serve": [
+          "llm-api",
+          "hf-inference",
+          "ollama",
+          "vllm",
+          "own"
+        ]
+      },
+      "msg": "Bạn trả lời sản phẩm dùng LLM hay tìm theo nghĩa, nhưng khâu Serving không có chỗ chạy model ấy. Câu trả lời RAG cần một LLM, và câu hỏi phải được embed bằng đúng model đã embed tài liệu: chọn thêm Hosted LLM API, Hugging Face Inference Providers, Ollama hay vLLM, hoặc ghi model chạy trong app ở ô \"Another tool\"."
+    },
+    {
+      "id": "search-server-on-app-host",
+      "title": "Search server on an app host",
+      "if": {
+        "search": [
+          "elasticsearch",
+          "opensearch"
+        ],
+        "host": [
+          "streamlit-cloud",
+          "hf-spaces",
+          "render",
+          "railway",
+          "vercel",
+          "github-pages"
+        ]
+      },
+      "unless": {
+        "host": [
+          "vps-docker",
+          "kubernetes",
+          "own"
+        ]
+      },
+      "msg": "Elasticsearch / OpenSearch là một máy chủ riêng chạy JVM, lấy bộ nhớ theo RAM của máy; host app đã chọn chỉ chạy app của bạn, không chạy kèm cụm tìm kiếm. Dùng dịch vụ có sẵn (Elastic Cloud, OpenSearch được quản lý) hay một VPS đủ RAM, ghi vào khâu Hosting; hoặc đổi sang full-text của SQLite / PostgreSQL."
+    },
+    {
+      "id": "index-on-ephemeral-disk",
+      "title": "Search index on a host without a lasting disk",
+      "if": {
+        "search": [
+          "chroma",
+          "faiss",
+          "sqlite-fts5"
+        ],
+        "host": [
+          "render",
+          "cloud-run",
+          "hf-spaces"
+        ]
+      },
+      "msg": "Chỉ mục ghi lúc chạy mất khi host khởi động lại, deploy lại hay ngủ. Dựng chỉ mục lúc build (hoặc commit file index) và chỉ đọc lúc chạy; cần thêm tài liệu thường xuyên thì dùng pgvector (Supabase, Neon) hay Qdrant Cloud."
+    },
+    {
+      "id": "local-llm-on-small-host",
+      "title": "Self-hosted LLM on a small app host",
+      "if": {
+        "serve": [
+          "ollama",
+          "vllm"
+        ],
+        "host": [
+          "streamlit-cloud",
+          "render",
+          "railway",
+          "vercel",
+          "github-pages"
+        ]
+      },
+      "unless": {
+        "serve": [
+          "llm-api",
+          "hf-inference"
+        ]
+      },
+      "msg": "Ollama, vLLM chạy model trong RAM / VRAM của chính máy chủ; host app gói thường không có GPU và RAM cho LLM. Khi deploy, gọi LLM qua API (Hosted LLM API, Hugging Face Inference Providers); giữ Ollama để thử trên máy bạn."
+    },
+    {
+      "id": "error-tracking-with-nothing-running",
+      "title": "Error tracking with nothing deployed",
+      "if": {
+        "monitor": [
+          "sentry"
+        ],
+        "host": [
+          "skip"
+        ]
+      },
+      "unless": {
+        "ingest": [
+          "cron",
+          "github-actions",
+          "prefect",
+          "dagster",
+          "airflow"
+        ]
+      },
+      "msg": "Sentry nhận lỗi từ code đang chạy ở đâu đó (app, API, job theo lịch). Không triển khai gì và không có job theo lịch thì không có gì gửi lỗi; chạy notebook bằng tay thì lỗi hiện ngay trước mắt."
+    },
+    {
+      "id": "kubernetes-for-few-users",
+      "title": "Kubernetes for a small audience",
+      "if": {
+        "host": [
+          "kubernetes"
+        ],
+        "users": [
+          "me",
+          "few"
+        ]
+      },
+      "msg": "Một cụm Kubernetes cho bạn hay vài người dùng là nhiều phần phải vận hành hơn chính app. Cloud Run, Render, Fly.io hay một VPS + Docker Compose cho cùng kết quả; học Kubernetes thì chạy minikube trên máy."
+    },
+    {
+      "id": "feature-store-for-one-model",
+      "title": "Feature store for a small project",
+      "if": {
+        "store": [
+          "feast"
+        ],
+        "users": [
+          "me",
+          "few"
+        ]
+      },
+      "msg": "Feature store đáng công khi nhiều model, nhiều người dùng chung feature và cần phục vụ online. Với một model, một hàm tạo feature dùng chung cho train và predict (kèm test) tránh được lệch train / serve mà không thêm hệ thống."
     }
   ]
 }

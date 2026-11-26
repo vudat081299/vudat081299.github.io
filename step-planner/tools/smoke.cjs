@@ -1572,6 +1572,13 @@ const check = (name, ok, detail = '') => {
       && (await sp.$$eval('#sd-pane input[data-path]', (r) => r.length)) === cat.paths.length + 1);
     await sp.click('#sd-nav [data-at="1"]');
     await sp.click('input[data-q="size"][value="large"]', { force: true });
+    /* Khâu chỉ cần khi hồ sơ khớp (`when`): trả lời ngoài `when` thì khâu nói vì sao thường không cần. */
+    const gated = cat.stages.find((x) => Object.keys(x.when || {}).length);
+    const [gq, gok] = Object.entries(gated.when)[0];
+    const goff = cat.profile.find((x) => x.id === gq).choices.find((c) => !gok.includes(c.id)).id;
+    await sp.click(`input[data-q="${gq}"][value="${goff}"]`, { force: true });
+    await sp.click(`#sd-nav [data-at="${cat.stages.indexOf(gated) + 2}"]`);
+    check(`${tag}: hồ sơ không cần khâu ${gated.id} thì khâu nói vì sao`, /Usually not needed for your profile/.test(await sp.textContent('#sd-pane')));
     await sp.click('#sd-nav [data-at="5"]');
     const proc = cat.stages[3];
     const top = await sp.$eval('#sd-pane .sd-opt:has(.sd-tag.top)', (e) => e.dataset.opt).catch(() => '');
@@ -1672,12 +1679,13 @@ const check = (name, ok, detail = '') => {
       });
       check(`${tag}: Markdown đi rồi về giữ nguyên thiết kế`, rt);
     }
-    /* Bàn giao: hai khâu liền nhau đã quyết thì đường nối có dấu +; bấm là mở đúng mục ở trang Handoffs; điền xong thì đường có
-     * nhãn bấm được bằng bàn phím; việc tích hợp sang bảng; Markdown có mục Handoffs. */
+    /* Bàn giao (khâu ngay sau Processing đã là Not needed, nên Processing nối thẳng Analytical store): hai khâu liền nhau đã
+     * quyết thì đường nối có dấu +; bấm là mở đúng mục ở trang Handoffs; điền xong thì đường có nhãn bấm được bằng bàn phím;
+     * việc tích hợp sang bảng; Markdown có mục Handoffs. */
     await sp.click(`#sd-fig [data-stage="${proc.id}"]`);
     await sp.click(`#sd-nav [data-at="${pg('raw')}"]`);
     await sp.click('#sd-pane .sd-opt input');
-    await sp.click(`#sd-nav [data-at="${pg('train')}"]`);
+    await sp.click(`#sd-nav [data-at="${pg('store')}"]`);
     await sp.click('#sd-pane .sd-opt input');
     await sp.keyboard.press('Escape');
     check(`${tag}: đường nối giữa hai khâu đã quyết có dấu + (ẩn với bàn phím)`, (await sp.$$eval('#sd-fig .sd-hand.is-empty', (l) => l.length)) === 2
