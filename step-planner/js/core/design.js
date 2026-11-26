@@ -5,7 +5,7 @@
    theo đường đi của dữ liệu, mỗi khâu nhiều phương án có `fit` (khoá hồ sơ → các câu trả lời hợp).
    Dự án giữ `design = {path, profile, stages, edges}`; không có gì thì null. `edges`: bàn giao trên đường nối hai khâu liền nhau
    của sơ đồ, khoá `khâu trước>khâu sau`.
-   Xuất: OWN_MAX, EDGE_MAX, VIA, EDGE_FIELDS, normEdge, normDesign, emptyDesign, presetDesign, isPreset, pathOf, effProfile,
+   Xuất: OWN_MAX, EDGE_MAX, VIA, normEdge, normDesign, emptyDesign, presetDesign, isPreset, pathOf, effProfile,
      stageState, fitOf, rankOptions, notNeededBy, applyPath, condTerm, archAdvice, warnings, decidedCount, pickNames,
      catalogErrors.
    Dùng: không. */
@@ -26,7 +26,6 @@ export const VIA = [
   { id: 'call', label: 'Function call', short: 'Call' },
   { id: 'results', label: 'Precomputed results', short: 'Results' },
 ];
-export const EDGE_FIELDS = ['via', 'what', 'where', 'promise', 'check'];
 
 /** Hợp đồng của một đường nối; trống thì null. @param {any} v */
 export function normEdge(v) {

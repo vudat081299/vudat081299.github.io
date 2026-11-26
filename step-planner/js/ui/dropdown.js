@@ -2,7 +2,7 @@
 /* Danh sách chọn tự dựng (mẫu listbox): một nút mở một danh sách nổi. Dùng cho mọi <select> có nghĩa (enhanceSelect: <select>
  * vẫn ở trong DOM, vẫn giữ value, vẫn phát `change`) và cho menu trạng thái của chip (openList).
  * Danh sách nằm trong lớp trên cùng (popover) nên không đẩy bố cục, nổi được cả trên hộp thoại modal. Chữ chỉ qua text node.
- * Xuất: isOpenFor, closeList, openList, consumeJustClosed, enhanceSelect.
+ * Xuất: closeList, openList, consumeJustClosed, enhanceSelect.
  * Dùng: core/board.js, ui/dom.js. */
 import { fold } from '../core/board.js';
 import { h, icon } from './dom.js';
@@ -14,9 +14,6 @@ let seq = 0;
 let cur = null;
 let typed = '';
 let typedAt = 0;
-
-/** Danh sách đang mở thuộc phần tử này không. @param {Element} anchor */
-export const isOpenFor = (anchor) => !!cur && cur.anchor === anchor;
 
 /** Đóng danh sách đang mở. @param {boolean} [refocus] trả focus về nút mở */
 export function closeList(refocus = false) {
