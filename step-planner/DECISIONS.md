@@ -35,6 +35,7 @@
 - PLAN-033 · Mẫu đặt sẵn hồ sơ System design mà nó ngụ ý, áp một lần lúc tạo dự án · `step-planner/data/templates.json`, `step-planner/js/core/model.js`, `step-planner/js/core/design.js`
 - PLAN-034 · Code tách thành logic thuần, giao diện, luật / cấu hình như md-annotate · `step-planner/js/`, `step-planner/css/`
 - PLAN-035 · Gợi ý model chỉ khi dự án có model; Ingestion giữ được cả luồng lẫn lịch; báo kho thô mà kho phân tích không đọc được · `step-planner/data/system-design.json`
+- PLAN-037 · Processing giữ được nhiều công cụ; dbt làm lớp batch cho dữ liệu liên tục · `step-planner/data/system-design.json`
 <!-- index:end -->
 
 ## PLAN-001 · Dự án là các bước có thứ tự, mỗi bước có bước con có thứ tự
@@ -209,3 +210,8 @@ giao diện của trang.
 26/11/2026 · `step-planner/data/system-design.json`
 
 Nhóm kiến trúc "model trả lời lúc nào" chỉ gợi ý theo hồ sơ (độ trễ, độ mới) khi khâu Training đã quyết; Serving đã chọn thì vẫn quyết như trước; Training Not needed mà Serving chưa chọn thì nhóm không cần; chưa quyết cả hai thì chưa gợi ý, kể cả với bộ đặt sẵn của mẫu. Khâu Ingestion chọn được nhiều công cụ, để một dự án vừa có luồng (Kafka) vừa có job theo lịch (Lambda, nạp bù, luồng giả lập cạnh pipeline theo ngày). Spark, Databricks dùng được cả khi dữ liệu tới liên tục (lớp batch đọc bảng bronze do job stream ghi). Luật mới báo: BigQuery làm kho phân tích mà kho thô là R2, MinIO hay HDFS (BigQuery chỉ nạp, đọc từ Cloud Storage hay file trên máy); MinIO hay catalog tự host mà chỉ đóng gói bằng requirements, uv, không có Docker Compose. Lối pipeline gợi ý Docker Compose ngay sau requirements và đo lag Kafka trước tiên ở khâu giám sát (chỉ hợp dữ liệu liên tục).
+
+## PLAN-037 · Processing giữ được nhiều công cụ; dbt làm lớp batch cho dữ liệu liên tục
+26/11/2026 · `step-planner/data/system-design.json`
+
+Khâu Processing chọn được nhiều công cụ, để một dự án ghi cả công cụ stream lẫn công cụ lô: Lambda, hay job stream ghi bảng bronze rồi dbt, Spark batch biến đổi theo lịch. dbt dùng được cả khi dữ liệu tới liên tục, làm lớp batch; người dùng cần câu trả lời ngay mà Processing chỉ có công cụ lô thì báo; Kafka mà Processing không có công cụ stream đọc topic thì báo, kể cả khi chưa trả lời câu độ trễ. Ingestion có Kafka bên cạnh công cụ lịch (Lambda, nạp bù) thì không báo nạp theo lô cho dữ liệu liên tục. dbt test mà Processing không có dbt thì báo.

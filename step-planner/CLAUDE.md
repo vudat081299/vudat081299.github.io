@@ -169,7 +169,7 @@
   `caveat: true`: luật chỉ nhắc cách dùng, phương án vẫn đúng (host miễn phí ngủ, đĩa không bền, file DuckDB sau API).
 - Kiến trúc (`architectures`): nhóm → kiến trúc (khi dùng, khi tránh, luồng, công cụ theo khâu, nguồn). Không lưu lựa chọn;
   `archAdvice` lấy luật đầu tiên khớp của nhóm (khoá điều kiện như `checks`), `""` = nhóm không cần. Lối là kiến trúc của nhóm app (`path`).
-  Kiến trúc được gợi ý phải có ở mỗi khâu một công cụ không làm luật báo với hồ sơ ấy (`test-core`); hồ sơ nói ngược khâu đã quyết thì luật hồ sơ đứng trước.
+  Kiến trúc được gợi ý phải có ở mỗi khâu một công cụ không làm luật báo với hồ sơ ấy (`test-core`; khâu nhiều công cụ đã quyết thì thêm bên cạnh); hồ sơ nói ngược khâu đã quyết thì luật hồ sơ đứng trước.
 - Bàn giao (`edges`): đường nối hai khâu liền nhau của luồng, cả hai đã quyết (`flowEdges`). Hợp đồng giữ cả khi đường nối không còn.
 - Sơ đồ: đường nối nét liền khi cả hai khâu đã quyết (`bothDecided`, cùng luật với `flowEdges`), còn lại nét đứt.
 - Sơ đồ là khung nhìn (PLAN-031): không lưu, tải lại về khung ban đầu; bánh xe trơn chỉ kéo khung khi khung có focus hay giữ Space. Luật đủ: đầu `ui/diagram-view.js`.

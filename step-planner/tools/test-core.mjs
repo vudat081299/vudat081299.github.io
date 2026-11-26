@@ -595,6 +595,7 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   /* Luật phối hợp: báo khi đủ điều kiện; khâu trong `unless` chưa quyết thì chưa báo; `own` ở `unless` tắt cảnh báo. */
   const W = (stages, profile = {}, path = '') => warnings(cat, normDesign({ path, profile, stages })).map((x) => x.id);
   const P = (...ids) => ({ pick: ids });
+  const hardOf = (stages, profile = {}, path = '') => warnings(cat, normDesign({ path, profile, stages })).filter((x) => !x.caveat).map((x) => x.id);
   check('thiết kế: luật — API trên GitHub Pages báo, có host tự ghi thì thôi',
     W({ serve: P('fastapi'), host: P('github-pages') }).includes('api-on-static-host')
     && !W({ serve: P('fastapi'), host: { pick: ['github-pages'], own: 'Render cho API' } }).includes('api-on-static-host'));
@@ -709,6 +710,28 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
     && has(W({ ingest: P('kafka', 'cron') }, { fresh: 'batch' }), 'kafka-for-batch-data')
     && eq(readStageLine('Ingestion & scheduling: Kafka, cron [ingest: kafka, cron]'), { id: 'ingest', pick: ['kafka', 'cron'], skip: false }));
   const optOf = (sid, oid) => cat.stages.find((x) => x.id === sid).options.find((o) => o.id === oid);
+  /* Processing nhận nhiều công cụ (PLAN-037): Lambda, hay luồng giả lập cạnh pipeline theo lịch, ghi cả công cụ stream lẫn công cụ lô.
+   * dbt dùng được cho dữ liệu liên tục (lớp batch trên bronze) nhưng không đọc topic: thiếu công cụ stream thì luật báo. */
+  const lambda = { ingest: P('kafka', 'cron'), process: P('spark-streaming', 'spark'), raw: P('s3', 'delta-lake'), store: P('cassandra') };
+  check('khâu Processing chọn được nhiều công cụ; Lambda (Kafka + cron, Spark Structured Streaming + Spark) không làm luật báo, kể cả nạp theo lô',
+    cat.stages.find((x) => x.id === 'process').multi === true && eq(normDesign({ stages: { process: P('spark-streaming', 'dbt') } }).stages.process.pick, ['spark-streaming', 'dbt'])
+    && !hardOf(lambda, { size: 'large', fresh: 'stream', latency: 'online', budget: 'low' }).length
+    && has(W({ ingest: P('cron') }, { fresh: 'stream', latency: 'online' }), 'stream-with-batch-ingest')
+    && !has(W({ ingest: P('kafka', 'cron') }, { fresh: 'stream', latency: 'online' }), 'stream-with-batch-ingest'),
+  JSON.stringify(hardOf(lambda, { size: 'large', fresh: 'stream', latency: 'online', budget: 'low' })));
+  check('dbt hợp dữ liệu liên tục; chỉ dbt cho dữ liệu liên tục cần trả lời ngay thì báo, thêm công cụ stream thì thôi',
+    fitOf(optOf('process', 'dbt'), { fresh: 'stream' }).ok && fitOf(optOf('validate', 'dbt-tests'), { fresh: 'stream' }).ok
+    && has(W({ process: P('dbt') }, { fresh: 'stream', latency: 'online' }), 'stream-without-stream-processor')
+    && !has(W({ process: P('dbt', 'spark-streaming') }, { fresh: 'stream', latency: 'online' }), 'stream-without-stream-processor')
+    && !has(W({ process: P('dbt') }, { fresh: 'stream', latency: 'batch' }), 'stream-without-stream-processor'));
+  check('Kafka mà Processing chỉ có công cụ lô thì báo, kể cả chưa trả lời câu độ trễ; có công cụ stream bên cạnh thì thôi',
+    has(W({ ingest: P('kafka'), process: P('dbt') }, { fresh: 'stream' }), 'kafka-without-consumer')
+    && has(W({ ingest: P('kafka'), process: P('duckdb') }, { fresh: 'stream', latency: 'online' }), 'kafka-without-consumer')
+    && !has(W({ ingest: P('kafka'), process: P('dbt', 'spark-streaming') }, { fresh: 'stream' }), 'kafka-without-consumer'));
+  check('luật: dbt test mà Processing không có dbt thì báo; có dbt (kể cả cạnh công cụ stream) thì thôi',
+    has(W({ validate: P('dbt-tests'), process: P('spark-streaming') }), 'dbt-tests-without-dbt')
+    && !has(W({ validate: P('dbt-tests'), process: P('spark-streaming', 'dbt') }), 'dbt-tests-without-dbt')
+    && !has(W({ validate: P('dbt-tests') }), 'dbt-tests-without-dbt'));
   check('phương án: WebSocket, lag Kafka hợp dữ liệu liên tục, không hợp theo lịch; Playwright ngược lại; Apply path không chọn Oozie',
     fitOf(optOf('source', 'websocket-feed'), { fresh: 'stream' }).ok && !fitOf(optOf('source', 'websocket-feed'), { fresh: 'batch' }).ok
     && fitOf(optOf('monitor', 'kafka-lag'), { fresh: 'stream' }).ok && !fitOf(optOf('monitor', 'kafka-lag'), { fresh: 'once' }).ok
@@ -744,8 +767,9 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   }
   check('thiết kế: Apply path không chọn phương án (hay bỏ khâu) làm luật báo', !selfWarn.size, [...selfWarn].slice(0, 5).join(' | '));
   /* Mỗi kiến trúc được gợi ý có ở mỗi khâu ít nhất một công cụ không làm luật báo; khâu đã quyết theo luật gợi ý cũng thử
-   * khi X hợp hồ sơ (luật nói "đã chọn X nên là kiến trúc Y" thì Y phải có công cụ dùng được). Gợi ý "không cần" thì khâu ấy
-   * không bị báo. */
+   * khi X hợp hồ sơ (luật nói "đã chọn X nên là kiến trúc Y" thì Y phải có công cụ dùng được). Khâu đã quyết nhận nhiều công cụ
+   * (`multi`) thì được thêm một công cụ của Y bên cạnh X (dbt cho dữ liệu liên tục: Kafka cần thêm bộ xử lý stream đọc topic).
+   * Gợi ý "không cần" thì khâu ấy không bị báo. */
   const decided = [{}, ...cat.architectures.flatMap((f) => f.rules.flatMap((rl) => Object.entries(rl.if).filter(([k]) => stageIds.has(k))
     .reduce((acc, [k, vals]) => acc.flatMap((st) => vals.map((v) => ({ ...st, [k]: v === 'skip' ? { skip: true } : v === 'own' ? { own: 'x' } : P(v) }))), [{}])
     .filter((st) => Object.keys(st).length)))];
@@ -762,7 +786,9 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
           }
           const e = cat.architectures.find((f) => f.id === a.family).entries.find((x) => x.id === a.id);
           for (const [sid, tools] of Object.entries(e.tools)) {
-            if (!tools.some((t) => !hard({ path, profile, stages: { ...stages, [sid]: P(t) } }, [sid]).length)) {
+            const plus = Object.keys(stages).filter((k) => k !== sid && stages[k].pick && e.tools[k] && cat.stages.find((x) => x.id === k).multi)
+              .reduce((acc, k) => acc.flatMap((st) => [st, ...e.tools[k].map((t) => ({ ...st, [k]: P(...stages[k].pick, t) }))]), [stages]);
+            if (!tools.some((t) => plus.some((st) => !hard({ path, profile, stages: { ...st, [sid]: P(t) } }, [sid]).length))) {
               badArch.add(`${a.family}:${a.id}/${sid} ${JSON.stringify({ path, profile, stages: Object.keys(stages) })}`);
             }
           }
@@ -846,13 +872,14 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
     && !(bdp('store') === 'bigquery' && ['cloudflare-r2', 'minio', 'hdfs'].includes(bdp('raw'))) && !warnings(cat, bdPipe).filter((w) => !w.caveat).length,
   JSON.stringify(Object.fromEntries(Object.keys(bdPipe.stages).map((k) => [k, bdp(k)]))));
   /* lakehouse-oss: Apply path đóng gói bằng Docker Compose; stack ví dụ của mẫu không làm luật báo với bộ đặt sẵn. Bước giả lập
-   * luồng (Kafka + một công cụ lịch ở Ingestion) không báo khi đổi câu độ mới sang Continuously, như ghi chú bước 7 dặn. */
+   * luồng (Kafka + một công cụ lịch ở Ingestion, Spark Structured Streaming + dbt ở Processing) không báo khi đổi câu độ mới
+   * sang Continuously, như ghi chú bước 7 dặn. */
   const lhPre = fromTemplate(templates.find((t) => t.id === 'lakehouse-oss')).design;
   const lhStack = { raw: P('minio', 'iceberg', 'polaris'), process: P('dbt'), validate: P('dbt-tests'), store: P('duckdb-iceberg'),
     app: P('superset'), package: P('docker-compose', 'requirements'), host: P('own-server'), source: P('web-scraping', 'open-data'), monitor: P('healthchecks') };
   const hardIds = (d) => warnings(cat, normDesign(d)).filter((w) => !w.caveat).map((w) => w.id);
   const lhBatch = hardIds({ ...lhPre, stages: { ...lhStack, ingest: P('prefect') } });
-  const lhStream = hardIds({ ...lhPre, profile: { ...lhPre.profile, fresh: 'stream' }, stages: { ...lhStack, source: P('web-scraping', 'open-data', 'event-stream'), ingest: P('kafka', 'cron'), process: P('spark-streaming') } });
+  const lhStream = hardIds({ ...lhPre, profile: { ...lhPre.profile, fresh: 'stream' }, stages: { ...lhStack, source: P('web-scraping', 'open-data', 'event-stream'), ingest: P('kafka', 'cron'), process: P('spark-streaming', 'dbt') } });
   check('mẫu đặt sẵn lakehouse-oss: Apply path chọn Docker Compose; stack của mẫu không làm luật báo, kể cả có luồng giả lập (Kafka + cron)',
     pick('lakehouse-oss', 'package') === 'docker-compose' && !lhBatch.length && !lhStream.length
     && hardIds({ ...lhPre, stages: { ...lhStack, ingest: P('kafka', 'cron') } }).includes('kafka-for-batch-data'),
