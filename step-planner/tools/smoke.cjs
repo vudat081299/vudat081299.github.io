@@ -3352,6 +3352,53 @@ const check = (name, ok, detail = '') => {
     await fx.close();
   });
 
+  /* ── Tab tới thẻ ở mép hàng (320px, 390px): cả thẻ vào trong scroll-padding, không nằm dưới mép mờ; bấm chuột không làm hàng nhảy ── */
+  await section('Tab tới thẻ ở mép hàng', async () => {
+    for (const w of [320, 390]) {
+      const { ctx: tx, page: tp } = await open(w, 800, { reducedMotion: 'reduce' });
+      await tp.click('#start .tpl[data-tpl="stats-report"]');
+      await tp.waitForSelector('.card[data-sub]');
+      const sid = await tp.$$eval('.step[data-step]', (rows) => rows.find((r) => r.querySelectorAll('.card').length >= 3).dataset.step);
+      const ids = await tp.$$eval(`.step[data-step="${sid}"] .card`, (cs) => cs.map((c) => c.dataset.sub));
+      /* Phần thẻ (trái) và tên thẻ nằm ngoài vùng trong scroll-padding, px; hàng đã cuộn tới mép thì mép ấy không mờ, không tính. */
+      const hidden = () => tp.evaluate(() => {
+        const a = document.activeElement, sc = a.closest('.cards-scroll'), cs = getComputedStyle(sc), r = sc.getBoundingClientRect();
+        const lo = r.left + parseFloat(cs.scrollPaddingLeft), hi = r.right - parseFloat(cs.scrollPaddingRight);
+        const c = a.closest('.card').getBoundingClientRect(), t = a.getBoundingClientRect();
+        const atL = sc.scrollLeft <= 1, atR = sc.scrollLeft + sc.clientWidth >= sc.scrollWidth - 1;
+        return Math.max(atL ? 0 : lo - c.left, atL ? 0 : lo - t.left, atR || c.width > hi - lo ? 0 : c.right - hi, atR || t.width > hi - lo ? 0 : t.right - hi);
+      });
+      await tp.focus(subSel(ids[0], 'edit-sub'));
+      await tp.keyboard.press('Tab'); // tên → chip
+      const worst = [];
+      for (let i = 1; i < ids.length; i++) {
+        await tp.keyboard.press('Tab'); // chip → tên thẻ sau
+        await tp.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
+        worst.push(Math.round(await hidden()));
+        await tp.keyboard.press('Tab');
+      }
+      check(`${w}px: Tab từ chip sang tên thẻ sau — cả thẻ và tên nằm ngoài mép mờ`, worst.every((x) => x <= 1), worst.join(','));
+      /* Chuột: bấm tên thẻ đang lấp dưới mép mờ trái thì hàng đứng yên. */
+      const sc = `.step[data-step="${sid}"] .cards-scroll`;
+      const tb = await tp.$eval(sc, (el, id) => {
+        const t = el.querySelector(`.card[data-sub="${id}"] [data-act="edit-sub"]`);
+        el.scrollLeft += t.getBoundingClientRect().left - el.getBoundingClientRect().left + 8;
+        const b = t.getBoundingClientRect();
+        return b.right > el.getBoundingClientRect().left + 24 && { x: el.getBoundingClientRect().left + 16, y: b.top + b.height / 2 };
+      }, ids[1]);
+      const before = await tp.$eval(sc, (el) => el.scrollLeft);
+      check(`${w}px: có tên thẻ lấp một phần dưới mép mờ trái để bấm`, !!tb);
+      if (tb) {
+        await tp.mouse.click(tb.x, tb.y);
+        await tp.waitForSelector('#dlg-sub[open]');
+        const after = await tp.$eval(sc, (el) => el.scrollLeft);
+        check(`${w}px: bấm chuột vào thẻ ở mép không cuộn hàng`, after === before, `${before} → ${after}`);
+        await tp.keyboard.press('Escape');
+      }
+      await tx.close();
+    }
+  });
+
   /* ── Dữ liệu lưu bị hỏng ── */
   await section('Dữ liệu lưu bị hỏng', async () => { // thân giữ thụt lề cũ cho dễ gộp
   const bad = await browser.newContext();

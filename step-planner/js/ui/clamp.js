@@ -1,7 +1,7 @@
 // @ts-check
 /* Chữ dài trên bảng: mỗi khối .clamp dừng ở số dòng của token --lines-*, thẻ ở --card-max; đo khối bị cắt (markCut:
    đọc hết rồi mới ghi), nút "Show more", link ở phần bị che ra khỏi vòng Tab; ghi chú dài trên thẻ chỉ dựng phần đầu; mép mờ
-   của hàng thẻ cuộn ngang. Đo lại khi đổi cỡ cửa sổ, font tải xong, mở ghi chú bước.
+   của hàng thẻ cuộn ngang; Tab tới thẻ thì cuộn cả thẻ ra khỏi mép mờ. Đo lại khi đổi cỡ cửa sổ, font tải xong, mở ghi chú bước.
    Xuất: cardNotes, unclip, boxKey, cutBoxes, openKeys, markCut, updateScrollCues, initClamp.
    Dùng: ui/dom.js, ui/hand.js, ui/state.js. */
 import { $, h, withLinks } from './dom.js';
@@ -105,6 +105,20 @@ export function updateScrollCues(list = document.querySelectorAll('.cards-scroll
   }
 }
 
+/* Tab tới thẻ ở mép hàng: trình duyệt chỉ cuộn khi phần tử ra hẳn ngoài khung, nên tên thẻ có thể nằm dưới mép mờ. Focus
+ * bằng phím (:focus-visible) thì cuộn ngang cho cả thẻ vào trong scroll-padding; thẻ rộng hơn chỗ thì mép trái thẻ thắng.
+ * Bấm chuột không làm hàng nhảy. @param {any} e */
+function revealCard(e) {
+  const card = e.target.closest?.('.card');
+  const sc = card?.closest('.cards-scroll');
+  if (!sc || !e.target.matches(':focus-visible')) return;
+  const cs = getComputedStyle(sc), r = sc.getBoundingClientRect(), c = card.getBoundingClientRect();
+  const lo = r.left + sc.clientLeft + parseFloat(cs.scrollPaddingLeft);
+  const hi = r.left + sc.clientLeft + sc.clientWidth - parseFloat(cs.scrollPaddingRight);
+  const d = c.left < lo || c.width > hi - lo ? c.left - lo : c.right > hi ? c.right - hi : 0;
+  if (Math.abs(d) >= 1) sc.scrollBy({ left: d, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+}
+
 /** Đo lại mọi khối, giữ khối đang mở. */
 function remeasureCut() {
   const boxes = cutBoxes([$('board')]);
@@ -116,6 +130,7 @@ let resizeFrame = 0;
 /** Gắn sự kiện, chạy một lần lúc khởi động (main.js gọi theo thứ tự). */
 export function initClamp() {
   $('board').addEventListener('scroll', (/** @type {any} */ e) => { if (e.target.classList?.contains('cards-scroll')) updateScrollCues([e.target]); }, true);
+  $('board').addEventListener('focusin', revealCard);
 
   window.addEventListener('resize', () => {
     updateScrollCues();
