@@ -26,6 +26,8 @@
   <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a1 1 0 0 1 1-1h9"/></symbol>
   <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></symbol>
   <symbol id="i-redo" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"/></symbol>
+  <symbol id="i-wait" viewBox="0 0 24 24"><path d="M5 22h14M5 2h14M17 22v-4.2a2 2 0 0 0-.6-1.4L12 12l-4.4 4.4a2 2 0 0 0-.6 1.4V22M7 2v4.2a2 2 0 0 0 .6 1.4L12 12l4.4-4.4a2 2 0 0 0 .6-1.4V2"/></symbol>
+  <symbol id="i-proof" viewBox="0 0 24 24"><path d="M3.9 8.6a4 4 0 0 1 4.7-4.7 4 4 0 0 1 6.8 0 4 4 0 0 1 4.7 4.7 4 4 0 0 1 0 6.8 4 4 0 0 1-4.7 4.7 4 4 0 0 1-6.8 0 4 4 0 0 1-4.7-4.7 4 4 0 0 1 0-6.8ZM9 12l2 2 4-4"/></symbol>
   <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
   <symbol id="i-chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
   <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
@@ -110,6 +112,16 @@
       <span class="sr">Search</span>
       <input type="search" class="input" id="q" placeholder="Search steps, sub-steps, notes" autocomplete="off">
     </label>
+    <label class="st-filter" title="Show only sub-steps with these statuses">
+      <span class="sr">Status filter</span>
+      <select id="st-filter">
+        <option value="">All statuses</option>
+        <option value="act" data-hint="New, In progress: can be done now">Actionable</option>
+        <option value="wait" data-hint="Pending, Blocked">Waiting</option>
+        <option value="done">Done</option>
+        <option value="out">Skipped, cancelled</option>
+      </select>
+    </label>
     <span class="filter-note" id="filter-note" role="status"></span>
     <button type="button" class="btn small quiet" id="renumber-btn" hidden title="Numbers stay put until you reload, so you can see what moved. Click to number everything in the current order">Renumber</button>
     <span class="tools-gap"></span>
@@ -122,6 +134,8 @@
       <button type="button" class="btn go" id="export-btn"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Export</button>
     </div>
   </section>
+
+  <p class="next-wait" id="next-wait" hidden></p>
 
   <details class="ws-notes" id="ws-notes">
     <summary><svg class="i" aria-hidden="true"><use href="#i-chev"/></svg>Project notes <span class="muted" id="ws-notes-hint"></span></summary>
@@ -627,10 +641,12 @@
     </header>
     <div class="dlg-body">
       <label class="field" id="ask-field"><span id="ask-label"></span><input type="text" id="ask-input" maxlength="120"></label>
+      <ul class="ask-list" id="ask-list" hidden></ul>
     </div>
     <footer class="dlg-foot">
       <span class="dlg-gap"></span>
       <button type="button" class="btn" data-close>Close</button>
+      <button type="submit" class="btn" id="ask-alt" value="alt" hidden></button>
       <button type="submit" class="btn go" id="ask-ok" value="ok">OK</button>
     </footer>
   </form>

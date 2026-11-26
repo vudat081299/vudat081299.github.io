@@ -27,11 +27,17 @@ const NEXT = { todo: 'doing', doing: 'done' };
 export const outOfScope = (s) => s === 'skip' || s === 'cancel';
 export const nextStatus = (/** @type {string} */ s) => NEXT[s] || '';
 /** Đổi trạng thái một bước con: sang trạng thái không có lý do thì bỏ lý do; giữa Pending, Blocked, Cancelled thì giữ.
- * @param {any} sub @param {string} st */
-export function setStatus(sub, st) {
+ * Vừa sang Done: `doneAt` là hôm nay (`day`); rời Done: bỏ `doneAt`.
+ * @param {any} sub @param {string} st @param {string} [day] */
+export function setStatus(sub, st, day = today()) {
+  const was = sub.status;
   sub.status = STATUSES.includes(st) ? st : 'todo';
   if (!hasReason(sub.status)) sub.reason = '';
+  if (sub.status !== 'done') sub.doneAt = '';
+  else if (was !== 'done') sub.doneAt = day;
 }
+/** Bước con xong mà chưa có tài liệu bằng chứng (`proof`) cho "Done when" của nó: trang gợi ý thêm (không chặn). @param {any} sub */
+export const needsEvidence = (sub) => sub.status === 'done' && !!sub.doneWhen && !sub.docs.some((/** @type {any} */ d) => d.proof);
 
 export const FORMAT = 'step-planner';
 export const VERSION = 3;
@@ -88,9 +94,9 @@ export function normDoc(o) {
   const kind = o.kind === 'link' || (o.kind !== 'md' && typeof o.url === 'string' && o.url) ? 'link' : 'md';
   if (kind === 'link') {
     const url = safeUrl(o.url);
-    return url ? { id: idOr(o.id, 'd'), kind, title: oneLine(o.title) || url, url } : null;
+    return url ? { id: idOr(o.id, 'd'), kind, title: oneLine(o.title) || url, url, proof: o.proof === true } : null;
   }
-  return { id: idOr(o.id, 'd'), kind, title: oneLine(o.title) || 'Document', body: mdBody(o.body) };
+  return { id: idOr(o.id, 'd'), kind, title: oneLine(o.title) || 'Document', body: mdBody(o.body), proof: o.proof === true };
 }
 const docsOf = (/** @type {any} */ a) => (Array.isArray(a) ? a.map(normDoc).filter(Boolean) : []);
 
@@ -104,6 +110,7 @@ export function normSub(o) {
     status,
     reason: hasReason(status) ? multiLine(typeof x.reason === 'string' ? x.reason : x.cancelReason) : '', // cancelReason: dữ liệu cũ
     due: parseDate(x.due),
+    doneAt: status === 'done' ? parseDate(x.doneAt) : '', // ngày sang Done (setStatus); dữ liệu cũ: rỗng, không bịa ngày
     doneWhen: oneLine(x.doneWhen),
     notes: multiLine(x.notes),
     docs: docsOf(x.docs),
@@ -169,6 +176,36 @@ export function normWorkspace(o) {
     log,
     design: normDesign(x.design),
   };
+}
+
+/* ── Sửa cùng lúc ở hai tab ──
+ * Hộp sửa chụp các trường của mục lúc mở; lúc Lưu chỉ ghi trường người dùng đã đổi lên bản mới nhất (tab khác có thể đã
+ * ghi). Hai bên cùng đổi một trường sang hai giá trị khác nhau là xung đột: trang hỏi giữ bên nào. */
+/** Trường mà hộp sửa của từng loại mục ghi. */
+export const EDIT_FIELDS = {
+  sub: ['title', 'status', 'reason', 'due', 'doneWhen', 'notes'],
+  step: ['title', 'goal', 'doneWhen', 'notes'],
+  log: ['date', 'decision', 'why', 'stepId'],
+};
+/** Bản sao các trường `keys` của o. @param {any} o @param {string[]} keys @returns {Record<string, any>} */
+export const pick = (o, keys) => Object.fromEntries(keys.map((k) => [k, JSON.parse(JSON.stringify(o[k] ?? null))]));
+/**
+ * Gộp: trường mình đổi (so với `snap`) lấy của mình, còn lại lấy `latest`. Cả hai cùng đổi một trường sang hai giá trị
+ * khác nhau: tên trường vào `conflicts`, `merged` tạm giữ của mình.
+ * @param {Record<string, any>} snap lúc mở hộp @param {Record<string, any>} mine trong hộp lúc Lưu @param {Record<string, any>} latest đang lưu
+ * @returns {{merged: Record<string, any>, conflicts: string[]}}
+ */
+export function mergeEdit(snap, mine, latest) {
+  const same = (/** @type {any} */ a, /** @type {any} */ b) => JSON.stringify(a ?? null) === JSON.stringify(b ?? null);
+  /** @type {Record<string, any>} */
+  const merged = {};
+  const conflicts = [];
+  for (const k of Object.keys(mine)) {
+    const m = !same(snap[k], mine[k]), t = !same(snap[k], latest[k]);
+    merged[k] = m ? mine[k] : latest[k];
+    if (m && t && !same(mine[k], latest[k])) conflicts.push(k);
+  }
+  return { merged, conflicts };
 }
 
 /** Bản sao sâu với id mới cho mọi thứ — dùng khi nhân bản và khi nhập. @param {any} ws */
@@ -347,6 +384,23 @@ export function projectNextIds(ws) {
   return [];
 }
 
+/** "Next" đang chờ: ô đầu tiên còn việc (của bước đầu tiên còn việc) không có thẻ làm được ngay, chỉ thẻ Pending / Blocked.
+ * Trả các thẻ ấy (để báo "Next waits on …"), không thì []. "Next" vẫn không vượt qua chỗ chờ. @param {any} ws @returns {any[]} */
+export function nextWaitingOn(ws) {
+  for (const s of ws.steps) {
+    const sl = slotsOf(s.subs).find((x) => x.some(open));
+    if (!sl) continue;
+    const live = sl.filter(open);
+    return live.some((x) => x.status === 'todo' || x.status === 'doing') ? [] : live;
+  }
+  return [];
+}
+
+/** Lọc thẻ theo nhóm trạng thái (thanh công cụ): '' là mọi trạng thái. */
+export const STATUS_GROUPS = { '': null, act: ['todo', 'doing'], wait: ['pending', 'blocked'], done: ['done'], out: ['skip', 'cancel'] };
+/** @param {string} group @param {string} status */
+export const inGroup = (group, status) => !STATUS_GROUPS[group] || STATUS_GROUPS[group].includes(status);
+
 /** So khớp không phân biệt hoa thường và dấu. */
 export const fold = (/** @type {string} */ s) => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '')
   .replace(/[đĐ]/g, 'd').toLowerCase();
@@ -399,6 +453,13 @@ const hardBreaks = (/** @type {string[]} */ lines) => lines.map((l, i) => (i < l
  * khối rào thụt thêm hai bậc; rào dài hơn chuỗi ` dài nhất trong thân, nên thân chứa ``` hay dòng #, -, nhãn vẫn
  * nguyên. Trong tên: `\`, `[`, `]` thoát bằng `\`. */
 const escDoc = (/** @type {string} */ s) => s.replace(/[\\[\]]/g, '\\$&');
+/* Tài liệu là bằng chứng: tên mở bằng `Evidence: ` (trang cũ đọc thành một phần tên, không mất gì). Tên thật mở bằng chữ ấy
+ * mà không là bằng chứng thì thêm `\` phía trước. */
+const PROOF = /^Evidence:[ \t]*/i;
+const docTitle = (/** @type {any} */ d) => (d.proof ? 'Evidence: ' : PROOF.test(d.title) ? '\\' : '') + escDoc(d.title);
+/** Tên tài liệu đọc từ Markdown (chưa bỏ thoát) → tên, bằng chứng không. @param {string} raw */
+const readDocTitle = (raw) => (PROOF.test(raw) ? { title: unescDoc(raw.replace(PROOF, '')), proof: true }
+  : { title: unescDoc(/^\\evidence:/i.test(raw) ? raw.slice(1) : raw), proof: false });
 const unescDoc = (/** @type {string} */ s) => s.replace(/\\([\\[\]])/g, '$1');
 const DOC_LINK = /^\[((?:\\.|[^\]\\])*)\]\((?:<([^<>]*)>|(\S+))\)$/;
 const DOC_ITEM = /^(\s*)[-*+][ \t]+(.*)$/;
@@ -408,13 +469,13 @@ function docLines(docs, ind) {
   const out = [];
   for (const d of docs) {
     if (d.kind === 'link') {
-      out.push(`${ind}  - [${escDoc(d.title)}](${/[()]/.test(d.url) ? '<' + d.url + '>' : d.url})`);
+      out.push(`${ind}  - [${docTitle(d)}](${/[()]/.test(d.url) ? '<' + d.url + '>' : d.url})`);
       continue;
     }
     const longest = Math.max(0, ...(d.body.match(/`+/g) || []).map((r) => r.length));
     const fence = '`'.repeat(Math.max(3, longest + 1));
     const fi = ind + '    ';
-    out.push(`${ind}  - ${escDoc(d.title)}`, fi + fence + 'markdown',
+    out.push(`${ind}  - ${docTitle(d)}`, fi + fence + 'markdown',
       ...(d.body ? d.body.split('\n').map((l) => (l ? fi + l : '')) : []), fi + fence);
   }
   return out;
@@ -445,8 +506,8 @@ function readDocs(lines, i, docs, warnings, min) {
     const text = /** @type {RegExpExecArray} */ (DOC_ITEM.exec(lines[i]))[2].trim();
     const lk = DOC_LINK.exec(text);
     if (lk) {
-      const title = unescDoc(lk[1]), url = lk[2] ?? lk[3];
-      const d = normDoc({ kind: 'link', title, url });
+      const { title, proof } = readDocTitle(lk[1]), url = lk[2] ?? lk[3];
+      const d = normDoc({ kind: 'link', title, url, proof });
       if (d) docs.push(d); else warnings.push(`Link is not http(s), skipped: ${title || url}`);
       i++;
       continue;
@@ -456,9 +517,9 @@ function readDocs(lines, i, docs, warnings, min) {
     const body = [];
     let k = i + 2;
     while (k < lines.length && !close.test(lines[k])) body.push(dedent(lines[k++], f[1].length));
-    const title = unescDoc(text);
+    const { title, proof } = readDocTitle(text);
     if (k >= lines.length) warnings.push(`Document "${title}" has no closing fence; read to the end of the file.`);
-    docs.push(normDoc({ kind: 'md', title, body: body.join('\n') }));
+    docs.push(normDoc({ kind: 'md', title, body: body.join('\n'), proof }));
     i = k + 1;
   }
   return i;
@@ -487,6 +548,7 @@ export function toMarkdown(ws, labels = null) {
       if (x.par) line += ' · parallel';
       if (x.redo) line += ' · redo';
       if (x.due) line += ` · due ${x.due}`;
+      if (x.status === 'done' && x.doneAt) line += ` · done ${x.doneAt}`;
       const more = [];
       if (x.doneWhen) more.push(`  Done when: ${x.doneWhen}`);
       if (hasReason(x.status) && x.reason) {
@@ -517,8 +579,9 @@ export function toMarkdown(ws, labels = null) {
     out.push('', `## ${LOG_HEADING}`, '');
     for (const l of ws.log) {
       const why = l.why ? l.why.split('\n') : [];
-      const step = ws.steps.find((/** @type {any} */ s) => s.id === l.stepId);
-      out.push(...hardBreaks([`- ${l.date} · ${l.decision}`, ...(step ? [`  Step: ${step.title}`] : []),
+      /* Số thứ tự như tiêu đề `## N. tên`: hai bước trùng tên vẫn phân biệt được. */
+      const k = ws.steps.findIndex((/** @type {any} */ s) => s.id === l.stepId);
+      out.push(...hardBreaks([`- ${l.date} · ${l.decision}`, ...(k >= 0 ? [`  Step: ${k + 1}. ${ws.steps[k].title}`] : []),
         ...why.map((w, k) => (k ? '  ' + escBlock(w) : `  Why: ${w}`))]));
     }
   }
@@ -529,6 +592,7 @@ const ITEM = /^(?:[-*+]|\d+[.)])\s+(?:\[(.?)\]\s*)?(.*)$/;
 const STEP_PREFIX = /^(?:(?:bước|step)\s*)?\d+(?:\s*[.):]\s*|\s+)/i;
 const DATE_TOKEN = '(\\d{4}-\\d{1,2}-\\d{1,2}|\\d{1,2}\\/\\d{1,2}\\/\\d{4})';
 const META_DUE = new RegExp(`^(?:hạn|due):?\\s+${DATE_TOKEN}$`, 'i');
+const META_DONE = new RegExp(`^done:?\\s+${DATE_TOKEN}$`, 'i'); // ngày xong (`doneAt`)
 const TITLE_DUE = new RegExp(`(^|[\\s(\\[,;])(?:hạn|due):?\\s+(\\d{1,4}[-\\/]\\d{1,2}[-\\/]\\d{1,4})`, 'gi');
 const LOG_DATE = new RegExp(`^${DATE_TOKEN}\\s*(?:·|–|-|:)?\\s*(.*)$`);
 
@@ -543,12 +607,14 @@ function parseSubText(raw, warnings) {
   let due = '';
   let par = false;
   let redo = false;
+  let doneAt = '';
   for (const part of parts.slice(1)) {
     const t = part.trim();
     let m;
     if (/^`@[^`]+`$/.test(t) || /^@.+$/.test(t)) continue; // người làm của file cũ: bỏ
     if (/^(?:parallel|song song)$/i.test(restore(t))) { par = true; continue; }
     if (/^(?:redo|làm lại)$/i.test(restore(t))) { redo = true; continue; }
+    if ((m = META_DONE.exec(restore(t))) && parseDate(m[1]) && !doneAt) { doneAt = parseDate(m[1]); continue; }
     if ((m = META_DUE.exec(restore(t))) && parseDate(m[1]) && !due) due = parseDate(m[1]);
     else {
       if (/^(?:hạn|due)\b/i.test(restore(t))) warnings.push(`Due date not readable, kept in the title: ${restore(t)}`);
@@ -566,7 +632,7 @@ function parseSubText(raw, warnings) {
     return pre;
   });
   if (changed) title = title.replace(/\(\s*(?:[,;]\s*)*\)/g, '').replace(/\s+/g, ' ').replace(/^[\s,;·:-]+|[\s,;·:-]+$/g, '');
-  return { title: restore(title).trim(), due, par, redo };
+  return { title: restore(title).trim(), due, par, redo, doneAt };
 }
 
 /**
@@ -597,7 +663,7 @@ export function fromMarkdown(text) {
   const newSub = (/** @type {string} */ mark, /** @type {string} */ rest) => {
     if (!step) { step = { title: LOOSE_STEP, subs: [] }; ws.steps.push(step); }
     const p = parseSubText(rest, warnings);
-    sub = { title: p.title, status: FROM_MARK[mark ?? ' '] || 'todo', due: p.due, par: p.par, redo: p.redo };
+    sub = { title: p.title, status: FROM_MARK[mark ?? ' '] || 'todo', due: p.due, par: p.par, redo: p.redo, doneAt: p.doneAt };
     if (mark != null && !(mark in FROM_MARK)) warnings.push(`Unknown mark [${mark}], read as New: ${p.title}`);
     step.subs.push(sub);
     block = 'sub'; blockFirst = true;
@@ -717,10 +783,14 @@ export function fromMarkdown(text) {
     else addNote(step, 'notes', raw);
   }
   if (!ws.name && !ws.steps.length) throw new Error('No "# …" title, "## …" step or "- [ ] …" task found.');
-  /* `Step: tên` của quyết định: gắn với bước đầu tiên cùng tên (bỏ dấu, không phân biệt hoa thường). */
+  /* `Step: N. tên` của quyết định: bước thứ N nếu đúng tên ấy; không thì bước đầu tiên tên đúng cả chuỗi (file cũ ghi
+   * `Step: tên`), rồi bước đầu tiên tên đúng phần sau số. So tên bỏ dấu, không phân biệt hoa thường. */
+  const named = (/** @type {string} */ t) => ws.steps.find((/** @type {any} */ x) => fold(oneLine(x.title)) === fold(t));
   for (const l of ws.log) {
     if (l.stepTitle == null) continue;
-    const s = ws.steps.find((/** @type {any} */ x) => fold(oneLine(x.title)) === fold(l.stepTitle));
+    const nm = /^(\d+)\.\s+(.+)$/.exec(l.stepTitle);
+    const at = nm ? ws.steps[+nm[1] - 1] : null;
+    const s = (nm && at && fold(oneLine(at.title)) === fold(nm[2]) ? at : null) || named(l.stepTitle) || (nm ? named(nm[2]) : null);
     if (s) l.stepId = s.id = s.id || uid('t');
     else if (l.stepTitle) warnings.push(`Decision linked to a missing step, link dropped: ${l.stepTitle}`);
     delete l.stepTitle;
@@ -812,14 +882,14 @@ export function slug(/** @type {string} */ s) {
   return fold(s).replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60) || 'project';
 }
 
-const docShape = (/** @type {any} */ d) => (d.kind === 'link' ? { kind: d.kind, title: d.title, url: d.url } : { kind: d.kind, title: d.title, body: d.body });
+const docShape = (/** @type {any} */ d) => (d.kind === 'link' ? { kind: d.kind, title: d.title, url: d.url, proof: d.proof } : { kind: d.kind, title: d.title, body: d.body, proof: d.proof });
 /** Phần so được khi kiểm Markdown đi rồi về: bỏ id và mốc thời gian. @param {any} ws */
 export function shape(ws) {
   return {
     name: ws.name, templateId: ws.templateId, notes: ws.notes,
     steps: ws.steps.map((/** @type {any} */ s) => ({
       title: s.title, goal: s.goal, doneWhen: s.doneWhen, notes: s.notes, revisit: s.revisit, round: s.round, docs: s.docs.map(docShape),
-      subs: s.subs.map((/** @type {any} */ x) => ({ title: x.title, status: x.status, reason: x.reason, due: x.due, doneWhen: x.doneWhen, notes: x.notes, par: x.par, redo: x.redo, docs: x.docs.map(docShape) })),
+      subs: s.subs.map((/** @type {any} */ x) => ({ title: x.title, status: x.status, reason: x.reason, due: x.due, doneAt: x.doneAt, doneWhen: x.doneWhen, notes: x.notes, par: x.par, redo: x.redo, docs: x.docs.map(docShape) })),
     })),
     log: ws.log.map((/** @type {any} */ l) => ({ date: l.date, decision: l.decision, why: l.why, step: ws.steps.findIndex((/** @type {any} */ s) => s.id === l.stepId) })),
     design: ws.design,

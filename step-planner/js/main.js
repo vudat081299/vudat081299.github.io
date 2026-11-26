@@ -59,7 +59,8 @@ let state = loaded.state;
 let curId = '';
 /** @type {any[]} */
 let templates = [];
-const ui = { q: '' };
+/** q: chữ tìm; st: nhóm trạng thái đang lọc (C.STATUS_GROUPS, '' = mọi trạng thái). Mỗi tab một bộ lọc, không lưu. */
+const ui = { q: '', st: '' };
 /** Kéo thả (js/drag.js); render() dọn lần kéo dở trước khi vẽ lại bảng. @type {{abort: () => void}|null} */
 let dragCtl = null;
 const banners = new Map();
@@ -130,10 +131,16 @@ const stepSel = (/** @type {string} */ id, /** @type {string} */ act) => `.step[
 let toastUndo = null;
 let toastTimer = 0;
 let toastBack = '';
-/* Xoá: focus nhảy vào Hoàn tác. Dời chỗ (focusUndo = false): focus ở lại thẻ vừa dời, Ctrl/Cmd + Z vẫn hoàn tác. */
-function toast(/** @type {string} */ text, /** @type {null | (() => void)} */ undo = null, back = '', focusUndo = true) {
+/** Nút của toast không phải Hoàn tác (vd. "Add evidence"): Ctrl/Cmd + Z không bấm nó. */
+let toastAction = false;
+/* Xoá: focus nhảy vào Hoàn tác. Dời chỗ (focusUndo = false): focus ở lại thẻ vừa dời, Ctrl/Cmd + Z vẫn hoàn tác.
+ * label: chữ của nút khi nó làm việc khác Hoàn tác. */
+function toast(/** @type {string} */ text, /** @type {null | (() => void)} */ undo = null, back = '', focusUndo = true, label = '') {
   $('toast-text').textContent = text;
   $('toast-undo').hidden = !undo;
+  $('toast-undo').textContent = label || 'Undo';
+  if (label) $('toast-undo').removeAttribute('aria-keyshortcuts'); else $('toast-undo').setAttribute('aria-keyshortcuts', 'Control+Z Meta+Z');
+  toastAction = !!label;
   toastUndo = undo;
   toastBack = back;
   $('toast').hidden = false;
@@ -157,7 +164,7 @@ $('toast-undo').addEventListener('click', runUndo);
 const typing = (/** @type {any} */ el) => !!el && (el.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName));
 document.addEventListener('keydown', (e) => {
   if ((e.ctrlKey || e.metaKey) && !e.shiftKey && !e.altKey && e.key.toLowerCase() === 'z'
-    && toastUndo && !typing(e.target) && !document.querySelector('dialog[open]')) {
+    && toastUndo && !toastAction && !typing(e.target) && !document.querySelector('dialog[open]')) {
     e.preventDefault();
     runUndo();
   }
@@ -183,6 +190,7 @@ function render(opt = {}) {
   $('hint').hidden = S.hintHidden();
   renderWsNotes(ws);
   $('log-btn-text').textContent = `Log (${ws.log.length})`;
+  renderNextWait(ws);
   renderBoard(ws, opt);
   renderDesign();
   renderLog(ws, opt);
@@ -225,7 +233,8 @@ let boardWsId = '';
 function renderBoard(ws, opt = {}) {
   const board = $('board');
   const q = C.fold(ui.q.trim());
-  const filtering = !!q;
+  const st = ui.st;
+  const filtering = !!q || !!st;
   const todayStr = C.today();
   const nextIds = new Set(C.projectNextIds(ws));
   const labels = labelsOf(ws);
@@ -243,8 +252,9 @@ function renderBoard(ws, opt = {}) {
   let shown = 0;
   ws.steps.forEach((/** @type {any} */ step, /** @type {number} */ i) => {
     const stepHit = !!q && foldOf(step, () => [step.title, step.goal, step.doneWhen, step.notes, step.revisit?.reason, docTitles(step.docs)]).includes(q);
-    const visible = step.subs.filter((/** @type {any} */ x) => !q || stepHit || foldOf(x, () => [x.title, x.doneWhen, x.notes, x.reason, docTitles(x.docs)]).includes(q));
-    if (filtering && !visible.length && !stepHit) return;
+    const visible = step.subs.filter((/** @type {any} */ x) => C.inGroup(st, x.status)
+      && (!q || stepHit || foldOf(x, () => [x.title, x.doneWhen, x.notes, x.reason, docTitles(x.docs)]).includes(q)));
+    if (filtering && !visible.length && !(stepHit && !st)) return;
     shown += visible.length;
     if (!step.revisit && step.round > 1) reopenedOn.set(step.id, lastReopened(ws, step));
     const key = JSON.stringify([step, filtering ? visible.map((/** @type {any} */ x) => x.id) : null,
@@ -283,11 +293,11 @@ function renderBoard(ws, opt = {}) {
   });
   if (!ws.steps.length) nodes.push(h('p', { class: 'empty' }, 'No steps yet. Click "Add step" below.'));
   else if (!plan.length) nodes.push(h('p', { class: 'empty' }, 'No sub-step matches. ',
-    h('button', { type: 'button', class: 'btn', 'data-act': 'clear-filter' }, 'Clear search')));
+    h('button', { type: 'button', class: 'btn', 'data-act': 'clear-filter' }, st ? 'Clear filters' : 'Clear search')));
   placeChildren(board, nodes, moved);
   for (const p of plan) if (p.row) patchRowIndex(p.row, p.i);
   $('renumber-btn').hidden = !labelsStale(ws);
-  $('filter-note').textContent = filtering ? `${C.plural(shown, 'sub-step')} match · reordering is off while searching` : '';
+  $('filter-note').textContent = filtering ? `${C.plural(shown, 'sub-step')} match · reordering is off while ${q ? 'searching' : 'filtering'}` : '';
   $('add-step').hidden = filtering;
   /* 4. Đo: thẻ của hàng mới (Compact vừa đổi: mọi thẻ) — một lần dàn trang cho cả lượt. */
   const cards = (/** @type {Element[]} */ rows) => rows.flatMap((r) => /** @type {HTMLElement[]} */ ([...r.querySelectorAll('.card[data-sub]')]));
@@ -395,6 +405,7 @@ function stepRow(step, i, visible, ctx) {
   const card = (/** @type {any} */ x) => {
     const overdue = x.due && x.due < todayStr && x.status !== 'done' && !C.outOfScope(x.status);
     const isNext = nextIds.has(x.id);
+    const doneOn = x.status === 'done' && x.doneAt;
     return h('div', { class: `card st-${x.status}${isNext ? ' next' : ''}`, 'data-sub': x.id },
       h('div', { class: 'card-top' },
         numTag('num', labels.get(x.id)),
@@ -403,11 +414,13 @@ function stepRow(step, i, visible, ctx) {
         x.docs.length > 0 && h('button', { type: 'button', class: 'doc-tag', 'data-act': 'sub-docs', tabindex: '-1',
           'aria-label': `${C.plural(x.docs.length, 'doc')}. Open the list`, title: x.docs.map((/** @type {any} */ d) => d.title).join('\n') },
         icon('clip'), String(x.docs.length)),
+        proofTag(x),
         statusChip(x)),
       h('div', { class: 'card-body' },
         h('h3', { class: 'card-title' }, h('button', { type: 'button', class: 'link', 'data-act': 'edit-sub', 'aria-keyshortcuts': 'Alt+ArrowLeft Alt+ArrowRight Alt+ArrowUp Alt+ArrowDown' }, x.title)),
-        x.due && h('p', { class: 'meta' },
-          h('span', { class: 'due' + (overdue ? ' overdue' : '') }, 'due ' + fmtDate(x.due) + (overdue ? ' (overdue)' : ''))),
+        (x.due || doneOn) && h('p', { class: 'meta' },
+          x.due && h('span', { class: 'due' + (overdue ? ' overdue' : '') }, 'due ' + fmtDate(x.due) + (overdue ? ' (overdue)' : '')),
+          doneOn && h('span', { class: 'done-at', title: `Marked Done on ${fmtDate(x.doneAt)}` }, 'done ' + fmtDate(x.doneAt))),
         x.reason && h('p', { class: 'card-reason' }, h('span', { class: 'lbl' }, C.REASON_LABEL[x.status] + ' '), withLinks(x.reason)),
         x.doneWhen && h('p', { class: 'card-done' }, h('span', { class: 'lbl' }, 'Done when '), x.doneWhen),
         x.notes && cardNotes(x.notes, keep.open.has(x.id))),
@@ -477,6 +490,14 @@ function statusChip(x) {
   const how = nx ? `Click: ${C.STATUS_LABEL[nx]}. Shift-click or Alt+Down: all statuses` : 'Click: choose a status';
   return h('button', { type: 'button', class: `chip st-${x.status}`, 'data-act': 'status', 'aria-haspopup': nx ? null : 'listbox',
     'aria-expanded': nx ? null : 'false', 'aria-keyshortcuts': 'Alt+ArrowDown', 'aria-label': `Status: ${label}. ${how}`, title: how }, label);
+}
+
+/** Dấu bằng chứng trên thẻ xong có tài liệu `proof` (mốc nghiệm thu có đầu ra kiểm được). @param {any} x */
+function proofTag(x) {
+  const proof = x.status === 'done' ? x.docs.filter((/** @type {any} */ d) => d.proof) : [];
+  if (!proof.length) return null;
+  const t = `Evidence: ${proof.map((/** @type {any} */ d) => d.title).join(', ')}`;
+  return h('span', { class: 'proof-tag', role: 'img', 'aria-label': t, title: t }, icon('proof'));
 }
 
 /** Thẻ chạm --card-max thì thân bị cắt: mờ dần ở đáy và thêm nút "Xem thêm" (mở cả thẻ). Nút ngoài vòng Tab:
@@ -748,7 +769,10 @@ document.addEventListener('click', (/** @type {any} */ e) => {
   if (GUARDED.includes(dlg.id)) tryClose(dlg); else dlg.close();
 });
 
-/** @param {{title:string, text?:string, label?:string, value?:string, ok:string, danger?:boolean}} o @returns {Promise<string|null>} */
+/** Hỏi lại trong #dlg-ask. Trả chữ trong ô (không có ô: ''), ASK_ALT khi bấm nút thứ hai (`alt`), null khi đóng.
+ * list: mỗi mục [nhãn, của mình, của tab kia] (xung đột giữa hai tab).
+ * @param {{title:string, text?:string, label?:string, value?:string, ok:string, alt?:string, danger?:boolean, list?:string[][]}} o
+ * @returns {Promise<string|null>} */
 function ask(o) {
   const dlg = $('dlg-ask');
   $('dlg-ask-title').textContent = o.title;
@@ -758,6 +782,11 @@ function ask(o) {
   $('ask-label').textContent = o.label || '';
   $('ask-input').value = o.value || '';
   $('ask-input').required = !!o.label;
+  $('ask-list').replaceChildren(...(o.list || []).map(([k, mine, theirs]) => h('li', {}, h('b', {}, k),
+    h('p', {}, h('span', { class: 'lbl' }, 'Yours: '), mine), h('p', {}, h('span', { class: 'lbl' }, 'Other tab: '), theirs))));
+  $('ask-list').hidden = !o.list?.length;
+  $('ask-alt').textContent = o.alt || '';
+  $('ask-alt').hidden = !o.alt;
   $('ask-ok').textContent = o.ok;
   $('ask-ok').className = 'btn ' + (o.danger ? 'danger' : 'go');
   dlg.returnValue = '';
@@ -765,8 +794,44 @@ function ask(o) {
   dlg.showModal();
   if (o.label) focusField($('ask-input'), true); else $('ask-ok').focus();
   return new Promise((resolve) => {
-    dlg.addEventListener('close', () => resolve(dlg.returnValue === 'ok' ? $('ask-input').value : null), { once: true });
+    dlg.addEventListener('close', () => resolve(dlg.returnValue === 'ok' ? $('ask-input').value : dlg.returnValue === 'alt' ? ASK_ALT : null), { once: true });
   });
+}
+const ASK_ALT = '\u0000alt';
+
+/* ── Lưu hộp sửa khi tab khác đã ghi (C.mergeEdit): chỉ trường mình đổi đè lên bản mới nhất; cùng trường thì hỏi ── */
+
+const FIELD_LABEL = { title: 'Title', status: 'Status', reason: 'Reason', due: 'Due', doneWhen: 'Done when', notes: 'Notes', goal: 'Goal',
+  date: 'Date', decision: 'Decision', why: 'Why', stepId: 'Step' };
+/** Giá trị một trường để so trong hộp hỏi. @param {any} ws @param {string} k @param {any} v */
+function fieldText(ws, k, v) {
+  const t = k === 'status' ? C.STATUS_LABEL[v] : k === 'stepId' ? stepOf(ws, v)?.title || '' : k === 'due' || k === 'date' ? fmtDate(v) : String(v ?? '');
+  const one = C.oneLine(t);
+  return !one ? '(empty)' : one.length > 80 ? one.slice(0, 79) + '…' : one;
+}
+/**
+ * Trường cần ghi khi Lưu: gộp `mine` lên `latest()` theo `snap`; trùng trường thì hỏi (Close: không lưu, hộp sửa vẫn mở).
+ * Hỏi xong thì gộp lại với bản mới nhất lúc ấy. Trả null khi người dùng đóng hộp hỏi, hay khi mục mất trong lúc hỏi.
+ * @param {any} ws @param {Record<string, any>} snap @param {Record<string, any>} mine @param {() => Record<string, any>|null} latest
+ */
+async function mergeSaved(ws, snap, mine, latest) {
+  const now = latest();
+  if (!now) return null;
+  const first = C.mergeEdit(snap, mine, now);
+  if (!first.conflicts.length) return first.merged;
+  const r = await ask({ title: 'Changed in another tab', text: 'Another tab saved these fields after you opened this dialog. Keep which version?',
+    list: first.conflicts.map((k) => [FIELD_LABEL[k] || k, fieldText(ws, k, mine[k]), fieldText(ws, k, now[k])]), ok: 'Keep mine', alt: "Keep the other tab's" });
+  if (r === null) return null;
+  const again = latest();
+  if (!again) return null;
+  const { merged, conflicts } = C.mergeEdit(snap, mine, again);
+  if (r === ASK_ALT) for (const k of conflicts) merged[k] = again[k];
+  return merged;
+}
+/** Mục đã bị xoá ở tab khác: tạo lại (true), bỏ chữ đã sửa (false), hay đóng hộp hỏi (null: hộp sửa vẫn mở). @param {string} what */
+async function askRecreate(what) {
+  const r = await ask({ title: 'Deleted in another tab', text: `${what} was deleted in another tab while you were editing it.`, ok: 'Re-create', alt: 'Discard my edits' });
+  return r === null ? null : r !== ASK_ALT;
 }
 
 /* Mọi <select> có nghĩa dùng danh sách chọn tự dựng; ô vị trí của bước chỉ là số nên giữ <select> gốc. */
@@ -779,8 +844,7 @@ document.querySelectorAll('select').forEach((s) => enhanceSelect(/** @type {HTML
 function addWorkspace(ws) {
   state.workspaces.push(ws);
   setCur(ws.id);
-  ui.q = '';
-  $('q').value = '';
+  resetFilters();
 }
 function afterOpen() {
   window.scrollTo(0, 0);
@@ -794,8 +858,7 @@ function createFrom(/** @type {string} */ tplId, /** @type {string} */ name = ''
 }
 function switchTo(/** @type {string} */ id) {
   setCur(id);
-  ui.q = '';
-  $('q').value = '';
+  resetFilters();
   persist();
   render({ full: true });
 }
@@ -979,7 +1042,7 @@ $('board').addEventListener('click', (/** @type {any} */ e) => {
     case 'status': {
       if (consumeJustClosed(b)) break;
       const nx = C.nextStatus(sub.status);
-      if (nx && !e.shiftKey) { C.setStatus(sub, nx); commit(subSel(sub.id, 'status')); } else openStatusMenu(b, step, sub);
+      if (nx && !e.shiftKey) { C.setStatus(sub, nx); commit(subSel(sub.id, 'status')); evidenceHint(step, sub); } else openStatusMenu(b, step, sub);
       break;
     }
     case 'edit-sub': openSub(step, sub); break;
@@ -987,6 +1050,21 @@ $('board').addEventListener('click', (/** @type {any} */ e) => {
     case 'sub-del': deleteSub(ws.id, step.id, sub.id); break;
   }
 });
+
+/** Vừa xong mà "Done when" chưa có tài liệu bằng chứng: toast gợi ý, nút mở hộp sửa ở phần tài liệu. Không chặn.
+ * @param {any} step @param {any} sub */
+function evidenceHint(step, sub) {
+  if (!C.needsEvidence(sub)) return;
+  const ids = { wsId: curId, stepId: step.id, subId: sub.id };
+  toast(`Done. Add evidence for "${sub.title.length > 40 ? sub.title.slice(0, 39) + '…' : sub.title}"? (a run, report, commit link)`, () => {
+    const ws = findWs(ids.wsId);
+    const st = ws && ws.steps.find((/** @type {any} */ s) => s.subs.some((/** @type {any} */ x) => x.id === ids.subId));
+    const x = st && st.subs.find((/** @type {any} */ y) => y.id === ids.subId);
+    if (!x) return;
+    if (curId !== ids.wsId) switchTo(ids.wsId);
+    openSub(st, x, { toDocs: true });
+  }, subSel(sub.id, 'status'), false, 'Add evidence');
+}
 
 /** Danh sách mọi trạng thái, mở dưới chip. Chọn Cancelled: mở hộp sửa ở ô lý do (lưu mới huỷ); Pending, Blocked đặt ngay
  * (lý do không bắt buộc, sửa trong hộp). @param {any} chip @param {any} step @param {any} sub */
@@ -1000,6 +1078,7 @@ function openStatusMenu(chip, step, sub) {
     if (v === x.status) return;
     C.setStatus(x, v);
     commit(subSel(x.id, 'status'));
+    evidenceHint(s, x);
   }, { label: `Status of "${sub.title}"`, className: 'dd-status' });
 }
 
@@ -1049,6 +1128,7 @@ function moveSubTo(ws, sub, to, focusSel = subSel(sub.id, 'edit-sub')) {
   const j = before ? before.subs.indexOf(sub) : -1;
   if (C.placeSub(ws, sub, to) === undefined) return;
   const target = stepOf(ws, to.stepId);
+  if (target !== before) sub.redo = false; // dấu Redo chỉ có nghĩa trong vòng của bước đã gửi nó lại
   const k = target.subs.indexOf(sub);
   /* Cái bị đổi chỗ: dời tới trong cùng hàng thì cái nó vừa vượt qua (đứng ngay trước); còn lại cái bị đẩy lùi (ngay sau). */
   const swap = before === target && k > j ? target.subs[k - 1] : target.subs[k + 1] || target.subs[k - 1];
@@ -1059,7 +1139,8 @@ function moveSubTo(ws, sub, to, focusSel = subSel(sub.id, 'edit-sub')) {
  * Toast tả chỗ mới bằng tên hàng xóm, không bằng số (số giữ nguyên tới khi tải lại). Dời liền nhiều lần cùng một thứ
  * (toast của nó còn hiện) thì Hoàn tác trả về chỗ trước lần dời đầu. ── */
 
-/** @type {null | {kind:'sub'|'step', id:string, wsId:string, from:any, fromStepId:string, undo:null|(() => void)}} */
+/** redo: dấu Redo của bước con lúc bắt đầu dời (sang bước khác thì mất dấu; Hoàn tác trả lại).
+ * @type {null | {kind:'sub'|'step', id:string, wsId:string, from:any, fromStepId:string, redo:boolean, undo:null|(() => void)}} */
 let lastMove = null;
 let flashTimer = 0;
 
@@ -1087,7 +1168,8 @@ function beginMove(kind, id) {
   if (lastMove && lastMove.kind === kind && lastMove.id === id && lastMove.wsId === ws.id
     && !$('toast').hidden && toastUndo && toastUndo === lastMove.undo) return lastMove;
   const from = placeNow(ws, kind, id);
-  lastMove = { kind, id, wsId: ws.id, from, fromStepId: kind === 'sub' ? from?.stepId : id, undo: null };
+  const sub = kind === 'sub' && from ? stepOf(ws, from.stepId).subs.find((/** @type {any} */ x) => x.id === id) : null;
+  lastMove = { kind, id, wsId: ws.id, from, fromStepId: kind === 'sub' ? from?.stepId : id, redo: !!sub?.redo, undo: null };
   return lastMove;
 }
 /** Gọi sau khi đổi chỗ: lưu, vẽ, giữ focus, tô, báo. @param {any} m @param {string|null|undefined} swapId @param {string} focusSel */
@@ -1118,7 +1200,9 @@ function undoMove(/** @type {any} */ m) {
     const from = w.steps.find((/** @type {any} */ s) => s.subs.some((/** @type {any} */ x) => x.id === m.id));
     if (!from) { toast('Cannot undo: the sub-step was deleted.'); return; }
     if (!stepOf(w, m.from.stepId)) { toast('Cannot undo: its step was deleted.'); return; }
-    C.placeSub(w, from.subs.find((/** @type {any} */ x) => x.id === m.id), m.from);
+    const sub = from.subs.find((/** @type {any} */ x) => x.id === m.id);
+    C.placeSub(w, sub, m.from);
+    if (m.redo && stepOf(w, m.from.stepId).revisit) sub.redo = true;
   }
   if (curId !== m.wsId) switchTo(m.wsId);
   commit(m.kind === 'step' ? stepSel(m.id, 'edit-step') : subSel(m.id, 'edit-sub'));
@@ -1204,8 +1288,9 @@ async function deleteStep(/** @type {string} */ wsId, /** @type {string} */ step
 
 /* ── Hộp bước con ── */
 
-/** pos: chỗ đặt sẵn cho bước con mới ("j:2" = song song với ô 2); pos0: giá trị ô Vị trí lúc mở hộp.
- * @type {{wsId:string, stepId:string, subId:string|null, pos?:string, pos0?:string}|null} */
+/** pos: chỗ đặt sẵn cho bước con mới ("j:2" = song song với ô 2); pos0: giá trị ô Vị trí lúc mở hộp; orig: bản sao bước con
+ * lúc mở hộp (so khi Lưu, tạo lại khi tab khác đã xoá nó).
+ * @type {{wsId:string, stepId:string, subId:string|null, pos?:string, pos0?:string, orig?:any}|null} */
 let subCtx = null;
 
 function fillPos(/** @type {any} */ sel, /** @type {number} */ n, /** @type {number} */ value) {
@@ -1237,7 +1322,7 @@ function subPosOptions(keep = true) {
 function openSub(step, sub, opt = {}) {
   const ws = cur();
   const f = $('sub-form');
-  subCtx = { wsId: ws.id, stepId: step.id, subId: sub ? sub.id : null, pos: opt.pos };
+  subCtx = { wsId: ws.id, stepId: step.id, subId: sub ? sub.id : null, pos: opt.pos, orig: sub ? JSON.parse(JSON.stringify(sub)) : null };
   $('dlg-sub-title').textContent = sub ? 'Edit sub-step' : 'Add sub-step';
   $('sub-where').textContent = docWhere({ wsId: ws.id, stepId: step.id, subId: null, docId: null });
   const labels = labelsOf(ws);
@@ -1281,36 +1366,68 @@ $('sub-status').addEventListener('change', () => {
   /* Chỉ Cancelled đưa focus vào ô lý do: lý do của Pending, Blocked không bắt buộc, và mũi tên trong nhóm viên phải đi tiếp. */
   if (field($('sub-form'), 'status').value === 'cancel') focusField(field($('sub-form'), 'reason'));
 });
+/** Bước con của hộp đang mở và bước chứa nó (tìm theo id ở mọi bước: tab khác có thể đã dời nó). */
 function subFromCtx() {
   const ws = subCtx && findWs(subCtx.wsId);
-  const step = ws && stepOf(ws, subCtx.stepId);
-  const sub = step && subCtx.subId ? step.subs.find((/** @type {any} */ x) => x.id === subCtx.subId) : null;
-  return { ws, step, sub };
+  if (!ws || !subCtx.subId) return { ws, step: ws && stepOf(ws, subCtx.stepId), sub: null };
+  for (const st of ws.steps) {
+    const sub = st.subs.find((/** @type {any} */ x) => x.id === subCtx.subId);
+    if (sub) return { ws, step: st, sub };
+  }
+  return { ws, step: null, sub: null };
 }
-$('sub-form').addEventListener('submit', (/** @type {any} */ e) => {
+/* Lưu: chỉ trường đã đổi so với lúc mở hộp đè lên bản đang lưu (tab khác có thể đã ghi); ô song song do chỗ đặt quyết định;
+ * dấu Redo do vòng của bước quyết định (moveSubTo bỏ dấu khi sang bước khác). */
+$('sub-form').addEventListener('submit', async (/** @type {any} */ e) => {
   e.preventDefault();
   const f = $('sub-form');
-  const { ws, step, sub } = subFromCtx();
+  const ctx = /** @type {any} */ (subCtx);
+  const F = C.EDIT_FIELDS.sub;
+  const mine = C.pick(C.normSub({ title: field(f, 'title').value, status: field(f, 'status').value, due: field(f, 'due').value,
+    doneWhen: field(f, 'doneWhen').value, notes: field(f, 'notes').value, reason: field(f, 'reason').value }), F);
+  let { ws, step, sub } = subFromCtx();
+  /** @type {any} */ let item = null;
+  if (ws && ctx.subId && !sub) {
+    const again = await askRecreate(`"${ctx.orig.title}"`);
+    if (again === null) return;
+    if (!again) { closeSaved($('dlg-sub')); return; }
+    ({ ws, step, sub } = subFromCtx());
+    if (!sub) {
+      item = C.normSub({ ...ctx.orig, ...mine, status: ctx.orig.status, redo: false });
+      C.setStatus(item, mine.status);
+      item.reason = mine.reason;
+    }
+  }
+  if (ws && sub) {
+    const merged = await mergeSaved(ws, C.pick(ctx.orig, F), mine, () => C.pick(subFromCtx().sub || {}, F));
+    if (!merged) return;
+    ({ ws, step, sub } = subFromCtx());
+    if (sub) {
+      const n = C.normSub({ ...sub, ...merged });
+      C.setStatus(sub, n.status); // doneAt theo lần đổi trạng thái
+      Object.assign(sub, C.pick(n, F));
+    }
+  }
+  const target = ws && (stepOf(ws, field(f, 'step').value) || step || stepOf(ws, ctx.stepId));
   closeSaved($('dlg-sub'));
-  if (!ws || !step || (subCtx.subId && !sub)) { toast('Not saved: the step was deleted elsewhere.'); return; }
-  const data = C.normSub({
-    id: sub ? sub.id : '', docs: sub ? sub.docs : [],
-    title: field(f, 'title').value, status: field(f, 'status').value,
-    due: field(f, 'due').value, doneWhen: field(f, 'doneWhen').value, notes: field(f, 'notes').value, reason: field(f, 'reason').value,
-  });
-  const target = stepOf(ws, field(f, 'step').value) || step;
+  if (!ws || !target || (ctx.subId && !sub && !item)) { toast('Not saved: the step was deleted elsewhere.'); return; }
+  if (!ctx.subId) {
+    item = C.normSub({ ...mine, status: 'todo', redo: false });
+    C.setStatus(item, mine.status);
+    item.reason = mine.reason;
+  }
   const pos = String(field(f, 'pos').value || 'n:999');
   const to = { stepId: target.id, slot: Number(pos.slice(2)) || 0, join: pos[0] === 'j', at: Infinity };
-  const { par, ...rest } = data; // ô song song do chỗ đặt quyết định, không do hộp sửa
-  const item = sub ? Object.assign(sub, rest) : data;
+  if (sub) item = sub;
   if (curId !== ws.id) switchTo(ws.id);
   const focusSel = `${subSel(item.id, 'edit-sub')} || ${stepSel(target.id, 'add-sub')} || #q`;
-  if (sub && (target !== step || pos !== subCtx.pos0)) moveSubTo(ws, sub, to, focusSel);
+  if (sub && (target.id !== ctx.stepId || pos !== ctx.pos0)) moveSubTo(ws, sub, to, focusSel);
   else {
     if (!sub) C.placeSub(ws, item, to);
     commit(focusSel);
   }
-  if (!document.querySelector(`.card[data-sub="${item.id}"]`)) toast(sub ? 'Saved — hidden by the search filter.' : 'Added — hidden by the search filter.');
+  if (!document.querySelector(`.card[data-sub="${item.id}"]`)) toast(sub ? 'Saved — hidden by the filter.' : 'Added — hidden by the filter.');
+  else if (item.status === 'done' && ctx.orig?.status !== 'done') evidenceHint(target, item);
 });
 /* Nhân bản bản đã lưu; chữ đang sửa chưa lưu thì hỏi lại như Đóng. */
 $('sub-dup').addEventListener('click', async () => {
@@ -1326,13 +1443,14 @@ $('sub-del').addEventListener('click', () => {
 
 /* ── Hộp bước ── */
 
-/** @type {{wsId:string, stepId:string|null}|null} */
+/** orig: bản sao bước lúc mở hộp (so khi Lưu, tạo lại khi tab khác đã xoá nó); pos0: ô Vị trí lúc mở.
+ * @type {{wsId:string, stepId:string|null, orig?:any, pos0?:string}|null} */
 let stepCtx = null;
 /** @param {any} step null: thêm bước mới @param {number} [at] bước mới: chỗ chèn đặt sẵn (mặc định cuối) */
 function openStep(step, at) {
   const f = $('step-form');
   const ws = cur();
-  stepCtx = { wsId: ws.id, stepId: step ? step.id : null };
+  stepCtx = { wsId: ws.id, stepId: step ? step.id : null, orig: step ? JSON.parse(JSON.stringify(step)) : null };
   $('dlg-step-title').textContent = step ? 'Edit step' : 'Add step';
   field(f, 'title').value = step ? step.title : '';
   field(f, 'goal').value = step ? step.goal : '';
@@ -1340,6 +1458,7 @@ function openStep(step, at) {
   field(f, 'notes').value = step ? step.notes : '';
   const n = ws.steps.length + (step ? 0 : 1);
   fillPos(field(f, 'pos'), n, step ? ws.steps.indexOf(step) : at ?? n - 1);
+  stepCtx.pos0 = field(f, 'pos').value;
   $('step-del').hidden = !step;
   $('step-revisit').hidden = !step || (!step.revisit && !C.canReopen(step));
   docUndo = null;
@@ -1347,23 +1466,40 @@ function openStep(step, at) {
   openDlg($('dlg-step'), field(f, 'title'));
 }
 $('add-step').addEventListener('click', () => openStep(null));
-$('step-form').addEventListener('submit', (/** @type {any} */ e) => {
+/* Lưu: như hộp bước con, chỉ trường đã đổi đè lên bản đang lưu; ô Vị trí không đổi thì bước đứng nguyên chỗ hiện tại. */
+$('step-form').addEventListener('submit', async (/** @type {any} */ e) => {
   e.preventDefault();
   const f = $('step-form');
-  const ws = stepCtx && findWs(stepCtx.wsId);
+  const ctx = /** @type {any} */ (stepCtx);
+  const F = C.EDIT_FIELDS.step;
+  const mine = C.pick(C.normStep({ title: field(f, 'title').value, goal: field(f, 'goal').value, doneWhen: field(f, 'doneWhen').value, notes: field(f, 'notes').value }), F);
+  const now = () => (ctx.stepId ? stepOf(findWs(ctx.wsId), ctx.stepId) : null);
+  let ws = findWs(ctx.wsId);
+  let step = now();
+  /** @type {any} */ let fresh = null;
+  if (ws && ctx.stepId && !step) {
+    const again = await askRecreate(`Step "${ctx.orig.title}"`);
+    if (again === null) return;
+    if (!again) { closeSaved($('dlg-step')); return; }
+    ws = findWs(ctx.wsId);
+    step = now();
+    if (!step) fresh = C.normStep({ ...ctx.orig, ...mine });
+  }
+  if (ws && step) {
+    const merged = await mergeSaved(ws, C.pick(ctx.orig, F), mine, () => { const s = now(); return s ? C.pick(s, F) : null; });
+    if (!merged) return;
+    ws = findWs(ctx.wsId);
+    step = now();
+    if (step) Object.assign(step, C.pick(C.normStep({ ...step, ...merged }), F));
+  }
   closeSaved($('dlg-step'));
-  if (!ws) return;
-  const vals = { title: field(f, 'title').value, goal: field(f, 'goal').value, doneWhen: field(f, 'doneWhen').value, notes: field(f, 'notes').value };
-  let step = stepCtx.stepId ? stepOf(ws, stepCtx.stepId) : null;
-  if (stepCtx.stepId && !step) { toast('Not saved: the step was deleted elsewhere.'); return; }
+  if (!ws || (ctx.stepId && !step && !fresh)) { toast('Not saved: the step was deleted elsewhere.'); return; }
   const m = step && curId === ws.id ? beginMove('step', step.id) : null;
   const i = step ? ws.steps.indexOf(step) : -1;
-  if (step) {
-    const n = C.normStep({ ...step, ...vals });
-    Object.assign(step, { title: n.title, goal: n.goal, doneWhen: n.doneWhen, notes: n.notes });
-    ws.steps.splice(i, 1);
-  } else step = C.normStep(vals);
-  const k = Math.min(Number(field(f, 'pos').value) || 0, ws.steps.length);
+  const posVal = field(f, 'pos').value;
+  if (step) ws.steps.splice(i, 1);
+  else step = fresh || C.normStep(mine);
+  const k = Math.min(step && i >= 0 && posVal === ctx.pos0 ? i : Number(posVal) || 0, ws.steps.length);
   ws.steps.splice(k, 0, step);
   const focusSel = `${stepSel(step.id, 'edit-step')} || #q`;
   if (m && k !== i) endMove(m, (k > i ? ws.steps[k - 1] : ws.steps[k + 1])?.id, focusSel);
@@ -1388,9 +1524,10 @@ $('step-revisit').addEventListener('click', async () => {
 /** @typedef {{wsId:string, stepId:string, subId:string|null, docId:string|null}} DocCtx */
 /** Bước hay bước con chứa tài liệu. @param {DocCtx} ctx */
 function docOwner(ctx) {
-  const step = stepOf(findWs(ctx.wsId), ctx.stepId);
-  if (!step) return null;
-  return ctx.subId ? step.subs.find((/** @type {any} */ x) => x.id === ctx.subId) || null : step;
+  const ws = findWs(ctx.wsId);
+  /* Bước con tìm theo id ở mọi bước: tab khác có thể đã dời nó trong lúc hộp sửa đang mở. */
+  if (ctx.subId) return ws?.steps.flatMap((/** @type {any} */ s) => s.subs).find((/** @type {any} */ x) => x.id === ctx.subId) || null;
+  return stepOf(ws, ctx.stepId);
 }
 /** "Bước 2 · tên" hay "Bước con 2.3 · tên". @param {DocCtx} ctx */
 function docWhere(ctx) {
@@ -1424,6 +1561,8 @@ function renderDocsEdit(where) {
   const rows = owner ? owner.docs.map((/** @type {any} */ d) => h('li', { class: 'doc-row', 'data-doc': d.id },
     h('button', { type: 'button', class: 'doc-link', 'data-doc-act': 'open' }, icon(d.kind === 'link' ? 'link' : 'doc'), h('span', {}, d.title),
       d.kind === 'link' && h('small', {}, d.url.replace(/^https?:\/\/(www\.)?/i, '').split(/[/?#]/)[0])),
+    h('button', { type: 'button', class: 'proof-btn', 'data-doc-act': 'proof', 'aria-pressed': String(d.proof),
+      title: d.proof ? 'Evidence for Done when. Click to unmark' : 'Mark as evidence for Done when (a run, report, test, commit)' }, icon('proof'), h('span', {}, 'Evidence')),
     h('button', { type: 'button', class: 'icon-btn', 'data-doc-act': 'del', 'aria-label': `Delete doc ${d.title}`, title: 'Delete doc' }, icon('trash')))) : [];
   if (docUndo && docUndo.where === where) {
     rows.push(h('li', { class: 'doc-row undo' }, h('span', {}, `Deleted "${docUndo.title}".`),
@@ -1454,6 +1593,13 @@ for (const where of /** @type {('sub'|'step')[]} */ (['sub', 'step'])) {
     const doc = owner && owner.docs.find((/** @type {any} */ d) => d.id === id);
     if (!doc) return;
     const c = { ...ctx, docId: id };
+    if (b.dataset.docAct === 'proof') {
+      doc.proof = !doc.proof;
+      commit();
+      refreshDocLists();
+      refocus(`#${where}-docs [data-doc="${id}"] [data-doc-act="proof"]`);
+      return;
+    }
     if (b.dataset.docAct === 'del') deleteDoc(c);
     else if (doc.kind === 'link') openLinkEdit(c, doc);
     else openMd(c);
@@ -1548,7 +1694,7 @@ $('doc-form').addEventListener('submit', (/** @type {any} */ e) => {
   closeSaved($('dlg-doc'));
   if (!owner) { toast('Not saved: the step was deleted elsewhere.'); return; }
   const old = ctx.docId ? owner.docs.find((/** @type {any} */ d) => d.id === ctx.docId) : null;
-  const doc = C.normDoc({ id: old ? old.id : '', kind: 'link', title, url });
+  const doc = C.normDoc({ id: old ? old.id : '', kind: 'link', title, url, proof: !!old?.proof });
   if (old) Object.assign(old, doc); else owner.docs.push(doc);
   commit();
   refreshDocLists();
@@ -1626,7 +1772,7 @@ $('md-form').addEventListener('submit', (/** @type {any} */ e) => {
   closeSaved($('dlg-md'));
   if (!owner) { toast('Not saved: the step was deleted elsewhere.'); return; }
   const old = ctx.docId ? owner.docs.find((/** @type {any} */ d) => d.id === ctx.docId) : null;
-  const doc = C.normDoc({ id: old ? old.id : '', kind: 'md', title: field(f, 'title').value, body: field(f, 'body').value });
+  const doc = C.normDoc({ id: old ? old.id : '', kind: 'md', title: field(f, 'title').value, body: field(f, 'body').value, proof: !!old?.proof });
   if (old) Object.assign(old, doc); else owner.docs.push(doc);
   commit();
   refreshDocLists();
@@ -1670,8 +1816,8 @@ $('revisit-all-done').addEventListener('click', () => {
   for (const cb of /** @type {any} */ ($('revisit-list').querySelectorAll('input[name="reset"]'))) cb.checked = true;
 });
 /** Trạng thái, dấu Redo của các bước con, để Hoàn tác. @param {any} step */
-const subMarks = (step) => new Map(step.subs.map((/** @type {any} */ x) => [x.id, { status: x.status, redo: x.redo }]));
-/** @param {any} step @param {Map<string, {status:string, redo:boolean}>} marks */
+const subMarks = (step) => new Map(step.subs.map((/** @type {any} */ x) => [x.id, { status: x.status, redo: x.redo, doneAt: x.doneAt }]));
+/** @param {any} step @param {Map<string, {status:string, redo:boolean, doneAt:string}>} marks */
 const restoreMarks = (step, marks) => { for (const x of step.subs) if (marks.has(x.id)) Object.assign(x, marks.get(x.id)); };
 /* Mở lại: vòng mới, bước con đã chọn về New và mang dấu Redo, ghi một dòng nhật ký; một Hoàn tác trả hết. */
 $('revisit-form').addEventListener('submit', (/** @type {any} */ e) => {
@@ -1740,13 +1886,55 @@ $('revisit-clear').addEventListener('click', () => {
 
 /* ── Lọc ── */
 
-function clearFilter() {
+/** Bỏ chữ tìm và lọc trạng thái (chưa vẽ lại). */
+function resetFilters() {
   ui.q = '';
   $('q').value = '';
+  ui.st = '';
+  $('st-filter').value = '';
+}
+function clearFilter() {
+  resetFilters();
   render();
   $('q').focus();
 }
 $('q').addEventListener('input', (/** @type {any} */ e) => { ui.q = e.target.value; render(); });
+/* Lọc theo nhóm trạng thái: như tìm, tắt sắp xếp và thêm bước; số, "Next" vẫn tính trên cả dự án. */
+$('st-filter').addEventListener('change', (/** @type {any} */ e) => { ui.st = e.target.value; render(); });
+
+/* "Next" đang chờ (C.nextWaitingOn): một dòng trên bảng nói chờ thẻ nào, lý do; bấm tên là tới thẻ; còn việc làm được ở chỗ
+ * khác thì nút lọc "Actionable". "Next" vẫn không vượt qua chỗ chờ (PLAN-003). */
+function renderNextWait(/** @type {any} */ ws) {
+  const box = $('next-wait');
+  const wait = ws ? C.nextWaitingOn(ws) : [];
+  box.hidden = !wait.length;
+  if (!wait.length) { box.replaceChildren(); return; }
+  const more = ws.steps.flatMap((/** @type {any} */ s) => s.subs).filter((/** @type {any} */ x) => C.inGroup('act', x.status)).length;
+  const why = (/** @type {any} */ x) => {
+    const r = x.reason.split('\n')[0];
+    return ` (${C.STATUS_LABEL[x.status]}${r ? ': ' + (r.length > 60 ? r.slice(0, 59) + '…' : r) : ''})`;
+  };
+  const shown = wait.slice(0, 2);
+  box.replaceChildren(icon('wait'), h('span', {}, h('b', {}, 'Next waits on '),
+    ...shown.flatMap((x, k) => [k ? ', ' : '', h('button', { type: 'button', class: 'link', 'data-goto': x.id, title: 'Go to this card' }, x.title), why(x)]),
+    wait.length > shown.length ? ` and ${wait.length - shown.length} more` : '', '.'),
+  more > 0 && ui.st !== 'act' && h('button', { type: 'button', class: 'btn small', 'data-act': 'show-act' },
+    `Show what can be done now (${more})`));
+}
+$('next-wait').addEventListener('click', (/** @type {any} */ e) => {
+  const go = e.target.closest('[data-goto]');
+  if (go) {
+    const id = go.dataset.goto;
+    if (!document.querySelector(`.card[data-sub="${id}"]`)) { resetFilters(); render(); }
+    flash('sub', id, null);
+    refocus(subSel(id, 'edit-sub'));
+  } else if (e.target.closest('[data-act="show-act"]')) {
+    ui.st = 'act';
+    $('st-filter').value = 'act';
+    render();
+    refocus('#board .card[data-sub] [data-act="edit-sub"] || .st-filter .dd-btn');
+  }
+});
 
 /* ── Nhật ký quyết định ── */
 
@@ -1781,6 +1969,7 @@ $('log-form').addEventListener('submit', (/** @type {any} */ e) => {
   commit(`[data-log="${entry.id}"] [data-act="edit-log"]`, { preventScroll: true });
   flash('log', entry.id, null);
 });
+/** orig: bản sao quyết định lúc mở hộp sửa (so khi Lưu, tạo lại khi tab khác đã xoá nó). @type {{wsId:string, id:string, orig?:any}} */
 let logCtx = { wsId: '', id: '' };
 /* Bấm vào một quyết định (ngoài nút, link, chữ đang bôi) là mở hộp sửa, như thẻ bước con. */
 $('log-list').addEventListener('click', (/** @type {any} */ e) => {
@@ -1798,11 +1987,11 @@ $('log-list').addEventListener('click', (/** @type {any} */ e) => {
     refocus(`[data-log="${id}"] [data-act="more-log"]`, { preventScroll: true });
   } else if (act === 'goto-step') {
     /* Bước đang bị lọc ẩn thì bỏ lọc trước. */
-    if (!document.querySelector(`.step[data-step="${entry.stepId}"]`)) { ui.q = ''; $('q').value = ''; render(); }
+    if (!document.querySelector(`.step[data-step="${entry.stepId}"]`)) { resetFilters(); render(); }
     flash('step', entry.stepId, null);
     refocus(stepSel(entry.stepId, 'edit-step'), { preventScroll: true });
   } else {
-    logCtx = { wsId: ws.id, id };
+    logCtx = { wsId: ws.id, id, orig: { ...entry } };
     const f = $('log-edit-form');
     field(f, 'date').value = entry.date;
     field(f, 'decision').value = entry.decision;
@@ -1811,13 +2000,34 @@ $('log-list').addEventListener('click', (/** @type {any} */ e) => {
     openDlg($('dlg-log'), field(f, 'decision'));
   }
 });
-$('log-edit-form').addEventListener('submit', (/** @type {any} */ e) => {
+/* Lưu: như hộp bước con, chỉ trường đã đổi đè lên bản đang lưu; tab khác đã xoá thì hỏi tạo lại. */
+$('log-edit-form').addEventListener('submit', async (/** @type {any} */ e) => {
   e.preventDefault();
   const f = $('log-edit-form');
+  const ctx = logCtx;
+  const F = C.EDIT_FIELDS.log;
+  const mine = C.pick(C.normLog({ date: field(f, 'date').value, decision: field(f, 'decision').value, why: field(f, 'why').value, stepId: field(f, 'step').value }), F);
+  const now = () => findWs(ctx.wsId)?.log.find((/** @type {any} */ l) => l.id === ctx.id);
+  let entry = now();
+  if (findWs(ctx.wsId) && !entry) {
+    const again = await askRecreate(`Decision "${ctx.orig.decision}"`);
+    if (again === null) return;
+    if (!again) { closeSaved($('dlg-log')); return; }
+    entry = now();
+    if (!entry) {
+      const ws = /** @type {any} */ (findWs(ctx.wsId));
+      entry = C.normLog({ ...ctx.orig, ...mine });
+      if (ws && !stepOf(ws, entry.stepId)) entry.stepId = '';
+      ws?.log.push(entry);
+    }
+  } else if (entry) {
+    const merged = await mergeSaved(findWs(ctx.wsId), C.pick(ctx.orig, F), mine, () => { const l = now(); return l ? C.pick(l, F) : null; });
+    if (!merged) return;
+    entry = now();
+    if (entry) Object.assign(entry, C.pick(C.normLog({ ...entry, ...merged }), F));
+  }
   closeSaved($('dlg-log'));
-  const entry = findWs(logCtx.wsId)?.log.find((/** @type {any} */ l) => l.id === logCtx.id);
-  if (!entry) { toast('Not saved: the decision was deleted elsewhere.'); return; }
-  Object.assign(entry, C.normLog({ id: entry.id, date: field(f, 'date').value, decision: field(f, 'decision').value, why: field(f, 'why').value, stepId: field(f, 'step').value }));
+  if (!entry || !findWs(ctx.wsId)) { toast('Not saved: the decision was deleted elsewhere.'); return; }
   commit(`[data-log="${entry.id}"] [data-act="edit-log"]`);
 });
 $('log-edit-del').addEventListener('click', () => {
@@ -1960,7 +2170,7 @@ $('import-go').addEventListener('click', () => {
   const mode = /** @type {any} */ (document.querySelector('input[name="import-mode"]:checked')).value;
   const parsed = importParsed;
   $('dlg-import').close();
-  ui.q = ''; $('q').value = '';
+  resetFilters();
   const ws = cur();
   if (mode === 'replace' && ws && parsed.workspaces.length === 1) {
     const before = JSON.parse(JSON.stringify(ws));
@@ -1995,7 +2205,7 @@ $('import-go').addEventListener('click', () => {
 /* ── Kéo thả (js/drag.js): chuột, chạm (giữ rồi kéo), bút. Bàn phím: Alt + mũi tên, ô Vị trí trong hộp sửa ── */
 
 dragCtl = initDrag($('board'), {
-  enabled: () => !!cur() && !ui.q.trim(),
+  enabled: () => !!cur() && !ui.q.trim() && !ui.st,
   placeOf: (id) => C.subPlace(cur(), id),
   onSub: (id, to) => {
     const ws = cur();
@@ -2033,6 +2243,7 @@ window.addEventListener('storage', (e) => {
   state = S.load().state;
   if (!findWs(curId)) setCur(findWs(state.lastId) ? state.lastId : state.workspaces[0]?.id || '');
   render();
+  refreshDocLists(); // hộp sửa đang mở: tài liệu theo bản mới; chữ đang sửa giữ nguyên, Lưu gộp (mergeSaved)
 });
 
 /* ── Khởi động ── */

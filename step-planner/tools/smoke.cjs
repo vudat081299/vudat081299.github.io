@@ -1072,7 +1072,7 @@ const check = (name, ok, detail = '') => {
   await page.click('.step:first-child .step-head [data-act="add-sub"]');
   await page.fill('#sub-form [name="title"]', 'Không khớp tìm');
   await page.click('#sub-form button[type="submit"]');
-  check('thêm mà bộ lọc ẩn: báo, focus không về body', /hidden by the search filter/.test(await page.textContent('#toast-text'))
+  check('thêm mà bộ lọc ẩn: báo, focus không về body', /hidden by the filter/.test(await page.textContent('#toast-text'))
     && await page.evaluate(() => document.activeElement !== document.body));
   await page.fill('#q', '');
 
@@ -1621,6 +1621,218 @@ const check = (name, ok, detail = '') => {
     }
     await sp.click('#toast-undo').catch(() => {});
     await sx.close();
+  }
+
+  /* ── Dấu Redo qua hộp sửa: chỉ sửa Notes thì giữ dấu và số "k of n"; chuyển sang bước khác thì bỏ dấu, Hoàn tác trả lại ── */
+  {
+    const seed = { version: 2, lastId: 'wr', workspaces: [{ id: 'wr', name: 'Redo', steps: [
+      { id: 'tr1', title: 'Mở lại', round: 2, revisit: { reason: 'r', date: '2026-11-20', round: 2 },
+        subs: [{ id: 'sr1', title: 'Một', status: 'done' }, { id: 'sr2', title: 'Hai', status: 'todo', redo: true }, { id: 'sr3', title: 'Ba', status: 'todo', redo: true }] },
+      { id: 'tr2', title: 'Khác', subs: [{ id: 'sr4', title: 'Bốn', status: 'todo' }] }], log: [] }] };
+    const rc = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+    await rc.addInitScript((d) => { if (!localStorage.getItem('stepPlanner.v2')) localStorage.setItem('stepPlanner.v2', d); }, JSON.stringify(seed));
+    const rp = await rc.newPage();
+    rp.on('pageerror', (e) => errors.push(String(e)));
+    await rp.goto(BASE);
+    await rp.waitForSelector('#app:not([hidden]) .card[data-sub]');
+    const left = () => rp.textContent('.step[data-step="tr1"] .redo-left');
+    const left0 = await left();
+    await rp.click(subSel('sr2', 'edit-sub'));
+    await rp.fill('#sub-form [name="notes"]', 'chỉ sửa ghi chú');
+    await rp.click('#sub-form button[type="submit"]');
+    const sr2 = (await cur(rp)).steps[0].subs[1];
+    check('Redo: chỉ sửa Notes rồi Save thì giữ dấu, số việc làm lại không đổi', left0 === '2 of 2 redo tasks left' && (await left()) === left0
+      && sr2.redo && sr2.notes === 'chỉ sửa ghi chú' && !!(await rp.$('.card[data-sub="sr2"] .redo-tag')), `${left0} → ${await left()}`);
+    await rp.click(subSel('sr3', 'edit-sub'));
+    await rp.selectOption('#sub-form [name="step"]', 'tr2');
+    await rp.click('#sub-form button[type="submit"]');
+    let rw = await cur(rp);
+    const moved = rw.steps[1].subs.find((x) => x.id === 'sr3');
+    check('Redo: chuyển sang bước khác qua hộp sửa thì bỏ dấu (Redo chỉ có nghĩa ở bước đã mở lại)', !!moved && !moved.redo
+      && (await left()) === '1 of 1 redo task left' && !(await rp.$('.card[data-sub="sr3"] .redo-tag')), await left());
+    await rp.click('#toast-undo');
+    rw = await cur(rp);
+    check('Redo: Hoàn tác việc chuyển bước trả cả dấu', rw.steps[0].subs.find((x) => x.id === 'sr3')?.redo === true && (await left()) === '2 of 2 redo tasks left');
+    await rc.close();
+  }
+
+  /* ── Hai tab sửa cùng một mục: Lưu chỉ ghi trường đã đổi; cùng trường thì hỏi; mục đã bị xoá thì hỏi tạo lại ── */
+  {
+    const seed = { version: 2, lastId: 'wm', workspaces: [{ id: 'wm', name: 'Gộp', steps: [
+      { id: 'tm1', title: 'Một', goal: 'g', subs: [{ id: 'sm1', title: 'Việc', status: 'todo', doneWhen: 'gốc' }, { id: 'sm2', title: 'Việc hai', status: 'todo' }] }],
+    log: [{ id: 'lm1', date: '2026-11-01', decision: 'Chọn A', why: 'vì' }] }] };
+    const mc = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+    await mc.addInitScript((d) => { if (!localStorage.getItem('stepPlanner.v2')) localStorage.setItem('stepPlanner.v2', d); }, JSON.stringify(seed));
+    const [A, B] = [await mc.newPage(), await mc.newPage()];
+    for (const [n, pg] of [['A', A], ['B', B]]) { pg.on('pageerror', (e) => errors.push(n + ' ' + e)); await pg.goto(BASE); await pg.waitForSelector('.card[data-sub="sm1"]'); }
+    const sm = async (id) => (await cur(A)).steps.flatMap((x) => x.subs).find((x) => x.id === id);
+    // 1. A sửa Notes (chưa lưu), B đổi Done when và lưu, A lưu: giữ cả hai, không hỏi.
+    await A.click(subSel('sm1', 'edit-sub'));
+    await A.fill('#sub-form [name="notes"]', 'ghi chú của A');
+    await B.click(subSel('sm1', 'edit-sub'));
+    await B.fill('#sub-form [name="doneWhen"]', 'của B');
+    await B.click('#sub-form button[type="submit"]');
+    await A.waitForTimeout(200);
+    await A.click('#sub-form button[type="submit"]');
+    let x = await sm('sm1');
+    check('hai tab: trường khác nhau thì giữ cả hai (Done when của tab kia không bị trả về)', x.doneWhen === 'của B' && x.notes === 'ghi chú của A'
+      && !(await A.isVisible('#dlg-ask')) && !(await A.isVisible('#dlg-sub')), JSON.stringify(x));
+    // 2. Cùng trường: A thấy hộp hỏi liệt kê trường, Close thì hộp sửa vẫn mở; Keep the other tab's thì giữ của B, trường khác của A vẫn ghi.
+    await B.waitForTimeout(100);
+    await A.click(subSel('sm1', 'edit-sub'));
+    await A.fill('#sub-form [name="doneWhen"]', 'của A');
+    await A.fill('#sub-form [name="title"]', 'Việc (A)');
+    await B.click(subSel('sm1', 'edit-sub'));
+    await B.fill('#sub-form [name="doneWhen"]', 'của B lần hai');
+    await B.click('#sub-form button[type="submit"]');
+    await A.waitForTimeout(200);
+    await A.click('#sub-form button[type="submit"]');
+    await A.waitForSelector('#dlg-ask[open]');
+    const askTxt = await A.textContent('#ask-list');
+    await A.click('#dlg-ask [data-close]');
+    const stillOpen = await A.isVisible('#dlg-sub') && (await A.inputValue('#sub-form [name="doneWhen"]')) === 'của A';
+    await A.click('#sub-form button[type="submit"]');
+    await A.click('#ask-alt');
+    x = await sm('sm1');
+    check('hai tab: cùng trường thì hỏi (Yours / Other tab), Close giữ hộp sửa, chọn tab kia thì giữ của nó, trường khác của mình vẫn ghi',
+      /Done when/.test(askTxt) && /Yours: của A/.test(askTxt) && /Other tab: của B lần hai/.test(askTxt) && !/Title/.test(askTxt) && stillOpen
+      && x.doneWhen === 'của B lần hai' && x.title === 'Việc (A)', `${askTxt} ${JSON.stringify(x)}`);
+    // Keep mine.
+    await A.click(subSel('sm1', 'edit-sub'));
+    await A.fill('#sub-form [name="doneWhen"]', 'A thắng');
+    await B.click(subSel('sm1', 'edit-sub'));
+    await B.fill('#sub-form [name="doneWhen"]', 'B thua');
+    await B.click('#sub-form button[type="submit"]');
+    await A.waitForTimeout(200);
+    await A.click('#sub-form button[type="submit"]');
+    await A.click('#ask-ok');
+    await B.waitForTimeout(200);
+    check('hai tab: "Keep mine" ghi của mình, tab kia đọc lại thấy', (await sm('sm1')).doneWhen === 'A thắng'
+      && /A thắng/.test(await B.textContent('.card[data-sub="sm1"]')));
+    // 3. Tab kia xoá bước con trong lúc sửa: hỏi; Re-create trả nó về với chữ đã sửa.
+    await A.click(subSel('sm2', 'edit-sub'));
+    await A.fill('#sub-form [name="notes"]', 'đang viết');
+    await B.click(subSel('sm2', 'sub-del'));
+    await A.waitForTimeout(200);
+    await A.click('#sub-form button[type="submit"]');
+    await A.waitForSelector('#dlg-ask[open]');
+    const delTitle = await A.textContent('#dlg-ask-title');
+    await A.click('#ask-ok');
+    x = await sm('sm2');
+    check('hai tab: bước con bị xoá ở tab kia thì hỏi, Re-create trả về với chữ đã sửa', /Deleted in another tab/.test(delTitle) && x?.notes === 'đang viết'
+      && !!(await A.$('.card[data-sub="sm2"]')), delTitle);
+    // 4. Hộp bước: A đổi Goal, B đổi Notes của bước: giữ cả hai.
+    await B.waitForTimeout(100);
+    await A.click('.step[data-step="tm1"] [data-act="edit-step"]');
+    await A.fill('#step-form [name="goal"]', 'mục tiêu A');
+    await B.click('.step[data-step="tm1"] [data-act="edit-step"]');
+    await B.fill('#step-form [name="notes"]', 'ghi chú B');
+    await B.click('#step-form button[type="submit"]');
+    await A.waitForTimeout(200);
+    await A.click('#step-form button[type="submit"]');
+    const st = (await cur(A)).steps[0];
+    check('hai tab: hộp bước gộp trường khác nhau', st.goal === 'mục tiêu A' && st.notes === 'ghi chú B' && !(await A.isVisible('#dlg-ask')), JSON.stringify(st).slice(0, 160));
+    // 5. Hộp quyết định: A sửa Why, B sửa Decision: giữ cả hai.
+    await B.waitForTimeout(100);
+    await A.click('.log-item[data-log="lm1"] [data-act="edit-log"]');
+    await A.fill('#log-edit-form [name="why"]', 'lý do A');
+    await B.click('.log-item[data-log="lm1"] [data-act="edit-log"]');
+    await B.fill('#log-edit-form [name="decision"]', 'Chọn B');
+    await B.click('#log-edit-form button[type="submit"]');
+    await A.waitForTimeout(200);
+    await A.click('#log-edit-form button[type="submit"]');
+    const lg = (await cur(A)).log[0];
+    check('hai tab: hộp quyết định gộp trường khác nhau', lg.decision === 'Chọn B' && lg.why === 'lý do A', JSON.stringify(lg));
+    await mc.close();
+  }
+
+  /* ── "Next" đang chờ và lọc trạng thái: dòng "Next waits on …" khi ô đầu chỉ có thẻ chờ; lọc Actionable / Waiting, cùng với tìm ── */
+  for (const [w, hh] of [[1280, 900], [390, 844]]) {
+    const seed = { version: 2, lastId: 'wn', workspaces: [{ id: 'wn', name: 'Chờ', steps: [
+      { id: 'tn1', title: 'Dữ liệu', subs: [{ id: 'sn0', title: 'Đã xong', status: 'done' }, { id: 'sn1', title: 'Chờ quyền truy cập', status: 'pending', reason: 'IT cấp quyền\ndòng hai' },
+        { id: 'sn2', title: 'Làm sạch', status: 'todo' }] },
+      { id: 'tn2', title: 'Báo cáo', subs: [{ id: 'sn3', title: 'Dàn ý báo cáo', status: 'todo' }, { id: 'sn4', title: 'Bị chặn', status: 'blocked' }] }], log: [] }] };
+    const nc = await browser.newContext({ viewport: { width: w, height: hh }, isMobile: w < 500, hasTouch: w < 500 });
+    await nc.addInitScript((d) => { if (!localStorage.getItem('stepPlanner.v2')) localStorage.setItem('stepPlanner.v2', d); }, JSON.stringify(seed));
+    const np = await nc.newPage();
+    np.on('pageerror', (e) => errors.push(String(e)));
+    await np.goto(BASE);
+    await np.waitForSelector('.card[data-sub="sn1"]');
+    const tag = `Next chờ ${w}px`;
+    const nw = await np.textContent('#next-wait');
+    check(`${tag}: không thẻ nào "Next", dòng báo chờ thẻ nào và lý do (dòng đầu), có nút xem việc làm được`, !(await np.$('.card.next'))
+      && await np.isVisible('#next-wait') && /^Next waits on Chờ quyền truy cập \(Pending: IT cấp quyền\)\./.test(nw.trim()) && /Show what can be done now \(2\)/.test(nw), nw);
+    await np.click('#next-wait [data-act="show-act"]');
+    const shownIds = () => np.$$eval('.card[data-sub]', (cs) => cs.map((c) => c.dataset.sub).join());
+    check(`${tag}: "Show what can be done now" lọc Actionable: chỉ New / In progress, tắt sắp xếp và thêm bước`, (await shownIds()) === 'sn2,sn3'
+      && (await np.textContent('.st-filter .dd-btn')).trim() === 'Actionable' && /reordering is off while filtering/.test(await np.textContent('#filter-note'))
+      && !(await np.isVisible('#add-step')) && !(await np.$('.step-grip')) && !(await np.isVisible('#next-wait [data-act="show-act"]')), await shownIds());
+    await np.click('.st-filter .dd-btn');
+    await np.click('.dd-pop [role="option"][data-value="wait"]');
+    check(`${tag}: lọc Waiting: Pending và Blocked`, (await shownIds()) === 'sn1,sn4', await shownIds());
+    await np.fill('#q', 'chặn');
+    check(`${tag}: lọc cùng với tìm: giao của hai`, (await shownIds()) === 'sn4', await shownIds());
+    await np.fill('#q', 'làm sạch');
+    check(`${tag}: không thẻ nào khớp: nút "Clear filters" bỏ cả hai`, /No sub-step matches/.test(await np.textContent('#board')) && (await np.textContent('#board [data-act="clear-filter"]')) === 'Clear filters');
+    await np.click('#board [data-act="clear-filter"]');
+    check(`${tag}: bỏ lọc: mọi thẻ, ô tìm trống, lọc về All statuses`, (await shownIds()) === 'sn0,sn1,sn2,sn3,sn4' && (await np.inputValue('#q')) === ''
+      && (await np.textContent('.st-filter .dd-btn')).trim() === 'All statuses');
+    await np.click('.st-filter .dd-btn');
+    await np.click('.dd-pop [role="option"][data-value="done"]');
+    await np.click('#next-wait [data-goto="sn1"]');
+    check(`${tag}: bấm tên thẻ đang chờ: bỏ lọc nếu nó bị ẩn, focus vào thẻ`, await np.evaluate(() => document.activeElement?.closest('.card')?.dataset.sub) === 'sn1'
+      && (await shownIds()).split(',').length === 5);
+    check(`${tag}: trang không tràn ngang`, (await hOverflow(np)) <= 0);
+    await nc.close();
+  }
+
+  /* ── Bằng chứng nghiệm thu: xong mà "Done when" chưa có bằng chứng thì toast gợi ý (không chặn); tài liệu đánh dấu Evidence;
+   * thẻ xong có dấu bằng chứng và ngày xong; rời Done thì bỏ ngày ── */
+  {
+    const seed = { version: 2, lastId: 'we', workspaces: [{ id: 'we', name: 'Bằng chứng', steps: [{ id: 'te1', title: 'Mô hình', subs: [
+      { id: 'se1', title: 'Huấn luyện', status: 'doing', doneWhen: 'AUC ≥ 0,8 trên tập kiểm định', docs: [{ id: 'de1', kind: 'link', title: 'Lần chạy 12', url: 'https://runs.example/12' }] },
+      { id: 'se2', title: 'Không tiêu chí', status: 'doing' }] }], log: [] }] };
+    const ec = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+    await ec.addInitScript((d) => { if (!localStorage.getItem('stepPlanner.v2')) localStorage.setItem('stepPlanner.v2', d); }, JSON.stringify(seed));
+    const ep = await ec.newPage();
+    ep.on('pageerror', (e) => errors.push(String(e)));
+    await ep.goto(BASE);
+    await ep.waitForSelector('.card[data-sub="se1"]');
+    const today = await ep.evaluate(async () => (await import(new URL('js/core.js', location.href).href)).today());
+    const se = async (id) => (await cur(ep)).steps[0].subs.find((x) => x.id === id);
+    await ep.click(subSel('se2', 'status'));
+    check('bằng chứng: xong mà không có Done when thì không gợi ý', !(await ep.isVisible('#toast')) && (await se('se2')).doneAt === today);
+    await ep.click(subSel('se1', 'status'));
+    const t1 = { text: await ep.textContent('#toast-text'), btn: await ep.textContent('#toast-undo'), x: await se('se1') };
+    await ep.keyboard.press('Control+z');
+    check('bằng chứng: xong mà Done when chưa có bằng chứng thì toast "Add evidence", không chặn; ghi ngày xong; Ctrl+Z không bấm nút ấy',
+      /Add evidence for "Huấn luyện"/.test(t1.text) && t1.btn === 'Add evidence' && t1.x.status === 'done' && t1.x.doneAt === today
+      && (await se('se1')).status === 'done' && !(await ep.$('.card[data-sub="se1"] .proof-tag')), JSON.stringify(t1).slice(0, 200));
+    await ep.click('#toast-undo');
+    check('bằng chứng: nút của toast mở hộp sửa ở phần tài liệu', await ep.isVisible('#dlg-sub') && await ep.evaluate(() => !!document.activeElement?.closest('#sub-docs')));
+    await ep.click('#sub-docs [data-doc="de1"] [data-doc-act="proof"]');
+    const pressed = await ep.getAttribute('#sub-docs [data-doc="de1"] [data-doc-act="proof"]', 'aria-pressed');
+    // Sửa link đã đánh dấu: vẫn là bằng chứng.
+    await ep.click('#sub-docs [data-doc="de1"] [data-doc-act="open"]');
+    await ep.fill('#doc-form [name="title"]', 'Lần chạy 12 (AUC 0,83)');
+    await ep.click('#doc-form button[type="submit"]');
+    await ep.keyboard.press('Escape');
+    const d1 = (await se('se1')).docs[0];
+    const tag = await ep.getAttribute('.card[data-sub="se1"] .proof-tag', 'aria-label');
+    const doneTxt = await ep.textContent('.card[data-sub="se1"] .done-at');
+    check('bằng chứng: bật Evidence lưu ngay, sửa link vẫn giữ; thẻ xong có dấu bằng chứng (aria-label) và ngày xong',
+      pressed === 'true' && d1.proof === true && d1.title === 'Lần chạy 12 (AUC 0,83)' && tag === 'Evidence: Lần chạy 12 (AUC 0,83)'
+      && /^done \d{1,2} \w{3} \d{4}$/.test(doneTxt), `${pressed} ${tag} ${doneTxt}`);
+    const md = await ep.evaluate(async () => {
+      const C = await import(new URL('js/core.js', location.href).href);
+      const s = JSON.parse(localStorage.getItem('stepPlanner.v2'));
+      return C.toMarkdown(s.workspaces[0]);
+    });
+    check('bằng chứng: Markdown xuất "· done YYYY-MM-DD" và "[Evidence: …](…)"', md.includes(`- [x] Huấn luyện · done ${today}`) && md.includes('- [Evidence: Lần chạy 12 (AUC 0,83)](https://runs.example/12)'), md.slice(0, 300));
+    await setSt(ep, 'se1', 'doing');
+    check('bằng chứng: rời Done thì bỏ ngày xong và dấu bằng chứng (tài liệu vẫn là bằng chứng)', (await se('se1')).doneAt === ''
+      && !(await ep.$('.card[data-sub="se1"] .proof-tag')) && !(await ep.$('.card[data-sub="se1"] .done-at')) && (await se('se1')).docs[0].proof);
+    await ec.close();
   }
 
   /* ── Dữ liệu lưu bị hỏng ── */

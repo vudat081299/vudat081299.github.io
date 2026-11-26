@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import {
   fromTemplate, toMarkdown, fromMarkdown, parseImport, toJSON, toBackup, shape, progress, nextActionIds, projectNextIds, slotsOf, subPlace, placeSub, takeSub, shiftTarget, liveLabels, redoCount, canReopen,
-  nextStatus, setStatus, splitInline, normWorkspace, normSub, normLog, freshCopy, counts, slug, fold, parseDate, uniqueName, normDoc, safeUrl,
+  nextStatus, setStatus, splitInline, mergeEdit, pick, EDIT_FIELDS, nextWaitingOn, inGroup, needsEvidence, normWorkspace, normSub, normLog, freshCopy, counts, slug, fold, parseDate, uniqueName, normDoc, safeUrl,
 } from '../js/core.js';
 import { parseMd, inline, srcTokens } from '../js/md.js';
 import { normDesign, rankOptions, snake, planTasks, diagramNodes, decidedCount, catalogErrors, readStageLine } from '../js/design-core.js';
@@ -67,7 +67,7 @@ const back = fromMarkdown(md);
 check('dự án khó: Markdown đi rồi về giữ nguyên', eq(shape(hard), shape(back.workspace)), firstDiff(shape(hard), shape(back.workspace)));
 check('dự án khó: không cảnh báo', back.warnings.length === 0, back.warnings.join(' | '));
 check('nhật ký gắn bước: dòng "Step:" ngay dưới quyết định, id lạ bị bỏ, đi rồi về gắn lại đúng bước',
-  md.includes('\n- 2026-11-22 · Chọn A · không B  \n  Step: Ba  \n  Why: vì') && hard.log[1].stepId === '' && !md.includes('Không lý do  \n  Step')
+  md.includes('\n- 2026-11-22 · Chọn A · không B  \n  Step: 4. Ba  \n  Why: vì') && hard.log[1].stepId === '' && !md.includes('Không lý do  \n  Step')
   && back.workspace.log[0].stepId === back.workspace.steps[3].id && back.workspace.log[2].stepId === back.workspace.steps[3].id
   && back.workspace.log[0].why.endsWith('\nStep: giả\nBước: giả'));
 {
@@ -493,6 +493,74 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   const back = fromMarkdown(md);
   check('thiết kế: Markdown viết tay — dòng không có [khâu: …] thì cảnh báo, không thành bước', back.workspace.steps.length === 0
     && eq(back.workspace.design, { profile: { size: 'small', budget: 'free' }, stages: { serve: { pick: ['fastapi'], skip: false, own: '', note: '' } } }) && back.warnings.length === 1);
+}
+
+/* Quyết định gắn với bước trùng tên: Markdown ghi `Step: N. tên`, nhập lại đúng bước thứ N; file cũ `Step: tên` vẫn đọc. */
+{
+  const ws = normWorkspace({ name: 'Trùng', steps: [{ id: 'a', title: 'Validation' }, { id: 'b', title: 'Model' }, { id: 'c', title: 'Validation' }, { id: 'd', title: '2. Lạ' }],
+    log: [{ date: '2026-11-01', decision: 'Q1', stepId: 'c' }, { date: '2026-11-02', decision: 'Q2', stepId: 'a' }, { date: '2026-11-03', decision: 'Q3', stepId: 'd' }] });
+  const md = toMarkdown(ws);
+  check('Markdown: dòng Step của quyết định có số thứ tự như tiêu đề', md.includes('  Step: 3. Validation') && md.includes('  Step: 1. Validation') && md.includes('  Step: 4. 2. Lạ'));
+  const back = shape(fromMarkdown(md).workspace);
+  check('Markdown: quyết định của bước trùng tên thứ hai về đúng bước ấy', eq(back.log.map((l) => l.step), [2, 0, 3]) && eq(back, shape(ws)), JSON.stringify(back.log));
+  const old = fromMarkdown('# P\n\n## 1. Validation\n\n## 2. Model\n\n## 3. Validation\n\n## 4. 2. Lạ\n\n## Decision log\n\n- 2026-11-01 · Q\n  Step: Validation\n- 2026-11-02 · R\n  Step: 2. Lạ\n- 2026-11-03 · S\n  Step: 9. Model\n');
+  const w = old.workspace;
+  const idx = w.log.map((l) => w.steps.findIndex((x) => x.id === l.stepId));
+  check('Markdown cũ: `Step: tên` gắn bước đầu tiên cùng tên; tên có số đầu vẫn khớp; số sai thì theo tên', eq(idx, [0, 3, 1]) && !old.warnings.length, JSON.stringify(idx));
+}
+
+/* "Next" đang chờ: ô đầu còn việc chỉ có Pending / Blocked thì báo các thẻ ấy; có thẻ làm được thì không báo. */
+{
+  const ws = (subs) => normWorkspace({ steps: [{ title: 'A', subs: [{ title: 'xong', status: 'done' }, ...subs] }, { title: 'B', subs: [{ title: 'độc lập' }] }] });
+  const ids = (w) => nextWaitingOn(w).map((x) => x.title);
+  check('Next chờ: ô đầu chỉ có Pending thì báo thẻ ấy, Next rỗng', eq(ids(ws([{ title: 'p', status: 'pending' }, { title: 'sau' }])), ['p'])
+    && projectNextIds(ws([{ title: 'p', status: 'pending' }])).length === 0);
+  check('Next chờ: ô song song Pending + Blocked thì báo cả hai', eq(ids(ws([{ title: 'p', status: 'pending' }, { title: 'b', status: 'blocked', par: true }])), ['p', 'b']));
+  check('Next chờ: ô có thẻ làm được thì không báo', eq(ids(ws([{ title: 'p', status: 'pending' }, { title: 'n', par: true }])), [])
+    && eq(ids(ws([{ title: 'n' }])), []) && eq(nextWaitingOn(normWorkspace({ steps: [] })), []));
+  check('lọc trạng thái: nhóm', inGroup('', 'cancel') && inGroup('act', 'doing') && !inGroup('act', 'pending') && inGroup('wait', 'blocked') && inGroup('out', 'skip') && !inGroup('done', 'todo'));
+}
+
+/* Bằng chứng nghiệm thu: tài liệu `proof`, ngày xong `doneAt`; Markdown và JSON đi rồi về; file cũ vẫn đọc. */
+{
+  const x = normSub({ title: 'T', doneWhen: 'Có báo cáo' });
+  setStatus(x, 'done', '2026-11-20');
+  const d1 = x.doneAt;
+  setStatus(x, 'done', '2026-11-21');
+  check('doneAt: sang Done ghi ngày, Done lại không đổi ngày, rời Done thì bỏ', d1 === '2026-11-20' && x.doneAt === '2026-11-20'
+    && (setStatus(x, 'doing'), x.doneAt === '') && normSub({ status: 'todo', doneAt: '2026-01-01' }).doneAt === '' && normSub({ status: 'done' }).doneAt === '');
+  setStatus(x, 'done', '2026-11-22');
+  check('bằng chứng: xong, có Done when, chưa có tài liệu proof thì gợi ý; có rồi thì thôi', needsEvidence(x)
+    && !needsEvidence({ ...x, docs: [normDoc({ kind: 'link', title: 'r', url: 'https://a.b', proof: true })] }) && !needsEvidence({ ...x, doneWhen: '' }));
+  const ws = normWorkspace({ name: 'P', steps: [{ title: 'A', docs: [{ kind: 'md', title: 'Evidence: tên thật', body: 'x' }, { kind: 'link', title: 'Chạy', url: 'https://r.example/1', proof: true }],
+    subs: [{ title: 'Huấn luyện · done 2026-01-01', status: 'done', doneAt: '2026-11-20', due: '2026-11-30', doneWhen: 'AUC ≥ 0,8',
+      docs: [{ kind: 'link', title: 'Evidence: [run] 12', url: 'https://r.example/12', proof: true }, { kind: 'md', title: 'Notebook', body: '# a', proof: true }, { kind: 'link', title: 'Brief', url: 'https://b.example' }] },
+    { title: 'Chưa xong', status: 'doing', doneAt: '2026-11-20' }] }] });
+  const md = toMarkdown(ws);
+  check('Markdown: dòng bước con có "· done YYYY-MM-DD", tài liệu bằng chứng mở bằng "Evidence: ", tên thật trùng chữ ấy thì thoát',
+    md.includes(' · due 2026-11-30 · done 2026-11-20') && md.includes('- [Evidence: Evidence: \\[run\\] 12](https://r.example/12)') && md.includes('    - Evidence: Notebook\n')
+    && md.includes('- \\Evidence: tên thật\n') && md.includes('- [Evidence: Chạy](https://r.example/1)') && md.includes('- [Brief](https://b.example)'));
+  check('Markdown: bằng chứng và ngày xong đi rồi về giữ nguyên', eq(shape(ws), roundTrip(ws)), firstDiff(shape(ws), roundTrip(ws)));
+  check('JSON: bằng chứng và ngày xong đi rồi về giữ nguyên', eq(shape(ws), shape(parseImport(toJSON(ws)).workspaces[0])));
+  const old = fromMarkdown('# P\n\n## A\n\n- [x] Xong · due 2026-11-30\n  Docs:\n    - [Run](https://r.example)\n');
+  const o = old.workspace.steps[0].subs[0];
+  check('Markdown cũ: không ngày xong, tài liệu không là bằng chứng', o.doneAt === '' && o.docs[0].proof === false && !old.warnings.length);
+}
+
+/* Sửa cùng lúc ở hai tab: chỉ trường mình đổi đè lên bản mới nhất; cùng trường khác giá trị là xung đột. */
+{
+  const snap = { title: 'A', notes: '', doneWhen: 'x', status: 'todo' };
+  const r1 = mergeEdit(snap, { ...snap, notes: 'của tôi' }, { ...snap, doneWhen: 'tab kia' });
+  check('gộp: trường khác nhau thì giữ cả hai, không xung đột', eq(r1, { merged: { title: 'A', notes: 'của tôi', doneWhen: 'tab kia', status: 'todo' }, conflicts: [] }), JSON.stringify(r1));
+  const r2 = mergeEdit(snap, { ...snap, doneWhen: 'tôi' }, { ...snap, doneWhen: 'tab kia', status: 'done' });
+  check('gộp: cùng trường khác giá trị là xung đột, tạm giữ của mình; trường tab kia đổi vẫn lấy', eq(r2.conflicts, ['doneWhen']) && r2.merged.doneWhen === 'tôi' && r2.merged.status === 'done');
+  const r3 = mergeEdit(snap, { ...snap, doneWhen: 'y' }, { ...snap, doneWhen: 'y' });
+  check('gộp: hai bên đổi cùng một giá trị thì không xung đột', !r3.conflicts.length && r3.merged.doneWhen === 'y');
+  const r4 = mergeEdit({ stepId: '' }, { stepId: '' }, { stepId: 't1' });
+  check('gộp: không đổi gì thì lấy hết bản mới nhất', eq(r4.merged, { stepId: 't1' }) && !r4.conflicts.length);
+  const sub = normSub({ id: 's', title: 'T', docs: [{ kind: 'link', title: 'x', url: 'https://a.b' }], redo: true });
+  const p = pick(sub, EDIT_FIELDS.sub);
+  check('gộp: hộp bước con chỉ ghi trường của hộp (không docs, par, redo)', eq(Object.keys(p), EDIT_FIELDS.sub) && !('docs' in p) && !('redo' in p));
 }
 
 if (fails) { console.log(`test-core: ${fails} LỖI`); process.exit(1); }
