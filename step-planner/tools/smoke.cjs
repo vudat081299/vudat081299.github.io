@@ -2020,6 +2020,45 @@ const check = (name, ok, detail = '') => {
   }
   });
 
+  /* ── Sơ đồ System design như khung nhìn: nhịp dọc của hộp (Handoffs, "Show other options"), nhãn bàn giao trên đường nối,
+   * kéo, thu phóng, về khung ban đầu. Thiết kế gieo thẳng vào bộ nhớ rồi tải lại. ── */
+  await section('System diagram view', async () => {
+    const pk = (id) => ({ pick: [id], skip: false, own: '', note: '' });
+    const no = { pick: [], skip: true, own: '', note: '' };
+    const seedDesign = (page) => page.evaluate((d) => {
+      const s = JSON.parse(localStorage.getItem('stepPlanner.v2'));
+      s.workspaces.find((x) => x.id === s.lastId).design = d;
+      localStorage.setItem('stepPlanner.v2', JSON.stringify(s));
+    }, { path: '', profile: {}, stages: { source: pk('kaggle-datasets'), ingest: pk('notebook-script'), raw: pk('project-folder'), process: pk('pandas'),
+      validate: pk('pandera'), store: pk('parquet-duckdb'), label: no, train: pk('local'), track: pk('mlflow'), search: no, serve: pk('fastapi'), app: pk('streamlit') },
+    edges: { 'source>ingest': { via: 'results', what: 'scores.csv', where: '', promise: '', check: '' }, 'raw>process': { via: 'file', what: 'raw/*.csv', where: '', promise: '', check: '' } } });
+    const { ctx: vx, page: vp } = await open(1280, 900);
+    await vp.click('#start .tpl[data-tpl="crisp-dm"]');
+    await vp.waitForSelector('#sd-fig svg');
+    await seedDesign(vp);
+    await vp.reload();
+    await vp.waitForSelector('#sd-fig .sd-hand');
+    const s4 = await vp.evaluate(() => parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--s4')));
+    const s3 = await vp.evaluate(() => parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--s3')));
+    /* Hộp Handoffs: đáy mỗi ô cách nhãn ô sau ít nhất --s4; nhãn đứng trên ô của nó. */
+    await vp.click('#sd-fig .sd-hand[data-edge="raw>process"]');
+    await vp.waitForSelector('#dlg-sd[open] [data-edge-item="raw>process"][open]');
+    const rhythm = await vp.$$eval('[data-edge-item="raw>process"] .field', (fs) => fs.map((f) => {
+      const lab = f.querySelector('span').getBoundingClientRect(), box = f.querySelector('input, textarea').getBoundingClientRect();
+      return { labTop: lab.top, labBottom: lab.bottom, boxTop: box.top, boxBottom: box.bottom };
+    }));
+    const gaps = rhythm.slice(1).map((r, i) => Math.round(r.labTop - rhythm[i].boxBottom));
+    check('Handoffs: đáy ô cách nhãn ô sau ≥ --s4, nhãn đứng trên ô', rhythm.length === 4 && gaps.every((g) => g >= s4) && rhythm.every((r) => r.boxTop >= r.labBottom), gaps.join());
+    await vp.keyboard.press('Escape');
+    /* "Show other options" mở ra: các phương án cách nhau như danh sách chính (--s3). */
+    await vp.click('#sd-fig [data-stage="process"]');
+    await vp.click('#sd-pane .sd-more > summary');
+    const more = await vp.$$eval('#sd-pane .sd-more .sd-opt', (os) => os.slice(1).map((o, i) => Math.round(o.getBoundingClientRect().top - os[i].getBoundingClientRect().bottom)));
+    check('"Show other options": các phương án cách nhau --s3 như danh sách chính', more.length > 1 && more.every((g) => g === s3), more.join());
+    await vp.keyboard.press('Escape');
+    await vx.close();
+  });
+
   /* ── Dấu Redo qua hộp sửa: chỉ sửa Notes thì giữ dấu và số "k of n"; chuyển sang bước khác thì bỏ dấu, Hoàn tác trả lại ── */
   await section('Dấu Redo qua hộp sửa', async () => {
     const seed = { version: 2, lastId: 'wr', workspaces: [{ id: 'wr', name: 'Redo', steps: [

@@ -52,6 +52,10 @@ function edit(fn) {
 /** Trạng thái lưu của một khâu (bản sửa được). @param {any} d @param {string} id */
 const stageRec = (d, id) => (d.stages[id] = d.stages[id] || { pick: [], skip: false, own: '', note: '' });
 
+/** Khối gập của hộp: phần mở nằm trong một div (`.sd-fold`), vì nội dung của <details> không nhận gap của flex.
+ * @param {Record<string, any>} attrs @param {any} summary @param {...any} kids */
+const fold = (attrs, summary, ...kids) => deps.h('details', attrs, summary, deps.h('div', { class: 'sd-fold' }, ...kids));
+
 /** Bàn giao của một đường nối (bản sửa được). @param {any} d @param {string} key */
 const edgeRec = (d, key) => ((d.edges = d.edges || {})[key] = d.edges[key] || { via: '', what: '', where: '', promise: '', check: '' });
 
@@ -508,7 +512,7 @@ function profilePane() {
     h('h3', { class: 'sd-h' }, 'Project profile'),
     h('p', { class: 'sd-q' }, 'Trả lời những câu bạn biết; câu nào chưa chắc thì để "Not sure". Gợi ý ở từng khâu đổi theo câu trả lời.'), // lang: vi — lời giải thích, nội dung
     ...asked.map(q2),
-    rest.length ? h('details', { class: 'sd-more', 'data-more': 'profile-rest', open: moreOpen.has('profile-rest') },
+    rest.length ? fold({ class: 'sd-more', 'data-more': 'profile-rest', open: moreOpen.has('profile-rest') },
       h('summary', {}, deps.icon('chev'), `${C.plural(rest.length, 'question')} the ${p.label} path doesn't need`),
       ...rest.map(q2)) : null,
   ];
@@ -563,7 +567,7 @@ function archItem(e, on, d) {
     const names = /** @type {string[]} */ (ids).map((oid) => s.options.find((/** @type {any} */ o) => o.id === oid)?.name).filter(Boolean);
     return h('li', {}, h('button', { type: 'button', class: 'sd-link', 'data-at': stagePage(sid) }, s.title), `: ${names.join(', ')}`);
   }).filter(Boolean);
-  return h('details', { class: `sd-arch${on ? ' is-rec' : ''}`, 'data-more': id, 'data-arch': e.id, open: moreOpen.has(id) },
+  return fold({ class: `sd-arch${on ? ' is-rec' : ''}`, 'data-more': id, 'data-arch': e.id, open: moreOpen.has(id) },
     h('summary', {}, deps.icon('chev'), h('span', { class: 'sd-arch-name' },
       h('span', { class: 'sd-arch-head' }, h('b', {}, e.name),
         on ? h('span', { class: 'sd-tag top' }, 'Recommended') : null, mine ? h('span', { class: 'sd-tag' }, 'Your deliverable') : null),
@@ -605,7 +609,7 @@ function edgeItem(e) {
     f === 'promise'
       ? h('textarea', { rows: 3, 'data-ef': f, 'data-edge': e.key, placeholder: ph }, c[f] || '')
       : h('input', { type: 'text', class: 'input', maxlength: D.EDGE_MAX, value: c[f] || '', 'data-ef': f, 'data-edge': e.key, placeholder: ph }));
-  return h('details', { class: `sd-edge-item${e.c ? ' is-set' : ''}`, 'data-more': id, 'data-edge-item': e.key, open: moreOpen.has(id) },
+  return fold({ class: `sd-edge-item${e.c ? ' is-set' : ''}`, 'data-more': id, 'data-edge-item': e.key, open: moreOpen.has(id) },
     h('summary', {}, deps.icon('chev'), h('span', { class: 'sd-edge-name' }, h('b', {}, `${e.from.title} → ${e.to.title}`), h('small', {}, sum))),
     h('fieldset', { class: 'sd-prof' }, h('legend', {}, 'Handed over as'),
       h('div', { class: 'sd-pills' }, ...[...D.VIA, { id: '', label: 'Not set' }].map((v) => h('label', { class: 'sd-pill' },
@@ -668,7 +672,7 @@ function stagePane(s) {
       s.skipWhen ? h('span', { class: 'sd-help' }, s.skipWhen) : null),
     st.skip ? null : h('div', { class: 'sd-opts', role: 'group', 'aria-label': s.multi ? 'Options (pick one or more)' : 'Options (pick one)' },
       ...(hasPick ? picked : ranked).map(card),
-      hasPick && rest.length ? h('details', { class: 'sd-more', 'data-more': s.id, open: moreOpen.has(s.id) },
+      hasPick && rest.length ? fold({ class: 'sd-more', 'data-more': s.id, open: moreOpen.has(s.id) },
         h('summary', {}, deps.icon('chev'), `Show ${C.plural(rest.length, 'other option')}`),
         ...rest.map(card)) : null),
     st.skip ? null : h('label', { class: 'field' }, h('span', {}, 'Another tool (not in the list)'),
@@ -699,7 +703,7 @@ function optionCard(s, r, on, answered, prof) {
     h('p', { class: 'sd-sum' }, o.summary),
     h('p', { class: 'sd-when' }, h('span', { class: 'sd-k' }, 'Pick when'), o.pick),
     answered && !r.ok ? h('p', { class: 'sd-when sd-warn' }, h('span', { class: 'sd-k' }, 'Not a fit'), miss.join(' · ')) : null,
-    h('details', { class: 'sd-det' },
+    fold({ class: 'sd-det' },
       h('summary', {}, deps.icon('chev'), 'Details, links, first commands'),
       o.avoid ? h('p', { class: 'sd-when' }, h('span', { class: 'sd-k' }, 'Avoid when'), o.avoid) : null,
       o.task ? h('p', { class: 'sd-when' }, h('span', { class: 'sd-k' }, 'Done when'), o.task) : null,

@@ -1030,6 +1030,10 @@ span.chip::after { content: none; }
 .sd-det > summary svg.i, .sd-more > summary svg.i { width: var(--s4); height: var(--s4); transform: rotate(-90deg); transition: transform var(--dur) var(--ease); }
 .sd-det[open] > summary svg.i, .sd-more[open] > summary svg.i { transform: none; }
 .sd-more[open] { gap: var(--s3); }
+/* Phần mở của mọi khối gập (design.js `fold`): <details> không chia gap cho nội dung, nên nhịp dọc nằm ở div này. */
+.sd-fold { min-width: 0; display: flex; flex-direction: column; gap: var(--s2); }
+.sd-more > .sd-fold { gap: var(--s3); }
+.sd-more[data-more="profile-rest"] > .sd-fold { gap: var(--s4); }
 .sd-links { display: flex; flex-direction: column; gap: var(--s1); list-style: none; font-size: var(--fs-sm); }
 .sd-links a { display: inline-flex; align-items: center; gap: var(--s1); color: var(--blue-fg); text-underline-offset: 3px; }
 .sd-links svg.i { width: var(--s4); height: var(--s4); }
@@ -1064,6 +1068,10 @@ span.chip::after { content: none; }
 .sd-edge-name b { font: 600 var(--fs-md)/var(--lh-tight) var(--display); }
 .sd-edge-name small { font-size: var(--fs-sm); color: var(--ink-3); overflow-wrap: anywhere; }
 .sd-edge-item > :not(summary) { margin-left: calc(var(--s4) + var(--s2)); }
+/* Hợp đồng đang mở: một vạch ngăn với tên đường nối, mỗi ô cách nhãn ô sau --s4. */
+.sd-edge-item > .sd-fold { gap: var(--s4); padding-top: var(--s4); border-top: var(--line-w) solid var(--line-2); }
+.sd-edge-item[open] { border-color: var(--ink-4); }
+.sd-edge-item.is-set[open] { border-color: var(--accent); }
 /* Hộp "Update plan" (#dlg-sdp): nhóm New / Changed / No longer in the design, mỗi mục một dòng kèm lựa chọn. */
 .sdp-groups { display: flex; flex-direction: column; gap: var(--s5); }
 .sdp-group { display: flex; flex-direction: column; gap: var(--s2); }
