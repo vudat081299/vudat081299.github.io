@@ -520,6 +520,11 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
         && applyPath(cat, { path: '', profile: { [q]: off }, stages: {}, edges: {} }, 'demo').next.stages[x.id]?.skip === true
         && !applyPath(cat, { path: '', profile: { [q]: ok[0] }, stages: {}, edges: {} }, 'demo').next.stages[x.id];
     }));
+  /* Gợi ý của lối theo thứ tự lối ghi: phương án lối ghi trước đứng trước, kể cả khi phương án sau khớp nhiều câu hồ sơ hơn. */
+  check('thiết kế: lối — phương án hợp đứng đầu theo thứ tự gợi ý của lối', cat.paths.every((pp) => Object.entries(pp.suggest).every(([sid, ids]) => {
+    const r = rankOptions(cat.stages.find((x) => x.id === sid), effProfile(cat, { path: pp.id, profile: {}, stages: {} }), pp).filter((x) => x.ok && x.sug);
+    return eq(r.map((x) => x.opt.id), ids.filter((id) => r.some((x) => x.opt.id === id)));
+  })));
   /* Mỗi lối, mỗi câu trả lời đơn lẻ: khâu lối cần có gợi ý thì "Apply path" chọn được một phương án hợp hồ sơ. */
   const misfit = [];
   for (const pp of cat.paths) {

@@ -172,8 +172,7 @@
           "hf-spaces"
         ],
         "monitor": [
-          "logs-weekly",
-          "sentry"
+          "logs-weekly"
         ]
       },
       "accept": [
@@ -245,9 +244,9 @@
         ],
         "store": [
           "parquet-duckdb",
-          "postgresql",
           "supabase",
-          "neon"
+          "neon",
+          "postgresql"
         ],
         "train": [
           "local",
@@ -865,10 +864,6 @@
             "fresh": [
               "batch"
             ],
-            "budget": [
-              "free",
-              "low"
-            ],
             "size": [
               "small",
               "medium"
@@ -1385,6 +1380,10 @@
           "fit": {
             "size": [
               "large"
+            ],
+            "fresh": [
+              "batch",
+              "stream"
             ]
           },
           "links": [
@@ -1559,10 +1558,6 @@
           "cost": "free",
           "level": 3,
           "fit": {
-            "fresh": [
-              "batch",
-              "stream"
-            ],
             "size": [
               "medium",
               "large"
@@ -2099,7 +2094,8 @@
               "low"
             ],
             "size": [
-              "small"
+              "small",
+              "medium"
             ]
           },
           "links": [
@@ -2126,7 +2122,8 @@
           "level": 1,
           "fit": {
             "size": [
-              "small"
+              "small",
+              "medium"
             ]
           },
           "links": [
@@ -3139,6 +3136,7 @@
               "batch"
             ],
             "users": [
+              "few",
               "public"
             ]
           },
@@ -3417,9 +3415,6 @@
             "users": [
               "me",
               "few"
-            ],
-            "gpu": [
-              "no"
             ]
           },
           "links": [
@@ -3485,10 +3480,6 @@
           "fit": {
             "latency": [
               "online"
-            ],
-            "budget": [
-              "free",
-              "low"
             ],
             "gpu": [
               "no"
@@ -4565,6 +4556,31 @@
         ]
       },
       "msg": "Feature store đáng công khi nhiều model, nhiều người dùng chung feature và cần phục vụ online. Với một model, một hàm tạo feature dùng chung cho train và predict (kèm test) tránh được lệch train / serve mà không thêm hệ thống."
+    },
+    {
+      "id": "streamlit-on-hf-spaces",
+      "title": "Streamlit on Hugging Face Spaces",
+      "if": {
+        "app": [
+          "streamlit"
+        ],
+        "host": [
+          "hf-spaces"
+        ]
+      },
+      "unless": {
+        "host": [
+          "streamlit-cloud",
+          "render",
+          "cloud-run",
+          "vps-docker",
+          "fly-io",
+          "railway",
+          "kubernetes",
+          "own"
+        ]
+      },
+      "msg": "Spaces có ba kiểu: Gradio, Docker và HTML tĩnh; app Streamlit phải chạy qua Space Docker, mà Space Gradio hay Docker cần gói trả phí (tài khoản miễn phí chỉ được vài Space Gradio chạy ZeroGPU). Đổi giao diện sang Gradio, hoặc host Streamlit trên Streamlit Community Cloud."
     }
   ]
 }

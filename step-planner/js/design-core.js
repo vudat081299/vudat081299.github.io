@@ -104,15 +104,16 @@ export function fitOf(opt, profile) {
 }
 
 /**
- * Phương án của một khâu theo thứ tự gợi ý: hợp hồ sơ trước, rồi phương án lối đã chọn gợi ý (`sug`), khớp nhiều câu hơn,
- * dễ hơn, rồi thứ tự danh mục. `top`: phương án đứng đầu khi đã trả lời ít nhất một câu hồ sơ hay chọn lối, và nó hợp.
+ * Phương án của một khâu theo thứ tự gợi ý: hợp hồ sơ trước, rồi phương án lối đã chọn gợi ý (`sug`, theo thứ tự lối ghi),
+ * khớp nhiều câu hơn, dễ hơn, rồi thứ tự danh mục. `top`: phương án đứng đầu khi đã trả lời ít nhất một câu hồ sơ hay chọn lối, và nó hợp.
  * @param {any} stage @param {Record<string,string>} profile @param {any} [path]
  */
 export function rankOptions(stage, profile, path = null) {
   const answered = Object.keys(profile).length > 0 || !!path;
   const sug = (path && path.suggest[stage.id]) || [];
   const rows = stage.options.map((/** @type {any} */ o, /** @type {number} */ i) => ({ opt: o, i, sug: sug.includes(o.id), ...fitOf(o, profile) }));
-  rows.sort((a, b) => (+b.ok - +a.ok) || (+b.sug - +a.sug) || (b.score - a.score) || ((a.opt.level || 2) - (b.opt.level || 2)) || (a.i - b.i));
+  const at = (/** @type {any} */ r) => (r.sug ? sug.indexOf(r.opt.id) : sug.length);
+  rows.sort((a, b) => (+b.ok - +a.ok) || (at(a) - at(b)) || (b.score - a.score) || ((a.opt.level || 2) - (b.opt.level || 2)) || (a.i - b.i));
   return rows.map((r, k) => ({ ...r, top: answered && k === 0 && r.ok }));
 }
 
