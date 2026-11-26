@@ -15,6 +15,8 @@ Làm xong mục nào thì xoá mục ấy.
 
 - System design: chưa mở lại nguồn cho vài câu (kiểu dữ liệu Label Studio nhận, vì sao Streamlit không chạy trên Vercel); CVAT chưa có lệnh
   cài (không mở được trang cài). Lệnh chép từ quickstart có số phiên bản sẽ cũ nhanh: Superset, OpenSearch, faiss, tên model Ollama.
+- System design: Hudi chưa có lệnh cài (lệnh pyspark của quickstart cần nhiều `--conf`); connector Starburst của Power BI chưa thử với
+  Trino mã nguồn mở; Data Studio mới đối chiếu connector PostgreSQL, BigQuery. MinIO bản cộng đồng: xem lại khi có bản phát hành hay fork mới.
 - System design: câu `gpu` hỏi về huấn luyện, nhưng vài `fit` của host / serve dùng nó như GPU lúc phục vụ. Streaming chưa có phương án giám sát riêng.
 - Dự án lớn (15 × 20, ghi chú 30 dòng), CPU chậm 4×: khung hình kéo thả lúc ô thả đổi chỗ còn ~50–80 ms (vẽ và xếp lớp
   cả trang). `content-visibility: auto` trên `.cards-scroll` giảm nửa số khung hình chậm, nhưng hàng khuất thì phải đo thẻ cắt
