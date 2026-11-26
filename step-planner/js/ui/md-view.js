@@ -11,6 +11,9 @@ import { h } from './dom.js';
 
 /* ── DOM ── */
 
+/** Lớp CSS của một loại token khung Edit (css/md.css: .sx-head, .sx-punct, …). */
+const SX = 'sx-';
+
 /** @param {Node} parent @param {Inline[]} list */
 function putInline(parent, list) {
   for (const n of list) {
@@ -76,6 +79,8 @@ export function renderMd(text) {
   return f;
 }
 
+/** Nguồn → mỗi dòng một <span class="md-ln"> (số dòng là ::before của CSS, không phải chữ), token là <span class="sx-*">.
+ * Chữ của các dòng nối bằng \n đúng bằng nguồn. @param {string} text */
 export function renderSrc(text) {
   const f = document.createDocumentFragment(), toks = srcTokens(text);
   let k = 0, off = 0;
@@ -85,7 +90,7 @@ export function renderSrc(text) {
     while (k < toks.length && toks[k].s < end) {
       const t = toks[k];
       if (t.s > pos) ln.appendChild(document.createTextNode(text.slice(pos, t.s)));
-      const sp = h('span', { class: t.c });
+      const sp = h('span', { class: SX + t.k });
       sp.textContent = text.slice(t.s, Math.min(t.e, end));
       ln.appendChild(sp);
       pos = Math.min(t.e, end);
