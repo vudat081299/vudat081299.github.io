@@ -113,9 +113,9 @@
 - Danh sách nêu đường dẫn, hợp đồng, bên giao / nơi dùng, mỗi bên nhảy tới được.
 - Chọn dòng trong danh sách cặp: tô hai bên, focus bên nhận, không cuộn; bên nào ngoài tầm nhìn (trang, hàng thẻ) thì toast
   nói hướng, nút "Show" mới cuộn tới. Nút một bên vẫn bỏ lọc và cuộn tới.
-- Treo (`handoffs().held`): bên nhận đứng trước bên giao sau khi sắp xếp. Giữ nguyên `ins`, không mũi tên; danh sách ghi "on hold";
+- Treo (`handoffs().held`): bên nhận đứng trước bên giao sau khi sắp xếp, hay cùng ô song song với nó (`parKeys`; chữ ghi "runs in parallel"). Giữ nguyên `ins`, không mũi tên; danh sách ghi "on hold";
   toast dời, toast Lưu của hộp sửa báo cái vừa treo. Dời về đúng thứ tự là nối lại, không cần làm gì.
-- Hộp sửa tính "on hold" theo ô Bước / Vị trí đang chọn, chưa Lưu (`heldAt`, `heldKeysAt`); hộp chọn đầu ra ghi đầu ra đứng sau.
+- Hộp sửa tính "on hold" theo ô Bước / Vị trí đang chọn, chưa Lưu (`heldInfoAt`, `handoffsAt`); hộp chọn đầu ra ghi đầu ra đứng sau hay cùng ô.
 - Xoá bên giao không gỡ đầu vào nơi khác: đầu vào mất nguồn giữ qua lần tải lại, xuất / nhập, chấm đỏ; danh sách, hộp sửa ghi
   "Deleted output", gỡ bằng nút x. Hoàn tác xoá nối lại (`insBackup`).
 

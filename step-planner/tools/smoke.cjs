@@ -2637,6 +2637,31 @@ const check = (name, ok, detail = '') => {
     check('đầu vào / đầu ra 390px: không tràn ngang, chấm nằm trong thẻ và đầu bước', (await hOverflow(ip2)) === 0 && narrow === 0, String(narrow));
     await ic2.close();
 
+    // Cùng ô song song: bên nhận chạy cùng lúc với bên giao → treo; chấm hai bên lỗi, chữ nói "runs in parallel"; hộp sửa, hộp chọn cũng vậy.
+    const parCtx = await browser.newContext({ viewport: { width: 1280, height: 900 }, deviceScaleFactor: 1 });
+    await parCtx.addInitScript(seedInit, { id: 'wp', name: 'Par', steps: [{ id: 'q1', title: 'Prep', subs: [
+      { id: 'qP', title: 'Cut', outs: [{ id: 'oq', name: 'cut.csv' }] }, { id: 'qQ', title: 'Use', par: true, ins: ['oq'] }] }], log: [] });
+    const qp = await parCtx.newPage();
+    qp.on('pageerror', (e) => errors.push('song song: ' + e));
+    await qp.goto(BASE);
+    await qp.waitForSelector('.card[data-sub="qQ"] .io');
+    const par0 = await qp.evaluate(() => {
+      const io = (sel) => { const el = document.querySelector(sel); return el ? `${el.dataset.ioIn}/${el.dataset.ioOut}` : '-'; };
+      const lb = (sel) => document.querySelector(sel)?.getAttribute('aria-label');
+      return { q: io('.card[data-sub="qQ"] .io'), p: io('.card[data-sub="qP"] .io'), s: io('.step[data-step="q1"] .step-top .io'),
+        qIn: lb('.card[data-sub="qQ"] .io-dot.in'), pOut: lb('.card[data-sub="qP"] .io-dot.out'), gap: !!document.querySelector('.step[data-step="q1"] .hand-gap') };
+    });
+    await qp.click('.card[data-sub="qQ"] [data-act="edit-sub"]');
+    const parChip = await qp.textContent('#sub-hand .in-chip');
+    await qp.click('#sub-hand [data-in-pick]');
+    const parPick = await qp.textContent('#pick-groups');
+    check('cùng ô song song: liên kết treo — chấm hai bên và đầu bước lỗi, nói "runs in parallel"; hộp sửa, hộp chọn đầu ra ghi như vậy; không mũi tên',
+      par0.q === 'bad/none' && par0.p === 'none/bad' && par0.s === 'bad/bad' && !par0.gap
+      && par0.qIn === 'Input: broken. "cut.csv" on hold: "Cut" runs in parallel with this'
+      && par0.pOut === 'Output: broken. "cut.csv" is only used by "Use", which runs in parallel with it (on hold)'
+      && /on hold: it runs in parallel with this/.test(parChip) && /Cut \(runs in parallel — will be on hold\)/.test(parPick), JSON.stringify({ par0, parChip, parPick }));
+    await parCtx.close();
+
     // Danh sách cặp: bên giao ở xa (nhiều hàng phía trên, nhiều ô bên trái) — không tự cuộn; toast nói nó ở đâu, "Show" mới cuộn tới.
     const farSteps = [{ id: 'f0', title: 'Producer step', subs: [{ id: 'fp', title: 'Make table', outs: [{ id: 'fo1', name: 'clean.parquet' }] }] }];
     for (let i = 1; i < 8; i++) farSteps.push({ id: 'f' + i, title: 'Filler ' + i, subs: [0, 1, 2].map((k) => ({ id: `ff${i}_${k}`, title: `Task ${i}.${k} with a long title`, notes: 'line\nline\nline' })) });

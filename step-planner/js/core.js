@@ -327,7 +327,7 @@ export const heldKey = (toId, outId) => toId + '>' + outId;
  * Mọi bàn giao đã khai và cách bảng hiện chúng. links: mỗi (đầu ra, bên nhận) một mục. usedBy: id đầu ra → bên nhận.
  * rows: chỉ số bước j → các cặp từ các bước trước sang bước j (mũi tên trên hàng j). gaps: id bước → (k → các cặp từ các ô
  * trước sang ô k + 1 của cùng hàng). Cặp gộp các đầu ra cùng bên giao, cùng bên nhận. held: liên kết treo (bên nhận đứng
- * trước bên giao); heldKeys: `heldKey` của chúng.
+ * trước bên giao, hay cùng ô song song với nó); heldKeys: `heldKey` của chúng; parKeys: phần của heldKeys treo vì cùng ô.
  * @param {{steps:any[]}} ws
  */
 export function handoffs(ws) {
@@ -376,18 +376,23 @@ export function handoffs(ws) {
       /** @type {Pair[]} */ (g.get(k)).push(p);
     }
   }
-  /* Treo: bên nhận đứng trước bên giao (hàng trước, hay ô trước cùng hàng) sau khi sắp xếp lại. Liên kết vẫn nằm trong dữ liệu;
-   * dời về đúng thứ tự thì tự nối lại. */
+  /* Treo: bên nhận đứng trước bên giao (hàng trước, hay ô trước cùng hàng) sau khi sắp xếp lại, hay cùng ô song song với nó
+   * (hai việc chạy cùng lúc, bên nhận không chờ được đầu ra). Liên kết vẫn nằm trong dữ liệu; dời về đúng thứ tự thì tự nối lại. */
+  /** @param {typeof links[number]} l */
+  const sameSlot = (l) => l.to.i === l.from.i && !!l.from.sub && !!l.to.sub && slotOf.get(l.to.sub.id) === slotOf.get(l.from.sub.id);
   const held = links.filter((l) => l.to.i < l.from.i
-    || (l.to.i === l.from.i && l.from.sub && l.to.sub && slotOf.get(l.to.sub.id) < slotOf.get(l.from.sub.id)));
-  return { idx, links, usedBy, rows, gaps, held, heldKeys: new Set(held.map((l) => heldKey(l.to.h.id, l.out.id))) };
+    || (l.to.i === l.from.i && l.from.sub && l.to.sub && slotOf.get(l.to.sub.id) <= slotOf.get(l.from.sub.id)));
+  const key = (/** @type {typeof links[number]} */ l) => heldKey(l.to.h.id, l.out.id);
+  return { idx, links, usedBy, rows, gaps, held, heldKeys: new Set(held.map(key)), parKeys: new Set(held.filter(sameSlot).map(key)) };
 }
 
 /**
- * @typedef {{kind:'held'|'missing', id:string, name:string, from:string, at:string}} InWhy đầu vào lỗi: treo (nguồn giờ đứng sau),
- * hay trỏ tới đầu ra không còn (name, from rỗng); at: tên bước con giữ đầu vào ấy khi xét cho bước, rỗng là của chính chủ
- * @typedef {{kind:'unused'|'held', id:string, name:string, to:string[], live:number}} OutWhy đầu ra lỗi: không ai dùng, hay có
- * nơi dùng đang treo (to: tên các nơi ấy; live: số nơi dùng còn nối, 0 = chỉ có nơi dùng treo)
+ * @typedef {{kind:'held'|'missing', id:string, name:string, from:string, at:string, par:boolean}} InWhy đầu vào lỗi: treo (nguồn
+ * giờ đứng sau, hay cùng ô song song: par), hay trỏ tới đầu ra không còn (name, from rỗng); at: tên bước con giữ đầu vào ấy khi
+ * xét cho bước, rỗng là của chính chủ
+ * @typedef {{kind:'unused'|'held', id:string, name:string, to:string[], par:string[], live:number}} OutWhy đầu ra lỗi: không ai
+ * dùng, hay có nơi dùng đang treo (to: tên các nơi ấy; par: những nơi trong to cùng ô song song; live: số nơi dùng còn nối,
+ * 0 = chỉ có nơi dùng treo)
  * @typedef {{in:'ok'|'bad'|'none', out:'ok'|'bad'|'none', inWhy:InWhy[], outWhy:OutWhy[]}} IoStatus
  */
 /**
@@ -402,26 +407,30 @@ export function handoffs(ws) {
  * @param {{steps:any[]}} ws @param {ReturnType<typeof handoffs>} [hand] @returns {Map<string, IoStatus>}
  */
 export function ioStatus(ws, hand = handoffs(ws)) {
-  const { idx, links, heldKeys } = hand;
-  /** @type {Map<string, {live:number, held:string[]}>} id đầu ra → số nơi nhận đang nối, tên nơi nhận treo */
+  const { idx, links, heldKeys, parKeys } = hand;
+  /** @typedef {{live:number, held:string[], par:string[]}} Use */
+  /** @type {Map<string, Use>} id đầu ra → số nơi nhận đang nối, tên nơi nhận treo, tên nơi nhận treo vì cùng ô */
   const use = new Map();
   for (const l of links) {
-    if (!use.has(l.out.id)) use.set(l.out.id, { live: 0, held: [] });
-    const u = /** @type {{live:number, held:string[]}} */ (use.get(l.out.id));
-    if (heldKeys.has(heldKey(l.to.h.id, l.out.id))) u.held.push(holderTitle(l.to));
+    if (!use.has(l.out.id)) use.set(l.out.id, { live: 0, held: [], par: [] });
+    const u = /** @type {Use} */ (use.get(l.out.id));
+    const k = heldKey(l.to.h.id, l.out.id);
+    if (heldKeys.has(k)) u.held.push(holderTitle(l.to));
     else u.live++;
+    if (parKeys.has(k)) u.par.push(holderTitle(l.to));
   }
   /** @param {any[]} outs @returns {OutWhy[]} */
   const outWhy = (outs) => outs.flatMap((o) => {
     const u = use.get(o.id);
     if (u && !u.held.length) return [];
-    return [{ kind: u ? 'held' : 'unused', id: o.id, name: o.name, to: u ? u.held : [], live: u ? u.live : 0 }];
+    return [{ kind: u ? 'held' : 'unused', id: o.id, name: o.name, to: u ? u.held : [], par: u ? u.par : [], live: u ? u.live : 0 }];
   });
   /** @param {any} x @param {string} [at] @returns {InWhy[]} */
   const inWhy = (x, at = '') => (x.ins || []).flatMap((/** @type {string} */ id) => {
     const src = idx.get(id);
-    if (!src) return [{ kind: 'missing', id, name: '', from: '', at }];
-    return heldKeys.has(heldKey(x.id, id)) ? [{ kind: 'held', id, name: src.out.name, from: holderTitle(src), at }] : [];
+    if (!src) return [{ kind: 'missing', id, name: '', from: '', at, par: false }];
+    const k = heldKey(x.id, id);
+    return heldKeys.has(k) ? [{ kind: 'held', id, name: src.out.name, from: holderTitle(src), at, par: parKeys.has(k) }] : [];
   });
   /** @type {Map<string, IoStatus>} */
   const m = new Map();
@@ -497,16 +506,28 @@ function placedCopy(ws, kind, id, place) {
 /** Các đầu ra trong `outIds` sẽ là đầu vào treo của mục đang sửa. @param {{steps:any[]}} ws @param {'sub'|'step'} kind @param {string} id
  * @param {string[]} outIds @param {any} place @returns {Set<string>} */
 export function heldAt(ws, kind, id, outIds, place) {
+  return heldInfoAt(ws, kind, id, outIds, place).held;
+}
+/** Như `heldAt`, kèm `par`: phần treo vì cùng ô song song với bên giao. @param {{steps:any[]}} ws @param {'sub'|'step'} kind
+ * @param {string} id @param {string[]} outIds @param {any} place @returns {{held:Set<string>, par:Set<string>}} */
+export function heldInfoAt(ws, kind, id, outIds, place) {
   const p = placedCopy(ws, kind, id, place);
-  if (!p) return new Set();
+  if (!p) return { held: new Set(), par: new Set() };
   p.h.ins = [...outIds];
-  return new Set(handoffs(p.c).held.filter((l) => l.to.h === p.h).map((l) => l.out.id));
+  const hand = handoffs(p.c);
+  const mine = hand.held.filter((l) => l.to.h === p.h);
+  return { held: new Set(mine.map((l) => l.out.id)), par: new Set(mine.filter((l) => hand.parKeys.has(heldKey(l.to.h.id, l.out.id))).map((l) => l.out.id)) };
+}
+/** `handoffs` của cả dự án khi mục đang sửa đứng ở chỗ `place`, hay null. @param {{steps:any[]}} ws @param {'sub'|'step'} kind
+ * @param {string} id @param {any} place */
+export function handoffsAt(ws, kind, id, place) {
+  const p = placedCopy(ws, kind, id, place);
+  return p ? handoffs(p.c) : null;
 }
 /** `heldKeys` của cả dự án khi mục đang sửa đứng ở chỗ `place` (nơi dùng đầu ra của nó có treo không).
  * @param {{steps:any[]}} ws @param {'sub'|'step'} kind @param {string} id @param {any} place @returns {Set<string>} */
 export function heldKeysAt(ws, kind, id, place) {
-  const p = placedCopy(ws, kind, id, place);
-  return p ? handoffs(p.c).heldKeys : new Set();
+  return handoffsAt(ws, kind, id, place)?.heldKeys ?? new Set();
 }
 
 /* ── Tiến độ ── */

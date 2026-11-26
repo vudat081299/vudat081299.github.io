@@ -32,10 +32,17 @@ export function tags(x) {
 }
 /** Câu của một đầu vào lỗi; của bước con (chấm đầu bước) thì mở bằng tên bước con. @param {C.InWhy} w */
 const inLine = (w) => (w.at ? `${quote(w.at)}: ` : '') + (w.kind === 'missing' ? 'an input whose output was deleted'
-  : `${quote(w.name)} on hold: ${quote(w.from)} now comes after ${w.at ? 'it' : 'this'}`);
+  : `${quote(w.name)} on hold: ${quote(w.from)} ${w.par ? 'runs in parallel with' : 'now comes after'} ${w.at ? 'it' : 'this'}`);
+/** "A, B, which now come before it": nơi dùng treo, theo lý do (đứng trước / cùng ô song song). @param {string[]} names @param {boolean} par */
+const heldBy = (names, par) => `${names.map(quote).join(', ')}, which ${par ? (names.length > 1 ? 'run' : 'runs') + ' in parallel with'
+  : 'now ' + (names.length > 1 ? 'come' : 'comes') + ' before'} it`;
 /** Câu của một đầu ra lỗi: không ai dùng, hay có nơi dùng treo (chỉ những nơi ấy, hay thêm nơi dùng khác còn nối). @param {C.OutWhy} w */
-const outLine = (w) => (w.kind === 'unused' ? `${quote(w.name)} is not used by any later step`
-  : `${quote(w.name)} is ${w.live ? '' : 'only '}used by ${w.to.map(quote).join(', ')}, which now ${w.to.length > 1 ? 'come' : 'comes'} before it (on hold)`);
+function outLine(w) {
+  if (w.kind === 'unused') return `${quote(w.name)} is not used by any later step`;
+  const before = w.to.filter((t) => !w.par.includes(t));
+  const parts = [before.length && heldBy(before, false), w.par.length && heldBy(w.par, true)].filter(Boolean);
+  return `${quote(w.name)} is ${w.live ? '' : 'only '}used by ${parts.join(', and ')} (on hold)`;
+}
 const cap = (/** @type {string} */ t) => t.charAt(0).toUpperCase() + t.slice(1);
 /** Chữ của chấm đầu ra. Bước: lỗi vì nơi dùng treo thì nêu chúng, đầu ra chưa ai dùng ghi thêm sau; lỗi vì không đầu ra nào được
  * dùng thì nêu cả. @param {C.IoStatus} s @param {boolean} step */
@@ -156,8 +163,10 @@ function whoBtn(ws, hd, pre = '', held = false) {
   return jumpBtn(h('button', { type: 'button', class: 'hand-who' + (held ? ' held' : ''), title: 'Go to it on the board' },
     h('b', {}, pre && h('span', { class: 'lbl' }, pre), w.title), h('small', {}, w.ctx + (held ? ' · on hold' : ''))), [hd]);
 }
-/** Câu giải thích một đầu vào treo. @param {string} from tên bên giao */
-const heldText = (from) => `On hold: ${quote(from)} now comes after this, so it cannot hand this over yet. Move one of them, or remove the input.`;
+/** Câu giải thích một đầu vào treo. @param {string} from tên bên giao @param {boolean} [par] treo vì cùng ô song song */
+const heldText = (from, par = false) => (par
+  ? `On hold: ${quote(from)} runs in parallel with this, so it cannot hand this over in time. Put one after the other, or remove the input.`
+  : `On hold: ${quote(from)} now comes after this, so it cannot hand this over yet. Move one of them, or remove the input.`);
 /** @param {string} kicker @param {string} title @param {string} where @param {any[]} items @param {typeof listCtx} ctx */
 function openList(kicker, title, where, items, ctx) {
   listCtx = ctx;
@@ -173,13 +182,13 @@ const ctxOf = (/** @type {any} */ ws, /** @type {C.Holder} */ hd, /** @type {'in
 /** Đầu vào của một bên: mỗi đầu vào, đường dẫn, hợp đồng, bên giao (nhảy tới). @param {any} ws @param {C.Holder} hd */
 function showIns(ws, hd) {
   const { h, icon } = deps;
-  const { idx, heldKeys } = C.handoffs(ws);
+  const { idx, heldKeys, parKeys } = C.handoffs(ws);
   const items = hd.h.ins.map((/** @type {string} */ id) => idx.get(id)).map((/** @type {any} */ src) => {
     if (!src) return h('li', { class: 'hand-item' }, h('p', { class: 'hand-name' }, icon('in'), h('b', {}, GONE)), h('p', { class: 'hand-gone' }, goneText));
     const held = heldKeys.has(C.heldKey(hd.h.id, src.out.id));
     return h('li', { class: 'hand-item' },
       h('p', { class: 'hand-name' }, icon('in'), h('b', {}, src.out.name)), outDetail(src.out), whoBtn(ws, src, 'From ', held),
-      held && h('p', { class: 'hand-held' }, heldText(C.holderTitle(src))));
+      held && h('p', { class: 'hand-held' }, heldText(C.holderTitle(src), parKeys.has(C.heldKey(hd.h.id, src.out.id)))));
   });
   const w = who(ws, hd);
   openList('Inputs', `Inputs of ${quote(w.title)}`, w.ctx, items, ctxOf(ws, hd, 'ins'));
@@ -343,8 +352,9 @@ export function repaintPlace(where) {
   paintIns(where);
   paintOuts(where);
 }
-/** Các đầu ra trong `ids` sẽ treo nếu mục đang sửa đứng ở chỗ đang chọn. @param {'sub'|'step'} where @param {any} ws @param {string[]} ids */
-const heldNow = (where, ws, ids) => (ws ? C.heldAt(ws, where, draft[where].id, ids, draft[where].place()) : new Set());
+/** Các đầu ra trong `ids` sẽ treo nếu mục đang sửa đứng ở chỗ đang chọn (par: treo vì cùng ô song song).
+ * @param {'sub'|'step'} where @param {any} ws @param {string[]} ids */
+const heldInfoNow = (where, ws, ids) => (ws ? C.heldInfoAt(ws, where, draft[where].id, ids, draft[where].place()) : { held: new Set(), par: new Set() });
 
 /** Ứng viên làm đầu vào: mọi đầu ra trong dự án trừ của chính nó, theo thứ tự trên bảng. @param {'sub'|'step'} where */
 function candidates(where) {
@@ -357,16 +367,16 @@ function paintIns(where) {
   const { h, icon } = deps;
   const ws = deps.findWs(draft[where].wsId);
   const idx = ws ? C.outIndex(ws) : new Map();
-  const held = heldNow(where, ws, draft[where].ins);
+  const { held, par } = heldInfoNow(where, ws, draft[where].ins);
   const s = sec(where);
   const items = draft[where].ins.map((id) => [id, idx.get(id)]).map(([id, src]) => {
     if (!src) return h('li', { class: 'in-chip gone', 'data-in': id, title: goneText },
       icon('in'), h('span', { class: 'in-text' }, h('b', {}, GONE), h('small', {}, 'its source no longer exists')),
       h('button', { type: 'button', class: 'icon-btn', 'data-in-del': '', 'aria-label': `Remove input (${GONE.toLowerCase()})`, title: 'Remove input' }, icon('x')));
-    const on = held.has(src.out.id);
-    return h('li', { class: 'in-chip' + (on ? ' held' : ''), 'data-in': src.out.id, title: on ? heldText(C.holderTitle(src)) : null },
+    const on = held.has(src.out.id), p = par.has(src.out.id);
+    return h('li', { class: 'in-chip' + (on ? ' held' : ''), 'data-in': src.out.id, title: on ? heldText(C.holderTitle(src), p) : null },
     icon('in'), h('span', { class: 'in-text' }, h('b', {}, src.out.name),
-      h('small', {}, `from ${C.holderTitle(src)}` + (on ? ' · on hold: it now comes after this' : ''))),
+      h('small', {}, `from ${C.holderTitle(src)}` + (p ? ' · on hold: it runs in parallel with this' : on ? ' · on hold: it now comes after this' : ''))),
     h('button', { type: 'button', class: 'icon-btn', 'data-in-del': '', 'aria-label': `Remove input ${src.out.name}`, title: 'Remove input' }, icon('x')));
   });
   s.querySelector('[data-ins]').replaceChildren(...items);
@@ -381,7 +391,10 @@ function paintOuts(where) {
   const { h, icon } = deps;
   const ws = deps.findWs(draft[where].wsId);
   const used = ws ? C.handoffs(ws).usedBy : new Map();
-  const heldKeys = ws ? C.heldKeysAt(ws, where, draft[where].id, draft[where].place()) : new Set();
+  const at = ws ? C.handoffsAt(ws, where, draft[where].id, draft[where].place()) : null;
+  const heldKeys = at ? at.heldKeys : new Set(), parKeys = at ? at.parKeys : new Set();
+  /** @param {any} x @param {string} id */
+  const onHold = (x, id) => { const k = C.heldKey(x.h.id, id); return parKeys.has(k) ? ' (on hold: runs in parallel with this)' : heldKeys.has(k) ? ' (on hold: it comes before this)' : ''; };
   const s = sec(where);
   const rows = draft[where].outs.map((o, k) => {
     const by = used.get(o.id) || [];
@@ -393,7 +406,7 @@ function paintOuts(where) {
         fld('ref', 'Path or link', { maxlength: '2000', placeholder: 'data/clean/matches.parquet or https://…' }),
         fld('note', 'Contract', { maxlength: '400', placeholder: 'Columns, keys, what both sides rely on, how to check' })),
       h('button', { type: 'button', class: 'icon-btn', 'data-out-del': '', 'aria-label': `Remove output ${o.name || k + 1}`, title: 'Remove output' }, icon('trash')),
-      by.length > 0 && h('p', { class: 'out-used' }, h('span', { class: 'lbl' }, 'Used by '), by.map((x) => C.holderTitle(x) + (heldKeys.has(C.heldKey(x.h.id, o.id)) ? ' (on hold: it comes before this)' : '')).join(', ')));
+      by.length > 0 && h('p', { class: 'out-used' }, h('span', { class: 'lbl' }, 'Used by '), by.map((x) => C.holderTitle(x) + onHold(x, o.id)).join(', ')));
     for (const key of ['name', 'ref', 'note']) /** @type {any} */ (row.querySelector(`[data-k="${key}"]`)).value = o[key];
     return row;
   });
@@ -448,7 +461,7 @@ function openPick(where) {
   const chosen = new Set(draft[where].ins);
   const byStep = new Map();
   const cands = candidates(where);
-  const later = heldNow(where, ws, cands.map((c) => c.out.id));
+  const later = heldInfoNow(where, ws, cands.map((c) => c.out.id));
   for (const c of cands) {
     if (!byStep.has(c.step)) byStep.set(c.step, []);
     byStep.get(c.step).push(c);
@@ -460,7 +473,8 @@ function openPick(where) {
       h('label', { class: 'reset-item' },
         h('input', { type: 'checkbox', name: 'pick', value: c.out.id, checked: chosen.has(c.out.id) }),
         h('span', { class: 'reset-title' }, h('b', {}, c.out.name),
-          h('small', {}, (c.sub ? c.sub.title : 'Whole step') + (later.has(c.out.id) ? ' (comes after this — will be on hold)' : '')))))))));
+          h('small', {}, (c.sub ? c.sub.title : 'Whole step') + (later.par.has(c.out.id) ? ' (runs in parallel — will be on hold)'
+            : later.held.has(c.out.id) ? ' (comes after this — will be on hold)' : '')))))))));
   $('pick-groups').replaceChildren(...(groups.length ? groups : [h('p', { class: 'muted' }, 'No outputs declared yet.')]));
   $('pick-ok').disabled = !groups.length;
   deps.showDlg($('dlg-pick'));
@@ -494,9 +508,11 @@ export function alsoCheck(ws, step, picked) {
 /** Câu báo kèm toast dời, toast Lưu của hộp sửa: các liên kết vừa treo (không có trong `before`).
  * @param {any} ws @param {Set<string>} before @param {string} [tail] */
 export function newlyHeld(ws, before, tail = 'Links kept; move back to reconnect.') {
-  const fresh = C.handoffs(ws).held.filter((l) => !before.has(C.heldKey(l.to.h.id, l.out.id)));
+  const { held, parKeys } = C.handoffs(ws);
+  const fresh = held.filter((l) => !before.has(C.heldKey(l.to.h.id, l.out.id)));
   if (!fresh.length) return '';
   const l = fresh[0];
-  return ` · Input on hold: ${quote(C.holderTitle(l.to))} now comes before ${quote(C.holderTitle(l.from))}`
+  const rel = parKeys.has(C.heldKey(l.to.h.id, l.out.id)) ? 'runs in parallel with' : 'now comes before';
+  return ` · Input on hold: ${quote(C.holderTitle(l.to))} ${rel} ${quote(C.holderTitle(l.from))}`
     + (fresh.length > 1 ? ` (+${fresh.length - 1} more)` : '') + '. ' + tail;
 }
