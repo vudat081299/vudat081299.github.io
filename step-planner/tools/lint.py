@@ -18,6 +18,8 @@
      `architectures`: nhóm kiến trúc {id, label, question, note?, sources?, entries, rules}; kiến trúc {id, name, what, use,
      avoid, flow, tools, path?, sources}: `tools` trỏ phương án có thật, `path` trỏ lối có thật; luật gợi ý {if, arch, why}
      dùng cùng khoá điều kiện với `checks`, `arch` là kiến trúc của nhóm ("" = nhóm không cần).
+     Luật báo {id, title, if, unless?, msg, caveat?}: `caveat: true` = luật nhắc cách dùng, phương án vẫn đúng (Apply path
+     không né nó).
   6. Ngôn ngữ (PLAN-028): mọi chữ của mẫu có chữ Việt (trừ chuỗi chỉ là đường dẫn, tên file, và LATIN_OK); lời giải thích của
      system-design.json (DESIGN_VI) tiếng Việt, nhãn và tên tiếng Anh (`english`); chuỗi trong js/*.js và chữ của index.html
      không có chữ Việt, trừ dòng có chú thích `lang: vi — lý do` (nội dung sinh ra, nhãn nhập định dạng cũ).
@@ -48,7 +50,7 @@ OPT_KEYS = {'id', 'name', 'kind', 'summary', 'pick', 'avoid', 'cost', 'level', '
 DESIGN_KEYS = {'note', 'paths', 'profile', 'stages', 'checks', 'architectures'}
 FAMILY_KEYS = {'id', 'label', 'question', 'note', 'sources', 'entries', 'rules'}
 ARCH_KEYS = {'id', 'name', 'what', 'use', 'avoid', 'flow', 'tools', 'path', 'sources'}
-CHECK_KEYS = {'id', 'title', 'if', 'unless', 'msg'}
+CHECK_KEYS = {'id', 'title', 'if', 'unless', 'msg', 'caveat'}
 PATH_KEYS = {'id', 'label', 'summary', 'flow', 'why', 'switch', 'ask', 'implies', 'stages', 'suggest', 'accept'}
 ID_RE = r'[a-z0-9]+(-[a-z0-9]+)*'
 
@@ -486,13 +488,15 @@ def check_checks(data, answers, options):
         cid = c.get('id', '')
         w = f'system-design.json checks[{i}] ({cid})'
         if set(c) - CHECK_KEYS or not {'id', 'title', 'if', 'msg'} <= set(c):
-            err(f'{w}: khoá là id, title, if, msg, unless (tuỳ chọn) (đang có {sorted(c)})')
+            err(f'{w}: khoá là id, title, if, msg, unless và caveat (tuỳ chọn) (đang có {sorted(c)})')
             continue
         if not re.fullmatch(ID_RE, str(cid)) or cid in seen:
             err(f'{w}: id sai hoặc trùng')
         seen.add(cid)
         need_str(w, c, 'title')
         need_str(w, c, 'msg')
+        if 'caveat' in c and c['caveat'] is not True:
+            err(f'{w}: caveat chỉ là true (luật nhắc cách dùng, Apply path vẫn chọn được phương án)')
         english(f'{w}.title', c.get('title', ''))
         if not isinstance(c['if'], dict) or not c['if']:
             err(f'{w}: `if` cần ít nhất một điều kiện')

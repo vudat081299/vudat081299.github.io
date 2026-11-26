@@ -130,28 +130,33 @@ export function notNeededBy(stage, profile) {
 /**
  * Áp lối vào thiết kế: chỉ khâu chưa quyết. Khâu lối bỏ (`skip`) hay hồ sơ cho là không cần (`when`) thành "không cần"; khâu
  * lối cần (`need`) có gợi ý thì chọn phương án đứng đầu (hợp hồ sơ, ưu tiên gợi ý của lối). Khâu `maybe` để người dùng tự
- * quyết. Không đụng khâu đã quyết.
+ * quyết. Không đụng khâu đã quyết. Không tự gây luật báo: trong các phương án hợp, chọn cái đầu tiên làm ít luật (trừ `caveat`)
+ * báo ở khâu ấy nhất. Bỏ khâu mà làm luật báo thì để khâu ấy cho người dùng quyết.
  * @param {any} cat @param {any} design @param {string} pathId
  * @returns {{next: any, filled: string[], skipped: string[]}}
  */
 export function applyPath(cat, design, pathId) {
-  const d = design ? JSON.parse(JSON.stringify(design)) : emptyDesign();
+  const d = normDesign(design) || emptyDesign();
   d.path = pathId;
   const path = pathOf(cat, d);
   /** @type {string[]} */ const filled = [];
   /** @type {string[]} */ const skipped = [];
   if (!path) return { next: normDesign(d), filled, skipped };
   const prof = effProfile(cat, d);
+  /** Số luật (trừ `caveat`) báo ở khâu `id` khi đặt nó thành `rec`. @param {string} id @param {any} rec */
+  const clash = (id, rec) => warnings(cat, { ...d, stages: { ...d.stages, [id]: rec } }).filter((w) => !w.caveat && w.stages.includes(id)).length;
   for (const s of cat.stages) {
     if (stageState(d, s.id) !== 'open') continue;
     const need = path.stages[s.id];
     const rec = d.stages[s.id] || { pick: [], skip: false, own: '', note: '' };
     if (need === 'skip' || notNeededBy(s, prof).length) {
+      if (clash(s.id, { ...rec, skip: true })) continue;
       rec.skip = true;
       skipped.push(s.id);
     } else if (need === 'need' && path.suggest[s.id]) {
       const r = rankOptions(s, prof, path);
-      const best = r[0].ok ? r[0] : (r.find((x) => x.sug) || r[0]);
+      const ok = r.filter((x) => x.ok).map((x) => ({ x, n: clash(s.id, { ...rec, pick: [x.opt.id] }) }));
+      const best = ok.length ? ok.reduce((a, b) => (b.n < a.n ? b : a)).x : (r.find((x) => x.sug) || r[0]);
       rec.pick = [best.opt.id];
       filled.push(s.id);
     } else continue;
@@ -197,9 +202,9 @@ export function archAdvice(cat, design) {
 /**
  * Luật phối hợp của danh mục (`checks`): báo khi mọi điều kiện `if` khớp, và mọi khâu trong `unless` đã quyết mà không khớp
  * (khâu chưa quyết: chưa biết, chưa báo). Khoá điều kiện: id khâu (giá trị là id phương án đã chọn, `skip` = khâu "không cần",
- * `own` = có công cụ tự ghi), id câu hồ sơ (câu trả lời, kể cả câu lối giả định) hay `path`.
+ * `own` = có công cụ tự ghi), id câu hồ sơ (câu trả lời, kể cả câu lối giả định) hay `path`. `caveat`: luật chỉ nhắc cách dùng.
  * @param {any} cat @param {any} design
- * @returns {{id: string, title: string, msg: string, stages: string[]}[]}
+ * @returns {{id: string, title: string, msg: string, caveat: boolean, stages: string[]}[]}
  */
 export function warnings(cat, design) {
   if (!design || !Array.isArray(cat.checks)) return [];
@@ -209,7 +214,7 @@ export function warnings(cat, design) {
   for (const c of cat.checks) {
     const hit = Object.entries(c.if).every(([k, v]) => term(k, /** @type {string[]} */ (v)) === true)
       && Object.entries(c.unless || {}).every(([k, v]) => term(k, /** @type {string[]} */ (v)) === false);
-    if (hit) out.push({ id: c.id, title: c.title, msg: c.msg, stages: [...new Set([...Object.keys(c.if), ...Object.keys(c.unless || {})])].filter((k) => stageIds.has(k)) });
+    if (hit) out.push({ id: c.id, title: c.title, msg: c.msg, caveat: c.caveat === true, stages: [...new Set([...Object.keys(c.if), ...Object.keys(c.unless || {})])].filter((k) => stageIds.has(k)) });
   }
   return out;
 }

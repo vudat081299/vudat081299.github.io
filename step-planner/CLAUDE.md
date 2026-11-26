@@ -41,7 +41,7 @@
 - Doc `{id, kind: 'link', title, url, proof}` hoặc `{id, kind: 'md', title, body, proof}`. `url` chỉ http(s) (`safeUrl`); link
   khác bị bỏ (nhập thì cảnh báo). `body` giữ nguyên từng dòng. `proof: true` = bằng chứng cho "Done when".
 - Out `{id, name, ref, note}`: `name` bắt buộc (không tên thì bỏ); `ref` đường dẫn file hay link; `note` hợp đồng một dòng.
-- `ins`: id đầu ra ở chỗ khác trong dự án; bỏ trùng, bỏ id của chính nó. `normWorkspace`: id đầu ra duy nhất, bỏ đầu vào treo.
+- `ins`: id đầu ra ở chỗ khác trong dự án; bỏ trùng, bỏ id của chính nó; id không còn đầu ra (mất nguồn) vẫn giữ. `normWorkspace`: id đầu ra duy nhất.
 - `design`: null hoặc `{path, profile, stages: {khâu: {pick[], skip, own, note}}, edges: {"a>b": {via, what, where, promise, check}}}`
   (`normDesign`). Khâu `skip` vẫn giữ `pick`, `own` (ẩn, bỏ qua ở mọi chỗ); bỏ `skip` là chúng về lại.
 - Mọi dữ liệu đi qua `normSub` / `normStep` / `normWorkspace`: chuỗi một dòng gộp khoảng trắng, phần tử sai kiểu bị bỏ,
@@ -101,17 +101,20 @@
 
 - Đầu ra khai ở bước / bước con tạo ra nó; nơi dùng chọn "Use existing output". Một đầu ra nhiều nơi dùng; liên kết theo id.
 - Bước không chọn được đầu ra của chính nó và các bước con của nó. Inputs / Outputs lưu cùng Save của hộp sửa.
-- Thẻ bước con không liệt kê đầu vào, đầu ra; xem và sửa trong hộp sửa. Bước có chip "In n" (đầu vào còn trỏ tới đầu ra), "Out n".
+- Thẻ bước con không liệt kê đầu vào, đầu ra; xem và sửa trong hộp sửa. Bước có chip "In n" (mọi đầu vào, kể cả treo, mất nguồn), "Out n".
 - Thẻ và đầu bước hiện trạng thái đầu vào, đầu ra (`ioStatus`, PLAN-025): ổn, lỗi, không có; không có cả hai thì không hiện.
   Đầu vào lỗi: treo hoặc trỏ tới đầu ra không còn; bước chỉ xét đầu vào của chính nó. Đầu ra lỗi: không có nơi nhận đang nối
   (chỉ nơi nhận treo cũng tính); bước con lỗi khi một đầu ra lỗi, bước gộp đầu ra của bước con và lỗi chỉ khi mọi đầu ra lỗi.
 - Hàng j nhận từ hàng trước nó (`handoffs().rows`): mũi tên trên hàng j. Ô k + 1 nhận từ ô trước nó cùng hàng (`gaps`): một ô
   mũi tên trước ô k + 1. Nút giữa mũi tên ghi tên đầu ra; bấm thì nêu từng cặp. Chảy ngược hay cùng ô: chỉ trong hộp sửa.
 - Danh sách nêu đường dẫn, hợp đồng, bên giao / nơi dùng, mỗi bên nhảy tới được.
-- Chọn dòng trong danh sách cặp: tô hai bên, focus bên nhận, không cuộn; nút một bên vẫn bỏ lọc và cuộn tới.
-- Treo (`handoffs().held`): bên nhận đứng trước bên giao sau khi sắp xếp. Giữ nguyên `ins`, không mũi tên; hộp sửa, danh sách
-  ghi "on hold"; toast dời báo cái vừa treo. Dời về đúng thứ tự là nối lại, không cần làm gì.
-- Xoá bên giao không gỡ đầu vào nơi khác (bảng bỏ qua, lần đọc sau chuẩn hoá bỏ). Hoàn tác xoá gắn lại theo `insBackup`.
+- Chọn dòng trong danh sách cặp: tô hai bên, focus bên nhận, không cuộn; bên nào ngoài tầm nhìn (trang, hàng thẻ) thì toast
+  nói hướng, nút "Show" mới cuộn tới. Nút một bên vẫn bỏ lọc và cuộn tới.
+- Treo (`handoffs().held`): bên nhận đứng trước bên giao sau khi sắp xếp. Giữ nguyên `ins`, không mũi tên; danh sách ghi "on hold";
+  toast dời, toast Lưu của hộp sửa báo cái vừa treo. Dời về đúng thứ tự là nối lại, không cần làm gì.
+- Hộp sửa tính "on hold" theo ô Bước / Vị trí đang chọn, chưa Lưu (`heldAt`, `heldKeysAt`); hộp chọn đầu ra ghi đầu ra đứng sau.
+- Xoá bên giao không gỡ đầu vào nơi khác: đầu vào mất nguồn giữ qua lần tải lại, xuất / nhập, chấm đỏ; danh sách, hộp sửa ghi
+  "Deleted output", gỡ bằng nút x. Hoàn tác xoá nối lại (`insBackup`).
 
 ## Mẫu (`data/templates.json`)
 
@@ -148,11 +151,14 @@
   đánh dấu Not needed; độ phủ của `lint.py` bỏ qua câu trả lời ấy. Câu chưa trả lời: khâu vẫn hiện.
 - Công cụ nên tránh khi làm một mình vẫn có trong danh mục nếu người học hay gặp: `avoid` nói vì sao và chọn gì thay, có luật báo,
   không đứng đầu `suggest` của lối nào.
-- "Apply path" (`applyPath`): chỉ khâu chưa quyết; `skip` → Not needed; `need` có gợi ý → phương án đầu; `maybe` để trống.
+- "Apply path" (`applyPath`): chỉ khâu chưa quyết; `skip` → Not needed; `need` có gợi ý → phương án hợp đầu tiên làm ít luật báo
+  nhất; `maybe` để trống. Không tự gây luật báo (trừ `caveat`): bỏ khâu mà làm luật báo thì để khâu ấy trống. `test-core` dò lưới hồ sơ × lối.
 - Luật phối hợp (`warnings`): báo khi mọi `if` khớp và mọi khâu trong `unless` đã quyết mà không khớp; khâu chưa quyết thì chưa báo.
   Khoá điều kiện: id khâu (phương án, `skip`, `own`), câu hồ sơ hay `path`. Phương án không được có id `skip`, `own`.
+  `caveat: true`: luật chỉ nhắc cách dùng, phương án vẫn đúng (host miễn phí ngủ, đĩa không bền, file DuckDB sau API).
 - Kiến trúc (`architectures`): nhóm → kiến trúc (khi dùng, khi tránh, luồng, công cụ theo khâu, nguồn). Không lưu lựa chọn;
   `archAdvice` lấy luật đầu tiên khớp của nhóm (khoá điều kiện như `checks`), `""` = nhóm không cần. Lối là kiến trúc của nhóm app (`path`).
+  Kiến trúc được gợi ý phải có ở mỗi khâu một công cụ không làm luật báo với hồ sơ ấy (`test-core`); hồ sơ nói ngược khâu đã quyết thì luật hồ sơ đứng trước.
 - Bàn giao (`edges`): đường nối hai khâu liền nhau của luồng, cả hai đã quyết (`flowEdges`). Hợp đồng giữ cả khi đường nối không còn.
 - Sơ đồ: đường nối nét liền khi cả hai khâu đã quyết (`bothDecided`, cùng luật với `flowEdges`), còn lại nét đứt.
 - "Add tasks to plan" / "Update plan": luôn xem trước New / Changed / No longer in the design, chọn từng mục và bước nhận
