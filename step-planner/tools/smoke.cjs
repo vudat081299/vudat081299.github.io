@@ -2312,19 +2312,39 @@ const check = (name, ok, detail = '') => {
     const pad = await vp.$eval('#sd-fig', (f) => { const r = f.getBoundingClientRect(); return { x: r.left + 4, y: r.bottom - 4 }; });
     await vp.mouse.click(pad.x, pad.y);
     check('Bấm vào sơ đồ: khung có focus, không mở hộp', await vp.evaluate(() => document.activeElement?.id === 'sd-fig') && !(await dlgOpen(vp)));
-    v1 = await camView(vp);
+    /* Cỡ thật, sơ đồ vừa khung: bánh xe không dời khung (sơ đồ không bị đẩy đi), trang cuộn. */
     const Q = await svgAt(vp, 0.5, 0.4);
     await vp.mouse.move(Q.x, Q.y);
+    const fits = await vp.$eval('#sd-fig svg', (s) => { const r = s.getBoundingClientRect(); return +s.getAttribute('data-w') <= r.width + 0.5 && +s.getAttribute('height') <= r.height + 0.5; });
+    await vp.mouse.wheel(40, 120);
+    await waitTo(vp, 'trang cuộn khi sơ đồ vừa khung', (y0) => scrollY !== y0, sy1);
+    check('Bánh xe trơn, sơ đồ có focus nhưng vừa khung: khung đứng yên, trang cuộn', fits && isHome(await camView(vp)) && (await vp.evaluate(() => scrollY)) !== sy1,
+      JSON.stringify(await camView(vp)));
+    /* Phóng to (phím +, khung giữ focus): sơ đồ tràn khung, bánh xe kéo khung, trang đứng yên. */
+    await vp.keyboard.press('+');
+    await vp.keyboard.press('+');
+    await settled(vp);
+    const sy2 = await vp.evaluate(() => scrollY);
+    v1 = await camView(vp);
     await vp.mouse.wheel(30, 90);
     await vp.mouse.wheel(0, 0);
     v = await camView(vp);
-    check('Bánh xe trơn khi sơ đồ có focus: kéo khung dọc và ngang, trang đứng yên', Math.abs(v.y - (v1.y - 90)) < 1 && Math.abs(v.x - (v1.x - 30)) < 1 && v.k === v1.k
-      && (await vp.evaluate(() => scrollY)) === sy1, JSON.stringify({ v, v1 }));
+    check('Bánh xe trơn khi sơ đồ có focus và tràn khung: kéo khung dọc và ngang, trang đứng yên', v1.k > 1.5 && Math.abs(v.y - (v1.y - 90)) < 1 && Math.abs(v.x - (v1.x - 30)) < 1 && v.k === v1.k
+      && (await vp.evaluate(() => scrollY)) === sy2, JSON.stringify({ v, v1 }));
     await vp.keyboard.down('Shift');
     await vp.mouse.wheel(0, 50);
     await vp.keyboard.up('Shift');
     const vs = await camView(vp);
     check('Shift + bánh xe: kéo ngang', Math.abs(vs.x - (v.x - 50)) < 1 && Math.abs(vs.y - v.y) < 1, JSON.stringify({ vs, v }));
+    /* Kéo tới mép trên của sơ đồ thì dừng ở mép (trang đứng yên); bánh xe tiếp: khung đứng yên, trang cuộn. */
+    await vp.mouse.wheel(0, -5000);
+    const ve = await camView(vp);
+    const sy3 = await vp.evaluate(() => scrollY);
+    await vp.mouse.wheel(0, -60);
+    await waitTo(vp, 'trang cuộn khi sơ đồ đã tới mép', (y0) => scrollY !== y0, sy3);
+    check('Bánh xe tới mép sơ đồ: dừng ở mép, không đẩy sơ đồ đi; tiếp thì trang cuộn', Math.abs(ve.y) < 0.5 && sy3 === sy2
+      && JSON.stringify(await camView(vp)) === JSON.stringify(ve) && (await vp.evaluate(() => scrollY)) < sy3, JSON.stringify({ ve, sy2, sy3 }));
+    v = await camView(vp);
     /* Space + kéo, bắt đầu trên một nút: khung dời đúng bằng đường kéo, nút không mở hộp; con trỏ bàn tay. */
     await vp.$eval('#sd-fig', (f) => f.scrollIntoView({ block: 'center' }));
     const node = await vp.$eval('#sd-fig [data-stage="validate"]', (g) => { const r = g.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; });
@@ -2348,6 +2368,13 @@ const check = (name, ok, detail = '') => {
     await vp.mouse.up({ button: 'middle' });
     const v3 = await camView(vp);
     check('Kéo bằng nút giữa: khung dời, không mở hộp', Math.abs(v3.x - (v.x - 40)) < 1 && Math.abs(v3.y - (v.y - 10)) < 1 && !(await dlgOpen(vp)), JSON.stringify({ v3, v }));
+    /* Nút trái trơn kéo trên một nút: không kéo khung (cần Space), không mở hộp khi thả. */
+    const n2 = await vp.$eval('#sd-fig [data-stage="validate"]', (g) => { const r = g.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; });
+    await vp.mouse.move(n2.x, n2.y);
+    await vp.mouse.down();
+    await vp.mouse.move(n2.x + 12, n2.y + 4, { steps: 3 });
+    await vp.mouse.up();
+    check('Kéo nút trái trơn trên nút: khung đứng yên, không mở hộp', JSON.stringify(await camView(vp)) === JSON.stringify(v3) && !(await dlgOpen(vp)));
     /* Bấm thường (không kéo) trên nút vẫn mở hộp. */
     await vp.keyboard.press('0');
     await vp.click('#sd-zoom-in');
@@ -2437,6 +2464,9 @@ const check = (name, ok, detail = '') => {
     /* Chạm thật (CDP): một ngón kéo ngang dời khung, không mở nút dưới ngón; hai ngón xa nhau thì phóng; chạm nhẹ vẫn mở nút. */
     const cdp = await tx.newCDPSession(tp);
     const touch = (type, points) => cdp.send('Input.dispatchTouchEvent', { type, touchPoints: points.map(([x, y], id) => ({ x, y, id })) });
+    await tp.click('#sd-zoom-in');
+    await tp.click('#sd-zoom-in');
+    await settled(tp);
     await tp.$eval('#sd-fig [data-stage="process"]', (g) => g.scrollIntoView({ block: 'center' }));
     const tn = await tp.$eval('#sd-fig [data-stage="process"]', (g) => { const r = g.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; });
     const tv0 = await camView(tp);
@@ -2444,7 +2474,7 @@ const check = (name, ok, detail = '') => {
     for (let i = 1; i <= 6; i++) await touch('touchMove', [[tn.x - 10 * i, tn.y]]);
     await touch('touchEnd', []);
     const tv1 = await camView(tp);
-    check('Chạm: một ngón kéo ngang dời khung, không mở nút dưới ngón', Math.abs(tv1.x - (tv0.x - 60)) < 1 && !(await dlgOpen(tp)), JSON.stringify({ tv0, tv1 }));
+    check('Chạm (đã phóng, sơ đồ tràn khung): một ngón kéo ngang dời khung, không mở nút dưới ngón', Math.abs(tv1.x - (tv0.x - 60)) < 1 && !(await dlgOpen(tp)), JSON.stringify({ tv0, tv1 }));
     const c = await svgAt(tp, 0.5, 0.2);
     await touch('touchStart', [[c.x - 20, c.y], [c.x + 20, c.y]]);
     for (let i = 1; i <= 5; i++) await touch('touchMove', [[c.x - 20 - 8 * i, c.y], [c.x + 20 + 8 * i, c.y]]);

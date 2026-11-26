@@ -2,15 +2,16 @@
 /* Sơ đồ System design như khung nhìn (PLAN-031): DOM của kéo và thu phóng. Toán thuần ở core/view-math.js.
  * - Ctrl / ⌘ + bánh xe (cả pinch của trackpad, tới như bánh xe có ctrlKey): thu phóng quanh con trỏ, luôn bắt.
  * - Bánh xe trơn, Shift + bánh xe: kéo khung, chỉ bắt khi chính khung có focus (đã bấm vào chỗ trống, hay Tab tới)
- *   hay đang giữ Space; còn lại trang cuộn như thường. Esc trả bánh xe cho trang.
- * - Giữ Space rồi kéo chuột, hay kéo bằng nút giữa: kéo khung. Chạm: hai ngón thu phóng và kéo; một ngón kéo ngang, và kéo
+ *   hay đang giữ Space; còn lại trang cuộn như thường. Esc trả bánh xe cho trang. Như hộp cuộn: chỉ trục sơ đồ tràn khung,
+ *   dừng ở mép sơ đồ; không dời được thì trang cuộn (wheelStep). Trục sơ đồ vừa khung luôn thấy trọn (clampPan).
+ * - Giữ Space rồi kéo chuột, hay kéo bằng nút giữa: kéo khung. Kéo nút trái trơn không kéo khung (như Figma). Chạm: hai ngón thu phóng và kéo; một ngón kéo ngang, và kéo
  *   mọi hướng khi khung có focus (chưa thì một ngón dọc cuộn trang, CSS touch-action).
  * - Phím khi sơ đồ có focus: + / - thu phóng, 0 về khung ban đầu, mũi tên kéo, Esc trả bánh xe cho trang.
- * - Kéo xong không tính là bấm: nút, đường nối dưới con trỏ không mở hộp.
+ * - Kéo xong (kể cả nút trái trơn dời quá DRAG_SLOP) không tính là bấm: nút, đường nối dưới con trỏ không mở hộp.
  * Khung nhìn chỉ ở bộ nhớ của trang: vẽ lại sơ đồ giữ khung, tải lại trang về khung ban đầu.
  * Xuất: resetView, attach, initDiagramView.
  * Dùng: core/view-math.js. */
-import { DRAG_SLOP, HOME, PAN_STEP, ZOOM_MAX, ZOOM_MIN, ZOOM_STEP, clampPan, clampZoom, panBy, pinch, wheelPan, wheelPx, wheelZoom, zoomAt, zoomPct } from '../core/view-math.js';
+import { DRAG_SLOP, HOME, PAN_STEP, ZOOM_MAX, ZOOM_MIN, ZOOM_STEP, clampPan, clampZoom, panBy, pinch, wheelPan, wheelPx, wheelStep, wheelZoom, zoomAt, zoomPct } from '../core/view-math.js';
 /** @typedef {import('../core/view-math.js').View} View */
 
 /** @type {View} */
@@ -25,6 +26,8 @@ let hover = false, spaceHeld = false, spaceUsed = false, suppress = false;
 const pts = new Map();
 /** Cử chỉ đang làm: kéo một điểm hay hai ngón; `moved` khi đã quá DRAG_SLOP. @type {any} */
 let gest = null;
+/** Nút trái trơn đang nhấn (không kéo khung): dời quá DRAG_SLOP thì nuốt cú bấm sau đó. @type {{id: number, x: number, y: number} | null} */
+let press = null;
 let onActivate = (/** @type {Element} */ _el) => {};
 
 const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -95,9 +98,11 @@ function onWheel(/** @type {WheelEvent} */ e) {
     return;
   }
   if (!active()) return;
-  e.preventDefault();
   const [mx, my] = wheelPan(dx, dy, e.shiftKey);
-  set(panBy(view, mx, my));
+  const next = wheelStep(view, mx, my, cw, ch, r.width || cw, r.height || ch);
+  if (next === view) return;             // sơ đồ vừa khung hay đã tới mép: trang cuộn
+  e.preventDefault();
+  set(next);
 }
 
 /* ── Kéo: chuột (Space + nút trái, nút giữa), chạm, bút ── */
@@ -116,7 +121,10 @@ function onDown(/** @type {PointerEvent} */ e) {
   if (!cam) return;
   const mouse = e.pointerType === 'mouse';
   if (!pts.size) suppress = false;       // cú bấm trước không tới (nút giữa không có click): đừng nuốt cú này
-  if (mouse && !(e.button === 1 || (e.button === 0 && spaceHeld))) return;
+  if (mouse && !(e.button === 1 || (e.button === 0 && spaceHeld))) {
+    press = e.button === 0 ? { id: e.pointerId, x: e.clientX, y: e.clientY } : null;
+    return;
+  }
   if (mouse) {
     e.preventDefault();
     if (spaceHeld) spaceUsed = true;
@@ -137,6 +145,10 @@ function startDrag(e) {
 }
 
 function onMove(/** @type {PointerEvent} */ e) {
+  if (press && press.id === e.pointerId && Math.hypot(e.clientX - press.x, e.clientY - press.y) >= DRAG_SLOP) {
+    suppress = true;
+    press = null;
+  }
   const p = pts.get(e.pointerId);
   if (!p || !gest) return;
   p.x = e.clientX;
@@ -156,6 +168,7 @@ function onMove(/** @type {PointerEvent} */ e) {
 }
 
 function onUp(/** @type {PointerEvent} */ e) {
+  if (press?.id === e.pointerId) press = null;
   if (!pts.delete(e.pointerId)) return;
   if (gest?.moved) suppress = true;
   regest();
