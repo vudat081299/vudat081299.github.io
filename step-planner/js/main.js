@@ -2316,5 +2316,5 @@ async function boot() {
 initDesign({ cur, findWs, commit, toast, h, icon, showDlg });
 /* Tới một thẻ đang bị ô tìm ẩn: bỏ lọc, không lấy focus (Bàn giao đưa focus tới thẻ). */
 const unfilter = () => { ui.q = ''; $('q').value = ''; render(); };
-Hd.initHand({ h, icon, cur, findWs, labelsOf, openSub, openStep, unfilter, flashMs, focusField, showDlg });
+Hd.initHand({ h, icon, cur, findWs, labelsOf, openSub, openStep, unfilter, flashMs, focusField, showDlg, toast });
 boot();

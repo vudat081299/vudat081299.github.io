@@ -8,7 +8,7 @@ import * as C from './core.js';
 const $ = (/** @type {string} */ id) => /** @type {any} */ (document.getElementById(id));
 const quote = (/** @type {string} */ t) => `"${t}"`;
 
-/** Hàm chung của main.js: h, icon, cur, findWs, labelsOf, openSub, openStep, unfilter, flashMs, focusField, showDlg. @param {any} d */
+/** Hàm chung của main.js: h, icon, cur, findWs, labelsOf, openSub, openStep, unfilter, flashMs, focusField, showDlg, toast. @param {any} d */
 export function initHand(d) {
   deps = d;
   wireList();
@@ -206,8 +206,33 @@ function showPairs(ws, pairs, title, where) {
 }
 
 let hiTimer = 0;
+/** Tô các bên một lúc (--flash-dur). @param {HTMLElement[]} els */
+function hilite(els) {
+  clearTimeout(hiTimer);
+  document.querySelectorAll('.hand-hi').forEach((e) => e.classList.remove('hand-hi'));
+  for (const e of els) e.classList.add('hand-hi');
+  hiTimer = window.setTimeout(() => els.forEach((e) => e.classList.remove('hand-hi')), deps.flashMs());
+}
+/** Một bên nằm ngoài chỗ nhìn thấy (khung nhìn dưới thanh trên, và khung cuộn ngang của hàng thẻ) thì ở hướng nào; trong
+ * tầm nhìn (dù chỉ một phần) thì ''. @param {HTMLElement} el */
+function offSide(el) {
+  const r = el.getBoundingClientRect();
+  const top = document.querySelector('.bar')?.getBoundingClientRect().bottom ?? 0;
+  let left = 0, right = document.documentElement.clientWidth;
+  const sc = el.closest('.cards-scroll');
+  if (sc) { const b = sc.getBoundingClientRect(); left = Math.max(left, b.left); right = Math.min(right, b.right); }
+  return r.bottom <= top ? 'above' : r.top >= window.innerHeight ? 'below' : r.right <= left ? 'to the left' : r.left >= right ? 'to the right' : '';
+}
+/** Tên của một bên trên bảng (tên bước con, hay tên bước). @param {{stepId:string, subId:string|null}} t */
+function targetTitle(t) {
+  const step = deps.cur()?.steps.find((/** @type {any} */ s) => s.id === t.stepId);
+  const sub = t.subId ? step?.subs.find((/** @type {any} */ x) => x.id === t.subId) : null;
+  return (t.subId ? sub?.title : step?.title) || '';
+}
+const actSel = (/** @type {{subId:string|null}} */ t) => (t.subId ? '[data-act="edit-sub"]' : '[data-act="edit-step"]');
 /** Tới bên giao / bên nhận trên bảng: bỏ lọc nếu nó đang bị ẩn, cuộn tới, focus tên bên đầu, tô cả hai một lúc.
- * `scroll` false (dòng của danh sách cặp, hai bên đang ở trên bảng): không cuộn trang lẫn hàng thẻ, chỉ tô và focus.
+ * `scroll` false (dòng của danh sách cặp, hai bên đang ở trên bảng): không cuộn trang lẫn hàng thẻ, chỉ tô và focus; bên nào
+ * nằm ngoài tầm nhìn thì toast nói nó ở hướng nào, nút "Show" mới cuộn tới (không bao giờ tự cuộn).
  * @param {{stepId:string, subId:string|null}[]} targets @param {{scroll?: boolean}} [opt] */
 export function jump(targets, { scroll = true } = {}) {
   const sel = (/** @type {{stepId:string, subId:string|null}} */ t) => (t.subId ? `.card[data-sub="${t.subId}"]` : `.step[data-step="${t.stepId}"] > .step-head`);
@@ -216,15 +241,25 @@ export function jump(targets, { scroll = true } = {}) {
   if (els.some((e) => !e)) { deps.unfilter(); els = find(); }
   const found = /** @type {HTMLElement[]} */ (els.filter(Boolean));
   if (!found.length) return;
-  clearTimeout(hiTimer);
-  document.querySelectorAll('.hand-hi').forEach((e) => e.classList.remove('hand-hi'));
   if (scroll) {
     for (const e of found.slice(1)) e.scrollIntoView({ block: 'nearest', inline: 'nearest' });
     found[0].scrollIntoView({ block: 'center', inline: 'nearest' });
   }
-  for (const e of found) e.classList.add('hand-hi');
-  found[0].querySelector(targets[0].subId ? '[data-act="edit-sub"]' : '[data-act="edit-step"]')?.focus({ preventScroll: true });
-  hiTimer = window.setTimeout(() => found.forEach((e) => e.classList.remove('hand-hi')), deps.flashMs());
+  hilite(found);
+  found[0].querySelector(actSel(targets[0]))?.focus({ preventScroll: true });
+  if (scroll) return;
+  const off = targets.map((t, k) => ({ t, el: els[k], side: els[k] ? offSide(/** @type {HTMLElement} */ (els[k])) : '' })).filter((o) => o.side);
+  if (!off.length) return;
+  const text = (off.length > 1 && off[0].side === off[1].side ? `${off.map((o) => quote(targetTitle(o.t))).join(' and ')} are ${off[0].side}`
+    : off.map((o) => `${quote(targetTitle(o.t))} is ${o.side}`).join(' and ')) + ', off screen';
+  const first = off[0];
+  deps.toast(text, () => {
+    const el = /** @type {HTMLElement|null} */ (document.querySelector(sel(first.t)));
+    if (!el) return;
+    el.scrollIntoView({ block: 'center', inline: 'nearest' });
+    hilite([el]);
+    el.querySelector(actSel(first.t))?.focus({ preventScroll: true });
+  }, '', false, 'Show');
 }
 
 function wireList() {

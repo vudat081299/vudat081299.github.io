@@ -2471,6 +2471,52 @@ const check = (name, ok, detail = '') => {
     }).length);
     check('đầu vào / đầu ra 390px: không tràn ngang, chấm nằm trong thẻ và đầu bước', (await hOverflow(ip2)) === 0 && narrow === 0, String(narrow));
     await ic2.close();
+
+    // Danh sách cặp: bên giao ở xa (nhiều hàng phía trên, nhiều ô bên trái) — không tự cuộn; toast nói nó ở đâu, "Show" mới cuộn tới.
+    const farSteps = [{ id: 'f0', title: 'Producer step', subs: [{ id: 'fp', title: 'Make table', outs: [{ id: 'fo1', name: 'clean.parquet' }] }] }];
+    for (let i = 1; i < 8; i++) farSteps.push({ id: 'f' + i, title: 'Filler ' + i, subs: [0, 1, 2].map((k) => ({ id: `ff${i}_${k}`, title: `Task ${i}.${k} with a long title`, notes: 'line\nline\nline' })) });
+    farSteps.push({ id: 'f8', title: 'Consumer step', subs: [{ id: 'fc', title: 'Use table', ins: ['fo1'] },
+      ...Array.from({ length: 14 }, (_, k) => ({ id: 'fw' + k, title: 'Wide ' + k, ...(k === 0 ? { outs: [{ id: 'fo2', name: 'features.parquet' }] } : {}),
+        ...(k === 12 ? { outs: [{ id: 'fo3', name: 'near.parquet' }] } : {}), ...(k === 13 ? { ins: ['fo2', 'fo3'] } : {}) }))] });
+    const fc2 = await browser.newContext({ viewport: { width: 1280, height: 800 }, deviceScaleFactor: 1 });
+    await fc2.addInitScript(seedInit, { id: 'wf', name: 'Far', steps: farSteps, log: [] });
+    const fp2 = await fc2.newPage();
+    fp2.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
+    fp2.on('pageerror', (e) => errors.push(String(e)));
+    await fp2.goto(BASE);
+    await fp2.waitForSelector('.card[data-sub="fc"]');
+    const vis = (id) => fp2.evaluate((i) => { const c = document.querySelector(`.card[data-sub="${i}"]`), r = c.getBoundingClientRect(), s = c.closest('.cards-scroll').getBoundingClientRect();
+      return r.bottom > 0 && r.top < innerHeight && r.right > s.left && r.left < s.right; }, id);
+    const tst = () => fp2.evaluate(() => ({ on: !document.getElementById('toast').hidden, text: document.getElementById('toast-text').textContent,
+      btn: document.getElementById('toast-undo').textContent, y: Math.round(scrollY), focus: document.activeElement?.closest('[data-sub]')?.dataset.sub }));
+    await fp2.click('.step[data-step="f8"] [data-act="hand-row"]');
+    await fp2.click('#dlg-hand .hand-pair');
+    const r0 = await tst();
+    const rv0 = await vis('fp');
+    await fp2.keyboard.press('Control+z'); // nút toast không phải Hoàn tác: Ctrl + Z không bấm nó
+    const r1 = await tst();
+    await fp2.click('#toast-undo');
+    await fp2.waitForFunction(() => { const r = document.querySelector('.card[data-sub="fp"]').getBoundingClientRect(); return r.top > 0 && r.bottom < innerHeight; });
+    const r2 = await tst();
+    check('bàn giao: danh sách cặp — bên giao ở hàng xa phía trên: không tự cuộn, toast "… is above, off screen", "Show" cuộn tới và focus nó',
+      !rv0 && r0.on && r0.text === '"Make table" is above, off screen' && r0.btn === 'Show' && r0.focus === 'fc' && same(r1, r0)
+      && !r2.on && r2.y < r0.y && r2.focus === 'fp', JSON.stringify({ r0, r1, r2 }));
+    await fp2.evaluate(() => { document.querySelector('.card[data-sub="fc"]').scrollIntoView({ block: 'center' }); const sc = document.querySelector('.step[data-step="f8"] .cards-scroll'); sc.scrollLeft = sc.scrollWidth; });
+    await fp2.evaluate(() => document.querySelector('.step[data-step="f8"] [data-act="hand-gap"]').click());
+    await fp2.click('#dlg-hand .hand-pair');
+    const g0 = await tst();
+    const gv0 = await vis('fw0');
+    await fp2.click('#toast-undo');
+    await fp2.waitForFunction(() => { const c = document.querySelector('.card[data-sub="fw0"]').getBoundingClientRect(), s = c && document.querySelector('.step[data-step="f8"] .cards-scroll').getBoundingClientRect(); return c.left >= s.left - 1 && c.right <= s.right + 1; });
+    check('bàn giao: danh sách cặp — bên giao ở ô xa bên trái hàng: toast "… is to the left, off screen", "Show" cuộn hàng tới nó',
+      !gv0 && g0.text === '"Wide 0" is to the left, off screen' && g0.focus === 'fw13' && (await vis('fw0')), JSON.stringify({ g0 }));
+    // Hai bên đều trong tầm nhìn (ô liền trước): không toast.
+    await fp2.evaluate(() => { document.getElementById('toast').hidden = true; const sc = document.querySelector('.step[data-step="f8"] .cards-scroll'); sc.scrollLeft = sc.scrollWidth; });
+    await fp2.evaluate(() => document.querySelector('.step[data-step="f8"] [data-act="hand-gap"]').click());
+    await fp2.locator('#dlg-hand .hand-pair', { hasText: 'Wide 12' }).click();
+    const n0 = await tst();
+    check('bàn giao: danh sách cặp — hai bên trong tầm nhìn thì không có toast', !n0.on, JSON.stringify(n0));
+    await fc2.close();
   }
 
   /* ── Dữ liệu lưu bị hỏng ── */
