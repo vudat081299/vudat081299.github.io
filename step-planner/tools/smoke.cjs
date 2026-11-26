@@ -22,6 +22,25 @@ const check = (name, ok, detail = '') => {
 (async () => {
   const browser = await chromium.launch();
   const errors = [];
+  /* Mỗi phần chạy riêng: một lỗi ném ra (selector không thấy, phần tử thiếu) báo LỖI cho phần ấy, đóng các context nó mở,
+   * rồi phần sau vẫn chạy; mã thoát vẫn khác 0. Chạy riêng các phần có tên chứa một đoạn chữ: SMOKE_ONLY="Bàn giao" node … */
+  const section = async (name, fn) => {
+    if (process.env.SMOKE_ONLY && !name.includes(process.env.SMOKE_ONLY)) return;
+    const before = new Set(browser.contexts());
+    try { await fn(); } catch (e) { check(`phần "${name}" dừng giữa chừng`, false, String(e && e.message || e).split('\n')[0]); }
+    for (const c of browser.contexts()) if (!before.has(c)) await c.close().catch(() => { /* đã đóng giữa chừng */ });
+  };
+  /* Chờ một điều kiện trong trang; hết giờ thì báo LỖI có tên (không ném: phần còn lại vẫn chạy). */
+  const waitTo = (page, what, fn, arg, timeout = 3000) => page.waitForFunction(fn, arg, { timeout })
+    .then(() => true, () => { check(`chờ ${what}`, false, `hết ${timeout} ms`); return false; });
+  /* Hai tab: đếm sự kiện `storage` của khoá dữ liệu (cài trước script của trang). `synced` làm việc ở tab này rồi chờ tab kia
+   * nhận bản ghi; trang xử lý sự kiện đồng bộ nên nhận là đã vẽ lại. */
+  const countStorage = () => addEventListener('storage', (e) => { if (e.key === 'stepPlanner.v2') window.__seen = (window.__seen || 0) + 1; });
+  const synced = async (to, act) => {
+    const n = await to.evaluate(() => window.__seen || 0);
+    await act();
+    await waitTo(to, 'tab kia nhận bản ghi mới (sự kiện storage)', (k) => (window.__seen || 0) > k, n);
+  };
   const open = async (w, h, opts = {}) => {
     const ctx = await browser.newContext({ viewport: { width: w, height: h }, acceptDownloads: true, ...opts });
     const page = await ctx.newPage();
@@ -58,6 +77,7 @@ const check = (name, ok, detail = '') => {
   const hOverflow = (page) => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
 
   /* ── Máy rộng ── */
+  await section('Máy rộng', async () => { // thân giữ thụt lề cũ cho dễ gộp
   const { ctx, page } = await open(1280, 900, { permissions: ['clipboard-read', 'clipboard-write'] });
   await page.waitForSelector('#start:not([hidden]) .tpl');
   const tplIds = await page.$$eval('#start .tpl', (bs) => bs.map((b) => b.dataset.tpl));
@@ -427,7 +447,7 @@ const check = (name, ok, detail = '') => {
   await page.keyboard.press('Control+z');
   check('hoàn tác dời (Ctrl+Z): về chỗ cũ, số khớp lại, Renumber ẩn', JSON.stringify(await order()) === JSON.stringify(before)
     && (await rowNums()) === '1,2,3' && !(await page.isVisible('#renumber-btn')));
-  await page.waitForFunction(() => !document.querySelector('.moved, .swapped'), null, { timeout: 6000 }).catch(() => {});
+  await waitTo(page, 'dấu tô thẻ vừa dời tắt', () => !document.querySelector('.moved, .swapped'), null, 6000);
   check('đánh dấu vừa dời tự tắt sau vài giây', !(await page.$('.moved, .swapped')));
 
   // Bước con song song: "Add parallel" trên thẻ đặt sẵn "Parallel with N"; ô xếp chồng, số "N.1", "N.2"; Alt + ↑ ↓ đổi thứ
@@ -628,7 +648,7 @@ const check = (name, ok, detail = '') => {
   await page.click(`.step[data-step="${s2id}"] [data-act="del-step"]`);
   check('xoá bước có bước con: hỏi lại trước', await page.isVisible('#dlg-ask') && (await cur(page)).steps.length === nSteps + 1);
   await page.click('#ask-ok');
-  await page.waitForFunction((n) => JSON.parse(localStorage.getItem('stepPlanner.v2')).workspaces[0].steps.length === n, nSteps, { timeout: 3000 }).catch(() => {});
+  await waitTo(page, 'bộ nhớ ghi bước đã xoá', (n) => JSON.parse(localStorage.getItem('stepPlanner.v2')).workspaces[0].steps.length === n, nSteps);
   check('xoá bước', (await cur(page)).steps.length === nSteps);
   await page.keyboard.press('Control+z');
   await page.waitForTimeout(50);
@@ -800,7 +820,7 @@ const check = (name, ok, detail = '') => {
   await page.click('#dlg-ask [data-close]');
   await page.click('#dlg-md .dlg-foot [data-close]');
   await page.click('#ask-ok');
-  await page.waitForFunction(() => !document.getElementById('dlg-md').open, null, { timeout: 3000 }).catch(() => {});
+  await waitTo(page, 'hộp văn bản đóng', () => !document.getElementById('dlg-md').open);
   check('tài liệu văn bản: chọn bỏ thì không lưu', !(await mdState()).open && /lồng/.test((await cur(page)).steps[1].docs[1].body));
   // Đóng bằng Esc: focus về tài liệu ở cột bước, không vẽ vòng focus; bấm Tab thì vòng hiện lại.
   await page.click(`${docStep} [data-act="open-doc"]`);
@@ -1015,14 +1035,14 @@ const check = (name, ok, detail = '') => {
   await page.click('.ws-item:first-child [data-act="ws-rename"]');
   await page.fill('#ask-input', 'Tên mới');
   await page.click('#ask-ok');
-  await page.waitForFunction(() => JSON.parse(localStorage.getItem('stepPlanner.v2')).workspaces[0].name === 'Tên mới', null, { timeout: 3000 }).catch(() => {});
+  await waitTo(page, 'bộ nhớ ghi tên dự án mới', () => JSON.parse(localStorage.getItem('stepPlanner.v2')).workspaces[0].name === 'Tên mới');
   check('đổi tên dự án', (await stored(page)).workspaces[0].name === 'Tên mới');
   const nw = (await stored(page)).workspaces.length;
   await page.click('.ws-item:first-child [data-act="ws-dup"]');
   check('nhân bản dự án', (await stored(page)).workspaces.length === nw + 1);
   await page.click('.ws-item:nth-child(2) [data-act="ws-del"]');
   await page.click('#ask-ok');
-  await page.waitForFunction((n) => JSON.parse(localStorage.getItem('stepPlanner.v2')).workspaces.length === n, nw, { timeout: 3000 }).catch(() => {});
+  await waitTo(page, 'bộ nhớ ghi dự án nhân bản', (n) => JSON.parse(localStorage.getItem('stepPlanner.v2')).workspaces.length === n, nw);
   check('xoá dự án sau khi hỏi lại', (await stored(page)).workspaces.length === nw);
   await page.click('#dlg-ws [data-close]');
 
@@ -1060,7 +1080,7 @@ const check = (name, ok, detail = '') => {
     && (await cur(page)).steps[0].subs.length === nSub0);
   await page.click('#sub-dup');
   await page.click('#ask-ok');
-  await page.waitForFunction((n) => { const d = JSON.parse(localStorage.getItem('stepPlanner.v2')); return d.workspaces.find((w) => w.id === d.lastId).steps[0].subs.length === n + 1; }, nSub0, { timeout: 3000 }).catch(() => {});
+  await waitTo(page, 'bộ nhớ ghi bản nhân bản', (n) => { const d = JSON.parse(localStorage.getItem('stepPlanner.v2')); return d.workspaces.find((w) => w.id === d.lastId).steps[0].subs.length === n + 1; }, nSub0);
   check('chọn bỏ: nhân bản bản đã lưu', (await cur(page)).steps[0].subs.length === nSub0 + 1
     && (await cur(page)).steps[0].subs[1].notes === firstSub.notes);
   await page.click(subSel((await cur(page)).steps[0].subs[1].id, 'sub-del'));
@@ -1133,9 +1153,12 @@ const check = (name, ok, detail = '') => {
   const t1 = await page.evaluate(() => [document.documentElement.dataset.theme, localStorage.getItem('hub-theme')]);
   check('nút theme đặt và nhớ lựa chọn', t1[0] === t1[1] && !!t1[0]);
   await ctx.close();
+  });
 
   /* ── Hai tab cùng dữ liệu ── */
+  await section('Hai tab cùng dữ liệu', async () => { // thân giữ thụt lề cũ cho dễ gộp
   const tc = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+  await tc.addInitScript(countStorage);
   const A = await tc.newPage();
   A.on('pageerror', (e) => errors.push('A ' + e));
   await A.goto(BASE);
@@ -1151,16 +1174,13 @@ const check = (name, ok, detail = '') => {
   await B.waitForSelector('.step');
   await B.click('#ws-btn');
   await B.click(`[data-ws="${w1.id}"] [data-act="ws-open"]`);
-  await B.click('.card[data-sub] >> nth=0 >> [data-act="status"]');
-  await A.waitForTimeout(200);
+  await synced(A, () => B.click('.card[data-sub] >> nth=0 >> [data-act="status"]'));
   check('hai tab: tab kia đổi dự án và sửa, tab này vẫn ở dự án của nó', (await A.textContent('#ws-name')) === w2.name
     && (await B.textContent('#ws-name')) === w1.name);
   const w2sub = w2.steps[0].subs[0];
   await A.click(subSel(w2sub.id, 'sub-del'));
-  await B.click('.card[data-sub] >> nth=1 >> [data-act="status"]');
-  await A.waitForTimeout(200);
+  await synced(A, () => B.click('.card[data-sub] >> nth=1 >> [data-act="status"]'));
   await A.click('#toast-undo');
-  await A.waitForTimeout(100);
   const aStore = (await stored(A)).workspaces;
   check('hai tab: hoàn tác sau khi tab kia ghi vẫn trả bước con về', aStore.find((w) => w.id === w2.id).steps[0].subs[0].id === w2sub.id
     && aStore.find((w) => w.id === w1.id).steps[0].subs[1].status === 'doing'
@@ -1168,10 +1188,8 @@ const check = (name, ok, detail = '') => {
   const w2step = w2.steps[1];
   await A.click(`.step[data-step="${w2step.id}"] [data-act="del-step"]`);
   await A.click('#ask-ok');
-  await B.click('.card[data-sub] >> nth=2 >> [data-act="status"]');
-  await A.waitForTimeout(200);
+  await synced(A, () => B.click('.card[data-sub] >> nth=2 >> [data-act="status"]'));
   await A.click('#toast-undo');
-  await A.waitForTimeout(100);
   check('hai tab: hoàn tác xoá bước sau khi tab kia ghi', (await stored(A)).workspaces.find((w) => w.id === w2.id).steps[1].id === w2step.id
     && !/was deleted/.test(await A.textContent('#toast-text')));
   await B.close();
@@ -1179,14 +1197,15 @@ const check = (name, ok, detail = '') => {
   await A.click('#ws-btn');
   await A.click(`[data-ws="${w2.id}"] [data-act="ws-del"]`);
   await A.click('#ask-ok');
-  await A.waitForTimeout(100);
-  check('xoá dự án: toast Hoàn tác của nó biến mất', !(await A.isVisible('#toast')));
+  check('xoá dự án: toast Hoàn tác của nó biến mất', await A.locator('#toast').waitFor({ state: 'hidden', timeout: 2000 }).then(() => true, () => false));
   await A.keyboard.press('Escape');
   const sA = await stored(A);
   check('xoá dự án: tab mở dự án còn lại, lastId hợp lệ', sA.workspaces.some((w) => w.id === sA.lastId) && (await A.textContent('#ws-name')) === w1.name);
   await tc.close();
+  });
 
   /* ── Điện thoại 390px ── */
+  await section('Điện thoại 390px', async () => { // thân giữ thụt lề cũ cho dễ gộp
   const m = await open(390, 844, { isMobile: true, hasTouch: true });
   await m.page.click('#start .tpl[data-tpl="it5425-sports"]');
   await m.page.waitForSelector('.step');
@@ -1343,9 +1362,11 @@ const check = (name, ok, detail = '') => {
   check('390px: hộp Import, phần tử trong thân không bị co lại', squeezed.length === 0, squeezed.join(', '));
   await m.page.keyboard.press('Escape');
   await m.ctx.close();
+  });
 
   /* ── Vẽ lại theo hàng: một thay đổi chỉ dựng lại hàng đổi; hàng khác giữ nguyên nút DOM (thẻ đã "Show more" vẫn mở),
    * "Next", chú giải, tiến độ vẫn đúng dù đổi sang bước khác; Hoàn tác, Compact, tìm không làm hỏng điều ấy ── */
+  await section('Vẽ lại theo hàng', async () => { // thân giữ thụt lề cũ cho dễ gộp
   const longN = Array.from({ length: 40 }, (_, i) => 'dòng ' + i).join('\n');
   const part = { version: 2, lastId: 'wp', workspaces: [{ id: 'wp', name: 'Theo hàng', log: [], steps: [
     { id: 'p1', title: 'Một', subs: [{ id: 'a1', title: 'A1', status: 'doing' }, { id: 'a2', title: 'A2', status: 'done' }] },
@@ -1398,8 +1419,10 @@ const check = (name, ok, detail = '') => {
   const tall = await pp.$eval('.card[data-sub="b2"]', (c) => [c.classList.contains('cut'), !!c.querySelector('.card-notes[data-clip]'), c.querySelector('.card-notes').textContent.split('\n').length]);
   check('thẻ đủ chỗ: ghi chú dựng đủ, không cắt', !tall[0] && !tall[1] && tall[2] === 40, String(tall));
   await pc.close();
+  });
 
   /* ── Bộ nhớ bị chặn ── */
+  await section('Bộ nhớ bị chặn', async () => { // thân giữ thụt lề cũ cho dễ gộp
   const blocked = await browser.newContext();
   await blocked.addInitScript(() => {
     Object.defineProperty(window, 'localStorage', { get() { throw new DOMException('blocked', 'SecurityError'); } });
@@ -1411,10 +1434,13 @@ const check = (name, ok, detail = '') => {
   await bp.waitForSelector('#start:not([hidden]) .tpl');
   await bp.click('#start .tpl[data-tpl="crisp-dm"]');
   check('bộ nhớ bị chặn: banner, vẫn dùng được', /blocks storage/.test(await bp.textContent('#banner')) && await bp.isVisible('#banner')
-    && (await bp.$$('.step')).length === nSteps && !bErr.length, bErr.join(' | '));
+    && (await bp.$$('.step')).length === (await bp.evaluate(async () => (await (await fetch('data/templates.json')).json()).templates.find((t) => t.id === 'crisp-dm').steps.length))
+    && !bErr.length, bErr.join(' | '));
   await blocked.close();
+  });
 
   /* ── Bố cục bước: bước đang mở lại có tài liệu, bước đã đóng vòng, bước chưa có bước con xong ── */
+  await section('Bố cục bước', async () => { // thân giữ thụt lề cũ cho dễ gộp
   const lay = { version: 2, lastId: 'wl', workspaces: [{ id: 'wl', name: 'Bố cục', steps: [
     { id: 'tl1', title: 'Đang mở lại', round: 2, revisit: { reason: 'Thiếu cột', date: '2026-11-20', round: 2 },
       docs: [{ id: 'dl1', kind: 'link', title: 'Từ điển dữ liệu', url: 'https://a.example' }],
@@ -1510,10 +1536,12 @@ const check = (name, ok, detail = '') => {
       && (w < 500 ? !hov.shown : hov.shown && hov.inside && Math.abs(hov.h - comp.s5) < 1), JSON.stringify({ full, comp, hov }));
     await lc.close();
   }
+  });
 
   /* ── Nền chung của ô song song: hàng cuộn ngang cắt cả chiều dọc, nên nền (tràn ra quanh thẻ) phải nằm trọn trong vùng
    * cắt của hàng — trên, dưới, trái khi là cột đầu, phải khi là cột cuối — lúc chưa cuộn và lúc cuộn tới cuối; thẻ vẫn
    * thẳng cột với hàng không có ô song song (đầu hàng, cuối hàng), trang không cuộn ngang. ── */
+  await section('Nền chung của ô song song', async () => { // thân giữ thụt lề cũ cho dễ gộp
   const pS = (id, x = {}) => ({ id, title: id.toUpperCase(), status: 'todo', ...x });
   const parSeed = { version: 2, lastId: 'wq', workspaces: [{ id: 'wq', name: 'Song song', steps: [
     { id: 'tq1', title: 'Ô song song ở đầu và cuối', subs: [pS('q1'), pS('q2', { par: true }), pS('q3', { outs: [{ id: 'oq', name: 'bang.csv' }] }),
@@ -1559,8 +1587,10 @@ const check = (name, ok, detail = '') => {
     }
     await qc.close();
   }
+  });
 
   /* ── Hàng đầu thẻ chật (số, "Tiếp theo", nhãn kẹp, chip dài): không chữ nào bị bẻ dòng, không tràn thẻ ── */
+  await section('Hàng đầu thẻ chật', async () => { // thân giữ thụt lề cũ cho dễ gộp
   const crowd = { version: 2, lastId: 'wc', workspaces: [{ id: 'wc', name: 'Chật', steps: [{ id: 'tc', title: 'B', subs: [
     { id: 'sc1', title: 'Một', status: 'doing', docs: [{ id: 'dc1', kind: 'link', title: 'L', url: 'https://a.example' }] },
     { id: 'sc2', title: 'Hai', status: 'blocked', docs: [{ id: 'dc2', kind: 'md', title: 'M', body: 'x' }] }] }], log: [] }] };
@@ -1579,8 +1609,10 @@ const check = (name, ok, detail = '') => {
     check(`${w}px: hàng đầu thẻ chật không bẻ chữ, không tràn thẻ`, bad.length === 0, bad.join(', '));
     await cc.close();
   }
+  });
 
   /* ── Bộ nhớ khoá cũ (v1, có người làm): đọc, chuẩn hoá bỏ người, ghi sang khoá mới, giữ khoá cũ ── */
+  await section('Bộ nhớ khoá cũ', async () => { // thân giữ thụt lề cũ cho dễ gộp
   const oldCtx = await browser.newContext();
   const v1 = { version: 1, lastId: 'w1', me: { w1: 'An' }, lastBackup: '', dirtySince: '', workspaces: [{ id: 'w1', name: 'Dự án cũ',
     people: ['An', 'Bình'], steps: [{ id: 't1', title: 'Bước cũ', subs: [{ id: 's1', title: 'Việc cũ', status: 'doing', owner: 'An' }] }], log: [] }] };
@@ -1601,9 +1633,11 @@ const check = (name, ok, detail = '') => {
     && !('me' in ov[0]) && !('people' in ov[0].workspaces[0]) && !('owner' in ov[0].workspaces[0].steps[0].subs[0])
     && ov[1] === JSON.stringify(v1), oErr.join(' | '));
   await oldCtx.close();
+  });
 
   /* ── System design (PLAN-016): hồ sơ đổi gợi ý, chọn lưu ngay, "không cần" bỏ khỏi sơ đồ, sơ đồ không tràn, việc sang
    * bảng (Hoàn tác gỡ), Markdown xuất có mục và nhập lại giữ nguyên, 390px không tràn ngang ── */
+  await section('System design', async () => { // thân giữ thụt lề cũ cho dễ gộp
   for (const [w, hh] of [[1280, 900], [390, 844]]) {
     const { ctx: sx, page: sp } = await open(w, hh);
     const tag = `system design ${w}px`;
@@ -1796,9 +1830,10 @@ const check = (name, ok, detail = '') => {
     check(`${tag}: Hoàn tác trả việc cũ, gỡ việc mới`, ws.steps[1].subs.length === 1 && ws.steps[1].subs[0].title === oldTitle);
     await sx.close();
   }
+  });
 
   /* ── System design, big data: luật mới báo khi bấm thật (MLlib cho dữ liệu nhỏ; cần trả lời ngay mà xử lý theo lô), hết khi đổi ── */
-  {
+  await section('System design, big data', async () => {
     const { ctx: bx, page: bp } = await open(1280, 900);
     await bp.click('#start .tpl[data-tpl="crisp-dm"]');
     await bp.waitForSelector('#sd-fig svg');
@@ -1819,10 +1854,11 @@ const check = (name, ok, detail = '') => {
     await bp.click('#sd-pane [data-opt="python-consumer"] input');
     check('big data: đổi sang consumer Python thì luật stream thôi báo', !/Answers in a second/.test(await bp.textContent('#sd-warns')));
     await bx.close();
-  }
+  });
 
   /* ── System design, kiến trúc: trang Architecture vẽ mọi nhóm, mọi kiến trúc; gợi ý đổi theo hồ sơ; công cụ dẫn tới khâu;
    * "Use this deliverable" đặt lối; dòng kiến trúc trên trang; 390px không tràn ngang ── */
+  await section('System design, kiến trúc', async () => { // thân giữ thụt lề cũ cho dễ gộp
   for (const [w, hh] of [[1280, 900], [390, 844]]) {
     const { ctx: ax, page: ap } = await open(w, hh);
     const tag = `kiến trúc ${w}px`;
@@ -1848,7 +1884,7 @@ const check = (name, ok, detail = '') => {
     await navTo('Architecture');
     r = await recs();
     check(`${tag}: dữ liệu liên tục, cần trả lời ngay — gợi ý nhóm xử lý thành stream, kiến trúc ấy viền xanh`,
-      ['streaming', 'lambda', 'kappa'].includes(r.processing) && r.ml === 'streaming-inference'
+      r.processing === 'streaming' && r.ml === 'streaming-inference'
       && !!(await ap.$(`#sd-pane .sd-arch.is-rec[data-arch="${r.processing}"]`)), JSON.stringify(r));
     await ap.click(`#sd-pane [data-arch="${r.processing}"] > summary`);
     const open1 = await ap.$eval(`#sd-pane [data-arch="${r.processing}"]`, (d) => d.open && d.querySelectorAll('.sd-chain li').length > 1 && d.querySelectorAll('.sd-links a').length > 0);
@@ -1869,9 +1905,10 @@ const check = (name, ok, detail = '') => {
     check(`${tag}: dòng kiến trúc trên trang nêu các kiến trúc gợi ý`, /^Architecture: /.test(line) && line.includes(stage.name), line);
     await ax.close();
   }
+  });
 
   /* ── Dấu Redo qua hộp sửa: chỉ sửa Notes thì giữ dấu và số "k of n"; chuyển sang bước khác thì bỏ dấu, Hoàn tác trả lại ── */
-  {
+  await section('Dấu Redo qua hộp sửa', async () => {
     const seed = { version: 2, lastId: 'wr', workspaces: [{ id: 'wr', name: 'Redo', steps: [
       { id: 'tr1', title: 'Mở lại', round: 2, revisit: { reason: 'r', date: '2026-11-20', round: 2 },
         subs: [{ id: 'sr1', title: 'Một', status: 'done' }, { id: 'sr2', title: 'Hai', status: 'todo', redo: true }, { id: 'sr3', title: 'Ba', status: 'todo', redo: true }] },
@@ -1901,14 +1938,15 @@ const check = (name, ok, detail = '') => {
     rw = await cur(rp);
     check('Redo: Hoàn tác việc chuyển bước trả cả dấu', rw.steps[0].subs.find((x) => x.id === 'sr3')?.redo === true && (await left()) === '2 of 2 redo tasks left');
     await rc.close();
-  }
+  });
 
   /* ── Hai tab sửa cùng một mục: Lưu chỉ ghi trường đã đổi; cùng trường thì hỏi; mục đã bị xoá thì hỏi tạo lại ── */
-  {
+  await section('Hai tab sửa cùng một mục', async () => {
     const seed = { version: 2, lastId: 'wm', workspaces: [{ id: 'wm', name: 'Gộp', steps: [
       { id: 'tm1', title: 'Một', goal: 'g', subs: [{ id: 'sm1', title: 'Việc', status: 'todo', doneWhen: 'gốc' }, { id: 'sm2', title: 'Việc hai', status: 'todo' }] }],
     log: [{ id: 'lm1', date: '2026-11-01', decision: 'Chọn A', why: 'vì' }] }] };
     const mc = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+    await mc.addInitScript(countStorage);
     await mc.addInitScript((d) => { if (!localStorage.getItem('stepPlanner.v2')) localStorage.setItem('stepPlanner.v2', d); }, JSON.stringify(seed));
     const [A, B] = [await mc.newPage(), await mc.newPage()];
     for (const [n, pg] of [['A', A], ['B', B]]) { pg.on('pageerror', (e) => errors.push(n + ' ' + e)); await pg.goto(BASE); await pg.waitForSelector('.card[data-sub="sm1"]'); }
@@ -1918,28 +1956,25 @@ const check = (name, ok, detail = '') => {
     await A.fill('#sub-form [name="notes"]', 'ghi chú của A');
     await B.click(subSel('sm1', 'edit-sub'));
     await B.fill('#sub-form [name="doneWhen"]', 'của B');
-    await B.click('#sub-form button[type="submit"]');
-    await A.waitForTimeout(200);
-    await A.click('#sub-form button[type="submit"]');
+    await synced(A, () => B.click('#sub-form button[type="submit"]'));
+    await synced(B, () => A.click('#sub-form button[type="submit"]'));
     let x = await sm('sm1');
     check('hai tab: trường khác nhau thì giữ cả hai (Done when của tab kia không bị trả về)', x.doneWhen === 'của B' && x.notes === 'ghi chú của A'
       && !(await A.isVisible('#dlg-ask')) && !(await A.isVisible('#dlg-sub')), JSON.stringify(x));
     // 2. Cùng trường: A thấy hộp hỏi liệt kê trường, Close thì hộp sửa vẫn mở; Keep the other tab's thì giữ của B, trường khác của A vẫn ghi.
-    await B.waitForTimeout(100);
     await A.click(subSel('sm1', 'edit-sub'));
     await A.fill('#sub-form [name="doneWhen"]', 'của A');
     await A.fill('#sub-form [name="title"]', 'Việc (A)');
     await B.click(subSel('sm1', 'edit-sub'));
     await B.fill('#sub-form [name="doneWhen"]', 'của B lần hai');
-    await B.click('#sub-form button[type="submit"]');
-    await A.waitForTimeout(200);
+    await synced(A, () => B.click('#sub-form button[type="submit"]'));
     await A.click('#sub-form button[type="submit"]');
     await A.waitForSelector('#dlg-ask[open]');
     const askTxt = await A.textContent('#ask-list');
     await A.click('#dlg-ask [data-close]');
     const stillOpen = await A.isVisible('#dlg-sub') && (await A.inputValue('#sub-form [name="doneWhen"]')) === 'của A';
     await A.click('#sub-form button[type="submit"]');
-    await A.click('#ask-alt');
+    await synced(B, () => A.click('#ask-alt'));
     x = await sm('sm1');
     check('hai tab: cùng trường thì hỏi (Yours / Other tab), Close giữ hộp sửa, chọn tab kia thì giữ của nó, trường khác của mình vẫn ghi',
       /Done when/.test(askTxt) && /Yours: của A/.test(askTxt) && /Other tab: của B lần hai/.test(askTxt) && !/Title/.test(askTxt) && stillOpen
@@ -1949,51 +1984,45 @@ const check = (name, ok, detail = '') => {
     await A.fill('#sub-form [name="doneWhen"]', 'A thắng');
     await B.click(subSel('sm1', 'edit-sub'));
     await B.fill('#sub-form [name="doneWhen"]', 'B thua');
-    await B.click('#sub-form button[type="submit"]');
-    await A.waitForTimeout(200);
+    await synced(A, () => B.click('#sub-form button[type="submit"]'));
     await A.click('#sub-form button[type="submit"]');
-    await A.click('#ask-ok');
-    await B.waitForTimeout(200);
+    await synced(B, () => A.click('#ask-ok'));
     check('hai tab: "Keep mine" ghi của mình, tab kia đọc lại thấy', (await sm('sm1')).doneWhen === 'A thắng'
       && /A thắng/.test(await B.textContent('.card[data-sub="sm1"]')));
     // 3. Tab kia xoá bước con trong lúc sửa: hỏi; Re-create trả nó về với chữ đã sửa.
     await A.click(subSel('sm2', 'edit-sub'));
     await A.fill('#sub-form [name="notes"]', 'đang viết');
-    await B.click(subSel('sm2', 'sub-del'));
-    await A.waitForTimeout(200);
+    await synced(A, () => B.click(subSel('sm2', 'sub-del')));
     await A.click('#sub-form button[type="submit"]');
     await A.waitForSelector('#dlg-ask[open]');
     const delTitle = await A.textContent('#dlg-ask-title');
-    await A.click('#ask-ok');
+    await synced(B, () => A.click('#ask-ok'));
     x = await sm('sm2');
     check('hai tab: bước con bị xoá ở tab kia thì hỏi, Re-create trả về với chữ đã sửa', /Deleted in another tab/.test(delTitle) && x?.notes === 'đang viết'
       && !!(await A.$('.card[data-sub="sm2"]')), delTitle);
     // 4. Hộp bước: A đổi Goal, B đổi Notes của bước: giữ cả hai.
-    await B.waitForTimeout(100);
     await A.click('.step[data-step="tm1"] [data-act="edit-step"]');
     await A.fill('#step-form [name="goal"]', 'mục tiêu A');
     await B.click('.step[data-step="tm1"] [data-act="edit-step"]');
     await B.fill('#step-form [name="notes"]', 'ghi chú B');
-    await B.click('#step-form button[type="submit"]');
-    await A.waitForTimeout(200);
-    await A.click('#step-form button[type="submit"]');
+    await synced(A, () => B.click('#step-form button[type="submit"]'));
+    await synced(B, () => A.click('#step-form button[type="submit"]'));
     const st = (await cur(A)).steps[0];
     check('hai tab: hộp bước gộp trường khác nhau', st.goal === 'mục tiêu A' && st.notes === 'ghi chú B' && !(await A.isVisible('#dlg-ask')), JSON.stringify(st).slice(0, 160));
     // 5. Hộp quyết định: A sửa Why, B sửa Decision: giữ cả hai.
-    await B.waitForTimeout(100);
     await A.click('.log-item[data-log="lm1"] [data-act="edit-log"]');
     await A.fill('#log-edit-form [name="why"]', 'lý do A');
     await B.click('.log-item[data-log="lm1"] [data-act="edit-log"]');
     await B.fill('#log-edit-form [name="decision"]', 'Chọn B');
-    await B.click('#log-edit-form button[type="submit"]');
-    await A.waitForTimeout(200);
+    await synced(A, () => B.click('#log-edit-form button[type="submit"]'));
     await A.click('#log-edit-form button[type="submit"]');
     const lg = (await cur(A)).log[0];
     check('hai tab: hộp quyết định gộp trường khác nhau', lg.decision === 'Chọn B' && lg.why === 'lý do A', JSON.stringify(lg));
     await mc.close();
-  }
+  });
 
   /* ── "Next" đang chờ và lọc trạng thái: dòng "Next waits on …" khi ô đầu chỉ có thẻ chờ; lọc Actionable / Waiting, cùng với tìm ── */
+  await section('"Next" đang chờ và lọc trạng thái', async () => { // thân giữ thụt lề cũ cho dễ gộp
   for (const [w, hh] of [[1280, 900], [390, 844]]) {
     const seed = { version: 2, lastId: 'wn', workspaces: [{ id: 'wn', name: 'Chờ', steps: [
       { id: 'tn1', title: 'Dữ liệu', subs: [{ id: 'sn0', title: 'Đã xong', status: 'done' }, { id: 'sn1', title: 'Chờ quyền truy cập', status: 'pending', reason: 'IT cấp quyền\ndòng hai' },
@@ -2032,10 +2061,11 @@ const check = (name, ok, detail = '') => {
     check(`${tag}: trang không tràn ngang`, (await hOverflow(np)) <= 0);
     await nc.close();
   }
+  });
 
   /* ── Bằng chứng nghiệm thu: xong mà "Done when" chưa có bằng chứng thì toast gợi ý (không chặn); tài liệu đánh dấu Evidence;
    * thẻ xong có dấu bằng chứng và ngày xong; rời Done thì bỏ ngày ── */
-  {
+  await section('Bằng chứng nghiệm thu', async () => {
     const seed = { version: 2, lastId: 'we', workspaces: [{ id: 'we', name: 'Bằng chứng', steps: [{ id: 'te1', title: 'Mô hình', subs: [
       { id: 'se1', title: 'Huấn luyện', status: 'doing', doneWhen: 'AUC ≥ 0,8 trên tập kiểm định', docs: [{ id: 'de1', kind: 'link', title: 'Lần chạy 12', url: 'https://runs.example/12' }] },
       { id: 'se2', title: 'Không tiêu chí', status: 'doing' }] }], log: [] }] };
@@ -2080,12 +2110,12 @@ const check = (name, ok, detail = '') => {
     check('bằng chứng: rời Done thì bỏ ngày xong và dấu bằng chứng (tài liệu vẫn là bằng chứng)', (await se('se1')).doneAt === ''
       && !(await ep.$('.card[data-sub="se1"] .proof-tag')) && !(await ep.$('.card[data-sub="se1"] .done-at')) && (await se('se1')).docs[0].proof);
     await ec.close();
-  }
+  });
 
   /* ── Bàn giao: khai đầu ra trên thẻ A (bước 1), dùng ở bước 2 và ở thẻ song song; vạch giữa hai hàng, nút giữa hai ô, chip,
    * danh sách và lối nhảy (bỏ lọc nếu cần), tìm theo tên đầu ra, kéo bước giữ liên kết, xoá + Hoàn tác, mở lại có "Also
    * check", Markdown và JSON đi rồi về, 390px ── */
-  {
+  await section('Bàn giao', async () => {
     const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
     const seed = { id: 'wh', name: 'Handoff', steps: [
       { id: 'h1', title: 'Clean data', outs: [{ id: 'oS', name: 'clean schema' }],
@@ -2212,7 +2242,7 @@ const check = (name, ok, detail = '') => {
     await hp.mouse.down();
     await hp.mouse.move(ca.x + 44, ca.y + 34, { steps: 4 });
     await hp.waitForFunction(() => document.body.classList.contains('dragging-any'));
-    await hp.waitForTimeout(400);
+    await waitTo(hp, 'hoạt ảnh lúc bắt đầu kéo chạy xong', () => document.getAnimations().every((a) => a.playState !== 'running'));
     const mid = await hp.evaluate(() => {
       const lis = [...document.querySelectorAll('.step[data-step="h1"] .cards > li')].filter((li) => getComputedStyle(li).display !== 'none' && !li.classList.contains('drag-src'));
       const rs = lis.map((li) => li.getBoundingClientRect());
@@ -2573,9 +2603,10 @@ const check = (name, ok, detail = '') => {
     check('hộp bước: dấu "on hold" theo ô Vị trí đang chọn; Lưu ở chỗ sau bên giao thì không treo',
       same(s0, ['held:model.pkl']) && same(s1, ['model.pkl']) && same(st, ['p2', 'p3', 'p1']) && !/on hold/.test(t2), JSON.stringify({ s0, s1, st, t2 }));
     await pc.close();
-  }
+  });
 
   /* ── Dữ liệu lưu bị hỏng ── */
+  await section('Dữ liệu lưu bị hỏng', async () => { // thân giữ thụt lề cũ cho dễ gộp
   const bad = await browser.newContext();
   await bad.addInitScript(() => { if (!sessionStorage.getItem('x')) { sessionStorage.setItem('x', '1'); localStorage.setItem('stepPlanner.v2', '{hỏng'); } });
   const badp = await bad.newPage();
@@ -2584,6 +2615,7 @@ const check = (name, ok, detail = '') => {
   check('dữ liệu hỏng: báo và giữ bản cũ', /corrupt/.test(await badp.textContent('#banner'))
     && (await badp.evaluate(() => localStorage.getItem('stepPlanner.v2.corrupt'))) === '{hỏng');
   await bad.close();
+  });
 
   await browser.close();
   check('không lỗi console', errors.length === 0, errors.slice(0, 3).join(' | '));
