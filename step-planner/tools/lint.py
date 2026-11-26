@@ -3,8 +3,7 @@
 
   1. data/templates.json: khuôn mẫu (khoá, kiểu, chuỗi không rỗng, id không trùng, không thẻ HTML, có đúng một mẫu
      trống). Không có khái niệm người làm: mẫu không có `people` / `owner`.
-     Tên mẫu, tên bước, tên bước con tiếng Anh (trừ mẫu đồ án); nội dung khác tiếng Việt.
-     Mẫu có bước thì có `output`: loại đầu ra, tiếng Anh, ≤ 30 ký tự.
+     Mẫu có bước thì có `output`: loại đầu ra, ≤ 30 ký tự.
      Bàn giao: bước hay bước con có thể có `outs` [{key, name, ref?, note?}] và `ins` [key]. Khoá dạng `[a-z0-9][a-z0-9-]*`
      (≤ 40), không trùng trong một mẫu; `ins` trỏ tới đầu ra có thật, không phải của chính nó, khai ở bước trước hoặc ở bước
      con đứng trước trong cùng bước (dữ liệu chỉ chảy xuôi). `ref`: đường dẫn hay link https, một dòng.
@@ -143,7 +142,7 @@ def course_template():
     return {
         'id': COURSE_ID,
         'name': 'Đồ án IT5425 — giám sát thể thao (Premier League)',
-        'output': 'Course project',
+        'output': 'Đồ án môn',
         'description': 'Chọn khi làm đồ án môn Data Management and Visualization (IT5425). Các giai đoạn P0–P8 lấy từ trang đồ án. '
                        'Làm một mình: Skip việc chia vai, họp tuần; app demo và slide tuỳ yêu cầu nộp.',
         'steps': steps,
@@ -170,10 +169,10 @@ def need_str(where, obj, key, required=True):
 
 
 def english(where, s):
-    """Tên mẫu, bước, bước con viết tiếng Anh: không có chữ cái ngoài ASCII (dấu câu như · — … vẫn được)."""
+    """Chữ giao diện (nhãn, tên khâu, tên phương án) viết tiếng Anh: không có chữ cái ngoài ASCII (dấu câu như · — … vẫn được)."""
     bad = sorted({c for c in str(s) if ord(c) > 127 and unicodedata.category(c).startswith('L')})
     if bad:
-        err(f'{where}: tên phải tiếng Anh, có chữ {"".join(bad)} (nội dung khác giữ tiếng Việt)')
+        err(f'{where}: chữ giao diện phải tiếng Anh, có chữ {"".join(bad)} (lời giải thích thì tiếng Việt)')
 
 
 def check_flow(w, steps):
@@ -256,9 +255,6 @@ def check_templates(data):
         for k in ('id', 'name', 'description'):
             need_str(w, t, k)
         tid = t.get('id', '')
-        en = tid != COURSE_ID  # mẫu đồ án giữ nguyên chữ nguồn
-        if en:
-            english(f'{w}.name', t.get('name', ''))
         if not re.fullmatch(r'[a-z0-9]+(-[a-z0-9]+)*', str(tid)):
             err(f'{w}: id "{tid}" phải là chữ thường-gạch-nối')
         if tid in seen:
@@ -271,7 +267,6 @@ def check_templates(data):
         blanks += not steps
         if steps or 'output' in t:  # loại đầu ra hiện trên thẻ mẫu; mẫu trống không cần
             need_str(w, t, 'output')
-            english(f'{w}.output', t.get('output', ''))
             if len(str(t.get('output', ''))) > 30:
                 err(f'{w}: `output` tối đa 30 ký tự (một dòng trên thẻ mẫu)')
         for j, s in enumerate(steps):
@@ -279,8 +274,6 @@ def check_templates(data):
             if extra := set(s) - STEP_KEYS:
                 err(f'{ws}: khoá lạ {sorted(extra)}')
             need_str(ws, s, 'title')
-            if en:
-                english(f'{ws}.title', s.get('title', ''))
             for k in ('goal', 'doneWhen'):
                 need_str(ws, s, k)
             need_str(ws, s, 'notes', required=False)
@@ -293,8 +286,6 @@ def check_templates(data):
                 if extra := set(sub) - SUB_KEYS:
                     err(f'{wss}: khoá lạ {sorted(extra)}')
                 need_str(wss, sub, 'title')
-                if en:
-                    english(f'{wss}.title', sub.get('title', ''))
                 for key in ('doneWhen', 'notes'):
                     need_str(wss, sub, key, required=False)
         check_flow(f'{w} ({tid})', steps)

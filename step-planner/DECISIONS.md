@@ -15,7 +15,6 @@
 - PLAN-012 · Giao diện tiếng Anh; Markdown xuất nhãn tiếng Anh, file cũ vẫn nhập · `step-planner/`
 - PLAN-013 · Bước con chạy song song · `step-planner/`
 - PLAN-014 · Số thứ tự đứng yên tới khi tải lại trang · `step-planner/`
-- PLAN-015 · Tên trong mẫu là tiếng Anh theo tên gốc của chuẩn; nội dung mẫu tiếng Việt · `step-planner/data/templates.json`
 - PLAN-016 · Mỗi dự án có phần thiết kế hệ thống: chọn theo gợi ý, tự vẽ sơ đồ, đưa thành việc · `step-planner/`
 - PLAN-017 · Bàn giao giữa bước và bước con: đầu ra khai ở chỗ tạo, nơi dùng chọn đầu ra có sẵn · `step-planner/`
 - PLAN-018 · Bằng chứng nghiệm thu và ngày xong: gợi ý, không chặn · `step-planner/`
@@ -28,6 +27,7 @@
 - PLAN-025 · Mỗi bước và bước con cho thấy đầu vào, đầu ra đang ổn, lỗi hay không có · `step-planner/`
 - PLAN-026 · System design phủ big data: HDFS, table format, xử lý stream, SQL trên file, NoSQL phân tán, học máy phân tán · `step-planner/data/system-design.json`
 - PLAN-027 · System design có danh mục kiến trúc theo nhóm, gợi ý một kiến trúc mỗi nhóm từ hồ sơ dự án · `step-planner/data/system-design.json`, `step-planner/js/design-core.js`
+- PLAN-028 · Chữ giao diện tiếng Anh, mọi nội dung mẫu tiếng Việt, tên chuẩn giữ trong ngoặc · `step-planner/`
 <!-- index:end -->
 
 ## PLAN-001 · Dự án là các bước có thứ tự, mỗi bước có bước con có thứ tự
@@ -100,11 +100,6 @@ Trong một bước, nhiều bước con có thể chạy song song rồi mới 
 
 Trong một lần mở trang, số của bước và bước con không đổi khi đổi chỗ: cái vừa dời giữ số cũ, nên người dùng nhìn hàng là biết mình vừa hoán đổi những gì. Số chỉ đánh lại khi tải lại trang, hoặc khi người dùng tự bấm đánh số lại. Cái mới thêm trong lần mở trang ấy chưa có số, có dấu riêng (không dùng chữ "New", trùng tên trạng thái).
 
-## PLAN-015 · Tên trong mẫu là tiếng Anh theo tên gốc của chuẩn; nội dung mẫu tiếng Việt
-24/11/2026 · `step-planner/data/templates.json`
-
-Tên mẫu, tên bước và tên bước con của các mẫu viết tiếng Anh, theo đúng tên gốc của chuẩn: pha và generic task của CRISP-DM 1.0, khâu và việc của PPDAC. Mục tiêu, tiêu chí xong, ghi chú và mô tả mẫu giữ tiếng Việt. Mẫu đồ án môn học giữ nguyên chữ của trang đồ án.
-
 ## PLAN-016 · Mỗi dự án có phần thiết kế hệ thống: chọn theo gợi ý, tự vẽ sơ đồ, đưa thành việc
 25/11/2026 · `step-planner/`
 
@@ -164,3 +159,8 @@ Danh mục có các công cụ big data người học gặp trong môn dữ li�
 26/11/2026 · `step-planner/data/system-design.json`, `step-planner/js/design-core.js`
 
 Sau hồ sơ dự án, System design có trang kiến trúc chia bốn nhóm: dữ liệu nằm ở đâu (file + một database, warehouse, data lake, lakehouse có tầng Bronze / Silver / Gold), xử lý thế nào (batch ETL, batch ELT, streaming, Lambda, Kappa), người dùng nhận kết quả qua gì (báo cáo tĩnh, một app, frontend + backend API, microservices, serverless), model trả lời lúc nào (batch prediction, online prediction, đặc trưng từ luồng, RAG). Mỗi kiến trúc nói nó là gì, khi nào dùng, khi nào tránh, luồng, công cụ theo từng khâu và nguồn. Mỗi nhóm gợi ý một kiến trúc kèm lý do một dòng, từ hồ sơ, lối và các khâu đã quyết; khâu đã quyết thắng hồ sơ, chưa đủ câu trả lời thì chưa gợi ý. Ba lối "What do you deliver?" chính là ba kiến trúc của nhóm app; chọn lối được ngay từ kiến trúc. Data mesh chỉ được nhắc là cách tổ chức nhiều đội, dự án nhỏ không cần. Gợi ý không lưu vào dự án.
+
+## PLAN-028 · Chữ giao diện tiếng Anh, mọi nội dung mẫu tiếng Việt, tên chuẩn giữ trong ngoặc
+26/11/2026 · `step-planner/` · thay cho PLAN-015
+
+Mọi chữ thuộc giao diện là tiếng Anh: nút, tiêu đề, gợi ý khi rê chuột, nhãn cho trình đọc màn hình, tiêu đề hộp thoại, mục menu, thông báo, chỗ trống, chữ gợi ý trong ô nhập, tên trạng thái; trong System design thêm tên khâu, tên phương án, nhãn câu hỏi hồ sơ và lựa chọn, tên lối, tên kiến trúc. Mọi nội dung của mẫu là tiếng Việt: tên mẫu, tên bước, tên bước con, mục tiêu, tiêu chí xong, ghi chú, tên và mô tả đầu ra, loại đầu ra; lời giải thích, hướng dẫn, cảnh báo của System design cũng tiếng Việt. Tên bước, bước con theo một chuẩn ghi tiếng Việt và giữ tên gốc tiếng Anh trong ngoặc để người học nhận ra thuật ngữ, ví dụ "Hiểu dữ liệu (Data Understanding)". Tên công cụ, thư viện, file, lệnh, URL giữ nguyên. Mẫu đồ án môn học giữ nguyên chữ của trang đồ án. Một cổng kiểm luật này để nó không trôi.

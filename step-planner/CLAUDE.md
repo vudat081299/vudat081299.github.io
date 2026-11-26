@@ -114,21 +114,22 @@
 
 ## Mẫu (`data/templates.json`)
 
-- Khuôn, khoá, chuỗi, tiếng Anh, `output`, bàn giao: `lint.py` (docstring đầu file); khuôn đầy đủ ở đó, đừng chép lại.
+- Khuôn, khoá, chuỗi, ngôn ngữ, `output`, bàn giao: `lint.py` (docstring đầu file); khuôn đầy đủ ở đó, đừng chép lại.
 - Đúng một mẫu trống. Mẫu chung không gắn vào một bài toán. Không thẻ HTML, không người làm.
-- Tên mẫu, bước, bước con: tiếng Anh, đúng tên gốc của chuẩn (PLAN-015); nội dung khác tiếng Việt.
+- Mọi chữ của mẫu tiếng Việt (PLAN-028); tên bước, bước con theo chuẩn: tên tiếng Việt, tên gốc trong ngoặc, ví dụ
+  "Hiểu dữ liệu (Data Understanding)". Giữ nguyên tên công cụ, thư viện, file, lệnh, URL.
 - `output`: loại đầu ra, hiện trên thẻ mẫu. `description` nói khi nào chọn mẫu, phần nào bỏ được khi làm một mình.
 - `outs: [{key, name, ref?, note?}]`, `ins: [key]`: `fromTemplate` đổi key thành id mới, key lạ bỏ. Dữ liệu chỉ chảy xuôi (`check_flow`).
 - `ref` là đường dẫn quy ước (CRISP-DM: Cookiecutter Data Science) hoặc link https; `note`: một dòng là gì, khoá, cách kiểm.
 - `crisp-dm` theo CRISP-DM 1.0 Step-by-step guide (Chapman et al., 2000): bước là sáu pha, bước con là generic task, `doneWhen`
   là output của task, `notes` là câu hỏi gợi ý và bẫy hay gặp. Việc ngoài guide ghi nguồn trong tên thẻ; không thêm việc không có nguồn.
-- CRISP-DM: chia train / validation / test (task 4.2, dời lên pha 3 ngay sau Integrate Data) trước làm sạch, điền thiếu, tạo đặc trưng;
+- CRISP-DM: chia train / validation / test (task 4.2, dời lên pha 3 ngay sau Ghép dữ liệu) trước làm sạch, điền thiếu, tạo đặc trưng;
   mọi biến đổi fit chỉ trên train, đặt chung Pipeline với mô hình. Đừng thêm bước con làm rò rỉ dữ liệu test.
-- CRISP-DM Modeling xong khi có bảng so với baseline và một quyết định kèm số đo; giữ baseline là kết quả hợp lệ.
+- CRISP-DM: pha Mô hình hoá xong khi có bảng so với baseline và một quyết định kèm số đo; giữ baseline là kết quả hợp lệ.
 - `smoke.cjs` tìm `VERIFY data quality` (đúng một bước con) và `BUSINESS understanding` (đúng một bước) trên `crisp-dm`.
 - `stats-report` theo PPDAC, tên bước, bước con đúng hình 1(a) của Wild & Pfannkuch (1999). Không thêm thẻ ngoài hình.
-- `data-pipeline` theo vòng đời data engineering (Reis & Housley, 2022): năm khâu và Undercurrents; việc từ nguồn khác ghi nguồn trong tên thẻ.
-- `big-data-ds` (PLAN-024): sáu pha CRISP-DM, thêm bước Data Ingestion and Storage sau Business Understanding; ghi chú mỗi bước
+- `data-pipeline` theo vòng đời data engineering (Reis & Housley, 2022): năm khâu và mạch ngầm (Undercurrents); việc từ nguồn khác ghi nguồn trong tên thẻ.
+- `big-data-ds` (PLAN-024): sáu pha CRISP-DM, thêm bước Thu nạp và lưu trữ dữ liệu sau pha Hiểu bài toán kinh doanh; ghi chú mỗi bước
   nói khác gì dự án thường; link bài giảng `masters-degree/big-data-storage-processing/` theo neo (`lint.py` kiểm neo).
 - `app-feature` không theo chuẩn; việc phát hành theo tài liệu App Store Connect, Google Play, Flutter (link ở ghi chú bước).
 - `it5425-sports` sinh từ `masters-degree/data-management-visualization/data/sports-monitoring-build.json` và "Xong khi nào"

@@ -3,28 +3,28 @@
   "templates": [
     {
       "id": "crisp-dm",
-      "name": "Data Science project (CRISP-DM)",
-      "output": "Prediction model / app",
-      "description": "Chọn khi đầu ra là mô hình dự đoán hay app dùng mô hình. CRISP-DM 1.0: sáu pha, bước con là generic task; thêm tái lập, giám sát theo CRISP-ML(Q), ML Test Score. Làm một mình chỉ nộp báo cáo: Skip Plan Monitoring and Maintenance, Customer Acceptance.",
+      "name": "Dự án Data Science (CRISP-DM)",
+      "output": "Mô hình dự đoán / app",
+      "description": "Chọn khi đầu ra là mô hình dự đoán hay app dùng mô hình. CRISP-DM 1.0: sáu pha, bước con là generic task; thêm tái lập, giám sát theo CRISP-ML(Q), ML Test Score. Làm một mình chỉ nộp báo cáo: chuyển hai thẻ Lập kế hoạch giám sát và bảo trì, Khách hàng nghiệm thu sang Skipped.",
       "steps": [
         {
-          "title": "Business Understanding",
+          "title": "Hiểu bài toán kinh doanh (Business Understanding)",
           "goal": "Biết bài toán thật, ai dùng kết quả, quyết định nào sẽ đổi.",
           "doneWhen": "Người đặt bài toán đồng ý mục tiêu, tiêu chí thành công và kế hoạch.",
-          "notes": "Mẫu theo CRISP-DM 1.0 Step-by-step data mining guide (Chapman et al., 2000): tên bước là tên pha, tên bước con là tên generic task.\nViệc bổ sung ngoài guide ghi nguồn trong tên thẻ: CRISP-ML(Q) (Studer et al., 2021), Microsoft TDSP, ML Test Score (Breck et al., 2017), Rules of ML (Google).\nCRISP-DM: https://en.wikipedia.org/wiki/Cross-industry_standard_process_for_data_mining\nCRISP-ML(Q): https://arxiv.org/abs/2003.05155\nBẫy hay gặp: làm nhanh pha này rồi trả lời đúng một câu hỏi sai.",
+          "notes": "Mẫu theo CRISP-DM 1.0 Step-by-step data mining guide (Chapman et al., 2000): tên bước là tên pha, tên bước con là tên generic task; tên tiếng Việt, tên gốc trong ngoặc.\nViệc bổ sung ngoài guide ghi nguồn trong tên thẻ: CRISP-ML(Q) (Studer et al., 2021), Microsoft TDSP, ML Test Score (Breck et al., 2017), Rules of ML (Google).\nCRISP-DM: https://en.wikipedia.org/wiki/Cross-industry_standard_process_for_data_mining\nCRISP-ML(Q): https://arxiv.org/abs/2003.05155\nBẫy hay gặp: làm nhanh pha này rồi trả lời đúng một câu hỏi sai.",
           "subs": [
             {
-              "title": "Determine Business Objectives",
+              "title": "Xác định mục tiêu nghiệp vụ (Determine Business Objectives)",
               "doneWhen": "Có bối cảnh, mục tiêu nghiệp vụ chính và các câu hỏi phụ, tiêu chí thành công nghiệp vụ.",
               "notes": "Hỏi: ai dùng kết quả? Có kết quả rồi họ làm gì khác? Hiện giờ họ quyết định thế nào?\nTiêu chí đo được thì ghi ngưỡng; tiêu chí chủ quan thì ghi ai là người đánh giá."
             },
             {
-              "title": "Assess Situation",
+              "title": "Đánh giá tình hình (Assess Situation)",
               "doneWhen": "Có danh sách nguồn lực (người, dữ liệu, máy, phần mềm); yêu cầu, giả định, ràng buộc; rủi ro và phương án dự phòng; bảng thuật ngữ; chi phí và lợi ích.",
               "notes": "Kiểm ngay quyền dùng dữ liệu: điều khoản, dữ liệu cá nhân.\nGhi cả giả định không kiểm được bằng dữ liệu: kết luận cuối đứng trên chúng."
             },
             {
-              "title": "Determine Data Mining Goals",
+              "title": "Xác định mục tiêu khai phá dữ liệu (Determine Data Mining Goals)",
               "doneWhen": "Mục tiêu viết bằng ngôn ngữ kỹ thuật (biến đích, đầu vào, loại bài toán), tiêu chí thành công kỹ thuật (chỉ số, ngưỡng) và mốc so: baseline đơn giản hoặc cách đang làm hiện nay.",
               "notes": "TDSP gọi là câu hỏi sắc (sharp question): bao nhiêu? (hồi quy), loại nào? (phân loại), nhóm nào? (phân cụm), có bất thường không? (phát hiện bất thường), nên chọn gì? (gợi ý).\nChỉ số nên SMART: cụ thể, đo được, khả thi, liên quan, có hạn.\nGhi trước rằng kết quả hợp lệ có thể là: baseline đã đủ dùng, hoặc dữ liệu chưa cho tín hiệu đủ mạnh. Rules of ML, Rule #1: đừng ngại ra sản phẩm không dùng học máy: https://developers.google.com/machine-learning/guides/rules-of-ml",
               "outs": [
@@ -37,20 +37,20 @@
               ]
             },
             {
-              "title": "Produce Project Plan",
+              "title": "Lập kế hoạch dự án (Produce Project Plan)",
               "doneWhen": "Kế hoạch có các giai đoạn, thời lượng, người, đầu vào, đầu ra, phụ thuộc, điểm soát cuối mỗi pha; đánh giá sơ bộ công cụ và kỹ thuật.",
-              "notes": "Ghi trước các vòng lặp lớn (mô hình hoá ↔ đánh giá) và cách đánh giá sẽ dùng.\nGhi trước điều kiện thu hẹp hay dừng, ví dụ: hết số vòng Modeling đã định mà chưa vượt baseline thì giữ baseline hoặc dừng (CRISP-DM 5.3 Determine next steps cho phép dừng hay mở dự án mới).\nKế hoạch là tài liệu sống: cập nhật sau mỗi pha."
+              "notes": "Ghi trước các vòng lặp lớn (mô hình hoá ↔ đánh giá) và cách đánh giá sẽ dùng.\nGhi trước điều kiện thu hẹp hay dừng, ví dụ: hết số vòng Mô hình hoá đã định mà chưa vượt baseline thì giữ baseline hoặc dừng (CRISP-DM 5.3 Determine next steps cho phép dừng hay mở dự án mới).\nKế hoạch là tài liệu sống: cập nhật sau mỗi pha."
             }
           ]
         },
         {
-          "title": "Data Understanding",
+          "title": "Hiểu dữ liệu (Data Understanding)",
           "goal": "Biết dữ liệu có gì, thiếu gì, tin được tới đâu.",
           "doneWhen": "Có bốn báo cáo: thu thập, mô tả, khám phá, chất lượng; biết dữ liệu đủ trả lời câu hỏi hay không.",
           "notes": "Điểm kiểm của TDSP: dữ liệu không đủ trả lời câu hỏi thì quay lại pha 1 hoặc tìm thêm nguồn, đừng ép mô hình hoá.\nKhám phá ở đây để hiểu dữ liệu. Con số dùng để biến đổi (trung vị điền thiếu, ngưỡng ngoại lai) tính lại trên train ở pha 3.",
           "subs": [
             {
-              "title": "Collect Initial Data",
+              "title": "Thu thập dữ liệu ban đầu (Collect Initial Data)",
               "doneWhen": "Báo cáo thu thập: tập dữ liệu nào, để ở đâu, lấy bằng cách nào, gặp vấn đề gì và đã xử lý ra sao.",
               "notes": "Ghi thêm ngày lấy, điều khoản, mã băm (SHA-256) từng file để người khác lấy lại đúng bản.\nKhông sửa tay file gốc; mọi thay đổi đi qua script.",
               "outs": [
@@ -63,7 +63,7 @@
               ]
             },
             {
-              "title": "Describe Data",
+              "title": "Mô tả dữ liệu (Describe Data)",
               "doneWhen": "Báo cáo mô tả: định dạng, số dòng và số cột mỗi bảng, tên, kiểu, đơn vị từng trường; dữ liệu có đáp ứng yêu cầu không.",
               "notes": "Viết luôn data card: nguồn, ai tạo, để làm gì, giai đoạn, hạn chế (Datasheets for Datasets, Gebru et al.: https://arxiv.org/abs/1803.09010).",
               "outs": [
@@ -76,30 +76,30 @@
               ]
             },
             {
-              "title": "Explore Data",
+              "title": "Khám phá dữ liệu (Explore Data)",
               "doneWhen": "Báo cáo khám phá: phân phối các biến chính (nhất là biến đích), quan hệ giữa các biến, nhóm con đáng chú ý, giả thuyết ban đầu, kèm hình.",
               "notes": "Mỗi phát hiện ghi luôn: nó đổi gì ở các pha sau.\nMột biến đoán biến đích quá giỏi thì nghi rò rỉ: lúc cần dự đoán thật, biến ấy đã có chưa?"
             },
             {
-              "title": "Verify Data Quality",
+              "title": "Kiểm tra chất lượng dữ liệu (Verify Data Quality)",
               "doneWhen": "Báo cáo chất lượng: dữ liệu đủ chưa (phủ hết trường hợp), sai ở đâu và nhiều không, thiếu ở đâu và ghi thế nào; mỗi vấn đề có hướng xử lý.",
               "notes": "Hướng xử lý cần cả hiểu biết về dữ liệu lẫn về lĩnh vực: hỏi chuyên gia trước khi xoá."
             }
           ]
         },
         {
-          "title": "Data Preparation",
+          "title": "Chuẩn bị dữ liệu (Data Preparation)",
           "goal": "Ra bộ dữ liệu cho mô hình, dựng lại được, không rò rỉ từ tập test.",
           "doneWhen": "Một lệnh dựng lại bộ dữ liệu từ dữ liệu gốc; tập test chưa bị nhìn.",
-          "notes": "Thứ tự trong mẫu: chọn → ghép → chia → làm sạch → tạo đặc trưng → định dạng.\nCRISP-DM 1.0 chia dữ liệu ở pha Mô hình hoá (task 4.2 Generate test design). Mẫu dời việc chia lên ngay sau ghép: làm sạch hay tạo đặc trưng trên toàn bộ dữ liệu thì thông tin của tập test lọt vào train (rò rỉ, leakage) và điểm test đẹp hơn thực tế.\nBiến đổi học tham số từ dữ liệu (điền thiếu, chuẩn hoá, mã hoá, chọn đặc trưng): fit chỉ trên train rồi áp cho validation và test. Dùng cross-validation thì fit lại trong từng fold: đặt chúng chung một Pipeline với mô hình ở pha Modeling (scikit-learn, Common pitfalls: https://scikit-learn.org/stable/common_pitfalls.html#data-leakage).\nThư mục theo Cookiecutter Data Science: data/raw (gốc, không đổi), data/interim, data/processed, models, reports: https://cookiecutter-data-science.drivendata.org/",
+          "notes": "Thứ tự trong mẫu: chọn → ghép → chia → làm sạch → tạo đặc trưng → định dạng.\nCRISP-DM 1.0 chia dữ liệu ở pha Mô hình hoá (task 4.2 Generate test design). Mẫu dời việc chia lên ngay sau ghép: làm sạch hay tạo đặc trưng trên toàn bộ dữ liệu thì thông tin của tập test lọt vào train (rò rỉ, leakage) và điểm test đẹp hơn thực tế.\nBiến đổi học tham số từ dữ liệu (điền thiếu, chuẩn hoá, mã hoá, chọn đặc trưng): fit chỉ trên train rồi áp cho validation và test. Dùng cross-validation thì fit lại trong từng fold: đặt chúng chung một Pipeline với mô hình ở pha Mô hình hoá (scikit-learn, Common pitfalls: https://scikit-learn.org/stable/common_pitfalls.html#data-leakage).\nThư mục theo Cookiecutter Data Science: data/raw (gốc, không đổi), data/interim, data/processed, models, reports: https://cookiecutter-data-science.drivendata.org/",
           "subs": [
             {
-              "title": "Select Data",
+              "title": "Chọn dữ liệu (Select Data)",
               "doneWhen": "Danh sách dữ liệu đưa vào và loại ra (cả cột lẫn dòng) kèm lý do.",
               "notes": "Tiêu chí: liên quan mục tiêu, chất lượng, giới hạn kỹ thuật.\nLoại cột chỉ biết sau sự kiện cần đoán: nguồn rò rỉ hay gặp nhất."
             },
             {
-              "title": "Integrate Data",
+              "title": "Ghép dữ liệu (Integrate Data)",
               "doneWhen": "Bảng đã ghép: khoá chuẩn hoá, số dòng trước và sau mỗi lần ghép đã đối chiếu.",
               "notes": "Gồm cả gộp nhiều dòng thành một (aggregation), ví dụ từ bảng giao dịch ra một dòng mỗi khách.\nGộp theo thời gian thì chỉ dùng dữ liệu trước mốc dự đoán.",
               "outs": [
@@ -116,7 +116,7 @@
               ]
             },
             {
-              "title": "Generate Test Design: Train / Validation / Test Split",
+              "title": "Chia train / validation / test (Generate Test Design)",
               "doneWhen": "Đã ghi cách chia (theo thời gian, ngẫu nhiên, theo nhóm hay phân tầng), tỷ lệ, seed; bỏ dòng trùng trước khi chia; tập test cất riêng tới pha Đánh giá.",
               "notes": "CRISP-DM 1.0 đặt task này ở pha Mô hình hoá (4.2). Mẫu dời lên đây để làm sạch và tạo đặc trưng không nhìn thấy tập test.\nDữ liệu theo thời gian: train là quá khứ, test là tương lai. Một người hay một nhóm có nhiều dòng: chia theo nhóm để không nằm ở cả hai phía.\nChỉnh tham số bằng cross-validation thì validation là các fold trong train; tập test vẫn cất riêng.",
               "outs": [
@@ -132,7 +132,7 @@
               ]
             },
             {
-              "title": "Clean Data",
+              "title": "Làm sạch dữ liệu (Clean Data)",
               "doneWhen": "Báo cáo làm sạch: mỗi vấn đề trong báo cáo chất lượng đã xử lý thế nào, vì sao, có thể ảnh hưởng kết quả ra sao.",
               "notes": "Sửa kiểu, đơn vị, lỗi nhập (không học gì từ dữ liệu): làm như nhau trên mọi tập.\nĐiền thiếu, cắt ngoại lai theo ngưỡng học từ dữ liệu: học trên train, áp cho validation và test; dùng cross-validation thì để chúng trong Pipeline để mỗi fold học lại.",
               "ins": [
@@ -141,12 +141,12 @@
               ]
             },
             {
-              "title": "Construct Data",
+              "title": "Tạo dữ liệu mới (Construct Data)",
               "doneWhen": "Mỗi đặc trưng mới có định nghĩa, công thức, lý do; bản ghi sinh thêm có mô tả.",
               "notes": "Đặc trưng dùng thống kê của nhiều dòng (trung bình theo nhóm, target encoding): tính trên train, trong cross-validation thì tính lại trong từng fold.\nSinh thêm mẫu cho lớp hiếm (oversampling, SMOTE) chỉ làm trên phần train, không bao giờ trên validation hay test."
             },
             {
-              "title": "Format Data",
+              "title": "Định dạng dữ liệu (Format Data)",
               "doneWhen": "Dữ liệu đúng khuôn công cụ mô hình cần (thứ tự cột, kiểu, bảng mã chữ) mà không đổi nghĩa.",
               "outs": [
                 {
@@ -160,18 +160,18 @@
           ]
         },
         {
-          "title": "Modeling",
+          "title": "Mô hình hoá (Modeling)",
           "goal": "Chọn, huấn luyện, so các mô hình trên train và validation.",
           "doneWhen": "Có bảng so các mô hình với baseline trên validation; đã chọn mô hình đưa sang pha Đánh giá (có thể chính là baseline) hoặc đã ghi kết luận chưa thấy tín hiệu đủ mạnh, kèm số đo, vào nhật ký quyết định; mỗi lần chạy đã ghi.",
           "notes": "Lặp: dựng → đánh giá → chỉnh tham số → dựng lại. Không dùng tập test ở pha này.\nKhông vượt baseline cũng là kết quả: ghi số đo rồi sang pha Đánh giá, đừng chỉnh mãi cho tới khi vượt.",
           "subs": [
             {
-              "title": "Select Modeling Technique",
+              "title": "Chọn kỹ thuật mô hình hoá (Select Modeling Technique)",
               "doneWhen": "Ghi kỹ thuật sẽ dùng và giả định của nó về dữ liệu (phân phối, giá trị thiếu, kiểu biến).",
               "notes": "Dùng nhiều kỹ thuật thì làm việc này cho từng cái.\nLuôn có một baseline đơn giản (đoán trung bình hay lớp đông nhất, hồi quy tuyến tính hay logistic) làm mốc so (ML Test Score, Model 5: https://research.google/pubs/the-ml-test-score-a-rubric-for-ml-production-readiness-and-technical-debt-reduction/)."
             },
             {
-              "title": "Build Model",
+              "title": "Xây dựng mô hình (Build Model)",
               "doneWhen": "Có mô hình, tham số đã chọn kèm lý do, mô tả mô hình (diễn giải, khó khăn gặp phải).",
               "notes": "Gói tiền xử lý học tham số và mô hình vào một Pipeline, rồi đưa cả Pipeline vào cross-validation hay tìm tham số: mỗi fold fit lại tiền xử lý trên phần train của fold (scikit-learn, Common pitfalls: https://scikit-learn.org/stable/common_pitfalls.html#data-leakage).\nChỉnh tham số bằng cross-validation trên train hoặc bằng tập validation; không chạm tập test.",
               "outs": [
@@ -188,7 +188,7 @@
               ]
             },
             {
-              "title": "Assess Model",
+              "title": "Đánh giá mô hình (Assess Model)",
               "doneWhen": "Bảng so và xếp hạng các mô hình, có baseline, theo tiêu chí kỹ thuật; các ca sai nặng nhất trên validation đã xem và gom theo kiểu lỗi; tham số chỉnh lại cho vòng sau.",
               "notes": "Đây là đánh giá kỹ thuật trên validation. Đánh giá theo mục tiêu nghiệp vụ ở pha 5.\nBáo điểm trung bình và độ lệch qua các fold: hơn baseline ít hơn độ lệch ấy thì chưa phải là hơn.\nPhân tích lỗi: xem từng ca sai, tìm điểm chung (nhóm, khoảng giá trị, nhãn sai), từ đó nghĩ đặc trưng mới (Rules of ML, Rule #26: https://developers.google.com/machine-learning/guides/rules-of-ml).",
               "outs": [
@@ -201,20 +201,20 @@
               ]
             },
             {
-              "title": "Assure Reproducibility (CRISP-ML(Q))",
+              "title": "Bảo đảm tái lập (Assure Reproducibility; theo CRISP-ML(Q))",
               "doneWhen": "Mỗi lần chạy nối được với: phiên bản dữ liệu (SHA-256 hay commit dữ liệu), commit code, seed, phiên bản thư viện, tham số, chỉ số, file mô hình; chạy lại ra cùng số.",
               "notes": "MLflow Tracking ghi cho mỗi run: tham số, chỉ số, artifact, dataset, commit git khi chạy trong repo git: https://mlflow.org/docs/latest/ml/tracking/tracking-api/\nÍt lần chạy: một bảng tính có cột run id, commit, SHA-256 dữ liệu là đủ.\nBáo điểm trung bình và độ lệch qua nhiều seed hay fold, không chỉ lần chạy đẹp nhất."
             }
           ]
         },
         {
-          "title": "Evaluation",
+          "title": "Đánh giá (Evaluation)",
           "goal": "Xét kết quả theo mục tiêu nghiệp vụ, không chỉ theo chỉ số mô hình.",
           "doneWhen": "Đã chạy tập test một lần; đã quyết triển khai, lặp lại hay dừng, lý do ở nhật ký quyết định.",
-          "notes": "Không đạt tiêu chí thì quay lại pha Mô hình hoá hay Chuẩn bị dữ liệu, hoặc dừng (CRISP-ML(Q)). Dùng nút Quay lại của bước ấy và ghi lý do.",
+          "notes": "Không đạt tiêu chí thì quay lại pha Mô hình hoá hay Chuẩn bị dữ liệu, hoặc dừng (CRISP-ML(Q)). Dùng nút Reopen của bước ấy và ghi lý do.",
           "subs": [
             {
-              "title": "Evaluate Results",
+              "title": "Đánh giá kết quả (Evaluate Results)",
               "doneWhen": "Kết quả trên tập test so với tiêu chí thành công nghiệp vụ và với baseline; câu kết: đã đạt mục tiêu chưa (giữ baseline hay chưa có tín hiệu cũng là câu kết); danh sách mô hình được duyệt.",
               "notes": "Tập test chạy một lần cho mô hình đã chọn. Chạy nhiều lần rồi chọn cái tốt nhất là biến test thành validation.\nGhi cả phát hiện ngoài mục tiêu ban đầu.",
               "outs": [
@@ -232,30 +232,30 @@
               ]
             },
             {
-              "title": "Subgroup Results, Robustness, Explainability (CRISP-ML(Q))",
+              "title": "Kết quả theo nhóm, độ vững, khả năng giải thích (Robustness, Explainability; theo CRISP-ML(Q))",
               "doneWhen": "Bảng điểm theo từng nhóm (lớp, giai đoạn, vùng); đã thử với dữ liệu nhiễu; đặc trưng ảnh hưởng nhất hợp lý với chuyên gia.",
               "notes": "Điểm trung bình tốt có thể giấu một nhóm rất tệ (ML Test Score, Model 6: chất lượng đủ trên mọi lát dữ liệu quan trọng).\nĐặc trưng quan trọng nhất trông vô lý thường là dấu hiệu rò rỉ."
             },
             {
-              "title": "Review Process",
+              "title": "Soát lại quy trình (Review Process)",
               "doneWhen": "Bản soát: việc bị sót, việc cần làm lại; chỉ dùng thuộc tính được phép dùng và có sẵn lúc dự đoán thật.",
               "notes": "Hỏi: dựng mô hình đúng chưa? Có rò rỉ không (chia trước khi làm sạch, fit chỉ trên train)? Giả định nào chưa kiểm?"
             },
             {
-              "title": "Determine Next Steps",
+              "title": "Quyết định bước tiếp theo (Determine Next Steps)",
               "doneWhen": "Danh sách phương án kèm lý do nên và không nên; quyết định và lý do ghi vào nhật ký quyết định.",
               "notes": "Phương án: triển khai, giữ baseline hay luật đơn giản, lặp thêm vòng, mở dự án mới, dừng. Tính cả thời gian và nguồn lực còn lại.\nQuyết định ghi kèm số đo: điểm test của mô hình chọn và của baseline."
             }
           ]
         },
         {
-          "title": "Deployment",
+          "title": "Triển khai (Deployment)",
           "goal": "Đưa kết quả tới người dùng và giữ nó đúng theo thời gian.",
           "doneWhen": "Người dùng nhận kết quả; có kế hoạch giám sát; báo cáo cuối và bài học đã ghi.",
-          "notes": "Triển khai có thể chỉ là một báo cáo, hoặc một mô hình chạy mỗi ngày. Đồ án học tập: nộp và trình bày là triển khai; khi ấy Plan Monitoring and Maintenance có thể Skip.\nML Test Score (Breck et al., 2017): https://research.google/pubs/the-ml-test-score-a-rubric-for-ml-production-readiness-and-technical-debt-reduction/\nRules of ML: https://developers.google.com/machine-learning/guides/rules-of-ml",
+          "notes": "Triển khai có thể chỉ là một báo cáo, hoặc một mô hình chạy mỗi ngày. Đồ án học tập: nộp và trình bày là triển khai; khi ấy thẻ Lập kế hoạch giám sát và bảo trì có thể chuyển sang Skipped.\nML Test Score (Breck et al., 2017): https://research.google/pubs/the-ml-test-score-a-rubric-for-ml-production-readiness-and-technical-debt-reduction/\nRules of ML: https://developers.google.com/machine-learning/guides/rules-of-ml",
           "subs": [
             {
-              "title": "Plan Deployment",
+              "title": "Lập kế hoạch triển khai (Plan Deployment)",
               "doneWhen": "Kế hoạch triển khai: chiến lược, các bước, cách làm từng bước; quy trình dựng lại mô hình; phép kiểm ngay sau triển khai; cách lùi về bản trước.",
               "notes": "Trước khi phục vụ: kiểm chất lượng trên dữ liệu giữ lại, chưa đạt ngưỡng thì không cho lên (ML Test Score, Infra 4).\nNgay sau khi lên: gửi vài đầu vào mẫu, so với dự đoán offline của cùng phiên bản; lệch là lỗi kỹ thuật (Rules of ML, Rule #37, training-serving skew).\nLùi về phiên bản trước nhanh và an toàn (ML Test Score, Infra 7); phương án lùi có thể là bản trước, baseline hay luật đơn giản (CRISP-ML(Q)).",
               "ins": [
@@ -264,12 +264,12 @@
               ]
             },
             {
-              "title": "Plan Monitoring and Maintenance",
+              "title": "Lập kế hoạch giám sát và bảo trì (Plan Monitoring and Maintenance)",
               "doneWhen": "Kế hoạch giám sát: phiên bản mô hình đang phục vụ, lần chạy hay huấn luyện gần nhất, độ mới dữ liệu, chất lượng dự đoán, độ trễ, chi phí chạy; mỗi chỉ số có ngưỡng báo động, chỗ xem và việc phải làm khi báo; khi nào huấn luyện lại.",
-              "notes": "CRISP-ML(Q) tách việc này thành pha riêng: dữ liệu thật đổi theo thời gian (drift) nên mô hình kém dần.\nML Test Score: đầu vào lúc phục vụ giữ đúng ràng buộc như lúc train (Monitor 2); mô hình không quá cũ (Monitor 4); độ trễ, thông lượng, RAM không tụt (Monitor 6); chất lượng trên dữ liệu thật không giảm (Monitor 7).\nRules of ML, Rule #8: biết mô hình cũ một ngày, một tuần thì kém đi bao nhiêu; Rule #10: lỗi im lặng (một nguồn đứng yên) làm điểm giảm dần mà không báo lỗi.\nChi phí chạy so với lợi ích đã ước ở Assess Situation.\nMô hình cập nhật phải đánh giá lại và so với bản trước rồi mới thay."
+              "notes": "CRISP-ML(Q) tách việc này thành pha riêng: dữ liệu thật đổi theo thời gian (drift) nên mô hình kém dần.\nML Test Score: đầu vào lúc phục vụ giữ đúng ràng buộc như lúc train (Monitor 2); mô hình không quá cũ (Monitor 4); độ trễ, thông lượng, RAM không tụt (Monitor 6); chất lượng trên dữ liệu thật không giảm (Monitor 7).\nRules of ML, Rule #8: biết mô hình cũ một ngày, một tuần thì kém đi bao nhiêu; Rule #10: lỗi im lặng (một nguồn đứng yên) làm điểm giảm dần mà không báo lỗi.\nChi phí chạy so với lợi ích đã ước ở thẻ Đánh giá tình hình.\nMô hình cập nhật phải đánh giá lại và so với bản trước rồi mới thay."
             },
             {
-              "title": "Write Model Card (Mitchell et al., 2019)",
+              "title": "Viết thẻ mô hình (Model Card; theo Mitchell et al., 2019)",
               "doneWhen": "Model card có: mục đích dùng và không nên dùng, dữ liệu huấn luyện và đánh giá, chỉ số, kết quả theo nhóm, cân nhắc đạo đức, hạn chế.",
               "notes": "Một trang là đủ. Mẫu gốc: https://arxiv.org/abs/1810.03993",
               "ins": [
@@ -277,7 +277,7 @@
               ]
             },
             {
-              "title": "Produce Final Report",
+              "title": "Viết báo cáo cuối (Produce Final Report)",
               "doneWhen": "Báo cáo cuối gom mọi sản phẩm trước và tóm kết quả; bài trình bày cuối.",
               "notes": "Khung gợi ý: câu hỏi, dữ liệu, phương pháp, kết quả, hạn chế, khuyến nghị.\nMỗi số trong báo cáo truy được về code.",
               "outs": [
@@ -294,11 +294,11 @@
               ]
             },
             {
-              "title": "Customer Acceptance (TDSP)",
+              "title": "Khách hàng nghiệm thu (Customer Acceptance; theo TDSP)",
               "doneWhen": "Người đặt bài toán xác nhận kết quả đạt yêu cầu; code, dữ liệu, tài liệu đã giao cho người vận hành hoặc đã nộp."
             },
             {
-              "title": "Review Project",
+              "title": "Nhìn lại dự án (Review Project)",
               "doneWhen": "Tài liệu kinh nghiệm: điều làm tốt, điều cần sửa, bẫy đã gặp, gợi ý cho dự án sau."
             }
           ]
@@ -307,23 +307,23 @@
     },
     {
       "id": "big-data-ds",
-      "name": "Data Science on big data (CRISP-DM, Spark)",
-      "output": "Model + pipeline on Spark",
+      "name": "Data Science trên big data (CRISP-DM, Spark)",
+      "output": "Mô hình + pipeline trên Spark",
       "description": "Chọn khi dữ liệu quá lớn hay tới quá nhanh cho một máy. Khung CRISP-DM như mẫu Data Science, thêm bước thu nạp và lưu trữ (Kafka, HDFS / object storage, Parquet / Delta), xử lý bằng Spark, triển khai theo kiến trúc Lambda. Ví dụ xuyên suốt: clickstream của một trang thương mại điện tử. Làm một mình hay để học: chạy Spark local[*] trên một máy; Skip speed layer khi không kết quả nào cần mới hơn chu kỳ batch.",
       "steps": [
         {
-          "title": "Business Understanding",
+          "title": "Hiểu bài toán kinh doanh (Business Understanding)",
           "goal": "Biết bài toán thật, và biết nó có cần công cụ big data hay không.",
           "doneWhen": "Đã chốt mục tiêu, tiêu chí thành công, độ mới cần cho từng kết quả, và quyết định một máy hay cụm Spark, kèm số đo.",
-          "notes": "Khung theo CRISP-DM 1.0 (Chapman et al., 2000), như mẫu Data Science project (CRISP-DM): tên bước là pha, tên bước con là generic task. Phần riêng của big data ghi sau dấu hai chấm hay thành thẻ mới; nguồn ở ghi chú.\nKhác dự án thường: có thêm hai quyết định trước khi viết code. Có cần cụm máy không (khối lượng, tốc độ)? Kết quả phải mới tới mức nào (batch hay real-time)? Hai câu trả lời định hình mọi bước sau.\nVí dụ xuyên suốt: trang thương mại điện tử ghi mỗi lượt xem, thêm giỏ, mua thành một sự kiện → Kafka → Spark (batch và streaming) → phân khúc khách, dự đoán khả năng mua → dashboard.\nBài giảng Big data (5V, quy trình data science): https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b1",
+          "notes": "Khung theo CRISP-DM 1.0 (Chapman et al., 2000), như mẫu Dự án Data Science (CRISP-DM): tên bước là pha, tên bước con là generic task; tên tiếng Việt, tên gốc trong ngoặc. Phần riêng của big data ghi sau dấu hai chấm hay thành thẻ mới; nguồn ở ghi chú.\nKhác dự án thường: có thêm hai quyết định trước khi viết code. Có cần cụm máy không (khối lượng, tốc độ)? Kết quả phải mới tới mức nào (batch hay real-time)? Hai câu trả lời định hình mọi bước sau.\nVí dụ xuyên suốt: trang thương mại điện tử ghi mỗi lượt xem, thêm giỏ, mua thành một sự kiện → Kafka → Spark (batch và streaming) → phân khúc khách, dự đoán khả năng mua → dashboard.\nBài giảng Big data (5V, quy trình data science): https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b1",
           "subs": [
             {
-              "title": "Determine Business Objectives",
+              "title": "Xác định mục tiêu nghiệp vụ (Determine Business Objectives)",
               "doneWhen": "Có bối cảnh, mục tiêu nghiệp vụ, người dùng kết quả và việc họ sẽ làm khác đi; tiêu chí thành công nghiệp vụ.",
               "notes": "Ví dụ: đội marketing muốn gửi ưu đãi đúng nhóm khách; đội sản phẩm muốn biết khách nào sắp mua.\nHỏi: có kết quả rồi họ quyết định gì khác? Họ cần kết quả mỗi ngày hay ngay trong phiên của khách?"
             },
             {
-              "title": "Assess Situation: Volume and Velocity",
+              "title": "Đánh giá tình hình: khối lượng và tốc độ (Assess Situation: Volume, Velocity)",
               "doneWhen": "Có số đo: dung lượng mỗi ngày, lịch sử cần dùng, số sự kiện mỗi giây lúc đỉnh, RAM và đĩa của máy đang có; kết luận một máy đủ hay cần cụm, kèm lý do.",
               "notes": "Đo trên phần dữ liệu thật sự cần (cột, khoảng thời gian), không trên tổng dung lượng log thô.\npandas giữ cả bảng trong RAM, vài phép còn tạo bản sao trung gian; dữ liệu cỡ gần bằng RAM đã khó dùng: https://pandas.pydata.org/docs/user_guide/scale.html\nMột máy với Parquet, chỉ đọc cột cần (pandas, Polars, DuckDB) thường đủ khi dữ liệu cần dùng vừa đĩa và kết quả trung gian vừa RAM. Cần cụm khi không vừa, hoặc một lượt đọc quá lâu: đọc 1 TB ở 100 MB/s mất gần 3 giờ.\nBài giảng, vì sao một máy không đủ: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b1-fig-io\nQuyền dùng dữ liệu: clickstream gắn với người dùng; kiểm điều khoản và dữ liệu cá nhân trước khi lưu.",
               "outs": [
@@ -336,7 +336,7 @@
               ]
             },
             {
-              "title": "Determine Latency Requirements: Batch or Real-time",
+              "title": "Xác định yêu cầu độ trễ: batch hay real-time (Latency Requirements)",
               "doneWhen": "Mỗi kết quả (phân khúc, điểm dự đoán, dashboard) có độ mới cần (ngày, giờ, phút, giây), ai cần và vì sao; chỉ kết quả cần mới hơn chu kỳ batch mới đi đường streaming.",
               "notes": "Phân khúc khách cho chiến dịch email: tính lại mỗi ngày là đủ. Gợi ý khi khách còn trong phiên: cần trong vài giây, phải xử lý dòng.\nStreaming tốn công vận hành hơn batch nhiều (chạy liên tục, giữ state, dữ liệu tới trễ). Đừng chọn chỉ vì nghe hiện đại.\nSpark Structured Streaming mặc định chạy micro-batch: độ trễ đầu-cuối thấp tới khoảng 100 ms, exactly-once. Continuous processing xuống khoảng 1 ms nhưng chỉ at-least-once: https://spark.apache.org/docs/latest/streaming/index.html",
               "outs": [
@@ -349,7 +349,7 @@
               ]
             },
             {
-              "title": "Determine Data Mining Goals",
+              "title": "Xác định mục tiêu khai phá dữ liệu (Determine Data Mining Goals)",
               "doneWhen": "Mục tiêu viết bằng ngôn ngữ kỹ thuật: đơn vị dự đoán, biến đích, cửa sổ thời gian, chỉ số và ngưỡng, baseline để so.",
               "notes": "Ví dụ dự đoán mua: đơn vị là một khách ở một ngày mốc (cutoff); biến đích: có mua trong 7 ngày sau mốc không; đặc trưng chỉ lấy từ sự kiện trước mốc.\nVí dụ phân khúc: nhóm khách theo hành vi 30 ngày gần nhất; thành công khi đội marketing dùng được các nhóm.\nLớp mua hiếm thì xem PR AUC (areaUnderPR) cạnh ROC AUC.\nBaseline: luật \"đã thêm giỏ trong 7 ngày qua\"; phân khúc baseline: chia theo RFM (recency, frequency, monetary).",
               "outs": [
@@ -362,7 +362,7 @@
               ]
             },
             {
-              "title": "Produce Project Plan",
+              "title": "Lập kế hoạch dự án (Produce Project Plan)",
               "doneWhen": "Kế hoạch có các pha, đầu vào và đầu ra, môi trường chạy (Spark local trên mẫu, rồi cụm), giới hạn tài nguyên, điều kiện dừng.",
               "notes": "Viết và thử code trên một máy với master local[*] (mọi nhân của máy) và một mẫu nhỏ; chỉ lên cụm khi code đã đúng: https://spark.apache.org/docs/latest/submitting-applications.html\nGhi trước giới hạn tài nguyên (số executor, số giờ máy mỗi lần chạy). Vượt thì thu hẹp dữ liệu hay đổi cách làm, đừng thêm máy mãi.",
               "ins": [
@@ -374,13 +374,13 @@
           ]
         },
         {
-          "title": "Data Ingestion and Storage",
+          "title": "Thu nạp và lưu trữ dữ liệu (Data Ingestion and Storage)",
           "goal": "Dữ liệu vào một chỗ lưu bền, đúng schema, tính lại được, trước khi ai đó phân tích.",
           "doneWhen": "Sự kiện chảy từ Kafka vào vùng bronze; lịch sử đã nạp bù; đếm lại một ngày ra đúng số sự kiện của nguồn.",
           "notes": "Bước này không có trong CRISP-DM 1.0: nó mở rộng task 2.1 Collect Initial Data, vì ở big data thu thập là cả một hệ chạy liên tục.\nKhác dự án thường: không còn \"tải file về data/raw\". Dữ liệu tới liên tục, nằm trên nhiều máy, và vùng thô phải bất biến để tính lại được (master dataset của kiến trúc Lambda).\nBa vùng theo medallion architecture: bronze (thô, như nguồn), silver (đã làm sạch, kiểm), gold (gộp, đặc trưng, sẵn cho phân tích và mô hình): https://docs.databricks.com/aws/en/lakehouse/medallion\nBài giảng Kafka: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b5\nBài giảng HDFS: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b3-3",
           "subs": [
             {
-              "title": "Define Event Schema",
+              "title": "Định nghĩa schema sự kiện (Event Schema)",
               "doneWhen": "Schema sự kiện: tên, kiểu, được trống không, ý nghĩa từng trường; khoá duy nhất của sự kiện; event time tách khỏi giờ nạp; số phiên bản schema.",
               "notes": "Ví dụ clickstream: event_id, user_id (trống khi khách chưa đăng nhập), session_id, event_type (view, add_to_cart, purchase), product_id, event_time (lúc xảy ra ở trình duyệt), schema_version.\nevent_id do nguồn sinh. Thiếu nó thì không khử trùng được khi sự kiện được giao lại.\nThêm trường thì tăng schema_version; đừng đổi nghĩa trường cũ.",
               "outs": [
@@ -393,7 +393,7 @@
               ]
             },
             {
-              "title": "Choose Storage Format and Partitioning (Delta Lake)",
+              "title": "Chọn định dạng lưu trữ và cách phân vùng (Storage Format, Partitioning; Delta Lake)",
               "doneWhen": "Đã chọn nơi lưu (HDFS hay object storage), định dạng (Parquet hay Delta), cột phân vùng, đường dẫn ba vùng bronze / silver / gold; mỗi lựa chọn có lý do.",
               "notes": "Parquet lưu theo cột: truy vấn chỉ đọc cột cần. Bài giảng, định dạng tệp: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b3-3-fig-rowcol\nDelta Lake thêm trên Parquet: giao dịch ACID, chặn ghi sai schema (schema enforcement), time travel để đọc lại phiên bản cũ và tái lập thí nghiệm: https://docs.delta.io/latest/index.html\nCột phân vùng thường là ngày. Đừng phân vùng theo cột nhiều giá trị (user_id); chỉ phân vùng khi mỗi phân vùng có ít nhất khoảng 1 GB (Delta Lake, Best practices): https://docs.delta.io/latest/best-practices.html\nNhiều tệp nhỏ làm đọc chậm; trên HDFS mỗi tệp còn chiếm RAM của NameNode. Streaming ghi mỗi micro-batch thành tệp mới: lên lịch gộp tệp (compaction).",
               "outs": [
@@ -409,7 +409,7 @@
               ]
             },
             {
-              "title": "Create Kafka Topic for the Event Stream",
+              "title": "Tạo Kafka topic cho luồng sự kiện",
               "doneWhen": "Topic có tên, key, số partition, thời gian giữ (retention), mức xác nhận của producer; gửi thử được, đọc lại đúng thứ tự trong từng partition.",
               "notes": "Sự kiện cùng key vào cùng partition, và người đọc một partition luôn thấy đúng thứ tự đã ghi: https://kafka.apache.org/intro\nKey là user_id hay session_id để sự kiện của một khách giữ thứ tự. Một key quá đông (bot) dồn vào một partition: lệch tải.\nThêm partition về sau làm key cũ có thể sang partition khác: chọn đủ từ đầu.\nKafka không xoá sự kiện khi đã đọc mà theo thời gian giữ của topic. Đặt retention đủ dài để job hỏng còn kịp đọc lại.\nacks=all: chờ mọi bản sao trong ISR nhận rồi mới xác nhận, bền nhất. Bài giảng, producer: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b5-prod",
               "outs": [
@@ -425,7 +425,7 @@
               ]
             },
             {
-              "title": "Land the Stream in Bronze (Structured Streaming)",
+              "title": "Ghi luồng sự kiện vào lớp bronze (Structured Streaming)",
               "doneWhen": "Job readStream đọc topic, ghi vào bronze theo ngày, có checkpointLocation; tắt rồi bật lại không mất, không trùng; dòng sai schema được giữ và đánh dấu.",
               "notes": "Kafka source của Spark: https://spark.apache.org/docs/latest/streaming/structured-streaming-kafka-integration.html\nGiữ cả value thô, topic, partition, offset, timestamp của Kafka: bronze là bản như nguồn, bước sau sai còn tính lại được.\nNguồn phát lại được, checkpoint, sink idempotent (file sink) cho exactly-once đầu-cuối. Bài giảng Structured Streaming: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b8-ss\nKafka source của Spark không commit offset lên Kafka; offset nằm trong checkpoint. Query mới (checkpoint mới) mới đọc theo startingOffsets.\nJob chậm hơn retention thì offset cần đọc bị Kafka xoá: mất dữ liệu. failOnDataLoss (mặc định true) làm query dừng thay vì lặng lẽ bỏ qua.",
               "outs": [
@@ -443,7 +443,7 @@
               ]
             },
             {
-              "title": "Backfill History into Bronze",
+              "title": "Nạp bù dữ liệu lịch sử vào bronze (Backfill)",
               "doneWhen": "Log lịch sử (trước khi có Kafka) nạp vào bronze bằng job batch, cùng schema, cùng phân vùng; số sự kiện mỗi ngày khớp nguồn; chạy lại một ngày không sinh trùng.",
               "notes": "Mô hình cần lịch sử dài hơn những gì Kafka còn giữ.\nJob batch ghi đè đúng phân vùng ngày của nó, nên chạy lại an toàn.\nGhi rõ ngày nối giữa dữ liệu nạp bù và dữ liệu từ Kafka: chỗ nối hay trùng hoặc hở.",
               "ins": [
@@ -454,13 +454,13 @@
           ]
         },
         {
-          "title": "Data Understanding",
+          "title": "Hiểu dữ liệu (Data Understanding)",
           "goal": "Biết dữ liệu có gì, lớn cỡ nào, lệch ở đâu, tin được tới đâu.",
           "doneWhen": "Có báo cáo khám phá trên mẫu, hồ sơ trên toàn bộ dữ liệu, báo cáo lệch và chất lượng; biết dữ liệu đủ trả lời câu hỏi hay không.",
-          "notes": "Khác dự án thường: không mở toàn bộ dữ liệu bằng pandas được. Làm hai tầng: khám phá nhanh trên một mẫu bằng pandas, rồi kiểm từng phát hiện trên toàn bộ bằng Spark.\nThêm câu hỏi riêng của dữ liệu phân tán: bao nhiêu tệp, bao nhiêu partition, khoá nào chiếm quá nhiều dòng (skew).\nCon số dùng để biến đổi (ngưỡng ngoại lai, giá trị điền thiếu) tính lại trên train ở pha Data Preparation.\nBài giảng Spark (lazy, action, partition): https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b7",
+          "notes": "Khác dự án thường: không mở toàn bộ dữ liệu bằng pandas được. Làm hai tầng: khám phá nhanh trên một mẫu bằng pandas, rồi kiểm từng phát hiện trên toàn bộ bằng Spark.\nThêm câu hỏi riêng của dữ liệu phân tán: bao nhiêu tệp, bao nhiêu partition, khoá nào chiếm quá nhiều dòng (skew).\nCon số dùng để biến đổi (ngưỡng ngoại lai, giá trị điền thiếu) tính lại trên train ở pha Chuẩn bị dữ liệu.\nBài giảng Spark (lazy, action, partition): https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b7",
           "subs": [
             {
-              "title": "Describe Data: Volume, Files, Partitions",
+              "title": "Mô tả dữ liệu: khối lượng, số file, phân vùng (Describe Data)",
               "doneWhen": "Theo từng ngày: số sự kiện, dung lượng, số tệp và cỡ tệp; số partition khi Spark đọc; khoảng ngày có dữ liệu.",
               "notes": "df.rdd.getNumPartitions(): số partition khi đọc. Spark UI, tab Stages: byte đọc, shuffle read / write của từng stage: https://spark.apache.org/docs/latest/web-ui.html\nNgày hụt hay vọt thường là job nạp hỏng, không phải hành vi khách.",
               "ins": [
@@ -468,7 +468,7 @@
               ]
             },
             {
-              "title": "Explore Data: Sample with pandas",
+              "title": "Khám phá dữ liệu: mẫu nhỏ bằng pandas (Explore Data)",
               "doneWhen": "Mẫu có cách lấy, tỉ lệ, seed ghi rõ; báo cáo khám phá: phân phối loại sự kiện, số sự kiện mỗi phiên, phễu xem → giỏ → mua, giả thuyết ban đầu.",
               "notes": "Lấy mẫu theo khách, không theo sự kiện: lấy ngẫu nhiên từng sự kiện làm vỡ phiên và phễu. Chọn một tỉ lệ user_id (ví dụ theo hash), rồi lấy mọi sự kiện của họ.\nsampleBy lấy mẫu phân tầng, mỗi tầng một tỉ lệ, khi cần giữ đủ nhóm hiếm như khách đã mua: https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.sampleBy.html\ntoPandas() kéo mọi dòng về driver, kể cả khi bật Arrow: chỉ gọi trên mẫu nhỏ: https://spark.apache.org/docs/latest/api/python/tutorial/sql/arrow_pandas.html\nPhát hiện trên mẫu là giả thuyết; ghi lại để kiểm trên toàn bộ ở thẻ sau.",
               "outs": [
@@ -484,7 +484,7 @@
               ]
             },
             {
-              "title": "Explore Data: Full Profile with Spark",
+              "title": "Khám phá dữ liệu: hồ sơ toàn bộ bằng Spark (Explore Data)",
               "doneWhen": "Hồ sơ trên toàn bộ: tỉ lệ trống mỗi cột, số giá trị khác nhau, phân vị các biến số, phân phối theo ngày; mỗi giả thuyết từ mẫu đã xác nhận hay bác bỏ.",
               "notes": "summary() cho thống kê cơ bản. approx_count_distinct, approxQuantile nhanh hơn bản chính xác; sai số tương đối khai bằng tham số (rsd, relativeError).\nMỗi count() là một action đọc lại dữ liệu: gộp nhiều chỉ số vào một agg().",
               "outs": [
@@ -501,7 +501,7 @@
               ]
             },
             {
-              "title": "Explore Data: Key Skew",
+              "title": "Khám phá dữ liệu: lệch khoá (Explore Data: Key Skew)",
               "doneWhen": "Bảng các khoá nhiều dòng nhất (user_id, session_id, product_id); khoá đông bất thường đã xác định là bot, khách thật hay lỗi; hướng xử lý ghi rõ.",
               "notes": "Skew: vài khoá có quá nhiều dòng, nên khi groupBy hay join theo khoá, task giữ khoá ấy chạy lâu hơn hẳn các task khác. Trên Spark UI: task lâu nhất của stage dài hơn trung vị nhiều lần.\ngroupBy(khoá).count() rồi sắp giảm dần. Giá trị trống (user_id của khách vãng lai) cũng là một khoá rất đông.\nBot và crawler sinh rất nhiều sự kiện: vừa làm lệch tải, vừa làm sai hành vi khách.",
               "ins": [
@@ -509,9 +509,9 @@
               ]
             },
             {
-              "title": "Verify Data Quality",
+              "title": "Kiểm tra chất lượng dữ liệu (Verify Data Quality)",
               "doneWhen": "Báo cáo chất lượng: sự kiện trùng (theo event_id), sự kiện tới trễ (event_time so với giờ nạp), giờ máy khách sai, user_id trống, bot; mỗi vấn đề có hướng xử lý.",
-              "notes": "Producer gửi lại, job đọc lại: một sự kiện có thể tới hơn một lần (at-least-once). Đếm trùng theo event_id. Bài giảng, ngữ nghĩa giao nhận: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b5-sem\nĐộ trễ của sự kiện quyết định watermark của job streaming ở pha Deployment: ghi phân phối độ trễ (ví dụ phân vị 99).",
+              "notes": "Producer gửi lại, job đọc lại: một sự kiện có thể tới hơn một lần (at-least-once). Đếm trùng theo event_id. Bài giảng, ngữ nghĩa giao nhận: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b5-sem\nĐộ trễ của sự kiện quyết định watermark của job streaming ở pha Triển khai: ghi phân phối độ trễ (ví dụ phân vị 99).",
               "outs": [
                 {
                   "key": "quality-report",
@@ -527,13 +527,13 @@
           ]
         },
         {
-          "title": "Data Preparation",
+          "title": "Chuẩn bị dữ liệu (Data Preparation)",
           "goal": "Ra bảng đặc trưng trên Spark, dựng lại được từ bronze, không rò rỉ từ tập test.",
           "doneWhen": "Một job dựng silver và gold từ bronze; bảng đặc trưng có schema cố định; tập test chưa bị nhìn; job chạy hết dữ liệu trong thời gian đã đặt.",
           "notes": "Khác dự án thường: mọi biến đổi viết bằng Spark DataFrame hay Spark SQL, chạy trên executor; driver chỉ giữ kế hoạch và kết quả nhỏ.\nĐừng collect() dữ liệu lớn: nó kéo toàn bộ về một máy, driver có thể hết RAM. Xem vài dòng thì dùng take(n): https://spark.apache.org/docs/latest/rdd-programming-guide.html\nJoin, groupBy, distinct, window theo khoá gây shuffle: dữ liệu đi qua mạng giữa các máy, thường là phần đắt nhất. Bài giảng, narrow và wide: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b7\nspark.sql.shuffle.partitions mặc định 200. Adaptive Query Execution (bật mặc định từ Spark 3.2.0) gộp partition nhỏ sau shuffle, đổi sang broadcast join khi được, tách partition lệch trong sort-merge join: https://spark.apache.org/docs/latest/sql-performance-tuning.html\nƯu tiên hàm có sẵn của pyspark.sql.functions. Cần Python thì dùng pandas UDF: chuyển dữ liệu bằng Arrow, thao tác theo lô (vectorized).\nChống rò rỉ như mẫu CRISP-DM: chia theo thời gian trước khi tạo đặc trưng; biến đổi học tham số nằm trong Pipeline của MLlib, fit chỉ trên train.",
           "subs": [
             {
-              "title": "Select Data",
+              "title": "Chọn dữ liệu (Select Data)",
               "doneWhen": "Danh sách cột, khoảng ngày, loại sự kiện đưa vào và loại ra kèm lý do; luật loại bot ghi rõ.",
               "notes": "Chọn cột và lọc theo cột phân vùng càng sớm càng tốt: Parquet chỉ đọc cột cần, lọc theo ngày bỏ qua cả thư mục (partition pruning).\nĐẩy điều kiện lọc xuống nguồn (pushdown). Bài giảng Presto: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b4-6-pushdown\nLoại cột chỉ biết sau sự kiện cần đoán.",
               "ins": [
@@ -542,7 +542,7 @@
               ]
             },
             {
-              "title": "Clean Data: Bronze to Silver",
+              "title": "Làm sạch dữ liệu: bronze sang silver (Clean Data)",
               "doneWhen": "Silver: khử trùng theo event_id, kiểu và múi giờ chuẩn (UTC), dòng hỏng tách ra bảng riêng; số dòng trước và sau mỗi luật đã ghi.",
               "notes": "Ở đây chỉ làm sạch không học từ dữ liệu (khử trùng, ép kiểu, đổi múi giờ): làm như nhau trên mọi tập. Điền thiếu, cắt ngoại lai theo ngưỡng học từ dữ liệu: để vào Pipeline, fit trên train.\ndropDuplicates([\"event_id\"]) gây shuffle theo event_id trên cả bảng. Biết trùng chỉ xảy ra gần nhau thì khử trong từng khoảng ngày.\nKhông cache bảng Delta: mất data skipping, và bản cache có thể cũ khi bảng được ghi qua đường khác (Delta Lake, Best practices).",
               "outs": [
@@ -559,7 +559,7 @@
               ]
             },
             {
-              "title": "Integrate Data: Sessions and Joins",
+              "title": "Ghép dữ liệu: phiên và join (Integrate Data)",
               "doneWhen": "Bảng phiên (một dòng mỗi phiên) và sự kiện đã nối danh mục sản phẩm; số dòng trước và sau mỗi join đã đối chiếu; biết join nào broadcast, join nào shuffle.",
               "notes": "Bảng nhỏ (danh mục sản phẩm) nối bằng broadcast join: gửi bảng nhỏ tới mọi máy, bảng lớn khỏi shuffle. Spark tự broadcast bảng dưới spark.sql.autoBroadcastJoinThreshold (mặc định 10 MB).\nChia phiên bằng Window partitionBy(user_id).orderBy(event_time): khoảng nghỉ quá một ngưỡng (ghi vào kế hoạch) thì mở phiên mới. Đừng gom sự kiện về driver.\nGộp theo thời gian chỉ dùng sự kiện trước mốc dự đoán.",
               "outs": [
@@ -575,9 +575,9 @@
               ]
             },
             {
-              "title": "Generate Test Design: Time-based Split",
-              "doneWhen": "Đã ghi các ngày mốc cho train, validation, test, cửa sổ đặc trưng, cửa sổ nhãn, seed; test là khoảng thời gian sau cùng, cất riêng tới pha Evaluation.",
-              "notes": "CRISP-DM 1.0 đặt task này ở pha Modeling (4.2). Như mẫu CRISP-DM, dời lên trước khi tạo đặc trưng để tránh rò rỉ.\nClickstream theo thời gian: train là quá khứ, test là tương lai. Cửa sổ nhãn của mốc train phải kết thúc trước mốc đầu của test.\nrandomSplit chia từng dòng ngẫu nhiên: chỉ hợp khi dữ liệu không theo thời gian và mỗi đơn vị một dòng.",
+              "title": "Tách tập theo thời gian (Generate Test Design: Time-based Split)",
+              "doneWhen": "Đã ghi các ngày mốc cho train, validation, test, cửa sổ đặc trưng, cửa sổ nhãn, seed; test là khoảng thời gian sau cùng, cất riêng tới pha Đánh giá.",
+              "notes": "CRISP-DM 1.0 đặt task này ở pha Mô hình hoá (4.2). Như mẫu CRISP-DM, dời lên trước khi tạo đặc trưng để tránh rò rỉ.\nClickstream theo thời gian: train là quá khứ, test là tương lai. Cửa sổ nhãn của mốc train phải kết thúc trước mốc đầu của test.\nrandomSplit chia từng dòng ngẫu nhiên: chỉ hợp khi dữ liệu không theo thời gian và mỗi đơn vị một dòng.",
               "outs": [
                 {
                   "key": "split-def",
@@ -591,7 +591,7 @@
               ]
             },
             {
-              "title": "Construct Data: Feature Table (Gold)",
+              "title": "Tạo dữ liệu mới: bảng đặc trưng gold (Construct Data)",
               "doneWhen": "Bảng đặc trưng gold: một dòng mỗi khách mỗi ngày mốc, kèm nhãn; mỗi đặc trưng có định nghĩa và cửa sổ thời gian; dựng lại từ silver bằng một lệnh.",
               "notes": "Ví dụ đặc trưng: số phiên, lượt xem, lượt thêm giỏ trong 7 và 30 ngày trước mốc; số ngày từ lần mua cuối; tỉ lệ thêm giỏ trên lượt xem.\nĐặc trưng chỉ dùng sự kiện trước mốc; nhãn chỉ dùng sự kiện sau mốc.\ncache() bảng trung gian dùng lại nhiều lần trong cùng job; dữ liệu chỉ được giữ khi một action chạy lần đầu; unpersist() khi xong.\nĐặc trưng mà phân khúc và mô hình cùng dùng: tính một lần ở đây, đừng tính lại trong từng notebook.",
               "outs": [
@@ -608,20 +608,20 @@
               ]
             },
             {
-              "title": "Format Data",
-              "doneWhen": "Bảng gold đúng kiểu MLlib cần (đặc trưng số thực, nhãn 0 / 1), schema cố định; việc mã hoá và gom vector để cho Pipeline ở pha Modeling.",
-              "notes": "StringIndexer, OneHotEncoder, VectorAssembler, StandardScaler là stage của Pipeline: fit ở pha Modeling trên train, không chạy ở đây trên toàn bộ.\nDelta chặn ghi sai schema: đổi schema bảng gold là việc có chủ ý, ghi vào nhật ký quyết định."
+              "title": "Định dạng dữ liệu (Format Data)",
+              "doneWhen": "Bảng gold đúng kiểu MLlib cần (đặc trưng số thực, nhãn 0 / 1), schema cố định; việc mã hoá và gom vector để cho Pipeline ở pha Mô hình hoá.",
+              "notes": "StringIndexer, OneHotEncoder, VectorAssembler, StandardScaler là stage của Pipeline: fit ở pha Mô hình hoá trên train, không chạy ở đây trên toàn bộ.\nDelta chặn ghi sai schema: đổi schema bảng gold là việc có chủ ý, ghi vào nhật ký quyết định."
             }
           ]
         },
         {
-          "title": "Modeling",
+          "title": "Mô hình hoá (Modeling)",
           "goal": "Chọn đường huấn luyện hợp cỡ dữ liệu, rồi dựng và so các mô hình trên train và validation.",
-          "doneWhen": "Đường huấn luyện đã chọn, lý do ở nhật ký quyết định; bảng so với baseline trên validation có cả thời gian chạy; đã chọn mô hình đưa sang Evaluation (có thể là baseline).",
+          "doneWhen": "Đường huấn luyện đã chọn, lý do ở nhật ký quyết định; bảng so với baseline trên validation có cả thời gian chạy; đã chọn mô hình đưa sang pha Đánh giá (có thể là baseline).",
           "notes": "Khác dự án thường: phải chọn huấn luyện ở đâu. Hai đường:\nA. Huấn luyện phân tán bằng Spark MLlib: khi bảng train không vừa một máy, hay cần huấn luyện lại định kỳ ngay trên cụm giữ dữ liệu. MLlib có LogisticRegression, RandomForestClassifier, GBTClassifier, KMeans, ALS…\nB. Gộp hay lấy mẫu xuống rồi huấn luyện trên một máy (scikit-learn, LightGBM, XGBoost): bảng một dòng mỗi khách thường nhỏ hơn log thô rất nhiều. Lấy mẫu theo lớp thì ghi tỉ lệ và hiệu chỉnh xác suất.\nKhông vượt baseline cũng là kết quả hợp lệ, như mẫu CRISP-DM.\nBài giảng MLlib (Transformer, Estimator, Pipeline): https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b10",
           "subs": [
             {
-              "title": "Choose Training Route: MLlib or Single Machine",
+              "title": "Chọn đường huấn luyện: MLlib hay một máy",
               "doneWhen": "Có số đo: số dòng và dung lượng bảng train, số đặc trưng, RAM máy đơn; chọn đường A hay B; lý do và số đo ghi vào nhật ký quyết định.",
               "notes": "Đo, đừng đoán: đếm dòng, đọc thử một phần vào pandas để ước RAM cần (thường lớn hơn nhiều so với tệp Parquet nén).\nChọn B: ghi ngưỡng dữ liệu mà từ đó sẽ chuyển sang A.\nChọn A: chỉ dùng thuật toán có trong MLlib; mô hình ngoài MLlib đi đường B.",
               "ins": [
@@ -630,7 +630,7 @@
               ]
             },
             {
-              "title": "Select Modeling Technique",
+              "title": "Chọn kỹ thuật mô hình hoá (Select Modeling Technique)",
               "doneWhen": "Ghi kỹ thuật sẽ dùng và giả định của nó; có baseline đơn giản làm mốc so.",
               "notes": "Dự đoán mua: baseline luật \"đã thêm giỏ trong 7 ngày\", rồi LogisticRegression, rồi cây (GBTClassifier hay LightGBM).\nPhân khúc: KMeans trên đặc trưng đã chuẩn hoá; baseline là chia theo RFM. Số cụm chọn theo silhouette (ClusteringEvaluator) và theo số nhóm đội marketing dùng được: https://spark.apache.org/docs/latest/ml-clustering.html",
               "ins": [
@@ -638,7 +638,7 @@
               ]
             },
             {
-              "title": "Build Model",
+              "title": "Xây dựng mô hình (Build Model)",
               "doneWhen": "Mô hình đã lưu (cả tiền xử lý và mô hình), tham số chọn kèm lý do; thời gian huấn luyện và tài nguyên đã ghi.",
               "notes": "Pipeline của MLlib: fit() trên train ra PipelineModel; dữ liệu mới đi qua đúng các stage như lúc train; lưu bằng save(), nạp bằng load(): https://spark.apache.org/docs/latest/ml-pipeline.html\nCrossValidator đắt: số mô hình = số tổ hợp tham số × số fold. TrainValidationSplit fit mỗi tổ hợp một lần. parallelism thử nhiều tổ hợp cùng lúc, đừng vượt tài nguyên cụm: https://spark.apache.org/docs/latest/ml-tuning.html\nCrossValidator chia fold ngẫu nhiên; foldCol cho tự đặt fold, nhưng mỗi fold vẫn train trên mọi fold còn lại, kể cả fold tương lai. Dữ liệu theo thời gian: tự lặp qua lưới tham số, fit trên train, chấm trên validation theo ngày mốc.\nThuật toán lặp (KMeans, LogisticRegression) đọc dữ liệu nhiều vòng: cache() bảng train trước khi fit.",
               "outs": [
@@ -655,9 +655,9 @@
               ]
             },
             {
-              "title": "Assess Model",
+              "title": "Đánh giá mô hình (Assess Model)",
               "doneWhen": "Bảng so các mô hình và baseline trên validation: chỉ số chính, độ lệch, thời gian huấn luyện, tài nguyên; ca sai nặng đã gom theo kiểu lỗi.",
-              "notes": "BinaryClassificationEvaluator có areaUnderROC và areaUnderPR; lớp hiếm thì xem areaUnderPR.\nMô hình hơn baseline một chút mà chạy lâu hơn nhiều lần: ghi cả hai cột để pha Evaluation cân.",
+              "notes": "BinaryClassificationEvaluator có areaUnderROC và areaUnderPR; lớp hiếm thì xem areaUnderPR.\nMô hình hơn baseline một chút mà chạy lâu hơn nhiều lần: ghi cả hai cột để pha Đánh giá cân.",
               "outs": [
                 {
                   "key": "metrics-table",
@@ -668,20 +668,20 @@
               ]
             },
             {
-              "title": "Assure Reproducibility (CRISP-ML(Q))",
+              "title": "Bảo đảm tái lập (Assure Reproducibility; theo CRISP-ML(Q))",
               "doneWhen": "Mỗi lần chạy nối được với phiên bản bảng đặc trưng, commit code, seed, phiên bản Spark và thư viện, cấu hình cụm; chạy lại ra cùng số.",
               "notes": "Delta time travel đọc lại đúng phiên bản bảng đã dùng để train: https://docs.delta.io/latest/index.html\nSeed cho sample, randomSplit và thuật toán có ngẫu nhiên. Ghi cấu hình cụm (số executor, bộ nhớ) cùng run."
             }
           ]
         },
         {
-          "title": "Evaluation",
+          "title": "Đánh giá (Evaluation)",
           "goal": "Xét kết quả theo mục tiêu nghiệp vụ, và xét hệ có chạy nổi khi dữ liệu lớn dần.",
           "doneWhen": "Tập test chạy một lần; có số đo mô hình và số đo hệ thống (thời gian, shuffle, mở rộng, tài nguyên); quyết định triển khai, lặp hay dừng ở nhật ký.",
-          "notes": "Khác dự án thường: mô hình tốt mà job chạy quá chu kỳ batch, hay tốn tài nguyên quá mức, vẫn không dùng được. Đánh giá hai mặt: chất lượng mô hình và chi phí hệ thống.\nKhông đạt thì quay lại Modeling hay Data Preparation bằng nút Reopen và ghi lý do.",
+          "notes": "Khác dự án thường: mô hình tốt mà job chạy quá chu kỳ batch, hay tốn tài nguyên quá mức, vẫn không dùng được. Đánh giá hai mặt: chất lượng mô hình và chi phí hệ thống.\nKhông đạt thì quay lại pha Mô hình hoá hay Chuẩn bị dữ liệu bằng nút Reopen và ghi lý do.",
           "subs": [
             {
-              "title": "Evaluate Results",
+              "title": "Đánh giá kết quả (Evaluate Results)",
               "doneWhen": "Điểm trên tập test (khoảng thời gian sau cùng) so với baseline và tiêu chí nghiệp vụ; câu kết: đã đạt mục tiêu chưa.",
               "notes": "Như mẫu CRISP-DM: chạy test một lần cho mô hình đã chọn.\nPhân khúc: mỗi cụm mô tả được bằng lời (ví dụ \"xem nhiều, ít mua\"); đội marketing đọc và dùng được.",
               "outs": [
@@ -699,7 +699,7 @@
               ]
             },
             {
-              "title": "Assess System Performance (Spark UI)",
+              "title": "Đánh giá hiệu năng hệ thống (Spark UI)",
               "doneWhen": "Mỗi job (bronze → silver, silver → gold, huấn luyện, chấm điểm): thời gian chạy, dữ liệu đọc, shuffle read / write, spill, task lâu nhất so với trung vị, số executor.",
               "notes": "Spark UI, tab Stages: Input, Output, Shuffle read, Shuffle write; trang chi tiết stage có Shuffle spill (memory / disk): https://spark.apache.org/docs/latest/web-ui.html\nSpill ra đĩa nhiều: partition quá lớn so với bộ nhớ executor. Task lâu nhất dài hơn trung vị nhiều lần: skew.\nJob batch phải xong trong chu kỳ của nó, còn khoảng dư: job hằng ngày xong trước lần chạy sau.",
               "outs": [
@@ -712,7 +712,7 @@
               ]
             },
             {
-              "title": "Assess Scaling as Data Grows",
+              "title": "Đánh giá khả năng mở rộng khi dữ liệu tăng (Scalability)",
               "doneWhen": "Cùng job chạy trên vài cỡ dữ liệu (ví dụ một phần tư, một nửa, toàn bộ) và vài số executor; có biểu đồ thời gian theo cỡ; ước thời gian và tài nguyên khi dữ liệu tăng như dự báo.",
               "notes": "Thời gian tăng gần tuyến tính theo dữ liệu và giảm khi thêm executor: hệ co giãn được. Tăng nhanh hơn tuyến tính, hay không giảm khi thêm máy: tìm shuffle lớn, skew, việc dồn về driver.\nGhi chi phí bằng giờ executor (số executor × thời gian) để so các phương án.",
               "ins": [
@@ -720,12 +720,12 @@
               ]
             },
             {
-              "title": "Review Process",
+              "title": "Soát lại quy trình (Review Process)",
               "doneWhen": "Bản soát: rò rỉ theo thời gian, sai lệch do lấy mẫu, sự kiện trễ và trùng đã xử lý; mọi đặc trưng có sẵn lúc chấm điểm thật, ở cả đường batch và streaming.",
               "notes": "Đặc trưng tính được ở batch mà speed layer không tính kịp thì mô hình streaming sẽ thiếu nó. Đối chiếu danh sách đặc trưng với từng đường chấm điểm."
             },
             {
-              "title": "Determine Next Steps",
+              "title": "Quyết định bước tiếp theo (Determine Next Steps)",
               "doneWhen": "Danh sách phương án kèm lý do; quyết định và số đo (mô hình và hệ thống) ghi vào nhật ký quyết định.",
               "notes": "Phương án: triển khai batch trước, thêm streaming sau; giữ baseline; thu hẹp dữ liệu; lặp thêm vòng; dừng.",
               "ins": [
@@ -735,13 +735,13 @@
           ]
         },
         {
-          "title": "Deployment",
+          "title": "Triển khai (Deployment)",
           "goal": "Đưa kết quả tới người dùng theo kiến trúc Lambda, và giữ nó đúng, đủ mới theo thời gian.",
           "doneWhen": "Batch layer chạy theo lịch, speed layer chạy liên tục (nếu cần), truy vấn trả kết quả gộp; dashboard có người dùng; giám sát drift, độ trễ, độ mới có ngưỡng báo.",
-          "notes": "Khác dự án thường: triển khai là một hệ chạy liên tục, không chỉ một file mô hình.\nKiến trúc Lambda (Marz và Warren, Big Data, Manning, 2015): batch layer tính lại view từ master dataset bất biến; speed layer xử lý dòng cho phần batch chưa tính; serving layer phục vụ batch view; truy vấn gộp batch view và real-time view. Bài giảng: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b9\nKiến trúc Kappa (Kreps, 2014): chỉ một đường streaming; đổi code thì chạy job thứ hai đọc lại từ đầu log Kafka đã giữ, bắt kịp rồi mới đổi bảng đọc. Hợp khi Kafka giữ đủ lịch sử cần tính lại và không muốn giữ hai bộ code: https://www.oreilly.com/radar/questioning-the-lambda-architecture/\nLàm một mình: batch layer và dashboard là đủ. Skip speed layer khi Business Understanding không có kết quả nào cần mới hơn chu kỳ batch.",
+          "notes": "Khác dự án thường: triển khai là một hệ chạy liên tục, không chỉ một file mô hình.\nKiến trúc Lambda (Marz và Warren, Big Data, Manning, 2015): batch layer tính lại view từ master dataset bất biến; speed layer xử lý dòng cho phần batch chưa tính; serving layer phục vụ batch view; truy vấn gộp batch view và real-time view. Bài giảng: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b9\nKiến trúc Kappa (Kreps, 2014): chỉ một đường streaming; đổi code thì chạy job thứ hai đọc lại từ đầu log Kafka đã giữ, bắt kịp rồi mới đổi bảng đọc. Hợp khi Kafka giữ đủ lịch sử cần tính lại và không muốn giữ hai bộ code: https://www.oreilly.com/radar/questioning-the-lambda-architecture/\nLàm một mình: batch layer và dashboard là đủ. Skip speed layer khi ở pha Hiểu bài toán kinh doanh không có kết quả nào cần mới hơn chu kỳ batch.",
           "subs": [
             {
-              "title": "Plan Deployment: Batch or Streaming Scoring",
+              "title": "Lập kế hoạch triển khai: chấm điểm theo lô hay theo luồng (Plan Deployment)",
               "doneWhen": "Mỗi kết quả có đường chấm điểm: batch (theo lịch, mọi khách) hay streaming (theo micro-batch); có lịch chạy, cách lùi về bản trước, phép kiểm ngay sau triển khai.",
               "notes": "Batch scoring: mỗi ngày chấm mọi khách bằng mô hình đã lưu trên bảng gold, ghi bảng điểm; đơn giản, chạy lại dễ.\nStreaming scoring: chỉ khi kết quả cần ngay trong phiên. Đặc trưng phải tính được từ dòng sự kiện và khớp cách tính lúc train (training-serving skew, Rules of ML, Rule #37): https://developers.google.com/machine-learning/guides/rules-of-ml",
               "ins": [
@@ -750,13 +750,13 @@
               ]
             },
             {
-              "title": "Batch Layer: Recompute Views and Batch Scores",
+              "title": "Lớp batch (Batch Layer): tính lại view và điểm theo lô",
               "doneWhen": "Job theo lịch đọc bronze (master dataset), dựng lại silver, gold, chấm điểm mọi khách, ghi batch view kèm mốc dữ liệu; chạy lại cùng ngày ra cùng kết quả.",
               "notes": "Master dataset chỉ ghi thêm. Code sai thì sửa code rồi tính lại, lỗi trong view tự hết.\nGhi đè đúng phân vùng ngày của lần chạy, không ghi thêm, để chạy lại không sinh trùng.\nPhân khúc: gán cụm mỗi lần batch; huấn luyện lại KMeans theo lịch riêng, thưa hơn.",
               "outs": [
                 {
                   "key": "batch-view",
-                  "name": "Batch view",
+                  "name": "Kết quả theo lô (batch view)",
                   "ref": "lake/gold/scores_batch/",
                   "note": "Một dòng mỗi user_id mỗi ngày tính: điểm mua, phân khúc, phiên bản mô hình, mốc dữ liệu cuối đã tính"
                 }
@@ -767,13 +767,13 @@
               ]
             },
             {
-              "title": "Speed Layer: Structured Streaming",
+              "title": "Lớp tốc độ (Speed Layer): Structured Streaming",
               "doneWhen": "Job streaming đọc Kafka, tính đặc trưng từ sự kiện sau mốc batch cuối, chấm điểm, ghi real-time view; có watermark và checkpoint; tắt bật lại không mất, không trùng.",
-              "notes": "withWatermark(cột event time, ngưỡng): sự kiện trễ quá ngưỡng bị bỏ, state cũ được dọn. Ngưỡng lấy từ phân phối độ trễ ở Verify Data Quality. Bài giảng watermark: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b8-ss\nChấm điểm trong foreachBatch: mỗi micro-batch là một DataFrame thường, gọi model.transform() như batch. foreachBatch mặc định chỉ at-least-once; dùng batchId để khử trùng khi ghi: https://spark.apache.org/docs/latest/streaming/apis-on-dataframes-and-datasets.html\nReal-time view chỉ phủ từ mốc batch cuối tới nay; batch mới xong thì phần cũ được thay.",
+              "notes": "withWatermark(cột event time, ngưỡng): sự kiện trễ quá ngưỡng bị bỏ, state cũ được dọn. Ngưỡng lấy từ phân phối độ trễ ở thẻ Kiểm tra chất lượng dữ liệu. Bài giảng watermark: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b8-ss\nChấm điểm trong foreachBatch: mỗi micro-batch là một DataFrame thường, gọi model.transform() như batch. foreachBatch mặc định chỉ at-least-once; dùng batchId để khử trùng khi ghi: https://spark.apache.org/docs/latest/streaming/apis-on-dataframes-and-datasets.html\nReal-time view chỉ phủ từ mốc batch cuối tới nay; batch mới xong thì phần cũ được thay.",
               "outs": [
                 {
                   "key": "realtime-view",
-                  "name": "Real-time view",
+                  "name": "Kết quả thời gian thực (real-time view)",
                   "ref": "serving/realtime_scores",
                   "note": "Một dòng mỗi user_id: điểm, giờ sự kiện cuối đã tính; chỉ phủ khoảng sau mốc của batch view"
                 }
@@ -785,13 +785,13 @@
               ]
             },
             {
-              "title": "Serving Layer and Dashboard",
+              "title": "Lớp phục vụ (Serving Layer) và dashboard",
               "doneWhen": "Truy vấn trả kết quả gộp batch view và real-time view; dashboard đọc qua đó; số trên dashboard khớp một truy vấn tay.",
               "notes": "Tra theo user_id (app, gửi ưu đãi): kho NoSQL đọc ngẫu nhiên nhanh như Cassandra. Bài giảng NoSQL: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b4-1\nDashboard, truy vấn phân tích trên bảng gold: SQL engine đọc thẳng lake như Presto / Trino. Bài giảng Presto: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b4-6\nCassandra chọn mức nhất quán theo từng thao tác (consistency level, theo kiểu R + W > N của Dynamo): đọc chỉ chắc thấy bản vừa ghi khi tập node đọc giao tập node ghi. Bài giảng quorum: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b4-3-quorum\nBài giảng CAP: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b4-2",
               "outs": [
                 {
                   "key": "dashboard",
-                  "name": "Dashboard",
+                  "name": "Bảng điều khiển (dashboard)",
                   "ref": "dashboards/clickstream/",
                   "note": "Phễu, phân khúc, điểm mua; trang ghi mốc dữ liệu của batch view và độ trễ của real-time view"
                 }
@@ -802,7 +802,7 @@
               ]
             },
             {
-              "title": "Plan Monitoring: Drift, Lag, Freshness",
+              "title": "Lập kế hoạch giám sát: drift, độ trễ, độ mới (Plan Monitoring)",
               "doneWhen": "Mỗi chỉ số có ngưỡng báo, chỗ xem và việc phải làm: phân phối đặc trưng và điểm so với lúc train, chất lượng khi nhãn về, độ trễ streaming, độ mới batch view, thời gian job batch.",
               "notes": "Drift: so phân phối từng đặc trưng và điểm dự đoán mỗi ngày với lúc train. Nhãn \"mua trong 7 ngày\" về sau 7 ngày, nên chất lượng thật đo trễ 7 ngày.\nLag streaming: lastProgress của query có inputRowsPerSecond và processedRowsPerSecond; xử lý chậm hơn tốc độ vào trong thời gian dài thì lag tăng dần.\nKafka source của Spark không commit offset lên Kafka, nên công cụ consumer group của Kafka không thấy lag của job này: đo bằng tiến độ của query.\nJob chậm tới mức Kafka xoá offset chưa đọc là mất dữ liệu; để failOnDataLoss mặc định để query dừng và báo.\nBatch view cũ hơn chu kỳ cam kết: báo, và dashboard ghi rõ mốc dữ liệu.",
               "ins": [
@@ -811,7 +811,7 @@
               ]
             },
             {
-              "title": "Produce Final Report",
+              "title": "Viết báo cáo cuối (Produce Final Report)",
               "doneWhen": "Báo cáo cuối: câu hỏi, dữ liệu, kiến trúc, đường huấn luyện và lý do, kết quả test cạnh baseline, số đo hệ thống, hạn chế, khuyến nghị.",
               "notes": "Mỗi số trong báo cáo truy được về một run hay một lần chạy job.",
               "outs": [
@@ -829,7 +829,7 @@
               ]
             },
             {
-              "title": "Review Project",
+              "title": "Nhìn lại dự án (Review Project)",
               "doneWhen": "Tài liệu kinh nghiệm: chỗ nào thật cần big data, chỗ nào một máy đã đủ, bẫy đã gặp, gợi ý cho dự án sau."
             }
           ]
@@ -839,7 +839,7 @@
     {
       "id": "it5425-sports",
       "name": "Đồ án IT5425 — giám sát thể thao (Premier League)",
-      "output": "Course project",
+      "output": "Đồ án môn",
       "description": "Chọn khi làm đồ án môn Data Management and Visualization (IT5425). Các giai đoạn P0–P8 lấy từ trang đồ án. Làm một mình: Skip việc chia vai, họp tuần; app demo và slide tuỳ yêu cầu nộp.",
       "steps": [
         {
@@ -1243,23 +1243,23 @@
     },
     {
       "id": "stats-report",
-      "name": "Statistical analysis and report (PPDAC)",
-      "output": "Report",
-      "description": "Chọn khi đầu ra là báo cáo trả lời một câu hỏi bằng dữ liệu, không cần mô hình dự đoán. Chu trình PPDAC (Wild & Pfannkuch, 1999). Làm một mình với dữ liệu có sẵn: Skip Sampling design và phần thử thu thập, ghi lý do; giữ việc chốt kế hoạch phân tích trước khi xem kết quả.",
+      "name": "Phân tích thống kê và báo cáo (PPDAC)",
+      "output": "Báo cáo",
+      "description": "Chọn khi đầu ra là báo cáo trả lời một câu hỏi bằng dữ liệu, không cần mô hình dự đoán. Chu trình PPDAC (Wild & Pfannkuch, 1999). Làm một mình với dữ liệu có sẵn: Skip thẻ Thiết kế chọn mẫu và phần thử thu thập, ghi lý do; giữ việc chốt kế hoạch phân tích trước khi xem kết quả.",
       "steps": [
         {
-          "title": "Problem",
+          "title": "Vấn đề (Problem)",
           "goal": "Hiểu hệ thống đang xét và biến nó thành một câu hỏi thống kê rõ ràng.",
           "doneWhen": "Câu hỏi một câu, có tổng thể, đơn vị quan sát và biến; người đặt bài toán đồng ý.",
           "notes": "Mẫu theo chu trình PPDAC (MacKay & Oldford, 1994) trong Wild & Pfannkuch (1999), Statistical Thinking in Empirical Enquiry, hình 1(a): tên bước là năm khâu, tên bước con là các mục dưới mỗi khâu.\nhttps://ideas.repec.org/a/bla/istatr/v67y1999i3p223-248.html\nKết luận thường mở ra câu hỏi mới: chu trình lặp lại.",
           "subs": [
             {
-              "title": "Grasping system dynamics",
+              "title": "Nắm động lực của hệ thống (Grasping system dynamics)",
               "doneWhen": "Ghi được hệ thống vận hành thế nào, yếu tố nào có thể ảnh hưởng kết quả, ai cần câu trả lời và để làm gì.",
               "notes": "Hỏi: muốn cải thiện hay hiểu điều gì? Đã có thông tin gì? Người trong nghề nghĩ yếu tố nào quan trọng?"
             },
             {
-              "title": "Defining problem",
+              "title": "Xác định vấn đề (Defining problem)",
               "doneWhen": "Câu hỏi một câu, có tổng thể, đơn vị quan sát, biến trả lời, biến giải thích; ghi rõ là câu hỏi mô tả, so sánh hay nhân quả.",
               "notes": "Câu hỏi nhân quả cần thiết kế cho phép (thí nghiệm, hoặc giả định ghi rõ); dữ liệu quan sát thường chỉ trả lời câu hỏi liên hệ.",
               "outs": [
@@ -1274,29 +1274,29 @@
           ]
         },
         {
-          "title": "Plan",
+          "title": "Kế hoạch (Plan)",
           "goal": "Chốt cách đo, cách lấy mẫu và cách phân tích trước khi xem kết quả.",
           "doneWhen": "Kế hoạch phân tích đã ghi và lưu (có ngày) trước khi chạy kiểm định.",
           "notes": "Chốt kế hoạch trước để không chọn phép thử theo p-value.\nHình 9 của bài báo tách khâu này thành: thông tin đã có, đo gì và đo thế nào, đo trên đơn vị nào, thu thập, quản lý dữ liệu, kế hoạch phân tích, thử và chỉnh.",
           "subs": [
             {
-              "title": "Measurement system",
+              "title": "Hệ thống đo lường (Measurement system)",
               "doneWhen": "Mỗi biến có định nghĩa, cách đo, đơn vị; biết phép đo tin được tới đâu.",
               "notes": "Hỏi: phép đo có đo đúng khái niệm cần không? Đo hai lần cùng một thứ có ra cùng số không?"
             },
             {
-              "title": "Sampling design",
+              "title": "Thiết kế chọn mẫu (Sampling design)",
               "doneWhen": "Đơn vị nào được đo và chọn thế nào (mẫu ngẫu nhiên, thí nghiệm, hay dữ liệu có sẵn); α, độ lớn hiệu ứng cần phát hiện, cỡ mẫu từ phân tích công suất (power analysis).",
               "notes": "Dữ liệu có sẵn: ghi nó đại diện cho tổng thể nào và ai bị thiếu.\nCỡ mẫu đã cố định thì tính ngược: với cỡ này phát hiện được hiệu ứng nhỏ nhất bao nhiêu."
             },
             {
-              "title": "Data management",
+              "title": "Quản lý dữ liệu (Data management)",
               "doneWhen": "Biết dữ liệu lưu ở đâu, đặt tên thế nào, ai được sửa; file gốc chỉ đọc."
             },
             {
-              "title": "Piloting & analysis",
+              "title": "Thử nghiệm và phân tích thử (Piloting & analysis)",
               "doneWhen": "Đã thử thu thập trên mẫu nhỏ và chỉnh; kế hoạch phân tích ghi giả thuyết H0 / H1, kiểm định, α, biến, cách xử lý thiếu và ngoại lai, lưu trước khi xem kết quả.",
-              "notes": "Kế hoạch này là ranh giới giữa Planned analyses và Unplanned analyses ở khâu Analysis.",
+              "notes": "Kế hoạch này là ranh giới giữa Phân tích theo kế hoạch và Phân tích ngoài kế hoạch ở khâu Phân tích.",
               "outs": [
                 {
                   "key": "analysis-plan",
@@ -1312,12 +1312,12 @@
           ]
         },
         {
-          "title": "Data",
+          "title": "Dữ liệu (Data)",
           "goal": "Có dữ liệu sạch, biết nguồn và giới hạn.",
           "doneWhen": "Bảng sạch dựng lại được bằng một lệnh; data card đủ.",
           "subs": [
             {
-              "title": "Data collection",
+              "title": "Thu thập dữ liệu (Data collection)",
               "doneWhen": "Ghi nguồn, ngày lấy, điều khoản; chỗ lệch so với kế hoạch đã ghi.",
               "notes": "Không sửa tay file gốc; mọi thay đổi đi qua script.",
               "outs": [
@@ -1330,7 +1330,7 @@
               ]
             },
             {
-              "title": "Data management",
+              "title": "Quản lý dữ liệu (Data management)",
               "doneWhen": "Có data card, data dictionary và lineage: file nào ra file nào.",
               "outs": [
                 {
@@ -1342,7 +1342,7 @@
               ]
             },
             {
-              "title": "Data cleaning",
+              "title": "Làm sạch dữ liệu (Data cleaning)",
               "doneWhen": "Mỗi luật làm sạch có lý do; số dòng trước và sau mỗi luật.",
               "notes": "Hỏi chuyên gia trước khi xoá dòng lạ: có khi đó là điều đáng tìm.",
               "outs": [
@@ -1361,17 +1361,17 @@
           ]
         },
         {
-          "title": "Analysis",
+          "title": "Phân tích (Analysis)",
           "goal": "Trả lời câu hỏi bằng phân tích đã chốt; tách rõ phân tích khám phá.",
           "doneWhen": "Mỗi kết quả có ước lượng, độ lớn hiệu ứng, khoảng tin cậy (và p-value nếu kiểm định); phân tích ngoài kế hoạch ghi rõ là khám phá.",
           "subs": [
             {
-              "title": "Data exploration",
+              "title": "Khám phá dữ liệu (Data exploration)",
               "doneWhen": "Bảng mô tả (trung bình, trung vị, độ lệch chuẩn, khoảng tứ phân vị) và hình phân phối cho mọi biến chính.",
               "notes": "Ngoại lai: quyết giữ hay bỏ, lý do ghi ở nhật ký quyết định."
             },
             {
-              "title": "Planned analyses",
+              "title": "Phân tích theo kế hoạch (Planned analyses)",
               "doneWhen": "Đã kiểm giả định (độc lập, phân phối, phương sai), chạy đúng kiểm định trong kế hoạch, hiệu chỉnh khi so nhiều lần, báo độ lớn hiệu ứng và khoảng tin cậy.",
               "notes": "Hỏi thêm: kết luận có đổi khi bỏ ngoại lai hay đổi giả định không? Ghi cả kết quả không có ý nghĩa thống kê.",
               "outs": [
@@ -1388,34 +1388,34 @@
               ]
             },
             {
-              "title": "Unplanned analyses",
+              "title": "Phân tích ngoài kế hoạch (Unplanned analyses)",
               "doneWhen": "Ghi rõ là khám phá, không trình bày như kết quả xác nhận."
             },
             {
-              "title": "Hypothesis generation",
+              "title": "Nêu giả thuyết (Hypothesis generation)",
               "doneWhen": "Giả thuyết mới ghi lại cho vòng sau, không kiểm trên chính dữ liệu đã gợi ra nó."
             }
           ]
         },
         {
-          "title": "Conclusions",
+          "title": "Kết luận (Conclusions)",
           "goal": "Người đọc hiểu kết quả, giới hạn của nó, và làm lại được.",
           "doneWhen": "Báo cáo đủ phần; chạy lại từ đầu ra đúng số trong báo cáo.",
           "subs": [
             {
-              "title": "Interpretation",
+              "title": "Diễn giải (Interpretation)",
               "doneWhen": "Kết quả nói bằng ngôn ngữ của bài toán; phân biệt ý nghĩa thống kê với ý nghĩa thực tế."
             },
             {
-              "title": "Conclusions",
-              "doneWhen": "Kết luận trả lời đúng câu hỏi ở khâu Problem; ghi hạn chế và mối đe doạ tới giá trị kết luận; chỉ nói nhân quả khi thiết kế cho phép."
+              "title": "Kết luận (Conclusions)",
+              "doneWhen": "Kết luận trả lời đúng câu hỏi ở khâu Vấn đề; ghi hạn chế và mối đe doạ tới giá trị kết luận; chỉ nói nhân quả khi thiết kế cho phép."
             },
             {
-              "title": "New ideas",
+              "title": "Ý tưởng mới (New ideas)",
               "doneWhen": "Câu hỏi mở cho vòng PPDAC sau."
             },
             {
-              "title": "Communication",
+              "title": "Truyền đạt kết quả (Communication)",
               "doneWhen": "Báo cáo: phương pháp đủ để làm lại, mỗi số truy được về code, hình có tiêu đề, trục, đơn vị, nguồn; trích dẫn nguồn dữ liệu và tài liệu.",
               "outs": [
                 {
@@ -1435,18 +1435,18 @@
     },
     {
       "id": "app-feature",
-      "name": "App feature (iOS / Flutter)",
-      "output": "App feature",
-      "description": "Chọn khi đầu ra là một tính năng của app iOS / Flutter, từ spec tới phát hành. Không theo một chuẩn; việc phát hành theo tài liệu App Store Connect, Google Play, Flutter. Làm một mình, app ít người dùng: Skip Design review, feature flag, staged rollout.",
+      "name": "Tính năng app (iOS / Flutter)",
+      "output": "Tính năng app",
+      "description": "Chọn khi đầu ra là một tính năng của app iOS / Flutter, từ spec tới phát hành. Không theo một chuẩn; việc phát hành theo tài liệu App Store Connect, Google Play, Flutter. Làm một mình, app ít người dùng: Skip thẻ Duyệt thiết kế, feature flag, phát hành dần.",
       "steps": [
         {
-          "title": "Spec",
+          "title": "Đặc tả (Spec)",
           "goal": "Biết tính năng giải quyết việc gì cho ai, và không làm gì.",
           "doneWhen": "User story và tiêu chí chấp nhận đã được người đặt việc đồng ý.",
           "notes": "Mẫu không theo một chuẩn. Nguồn của việc phát hành:\nTestFlight: https://developer.apple.com/help/app-store-connect/test-a-beta-version/testflight-overview/\nPhased release (App Store): https://developer.apple.com/help/app-store-connect/update-your-app/release-a-version-update-in-phases/\nStaged rollout (Google Play): https://support.google.com/googleplay/android-developer/answer/6346149\nKiểm thử Flutter: https://docs.flutter.dev/testing/overview",
           "subs": [
             {
-              "title": "Write user stories and acceptance criteria",
+              "title": "Viết user story và tiêu chí nghiệm thu (acceptance criteria)",
               "doneWhen": "Mỗi story: ai, muốn gì, để làm gì; mỗi tiêu chí chấp nhận kiểm được bằng một thao tác và một kết quả nhìn thấy.",
               "outs": [
                 {
@@ -1458,34 +1458,34 @@
               ]
             },
             {
-              "title": "List edge cases: offline, network errors, permissions, empty data",
+              "title": "Liệt kê trường hợp biên: offline, lỗi mạng, quyền truy cập, dữ liệu trống",
               "doneWhen": "Mỗi trường hợp biên có hành vi mong đợi."
             },
             {
-              "title": "Fix the scope and the non-goals",
+              "title": "Chốt phạm vi và những gì không làm (non-goals)",
               "doneWhen": "Danh sách việc không làm ở bản này đã được đồng ý."
             },
             {
-              "title": "Estimate and split the work",
+              "title": "Ước lượng và chia việc",
               "doneWhen": "Việc chia thành phần nhỏ, mỗi phần có ước lượng; biết phần nào bỏ được nếu trễ."
             }
           ]
         },
         {
-          "title": "Design",
+          "title": "Thiết kế (Design)",
           "goal": "Màn hình, luồng và dữ liệu rõ trước khi viết code.",
           "doneWhen": "Thiết kế đã review; API và model đã chốt.",
           "subs": [
             {
-              "title": "Wireframes / mockups for each screen",
+              "title": "Wireframe / mockup cho từng màn hình",
               "doneWhen": "Mỗi màn hình có bản phác."
             },
             {
-              "title": "Navigation flow and states: loading, empty, error",
+              "title": "Luồng điều hướng và trạng thái: đang tải, trống, lỗi",
               "doneWhen": "Sơ đồ đi giữa các màn hình; mỗi màn có đủ trạng thái loading, empty, error."
             },
             {
-              "title": "API and data model design",
+              "title": "Thiết kế API và mô hình dữ liệu",
               "doneWhen": "Hợp đồng API (endpoint, request, response, mã lỗi, ví dụ JSON) và model dữ liệu phía app.",
               "outs": [
                 {
@@ -1497,87 +1497,87 @@
               ]
             },
             {
-              "title": "Analytics and feature flag plan",
+              "title": "Kế hoạch analytics và feature flag",
               "doneWhen": "Sự kiện cần đo (tên, thuộc tính) và chỉ số sẽ xem sau phát hành; tên flag và giá trị mặc định."
             },
             {
-              "title": "Design review",
+              "title": "Duyệt thiết kế (Design review)",
               "doneWhen": "Góp ý đã xử lý hoặc ghi lý do không xử lý."
             }
           ]
         },
         {
-          "title": "Build",
+          "title": "Xây dựng (Build)",
           "goal": "Code chạy đúng spec, sau feature flag.",
           "doneWhen": "Mọi tiêu chí chấp nhận chạy được trên bản build nội bộ.",
           "subs": [
             {
-              "title": "Create the branch and feature flag",
+              "title": "Tạo nhánh và feature flag",
               "doneWhen": "Nhánh riêng; flag mặc định tắt, tắt thì app chạy như trước."
             },
             {
-              "title": "Model, repository, API calls",
+              "title": "Model, repository, lời gọi API",
               "doneWhen": "Gọi API đúng hợp đồng; lỗi mạng, timeout ra lỗi có kiểu, không làm văng app.",
               "ins": [
                 "api-contract"
               ]
             },
             {
-              "title": "State management",
+              "title": "Quản lý trạng thái (State management)",
               "doneWhen": "Mỗi màn hình có trạng thái rõ: loading, có dữ liệu, empty, error."
             },
             {
-              "title": "UI with the design system",
+              "title": "Giao diện theo design system",
               "doneWhen": "Màn hình dùng component, màu, cỡ chữ của design system; khớp bản thiết kế."
             },
             {
-              "title": "Accessibility: Dynamic Type, VoiceOver / TalkBack",
+              "title": "Trợ năng (Accessibility): Dynamic Type, VoiceOver / TalkBack",
               "doneWhen": "Đọc được ở cỡ chữ lớn nhất; VoiceOver / TalkBack đọc đúng tên và vai trò mọi nút."
             },
             {
-              "title": "Localization: move strings to translation files",
+              "title": "Bản địa hoá (Localization): chuyển chuỗi chữ sang file dịch",
               "doneWhen": "Không còn chuỗi hiển thị viết cứng trong code."
             }
           ]
         },
         {
-          "title": "Test",
+          "title": "Kiểm thử (Test)",
           "goal": "Bắt lỗi trước người dùng.",
           "doneWhen": "Test xanh trên CI; không còn lỗi chặn.",
           "notes": "Flutter chia ba loại test: unit (một hàm, method hay class), widget (một widget), integration (cả app hay phần lớn app).",
           "subs": [
             {
-              "title": "Unit tests for the logic",
+              "title": "Unit test cho phần logic",
               "doneWhen": "Logic (parse, tính toán, chuyển trạng thái) có unit test chạy trên CI."
             },
             {
-              "title": "Widget tests / UI tests",
+              "title": "Viết widget test / UI test",
               "doneWhen": "Mỗi tiêu chí chấp nhận có ít nhất một test; mỗi trạng thái màn hình có widget test hay UI test.",
               "ins": [
                 "acceptance-criteria"
               ]
             },
             {
-              "title": "Test on real devices: iOS and Android, older devices",
+              "title": "Thử trên máy thật: iOS và Android, máy đời cũ",
               "doneWhen": "Chạy trên máy thật iOS và Android, có một máy cũ và màn nhỏ nhất app hỗ trợ."
             },
             {
-              "title": "Test offline, slow network, denied permissions",
+              "title": "Thử khi offline, mạng chậm, bị từ chối quyền",
               "doneWhen": "Hành vi khớp danh sách trường hợp biên ở Spec."
             },
             {
-              "title": "Code review",
+              "title": "Duyệt code (Code review)",
               "doneWhen": "Mọi góp ý đã xử lý hoặc trả lời."
             }
           ]
         },
         {
-          "title": "Release",
+          "title": "Phát hành (Release)",
           "goal": "Đưa tới người dùng từng phần, theo dõi được.",
           "doneWhen": "Phát hành cho mọi người; crash và chỉ số ổn định.",
           "subs": [
             {
-              "title": "Bump version and build number",
+              "title": "Tăng version và build number",
               "doneWhen": "Version và build number tăng; không trùng số với bản đã tải lên.",
               "outs": [
                 {
@@ -1588,11 +1588,11 @@
               ]
             },
             {
-              "title": "Write release notes",
+              "title": "Viết ghi chú phát hành (release notes)",
               "doneWhen": "Release notes ngắn, nói thay đổi người dùng thấy."
             },
             {
-              "title": "TestFlight / internal testing track",
+              "title": "Thử nội bộ: TestFlight / internal testing track",
               "doneWhen": "Bản build đã chạy ở TestFlight hay internal testing track, không lỗi chặn.",
               "notes": "TestFlight: tối đa 100 tester nội bộ và 10.000 tester ngoài; build đầu cho nhóm tester ngoài phải qua App Review; build hết hạn sau 90 ngày.",
               "ins": [
@@ -1600,16 +1600,16 @@
               ]
             },
             {
-              "title": "Staged rollout / phased release",
+              "title": "Phát hành dần (staged rollout / phased release)",
               "doneWhen": "Đang phát hành theo tỉ lệ; đã định ngưỡng crash để dừng.",
               "notes": "App Store phased release: 7 ngày, 1%, 2%, 5%, 10%, 20%, 50%, 100% người bật cập nhật tự động; ai cũng tải tay được bất cứ lúc nào; tạm dừng tổng cộng tối đa 30 ngày.\nGoogle Play staged rollout: tự chọn tỉ lệ, tỉ lệ không tự tăng; dừng thì người đã nhận vẫn giữ bản ấy, nên sửa lỗi là phát hành bản mới số cao hơn."
             },
             {
-              "title": "Monitor crashes and metrics after release",
+              "title": "Theo dõi crash và chỉ số sau phát hành",
               "doneWhen": "Đã xem tỉ lệ crash và các chỉ số trong kế hoạch analytics, so với bản trước."
             },
             {
-              "title": "Turn the flag on for everyone, remove old flags",
+              "title": "Bật flag cho mọi người, gỡ flag cũ",
               "doneWhen": "Flag bật cho mọi người; flag và nhánh code cũ đã xoá."
             }
           ]
@@ -1618,23 +1618,23 @@
     },
     {
       "id": "data-pipeline",
-      "name": "Scheduled data pipeline (Data engineering lifecycle)",
-      "output": "Data pipeline",
-      "description": "Chọn khi dữ liệu mới tới định kỳ và cần một job tự chạy, chặn lô lỗi, giữ bản sạch tốt gần nhất cho bên dùng. Theo vòng đời data engineering (Reis & Housley, Fundamentals of Data Engineering, 2022). Làm một mình: Storage có thể chỉ là một thư mục phân vùng; Security chỉ cần giữ secret ngoài code.",
+      "name": "Pipeline dữ liệu định kỳ (Data Engineering Lifecycle)",
+      "output": "Pipeline dữ liệu",
+      "description": "Chọn khi dữ liệu mới tới định kỳ và cần một job tự chạy, chặn lô lỗi, giữ bản sạch tốt gần nhất cho bên dùng. Theo vòng đời data engineering (Reis & Housley, Fundamentals of Data Engineering, 2022). Làm một mình: Lưu trữ có thể chỉ là một thư mục phân vùng; Bảo mật chỉ cần giữ secret ngoài code.",
       "steps": [
         {
-          "title": "Generation: Source Systems",
+          "title": "Phát sinh dữ liệu: hệ thống nguồn (Generation: Source Systems)",
           "goal": "Biết dữ liệu sinh ra ở đâu, đổi thế nào, và được dùng tới đâu.",
           "doneWhen": "Có hợp đồng với nguồn và một mẫu dữ liệu thật để viết test.",
-          "notes": "Mẫu theo vòng đời data engineering trong Reis & Housley, Fundamentals of Data Engineering (O'Reilly, 2022), chương 2: năm khâu Generation, Storage, Ingestion, Transformation, Serving và các mạch ngầm (undercurrents) Security, Data Management, DataOps, Data Architecture, Orchestration, Software Engineering. Tên bước là tên mục của chương 2. Bước con là việc cụ thể cho một người làm; việc lấy từ nguồn khác ghi nguồn trong tên thẻ.\nBài của tác giả nhắc lại khung này: https://joereis.substack.com/p/the-data-engineering-lifecycle-and\nBẫy hay gặp: nguồn đổi cột hay sửa dữ liệu cũ mà không báo; job vẫn chạy xanh và ghi dữ liệu sai.",
+          "notes": "Mẫu theo vòng đời data engineering trong Reis & Housley, Fundamentals of Data Engineering (O'Reilly, 2022), chương 2: năm khâu Generation, Storage, Ingestion, Transformation, Serving và các mạch ngầm (undercurrents) Security, Data Management, DataOps, Data Architecture, Orchestration, Software Engineering. Tên bước là tên mục của chương 2: tiếng Việt, tên gốc trong ngoặc. Bước con là việc cụ thể cho một người làm; việc lấy từ nguồn khác ghi nguồn trong tên thẻ.\nBài của tác giả nhắc lại khung này: https://joereis.substack.com/p/the-data-engineering-lifecycle-and\nBẫy hay gặp: nguồn đổi cột hay sửa dữ liệu cũ mà không báo; job vẫn chạy xanh và ghi dữ liệu sai.",
           "subs": [
             {
-              "title": "Identify the source and its terms",
+              "title": "Xác định nguồn và điều khoản sử dụng",
               "doneWhen": "Ghi nguồn, cách lấy (API, file, cơ sở dữ liệu), điều khoản dùng, hạn mức gọi, nguồn cập nhật lúc nào.",
               "notes": "Hỏi: nguồn có sửa hay bổ sung dữ liệu của ngày đã qua không? Nguồn báo đổi cột bằng cách nào?"
             },
             {
-              "title": "Write the source contract",
+              "title": "Viết hợp đồng nguồn (source contract)",
               "doneWhen": "Hợp đồng nguồn: mỗi cột (tên, kiểu, được trống không), khoá của một dòng, tần suất cập nhật, cách nguồn sửa dữ liệu cũ, số ngày lùi phải chạy lại.",
               "notes": "Hợp đồng là thứ job kiểm mỗi lần chạy, không chỉ là tài liệu.",
               "outs": [
@@ -1647,7 +1647,7 @@
               ]
             },
             {
-              "title": "Save a sample snapshot",
+              "title": "Lưu một bản chụp mẫu",
               "doneWhen": "Vài trăm dòng thật (kể cả dòng lạ) lưu làm dữ liệu test; ghi ngày lấy.",
               "outs": [
                 {
@@ -1661,17 +1661,17 @@
           ]
         },
         {
-          "title": "Storage",
+          "title": "Lưu trữ (Storage)",
           "goal": "Chọn nơi lưu thô và sạch sao cho chạy lại, quay về bản cũ được.",
           "doneWhen": "Có sơ đồ thư mục hay bảng: thô chỉ thêm, sạch theo phiên bản, một chỗ trỏ bản đang công bố.",
           "subs": [
             {
-              "title": "Choose raw and clean storage",
+              "title": "Chọn nơi lưu dữ liệu thô và dữ liệu sạch",
               "doneWhen": "Đã chọn nơi lưu (thư mục, object storage, cơ sở dữ liệu) và định dạng (ví dụ Parquet) cho vùng thô và vùng sạch, kèm lý do.",
               "notes": "Vùng thô chỉ thêm, không sửa: lô nào cũng dựng lại được từ đây."
             },
             {
-              "title": "Partition and version layout (Airflow)",
+              "title": "Bố cục phân vùng và phiên bản (theo Airflow)",
               "doneWhen": "Vùng thô phân vùng theo khoảng dữ liệu (ví dụ theo ngày); vùng sạch có phiên bản; có con trỏ tới bản sạch đang công bố.",
               "notes": "Airflow, Best practices: đọc và ghi theo một phân vùng cụ thể (ví dụ lấy data_interval_start làm phân vùng), không đọc \"dữ liệu mới nhất\" trong task: https://airflow.apache.org/docs/apache-airflow/stable/best-practices.html",
               "outs": [
@@ -1686,13 +1686,13 @@
           ]
         },
         {
-          "title": "Ingestion",
+          "title": "Thu nạp (Ingestion)",
           "goal": "Lấy dữ liệu về theo lô, chạy lại không sinh trùng, phát hiện nguồn đổi.",
           "doneWhen": "Chạy hai lần cùng một lô ra cùng kết quả; lô đổi schema dừng lại kèm báo lỗi rõ.",
           "notes": "Airflow, Best practices: mỗi task như một transaction, chạy lại ra cùng kết quả; đọc và ghi theo phân vùng; không dùng giờ máy (now()) trong task; INSERT khi chạy lại sinh dòng trùng, dùng UPSERT: https://airflow.apache.org/docs/apache-airflow/stable/best-practices.html",
           "subs": [
             {
-              "title": "Batch ingestion job",
+              "title": "Job thu nạp theo lô",
               "doneWhen": "Job lấy đúng một khoảng dữ liệu (data interval) truyền vào, ghi vào phân vùng của khoảng ấy ở vùng thô, kèm số dòng và SHA-256.",
               "notes": "Khoảng dữ liệu là tham số của lần chạy, không phải \"hôm nay\": chạy lại hay chạy bù mới đúng lô.",
               "outs": [
@@ -1709,12 +1709,12 @@
               ]
             },
             {
-              "title": "Idempotent re-runs (Airflow)",
+              "title": "Chạy lại không sinh trùng (idempotent; theo Airflow)",
               "doneWhen": "Chạy lại cùng một lô hai lần: số dòng và tổng kiểm như nhau, không dòng trùng khoá (ghi đè phân vùng hoặc UPSERT theo khoá).",
               "notes": "Dữ liệu tới trễ hay nguồn sửa ngày cũ: chạy lại đúng các phân vùng trong cửa sổ đã ghi ở hợp đồng nguồn; làm được vì mỗi lần chạy đã idempotent."
             },
             {
-              "title": "Schema change detection (ML Test Score)",
+              "title": "Phát hiện schema thay đổi (theo ML Test Score)",
               "doneWhen": "Mỗi lô so cột, kiểu với hợp đồng nguồn; thiếu, thừa hay đổi kiểu thì dừng trước vùng sạch, báo lỗi nêu tên cột.",
               "notes": "ML Test Score, Monitor 1: nguồn đổi (hỏng một phần, nâng phiên bản) có thể đổi nghĩa dữ liệu mà không gây lỗi; thay đổi phải sinh thông báo: https://research.google/pubs/the-ml-test-score-a-rubric-for-ml-production-readiness-and-technical-debt-reduction/\nTest schema chạy trên mẫu dữ liệu nguồn trong CI, và trên mỗi lô thật lúc chạy.",
               "ins": [
@@ -1725,12 +1725,12 @@
           ]
         },
         {
-          "title": "Transformation",
+          "title": "Biến đổi (Transformation)",
           "goal": "Biến lô thô thành bảng sạch đúng hợp đồng, và chặn lô lỗi.",
           "doneWhen": "Bảng sạch dựng lại được từ vùng thô; mọi lô qua cổng chất lượng trước khi công bố.",
           "subs": [
             {
-              "title": "Clean and model the data",
+              "title": "Làm sạch và mô hình hoá dữ liệu",
               "doneWhen": "Bảng sạch: một dòng mỗi thực thể, khoá không trùng, cột và kiểu theo hợp đồng; mỗi luật làm sạch có lý do, số dòng trước và sau.",
               "outs": [
                 {
@@ -1745,12 +1745,12 @@
               ]
             },
             {
-              "title": "Data quality tests (dbt)",
+              "title": "Test chất lượng dữ liệu (theo dbt)",
               "doneWhen": "Mỗi lần chạy kiểm: khoá duy nhất, cột bắt buộc không trống, giá trị trong miền cho phép, khoá ngoại có thật, số dòng không lệch xa lô trước.",
               "notes": "dbt có sẵn bốn test: unique, not_null, accepted_values, relationships; test trả về các dòng sai: https://docs.getdbt.com/docs/build/data-tests\nKhông dùng dbt thì viết các luật này bằng SQL hay pandas; điều cần là chúng chạy mỗi lần, không chỉ lúc viết."
             },
             {
-              "title": "Quality gate before publish (dbt)",
+              "title": "Cổng chất lượng trước khi công bố (theo dbt)",
               "doneWhen": "Lô không qua test thì không công bố: bản sạch đang công bố giữ nguyên, lô lỗi giữ lại kèm báo cáo chất lượng để sửa.",
               "notes": "dbt build: test của bảng trước hỏng thì các bảng sau bị bỏ qua (SKIP): https://docs.getdbt.com/reference/commands/build\nBẫy: ghi đè bản sạch trước rồi mới kiểm; bên dùng đọc phải bản hỏng.",
               "outs": [
@@ -1765,12 +1765,12 @@
           ]
         },
         {
-          "title": "Serving Data",
+          "title": "Phục vụ dữ liệu (Serving Data)",
           "goal": "Bên dùng đọc một bản sạch ổn định và biết nó mới tới đâu.",
           "doneWhen": "Bên dùng chỉ đọc bản đang công bố; đọc thử ra đúng số đối chiếu.",
           "subs": [
             {
-              "title": "Publish the current version",
+              "title": "Công bố phiên bản hiện hành",
               "doneWhen": "Công bố bằng cách trỏ con trỏ sang phiên bản mới sau khi qua cổng; bản trước còn giữ để lùi lại.",
               "outs": [
                 {
@@ -1786,11 +1786,11 @@
               ]
             },
             {
-              "title": "Document the data for consumers",
+              "title": "Viết tài liệu dữ liệu cho bên dùng",
               "doneWhen": "Từ điển dữ liệu của bảng công bố, khoá, độ mới cam kết (dữ liệu trễ tối đa bao lâu), cách báo khi đổi cột."
             },
             {
-              "title": "Consumer check",
+              "title": "Bên dùng kiểm tra",
               "doneWhen": "Bên dùng (notebook, dashboard, app) đọc bản công bố, lọc một khoảng, ra đúng số dòng và tổng đã đối chiếu với nguồn.",
               "ins": [
                 "published-data"
@@ -1799,18 +1799,18 @@
           ]
         },
         {
-          "title": "Undercurrents",
+          "title": "Mạch ngầm (Undercurrents)",
           "goal": "Job tự chạy đúng lịch, hỏng thì biết ngay, sửa và chạy bù được.",
           "doneWhen": "Có lịch chạy, nhật ký mỗi lần chạy, cảnh báo, runbook; đã thử một lần backfill.",
           "notes": "Mạch ngầm (undercurrents) chạy qua mọi khâu. Mẫu giữ Orchestration, DataOps, Security; Data Management nằm ở hợp đồng nguồn và test chất lượng.",
           "subs": [
             {
-              "title": "Orchestration: schedule and dependencies",
+              "title": "Điều phối (Orchestration): lịch chạy và phụ thuộc",
               "doneWhen": "Lịch chạy, thứ tự các bước, số lần thử lại khi lỗi; chạy tay được với khoảng dữ liệu tự chọn.",
               "notes": "GitHub Actions schedule: có thể trễ khi tải cao, tải đủ cao thì job trong hàng chờ có thể bị bỏ; giờ tròn là lúc tải cao, nên đặt phút lẻ; chỉ chạy trên nhánh mặc định; repo công khai 60 ngày không hoạt động thì lịch tự tắt: https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule\nVì vậy đừng giả định lần chạy nào cũng có: mỗi lần chạy tự bù các khoảng còn thiếu, và kiểm độ mới riêng."
             },
             {
-              "title": "DataOps: run log and freshness (dbt)",
+              "title": "DataOps: nhật ký chạy và độ mới (theo dbt)",
               "doneWhen": "Nhật ký mỗi lần chạy và kiểm độ mới: bản công bố cũ quá mức cam kết thì báo.",
               "notes": "dbt khuyên chạy kiểm độ mới ít nhất gấp đôi tần suất của SLA ngắn nhất: https://docs.getdbt.com/docs/deploy/source-freshness",
               "outs": [
@@ -1823,12 +1823,12 @@
               ]
             },
             {
-              "title": "DataOps: alerting and runbook",
+              "title": "DataOps: cảnh báo và runbook",
               "doneWhen": "Lỗi chạy, lô bị cổng chặn, dữ liệu quá cũ đều gửi cảnh báo tới chỗ mình đọc hằng ngày; runbook ghi mỗi loại lỗi: kiểm gì, sửa thế nào, chạy lại lệnh nào.",
               "outs": [
                 {
                   "key": "runbook",
-                  "name": "Runbook",
+                  "name": "Sổ tay vận hành (runbook)",
                   "ref": "docs/runbook.md",
                   "note": "Mỗi loại cảnh báo: dấu hiệu, kiểm gì, lệnh chạy lại hay lùi bản, khi nào báo bên dùng"
                 }
@@ -1838,7 +1838,7 @@
               ]
             },
             {
-              "title": "Orchestration: backfill (Airflow)",
+              "title": "Điều phối (Orchestration): chạy bù (backfill; theo Airflow)",
               "doneWhen": "Chạy bù một khoảng lịch sử theo từng phân vùng; sau đó số khoá trùng bằng 0 và số dòng mỗi phân vùng khớp nguồn.",
               "notes": "Airflow gọi việc chạy lại pipeline cho một khoảng thời gian đã qua là backfill: https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/dag-run.html\nChạy bù trên bản sạch mới rồi mới công bố, như một lô thường.",
               "ins": [
@@ -1846,7 +1846,7 @@
               ]
             },
             {
-              "title": "Security: secrets and access",
+              "title": "Bảo mật (Security): secret và quyền truy cập",
               "doneWhen": "Khoá API, mật khẩu nằm trong secret, không trong code hay log; chỉ job cần mới đọc được.",
               "notes": "GitHub Actions: secret đọc qua context secrets, bị che trong log, không truyền cho workflow chạy từ fork: https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets"
             }
@@ -1856,7 +1856,7 @@
     },
     {
       "id": "blank",
-      "name": "Blank",
+      "name": "Dự án trống",
       "description": "Chọn khi không mẫu nào hợp: không có bước nào, tự thêm.",
       "steps": []
     }
