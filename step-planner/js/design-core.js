@@ -104,21 +104,33 @@ export function fitOf(opt, profile) {
 }
 
 /**
- * Phương án của một khâu theo thứ tự gợi ý: hợp hồ sơ trước, rồi phương án lối đã chọn gợi ý (`sug`), khớp nhiều câu hơn,
- * dễ hơn, rồi thứ tự danh mục. `top`: phương án đứng đầu khi đã trả lời ít nhất một câu hồ sơ hay chọn lối, và nó hợp.
+ * Phương án của một khâu theo thứ tự gợi ý: hợp hồ sơ trước, rồi phương án lối đã chọn gợi ý (`sug`, theo thứ tự lối ghi),
+ * khớp nhiều câu hơn, dễ hơn, rồi thứ tự danh mục. `top`: phương án đứng đầu khi đã trả lời ít nhất một câu hồ sơ hay chọn lối, và nó hợp.
  * @param {any} stage @param {Record<string,string>} profile @param {any} [path]
  */
 export function rankOptions(stage, profile, path = null) {
   const answered = Object.keys(profile).length > 0 || !!path;
   const sug = (path && path.suggest[stage.id]) || [];
   const rows = stage.options.map((/** @type {any} */ o, /** @type {number} */ i) => ({ opt: o, i, sug: sug.includes(o.id), ...fitOf(o, profile) }));
-  rows.sort((a, b) => (+b.ok - +a.ok) || (+b.sug - +a.sug) || (b.score - a.score) || ((a.opt.level || 2) - (b.opt.level || 2)) || (a.i - b.i));
+  const at = (/** @type {any} */ r) => (r.sug ? sug.indexOf(r.opt.id) : sug.length);
+  rows.sort((a, b) => (+b.ok - +a.ok) || (at(a) - at(b)) || (b.score - a.score) || ((a.opt.level || 2) - (b.opt.level || 2)) || (a.i - b.i));
   return rows.map((r, k) => ({ ...r, top: answered && k === 0 && r.ok }));
 }
 
 /**
- * Áp lối vào thiết kế: chỉ khâu chưa quyết. Khâu lối bỏ (`skip`) thành "không cần"; khâu lối cần (`need`) có gợi ý thì chọn
- * phương án đứng đầu (hợp hồ sơ, ưu tiên gợi ý của lối). Khâu `maybe` để người dùng tự quyết. Không đụng khâu đã quyết.
+ * Khâu chỉ cần khi hồ sơ khớp (`when` của khâu: câu hồ sơ → các câu trả lời). Trả các câu đã trả lời mà không khớp
+ * (rỗng: khâu cần, hoặc chưa biết vì câu chưa trả lời). @param {any} stage @param {Record<string,string>} profile
+ * @returns {string[]}
+ */
+export function notNeededBy(stage, profile) {
+  const when = isObj(stage.when) ? stage.when : {};
+  return Object.entries(when).filter(([k, v]) => profile[k] && Array.isArray(v) && !v.includes(profile[k])).map(([k]) => k);
+}
+
+/**
+ * Áp lối vào thiết kế: chỉ khâu chưa quyết. Khâu lối bỏ (`skip`) hay hồ sơ cho là không cần (`when`) thành "không cần"; khâu
+ * lối cần (`need`) có gợi ý thì chọn phương án đứng đầu (hợp hồ sơ, ưu tiên gợi ý của lối). Khâu `maybe` để người dùng tự
+ * quyết. Không đụng khâu đã quyết.
  * @param {any} cat @param {any} design @param {string} pathId
  * @returns {{next: any, filled: string[], skipped: string[]}}
  */
@@ -134,7 +146,7 @@ export function applyPath(cat, design, pathId) {
     if (stageState(d, s.id) !== 'open') continue;
     const need = path.stages[s.id];
     const rec = d.stages[s.id] || { pick: [], skip: false, own: '', note: '' };
-    if (need === 'skip') {
+    if (need === 'skip' || notNeededBy(s, prof).length) {
       rec.skip = true;
       skipped.push(s.id);
     } else if (need === 'need' && path.suggest[s.id]) {
@@ -473,6 +485,10 @@ export function catalogErrors(cat) {
     if (!ID.test(s.id) || seen.has(s.id)) err.push(`stage id: ${s.id}`);
     seen.add(s.id);
     if (!['data', 'model', 'app', 'ops'].includes(s.lane)) err.push(`${s.id}: lane ${s.lane}`);
+    for (const [k, v] of Object.entries(isObj(s.when) ? s.when : {})) {
+      const ok = answers.get(k);
+      if (!ok || !Array.isArray(v) || v.some((a) => !ok.has(a))) err.push(`${s.id}: when ${k}`);
+    }
     const ids = new Set();
     for (const o of s.options || []) {
       if (!ID.test(o.id) || ids.has(o.id) || o.id === 'skip' || o.id === 'own') err.push(`${s.id}: option id ${o.id}`);

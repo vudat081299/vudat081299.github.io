@@ -37,7 +37,7 @@ PLAN_URL = 'https://vudat081299.github.io/masters-degree/data-management-visuali
 TOKEN_END = '/* ── hết token ── */'
 DESIGN = os.path.join(HERE, 'data/system-design.json')
 LANES = ('data', 'model', 'app', 'ops')
-STAGE_KEYS = {'id', 'title', 'lane', 'question', 'guide', 'multi', 'skipWhen', 'task', 'options'}
+STAGE_KEYS = {'id', 'title', 'lane', 'question', 'guide', 'multi', 'skipWhen', 'task', 'when', 'options'}
 OPT_KEYS = {'id', 'name', 'kind', 'summary', 'pick', 'avoid', 'cost', 'level', 'fit', 'links', 'setup', 'task'}
 DESIGN_KEYS = {'note', 'paths', 'profile', 'stages', 'checks'}
 CHECK_KEYS = {'id', 'title', 'if', 'unless', 'msg'}
@@ -326,6 +326,14 @@ def check_design(data):
             err(f'{w}: lane phải thuộc {LANES}')
         if not isinstance(s.get('multi'), bool):
             err(f'{w}: `multi` phải là true / false')
+        # `when`: khâu chỉ cần khi hồ sơ khớp ({} = luôn cần); câu trả lời ngoài `when` không cần phương án hợp.
+        when = s.get('when')
+        if not isinstance(when, dict):
+            err(f'{w}: `when` phải là object (câu hồ sơ → các câu trả lời)')
+            when = {}
+        for k, v in when.items():
+            if k not in answers or not isinstance(v, list) or not v or set(v) - set(answers[k]):
+                err(f'{w}: when.{k} = {v} không khớp hồ sơ')
         opts = s.get('options') or []
         if len(opts) < 2:
             err(f'{w}: cần ít nhất hai phương án')
@@ -358,6 +366,8 @@ def check_design(data):
                 err(f'{wo}: setup là danh sách lệnh, mỗi lệnh một dòng')
         for q, vals in answers.items():
             for a in vals:
+                if q in when and a not in when[q]:
+                    continue
                 if not any(a in (o.get('fit') or {}).get(q, vals) for o in opts):
                     err(f'{w}: không phương án nào hợp khi {q} = {a}')
     options = {s.get('id'): {o.get('id') for o in s.get('options') or []} for s in data['stages']}

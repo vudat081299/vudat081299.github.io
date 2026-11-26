@@ -8,7 +8,7 @@ import {
 } from '../js/core.js';
 import * as CORE from '../js/core.js';
 import { parseMd, inline, srcTokens } from '../js/md.js';
-import { normDesign, rankOptions, snake, planTasks, diagramNodes, decidedCount, catalogErrors, readStageLine, applyPath, effProfile, warnings, flowEdges, planDiff, applyPlan, PLAN_STEP } from '../js/design-core.js';
+import { normDesign, rankOptions, snake, planTasks, diagramNodes, decidedCount, catalogErrors, readStageLine, applyPath, effProfile, warnings, flowEdges, planDiff, applyPlan, PLAN_STEP, notNeededBy } from '../js/design-core.js';
 
 let fails = 0;
 const check = (name, ok, detail = '') => {
@@ -510,6 +510,38 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
     ap.next.path === 'report' && ap.next.stages.app.pick[0] === 'web-app' && ap.next.stages.serve.skip && ap.next.stages.monitor.skip
     && ap.next.stages.monitor.note === 'giữ' && ap.next.stages.process.pick.length === 1 && !ap.filled.includes('app') && !ap.next.stages.ingest
     && ap.skipped.includes('serve') && mine.path === '');
+  /* Khâu chỉ cần khi hồ sơ khớp (`when`): câu chưa trả lời thì chưa biết; trả lời ngoài `when` thì áp lối đánh dấu Not needed. */
+  const gated = cat.stages.filter((x) => Object.keys(x.when || {}).length);
+  check('thiết kế: khâu có `when` — chưa trả lời thì cần, trả lời ngoài `when` thì không cần',
+    gated.length > 0 && gated.every((x) => {
+      const [q, ok] = Object.entries(x.when)[0];
+      const off = cat.profile.find((y) => y.id === q).choices.find((c) => !ok.includes(c.id)).id;
+      return !notNeededBy(x, {}).length && !notNeededBy(x, { [q]: ok[0] }).length && eq(notNeededBy(x, { [q]: off }), [q])
+        && applyPath(cat, { path: '', profile: { [q]: off }, stages: {}, edges: {} }, 'demo').next.stages[x.id]?.skip === true
+        && !applyPath(cat, { path: '', profile: { [q]: ok[0] }, stages: {}, edges: {} }, 'demo').next.stages[x.id];
+    }));
+  /* Gợi ý của lối theo thứ tự lối ghi: phương án lối ghi trước đứng trước, kể cả khi phương án sau khớp nhiều câu hồ sơ hơn. */
+  check('thiết kế: lối — phương án hợp đứng đầu theo thứ tự gợi ý của lối', cat.paths.every((pp) => Object.entries(pp.suggest).every(([sid, ids]) => {
+    const r = rankOptions(cat.stages.find((x) => x.id === sid), effProfile(cat, { path: pp.id, profile: {}, stages: {} }), pp).filter((x) => x.ok && x.sug);
+    return eq(r.map((x) => x.opt.id), ids.filter((id) => r.some((x) => x.opt.id === id)));
+  })));
+  /* Mỗi lối, mỗi câu trả lời đơn lẻ: khâu lối cần có gợi ý thì "Apply path" chọn được một phương án hợp hồ sơ. */
+  const misfit = [];
+  for (const pp of cat.paths) {
+    for (const q of cat.profile) {
+      for (const c of q.choices) {
+        const nx = applyPath(cat, { path: '', profile: { [q.id]: c.id }, stages: {}, edges: {} }, pp.id).next;
+        const prof = effProfile(cat, nx);
+        for (const sid of Object.keys(pp.suggest)) {
+          const st = nx.stages[sid];
+          if (!st || st.skip) continue;
+          const sx = cat.stages.find((x) => x.id === sid);
+          if (!rankOptions(sx, prof, pp).find((x) => x.opt.id === st.pick[0]).ok) misfit.push(`${pp.id}/${q.id}=${c.id}/${sid}`);
+        }
+      }
+    }
+  }
+  check('thiết kế: áp lối với mỗi câu trả lời đơn lẻ chọn phương án hợp hồ sơ', !misfit.length, misfit.join(' '));
   const pws = normWorkspace({ name: 'P', steps: [], design: ap.next });
   const pmd = toMarkdown(pws, cat);
   check('thiết kế: Markdown ghi lối (tên, luồng, mốc nghiệm thu) và nhập lại chỉ đọc id', /^Path: Notebook & report \[path: report\]/m.test(pmd)
@@ -546,7 +578,7 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   check('thiết kế: bàn giao — bỏ khoá sai, via lạ, mục trống; giữ cả khi khâu chưa quyết', eq(normDesign({ edges: {
     'process>store': { via: 'file', what: ' matches.parquet ', promise: 'a\n\nb', check: 'x' }, 'a b>c': { via: 'file' }, 'raw>process': { via: 'fax' } } }).edges,
   { 'process>store': { via: 'file', what: 'matches.parquet', where: '', promise: 'a\n\nb', check: 'x' } }));
-  const ed = normDesign({ stages: { raw: P('project-folder'), process: P('duckdb'), store: P('parquet-duckdb'), serve: P('fastapi') },
+  const ed = normDesign({ stages: { raw: P('project-folder'), process: P('duckdb'), validate: { skip: true }, store: P('parquet-duckdb'), serve: P('fastapi') },
     edges: { 'process>store': { via: 'file', what: 'matches.parquet, một dòng mỗi trận, khoá match_id', where: 'data/clean/', check: 'Backend đọc file mẫu, lọc một mùa, trả đúng số trận',
       promise: 'Cột bắt buộc: match_id, season\n\n# home_win = 0 gồm cả hoà\n- thứ tự theo seq' }, 'store>train': { via: 'sql' } } });
   check('thiết kế: đường nối chỉ giữa hai khâu đã quyết liền nhau', flowEdges(cat, ed).map((e) => e.key).join() === 'raw>process,process>store');

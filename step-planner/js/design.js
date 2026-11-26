@@ -438,7 +438,7 @@ function pathDetail(p) {
     h('ul', { class: 'sd-accept' }, ...p.accept.map((/** @type {string} */ a) => h('li', {}, a))),
     h('div', { class: 'sd-apply' },
       h('button', { type: 'button', class: 'btn go', 'data-apply': p.id }, deps.icon('check'), 'Apply path'),
-      h('span', { class: 'sd-help' }, 'Fills undecided stages with the suggested tool and marks the stages this path skips as Not needed. Stages you already decided stay as they are.')),
+      h('span', { class: 'sd-help' }, 'Fills undecided stages with the suggested tool and marks the stages this path or your profile skips as Not needed. Stages you already decided stay as they are.')),
     mine ? h('p', { class: 'sd-applied', role: 'status' }, mine.text, ' ',
       mine.prev ? h('button', { type: 'button', class: 'sd-link', 'data-unapply': '1' }, 'Undo') : null) : null);
 }
@@ -566,6 +566,11 @@ function stagePane(s) {
   const answered = Object.keys(prof).length > 0 || !!p;
   const card = (/** @type {any} */ r) => optionCard(s, r, st.pick.includes(r.opt.id), answered, prof);
   const need = p ? p.stages[s.id] : '';
+  /* Hồ sơ cho là khâu không cần (`when` của khâu): nói câu trả lời nào. */
+  const notNeeded = D.notNeededBy(s, prof).map((k) => {
+    const q = cat.profile.find((/** @type {any} */ x) => x.id === k);
+    return `${q?.label || k} ${q?.choices.find((/** @type {any} */ c) => c.id === prof[k])?.label || prof[k]}`;
+  });
   return [
     h('p', { class: 'dlg-kicker' }, `${LANE_LABEL[/** @type {'data'} */ (s.lane)]} · stage ${at - 1}`),
     h('h3', { class: 'sd-h' }, s.title),
@@ -574,7 +579,8 @@ function stagePane(s) {
     !answered ? h('p', { class: 'sd-tip' }, 'Pick what you deliver or answer the project profile to get a recommendation. ',
       h('button', { type: 'button', class: 'sd-link', 'data-at': 0 }, 'Go to start')) : null,
     need === 'skip' ? h('p', { class: 'sd-tip' }, `The ${p.label} path doesn't need this stage.`)
-      : need === 'maybe' ? h('p', { class: 'sd-tip' }, `Optional on the ${p.label} path.`) : null,
+      : notNeeded.length ? h('p', { class: 'sd-tip' }, `Usually not needed for your profile (${notNeeded.join(' · ')}).`)
+        : need === 'maybe' ? h('p', { class: 'sd-tip' }, `Optional on the ${p.label} path.`) : null,
     ...D.warnings(cat, d).filter((x) => x.stages.includes(s.id)).map((x) => h('div', { class: 'sd-warnbox', role: 'note' }, h('b', {}, x.title), h('p', {}, x.msg))),
     h('div', { class: 'sd-skip' },
       h('button', { type: 'button', class: 'btn small', 'aria-pressed': String(st.skip), 'data-skip': s.id }, 'Not needed'),
