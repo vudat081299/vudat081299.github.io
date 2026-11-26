@@ -32,6 +32,7 @@
 - PLAN-030 · System design phủ lakehouse tự host: MinIO, Hudi, catalog cho Iceberg, medallion là cách chia tầng, hồ sơ chỉ mã nguồn mở · `step-planner/data/system-design.json`, `step-planner/js/design-core.js`
 - PLAN-031 · Sơ đồ System design kéo và thu phóng được; khung nhìn không lưu · `step-planner/js/design.js`, `step-planner/js/diagram-view.js`, `step-planner/js/view-math.js`
 - PLAN-032 · System design phủ nguồn đẩy, trang dựng bằng JavaScript, lag của consumer; báo công cụ đã nghỉ hưu và API hỏi theo chu kỳ dùng như luồng · `step-planner/data/system-design.json`
+- PLAN-033 · Mẫu đặt sẵn hồ sơ System design mà nó ngụ ý, áp một lần lúc tạo dự án · `step-planner/data/templates.json`, `step-planner/js/core.js`, `step-planner/js/design-core.js`
 <!-- index:end -->
 
 ## PLAN-001 · Dự án là các bước có thứ tự, mỗi bước có bước con có thứ tự
@@ -188,3 +189,8 @@ Sơ đồ System design là một khung nhìn: người dùng kéo và thu phón
 26/11/2026 · `step-planner/data/system-design.json`
 
 Khâu nguồn có thêm nguồn đẩy qua WebSocket (dùng được cho dữ liệu liên tục) và trình duyệt không giao diện cho trang chỉ hiện dữ liệu sau khi chạy JavaScript. Khâu giám sát có đo lag của consumer group Kafka cho dữ liệu liên tục. Oozie có trong danh mục như công cụ nên tránh: đã nghỉ hưu, vẫn tính là công cụ chạy theo lịch, chọn nó thì báo và chỉ sang cron hay Airflow. Dữ liệu liên tục mà nguồn chỉ là API hay trang web phải hỏi theo chu kỳ, không có nguồn đẩy đi kèm, thì báo: hạn mức gọi chặn độ mới. Kiến trúc Lambda nói cách gộp batch view và real-time view tại mốc as-of, và nhận consumer Python làm speed layer; kiến trúc streaming nhận nguồn WebSocket.
+
+## PLAN-033 · Mẫu đặt sẵn hồ sơ System design mà nó ngụ ý, áp một lần lúc tạo dự án
+26/11/2026 · `step-planner/data/templates.json`, `step-planner/js/core.js`, `step-planner/js/design-core.js`
+
+Mỗi mẫu (trừ mẫu trống) mang sẵn phần hồ sơ System design mà nội dung của nó thật sự ngụ ý, và lối "What do you deliver?" khi mẫu chỉ rõ thứ bàn giao; câu nào mẫu không nói thì để trống cho người dùng trả lời. Ví dụ: lakehouse mã nguồn mở là dữ liệu lớn, dạng bảng, theo lịch, tự host, miễn phí, vài người dùng, lối pipeline; báo cáo thống kê là dữ liệu nhỏ, dạng bảng, cố định, đọc bằng báo cáo, lối báo cáo. Mẫu chỉ đặt hồ sơ và lối, không chọn sẵn công cụ: gợi ý ở từng khâu và kiến trúc đi từ hồ sơ như mọi dự án. Bộ đặt sẵn chép vào dự án đúng một lần, lúc tạo dự án từ mẫu; sau đó nó là dữ liệu của dự án, người dùng đổi hay bỏ mọi câu được. Dự án đã có, nhân bản, nhập Markdown hay JSON không bị đụng tới; tạo từ mẫu trống vẫn bắt đầu với System design trống. Khi hồ sơ và lối còn đúng như mẫu đặt, System design nói chúng đến từ mẫu nào; người dùng đổi một câu thì thôi nói. Mỗi bộ đặt sẵn phải cho gợi ý kiến trúc hợp với mẫu, và "Apply path" trên nó không chọn phương án lệch hồ sơ hay làm luật báo.

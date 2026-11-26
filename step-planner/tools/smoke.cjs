@@ -2099,6 +2099,44 @@ const check = (name, ok, detail = '') => {
     await bx.close();
   });
 
+  /* ── System design, mẫu đặt sẵn (PLAN-033): tạo từ lakehouse-oss thì hồ sơ, lối của mẫu đã chọn sẵn, có dòng nói là của mẫu;
+   * đổi một câu thì dòng ấy ẩn; tạo từ mẫu trống thì hồ sơ trống, không có dòng ── */
+  await section('System design, mẫu đặt sẵn', async () => {
+    const { ctx: px, page: pp } = await open(1280, 900);
+    const tpl = (await pp.evaluate(async () => (await (await fetch('data/templates.json')).json()).templates)).find((t) => t.id === 'lakehouse-oss');
+    await pp.click('#start .tpl[data-tpl="lakehouse-oss"]');
+    await pp.waitForSelector('#sd-fig svg');
+    let ws = await cur(pp);
+    check('mẫu đặt sẵn: dự án lakehouse-oss lưu hồ sơ, lối của mẫu, chưa chọn phương án',
+      JSON.stringify(ws.design) === JSON.stringify({ path: tpl.design.path, profile: tpl.design.profile, stages: {}, edges: {} }), JSON.stringify(ws.design));
+    await pp.click('#sd-open');
+    await pp.waitForSelector('#dlg-sd[open] .sd-paths');
+    const note = async () => (await pp.$('#sd-pane [data-preset="lakehouse-oss"]')) && pp.textContent('#sd-pane [data-preset]');
+    check('mẫu đặt sẵn: trang lối đã chọn lối của mẫu, có dòng nêu tên mẫu',
+      await pp.$eval(`#sd-pane input[data-path][value="${tpl.design.path}"]`, (r) => r.checked) && (await note() || '').includes(tpl.name));
+    await pp.click('#sd-nav [data-at="1"]');
+    const checked = await pp.$$eval('#sd-pane input[data-q]:checked', (rs) => Object.fromEntries(rs.filter((r) => r.value).map((r) => [r.dataset.q, r.value])));
+    check('mẫu đặt sẵn: trang hồ sơ chọn sẵn đúng câu trả lời của mẫu, có dòng Preset from template',
+      JSON.stringify(checked, Object.keys(tpl.design.profile)) === JSON.stringify(tpl.design.profile, Object.keys(tpl.design.profile))
+      && Object.keys(checked).length === Object.keys(tpl.design.profile).length && /^Preset from template/.test(await note() || ''), JSON.stringify(checked));
+    await pp.click('#sd-pane input[data-q="users"][value="me"]', { force: true });
+    ws = await cur(pp);
+    check('mẫu đặt sẵn: đổi một câu thì lưu, dòng Preset from template ẩn', ws.design.profile.users === 'me' && !(await pp.$('#sd-pane [data-preset]')));
+    await pp.keyboard.press('Escape');
+    await pp.click('#ws-btn');
+    await pp.click('#ws-tab-new');
+    await pp.check('#ws-new-templates input[value="blank"]');
+    await pp.click('#ws-new button[type="submit"]');
+    await pp.waitForSelector('#sd-fig svg');
+    ws = await cur(pp);
+    await pp.click('#sd-open');
+    await pp.waitForSelector('#dlg-sd[open] .sd-paths');
+    await pp.click('#sd-nav [data-at="1"]');
+    check('mẫu đặt sẵn: tạo từ mẫu trống thì hồ sơ trống, không có dòng Preset from template', ws.templateId === 'blank' && ws.design === null
+      && !(await pp.$$eval('#sd-pane input[data-q]:checked', (rs) => rs.filter((r) => r.value).length)) && !(await pp.$('#sd-pane [data-preset]')));
+    await px.close();
+  });
+
   /* ── System design, kiến trúc: trang Architecture vẽ mọi nhóm, mọi kiến trúc; gợi ý đổi theo hồ sơ; công cụ dẫn tới khâu;
    * "Use this deliverable" đặt lối; dòng kiến trúc trên trang; 390px không tràn ngang ── */
   await section('System design, kiến trúc', async () => { // thân giữ thụt lề cũ cho dễ gộp

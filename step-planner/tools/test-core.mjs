@@ -8,7 +8,7 @@ import {
 } from '../js/core.js';
 import * as CORE from '../js/core.js';
 import { parseMd, inline, srcTokens, linkParts } from '../js/md.js';
-import { normDesign, rankOptions, snake, planTasks, diagramNodes, decidedCount, catalogErrors, readStageLine, applyPath, effProfile, warnings, flowEdges, bothDecided, planDiff, applyPlan, PLAN_STEP, notNeededBy, archAdvice, fitOf } from '../js/design-core.js';
+import { normDesign, rankOptions, snake, planTasks, diagramNodes, decidedCount, catalogErrors, readStageLine, applyPath, effProfile, warnings, flowEdges, bothDecided, planDiff, applyPlan, PLAN_STEP, notNeededBy, archAdvice, fitOf, presetDesign, isPreset } from '../js/design-core.js';
 
 let fails = 0;
 const check = (name, ok, detail = '') => {
@@ -749,6 +749,62 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
     }
   }
   check('kiến trúc: kiến trúc được gợi ý có công cụ không làm luật báo ở mọi khâu của nó', !badArch.size, [...badArch].slice(0, 5).join(' | '));
+  /* Mẫu đặt sẵn hồ sơ, lối (PLAN-033): tạo từ mẫu thì có đúng bộ ấy, không phương án nào được chọn; mẫu trống không có.
+   * Mỗi bộ đặt sẵn cho gợi ý kiến trúc hợp mẫu; Apply path (lối của mẫu, mẫu không có lối thì mọi lối) không chọn phương án
+   * nào lệch hồ sơ hay làm luật báo (trừ `caveat`). */
+  const blankWs = fromTemplate(templates.find((t) => !t.steps.length));
+  check('mẫu đặt sẵn: mẫu trống không có System design; mọi mẫu khác có', blankWs.design === null && templates.filter((t) => t.steps.length).every((t) => presetDesign(t)));
+  const PRESET_ARCH = {
+    'crisp-dm': { storage: null, layers: null, processing: null, app: null, ml: null },
+    'big-data-ds': { storage: 'lakehouse', layers: 'medallion', processing: 'streaming' },
+    'it5425-sports': { storage: 'files-db', layers: 'two-layers', processing: 'batch-etl', app: 'monolith' },
+    'stats-report': { storage: 'files-db', layers: 'two-layers', processing: 'batch-etl', app: 'static-report' },
+    'app-feature': { app: 'client-server' },
+    'data-pipeline': { layers: 'medallion', processing: 'batch-etl', app: 'static-report' },
+    'lakehouse-oss': { storage: 'lakehouse', layers: 'medallion', processing: 'batch-elt', app: 'static-report' },
+  };
+  const stageOf = (id) => cat.stages.find((x) => x.id === id);
+  const plans = {};
+  for (const t of templates.filter((x) => x.design)) {
+    const ws = fromTemplate(t), pre = presetDesign(t);
+    check(`mẫu đặt sẵn ${t.id}: dự án mới có đúng hồ sơ, lối của mẫu, chưa chọn phương án; đổi một câu thì không còn là bộ đặt sẵn`,
+      eq(ws.design, { ...pre, stages: {}, edges: {} }) && isPreset(ws.design, pre)
+      && !isPreset({ ...ws.design, profile: { ...ws.design.profile, [Object.keys(pre.profile)[0]]: 'x' } }, pre)
+      && !isPreset({ ...ws.design, profile: { ...ws.design.profile, users: ws.design.profile.users === 'me' ? 'few' : 'me' } }, pre),
+    JSON.stringify(ws.design));
+    const got = Object.fromEntries(archAdvice(cat, ws.design).map((a) => [a.family, a.id]));
+    const want = PRESET_ARCH[t.id] || {};
+    check(`mẫu đặt sẵn ${t.id}: gợi ý kiến trúc`, !!PRESET_ARCH[t.id] && Object.entries(want).every(([f, id]) => got[f] === id), JSON.stringify(got));
+    const prof = effProfile(cat, ws.design);
+    const bad = [];
+    for (const path of pre.path ? [pre.path] : cat.paths.map((x) => x.id)) {
+      const r = applyPath(cat, ws.design, path);
+      if (path === pre.path) plans[t.id] = r.next;
+      for (const w of warnings(cat, r.next).filter((x) => !x.caveat)) bad.push(`${path}: luật ${w.id}`);
+      for (const [sid, st] of Object.entries(r.next.stages)) {
+        for (const o of st.pick) if (!fitOf(stageOf(sid).options.find((x) => x.id === o), effProfile(cat, r.next)).ok) bad.push(`${path}: ${sid}=${o} lệch hồ sơ`);
+      }
+    }
+    check(`mẫu đặt sẵn ${t.id}: Apply path không làm luật báo, không chọn phương án lệch hồ sơ`, !bad.length && Object.keys(prof).length > 0, bad.join(' | '));
+  }
+  const pick = (id, sid) => plans[id]?.stages[sid]?.skip ? 'skip' : plans[id]?.stages[sid]?.pick.join('+');
+  check('mẫu đặt sẵn lakehouse-oss: Apply path chọn công cụ tự host — MinIO, dbt + dbt test, DuckDB trên Iceberg',
+    pick('lakehouse-oss', 'raw') === 'minio' && pick('lakehouse-oss', 'process') === 'dbt' && pick('lakehouse-oss', 'validate') === 'dbt-tests'
+    && pick('lakehouse-oss', 'store') === 'duckdb-iceberg'
+    && Object.entries(plans['lakehouse-oss'].stages).every(([sid, st]) => st.pick.every((o) => !stageOf(sid).options.find((x) => x.id === o).fit.selfhost || fitOf(stageOf(sid).options.find((x) => x.id === o), { selfhost: 'yes' }).ok)),
+  JSON.stringify(plans['lakehouse-oss']?.stages));
+  check('mẫu đặt sẵn stats-report: Apply path ra thư mục dự án, notebook + báo cáo, không phục vụ model; nhóm model thành không cần',
+    pick('stats-report', 'raw') === 'project-folder' && pick('stats-report', 'app') === 'notebook-report' && pick('stats-report', 'serve') === 'skip'
+    && archAdvice(cat, plans['stats-report']).find((a) => a.family === 'ml').id === '');
+  check('mẫu đặt sẵn it5425-sports: Apply path ra Streamlit đọc thư mục dự án, xử lý bằng pandas',
+    pick('it5425-sports', 'app') === 'streamlit' && pick('it5425-sports', 'raw') === 'project-folder' && pick('it5425-sports', 'process') === 'pandas');
+  check('mẫu đặt sẵn data-pipeline: Apply path có lịch chạy và cổng chất lượng', !!pick('data-pipeline', 'ingest') && !!pick('data-pipeline', 'validate'));
+  const bd = effProfile(cat, fromTemplate(templates.find((t) => t.id === 'big-data-ds')).design);
+  check('mẫu đặt sẵn big-data-ds: khâu xử lý gợi ý công cụ stream của cụm, Spark MLlib hợp hồ sơ, pandas thì không',
+    ['spark-streaming', 'flink'].includes(rankOptions(stageOf('process'), bd)[0].opt.id)
+    && fitOf(stageOf('train').options.find((o) => o.id === 'spark-mllib'), bd).ok && !fitOf(stageOf('process').options.find((o) => o.id === 'pandas'), bd).ok,
+  rankOptions(stageOf('process'), bd)[0].opt.id);
+  check('mẫu đặt sẵn crisp-dm: dữ liệu bảng thì khâu gán nhãn thường không cần', notNeededBy(stageOf('label'), effProfile(cat, fromTemplate(templates[0]).design)).includes('kind'));
   designSnapshot(cat);
   /* Bàn giao trên đường nối: chuẩn hoá, chỉ đường giữa hai khâu đã quyết liền nhau, việc tích hợp, Markdown đi rồi về. */
   check('thiết kế: bàn giao — bỏ khoá sai, via lạ, mục trống; giữ cả khi khâu chưa quyết', eq(normDesign({ edges: {

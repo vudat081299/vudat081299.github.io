@@ -6,6 +6,12 @@
       "name": "Dự án Data Science (CRISP-DM)",
       "output": "Mô hình dự đoán / app",
       "description": "Chọn khi đầu ra là mô hình dự đoán hay app dùng mô hình. CRISP-DM 1.0: sáu pha, bước con là generic task; thêm tái lập, giám sát theo CRISP-ML(Q), ML Test Score. Làm một mình chỉ nộp báo cáo: chuyển hai thẻ Lập kế hoạch giám sát và bảo trì, Khách hàng nghiệm thu sang Skipped.",
+      "design": {
+        "profile": {
+          "kind": "tables",
+          "gpu": "no"
+        }
+      },
       "steps": [
         {
           "title": "Hiểu bài toán kinh doanh (Business Understanding)",
@@ -310,6 +316,14 @@
       "name": "Data Science trên big data (CRISP-DM, Spark)",
       "output": "Mô hình + pipeline trên Spark",
       "description": "Chọn khi dữ liệu quá lớn hay tới quá nhanh cho một máy. Khung CRISP-DM như mẫu Data Science, thêm bước thu nạp và lưu trữ (Kafka, HDFS / object storage, Parquet / Delta), xử lý bằng Spark, triển khai theo kiến trúc Lambda. Ví dụ xuyên suốt: clickstream của một trang thương mại điện tử. Làm một mình hay để học: chạy Spark local[*] trên một máy; Skip speed layer khi không kết quả nào cần mới hơn chu kỳ batch.",
+      "design": {
+        "profile": {
+          "size": "large",
+          "kind": "tables",
+          "fresh": "stream",
+          "gpu": "no"
+        }
+      },
       "steps": [
         {
           "title": "Hiểu bài toán kinh doanh (Business Understanding)",
@@ -861,6 +875,17 @@
       "name": "Đồ án IT5425 — giám sát thể thao (Premier League)",
       "output": "Đồ án môn",
       "description": "Chọn khi làm đồ án môn Data Management and Visualization (IT5425). Các giai đoạn P0–P8 lấy từ trang đồ án. Làm một mình: Skip việc chia vai, họp tuần; app demo và slide tuỳ yêu cầu nộp.",
+      "design": {
+        "path": "demo",
+        "profile": {
+          "size": "small",
+          "kind": "tables",
+          "fresh": "once",
+          "ai": "none",
+          "users": "few",
+          "gpu": "no"
+        }
+      },
       "steps": [
         {
           "title": "P0 · Khởi động",
@@ -1266,6 +1291,16 @@
       "name": "Phân tích thống kê và báo cáo (PPDAC)",
       "output": "Báo cáo",
       "description": "Chọn khi đầu ra là báo cáo trả lời một câu hỏi bằng dữ liệu, không cần mô hình dự đoán. Chu trình PPDAC (Wild & Pfannkuch, 1999). Làm một mình với dữ liệu có sẵn: Skip thẻ Thiết kế chọn mẫu và phần thử thu thập, ghi lý do; giữ việc chốt kế hoạch phân tích trước khi xem kết quả.",
+      "design": {
+        "path": "report",
+        "profile": {
+          "size": "small",
+          "kind": "tables",
+          "fresh": "once",
+          "latency": "report",
+          "gpu": "no"
+        }
+      },
       "steps": [
         {
           "title": "Vấn đề (Problem)",
@@ -1458,6 +1493,12 @@
       "name": "Tính năng app (iOS / Flutter)",
       "output": "Tính năng app",
       "description": "Chọn khi đầu ra là một tính năng của app iOS / Flutter, từ spec tới phát hành. Không theo một chuẩn; việc phát hành theo tài liệu App Store Connect, Google Play, Flutter. Làm một mình, app ít người dùng: Skip thẻ Duyệt thiết kế, feature flag, phát hành dần.",
+      "design": {
+        "profile": {
+          "latency": "online",
+          "users": "public"
+        }
+      },
       "steps": [
         {
           "title": "Đặc tả (Spec)",
@@ -1641,6 +1682,14 @@
       "name": "Pipeline dữ liệu định kỳ (Data Engineering Lifecycle)",
       "output": "Pipeline dữ liệu",
       "description": "Chọn khi dữ liệu mới tới định kỳ và cần một job tự chạy, chặn lô lỗi, giữ bản sạch tốt gần nhất cho bên dùng. Theo vòng đời data engineering (Reis & Housley, Fundamentals of Data Engineering, 2022). Làm một mình: Lưu trữ có thể chỉ là một thư mục phân vùng; Bảo mật chỉ cần giữ secret ngoài code.",
+      "design": {
+        "path": "pipeline",
+        "profile": {
+          "kind": "tables",
+          "fresh": "batch",
+          "latency": "batch"
+        }
+      },
       "steps": [
         {
           "title": "Phát sinh dữ liệu: hệ thống nguồn (Generation: Source Systems)",
@@ -1880,6 +1929,18 @@
       "name": "Nền tảng lakehouse mã nguồn mở (Medallion Lakehouse)",
       "output": "Nền tảng dữ liệu lakehouse",
       "description": "Chọn khi xây một nền tảng dữ liệu tự chạy (self-hosted) bằng công cụ mã nguồn mở: object storage, table format có catalog, ba tầng bronze / silver / gold, biến đổi bằng Spark hoặc dbt, dashboard đọc tầng gold. Thứ tự: hạ tầng và dữ liệu trước, điều phối pipeline sau. Ví dụ ở ghi chú: Docker Compose, MinIO, Iceberg + Polaris, Spark, dbt, DuckDB, Superset. Làm một mình: bỏ Trino (DuckDB đủ), Skip bước giả lập luồng, điều phối bằng script + cron.",
+      "design": {
+        "path": "pipeline",
+        "profile": {
+          "size": "large",
+          "kind": "tables",
+          "fresh": "batch",
+          "latency": "batch",
+          "users": "few",
+          "budget": "free",
+          "selfhost": "yes"
+        }
+      },
       "steps": [
         {
           "title": "Phạm vi và kiểm kê nguồn (Scope and Source Inventory)",

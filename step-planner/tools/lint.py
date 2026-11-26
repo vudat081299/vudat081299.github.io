@@ -9,7 +9,10 @@
      con đứng trước trong cùng bước (dữ liệu chỉ chảy xuôi). Bước con của mẫu không có `par`: mỗi bước con một ô, nên luật này
      cũng chặn bên nhận cùng ô với bên giao (treo); test-core kiểm lại trên dự án mở từ mẫu. `ref`: đường dẫn hay link https, một dòng.
      Link tới trang của repo (https://vudat081299.github.io/…): file có trong repo, neo `#id` có trên trang.
-  2. Mẫu `it5425-sports` khớp từng chữ với bản sinh từ trang đồ án môn (COURSE_JSON, COURSE_HTML): không thêm nội dung.
+     `design` (tuỳ chọn, PLAN-033): {profile, path?} đặt sẵn cho System design khi tạo dự án; câu và câu trả lời có trong
+     hồ sơ của system-design.json, `path` là lối có thật, hồ sơ không rỗng. Mẫu trống không có `design`.
+  2. Mẫu `it5425-sports` khớp từng chữ với bản sinh từ trang đồ án môn (COURSE_JSON, COURSE_HTML): không thêm nội dung
+     (trừ `design`: trang đồ án không có, sinh lại thì giữ).
      outs / ins của nó suy từ đường dẫn trong `io_html` từng pha (`course_flow`).
      Sinh lại:  python3 step-planner/tools/lint.py --write-course
   3. js/*.js: không innerHTML / outerHTML / insertAdjacentHTML / document.write — chữ người dùng chỉ qua textContent.
@@ -161,7 +164,8 @@ STEP_KEYS = {'title', 'goal', 'doneWhen', 'notes', 'subs', 'outs', 'ins'}
 SUB_KEYS = {'title', 'doneWhen', 'notes', 'outs', 'ins'}
 OUT_KEYS = {'key', 'name', 'ref', 'note'}
 KEY_RE = r'[a-z0-9][a-z0-9-]{0,39}'
-TPL_KEYS = {'id', 'name', 'output', 'description', 'steps'}
+TPL_KEYS = {'id', 'name', 'output', 'description', 'design', 'steps'}
+TPL_DESIGN_KEYS = {'profile', 'path'}
 
 
 def need_str(where, obj, key, required=True):
@@ -303,8 +307,30 @@ def check_templates(data):
     course = next((t for t in tpls if t.get('id') == COURSE_ID), None)
     if course is None:
         err(f'templates.json: thiếu mẫu {COURSE_ID}')
-    elif course != course_template():
+    elif {k: v for k, v in course.items() if k != 'design'} != course_template():
         err(f'templates.json: mẫu {COURSE_ID} lệch trang đồ án — chạy python3 step-planner/tools/lint.py --write-course')
+
+
+def check_tpl_design(data, design):
+    """`design` của mẫu (PLAN-033): hồ sơ và lối đặt sẵn, chỉ id có trong danh mục System design."""
+    answers = {q.get('id'): [c.get('id') for c in q.get('choices') or []] for q in design.get('profile') or []}
+    paths = {p.get('id') for p in design.get('paths') or []}
+    for t in data.get('templates') or []:
+        if 'design' not in t:
+            continue
+        w, d = f'templates.json ({t.get("id")}) design', t['design']
+        if not t.get('steps'):
+            err(f'{w}: mẫu trống không đặt sẵn System design')
+        if not isinstance(d, dict) or set(d) - TPL_DESIGN_KEYS or not isinstance(d.get('profile'), dict) or not d['profile']:
+            err(f'{w}: phải là {{profile, path?}}, `profile` không rỗng')
+            continue
+        for q, a in d['profile'].items():
+            if q not in answers:
+                err(f'{w}: câu hồ sơ "{q}" không có trong system-design.json')
+            elif a not in answers[q]:
+                err(f'{w}: "{q}" không có lựa chọn "{a}" (có {answers[q]})')
+        if 'path' in d and d['path'] not in paths:
+            err(f'{w}: lối "{d["path"]}" không có trong system-design.json (có {sorted(paths)})')
 
 
 def check_design(data):
@@ -785,7 +811,23 @@ def self_test():
             json.dump(d, open(p, 'w', encoding='utf-8'), ensure_ascii=False)
         return run
 
+    def preset(tid, fn):
+        """Sửa `design` của một mẫu trong bản sao."""
+        def run(root):
+            p = os.path.join(root, 'data', 'templates.json')
+            d = json.load(open(p, encoding='utf-8'))
+            fn(next(t for t in d['templates'] if t.get('id') == tid))
+            json.dump(d, open(p, 'w', encoding='utf-8'), ensure_ascii=False)
+        return run
+
     cases = [
+        ('mẫu: design — câu hồ sơ không có', preset('lakehouse-oss', lambda t: t['design']['profile'].update(cloud='yes')), 'câu hồ sơ "cloud"'),
+        ('mẫu: design — lựa chọn không có', preset('lakehouse-oss', lambda t: t['design']['profile'].update(size='huge')), 'không có lựa chọn "huge"'),
+        ('mẫu: design — lối không có', preset('lakehouse-oss', lambda t: t['design'].update(path='etl')), 'lối "etl"'),
+        ('mẫu: design — khoá lạ', preset('lakehouse-oss', lambda t: t['design'].update(stages={})), 'phải là {profile, path?}'),
+        ('mẫu: design — hồ sơ rỗng', preset('lakehouse-oss', lambda t: t['design'].update(profile={})), 'phải là {profile, path?}'),
+        ('mẫu: design ở mẫu trống', preset('blank', lambda t: t.update(design={'profile': {'size': 'small'}})), 'mẫu trống không đặt sẵn'),
+        ('mẫu: design của mẫu đồ án không tính là lệch trang đồ án', preset('it5425-sports', lambda t: t['design'].update(path='report')), None),
         ('mẫu: đầu vào lơ lửng (key không có đầu ra)', flow(lambda st: st[1]['subs'][0]['ins'].append('khong-co')), 'không là đầu ra nào'),
         ('mẫu: đầu vào lấy từ bước sau', flow(lambda st: st[1]['subs'][0]['ins'].append('gold-marts')), 'chỉ lấy từ bước trước'),
         ('mẫu: đầu vào lấy từ bước con đứng sau, cùng bước', flow(lambda st: st[1]['subs'][1]['ins'].append('bootstrap-script')), 'chỉ lấy từ bước trước'),
@@ -831,7 +873,8 @@ def main():
     if '--write-course' in sys.argv:
         tpls = data['templates']
         idx = next(i for i, t in enumerate(tpls) if t.get('id') == COURSE_ID)
-        tpls[idx] = course_template()
+        new, keep = course_template(), tpls[idx].get('design')
+        tpls[idx] = {k: v for k, v in new.items() if k != 'steps'} | ({'design': keep} if keep else {}) | {'steps': new['steps']}
         with open(TEMPLATES, 'w', encoding='utf-8') as f:
             json.dump(data, f, ensure_ascii=False, indent=2)
             f.write('\n')
@@ -839,6 +882,7 @@ def main():
     check_templates(data)
     design = json.load(open(DESIGN, encoding='utf-8'))
     check_design(design)
+    check_tpl_design(data, design)
     check_code()
     check_tpl_language(data)
     check_design_language(design)

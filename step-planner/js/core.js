@@ -2,7 +2,7 @@
 /* Logic thuần của Step Planner: chuẩn hoá dữ liệu, tiến độ, Markdown và JSON vào / ra.
  * Không đụng DOM hay bộ nhớ trình duyệt; chạy được trong Node (tools/test-core.mjs). */
 
-import { normDesign, DESIGN_HEADING, DESIGN_HEAD_RE, designMd, designReader } from './design-core.js';
+import { normDesign, presetDesign, DESIGN_HEADING, DESIGN_HEAD_RE, designMd, designReader } from './design-core.js';
 
 /* Bảy trạng thái (PLAN-003), theo thứ tự: còn mở (mới, đang làm, chờ, bị chặn), xong, ngoài phạm vi (bỏ qua, huỷ).
  * Chờ: đợi bên ngoài, tự xong mà ta không phải làm gì. Bị chặn: vướng, phải ra tay gỡ. Bỏ qua: không cần với dự án này.
@@ -294,7 +294,8 @@ export function fromTemplate(tpl, name) {
     Object.assign(s, { ins: ins(s.insKeys) });
     for (const x of s.subs) Object.assign(x, { ins: ins(x.insKeys) });
   }
-  return normWorkspace({ name: oneLine(name) || t.name || 'Project', templateId: t.id || '', createdAt: now, updatedAt: now, steps });
+  return normWorkspace({ name: oneLine(name) || t.name || 'Project', templateId: t.id || '', createdAt: now, updatedAt: now, steps,
+    design: presetDesign(t) }); // hồ sơ, lối mẫu đặt sẵn (PLAN-033); chỉ lúc tạo
 }
 
 /* ── Bàn giao: ai tạo, ai dùng ── */

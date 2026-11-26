@@ -479,6 +479,14 @@ function paintPane() {
   $('sd-pane').closest('.dlg-body').scrollTop = 0;
 }
 
+/** Dòng "Preset from template" (PLAN-033): hồ sơ, lối còn đúng như mẫu của dự án đặt sẵn; đổi một câu là ẩn. */
+function presetNote() {
+  const w = ws();
+  const t = w && w.templateId ? deps.tplOf(w.templateId) : null;
+  return t && D.isPreset(w.design, D.presetDesign(t))
+    ? deps.h('p', { class: 'sd-tip', 'data-preset': t.id }, `Preset from template "${t.name}" — change any answer.`) : null;
+}
+
 /* ── Lối bắt đầu: "What do you deliver?" — luồng tối thiểu, vì sao hợp, khi nào đổi lối, khâu cần / bỏ, mốc nghiệm thu ── */
 
 function pathPane() {
@@ -488,6 +496,7 @@ function pathPane() {
   return [
     h('p', { class: 'dlg-kicker' }, 'Start here'),
     h('h3', { class: 'sd-h' }, 'What do you deliver?'),
+    presetNote(),
     h('p', { class: 'sd-q' }, 'Chọn thứ cuối cùng bạn bàn giao. Lối cho thấy luồng tối thiểu, khâu nào cần, khâu nào bỏ được; gợi ý ở từng khâu ưu tiên công cụ của lối.'), // lang: vi — lời giải thích, nội dung
     h('fieldset', { class: 'sd-paths' }, h('legend', { class: 'sr' }, 'What do you deliver?'),
       ...[...cat.paths, { id: '', label: 'Not sure yet', summary: 'Đi thẳng qua hồ sơ và từng khâu.' }].map((/** @type {any} */ x) => h('label', { class: 'sd-path-card' }, // lang: vi — lời giải thích, nội dung
@@ -563,6 +572,7 @@ function profilePane() {
   return [
     h('p', { class: 'dlg-kicker' }, 'Your project'),
     h('h3', { class: 'sd-h' }, 'Project profile'),
+    presetNote(),
     h('p', { class: 'sd-q' }, 'Trả lời những câu bạn biết; câu nào chưa chắc thì để "Not sure". Gợi ý ở từng khâu đổi theo câu trả lời.'), // lang: vi — lời giải thích, nội dung
     ...asked.map(q2),
     rest.length ? fold({ class: 'sd-more', 'data-more': 'profile-rest', open: moreOpen.has('profile-rest') },
