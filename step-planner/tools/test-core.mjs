@@ -488,6 +488,27 @@ check('bước con có ghi chú mở bằng rào, ngay sau tài liệu của bư
   }
   check('Markdown đi rồi về: 1500 dự án ngẫu nhiên giữ nguyên', !bad.length, bad.join(' | '));
 }
+/* Ký tự vùng riêng của Unicode (U+E000–U+F8FF) trong chữ: Markdown tạm đổi ký tự thoát `\x` sang vùng ấy khi đọc, nên ký tự
+ * vùng riêng có sẵn phải đi rồi về nguyên vẹn, kể cả cạnh `·`, `\`, `@`, `due`. */
+{
+  const atoms = ['a', ' ', '·', ' · ', '\\', '\\·', '@x', 'due', 'hạn', '', '', '', '', '', '', '',
+    '᣿', 'ᤀ', ' · redo', ' · parallel', ''];
+  let seed = 11;
+  const rnd = (n) => { seed = (seed + 0x6D2B79F5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t ^= t + Math.imul(t ^ (t >>> 7), 61 | t); return ((t ^ (t >>> 14)) >>> 0) % n; };
+  const str = (n) => Array.from({ length: 1 + rnd(n) }, () => atoms[rnd(atoms.length)]).join('');
+  const bad = [];
+  for (let t = 0; t < 800 && bad.length < 3; t++) {
+    const w = normWorkspace({ name: str(3), steps: Array.from({ length: 1 + rnd(2) }, () => ({ title: str(4), notes: rnd(2) ? str(5) : '',
+      outs: rnd(2) ? [{ name: str(3), ref: str(2), note: str(3) }] : [],
+      subs: Array.from({ length: 1 + rnd(3) }, () => ({ title: str(6), status: ['todo', 'done', 'cancel'][rnd(3)], reason: str(3), due: rnd(2) ? '2026-02-03' : '',
+        doneWhen: rnd(2) ? str(3) : '', par: !!rnd(2), docs: rnd(2) ? [{ kind: 'link', title: str(3), url: 'https://e.com/' + rnd(9) }] : [] })) })), log: [] });
+    let back = null;
+    try { back = roundTrip(w); } catch (e) { bad.push(`#${t}: ${e.message}`); continue; }
+    if (!eq(shape(w), back)) bad.push(`#${t}: ${firstDiff(shape(w), back)}`);
+  }
+  check('Markdown đi rồi về: chữ có ký tự vùng riêng (U+E000–U+F8FF) cạnh ·, \\, @ giữ nguyên (800 dự án ngẫu nhiên)', !bad.length, bad.join(' | '));
+  check('tách theo ·: ký tự vùng riêng có sẵn giữ nguyên', eq(splitInline('ab \\· c ·  · \\'), ['ab · c', '', '']));
+}
 
 /* `__` trong chữ (tên biến Python, `obj.__dict__`) không mở in đậm nếu chỗ đóng dính chữ phía sau. */
 const under = (t) => inline(t).map((n) => n.t + ':' + (n.v ?? '')).join('|');
