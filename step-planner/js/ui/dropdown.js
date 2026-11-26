@@ -2,7 +2,7 @@
 /* Danh sách chọn tự dựng (mẫu listbox): một nút mở một danh sách nổi. Dùng cho mọi <select> có nghĩa (enhanceSelect: <select>
  * vẫn ở trong DOM, vẫn giữ value, vẫn phát `change`) và cho menu trạng thái của chip (openList).
  * Danh sách nằm trong lớp trên cùng (popover) nên không đẩy bố cục, nổi được cả trên hộp thoại modal. Chữ chỉ qua text node.
- * Xuất: closeList, openList, consumeJustClosed, enhanceSelect.
+ * Xuất: closeList, openList, consumeJustClosed, enhanceSelect, initDropdown.
  * Dùng: core/board.js, ui/dom.js. */
 import { fold } from '../core/board.js';
 import { h, icon } from './dom.js';
@@ -152,24 +152,27 @@ function onKey(e) {
   e.stopPropagation(); // Esc không đóng luôn hộp thoại chứa nó
 }
 
-/* Bấm ra ngoài: đóng (bấm lại đúng nút mở thì chỉ đóng, không mở lại). Đổi cỡ: đóng. */
-document.addEventListener('pointerdown', (e) => {
-  if (!cur) return;
-  const t = /** @type {Node} */ (e.target);
-  if (cur.pop.contains(t)) return;
-  if (cur.anchor.contains(t)) cur.anchor.dataset.ddJustClosed = '1';
-  closeList();
-}, true);
-/* Cuộn (trang, hàng thẻ, thân hộp thoại): nút mở còn thấy thì danh sách đi theo nó, khuất hẳn thì đóng. Hàng thẻ vừa vuốt còn
-   trôi khi ngón chạm chip: cuộn ấy không được đóng danh sách vừa mở. */
-document.addEventListener('scroll', (e) => {
-  if (!cur || cur.pop.contains(/** @type {Node} */ (e.target))) return;
-  if (anchorShown(cur.anchor)) place(); else closeList();
-}, true);
-window.addEventListener('resize', () => closeList());
-document.addEventListener('focusin', (e) => {
-  if (cur && !cur.pop.contains(/** @type {Node} */ (e.target)) && e.target !== cur.anchor) closeList();
-});
+/** Gắn sự kiện, chạy một lần lúc khởi động (main.js gọi trước mọi init khác). */
+export function initDropdown() {
+  /* Bấm ra ngoài: đóng (bấm lại đúng nút mở thì chỉ đóng, không mở lại). Đổi cỡ: đóng. */
+  document.addEventListener('pointerdown', (e) => {
+    if (!cur) return;
+    const t = /** @type {Node} */ (e.target);
+    if (cur.pop.contains(t)) return;
+    if (cur.anchor.contains(t)) cur.anchor.dataset.ddJustClosed = '1';
+    closeList();
+  }, true);
+  /* Cuộn (trang, hàng thẻ, thân hộp thoại): nút mở còn thấy thì danh sách đi theo nó, khuất hẳn thì đóng. Hàng thẻ vừa vuốt còn
+     trôi khi ngón chạm chip: cuộn ấy không được đóng danh sách vừa mở. */
+  document.addEventListener('scroll', (e) => {
+    if (!cur || cur.pop.contains(/** @type {Node} */ (e.target))) return;
+    if (anchorShown(cur.anchor)) place(); else closeList();
+  }, true);
+  window.addEventListener('resize', () => closeList());
+  document.addEventListener('focusin', (e) => {
+    if (cur && !cur.pop.contains(/** @type {Node} */ (e.target)) && e.target !== cur.anchor) closeList();
+  });
+}
 
 /** Nút mở vừa bị bấm khi danh sách của nó đang mở (pointerdown đã đóng): click này không mở lại. @param {HTMLElement} anchor */
 export function consumeJustClosed(anchor) {
