@@ -119,7 +119,7 @@
 ## Đánh dấu đã đọc (MDAN-013)
 
 - Chỉ file markdown (MDAN-073); file khác: không có tab *Review* (MDAN-081), dấu cũ giữ, không báo mất. Đơn vị: khối của `lexSpans`; danh sách ≥ 2 mục thì mỗi mục cấp cao một đơn vị (mục con thuộc mục cha); bảng, khối code là
-  một đơn vị; khối không chữ / số / emoji (kẻ ngang), khối chỉ có chú thích HTML không tính. Tiến độ theo số dòng, làm tròn xuống.
+  một đơn vị; khối không chữ / số / emoji (kẻ ngang), khối chỉ có chú thích HTML không tính. Tiến độ theo số dòng, làm tròn xuống. Section (dàn ý, Shift+X, ô vuông) mở ở tiêu đề h1–h6 và ở nhãn (`labelDepth`, MDAN-093): đoạn một dòng toàn chữ đậm (cấp 7), dòng ngắn `…:` ngay trước danh sách (cấp 8); *Focus mode* vẫn chỉ theo tiêu đề.
 - Dấu ở `D.reviews` (`{ h, p, n, q, r }`, không số dòng): băm chữ chuẩn hoá (bỏ dấu mục), băm hai hàng xóm (mép văn bản: rỗng), 80 ký tự
   đầu. Chuyển chỗ, chữ giữ nguyên: ✓. Chữ đổi: ○, tính là chưa đọc. Không tìm lại được: mất, báo toast lúc mất và ở tab *Review*.
 - Một chỗ hỏi: `rvState()`; một chỗ ghi: `setReviews()` (lưu, vẽ, Undo, cả khi đã đổi file / phiên). Luật ở `core/review.js` (`resolveMarks`,

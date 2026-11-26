@@ -4,9 +4,11 @@
    chữ, số hay emoji (kẻ ngang) và khối chỉ có chú thích HTML (Preview không dựng ra gì) không là đơn vị. Dòng đếm từ 0.
    Dấu (mark) = { h, p, n, q, r }: h băm chữ chuẩn hoá của đơn vị, p / n băm đơn vị liền trước / sau, q 80 ký tự đầu
    (so gần giống, hiện khi mất), r vị trí tương đối. Không lưu số dòng: văn bản đổi thì số dòng sai.
+   Section mở ở mỗi tiêu đề h1–h6 (cấp 1–6), và ở nhãn (MDAN-093): đoạn một dòng toàn chữ đậm (cấp 7), dòng ngắn kết thúc
+   bằng ':' ngay trước một danh sách (cấp 8). Văn bản không có tiêu đề vẫn có dàn ý theo nhãn.
    Trạng thái: 'done' (dấu khớp đúng chữ, ở đâu cũng được), 'changed' (chữ đã đổi, tìm lại nhờ hàng xóm / chữ gần
    giống; tính là chưa đọc), 'todo'. Dấu không tìm lại được là mất (lost), giữ tới khi người dùng bỏ.
-   Xuất: allDone, dropLost, firstOpen, hashStr, linesWord, makeMark, markWord, nextOpen, normUnit, progress,
+   Xuất: allDone, dropLost, firstOpen, hashStr, labelDepth, linesWord, makeMark, markWord, nextOpen, normUnit, progress,
      resolveMarks, reviewRanges, reviewSections, reviewUnits, rvLines, setMarks, unitAt, unitRuns, unitsIn, unitsOfLines, withSug.
    Dùng: core/text.js. */
 import { lineStarts } from './text.js';
@@ -27,15 +29,32 @@ export function hashStr(str) {
   return (4294967296 * (2097151 & h2) + (h1 >>> 0)).toString(36);
 }
 
+/* Nhãn (MDAN-093): cấp 7 nếu khối k là đoạn một dòng chỉ gồm chữ đậm (**…** hay __…__, ':' trong hay ngoài dấu đậm),
+   cấp 8 nếu là đoạn một dòng ngắn (≤ LABEL_MAX ký tự) không đậm kết thúc bằng ':' mà khối ngay sau là danh sách; không
+   thì 0. Tiêu đề h1–h6 đứng trên nhãn. */
+var LABEL_MAX = 60, BOLD_MAX = 160;
+export function labelDepth(text, spans, k) {
+  var sp = spans[k];
+  if (!sp || sp.heading || sp.tag !== 'P' || sp.a !== sp.b) return 0;
+  var st = lineStarts(text), end = sp.a + 1 < st.length ? st[sp.a + 1] - 1 : text.length;
+  var line = text.slice(st[sp.a], end).trim();
+  var m = /^(\*\*|__)(?=\S)([\s\S]+?)(?<=\S)\1\s*:?$/.exec(line);
+  if (m && line.length <= BOLD_MAX && m[2].indexOf(m[1]) < 0) return 7;
+  var next = spans[k + 1];
+  if (line.length <= LABEL_MAX && /[^:]:$/.test(line) && !/[*_`]/.test(line) && next && (next.tag === 'UL' || next.tag === 'OL')) return 8;
+  return 0;
+}
+
 /* Đơn vị đọc theo thứ tự trong văn bản: [{ a, b, block, item, head, depth, sec, h, q }]. block: chỉ số khối trong
-   spans; item: chỉ số mục trong danh sách (-1: cả khối); head: khối tiêu đề; depth: cấp tiêu đề (0 nếu không đoán
-   được); sec: số section (0 trước tiêu đề đầu, như core/sections.js). */
+   spans; item: chỉ số mục trong danh sách (-1: cả khối); head: khối tiêu đề hay nhãn (labelDepth); depth: cấp tiêu đề
+   1–6, nhãn 7–8 (0 nếu không đoán được); sec: số section (0 trước tiêu đề / nhãn đầu). */
 export function reviewUnits(text, spans) {
   var st = lineStarts(text), nl = st.length, units = [], sec = 0;
   function lineEnd(i) { return i + 1 < nl ? st[i + 1] - 1 : text.length; }
   function blank(i) { return !/\S/.test(text.slice(st[i], lineEnd(i))); }
   spans.forEach(function (sp, k) {
-    if (sp.heading) sec++;
+    var lab = labelDepth(text, spans, k), head = !!sp.heading || lab > 0;
+    if (head) sec++;
     var rs = [];
     if (sp.items && sp.items.length > 1) {
       sp.items.forEach(function (a, j) {
@@ -49,8 +68,8 @@ export function reviewUnits(text, spans) {
       if (!/[\p{L}\p{N}\p{So}]/u.test(norm)) return;   // \p{So}: emoji, ✓ (tiêu đề chỉ có emoji vẫn là đơn vị)
       if (/^(?:<!--[\s\S]*?-->\s*)+$/.test(norm)) return;
       units.push({
-        a: r[0], b: r[1], block: k, item: r[2], head: !!sp.heading,
-        depth: sp.heading && /^H[1-6]$/.test(sp.tag) ? +sp.tag[1] : 0, sec: sec, h: hashStr(norm), q: norm.slice(0, 80)
+        a: r[0], b: r[1], block: k, item: r[2], head: head,
+        depth: lab || (sp.heading && /^H[1-6]$/.test(sp.tag) ? +sp.tag[1] : 0), sec: sec, h: hashStr(norm), q: norm.slice(0, 80)
       });
     });
   });
@@ -230,8 +249,9 @@ export function unitsIn(units, la, lb) {
   return out;
 }
 
-/* Tiêu đề section: chữ của khối tiêu đề, bỏ dấu #, vạch gạch setext và thẻ HTML. */
-function headTitle(q) {
+/* Tiêu đề section: chữ của khối tiêu đề, bỏ dấu #, vạch gạch setext và thẻ HTML; nhãn (cấp 7–8): bỏ dấu đậm và ':' cuối. */
+function headTitle(q, depth) {
+  if (depth > 6) return q.replace(/^(\*\*|__)/, '').replace(/(\*\*|__)?\s*:?\s*(\*\*|__)?\s*:?$/, '').trim();
   if (!/^\s*[#<]/.test(q)) q = q.replace(/\s+(?:=+|-+)\s*$/, '');   // tiêu đề setext: bỏ dòng gạch === / ---
   return q.replace(/<[^>]*>/g, ' ').replace(/^#{1,6}\s*/, '').replace(/\s+#+\s*$/, '').replace(/\s+/g, ' ').trim();
 }
@@ -242,7 +262,7 @@ export function reviewSections(units, state, cLines) {
   var secs = [], cur = null;
   units.forEach(function (u, i) {
     if (!cur || u.sec !== cur.sec) {
-      cur = { sec: u.sec, first: i, last: i, a: u.a, b: u.b, title: u.head ? headTitle(u.q) : '', depth: u.head ? u.depth : 0,
+      cur = { sec: u.sec, first: i, last: i, a: u.a, b: u.b, title: u.head ? headTitle(u.q, u.depth) : '', depth: u.head ? u.depth : 0,
         done: 0, changed: 0, total: 0, comments: 0 };
       secs.push(cur);
     }

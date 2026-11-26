@@ -1744,6 +1744,18 @@ const cornerClash = (page) => page.evaluate(() => {
     await rctx.close();
   }
   // ── end đánh dấu đã đọc ──
+  // Dàn ý Review theo nhãn (MDAN-093): văn bản không tiêu đề, chỉ có đoạn chữ đậm và dòng "Nhãn:" trước danh sách.
+  {
+    const lctx2 = await browser.newContext({ viewport: { width: 1280, height: 900 }, colorScheme: 'light' });
+    const lp2 = await openPage(lctx2);
+    await pasteText(lp2, ['**Phương án A: bóng đá**', '', 'Ưu điểm:', '- một', '- hai', '', 'Nhược điểm:', '- ba', '', '**A so với B**', '- bốn', '- năm'].join('\n'));
+    await lp2.waitForTimeout(200); await lp2.click('#tab-view'); await lp2.waitForTimeout(300); await lp2.click('#ptab-review'); await lp2.waitForTimeout(200);
+    const lo = await lp2.$$eval('#rv-secs .ma-rvs', (ls) => ls.map((l) => getComputedStyle(l).getPropertyValue('--d').trim() + ':' + l.querySelector('.ma-rvs__t').textContent));
+    const lsq = await lp2.$$eval('#wrap-md .ma-lane__b.is-head', (x) => x.length);
+    check('Review: văn bản không tiêu đề có dàn ý theo nhãn — chữ đậm trọn đoạn cấp trên, "Ưu điểm:" thụt một cấp; nhãn có ô vuông bật cả section',
+      lo.join('|') === '0:Phương án A: bóng đá|1:Ưu điểm|1:Nhược điểm|0:A so với B' && lsq === 4, JSON.stringify([lo, lsq]));
+    await lctx2.close();
+  }
 
   // ── hộp của các dòng đã chọn không đóng khi bấm ra ngoài (MDAN-014) ──
   {
