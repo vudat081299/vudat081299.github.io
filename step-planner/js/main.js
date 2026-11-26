@@ -1144,8 +1144,8 @@ function moveStepTo(ws, step, k, focusSel = stepSel(step.id, 'edit-step')) {
   endMove(m, (j > i ? ws.steps[j - 1] : ws.steps[j + 1])?.id, focusSel);
 }
 /** Đặt bước con vào chỗ `to` (C.Place): lưu, vẽ, tô, toast có Hoàn tác. @param {any} ws @param {any} sub @param {C.Place} to */
-function moveSubTo(ws, sub, to, focusSel = subSel(sub.id, 'edit-sub')) {
-  const m = beginMove('sub', sub.id);
+function moveSubTo(ws, sub, to, focusSel = subSel(sub.id, 'edit-sub'), held0 = null) {
+  const m = keepHeld(beginMove('sub', sub.id), held0);
   const before = ws.steps.find((/** @type {any} */ s) => s.subs.includes(sub));
   const j = before ? before.subs.indexOf(sub) : -1;
   if (C.placeSub(ws, sub, to) === undefined) return;
@@ -1184,6 +1184,16 @@ function movedText(ws, kind, id, fromStepId) {
     : p.slot === 0 ? 'the start of the row' : `after ${quote(slots[p.slot - 1].at(-1).title)}`;
   if (p.stepId !== fromStepId) return `Moved ${quote(sub.title)} to step ${quote(step.title)}, ${where}`;
   return `Moved ${quote(sub.title)} ` + (p.join ? `to run ${where}` : p.slot === 0 ? `to ${where}` : where);
+}
+/** Toast của hộp sửa khi Lưu làm treo một đầu vào mà không dời gì. */
+const HELD_TAIL = 'Link kept; move the input after its source to connect.';
+/** heldKeys của dự án lúc này (trước khi Lưu hộp sửa). @param {string} wsId */
+const heldNow = (wsId) => { const w = findWs(wsId); return w ? C.handoffs(w).heldKeys : new Set(); };
+/** Lưu hộp sửa rồi dời: toast báo cả đầu vào vừa treo vì đầu vào mới chọn (bỏ khỏi `m.held` cái chưa treo lúc mở Lưu).
+ * @param {any} m @param {Set<string>|null} held0 */
+function keepHeld(m, held0) {
+  if (m && held0) m.held = new Set([...m.held].filter((k) => held0.has(k)));
+  return m;
 }
 /** Gọi trước khi đổi chỗ. @param {'sub'|'step'} kind @param {string} id */
 function beginMove(kind, id) {
@@ -1370,7 +1380,7 @@ function openSub(step, sub, opt = {}) {
   $('sub-dup').hidden = !sub;
   docUndo = null;
   renderDocsEdit('sub');
-  Hd.paintEdit('sub', ws, sub, sub ? [sub] : []);
+  Hd.paintEdit('sub', ws, sub, sub ? [sub] : [], subDraftPlace);
   openDlg($('dlg-sub'), opt.toDocs || opt.toHand ? null : opt.status === 'cancel' ? field(f, 'reason') : field(f, 'title'));
   if (opt.toHand) Hd.focusEdit('sub', opt.toHand);
   if (opt.toDocs) {
@@ -1378,7 +1388,15 @@ function openSub(step, sub, opt = {}) {
     /** @type {any} */ ($('sub-docs').querySelector('.doc-list button, [data-doc-add]')).focus();
   }
 }
-field($('sub-form'), 'step').addEventListener('change', () => subPosOptions(false));
+field($('sub-form'), 'step').addEventListener('change', () => { subPosOptions(false); Hd.repaintPlace('sub'); });
+field($('sub-form'), 'pos').addEventListener('change', () => Hd.repaintPlace('sub'));
+/** Chỗ đang chọn ở ô Bước / Vị trí của hộp bước con (C.Place), null khi chưa đổi so với lúc mở (Lưu cũng không dời). */
+function subDraftPlace() {
+  const f = $('sub-form');
+  const stepId = field(f, 'step').value, pos = String(field(f, 'pos').value || 'n:999');
+  if (!subCtx || (subCtx.subId && stepId === subCtx.stepId && pos === subCtx.pos0)) return null;
+  return { stepId, slot: Number(pos.slice(2)) || 0, join: pos[0] === 'j', at: Infinity };
+}
 /* Pending, Blocked, Cancelled thì hiện ô lý do, nhãn theo trạng thái (giữ chữ đã gõ khi đổi qua lại; lưu với trạng thái
  * không có lý do thì bỏ). */
 function paintReason() {
@@ -1415,6 +1433,7 @@ $('sub-form').addEventListener('submit', async (/** @type {any} */ e) => {
   const F = C.EDIT_FIELDS.sub;
   const mine = C.pick(C.normSub({ title: field(f, 'title').value, status: field(f, 'status').value, due: field(f, 'due').value,
     doneWhen: field(f, 'doneWhen').value, notes: field(f, 'notes').value, reason: field(f, 'reason').value, ...Hd.readEdit(f) }), F);
+  const held0 = heldNow(ctx.wsId);
   let { ws, step, sub } = subFromCtx();
   /** @type {any} */ let item = null;
   if (ws && ctx.subId && !sub) {
@@ -1451,12 +1470,15 @@ $('sub-form').addEventListener('submit', async (/** @type {any} */ e) => {
   if (sub) item = sub;
   if (curId !== ws.id) switchTo(ws.id);
   const focusSel = `${subSel(item.id, 'edit-sub')} || ${stepSel(target.id, 'add-sub')} || #q`;
-  if (sub && (target.id !== ctx.stepId || pos !== ctx.pos0)) moveSubTo(ws, sub, to, focusSel);
+  const moved = !!sub && (target.id !== ctx.stepId || pos !== ctx.pos0);
+  if (moved) moveSubTo(ws, sub, to, focusSel, held0);
   else {
     if (!sub) C.placeSub(ws, item, to);
     commit(focusSel);
   }
-  if (!document.querySelector(`.card[data-sub="${item.id}"]`)) toast(sub ? 'Saved — hidden by the filter.' : 'Added — hidden by the filter.');
+  const heldMsg = moved ? '' : Hd.newlyHeld(ws, held0, HELD_TAIL);
+  if (!document.querySelector(`.card[data-sub="${item.id}"]`)) toast((sub ? 'Saved — hidden by the filter.' : 'Added — hidden by the filter.') + heldMsg);
+  else if (heldMsg) toast(`${sub ? 'Saved' : 'Added'} ${quote(item.title)}${heldMsg}`, null, focusSel);
   else if (item.status === 'done' && ctx.orig?.status !== 'done') evidenceHint(target, item);
 });
 /* Nhân bản bản đã lưu; chữ đang sửa chưa lưu thì hỏi lại như Đóng. */
@@ -1494,11 +1516,17 @@ function openStep(step, at, opt = {}) {
   $('step-revisit').hidden = !step || (!step.revisit && !C.canReopen(step));
   docUndo = null;
   renderDocsEdit('step');
-  Hd.paintEdit('step', ws, step, step ? [step, ...step.subs] : []);
+  Hd.paintEdit('step', ws, step, step ? [step, ...step.subs] : [], stepDraftPlace);
   openDlg($('dlg-step'), opt.toHand ? null : field(f, 'title'));
   if (opt.toHand) Hd.focusEdit('step', opt.toHand);
 }
 $('add-step').addEventListener('click', () => openStep(null));
+field($('step-form'), 'pos').addEventListener('change', () => Hd.repaintPlace('step'));
+/** Chỗ đang chọn ở ô Vị trí của hộp bước (chỉ số khi đã nhấc bước ra), null khi chưa đổi so với lúc mở. */
+function stepDraftPlace() {
+  const v = field($('step-form'), 'pos').value;
+  return stepCtx && stepCtx.stepId && v === stepCtx.pos0 ? null : Number(v) || 0;
+}
 /* Lưu: như hộp bước con, chỉ trường đã đổi đè lên bản đang lưu; ô Vị trí không đổi thì bước đứng nguyên chỗ hiện tại. */
 $('step-form').addEventListener('submit', async (/** @type {any} */ e) => {
   e.preventDefault();
@@ -1506,6 +1534,7 @@ $('step-form').addEventListener('submit', async (/** @type {any} */ e) => {
   const ctx = /** @type {any} */ (stepCtx);
   const F = C.EDIT_FIELDS.step;
   const mine = C.pick(C.normStep({ title: field(f, 'title').value, goal: field(f, 'goal').value, doneWhen: field(f, 'doneWhen').value, notes: field(f, 'notes').value, ...Hd.readEdit(f) }), F);
+  const held0 = heldNow(ctx.wsId);
   const now = () => (ctx.stepId ? stepOf(findWs(ctx.wsId), ctx.stepId) : null);
   let ws = findWs(ctx.wsId);
   let step = now();
@@ -1527,7 +1556,7 @@ $('step-form').addEventListener('submit', async (/** @type {any} */ e) => {
   }
   closeSaved($('dlg-step'));
   if (!ws || (ctx.stepId && !step && !fresh)) { toast('Not saved: the step was deleted elsewhere.'); return; }
-  const m = step && curId === ws.id ? beginMove('step', step.id) : null;
+  const m = step && curId === ws.id ? keepHeld(beginMove('step', step.id), held0) : null;
   const i = step ? ws.steps.indexOf(step) : -1;
   const posVal = field(f, 'pos').value;
   if (step) ws.steps.splice(i, 1);
@@ -1536,7 +1565,11 @@ $('step-form').addEventListener('submit', async (/** @type {any} */ e) => {
   ws.steps.splice(k, 0, step);
   const focusSel = `${stepSel(step.id, 'edit-step')} || #q`;
   if (m && k !== i) endMove(m, (k > i ? ws.steps[k - 1] : ws.steps[k + 1])?.id, focusSel);
-  else commit(focusSel);
+  else {
+    commit(focusSel);
+    const heldMsg = Hd.newlyHeld(ws, held0, HELD_TAIL);
+    if (heldMsg) toast(`${i >= 0 ? 'Saved' : 'Added'} step ${quote(step.title)}${heldMsg}`, null, focusSel);
+  }
 });
 $('step-del').addEventListener('click', () => {
   const ctx = stepCtx;

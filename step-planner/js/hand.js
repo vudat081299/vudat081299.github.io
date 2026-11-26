@@ -285,8 +285,9 @@ function wireList() {
 /* ── Phần Inputs / Outputs trong hộp sửa: bản nháp lưu cùng nút Save (ô ẩn `ins`, `outs` mang JSON, nên hỏi lại khi đóng
  * mà chưa lưu như các ô khác) ── */
 
-/** id: bước / bước con đang sửa (rỗng khi thêm mới). @type {Record<'sub'|'step', {wsId:string, id:string, own:Set<string>, ins:string[], outs:any[]}>} */
-const draft = { sub: { wsId: '', id: '', own: new Set(), ins: [], outs: [] }, step: { wsId: '', id: '', own: new Set(), ins: [], outs: [] } };
+/** id: bước / bước con đang sửa (rỗng khi thêm mới). place: chỗ đang chọn trong hộp (ô Bước / Vị trí), null = giữ chỗ cũ
+ * (C.heldAt). @type {Record<'sub'|'step', {wsId:string, id:string, own:Set<string>, ins:string[], outs:any[], place:() => any}>} */
+const draft = { sub: { wsId: '', id: '', own: new Set(), ins: [], outs: [], place: () => null }, step: { wsId: '', id: '', own: new Set(), ins: [], outs: [], place: () => null } };
 const sec = (/** @type {'sub'|'step'} */ where) => $(where + '-hand');
 const form = (/** @type {'sub'|'step'} */ where) => $(where + '-form');
 
@@ -304,11 +305,13 @@ export function readEdit(f) {
 
 /**
  * Mở hộp sửa: dựng phần Inputs / Outputs từ bản đã lưu (null: thêm mới). `owners`: bước / bước con mà đầu ra của nó không
- * được chọn làm đầu vào (chính nó; bước: cả các bước con của nó).
- * @param {'sub'|'step'} where @param {any} ws @param {any} holder @param {any[]} owners
+ * được chọn làm đầu vào (chính nó; bước: cả các bước con của nó). `place`: chỗ đang chọn trong hộp (xem `draft`); đầu vào treo
+ * tính theo chỗ ấy, không theo chỗ đã lưu.
+ * @param {'sub'|'step'} where @param {any} ws @param {any} holder @param {any[]} owners @param {() => any} place
  */
-export function paintEdit(where, ws, holder, owners) {
+export function paintEdit(where, ws, holder, owners, place) {
   draft[where] = {
+    place,
     wsId: ws.id,
     id: holder ? holder.id : '',
     own: new Set(owners.flatMap((o) => o.outs.map((/** @type {any} */ x) => x.id))),
@@ -327,6 +330,14 @@ export function focusEdit(where, which) {
   head.focus({ preventScroll: true });
 }
 
+/** Ô Bước / Vị trí của hộp đổi: tính lại dấu "on hold" của đầu vào, của nơi dùng đầu ra. @param {'sub'|'step'} where */
+export function repaintPlace(where) {
+  paintIns(where);
+  paintOuts(where);
+}
+/** Các đầu ra trong `ids` sẽ treo nếu mục đang sửa đứng ở chỗ đang chọn. @param {'sub'|'step'} where @param {any} ws @param {string[]} ids */
+const heldNow = (where, ws, ids) => (ws ? C.heldAt(ws, where, draft[where].id, ids, draft[where].place()) : new Set());
+
 /** Ứng viên làm đầu vào: mọi đầu ra trong dự án trừ của chính nó, theo thứ tự trên bảng. @param {'sub'|'step'} where */
 function candidates(where) {
   const ws = deps.findWs(draft[where].wsId);
@@ -337,16 +348,17 @@ function candidates(where) {
 function paintIns(where) {
   const { h, icon } = deps;
   const ws = deps.findWs(draft[where].wsId);
-  const { idx, heldKeys } = ws ? C.handoffs(ws) : { idx: new Map(), heldKeys: new Set() };
+  const idx = ws ? C.outIndex(ws) : new Map();
+  const held = heldNow(where, ws, draft[where].ins);
   const s = sec(where);
   const items = draft[where].ins.map((id) => [id, idx.get(id)]).map(([id, src]) => {
     if (!src) return h('li', { class: 'in-chip gone', 'data-in': id, title: goneText },
       icon('in'), h('span', { class: 'in-text' }, h('b', {}, GONE), h('small', {}, 'its source no longer exists')),
       h('button', { type: 'button', class: 'icon-btn', 'data-in-del': '', 'aria-label': `Remove input (${GONE.toLowerCase()})`, title: 'Remove input' }, icon('x')));
-    const held = heldKeys.has(C.heldKey(draft[where].id, src.out.id));
-    return h('li', { class: 'in-chip' + (held ? ' held' : ''), 'data-in': src.out.id, title: held ? heldText(C.holderTitle(src)) : null },
+    const on = held.has(src.out.id);
+    return h('li', { class: 'in-chip' + (on ? ' held' : ''), 'data-in': src.out.id, title: on ? heldText(C.holderTitle(src)) : null },
     icon('in'), h('span', { class: 'in-text' }, h('b', {}, src.out.name),
-      h('small', {}, `from ${C.holderTitle(src)}` + (held ? ' · on hold: it now comes after this' : ''))),
+      h('small', {}, `from ${C.holderTitle(src)}` + (on ? ' · on hold: it now comes after this' : ''))),
     h('button', { type: 'button', class: 'icon-btn', 'data-in-del': '', 'aria-label': `Remove input ${src.out.name}`, title: 'Remove input' }, icon('x')));
   });
   s.querySelector('[data-ins]').replaceChildren(...items);
@@ -360,7 +372,8 @@ function paintIns(where) {
 function paintOuts(where) {
   const { h, icon } = deps;
   const ws = deps.findWs(draft[where].wsId);
-  const { usedBy: used, heldKeys } = ws ? C.handoffs(ws) : { usedBy: new Map(), heldKeys: new Set() };
+  const used = ws ? C.handoffs(ws).usedBy : new Map();
+  const heldKeys = ws ? C.heldKeysAt(ws, where, draft[where].id, draft[where].place()) : new Set();
   const s = sec(where);
   const rows = draft[where].outs.map((o, k) => {
     const by = used.get(o.id) || [];
@@ -426,7 +439,9 @@ function openPick(where) {
   const ws = deps.findWs(draft[where].wsId);
   const chosen = new Set(draft[where].ins);
   const byStep = new Map();
-  for (const c of candidates(where)) {
+  const cands = candidates(where);
+  const later = heldNow(where, ws, cands.map((c) => c.out.id));
+  for (const c of cands) {
     if (!byStep.has(c.step)) byStep.set(c.step, []);
     byStep.get(c.step).push(c);
   }
@@ -436,7 +451,8 @@ function openPick(where) {
     h('ul', { class: 'reset-list' }, list.map((/** @type {any} */ c) => h('li', {},
       h('label', { class: 'reset-item' },
         h('input', { type: 'checkbox', name: 'pick', value: c.out.id, checked: chosen.has(c.out.id) }),
-        h('span', { class: 'reset-title' }, h('b', {}, c.out.name), h('small', {}, c.sub ? `${c.sub.title}` : 'Whole step'))))))));
+        h('span', { class: 'reset-title' }, h('b', {}, c.out.name),
+          h('small', {}, (c.sub ? c.sub.title : 'Whole step') + (later.has(c.out.id) ? ' (comes after this — will be on hold)' : '')))))))));
   $('pick-groups').replaceChildren(...(groups.length ? groups : [h('p', { class: 'muted' }, 'No outputs declared yet.')]));
   $('pick-ok').disabled = !groups.length;
   deps.showDlg($('dlg-pick'));
@@ -467,11 +483,12 @@ export function alsoCheck(ws, step, picked) {
 
 /* ── Sắp xếp lại: đầu vào vừa bị treo ── */
 
-/** Câu báo kèm toast dời: các liên kết vừa treo (không có trong `before`). @param {any} ws @param {Set<string>} before */
-export function newlyHeld(ws, before) {
+/** Câu báo kèm toast dời, toast Lưu của hộp sửa: các liên kết vừa treo (không có trong `before`).
+ * @param {any} ws @param {Set<string>} before @param {string} [tail] */
+export function newlyHeld(ws, before, tail = 'Links kept; move back to reconnect.') {
   const fresh = C.handoffs(ws).held.filter((l) => !before.has(C.heldKey(l.to.h.id, l.out.id)));
   if (!fresh.length) return '';
   const l = fresh[0];
   return ` · Input on hold: ${quote(C.holderTitle(l.to))} now comes before ${quote(C.holderTitle(l.from))}`
-    + (fresh.length > 1 ? ` (+${fresh.length - 1} more)` : '') + '. Links kept; move back to reconnect.';
+    + (fresh.length > 1 ? ` (+${fresh.length - 1} more)` : '') + '. ' + tail;
 }

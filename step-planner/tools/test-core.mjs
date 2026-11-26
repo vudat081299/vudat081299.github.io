@@ -822,6 +822,26 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   check('bàn giao: consumersOf — bên nhận của bước và bước con làm lại, trừ chính chúng', eq(H.consumersOf(ws, [ws.steps[0], ws.steps[0].subs[2]]).map(H.holderTitle), ['Backend', 'A', 'API']));
 }
 
+/* Hộp sửa: đầu vào treo tính theo chỗ đang chọn (heldAt, heldKeysAt), không đổi dữ liệu thật. */
+{
+  const ws = normWorkspace({ steps: [
+    { id: 't1', title: 'First', subs: [{ id: 'a', title: 'A' }] },
+    { id: 't2', title: 'Second', outs: [{ id: 'os', name: 's' }], subs: [{ id: 'b', title: 'B', outs: [{ id: 'ob', name: 'm' }] }, { id: 'c', title: 'C', ins: ['ob'] }] },
+    { id: 't3', title: 'Third', subs: [{ id: 'd', title: 'D' }] }] });
+  const before = JSON.stringify(ws);
+  const at = (...a) => [...CORE.heldAt(ws, ...a)].sort();
+  check('heldAt: bước con giữ chỗ — đầu ra của bước sau thì treo', eq(at('sub', 'a', ['os', 'ob'], null), ['ob', 'os']));
+  check('heldAt: bước con đổi sang bước sau bên giao — không treo', eq(at('sub', 'a', ['os', 'ob'], { stepId: 't3', slot: 0, join: false }), []));
+  check('heldAt: cùng hàng, đổi ô lên trước bên giao — treo; đầu ra của cả bước cùng hàng không treo',
+    eq(at('sub', 'c', ['os', 'ob'], { stepId: 't2', slot: 0, join: false }), ['ob']));
+  check('heldAt: bước con mới, bước mới theo chỗ đặt', eq(at('sub', '', ['ob'], { stepId: 't1', slot: 1, join: false }), ['ob'])
+    && eq(at('step', '', ['ob'], 0), ['ob']) && eq(at('step', '', ['ob'], 3), []));
+  check('heldAt: bước đổi Vị trí', eq(at('step', 't1', ['ob'], null), ['ob']) && eq(at('step', 't1', ['ob'], 2), []));
+  check('heldKeysAt: dời bên giao ra sau nơi dùng', eq([...CORE.heldKeysAt(ws, 'sub', 'b', { stepId: 't3', slot: 0, join: false })], ['c>ob'])
+    && !CORE.heldKeysAt(ws, 'sub', 'b', null).size);
+  check('heldAt: không đổi dữ liệu thật', JSON.stringify(ws) === before);
+}
+
 /* Trạng thái đầu vào / đầu ra (ioStatus). */
 {
   const io = (raw) => CORE.ioStatus(raw);

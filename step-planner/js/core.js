@@ -464,6 +464,43 @@ export function consumersOf(ws, owners) {
   return holders(ws).filter((hd) => !own.has(hd.h) && (hd.h.ins || []).some((/** @type {string} */ id) => ids.has(id)));
 }
 
+/* Hộp sửa, trước khi Lưu: liên kết nào sẽ treo nếu mục đang sửa đứng ở chỗ đang chọn trong hộp (ô Bước / Vị trí). Tính trên
+ * bản sao. kind 'sub': `place` là Place (tính khi đã nhấc nó ra); kind 'step': chỉ số khi đã nhấc ra. `place` null: giữ chỗ
+ * hiện tại. `id` rỗng: mục mới (cần `place`). */
+/** Bản sao các bước với mục đang sửa ở chỗ `place`, hay null. @param {{steps:any[]}} ws @param {'sub'|'step'} kind @param {string} id @param {any} place */
+function placedCopy(ws, kind, id, place) {
+  const c = { steps: JSON.parse(JSON.stringify(ws.steps)) };
+  const DRAFT = '\u0000draft';
+  /** @type {any} */ let h = null;
+  if (kind === 'sub') {
+    h = (id && c.steps.flatMap((/** @type {any} */ st) => st.subs).find((/** @type {any} */ x) => x.id === id)) || { id: DRAFT, outs: [], ins: [], par: false };
+    if (h.id === DRAFT && !place) return null;
+    if (place && placeSub(c, h, { ...place, at: Number.isFinite(place.at) ? place.at : Infinity }) === undefined) return null;
+  } else {
+    h = (id && c.steps.find((/** @type {any} */ st) => st.id === id)) || { id: DRAFT, outs: [], ins: [], subs: [] };
+    if (place != null || h.id === DRAFT) {
+      const i = c.steps.indexOf(h);
+      if (i >= 0) c.steps.splice(i, 1);
+      c.steps.splice(Math.max(0, Math.min(Number(place) || 0, c.steps.length)), 0, h);
+    }
+  }
+  return { c, h };
+}
+/** Các đầu ra trong `outIds` sẽ là đầu vào treo của mục đang sửa. @param {{steps:any[]}} ws @param {'sub'|'step'} kind @param {string} id
+ * @param {string[]} outIds @param {any} place @returns {Set<string>} */
+export function heldAt(ws, kind, id, outIds, place) {
+  const p = placedCopy(ws, kind, id, place);
+  if (!p) return new Set();
+  p.h.ins = [...outIds];
+  return new Set(handoffs(p.c).held.filter((l) => l.to.h === p.h).map((l) => l.out.id));
+}
+/** `heldKeys` của cả dự án khi mục đang sửa đứng ở chỗ `place` (nơi dùng đầu ra của nó có treo không).
+ * @param {{steps:any[]}} ws @param {'sub'|'step'} kind @param {string} id @param {any} place @returns {Set<string>} */
+export function heldKeysAt(ws, kind, id, place) {
+  const p = placedCopy(ws, kind, id, place);
+  return p ? handoffs(p.c).heldKeys : new Set();
+}
+
 /* ── Tiến độ ── */
 
 /** Xong / (tổng − bỏ qua − huỷ). @param {{status:string}[]} subs */

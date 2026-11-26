@@ -2517,6 +2517,59 @@ const check = (name, ok, detail = '') => {
     const n0 = await tst();
     check('bàn giao: danh sách cặp — hai bên trong tầm nhìn thì không có toast', !n0.on, JSON.stringify(n0));
     await fc2.close();
+
+    // Hộp sửa: dấu "on hold" tính theo ô Bước / Vị trí đang chọn (chưa Lưu); hộp chọn ghi đầu ra đứng sau; Lưu tạo treo thì toast báo.
+    const pc = await browser.newContext({ viewport: { width: 1280, height: 900 }, deviceScaleFactor: 1 });
+    await pc.addInitScript(seedInit, { id: 'wp', name: 'Pick', log: [], steps: [
+      { id: 'p1', title: 'First', subs: [{ id: 'pa', title: 'Consumer A' }] },
+      { id: 'p2', title: 'Second', subs: [{ id: 'pb', title: 'Producer B', outs: [{ id: 'pob', name: 'model.pkl' }] }, { id: 'pc', title: 'Consumer C', ins: ['pob'] }] },
+      { id: 'p3', title: 'Third', subs: [{ id: 'pd', title: 'Consumer D' }] }] });
+    const pp = await pc.newPage();
+    pp.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
+    pp.on('pageerror', (e) => errors.push(String(e)));
+    await pp.goto(BASE);
+    await pp.waitForSelector('.card[data-sub="pa"]');
+    const setSel = (sel, v) => pp.evaluate(([q, val]) => { const e = document.querySelector(q); e.value = val; e.dispatchEvent(new Event('change', { bubbles: true })); }, [sel, v]);
+    const chipHeld = () => pp.evaluate(() => [...document.querySelectorAll('#sub-hand .in-chip, #step-hand .in-chip')].filter((c) => c.offsetParent).map((c) => (c.classList.contains('held') ? 'held:' : '') + c.querySelector('b').textContent));
+    await pp.click('.card[data-sub="pa"] [data-act="edit-sub"]');
+    await pp.click('#sub-hand [data-in-pick]');
+    const pickTxt = await pp.textContent('#pick-groups');
+    await pp.check('#pick-groups input[value="pob"]');
+    await pp.click('#pick-ok');
+    const c0 = await chipHeld();
+    await setSel('#sub-form [name="step"]', 'p3');
+    const c1 = await chipHeld();
+    await setSel('#sub-form [name="step"]', 'p1');
+    const c2 = await chipHeld();
+    await pp.click('#sub-form button[type="submit"]');
+    const t0 = await pp.textContent('#toast-text');
+    const dotA = await pp.evaluate(() => document.querySelector('.card[data-sub="pa"] .io')?.dataset.ioIn);
+    check('hộp sửa: hộp chọn ghi đầu ra đứng sau; dấu "on hold" theo ô Bước đang chọn; Lưu tạo treo thì toast báo',
+      /model\.pkl\s*Producer B \(comes after this — will be on hold\)/.test(pickTxt) && same(c0, ['held:model.pkl']) && same(c1, ['model.pkl']) && same(c2, ['held:model.pkl'])
+      && /^Saved "Consumer A" · Input on hold: "Consumer A" now comes before "Producer B"\./.test(t0) && dotA === 'bad', JSON.stringify({ pickTxt, c0, c1, c2, t0, dotA }));
+    // Đổi Bước sang sau bên giao rồi Lưu: dời, liên kết nối, toast dời không báo treo.
+    await pp.click('.card[data-sub="pa"] [data-act="edit-sub"]');
+    await setSel('#sub-form [name="step"]', 'p3');
+    const c3 = await chipHeld();
+    await pp.click('#sub-form button[type="submit"]');
+    const t1 = await pp.textContent('#toast-text');
+    const dotA2 = await pp.evaluate(() => document.querySelector('.card[data-sub="pa"] .io')?.dataset.ioIn);
+    check('hộp sửa: đổi Bước tới sau bên giao — chip hết "on hold" trước khi Lưu, Lưu thì dời và nối lại',
+      same(c3, ['model.pkl']) && /^Moved "Consumer A" to step "Third"/.test(t1) && !/on hold/.test(t1) && dotA2 === 'ok', JSON.stringify({ c3, t1, dotA2 }));
+    // Hộp bước: Vị trí đổi thì dấu đổi theo; dời bước nhận xuống cuối khi Lưu thì không báo treo.
+    await pp.click('.step[data-step="p1"] [data-act="edit-step"]');
+    await pp.click('#step-hand [data-in-pick]');
+    await pp.check('#pick-groups input[value="pob"]');
+    await pp.click('#pick-ok');
+    const s0 = await chipHeld();
+    await setSel('#step-form [name="pos"]', '2');
+    const s1 = await chipHeld();
+    await pp.click('#step-form button[type="submit"]');
+    const t2 = await pp.textContent('#toast-text');
+    const st = (await cur(pp)).steps.map((x) => x.id);
+    check('hộp bước: dấu "on hold" theo ô Vị trí đang chọn; Lưu ở chỗ sau bên giao thì không treo',
+      same(s0, ['held:model.pkl']) && same(s1, ['model.pkl']) && same(st, ['p2', 'p3', 'p1']) && !/on hold/.test(t2), JSON.stringify({ s0, s1, st, t2 }));
+    await pc.close();
   }
 
   /* ── Dữ liệu lưu bị hỏng ── */
