@@ -1438,8 +1438,8 @@ html { scrollbar-gutter: stable; }   /* khoá cuộn không làm trang nhảy ng
 .board.compact .hand-gap { height: var(--card-min-compact); }
 .hand-gap::before { left: var(--s1); right: var(--s1); top: 50%; border-top: var(--mark-w) dashed var(--ink-4); transform: translateY(-50%); }
 .hand-gap::after { right: var(--s1); top: 50%; transform: translateY(-50%) rotate(45deg); }
-/* Đang kéo: giữ chỗ (không đẩy thẻ dưới con trỏ), chỉ ẩn. */
-.dragging-any :is(.hand-row, .hand-gap) { visibility: hidden; }
+/* Đang kéo: thu hẳn lại (drag.js cho các khối trượt khít vào), thả xong bảng vẽ lại. */
+.dragging-any :is(.hand-row, .hand-gap) { display: none; }
 /* Tô bên giao và bên nhận khi nhảy tới (main.js gỡ lớp sau --flash-dur). */
 @keyframes hand-head { from { background-color: var(--flash); box-shadow: 0 0 0 var(--s2) var(--flash); } to { background-color: transparent; box-shadow: 0 0 0 var(--s2) transparent; } }
 .card.hand-hi { animation: moved-card var(--flash-dur) var(--ease) both; }

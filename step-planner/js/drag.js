@@ -114,15 +114,20 @@ export function initDrag(board, api) {
     st.phase = 'drag';
     clearTimeout(st.timer);
     getSelection()?.removeAllRanges();
-    document.body.classList.add('dragging-any');
+    const src = st.kind === 'sub' ? el : /** @type {HTMLElement} */ (el.querySelector('.step-head'));
+    const r = src.getBoundingClientRect();
+    st.offX = st.x0 - r.left; st.offY = st.y0 - r.top;
+    /* Mũi tên bàn giao (ô rộng bằng thẻ, dải trên bước) thu hẳn lại lúc kéo: chỗ thả không nằm sau một khoảng trống. Các khối
+       còn lại trượt khít vào (chỉ khối lá, không trượt cả hàng lẫn thẻ trong nó); đo chỗ thả về sau theo bố cục đã thu. */
+    const collapse = () => document.body.classList.add('dragging-any');
+    if (board.querySelector('.hand-row, .hand-gap')) {
+      flip(/** @type {HTMLElement[]} */ ([...board.querySelectorAll('.card[data-sub], .step-head, .revisit-band, .step-docs')]), collapse, () => {});
+    } else collapse();
     st.cover = document.createElement('div');
     st.cover.className = 'drag-cover';
     document.body.append(st.cover);
     try { board.setPointerCapture(st.pointerId); } catch (e) { /* ngón đã nhấc */ }
     if (st.type === 'touch' && navigator.vibrate) navigator.vibrate(10);
-    const src = st.kind === 'sub' ? el : /** @type {HTMLElement} */ (el.querySelector('.step-head'));
-    const r = src.getBoundingClientRect();
-    st.offX = st.x0 - r.left; st.offY = st.y0 - r.top;
     /* Chỉ một bóng: bóng sót (nếu có) bị gỡ trước. Bản sao bỏ id và khoá dữ liệu (không truy vấn nào của main.js chạm tới
        nó), bỏ nút "Show more" (bóng chỉ để nhìn). */
     for (const g of document.querySelectorAll('.drag-ghost')) g.remove();

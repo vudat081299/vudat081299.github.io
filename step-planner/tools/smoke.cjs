@@ -2048,6 +2048,27 @@ const check = (name, ok, detail = '') => {
     check('bàn giao: tìm khớp tên đầu ra; chip Out liệt kê nơi dùng, nhảy tới bước bị lọc thì bỏ lọc', same(found, ['hA']) && /Used by.*Report/.test(usedTxt)
       && jumped.q === '' && jumped.act === 'edit-step' && jumped.step === 'h3', JSON.stringify({ found, usedTxt, jumped }));
 
+    // Đang kéo thẻ: mũi tên thu hẳn lại, các ô trong hàng khít nhau (không có khoảng trống rộng bằng thẻ); Esc huỷ, mũi tên về.
+    await hp.locator('.card[data-sub="hA"]').scrollIntoViewIfNeeded();
+    await hp.evaluate(() => window.scrollBy(0, -200));
+    const ca = await hp.locator('.card[data-sub="hA"]').boundingBox();
+    await hp.mouse.move(ca.x + 24, ca.y + 24);
+    await hp.mouse.down();
+    await hp.mouse.move(ca.x + 44, ca.y + 34, { steps: 4 });
+    await hp.waitForFunction(() => document.body.classList.contains('dragging-any'));
+    await hp.waitForTimeout(400);
+    const mid = await hp.evaluate(() => {
+      const lis = [...document.querySelectorAll('.step[data-step="h1"] .cards > li')].filter((li) => getComputedStyle(li).display !== 'none' && !li.classList.contains('drag-src'));
+      const rs = lis.map((li) => li.getBoundingClientRect());
+      return { arrows: [...document.querySelectorAll('.hand-row, .hand-gap')].filter((e) => getComputedStyle(e).display !== 'none').length,
+        maxGap: Math.max(...rs.slice(1).map((r, k) => Math.round(r.left - rs[k].right))) };
+    });
+    await hp.keyboard.press('Escape');
+    await hp.mouse.up();
+    await hp.waitForFunction(() => !document.body.classList.contains('dragging-any'));
+    const afterEsc = await marks();
+    check('bàn giao: đang kéo thẻ thì mũi tên thu lại, ô khít nhau; Esc thì mũi tên về', mid.arrows === 0 && mid.maxGap <= 16 && same(afterEsc, m1), JSON.stringify({ mid, afterEsc }));
+
     // Kéo bước 2 lên đầu: liên kết theo id giữ nguyên, vạch tính lại (bên nhận nằm trên bên giao: không còn vạch); Hoàn tác về chỗ cũ.
     const g = await hp.locator('.step[data-step="h2"] .step-grip').boundingBox();
     const t = await hp.locator('.step[data-step="h1"]').boundingBox();
