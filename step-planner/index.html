@@ -45,6 +45,10 @@
   <symbol id="i-grip" viewBox="0 0 24 24"><path d="M9 6h.01M15 6h.01M9 12h.01M15 12h.01M9 18h.01M15 18h.01"/></symbol>
   <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16v4z"/><path d="m13.5 6.5 4 4"/></symbol>
   <symbol id="i-flow" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="8.5" y="16" width="7" height="5" rx="1.5"/><path d="M10 5.5h4M17.5 8v4H12v4"/></symbol>
+  <symbol id="i-in" viewBox="0 0 24 24"><path d="M3 12h11M10 8l4 4-4 4M14 4h5a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-5"/></symbol>
+  <symbol id="i-out" viewBox="0 0 24 24"><path d="M10 12h11M17 8l4 4-4 4M10 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h5"/></symbol>
+  <symbol id="i-hand-down" viewBox="0 0 24 24"><path d="M12 3v2M12 8v2M12 13v7M6.5 14.5 12 20l5.5-5.5"/></symbol>
+  <symbol id="i-hand-right" viewBox="0 0 24 24"><path d="M3 12h2M8 12h2M13 12h7M14.5 6.5 20 12l-5.5 5.5"/></symbol>
   <symbol id="i-parallel" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="7" rx="2"/><rect x="4" y="14" width="16" height="7" rx="2"/></symbol>
 </svg>
 
@@ -323,6 +327,22 @@
       </div>
       <label class="field"><span>Done when</span><input type="text" name="doneWhen" maxlength="300" placeholder="The output that shows this is finished"></label>
       <label class="field"><span>Notes</span><textarea name="notes" rows="4" placeholder="Questions, pitfalls, links…"></textarea></label>
+      <!-- Bàn giao (js/hand.js): lưu cùng nút Save qua hai ô ẩn mang JSON -->
+      <section class="hand-edit" id="sub-hand" aria-label="Handoff: inputs and outputs">
+        <div class="docs-edit-head">
+          <h3 class="dlg-sec-h" id="sub-ins-h">Inputs</h3>
+          <button type="button" class="btn small" data-in-pick><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg>Use existing output</button>
+        </div>
+        <ul class="in-chips" data-ins aria-labelledby="sub-ins-h"></ul>
+        <p class="docs-note" data-ins-note></p>
+        <div class="docs-edit-head">
+          <h3 class="dlg-sec-h" id="sub-outs-h">Outputs</h3>
+          <button type="button" class="btn small" data-out-add><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg>Add output</button>
+        </div>
+        <ul class="out-list" data-outs aria-labelledby="sub-outs-h"></ul>
+        <p class="docs-note" data-outs-note></p>
+        <input type="hidden" name="ins"><input type="hidden" name="outs">
+      </section>
       <section class="docs-edit" id="sub-docs" aria-labelledby="sub-docs-h">
         <div class="docs-edit-head">
           <h3 class="dlg-sec-h" id="sub-docs-h">Documents</h3>
@@ -361,6 +381,21 @@
       <label class="field"><span>Goal</span><input type="text" name="goal" maxlength="400" placeholder="Why this step exists"></label>
       <label class="field"><span>Done when</span><input type="text" name="doneWhen" maxlength="400" placeholder="The output that closes this step"></label>
       <label class="field"><span>Notes</span><textarea name="notes" rows="4" placeholder="Guiding questions, common traps…"></textarea></label>
+      <section class="hand-edit" id="step-hand" aria-label="Handoff: inputs and outputs">
+        <div class="docs-edit-head">
+          <h3 class="dlg-sec-h" id="step-ins-h">Inputs</h3>
+          <button type="button" class="btn small" data-in-pick><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg>Use existing output</button>
+        </div>
+        <ul class="in-chips" data-ins aria-labelledby="step-ins-h"></ul>
+        <p class="docs-note" data-ins-note></p>
+        <div class="docs-edit-head">
+          <h3 class="dlg-sec-h" id="step-outs-h">Outputs</h3>
+          <button type="button" class="btn small" data-out-add><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg>Add output</button>
+        </div>
+        <ul class="out-list" data-outs aria-labelledby="step-outs-h"></ul>
+        <p class="docs-note" data-outs-note></p>
+        <input type="hidden" name="ins"><input type="hidden" name="outs">
+      </section>
       <section class="docs-edit" id="step-docs" aria-labelledby="step-docs-h">
         <div class="docs-edit-head">
           <h3 class="dlg-sec-h" id="step-docs-h">Documents</h3>
@@ -469,6 +504,10 @@
         </div>
         <ul class="reset-list" id="revisit-list"></ul>
       </fieldset>
+      <div class="dlg-callout" id="revisit-also" hidden>
+        <svg class="i" aria-hidden="true"><use href="#i-out"/></svg>
+        <p><b>Also check</b> (they use outputs of what you redo; added to the log): <span id="revisit-also-text"></span></p>
+      </div>
     </div>
     <footer class="dlg-foot">
       <button type="button" class="btn quiet foot-aux" id="revisit-clear" title="Close iteration"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg><span class="btn-lbl">Close iteration</span></button>
@@ -615,6 +654,48 @@
       <button type="button" class="btn go" id="sd-next"><span id="sd-next-text">Next</span></button>
     </footer>
   </div>
+</dialog>
+
+<!-- Bàn giao: đầu vào / đầu ra của một thẻ, các cặp giữa hai hàng hay hai ô (js/hand.js) -->
+<dialog class="dlg dlg-sm" id="dlg-hand" aria-labelledby="dlg-hand-title" aria-describedby="hand-where">
+  <div class="dlg-form">
+    <header class="dlg-head">
+      <div class="dlg-titles">
+        <p class="dlg-kicker" id="hand-kicker">Handoff</p>
+        <h2 id="dlg-hand-title">Handoff</h2>
+        <p class="dlg-sub" id="hand-where"></p>
+      </div>
+      <button type="button" class="icon-btn dlg-x" data-close aria-label="Close" title="Close"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button>
+    </header>
+    <div class="dlg-body">
+      <ul class="hand-list" id="hand-list"></ul>
+    </div>
+    <footer class="dlg-foot">
+      <span class="dlg-gap"></span>
+      <button type="button" class="btn" data-close>Close</button>
+      <button type="button" class="btn go" id="hand-edit">Edit</button>
+    </footer>
+  </div>
+</dialog>
+
+<!-- Chọn đầu ra có sẵn làm đầu vào (mở trên hộp sửa) -->
+<dialog class="dlg dlg-sm" id="dlg-pick" aria-labelledby="dlg-pick-title">
+  <form method="dialog" id="pick-form" class="dlg-form">
+    <header class="dlg-head">
+      <div class="dlg-titles">
+        <p class="dlg-kicker">Inputs</p>
+        <h2 id="dlg-pick-title">Use existing outputs</h2>
+        <p class="dlg-sub">Outputs declared on other steps and sub-steps. Pick what this one needs.</p>
+      </div>
+      <button type="button" class="icon-btn dlg-x" data-close aria-label="Close" title="Close"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button>
+    </header>
+    <div class="dlg-body" id="pick-groups"></div>
+    <footer class="dlg-foot">
+      <span class="dlg-gap"></span>
+      <button type="button" class="btn" data-close>Close</button>
+      <button type="submit" class="btn go" id="pick-ok" value="ok">Use selected</button>
+    </footer>
+  </form>
 </dialog>
 
 <dialog class="dlg dlg-sm dlg-ask" id="dlg-ask" aria-labelledby="dlg-ask-title" aria-describedby="ask-text">

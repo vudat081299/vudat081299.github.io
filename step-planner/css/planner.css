@@ -1284,6 +1284,106 @@ html { scrollbar-gutter: stable; }   /* khoá cuộn không làm trang nhảy ng
 .docs-note:empty { display: none; }
 .doc-open { display: inline-flex; align-items: center; gap: var(--s2); min-height: var(--hit); align-self: flex-start; font-weight: 600; color: var(--green); text-underline-offset: 3px; }
 
+/* ── Bàn giao (js/hand.js): chip In / Out trên thẻ và cột tên bước, vạch nét đứt giữa hai hàng, nút giữa hai ô, tô hai bên,
+   hộp danh sách (#dlg-hand), phần Inputs / Outputs trong hộp sửa, hộp chọn đầu ra (#dlg-pick) ── */
+.hand-tags { display: flex; flex-wrap: wrap; gap: var(--s2); }
+.hand-tag {
+  position: relative; display: inline-flex; align-items: center; gap: var(--s1); min-height: var(--h-xs); padding: 0 var(--s2);
+  font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-2); cursor: pointer;
+  background: var(--chip); border: 0; border-radius: var(--r-pill);
+}
+.hand-tag svg.i { width: var(--fs-sm); height: var(--fs-sm); color: var(--ink-3); }
+.hand-tag::after { content: ''; position: absolute; left: 50%; top: 50%; width: max(100%, var(--hit)); height: max(100%, var(--hit)); transform: translate(-50%, -50%); }
+@media (hover: hover) { .hand-tag:hover { color: var(--ink); background: var(--surface-2); } }
+/* Nút "Handoff · n": viền đứt như vạch; vùng bấm nới tới --hit bằng lớp giả. */
+.hand-btn {
+  position: relative; display: inline-flex; align-items: center; gap: var(--s1); min-height: var(--h-xs); padding: 0 var(--s2);
+  font: 600 var(--fs-xs)/1 var(--sans); color: var(--ink-2); white-space: nowrap; cursor: pointer;
+  background: var(--surface); border: var(--line-w) dashed var(--ink-4); border-radius: var(--r-pill);
+}
+.hand-btn svg.i { width: var(--fs-sm); height: var(--fs-sm); color: var(--ink-3); }
+.hand-btn::after { content: ''; position: absolute; left: 50%; top: 50%; width: max(100%, var(--hit)); height: max(100%, var(--hit)); transform: translate(-50%, -50%); }
+@media (hover: hover) { .hand-btn:hover { color: var(--ink); border-color: var(--ink-2); } .hand-btn:hover svg.i { color: var(--ink); } }
+/* Giữa hai hàng: nét đứt chạy từ lề dưới hàng trên xuống nút nằm trên vạch chia, ở cột tên bước (nút "Add step" ở giữa). */
+.hand-row {
+  position: absolute; z-index: 4; left: var(--s2); top: calc(-1 * var(--s6)); height: calc(var(--s6) + var(--h-xs) / 2);
+  display: flex; flex-direction: column; align-items: flex-start; pointer-events: none;
+}
+.board.compact .hand-row { top: calc(-1 * var(--s4)); height: calc(var(--s4) + var(--h-xs) / 2); }
+.hand-row::before { content: ''; flex: 1 1 auto; margin-left: calc(var(--s2) + var(--fs-sm) / 2 - var(--mark-w) / 2); border-left: var(--mark-w) dashed var(--ink-4); }
+.hand-row .hand-btn { pointer-events: auto; }
+/* Giữa hai ô: một cột hẹp, nút dựng đứng ngang hàng đầu thẻ. */
+.hand-gap { flex: none; align-self: stretch; display: flex; justify-content: center; margin-inline: calc(-1 * var(--s1)); padding-top: var(--s3); }
+.hand-gap .hand-btn { writing-mode: vertical-rl; align-self: flex-start; min-width: var(--h-xs); min-height: 0; padding: var(--s2) 0; }
+@media (pointer: coarse), (max-width: 640px) { .hand-gap { margin-inline: 0; } }
+.dragging-any :is(.hand-row, .hand-gap) { display: none; }
+/* Tô bên giao và bên nhận khi nhảy tới (main.js gỡ lớp sau --flash-dur). */
+@keyframes hand-head { from { background-color: var(--flash); box-shadow: 0 0 0 var(--s2) var(--flash); } to { background-color: transparent; box-shadow: 0 0 0 var(--s2) transparent; } }
+.card.hand-hi { animation: moved-card var(--flash-dur) var(--ease) both; }
+.step-head.hand-hi { border-radius: var(--r-xs); animation: hand-head var(--flash-dur) var(--ease) both; }
+@media (prefers-reduced-motion: reduce) {
+  .card.hand-hi, .step-head.hand-hi { animation: none; background-color: var(--flash); }
+  .card.hand-hi { border-color: var(--flash-ring); }
+}
+/* Hộp danh sách: mỗi đầu ra / mỗi cặp một khối; bên giao, bên nhận là nút nhảy tới thẻ. */
+.hand-list { display: flex; flex-direction: column; gap: var(--s3); }
+.hand-item {
+  display: flex; flex-direction: column; align-items: flex-start; gap: var(--s2); padding: var(--s3);
+  background: var(--surface); border: var(--line-w) solid var(--line); border-radius: var(--r-sm);
+}
+.hand-name { display: flex; align-items: flex-start; gap: var(--s2); font-size: var(--fs-md); line-height: var(--lh-tight); overflow-wrap: anywhere; }
+.hand-name svg.i { flex: none; color: var(--ink-3); }
+.hand-name b { font-weight: 600; min-width: 0; }
+.hand-ref { max-width: 100%; font-size: var(--fs-sm); overflow-wrap: anywhere; }
+.hand-ref code { font: 500 var(--fs-xs)/var(--lh) var(--mono); padding: 0 var(--s1); color: var(--ink-2); background: var(--chip); border-radius: var(--r-xs); }
+.hand-ref a { display: inline-flex; align-items: center; gap: var(--s1); max-width: 100%; font-weight: 600; color: var(--green); text-underline-offset: 3px; }
+.hand-ref a span { min-width: 0; overflow-wrap: anywhere; }
+.hand-note { font-size: var(--fs-sm); color: var(--ink-2); overflow-wrap: anywhere; }
+.hand-used { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); font-size: var(--fs-sm); }
+.hand-who, .hand-pair {
+  display: flex; flex-direction: column; align-items: flex-start; gap: var(--s1); min-height: var(--hit); max-width: 100%; padding: var(--s1) var(--s3);
+  font: inherit; text-align: left; color: var(--ink); cursor: pointer;
+  background: var(--chip); border: var(--line-w) solid transparent; border-radius: var(--r-sm);
+  transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease);
+}
+@media (hover: hover) { :is(.hand-who, .hand-pair):hover { border-color: var(--ink-4); background: var(--surface-2); } }
+.hand-who b, .hand-end b { font-size: var(--fs-sm); font-weight: 600; overflow-wrap: anywhere; }
+.hand-who small, .hand-end small { font-size: var(--fs-xs); color: var(--ink-3); overflow-wrap: anywhere; }
+.hand-pair { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: var(--s2); width: 100%; padding: var(--s2) var(--s3); }
+.hand-end { display: flex; flex-direction: column; gap: var(--s1); min-width: 0; }
+.hand-arrow { display: inline-flex; color: var(--ink-3); }
+.hand-outs { display: flex; flex-direction: column; gap: var(--s2); width: 100%; padding-left: var(--s2); }
+.hand-outs > li { display: flex; flex-direction: column; gap: var(--s1); }
+/* Phần sửa: như phần Tài liệu (nhãn nhóm + nút); đầu vào là chip có nút gỡ, đầu ra là khối ba ô. */
+.hand-edit { display: flex; flex-direction: column; gap: var(--s2); padding-top: var(--s4); border-top: var(--line-w) solid var(--line-2); }
+.hand-edit .docs-edit-head + * { margin-top: calc(-1 * var(--s1)); }
+.hand-edit .docs-note + .docs-edit-head, .hand-edit ul + .docs-edit-head { margin-top: var(--s2); }
+.in-chips { display: flex; flex-wrap: wrap; gap: var(--s2); }
+.in-chips:empty, .out-list:empty { display: none; }
+.in-chip {
+  display: inline-flex; align-items: center; gap: var(--s2); max-width: 100%; padding: 0 0 0 var(--s3); font-size: var(--fs-sm);
+  background: var(--surface); border: var(--line-w) solid var(--line); border-radius: var(--r-sm);
+}
+.in-chip > svg.i { flex: none; color: var(--ink-3); }
+.in-text { display: flex; flex-direction: column; min-width: 0; padding: var(--s1) 0; line-height: var(--lh-tight); overflow-wrap: anywhere; }
+.in-text b { font-weight: 600; color: var(--ink); }
+.in-text small { font-size: var(--fs-xs); color: var(--ink-3); }
+.in-chip .icon-btn { flex: none; }
+@media (hover: hover) { .in-chip .icon-btn:hover, .out-row .icon-btn:hover { color: var(--danger); } }
+.out-list { display: flex; flex-direction: column; gap: var(--s2); }
+.out-row {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--s2); align-items: start; padding: var(--s3);
+  background: var(--surface); border: var(--line-w) solid var(--line); border-radius: var(--r-sm);
+}
+.out-fields { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--s2) var(--s3); }
+.out-fields .field:first-child { grid-column: 1 / -1; }
+.out-used { grid-column: 1 / -1; font-size: var(--fs-xs); color: var(--ink-2); overflow-wrap: anywhere; }
+@media (max-width: 640px) { .out-fields { grid-template-columns: minmax(0, 1fr); } }
+/* Hộp chọn: mỗi bước một nhóm, mỗi đầu ra một hàng có ô chọn (dáng danh sách của hộp Reopen). */
+.pick-group { display: flex; flex-direction: column; }
+.pick-group .reset-title b { display: block; font-weight: 600; }
+.pick-group .reset-title small { display: block; font-size: var(--fs-xs); color: var(--ink-3); }
+
 /* ── Hộp văn bản Markdown (dáng md-annotate: tab gạch chân Edit / Preview, bản xem kiểu GitHub). Gần toàn màn; điện
    thoại: toàn màn. Đầu: biểu tượng, tên sửa tại chỗ, dòng ngữ cảnh ── */
 .dlg.md-dlg { width: min(var(--dlg-md), calc(100vw - 2 * var(--s5))); height: min(92dvh, calc(100dvh - 2 * var(--s5))); max-height: none; }

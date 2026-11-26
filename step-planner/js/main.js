@@ -7,6 +7,7 @@ import { renderMd, renderSrc } from './md.js';
 import { enhanceSelect, openList, consumeJustClosed } from './dropdown.js';
 import { initDrag } from './drag.js';
 import { initDesign, renderSection as renderDesign, mdLabels } from './design.js';
+import * as Hd from './hand.js';
 
 /** @param {string} id @returns {any} */
 const $ = (id) => document.getElementById(id);
@@ -236,20 +237,23 @@ function renderBoard(ws, opt = {}) {
   const old = new Map();
   for (const row of /** @type {NodeListOf<HTMLElement>} */ (board.querySelectorAll(':scope > .step[data-step]'))) old.set(/** @type {string} */ (row.dataset.step), row);
   const docTitles = (/** @type {any[]} */ docs) => docs.map((d) => d.title).join(' ');
+  const outText = (/** @type {any[]} */ outs) => outs.map((o) => `${o.name} ${o.ref}`).join(' ');
+  /* Bàn giao: chip "In n" đếm đầu vào còn trỏ tới đầu ra (đọc cả hàng khác), vạch trên hàng đếm cặp từ hàng trên: vào khoá. */
+  const hand = C.handoffs(ws);
   /* 1. Dữ liệu: hàng nào hiện, khoá của nó, dùng lại được hàng cũ không. Chưa đọc, chưa ghi DOM. */
   const plan = [];
   /** Ngày mở lại cuối của bước đã đóng vòng (chú thích nhãn "Iteration N"); nằm trong khoá hàng vì nó đọc nhật ký. */
   const reopenedOn = new Map();
   let shown = 0;
   ws.steps.forEach((/** @type {any} */ step, /** @type {number} */ i) => {
-    const stepHit = !!q && foldOf(step, () => [step.title, step.goal, step.doneWhen, step.notes, step.revisit?.reason, docTitles(step.docs)]).includes(q);
-    const visible = step.subs.filter((/** @type {any} */ x) => !q || stepHit || foldOf(x, () => [x.title, x.doneWhen, x.notes, x.reason, docTitles(x.docs)]).includes(q));
+    const stepHit = !!q && foldOf(step, () => [step.title, step.goal, step.doneWhen, step.notes, step.revisit?.reason, docTitles(step.docs), outText(step.outs)]).includes(q);
+    const visible = step.subs.filter((/** @type {any} */ x) => !q || stepHit || foldOf(x, () => [x.title, x.doneWhen, x.notes, x.reason, docTitles(x.docs), outText(x.outs)]).includes(q));
     if (filtering && !visible.length && !stepHit) return;
     shown += visible.length;
     if (!step.revisit && step.round > 1) reopenedOn.set(step.id, lastReopened(ws, step));
     const key = JSON.stringify([step, filtering ? visible.map((/** @type {any} */ x) => x.id) : null,
       labels.get(step.id) ?? null, step.subs.map((/** @type {any} */ x) => [labels.get(x.id) ?? null, nextIds.has(x.id)]), todayStr,
-      reopenedOn.get(step.id) ?? null]);
+      reopenedOn.get(step.id) ?? null, (hand.rows.get(i) || []).length, [step, ...step.subs].map((/** @type {any} */ x) => Hd.insCount(x, hand.idx))]);
     const prev = old.get(step.id);
     plan.push({ step, i, visible, key, row: reuse && prev && rowKeys.get(prev) === key ? prev : null, prev });
   });
@@ -271,7 +275,7 @@ function renderBoard(ws, opt = {}) {
   const compactChanged = board.classList.contains('compact') !== compact;
   board.classList.toggle('compact', compact);
   $('compact-btn').setAttribute('aria-pressed', String(compact));
-  const ctx = { filtering, todayStr, nextIds, labels, keep, reopenedOn };
+  const ctx = { filtering, todayStr, nextIds, labels, keep, reopenedOn, hand };
   /** @type {HTMLElement[]} */
   const fresh = [];
   const nodes = plan.map((p) => {
@@ -356,9 +360,10 @@ function patchRowIndex(row, i) {
 
 /** Dựng một hàng (bước): đầu bước, băng Reopened, dải tài liệu, hàng thẻ theo ô.
  * @param {any} step @param {number} i @param {any[]} visible
- * @param {{filtering:boolean, todayStr:string, nextIds:Set<string>, labels:Map<string,string>, keep:{notes:Set<string>, open:Set<string>}, reopenedOn:Map<string,string>}} ctx */
+ * @param {{filtering:boolean, todayStr:string, nextIds:Set<string>, labels:Map<string,string>, keep:{notes:Set<string>, open:Set<string>}, reopenedOn:Map<string,string>, hand:any}} ctx */
 function stepRow(step, i, visible, ctx) {
-  const { filtering, todayStr, nextIds, labels, keep, reopenedOn } = ctx;
+  const { filtering, todayStr, nextIds, labels, keep, reopenedOn, hand } = ctx;
+  const stepTags = Hd.tags(step, Hd.insCount(step, hand.idx)).filter(Boolean);
   const prog = C.progress(step.subs);
   const done = prog.total > 0 && prog.done === prog.total;
   const head = h('div', { class: 'step-head' },
@@ -371,6 +376,7 @@ function stepRow(step, i, visible, ctx) {
     step.goal && h('p', { class: 'step-goal' }, step.goal),
     step.doneWhen && h('p', { class: 'step-done' }, h('span', { class: 'lbl' }, 'Done when '), step.doneWhen),
     step.notes && h('details', { class: 'step-notes', open: keep.notes.has(step.id) }, h('summary', {}, icon('chev'), 'Notes'), h('p', { class: 'notes-text' }, withLinks(step.notes))),
+    stepTags.length > 0 && h('div', { class: 'hand-tags' }, stepTags),
     h('div', { class: 'prog' },
       h('span', {}, `${prog.done}/${prog.total}`, h('span', { class: 'sr' }, ' sub-steps done')),
       h('span', { class: 'bar-prog', 'aria-hidden': 'true' }, barFill(prog.pct))),
@@ -403,6 +409,7 @@ function stepRow(step, i, visible, ctx) {
         x.docs.length > 0 && h('button', { type: 'button', class: 'doc-tag', 'data-act': 'sub-docs', tabindex: '-1',
           'aria-label': `${C.plural(x.docs.length, 'doc')}. Open the list`, title: x.docs.map((/** @type {any} */ d) => d.title).join('\n') },
         icon('clip'), String(x.docs.length)),
+        Hd.tags(x, Hd.insCount(x, hand.idx)),
         statusChip(x)),
       h('div', { class: 'card-body' },
         h('h3', { class: 'card-title' }, h('button', { type: 'button', class: 'link', 'data-act': 'edit-sub', 'aria-keyshortcuts': 'Alt+ArrowLeft Alt+ArrowRight Alt+ArrowUp Alt+ArrowDown' }, x.title)),
@@ -418,11 +425,15 @@ function stepRow(step, i, visible, ctx) {
   };
   /* Mỗi ô một cột của hàng; ô song song xếp chồng các thẻ của nó. */
   const shownIds = new Set(visible.map((/** @type {any} */ x) => x.id));
-  const slots = C.slotsOf(step.subs).map((sl, si) => {
+  /* Giữa ô k và ô k + 1 có bàn giao: một nút chung (ẩn khi đang lọc). */
+  const gaps = filtering ? null : hand.gaps.get(step.id);
+  const slots = C.slotsOf(step.subs).flatMap((sl, si) => {
     const vis = sl.filter((x) => shownIds.has(x.id));
-    return vis.length > 0 && h('li', { class: 'slot' + (sl.length > 1 ? ' par' : ''), 'data-slot': String(si),
-      'aria-label': sl.length > 1 ? `${sl.length} parallel sub-steps` : null }, vis.map(card));
+    const n = gaps?.get(si)?.length || 0;
+    return [vis.length > 0 && h('li', { class: 'slot' + (sl.length > 1 ? ' par' : ''), 'data-slot': String(si),
+      'aria-label': sl.length > 1 ? `${sl.length} parallel sub-steps` : null }, vis.map(card)), n > 0 && Hd.gapItem(si, n)];
   });
+  const rowHand = filtering ? 0 : (hand.rows.get(i) || []).length;
   /* Tài liệu của cả bước: dải chip ngay dưới băng Reopened (hay ở chỗ ấy khi không có băng), trên hàng thẻ. */
   const docs = step.docs.length > 0 && h('div', { class: 'step-docs' },
     h('ul', { class: 'doc-chips', 'aria-label': `Docs of step ${i + 1}` }, step.docs.map(docChip)),
@@ -433,6 +444,7 @@ function stepRow(step, i, visible, ctx) {
       'aria-label': `Add a step before step ${i + 1}`, title: `Add a step here (before step ${i + 1})` }, icon('plus'), h('span', {}, 'Add step')));
   return h('section', { class: 'step' + (step.revisit ? ' revisit' : '') + (done ? ' is-done' : ''), 'data-step': step.id, 'aria-labelledby': 'st-' + step.id },
     gap,
+    rowHand > 0 && Hd.rowMarker(rowHand),
     band,
     docs,
     head,
@@ -966,6 +978,7 @@ $('board').addEventListener('click', (/** @type {any} */ e) => {
   if (!step) return;
   const card = b.closest('[data-sub]');
   const sub = card && step.subs.find((/** @type {any} */ x) => x.id === card.dataset.sub);
+  if (Hd.boardAct(act, b, step, sub)) return;
   switch (act) {
     case 'edit-step': openStep(step); break;
     case 'add-doc': openDocNew({ wsId: ws.id, stepId: step.id, subId: null, docId: null }); break;
@@ -1150,7 +1163,8 @@ function flash(kind, id, swapId) {
 }
 
 function duplicateSub(/** @type {any} */ step, /** @type {any} */ sub) {
-  const c = C.normSub({ ...sub, id: '', title: sub.title + ' (copy)', docs: sub.docs.map((/** @type {any} */ d) => ({ ...d, id: '' })) });
+  const c = C.normSub({ ...sub, id: '', title: sub.title + ' (copy)', docs: sub.docs.map((/** @type {any} */ d) => ({ ...d, id: '' })),
+    outs: sub.outs.map((/** @type {any} */ o) => ({ ...o, id: '' })) }); // bản sao giữ đầu vào; đầu ra mang id mới, nơi dùng vẫn trỏ bản gốc
   /* Bản sao đứng ngay sau bản gốc: trong cùng ô song song nếu bản gốc ở ô song song, không thì một ô mới. */
   const p = C.subPlace(cur(), sub.id);
   if (!p) return;
@@ -1165,6 +1179,7 @@ function deleteSub(/** @type {string} */ wsId, /** @type {string} */ stepId, /**
   const j = step ? step.subs.findIndex((/** @type {any} */ x) => x.id === subId) : -1;
   if (j < 0) return;
   const place = /** @type {C.Place} */ (C.subPlace(ws, subId));
+  const relink = C.insBackup(ws, [step.subs[j]]);
   const sub = C.takeSub(ws, subId);
   commit();
   const back = `${subSel(step.subs[Math.min(j, step.subs.length - 1)]?.id, 'edit-sub')} || ${stepSel(stepId, 'add-sub')}`;
@@ -1174,6 +1189,7 @@ function deleteSub(/** @type {string} */ wsId, /** @type {string} */ stepId, /**
     if (!w) { toast('Cannot undo: the project was deleted.'); return; }
     if (!s) { toast('Cannot undo: its step was deleted.'); return; }
     if (!s.subs.some((/** @type {any} */ x) => x.id === sub.id)) C.placeSub(w, sub, place);
+    relink(w);
     if (curId !== wsId) switchTo(wsId);
     commit(subSel(sub.id, 'edit-sub'));
   }, back);
@@ -1190,6 +1206,7 @@ async function deleteStep(/** @type {string} */ wsId, /** @type {string} */ step
   step = stepOf(ws, stepId);
   if (!step) return;
   const i = ws.steps.indexOf(step);
+  const relink = C.insBackup(ws, [step, ...step.subs]);
   ws.steps.splice(i, 1);
   commit();
   const near = ws.steps[Math.min(i, ws.steps.length - 1)];
@@ -1197,6 +1214,7 @@ async function deleteStep(/** @type {string} */ wsId, /** @type {string} */ step
     const w = findWs(wsId);
     if (!w) { toast('Cannot undo: the project was deleted.'); return; }
     if (!stepOf(w, step.id)) w.steps.splice(Math.min(i, w.steps.length), 0, step);
+    relink(w);
     if (curId !== wsId) switchTo(wsId);
     commit(stepSel(step.id, 'edit-step'));
   }, near ? stepSel(near.id, 'edit-step') : '#add-step');
@@ -1232,8 +1250,8 @@ function subPosOptions(keep = true) {
   field(f, 'pos').value = p ? `${p.join ? 'j' : 'n'}:${p.slot}` : keep && subCtx.pos ? subCtx.pos : `n:${slots.length}`;
 }
 
-/** @param {any} step @param {any} sub @param {{toDocs?:boolean, status?:string, pos?:string}} [opt] status: đặt sẵn trạng thái
- * (Cancelled: focus ô lý do); pos: chỗ đặt sẵn của bước con mới */
+/** @param {any} step @param {any} sub @param {{toDocs?:boolean, status?:string, pos?:string, toHand?:'ins'|'outs'}} [opt] status: đặt sẵn trạng thái
+ * (Cancelled: focus ô lý do); pos: chỗ đặt sẵn của bước con mới; toHand: mở ở phần Inputs / Outputs */
 function openSub(step, sub, opt = {}) {
   const ws = cur();
   const f = $('sub-form');
@@ -1257,7 +1275,9 @@ function openSub(step, sub, opt = {}) {
   $('sub-dup').hidden = !sub;
   docUndo = null;
   renderDocsEdit('sub');
-  openDlg($('dlg-sub'), opt.toDocs ? null : opt.status === 'cancel' ? field(f, 'reason') : field(f, 'title'));
+  Hd.paintEdit('sub', ws, sub, sub ? [sub] : []);
+  openDlg($('dlg-sub'), opt.toDocs || opt.toHand ? null : opt.status === 'cancel' ? field(f, 'reason') : field(f, 'title'));
+  if (opt.toHand) Hd.focusEdit('sub', opt.toHand);
   if (opt.toDocs) {
     $('sub-docs').scrollIntoView({ block: 'nearest' });
     /** @type {any} */ ($('sub-docs').querySelector('.doc-list button, [data-doc-add]')).focus();
@@ -1297,6 +1317,7 @@ $('sub-form').addEventListener('submit', (/** @type {any} */ e) => {
     id: sub ? sub.id : '', docs: sub ? sub.docs : [],
     title: field(f, 'title').value, status: field(f, 'status').value,
     due: field(f, 'due').value, doneWhen: field(f, 'doneWhen').value, notes: field(f, 'notes').value, reason: field(f, 'reason').value,
+    ...Hd.readEdit(f),
   });
   const target = stepOf(ws, field(f, 'step').value) || step;
   const pos = String(field(f, 'pos').value || 'n:999');
@@ -1328,8 +1349,9 @@ $('sub-del').addEventListener('click', () => {
 
 /** @type {{wsId:string, stepId:string|null}|null} */
 let stepCtx = null;
-/** @param {any} step null: thêm bước mới @param {number} [at] bước mới: chỗ chèn đặt sẵn (mặc định cuối) */
-function openStep(step, at) {
+/** @param {any} step null: thêm bước mới @param {number} [at] bước mới: chỗ chèn đặt sẵn (mặc định cuối)
+ * @param {{toHand?:'ins'|'outs'}} [opt] toHand: mở ở phần Inputs / Outputs */
+function openStep(step, at, opt = {}) {
   const f = $('step-form');
   const ws = cur();
   stepCtx = { wsId: ws.id, stepId: step ? step.id : null };
@@ -1344,7 +1366,9 @@ function openStep(step, at) {
   $('step-revisit').hidden = !step || (!step.revisit && !C.canReopen(step));
   docUndo = null;
   renderDocsEdit('step');
-  openDlg($('dlg-step'), field(f, 'title'));
+  Hd.paintEdit('step', ws, step, step ? [step, ...step.subs] : []);
+  openDlg($('dlg-step'), opt.toHand ? null : field(f, 'title'));
+  if (opt.toHand) Hd.focusEdit('step', opt.toHand);
 }
 $('add-step').addEventListener('click', () => openStep(null));
 $('step-form').addEventListener('submit', (/** @type {any} */ e) => {
@@ -1353,14 +1377,14 @@ $('step-form').addEventListener('submit', (/** @type {any} */ e) => {
   const ws = stepCtx && findWs(stepCtx.wsId);
   closeSaved($('dlg-step'));
   if (!ws) return;
-  const vals = { title: field(f, 'title').value, goal: field(f, 'goal').value, doneWhen: field(f, 'doneWhen').value, notes: field(f, 'notes').value };
+  const vals = { title: field(f, 'title').value, goal: field(f, 'goal').value, doneWhen: field(f, 'doneWhen').value, notes: field(f, 'notes').value, ...Hd.readEdit(f) };
   let step = stepCtx.stepId ? stepOf(ws, stepCtx.stepId) : null;
   if (stepCtx.stepId && !step) { toast('Not saved: the step was deleted elsewhere.'); return; }
   const m = step && curId === ws.id ? beginMove('step', step.id) : null;
   const i = step ? ws.steps.indexOf(step) : -1;
   if (step) {
     const n = C.normStep({ ...step, ...vals });
-    Object.assign(step, { title: n.title, goal: n.goal, doneWhen: n.doneWhen, notes: n.notes });
+    Object.assign(step, { title: n.title, goal: n.goal, doneWhen: n.doneWhen, notes: n.notes, outs: n.outs, ins: n.ins });
     ws.steps.splice(i, 1);
   } else step = C.normStep(vals);
   const k = Math.min(Number(field(f, 'pos').value) || 0, ws.steps.length);
@@ -1662,12 +1686,23 @@ function openRevisit(step) {
       numTag('num', labels.get(x.id)), h('span', { class: 'reset-title' }, x.title),
       h('span', { class: `chip st-${x.status}` }, C.STATUS_LABEL[x.status])))));
   $('revisit-clear').hidden = !step.revisit;
+  paintAlsoCheck();
   /** @type {any} */ ($('revisit-form').querySelector('button[type="submit"]')).textContent = step.revisit ? 'Save reason' : 'Reopen step';
   openDlg($('dlg-revisit'), field($('revisit-form'), 'reason'));
 }
 const revisitStep = () => stepOf(findWs(revisitCtx.wsId), revisitCtx.stepId);
+const revisitPicked = () => [...$('revisit-list').querySelectorAll('input[name="reset"]:checked')].map((/** @type {any} */ cb) => cb.value);
+/* Đầu ra của bước, của bước con được chọn làm lại đang được nơi khác dùng: "Also check" liệt kê nơi ấy, ghi vào nhật ký. */
+function paintAlsoCheck() {
+  const step = revisitStep();
+  const names = step && !step.revisit ? Hd.alsoCheck(findWs(revisitCtx.wsId), step, revisitPicked()) : [];
+  $('revisit-also').hidden = !names.length;
+  $('revisit-also-text').textContent = names.join(', ');
+}
+$('revisit-list').addEventListener('change', paintAlsoCheck);
 $('revisit-all-done').addEventListener('click', () => {
   for (const cb of /** @type {any} */ ($('revisit-list').querySelectorAll('input[name="reset"]'))) cb.checked = true;
+  paintAlsoCheck();
 });
 /** Trạng thái, dấu Redo của các bước con, để Hoàn tác. @param {any} step */
 const subMarks = (step) => new Map(step.subs.map((/** @type {any} */ x) => [x.id, { status: x.status, redo: x.redo }]));
@@ -1680,7 +1715,7 @@ $('revisit-form').addEventListener('submit', (/** @type {any} */ e) => {
   const ws = findWs(wsId);
   const step = revisitStep();
   const reason = C.oneLine(field($('revisit-form'), 'reason').value);
-  const picked = [...$('revisit-list').querySelectorAll('input[name="reset"]:checked')].map((/** @type {any} */ cb) => cb.value);
+  const picked = revisitPicked();
   closeSaved($('dlg-revisit'));
   if (!ws || !step) return;
   const focusSel = `.step[data-step="${step.id}"] .badge || ${stepSel(step.id, 'edit-step')}`;
@@ -1697,7 +1732,9 @@ $('revisit-form').addEventListener('submit', (/** @type {any} */ e) => {
     x.redo = true;
     n++;
   }
-  const entry = C.normLog({ date: C.today(), decision: `Reopened: ${step.title} (iteration ${round})`, why: reason, stepId: step.id });
+  const also = Hd.alsoCheck(ws, step, picked);
+  const why = [reason, also.length ? `Also check: ${also.join(', ')}` : ''].filter(Boolean).join('\n');
+  const entry = C.normLog({ date: C.today(), decision: `Reopened: ${step.title} (iteration ${round})`, why, stepId: step.id });
   ws.log.push(entry);
   commit(focusSel);
   toast(`Step reopened · iteration ${round}${n ? ` · ${C.plural(n, 'sub-step')} to redo` : ''} · logged.`, () => {
@@ -2057,4 +2094,7 @@ async function boot() {
   render();
 }
 initDesign({ cur, findWs, commit, toast, h, icon, showDlg });
+/* Tới một thẻ đang bị ô tìm ẩn: bỏ lọc, không lấy focus (Bàn giao đưa focus tới thẻ). */
+const unfilter = () => { ui.q = ''; $('q').value = ''; render(); };
+Hd.initHand({ h, icon, cur, findWs, labelsOf, openSub, openStep, unfilter, flashMs, focusField, showDlg });
 boot();
