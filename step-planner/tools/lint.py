@@ -4,6 +4,9 @@
   1. data/templates.json: khuôn mẫu (khoá, kiểu, chuỗi không rỗng, id không trùng, không thẻ HTML, có đúng một mẫu
      trống). Không có khái niệm người làm: mẫu không có `people` / `owner`.
      Tên mẫu, tên bước, tên bước con tiếng Anh (trừ mẫu đồ án); nội dung khác tiếng Việt.
+     Bàn giao: bước hay bước con có thể có `outs` [{key, name, ref?, note?}] và `ins` [key]. Khoá dạng `[a-z0-9][a-z0-9-]*`
+     (≤ 40), không trùng trong một mẫu; `ins` trỏ tới đầu ra có thật, không phải của chính nó, khai ở bước trước hoặc ở bước
+     con đứng trước trong cùng bước (dữ liệu chỉ chảy xuôi). `ref`: đường dẫn hay link https, một dòng.
   2. Mẫu `it5425-sports` khớp từng chữ với bản sinh từ trang đồ án môn (COURSE_JSON, COURSE_HTML): không thêm nội dung.
      Sinh lại:  python3 step-planner/tools/lint.py --write-course
   3. js/*.js: không innerHTML / outerHTML / insertAdjacentHTML / document.write — chữ người dùng chỉ qua textContent.
@@ -89,8 +92,10 @@ def course_template():
     }
 
 
-STEP_KEYS = {'title', 'goal', 'doneWhen', 'notes', 'subs'}
-SUB_KEYS = {'title', 'doneWhen', 'notes'}
+STEP_KEYS = {'title', 'goal', 'doneWhen', 'notes', 'subs', 'outs', 'ins'}
+SUB_KEYS = {'title', 'doneWhen', 'notes', 'outs', 'ins'}
+OUT_KEYS = {'key', 'name', 'ref', 'note'}
+KEY_RE = r'[a-z0-9][a-z0-9-]{0,39}'
 TPL_KEYS = {'id', 'name', 'description', 'steps'}
 
 
@@ -111,6 +116,58 @@ def english(where, s):
     bad = sorted({c for c in str(s) if ord(c) > 127 and unicodedata.category(c).startswith('L')})
     if bad:
         err(f'{where}: tên phải tiếng Anh, có chữ {"".join(bad)} (nội dung khác giữ tiếng Việt)')
+
+
+def check_flow(w, steps):
+    """outs / ins của một mẫu. Vị trí (j, k): bước j, bước con k (k = -1: cả bước)."""
+    where = {}  # key -> (j, k)
+    items = [(j, -1, s) for j, s in enumerate(steps)] + [
+        (j, k, x) for j, s in enumerate(steps) for k, x in enumerate(s['subs'] if isinstance(s.get('subs'), list) else [])]
+    for j, k, it in items:
+        wi = f'{w} steps[{j}]' + (f'.subs[{k}]' if k >= 0 else '')
+        outs = it.get('outs', [])
+        if not isinstance(outs, list):
+            err(f'{wi}: `outs` phải là danh sách')
+            continue
+        for n, out in enumerate(outs):
+            wo = f'{wi}.outs[{n}]'
+            if not isinstance(out, dict):
+                err(f'{wo}: phải là object {{key, name, ref?, note?}}')
+                continue
+            if extra := set(out) - OUT_KEYS:
+                err(f'{wo}: khoá lạ {sorted(extra)}')
+            key = out.get('key')
+            if not isinstance(key, str) or not re.fullmatch(KEY_RE, key):
+                err(f'{wo}: key "{key}" phải là chữ thường, số, gạch nối, tối đa 40 ký tự')
+            elif key in where:
+                err(f'{wo}: key "{key}" trùng trong mẫu')
+            else:
+                where[key] = (j, k)
+            need_str(wo, out, 'name')
+            for f in ('ref', 'note'):
+                need_str(wo, out, f, required=False)
+            ref = out.get('ref')
+            if isinstance(ref, str) and '://' in ref and not ref.startswith('https://'):
+                err(f'{wo}: ref là link thì phải https')
+    for j, k, it in items:
+        wi = f'{w} steps[{j}]' + (f'.subs[{k}]' if k >= 0 else '')
+        ins = it.get('ins', [])
+        if not isinstance(ins, list) or not all(isinstance(x, str) for x in ins):
+            err(f'{wi}: `ins` phải là danh sách key')
+            continue
+        if len(set(ins)) != len(ins):
+            err(f'{wi}: `ins` có key lặp')
+        own = {o.get('key') for o in it.get('outs', []) if isinstance(o, dict)}
+        for key in ins:
+            if key not in where:
+                err(f'{wi}: ins "{key}" không là đầu ra nào của mẫu')
+            elif key in own:
+                err(f'{wi}: ins "{key}" là đầu ra của chính nó')
+            else:
+                j2, k2 = where[key]
+                if not (j2 < j or (j2 == j and 0 <= k2 < k)):
+                    err(f'{wi}: ins "{key}" khai ở steps[{j2}]' + (f'.subs[{k2}]' if k2 >= 0 else '')
+                        + ' — đầu vào chỉ lấy từ bước trước hoặc bước con đứng trước trong cùng bước')
 
 
 def check_templates(data):
@@ -164,6 +221,7 @@ def check_templates(data):
                     english(f'{wss}.title', sub.get('title', ''))
                 for key in ('doneWhen', 'notes'):
                     need_str(wss, sub, key, required=False)
+        check_flow(f'{w} ({tid})', steps)
     if blanks != 1:
         err(f'templates.json: cần đúng một mẫu trống (steps rỗng), đang có {blanks}')
     course = next((t for t in tpls if t.get('id') == COURSE_ID), None)
