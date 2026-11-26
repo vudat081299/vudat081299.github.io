@@ -101,7 +101,7 @@
             {
               "title": "Ghép dữ liệu (Integrate Data)",
               "doneWhen": "Bảng đã ghép: khoá chuẩn hoá, số dòng trước và sau mỗi lần ghép đã đối chiếu.",
-              "notes": "Gồm cả gộp nhiều dòng thành một (aggregation), ví dụ từ bảng giao dịch ra một dòng mỗi khách.\nGộp theo thời gian thì chỉ dùng dữ liệu trước mốc dự đoán.",
+              "notes": "Gồm cả gộp nhiều dòng thành một (aggregation), ví dụ từ bảng giao dịch ra một dòng mỗi khách.\nGộp theo thời gian thì chỉ dùng dữ liệu trước mốc dự đoán.\nLưu bảng trung gian bằng Parquet thay vì CSV: lưu theo cột, nén, schema (tên, kiểu cột) nằm trong file nên đọc lại không phải đoán kiểu: https://parquet.apache.org/docs/overview/",
               "outs": [
                 {
                   "key": "analysis-table",
@@ -203,7 +203,7 @@
             {
               "title": "Bảo đảm tái lập (Assure Reproducibility; theo CRISP-ML(Q))",
               "doneWhen": "Mỗi lần chạy nối được với: phiên bản dữ liệu (SHA-256 hay commit dữ liệu), commit code, seed, phiên bản thư viện, tham số, chỉ số, file mô hình; chạy lại ra cùng số.",
-              "notes": "MLflow Tracking ghi cho mỗi run: tham số, chỉ số, artifact, dataset, commit git khi chạy trong repo git: https://mlflow.org/docs/latest/ml/tracking/tracking-api/\nÍt lần chạy: một bảng tính có cột run id, commit, SHA-256 dữ liệu là đủ.\nBáo điểm trung bình và độ lệch qua nhiều seed hay fold, không chỉ lần chạy đẹp nhất."
+              "notes": "MLflow Tracking ghi cho mỗi run: tham số, chỉ số, artifact, dataset, commit git khi chạy trong repo git: https://mlflow.org/docs/latest/ml/tracking/tracking-api/\nÍt lần chạy: một bảng tính có cột run id, commit, SHA-256 dữ liệu là đủ.\nBáo điểm trung bình và độ lệch qua nhiều seed hay fold, không chỉ lần chạy đẹp nhất.\nDịch vụ đi kèm (database, MLflow) và phiên bản của chúng ghim trong một file Docker Compose: người khác dựng lại đúng môi trường bằng một lệnh: https://docs.docker.com/compose/"
             }
           ]
         },
@@ -364,7 +364,7 @@
             {
               "title": "Lập kế hoạch dự án (Produce Project Plan)",
               "doneWhen": "Kế hoạch có các pha, đầu vào và đầu ra, môi trường chạy (Spark local trên mẫu, rồi cụm), giới hạn tài nguyên, điều kiện dừng.",
-              "notes": "Viết và thử code trên một máy với master local[*] (mọi nhân của máy) và một mẫu nhỏ; chỉ lên cụm khi code đã đúng: https://spark.apache.org/docs/latest/submitting-applications.html\nGhi trước giới hạn tài nguyên (số executor, số giờ máy mỗi lần chạy). Vượt thì thu hẹp dữ liệu hay đổi cách làm, đừng thêm máy mãi.",
+              "notes": "Viết và thử code trên một máy với master local[*] (mọi nhân của máy) và một mẫu nhỏ; chỉ lên cụm khi code đã đúng: https://spark.apache.org/docs/latest/submitting-applications.html\nGhi trước giới hạn tài nguyên (số executor, số giờ máy mỗi lần chạy). Vượt thì thu hẹp dữ liệu hay đổi cách làm, đừng thêm máy mãi.\nSpark, Kafka chạy thử trên máy bằng Docker Compose, image ghim phiên bản; healthcheck với depends_on để dịch vụ chờ nhau sẵn sàng: https://docs.docker.com/compose/how-tos/startup-order/",
               "ins": [
                 "scale-decision",
                 "latency-reqs",
@@ -395,7 +395,7 @@
             {
               "title": "Chọn định dạng lưu trữ và cách phân vùng (Storage Format, Partitioning; Delta Lake)",
               "doneWhen": "Đã chọn nơi lưu (HDFS hay object storage), định dạng (Parquet hay Delta), cột phân vùng, đường dẫn ba vùng bronze / silver / gold; mỗi lựa chọn có lý do.",
-              "notes": "Parquet lưu theo cột: truy vấn chỉ đọc cột cần. Bài giảng, định dạng tệp: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b3-3-fig-rowcol\nDelta Lake thêm trên Parquet: giao dịch ACID, chặn ghi sai schema (schema enforcement), time travel để đọc lại phiên bản cũ và tái lập thí nghiệm (có thời hạn, xem thẻ Bảo đảm tái lập): https://docs.delta.io/latest/index.html\nCột phân vùng thường là ngày. Đừng phân vùng theo cột nhiều giá trị (user_id); chỉ phân vùng khi mỗi phân vùng có ít nhất khoảng 1 GB (Delta Lake, Best practices): https://docs.delta.io/latest/best-practices.html\nNhiều tệp nhỏ làm đọc chậm; trên HDFS mỗi tệp còn chiếm RAM của NameNode. Streaming ghi mỗi micro-batch thành tệp mới: lên lịch gộp tệp (compaction).",
+              "notes": "Parquet lưu theo cột: truy vấn chỉ đọc cột cần. Bài giảng, định dạng tệp: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b3-3-fig-rowcol\nDelta Lake thêm trên Parquet: giao dịch ACID, chặn ghi sai schema (schema enforcement), time travel để đọc lại phiên bản cũ và tái lập thí nghiệm (có thời hạn, xem thẻ Bảo đảm tái lập): https://docs.delta.io/latest/index.html\nCột phân vùng thường là ngày. Đừng phân vùng theo cột nhiều giá trị (user_id); chỉ phân vùng khi mỗi phân vùng có ít nhất khoảng 1 GB (Delta Lake, Best practices): https://docs.delta.io/latest/best-practices.html\nNhiều tệp nhỏ làm đọc chậm; trên HDFS mỗi tệp còn chiếm RAM của NameNode. Streaming ghi mỗi micro-batch thành tệp mới: lên lịch gộp tệp (compaction).\nTable format cần một catalog để mọi engine (Spark, Trino, DuckDB) thấy cùng một bảng và bản hiện hành: Hive Metastore, hay Iceberg REST Catalog như Apache Polaris: https://polaris.apache.org/\nObject storage tự chạy: repo cộng đồng của MinIO đã ngừng bảo trì, archived (https://github.com/minio/minio); chọn bản còn bảo trì hay ghi rủi ro. Dựng cả một lakehouse tự chạy: mẫu Nền tảng lakehouse mã nguồn mở.",
               "outs": [
                 {
                   "key": "storage-layout",
@@ -1668,12 +1668,12 @@
             {
               "title": "Chọn nơi lưu dữ liệu thô và dữ liệu sạch",
               "doneWhen": "Đã chọn nơi lưu (thư mục, object storage, cơ sở dữ liệu) và định dạng (ví dụ Parquet) cho vùng thô và vùng sạch, kèm lý do.",
-              "notes": "Vùng thô chỉ thêm, không sửa: lô nào cũng dựng lại được từ đây."
+              "notes": "Vùng thô chỉ thêm, không sửa: lô nào cũng dựng lại được từ đây.\nParquet hơn CSV cho vùng sạch: lưu theo cột, nén, schema nằm trong file: https://parquet.apache.org/docs/overview/\nVùng thô / sạch / công bố ứng với bronze / silver / gold của medallion architecture: https://docs.databricks.com/aws/en/lakehouse/medallion\nObject storage tự chạy (tương thích S3): kiểm tình trạng bảo trì, không chỉ giấy phép; repo cộng đồng của MinIO đã ngừng bảo trì, archived: https://github.com/minio/minio"
             },
             {
               "title": "Bố cục phân vùng và phiên bản (theo Airflow)",
               "doneWhen": "Vùng thô phân vùng theo khoảng dữ liệu (ví dụ theo ngày); vùng sạch có phiên bản; có con trỏ tới bản sạch đang công bố.",
-              "notes": "Airflow, Best practices: đọc và ghi theo một phân vùng cụ thể (ví dụ lấy data_interval_start làm phân vùng), không đọc \"dữ liệu mới nhất\" trong task: https://airflow.apache.org/docs/apache-airflow/stable/best-practices.html",
+              "notes": "Airflow, Best practices: đọc và ghi theo một phân vùng cụ thể (ví dụ lấy data_interval_start làm phân vùng), không đọc \"dữ liệu mới nhất\" trong task: https://airflow.apache.org/docs/apache-airflow/stable/best-practices.html\nTable format (Iceberg, Delta Lake) cộng một catalog làm sẵn phần phiên bản và con trỏ: mỗi lần ghi là một snapshot, catalog trỏ bản hiện hành, lùi về bản tốt được (rollback): https://iceberg.apache.org/",
               "outs": [
                 {
                   "key": "storage-layout",
@@ -1742,7 +1742,8 @@
               ],
               "ins": [
                 "raw-batch"
-              ]
+              ],
+              "notes": "dbt: mỗi model là một câu SELECT trong file .sql; ref() nối các model thành DAG nên dbt tự biết thứ tự chạy: https://docs.getdbt.com/docs/build/sql-models"
             },
             {
               "title": "Test chất lượng dữ liệu (theo dbt)",
@@ -1802,7 +1803,7 @@
           "title": "Mạch ngầm (Undercurrents)",
           "goal": "Job tự chạy đúng lịch, hỏng thì biết ngay, sửa và chạy bù được.",
           "doneWhen": "Có lịch chạy, nhật ký mỗi lần chạy, cảnh báo, runbook; đã thử một lần backfill.",
-          "notes": "Mạch ngầm (undercurrents) chạy qua mọi khâu. Mẫu giữ Orchestration, DataOps, Security; Data Management nằm ở hợp đồng nguồn và test chất lượng.",
+          "notes": "Mạch ngầm (undercurrents) chạy qua mọi khâu. Mẫu giữ Orchestration, DataOps, Security; Data Management nằm ở hợp đồng nguồn và test chất lượng.\nMôi trường của job (database, orchestrator, phiên bản) ghim trong một file Docker Compose: máy dev và máy chạy lịch dựng giống nhau bằng một lệnh: https://docs.docker.com/compose/",
           "subs": [
             {
               "title": "Điều phối (Orchestration): lịch chạy và phụ thuộc",
@@ -1849,6 +1850,732 @@
               "title": "Bảo mật (Security): secret và quyền truy cập",
               "doneWhen": "Khoá API, mật khẩu nằm trong secret, không trong code hay log; chỉ job cần mới đọc được.",
               "notes": "GitHub Actions: secret đọc qua context secrets, bị che trong log, không truyền cho workflow chạy từ fork: https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lakehouse-oss",
+      "name": "Nền tảng lakehouse mã nguồn mở (Medallion Lakehouse)",
+      "output": "Nền tảng dữ liệu lakehouse",
+      "description": "Chọn khi xây một nền tảng dữ liệu tự chạy (self-hosted) bằng công cụ mã nguồn mở: object storage, table format có catalog, ba tầng bronze / silver / gold, biến đổi bằng Spark hoặc dbt, dashboard đọc tầng gold. Thứ tự: hạ tầng và dữ liệu trước, điều phối pipeline sau. Ví dụ ở ghi chú: Docker Compose, MinIO, Iceberg + Polaris, Spark, dbt, DuckDB, Superset. Làm một mình: bỏ Trino (DuckDB đủ), Skip bước giả lập luồng, điều phối bằng script + cron.",
+      "steps": [
+        {
+          "title": "Phạm vi và kiểm kê nguồn (Scope and Source Inventory)",
+          "goal": "Biết nền tảng trả lời câu hỏi nào, nhận những nguồn nào, mỗi nguồn ở định dạng gì và tới ra sao.",
+          "doneWhen": "Có danh sách câu hỏi cho dashboard, bảng kiểm kê nguồn, mẫu thật của từng nguồn, và quyết định công cụ cho từng lớp.",
+          "notes": "Mẫu cho mọi lakehouse mã nguồn mở tự chạy. Tên bước, bước con: tiếng Việt, tên gốc trong ngoặc.\nLakehouse: dữ liệu nằm trên object storage dưới dạng file Parquet, một table format (Iceberg, Hudi, Delta) thêm giao dịch và schema, một catalog cho mọi engine cùng thấy một bảng. Ba tầng theo medallion architecture: bronze (thô, chưa kiểm), silver (đã kiểm, làm sạch), gold (gộp theo nghiệp vụ, cho dashboard): https://docs.databricks.com/aws/en/lakehouse/medallion\nVí dụ xuyên suốt: một nhóm sinh viên dựng hạ tầng bằng Docker Compose; MinIO giữ file Parquet; bảng Iceberg với catalog Apache Polaris; biến đổi bằng Spark, dbt, DuckDB; nguồn là trang HTML, CSV, Parquet, sau thêm một luồng giả lập; dashboard Apache Superset nối DuckDB bằng SQL.\nThứ tự của mẫu: hạ tầng và dữ liệu chạy tay được trước (bước 2–6), giả lập luồng, dashboard, rồi mới điều phối pipeline (bước 9). Điều phối một chuỗi chưa chạy tay được chỉ làm lỗi khó tìm hơn.",
+          "subs": [
+            {
+              "title": "Chốt câu hỏi và người dùng (Use Cases)",
+              "doneWhen": "Ba tới năm câu hỏi mà dashboard tầng gold phải trả lời; ai xem, xem để quyết định gì, cần dữ liệu mới tới mức nào (ngày, giờ, gần thời gian thực).",
+              "notes": "Câu hỏi định ra bảng gold. Không có câu hỏi thì gold thành bản sao của silver và dashboard không ai dùng.",
+              "outs": [
+                {
+                  "key": "use-cases",
+                  "name": "Câu hỏi nghiệp vụ",
+                  "ref": "docs/use-cases.md",
+                  "note": "Mỗi câu hỏi: người xem, quyết định đi kèm, độ mới cần; mỗi câu hỏi về sau có một bảng gold, một biểu đồ"
+                }
+              ]
+            },
+            {
+              "title": "Kiểm kê nguồn dữ liệu (Source Inventory)",
+              "doneWhen": "Mỗi nguồn: định dạng, cách lấy, cỡ, tần suất cập nhật, khoá của một dòng, điều khoản sử dụng, ai giữ nguồn.",
+              "notes": "Mỗi định dạng là gì:\n- HTML: trang viết cho người đọc, không có schema. Dữ liệu nằm trong thẻ table hay rải trong các thẻ khác; phải tách (parse) ra bảng; trang đổi bố cục là bộ tách gãy.\n- CSV: văn bản thuần, mỗi dòng một bản ghi, cột cách nhau bằng dấu phẩy. Không có kiểu, không có schema đi kèm: số, ngày, mã đều là chữ, kiểu là do công cụ đoán.\n- Parquet: file nhị phân lưu theo cột, nén, schema (tên cột, kiểu) nằm trong file. Truy vấn chỉ đọc cột cần: https://parquet.apache.org/docs/overview/\n- Luồng (stream): sự kiện tới liên tục qua một broker như Kafka, không có \"file cuối cùng\".\nHỏi: nguồn có sửa dữ liệu cũ không? Báo đổi cột thế nào? Trang HTML có cho phép tải tự động không (điều khoản, robots.txt)?",
+              "outs": [
+                {
+                  "key": "source-inventory",
+                  "name": "Bảng kiểm kê nguồn",
+                  "ref": "docs/sources.md",
+                  "note": "Mỗi nguồn: định dạng, cách lấy, cỡ, tần suất, khoá, điều khoản; job thu nạp đọc lại bảng này"
+                }
+              ]
+            },
+            {
+              "title": "Lưu mẫu thật của từng nguồn (Sample Fixtures)",
+              "doneWhen": "Mỗi nguồn vài file thật, kể cả ca lạ (trang HTML thiếu bảng, CSV có dòng lỗi, Parquet đổi kiểu cột); ghi ngày lấy.",
+              "notes": "Bộ tách HTML, test schema, script giả lập luồng đều chạy trên các file này, không cần mạng.",
+              "ins": [
+                "source-inventory"
+              ],
+              "outs": [
+                {
+                  "key": "sample-fixtures",
+                  "name": "File mẫu của nguồn",
+                  "ref": "tests/fixtures/",
+                  "note": "File thật của từng nguồn, kể cả ca lạ; test bộ tách và test schema chạy trên đây"
+                }
+              ]
+            },
+            {
+              "title": "Chọn công cụ cho từng lớp (Stack Decision)",
+              "doneWhen": "Bản quyết định (ADR) cho từng lớp: object storage, table format, catalog, engine xử lý, engine truy vấn, BI, điều phối; mỗi lựa chọn có lý do, giấy phép, tình trạng bảo trì.",
+              "notes": "Kiểm tình trạng bảo trì, không chỉ giấy phép. MinIO: mã nguồn vẫn AGPLv3, nhưng repo cộng đồng đã ngừng bảo trì và lưu trữ (archived, chỉ đọc) từ 25/04/2026; không còn phát hành binary cho bản cộng đồng, image phải tự build từ Dockerfile: https://github.com/minio/minio\nNên: dùng MinIO để học thì ghim một phiên bản và ghi rủi ro \"không còn bản vá bảo mật\"; hoặc chọn một object storage tương thích S3 còn bảo trì (quickstart của Polaris dùng RustFS; SeaweedFS, Garage cũng hay gặp). Code chỉ nói S3 API thì đổi được về sau.\nApache Polaris (Iceberg REST Catalog) đã tốt nghiệp incubator, thành dự án cấp cao của Apache ngày 19/02/2026: https://polaris.apache.org/blog/2026/02/19/apache-polaris-graduates-to-top-level-project/\nSo với System design của dự án: mục Architecture, nhóm Where the data lives, kiến trúc Lakehouse (medallion).",
+              "ins": [
+                "use-cases",
+                "source-inventory"
+              ],
+              "outs": [
+                {
+                  "key": "stack-decision",
+                  "name": "Quyết định công cụ theo lớp",
+                  "ref": "docs/adr/stack.md",
+                  "note": "Mỗi lớp: công cụ, phiên bản ghim, giấy phép, tình trạng bảo trì, lý do, phương án thay"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Hạ tầng dạng code (Infrastructure as Code)",
+          "goal": "Một lệnh dựng cả nền tảng trên máy bất kỳ của nhóm; mỗi dịch vụ báo khi đã thật sự sẵn sàng.",
+          "doneWhen": "Máy mới clone repo, chạy một script, mọi dịch vụ healthy; tắt rồi bật lại không mất dữ liệu.",
+          "notes": "Docker Compose đủ cho một máy, môi trường của cả nhóm giống nhau vì cùng một file. Kubernetes (Helm) chỉ khi thật cần nhiều máy; nhóm nhỏ học lakehouse thì Compose trước, Kubernetes là việc riêng về sau.\nCompose chỉ chờ container chạy (running), không chờ sẵn sàng (ready). Dùng healthcheck và depends_on với condition service_healthy; job khởi tạo chạy một lần dùng service_completed_successfully: https://docs.docker.com/compose/how-tos/startup-order/\nGhim phiên bản mọi image (không dùng latest): bản mới đổi cấu hình là cả nhóm hỏng cùng lúc.",
+          "subs": [
+            {
+              "title": "Viết docker-compose.yml (Compose Services)",
+              "doneWhen": "Có đủ dịch vụ: object storage, catalog (Polaris + Postgres), Spark, engine truy vấn (Trino hoặc DuckDB), Superset (+ Postgres metadata); image ghim phiên bản; volume có tên cho dữ liệu bền; cổng ghi rõ.",
+              "notes": "DuckDB chạy trong tiến trình (thư viện), không cần dịch vụ riêng: nằm trong image của dbt, của Superset hay của job Python.\nTrino là dịch vụ riêng, cần khi nhiều người truy vấn cùng lúc; một người dùng thì DuckDB đủ.\nVolume có tên, không bind mount thư mục trong repo: dữ liệu không lẫn vào git.",
+              "ins": [
+                "stack-decision"
+              ],
+              "outs": [
+                {
+                  "key": "compose-file",
+                  "name": "File Compose của nền tảng",
+                  "ref": "infra/docker-compose.yml",
+                  "note": "Dịch vụ, image ghim phiên bản, cổng, volume, healthcheck; mọi máy của nhóm dựng từ file này"
+                }
+              ]
+            },
+            {
+              "title": "Tách cấu hình và secret (.env)",
+              "doneWhen": "Mật khẩu, access key nằm trong .env (có trong .gitignore); .env.example liệt kê đủ biến với giá trị giả; không secret trong compose, code hay log.",
+              "ins": [
+                "compose-file"
+              ],
+              "outs": [
+                {
+                  "key": "env-template",
+                  "name": "Mẫu biến môi trường",
+                  "ref": ".env.example",
+                  "note": "Mọi biến compose và job cần, giá trị giả; người mới chép thành .env rồi sửa"
+                }
+              ]
+            },
+            {
+              "title": "Kiểm tra sức khoẻ dịch vụ (Health Checks)",
+              "doneWhen": "Mỗi dịch vụ có healthcheck thật (gọi endpoint health hay chạy một truy vấn); dịch vụ phụ thuộc chờ service_healthy; job tạo bucket, catalog chạy một lần và báo thành công.",
+              "notes": "Healthcheck chỉ \"cổng đang mở\" là chưa đủ: catalog có thể mở cổng trước khi nối được Postgres.",
+              "ins": [
+                "compose-file"
+              ]
+            },
+            {
+              "title": "Script dựng một lệnh (Bootstrap Script)",
+              "doneWhen": "scripts/up.sh: kiểm Docker, tạo .env từ .env.example nếu chưa có, docker compose up -d --wait, chạy khởi tạo, in URL các giao diện; scripts/down.sh tắt; chạy up lần hai không lỗi.",
+              "notes": "docker compose up --wait chờ các dịch vụ running hoặc healthy rồi mới trả về; có --wait-timeout: https://docs.docker.com/reference/cli/docker/compose/up/",
+              "ins": [
+                "compose-file",
+                "env-template"
+              ],
+              "outs": [
+                {
+                  "key": "bootstrap-script",
+                  "name": "Script dựng nền tảng",
+                  "ref": "scripts/up.sh",
+                  "note": "Một lệnh dựng mọi dịch vụ và khởi tạo; chạy lại không lỗi; in URL giao diện"
+                }
+              ]
+            },
+            {
+              "title": "Thử trên máy sạch (Clean Machine Test)",
+              "doneWhen": "Một người khác clone repo trên máy mình, chạy script, mọi dịch vụ healthy trong một lần; lỗi gặp phải ghi vào README.",
+              "notes": "Hay gặp: cổng bị chiếm, Docker thiếu RAM cho Spark, máy chip ARM thiếu image, file .sh mất quyền chạy hay đổi xuống dòng kiểu Windows.",
+              "ins": [
+                "bootstrap-script"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Lưu trữ, table format và catalog (Storage, Table Format, Catalog)",
+          "goal": "Dữ liệu nằm trên object storage thành bảng có giao dịch; mọi engine đọc cùng một catalog.",
+          "doneWhen": "Có bucket cho mỗi tầng, catalog có namespace bronze / silver / gold; Spark tạo một bảng thử, DuckDB và Trino đọc lại đúng số dòng.",
+          "notes": "Table format thêm một lớp metadata trên file Parquet: giao dịch (hai job ghi cùng lúc không làm hỏng bảng), đổi schema, đọc lại phiên bản cũ (time travel). Catalog giữ con trỏ tới metadata hiện hành của mỗi bảng; mọi engine đi qua catalog, không đọc thẳng thư mục.\nBẫy: mỗi engine tự đọc đường dẫn file thay vì qua catalog: thấy cả file của lần ghi hỏng, hay bản cũ.",
+          "subs": [
+            {
+              "title": "Tạo bucket theo tầng (Buckets per Layer)",
+              "doneWhen": "Bucket hay prefix: landing (file gốc), bronze, silver, gold; job ghi tầng nào chỉ có quyền ghi tầng ấy; bucket tạo bằng job khởi tạo trong compose.",
+              "notes": "landing giữ file gốc đúng từng byte (HTML, CSV, Parquet) để tách lại khi bộ tách sửa; bronze là bảng. Không xoá landing khi đã nạp.",
+              "ins": [
+                "compose-file"
+              ],
+              "outs": [
+                {
+                  "key": "storage-layout",
+                  "name": "Sơ đồ lưu trữ theo tầng",
+                  "ref": "docs/storage-layout.md",
+                  "note": "Bucket landing, bronze, silver, gold: ai ghi, ai đọc, phân vùng, giữ bao lâu"
+                }
+              ]
+            },
+            {
+              "title": "Chọn table format: Iceberg hay Hudi (Table Format Choice)",
+              "doneWhen": "ADR so Iceberg và Hudi theo: engine nào đọc, ghi được (Spark, Trino, DuckDB), catalog dùng được, kiểu ghi chính (thêm hay cập nhật nhiều); chọn một, kèm lý do.",
+              "notes": "Hudi mạnh khi cập nhật, xoá nhiều: bảng Merge On Read ghi thay đổi vào log rồi gộp, có truy vấn tăng dần (incremental query) chỉ lấy dữ liệu mới từ một mốc: https://hudi.apache.org/docs/table_types\nHudi với Polaris: có từ Polaris 1.3.0 và Hudi 1.1.1 qua generic table, tài liệu chỉ nói Spark SQL: https://hudi.apache.org/docs/catalog_polaris\nDuckDB không có extension Hudi trong danh sách core extension (có iceberg, delta, ducklake): https://duckdb.org/docs/stable/core_extensions/overview\nIceberg: Polaris, Trino, Spark, DuckDB đều nói chuyện qua Iceberg REST Catalog. Stack có DuckDB và Superset thì Iceberg là lựa chọn ít ma sát.",
+              "ins": [
+                "stack-decision"
+              ],
+              "outs": [
+                {
+                  "key": "table-format-adr",
+                  "name": "Quyết định table format",
+                  "ref": "docs/adr/table-format.md",
+                  "note": "Iceberg hay Hudi; engine đọc, ghi được; catalog; kiểu ghi chính; lý do"
+                }
+              ]
+            },
+            {
+              "title": "Dựng catalog Polaris (Iceberg REST Catalog)",
+              "doneWhen": "Catalog chạy với metastore bền (Postgres), có warehouse trỏ object storage, namespace bronze, silver, gold; principal riêng cho job ghi và cho BI chỉ đọc; khởi động lại vẫn còn bảng.",
+              "notes": "Quickstart của Polaris dựng bằng Docker Compose, dùng metastore trong bộ nhớ, không dành cho production: https://polaris.apache.org/guides/quickstart/\nMetastore in-memory mất dữ liệu khi server khởi động lại; PostgreSQL qua JDBC (relational-jdbc) là bản khuyên dùng: https://polaris.apache.org/releases/1.9.0/metastores/\nCatalog REST tự chạy khác nếu không dùng Polaris: Lakekeeper, Nessie.",
+              "ins": [
+                "storage-layout",
+                "table-format-adr"
+              ],
+              "outs": [
+                {
+                  "key": "catalog-config",
+                  "name": "Catalog và namespace",
+                  "ref": "infra/catalog/",
+                  "note": "URL catalog, warehouse, namespace bronze / silver / gold, principal ghi và principal chỉ đọc"
+                }
+              ]
+            },
+            {
+              "title": "Nối các engine vào catalog (Engine Wiring)",
+              "doneWhen": "Spark, Trino, DuckDB cùng trỏ một catalog; Spark tạo một bảng thử, ghi 10 dòng; Trino và DuckDB đếm ra 10; xoá bảng thử.",
+              "notes": "Trino: connector Iceberg với iceberg.catalog.type=rest: https://trino.io/docs/current/connector/iceberg.html\nDuckDB: iceberg_scan đọc thẳng file, chỉ đọc. Muốn ghi (INSERT, UPDATE, DELETE, MERGE INTO) phải ATTACH một REST catalog; chỉ ghi kiểu merge-on-read, chưa có copy-on-write: https://duckdb.org/docs/stable/core_extensions/iceberg/writing_to_iceberg\nTrang Iceberg của DuckDB có lệnh ATTACH cho Polaris: https://duckdb.org/docs/stable/core_extensions/iceberg/overview\nSpark: cấu hình catalog Iceberg kiểu rest trong spark-defaults.conf; jar Iceberg runtime đúng bản Spark, Scala.",
+              "ins": [
+                "catalog-config"
+              ],
+              "outs": [
+                {
+                  "key": "engine-config",
+                  "name": "Cấu hình engine",
+                  "ref": "conf/",
+                  "note": "spark-defaults.conf, catalog Trino, lệnh ATTACH của DuckDB; cả ba trỏ cùng catalog; đã thử đọc chéo"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Tầng bronze: thu nạp thô (Bronze Ingestion)",
+          "goal": "Mọi nguồn vào bronze như nguồn, chỉ thêm, kèm metadata thu nạp; nạp lại không sinh trùng.",
+          "doneWhen": "Mỗi nguồn có job nạp vào bảng bronze; chạy lại một lô không thêm dòng; đếm bronze khớp nguồn.",
+          "notes": "Bronze giữ dữ liệu thô, chưa kiểm, lớn dần theo thời gian; nó phục vụ job làm giàu cho silver, không phục vụ người phân tích. Databricks không khuyên ghi thẳng vào silver từ bước thu nạp: https://docs.databricks.com/aws/en/lakehouse/medallion\nỞ bronze chưa sửa, chưa lọc, chưa ép kiểu: sai ở bước sau thì tính lại được từ đây.",
+          "subs": [
+            {
+              "title": "Quy ước metadata thu nạp (Ingestion Metadata)",
+              "doneWhen": "Mỗi dòng bronze có _source, _source_file (đường dẫn ở landing), _ingested_at, _batch_id, _file_hash; quy ước ghi trong tài liệu.",
+              "notes": "_file_hash (ví dụ SHA-256 của file) là khoá của lô: cùng file thì bỏ qua, file sửa thì thành lô mới.",
+              "ins": [
+                "storage-layout",
+                "source-inventory"
+              ],
+              "outs": [
+                {
+                  "key": "ingest-contract",
+                  "name": "Hợp đồng tầng bronze",
+                  "ref": "docs/bronze-contract.md",
+                  "note": "Cột metadata bắt buộc, khoá lô, luật chỉ thêm; mọi job nạp theo hợp đồng này"
+                }
+              ]
+            },
+            {
+              "title": "Nạp CSV và Parquet vào bronze (File Ingestion)",
+              "doneWhen": "File gốc chép vào landing nguyên byte; bảng bronze giữ cột như nguồn (CSV: mọi cột là chuỗi) kèm metadata; nạp lại cùng file không thêm dòng.",
+              "notes": "Bẫy của CSV: kiểu là đoán. DuckDB đoán dialect, kiểu, dòng tiêu đề trên một mẫu, mặc định 20 480 dòng; dòng lạ sau mẫu thì lỗi hay sai: https://duckdb.org/docs/stable/data/csv/auto_detection\nMã có số 0 đứng đầu (mã bưu chính, mã sinh viên) bị đoán thành số là mất số 0. Ngày nhiều kiểu viết (01-02-2000 là tháng 1 hay tháng 2?). Dấu thập phân là dấu phẩy, mã hoá không phải UTF-8, dấu phân cách trong ô có ngoặc kép.\nNên: ở bronze đọc CSV toàn chuỗi (all_varchar); ép kiểu ở silver theo hợp đồng. Parquet đã có schema: so schema với lần nạp trước, đổi thì báo.",
+              "ins": [
+                "ingest-contract",
+                "engine-config",
+                "sample-fixtures"
+              ],
+              "outs": [
+                {
+                  "key": "bronze-files",
+                  "name": "Bảng bronze từ file",
+                  "ref": "bronze.*",
+                  "note": "Mỗi nguồn file một bảng; cột như nguồn (CSV toàn chuỗi) + metadata thu nạp; chỉ thêm"
+                }
+              ]
+            },
+            {
+              "title": "Tách bảng từ trang HTML (HTML Parsing)",
+              "doneWhen": "Trang gốc lưu ở landing; bộ tách ra bảng bronze có cột như trang, mỗi dòng giữ URL và _source_file; test bộ tách chạy trên trang mẫu.",
+              "notes": "pandas.read_html chỉ tìm thẻ table, trả về danh sách DataFrame (mỗi bảng một cái), cần lxml hoặc beautifulsoup4 + html5lib; tài liệu dặn phải dọn sau khi đọc: https://pandas.pydata.org/docs/reference/api/pandas.read_html.html\nDữ liệu không nằm trong thẻ table thì dùng BeautifulSoup với CSS selector. Trang dựng bằng JavaScript thì HTML tải về không có dữ liệu: tìm API mà trang gọi.\nLưu HTML gốc rồi mới tách: bộ tách sửa xong thì tách lại từ landing, không tải lại.",
+              "ins": [
+                "ingest-contract",
+                "engine-config",
+                "sample-fixtures"
+              ],
+              "outs": [
+                {
+                  "key": "bronze-html",
+                  "name": "Bảng bronze từ HTML",
+                  "ref": "bronze.*",
+                  "note": "Mỗi loại trang một bảng; cột như trang, URL, metadata thu nạp; chỉ thêm"
+                }
+              ]
+            },
+            {
+              "title": "Kiểm nạp lại không trùng (Idempotent Re-run)",
+              "doneWhen": "Chạy cùng một lô hai lần: số dòng bronze như nhau; nạp một file đã sửa thì thành lô mới, lô cũ còn nguyên.",
+              "ins": [
+                "bronze-files",
+                "bronze-html"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Tầng silver: làm sạch và kiểm (Silver Layer)",
+          "goal": "Mỗi thực thể một bảng sạch: đúng kiểu, không trùng khoá, qua test chất lượng.",
+          "doneWhen": "Bảng silver dựng lại được từ bronze; test chất lượng chạy mỗi lần; dòng hỏng nằm ở bảng riêng kèm lý do.",
+          "notes": "Silver là bản đã kiểm, làm sạch, làm giàu của dữ liệu; làm sạch và kiểm chất lượng nằm ở tầng này: https://docs.databricks.com/aws/en/lakehouse/medallion",
+          "subs": [
+            {
+              "title": "Viết hợp đồng bảng silver (Data Contract)",
+              "doneWhen": "Mỗi bảng silver: khoá, cột, kiểu, được trống không, miền giá trị, độ mới cam kết.",
+              "ins": [
+                "source-inventory",
+                "ingest-contract"
+              ],
+              "outs": [
+                {
+                  "key": "silver-contract",
+                  "name": "Hợp đồng tầng silver",
+                  "ref": "docs/silver-contract.md",
+                  "note": "Mỗi bảng: khoá, cột, kiểu, miền giá trị, độ mới; test chất lượng sinh từ đây"
+                }
+              ]
+            },
+            {
+              "title": "Ép kiểu, chuẩn hoá, khử trùng (Clean and Deduplicate)",
+              "doneWhen": "Cột đúng kiểu hợp đồng, giờ UTC, tên cột snake_case; trùng theo khoá giữ bản _ingested_at mới nhất; dòng ép kiểu hỏng sang bảng quarantine kèm lý do; số dòng trước, sau mỗi luật.",
+              "notes": "TRY_CAST (DuckDB) và try_cast (Spark SQL) trả NULL thay vì lỗi: đếm NULL trước và sau để bắt dòng hỏng, đừng để chúng biến mất lặng lẽ.\nKhử trùng: ROW_NUMBER() OVER (PARTITION BY khoá ORDER BY _ingested_at DESC) = 1. Cập nhật bảng silver Iceberg bằng MERGE INTO.",
+              "ins": [
+                "silver-contract",
+                "bronze-files",
+                "bronze-html"
+              ],
+              "outs": [
+                {
+                  "key": "silver-tables",
+                  "name": "Bảng silver",
+                  "ref": "silver.*",
+                  "note": "Một dòng mỗi khoá, kiểu theo hợp đồng, giờ UTC; ghi kèm _batch_id của bronze đã đọc"
+                },
+                {
+                  "key": "quarantine",
+                  "name": "Bảng dòng hỏng (quarantine)",
+                  "ref": "silver.quarantine_*",
+                  "note": "Dòng không qua ép kiểu hay luật: dòng gốc, luật hỏng, lô; xem lại mỗi tuần"
+                }
+              ]
+            },
+            {
+              "title": "Test chất lượng dữ liệu (Data Quality Tests; dbt)",
+              "doneWhen": "Mỗi bảng silver có test unique, not_null trên khoá, accepted_values, relationships, và test số dòng không lệch xa lô trước; test chạy mỗi lần build.",
+              "notes": "dbt có sẵn bốn test unique, not_null, accepted_values, relationships; test trả về các dòng sai: https://docs.getdbt.com/docs/build/data-tests",
+              "ins": [
+                "silver-contract",
+                "silver-tables"
+              ],
+              "outs": [
+                {
+                  "key": "dq-report",
+                  "name": "Kết quả test chất lượng",
+                  "ref": "reports/quality/",
+                  "note": "Mỗi lần chạy: test đạt, test hỏng, số dòng sai, số dòng quarantine"
+                }
+              ]
+            },
+            {
+              "title": "Cổng chất lượng trước gold (Quality Gate)",
+              "doneWhen": "Test silver hỏng thì gold không build lại, dashboard giữ số của lần tốt gần nhất; lỗi nêu bảng và test.",
+              "notes": "dbt build chạy model và test theo thứ tự DAG; test hỏng thì các model phía sau bị bỏ qua (SKIP): https://docs.getdbt.com/reference/commands/build",
+              "ins": [
+                "dq-report"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Tầng gold: bảng nghiệp vụ bằng dbt (Gold Marts)",
+          "goal": "Mỗi câu hỏi của dashboard có một bảng gold sẵn để đọc, dựng bằng dbt từ silver.",
+          "doneWhen": "dbt build xanh; mỗi câu hỏi ở danh sách câu hỏi có một mart; số tổng của mart đối chiếu được với silver.",
+          "notes": "Gold gộp dữ liệu theo nghiệp vụ cho phân tích và báo cáo: https://docs.databricks.com/aws/en/lakehouse/medallion\ndbt: mỗi model là một câu SELECT; ref() nối các model thành DAG, nên dbt biết thứ tự chạy, test và lineage.",
+          "subs": [
+            {
+              "title": "Chọn adapter dbt: DuckDB hay Spark (dbt Adapter)",
+              "doneWhen": "ADR: adapter nào, gold ghi vào đâu (bảng Iceberg qua catalog, hay file Parquet), engine nào chạy biến đổi, lý do.",
+              "notes": "dbt-spark: nối một Spark đang chạy (Thrift server); file_format iceberg, hudi hay delta; incremental merge chỉ với ba format này: https://docs.getdbt.com/reference/resource-configs/spark-configs\nDuckDB: dbt v2 có sẵn adapter DuckDB, ghi bảng Iceberg qua catalogs.yml (materialization table, incremental); adapter Python dbt-duckdb của dbt v1 không có catalogs.yml: https://docs.getdbt.com/docs/build/iceberg/adapters/duckdb-iceberg-support\nChọn theo cỡ: gold vừa một máy thì DuckDB nhanh, ít dịch vụ; biến đổi nặng hơn một máy thì Spark.",
+              "ins": [
+                "table-format-adr",
+                "engine-config"
+              ],
+              "outs": [
+                {
+                  "key": "dbt-adapter-adr",
+                  "name": "Quyết định adapter dbt",
+                  "ref": "docs/adr/dbt-adapter.md",
+                  "note": "Adapter, nơi gold ghi vào, engine chạy, lý do"
+                }
+              ]
+            },
+            {
+              "title": "Dựng project dbt: staging và marts (dbt Project)",
+              "doneWhen": "Project dbt có sources trỏ bảng silver, model staging (stg_), marts (fct_, dim_); dbt build chạy từ một lệnh; profiles.yml lấy secret từ biến môi trường.",
+              "ins": [
+                "dbt-adapter-adr",
+                "silver-tables"
+              ],
+              "outs": [
+                {
+                  "key": "dbt-project",
+                  "name": "Dự án dbt (dbt project)",
+                  "ref": "transform/dbt/",
+                  "note": "sources trỏ silver, staging, marts; dbt build chạy được trên máy sạch"
+                }
+              ]
+            },
+            {
+              "title": "Viết mart cho từng câu hỏi (Business Marts)",
+              "doneWhen": "Mỗi câu hỏi một mart: grain (một dòng là gì) ghi trong mô tả, test unique trên khoá grain; số tổng đối chiếu với silver.",
+              "notes": "Mart chỉ đọc silver hay mart khác, không đọc bronze. Grain mơ hồ thì join, gộp dễ đếm trùng hay đếm thiếu.",
+              "ins": [
+                "dbt-project",
+                "use-cases"
+              ],
+              "outs": [
+                {
+                  "key": "gold-marts",
+                  "name": "Bảng gold (marts)",
+                  "ref": "gold.*",
+                  "note": "Mỗi câu hỏi một mart; grain ghi rõ, khoá unique; dashboard chỉ đọc tầng này"
+                }
+              ]
+            },
+            {
+              "title": "Tài liệu và lineage của dbt (dbt Docs)",
+              "doneWhen": "dbt docs generate ra trang tài liệu có DAG từ source tới mart; mỗi mart có mô tả cột.",
+              "notes": "Tài liệu dbt gồm code model, DAG của project, test của từng cột, kiểu cột: https://docs.getdbt.com/docs/build/documentation",
+              "ins": [
+                "gold-marts"
+              ],
+              "outs": [
+                {
+                  "key": "dbt-docs",
+                  "name": "Tài liệu dbt",
+                  "ref": "transform/dbt/target/",
+                  "note": "Trang tài liệu dbt: DAG source → staging → mart, mô tả cột, test"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Giả lập luồng dữ liệu (Mock Streaming)",
+          "goal": "Có một nguồn luồng giả lập để thử đường thu nạp liên tục khi chưa có hệ thống thật.",
+          "doneWhen": "Script phát lại dữ liệu vào topic theo tốc độ đặt; job micro-batch ghi vào bronze; tắt bật lại không mất, không trùng.",
+          "notes": "Làm sau khi đường batch đã chạy từ bronze tới gold. Không có nguồn luồng trong phạm vi thì Skip cả bước.",
+          "subs": [
+            {
+              "title": "Dựng broker Kafka hoặc Redpanda (Message Broker)",
+              "doneWhen": "Broker trong compose có healthcheck; topic có key, số partition, thời gian giữ (retention); gửi thử, đọc lại được.",
+              "notes": "Image chính thức apache/kafka chạy một broker bằng một lệnh docker run: https://kafka.apache.org/quickstart\nRedpanda nói giao thức Kafka, nhẹ hơn; nhưng bản Community dùng giấy phép riêng của Redpanda, không phải giấy phép mã nguồn mở: https://docs.redpanda.com/current/get-started/licensing/overview\nDự án yêu cầu toàn bộ mã nguồn mở thì chọn Apache Kafka.",
+              "ins": [
+                "compose-file"
+              ],
+              "outs": [
+                {
+                  "key": "stream-topic",
+                  "name": "Topic luồng",
+                  "ref": "conf/topics.yaml",
+                  "note": "Tên topic, key, số partition, retention; producer và job đọc dùng chung file này"
+                }
+              ]
+            },
+            {
+              "title": "Script phát lại dữ liệu (Replay Producer)",
+              "doneWhen": "Script đọc file mẫu (CSV, Parquet), gửi từng dòng thành sự kiện JSON có event_id, event_time; tốc độ, số dòng, seed là tham số; có chế độ gửi trùng, gửi trễ để thử.",
+              "notes": "Gửi trùng và gửi trễ có chủ ý: đó là thứ luồng thật sẽ làm, và là thứ job phải chịu được.",
+              "ins": [
+                "stream-topic",
+                "sample-fixtures"
+              ],
+              "outs": [
+                {
+                  "key": "replay-script",
+                  "name": "Script phát lại",
+                  "ref": "scripts/replay.py",
+                  "note": "Tham số: file, tốc độ, số dòng, seed, tỉ lệ trùng, độ trễ; mỗi sự kiện có event_id"
+                }
+              ]
+            },
+            {
+              "title": "Ghi micro-batch vào bronze (Structured Streaming)",
+              "doneWhen": "Spark readStream đọc topic, ghi bảng bronze Iceberg kèm metadata thu nạp và offset Kafka; checkpointLocation trên object storage; tắt bật lại không mất, không trùng.",
+              "notes": "Kafka source của Spark: https://spark.apache.org/docs/latest/streaming/structured-streaming-kafka-integration.html\nMỗi micro-batch sinh file mới: luồng tạo nhiều file nhỏ, cần gộp (compaction) và expire snapshot định kỳ: https://iceberg.apache.org/docs/latest/maintenance/\nKhông cần chạy liên tục: trigger availableNow đọc hết phần đang có rồi dừng, chạy theo lịch như một job batch.",
+              "ins": [
+                "replay-script",
+                "ingest-contract",
+                "engine-config"
+              ],
+              "outs": [
+                {
+                  "key": "bronze-stream",
+                  "name": "Bảng bronze từ luồng",
+                  "ref": "bronze.events",
+                  "note": "Sự kiện thô, offset Kafka, event_time, metadata thu nạp; chỉ thêm; checkpoint đi kèm"
+                }
+              ]
+            },
+            {
+              "title": "Đưa luồng vào silver (Stream to Silver)",
+              "doneWhen": "Silver nhận cả dữ liệu luồng: khử trùng theo event_id, cùng test chất lượng như dữ liệu batch; sự kiện trễ vào đúng ngày của event_time.",
+              "ins": [
+                "bronze-stream",
+                "silver-contract"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Dashboard với Superset (BI)",
+          "goal": "Người dùng mở dashboard và trả lời được các câu hỏi đã chốt; số khớp tầng gold.",
+          "doneWhen": "Mỗi câu hỏi một biểu đồ; dashboard chỉ đọc gold; số trên biểu đồ khớp truy vấn kiểm trên mart.",
+          "subs": [
+            {
+              "title": "Nối Superset với DuckDB hoặc Trino (Database Connection)",
+              "doneWhen": "Driver có trong image; kết nối chỉ đọc; Superset chỉ thấy schema gold; thử một truy vấn trong SQL Lab.",
+              "notes": "DuckDB: driver duckdb-engine, chuỗi kết nối dạng duckdb:////path/to/duck.db: https://superset.apache.org/user-docs/databases/supported/duckdb\nThêm driver cho Superset chạy bằng Docker: ghi tên gói driver vào docker/requirements-local.txt rồi khởi động lại container: https://superset.apache.org/user-docs/databases/\nDuckDB: một tiến trình đọc và ghi, hoặc nhiều tiến trình chỉ đọc (READ_ONLY); Superset mở file .duckdb mà dbt đang ghi là đụng khoá: https://duckdb.org/docs/stable/connect/concurrency\nNên: gold là bảng Iceberg, Superset mở DuckDB rồi ATTACH catalog bằng principal chỉ đọc; nhiều người xem cùng lúc thì nối Trino.",
+              "ins": [
+                "gold-marts",
+                "engine-config"
+              ],
+              "outs": [
+                {
+                  "key": "bi-connection",
+                  "name": "Kết nối BI chỉ đọc",
+                  "ref": "bi/superset/",
+                  "note": "Driver, chuỗi kết nối (secret ở .env), tài khoản chỉ đọc, chỉ thấy schema gold"
+                }
+              ]
+            },
+            {
+              "title": "Dataset và biểu đồ (Datasets, Charts)",
+              "doneWhen": "Mỗi mart một dataset; mỗi câu hỏi một biểu đồ, tiêu đề là câu hỏi; số trên biểu đồ khớp truy vấn kiểm trên mart.",
+              "ins": [
+                "bi-connection",
+                "use-cases"
+              ],
+              "outs": [
+                {
+                  "key": "bi-charts",
+                  "name": "Biểu đồ theo câu hỏi",
+                  "ref": "bi/superset/",
+                  "note": "Mỗi câu hỏi một biểu đồ trên một dataset gold; truy vấn kiểm số đi kèm"
+                }
+              ]
+            },
+            {
+              "title": "Ghép dashboard và lưu vào repo (Dashboard Export)",
+              "doneWhen": "Dashboard có bộ lọc chung và dòng ghi dữ liệu mới tới ngày nào; dashboard xuất (Export) thành file trong repo, máy khác nhập lại được.",
+              "notes": "Dashboard chỉ nằm trong database metadata của Superset thì mất khi xoá volume: xuất vào repo sau mỗi lần sửa.",
+              "ins": [
+                "bi-charts"
+              ],
+              "outs": [
+                {
+                  "key": "dashboard-export",
+                  "name": "Dashboard đã xuất",
+                  "ref": "bi/superset/dashboards/",
+                  "note": "File xuất của dashboard, dataset, kết nối (không kèm mật khẩu); nhập lại trên máy sạch"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Điều phối và lịch chạy (Orchestration)",
+          "goal": "Cả chuỗi landing → bronze → silver → gold chạy bằng một lệnh hoặc theo lịch, đúng thứ tự, hỏng thì dừng và báo.",
+          "doneWhen": "Một lệnh chạy cả chuỗi; có lịch chạy; bước hỏng thì bước sau không chạy; mỗi lần chạy có nhật ký; bảo trì bảng chạy định kỳ.",
+          "notes": "Bắt đầu bằng một script gọi các job theo thứ tự. Cần lịch, thử lại, chạy bù, xem lịch sử thì thêm Airflow hay Dagster vào compose.\nAirflow, Best practices: mỗi task như một transaction, chạy lại ra cùng kết quả; đọc và ghi theo phân vùng: https://airflow.apache.org/docs/apache-airflow/stable/best-practices.html",
+          "subs": [
+            {
+              "title": "Một lệnh chạy cả chuỗi (Pipeline Entrypoint)",
+              "doneWhen": "scripts/run_pipeline.sh chạy nạp bronze → silver → dbt build theo thứ tự, nhận khoảng ngày làm tham số, dừng ở bước hỏng với mã lỗi khác 0.",
+              "ins": [
+                "bronze-files",
+                "bronze-html",
+                "dbt-project"
+              ],
+              "outs": [
+                {
+                  "key": "pipeline-entry",
+                  "name": "Lệnh chạy pipeline",
+                  "ref": "scripts/run_pipeline.sh",
+                  "note": "Tham số khoảng ngày; chạy từng tầng theo thứ tự; dừng ở bước hỏng"
+                }
+              ]
+            },
+            {
+              "title": "Lịch chạy, phụ thuộc, thử lại (Scheduling)",
+              "doneWhen": "Lịch hay DAG: thứ tự, số lần thử lại, timeout; chạy tay với khoảng ngày tự chọn; đã thử chạy bù (backfill) một khoảng.",
+              "notes": "Một máy, một lịch: cron gọi lệnh chạy pipeline là đủ. Airflow, Dagster đáng công khi có nhiều nguồn, nhiều lịch, cần xem lịch sử chạy.",
+              "ins": [
+                "pipeline-entry"
+              ],
+              "outs": [
+                {
+                  "key": "schedule",
+                  "name": "Lịch chạy pipeline",
+                  "ref": "orchestration/",
+                  "note": "Lịch, thứ tự, thử lại, timeout; cách chạy tay và chạy bù một khoảng ngày"
+                }
+              ]
+            },
+            {
+              "title": "Nhật ký chạy và cảnh báo (Run Log, Alerts)",
+              "doneWhen": "Mỗi lần chạy một dòng: run id, khoảng dữ liệu, số dòng mỗi tầng, test hỏng, thời gian; lỗi hay dữ liệu quá cũ gửi cảnh báo tới chỗ nhóm đọc hằng ngày.",
+              "ins": [
+                "schedule"
+              ],
+              "outs": [
+                {
+                  "key": "run-log",
+                  "name": "Nhật ký chạy",
+                  "ref": "logs/runs.csv",
+                  "note": "Một dòng mỗi lần chạy: run id, khoảng dữ liệu, số dòng mỗi tầng, test hỏng, trạng thái"
+                }
+              ]
+            },
+            {
+              "title": "Bảo trì bảng Iceberg (Table Maintenance)",
+              "doneWhen": "Lịch định kỳ: gộp file nhỏ, expire snapshot cũ, xoá file mồ côi (orphan files); số file mỗi bảng không tăng mãi.",
+              "notes": "Iceberg khuyên expire snapshot định kỳ, xoá file mồ côi do job hỏng để lại; luồng sinh file nhỏ thì gộp: https://iceberg.apache.org/docs/latest/maintenance/\nSpark có sẵn procedure rewrite_data_files, expire_snapshots, remove_orphan_files: https://iceberg.apache.org/docs/latest/spark-procedures/",
+              "ins": [
+                "schedule"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Tài liệu nền tảng (Documentation)",
+          "goal": "Người mới đọc README là hiểu kiến trúc, dựng và chạy được, biết dữ liệu đi đâu.",
+          "doneWhen": "README có sơ đồ kiến trúc, lineage, cách chạy; một người ngoài nhóm làm theo và chạy được.",
+          "subs": [
+            {
+              "title": "Sơ đồ kiến trúc trong README (Architecture Diagram)",
+              "doneWhen": "Sơ đồ: nguồn → landing → bronze → silver → gold → dashboard, kèm dịch vụ (object storage, catalog, Spark, dbt, DuckDB / Trino, Superset) và tầng mỗi job ghi; sơ đồ viết bằng chữ (Mermaid) để sửa trong pull request.",
+              "notes": "GitHub vẽ khối mã mermaid trong file Markdown: https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/creating-diagrams",
+              "ins": [
+                "compose-file",
+                "storage-layout"
+              ],
+              "outs": [
+                {
+                  "key": "readme",
+                  "name": "README có sơ đồ kiến trúc",
+                  "ref": "README.md",
+                  "note": "Sơ đồ tầng và dịch vụ, cách dựng, cách chạy; sơ đồ là Mermaid"
+                }
+              ]
+            },
+            {
+              "title": "Lineage dữ liệu (Data Lineage)",
+              "doneWhen": "Mỗi bảng gold truy ngược được: gold ← silver ← bronze ← nguồn ở landing; phần dbt lấy từ DAG của dbt docs, phần job Spark ghi tay.",
+              "ins": [
+                "dbt-docs",
+                "source-inventory"
+              ],
+              "outs": [
+                {
+                  "key": "lineage",
+                  "name": "Lineage dữ liệu",
+                  "ref": "docs/lineage.md",
+                  "note": "Mỗi bảng: đọc từ bảng nào, job nào ghi, tầng nào"
+                }
+              ]
+            },
+            {
+              "title": "Hướng dẫn chạy và runbook (How to Run)",
+              "doneWhen": "README: yêu cầu máy, một lệnh dựng, một lệnh chạy pipeline, URL giao diện, cách tắt và xoá dữ liệu; runbook: lỗi hay gặp, kiểm gì, chạy lại lệnh nào.",
+              "ins": [
+                "bootstrap-script",
+                "pipeline-entry",
+                "run-log"
+              ],
+              "outs": [
+                {
+                  "key": "runbook",
+                  "name": "Sổ tay vận hành (runbook)",
+                  "ref": "docs/runbook.md",
+                  "note": "Mỗi lỗi hay gặp: dấu hiệu, kiểm gì, lệnh sửa hay chạy lại"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Kiểm tra tuân thủ medallion (Medallion Conformance Check)",
+          "goal": "Trả lời có bằng chứng câu hỏi \"README và code còn đúng medallion không?\".",
+          "doneWhen": "Bảng kiểm từng luật: đạt hay không, bằng chứng (file, truy vấn, lệnh); mỗi chỗ không đạt có việc sửa hoặc lý do giữ.",
+          "notes": "Luật lấy từ trang medallion của Databricks: bronze thô, chưa kiểm, lớn dần; silver đã kiểm, làm sạch; gold gộp theo nghiệp vụ; bronze không dành cho người phân tích; không ghi thẳng silver từ bước thu nạp: https://docs.databricks.com/aws/en/lakehouse/medallion\nTrang ấy nói medallion là khuyến nghị, không bắt buộc: lệch có chủ ý thì ghi lý do vào nhật ký quyết định, không cần sửa.\nChạy lại bước này mỗi khi thêm nguồn, thêm tầng, đổi engine.",
+          "subs": [
+            {
+              "title": "Đối chiếu README với hệ thống thật (README vs Code)",
+              "doneWhen": "Mỗi tầng trong sơ đồ README có bucket, namespace thật và job thật ghi vào; không có bảng, bucket nào trong hệ thống mà README không nhắc.",
+              "notes": "Liệt kê namespace và bảng trong catalog, bucket trong object storage, rồi so với sơ đồ; tầng tên khác (raw, staging, curated) thì ghi nó ứng với tầng nào.",
+              "ins": [
+                "readme",
+                "catalog-config"
+              ]
+            },
+            {
+              "title": "Kiểm luật từng tầng (Layer Rules)",
+              "doneWhen": "Bronze: chỉ job thu nạp ghi, chỉ thêm, có metadata thu nạp. Silver: chỉ đọc bronze hay silver, có test. Gold: chỉ dbt ghi, chỉ đọc silver hay gold. Không job nào ghi ngược về tầng trước, không job nào ghi silver thẳng từ nguồn.",
+              "notes": "Cách kiểm: lineage (không mart nào đọc bronze; dbt ls --select +tên_mart liệt kê mọi node phía trên một mart); quyền ghi theo bucket; tìm đường dẫn tầng trong code của job. Viết thành script để chạy lại được.",
+              "ins": [
+                "lineage",
+                "storage-layout"
+              ]
+            },
+            {
+              "title": "Kiểm nơi đọc (Consumer Access)",
+              "doneWhen": "Superset chỉ có dataset trên gold; tài khoản BI không đọc được bronze, silver; thử truy vấn bronze bằng tài khoản ấy và bị từ chối.",
+              "ins": [
+                "bi-connection",
+                "dashboard-export"
+              ]
+            },
+            {
+              "title": "Báo cáo tuân thủ (Conformance Report)",
+              "doneWhen": "Bảng luật: đạt hay không, bằng chứng, việc sửa hay lý do giữ; kết luận một dòng cho câu hỏi \"còn đúng medallion không\".",
+              "outs": [
+                {
+                  "key": "conformance-report",
+                  "name": "Báo cáo tuân thủ medallion",
+                  "ref": "docs/medallion-check.md",
+                  "note": "Mỗi luật: đạt hay không, bằng chứng, việc sửa; kết luận một dòng; ngày kiểm"
+                }
+              ]
             }
           ]
         }

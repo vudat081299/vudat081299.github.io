@@ -6,7 +6,8 @@
      Mẫu có bước thì có `output`: loại đầu ra, ≤ 30 ký tự.
      Bàn giao: bước hay bước con có thể có `outs` [{key, name, ref?, note?}] và `ins` [key]. Khoá dạng `[a-z0-9][a-z0-9-]*`
      (≤ 40), không trùng trong một mẫu; `ins` trỏ tới đầu ra có thật, không phải của chính nó, khai ở bước trước hoặc ở bước
-     con đứng trước trong cùng bước (dữ liệu chỉ chảy xuôi). `ref`: đường dẫn hay link https, một dòng.
+     con đứng trước trong cùng bước (dữ liệu chỉ chảy xuôi). Bước con của mẫu không có `par`: mỗi bước con một ô, nên luật này
+     cũng chặn bên nhận cùng ô với bên giao (treo); test-core kiểm lại trên dự án mở từ mẫu. `ref`: đường dẫn hay link https, một dòng.
      Link tới trang của repo (https://vudat081299.github.io/…): file có trong repo, neo `#id` có trên trang.
   2. Mẫu `it5425-sports` khớp từng chữ với bản sinh từ trang đồ án môn (COURSE_JSON, COURSE_HTML): không thêm nội dung.
      outs / ins của nó suy từ đường dẫn trong `io_html` từng pha (`course_flow`).
@@ -775,7 +776,21 @@ def self_test():
         next(t for t in d['templates'] if t.get('steps'))['steps'][0]['subs'][0]['title'] = 'Collect data'
         json.dump(d, open(p, 'w', encoding='utf-8'), ensure_ascii=False)
 
+    def flow(fn):
+        """Sửa bàn giao của mẫu lakehouse-oss (nhiều outs / ins) trong bản sao."""
+        def run(root):
+            p = os.path.join(root, 'data', 'templates.json')
+            d = json.load(open(p, encoding='utf-8'))
+            fn(next(t for t in d['templates'] if t.get('id') == 'lakehouse-oss')['steps'])
+            json.dump(d, open(p, 'w', encoding='utf-8'), ensure_ascii=False)
+        return run
+
     cases = [
+        ('mẫu: đầu vào lơ lửng (key không có đầu ra)', flow(lambda st: st[1]['subs'][0]['ins'].append('khong-co')), 'không là đầu ra nào'),
+        ('mẫu: đầu vào lấy từ bước sau', flow(lambda st: st[1]['subs'][0]['ins'].append('gold-marts')), 'chỉ lấy từ bước trước'),
+        ('mẫu: đầu vào lấy từ bước con đứng sau, cùng bước', flow(lambda st: st[1]['subs'][1]['ins'].append('bootstrap-script')), 'chỉ lấy từ bước trước'),
+        ('mẫu: bước nhận đầu ra của bước con của chính nó (cùng hàng)', flow(lambda st: st[1].update(ins=['compose-file'])), 'chỉ lấy từ bước trước'),
+        ('mẫu: bước con có `par` (ô song song)', flow(lambda st: st[1]['subs'][1].update(par=True)), 'khoá lạ'),
         ('js: chuỗi tiếng Việt không chú thích', js("export const __a = 'Tới chỗ này';"), 'chữ giao diện phải tiếng Anh'),
         ('js: một chú thích, hai chuỗi tiếng Việt', js("export const __b = ['Một', 'Hải']; // lang: vi — thử"), 'miễn đúng một chuỗi'),
         ('js: chú thích thiếu lý do', js("export const __c = 'Một'; // lang: vi"), 'thiếu lý do'),

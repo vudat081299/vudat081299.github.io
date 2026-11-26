@@ -81,8 +81,9 @@ const check = (name, ok, detail = '') => {
   const { ctx, page } = await open(1280, 900, { permissions: ['clipboard-read', 'clipboard-write'] });
   await page.waitForSelector('#start:not([hidden]) .tpl');
   const tplIds = await page.$$eval('#start .tpl', (bs) => bs.map((b) => b.dataset.tpl));
-  const nTpl = (await page.evaluate(async () => (await (await fetch('data/templates.json')).json()).templates)).length;
-  check('màn đầu: đủ mẫu như templates.json', tplIds.length === nTpl && nTpl >= 5, tplIds.join(','));
+  const jsonIds = (await page.evaluate(async () => (await (await fetch('data/templates.json')).json()).templates)).map((t) => t.id);
+  const nTpl = jsonIds.length;
+  check('màn đầu: đủ mẫu, đúng thứ tự như templates.json', tplIds.join() === jsonIds.join() && nTpl >= 5, tplIds.join(','));
   // Nút đóng hộp không lưu ghi "Close": "Cancelled" là tên một trạng thái.
   const closeBtns = await page.$$eval('dialog button', (bs) => bs.filter((b) => b.textContent.trim() && (b.hasAttribute('data-close') || /^Cancel/.test(b.textContent.trim())))
     .map((b) => b.textContent.trim()));
