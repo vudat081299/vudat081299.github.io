@@ -148,7 +148,8 @@ export function notNeededBy(stage, profile) {
  * Áp lối vào thiết kế: chỉ khâu chưa quyết. Khâu lối bỏ (`skip`) hay hồ sơ cho là không cần (`when`) thành "không cần"; khâu
  * lối cần (`need`) có gợi ý thì chọn phương án đứng đầu (hợp hồ sơ, ưu tiên gợi ý của lối). Khâu `maybe` để người dùng tự
  * quyết. Không đụng khâu đã quyết. Không tự gây luật báo: trong các phương án hợp, chọn cái đầu tiên làm ít luật (trừ `caveat`)
- * báo ở khâu ấy nhất. Bỏ khâu hay phương án lấy được mà vẫn làm luật báo thì để khâu ấy cho người dùng quyết.
+ * báo ở khâu ấy nhất. Không phương án nào hợp hồ sơ, hay bỏ khâu / phương án lấy được mà vẫn làm luật báo: để khâu ấy cho
+ * người dùng quyết.
  * @param {any} cat @param {any} design @param {string} pathId
  * @returns {{next: any, filled: string[], skipped: string[]}}
  */
@@ -173,11 +174,12 @@ export function applyPath(cat, design, pathId) {
     } else if (need === 'need' && path.suggest[s.id]) {
       const r = rankOptions(s, prof, path);
       const ok = r.filter((x) => x.ok).map((x) => ({ x, n: clash(s.id, { ...rec, pick: [x.opt.id] }) }));
-      const best = ok.length ? ok.reduce((a, b) => (b.n < a.n ? b : a)).x : (r.find((x) => x.sug) || r[0]);
-      /* Phương án lấy được vẫn làm luật báo (vd. người dùng công khai, ngân sách miễn phí, chỉ tự host: không công cụ hợp nào né được):
-       * để khâu cho người dùng quyết. */
-      if (clash(s.id, { ...rec, pick: [best.opt.id] })) continue;
-      rec.pick = [best.opt.id];
+      /* Không phương án nào hợp hồ sơ (vd. người dùng công khai, ngân sách miễn phí, chỉ tự host), hay phương án hợp nhất vẫn
+       * làm luật báo: để khâu cho người dùng quyết. */
+      if (!ok.length) continue;
+      const best = ok.reduce((a, b) => (b.n < a.n ? b : a));
+      if (best.n) continue;
+      rec.pick = [best.x.opt.id];
       filled.push(s.id);
     } else continue;
     d.stages[s.id] = rec;

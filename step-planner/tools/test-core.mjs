@@ -715,14 +715,24 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   const grid = GRID_Q.reduce((acc, q) => acc.flatMap((p) => [...(q === 'latency' ? [p] : []),
     ...cat.profile.find((x) => x.id === q).choices.map((c) => ({ ...p, [q]: c.id }))]), [{}]);
   const hard = (d, ids) => warnings(cat, normDesign(d)).filter((w) => !w.caveat && !EXCEPT.has(w.id) && w.stages.some((x) => ids.includes(x)));
-  const selfWarn = new Set();
+  const selfWarn = new Set(), misfitGrid = new Set();
   for (const pp of cat.paths) {
     for (const profile of grid) {
       const r = applyPath(cat, { path: '', profile, stages: {}, edges: {} }, pp.id);
       for (const w of hard(r.next, [...r.filled, ...r.skipped])) selfWarn.add(`${pp.id}/${w.id} ${JSON.stringify(profile)}`);
+      const eff = effProfile(cat, r.next);
+      for (const sid of r.filled) {
+        for (const o of r.next.stages[sid].pick) {
+          const f = fitOf(cat.stages.find((x) => x.id === sid).options.find((x) => x.id === o), eff);
+          if (!f.ok) misfitGrid.add(`${pp.id}/${sid}=${o} lệch ${f.miss} ${JSON.stringify(profile)}`);
+        }
+      }
     }
   }
   check('thiết kế: Apply path không chọn phương án (hay bỏ khâu) làm luật báo', !selfWarn.size, [...selfWarn].slice(0, 5).join(' | '));
+  check('thiết kế: Apply path không chọn phương án lệch hồ sơ; không phương án nào hợp thì để khâu trống', !misfitGrid.size
+    && !applyPath(cat, { path: '', profile: { users: 'public', budget: 'free', selfhost: 'yes' }, stages: {}, edges: {} }, 'api').next.stages.host,
+  [...misfitGrid].slice(0, 5).join(' | '));
   /* Mỗi kiến trúc được gợi ý có ở mỗi khâu ít nhất một công cụ không làm luật báo; khâu đã quyết theo luật gợi ý cũng thử
    * khi X hợp hồ sơ (luật nói "đã chọn X nên là kiến trúc Y" thì Y phải có công cụ dùng được). Gợi ý "không cần" thì khâu ấy
    * không bị báo. */
