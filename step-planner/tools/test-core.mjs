@@ -560,6 +560,18 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
     eq(parseImport(toJSON(hidWs)).workspaces[0].design, hid) && eq(fromMarkdown(toMarkdown(hidWs)).workspace.design.stages[st0.id], { pick: [], skip: true, own: '', note: '' }));
   check('thiết kế: đọc dòng khâu', eq(readStageLine('Hosting: Render (free) [host: render, vps-docker]'), { id: 'host', pick: ['render', 'vps-docker'], skip: false })
     && readStageLine('Ingest: not needed [ingest: skip]').skip && readStageLine('không có ngoặc') === null);
+  check('thiết kế: viết tay `[raw: skip, minio]` — Not needed, minio là lựa chọn ẩn; `skip`, `own` không bao giờ là id phương án',
+    eq(readStageLine('- Raw: x [raw: skip, minio]'), { id: 'raw', pick: ['minio'], skip: true }) && eq(readStageLine('[raw: own, minio]').pick, ['minio'])
+    && eq(normDesign({ stages: { raw: { pick: ['skip', 'minio', 'own'] } } }).stages.raw.pick, ['minio'])
+    && eq(fromMarkdown('# P\n\n## System design\n\n- Raw: x [raw: skip, minio]\n').workspace.design.stages.raw, { pick: ['minio'], skip: true, own: '', note: '' }));
+  {
+    /* Dữ liệu hỏng: B khai đầu ra trùng id với A và nhận id ấy làm đầu vào. Đầu ra của B lấy id mới, đầu vào trỏ tới A. */
+    const dw = normWorkspace({ steps: [{ title: 'S', subs: [{ id: 'a', title: 'A', outs: [{ id: 'o', name: 'first' }] },
+      { id: 'b', title: 'B', ins: ['x', 'o'], outs: [{ id: 'o', name: 'second' }] }] }] });
+    const [da, db] = dw.steps[0].subs;
+    check('bàn giao: đầu ra trùng id và đầu vào cùng id ấy — đầu ra sau lấy id mới, đầu vào vẫn trỏ tới đầu ra đầu tiên',
+      da.outs[0].id === 'o' && db.outs[0].id !== 'o' && eq(db.ins, ['x', 'o']), JSON.stringify(db));
+  }
   const ws = normWorkspace({ name: 'P', steps: [{ title: 'A', subs: [{ title: 'x' }] }], design: { profile: { size: 'small', latency: 'online' },
     stages: { serve: { pick: ['fastapi', 'in-app'], own: 'Vapor', note: 'Own: dòng mở bằng nhãn\n\n# không phải tiêu đề\n- không phải việc' }, ingest: { skip: true, note: 'dữ liệu cố định' } } } });
   check('thiết kế: Markdown đi rồi về giữ nguyên (có và không có nhãn)', eq(shape(ws), roundTrip(ws)) && eq(shape(ws), shape(fromMarkdown(toMarkdown(ws, cat)).workspace)),

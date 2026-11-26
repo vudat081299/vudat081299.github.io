@@ -39,13 +39,13 @@ export function stageLine(id, st, labels = {}) {
   return `- ${head ? head + ' ' : ''}${tag}`;
 }
 
-/** Dòng gạch đầu dòng của mục System design → {id, pick, skip} hay null. @param {string} text */
+/** Dòng gạch đầu dòng của mục System design → {id, pick, skip} hay null. `skip` cùng id khác (viết tay `[raw: skip, minio]`):
+ * khâu Not needed, id khác là lựa chọn ẩn; `skip`, `own` không bao giờ là id phương án. @param {string} text */
 export function readStageLine(text) {
   const m = TAIL.exec(text);
   if (!m) return null;
   const vals = m[2].split(',').map((x) => x.trim().toLowerCase()).filter(Boolean);
-  const skip = vals.length === 1 && vals[0] === 'skip';
-  return { id: m[1].toLowerCase(), pick: skip ? [] : vals, skip };
+  return { id: m[1].toLowerCase(), pick: vals.filter((x) => x !== 'skip' && x !== 'own'), skip: vals.includes('skip') };
 }
 
 export function designMd(d, cat, esc, hard) {

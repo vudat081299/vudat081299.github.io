@@ -38,8 +38,9 @@ export function normEdge(v) {
   return e.via || e.what || e.where || e.promise || e.check ? e : null;
 }
 
-/** @param {any} v @returns {string[]} */
-const idList = (v) => (Array.isArray(v) ? [...new Set(v.filter((x) => typeof x === 'string' && ID.test(x)))] : []);
+/** Id phương án đã chọn; `skip`, `own` là khoá dành riêng của luật (khâu không cần, công cụ tự ghi), không là id phương án.
+ * @param {any} v @returns {string[]} */
+const idList = (v) => (Array.isArray(v) ? [...new Set(v.filter((x) => typeof x === 'string' && ID.test(x) && x !== 'skip' && x !== 'own'))] : []);
 
 /**
  * Khoá và id chỉ là chữ thường, số, gạch nối (id lạ của danh mục cũ vẫn giữ: giao diện bỏ qua cái không còn).

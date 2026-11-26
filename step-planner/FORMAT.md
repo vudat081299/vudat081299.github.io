@@ -125,7 +125,8 @@ Warnings:
 - Mục `## System design` sau các bước, trước nhật ký. Nhập chỉ đọc id trong ngoặc vuông cuối dòng; tên trước ngoặc để người đọc.
 - `Path:` có dòng thụt `Flow N:`, `Accept:` chép từ danh mục; nhập bỏ qua chúng.
 - `Profile:` một dòng, mỗi câu hồ sơ `<id câu> <id trả lời>`, tách bằng ` · `.
-- Khâu: `- tên: phương án [khâu: id, id]`; khâu Not needed chỉ ghi `[khâu: skip]`, không ghi lựa chọn ẩn. Dòng thụt `Own:`
+- Khâu: `- tên: phương án [khâu: id, id]`; khâu Not needed chỉ ghi `[khâu: skip]`, không ghi lựa chọn ẩn
+  (viết tay `skip` cùng id khác: Not needed, id kia là lựa chọn ẩn; `skip`, `own` không bao giờ là id phương án). Dòng thụt `Own:`
   (chỉ dòng đầu) là công cụ tự ghi, dòng thụt khác là ghi chú; ghi chú mở bằng `Own:` thì thoát `\`.
 - `Handoffs:` rồi mỗi đường nối `- A → B [handoff: a > b]`; dòng thụt `Via:` (id hay nhãn của cách bàn giao), `What:`,
   `Where:`, `Promise:` (dòng tiếp thụt bốn, thoát như ghi chú), `Check:`.

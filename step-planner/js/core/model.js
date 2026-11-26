@@ -195,13 +195,21 @@ export function normLog(o) {
 /** @param {any} o */
 export function normWorkspace(o) {
   const x = isObj(o) ? o : {};
-  const steps = objs(x.steps).map(normStep);
+  const raw = objs(x.steps);
+  const steps = raw.map(normStep);
   const ids = new Set(steps.map((s) => s.id));
   /* Quyết định chỉ gắn với bước còn trong dự án. */
   const log = objs(x.log).map(normLog).map((l) => (ids.has(l.stepId) ? l : { ...l, stepId: '' }));
-  /* Id đầu ra duy nhất trong dự án (trùng thì cái sau lấy id mới). Đầu vào mất nguồn vẫn giữ (insOf). */
+  /* Id đầu ra duy nhất trong dự án (trùng thì cái sau lấy id mới). Đầu vào mất nguồn vẫn giữ (insOf). Chủ có đầu ra vừa đổi id
+   * thì đọc lại đầu vào từ bản gốc: đầu vào cùng id cũ (insOf đã bỏ vì tưởng là của chính nó) trỏ tới đầu ra giữ id ấy. */
+  const rawOf = new Map();
+  steps.forEach((s, i) => { rawOf.set(s, raw[i]); objs(raw[i].subs).forEach((r, j) => rawOf.set(s.subs[j], r)); });
   const outIds = new Set();
-  for (const { h } of holders({ steps })) for (const o of h.outs) { if (outIds.has(o.id)) o.id = uid('o'); outIds.add(o.id); }
+  for (const { h } of holders({ steps })) {
+    let renamed = false;
+    for (const o of h.outs) { if (outIds.has(o.id)) { o.id = uid('o'); renamed = true; } outIds.add(o.id); }
+    if (renamed) h.ins = insOf(rawOf.get(h).ins, h.outs);
+  }
   return {
     id: idOr(x.id, 'w'),
     name: oneLine(x.name) || 'Project',
