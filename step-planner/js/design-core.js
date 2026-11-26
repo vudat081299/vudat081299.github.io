@@ -122,6 +122,36 @@ export function applyPath(cat, design, pathId) {
   return { next: normDesign(d), filled, skipped };
 }
 
+/**
+ * Luật phối hợp của danh mục (`checks`): báo khi mọi điều kiện `if` khớp, và mọi khâu trong `unless` đã quyết mà không khớp
+ * (khâu chưa quyết: chưa biết, chưa báo). Khoá điều kiện: id khâu (giá trị là id phương án đã chọn, `skip` = khâu "không cần",
+ * `own` = có công cụ tự ghi), id câu hồ sơ (câu trả lời, kể cả câu lối giả định) hay `path`.
+ * @param {any} cat @param {any} design
+ * @returns {{id: string, title: string, msg: string, stages: string[]}[]}
+ */
+export function warnings(cat, design) {
+  if (!design || !Array.isArray(cat.checks)) return [];
+  const prof = effProfile(cat, design);
+  const stageIds = new Set(cat.stages.map((/** @type {any} */ s) => s.id));
+  /** Khớp (true), không khớp (false) hay chưa biết (null). @param {string} k @param {string[]} vals */
+  const term = (k, vals) => {
+    if (k === 'path') return vals.includes(design.path);
+    if (!stageIds.has(k)) return prof[k] ? vals.includes(prof[k]) : null;
+    const st = design.stages[k];
+    const state = stageState(design, k);
+    if (state === 'open') return null;
+    if (state === 'skip') return vals.includes('skip');
+    return st.pick.some((/** @type {string} */ id) => vals.includes(id)) || (!!st.own && vals.includes('own'));
+  };
+  const out = [];
+  for (const c of cat.checks) {
+    const hit = Object.entries(c.if).every(([k, v]) => term(k, /** @type {string[]} */ (v)) === true)
+      && Object.entries(c.unless || {}).every(([k, v]) => term(k, /** @type {string[]} */ (v)) === false);
+    if (hit) out.push({ id: c.id, title: c.title, msg: c.msg, stages: [...new Set([...Object.keys(c.if), ...Object.keys(c.unless || {})])].filter((k) => stageIds.has(k)) });
+  }
+  return out;
+}
+
 /** Số khâu đã quyết (chọn, tự ghi hay không cần) trên tổng số khâu. @param {any} catalog @param {any} design */
 export function decidedCount(catalog, design) {
   const ids = catalog.stages.map((/** @type {any} */ s) => s.id);
@@ -257,7 +287,7 @@ export function catalogErrors(cat) {
     if (!['data', 'model', 'app', 'ops'].includes(s.lane)) err.push(`${s.id}: lane ${s.lane}`);
     const ids = new Set();
     for (const o of s.options || []) {
-      if (!ID.test(o.id) || ids.has(o.id) || o.id === 'skip') err.push(`${s.id}: option id ${o.id}`);
+      if (!ID.test(o.id) || ids.has(o.id) || o.id === 'skip' || o.id === 'own') err.push(`${s.id}: option id ${o.id}`);
       ids.add(o.id);
       for (const [k, v] of Object.entries(o.fit || {})) {
         const ok = answers.get(k);

@@ -7,7 +7,7 @@ import {
   nextStatus, setStatus, splitInline, normWorkspace, normSub, normLog, freshCopy, counts, slug, fold, parseDate, uniqueName, normDoc, safeUrl,
 } from '../js/core.js';
 import { parseMd, inline, srcTokens } from '../js/md.js';
-import { normDesign, rankOptions, snake, planTasks, diagramNodes, decidedCount, catalogErrors, readStageLine, applyPath, effProfile } from '../js/design-core.js';
+import { normDesign, rankOptions, snake, planTasks, diagramNodes, decidedCount, catalogErrors, readStageLine, applyPath, effProfile, warnings } from '../js/design-core.js';
 
 let fails = 0;
 const check = (name, ok, detail = '') => {
@@ -513,6 +513,34 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   const pmd = toMarkdown(pws, cat);
   check('thiết kế: Markdown ghi lối (tên, luồng, mốc nghiệm thu) và nhập lại chỉ đọc id', /^Path: Notebook & report \[path: report\]/m.test(pmd)
     && /^ {2}Accept: /m.test(pmd) && eq(shape(pws), shape(fromMarkdown(pmd).workspace)) && !fromMarkdown(pmd).warnings.length);
+  /* Luật phối hợp: báo khi đủ điều kiện; khâu trong `unless` chưa quyết thì chưa báo; `own` ở `unless` tắt cảnh báo. */
+  const W = (stages, profile = {}, path = '') => warnings(cat, normDesign({ path, profile, stages })).map((x) => x.id);
+  const P = (...ids) => ({ pick: ids });
+  check('thiết kế: luật — API trên GitHub Pages báo, có host tự ghi thì thôi',
+    W({ serve: P('fastapi'), host: P('github-pages') }).includes('api-on-static-host')
+    && !W({ serve: P('fastapi'), host: { pick: ['github-pages'], own: 'Render cho API' } }).includes('api-on-static-host'));
+  check('thiết kế: luật — dữ liệu theo lịch: Ingestion chưa quyết thì chưa báo, Not needed thì báo, cron thì thôi',
+    !W({}, { fresh: 'batch' }).includes('schedule-without-scheduler') && W({ ingest: { skip: true } }, { fresh: 'batch' }).includes('schedule-without-scheduler')
+    && !W({ ingest: P('cron') }, { fresh: 'batch' }).includes('schedule-without-scheduler'));
+  check('thiết kế: luật — câu hồ sơ lối giả định cũng tính', W({ host: P('render') }, {}, 'demo').includes('free-host-sleeps'));
+  /* Mọi luật trong danh mục bắn được: dựng thiết kế thoả `if`, khâu trong `unless` quyết bằng thứ không khớp. */
+  const stageIds = new Set(cat.stages.map((x) => x.id));
+  const dead = cat.checks.filter((c) => {
+    const stages = {}, profile = {};
+    let path = '';
+    for (const [k, v] of Object.entries(c.if)) {
+      if (k === 'path') path = v[0];
+      else if (!stageIds.has(k)) profile[k] = v[0];
+      else stages[k] = v[0] === 'skip' ? { skip: true } : v[0] === 'own' ? { own: 'x' } : P(v[0]);
+    }
+    for (const [k, v] of Object.entries(c.unless || {})) {
+      if (!stageIds.has(k) || stages[k]) continue;
+      const other = cat.stages.find((x) => x.id === k).options.find((o) => !v.includes(o.id));
+      stages[k] = other ? P(other.id) : { skip: true };
+    }
+    return !W(stages, profile, path).includes(c.id);
+  });
+  check('thiết kế: luật — mọi luật trong danh mục bắn được', !dead.length, dead.map((c) => c.id).join());
   const md = '# P\n\n## System design\n\nProfile: size small · budget free\n\n- dòng lạ\n- Serving: FastAPI [serve: fastapi]\n';
   const back = fromMarkdown(md);
   check('thiết kế: Markdown viết tay — dòng không có [khâu: …] thì cảnh báo, không thành bước', back.workspace.steps.length === 0

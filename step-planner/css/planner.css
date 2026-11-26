@@ -1002,6 +1002,17 @@ span.chip::after { content: none; }
 .sd-pill input:checked + span { color: var(--on-accent); background: var(--accent); border-color: var(--accent); font-weight: 600; }
 .sd-pill input:focus-visible + span { outline: var(--ring-w) solid var(--ring); outline-offset: var(--mark-w); }
 .sd-pos { font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-3); }
+/* Cảnh báo phối hợp (danh mục `checks`): trên trang dưới sơ đồ, trong hộp ở khâu liên quan và ở trang Checks. */
+.sd-warns { display: flex; flex-direction: column; gap: var(--s2); list-style: none; }
+.sd-warnbox {
+  display: flex; flex-direction: column; gap: var(--s1); padding: var(--s3); font-size: var(--fs-sm); line-height: var(--lh);
+  color: var(--ink); background: var(--amber-soft); border: var(--line-w) solid var(--amber-line); border-radius: var(--r-sm);
+}
+li.sd-warnbox { display: block; }
+.sd-warnbox b { font-weight: 600; color: var(--amber-fg); }
+.sd-warnbox .sd-link { color: var(--amber-fg); }
+.sd-warn-go { display: flex; flex-wrap: wrap; gap: var(--s2); margin-top: var(--s1); }
+.sd-nav-btn.has-warn .sd-dot { border-color: var(--amber); box-shadow: 0 0 0 var(--mark-w) var(--amber-soft); }
 .sd-deliv { font: 500 var(--fs-xs)/var(--lh-tight) var(--mono); letter-spacing: var(--track); text-transform: uppercase; color: var(--green); }
 /* Lối bắt đầu: thẻ radio, rồi luồng tối thiểu, mốc nghiệm thu, nút Apply path. */
 .sd-paths { display: grid; grid-template-columns: repeat(auto-fill, minmax(var(--tpl-min), 1fr)); gap: var(--s3); border: 0; padding: 0; }

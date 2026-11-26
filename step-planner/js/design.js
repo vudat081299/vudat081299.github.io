@@ -31,7 +31,11 @@ function svg(tag, attrs = {}, ...kids) {
 const ws = () => deps.cur();
 const design = () => ws()?.design || null;
 const stageAt = (/** @type {number} */ k) => cat.stages[k - FIRST_STAGE];
-const lastPage = () => cat.stages.length + FIRST_STAGE - 1;
+/* Sau các khâu: trang xem lại (luật phối hợp). */
+const EXTRA = ['checks'];
+const lastPage = () => cat.stages.length + FIRST_STAGE - 1 + EXTRA.length;
+const extraAt = (/** @type {number} */ k) => EXTRA[k - FIRST_STAGE - cat.stages.length] || '';
+const extraPage = (/** @type {string} */ kind) => cat.stages.length + FIRST_STAGE + EXTRA.indexOf(kind);
 const stagePage = (/** @type {string} */ id) => cat.stages.findIndex((/** @type {any} */ s) => s.id === id) + FIRST_STAGE;
 
 /** Sửa thiết kế của dự án đang mở rồi ghi; thiết kế trống thì về null. @param {(d: any) => void} fn */
@@ -68,6 +72,10 @@ export function renderSection() {
   $('sd-path').textContent = p ? `Deliverable: ${p.label}` : '';
   $('sd-svg').hidden = !n.done;
   drawDiagram();
+  const warns = D.warnings(cat, w.design);
+  $('sd-warns').hidden = !warns.length;
+  $('sd-warns').replaceChildren(...warns.map((x) => deps.h('li', { class: 'sd-warnbox' },
+    deps.h('button', { type: 'button', class: 'sd-link', 'data-warn-stage': x.stages[0] || '' }, x.title), ' ', x.msg)));
 }
 
 /* ── Sơ đồ (SVG dựng bằng createElementNS; cỡ đọc từ token --sd-*) ── */
@@ -232,13 +240,21 @@ function paint() {
   const last = lastPage();
   $('sd-prev').disabled = at === 0;
   $('sd-next-text').textContent = at === last ? 'Done' : 'Next';
-  $('sd-pos').textContent = at === 0 ? 'Deliverable' : at === 1 ? 'Project profile' : `Stage ${at - 1} of ${cat.stages.length}`;
+  $('sd-pos').textContent = at === 0 ? 'Deliverable' : at === 1 ? 'Project profile' : extraAt(at) === 'checks' ? 'Checks' : `Stage ${at - 1} of ${cat.stages.length}`;
+  paintSub();
+}
+
+/** Dòng dưới tên hộp: số khâu đã quyết, số cảnh báo. */
+function paintSub() {
   const n = D.decidedCount(cat, design());
-  $('sd-sub').textContent = `${n.done} of ${n.total} stages decided. Changes save as you go.`;
+  const k = D.warnings(cat, design()).length;
+  $('sd-sub').textContent = `${n.done} of ${n.total} stages decided${k ? ` · ${C.plural(k, 'warning')}` : ''}. Changes save as you go.`;
 }
 
 function paintNav() {
   const d = design();
+  const warns = D.warnings(cat, d);
+  const warned = new Set(warns.flatMap((x) => x.stages));
   const h = deps.h;
   /** @type {any[]} */
   const p = D.pathOf(cat, d);
@@ -248,23 +264,26 @@ function paintNav() {
   cat.stages.forEach((/** @type {any} */ s, /** @type {number} */ i) => {
     if (s.lane !== lane) { lane = s.lane; items.push(h('li', { class: 'sd-nav-lane', 'aria-hidden': 'true' }, LANE_LABEL[/** @type {'data'} */ (lane)])); }
     const st = D.stageState(d, s.id);
-    items.push(h('li', {}, navBtn(i + FIRST_STAGE, s.title, st, st === 'skip' ? 'Not needed' : D.pickNames(s, d?.stages[s.id]).join(', '))));
+    items.push(h('li', {}, navBtn(i + FIRST_STAGE, s.title, st, st === 'skip' ? 'Not needed' : D.pickNames(s, d?.stages[s.id]).join(', '), warned.has(s.id))));
   });
+  items.push(h('li', { class: 'sd-nav-lane', 'aria-hidden': 'true' }, 'Review'));
+  items.push(h('li', {}, navBtn(extraPage('checks'), 'Checks', warns.length ? 'open' : 'done', warns.length ? C.plural(warns.length, 'warning') : 'No conflicts', warns.length > 0)));
   $('sd-nav').replaceChildren(...items);
   $('sd-nav').querySelector('[aria-current]')?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
 }
 
-/** @param {number} k @param {string} title @param {string} state @param {string} sub */
-function navBtn(k, title, state, sub) {
+/** @param {number} k @param {string} title @param {string} state @param {string} sub @param {boolean} [warn] */
+function navBtn(k, title, state, sub, warn = false) {
   const h = deps.h;
-  return h('button', { type: 'button', class: `sd-nav-btn is-${state}`, 'data-at': k, 'aria-current': k === at ? 'step' : null },
+  return h('button', { type: 'button', class: `sd-nav-btn is-${state}${warn ? ' has-warn' : ''}`, 'data-at': k, 'aria-current': k === at ? 'step' : null },
     h('span', { class: 'sd-dot', 'aria-hidden': 'true' }, state === 'done' ? deps.icon('check') : null),
     h('span', { class: 'sd-nav-txt' }, h('span', {}, title), sub ? h('small', {}, sub) : null,
-      h('span', { class: 'sr' }, state === 'done' ? ' (decided)' : state === 'skip' ? ' (not needed)' : ' (open)')));
+      h('span', { class: 'sr' }, (state === 'done' ? ' (decided)' : state === 'skip' ? ' (not needed)' : ' (open)') + (warn ? ', has a warning' : ''))));
 }
 
 function paintPane() {
-  $('sd-pane').replaceChildren(...(at === 0 ? pathPane() : at === 1 ? profilePane() : stagePane(stageAt(at))).filter(Boolean));
+  const ex = extraAt(at);
+  $('sd-pane').replaceChildren(...(at === 0 ? pathPane() : at === 1 ? profilePane() : ex === 'checks' ? checksPane() : stagePane(stageAt(at))).filter(Boolean));
   $('sd-pane').scrollTop = 0;
   $('sd-pane').closest('.dlg-body').scrollTop = 0;
 }
@@ -361,6 +380,23 @@ function profilePane() {
   ];
 }
 
+/* ── Xem lại: các luật phối hợp đang báo (danh mục `checks`), mỗi cái kèm lối tới khâu liên quan ── */
+
+function checksPane() {
+  const h = deps.h;
+  const warns = D.warnings(cat, design());
+  const title = (/** @type {string} */ id) => cat.stages.find((/** @type {any} */ s) => s.id === id)?.title || id;
+  return [
+    h('p', { class: 'dlg-kicker' }, 'Review'),
+    h('h3', { class: 'sd-h' }, 'Checks'),
+    h('p', { class: 'sd-q' }, 'Những cặp lựa chọn hay vấp khi ghép với nhau. Trang chỉ báo khi các khâu liên quan đã quyết.'),
+    warns.length ? h('ul', { class: 'sd-warns' }, ...warns.map((x) => h('li', { class: 'sd-warnbox' },
+      h('b', {}, x.title), h('p', {}, x.msg),
+      h('p', { class: 'sd-warn-go' }, ...x.stages.map((id) => h('button', { type: 'button', class: 'btn small', 'data-at': stagePage(id) }, title(id)))))))
+      : h('p', { class: 'sd-tip' }, 'No conflicts found among the decided stages.'),
+  ];
+}
+
 /** @param {any} s */
 function stagePane(s) {
   const h = deps.h;
@@ -384,6 +420,7 @@ function stagePane(s) {
       h('button', { type: 'button', class: 'sd-link', 'data-at': 0 }, 'Go to start')) : null,
     need === 'skip' ? h('p', { class: 'sd-tip' }, `The ${p.label} path doesn't need this stage.`)
       : need === 'maybe' ? h('p', { class: 'sd-tip' }, `Optional on the ${p.label} path.`) : null,
+    ...D.warnings(cat, d).filter((x) => x.stages.includes(s.id)).map((x) => h('div', { class: 'sd-warnbox', role: 'note' }, h('b', {}, x.title), h('p', {}, x.msg))),
     h('div', { class: 'sd-skip' },
       h('button', { type: 'button', class: 'btn small', 'aria-pressed': String(st.skip), 'data-skip': s.id }, 'Not needed'),
       s.skipWhen ? h('span', { class: 'sd-help' }, s.skipWhen) : null),
@@ -461,6 +498,10 @@ function wire() {
     openDesign(stagePage(n.dataset.stage));
   };
   fig.addEventListener('click', openNode);
+  $('sd-warns').addEventListener('click', (/** @type {any} */ e) => {
+    const b = e.target.closest('[data-warn-stage]');
+    if (b && cat) openDesign(b.dataset.warnStage ? stagePage(b.dataset.warnStage) : extraPage('checks'));
+  });
   fig.addEventListener('keydown', (/** @type {KeyboardEvent} */ e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openNode(e); } });
   let lastW = 0;
   new ResizeObserver(() => {
@@ -514,8 +555,7 @@ function wire() {
     if (!id) return;
     edit((d) => { const r = stageRec(d, id); if (t.dataset.own) r.own = t.value; else r.note = t.value; });
     paintNav();
-    const n = D.decidedCount(cat, design());
-    $('sd-sub').textContent = `${n.done} of ${n.total} stages decided. Changes save as you go.`;
+    paintSub();
   });
   /* Ô tự ghi: rời ô thì vẽ lại (phương án khác gập lại khi khâu đã có lựa chọn). */
   pane.addEventListener('focusout', (/** @type {any} */ e) => {

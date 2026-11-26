@@ -781,6 +781,10 @@
             {
               "title": "Actions billing",
               "url": "https://docs.github.com/en/billing/concepts/product-billing/github-actions"
+            },
+            {
+              "title": "Workflow artifacts",
+              "url": "https://docs.github.com/en/actions/concepts/workflows-and-actions/workflow-artifacts"
             }
           ],
           "setup": [],
@@ -1298,6 +1302,10 @@
             {
               "title": "Python API",
               "url": "https://duckdb.org/docs/stable/clients/python/overview"
+            },
+            {
+              "title": "Concurrency",
+              "url": "https://duckdb.org/docs/stable/connect/concurrency"
             }
           ],
           "setup": [
@@ -1327,6 +1335,10 @@
             {
               "title": "Command line shell",
               "url": "https://sqlite.org/cli.html"
+            },
+            {
+              "title": "When to use SQLite",
+              "url": "https://sqlite.org/whentouse.html"
             }
           ],
           "setup": [],
@@ -2413,6 +2425,10 @@
             {
               "title": "App hibernation",
               "url": "https://docs.streamlit.io/deploy/streamlit-community-cloud/manage-your-app"
+            },
+            {
+              "title": "App dependencies",
+              "url": "https://docs.streamlit.io/deploy/streamlit-community-cloud/deploy-your-app/app-dependencies"
             }
           ],
           "setup": [],
@@ -2517,6 +2533,10 @@
             {
               "title": "Free tier",
               "url": "https://docs.cloud.google.com/free/docs/free-cloud-features"
+            },
+            {
+              "title": "Container runtime contract",
+              "url": "https://docs.cloud.google.com/run/docs/container-contract"
             }
           ],
           "setup": [
@@ -2576,6 +2596,10 @@
             ]
           },
           "links": [
+            {
+              "title": "What is GitHub Pages",
+              "url": "https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages"
+            },
             {
               "title": "Create a Pages site",
               "url": "https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site"
@@ -2742,6 +2766,255 @@
           "task": "Dashboard Grafana hiện số request và tỉ lệ lỗi của app."
         }
       ]
+    }
+  ],
+  "checks": [
+    {
+      "id": "api-on-static-host",
+      "title": "API on a static host",
+      "if": {
+        "serve": [
+          "fastapi",
+          "bentoml"
+        ],
+        "host": [
+          "github-pages"
+        ]
+      },
+      "unless": {
+        "host": [
+          "own"
+        ]
+      },
+      "msg": "API cần một máy chủ chạy Python suốt; GitHub Pages là dịch vụ host trang tĩnh, chỉ phục vụ file HTML, CSS, JS. Frontend để trên Pages được, nhưng API phải chạy ở host khác (Render, Cloud Run, VPS); ghi host ấy vào ô \"Another tool\" của khâu Hosting."
+    },
+    {
+      "id": "python-app-on-static-host",
+      "title": "Python app on a static host",
+      "if": {
+        "app": [
+          "streamlit",
+          "gradio"
+        ],
+        "host": [
+          "github-pages"
+        ]
+      },
+      "unless": {
+        "host": [
+          "own"
+        ]
+      },
+      "msg": "App Streamlit hay Gradio là một tiến trình Python phải chạy trên máy chủ; GitHub Pages chỉ phục vụ file tĩnh. Chọn host chạy được app Python (Streamlit Community Cloud, Hugging Face Spaces, Render)."
+    },
+    {
+      "id": "api-on-streamlit-cloud",
+      "title": "API on Streamlit Community Cloud",
+      "if": {
+        "serve": [
+          "fastapi",
+          "bentoml"
+        ],
+        "host": [
+          "streamlit-cloud"
+        ]
+      },
+      "unless": {
+        "host": [
+          "own"
+        ]
+      },
+      "msg": "Streamlit Community Cloud để deploy app Streamlit, không phải để mở một API cho app khác gọi. API FastAPI / BentoML cần host chạy web service (Render, Cloud Run, VPS + Docker)."
+    },
+    {
+      "id": "non-streamlit-ui-on-streamlit-cloud",
+      "title": "Non-Streamlit app on Streamlit Community Cloud",
+      "if": {
+        "app": [
+          "gradio",
+          "web-app",
+          "bi-dashboard"
+        ],
+        "host": [
+          "streamlit-cloud"
+        ]
+      },
+      "unless": {
+        "host": [
+          "own"
+        ]
+      },
+      "msg": "Streamlit Community Cloud để deploy app Streamlit. Giao diện đã chọn cần nơi chạy khác: Gradio lên Hugging Face Spaces, bản build tĩnh của web Vue / React lên GitHub Pages; Data Studio, Power BI chạy trên dịch vụ của chính chúng, Metabase cần máy chủ riêng."
+    },
+    {
+      "id": "docker-only-on-streamlit-cloud",
+      "title": "Docker is not what Community Cloud installs",
+      "if": {
+        "package": [
+          "docker"
+        ],
+        "host": [
+          "streamlit-cloud"
+        ]
+      },
+      "unless": {
+        "package": [
+          "requirements",
+          "uv"
+        ]
+      },
+      "msg": "Streamlit Community Cloud cài thư viện từ file phụ thuộc trong repo (uv.lock, Pipfile, environment.yml, requirements.txt, pyproject.toml); thiếu file ấy thì app chỉ có Streamlit. Giữ thêm requirements.txt hoặc uv cạnh Dockerfile."
+    },
+    {
+      "id": "schedule-without-scheduler",
+      "title": "New data, no scheduler",
+      "if": {
+        "fresh": [
+          "batch"
+        ]
+      },
+      "unless": {
+        "ingest": [
+          "cron",
+          "github-actions",
+          "prefect",
+          "airflow",
+          "own"
+        ]
+      },
+      "msg": "Dữ liệu mới tới hằng ngày hay hằng tuần nhưng khâu Ingestion không có công cụ chạy theo lịch: phải nhớ chạy tay, và không có log của từng lần chạy. Chọn cron, GitHub Actions, Prefect hoặc Airflow."
+    },
+    {
+      "id": "stream-with-batch-ingest",
+      "title": "Continuous data, batch ingestion",
+      "if": {
+        "fresh": [
+          "stream"
+        ],
+        "ingest": [
+          "notebook-script",
+          "cron",
+          "github-actions",
+          "prefect",
+          "airflow"
+        ]
+      },
+      "msg": "Bạn trả lời dữ liệu tới liên tục, nhưng khâu Ingestion chạy theo lịch hay chạy tay: kết quả chỉ mới tới lần chạy gần nhất. Ổn nếu chừng ấy là đủ; cần thấy sự kiện gần như ngay khi nó xảy ra thì cần một consumer chạy liên tục, như Kafka."
+    },
+    {
+      "id": "actions-runner-is-fresh",
+      "title": "Files on a GitHub Actions runner do not stay",
+      "if": {
+        "ingest": [
+          "github-actions"
+        ],
+        "raw": [
+          "project-folder"
+        ]
+      },
+      "msg": "Mỗi job GitHub Actions chạy trên một bản runner mới, nên file job tải vào data/raw không còn ở lần chạy sau. Lưu lại bằng cách commit vào repo, tải lên thành artifact, hoặc ghi ra object storage (R2, GCS, S3)."
+    },
+    {
+      "id": "file-db-on-ephemeral-disk",
+      "title": "File database on a host without a lasting disk",
+      "if": {
+        "store": [
+          "sqlite",
+          "parquet-duckdb"
+        ],
+        "host": [
+          "render",
+          "cloud-run",
+          "hf-spaces"
+        ]
+      },
+      "msg": "Ổ đĩa của host này không giữ dữ liệu ghi lúc chạy: Render Free mất thay đổi khi service khởi động lại, deploy lại hay ngủ; Cloud Run ghi vào bộ nhớ của instance và mất khi instance dừng; đĩa của Space Hugging Face không bền. Chỉ đọc file đóng gói sẵn thì ổn; cần ghi bền thì dùng DB server (PostgreSQL, Supabase, Neon) hoặc object storage."
+    },
+    {
+      "id": "duckdb-file-many-processes",
+      "title": "DuckDB file behind an API",
+      "if": {
+        "store": [
+          "parquet-duckdb"
+        ],
+        "serve": [
+          "fastapi",
+          "bentoml"
+        ]
+      },
+      "msg": "Một file .duckdb chỉ cho một tiến trình mở để đọc và ghi; nhiều tiến trình cùng mở thì phải ở chế độ chỉ đọc (read_only). API chạy nhiều worker hay nhiều instance nên mở file read_only (hoặc chỉ đọc Parquet) và để pipeline ghi bản mới; web cần ghi đồng thời thì dùng PostgreSQL."
+    },
+    {
+      "id": "sqlite-public-writers",
+      "title": "SQLite for a public app",
+      "if": {
+        "store": [
+          "sqlite"
+        ],
+        "users": [
+          "public"
+        ]
+      },
+      "msg": "SQLite cho nhiều người đọc cùng lúc nhưng chỉ một người ghi tại một thời điểm. App công khai mà nhiều người cùng ghi (đăng ký, lưu kết quả) nên dùng cơ sở dữ liệu client/server như PostgreSQL; chỉ đọc thì SQLite vẫn ổn."
+    },
+    {
+      "id": "model-without-versioned-file",
+      "title": "Serving a model with no model store",
+      "if": {
+        "serve": [
+          "batch-file",
+          "in-app",
+          "fastapi",
+          "bentoml",
+          "serverless"
+        ],
+        "track": [
+          "skip"
+        ]
+      },
+      "msg": "Có khâu phục vụ model nhưng khâu Experiment tracking & model registry là Not needed: app không biết chắc đang nạp file model nào. Tối thiểu lưu file model kèm phiên bản (git tag, DVC hoặc Hugging Face Hub) và số đo lúc nghiệm thu."
+    },
+    {
+      "id": "public-without-monitoring",
+      "title": "Public app with no monitoring",
+      "if": {
+        "users": [
+          "public"
+        ],
+        "monitor": [
+          "skip"
+        ]
+      },
+      "msg": "App cho người ngoài dùng mà khâu Monitoring là Not needed: app ngủ, lỗi hay dữ liệu cũ sẽ không ai báo. Tối thiểu có một kiểm tra uptime và đọc log định kỳ."
+    },
+    {
+      "id": "free-host-sleeps",
+      "title": "Free hosting sleeps",
+      "if": {
+        "latency": [
+          "online"
+        ],
+        "host": [
+          "streamlit-cloud",
+          "render",
+          "hf-spaces"
+        ]
+      },
+      "msg": "Ở gói miễn phí, app ngủ khi không có truy cập một thời gian; người mở đầu tiên sau đó phải chờ app khởi động lại (Render ghi khoảng một phút), xa với \"trả lời trong khoảng một giây\". Ổn cho demo; cần luôn nhanh thì dùng gói trả phí không ngủ hoặc host khác."
+    },
+    {
+      "id": "in-app-model-for-web-client",
+      "title": "Model inside the app, but the app is not Python",
+      "if": {
+        "serve": [
+          "in-app"
+        ],
+        "app": [
+          "web-app",
+          "mobile-app"
+        ]
+      },
+      "msg": "Model inside the UI app nghĩa là model chạy trong tiến trình Python của app Streamlit hay Gradio. Web Vue / React và app mobile chạy trên máy người dùng, nên cần một API (FastAPI, serverless) để gọi model."
     }
   ]
 }
