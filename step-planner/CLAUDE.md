@@ -136,6 +136,8 @@
 - `data-pipeline` theo vòng đời data engineering (Reis & Housley, 2022): năm khâu và mạch ngầm (Undercurrents); việc từ nguồn khác ghi nguồn trong tên thẻ.
 - `big-data-ds` (PLAN-024): sáu pha CRISP-DM, thêm bước Thu nạp và lưu trữ dữ liệu sau pha Hiểu bài toán kinh doanh; ghi chú mỗi bước
   nói khác gì dự án thường; link bài giảng `masters-degree/big-data-storage-processing/` theo neo (`lint.py` kiểm neo).
+- `lakehouse-oss` (PLAN-029): mẫu chung cho mọi lakehouse mã nguồn mở; stack cụ thể chỉ là ví dụ ở ghi chú. Hạ tầng, dữ liệu trước,
+  điều phối sau; bước cuối kiểm tuân thủ medallion. Ghi chú về giấy phép, tình trạng bảo trì công cụ ghi kèm link nguồn.
 - `app-feature` không theo chuẩn; việc phát hành theo tài liệu App Store Connect, Google Play, Flutter (link ở ghi chú bước).
 - `it5425-sports` sinh từ `masters-degree/data-management-visualization/data/sports-monitoring-build.json` và "Xong khi nào"
   (`#xong`) của trang 2 đồ án: `python3 step-planner/tools/lint.py --write-course`, không sửa tay; cổng đỏ khi nguồn đổi mà chưa sinh lại.

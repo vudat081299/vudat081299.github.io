@@ -28,6 +28,7 @@
 - PLAN-026 · System design phủ big data: HDFS, table format, xử lý stream, SQL trên file, NoSQL phân tán, học máy phân tán · `step-planner/data/system-design.json`
 - PLAN-027 · System design có danh mục kiến trúc theo nhóm, gợi ý một kiến trúc mỗi nhóm từ hồ sơ dự án · `step-planner/data/system-design.json`, `step-planner/js/design-core.js`
 - PLAN-028 · Chữ giao diện tiếng Anh, mọi nội dung mẫu tiếng Việt, tên chuẩn giữ trong ngoặc · `step-planner/`
+- PLAN-029 · Mẫu nền tảng lakehouse mã nguồn mở: hạ tầng và dữ liệu trước, pipeline sau, có bước kiểm tuân thủ medallion · `step-planner/data/templates.json`
 <!-- index:end -->
 
 ## PLAN-001 · Dự án là các bước có thứ tự, mỗi bước có bước con có thứ tự
@@ -68,7 +69,7 @@ Xuất Markdown cho người đọc, theo một khuôn cố định để nhập
 ## PLAN-008 · Mẫu đồ án lấy đúng từ trang đồ án
 24/11/2026 · `step-planner/data/templates.json`
 
-Có sáu mẫu: dự án Data Science theo CRISP-DM, đồ án môn đang học, phân tích thống kê không học máy, tính năng app iOS / Flutter, pipeline dữ liệu định kỳ, và trống. Mẫu đồ án chỉ lấy các giai đoạn, việc, sản phẩm và tiêu chí xong của trang đồ án, không thêm nội dung, không tên người thật.
+Có mẫu cho các loại dự án hay gặp (Data Science, đồ án môn đang học, phân tích thống kê không học máy, tính năng app, dữ liệu) và đúng một mẫu trống; danh sách ở `data/templates.json`. Mẫu đồ án chỉ lấy các giai đoạn, việc, sản phẩm và tiêu chí xong của trang đồ án, không thêm nội dung, không tên người thật.
 
 ## PLAN-009 · Mẫu Data Science theo chuẩn CRISP-DM 1.0, áp được cho mọi dự án
 24/11/2026 · `step-planner/data/templates.json`
@@ -164,3 +165,8 @@ Sau hồ sơ dự án, System design có trang kiến trúc chia bốn nhóm: d�
 26/11/2026 · `step-planner/` · thay cho PLAN-015
 
 Mọi chữ thuộc giao diện là tiếng Anh: nút, tiêu đề, gợi ý khi rê chuột, nhãn cho trình đọc màn hình, tiêu đề hộp thoại, mục menu, thông báo, chỗ trống, chữ gợi ý trong ô nhập, tên trạng thái; trong System design thêm tên khâu, tên phương án, nhãn câu hỏi hồ sơ và lựa chọn, tên lối, tên kiến trúc. Mọi nội dung của mẫu là tiếng Việt: tên mẫu, tên bước, tên bước con, mục tiêu, tiêu chí xong, ghi chú, tên và mô tả đầu ra, loại đầu ra; lời giải thích, hướng dẫn, cảnh báo của System design cũng tiếng Việt. Tên bước, bước con theo một chuẩn ghi tiếng Việt và giữ tên gốc tiếng Anh trong ngoặc để người học nhận ra thuật ngữ, ví dụ "Hiểu dữ liệu (Data Understanding)". Tên công cụ, thư viện, file, lệnh, URL giữ nguyên. Mẫu đồ án môn học giữ nguyên chữ của trang đồ án. Một cổng kiểm luật này để nó không trôi.
+
+## PLAN-029 · Mẫu nền tảng lakehouse mã nguồn mở: hạ tầng và dữ liệu trước, pipeline sau, có bước kiểm tuân thủ medallion
+26/11/2026 · `step-planner/data/templates.json`
+
+Có mẫu cho dự án dựng nền tảng dữ liệu lakehouse tự chạy bằng công cụ mã nguồn mở, đủ chung cho mọi nhóm; stack của một nhóm cụ thể (Docker Compose, MinIO, Iceberg + Polaris, Spark, dbt, DuckDB, Superset) chỉ là ví dụ trong ghi chú. Thứ tự: phạm vi và kiểm kê nguồn, hạ tầng dạng code (một lệnh dựng mọi dịch vụ, kiểm sức khoẻ), lưu trữ + table format + catalog, bronze, silver, gold; sau đó giả lập luồng, dashboard, rồi mới điều phối pipeline; cuối cùng tài liệu và một bước kiểm tuân thủ medallion trả lời có bằng chứng câu "README và hệ thống còn đúng medallion không". Bronze giữ nguồn nguyên dạng, chỉ thêm, có metadata thu nạp, nạp lại không trùng; silver ép kiểu, khử trùng, có test và cổng chất lượng trước gold; gold là bảng nghiệp vụ dựng bằng dbt, mỗi câu hỏi của dashboard một bảng; dashboard chỉ đọc gold. Mỗi lựa chọn công cụ ghi giấy phép và tình trạng bảo trì, không chỉ tên. Trong mọi mẫu, không đầu vào nào đứng trước hay cùng ô với đầu ra nó dùng, và không đầu vào nào trỏ tới đầu ra không có.
