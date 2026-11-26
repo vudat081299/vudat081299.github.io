@@ -544,7 +544,7 @@ export const inGroup = (group, status) => !STATUS_GROUPS[group] || STATUS_GROUPS
 export const fold = (/** @type {string} */ s) => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '')
   .replace(/[đĐ]/g, 'd').toLowerCase();
 
-/* ── Markdown ── (khuôn ghi đủ ở step-planner/CLAUDE.md, mục Markdown) */
+/* ── Markdown ── (khuôn ghi đủ ở step-planner/FORMAT.md) */
 
 /* Ký tự thoát `\x` đổi tạm sang vùng riêng của Unicode để các biểu thức bên dưới không thấy nó, rồi đổi lại. */
 const PUA = 0xe000;

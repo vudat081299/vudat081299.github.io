@@ -1,198 +1,158 @@
 # `step-planner/` — Data Science Step Planner
 
 - Tên hiển thị: Data Science Step Planner (`<title>`, thanh trên, trang chủ, Markdown); thư mục, khoá giữ `step-planner`.
-- Một trang, `index.html`: dự án chia thành bước (hàng) và bước con (thẻ), trạng thái, hạn, tài liệu, nhật ký quyết
-  định, xuất / nhập Markdown và JSON. Ưu tiên dự án dữ liệu, dùng được cho dự án bất kỳ. Không có người làm (PLAN-010).
+- Một trang, `index.html`: dự án chia thành bước (hàng) và bước con (thẻ), trạng thái, hạn, tài liệu, bàn giao, nhật ký quyết
+  định, System design, xuất / nhập Markdown và JSON. Ưu tiên dự án dữ liệu, dùng được cho dự án bất kỳ. Không có người làm (PLAN-010).
 - Giao diện tiếng Anh (PLAN-012), chữ ngắn kiểu ghi chú; nội dung mẫu, tài liệu repo tiếng Việt. Quyết định: [DECISIONS.md](DECISIONS.md).
+- Khuôn Markdown và JSON: [FORMAT.md](FORMAT.md). Đổi khuôn thì sửa file ấy cùng commit.
 - Không build. Mở qua HTTP: `python3 -m http.server` ở gốc repo, `http://localhost:8000/step-planner/` (`file://`: trang báo).
 
 ## File
 
 | File | Việc |
 |---|---|
-| `index.html` | markup, hộp thoại, script theme trước lần vẽ đầu, script báo `file://` |
+| `index.html` | markup, hộp thoại, bộ biểu tượng `<symbol id="i-…">`, script theme trước lần vẽ đầu, script báo `file://` |
 | `css/planner.css` | token ở đầu (tới dòng `/* ── hết token ── */`), rồi từng component, mỗi khối mở bằng một dòng chú thích |
-| `js/core.js` | logic thuần: chuẩn hoá, ngày, tiến độ, việc tiếp theo, Markdown và JSON vào / ra; không DOM, chạy được trong Node |
-| `js/md.js` | Markdown của tài liệu văn bản → cây khối (`parseMd`, thuần) → DOM (`renderMd`, chỉ createElement / text node); khung Edit: token (`srcTokens`, thuần, chép md-annotate) → dòng có số (`renderSrc`) |
-| `js/design-core.js`, `js/design.js` | System design: logic thuần (`normDesign`, `rankOptions`, `snake`, `diagramNodes`, `planTasks`, dòng Markdown); UI (mục trên trang, sơ đồ SVG, hộp `#dlg-sd`, nhận hàm chung qua `initDesign`) |
+| `js/core.js` | logic thuần: chuẩn hoá, gộp khi lưu, ngày, tiến độ, việc tiếp theo, bàn giao (`holders`, `handoffs`, `consumersOf`), Markdown và JSON vào / ra; không DOM, chạy được trong Node |
+| `js/md.js` | Markdown của tài liệu văn bản → cây khối (`parseMd`, thuần) → DOM (`renderMd`, chỉ createElement / text node); khung Edit: token (`srcTokens`, thuần) → dòng có số (`renderSrc`) |
+| `js/design-core.js` | System design, thuần: `normDesign`, `rankOptions`, `applyPath`, `warnings`, `flowEdges`, `diagramNodes`, `planTasks`, `planDiff`, `applyPlan`, `designMd`, `designReader` (core.js chỉ gọi hai hàm cuối) |
+| `js/design.js` | System design, UI: mục trên trang, sơ đồ SVG, hộp `#dlg-sd`, hộp xem trước Update plan; nhận hàm chung qua `initDesign` |
+| `js/hand.js` | bàn giao, UI: chip In / Out, vạch giữa hai hàng, nút giữa hai ô, hộp `#dlg-hand`, phần Inputs / Outputs của hộp sửa, hộp `#dlg-pick`; nhận hàm chung qua `initHand` |
 | `js/store.js` | `localStorage` (dữ liệu, mẹo `stepPlanner.hintOff`, Compact `stepPlanner.compact`, theme `hub-theme`), `sessionStorage` (dự án của tab); mọi truy cập bọc try/catch |
 | `js/dropdown.js` | danh sách chọn tự dựng: `enhanceSelect` (thay giao diện `<select>`, giữ nó làm nguồn value và `change`), `openList` |
-| `js/drag.js` | kéo thả bằng pointer events (chuột, chạm, bút): bóng, ô "Drop here", FLIP, tự cuộn, Esc; mỗi khung hình một lượt, toạ độ đo một lần |
-| `js/main.js` | vẽ bảng theo hàng (`renderBoard`: khoá mỗi hàng, chỉ hàng đổi dựng lại), sự kiện, hộp thoại, kéo thả, toast Hoàn tác, nhắc sao lưu |
+| `js/drag.js` | kéo thả bằng pointer events (chuột, chạm, bút): bóng, ô "Drop here", FLIP, tự cuộn, Esc; mỗi khung hình một lượt |
+| `js/main.js` | vẽ bảng theo hàng (`renderBoard`: khoá mỗi hàng, chỉ hàng đổi dựng lại), sự kiện, hộp thoại, kéo thả, toast, nhắc sao lưu |
 
 ## Dữ liệu
 
 - `localStorage['stepPlanner.v2']`: `{version, workspaces[], lastId, lastBackup, dirtySince}`. Đổi khuôn thì tăng số khoá;
-  khoá cũ (`OLD_KEYS`) đọc khi khoá mới chưa có rồi ghi sang khoá mới. Trường mới có mặc định thì không cần đổi khoá.
-- Workspace `{id, name, templateId, createdAt, updatedAt, notes, steps[], log[], design}`. Log `{id, date, decision, why, stepId}`;
-  `stepId`: id một bước hoặc rỗng; bước không còn thì rỗng; nhân bản, nhập thì theo id mới.
-- `design`: null hoặc `{profile: {câu: trả lời}, stages: {khâu: {pick[], skip, own, note}}}` (`normDesign`); `skip` thì bỏ `pick`, `own`.
-- Step `{id, title, goal, doneWhen, notes, revisit: null | {reason, date, round}, round, docs[], subs[]}`. `round`: vòng gần
-  nhất (1 = chưa mở lại); đang mở lại thì `round` = `revisit.round` ≥ 2.
-- Sub `{id, title, status, reason, due, doneWhen, notes, docs[], par, redo}`; `status` ∈ `todo doing pending blocked done skip
-  cancel`; `reason` (nhiều dòng) chỉ giữ khi `pending`, `blocked`, `cancel` (`cancelReason` cũ đọc thành `reason`); `due`:
-  `YYYY-MM-DD` hoặc rỗng. `par: true` = nhập ô của bước con ngay trước; `subs[0].par` luôn false. Ô (slot), chỗ (`Place`), mọi
-  phép dời ở `core.js`. `redo: true` = được gửi lại làm trong vòng đang mở; bước không mở lại thì mọi `redo` là false.
-- Doc `{id, kind: 'link', title, url}` hoặc `{id, kind: 'md', title, body}`. `url` chỉ http(s) (`safeUrl`); link khác bị bỏ
-  (nhập thì cảnh báo). `body` giữ nguyên từng dòng, chỉ bỏ dòng trống đầu và khoảng trắng cuối.
+  khoá cũ (`OLD_KEYS`) đọc khi khoá mới chưa có rồi ghi sang khoá mới. Trường mới có mặc định thì không đổi khoá.
+- Workspace `{id, name, templateId, createdAt, updatedAt, notes, steps[], log[], design}`.
+- Log `{id, date, decision, why, stepId}`; `stepId`: id một bước hoặc rỗng; bước không còn thì rỗng.
+- Step `{id, title, goal, doneWhen, notes, revisit: null | {reason, date, round}, round, docs[], outs[], ins[], subs[]}`.
+  `round`: vòng gần nhất (1 = chưa mở lại); đang mở lại thì `round` = `revisit.round` ≥ 2.
+- Sub `{id, title, status, reason, due, doneAt, doneWhen, notes, docs[], outs[], ins[], par, redo, sd?}`.
+- `status` ∈ `todo doing pending blocked done skip cancel`. `reason` (nhiều dòng) chỉ giữ khi `pending`, `blocked`, `cancel`.
+- `due`, `doneAt`: `YYYY-MM-DD` hoặc rỗng. `doneAt`: ngày sang Done (`setStatus`), chỉ giữ khi `done`; dữ liệu cũ rỗng, không bịa ngày.
+- `par: true` = nhập ô của bước con ngay trước; `subs[0].par` luôn false. Ô (slot), chỗ (`Place`), mọi phép dời ở `core.js`.
+- `redo: true` = được gửi lại làm trong vòng đang mở; bước không mở lại thì mọi `redo` là false.
+- `sd`: `stage:<khâu>@<chữ ký>` hoặc `edge:<a>><b>@<chữ ký>`, chỉ ở bước con System design sinh ra; nhân bản bước con thì bỏ.
+- Doc `{id, kind: 'link', title, url, proof}` hoặc `{id, kind: 'md', title, body, proof}`. `url` chỉ http(s) (`safeUrl`); link
+  khác bị bỏ (nhập thì cảnh báo). `body` giữ nguyên từng dòng. `proof: true` = bằng chứng cho "Done when".
+- Out `{id, name, ref, note}`: `name` bắt buộc (không tên thì bỏ); `ref` đường dẫn file hay link; `note` hợp đồng một dòng.
+- `ins`: id đầu ra ở chỗ khác trong dự án; bỏ trùng, bỏ id của chính nó. `normWorkspace`: id đầu ra duy nhất, bỏ đầu vào treo.
+- `design`: null hoặc `{path, profile, stages: {khâu: {pick[], skip, own, note}}, edges: {"a>b": {via, what, where, promise, check}}}`
+  (`normDesign`). Khâu `skip` vẫn giữ `pick`, `own` (ẩn, bỏ qua ở mọi chỗ); bỏ `skip` là chúng về lại.
 - Mọi dữ liệu đi qua `normSub` / `normStep` / `normWorkspace`: chuỗi một dòng gộp khoảng trắng, phần tử sai kiểu bị bỏ,
-  ngày phải có thật (`parseDate`). Trường lạ (kể cả `owner`, `people`, `me` của dữ liệu cũ) bị bỏ, không lỗi.
+  ngày phải có thật (`parseDate`). Trường lạ (kể cả `owner`, `people`, `me` cũ) bị bỏ, không lỗi; `cancelReason` cũ đọc thành `reason`.
+- Nhân bản dự án, nhập: id mới cho mọi thứ, đầu vào và quyết định trỏ theo (`freshCopy`). Nhân bản bước con: đầu ra id mới, giữ đầu vào.
 - Hai mốc sao lưu chỉ ở máy này, không xuất. Dự án đang mở của tab ở `sessionStorage['stepPlanner.tab']`. Bộ nhớ bị chặn: bộ nhớ tạm + banner.
   Hỏng: chép sang `stepPlanner.v2.corrupt`, bắt đầu trống. Lúc mở gọi `navigator.storage.persist()` (Safari xoá dữ liệu script ghi sau 7 ngày không mở).
 
 ## Hành vi
 
-- Bảy trạng thái, ý nghĩa ở PLAN-003, thứ tự này ở mọi chỗ: New (`todo`), In progress, Pending, Blocked, Done, Skipped,
-  Cancelled. Nhãn lý do: Pending "Waiting on", Blocked "Blocked by", Cancelled "Cancelled because" (`REASON_LABEL`).
-- Tiến độ = xong / (tổng − bỏ qua − huỷ), không đổi với ô song song. "Next" tô các thẻ còn mở (không xong, bỏ qua, huỷ),
-  trừ thẻ chờ, của ô đầu tiên còn việc trong bước đầu tiên còn việc. Hạn qua: "(overdue)", trừ thẻ xong, bỏ qua, huỷ.
-- Song song (PLAN-013): mỗi ô một cột của hàng. Số thẻ là vị trí ô (`1`, `2`…), ô k thẻ thì `n.1` … `n.k`. "Add parallel" trên thẻ, ô "Position";
-  Alt + ← →: đổi ô (thẻ ở ô song song thì tách ra ô riêng), Alt + ↑ ↓: đổi thứ tự trong ô. Toast dời tả chỗ mới bằng tên hàng xóm, không bằng số.
+- Bảy trạng thái (PLAN-003), thứ tự này ở mọi chỗ: New (`todo`), In progress, Pending, Blocked, Done, Skipped, Cancelled.
+  Nhãn lý do (`REASON_LABEL`): Pending "Waiting on", Blocked "Blocked by", Cancelled "Cancelled because".
+- Tiến độ = xong / (tổng − bỏ qua − huỷ). "Next" = thẻ còn mở, trừ thẻ chờ, của ô đầu tiên còn việc trong bước đầu tiên còn việc.
+- Ô ấy chỉ còn Pending / Blocked (`nextWaitingOn`): dòng "Next waits on …" nêu thẻ và lý do; nút lọc Actionable. "Next" không vượt chỗ chờ.
+- Hạn qua: "(overdue)", trừ thẻ xong, bỏ qua, huỷ. Thẻ xong có `doneAt` hiện ngày xong.
+- Lọc trạng thái (`STATUS_GROUPS`): All statuses, Actionable (New, In progress), Waiting (Pending, Blocked), Done, Skipped, cancelled.
+  Lọc và tìm là giao; "Clear filters" bỏ cả hai.
+  Mỗi tab một bộ lọc, không lưu; đổi / tạo / nhập dự án thì bỏ.
+- Tìm bỏ qua dấu và hoa thường, khớp cả lý do, tài liệu, tên và `ref` của đầu ra; bước khớp thì hiện cả hàng.
+  Đang tìm hay lọc thì tắt sắp xếp, thêm bước, ẩn vạch bàn giao.
+- Song song (PLAN-013): mỗi ô một cột của hàng; ô k thẻ đánh `n.1` … `n.k`. Alt + ← →: đổi ô (thẻ ở ô song song thì tách ra
+  ô riêng), Alt + ↑ ↓: đổi thứ tự trong ô. Toast dời tả chỗ mới bằng tên hàng xóm, không bằng số.
 - Số đứng yên trong phiên (PLAN-014): chụp số khi dự án hiện lần đầu sau khi mở trang (và sau nhập thay nội dung); dời,
-  xoá không đổi số (hàng đọc "1 3 2"); cái thêm trong phiên hiện chấm thay số. Số lệch thì nút "Renumber" hiện.
-- Bấm chip: New → In progress → Done; chip trạng thái khác (hoặc Shift + bấm, Alt + ↓) mở danh sách bảy trạng thái. Chọn Cancelled: mở hộp
-  sửa, trạng thái đặt sẵn, focus ô lý do; Lưu mới huỷ. Pending, Blocked đặt ngay, lý do sửa trong hộp. Lý do trong thân thẻ kèm nhãn. Thẻ huỷ: tên gạch.
-- Thêm bước: nút cuối bảng, hoặc nút "Add step" trên vạch chia giữa hai bước (mở hộp đặt sẵn vị trí ấy). Thêm bước con: nút ở cột tên bước.
-- Bấm vào thẻ (ngoài nút) là mở hộp sửa; mỗi thẻ chỉ hai điểm dừng Tab: tên và chip. Nút phụ có `tabindex=-1`; bàn phím làm cùng việc:
-  Alt + mũi tên trên tên bước con, Alt + ↑ ↓ trên tên bước, ô bước / vị trí và các nút trong hộp sửa.
-- Kéo thả: chuột kéo thẻ (trừ nút, link) hay đầu bước; chạm thì giữ thẻ rồi kéo, bước kéo bằng tay nắm. Đang kéo không vẽ lại bảng; chỗ thả
-  "Drop here". Nửa trái / phải một ô: chen ô mới trước / sau nó; phần dưới thẻ hay giữa ô song song: nhập ô ấy. Gần mép tự cuộn; Esc huỷ.
-- Đổi chỗ (mọi cách): cái vừa dời `moved`, cái bị đổi chỗ `swapped`; toast "Moved …" có Hoàn tác, không lấy focus; dời liền: Hoàn tác về chỗ đầu.
-- "Reopen" (PLAN-004): chỉ khi bước có bước con Done (`canReopen`). Hộp: một câu khi nào dùng, lý do bắt buộc, chọn bước con Done để gửi lại
-  (mặc định không chọn). Mở vòng `round + 1`; bước con đã chọn về New, mang dấu "Redo" tới khi xong lại; nhật ký ghi "Reopened: tên (iteration N)"
-  gắn với bước; một Hoàn tác trả hết. Băng "Reopened · Iteration N · ngày · lý do" (bấm: sửa lý do) đếm "k of n redo tasks left"; xong hết thì
-  "Close iteration" là nút chính. Đóng vòng bỏ băng, dấu Redo (Hoàn tác được); `round` > 1 mà hết băng: đầu bước có nhãn "Iteration N".
-- Mẹo tắt bằng ×; "Compact" ẩn "Done when", ghi chú, lý do, ở cảm ứng cả nút thẻ (cả hai nhớ ở máy này). "Log (N)" tới nhật ký,
-  focus. Tìm bỏ qua dấu và hoa thường, khớp cả lý do, tài liệu; bước khớp thì hiện cả hàng; đang tìm thì tắt sắp xếp, thêm bước.
-- Xoá bước con, quyết định, tài liệu: một bấm. Xoá bước còn bước con, xoá dự án (không hoàn tác): hỏi lại. Sau khi xoá, focus vào Hoàn tác
-  của toast (15 giây); Ctrl/Cmd + Z cũng hoàn tác khi không gõ chữ, không có hộp mở. Hoàn tác tìm lại dự án và bước theo id (tab khác có thể đã thay `state`).
-- Hộp sửa: mở thì focus ô đầu (cảm ứng: không tự focus ô chữ); tên tự cao, Enter lưu. Esc, ×, Close, Duplicate khi chữ đổi thì hỏi lại.
-  Nút đóng ghi "Close", không "Cancel". Đóng hộp: focus về chỗ mở.
-- Ghi chú bước gập dưới tên. Thẻ quá `--card-max` thì cắt (chỉ dựng phần đầu ghi chú), "Show more" mở cả thẻ; link trong ghi chú bấm được.
-  Vẽ lại giữ ghi chú đang mở, thẻ đã mở, chỗ cuộn ngang; hàng không đổi giữ nguyên nút DOM.
-- Tài liệu (PLAN-011): bấm nhãn kẹp trên thẻ là mở hộp sửa bước con ở phần tài liệu. Thêm / sửa / xoá trong hộp sửa, lưu ngay; xoá khi hộp đang mở thì Hoàn tác là một
-  hàng trong hộp. Link mở tab mới (`noopener noreferrer`); văn bản mở hộp lớn Edit / Preview (`#dlg-md`).
-- Nhật ký (PLAN-005): ô ghi gập tới khi bấm; mở thì focus Decision, ngày mặc định hôm nay, bước tuỳ chọn; Esc gập, giữ chữ.
-  Mới nhất trước, nhóm theo tháng; lý do dài cắt, "Show more"; bấm mục là sửa; bấm chip bước là tới bước ấy (bỏ lọc nếu cần).
-- Ghi bộ nhớ ở lượt việc kế, không chờ khung hình (tab nền bị hãm khung hình, tab kia ghi đè); rời, ẩn trang: ghi ngay. Tab khác sửa cùng khoá thì đọc lại (`storage`), giữ dự án của tab.
-- Nhắc sao lưu: thay đổi chưa sao lưu ≥ 3 ngày thì nút nhắc hiện cạnh Export, bấm là tải sao lưu mọi dự án (mới đặt lại mốc).
+  xoá không đổi số; cái thêm trong phiên hiện chấm thay số. Số lệch thì nút "Renumber" hiện.
+- Bấm chip: New → In progress → Done; chip trạng thái khác (hoặc Shift + bấm, Alt + ↓) mở danh sách bảy trạng thái.
+  Chọn Cancelled: mở hộp sửa, focus ô lý do; Lưu mới huỷ. Pending, Blocked đặt ngay, lý do sửa trong hộp.
+- Thêm bước: nút cuối bảng, hoặc "Add step" giữa hai bước (đặt sẵn vị trí). Thêm bước con: nút ở cột tên bước.
+- Bấm vào thẻ (ngoài nút) mở hộp sửa; bấm dấu tài liệu mở hộp sửa ở phần tài liệu.
+- Mỗi thẻ hai điểm dừng Tab: tên và chip; nút phụ `tabindex=-1`, việc của chúng làm được bằng phím (Alt + mũi tên, hộp sửa).
+- Kéo thả: chuột kéo thẻ (trừ nút, link) hay đầu bước; chạm thì giữ rồi kéo, bước kéo bằng tay nắm. Đang kéo không vẽ lại bảng.
+  Nửa trái / phải một ô: chen ô mới trước / sau; phần dưới thẻ hay giữa ô song song: nhập ô ấy. Gần mép tự cuộn; Esc huỷ.
+- Đổi chỗ (mọi cách): toast "Moved …" có Hoàn tác, không lấy focus; dời liền: Hoàn tác về chỗ đầu.
+- Dời bước con sang bước khác (`moveSubTo`, mọi cách) bỏ dấu Redo; Hoàn tác trả dấu nếu bước gốc còn mở lại.
+- "Reopen" (PLAN-004): chỉ khi bước có bước con Done (`canReopen`). Lý do bắt buộc; chọn bước con Done để gửi lại (mặc định không).
+  Mở vòng `round + 1`; bước con đã chọn về New, mang dấu Redo tới khi xong lại; nhật ký ghi "Reopened: tên (iteration N)" gắn với bước.
+- Reopen: đầu ra của bước, của bước con gửi lại đang được nơi khác dùng thì hộp nêu "Also check: …", dòng ấy vào Why của nhật ký.
+- Băng Reopened đếm "k of n redo tasks left"; xong hết thì "Close iteration" là nút chính. Đóng vòng bỏ dấu Redo. Mỗi thao tác một Hoàn tác.
+- Xoá bước con, quyết định, tài liệu: một bấm. Xoá bước còn bước con, xoá dự án (không hoàn tác): hỏi lại. Sau khi xoá, focus vào
+  Hoàn tác của toast; Ctrl/Cmd + Z hoàn tác khi không gõ chữ, không có hộp mở, và không bấm nút toast khác Hoàn tác.
+- Hoàn tác tìm lại dự án và bước theo id (tab khác có thể đã thay `state`).
+- Hộp sửa: Enter ở tên lưu; Esc, ×, Close, Duplicate khi chữ đổi thì hỏi lại. Nút đóng ghi "Close", không "Cancel". Đóng: focus về chỗ mở.
+- Lưu hộp sửa (bước con, bước, quyết định): chỉ ghi trường đã đổi so với lúc mở (`EDIT_FIELDS`, `mergeEdit`) lên bản mới nhất.
+  Trường mới của hộp sửa phải thêm vào `EDIT_FIELDS`.
+- Cùng trường bị tab khác đổi khác: `#dlg-ask` liệt kê, "Keep mine" / "Keep the other tab's"; Close thì hộp sửa vẫn mở.
+  Mục đã bị tab khác xoá: "Re-create" / "Discard my edits". Vị trí chỉ đổi khi người dùng đổi ô Bước / Vị trí.
+- Tài liệu (PLAN-011): thêm / sửa / xoá trong hộp sửa, lưu ngay. Link mở tab mới (`noopener noreferrer`); văn bản mở `#dlg-md`.
+- Bằng chứng: nút "Evidence" trên mỗi tài liệu của bước, bước con bật `proof`; sửa tài liệu giữ `proof`. Thẻ xong có bằng chứng có dấu riêng.
+- Vừa sang Done mà có "Done when" và chưa có bằng chứng (`needsEvidence`): toast gợi ý "Add evidence", không chặn.
+- Nhật ký (PLAN-005): mới nhất trước, nhóm theo tháng; bấm mục là sửa; bấm chip bước là tới bước ấy (bỏ lọc nếu cần).
+- Ghi bộ nhớ ở lượt việc kế, không chờ khung hình (tab nền bị hãm); rời, ẩn trang: ghi ngay. Tab khác sửa cùng khoá thì đọc lại (`storage`), giữ dự án của tab.
+- Thẻ dài thì cắt, "Show more" mở cả thẻ; vẽ lại giữ ghi chú đang mở, thẻ đã mở, chỗ cuộn ngang; hàng không đổi giữ nút DOM.
+- Mẹo tắt bằng ×; "Compact" ẩn "Done when", ghi chú, lý do (cả hai nhớ ở máy này). "Log (N)" tới nhật ký.
+- Nhắc sao lưu: thay đổi chưa sao lưu ≥ 3 ngày thì nút nhắc hiện cạnh Export, bấm là tải sao lưu mọi dự án.
 - Chữ người dùng chỉ vào DOM qua text node; không `innerHTML` ở `js/`. Không `alert` / `confirm` / `prompt` (`#dlg-ask`).
+
+## Bàn giao (outs / ins)
+
+- Đầu ra khai ở bước / bước con tạo ra nó; nơi dùng chọn "Use existing output". Một đầu ra nhiều nơi dùng; liên kết theo id.
+- Bước không chọn được đầu ra của chính nó và các bước con của nó. Inputs / Outputs lưu cùng Save của hộp sửa.
+- Chip "In n" (đầu vào còn trỏ tới đầu ra), "Out n"; danh sách nêu đường dẫn, hợp đồng, bên giao / nơi dùng, mỗi bên nhảy tới được.
+- Hàng j lấy từ hàng j − 1: vạch và nút "Handoff · n"; ô k + 1 lấy từ ô k cùng hàng: một nút giữa hai ô. Xa hơn: chỉ qua chip.
+- Xoá bên giao không gỡ đầu vào nơi khác (bảng bỏ qua, lần đọc sau chuẩn hoá bỏ). Hoàn tác xoá gắn lại theo `insBackup`.
 
 ## Mẫu (`data/templates.json`)
 
-- `{note, templates[]}`; mẫu `{id, name, description, steps[]}`; bước `{title, goal, doneWhen, notes?, subs[]}`; bước con
-  `{title, doneWhen?, notes?}`. Không thẻ HTML, không người làm. Đúng một mẫu trống. Mẫu chung không gắn vào một bài toán.
-- Tên mẫu, bước, bước con: tiếng Anh, đúng tên gốc của chuẩn (PLAN-015, cổng kiểm); nội dung khác tiếng Việt.
-- `crisp-dm` theo CRISP-DM 1.0 Step-by-step guide (Chapman et al., 2000): bước là sáu pha, bước con là generic task,
-  `doneWhen` là output của task, `notes` là câu hỏi gợi ý và bẫy hay gặp. Việc thêm ngoài guide ghi nguồn trong tên thẻ
-  (CRISP-ML(Q), Mitchell et al. 2019, TDSP); không thêm việc không có nguồn.
-- CRISP-DM: chia train / validation / test (task 4.2, dời lên pha 3 ngay sau Integrate Data, ghi chú thẻ nói vì sao) trước làm
-  sạch, điền thiếu, tạo đặc trưng; mọi biến đổi fit chỉ trên train. Đừng thêm bước con làm rò rỉ dữ liệu test.
+- Khuôn, khoá, chuỗi, tiếng Anh, `output`, bàn giao: `lint.py` (docstring đầu file); khuôn đầy đủ ở đó, đừng chép lại.
+- Đúng một mẫu trống. Mẫu chung không gắn vào một bài toán. Không thẻ HTML, không người làm.
+- Tên mẫu, bước, bước con: tiếng Anh, đúng tên gốc của chuẩn (PLAN-015); nội dung khác tiếng Việt.
+- `output`: loại đầu ra, hiện trên thẻ mẫu. `description` nói khi nào chọn mẫu, phần nào bỏ được khi làm một mình.
+- `outs: [{key, name, ref?, note?}]`, `ins: [key]`: `fromTemplate` đổi key thành id mới, key lạ bỏ. Dữ liệu chỉ chảy xuôi (`check_flow`).
+- `ref` là đường dẫn quy ước (CRISP-DM: Cookiecutter Data Science) hoặc link https; `note`: một dòng là gì, khoá, cách kiểm.
+- `crisp-dm` theo CRISP-DM 1.0 Step-by-step guide (Chapman et al., 2000): bước là sáu pha, bước con là generic task, `doneWhen`
+  là output của task, `notes` là câu hỏi gợi ý và bẫy hay gặp. Việc ngoài guide ghi nguồn trong tên thẻ; không thêm việc không có nguồn.
+- CRISP-DM: chia train / validation / test (task 4.2, dời lên pha 3 ngay sau Integrate Data) trước làm sạch, điền thiếu, tạo đặc trưng;
+  mọi biến đổi fit chỉ trên train, đặt chung Pipeline với mô hình. Đừng thêm bước con làm rò rỉ dữ liệu test.
+- CRISP-DM Modeling xong khi có bảng so với baseline và một quyết định kèm số đo; giữ baseline là kết quả hợp lệ.
 - `smoke.cjs` tìm `VERIFY data quality` (đúng một bước con) và `BUSINESS understanding` (đúng một bước) trên `crisp-dm`.
-- `stats-report` theo chu trình PPDAC (MacKay & Oldford; Wild & Pfannkuch, 1999): năm khâu, việc theo Wild & Pfannkuch.
-- `it5425-sports` sinh từ `masters-degree/data-management-visualization/data/sports-monitoring-build.json` và "Xong khi
-  nào" (`#xong`) của trang 2 đồ án (link câu hỏi giảng viên trỏ `#can-xac-nhan` của trang 1): `python3 step-planner/tools/lint.py --write-course`, không sửa tay; cổng đỏ khi nguồn
-  đổi mà chưa sinh lại. Tên việc giữ nguyên chữ nguồn (kể cả "Vai N, …"); ghi chú bước có dòng "Vai:" và link trang đồ án
-  kèm neo (cổng kiểm neo còn). Không tên người, kể cả giảng viên.
+- `stats-report` theo PPDAC, tên bước, bước con đúng hình 1(a) của Wild & Pfannkuch (1999). Không thêm thẻ ngoài hình.
+- `data-pipeline` theo vòng đời data engineering (Reis & Housley, 2022): năm khâu và Undercurrents; việc từ nguồn khác ghi nguồn trong tên thẻ.
+- `app-feature` không theo chuẩn; việc phát hành theo tài liệu App Store Connect, Google Play, Flutter (link ở ghi chú bước).
+- `it5425-sports` sinh từ `masters-degree/data-management-visualization/data/sports-monitoring-build.json` và "Xong khi nào"
+  (`#xong`) của trang 2 đồ án: `python3 step-planner/tools/lint.py --write-course`, không sửa tay; cổng đỏ khi nguồn đổi mà chưa sinh lại.
+- `it5425-sports`: tên việc giữ chữ nguồn; outs / ins suy từ đường dẫn trong `io_html` từng pha (`course_flow`). Không tên người.
 
 ## System design (`data/system-design.json`, PLAN-016)
 
-- Hồ sơ `{id, label, help, choices[]}`; khâu `{id, title, lane, question, guide, multi, skipWhen, options[]}`; phương án `{id, name, kind, summary,
-  pick, avoid, cost, level, fit, links, setup, task}`. Khuôn, độ phủ (mỗi câu trả lời có phương án hợp ở mọi khâu): `lint.py`.
+- Danh mục `{note, paths[], profile[], stages[], checks[]}`; khuôn, độ phủ, luật: `lint.py`. Số khâu, phương án, luật đọc từ file.
 - `label`, `title`, `kind` tiếng Anh, chữ khác tiếng Việt. Link chỉ trang chính thức đã mở được; không ghi giá, hạn mức bằng số; lệnh chép từ quickstart.
-- Hợp hồ sơ: mọi câu đã trả lời mà `fit` nhắc tới đều khớp; xếp hợp trước, khớp nhiều câu, dễ hơn; cái đầu là "Recommended". Lựa chọn lưu ngay.
-- "Add tasks to plan": bước "System build" (chưa có thì ở vị trí 2), mỗi khâu đã quyết một bước con; trùng tên bỏ qua; Hoàn tác gỡ phần vừa thêm.
-- Markdown: mục `## System design` sau các bước: `Profile: câu trả_lời · …`, mỗi khâu `- tên: phương án [khâu: id, id]` hoặc `[khâu: skip]`, nhập chỉ đọc ngoặc cuối; dòng thụt `Own:` rồi ghi chú.
-
-## Markdown
-
-Xuất rồi nhập lại ra đúng cấu trúc cũ. Nhãn và khối cách nhau một dòng trống (khuôn dưới bỏ bớt), dòng trong khối có hai
-dấu cách cuối (xuống dòng khi xem trên GitHub / VS Code).
-
-```
-# Tên dự án
-> Data Science Step Planner · format 3
->
-> Template: <templateId>
-dòng ghi chú dự án
-
-## 1. Tên bước
-Goal: …
-Done when: …
-Reopened: YYYY-MM-DD · iteration N · lý do
-Notes:
-  dòng ghi chú
-Docs:
-  - [Tên link](https://…)
-  - Tên văn bản
-    ````markdown
-    thân văn bản, kể cả ``` và dòng #, -, nhãn
-    ````
-
-- [/] Tên bước con · parallel · redo · due YYYY-MM-DD
-  Done when: …
-  Cancelled because: dòng đầu
-    dòng tiếp của lý do
-  dòng ghi chú
-  Docs:
-    - [Tên link](https://…)
-
-## Decision log
-- YYYY-MM-DD · quyết định
-  Step: tên bước
-  Why: dòng đầu
-  dòng tiếp
-```
-
-- Nhãn định dạng 2 (tiếng Việt) vẫn nhập: `Mẫu`, `Mục tiêu`, `Xong khi`, `Quay lại` (`· vòng N`), `Vòng`, `Ghi chú`, `Tài liệu`,
-  `Huỷ vì`, `Vì sao`, `Bước`, `hạn`, `## Nhật ký quyết định`. Nhãn không phân biệt hoa thường. Dòng đầu (`… · format N`) chỉ để
-  đọc, trang không dựa vào nó. Số thứ tự trên bảng không ghi vào Markdown.
-- Phần tử `parallel` (nhận cả `song song`): nhập ô của bước con ngay trước. `redo` (nhận cả `làm lại`): dấu Redo.
-- Dấu: `[ ]` / `[]` mới, `[~]` đang làm, `[>]` chờ, `[!]` bị chặn, `[x]` / `[X]` xong, `[-]` bỏ qua, `[/]` huỷ; dấu lạ là mới.
-- Trên dòng bước con, phần tử tách bằng ` · `. Trong tên: `\` → `\\`, `·` → `\·`, `@` → `\@`, `hạn` / `due` → `\hạn` / `\due`.
-- Dòng thụt hai dấu cách thuộc bước con / `Notes:` / quyết định ngay trên nó. Dòng thụt đầu `Done when: ` của bước con là
-  `doneWhen`; dòng thụt đầu `Why: ` của quyết định mở phần lý do. `Step: tên` ngay dưới dòng quyết định gắn nó với bước đầu
-  tiên cùng tên (bỏ dấu, không phân biệt hoa thường); không có bước ấy thì cảnh báo, bỏ link.
-- Lý do: dòng thụt `<nhãn>: dòng đầu` sau `Done when:`, dòng sau thụt bốn; nhập nhận mọi nhãn lý do (cả `Huỷ vì`) khi trạng thái có lý do, không thì là ghi chú.
-- Dòng ghi chú: dòng trống viết `\`; dòng mở bằng `\`, khoảng trắng, `#`, `>`, đầu mục danh sách, `**` hay nhãn (cả định dạng 2) thêm `\`.
-- Vòng: bước đang mở lại ghi vòng trong `Reopened:`; bước đã đóng vòng mà `round` > 1 có dòng `Iteration: N` thay chỗ ấy.
-  Dòng cũ `Quay lại: YYYY-MM-DD · lý do` (không vòng) đọc là vòng 2.
-- Tài liệu: nhãn `Docs:` (bước: không thụt, sau `Notes:`; bước con: thụt hai, cuối bước con), mỗi tài liệu một mục thụt thêm
-  hai. Link `- [tên](url)`, url có ngoặc thì `(<url>)`. Văn bản `- tên` rồi khối rào thụt thêm hai, rào `` ` `` dài hơn chuỗi
-  `` ` `` dài nhất trong thân (tối thiểu ba), dòng trống của thân ghi rỗng. Trong tên: `\`, `[`, `]` thoát bằng `\`.
-
-Nhập file cũ và Markdown viết tay (dễ dãi):
-
-- Người làm (dòng `Người:`, `` `@tên` ``, `@tên`) bị bỏ khỏi tên, không cảnh báo. Trước `##` đầu: dòng đầu không `#` là tên
-  dự án, việc thành bước "General", chữ khác là ghi chú dự án. Dòng lạ trong bước (đoạn văn, `###`) nối vào ghi chú bước.
-- Bước con: `- [ ] x`, `- [] x`, `* [ ] x`, `+ [ ] x`, `1. [ ] x`, gạch đầu dòng thường `- x` (mới); mục lồng xếp phẳng.
-- Hạn: `hạn` / `due` + `YYYY-MM-DD`, `YYYY-M-D`, `DD/MM/YYYY`, `D/M/YYYY`. Ngày không có thật thì cảnh báo, giữ trong tên.
-- Tiêu đề bước: `## 1. x`, `## 1) x`, `## 2 x`, `## Bước 1: x`, `## Step 2) x`, `## x`. `## Nhật ký (quyết định)` / `## Decision
-  log` là nhật ký; trong đó mỗi gạch đầu dòng hay dòng thường là một quyết định, ngày đầu dòng (hai kiểu) là ngày.
-- Sau `Docs:`: mục là link, hoặc mục có rào ``` / ~~~ ngay dòng sau; mục của bước không cần thụt, của bước con thụt ≥ 2.
-  Link không phải http(s): cảnh báo, bỏ. Thiếu rào đóng: đọc tới hết file, cảnh báo. Xem trước liệt kê mọi cảnh báo.
-
-## JSON
-
-- Một dự án: `{format: "step-planner", version: 3, exportedAt, workspace}`. Sao lưu: `{…, workspaces: [...]}`. Trang không
-  dựa vào `version`: bản 1 (có người, không tài liệu), bản 2 (không ô song song) vẫn nhập.
-- Nhập nhận cả hai, mảng dự án, hoặc một dự án trần. Mục sai khuôn thì bỏ, kèm cảnh báo; không còn dự án nào thì báo lỗi,
-  không lộ TypeError. Chữ mở bằng `{`, hay `[` rồi một giá trị JSON, là JSON; còn lại (kể cả `[tên](url)`) là Markdown.
-- Mặc định tạo dự án mới (id mới, trùng tên thì ` (imported)`, ` (imported 2)`…). "Thay dự án đang mở" (một dự án) có Hoàn tác.
+- Hộp mở ở "What do you deliver?" (lối), rồi hồ sơ, từng khâu, Handoffs, Checks. Câu hồ sơ ngoài `ask` của lối gập lại, vẫn trả lời được.
+- Gợi ý: câu chưa trả lời lấy theo `implies` của lối; xếp hợp hồ sơ trước, rồi gợi ý của lối, khớp nhiều câu, dễ hơn. Lựa chọn lưu ngay.
+- "Apply path" (`applyPath`): chỉ khâu chưa quyết; `skip` → Not needed; `need` có gợi ý → phương án đầu; `maybe` để trống.
+- Luật phối hợp (`warnings`): báo khi mọi `if` khớp và mọi khâu trong `unless` đã quyết mà không khớp; khâu chưa quyết thì chưa báo.
+  Khoá điều kiện: id khâu (phương án, `skip`, `own`), câu hồ sơ hay `path`. Phương án không được có id `skip`, `own`.
+- Bàn giao (`edges`): đường nối hai khâu liền nhau của luồng, cả hai đã quyết (`flowEdges`). Hợp đồng giữ cả khi đường nối không còn.
+- "Add tasks to plan" / "Update plan": luôn xem trước New / Changed / No longer in the design, chọn từng mục và bước nhận
+  (mặc định "System build", chưa có thì tạo ở vị trí 2). Mỗi khâu đã quyết một việc, mỗi bàn giao đã ghi một việc `Handoff: A → B`.
+- Đối chiếu theo `sd`; bước con chưa có `sd` thì theo tên trong bước "System build".
+- Update: thay tên, Done when, thêm link và dòng ghi chú mới; giữ ghi chú, tài liệu của người dùng; Done về New.
+  "Keep old and add new": cũ thành Cancelled ("Replaced in system design: …"). Cancel: "No longer in system design: …". Một Hoàn tác.
 
 ## Giao diện
 
 - Màu, cỡ, khoảng cách chỉ ở token đầu `css/planner.css` (REPO-028, REPO-023); dáng chung chép từ `md-annotate/`.
-- Theme theo hệ điều hành tới khi bấm nút (REPO-024), khoá `hub-theme`. Thanh trên ghi đủ tên, không cắt "…". Chân trang giới thiệu (chữ ở HTML), cảm ứng ẩn cột phím tắt.
-- Biểu tượng: một bộ `<symbol id="i-…">` trong `index.html` qua `<use>`, không ký tự unicode; nút chỉ biểu tượng có `aria-label`, `title`.
-- Hàng thẻ cuộn ngang bên trong. ≤ 640px: một cột, đầu bước trên cùng, rồi băng Reopened, dải tài liệu, hàng thẻ.
-- Hộp thoại: chỉ thân cuộn (đầu, chân đứng yên; trang sau khoá cuộn); ≤ 640px tấm đáy; Markdown toàn màn; trạng thái: viên radio.
-- Mọi `<select>` chọn thứ có nghĩa dùng danh sách tự dựng (phím ↑ ↓, gõ chữ đầu, Enter, Esc); ô chỉ chọn số giữ `<select>` gốc (`data-native`).
-- Cảm ứng và ≤ 640px: vùng bấm ≥ 44px. Trang không cuộn ngang. Tạo hay mở dự án thì về đầu trang, không cuộn theo focus.
+- Theme theo hệ điều hành tới khi bấm nút (REPO-024), khoá `hub-theme`.
+- Biểu tượng: `<symbol id="i-…">` trong `index.html` qua `<use>`, không ký tự unicode; nút chỉ biểu tượng có `aria-label`, `title`.
+- Mọi `<select>` chọn thứ có nghĩa dùng danh sách tự dựng (↑ ↓, gõ chữ đầu, Enter, Esc); ô chỉ chọn số giữ `<select>` gốc (`data-native`).
+- Nút bàn giao, nút phụ trên thẻ ngoài vòng Tab. Vùng bấm ở cảm ứng và trang không cuộn ngang: smoke đo.
 
 ## Cổng: `sh step-planner/tools/check.sh`
 
-- `tools/lint.py`: khuôn mẫu, danh mục System design, mẫu đồ án khớp nguồn và neo, không `innerHTML`, mã màu chỉ trong khối token.
-- `node --input-type=module --check` cho `js/*.js` (đọc qua stdin: `node --check file.js` bỏ sót lỗi của module); `tools/test-core.mjs`: logic thuần của `core.js`, `md.js`, `design-core.js`; danh sách ở chính file.
+- `tools/lint.py`: khuôn mẫu và bàn giao trong mẫu, danh mục System design, mẫu đồ án khớp nguồn và neo, không `innerHTML`, mã màu chỉ trong khối token.
+- `node --input-type=module --check < file` cho `js/*.js` (`node --check file.js` bỏ sót lỗi của module).
+- `tools/test-core.mjs`: logic thuần của `core.js`, `md.js`, `design-core.js`; danh sách ở chính file.
 - `tools/smoke.cjs` (cổng tự dựng máy chủ tạm; thiếu playwright thì bỏ qua, CI chạy ở job smoke): bấm thật các hành vi trên,
   hai tab, 390px, bộ nhớ bị chặn / hỏng / khoá cũ, lỗi console; số mẫu đọc từ `templates.json`. Chạy tay: `node <file> <url>`.
