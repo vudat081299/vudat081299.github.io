@@ -732,6 +732,15 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
     has(W({ validate: P('dbt-tests'), process: P('spark-streaming') }), 'dbt-tests-without-dbt')
     && !has(W({ validate: P('dbt-tests'), process: P('spark-streaming', 'dbt') }), 'dbt-tests-without-dbt')
     && !has(W({ validate: P('dbt-tests') }), 'dbt-tests-without-dbt'));
+  /* Công cụ lịch dùng được cho dữ liệu tới liên tục khi kết quả xem theo lịch (gom thành lô); cần trả lời ngay thì luật báo. */
+  const streamReport = applyPath(cat, { path: '', profile: { fresh: 'stream', latency: 'report' }, stages: {}, edges: {} }, 'pipeline').next;
+  const batchEtl = cat.architectures.find((f) => f.id === 'processing').entries.find((e) => e.id === 'batch-etl').tools;
+  check('lối pipeline, dữ liệu liên tục xem theo lịch: Apply path chọn công cụ lịch và công cụ lô của batch ETL, không Kafka, không công cụ stream',
+    ['cron', 'github-actions', 'prefect', 'dagster', 'airflow', 'oozie'].every((id) => fitOf(optOf('ingest', id), { fresh: 'stream' }).ok)
+    && archAdvice(cat, streamReport).find((a) => a.family === 'processing').id === 'batch-etl'
+    && streamReport.stages.ingest.pick.every((id) => batchEtl.ingest.includes(id)) && streamReport.stages.process.pick.every((id) => batchEtl.process.includes(id))
+    && !hardOf(streamReport.stages, streamReport.profile, 'pipeline').length,
+  JSON.stringify(streamReport.stages));
   check('phương án: WebSocket, lag Kafka hợp dữ liệu liên tục, không hợp theo lịch; Playwright ngược lại; Apply path không chọn Oozie',
     fitOf(optOf('source', 'websocket-feed'), { fresh: 'stream' }).ok && !fitOf(optOf('source', 'websocket-feed'), { fresh: 'batch' }).ok
     && fitOf(optOf('monitor', 'kafka-lag'), { fresh: 'stream' }).ok && !fitOf(optOf('monitor', 'kafka-lag'), { fresh: 'once' }).ok
@@ -759,13 +768,24 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
     ...cat.profile.find((x) => x.id === q).choices.map((c) => ({ ...p, [q]: c.id }))]), [{}]);
   const hard = (d, ids) => warnings(cat, normDesign(d)).filter((w) => !w.caveat && !EXCEPT.has(w.id) && w.stages.some((x) => ids.includes(x)));
   const selfWarn = new Set();
+  const offArch = new Set();
+  const procArch = cat.architectures.find((f) => f.id === 'processing').entries;
   for (const pp of cat.paths) {
     for (const profile of grid) {
       const r = applyPath(cat, { path: '', profile, stages: {}, edges: {} }, pp.id);
       for (const w of hard(r.next, [...r.filled, ...r.skipped])) selfWarn.add(`${pp.id}/${w.id} ${JSON.stringify(profile)}`);
+      const adv = archAdvice(cat, r.next).find((a) => a.family === 'processing');
+      const tools = adv.id ? procArch.find((e) => e.id === adv.id).tools : {};
+      for (const sid of ['ingest', 'process']) {
+        const st = r.next.stages[sid];
+        if (!st || st.skip || !tools[sid] || st.pick.some((id) => tools[sid].includes(id))) continue;
+        if (tools[sid].some((id) => fitOf(optOf(sid, id), effProfile(cat, r.next)).ok)) offArch.add(`${pp.id}/${adv.id}/${sid}=${st.pick} ${JSON.stringify(profile)}`);
+      }
     }
   }
   check('thiết kế: Apply path không chọn phương án (hay bỏ khâu) làm luật báo', !selfWarn.size, [...selfWarn].slice(0, 5).join(' | '));
+  check('thiết kế: Apply path chọn Ingestion, Processing trong công cụ của kiến trúc xử lý đang gợi ý (khi có công cụ hợp hồ sơ)',
+    !offArch.size, [...offArch].slice(0, 5).join(' | '));
   /* Mỗi kiến trúc được gợi ý có ở mỗi khâu ít nhất một công cụ không làm luật báo; khâu đã quyết theo luật gợi ý cũng thử
    * khi X hợp hồ sơ (luật nói "đã chọn X nên là kiến trúc Y" thì Y phải có công cụ dùng được). Khâu đã quyết nhận nhiều công cụ
    * (`multi`) thì được thêm một công cụ của Y bên cạnh X (dbt cho dữ liệu liên tục: Kafka cần thêm bộ xử lý stream đọc topic).

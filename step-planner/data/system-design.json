@@ -872,7 +872,7 @@
       "title": "Ingestion & scheduling",
       "lane": "data",
       "question": "Bạn kéo dữ liệu về bằng cách nào và bao lâu một lần?",
-      "guide": "Ingestion là đoạn code lấy dữ liệu từ nguồn và ghi vào kho thô.\nScheduling là thứ chạy đoạn code đó theo lịch, ví dụ mỗi sáng.\nDữ liệu cố định chỉ cần chạy một lần bằng tay.\nDữ liệu mới mỗi ngày cần lịch chạy; dữ liệu liên tục cần hệ thống stream.\nCó cả luồng lẫn nguồn theo lịch (Lambda, nạp bù lịch sử, luồng giả lập bên cạnh pipeline theo ngày) thì chọn cả hai: Kafka cho luồng, một công cụ lịch cho job batch.",
+      "guide": "Ingestion là đoạn code lấy dữ liệu từ nguồn và ghi vào kho thô.\nScheduling là thứ chạy đoạn code đó theo lịch, ví dụ mỗi sáng.\nDữ liệu cố định chỉ cần chạy một lần bằng tay.\nDữ liệu mới mỗi ngày cần lịch chạy.\nDữ liệu tới liên tục mà người dùng cần câu trả lời ngay: cần hệ thống stream (Kafka); chỉ xem kết quả theo lịch: một công cụ lịch gom phần mới thành lô là đủ.\nCó cả luồng lẫn nguồn theo lịch (Lambda, nạp bù lịch sử, luồng giả lập bên cạnh pipeline theo ngày) thì chọn cả hai: Kafka cho luồng, một công cụ lịch cho job batch.",
       "multi": true,
       "skipWhen": "Bỏ qua khi bạn chỉ tải một file về bằng trình duyệt và không cần tải lại.",
       "task": "Một lệnh lấy dữ liệu mới chạy được từ đầu tới cuối bằng công cụ đã chọn; README có lệnh chạy lại.",
@@ -919,7 +919,8 @@
           "level": 2,
           "fit": {
             "fresh": [
-              "batch"
+              "batch",
+              "stream"
             ]
           },
           "links": [
@@ -948,7 +949,8 @@
           "level": 2,
           "fit": {
             "fresh": [
-              "batch"
+              "batch",
+              "stream"
             ],
             "size": [
               "small",
@@ -986,7 +988,8 @@
           "level": 2,
           "fit": {
             "fresh": [
-              "batch"
+              "batch",
+              "stream"
             ]
           },
           "links": [
@@ -1016,7 +1019,8 @@
           "level": 2,
           "fit": {
             "fresh": [
-              "batch"
+              "batch",
+              "stream"
             ],
             "size": [
               "medium",
@@ -1048,7 +1052,8 @@
           "level": 3,
           "fit": {
             "fresh": [
-              "batch"
+              "batch",
+              "stream"
             ],
             "size": [
               "medium",
@@ -1080,7 +1085,8 @@
           "level": 3,
           "fit": {
             "fresh": [
-              "batch"
+              "batch",
+              "stream"
             ],
             "size": [
               "large"
@@ -5017,7 +5023,8 @@
           "level": 1,
           "fit": {
             "fresh": [
-              "batch"
+              "batch",
+              "stream"
             ]
           },
           "links": [
@@ -6461,6 +6468,7 @@
               "bigquery",
               "snowflake",
               "parquet-duckdb",
+              "duckdb-iceberg",
               "trino"
             ]
           },
