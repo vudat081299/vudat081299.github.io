@@ -751,8 +751,12 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   check('bàn giao: vạch giữa hai hàng gom theo cặp bên giao → bên nhận', eq((ho.rows.get(1) || []).map(name),
     ['Clean>Backend:matches.parquet', 'C>A:table', 'A>A:table', 'Clean>API:matches.parquet', 'B>API:teams ← list \\ x']));
   const gaps = ho.gaps.get(ws.steps[0].id);
-  check('bàn giao: nút giữa hai ô — chỉ ô kề nhau, một nút cho mọi cặp', eq([...gaps.keys()], [1]) && eq(gaps.get(1).map(name), ['B>D:teams ← list \\ x']));
-  /* A ở ô 0, D ở ô 2 (ô song song với C): A → D không kề nhau, không có nút; vẫn có trong usedBy. */
+  /* A ở ô 0, B ở ô 1, D ở ô 2 (ô song song với C): cả A → D và B → D vào nút ngay trước ô của D. */
+  check('bàn giao: nút trước ô nhận — gom mọi cặp từ ô trước nó, một nút cho mọi cặp', eq([...gaps.keys()], [1])
+    && eq(gaps.get(1).map(name), ['A>D:table', 'B>D:teams ← list \\ x']));
+  const far = H.handoffs(normWorkspace({ steps: [{ id: 'x1', title: 'S1', outs: [{ id: 'q', name: 'q' }], subs: [{ id: 'u', title: 'U', ins: ['r'] }] },
+    { id: 'x2', title: 'S2', subs: [{ id: 'v', title: 'V' }] }, { id: 'x3', title: 'S3', subs: [{ id: 'w', title: 'W', ins: ['q'], outs: [{ id: 'r', name: 'r' }] }] }] }));
+  check('bàn giao: vạch trên hàng nhận gom cả hàng xa hơn; chảy ngược không có vạch', eq([...far.rows.keys()], [2]) && eq(far.rows.get(2).map(name), ['S1>W:q']));
   check('bàn giao: nơi dùng của một đầu ra', eq((ho.usedBy.get('oa') || []).map(H.holderTitle), ['D', 'A']));
   const w2 = normWorkspace(raw);
   const relink = H.insBackup(w2, [w2.steps[0].subs[0]]);

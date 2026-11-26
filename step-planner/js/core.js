@@ -356,12 +356,14 @@ export function handoffs(ws) {
   const rows = new Map();
   /** @type {Map<string, Map<number, Pair[]>>} */
   const gaps = new Map();
+  /* Vạch trên hàng j: mọi cặp từ hàng trước j vào hàng j. Nút trước ô k + 1: mọi cặp từ ô trước nó, cùng hàng, vào ô ấy.
+   * Cặp chảy ngược (hàng sau → hàng trước, ô sau → ô trước, cùng ô) không có vạch, chỉ thấy trong hộp sửa. */
   for (const p of pairs(links)) {
-    if (p.to.i === p.from.i + 1) {
+    if (p.to.i > p.from.i) {
       if (!rows.has(p.to.i)) rows.set(p.to.i, []);
       /** @type {Pair[]} */ (rows.get(p.to.i)).push(p);
-    } else if (p.to.i === p.from.i && p.from.sub && p.to.sub && slotOf.get(p.to.sub.id) === slotOf.get(p.from.sub.id) + 1) {
-      const id = p.to.step.id, k = slotOf.get(p.from.sub.id);
+    } else if (p.to.i === p.from.i && p.from.sub && p.to.sub && slotOf.get(p.to.sub.id) > slotOf.get(p.from.sub.id)) {
+      const id = p.to.step.id, k = slotOf.get(p.to.sub.id) - 1;
       if (!gaps.has(id)) gaps.set(id, new Map());
       const g = /** @type {Map<number, Pair[]>} */ (gaps.get(id));
       if (!g.has(k)) g.set(k, []);

@@ -1955,9 +1955,10 @@ const check = (name, ok, detail = '') => {
   {
     const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
     const seed = { id: 'wh', name: 'Handoff', steps: [
-      { id: 'h1', title: 'Clean data', subs: [{ id: 'hA', title: 'Build snapshot', status: 'done' }, { id: 'hB', title: 'Profile columns' }, { id: 'hC', title: 'Quality report', par: true }] },
+      { id: 'h1', title: 'Clean data', outs: [{ id: 'oS', name: 'clean schema' }],
+        subs: [{ id: 'hA', title: 'Build snapshot', status: 'done' }, { id: 'hB', title: 'Profile columns' }, { id: 'hC', title: 'Quality report', par: true }] },
       { id: 'h2', title: 'Backend', subs: [{ id: 'hD', title: 'Read snapshot in API' }, { id: 'hE', title: 'Season endpoint' }] },
-      { id: 'h3', title: 'Report', subs: [{ id: 'hF', title: 'Write up' }] },
+      { id: 'h3', title: 'Report', ins: ['oS'], subs: [{ id: 'hF', title: 'Write up' }] },
     ], log: [] };
     const seedInit = (d) => { if (!sessionStorage.getItem('seeded')) { sessionStorage.setItem('seeded', '1'); localStorage.setItem('stepPlanner.v2', JSON.stringify({ version: 2, workspaces: [d], lastId: d.id })); } };
     const hc = await browser.newContext({ viewport: { width: 1280, height: 1000 }, deviceScaleFactor: 1, permissions: ['clipboard-read', 'clipboard-write'] });
@@ -2007,11 +2008,13 @@ const check = (name, ok, detail = '') => {
     const marks = () => hp.evaluate(() => ({
       row: [...document.querySelectorAll('[data-act="hand-row"]')].map((b) => b.closest('[data-step]').dataset.step + ':' + b.textContent),
       gap: [...document.querySelectorAll('[data-act="hand-gap"]')].map((b) => b.closest('[data-step]').dataset.step + ':' + b.dataset.gap + ':' + b.textContent),
-      tags: [...document.querySelectorAll('.hand-tag')].map((b) => b.closest('[data-sub]').dataset.sub + ':' + b.textContent),
+      tags: [...document.querySelectorAll('.hand-tag')].map((b) => (b.closest('[data-sub]') ? 'card ' : '') + b.closest('[data-step]').dataset.step + ':' + b.textContent),
+      gapW: [...document.querySelectorAll('.hand-gap')].map((g) => Math.round(g.getBoundingClientRect().width - document.querySelector('.slot:not(.par)').getBoundingClientRect().width)),
     }));
     const m1 = await marks();
-    check('bàn giao: vạch giữa hàng 1 và 2, nút giữa ô 1 và 2, chip In / Out trên thẻ', same(m1.row, ['h2:Handoff · 1']) && same(m1.gap, ['h1:0:Handoff · 1'])
-      && same(m1.tags, ['hA:Out 1', 'hC:In 1', 'hD:In 1']), JSON.stringify(m1));
+    check('bàn giao: mũi tên trên bước nhận (cả từ bước xa hơn), ô mũi tên rộng bằng thẻ trước ô nhận, nút ghi tên đầu ra; thẻ không có chip In / Out',
+      same(m1.row, ['h2:matches.parquet', 'h3:clean schema']) && same(m1.gap, ['h1:0:matches.parquet']) && same(m1.gapW, [0])
+      && same(m1.tags, ['h1:Out 1', 'h3:In 1']), JSON.stringify(m1));
 
     // Nút giữa hai ô: danh sách cặp; chọn dòng thì đóng hộp, tô cả hai thẻ, focus bên nhận.
     await hp.click('[data-act="hand-gap"]');
@@ -2021,24 +2024,29 @@ const check = (name, ok, detail = '') => {
       focus: document.activeElement.closest('.card')?.dataset.sub, open: document.getElementById('dlg-hand').open }));
     check('bàn giao: nút giữa hai ô — cặp A → C, chọn dòng tô cả hai, focus bên nhận', /Build snapshot.*Quality report.*matches\.parquet/.test(pairTxt)
       && same(hi.hi, ['hA', 'hC']) && hi.focus === 'hC' && !hi.open, JSON.stringify(hi) + pairTxt);
-    // Chip In: đường dẫn (không phải link thì chữ mono), hợp đồng, bên giao.
-    await hp.click('.card[data-sub="hD"] [data-act="hand-in"]');
+    // Mũi tên trên bước 2: đường dẫn (không phải link thì chữ mono), hợp đồng, hai bên.
+    await hp.click('.step[data-step="h2"] [data-act="hand-row"]');
     const inInfo = await hp.evaluate(() => ({ t: document.getElementById('hand-list').textContent, links: document.querySelectorAll('#hand-list a').length,
-      code: document.querySelector('#hand-list code')?.textContent, edit: document.getElementById('hand-edit').textContent }));
-    await hp.click('#hand-edit');
-    const toHand = await hp.evaluate(() => document.getElementById('dlg-sub').open && document.activeElement?.hasAttribute('data-in-pick'));
+      code: document.querySelector('#hand-list code')?.textContent, title: document.getElementById('dlg-hand-title').textContent, edit: document.getElementById('hand-edit').hidden }));
     await hp.keyboard.press('Escape');
-    check('bàn giao: chip In — đường dẫn, hợp đồng, bên giao; "Edit sub-step" mở hộp sửa ở phần Inputs', inInfo.links === 0 && inInfo.code === 'data/clean/matches.parquet'
-      && /Contract one row per match/.test(inInfo.t) && /From Build snapshot/.test(inInfo.t) && inInfo.edit === 'Edit sub-step' && toHand, JSON.stringify(inInfo));
+    check('bàn giao: mũi tên trên bước — đường dẫn, hợp đồng, bên giao → bên nhận', inInfo.links === 0 && inInfo.code === 'data/clean/matches.parquet'
+      && /Contract one row per match/.test(inInfo.t) && /Build snapshot.*Read snapshot in API/.test(inInfo.t) && /From the step above/.test(inInfo.title) && inInfo.edit, JSON.stringify(inInfo));
+    // Chip In của bước: "Edit step" mở hộp sửa ở phần Inputs.
+    await hp.click('.step[data-step="h3"] [data-act="hand-in"]');
+    const inTxt = await hp.textContent('#hand-list');
+    await hp.click('#hand-edit');
+    const toHand = await hp.evaluate(() => document.getElementById('dlg-step').open && document.activeElement?.hasAttribute('data-in-pick'));
+    await hp.keyboard.press('Escape');
+    check('bàn giao: chip In của bước — bên giao; "Edit step" mở hộp sửa ở phần Inputs', /clean schema.*From Clean data/.test(inTxt) && toHand, inTxt);
     // Tìm theo tên đầu ra; nhảy tới nơi dùng đang bị lọc ẩn thì bỏ lọc.
     await hp.fill('#q', 'matches.parquet');
     const found = await hp.$$eval('.card[data-sub]', (cs) => cs.map((c) => c.dataset.sub));
-    await hp.click('.card[data-sub="hA"] [data-act="hand-out"]');
+    await hp.click('.step[data-step="h1"] [data-act="hand-out"]');
     const usedTxt = await hp.textContent('#hand-list .hand-used');
-    await hp.locator('#hand-list .hand-who', { hasText: 'Read snapshot in API' }).click();
-    const jumped = await hp.evaluate(() => ({ q: document.getElementById('q').value, focus: document.activeElement.closest('.card')?.dataset.sub }));
-    check('bàn giao: tìm khớp tên đầu ra; chip Out liệt kê nơi dùng, nhảy tới thẻ bị lọc thì bỏ lọc', same(found, ['hA']) && /Used by.*Quality report.*Read snapshot in API/.test(usedTxt)
-      && jumped.q === '' && jumped.focus === 'hD', JSON.stringify({ found, usedTxt, jumped }));
+    await hp.locator('#hand-list .hand-who', { hasText: 'Report' }).click();
+    const jumped = await hp.evaluate(() => ({ q: document.getElementById('q').value, act: document.activeElement.dataset.act, step: document.activeElement.closest('[data-step]')?.dataset.step }));
+    check('bàn giao: tìm khớp tên đầu ra; chip Out liệt kê nơi dùng, nhảy tới bước bị lọc thì bỏ lọc', same(found, ['hA']) && /Used by.*Report/.test(usedTxt)
+      && jumped.q === '' && jumped.act === 'edit-step' && jumped.step === 'h3', JSON.stringify({ found, usedTxt, jumped }));
 
     // Kéo bước 2 lên đầu: liên kết theo id giữ nguyên, vạch tính lại (bên nhận nằm trên bên giao: không còn vạch); Hoàn tác về chỗ cũ.
     const g = await hp.locator('.step[data-step="h2"] .step-grip').boundingBox();
@@ -2052,7 +2060,7 @@ const check = (name, ok, detail = '') => {
     w = await cur(hp);
     const m2 = await marks();
     check('bàn giao: kéo đổi chỗ bước giữ liên kết, vạch tính lại', same(w.steps.map((s) => s.id), ['h2', 'h1', 'h3']) && same(subOf(w, 'hD').ins, [outId])
-      && same(m2.row, []) && same(m2.gap, ['h1:0:Handoff · 1']), JSON.stringify(m2));
+      && same(m2.row, ['h3:clean schema']) && same(m2.gap, ['h1:0:matches.parquet']), JSON.stringify(m2));
     await hp.keyboard.press('Control+z');
     await hp.waitForFunction(() => document.querySelector('#board > .step')?.dataset.step === 'h1');
 
@@ -2063,19 +2071,20 @@ const check = (name, ok, detail = '') => {
     await hp.click('#toast-undo');
     const m4 = await marks();
     w = await cur(hp);
-    check('bàn giao: xoá bên giao thì nơi dùng mất chip, vạch; Hoàn tác trả lại', same(m3, { row: [], gap: [], tags: [] }) && same(m4, m1)
+    check('bàn giao: xoá bên giao thì mũi tên của nó biến mất; Hoàn tác trả lại', same(m3, { row: ['h3:clean schema'], gap: [], tags: m1.tags, gapW: [] }) && same(m4, m1)
       && same(subOf(w, 'hD').ins, [outId]) && same(subOf(w, 'hC').ins, [outId]), JSON.stringify({ m3, m4 }));
 
     // Mở lại bước 1, chọn làm lại A: "Also check" liệt kê nơi dùng đầu ra của A, ghi vào nhật ký; Hoàn tác.
     await hp.click('.step[data-step="h1"] .step-head [data-act="revisit"]');
-    const also0 = await hp.isHidden('#revisit-also');
+    const also0 = await hp.textContent('#revisit-also-text');
     await hp.check('#revisit-list input[value="hA"]');
     const also1 = await hp.textContent('#revisit-also-text');
     await hp.fill('#revisit-form [name="reason"]', 'schema changed');
     await hp.click('#revisit-form button[type="submit"]');
     w = await cur(hp);
     const why = w.log.at(-1)?.why || '';
-    check('bàn giao: mở lại — "Also check" theo bước con chọn làm lại, ghi vào nhật ký', also0 && also1 === '"Quality report" in "Clean data", "Read snapshot in API" in "Backend"'
+    check('bàn giao: mở lại — "Also check" theo đầu ra của bước và bước con chọn làm lại, ghi vào nhật ký', also0 === 'step "Report"'
+      && also1 === '"Quality report" in "Clean data", "Read snapshot in API" in "Backend", step "Report"'
       && why === `schema changed\nAlso check: ${also1}`, JSON.stringify({ also0, also1, why }));
     await hp.click('#toast-undo');
 

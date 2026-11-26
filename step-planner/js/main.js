@@ -263,7 +263,7 @@ function renderBoard(ws, opt = {}) {
     if (!step.revisit && step.round > 1) reopenedOn.set(step.id, lastReopened(ws, step));
     const key = JSON.stringify([step, filtering ? visible.map((/** @type {any} */ x) => x.id) : null,
       labels.get(step.id) ?? null, step.subs.map((/** @type {any} */ x) => [labels.get(x.id) ?? null, nextIds.has(x.id)]), todayStr,
-      reopenedOn.get(step.id) ?? null, (hand.rows.get(i) || []).length, [step, ...step.subs].map((/** @type {any} */ x) => Hd.insCount(x, hand.idx))]);
+      reopenedOn.get(step.id) ?? null, Hd.insCount(step, hand.idx), handSig(hand.rows.get(i)), [...(hand.gaps.get(step.id) || [])].map(([k, ps]) => [k, handSig(ps)])]);
     const prev = old.get(step.id);
     plan.push({ step, i, visible, key, row: reuse && prev && rowKeys.get(prev) === key ? prev : null, prev });
   });
@@ -368,6 +368,9 @@ function patchRowIndex(row, i) {
   set(row.querySelector(':scope > .step-docs .doc-chips'), 'aria-label', `Docs of step ${i + 1}`);
 }
 
+/** Dấu của vạch / nút bàn giao trong khoá hàng: bên giao, bên nhận, tên đầu ra (tên đổi ở hàng khác cũng vẽ lại). @param {any[]} [pairs] */
+const handSig = (pairs) => (pairs || []).map((p) => [p.from.h.id, p.to.h.id, p.outs.map((/** @type {any} */ o) => o.name)]);
+
 /** Dựng một hàng (bước): đầu bước, băng Reopened, dải tài liệu, hàng thẻ theo ô.
  * @param {any} step @param {number} i @param {any[]} visible
  * @param {{filtering:boolean, todayStr:string, nextIds:Set<string>, labels:Map<string,string>, keep:{notes:Set<string>, open:Set<string>}, reopenedOn:Map<string,string>, hand:any}} ctx */
@@ -421,7 +424,6 @@ function stepRow(step, i, visible, ctx) {
           'aria-label': `${C.plural(x.docs.length, 'doc')}. Open the list`, title: x.docs.map((/** @type {any} */ d) => d.title).join('\n') },
         icon('clip'), String(x.docs.length)),
         proofTag(x),
-        Hd.tags(x, Hd.insCount(x, hand.idx)),
         statusChip(x)),
       h('div', { class: 'card-body' },
         h('h3', { class: 'card-title' }, h('button', { type: 'button', class: 'link', 'data-act': 'edit-sub', 'aria-keyshortcuts': 'Alt+ArrowLeft Alt+ArrowRight Alt+ArrowUp Alt+ArrowDown' }, x.title)),
@@ -442,11 +444,11 @@ function stepRow(step, i, visible, ctx) {
   const gaps = filtering ? null : hand.gaps.get(step.id);
   const slots = C.slotsOf(step.subs).flatMap((sl, si) => {
     const vis = sl.filter((x) => shownIds.has(x.id));
-    const n = gaps?.get(si)?.length || 0;
+    const pairs = gaps?.get(si) || [];
     return [vis.length > 0 && h('li', { class: 'slot' + (sl.length > 1 ? ' par' : ''), 'data-slot': String(si),
-      'aria-label': sl.length > 1 ? `${sl.length} parallel sub-steps` : null }, vis.map(card)), n > 0 && Hd.gapItem(si, n)];
+      'aria-label': sl.length > 1 ? `${sl.length} parallel sub-steps` : null }, vis.map(card)), pairs.length > 0 && Hd.gapItem(si, pairs)];
   });
-  const rowHand = filtering ? 0 : (hand.rows.get(i) || []).length;
+  const rowPairs = filtering ? [] : hand.rows.get(i) || [];
   /* Tài liệu của cả bước: dải chip ngay dưới băng Reopened (hay ở chỗ ấy khi không có băng), trên hàng thẻ. */
   const docs = step.docs.length > 0 && h('div', { class: 'step-docs' },
     h('ul', { class: 'doc-chips', 'aria-label': `Docs of step ${i + 1}` }, step.docs.map(docChip)),
@@ -457,7 +459,7 @@ function stepRow(step, i, visible, ctx) {
       'aria-label': `Add a step before step ${i + 1}`, title: `Add a step here (before step ${i + 1})` }, icon('plus'), h('span', {}, 'Add step')));
   return h('section', { class: 'step' + (step.revisit ? ' revisit' : '') + (done ? ' is-done' : ''), 'data-step': step.id, 'aria-labelledby': 'st-' + step.id },
     gap,
-    rowHand > 0 && Hd.rowMarker(rowHand),
+    rowPairs.length > 0 && Hd.rowMarker(rowPairs),
     band,
     docs,
     head,

@@ -1,5 +1,5 @@
 // @ts-check
-/* Bàn giao (handoff) trên bảng: chip "In n" / "Out n" (thẻ, cột tên bước), vạch giữa hai hàng, nút giữa hai ô, hộp danh
+/* Bàn giao (handoff) trên bảng: chip "In n" / "Out n" (cột tên bước), dải mũi tên trên bước nhận, ô mũi tên trước ô nhận, hộp danh
  * sách (#dlg-hand) có lối nhảy tới bên giao / bên nhận, phần Inputs / Outputs trong hộp sửa, hộp chọn đầu ra (#dlg-pick).
  * Logic thuần: core.js (handoffs, outIndex, consumersOf, insBackup). Chữ người dùng chỉ vào DOM qua text node. */
 import * as C from './core.js';
@@ -21,7 +21,7 @@ export function initHand(d) {
 /** Số đầu vào còn trỏ tới một đầu ra (đầu vào treo, sau khi xoá bên giao, không đếm). @param {any} x @param {Map<string, any>} idx */
 export const insCount = (x, idx) => x.ins.filter((/** @type {string} */ id) => idx.has(id)).length;
 
-/** Chip "In n" / "Out n" của một thẻ hay một bước. Ngoài vòng Tab như nút phụ khác: bàn phím xem trong hộp sửa.
+/** Chip "In n" / "Out n" của một bước (thẻ bước con không có chip: xem trong hộp sửa). Ngoài vòng Tab như nút phụ khác: bàn phím xem trong hộp sửa.
  * @param {any} x @param {number} insN */
 export function tags(x, insN) {
   const { h, icon } = deps;
@@ -32,22 +32,25 @@ export function tags(x, insN) {
     x.outs.length > 0 && tag('hand-out', 'out', `Out ${x.outs.length}`, `${C.plural(x.outs.length, 'output')}: path, contract, who uses it`),
   ];
 }
-/** Vạch giữa bước trên và bước này: mũi tên nét đứt xuống, nút "Handoff · n" ở cột tên bước (tách khỏi nút "Add step").
- * @param {number} n số cặp bên giao → bên nhận */
-export function rowMarker(n) {
+/** Tên các đầu ra được chuyển, không trùng, theo thứ tự cặp. @param {C.Pair[]} pairs */
+const outNames = (pairs) => [...new Set(pairs.flatMap((p) => p.outs.map((/** @type {any} */ o) => o.name)))];
+/** Nút thông tin nằm giữa mũi tên: tên đầu ra đầu tiên, "+n" nếu còn; tên đủ ở aria-label, title.
+ * @param {string} act @param {C.Pair[]} pairs @param {string} lead @param {Record<string, string>} [extra] */
+function infoBtn(act, pairs, lead, extra = {}) {
   const { h, icon } = deps;
-  const label = `Handoff from the step above: ${C.plural(n, 'link')}`;
-  return h('div', { class: 'hand-row' },
-    h('button', { type: 'button', class: 'hand-btn', 'data-act': 'hand-row', tabindex: '-1', 'aria-label': label, title: label },
-      icon('hand-down'), h('span', {}, `Handoff · ${n}`)));
+  const names = outNames(pairs);
+  const label = `${lead}: ${names.join(', ')}. Show details`;
+  return h('button', { type: 'button', class: 'hand-btn', 'data-act': act, tabindex: '-1', 'aria-label': label, title: label, ...extra },
+    icon('info'), h('span', { class: 'hand-btn-name' }, names[0] || ''), names.length > 1 && h('span', { class: 'hand-btn-more' }, `+${names.length - 1}`));
 }
-/** Nút chung giữa ô k và ô k + 1 của một hàng. @param {number} k @param {number} n */
-export function gapItem(k, n) {
-  const { h, icon } = deps;
-  const label = `Handoff to the next column: ${C.plural(n, 'link')}`;
-  return h('li', { class: 'hand-gap' },
-    h('button', { type: 'button', class: 'hand-btn', 'data-act': 'hand-gap', 'data-gap': String(k), tabindex: '-1', 'aria-label': label, title: label },
-      icon('hand-right'), h('span', {}, `Handoff · ${n}`)));
+/** Dải trên bước này: mũi tên nét đứt từ bước trên xuống, nút thông tin ở giữa (cặp từ mọi bước trước vào bước này).
+ * @param {C.Pair[]} pairs */
+export function rowMarker(pairs) {
+  return deps.h('div', { class: 'hand-row' }, infoBtn('hand-row', pairs, 'Handoff into this step'));
+}
+/** Ô trống rộng bằng một thẻ trước ô k + 1: mũi tên nét đứt trái sang phải, nút thông tin ở giữa. @param {number} k @param {C.Pair[]} pairs */
+export function gapItem(k, pairs) {
+  return deps.h('li', { class: 'hand-gap' }, infoBtn('hand-gap', pairs, 'Handoff into the next column', { 'data-gap': String(k) }));
 }
 
 /** Bấm trên bảng: trả true nếu là việc của bàn giao. @param {string} act @param {any} b @param {any} step @param {any} sub */
@@ -57,10 +60,13 @@ export function boardAct(act, b, step, sub) {
   const hd = { h: sub || step, step, sub: sub || null, i: ws.steps.indexOf(step) };
   if (act === 'hand-in') showIns(ws, hd);
   else if (act === 'hand-out') showOuts(ws, hd);
-  else if (act === 'hand-row') showPairs(ws, C.handoffs(ws).rows.get(hd.i) || [], 'From the step above', `Step ${quote(ws.steps[hd.i - 1]?.title || '')} → step ${quote(step.title)}`);
-  else if (act === 'hand-gap') {
+  else if (act === 'hand-row') {
+    const pairs = C.handoffs(ws).rows.get(hd.i) || [];
+    const near = pairs.every((p) => p.from.i === hd.i - 1);
+    showPairs(ws, pairs, near ? 'From the step above' : 'From earlier steps', `Into step ${quote(step.title)}`);
+  } else if (act === 'hand-gap') {
     const k = Number(b.dataset.gap);
-    showPairs(ws, C.handoffs(ws).gaps.get(step.id)?.get(k) || [], 'To the next column', `Step ${quote(step.title)} · column ${k + 1} → ${k + 2}`);
+    showPairs(ws, C.handoffs(ws).gaps.get(step.id)?.get(k) || [], 'From earlier columns', `Step ${quote(step.title)} · into column ${k + 2}`);
   } else return false;
   return true;
 }
