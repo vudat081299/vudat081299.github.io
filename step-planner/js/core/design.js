@@ -145,7 +145,8 @@ export function notNeededBy(stage, profile) {
 }
 
 /**
- * Áp lối vào thiết kế: chỉ khâu chưa quyết. Khâu lối bỏ (`skip`) hay hồ sơ cho là không cần (`when`) thành "không cần"; khâu
+ * Áp lối vào thiết kế: chỉ khâu chưa quyết. Khâu lối bỏ (`skip`, trừ khi `when` của khâu nêu đúng câu trả lời của hồ sơ) hay
+ * hồ sơ cho là không cần (`when`) thành "không cần"; khâu
  * lối cần (`need`) có gợi ý thì chọn phương án đứng đầu (hợp hồ sơ, ưu tiên gợi ý của lối). Khâu `maybe` để người dùng tự
  * quyết. Không đụng khâu đã quyết. Không tự gây luật báo: trong các phương án hợp, chọn cái đầu tiên làm ít luật (trừ `caveat`)
  * báo ở khâu ấy nhất. Không phương án nào hợp hồ sơ, hay bỏ khâu / phương án lấy được mà vẫn làm luật báo: để khâu ấy cho
@@ -167,7 +168,10 @@ export function applyPath(cat, design, pathId) {
     if (stageState(d, s.id) !== 'open') continue;
     const need = path.stages[s.id];
     const rec = d.stages[s.id] || { pick: [], skip: false, own: '', note: '' };
-    if (need === 'skip' || notNeededBy(s, prof).length) {
+    /* Lối bỏ khâu mà `when` của khâu nêu đúng câu trả lời của hồ sơ (lối báo cáo, sản phẩm dùng LLM: khâu tìm kiếm): hồ sơ
+     * nói cần, để người dùng quyết. */
+    const wanted = Object.entries(isObj(s.when) ? s.when : {}).some(([k, v]) => !!prof[k] && Array.isArray(v) && v.includes(prof[k]));
+    if ((need === 'skip' && !wanted) || notNeededBy(s, prof).length) {
       if (clash(s.id, { ...rec, skip: true })) continue;
       rec.skip = true;
       skipped.push(s.id);

@@ -715,12 +715,16 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   const grid = GRID_Q.reduce((acc, q) => acc.flatMap((p) => [...(q === 'latency' ? [p] : []),
     ...cat.profile.find((x) => x.id === q).choices.map((c) => ({ ...p, [q]: c.id }))]), [{}]);
   const hard = (d, ids) => warnings(cat, normDesign(d)).filter((w) => !w.caveat && !EXCEPT.has(w.id) && w.stages.some((x) => ids.includes(x)));
-  const selfWarn = new Set(), misfitGrid = new Set();
+  const selfWarn = new Set(), misfitGrid = new Set(), wantedSkip = new Set();
   for (const pp of cat.paths) {
     for (const profile of grid) {
       const r = applyPath(cat, { path: '', profile, stages: {}, edges: {} }, pp.id);
       for (const w of hard(r.next, [...r.filled, ...r.skipped])) selfWarn.add(`${pp.id}/${w.id} ${JSON.stringify(profile)}`);
       const eff = effProfile(cat, r.next);
+      for (const sid of r.skipped) {
+        const when = cat.stages.find((x) => x.id === sid).when || {};
+        for (const [q, ok] of Object.entries(when)) if (eff[q] && ok.includes(eff[q])) wantedSkip.add(`${pp.id}/${sid} ${q}=${eff[q]}`);
+      }
       for (const sid of r.filled) {
         for (const o of r.next.stages[sid].pick) {
           const f = fitOf(cat.stages.find((x) => x.id === sid).options.find((x) => x.id === o), eff);
@@ -733,6 +737,11 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   check('thiết kế: Apply path không chọn phương án lệch hồ sơ; không phương án nào hợp thì để khâu trống', !misfitGrid.size
     && !applyPath(cat, { path: '', profile: { users: 'public', budget: 'free', selfhost: 'yes' }, stages: {}, edges: {} }, 'api').next.stages.host,
   [...misfitGrid].slice(0, 5).join(' | '));
+  /* Lối bỏ khâu mà `when` của khâu nêu đúng câu trả lời (lối report, ai = llm: khâu search): khâu để trống, nên gợi ý kiến
+   * trúc (RAG) không ngược với khâu Not needed. */
+  const llm = applyPath(cat, { path: '', profile: { ai: 'llm' }, stages: {}, edges: {} }, 'report');
+  check('thiết kế: Apply path không bỏ khâu mà hồ sơ nói cần (`when` khớp), kể cả khi lối bỏ', !wantedSkip.size && !llm.next.stages.search
+    && !llm.skipped.includes('search'), [...wantedSkip].slice(0, 5).join(' | '));
   /* Mỗi kiến trúc được gợi ý có ở mỗi khâu ít nhất một công cụ không làm luật báo; khâu đã quyết theo luật gợi ý cũng thử
    * khi X hợp hồ sơ (luật nói "đã chọn X nên là kiến trúc Y" thì Y phải có công cụ dùng được). Gợi ý "không cần" thì khâu ấy
    * không bị báo. */
