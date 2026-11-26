@@ -1435,10 +1435,15 @@ html { scrollbar-gutter: stable; }   /* khoá cuộn không làm trang nhảy ng
 .hand-row::before { top: calc(-1 * var(--s4)); bottom: var(--mark-w); left: 50%; border-left: var(--mark-w) dashed var(--ink-4); transform: translateX(-50%); }
 .hand-row::after { bottom: var(--mark-w); left: 50%; transform: translateX(-50%) rotate(135deg); }
 /* Trước ô nhận: một ô rộng bằng thẻ, mũi tên trái sang phải ngang nửa thẻ thấp nhất, nút ở giữa. */
-.hand-gap { flex: 0 0 var(--card-w); height: var(--card-min); padding-inline: var(--s2); }
+.hand-gap { flex: 0 0 var(--card-w); min-width: 0; height: var(--card-min); padding-inline: var(--s2); }
 .board.compact .hand-gap { height: var(--card-min-compact); }
 .hand-gap::before { left: var(--s1); right: var(--s1); top: 50%; border-top: var(--mark-w) dashed var(--ink-4); transform: translateY(-50%); }
 .hand-gap::after { right: var(--s1); top: 50%; transform: translateY(-50%) rotate(45deg); }
+/* Nút giữa hai ô dài tối đa nửa nét đứt: nét = ô − 2·--s1, còn % tính trên phần nội dung = ô − 2·--s2.
+   Tên tràn thì mờ dần ở đuôi thay dấu "…" (hand.js gắn .cut khi chữ tràn); icon và "+n" luôn hiện đủ. */
+.hand-gap .hand-btn { max-width: calc((100% + 2 * var(--s2) - 2 * var(--s1)) / 2); }
+.hand-gap .hand-btn-name { text-overflow: clip; }
+.hand-gap .hand-btn-name.cut { mask-image: linear-gradient(to right, var(--mask) calc(100% - var(--s5)), transparent); }
 /* Đang kéo: thu hẳn lại (drag.js cho các khối trượt khít vào), thả xong bảng vẽ lại. */
 .dragging-any :is(.hand-row, .hand-gap) { display: none; }
 /* Tô bên giao và bên nhận khi nhảy tới (main.js gỡ lớp sau --flash-dur). */
