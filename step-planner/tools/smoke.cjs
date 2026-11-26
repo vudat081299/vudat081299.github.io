@@ -834,6 +834,25 @@ const check = (name, ok, detail = '') => {
   await page.keyboard.press('Tab');
   const rg2 = await ring();
   check('sau Esc, bấm Tab: vòng focus hiện lại', rg2.fv && rg2.w > 0, JSON.stringify(rg2));
+  // Vòng focus của tên thẻ nằm trọn trong vùng cắt của thân thẻ (overflow: hidden), ở mọi thẻ có tên vừa thân.
+  const ringClip = await page.evaluate(() => {
+    const bad = [];
+    let n = 0;
+    for (const c of document.querySelectorAll('#board .card[data-sub]')) {
+      const t = /** @type {HTMLElement} */ (c.querySelector('.card-title [data-act="edit-sub"]')), body = c.querySelector('.card-body');
+      t.focus({ focusVisible: true });
+      const cs = getComputedStyle(t);
+      if (!t.matches(':focus-visible') || cs.outlineStyle === 'none') { bad.push('no ring ' + c.dataset.sub); continue; }
+      const o = parseFloat(cs.outlineWidth) + parseFloat(cs.outlineOffset), r = t.getBoundingClientRect(), b = body.getBoundingClientRect();
+      if (r.height + 2 * o > b.height) continue; // tên cao hơn cả thân (thẻ bị cắt): không đo
+      n++;
+      if (r.left - o < b.left - 0.5 || r.right + o > b.right + 0.5 || r.top - o < b.top - 0.5 || r.bottom + o > b.bottom + 0.5)
+        bad.push(`${c.dataset.sub}: ring ${[r.left - o, r.top - o, r.right + o, r.bottom + o].map(Math.round)} body ${[b.left, b.top, b.right, b.bottom].map(Math.round)}`);
+    }
+    /** @type {HTMLElement} */ (document.activeElement).blur();
+    return { n, bad };
+  });
+  check('focus tên thẻ: vòng focus nằm trọn trong vùng cắt của thân thẻ', ringClip.n > 3 && ringClip.bad.length === 0, JSON.stringify(ringClip));
 
   // Tài liệu của bước con: nhãn kẹp trên thẻ, sửa trong hộp bước con; xoá có Hoàn tác ngay trong hộp.
   const dsub = (await cur(page)).steps[1].subs[0];
