@@ -2151,18 +2151,21 @@ const check = (name, ok, detail = '') => {
 
     // Nút giữa hai ô: danh sách cặp; chọn dòng thì đóng hộp, tô cả hai thẻ, focus bên nhận, không cuộn trang lẫn hàng thẻ.
     // Khung nhìn hẹp, thẻ nhận lấn ra ngoài mép dưới trang và mép phải hàng thẻ: cách cũ (cuộn tới) phải cuộn cả hai.
-    // off: thẻ nhận lấn ra ngoài mép dưới khung nhìn, mép phải hàng thẻ bao nhiêu px.
+    // off: thẻ nhận lấn ra ngoài mép dưới khung nhìn, mép phải hàng thẻ bao nhiêu px; tên thẻ (chỗ focus) nằm hẳn ngoài mép phải
+    // hàng thẻ: focus mà không preventScroll là hàng thẻ cuộn.
     const scrollPos = () => hp.evaluate(() => {
       const c = document.querySelector('.card[data-sub="hC"]').getBoundingClientRect();
+      const t = document.querySelector('.card[data-sub="hC"] [data-act="edit-sub"]').getBoundingClientRect();
       const row = document.querySelector('.card[data-sub="hC"]').closest('.cards-scroll');
-      return { x: scrollX, y: scrollY, row: row.scrollLeft, off: [Math.round(c.bottom - innerHeight), Math.round(c.right - row.getBoundingClientRect().right)] };
+      const rr = row.getBoundingClientRect();
+      return { x: scrollX, y: scrollY, row: row.scrollLeft, off: [Math.round(c.bottom - innerHeight), Math.round(c.right - rr.right), Math.round(t.left - rr.right)] };
     });
     await hp.setViewportSize({ width: 760, height: 600 });
     await hp.evaluate(() => {
       const c = document.querySelector('.card[data-sub="hC"]');
       window.scrollBy(0, c.getBoundingClientRect().bottom - innerHeight - 12);
       const row = c.closest('.cards-scroll');
-      row.scrollLeft += c.getBoundingClientRect().right - row.getBoundingClientRect().right - 12;
+      row.scrollLeft += c.querySelector('[data-act="edit-sub"]').getBoundingClientRect().left - row.getBoundingClientRect().right - 8;
       const g = document.querySelector('[data-act="hand-gap"]'); // bấm qua DOM: hp.click tự cuộn nút vào khung nhìn
       g.focus({ preventScroll: true });
       g.click();
