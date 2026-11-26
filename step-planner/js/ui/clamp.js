@@ -115,12 +115,17 @@ let resizeFrame = 0;
 
 /** Gắn sự kiện, chạy một lần lúc khởi động (main.js gọi theo thứ tự). */
 export function initClamp() {
-  $('board').addEventListener('scroll', (/** @type {any} */ e) => { if (e.target.classList?.contains('cards-scroll')) updateScrollCues([e.target]); }, true);
+  /** @type {Set<Element>} */
+  const scrolled = new Set();
+  let cueFrame = 0;
+  $('board').addEventListener('scroll', (/** @type {any} */ e) => {
+    if (!e.target.classList?.contains('cards-scroll')) return;
+    scrolled.add(e.target);
+    if (!cueFrame) cueFrame = requestAnimationFrame(() => { cueFrame = 0; updateScrollCues([...scrolled]); scrolled.clear(); });
+  }, true);
 
   window.addEventListener('resize', () => {
-    updateScrollCues();
-    fadeGapNames($('board'));
-    if (!resizeFrame) resizeFrame = requestAnimationFrame(() => { resizeFrame = 0; remeasureCut(); });
+    if (!resizeFrame) resizeFrame = requestAnimationFrame(() => { resizeFrame = 0; updateScrollCues(); fadeGapNames($('board')); remeasureCut(); });
   });
   /* Hàng dùng lại không được đo lại: font tải xong sau lần vẽ đầu (chữ dàn lại) thì đo lại mọi khối, giữ khối đang mở. */
   document.fonts?.addEventListener('loadingdone', () => {

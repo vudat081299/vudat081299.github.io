@@ -5,7 +5,7 @@
    Dùng: core/board.js, core/io.js, core/model.js, ui/board.js, ui/design.js, ui/dom.js, ui/export.js, ui/filter.js,
      ui/log.js, ui/move.js, ui/start.js, ui/state.js, ui/store.js. */
 import * as S from './store.js';
-import { renderSection as renderDesign } from './design.js';
+import { mdLabels, renderSection as renderDesign } from './design.js';
 import { overall } from '../core/board.js';
 import { plural } from '../core/io.js';
 import { STATUSES, STATUS_LABEL } from '../core/model.js';
@@ -40,8 +40,21 @@ export function render(opt = {}) {
   $('log-btn-text').textContent = `Log (${ws.log.length})`;
   renderNextWait(ws);
   renderBoard(ws, opt);
-  renderDesign();
+  const key = designKey(ws);
+  if (key !== lastDesign) { lastDesign = key; renderDesign(); }
   renderLog(ws, opt);
+}
+
+/* Mục System design dựng lại sơ đồ SVG, planDiff, luật báo: chỉ khi thứ nó đọc đổi — dự án, thiết kế, danh mục đã nạp, bề
+ * rộng khung, theme, font đã tải xong chưa, và phần của các bước mà planDiff đọc (tên bước; mỗi bước con: sd, tên, Done when, có huỷ / bỏ qua không).
+ * Đổi trạng thái thường (New, In progress, Done…), lọc, tìm, Compact thì không vẽ lại. Đổi cỡ, nạp danh mục: ui/design.js tự vẽ. */
+let lastDesign = '';
+/** @param {any} ws */
+function designKey(ws) {
+  const steps = ws.steps.map((/** @type {any} */ s) => [s.title, s.subs.map((/** @type {any} */ x) => [x.sd || '', x.title, x.doneWhen,
+    x.status === 'cancel' || x.status === 'skip'])]);
+  return JSON.stringify([ws.id, ws.design, !!mdLabels(), $('sd-fig').clientWidth, document.documentElement.dataset.theme || '',
+    document.fonts?.status || '', steps]);
 }
 
 /** Chú giải bảy trạng thái (chip mẫu + chữ + số bước con), cũng là tiến độ chi tiết của dự án. @param {any} ws */

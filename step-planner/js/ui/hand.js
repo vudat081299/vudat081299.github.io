@@ -112,8 +112,8 @@ export function gapItem(k, pairs) {
 /** Tên trên nút giữa hai ô dài hơn chỗ của nó thì mờ dần ở đuôi (lớp .cut); CSS không tự biết chữ có tràn hay không.
  * Đọc hết rồi mới ghi; nút đang ẩn (đang kéo) giữ nguyên. Gọi sau mỗi lần vẽ bảng, khi đổi cỡ cửa sổ, khi font tải xong.
  * @param {ParentNode} [root] */
-export function fadeGapNames(root = document) {
-  const m = [...root.querySelectorAll('.hand-gap .hand-btn-name')].filter((el) => el.clientWidth > 0).map((el) => /** @type {[Element, boolean]} */ ([el, el.scrollWidth > el.clientWidth]));
+export function fadeGapNames(root = /** @type {ParentNode | ParentNode[]} */ (document)) {
+  const m = (Array.isArray(root) ? root : [root]).flatMap((r) => [...r.querySelectorAll('.hand-gap .hand-btn-name')]).filter((el) => el.clientWidth > 0).map((el) => /** @type {[Element, boolean]} */ ([el, el.scrollWidth > el.clientWidth]));
   for (const [el, cut] of m) el.classList.toggle('cut', cut);
 }
 
