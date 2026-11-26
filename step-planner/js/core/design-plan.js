@@ -4,7 +4,7 @@
    Xuất: snake, diagramNodes, bothDecided, flowEdges, viaLabel, PLAN_STEP, planTasks, SD_RE, planDiff, applyPlan.
    Dùng: core/design.js, core/model.js. */
 import { VIA, pickNames, stageState } from './design.js';
-import { normDoc, normSub, setStatus } from './model.js';
+import { SD_KEPT, normDoc, normSub, setStatus } from './model.js';
 
 /* ── Sơ đồ: khâu theo đường đi của dữ liệu xếp kiểu rắn bò (hàng chẵn trái → phải, hàng lẻ phải → trái), nên hai khâu
  * liền nhau luôn kề ngang hoặc thẳng dọc — mũi tên không bao giờ cắt nhau ở mọi số cột. ── */
@@ -118,7 +118,8 @@ export function planTasks(catalog, design) {
 }
 
 /* ── Giữ kế hoạch theo thiết kế: so việc sinh từ thiết kế với bước con đã sinh trước (theo `sd`; bước con cũ không có `sd`
- * thì theo tên trong bước "System build": đúng tên, rồi mở bằng `Tên khâu:`). ── */
+ * thì theo tên trong bước "System build": đúng tên, rồi mở bằng `Tên khâu:`). Bước con mang `SD_KEPT` (người dùng chọn Keep)
+ * không đối chiếu nữa. ── */
 
 export const SD_RE = /^(stage|edge):([a-z0-9>-]{1,81})@([a-z0-9]{1,13})$/;
 const foldT = (/** @type {string} */ s) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D').toLowerCase().trim();
@@ -185,15 +186,16 @@ export function planDiff(cat, ws) {
 /**
  * Áp bản so vào dự án (sửa tại chỗ). `choices[i]`: new → 'add' | 'skip'; changed → 'update' | 'replace' | 'leave';
  * removed → 'cancel' | 'keep'. Update: thay tên, Done when, thêm tài liệu và dòng ghi chú mới (giữ của người dùng); bước con
- * Done về New. Replace: bước con cũ huỷ (lý do "Replaced in system design: …"), thêm việc mới. Cancel / Keep: bỏ dấu `sd`.
- * Việc khớp theo tên (chưa có `sd`) được gắn `sd`.
+ * Done về New. Replace: bước con cũ huỷ (lý do "Replaced in system design: …"), thêm việc mới. Cancel: bỏ dấu `sd`. Keep: dấu
+ * `sd` thành `SD_KEPT` — việc của người dùng, lần so sau không đối chiếu nữa (kể cả theo tên). Việc khớp theo tên (chưa có
+ * `sd`) được gắn `sd`.
  * @param {any[]} items @param {string[]} choices @param {any} target bước nhận việc mới
- * @returns {{before: Map<string, any>, added: string[], counts: {added: number, updated: number, cancelled: number, reset: number}}}
+ * @returns {{before: Map<string, any>, added: string[], counts: {added: number, updated: number, cancelled: number, reset: number, kept: number}}}
  */
 export function applyPlan(items, choices, target) {
   const before = new Map();
   /** @type {string[]} */ const added = [];
-  const counts = { added: 0, updated: 0, cancelled: 0, reset: 0 };
+  const counts = { added: 0, updated: 0, cancelled: 0, reset: 0, kept: 0 };
   const keep = (/** @type {any} */ x) => { if (!before.has(x.id)) before.set(x.id, JSON.parse(JSON.stringify(x))); };
   const tag = (/** @type {any} */ t) => `${t.src}@${t.sig}`;
   const add = (/** @type {any} */ t) => {
@@ -226,9 +228,10 @@ export function applyPlan(items, choices, target) {
       delete x.sd;
       counts.cancelled++;
       if (it.kind === 'changed') add(it.task);
-    } else if (it.kind === 'removed' && ch === 'keep' && x.sd) {
+    } else if (it.kind === 'removed' && ch === 'keep') {
       keep(x);
-      delete x.sd;
+      x.sd = SD_KEPT;
+      counts.kept++;
     }
   });
   return { before, added, counts };

@@ -38,8 +38,9 @@ export function normEdge(v) {
   return e.via || e.what || e.where || e.promise || e.check ? e : null;
 }
 
-/** @param {any} v @returns {string[]} */
-const idList = (v) => (Array.isArray(v) ? [...new Set(v.filter((x) => typeof x === 'string' && ID.test(x)))] : []);
+/** Id phương án đã chọn; `skip`, `own` là khoá dành riêng của luật (khâu không cần, công cụ tự ghi), không là id phương án.
+ * @param {any} v @returns {string[]} */
+const idList = (v) => (Array.isArray(v) ? [...new Set(v.filter((x) => typeof x === 'string' && ID.test(x) && x !== 'skip' && x !== 'own'))] : []);
 
 /**
  * Khoá và id chỉ là chữ thường, số, gạch nối (id lạ của danh mục cũ vẫn giữ: giao diện bỏ qua cái không còn).
@@ -145,10 +146,12 @@ export function notNeededBy(stage, profile) {
 }
 
 /**
- * Áp lối vào thiết kế: chỉ khâu chưa quyết. Khâu lối bỏ (`skip`) hay hồ sơ cho là không cần (`when`) thành "không cần"; khâu
+ * Áp lối vào thiết kế: chỉ khâu chưa quyết. Khâu lối bỏ (`skip`, trừ khi `when` của khâu nêu đúng câu trả lời của hồ sơ) hay
+ * hồ sơ cho là không cần (`when`) thành "không cần"; khâu
  * lối cần (`need`) có gợi ý thì chọn phương án đứng đầu (hợp hồ sơ, ưu tiên gợi ý của lối). Khâu `maybe` để người dùng tự
  * quyết. Không đụng khâu đã quyết. Không tự gây luật báo: trong các phương án hợp, chọn cái đầu tiên làm ít luật (trừ `caveat`)
- * báo ở khâu ấy nhất. Bỏ khâu hay phương án lấy được mà vẫn làm luật báo thì để khâu ấy cho người dùng quyết.
+ * báo ở khâu ấy nhất. Không phương án nào hợp hồ sơ, hay bỏ khâu / phương án lấy được mà vẫn làm luật báo: để khâu ấy cho
+ * người dùng quyết.
  * @param {any} cat @param {any} design @param {string} pathId
  * @returns {{next: any, filled: string[], skipped: string[]}}
  */
@@ -166,18 +169,22 @@ export function applyPath(cat, design, pathId) {
     if (stageState(d, s.id) !== 'open') continue;
     const need = path.stages[s.id];
     const rec = d.stages[s.id] || { pick: [], skip: false, own: '', note: '' };
-    if (need === 'skip' || notNeededBy(s, prof).length) {
+    /* Lối bỏ khâu mà `when` của khâu nêu đúng câu trả lời của hồ sơ (lối báo cáo, sản phẩm dùng LLM: khâu tìm kiếm): hồ sơ
+     * nói cần, để người dùng quyết. */
+    const wanted = Object.entries(isObj(s.when) ? s.when : {}).some(([k, v]) => !!prof[k] && Array.isArray(v) && v.includes(prof[k]));
+    if ((need === 'skip' && !wanted) || notNeededBy(s, prof).length) {
       if (clash(s.id, { ...rec, skip: true })) continue;
       rec.skip = true;
       skipped.push(s.id);
     } else if (need === 'need' && path.suggest[s.id]) {
       const r = rankOptions(s, prof, path);
       const ok = r.filter((x) => x.ok).map((x) => ({ x, n: clash(s.id, { ...rec, pick: [x.opt.id] }) }));
-      const best = ok.length ? ok.reduce((a, b) => (b.n < a.n ? b : a)).x : (r.find((x) => x.sug) || r[0]);
-      /* Phương án lấy được vẫn làm luật báo (vd. người dùng công khai, ngân sách miễn phí, chỉ tự host: không công cụ hợp nào né được):
-       * để khâu cho người dùng quyết. */
-      if (clash(s.id, { ...rec, pick: [best.opt.id] })) continue;
-      rec.pick = [best.opt.id];
+      /* Không phương án nào hợp hồ sơ (vd. người dùng công khai, ngân sách miễn phí, chỉ tự host), hay phương án hợp nhất vẫn
+       * làm luật báo: để khâu cho người dùng quyết. */
+      if (!ok.length) continue;
+      const best = ok.reduce((a, b) => (b.n < a.n ? b : a));
+      if (best.n) continue;
+      rec.pick = [best.x.opt.id];
       filled.push(s.id);
     } else continue;
     d.stages[s.id] = rec;

@@ -138,6 +138,7 @@ export function boardAct(act, b, step, sub) {
 /** Tên hiện thay cho đầu vào mất nguồn (bên giao đã xoá), ở hộp danh sách và hộp sửa. */
 const GONE = 'Deleted output';
 const goneText = 'Its output was deleted. Remove this input, or undo the delete.';
+const selfText = 'This output is made inside this step, so it is not an input of the step. Remove it here.';
 
 /** Nút nhảy → các bên cần tô; `scroll` false là không cuộn (dòng của danh sách cặp).
  * @type {WeakMap<Element, {targets: {stepId:string, subId:string|null}[], scroll: boolean}>} */
@@ -381,6 +382,10 @@ function paintIns(where) {
     if (!src) return h('li', { class: 'in-chip gone', 'data-in': id, title: goneText },
       icon('in'), h('span', { class: 'in-text' }, h('b', {}, GONE), h('small', {}, 'its source no longer exists')),
       h('button', { type: 'button', class: 'icon-btn', 'data-in-del': '', 'aria-label': `Remove input (${GONE.toLowerCase()})`, title: 'Remove input' }, icon('x')));
+    /* Đầu ra của chính nó hay của bước con của nó (bước con được dời vào bước sau khi đã nối): không chọn được, chỉ gỡ. */
+    if (draft[where].own.has(id)) return h('li', { class: 'in-chip gone', 'data-in': id, title: selfText },
+      icon('in'), h('span', { class: 'in-text' }, h('b', {}, src.out.name), h('small', {}, `from ${holderTitle(src)} · inside this step, not an input`)),
+      h('button', { type: 'button', class: 'icon-btn', 'data-in-del': '', 'aria-label': `Remove input ${src.out.name}`, title: 'Remove input' }, icon('x')));
     const on = held.has(src.out.id), p = par.has(src.out.id);
     return h('li', { class: 'in-chip' + (on ? ' held' : ''), 'data-in': src.out.id, title: on ? heldText(holderTitle(src), p) : null },
     icon('in'), h('span', { class: 'in-text' }, h('b', {}, src.out.name),

@@ -2784,6 +2784,16 @@ const check = (name, ok, detail = '') => {
     const jumped = await hp.evaluate(() => ({ q: document.getElementById('q').value, act: document.activeElement.dataset.act, step: document.activeElement.closest('[data-step]')?.dataset.step }));
     check('bàn giao: tìm khớp tên đầu ra; chip Out liệt kê nơi dùng, nhảy tới bước bị lọc thì bỏ lọc', same(found, ['hA']) && /Used by.*Report/.test(usedTxt)
       && jumped.q === '' && jumped.act === 'edit-step' && jumped.step === 'h3', JSON.stringify({ found, usedTxt, jumped }));
+    // Nơi dùng bị lọc trạng thái ẩn (Done: bước Report không còn thẻ nào): nhảy tới thì bỏ cả lọc trạng thái.
+    await hp.click('.st-filter .dd-btn');
+    await hp.click('.dd-pop [role="option"][data-value="done"]');
+    const hiddenH3 = !(await hp.$('.step[data-step="h3"]'));
+    await hp.click('.step[data-step="h1"] [data-act="hand-out"]');
+    await hp.locator('#hand-list .hand-who', { hasText: 'Report' }).click();
+    const jumpedSt = await hp.evaluate(() => ({ st: document.querySelector('.st-filter .dd-btn').textContent.trim(), act: document.activeElement.dataset.act,
+      step: document.activeElement.closest('[data-step]')?.dataset.step }));
+    check('bàn giao: nhảy tới nơi dùng bị lọc trạng thái ẩn thì bỏ lọc trạng thái (All statuses), focus vào nó', hiddenH3
+      && jumpedSt.st === 'All statuses' && jumpedSt.act === 'edit-step' && jumpedSt.step === 'h3', JSON.stringify({ hiddenH3, jumpedSt }));
 
     // Đang kéo thẻ: mũi tên thu hẳn lại, các ô trong hàng khít nhau (không có khoảng trống rộng bằng thẻ); Esc huỷ, mũi tên về.
     await hp.locator('.card[data-sub="hA"]').scrollIntoViewIfNeeded();
@@ -3308,6 +3318,33 @@ const check = (name, ok, detail = '') => {
     const [, k, n] = nav.t.match(/(\d+) of (\d+) recommended/) || [];
     check('Architecture: chưa đủ gợi ý cho mọi nhóm thì mục chưa xong', /\bis-open\b/.test(nav.cls) && !/\bis-done\b/.test(nav.cls) && +k >= 1 && +k < +n, JSON.stringify(nav));
     await nx.close();
+  });
+
+  /* ── Bước nhận đầu ra của bước con của chính nó (bước con dời vào sau khi đã nối): chấm đầu vào của bước "none"; hộp sửa bước
+   * hiện chip "inside this step" để gỡ, hộp chọn không đưa ra đầu ra ấy. ── */
+  await section('Đầu vào trong chính bước', async () => {
+    const seed = { version: 2, lastId: 'wi', workspaces: [{ id: 'wi', name: 'Trong bước', steps: [
+      { id: 'i1', title: 'Prep', subs: [{ id: 'iz', title: 'Other', outs: [{ id: 'oz', name: 'other' }] }] },
+      { id: 'i2', title: 'Use', ins: ['oi'], subs: [{ id: 'ix', title: 'Make table', outs: [{ id: 'oi', name: 'table' }] }, { id: 'iy', title: 'Read' }] }], log: [] }] };
+    const ic = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+    await ic.addInitScript((d) => { if (!sessionStorage.getItem('seeded')) { sessionStorage.setItem('seeded', '1'); localStorage.setItem('stepPlanner.v2', d); } }, JSON.stringify(seed));
+    const ip = await ic.newPage();
+    ip.on('pageerror', (e) => errors.push(String(e)));
+    await ip.goto(BASE);
+    await ip.waitForSelector('.card[data-sub="ix"]');
+    const dotIn = await ip.$eval('.step[data-step="i2"] .step-top .io', (el) => el.dataset.ioIn);
+    await ip.click('.step[data-step="i2"] [data-act="edit-step"]');
+    const chip = await ip.$eval('#step-hand [data-ins] .in-chip', (el) => ({ cls: el.className, t: el.textContent, title: el.title }));
+    await ip.click('#step-hand [data-in-pick]');
+    const offered = await ip.$$eval('#pick-groups input[name="pick"]', (cs) => cs.map((c) => c.value));
+    await ip.keyboard.press('Escape');
+    await ip.click('#step-hand .in-chip [data-in-del]');
+    await ip.click('#step-form button[type="submit"]');
+    const w = await cur(ip);
+    check('đầu vào trong chính bước: chấm đầu vào của bước none; hộp sửa ghi "inside this step" (chip lỗi), hộp chọn không đưa ra; gỡ được',
+      dotIn === 'none' && /\bgone\b/.test(chip.cls) && /inside this step/.test(chip.t) && /not an input/.test(chip.title) && !offered.includes('oi')
+      && JSON.stringify(w.steps[1].ins) === '[]', JSON.stringify({ dotIn, chip, offered, ins: w.steps[1].ins }));
+    await ic.close();
   });
 
   /* ── Dữ liệu lưu bị hỏng ── */

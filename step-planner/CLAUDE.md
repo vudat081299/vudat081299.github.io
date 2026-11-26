@@ -44,7 +44,7 @@
 - `due`, `doneAt`: `YYYY-MM-DD` hoặc rỗng. `doneAt`: ngày sang Done (`setStatus`), chỉ giữ khi `done`; dữ liệu cũ rỗng, không bịa ngày.
 - `par: true` = nhập ô của bước con ngay trước; `subs[0].par` luôn false. Ô (slot), chỗ (`Place`), mọi phép dời ở `core/board.js`.
 - `redo: true` = được gửi lại làm trong vòng đang mở; bước không mở lại thì mọi `redo` là false.
-- `sd`: `stage:<khâu>@<chữ ký>` hoặc `edge:<a>><b>@<chữ ký>`, chỉ ở bước con System design sinh ra; nhân bản bước con thì bỏ.
+- `sd`: `stage:<khâu>@<chữ ký>` hoặc `edge:<a>><b>@<chữ ký>`, chỉ ở bước con System design sinh ra; nhân bản bước con thì bỏ. `kept`: đã chọn Keep, nhân bản giữ.
 - Doc `{id, kind: 'link', title, url, proof}` hoặc `{id, kind: 'md', title, body, proof}`. `url` chỉ http(s) (`safeUrl`); link
   khác bị bỏ (nhập thì cảnh báo). `body` giữ nguyên từng dòng. `proof: true` = bằng chứng cho "Done when".
 - Out `{id, name, ref, note}`: `name` bắt buộc (không tên thì bỏ); `ref` đường dẫn file hay link; `note` hợp đồng một dòng.
@@ -105,7 +105,7 @@
 ## Bàn giao (outs / ins)
 
 - Đầu ra khai ở bước / bước con tạo ra nó; nơi dùng chọn "Use existing output". Một đầu ra nhiều nơi dùng; liên kết theo id.
-- Bước không chọn được đầu ra của chính nó và các bước con của nó. Inputs / Outputs lưu cùng Save của hộp sửa.
+- Bước không chọn được đầu ra của chính nó và các bước con của nó; có sẵn (dời bước con vào) thì không tính, hộp sửa ghi "inside this step" để gỡ. Inputs / Outputs lưu cùng Save.
 - Thẻ bước con không liệt kê đầu vào, đầu ra; xem và sửa trong hộp sửa. Bước có chip "In n" (mọi đầu vào, kể cả treo, mất nguồn), "Out n".
 - Thẻ và đầu bước hiện trạng thái đầu vào, đầu ra (`ioStatus`, PLAN-025): ổn, lỗi, không có; không có cả hai thì không hiện.
   Đầu vào lỗi: treo hoặc trỏ tới đầu ra không còn. Bước gộp đầu vào của bước con: có đầu vào khi nó hay một bước con nhận từ
@@ -162,8 +162,8 @@
 - Catalog của table format (Polaris, Hive Metastore, Nessie, JDBC) là phương án của khâu `raw`, cùng chỗ lưu và table format; không có khâu riêng.
 - Câu `selfhost` = `yes`: dịch vụ được quản lý mang `fit.selfhost: ["no"]`; phương án mới chạy trên hạ tầng người khác thì thêm khoá ấy.
 - Công cụ nên tránh khi làm một mình vẫn có trong danh mục nếu người học hay gặp: `avoid` nói vì sao và chọn gì thay, có luật báo, không đứng đầu `suggest` của lối nào.
-- "Apply path" (`applyPath`): chỉ khâu chưa quyết; `skip` → Not needed; `need` có gợi ý → phương án hợp đầu tiên làm ít luật báo
-  nhất; `maybe` để trống. Không tự gây luật báo (trừ `caveat`): bỏ khâu, hay phương án lấy được, mà làm luật báo thì để khâu ấy trống. `test-core` dò lưới hồ sơ × lối.
+- "Apply path" (`applyPath`): chỉ khâu chưa quyết; `skip` → Not needed (`when` của khâu khớp hồ sơ thì để trống); `need` có gợi ý → phương án hợp đầu tiên làm ít luật báo
+  nhất, không phương án nào hợp thì để trống; `maybe` để trống. Không tự gây luật báo (trừ `caveat`): bỏ khâu, hay phương án lấy được, mà làm luật báo thì để khâu ấy trống. `test-core` dò lưới hồ sơ × lối.
 - Luật phối hợp (`warnings`): báo khi mọi `if` khớp và mọi khâu trong `unless` đã quyết mà không khớp; khâu chưa quyết thì chưa báo.
   Khoá điều kiện: id khâu (phương án, `skip`, `own`), câu hồ sơ hay `path`. Phương án không được có id `skip`, `own`.
   `caveat: true`: luật chỉ nhắc cách dùng, phương án vẫn đúng (host miễn phí ngủ, đĩa không bền, file DuckDB sau API).
@@ -177,7 +177,7 @@
   (mặc định "System build", chưa có thì tạo ở vị trí 2). Mỗi khâu đã quyết một việc, mỗi bàn giao đã ghi một việc `Handoff: A → B`.
 - Đối chiếu theo `sd`; bước con chưa có `sd` thì theo tên trong bước "System build".
 - Update: thay tên, Done when, thêm link và dòng ghi chú mới; giữ ghi chú, tài liệu của người dùng; Done về New.
-  "Keep old and add new": cũ thành Cancelled ("Replaced in system design: …"). Cancel: "No longer in system design: …". Một Hoàn tác.
+  "Keep old and add new": cũ thành Cancelled ("Replaced in system design: …"). Cancel: "No longer in system design: …". Keep: `sd` = `kept`, không đối chiếu lại. Một Hoàn tác.
 
 ## Giao diện
 

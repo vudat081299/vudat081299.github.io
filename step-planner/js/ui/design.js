@@ -393,7 +393,8 @@ function applyPlanNow() {
   const r = applyPlan(ctx.items, choices, step);
   if (created && !step.subs.length) { w.steps = w.steps.filter((/** @type {any} */ s) => s !== step); created = false; }
   const n = r.counts;
-  const parts = [n.added ? `${n.added} added` : '', n.updated ? `${n.updated} updated` : '', n.cancelled ? `${n.cancelled} cancelled` : ''].filter(Boolean);
+  const parts = [n.added ? `${n.added} added` : '', n.updated ? `${n.updated} updated` : '', n.cancelled ? `${n.cancelled} cancelled` : '',
+    n.kept ? `${n.kept} kept as your own` : ''].filter(Boolean);
   commit();
   if (!parts.length && !r.before.size) { toast('Nothing changed.'); return; }
   const wsId = w.id, stepId = step.id, added = new Set(r.added), before = r.before;

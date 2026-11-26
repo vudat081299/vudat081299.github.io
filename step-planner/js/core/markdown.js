@@ -9,10 +9,19 @@ import { APP_NAME, FROM_MARK, LOG_HEADING, LOOSE_STEP, MARK, MD_VERSION, REASON_
 
 /* ── Markdown ── (khuôn ghi đủ ở step-planner/FORMAT.md) */
 
-/* Ký tự thoát `\x` đổi tạm sang vùng riêng của Unicode để các biểu thức bên dưới không thấy nó, rồi đổi lại. */
+/* Ký tự thoát `\x` (x < U+18FF) đổi tạm sang vùng riêng của Unicode (U+E000 + x) để các biểu thức bên dưới không thấy nó, rồi
+ * đổi lại. Ký tự vùng riêng có sẵn trong chữ mang dấu PUA_MARK (U+F8FF, không ký tự thoát nào đổi ra nó) đứng trước: restore
+ * trả nguyên. Dấu và ký tự luôn đi liền (chỉ tách theo ` · `). */
 const PUA = 0xe000;
-const protect = (/** @type {string} */ s) => s.replace(/\\([\s\S])/g, (_, c) => (c.charCodeAt(0) < 0x1900 ? String.fromCharCode(PUA + c.charCodeAt(0)) : c));
-const restore = (/** @type {string} */ s) => s.replace(/[\ue000-\uf8ff]/g, (c) => String.fromCharCode(c.charCodeAt(0) - PUA));
+const PUA_MARK = '\uf8ff';
+const isPua = (/** @type {string} */ c) => c >= '\ue000' && c <= '\uf8ff';
+const protect = (/** @type {string} */ s) => s.replace(/\\([\s\S])|[\ue000-\uf8ff]/g, (m, c) => {
+  if (c === undefined) return PUA_MARK + m;
+  const k = c.charCodeAt(0);
+  return k < 0x18ff ? String.fromCharCode(PUA + k) : isPua(c) ? PUA_MARK + c : c;
+});
+const restore = (/** @type {string} */ s) => s.replace(/\uf8ff([\ue000-\uf8ff])|[\ue000-\uf8fe]/g,
+  (m, p) => (p !== undefined ? p : String.fromCharCode(m.charCodeAt(0) - PUA)));
 /** Tách chuỗi đã protect theo ` · `. */
 const splitDots = (/** @type {string} */ s) => s.split(' · ');
 

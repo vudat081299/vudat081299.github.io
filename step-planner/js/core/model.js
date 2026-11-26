@@ -4,7 +4,7 @@
    tên không trùng, tạo dự án từ mẫu (fromTemplate).
    Xuất: STATUSES, STATUS_LABEL, MARK, FROM_MARK, STATUS_HINT, REASON_LABEL, hasReason, outOfScope, nextStatus, setStatus,
      needsEvidence, FORMAT, VERSION, MD_VERSION, APP_NAME, LOG_HEADING, LOOSE_STEP, uid, today, parseDate, isObj, oneLine,
-     multiLine, DOC_KINDS, safeUrl, normDoc, normOut, normSub, normStep, normLog, normWorkspace, EDIT_FIELDS, pick,
+     multiLine, DOC_KINDS, safeUrl, normDoc, normOut, SD_KEPT, normSub, normStep, normLog, normWorkspace, EDIT_FIELDS, pick,
      mergeEdit, freshCopy, uniqueName, fromTemplate.
    Dùng: core/design.js, core/handoffs.js. */
 import { normDesign, presetDesign } from './design.js';
@@ -121,6 +121,11 @@ const insOf = (a, outs) => {
   return [...new Set((Array.isArray(a) ? a : []).filter((s) => typeof s === 'string' && s && !own.has(s)))];
 };
 
+/** Dấu `sd` của bước con: việc sinh từ System design (`stage:khâu@chữ ký`, `edge:a>b@chữ ký`), hay `SD_KEPT` — người dùng
+ * chọn Keep khi việc không còn trong thiết kế: thành việc của người dùng, không đối chiếu lại (core/design-plan.js). */
+export const SD_KEPT = 'kept';
+const SD_OK = /^(?:(?:stage|edge):[a-z0-9>-]{1,81}@[a-z0-9]{1,13}|kept)$/;
+
 /** @param {any} o */
 export function normSub(o) {
   const x = isObj(o) ? o : {};
@@ -138,7 +143,7 @@ export function normSub(o) {
     par: x.par === true,
     redo: x.redo === true,
     ...handOf(x),
-    ...(/^(?:stage|edge):[a-z0-9>-]{1,81}@[a-z0-9]{1,13}$/.test(x.sd) ? { sd: x.sd } : {}), // việc sinh từ System design (core/design-plan.js)
+    ...(typeof x.sd === 'string' && SD_OK.test(x.sd) ? { sd: x.sd } : {}), // test() ép mảng ['stage:a@b'] thành chuỗi: kiểm kiểu trước
   };
 }
 /** outs, ins của một bước / bước con. @param {any} x */
@@ -190,13 +195,21 @@ export function normLog(o) {
 /** @param {any} o */
 export function normWorkspace(o) {
   const x = isObj(o) ? o : {};
-  const steps = objs(x.steps).map(normStep);
+  const raw = objs(x.steps);
+  const steps = raw.map(normStep);
   const ids = new Set(steps.map((s) => s.id));
   /* Quyết định chỉ gắn với bước còn trong dự án. */
   const log = objs(x.log).map(normLog).map((l) => (ids.has(l.stepId) ? l : { ...l, stepId: '' }));
-  /* Id đầu ra duy nhất trong dự án (trùng thì cái sau lấy id mới). Đầu vào mất nguồn vẫn giữ (insOf). */
+  /* Id đầu ra duy nhất trong dự án (trùng thì cái sau lấy id mới). Đầu vào mất nguồn vẫn giữ (insOf). Chủ có đầu ra vừa đổi id
+   * thì đọc lại đầu vào từ bản gốc: đầu vào cùng id cũ (insOf đã bỏ vì tưởng là của chính nó) trỏ tới đầu ra giữ id ấy. */
+  const rawOf = new Map();
+  steps.forEach((s, i) => { rawOf.set(s, raw[i]); objs(raw[i].subs).forEach((r, j) => rawOf.set(s.subs[j], r)); });
   const outIds = new Set();
-  for (const { h } of holders({ steps })) for (const o of h.outs) { if (outIds.has(o.id)) o.id = uid('o'); outIds.add(o.id); }
+  for (const { h } of holders({ steps })) {
+    let renamed = false;
+    for (const o of h.outs) { if (outIds.has(o.id)) { o.id = uid('o'); renamed = true; } outIds.add(o.id); }
+    if (renamed) h.ins = insOf(rawOf.get(h).ins, h.outs);
+  }
   return {
     id: idOr(x.id, 'w'),
     name: oneLine(x.name) || 'Project',

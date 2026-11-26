@@ -488,6 +488,27 @@ check('bước con có ghi chú mở bằng rào, ngay sau tài liệu của bư
   }
   check('Markdown đi rồi về: 1500 dự án ngẫu nhiên giữ nguyên', !bad.length, bad.join(' | '));
 }
+/* Ký tự vùng riêng của Unicode (U+E000–U+F8FF) trong chữ: Markdown tạm đổi ký tự thoát `\x` sang vùng ấy khi đọc, nên ký tự
+ * vùng riêng có sẵn phải đi rồi về nguyên vẹn, kể cả cạnh `·`, `\`, `@`, `due`. */
+{
+  const atoms = ['a', ' ', '·', ' · ', '\\', '\\·', '@x', 'due', 'hạn', '', '', '', '', '', '', '',
+    '᣿', 'ᤀ', ' · redo', ' · parallel', ''];
+  let seed = 11;
+  const rnd = (n) => { seed = (seed + 0x6D2B79F5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t ^= t + Math.imul(t ^ (t >>> 7), 61 | t); return ((t ^ (t >>> 14)) >>> 0) % n; };
+  const str = (n) => Array.from({ length: 1 + rnd(n) }, () => atoms[rnd(atoms.length)]).join('');
+  const bad = [];
+  for (let t = 0; t < 800 && bad.length < 3; t++) {
+    const w = normWorkspace({ name: str(3), steps: Array.from({ length: 1 + rnd(2) }, () => ({ title: str(4), notes: rnd(2) ? str(5) : '',
+      outs: rnd(2) ? [{ name: str(3), ref: str(2), note: str(3) }] : [],
+      subs: Array.from({ length: 1 + rnd(3) }, () => ({ title: str(6), status: ['todo', 'done', 'cancel'][rnd(3)], reason: str(3), due: rnd(2) ? '2026-02-03' : '',
+        doneWhen: rnd(2) ? str(3) : '', par: !!rnd(2), docs: rnd(2) ? [{ kind: 'link', title: str(3), url: 'https://e.com/' + rnd(9) }] : [] })) })), log: [] });
+    let back = null;
+    try { back = roundTrip(w); } catch (e) { bad.push(`#${t}: ${e.message}`); continue; }
+    if (!eq(shape(w), back)) bad.push(`#${t}: ${firstDiff(shape(w), back)}`);
+  }
+  check('Markdown đi rồi về: chữ có ký tự vùng riêng (U+E000–U+F8FF) cạnh ·, \\, @ giữ nguyên (800 dự án ngẫu nhiên)', !bad.length, bad.join(' | '));
+  check('tách theo ·: ký tự vùng riêng có sẵn giữ nguyên', eq(splitInline('ab \\· c ·  · \\'), ['ab · c', '', '']));
+}
 
 /* `__` trong chữ (tên biến Python, `obj.__dict__`) không mở in đậm nếu chỗ đóng dính chữ phía sau. */
 const under = (t) => inline(t).map((n) => n.t + ':' + (n.v ?? '')).join('|');
@@ -539,6 +560,18 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
     eq(parseImport(toJSON(hidWs)).workspaces[0].design, hid) && eq(fromMarkdown(toMarkdown(hidWs)).workspace.design.stages[st0.id], { pick: [], skip: true, own: '', note: '' }));
   check('thiết kế: đọc dòng khâu', eq(readStageLine('Hosting: Render (free) [host: render, vps-docker]'), { id: 'host', pick: ['render', 'vps-docker'], skip: false })
     && readStageLine('Ingest: not needed [ingest: skip]').skip && readStageLine('không có ngoặc') === null);
+  check('thiết kế: viết tay `[raw: skip, minio]` — Not needed, minio là lựa chọn ẩn; `skip`, `own` không bao giờ là id phương án',
+    eq(readStageLine('- Raw: x [raw: skip, minio]'), { id: 'raw', pick: ['minio'], skip: true }) && eq(readStageLine('[raw: own, minio]').pick, ['minio'])
+    && eq(normDesign({ stages: { raw: { pick: ['skip', 'minio', 'own'] } } }).stages.raw.pick, ['minio'])
+    && eq(fromMarkdown('# P\n\n## System design\n\n- Raw: x [raw: skip, minio]\n').workspace.design.stages.raw, { pick: ['minio'], skip: true, own: '', note: '' }));
+  {
+    /* Dữ liệu hỏng: B khai đầu ra trùng id với A và nhận id ấy làm đầu vào. Đầu ra của B lấy id mới, đầu vào trỏ tới A. */
+    const dw = normWorkspace({ steps: [{ title: 'S', subs: [{ id: 'a', title: 'A', outs: [{ id: 'o', name: 'first' }] },
+      { id: 'b', title: 'B', ins: ['x', 'o'], outs: [{ id: 'o', name: 'second' }] }] }] });
+    const [da, db] = dw.steps[0].subs;
+    check('bàn giao: đầu ra trùng id và đầu vào cùng id ấy — đầu ra sau lấy id mới, đầu vào vẫn trỏ tới đầu ra đầu tiên',
+      da.outs[0].id === 'o' && db.outs[0].id !== 'o' && eq(db.ins, ['x', 'o']), JSON.stringify(db));
+  }
   const ws = normWorkspace({ name: 'P', steps: [{ title: 'A', subs: [{ title: 'x' }] }], design: { profile: { size: 'small', latency: 'online' },
     stages: { serve: { pick: ['fastapi', 'in-app'], own: 'Vapor', note: 'Own: dòng mở bằng nhãn\n\n# không phải tiêu đề\n- không phải việc' }, ingest: { skip: true, note: 'dữ liệu cố định' } } } });
   check('thiết kế: Markdown đi rồi về giữ nguyên (có và không có nhãn)', eq(shape(ws), roundTrip(ws)) && eq(shape(ws), shape(fromMarkdown(toMarkdown(ws, cat)).workspace)),
@@ -735,14 +768,33 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   const grid = GRID_Q.reduce((acc, q) => acc.flatMap((p) => [...(q === 'latency' ? [p] : []),
     ...cat.profile.find((x) => x.id === q).choices.map((c) => ({ ...p, [q]: c.id }))]), [{}]);
   const hard = (d, ids) => warnings(cat, normDesign(d)).filter((w) => !w.caveat && !EXCEPT.has(w.id) && w.stages.some((x) => ids.includes(x)));
-  const selfWarn = new Set();
+  const selfWarn = new Set(), misfitGrid = new Set(), wantedSkip = new Set();
   for (const pp of cat.paths) {
     for (const profile of grid) {
       const r = applyPath(cat, { path: '', profile, stages: {}, edges: {} }, pp.id);
       for (const w of hard(r.next, [...r.filled, ...r.skipped])) selfWarn.add(`${pp.id}/${w.id} ${JSON.stringify(profile)}`);
+      const eff = effProfile(cat, r.next);
+      for (const sid of r.skipped) {
+        const when = cat.stages.find((x) => x.id === sid).when || {};
+        for (const [q, ok] of Object.entries(when)) if (eff[q] && ok.includes(eff[q])) wantedSkip.add(`${pp.id}/${sid} ${q}=${eff[q]}`);
+      }
+      for (const sid of r.filled) {
+        for (const o of r.next.stages[sid].pick) {
+          const f = fitOf(cat.stages.find((x) => x.id === sid).options.find((x) => x.id === o), eff);
+          if (!f.ok) misfitGrid.add(`${pp.id}/${sid}=${o} lệch ${f.miss} ${JSON.stringify(profile)}`);
+        }
+      }
     }
   }
   check('thiết kế: Apply path không chọn phương án (hay bỏ khâu) làm luật báo', !selfWarn.size, [...selfWarn].slice(0, 5).join(' | '));
+  check('thiết kế: Apply path không chọn phương án lệch hồ sơ; không phương án nào hợp thì để khâu trống', !misfitGrid.size
+    && !applyPath(cat, { path: '', profile: { users: 'public', budget: 'free', selfhost: 'yes' }, stages: {}, edges: {} }, 'api').next.stages.host,
+  [...misfitGrid].slice(0, 5).join(' | '));
+  /* Lối bỏ khâu mà `when` của khâu nêu đúng câu trả lời (lối report, ai = llm: khâu search): khâu để trống, nên gợi ý kiến
+   * trúc (RAG) không ngược với khâu Not needed. */
+  const llm = applyPath(cat, { path: '', profile: { ai: 'llm' }, stages: {}, edges: {} }, 'report');
+  check('thiết kế: Apply path không bỏ khâu mà hồ sơ nói cần (`when` khớp), kể cả khi lối bỏ', !wantedSkip.size && !llm.next.stages.search
+    && !llm.skipped.includes('search'), [...wantedSkip].slice(0, 5).join(' | '));
   /* Mỗi kiến trúc được gợi ý có ở mỗi khâu ít nhất một công cụ không làm luật báo; khâu đã quyết theo luật gợi ý cũng thử
    * khi X hợp hồ sơ (luật nói "đã chọn X nên là kiến trúc Y" thì Y phải có công cụ dùng được). Gợi ý "không cần" thì khâu ấy
    * không bị báo. */
@@ -891,6 +943,8 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   check('kế hoạch: lần đầu thêm mỗi khâu một việc có dấu sd; so lại là same', build.subs.length === 2 && build.subs.every((x) => /^stage:[a-z-]+@/.test(x.sd))
     && planDiff(cat, pw).every((x) => x.kind === 'same'));
   check('kế hoạch: sd đi qua JSON', eq(parseImport(toJSON(pw)).workspaces[0].steps[1].subs.map((x) => x.sd), build.subs.map((x) => x.sd)));
+  check('kế hoạch: sd không phải chuỗi (mảng, đối tượng có toString) bị bỏ', ['sd' in normSub({ sd: 'stage:raw@abc' }), 'sd' in normSub({ sd: ['stage:raw@abc'] }),
+    'sd' in normSub({ sd: { toString: () => 'kept' } }), 'sd' in normSub({ sd: 'kept' })].join() === 'true,false,false,true');
   const procSub = build.subs.find((x) => x.title.startsWith('Processing'));
   setStatus(procSub, 'done');
   procSub.notes += '\nghi chú của tôi';
@@ -917,6 +971,25 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   check('kế hoạch: việc cũ chưa có dấu — khớp theo tên, việc thừa cùng khâu là removed (thay bởi việc mới), việc riêng không đụng',
     diff.length === 2 && diff[0].kind === 'changed' && diff[0].sub.title === 'Processing & cleaning: DuckDB' && !diff[0].tagged
     && diff[1].kind === 'removed' && diff[1].sub.title === 'Processing & cleaning: pandas' && /replaced by/.test(diff[1].why), kinds(diff));
+  /* Keep ở "No longer in the design" bền: việc có dấu và việc khớp theo tên đều thành `kept`, lần so sau không hỏi lại;
+   * đi qua JSON; khâu quay lại thì là việc mới, không ăn vào việc đã giữ. */
+  const kw = normWorkspace({ name: 'K', steps: [{ title: PLAN_STEP.title, subs: [{ id: 'kOld', title: 'Raw storage: Project folder (data/raw)' }] }],
+    design: { stages: { process: P('pandas') } } });
+  const kb = kw.steps[0];
+  diff = planDiff(cat, kw);
+  const kinds0 = kinds(diff);
+  const kr = applyPlan(diff, diff.map((x) => (x.kind === 'new' ? 'add' : 'keep')), kb);
+  const kinds1 = kinds(planDiff(cat, kw));
+  kw.design = normDesign({ stages: { raw: P('project-folder') } });
+  diff = planDiff(cat, kw);
+  const kinds2 = kinds(diff);
+  const kr2 = applyPlan(diff, diff.map((x) => (x.kind === 'new' ? 'add' : 'keep')), kb);
+  const kj = parseImport(toJSON(kw)).workspaces[0].steps[0].subs;
+  check('kế hoạch: Keep bền — việc khớp theo tên và việc có dấu thành kept, so lại không hỏi lại, qua JSON; khâu quay lại là việc mới',
+    kinds0 === 'new:stage:process,removed:Raw storage: Project folder (data/raw)' && kr.counts.kept === 1 && !kr.before.get('kOld').sd
+    && kinds1 === 'same:stage:process' && kinds2 === 'new:stage:raw,removed:Processing & cleaning: pandas' && kr2.counts.kept === 1
+    && eq(kb.subs.map((x) => x.sd === 'kept'), [true, true, false]) && eq(kinds(planDiff(cat, kw)), 'same:stage:raw')
+    && eq(kj.map((x) => x.sd), kb.subs.map((x) => x.sd)), `${kinds0} → ${kinds1} → ${kinds2} → ${kinds(planDiff(cat, kw))}`);
   const md = '# P\n\n## System design\n\nProfile: size small · budget free\n\n- dòng lạ\n- Serving: FastAPI [serve: fastapi]\n';
   const back = fromMarkdown(md);
   check('thiết kế: Markdown viết tay — dòng không có [khâu: …] thì cảnh báo, không thành bước', back.workspace.steps.length === 0
@@ -1155,6 +1228,13 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   /* Bước nhận đầu ra của bước con đứng sau nó → đầu vào của bước treo. */
   const d = io(normWorkspace({ steps: [{ id: 'k1', title: 'K1', ins: ['om'] }, { id: 'k2', title: 'K2', subs: [{ id: 'm', title: 'M', outs: [{ id: 'om', name: 'm' }] }] }] }));
   check('io: bước — đầu vào riêng của bước treo → bad', st(d, 'k1') === 'bad/none' && d.get('k1').inWhy[0].from === 'M');
+  /* Bước nhận đầu ra của X (bước trước); dời X vào chính bước ấy: đầu vào giờ là việc bên trong → none, không phải ok. */
+  const sw = normWorkspace({ steps: [{ id: 'j1', title: 'J1', subs: [{ id: 'jx', title: 'X', outs: [{ id: 'oj', name: 'o' }] }] },
+    { id: 'j2', title: 'J2', ins: ['oj'], subs: [{ id: 'jy', title: 'Y' }] }] });
+  const swBefore = io(sw).get('j2').in;
+  placeSub(sw, sw.steps[0].subs[0], { stepId: 'j2', slot: 0 });
+  check('io: bước nhận đầu ra của bước con của chính nó (sau khi dời bước con vào) → đầu vào none', swBefore === 'ok' && io(sw).get('j2').in === 'none'
+    && eq(sw.steps[1].ins, ['oj']), `${swBefore} → ${io(sw).get('j2').in}`);
   /* Dời về đúng thứ tự: liên kết nối lại, cả hai bên ok. */
   const e = normWorkspace({ steps: [{ id: 'k1', title: 'K1', ins: ['om'] }, { id: 'k2', title: 'K2', subs: [{ id: 'm', title: 'M', outs: [{ id: 'om', name: 'm' }] }] }] });
   e.steps.reverse();
