@@ -757,6 +757,10 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   const far = H.handoffs(normWorkspace({ steps: [{ id: 'x1', title: 'S1', outs: [{ id: 'q', name: 'q' }], subs: [{ id: 'u', title: 'U', ins: ['r'] }] },
     { id: 'x2', title: 'S2', subs: [{ id: 'v', title: 'V' }] }, { id: 'x3', title: 'S3', subs: [{ id: 'w', title: 'W', ins: ['q'], outs: [{ id: 'r', name: 'r' }] }] }] }));
   check('bàn giao: vạch trên hàng nhận gom cả hàng xa hơn; chảy ngược không có vạch', eq([...far.rows.keys()], [2]) && eq(far.rows.get(2).map(name), ['S1>W:q']));
+  check('bàn giao: bên nhận đứng trước bên giao thì liên kết treo, vẫn giữ trong dữ liệu', far.held.length === 1 && far.heldKeys.has(H.heldKey('u', 'r'))
+    && eq(far.held.map((l) => `${H.holderTitle(l.from)}>${H.holderTitle(l.to)}`), ['W>U']) && ho.held.length === 0);
+  const sameRow = H.handoffs(normWorkspace({ steps: [{ id: 'y1', title: 'S', subs: [{ id: 'p', title: 'P', ins: ['z'] }, { id: 'q2', title: 'Q', outs: [{ id: 'z', name: 'z' }] }] }] }));
+  check('bàn giao: cùng hàng, ô nhận đứng trước ô giao thì treo, không có mũi tên', eq([...sameRow.heldKeys], ['p>z']) && !sameRow.gaps.size);
   check('bàn giao: nơi dùng của một đầu ra', eq((ho.usedBy.get('oa') || []).map(H.holderTitle), ['D', 'A']));
   const w2 = normWorkspace(raw);
   const relink = H.insBackup(w2, [w2.steps[0].subs[0]]);

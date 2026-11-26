@@ -1155,7 +1155,8 @@ function moveSubTo(ws, sub, to, focusSel = subSel(sub.id, 'edit-sub')) {
  * (toast của nó còn hiện) thì Hoàn tác trả về chỗ trước lần dời đầu. ── */
 
 /** redo: dấu Redo của bước con lúc bắt đầu dời (sang bước khác thì mất dấu; Hoàn tác trả lại).
- * @type {null | {kind:'sub'|'step', id:string, wsId:string, from:any, fromStepId:string, redo:boolean, undo:null|(() => void)}} */
+ * held: đầu vào đã treo lúc bắt đầu dời (toast chỉ báo cái vừa treo).
+ * @type {null | {kind:'sub'|'step', id:string, wsId:string, from:any, fromStepId:string, redo:boolean, undo:null|(() => void), held:Set<string>}} */
 let lastMove = null;
 let flashTimer = 0;
 
@@ -1184,7 +1185,7 @@ function beginMove(kind, id) {
     && !$('toast').hidden && toastUndo && toastUndo === lastMove.undo) return lastMove;
   const from = placeNow(ws, kind, id);
   const sub = kind === 'sub' && from ? stepOf(ws, from.stepId).subs.find((/** @type {any} */ x) => x.id === id) : null;
-  lastMove = { kind, id, wsId: ws.id, from, fromStepId: kind === 'sub' ? from?.stepId : id, redo: !!sub?.redo, undo: null };
+  lastMove = { kind, id, wsId: ws.id, from, fromStepId: kind === 'sub' ? from?.stepId : id, redo: !!sub?.redo, undo: null, held: C.handoffs(ws).heldKeys };
   return lastMove;
 }
 /** Gọi sau khi đổi chỗ: lưu, vẽ, giữ focus, tô, báo. @param {any} m @param {string|null|undefined} swapId @param {string} focusSel */
@@ -1200,7 +1201,7 @@ function endMove(m, swapId, focusSel) {
     return;
   }
   m.undo = () => undoMove(m);
-  toast(movedText(ws, m.kind, m.id, m.fromStepId), m.undo, focusSel, false);
+  toast(movedText(ws, m.kind, m.id, m.fromStepId) + Hd.newlyHeld(ws, m.held), m.undo, focusSel, false);
 }
 function undoMove(/** @type {any} */ m) {
   lastMove = null;

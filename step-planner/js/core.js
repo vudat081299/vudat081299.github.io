@@ -318,10 +318,14 @@ export function outIndex(ws) {
 export const holderTitle = (hd) => (hd.sub ? hd.sub.title : hd.step.title);
 
 /** @typedef {{from:Holder, to:Holder, outs:any[]}} Pair một cặp bên giao → bên nhận, kèm các đầu ra được chuyển */
+/** Khoá của một đầu vào treo: id bên nhận và id đầu ra. @param {string} toId @param {string} outId */
+export const heldKey = (toId, outId) => toId + '>' + outId;
+
 /**
  * Mọi bàn giao đã khai và cách bảng hiện chúng. links: mỗi (đầu ra, bên nhận) một mục. usedBy: id đầu ra → bên nhận.
- * rows: chỉ số bước j → các cặp từ bước j − 1 sang bước j (vạch giữa hai hàng). gaps: id bước → (k → các cặp từ ô k sang
- * ô k + 1 của cùng hàng). Cặp gộp các đầu ra cùng bên giao, cùng bên nhận.
+ * rows: chỉ số bước j → các cặp từ các bước trước sang bước j (mũi tên trên hàng j). gaps: id bước → (k → các cặp từ các ô
+ * trước sang ô k + 1 của cùng hàng). Cặp gộp các đầu ra cùng bên giao, cùng bên nhận. held: liên kết treo (bên nhận đứng
+ * trước bên giao); heldKeys: `heldKey` của chúng.
  * @param {{steps:any[]}} ws
  */
 export function handoffs(ws) {
@@ -370,7 +374,11 @@ export function handoffs(ws) {
       /** @type {Pair[]} */ (g.get(k)).push(p);
     }
   }
-  return { idx, links, usedBy, rows, gaps };
+  /* Treo: bên nhận đứng trước bên giao (hàng trước, hay ô trước cùng hàng) sau khi sắp xếp lại. Liên kết vẫn nằm trong dữ liệu;
+   * dời về đúng thứ tự thì tự nối lại. */
+  const held = links.filter((l) => l.to.i < l.from.i
+    || (l.to.i === l.from.i && l.from.sub && l.to.sub && slotOf.get(l.to.sub.id) < slotOf.get(l.from.sub.id)));
+  return { idx, links, usedBy, rows, gaps, held, heldKeys: new Set(held.map((l) => heldKey(l.to.h.id, l.out.id))) };
 }
 
 /**

@@ -2080,6 +2080,13 @@ const check = (name, ok, detail = '') => {
     await hp.waitForFunction(() => !document.body.classList.contains('dragging-any'));
     w = await cur(hp);
     const m2 = await marks();
+    const heldToast = await hp.textContent('#toast-text');
+    await hp.click('.card[data-sub="hD"] [data-act="edit-sub"]');
+    const heldChip = await hp.evaluate(() => { const c = document.querySelector('#sub-hand .in-chip'); return { held: c?.classList.contains('held'), t: c?.textContent }; });
+    await hp.keyboard.press('Escape');
+    check('bàn giao: xếp bên nhận lên trước bên giao — toast báo đầu vào treo, hộp sửa đánh dấu, liên kết vẫn giữ',
+      /Input on hold: "Read snapshot in API" now comes before "Build snapshot"/.test(heldToast) && heldChip.held && /on hold/.test(heldChip.t),
+      JSON.stringify({ heldToast, heldChip }));
     check('bàn giao: kéo đổi chỗ bước giữ liên kết, vạch tính lại', same(w.steps.map((s) => s.id), ['h2', 'h1', 'h3']) && same(subOf(w, 'hD').ins, [outId])
       && same(m2.row, ['h3:clean schema']) && same(m2.gap, ['h1:0:matches.parquet']), JSON.stringify(m2));
     await hp.keyboard.press('Control+z');

@@ -1492,6 +1492,10 @@ html { scrollbar-gutter: stable; }   /* khoá cuộn không làm trang nhảy ng
 .in-text b { font-weight: 600; color: var(--ink); }
 .in-text small { font-size: var(--fs-xs); color: var(--ink-3); }
 .in-chip .icon-btn { flex: none; }
+/* Đầu vào treo (bên giao đã bị xếp ra sau): viền đứt, chữ hổ phách; liên kết vẫn giữ. */
+.in-chip.held { border-style: dashed; border-color: var(--amber-line); background: var(--amber-soft); }
+.in-chip.held .in-text small, .hand-who.held small, .hand-held { color: var(--amber-fg); }
+.hand-held { font-size: var(--fs-sm); overflow-wrap: anywhere; }
 @media (hover: hover) { .in-chip .icon-btn:hover, .out-row .icon-btn:hover { color: var(--danger); } }
 .out-list { display: flex; flex-direction: column; gap: var(--s2); }
 .out-row {
