@@ -283,7 +283,8 @@
           "cloud-run",
           "fly-io",
           "vps-docker",
-          "vercel"
+          "vercel",
+          "own-server"
         ],
         "monitor": [
           "uptime",
@@ -351,6 +352,7 @@
           "cloudflare-r2",
           "gcs",
           "s3",
+          "minio",
           "postgres-raw",
           "dvc"
         ],
@@ -368,7 +370,9 @@
         "store": [
           "parquet-duckdb",
           "postgresql",
-          "bigquery"
+          "bigquery",
+          "duckdb-iceberg",
+          "trino"
         ],
         "train": [
           "local"
@@ -388,7 +392,8 @@
         "app": [
           "bi-dashboard",
           "streamlit",
-          "notebook-report"
+          "notebook-report",
+          "superset"
         ],
         "package": [
           "requirements",
@@ -398,7 +403,9 @@
         ],
         "host": [
           "github-pages",
-          "cloud-run"
+          "cloud-run",
+          "own-server",
+          "vps-docker"
         ],
         "monitor": [
           "healthchecks",
@@ -760,7 +767,7 @@
           "name": "App events / logs",
           "kind": "Event or log stream",
           "summary": "Sự kiện app gửi liên tục, như lượt click, đơn hàng, log server, dữ liệu cảm biến. Mỗi sự kiện là một dòng JSON nhỏ.",
-          "pick": "Chọn khi đề bài cần phản ứng với dữ liệu mới trong vài giây hoặc vài phút.",
+          "pick": "Chọn khi đề bài cần phản ứng với dữ liệu mới trong vài giây hoặc vài phút. Chưa có nguồn thật thì giả lập (mock): một script replay đọc file CSV có sẵn, gửi từng dòng thành một sự kiện JSON vào topic Kafka (hay Redpanda, cùng API Kafka) với nhịp cố định, vài dòng mỗi giây, giữ cột thời gian gốc làm thời điểm sự kiện.",
           "avoid": "Tránh khi một bộ dữ liệu cố định là đủ cho câu hỏi của bạn.",
           "cost": "free",
           "level": 3,
@@ -774,10 +781,14 @@
             {
               "title": "Kafka introduction",
               "url": "https://kafka.apache.org/intro"
+            },
+            {
+              "title": "Kafka Python client",
+              "url": "https://docs.confluent.io/kafka-clients/python/current/overview.html"
             }
           ],
           "setup": [],
-          "task": "Đã viết ra định dạng một sự kiện (các trường, kiểu, thời gian) và nơi app gửi nó tới."
+          "task": "Đã viết ra định dạng một sự kiện (các trường, kiểu, thời gian) và nơi app gửi nó tới; chưa có nguồn thật thì script replay gửi CSV vào topic với nhịp ghi trong README."
         }
       ]
     },
@@ -984,8 +995,8 @@
           "id": "kafka",
           "name": "Apache Kafka",
           "kind": "Event streaming platform",
-          "summary": "Hệ thống nhận và lưu sự kiện liên tục theo topic. App gửi sự kiện vào, các consumer đọc ra để xử lý.",
-          "pick": "Chọn khi dữ liệu đến liên tục và cần xử lý trong vài giây.",
+          "summary": "Hệ thống nhận và lưu sự kiện liên tục theo topic. App gửi sự kiện vào, các consumer đọc ra để xử lý. Redpanda là một hệ khác nói cùng API Kafka, có quickstart Docker Compose.",
+          "pick": "Chọn khi dữ liệu đến liên tục và cần xử lý trong vài giây. Chưa có nguồn sự kiện thật thì giả lập bằng một producer đọc CSV, gửi từng dòng vào topic với nhịp cố định.",
           "avoid": "Tránh khi dữ liệu chỉ cập nhật theo ngày, vì một job theo lịch đơn giản hơn nhiều.",
           "cost": "free",
           "level": 3,
@@ -1002,6 +1013,10 @@
             {
               "title": "Introduction",
               "url": "https://kafka.apache.org/intro"
+            },
+            {
+              "title": "Redpanda quickstart",
+              "url": "https://docs.redpanda.com/current/get-started/quick-start/"
             }
           ],
           "setup": [
@@ -1017,7 +1032,7 @@
       "title": "Raw storage",
       "lane": "data",
       "question": "Dữ liệu gốc, chưa sửa, được cất ở đâu?",
-      "guide": "Kho thô giữ dữ liệu đúng như lúc tải về, không ai sửa tay.\nNhờ vậy khi code làm sạch có lỗi, bạn chạy lại từ bản gốc mà không phải tải lại.\nDữ liệu nhỏ để trong thư mục dự án; dữ liệu lớn hoặc nhiều máy cùng đọc thì để trên object storage.\nDữ liệu cỡ cụm máy: HDFS (hệ file phân tán của Hadoop) hoặc object storage. Chọn thêm một table format (Delta Lake, Iceberg) khi muốn thư mục file trên đó dùng như bảng có giao dịch và lịch sử phiên bản.\nBước sau (Processing) đọc từ đây và ghi kết quả sạch ra chỗ khác.",
+      "guide": "Kho thô giữ dữ liệu đúng như lúc tải về, không ai sửa tay.\nNhờ vậy khi code làm sạch có lỗi, bạn chạy lại từ bản gốc mà không phải tải lại.\nDữ liệu nhỏ để trong thư mục dự án; dữ liệu lớn hoặc nhiều máy cùng đọc thì để trên object storage (dịch vụ cloud như R2, S3, GCS, hay tự chạy trên máy của nhóm như MinIO).\nDữ liệu cỡ cụm máy: HDFS (hệ file phân tán của Hadoop) hoặc object storage. Chọn thêm một table format (Delta Lake, Iceberg, Hudi) khi muốn thư mục file trên đó dùng như bảng có giao dịch và lịch sử phiên bản.\nBước sau (Processing) đọc từ đây và ghi kết quả sạch ra chỗ khác.",
       "multi": true,
       "skipWhen": "",
       "task": "Dữ liệu thô nằm ở nơi đã chọn, không sửa tay; README ghi cách lấy lại từ đầu.",
@@ -1175,6 +1190,46 @@
           "task": "Bucket raw đã có dữ liệu gốc, chặn truy cập công khai, và có cảnh báo chi phí trong AWS Budgets."
         },
         {
+          "id": "minio",
+          "name": "MinIO",
+          "kind": "Self-hosted S3-compatible object storage",
+          "summary": "Object storage tự chạy trên máy của nhóm, nói cùng API với Amazon S3: Spark, DuckDB (httpfs), Trino, PyIceberg đọc ghi đường dẫn s3:// chỉ cần đổi endpoint. Mã nguồn theo giấy phép AGPLv3. Bản cộng đồng (community edition) nay chỉ phát hành mã nguồn: không còn bản dựng sẵn hay image Docker mới, và kho GitHub minio/minio đã được lưu trữ (archived), ghi là không còn bảo trì. Bản AIStor Free của công ty MinIO không mất phí nhưng theo giấy phép riêng, phải xin khoá giấy phép và chỉ chạy một máy (standalone).",
+          "pick": "Chọn khi nhóm phải tự host toàn bộ (lakehouse của đồ án, máy lab, không dùng cloud) và cần một chỗ lưu file chung cho nhiều công cụ: file HTML, CSV, Parquet thô ở tầng bronze, bảng Iceberg, Delta hay Hudi ở các tầng sau; hoặc khi tài liệu môn học, ví dụ có sẵn dùng MinIO. Chạy cùng các service khác trong Docker Compose, gắn volume cho thư mục dữ liệu.",
+          "avoid": "Tránh coi MinIO bản cộng đồng là lựa chọn lâu dài: không còn bản vá, phải tự build từ mã nguồn hoặc dùng image cũ không còn cập nhật. Bắt đầu mới thì cân nhắc RustFS hay SeaweedFS: cùng nói API S3, giấy phép Apache 2.0, và quickstart chính thức của Iceberg, Polaris nay dùng RustFS. Dữ liệu vừa một máy, một người: thư mục dự án là đủ; không bắt buộc tự host thì R2, S3, GCS khỏi phải vận hành.",
+          "cost": "free",
+          "level": 2,
+          "fit": {},
+          "links": [
+            {
+              "title": "minio/minio on GitHub",
+              "url": "https://github.com/minio/minio"
+            },
+            {
+              "title": "MinIO download",
+              "url": "https://www.min.io/download"
+            },
+            {
+              "title": "DuckDB S3 API support",
+              "url": "https://duckdb.org/docs/stable/core_extensions/httpfs/s3api"
+            },
+            {
+              "title": "RustFS on GitHub",
+              "url": "https://github.com/rustfs/rustfs"
+            },
+            {
+              "title": "SeaweedFS on GitHub",
+              "url": "https://github.com/seaweedfs/seaweedfs"
+            }
+          ],
+          "setup": [
+            "# Bản cộng đồng chỉ còn mã nguồn: build image từ Dockerfile trong repo minio/minio",
+            "docker build -t myminio:minio .",
+            "# Gắn thêm volume (-v) cho thư mục dữ liệu, nếu không dữ liệu mất khi xoá container",
+            "docker run -p 9000:9000 -p 9001:9001 myminio:minio server /tmp/minio --console-address :9001"
+          ],
+          "task": "Bucket bronze chạy trên MinIO có volume bền; script ingest ghi file vào đó, DuckDB hay Spark đọc lại bằng s3:// qua endpoint của MinIO, và khởi động lại container thì dữ liệu vẫn còn."
+        },
+        {
           "id": "hdfs",
           "name": "HDFS (Hadoop Distributed File System)",
           "kind": "Distributed file system",
@@ -1264,6 +1319,38 @@
             "pip install \"pyiceberg[s3fs,hive]\""
           ],
           "task": "Bảng Iceberg đăng ký trong catalog; ghi một lô mới tạo snapshot mới, và truy vấn từ engine đã chọn trả đúng số dòng."
+        },
+        {
+          "id": "hudi",
+          "name": "Apache Hudi",
+          "kind": "Open table format",
+          "summary": "Table format mở mạnh ở ghi đè từng dòng theo khoá bản ghi (upsert, delete) và đọc tăng dần (incremental query: chỉ lấy các dòng đổi từ một mốc trên timeline). Hai kiểu bảng: Copy-on-Write ghi lại file Parquet mỗi lần sửa nên đọc nhanh; Merge-on-Read ghi thay đổi vào file log rồi gộp khi đọc hay khi compaction nên ghi nhanh. Spark, Flink, Trino, Hive đọc được.",
+          "pick": "Chọn khi tầng bronze nhận nhiều bản cập nhật, xoá theo khoá (CDC từ database, đơn hàng đổi trạng thái) và bước sau chỉ muốn xử lý phần mới đổi, hoặc khi môn học dùng Hudi. So với Iceberg (nhiều engine dùng chung một bảng qua catalog) và Delta Lake (dùng được từ Python không cần Spark), Hudi mạnh nhất ở upsert và đọc tăng dần. Copy-on-Write cho bảng đọc nhiều, Merge-on-Read cho dữ liệu sửa liên tục.",
+          "avoid": "Tránh khi dữ liệu chủ yếu chỉ ghi thêm: Iceberg hay Delta ít khái niệm hơn. DuckDB không có extension đọc Hudi (có cho Iceberg, Delta); Trino chỉ đọc Hudi và cần Hive Metastore; Polaris quản lý đầy đủ bảng Iceberg, còn định dạng khác chỉ là bảng chung (generic table, đang beta). Muốn DuckDB, Superset đọc thẳng bảng thì chọn Iceberg.",
+          "cost": "free",
+          "level": 3,
+          "fit": {
+            "size": [
+              "medium",
+              "large"
+            ]
+          },
+          "links": [
+            {
+              "title": "Apache Hudi overview",
+              "url": "https://hudi.apache.org/docs/overview"
+            },
+            {
+              "title": "Table & Query Types",
+              "url": "https://hudi.apache.org/docs/table_types"
+            },
+            {
+              "title": "Spark Quick Start",
+              "url": "https://hudi.apache.org/docs/quick-start-guide"
+            }
+          ],
+          "setup": [],
+          "task": "Bảng Hudi có khoá bản ghi; ghi lại một lô có dòng sửa thì số dòng không tăng (upsert), và truy vấn incremental từ mốc trước chỉ trả các dòng mới đổi."
         },
         {
           "id": "postgres-raw",
@@ -1373,8 +1460,8 @@
           "id": "duckdb",
           "name": "DuckDB",
           "kind": "In-process SQL engine",
-          "summary": "Database SQL chạy ngay trong tiến trình Python, không cần server. Đọc thẳng CSV và Parquet, xử lý được dữ liệu lớn hơn RAM.",
-          "pick": "Chọn khi bạn thích viết SQL và dữ liệu nằm trong file CSV hoặc Parquet.",
+          "summary": "Database SQL chạy ngay trong tiến trình Python, không cần server. Đọc thẳng CSV và Parquet, xử lý được dữ liệu lớn hơn RAM. Extension httpfs đọc ghi Parquet, CSV trên S3 và kho nói API S3 như MinIO (đặt ENDPOINT, URL_STYLE 'path' trong secret); extension iceberg đọc bảng Iceberg, ghi được khi gắn một Iceberg REST catalog.",
+          "pick": "Chọn khi bạn thích viết SQL và dữ liệu nằm trong file CSV hoặc Parquet, trên máy hay trên MinIO, S3.",
           "avoid": "Tránh khi nhiều tiến trình cùng ghi vào một file database.",
           "cost": "free",
           "level": 1,
@@ -1392,6 +1479,10 @@
             {
               "title": "Installation",
               "url": "https://duckdb.org/docs/installation/"
+            },
+            {
+              "title": "S3 API support",
+              "url": "https://duckdb.org/docs/stable/core_extensions/httpfs/s3api"
             }
           ],
           "setup": [
@@ -1403,9 +1494,9 @@
           "id": "dbt",
           "name": "dbt",
           "kind": "SQL transformation framework",
-          "summary": "Công cụ tổ chức các câu SQL biến đổi thành model có thứ tự, có test và tài liệu. Chạy trên DuckDB, BigQuery, Snowflake và các warehouse khác.",
-          "pick": "Chọn khi pipeline chạy lại theo lịch và có nhiều bảng phụ thuộc nhau.",
-          "avoid": "Tránh khi chỉ có vài bước làm sạch chạy một lần.",
+          "summary": "Công cụ tổ chức các câu SQL biến đổi thành model có thứ tự, có test và tài liệu. dbt không tự chạy SQL: một adapter gửi SQL tới engine. DuckDB: adapter duckdb (gói dbt-duckdb), đọc Parquet, CSV trên S3, MinIO qua extension httpfs. Spark: adapter spark (gói dbt-spark) nối Spark Thrift Server, ghi bảng file_format iceberg, delta hay hudi, cập nhật tăng dần bằng merge. Trino: gói dbt-trino. Cũng chạy trên BigQuery, Snowflake và các warehouse khác.",
+          "pick": "Chọn khi pipeline chạy lại theo lịch và có nhiều bảng phụ thuộc nhau (silver, gold). Chọn adapter theo engine đã có: dữ liệu vừa một máy thì DuckDB; bảng lớn trên lakehouse thì Spark hay Trino.",
+          "avoid": "Tránh khi chỉ có vài bước làm sạch chạy một lần. Bản dbt cài bằng pip (dbt v2) có sẵn adapter DuckDB và Spark (Spark đang beta, chỉ dòng lệnh); Trino dùng gói dbt-trino của dbt v1. Cần đúng bản mã nguồn mở Apache 2.0 thì cài dbt-oss.",
           "cost": "free",
           "level": 2,
           "fit": {
@@ -1421,11 +1512,33 @@
             {
               "title": "DuckDB setup",
               "url": "https://docs.getdbt.com/docs/local/connect-data-platform/duckdb-setup"
+            },
+            {
+              "title": "Supported data platforms",
+              "url": "https://docs.getdbt.com/docs/supported-data-platforms"
+            },
+            {
+              "title": "Apache Spark setup",
+              "url": "https://docs.getdbt.com/docs/local/connect-data-platform/spark-setup"
+            },
+            {
+              "title": "Apache Spark configurations",
+              "url": "https://docs.getdbt.com/reference/resource-configs/spark-configs"
+            },
+            {
+              "title": "Starburst/Trino setup",
+              "url": "https://docs.getdbt.com/docs/local/connect-data-platform/trino-setup"
+            },
+            {
+              "title": "Install dbt OSS",
+              "url": "https://docs.getdbt.com/docs/local/install-dbt-v2"
             }
           ],
           "setup": [
             "python -m pip install dbt",
-            "dbt init"
+            "dbt init",
+            "# Chỉ dùng mã nguồn Apache 2.0: cài dbt OSS (đừng cài chung môi trường với dbt)",
+            "uv tool install dbt-oss"
           ],
           "task": "dbt build chạy xanh, có model staging và model sạch, và mỗi model có ít nhất một test."
         },
@@ -1464,7 +1577,7 @@
           "name": "Apache Spark (PySpark)",
           "kind": "Distributed processing engine",
           "summary": "Engine xử lý phân tán chuẩn của ngành dữ liệu lớn. Một driver chia việc cho nhiều executor trên nhiều máy; viết bằng PySpark hoặc Spark SQL.",
-          "pick": "Chọn khi dữ liệu trên 100 GB hoặc nằm rải trên object storage, và bạn có cụm máy để chạy.",
+          "pick": "Chọn khi dữ liệu trên 100 GB hoặc nằm rải trên object storage, và bạn có cụm máy để chạy. Spark đọc ghi bảng Iceberg, Delta, Hudi trên MinIO, S3 khi thêm gói của table format và khai catalog trong cấu hình.",
           "avoid": "Tránh khi dữ liệu nhỏ, vì thời gian khởi động và cấu hình lớn hơn thời gian xử lý. Dữ liệu tới liên tục thì chọn Spark Structured Streaming.",
           "cost": "free",
           "level": 3,
@@ -1584,7 +1697,7 @@
           "name": "Spark Structured Streaming",
           "kind": "Stream processing engine",
           "summary": "Phần stream của Spark: viết truy vấn DataFrame hay SQL như với batch, Spark chạy dần trên dữ liệu mới tới (mặc định theo từng micro-batch nhỏ). Đọc Kafka hay file mới trong thư mục; có cửa sổ thời gian, watermark cho sự kiện tới trễ, checkpoint để chạy lại không mất dữ liệu.",
-          "pick": "Chọn khi đã dùng PySpark, cần gộp theo cửa sổ thời gian hay join luồng, hoặc muốn cùng một code DataFrame cho cả job batch lẫn job stream (đỡ viết logic hai lần khi theo Lambda).",
+          "pick": "Chọn khi đã dùng PySpark, cần gộp theo cửa sổ thời gian hay join luồng, hoặc muốn cùng một code DataFrame cho cả job batch lẫn job stream (đỡ viết logic hai lần khi theo Lambda). Chưa có Kafka hay nguồn thật thì thử bằng nguồn rate (sinh dòng theo nhịp, dành cho kiểm thử) hoặc nguồn file: thả từng file CSV vào thư mục đang đọc.",
           "avoid": "Tránh khi chỉ cần kết quả theo ngày: một job batch theo lịch đơn giản hơn. Luồng nhỏ, xử lý từng sự kiện độc lập thì một consumer Python ít phần hơn.",
           "cost": "free",
           "level": 3,
@@ -1605,6 +1718,10 @@
             {
               "title": "Structured Streaming + Kafka Integration Guide",
               "url": "https://spark.apache.org/docs/latest/streaming/structured-streaming-kafka-integration.html"
+            },
+            {
+              "title": "Input sources",
+              "url": "https://spark.apache.org/docs/latest/streaming/apis-on-dataframes-and-datasets.html"
             }
           ],
           "setup": [
@@ -1823,6 +1940,44 @@
             "pip install duckdb"
           ],
           "task": "Bảng sạch nằm ở data/processed dạng Parquet, và một câu SELECT trong DuckDB trả về kết quả mong đợi."
+        },
+        {
+          "id": "duckdb-iceberg",
+          "name": "DuckDB on Iceberg / S3",
+          "kind": "In-process SQL over lakehouse tables",
+          "summary": "DuckDB truy vấn thẳng bảng trên object storage, không cần server: extension httpfs đọc ghi Parquet, CSV trên S3 hay MinIO; extension iceberg đọc bảng Iceberg. Gắn (ATTACH) một Iceberg REST catalog như Polaris thì ghi được: CREATE TABLE, INSERT, UPDATE, DELETE, MERGE INTO (chỉ kiểu merge-on-read). Đọc thẳng file metadata bằng iceberg_scan thì không cần catalog nhưng chỉ đọc.",
+          "pick": "Chọn khi bảng gold (đã gộp, nhỏ) nằm trên MinIO, S3 dạng Iceberg hay Parquet và vài người truy vấn, dựng dashboard: một máy là đủ, không phải dựng Trino. Hợp với dbt-duckdb ở khâu Processing và Superset ở khâu App.",
+          "avoid": "Tránh khi nhiều người cùng truy vấn bảng lớn hay cần phân quyền theo người: dùng Trino. DuckDB không đọc Hudi. Catalog không theo chuẩn Iceberg REST (Hive Metastore, JDBC) thì DuckDB không gắn được; khi ấy đọc bằng iceberg_scan (chỉ đọc) hay qua Trino.",
+          "cost": "free",
+          "level": 2,
+          "fit": {
+            "users": [
+              "me",
+              "few"
+            ]
+          },
+          "links": [
+            {
+              "title": "Iceberg extension",
+              "url": "https://duckdb.org/docs/stable/core_extensions/iceberg/overview"
+            },
+            {
+              "title": "Writing to Iceberg",
+              "url": "https://duckdb.org/docs/stable/core_extensions/iceberg/writing_to_iceberg"
+            },
+            {
+              "title": "Iceberg REST catalogs",
+              "url": "https://duckdb.org/docs/stable/core_extensions/iceberg/catalogs"
+            },
+            {
+              "title": "S3 API support",
+              "url": "https://duckdb.org/docs/stable/core_extensions/httpfs/s3api"
+            }
+          ],
+          "setup": [
+            "pip install duckdb"
+          ],
+          "task": "DuckDB gắn catalog (hay đọc đường dẫn s3:// trên MinIO), một truy vấn trên bảng gold trả đúng số dòng đã đối chiếu, và dashboard đọc qua cùng đường ấy."
         },
         {
           "id": "sqlite",
@@ -2086,8 +2241,8 @@
           "name": "Trino (Presto)",
           "kind": "Distributed SQL query engine",
           "summary": "Engine SQL phân tán truy vấn dữ liệu tại chỗ qua connector (Hive, Iceberg, Delta trên object storage; PostgreSQL; Kafka...), kể cả join giữa các nguồn. Trino là tên mới của PrestoSQL, do những người tạo ra Presto làm. Không lưu dữ liệu, không phải database cho app.",
-          "pick": "Chọn khi dữ liệu lớn nằm ở kho thô (HDFS, object storage) hay ở nhiều hệ khác nhau và bạn muốn truy vấn tương tác bằng SQL mà không chép sang warehouse.",
-          "avoid": "Tránh làm database cho app (Trino không dành cho OLTP) và khi dữ liệu vừa một máy: DuckDB làm cùng việc không cần máy chủ. Muốn thấy bảng trên file thì cần thêm catalog (Hive Metastore, Iceberg REST).",
+          "pick": "Chọn khi dữ liệu lớn nằm ở kho thô (HDFS, object storage) hay ở nhiều hệ khác nhau và bạn muốn truy vấn tương tác bằng SQL mà không chép sang warehouse. Trong lakehouse tự host, Trino là engine SQL trên bảng Iceberg ở MinIO, S3: connector Iceberg nối catalog REST (như Polaris), Hive Metastore, JDBC hay Nessie, đọc và ghi được (INSERT, UPDATE, DELETE, MERGE); Superset nối Trino qua driver trino.",
+          "avoid": "Tránh làm database cho app (Trino không dành cho OLTP) và khi dữ liệu vừa một máy: DuckDB làm cùng việc không cần máy chủ. Muốn thấy bảng trên file thì cần thêm catalog (Polaris hay Iceberg REST khác, Hive Metastore). Hudi chỉ đọc được, qua Hive Metastore.",
           "cost": "free",
           "level": 3,
           "fit": {
@@ -2103,6 +2258,10 @@
             {
               "title": "Trino use cases",
               "url": "https://trino.io/docs/current/overview/use-cases.html"
+            },
+            {
+              "title": "Iceberg connector",
+              "url": "https://trino.io/docs/current/connector/iceberg.html"
             },
             {
               "title": "Trino in a Docker container",
@@ -3417,12 +3576,12 @@
         },
         {
           "id": "bi-dashboard",
-          "name": "Data Studio / Power BI / Metabase",
-          "kind": "BI dashboard",
-          "summary": "Công cụ BI kéo thả biểu đồ từ bảng dữ liệu. Data Studio của Google (tên cũ Looker Studio) miễn phí, Metabase là mã nguồn mở tự host.",
-          "pick": "Chọn khi người xem cần lọc và xem số liệu đã tính sẵn mà không cần code.",
-          "avoid": "Tránh Power BI khi cần chia sẻ miễn phí, vì chia sẻ báo cáo cần giấy phép Pro.",
-          "cost": "freemium",
+          "name": "Metabase",
+          "kind": "Open-source BI dashboard",
+          "summary": "Công cụ BI mã nguồn mở: hỏi dữ liệu bằng giao diện kéo thả hay SQL, dựng dashboard có bộ lọc. Tự host bằng một file JAR hay Docker.",
+          "pick": "Chọn khi người xem cần lọc và xem số liệu đã tính sẵn mà không cần code, và muốn ít phần phải dựng hơn Superset.",
+          "avoid": "Tránh khi chỉ cần vài biểu đồ tĩnh: notebook hay Streamlit đủ. Metabase cần một máy chủ chạy suốt.",
+          "cost": "free",
           "level": 1,
           "fit": {
             "latency": [
@@ -3436,20 +3595,126 @@
           },
           "links": [
             {
-              "title": "Data Studio docs",
-              "url": "https://docs.cloud.google.com/looker/docs/studio"
-            },
-            {
-              "title": "Power BI Desktop",
-              "url": "https://learn.microsoft.com/en-us/power-bi/fundamentals/desktop-getting-started"
-            },
-            {
               "title": "Metabase JAR",
               "url": "https://www.metabase.com/docs/latest/installation-and-operation/running-the-metabase-jar-file"
             }
           ],
           "setup": [],
           "task": "Dashboard đọc bảng kết quả và có ít nhất một bộ lọc hoạt động."
+        },
+        {
+          "id": "data-studio",
+          "name": "Data Studio (formerly Looker Studio)",
+          "kind": "Hosted BI reports",
+          "summary": "Công cụ báo cáo, dashboard không mất phí của Google, chạy trên web; năm 2026 Google đổi tên Looker Studio về lại Data Studio, tách khỏi Looker. Nối dữ liệu qua connector của Google (BigQuery, Google Sheets, PostgreSQL…); có bản Data Studio Pro trả phí.",
+          "pick": "Chọn khi dữ liệu kết quả đã ở BigQuery, Google Sheets hay một PostgreSQL mở ra Internet, và cần chia sẻ dashboard bằng một link.",
+          "avoid": "Tránh khi phải tự host hay chỉ dùng mã nguồn mở: Data Studio là dịch vụ của Google. Không có connector cho DuckDB hay Trino; database sau tường lửa phải mở cho dải IP của Google, nên dữ liệu trên máy lab, MinIO thì phải đẩy bảng gold sang chỗ Google đọc được.",
+          "cost": "free",
+          "level": 1,
+          "fit": {
+            "latency": [
+              "report",
+              "batch"
+            ],
+            "users": [
+              "few",
+              "public"
+            ]
+          },
+          "links": [
+            {
+              "title": "Data Studio documentation",
+              "url": "https://docs.cloud.google.com/looker/docs/studio"
+            },
+            {
+              "title": "Connect to PostgreSQL",
+              "url": "https://docs.cloud.google.com/looker/docs/studio/connect-to-postgresql"
+            },
+            {
+              "title": "Data Studio is back (Google Cloud blog)",
+              "url": "https://cloud.google.com/blog/products/data-analytics/looker-studio-is-data-studio"
+            }
+          ],
+          "setup": [],
+          "task": "Dashboard Data Studio đọc bảng kết quả qua connector, có ít nhất một bộ lọc, và người được chia sẻ link mở được."
+        },
+        {
+          "id": "power-bi",
+          "name": "Power BI",
+          "kind": "BI desktop + cloud service",
+          "summary": "Bộ BI của Microsoft: Power BI Desktop (không mất phí, chỉ chạy trên Windows) dựng mô hình dữ liệu và báo cáo, rồi đăng lên Power BI service để chia sẻ. DuckDB nối qua driver ODBC của DuckDB (connector ODBC, chế độ Import); Trino qua connector Starburst (do Starburst cung cấp, cần Starburst ODBC driver).",
+          "pick": "Chọn khi nhóm, nơi làm đã dùng Microsoft 365 và Power BI, hay đề bài yêu cầu Power BI, và có máy Windows để dựng báo cáo.",
+          "avoid": "Tránh khi nhóm dùng macOS, Linux (Desktop chỉ chạy trên Windows) hay phải chỉ dùng mã nguồn mở. Chia sẻ báo cáo cần giấy phép Pro (hay PPU, capacity): tài khoản miễn phí chỉ xem báo cáo của mình. Làm mới dữ liệu trên Power BI service từ nguồn ODBC trong máy cần cài on-premises data gateway.",
+          "cost": "freemium",
+          "level": 2,
+          "fit": {
+            "latency": [
+              "report",
+              "batch"
+            ],
+            "users": [
+              "few",
+              "public"
+            ]
+          },
+          "links": [
+            {
+              "title": "Download Power BI Desktop",
+              "url": "https://learn.microsoft.com/en-us/power-bi/fundamentals/desktop-get-the-desktop"
+            },
+            {
+              "title": "Power BI service features by license type",
+              "url": "https://learn.microsoft.com/en-us/power-bi/fundamentals/service-features-license-type"
+            },
+            {
+              "title": "Power Query ODBC connector",
+              "url": "https://learn.microsoft.com/en-us/power-query/connectors/odbc"
+            },
+            {
+              "title": "DuckDB ODBC API",
+              "url": "https://duckdb.org/docs/stable/clients/odbc/overview"
+            },
+            {
+              "title": "Power Query Starburst connector",
+              "url": "https://learn.microsoft.com/en-us/power-query/connectors/starburst"
+            }
+          ],
+          "setup": [],
+          "task": "Báo cáo Power BI đọc bảng kết quả (qua ODBC hay connector), có ít nhất một bộ lọc, và người xem cần xem mở được."
+        },
+        {
+          "id": "looker",
+          "name": "Looker",
+          "kind": "Enterprise BI platform",
+          "summary": "Nền tảng BI doanh nghiệp trả phí của Google Cloud: định nghĩa số liệu một lần bằng ngôn ngữ LookML, mọi dashboard dùng chung định nghĩa ấy. Nối database qua mạng; danh sách hỗ trợ có Trino, Apache Spark 3+, không có DuckDB. Khác Data Studio (không mất phí).",
+          "pick": "Chọn khi tổ chức đã có Looker hay môn học yêu cầu, và cần một lớp định nghĩa số liệu chung cho nhiều dashboard.",
+          "avoid": "Tránh cho đồ án và dự án học: trả phí, chạy trên Google Cloud, phải học LookML. Superset hay Metabase tự host, Data Studio không mất phí đủ cho dashboard của nhóm nhỏ.",
+          "cost": "paid",
+          "level": 3,
+          "fit": {
+            "latency": [
+              "report",
+              "batch"
+            ],
+            "users": [
+              "public"
+            ],
+            "budget": [
+              "cloud"
+            ]
+          },
+          "links": [
+            {
+              "title": "Looker documentation",
+              "url": "https://docs.cloud.google.com/looker/docs/intro"
+            },
+            {
+              "title": "Looker dialect support",
+              "url": "https://docs.cloud.google.com/looker/docs/dialects"
+            }
+          ],
+          "setup": [],
+          "task": "Một model LookML định nghĩa các số liệu chính; dashboard Looker đọc qua model ấy và khớp số đã đối chiếu."
         },
         {
           "id": "streamlit",
@@ -3594,8 +3859,8 @@
           "id": "superset",
           "name": "Apache Superset",
           "kind": "Open-source BI platform",
-          "summary": "Nền tảng BI mã nguồn mở: kết nối CSDL SQL, dựng chart và dashboard, có SQL Lab để truy vấn. Tự host bằng Docker.",
-          "pick": "Chọn khi muốn dashboard BI tự host, miễn phí, đọc thẳng từ PostgreSQL hay ClickHouse, hoặc muốn học công cụ BI mã nguồn mở.",
+          "summary": "Nền tảng BI mã nguồn mở: kết nối CSDL SQL qua driver SQLAlchemy, dựng chart và dashboard, có SQL Lab để truy vấn. DuckDB nối qua gói duckdb-engine (URI duckdb:////đường/dẫn/file.duckdb), Trino qua gói trino; chạy bằng Docker thì ghi tên gói vào docker/requirements-local.txt rồi khởi động lại. Tự host bằng Docker.",
+          "pick": "Chọn khi muốn dashboard BI tự host, miễn phí, đọc thẳng từ PostgreSQL, DuckDB, Trino hay ClickHouse, hoặc muốn học công cụ BI mã nguồn mở.",
           "avoid": "Tránh khi chỉ cần vài biểu đồ: cấu hình Docker Compose của quickstart không dành cho production, deploy thật cần nhiều thành phần. Data Studio, Metabase hay Streamlit nhanh hơn.",
           "cost": "free",
           "level": 3,
@@ -3613,6 +3878,18 @@
             {
               "title": "Quickstart",
               "url": "https://superset.apache.org/docs/quickstart"
+            },
+            {
+              "title": "Connecting to Databases",
+              "url": "https://superset.apache.org/user-docs/databases/"
+            },
+            {
+              "title": "DuckDB",
+              "url": "https://superset.apache.org/user-docs/databases/supported/duckdb"
+            },
+            {
+              "title": "Trino",
+              "url": "https://superset.apache.org/user-docs/databases/supported/trino"
             }
           ],
           "setup": [
@@ -3730,21 +4007,20 @@
           "id": "docker-compose",
           "name": "Docker Compose",
           "kind": "Multi-container setup",
-          "summary": "Một file compose.yaml khai mọi service (API, PostgreSQL, Redis…) kèm mạng và volume; docker compose up chạy cả bộ.",
-          "pick": "Chọn khi app cần vài service chạy cùng nhau (API + database) trên máy bạn hay trên một VPS.",
-          "avoid": "Tránh khi chỉ có một app Python: một Dockerfile hay file phụ thuộc là đủ.",
+          "summary": "Một file compose.yaml khai mọi service (API, PostgreSQL, MinIO, Spark…) kèm mạng và volume; docker compose up chạy cả bộ trên một máy (một Docker Engine).",
+          "pick": "Chọn khi app cần vài service chạy cùng nhau trên một máy: API + database, hay cả bộ lakehouse (MinIO, catalog, Spark, Superset) trên laptop, máy lab hoặc một VPS. Đây là cách mặc định cho đồ án, demo trên lớp và nhóm sinh viên tự dựng hạ tầng.",
+          "avoid": "Tránh khi chỉ có một app Python: một Dockerfile hay file phụ thuộc là đủ. Compose không trải service ra nhiều máy; chỉ khi thật sự cần nhiều node (một máy không đủ RAM, đĩa, hay phải chạy tiếp khi một máy hỏng) mới tính Kubernetes.",
           "cost": "free",
           "level": 2,
-          "fit": {
-            "users": [
-              "few",
-              "public"
-            ]
-          },
+          "fit": {},
           "links": [
             {
               "title": "Docker Compose quickstart",
               "url": "https://docs.docker.com/compose/gettingstarted/"
+            },
+            {
+              "title": "Docker Compose overview",
+              "url": "https://docs.docker.com/compose/"
             }
           ],
           "setup": [
@@ -3976,6 +4252,37 @@
           "task": "App chạy trên VPS và mở được qua địa chỉ IP hoặc tên miền."
         },
         {
+          "id": "own-server",
+          "name": "Own machine or lab server",
+          "kind": "Self-managed machine",
+          "summary": "Chạy cả hệ thống trên máy của nhóm: laptop, máy bàn hay máy chủ phòng lab, cài Docker và dùng Docker Compose. Không tốn tiền thuê; dữ liệu nằm trên đĩa của máy.",
+          "pick": "Chọn cho đồ án, demo trên lớp, lakehouse tự dựng của nhóm khi phải dùng mã nguồn mở, tự host, hay không có ngân sách cloud.",
+          "avoid": "Tránh khi người ngoài phải dùng được mọi lúc: máy tắt hay mất mạng là dịch vụ dừng, và máy thường không có địa chỉ công khai; khi ấy thuê VPS + Docker. Gắn volume cho MinIO, PostgreSQL và sao lưu ra chỗ khác.",
+          "cost": "free",
+          "level": 2,
+          "fit": {
+            "users": [
+              "me",
+              "few"
+            ]
+          },
+          "links": [
+            {
+              "title": "Install Docker Engine",
+              "url": "https://docs.docker.com/engine/install/"
+            },
+            {
+              "title": "Docker Compose overview",
+              "url": "https://docs.docker.com/compose/"
+            }
+          ],
+          "setup": [
+            "docker compose up -d",
+            "docker compose ps"
+          ],
+          "task": "docker compose up -d trên máy của nhóm dựng đủ service; khởi động lại máy thì dữ liệu trong volume vẫn còn và các service lên lại."
+        },
+        {
           "id": "github-pages",
           "name": "GitHub Pages",
           "kind": "Static site hosting",
@@ -4135,8 +4442,8 @@
           "name": "Kubernetes",
           "kind": "Container orchestration",
           "summary": "Nền tảng chạy và điều phối nhiều container trên một cụm máy: tự khởi động lại, mở rộng, cập nhật dần. Các cloud lớn có dịch vụ Kubernetes được quản lý.",
-          "pick": "Chọn khi muốn học công cụ mà đội hạ tầng dùng, hoặc khi nhiều service phải chạy cùng nhau và luôn sẵn sàng.",
-          "avoid": "Tránh cho dự án một người: cụm, manifest, mạng, lưu trữ là cả một nghề. Cloud Run, Render hay một VPS + Docker Compose đủ cho phần lớn dự án; muốn học thì chạy minikube trên máy.",
+          "pick": "Chọn khi thật sự cần nhiều node: dữ liệu hay tải vượt một máy, service phải chạy tiếp khi một máy hỏng, hoặc môn học, đội hạ tầng yêu cầu Kubernetes.",
+          "avoid": "Tránh cho dự án một người hay đồ án nhóm chạy vừa một máy: cụm, manifest, mạng, lưu trữ (PersistentVolume cho MinIO, PostgreSQL) là cả một nghề. Docker Compose trên một máy (laptop, máy lab, VPS) đủ cho phần lớn đồ án; Cloud Run, Render cho app công khai; muốn học thì chạy minikube trên máy.",
           "cost": "paid",
           "level": 3,
           "fit": {
@@ -4473,6 +4780,7 @@
           "render",
           "cloud-run",
           "vps-docker",
+          "own-server",
           "fly-io",
           "railway",
           "vercel",
@@ -4502,6 +4810,7 @@
           "render",
           "cloud-run",
           "vps-docker",
+          "own-server",
           "fly-io",
           "railway",
           "kubernetes",
@@ -4527,6 +4836,7 @@
           "render",
           "cloud-run",
           "vps-docker",
+          "own-server",
           "fly-io",
           "railway",
           "vercel",
@@ -4557,6 +4867,7 @@
           "render",
           "cloud-run",
           "vps-docker",
+          "own-server",
           "fly-io",
           "railway",
           "vercel",
@@ -4940,6 +5251,7 @@
       "unless": {
         "host": [
           "vps-docker",
+          "own-server",
           "kubernetes",
           "own"
         ]
@@ -5044,6 +5356,7 @@
       "unless": {
         "host": [
           "vps-docker",
+          "own-server",
           "kubernetes",
           "own"
         ]
@@ -5158,6 +5471,7 @@
           "render",
           "cloud-run",
           "vps-docker",
+          "own-server",
           "fly-io",
           "railway",
           "kubernetes",
