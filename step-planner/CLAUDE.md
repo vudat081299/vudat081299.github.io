@@ -3,7 +3,8 @@
 - Tên hiển thị: Data Science Step Planner (`<title>`, thanh trên, trang chủ, Markdown); thư mục, khoá giữ `step-planner`.
 - Một trang, `index.html`: dự án chia thành bước (hàng) và bước con (thẻ), trạng thái, hạn, tài liệu, bàn giao, nhật ký quyết
   định, System design, xuất / nhập Markdown và JSON. Ưu tiên dự án dữ liệu, dùng được cho dự án bất kỳ. Không có người làm (PLAN-010).
-- Giao diện tiếng Anh (PLAN-012), chữ ngắn kiểu ghi chú; nội dung mẫu, tài liệu repo tiếng Việt. Quyết định: [DECISIONS.md](DECISIONS.md).
+- Chữ giao diện tiếng Anh, ngắn kiểu ghi chú (PLAN-012); nội dung mẫu, lời giải thích, tài liệu repo tiếng Việt (PLAN-028).
+  Chuỗi tiếng Việt có chủ ý trong `js/` mang chú thích `lang: vi — lý do` trên dòng mở chuỗi. Quyết định: [DECISIONS.md](DECISIONS.md).
 - Khuôn Markdown và JSON: [FORMAT.md](FORMAT.md). Đổi khuôn thì sửa file ấy cùng commit.
 - Không build. Mở qua HTTP: `python3 -m http.server` ở gốc repo, `http://localhost:8000/step-planner/` (`file://`: trang báo).
 
@@ -170,7 +171,7 @@
 
 ## Cổng: `sh step-planner/tools/check.sh`
 
-- `tools/lint.py`: khuôn mẫu và bàn giao trong mẫu, danh mục System design, mẫu đồ án khớp nguồn và neo, không `innerHTML`, mã màu chỉ trong khối token.
+- `tools/lint.py`: khuôn mẫu và bàn giao trong mẫu, ngôn ngữ (giao diện, mẫu, System design), danh mục System design, mẫu đồ án khớp nguồn và neo, không `innerHTML`, mã màu chỉ trong khối token.
 - `node --input-type=module --check < file` cho `js/*.js` (`node --check file.js` bỏ sót lỗi của module).
 - `tools/test-core.mjs`: logic thuần của `core.js`, `md.js`, `design-core.js`; danh sách ở chính file.
 - `tools/smoke.cjs` (cổng tự dựng máy chủ tạm; thiếu playwright thì bỏ qua, CI chạy ở job smoke): bấm thật các hành vi trên,

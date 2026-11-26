@@ -629,11 +629,11 @@ export const splitInline = (line) => splitDots(protect(line)).map(restore);
 /* Nhãn Markdown: xuất nhãn tiếng Anh (định dạng 3); nhập nhận cả nhãn tiếng Việt của định dạng 2, không phân biệt hoa
  * thường. */
 const LABELS = {
-  goal: ['Goal', 'Mục tiêu'], doneWhen: ['Done when', 'Xong khi'], reopened: ['Reopened', 'Quay lại'], iteration: ['Iteration', 'Vòng'],
-  notes: ['Notes', 'Ghi chú'], docs: ['Docs', 'Tài liệu'], why: ['Why', 'Vì sao'],
+  goal: ['Goal', 'Mục tiêu'], doneWhen: ['Done when', 'Xong khi'], reopened: ['Reopened', 'Quay lại'], iteration: ['Iteration', 'Vòng'], // lang: vi — nhãn định dạng 2, chỉ để nhập
+  notes: ['Notes', 'Ghi chú'], docs: ['Docs', 'Tài liệu'], why: ['Why', 'Vì sao'], // lang: vi — nhãn định dạng 2, chỉ để nhập
   /* Lý do của bước con: xuất nhãn theo trạng thái (REASON_LABEL); nhập nhận nhãn nào cũng được nếu trạng thái có lý do. */
-  reason: ['Cancelled because', 'Huỷ vì', 'Blocked by', 'Waiting on'],
-  step: ['Step', 'Bước'],
+  reason: ['Cancelled because', 'Huỷ vì', 'Blocked by', 'Waiting on'], // lang: vi — nhãn định dạng 2, chỉ để nhập
+  step: ['Step', 'Bước'], // lang: vi — nhãn định dạng 2, chỉ để nhập
   outs: ['Outputs'], ins: ['Inputs'],
 };
 const labelRe = (/** @type {string[]} */ names) => names.join('|');
@@ -865,9 +865,9 @@ export function toMarkdown(ws, labels = null) {
 const ITEM = /^(?:[-*+]|\d+[.)])\s+(?:\[(.?)\]\s*)?(.*)$/;
 const STEP_PREFIX = /^(?:(?:bước|step)\s*)?\d+(?:\s*[.):]\s*|\s+)/i;
 const DATE_TOKEN = '(\\d{4}-\\d{1,2}-\\d{1,2}|\\d{1,2}\\/\\d{1,2}\\/\\d{4})';
-const META_DUE = new RegExp(`^(?:hạn|due):?\\s+${DATE_TOKEN}$`, 'i');
+const META_DUE = new RegExp(`^(?:hạn|due):?\\s+${DATE_TOKEN}$`, 'i'); // lang: vi — nhãn định dạng 2, chỉ để nhập
 const META_DONE = new RegExp(`^done:?\\s+${DATE_TOKEN}$`, 'i'); // ngày xong (`doneAt`)
-const TITLE_DUE = new RegExp(`(^|[\\s(\\[,;])(?:hạn|due):?\\s+(\\d{1,4}[-\\/]\\d{1,2}[-\\/]\\d{1,4})`, 'gi');
+const TITLE_DUE = new RegExp(`(^|[\\s(\\[,;])(?:hạn|due):?\\s+(\\d{1,4}[-\\/]\\d{1,2}[-\\/]\\d{1,4})`, 'gi'); // lang: vi — nhãn định dạng 2, chỉ để nhập
 const LOG_DATE = new RegExp(`^${DATE_TOKEN}\\s*(?:·|–|-|:)?\\s*(.*)$`);
 
 /**

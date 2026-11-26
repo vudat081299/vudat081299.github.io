@@ -18,6 +18,9 @@
      `architectures`: nhóm kiến trúc {id, label, question, note?, sources?, entries, rules}; kiến trúc {id, name, what, use,
      avoid, flow, tools, path?, sources}: `tools` trỏ phương án có thật, `path` trỏ lối có thật; luật gợi ý {if, arch, why}
      dùng cùng khoá điều kiện với `checks`, `arch` là kiến trúc của nhóm ("" = nhóm không cần).
+  6. Ngôn ngữ (PLAN-028): mọi chữ của mẫu có chữ Việt (trừ chuỗi chỉ là đường dẫn, tên file, và LATIN_OK); lời giải thích của
+     system-design.json (DESIGN_VI) tiếng Việt, nhãn và tên tiếng Anh (`english`); chuỗi trong js/*.js và chữ của index.html
+     không có chữ Việt, trừ dòng có chú thích `lang: vi — lý do` (nội dung sinh ra, nhãn nhập định dạng cũ).
 
 Chạy:  python3 step-planner/tools/lint.py
 """
@@ -558,6 +561,140 @@ def check_code():
                 err(f'css/planner.css:{n}: mã màu ngoài khối token')
 
 
+# ── Ngôn ngữ (PLAN-028): chữ giao diện tiếng Anh, nội dung mẫu và lời giải thích tiếng Việt ──
+
+VI_RE = re.compile('[À-ÃÈ-ÊÌÍÒ-ÕÙÚÝà-ãè-êìíò-õùúýĂăĐđĨĩŨũƠơƯưẠ-ỹ]')  # chữ cái riêng của tiếng Việt
+TPL_TEXT = ('name', 'description', 'output', 'title', 'goal', 'doneWhen', 'notes')  # + outs[].name, outs[].note
+# Chuỗi của mẫu được phép không có chữ Việt (ngoài đường dẫn, tên file): tên pha giữ chữ của trang đồ án.
+LATIN_OK = {'P3 · EDA', 'P7 · Demo'}
+# Trường lời giải thích của system-design.json: phải tiếng Việt (chuỗi rỗng bỏ qua). Nhãn, tên: `english` ở check_design.
+DESIGN_VI = {'note', 'stages[].question', 'stages[].guide', 'stages[].task', 'stages[].skipWhen', 'stages[].options[].summary',
+             'stages[].options[].pick', 'stages[].options[].avoid', 'stages[].options[].task', 'checks[].msg', 'paths[].summary',
+             'paths[].why', 'paths[].switch', 'paths[].flow[]', 'paths[].accept[]', 'profile[].help', 'architectures[].question',
+             'architectures[].note', 'architectures[].entries[].what', 'architectures[].entries[].use',
+             'architectures[].entries[].avoid', 'architectures[].rules[].why'}
+JS_VI_MARK = 'lang: vi'  # chú thích trên dòng mở chuỗi: chuỗi tiếng Việt có chủ ý (nội dung sinh ra, nhãn nhập định dạng cũ)
+
+
+def path_text(s):
+    """Chuỗi chỉ gồm đường dẫn, tên file (`data/raw/*.csv`, `README.md`, `.gitignore`) và dấu nối, không có chữ để dịch."""
+    toks = [t.rstrip(',;') for t in s.split()]
+    return all(t in ('', '→', '+', '·') or '/' in t or re.fullmatch(r'[\w.*-]*\.[A-Za-z]\w*\.?', t) for t in toks)
+
+
+def check_tpl_language(data):
+    """(a) Mọi chữ của mẫu tiếng Việt: tên, mô tả, loại đầu ra, tên bước, bước con, mục tiêu, Done when, ghi chú, đầu ra."""
+    for t in data.get('templates') or []:
+        w0 = f'templates.json ({t.get("id")})'
+        items = [('', t)] + [(f'steps[{j}]', s) for j, s in enumerate(t.get('steps') or [])] + [
+            (f'steps[{j}].subs[{k}]', x) for j, s in enumerate(t.get('steps') or []) for k, x in enumerate(s.get('subs') or [])]
+        for where, it in items:
+            fields = [(k, it.get(k)) for k in TPL_TEXT if k in it and (where or k in ('name', 'description', 'output'))]
+            fields += [(f'outs[{n}].{k}', o.get(k)) for n, o in enumerate(it.get('outs') or []) for k in ('name', 'note') if k in o]
+            for k, v in fields:
+                if isinstance(v, str) and v.strip() and not VI_RE.search(v) and not path_text(v) and v not in LATIN_OK:
+                    err(f'{w0} {where}{"." if where else ""}{k}: nội dung mẫu phải tiếng Việt (tên gốc tiếng Anh để trong ngoặc): "{v[:60]}"')
+
+
+def check_design_language(data):
+    """Lời giải thích của System design tiếng Việt; tên phương án tiếng Anh (nhãn, tên khâu, kind: check_design)."""
+    def walk(o, path):
+        if isinstance(o, dict):
+            for k, v in o.items():
+                yield from walk(v, f'{path}.{k}' if path else k)
+        elif isinstance(o, list):
+            for v in o:
+                yield from walk(v, path + '[]')
+        elif isinstance(o, str):
+            yield path, o
+    for path, s in walk(data, ''):
+        if path in DESIGN_VI and s.strip() and not VI_RE.search(s):
+            err(f'system-design.json {path}: lời giải thích phải tiếng Việt: "{s[:60]}"')
+        elif path == 'stages[].options[].name':
+            english(f'system-design.json {path}', s)
+
+
+def js_strings(src):
+    """[(dòng, chữ)] của mọi chuỗi trong code JS ('…', "…", phần chữ của `…`), bỏ chú thích và regex literal."""
+    out, i, n, line, prev, stack = [], 0, len(src), 1, '', []  # stack: độ sâu { } trong từng ${ } đang mở
+    while i < n:
+        c = src[i]
+        if c == '\n':
+            line, i = line + 1, i + 1
+        elif c in ' \t\r':
+            i += 1
+        elif src.startswith('//', i):
+            j = src.find('\n', i)
+            i = n if j < 0 else j
+        elif src.startswith('/*', i):
+            j = src.find('*/', i + 2)
+            j = n if j < 0 else j + 2
+            line, i = line + src.count('\n', i, j), j
+        elif c in '\'"`' or (c == '}' and stack and stack[-1] == 0):
+            end = c if c != '}' else '`'
+            if c == '}':
+                stack.pop()
+            j, buf, start = i + 1, [], line
+            while j < n and src[j] != end and not (end == '`' and src.startswith('${', j)):
+                if src[j] == '\\':
+                    buf.append(src[j:j + 2])
+                    j += 2
+                    continue
+                line += src[j] == '\n'
+                buf.append(src[j])
+                j += 1
+            out.append((start, ''.join(buf)))
+            if end == '`' and src.startswith('${', j):
+                stack.append(0)
+                i = j + 2
+            else:
+                i = j + 1
+            prev = 'a'
+        elif c == '/' and (prev == '' or prev in '(,=:[!&|?{};+-*%<>~^'):  # regex literal
+            j, cls = i + 1, False
+            while j < n and src[j] != '\n' and (src[j] != '/' or cls):
+                cls = (cls or src[j] == '[') and src[j] != ']'
+                j += 2 if src[j] == '\\' else 1
+            i = j + 1
+            while i < n and src[i].isalpha():
+                i += 1
+            prev = 'a'
+        elif re.match(r'[A-Za-z0-9_$]', c):
+            word = re.match(r'[A-Za-z0-9_$]+', src[i:]).group(0)
+            i += len(word)
+            prev = '(' if word in ('return', 'typeof', 'case', 'of', 'in', 'yield', 'await', 'else', 'do') else 'a'
+        else:
+            if c == '{' and stack:
+                stack[-1] += 1
+            elif c == '}' and stack:
+                stack[-1] -= 1
+            prev = 'a' if c in ')]' else c
+            i += 1
+    return out
+
+
+def check_ui_language():
+    """(b) Chữ giao diện tiếng Anh: chuỗi trong js/*.js và chữ của index.html (ngoài chú thích) không có chữ Việt.
+    Chuỗi tiếng Việt có chủ ý (nội dung việc System design sinh ra, lời giải thích, nhãn nhập của định dạng cũ): dòng mở
+    chuỗi mang chú thích `lang: vi — lý do`."""
+    for name in sorted(os.listdir(os.path.join(HERE, 'js'))):
+        if not name.endswith('.js'):
+            continue
+        src = open(os.path.join(HERE, 'js', name), encoding='utf-8').read()
+        lines = src.split('\n')
+        for ln, s in js_strings(src):
+            if VI_RE.search(s) and JS_VI_MARK not in lines[ln - 1]:
+                err(f'js/{name}:{ln}: chữ giao diện phải tiếng Anh (nội dung có chủ ý: thêm chú thích `// {JS_VI_MARK} — lý do`): "{s[:60]}"')
+    page = open(os.path.join(HERE, 'index.html'), encoding='utf-8').read()
+    for m in re.finditer(r'<!--.*?-->|<script\b[^>]*>(.*?)</script>', page, re.S):
+        if m.group(1) and any(VI_RE.search(s) for _, s in js_strings(m.group(1))):
+            err(f'index.html:{page.count(chr(10), 0, m.start()) + 1}: chuỗi tiếng Việt trong <script>')
+    bare = re.sub(r'<!--.*?-->|<script\b[^>]*>.*?</script>', lambda m: '\n' * m.group(0).count('\n'), page, flags=re.S)
+    for n, l in enumerate(bare.split('\n'), 1):
+        if VI_RE.search(l):
+            err(f'index.html:{n}: chữ giao diện phải tiếng Anh: "{l.strip()[:60]}"')
+
+
 def main():
     data = json.load(open(TEMPLATES, encoding='utf-8'))
     if '--write-course' in sys.argv:
@@ -572,6 +709,9 @@ def main():
     design = json.load(open(DESIGN, encoding='utf-8'))
     check_design(design)
     check_code()
+    check_tpl_language(data)
+    check_design_language(design)
+    check_ui_language()
     if errors:
         for e in errors:
             print(f'step-planner: {e}')

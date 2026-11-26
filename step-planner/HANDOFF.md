@@ -34,6 +34,8 @@ Làm xong mục nào thì xoá mục ấy.
 
 ## CHỜ CHỦ TRANG
 
+- Ngôn ngữ: đoạn giải thích đầu mỗi phần của hộp System design (`js/design.js`, dòng `lang: vi`) và chữ của việc System design
+  sinh ra (`js/design-core.js`) đang giữ tiếng Việt, coi là lời giải thích / nội dung. Có muốn chúng tiếng Anh như chữ giao diện không?
 - Toast "Add evidence" hiện mỗi lần một thẻ có "Done when" (mọi thẻ CRISP-DM) sang Done mà chưa có bằng chứng: có thể ồn.
   Có cần một công tắc tắt gợi ý này không?
 - Luật `free-host-sleeps` ghi Render "dậy mất khoảng một phút": là thời gian, không phải giá hay hạn mức; có hợp luật

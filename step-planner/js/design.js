@@ -431,9 +431,9 @@ function pathPane() {
   return [
     h('p', { class: 'dlg-kicker' }, 'Start here'),
     h('h3', { class: 'sd-h' }, 'What do you deliver?'),
-    h('p', { class: 'sd-q' }, 'Chọn thứ cuối cùng bạn bàn giao. Lối cho thấy luồng tối thiểu, khâu nào cần, khâu nào bỏ được; gợi ý ở từng khâu ưu tiên công cụ của lối.'),
+    h('p', { class: 'sd-q' }, 'Chọn thứ cuối cùng bạn bàn giao. Lối cho thấy luồng tối thiểu, khâu nào cần, khâu nào bỏ được; gợi ý ở từng khâu ưu tiên công cụ của lối.'), // lang: vi — lời giải thích, nội dung
     h('fieldset', { class: 'sd-paths' }, h('legend', { class: 'sr' }, 'What do you deliver?'),
-      ...[...cat.paths, { id: '', label: 'Not sure yet', summary: 'Đi thẳng qua hồ sơ và từng khâu.' }].map((/** @type {any} */ x) => h('label', { class: 'sd-path-card' },
+      ...[...cat.paths, { id: '', label: 'Not sure yet', summary: 'Đi thẳng qua hồ sơ và từng khâu.' }].map((/** @type {any} */ x) => h('label', { class: 'sd-path-card' }, // lang: vi — lời giải thích, nội dung
         h('input', { type: 'radio', name: 'sd-path', value: x.id, 'data-path': '1', checked: (d?.path || '') === x.id }),
         h('span', { class: 'sd-path-txt' }, h('b', {}, x.label), h('small', {}, x.summary))))),
     p ? pathDetail(p) : null,
@@ -506,7 +506,7 @@ function profilePane() {
   return [
     h('p', { class: 'dlg-kicker' }, 'Your project'),
     h('h3', { class: 'sd-h' }, 'Project profile'),
-    h('p', { class: 'sd-q' }, 'Trả lời những câu bạn biết; câu nào chưa chắc thì để "Not sure". Gợi ý ở từng khâu đổi theo câu trả lời.'),
+    h('p', { class: 'sd-q' }, 'Trả lời những câu bạn biết; câu nào chưa chắc thì để "Not sure". Gợi ý ở từng khâu đổi theo câu trả lời.'), // lang: vi — lời giải thích, nội dung
     ...asked.map(q2),
     rest.length ? h('details', { class: 'sd-more', 'data-more': 'profile-rest', open: moreOpen.has('profile-rest') },
       h('summary', {}, deps.icon('chev'), `${C.plural(rest.length, 'question')} the ${p.label} path doesn't need`),
@@ -525,7 +525,7 @@ function archPane() {
   return [
     h('p', { class: 'dlg-kicker' }, 'Your project'),
     h('h3', { class: 'sd-h' }, 'Architecture'),
-    h('p', { class: 'sd-q' }, 'Kiến trúc là hình dạng lớn của hệ thống, quyết trước khi chọn công cụ cho từng khâu. Mỗi nhóm dưới đây trả lời một câu hỏi bằng vài kiến trúc chuẩn; trang gợi ý một kiến trúc mỗi nhóm theo hồ sơ dự án, lối đã chọn và các khâu đã quyết.'),
+    h('p', { class: 'sd-q' }, 'Kiến trúc là hình dạng lớn của hệ thống, quyết trước khi chọn công cụ cho từng khâu. Mỗi nhóm dưới đây trả lời một câu hỏi bằng vài kiến trúc chuẩn; trang gợi ý một kiến trúc mỗi nhóm theo hồ sơ dự án, lối đã chọn và các khâu đã quyết.'), // lang: vi — lời giải thích, nội dung
     adv.every((a) => a.id === null) ? h('p', { class: 'sd-tip' }, 'Answer the project profile to get a recommendation. ',
       h('button', { type: 'button', class: 'sd-link', 'data-at': 1 }, 'Go to profile')) : null,
     ...fams.map((/** @type {any} */ f, /** @type {number} */ i) => archFamily(f, adv[i], d)),
@@ -588,7 +588,7 @@ function handoffsPane() {
   return [
     h('p', { class: 'dlg-kicker' }, 'Review'),
     h('h3', { class: 'sd-h' }, 'Handoffs'),
-    h('p', { class: 'sd-q' }, 'Mỗi đường nối giữa hai khâu đã quyết là một chỗ bàn giao: bên trước đưa gì, bên sau đọc ở đâu và bằng cách nào, hai bên hứa gì, kiểm thế nào là đã nối được. Điền vài đường quan trọng là đủ.'),
+    h('p', { class: 'sd-q' }, 'Mỗi đường nối giữa hai khâu đã quyết là một chỗ bàn giao: bên trước đưa gì, bên sau đọc ở đâu và bằng cách nào, hai bên hứa gì, kiểm thế nào là đã nối được. Điền vài đường quan trọng là đủ.'), // lang: vi — lời giải thích, nội dung
     edges.length ? null : h('p', { class: 'sd-tip' }, 'Decide two neighbouring stages on the diagram to describe the handoff between them.'),
     ...edges.map(edgeItem),
     kept ? h('p', { class: 'sd-help' }, `${C.plural(kept, 'handoff')} kept for stages that are no longer decided or next to each other.`) : null,
@@ -625,7 +625,7 @@ function checksPane() {
   return [
     h('p', { class: 'dlg-kicker' }, 'Review'),
     h('h3', { class: 'sd-h' }, 'Checks'),
-    h('p', { class: 'sd-q' }, 'Những cặp lựa chọn hay vấp khi ghép với nhau. Trang chỉ báo khi các khâu liên quan đã quyết.'),
+    h('p', { class: 'sd-q' }, 'Những cặp lựa chọn hay vấp khi ghép với nhau. Trang chỉ báo khi các khâu liên quan đã quyết.'), // lang: vi — lời giải thích, nội dung
     warns.length ? h('ul', { class: 'sd-warns' }, ...warns.map((x) => h('li', { class: 'sd-warnbox' },
       h('b', {}, x.title), h('p', {}, x.msg),
       h('p', { class: 'sd-warn-go' }, ...x.stages.map((id) => h('button', { type: 'button', class: 'btn small', 'data-at': stagePage(id) }, title(id)))))))

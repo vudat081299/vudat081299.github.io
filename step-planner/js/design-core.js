@@ -287,11 +287,11 @@ export const viaLabel = (id) => VIA.find((x) => x.id === id)?.label || '';
 
 export const PLAN_STEP = {
   title: 'System build',
-  goal: 'Dựng hệ thống theo khung đã chọn ở System design.',
-  doneWhen: 'Mọi khâu đã chọn chạy nối tiếp nhau, từ nguồn dữ liệu tới người dùng.',
-  notes: 'Dựng một đường chạy thông sớm: dữ liệu thật, mô hình đơn giản nhất, giao diện thô, deploy được. Rồi mới làm tốt từng khâu.\n'
-    + 'Đổi thiết kế thì bấm "Update plan" ở mục System design: việc sinh ra đi theo thiết kế, ghi chú và tài liệu của bạn giữ nguyên.\n'
-    + 'Nguồn: Google, Rules of Machine Learning, rule #4: https://developers.google.com/machine-learning/guides/rules-of-ml',
+  goal: 'Dựng hệ thống theo khung đã chọn ở System design.', // lang: vi — nội dung việc sinh ra
+  doneWhen: 'Mọi khâu đã chọn chạy nối tiếp nhau, từ nguồn dữ liệu tới người dùng.', // lang: vi — nội dung việc sinh ra
+  notes: 'Dựng một đường chạy thông sớm: dữ liệu thật, mô hình đơn giản nhất, giao diện thô, deploy được. Rồi mới làm tốt từng khâu.\n' // lang: vi — nội dung việc sinh ra
+    + 'Đổi thiết kế thì bấm "Update plan" ở mục System design: việc sinh ra đi theo thiết kế, ghi chú và tài liệu của bạn giữ nguyên.\n' // lang: vi — nội dung việc sinh ra
+    + 'Nguồn: Google, Rules of Machine Learning, rule #4: https://developers.google.com/machine-learning/guides/rules-of-ml', // lang: vi — nội dung việc sinh ra
 };
 
 /** Chữ ký ngắn của nội dung một việc sinh ra (djb2, cơ số 36). @param {any} t */
@@ -314,7 +314,7 @@ export function planTasks(catalog, design) {
     const names = pickNames(s, st);
     if (!names.length) continue;
     const setup = opts.flatMap((/** @type {any} */ o) => o.setup || []);
-    const notes = [setup.length ? 'Lệnh bắt đầu:' : '', ...setup.map((/** @type {string} */ c) => '  ' + c), st.note].filter(Boolean).join('\n');
+    const notes = [setup.length ? 'Lệnh bắt đầu:' : '', ...setup.map((/** @type {string} */ c) => '  ' + c), st.note].filter(Boolean).join('\n'); // lang: vi — nội dung việc sinh ra
     out.push({
       src: `stage:${s.id}`, prefix: `${s.title}:`,
       title: `${s.title}: ${names.join(' + ')}`,
@@ -329,7 +329,7 @@ export function planTasks(catalog, design) {
     out.push({
       src: `edge:${e.key}`, prefix: `Handoff: ${e.from.title} → ${e.to.title}`,
       title: `Handoff: ${e.from.title} → ${e.to.title}`,
-      doneWhen: e.c.check || `${e.to.title} đọc được đầu ra của ${e.from.title} theo hợp đồng bàn giao, trên dữ liệu mẫu.`,
+      doneWhen: e.c.check || `${e.to.title} đọc được đầu ra của ${e.from.title} theo hợp đồng bàn giao, trên dữ liệu mẫu.`, // lang: vi — nội dung việc sinh ra
       notes: [e.c.via ? `Via: ${viaLabel(e.c.via)}` : '', e.c.what ? `What: ${e.c.what}` : '', e.c.where ? `Where: ${e.c.where}` : '',
         e.c.promise ? `Promise: ${e.c.promise}` : ''].filter(Boolean).join('\n'),
       docs: [],

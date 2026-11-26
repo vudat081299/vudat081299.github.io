@@ -116,7 +116,7 @@
               ]
             },
             {
-              "title": "Chia train / validation / test (Generate Test Design)",
+              "title": "Chia tập train / validation / test (Generate Test Design)",
               "doneWhen": "Đã ghi cách chia (theo thời gian, ngẫu nhiên, theo nhóm hay phân tầng), tỷ lệ, seed; bỏ dòng trùng trước khi chia; tập test cất riêng tới pha Đánh giá.",
               "notes": "CRISP-DM 1.0 đặt task này ở pha Mô hình hoá (4.2). Mẫu dời lên đây để làm sạch và tạo đặc trưng không nhìn thấy tập test.\nDữ liệu theo thời gian: train là quá khứ, test là tương lai. Một người hay một nhóm có nhiều dòng: chia theo nhóm để không nằm ở cả hai phía.\nChỉnh tham số bằng cross-validation thì validation là các fold trong train; tập test vẫn cất riêng.",
               "outs": [
