@@ -7,7 +7,7 @@ import {
   nextStatus, setStatus, splitInline, normWorkspace, normSub, normLog, freshCopy, counts, slug, fold, parseDate, uniqueName, normDoc, safeUrl,
 } from '../js/core.js';
 import { parseMd, inline, srcTokens } from '../js/md.js';
-import { normDesign, rankOptions, snake, planTasks, diagramNodes, decidedCount, catalogErrors, readStageLine } from '../js/design-core.js';
+import { normDesign, rankOptions, snake, planTasks, diagramNodes, decidedCount, catalogErrors, readStageLine, applyPath, effProfile } from '../js/design-core.js';
 
 let fails = 0;
 const check = (name, ok, detail = '') => {
@@ -464,7 +464,7 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   check('thiết kế: chuẩn hoá bỏ id lạ, khâu trống; "không cần" giữ lựa chọn ẩn', eq(normDesign({
     profile: { size: 'small', Bad: 'x', budget: 'Free!' },
     stages: { serve: { pick: ['fastapi', 'fastapi', 'X Y', 3] }, host: { pick: [] }, ingest: { skip: true, pick: ['cron'], own: 'z' }, 'a b': { pick: ['q'] } },
-  }), { profile: { size: 'small' }, stages: { serve: { pick: ['fastapi'], skip: false, own: '', note: '' }, ingest: { pick: ['cron'], skip: true, own: 'z', note: '' } } }));
+  }), { path: '', profile: { size: 'small' }, stages: { serve: { pick: ['fastapi'], skip: false, own: '', note: '' }, ingest: { pick: ['cron'], skip: true, own: 'z', note: '' } } }));
   check('thiết kế: không còn gì thì null', normDesign({ profile: {}, stages: { a: { pick: [] } } }) === null && normDesign('x') === null);
   const s = { options: [{ id: 'a', level: 3, fit: { size: ['large'] } }, { id: 'b', level: 2, fit: { size: ['small'], budget: ['free'] } }, { id: 'c', level: 1, fit: {} }] };
   const r = rankOptions(s, { size: 'small', budget: 'free' });
@@ -494,14 +494,29 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
     && readStageLine('Ingest: not needed [ingest: skip]').skip && readStageLine('không có ngoặc') === null);
   const ws = normWorkspace({ name: 'P', steps: [{ title: 'A', subs: [{ title: 'x' }] }], design: { profile: { size: 'small', latency: 'online' },
     stages: { serve: { pick: ['fastapi', 'in-app'], own: 'Vapor', note: 'Own: dòng mở bằng nhãn\n\n# không phải tiêu đề\n- không phải việc' }, ingest: { skip: true, note: 'dữ liệu cố định' } } } });
-  const labels = (id, st) => ({ stage: id.toUpperCase(), names: [...st.pick, st.own].filter(Boolean) });
-  check('thiết kế: Markdown đi rồi về giữ nguyên (có và không có nhãn)', eq(shape(ws), roundTrip(ws)) && eq(shape(ws), shape(fromMarkdown(toMarkdown(ws, labels)).workspace)),
+  check('thiết kế: Markdown đi rồi về giữ nguyên (có và không có nhãn)', eq(shape(ws), roundTrip(ws)) && eq(shape(ws), shape(fromMarkdown(toMarkdown(ws, cat)).workspace)),
     firstDiff(shape(ws), roundTrip(ws)));
   check('thiết kế: JSON đi rồi về giữ nguyên', eq(parseImport(toJSON(ws)).workspaces[0].design, ws.design));
+  /* Lối bắt đầu: gợi ý ưu tiên phương án của lối, áp lối chỉ điền khâu chưa quyết, không đè khâu đã quyết. */
+  const demo = cat.paths.find((p) => p.id === 'demo');
+  const app = cat.stages.find((x) => x.id === 'app');
+  check('thiết kế: lối — chưa trả lời hồ sơ vẫn có Recommended, phương án lối gợi ý đứng đầu',
+    rankOptions(app, effProfile(cat, { path: 'demo', profile: {}, stages: {} }), demo)[0].top
+    && demo.suggest.app.includes(rankOptions(app, effProfile(cat, { path: 'demo', profile: {}, stages: {} }), demo)[0].opt.id));
+  const mine = { path: '', profile: { users: 'public' }, stages: { app: { pick: ['web-app'], skip: false, own: '', note: '' }, monitor: { pick: [], skip: false, own: '', note: 'giữ' } } };
+  const ap = applyPath(cat, mine, 'report');
+  check('thiết kế: áp lối — khâu lối bỏ thành Not needed, khâu cần có gợi ý được chọn, khâu đã quyết giữ nguyên, ghi chú giữ',
+    ap.next.path === 'report' && ap.next.stages.app.pick[0] === 'web-app' && ap.next.stages.serve.skip && ap.next.stages.monitor.skip
+    && ap.next.stages.monitor.note === 'giữ' && ap.next.stages.process.pick.length === 1 && !ap.filled.includes('app') && !ap.next.stages.ingest
+    && ap.skipped.includes('serve') && mine.path === '');
+  const pws = normWorkspace({ name: 'P', steps: [], design: ap.next });
+  const pmd = toMarkdown(pws, cat);
+  check('thiết kế: Markdown ghi lối (tên, luồng, mốc nghiệm thu) và nhập lại chỉ đọc id', /^Path: Notebook & report \[path: report\]/m.test(pmd)
+    && /^ {2}Accept: /m.test(pmd) && eq(shape(pws), shape(fromMarkdown(pmd).workspace)) && !fromMarkdown(pmd).warnings.length);
   const md = '# P\n\n## System design\n\nProfile: size small · budget free\n\n- dòng lạ\n- Serving: FastAPI [serve: fastapi]\n';
   const back = fromMarkdown(md);
   check('thiết kế: Markdown viết tay — dòng không có [khâu: …] thì cảnh báo, không thành bước', back.workspace.steps.length === 0
-    && eq(back.workspace.design, { profile: { size: 'small', budget: 'free' }, stages: { serve: { pick: ['fastapi'], skip: false, own: '', note: '' } } }) && back.warnings.length === 1);
+    && eq(back.workspace.design, { path: '', profile: { size: 'small', budget: 'free' }, stages: { serve: { pick: ['fastapi'], skip: false, own: '', note: '' } } }) && back.warnings.length === 1);
 }
 
 if (fails) { console.log(`test-core: ${fails} LỖI`); process.exit(1); }

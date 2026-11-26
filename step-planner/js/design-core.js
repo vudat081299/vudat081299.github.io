@@ -1,6 +1,7 @@
 /* Thiết kế hệ thống của một dự án (PLAN-016) — logic thuần, không DOM, chạy được trong Node.
- * Danh mục (data/system-design.json): hồ sơ dự án (câu hỏi → lựa chọn) và các khâu theo đường đi của dữ liệu, mỗi khâu
- * nhiều phương án có `fit` (khoá hồ sơ → các câu trả lời hợp). Dự án giữ `design = {profile, stages}`; không có gì thì null. */
+ * Danh mục (data/system-design.json): lối bắt đầu theo thứ bàn giao (`paths`), hồ sơ dự án (câu hỏi → lựa chọn) và các khâu
+ * theo đường đi của dữ liệu, mỗi khâu nhiều phương án có `fit` (khoá hồ sơ → các câu trả lời hợp).
+ * Dự án giữ `design = {path, profile, stages}`; không có gì thì null. */
 
 const ID = /^[a-z0-9][a-z0-9-]{0,39}$/;
 const isObj = (/** @type {any} */ v) => !!v && typeof v === 'object' && !Array.isArray(v);
@@ -17,10 +18,11 @@ const idList = (v) => (Array.isArray(v) ? [...new Set(v.filter((x) => typeof x =
  * Khâu "không cần" (`skip`) vẫn giữ phương án, chữ tự ghi (ẩn, bỏ qua ở mọi chỗ): tắt "không cần" là chúng về lại.
  * Khâu trống bị bỏ; dự án không còn gì thì null.
  * @param {any} o
- * @returns {null | {profile: Record<string,string>, stages: Record<string,{pick:string[], skip:boolean, own:string, note:string}>}}
+ * @returns {null | {path: string, profile: Record<string,string>, stages: Record<string,{pick:string[], skip:boolean, own:string, note:string}>}}
  */
 export function normDesign(o) {
   if (!isObj(o)) return null;
+  const path = typeof o.path === 'string' && ID.test(o.path) ? o.path : '';
   /** @type {Record<string,string>} */
   const profile = {};
   if (isObj(o.profile)) for (const [k, v] of Object.entries(o.profile)) if (ID.test(k) && typeof v === 'string' && ID.test(v)) profile[k] = v;
@@ -34,11 +36,20 @@ export function normDesign(o) {
       if (st.pick.length || st.skip || st.own || st.note) stages[k] = st;
     }
   }
-  return Object.keys(profile).length || Object.keys(stages).length ? { profile, stages } : null;
+  return path || Object.keys(profile).length || Object.keys(stages).length ? { path, profile, stages } : null;
 }
 
-/** Bản trống để sửa. @returns {{profile: Record<string,string>, stages: Record<string,any>}} */
-export const emptyDesign = () => ({ profile: {}, stages: {} });
+/** Bản trống để sửa. @returns {{path: string, profile: Record<string,string>, stages: Record<string,any>}} */
+export const emptyDesign = () => ({ path: '', profile: {}, stages: {} });
+
+/** Lối đã chọn (còn trong danh mục) hay null. @param {any} cat @param {any} design */
+export const pathOf = (cat, design) => (design && design.path && (cat.paths || []).find((/** @type {any} */ p) => p.id === design.path)) || null;
+
+/** Hồ sơ dùng để gợi ý: câu người dùng đã trả lời; câu chưa trả lời lấy theo lối (`implies`). @param {any} cat @param {any} design */
+export function effProfile(cat, design) {
+  const p = pathOf(cat, design);
+  return { ...(p ? p.implies : {}), ...(design ? design.profile : {}) };
+}
 
 /** Trạng thái một khâu: 'done' (đã chọn hay tự ghi), 'skip' (không cần), 'open'. @param {any} design @param {string} id */
 export function stageState(design, id) {
@@ -67,15 +78,48 @@ export function fitOf(opt, profile) {
 }
 
 /**
- * Phương án của một khâu theo thứ tự gợi ý: hợp hồ sơ trước (khớp nhiều câu hơn, dễ hơn trước), rồi thứ tự danh mục.
- * `top`: phương án đứng đầu khi đã có ít nhất một câu hồ sơ được trả lời và nó hợp.
- * @param {any} stage @param {Record<string,string>} profile
+ * Phương án của một khâu theo thứ tự gợi ý: hợp hồ sơ trước, rồi phương án lối đã chọn gợi ý (`sug`), khớp nhiều câu hơn,
+ * dễ hơn, rồi thứ tự danh mục. `top`: phương án đứng đầu khi đã trả lời ít nhất một câu hồ sơ hay chọn lối, và nó hợp.
+ * @param {any} stage @param {Record<string,string>} profile @param {any} [path]
  */
-export function rankOptions(stage, profile) {
-  const answered = Object.keys(profile).length > 0;
-  const rows = stage.options.map((/** @type {any} */ o, /** @type {number} */ i) => ({ opt: o, i, ...fitOf(o, profile) }));
-  rows.sort((a, b) => (+b.ok - +a.ok) || (b.score - a.score) || ((a.opt.level || 2) - (b.opt.level || 2)) || (a.i - b.i));
+export function rankOptions(stage, profile, path = null) {
+  const answered = Object.keys(profile).length > 0 || !!path;
+  const sug = (path && path.suggest[stage.id]) || [];
+  const rows = stage.options.map((/** @type {any} */ o, /** @type {number} */ i) => ({ opt: o, i, sug: sug.includes(o.id), ...fitOf(o, profile) }));
+  rows.sort((a, b) => (+b.ok - +a.ok) || (+b.sug - +a.sug) || (b.score - a.score) || ((a.opt.level || 2) - (b.opt.level || 2)) || (a.i - b.i));
   return rows.map((r, k) => ({ ...r, top: answered && k === 0 && r.ok }));
+}
+
+/**
+ * Áp lối vào thiết kế: chỉ khâu chưa quyết. Khâu lối bỏ (`skip`) thành "không cần"; khâu lối cần (`need`) có gợi ý thì chọn
+ * phương án đứng đầu (hợp hồ sơ, ưu tiên gợi ý của lối). Khâu `maybe` để người dùng tự quyết. Không đụng khâu đã quyết.
+ * @param {any} cat @param {any} design @param {string} pathId
+ * @returns {{next: any, filled: string[], skipped: string[]}}
+ */
+export function applyPath(cat, design, pathId) {
+  const d = design ? JSON.parse(JSON.stringify(design)) : emptyDesign();
+  d.path = pathId;
+  const path = pathOf(cat, d);
+  /** @type {string[]} */ const filled = [];
+  /** @type {string[]} */ const skipped = [];
+  if (!path) return { next: normDesign(d), filled, skipped };
+  const prof = effProfile(cat, d);
+  for (const s of cat.stages) {
+    if (stageState(d, s.id) !== 'open') continue;
+    const need = path.stages[s.id];
+    const rec = d.stages[s.id] || { pick: [], skip: false, own: '', note: '' };
+    if (need === 'skip') {
+      rec.skip = true;
+      skipped.push(s.id);
+    } else if (need === 'need' && path.suggest[s.id]) {
+      const r = rankOptions(s, prof, path);
+      const best = r[0].ok ? r[0] : (r.find((x) => x.sug) || r[0]);
+      rec.pick = [best.opt.id];
+      filled.push(s.id);
+    } else continue;
+    d.stages[s.id] = rec;
+  }
+  return { next: normDesign(d), filled, skipped };
 }
 
 /** Số khâu đã quyết (chọn, tự ghi hay không cần) trên tổng số khâu. @param {any} catalog @param {any} design */
@@ -156,8 +200,10 @@ export function planTasks(catalog, design) {
   return out;
 }
 
-/* ── Markdown: mục "## System design" (core.js gọi). Mỗi khâu một dòng: chữ đọc được, cuối dòng là `[khâu: id, id]`
- * (hay `[khâu: skip]`) — trang chỉ đọc phần trong ngoặc. Dòng thụt: `Own: …` rồi ghi chú. ── */
+/* ── Markdown: mục "## System design" (core.js gọi designMd, designReader). `Path: tên [path: id]` (dòng thụt dưới nó: luồng
+ * và mốc nghiệm thu của lối, chép từ danh mục cho người và AI đọc, nhập bỏ qua). Mỗi khâu một dòng: chữ đọc được, cuối dòng
+ * là `[khâu: id, id]` (hay `[khâu: skip]`; lựa chọn ẩn của khâu "không cần" không ghi) — trang chỉ đọc phần trong ngoặc.
+ * Dòng thụt: `Own: …` rồi ghi chú. ── */
 
 export const DESIGN_HEADING = 'System design';
 export const DESIGN_HEAD_RE = /^(?:system design|thiết kế hệ thống)$/i;
@@ -202,7 +248,7 @@ export function readStageLine(text) {
 /** @param {any} cat @returns {string[]} lỗi */
 export function catalogErrors(cat) {
   const err = [];
-  if (!isObj(cat) || !Array.isArray(cat.profile) || !Array.isArray(cat.stages)) return ['catalog needs profile[] and stages[]'];
+  if (!isObj(cat) || !Array.isArray(cat.paths) || !Array.isArray(cat.profile) || !Array.isArray(cat.stages)) return ['catalog needs paths[], profile[] and stages[]'];
   const answers = new Map(cat.profile.map((/** @type {any} */ q) => [q.id, new Set((q.choices || []).map((/** @type {any} */ c) => c.id))]));
   const seen = new Set();
   for (const s of cat.stages) {
@@ -221,4 +267,73 @@ export function catalogErrors(cat) {
     }
   }
   return err;
+}
+
+/**
+ * Các dòng sau tiêu đề `## System design`. `cat`: danh mục (chữ đọc được) hay null (chỉ id).
+ * @param {any} d @param {any} cat @param {(s: string) => string} esc @param {(l: string[]) => string[]} hard
+ * @returns {string[]}
+ */
+export function designMd(d, cat, esc, hard) {
+  const out = [];
+  if (d.path) {
+    const p = cat ? pathOf(cat, d) : null;
+    out.push('', ...hard([`Path: ${p ? p.label + ' ' : ''}[path: ${d.path}]`,
+      ...(p ? [...p.flow.map((/** @type {string} */ f, /** @type {number} */ i) => `  Flow ${i + 1}: ${f}`), ...p.accept.map((/** @type {string} */ a) => `  Accept: ${a}`)] : [])]));
+  }
+  if (Object.keys(d.profile).length) out.push('', profileLine(d.profile));
+  const ids = Object.keys(d.stages);
+  if (ids.length) out.push('');
+  for (const id of ids) {
+    const st = d.stages[id];
+    const more = [];
+    if (st.own && !st.skip) more.push(`  Own: ${st.own}`);
+    /* Ghi chú mở bằng `Own:` thì thoát, kẻo đọc lại thành chữ tự ghi. */
+    if (st.note) more.push(...st.note.split('\n').map((/** @type {string} */ l) => '  ' + (/^own:/i.test(l) ? '\\' + l : esc(l))));
+    const s = cat && cat.stages.find((/** @type {any} */ x) => x.id === id);
+    out.push(...hard([stageLine(id, st, s ? { stage: s.title, names: pickNames(s, st) } : {}), ...more]));
+  }
+  return out;
+}
+
+/**
+ * Bộ đọc mục System design của Markdown: core.js đưa từng dòng (trừ tiêu đề `## `) vào `line`; kết quả ở `design`.
+ * @param {string[]} warnings @param {(s: string) => string} unesc
+ */
+export function designReader(warnings, unesc) {
+  /** @type {any} */
+  const design = { path: '', profile: {}, stages: {} };
+  let block = /** @type {'' | 'path' | 'stage'} */ ('');
+  let first = false;
+  /** @type {any} */ let dst = null;
+  /** @param {string} raw */
+  const line = (raw) => {
+    const ind = /^( {2}|\t)(.*)$/.exec(raw);
+    if (ind && block) {
+      const l = ind[2];
+      if (block === 'stage') {
+        const own = /^Own:\s?(.*)$/i.exec(l);
+        if (first && own) dst.own = own[1].slice(0, OWN_MAX);
+        else dst.note = dst.note == null ? unesc(l) : dst.note + '\n' + unesc(l);
+      } // block 'path': luồng, mốc nghiệm thu chép từ danh mục — bỏ qua
+      first = false;
+      return;
+    }
+    block = '';
+    if (!raw.trim()) return;
+    const pm = /^Profile:\s*(.*)$/i.exec(raw);
+    const pa = /^Path:\s*(.*)$/i.exec(raw);
+    const item = /^(?:[-*+]|\d+[.)])\s+(.*)$/.exec(raw);
+    const sl = item ? readStageLine(item[1]) : null;
+    if (pa) {
+      const m = /\[path:\s*([a-z0-9-]+)\s*\]\s*$/i.exec(pa[1]) || /^([a-z0-9-]+)$/i.exec(pa[1].trim());
+      if (m) design.path = m[1].toLowerCase(); else warnings.push(`Line in System design not read: ${raw.trim()}`);
+      block = 'path';
+    } else if (pm) Object.assign(design.profile, readProfile(pm[1]));
+    else if (sl) {
+      dst = design.stages[sl.id] = { pick: sl.pick, skip: sl.skip, own: '', note: null };
+      block = 'stage'; first = true;
+    } else warnings.push(`Line in System design not read: ${raw.trim()}`);
+  };
+  return { design, line };
 }

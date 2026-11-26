@@ -1002,6 +1002,25 @@ span.chip::after { content: none; }
 .sd-pill input:checked + span { color: var(--on-accent); background: var(--accent); border-color: var(--accent); font-weight: 600; }
 .sd-pill input:focus-visible + span { outline: var(--ring-w) solid var(--ring); outline-offset: var(--mark-w); }
 .sd-pos { font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-3); }
+.sd-deliv { font: 500 var(--fs-xs)/var(--lh-tight) var(--mono); letter-spacing: var(--track); text-transform: uppercase; color: var(--green); }
+/* Lối bắt đầu: thẻ radio, rồi luồng tối thiểu, mốc nghiệm thu, nút Apply path. */
+.sd-paths { display: grid; grid-template-columns: repeat(auto-fill, minmax(var(--tpl-min), 1fr)); gap: var(--s3); border: 0; padding: 0; }
+.sd-path-card {
+  position: relative; display: flex; align-items: flex-start; gap: var(--s3); padding: var(--s3); cursor: pointer;
+  background: var(--surface); border: var(--line-w) solid var(--line); border-radius: var(--r); box-shadow: var(--shadow-1);
+}
+.sd-path-card input { flex: none; width: var(--icon); height: var(--icon); margin-top: var(--mark-w); accent-color: var(--green); }
+.sd-path-card:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); }
+.sd-path-txt { min-width: 0; display: flex; flex-direction: column; gap: var(--s1); }
+.sd-path-txt b { font: 600 var(--fs-md)/var(--lh-tight) var(--display); }
+.sd-path-txt small { font-size: var(--fs-sm); line-height: var(--lh); color: var(--ink-2); }
+.sd-path-det { display: flex; flex-direction: column; gap: var(--s3); }
+.sd-h4 { margin: 0; font: 600 var(--fs-lg)/var(--lh-tight) var(--display); }
+.sd-flowlist, .sd-accept { display: flex; flex-direction: column; gap: var(--s1); padding-left: var(--s5); font-size: var(--fs-md); line-height: var(--lh); }
+.sd-flowlist { list-style: decimal; }
+.sd-accept { list-style: disc; }
+.sd-apply { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2) var(--s3); }
+.sd-applied { padding: var(--s3); font-size: var(--fs-sm); color: var(--ink); background: var(--accent-soft); border-radius: var(--r-sm); }
 @media (max-width: 640px) {
   .sd { grid-template-columns: minmax(0, 1fr); padding-top: var(--s5); }
   .sd-acts { flex-direction: row; flex-wrap: wrap; }

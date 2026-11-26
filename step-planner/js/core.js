@@ -2,7 +2,7 @@
 /* Logic thuần của Step Planner: chuẩn hoá dữ liệu, tiến độ, Markdown và JSON vào / ra.
  * Không đụng DOM hay bộ nhớ trình duyệt; chạy được trong Node (tools/test-core.mjs). */
 
-import { normDesign, DESIGN_HEADING, DESIGN_HEAD_RE, profileLine, readProfile, stageLine, readStageLine, OWN_MAX } from './design-core.js';
+import { normDesign, DESIGN_HEADING, DESIGN_HEAD_RE, designMd, designReader } from './design-core.js';
 
 /* Bảy trạng thái (PLAN-003), theo thứ tự: còn mở (mới, đang làm, chờ, bị chặn), xong, ngoài phạm vi (bỏ qua, huỷ).
  * Chờ: đợi bên ngoài, tự xong mà ta không phải làm gì. Bị chặn: vướng, phải ra tay gỡ. Bỏ qua: không cần với dự án này.
@@ -465,8 +465,8 @@ function readDocs(lines, i, docs, warnings, min) {
 }
 
 /**
- * `labels` (tuỳ chọn): tên khâu và tên phương án từ danh mục thiết kế, cho mục System design dễ đọc; nhập chỉ đọc id.
- * @param {any} ws @param {null | ((stageId: string, st: any) => {stage?: string, names?: string[]})} [labels]
+ * `labels` (tuỳ chọn): danh mục thiết kế (data/system-design.json), cho mục System design dễ đọc; nhập chỉ đọc id.
+ * @param {any} ws @param {any} [labels]
  * @returns {string}
  */
 export function toMarkdown(ws, labels = null) {
@@ -498,21 +498,7 @@ export function toMarkdown(ws, labels = null) {
       out.push(...hardBreaks([line, ...more]), ...docLines(x.docs, '  '));
     }
   });
-  if (ws.design) {
-    const d = ws.design;
-    out.push('', `## ${DESIGN_HEADING}`);
-    if (Object.keys(d.profile).length) out.push('', profileLine(d.profile));
-    const ids = Object.keys(d.stages);
-    if (ids.length) out.push('');
-    for (const id of ids) {
-      const st = d.stages[id];
-      const more = [];
-      if (st.own && !st.skip) more.push(`  Own: ${st.own}`); // khâu "không cần": phương án, chữ tự ghi ẩn không ghi ra
-      /* Ghi chú mở bằng `Own:` thì thoát, kẻo đọc lại thành chữ tự ghi. */
-      if (st.note) more.push(...st.note.split('\n').map((/** @type {string} */ l) => '  ' + (/^own:/i.test(l) ? '\\' + l : escBlock(l))));
-      out.push(...hardBreaks([stageLine(id, st, labels ? labels(id, st) : {}), ...more]));
-    }
-  }
+  if (ws.design) out.push('', `## ${DESIGN_HEADING}`, ...designMd(ws.design, labels, escBlock, hardBreaks));
   if (ws.log.length) {
     out.push('', `## ${LOG_HEADING}`, '');
     for (const l of ws.log) {
@@ -584,11 +570,11 @@ export function fromMarkdown(text) {
   /** @type {any} */ let step = null;
   /** @type {any} */ let sub = null;
   /** @type {any} */ let entry = null;
-  /** @type {any} */ let dst = null; // khâu đang đọc của mục System design
+  /** @type {any} */ let dr = null; // bộ đọc mục System design (design-core.js)
   let inLog = false;
   let inDesign = false;
   let started = false; // đã qua `## ` đầu tiên
-  let block = /** @type {'' | 'step' | 'sub' | 'why' | 'design'} */ ('');
+  let block = /** @type {'' | 'step' | 'sub' | 'why'} */ ('');
   let blockFirst = false;
   let reasonCont = false; // đang ở các dòng thụt bốn nối tiếp nhãn lý do (`Cancelled because:`, `Huỷ vì:`…)
   const addNote = (/** @type {any} */ o, /** @type {string} */ key, /** @type {string} */ l) => {
@@ -611,6 +597,7 @@ export function fromMarkdown(text) {
 
   for (let i = 0; i < lines.length; i++) {
     const raw = lines[i];
+    if (inDesign && !/^## /.test(raw)) { dr.line(raw); continue; }
     const ind = /^( {2}|\t)(.*)$/.exec(raw);
     if (ind && block === 'sub' && reasonCont && /^ {2}/.test(ind[2])) {
       sub.reason += '\n' + unescBlock(ind[2].slice(2));
@@ -642,10 +629,6 @@ export function fromMarkdown(text) {
         entry.stepTitle = oneLine(after(l, 'step')); // `Step:` đứng ngay dưới dòng quyết định, trước `Why:`
         continue;
       } else if (block === 'why') addNote(entry, 'why', blockFirst && after(l, 'why') !== null ? /** @type {string} */ (after(l, 'why')) : unescBlock(l));
-      else if (block === 'design') {
-        const own = /^Own:\s?(.*)$/i.exec(l);
-        if (blockFirst && own) dst.own = own[1].slice(0, OWN_MAX); else addNote(dst, 'note', unescBlock(l));
-      }
       blockFirst = false;
       continue;
     }
@@ -658,21 +641,14 @@ export function fromMarkdown(text) {
       const h = m[1].trim();
       if (/^(nhật ký( quyết định)?|decision log)$/i.test(h)) { inLog = true; inDesign = false; step = null; continue; }
       inLog = false;
-      if (DESIGN_HEAD_RE.test(h)) { inDesign = true; step = null; ws.design = ws.design || { profile: {}, stages: {} }; continue; }
+      if (DESIGN_HEAD_RE.test(h)) {
+        inDesign = true; step = null;
+        if (!dr) { dr = designReader(warnings, unescBlock); ws.design = dr.design; }
+        continue;
+      }
       inDesign = false;
       step = { title: h.replace(STEP_PREFIX, '') || h, subs: [] };
       ws.steps.push(step);
-      continue;
-    }
-    if (inDesign) {
-      const pm = /^Profile:\s*(.*)$/i.exec(raw);
-      const it = ITEM.exec(raw);
-      const sl = it ? readStageLine(raw.replace(/^\s*[-*+]\s+/, '')) : null;
-      if (pm) Object.assign(ws.design.profile, readProfile(pm[1]));
-      else if (sl) {
-        dst = ws.design.stages[sl.id] = { pick: sl.pick, skip: sl.skip, own: '', note: null };
-        block = 'design'; blockFirst = true;
-      } else warnings.push(`Line in System design not read: ${raw.trim()}`);
       continue;
     }
     if (inLog) {

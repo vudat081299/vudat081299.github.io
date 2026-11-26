@@ -34,6 +34,8 @@ DESIGN = os.path.join(HERE, 'data/system-design.json')
 LANES = ('data', 'model', 'app', 'ops')
 STAGE_KEYS = {'id', 'title', 'lane', 'question', 'guide', 'multi', 'skipWhen', 'task', 'options'}
 OPT_KEYS = {'id', 'name', 'kind', 'summary', 'pick', 'avoid', 'cost', 'level', 'fit', 'links', 'setup', 'task'}
+DESIGN_KEYS = {'note', 'paths', 'profile', 'stages'}
+PATH_KEYS = {'id', 'label', 'summary', 'flow', 'why', 'switch', 'ask', 'implies', 'stages', 'suggest', 'accept'}
 ID_RE = r'[a-z0-9]+(-[a-z0-9]+)*'
 
 errors = []
@@ -175,8 +177,8 @@ def check_templates(data):
 
 def check_design(data):
     w0 = 'system-design.json'
-    if set(data) != {'note', 'profile', 'stages'}:
-        err(f'{w0}: khoá gốc phải là note, profile, stages (đang có {sorted(data)})')
+    if set(data) != DESIGN_KEYS:
+        err(f'{w0}: khoá gốc phải là {sorted(DESIGN_KEYS)} (đang có {sorted(data)})')
         return
     answers = {}
     for i, q in enumerate(data['profile']):
@@ -245,6 +247,49 @@ def check_design(data):
             for a in vals:
                 if not any(a in (o.get('fit') or {}).get(q, vals) for o in opts):
                     err(f'{w}: không phương án nào hợp khi {q} = {a}')
+    check_paths(data, answers, {s.get('id'): {o.get('id') for o in s.get('options') or []} for s in data['stages']})
+
+
+def check_paths(data, answers, options):
+    """Lối bắt đầu theo thứ bàn giao: mỗi khâu một mức need / maybe / skip, gợi ý chỉ phương án có thật ở khâu không bỏ."""
+    seen = set()
+    paths = data.get('paths')
+    if not isinstance(paths, list) or len(paths) < 2:
+        err('system-design.json: `paths` cần ít nhất hai lối')
+        return
+    for i, pth in enumerate(paths):
+        pid = pth.get('id', '')
+        w = f'system-design.json paths[{i}] ({pid})'
+        if set(pth) != PATH_KEYS:
+            err(f'{w}: khoá phải là {sorted(PATH_KEYS)} (đang có {sorted(pth)})')
+            continue
+        if not re.fullmatch(ID_RE, str(pid)) or pid in seen:
+            err(f'{w}: id sai hoặc trùng')
+        seen.add(pid)
+        for k in ('label', 'summary', 'why', 'switch'):
+            need_str(w, pth, k)
+        english(f'{w}.label', pth.get('label', ''))
+        for k in ('flow', 'accept'):
+            v = pth.get(k)
+            if not isinstance(v, list) or not v:
+                err(f'{w}: `{k}` là danh sách chữ không rỗng')
+            else:
+                for j in range(len(v)):
+                    if not isinstance(v[j], str) or not v[j].strip() or '\n' in v[j]:
+                        err(f'{w}.{k}[{j}]: mỗi mục một dòng chữ')
+        for q in pth['ask']:
+            if q not in answers:
+                err(f'{w}: ask có câu hồ sơ lạ {q}')
+        for q, a in pth['implies'].items():
+            if q not in answers or a not in answers[q]:
+                err(f'{w}: implies.{q} = {a} không khớp hồ sơ')
+        if set(pth['stages']) != set(options) or set(pth['stages'].values()) - {'need', 'maybe', 'skip'}:
+            err(f'{w}: stages phải ghi mọi khâu, giá trị need / maybe / skip')
+        for sid, ids in pth['suggest'].items():
+            if sid not in options or pth['stages'].get(sid) == 'skip':
+                err(f'{w}: suggest.{sid} — khâu lạ hoặc khâu lối này bỏ')
+            elif not ids or set(ids) - options[sid]:
+                err(f'{w}: suggest.{sid} có phương án lạ {sorted(set(ids) - options[sid])}')
 
 
 def check_code():

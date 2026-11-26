@@ -1564,11 +1564,13 @@ const check = (name, ok, detail = '') => {
       && (await sp.$$eval('#sd-fig .sd-node.is-open', (ns) => ns.length)) === cat.stages.length);
     await sp.click('#sd-btn');
     await sp.click('#sd-open');
-    await sp.waitForSelector('#dlg-sd[open] .sd-prof');
+    await sp.waitForSelector('#dlg-sd[open] .sd-paths');
     const before = await sp.$$eval('#sd-nav .sd-nav-btn', (b) => b.length);
-    check(`${tag}: hộp có hồ sơ và mọi khâu`, before === cat.stages.length + 1);
+    check(`${tag}: hộp mở ở lối bắt đầu, có hồ sơ và mọi khâu`, before === cat.stages.length + 2
+      && (await sp.$$eval('#sd-pane input[data-path]', (r) => r.length)) === cat.paths.length + 1);
+    await sp.click('#sd-nav [data-at="1"]');
     await sp.click('input[data-q="size"][value="large"]', { force: true });
-    await sp.click('#sd-nav [data-at="4"]');
+    await sp.click('#sd-nav [data-at="5"]');
     const proc = cat.stages[3];
     const top = await sp.$eval('#sd-pane .sd-opt:has(.sd-tag.top)', (e) => e.dataset.opt).catch(() => '');
     const want = proc.options.find((o) => !o.fit || !o.fit.size || o.fit.size.includes('large'));
@@ -1589,6 +1591,22 @@ const check = (name, ok, detail = '') => {
     await sp.fill('#sd-pane [data-note]', 'Own: lý do\n- không phải việc');
     ws = await cur(sp);
     check(`${tag}: "Not needed" và ghi chú lưu`, ws.design.stages[ing].skip && /không phải việc/.test(ws.design.stages[ing].note));
+    /* Lối bắt đầu: chọn lối thì thấy luồng tối thiểu; Apply path chỉ điền khâu chưa quyết; Hoàn tác trong hộp trả lại. */
+    await sp.click('#sd-nav [data-at="0"]');
+    await sp.click('#sd-pane input[data-path][value="report"]', { force: true });
+    check(`${tag}: chọn lối thì hiện luồng tối thiểu và mốc nghiệm thu`, (await sp.$$eval('#sd-pane .sd-flowlist li', (l) => l.length)) > 1
+      && (await sp.$$eval('#sd-pane .sd-accept li', (l) => l.length)) > 0);
+    await sp.click('#sd-pane [data-apply]');
+    ws = await cur(sp);
+    check(`${tag}: Apply path — khâu lối bỏ thành Not needed, khâu cần được chọn, khâu đã quyết giữ nguyên`, ws.design.path === 'report'
+      && ws.design.stages.serve?.skip && ws.design.stages.app?.pick[0] === 'notebook-report' && ws.design.stages[proc.id].pick[0] === top
+      && ws.design.stages[ing].skip && /Filled/.test(await sp.textContent('#sd-pane .sd-applied')));
+    if (w === 390) check(`${tag}: hộp lối bắt đầu không tràn ngang`, await sp.$eval('#dlg-sd', (d) => d.scrollWidth <= d.clientWidth + 1));
+    await sp.click('#sd-pane [data-unapply]');
+    ws = await cur(sp);
+    check(`${tag}: Hoàn tác Apply path trả các khâu vừa điền`, !ws.design.stages.serve && !ws.design.stages.app && ws.design.stages[proc.id].pick[0] === top
+      && ws.design.path === 'report');
+    await sp.click('#sd-pane input[data-path][value=""]', { force: true });
     if (w === 390) check(`${tag}: hộp không tràn ngang`, await sp.$eval('#dlg-sd', (d) => d.scrollWidth <= d.clientWidth + 1));
     await sp.keyboard.press('Escape');
     check(`${tag}: sơ đồ bỏ khâu không cần, khâu đã chọn có tên`, !(await sp.$(`#sd-fig [data-stage="${ing}"]`))
