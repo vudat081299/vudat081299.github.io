@@ -2151,18 +2151,21 @@ const check = (name, ok, detail = '') => {
 
     // Nút giữa hai ô: danh sách cặp; chọn dòng thì đóng hộp, tô cả hai thẻ, focus bên nhận, không cuộn trang lẫn hàng thẻ.
     // Khung nhìn hẹp, thẻ nhận lấn ra ngoài mép dưới trang và mép phải hàng thẻ: cách cũ (cuộn tới) phải cuộn cả hai.
-    // off: thẻ nhận lấn ra ngoài mép dưới khung nhìn, mép phải hàng thẻ bao nhiêu px.
+    // off: thẻ nhận lấn ra ngoài mép dưới khung nhìn, mép phải hàng thẻ bao nhiêu px; tên thẻ (chỗ focus) nằm hẳn ngoài mép phải
+    // hàng thẻ: focus mà không preventScroll là hàng thẻ cuộn.
     const scrollPos = () => hp.evaluate(() => {
       const c = document.querySelector('.card[data-sub="hC"]').getBoundingClientRect();
+      const t = document.querySelector('.card[data-sub="hC"] [data-act="edit-sub"]').getBoundingClientRect();
       const row = document.querySelector('.card[data-sub="hC"]').closest('.cards-scroll');
-      return { x: scrollX, y: scrollY, row: row.scrollLeft, off: [Math.round(c.bottom - innerHeight), Math.round(c.right - row.getBoundingClientRect().right)] };
+      const rr = row.getBoundingClientRect();
+      return { x: scrollX, y: scrollY, row: row.scrollLeft, off: [Math.round(c.bottom - innerHeight), Math.round(c.right - rr.right), Math.round(t.left - rr.right)] };
     });
     await hp.setViewportSize({ width: 760, height: 600 });
     await hp.evaluate(() => {
       const c = document.querySelector('.card[data-sub="hC"]');
       window.scrollBy(0, c.getBoundingClientRect().bottom - innerHeight - 12);
       const row = c.closest('.cards-scroll');
-      row.scrollLeft += c.getBoundingClientRect().right - row.getBoundingClientRect().right - 12;
+      row.scrollLeft += c.querySelector('[data-act="edit-sub"]').getBoundingClientRect().left - row.getBoundingClientRect().right - 8;
       const g = document.querySelector('[data-act="hand-gap"]'); // bấm qua DOM: hp.click tự cuộn nút vào khung nhìn
       g.focus({ preventScroll: true });
       g.click();
@@ -2437,6 +2440,25 @@ const check = (name, ok, detail = '') => {
     const io4 = await ioOf();
     check('đầu vào / đầu ra: xoá bên giao thì đầu vào nơi dùng lỗi ngay ("output was deleted"); Hoàn tác trả lại',
       io3.gI === 'bad/none' && io3.gC === 'bad/ok' && io3.g2 === 'bad/ok' && /output was deleted/.test(gone.a) && same(io4, want0), JSON.stringify({ io3, io4, gone }));
+    // Xoá "Fetch", tải lại: đầu vào mất nguồn vẫn còn, vẫn lỗi; chip In của bước đếm nó; hộp sửa hiện chip "Deleted output", gỡ rồi Save.
+    await ip.click('.card[data-sub="gA"] [data-act="edit-sub"]');
+    await ip.click('#sub-del');
+    await ip.reload();
+    await ip.waitForSelector('.card[data-sub="gI"]');
+    const io5 = await ioOf();
+    const inTag = await ip.textContent('.step[data-step="g2"] [data-act="hand-in"]');
+    await ip.click('.step[data-step="g2"] [data-act="hand-in"]');
+    const goneList = await ip.textContent('#hand-list');
+    await ip.keyboard.press('Escape');
+    await ip.click('.card[data-sub="gI"] [data-act="edit-sub"]');
+    const goneChip = await ip.evaluate(() => [...document.querySelectorAll('#sub-hand .in-chip')].map((c) => (c.classList.contains('gone') ? 'gone:' : '') + c.textContent));
+    await ip.click('#sub-hand .in-chip.gone [data-in-del]');
+    await ip.click('#sub-form button[type="submit"]');
+    const io6 = await ioOf();
+    const gIins = (await cur(ip)).steps[0].subs.find((x) => x.id === 'gI').ins;
+    check('đầu vào / đầu ra: đầu vào mất nguồn giữ qua lần tải lại, chip In đếm nó, danh sách và hộp sửa ghi "Deleted output", gỡ được',
+      io5.gI === 'bad/none' && io5.gC === 'bad/ok' && io5.g2 === 'bad/ok' && /In 1/.test(inTag) && /Deleted output.*output was deleted/.test(goneList)
+      && same(goneChip, ['gone:Deleted outputits source no longer exists']) && io6.gI === '-' && same(gIins, []), JSON.stringify({ io5, inTag, goneList, goneChip, io6, gIins }));
     await ic.close();
 
     // 390px: không tràn ngang, chấm nằm trong thẻ và đầu bước.
@@ -2452,6 +2474,105 @@ const check = (name, ok, detail = '') => {
     }).length);
     check('đầu vào / đầu ra 390px: không tràn ngang, chấm nằm trong thẻ và đầu bước', (await hOverflow(ip2)) === 0 && narrow === 0, String(narrow));
     await ic2.close();
+
+    // Danh sách cặp: bên giao ở xa (nhiều hàng phía trên, nhiều ô bên trái) — không tự cuộn; toast nói nó ở đâu, "Show" mới cuộn tới.
+    const farSteps = [{ id: 'f0', title: 'Producer step', subs: [{ id: 'fp', title: 'Make table', outs: [{ id: 'fo1', name: 'clean.parquet' }] }] }];
+    for (let i = 1; i < 8; i++) farSteps.push({ id: 'f' + i, title: 'Filler ' + i, subs: [0, 1, 2].map((k) => ({ id: `ff${i}_${k}`, title: `Task ${i}.${k} with a long title`, notes: 'line\nline\nline' })) });
+    farSteps.push({ id: 'f8', title: 'Consumer step', subs: [{ id: 'fc', title: 'Use table', ins: ['fo1'] },
+      ...Array.from({ length: 14 }, (_, k) => ({ id: 'fw' + k, title: 'Wide ' + k, ...(k === 0 ? { outs: [{ id: 'fo2', name: 'features.parquet' }] } : {}),
+        ...(k === 12 ? { outs: [{ id: 'fo3', name: 'near.parquet' }] } : {}), ...(k === 13 ? { ins: ['fo2', 'fo3'] } : {}) }))] });
+    const fc2 = await browser.newContext({ viewport: { width: 1280, height: 800 }, deviceScaleFactor: 1 });
+    await fc2.addInitScript(seedInit, { id: 'wf', name: 'Far', steps: farSteps, log: [] });
+    const fp2 = await fc2.newPage();
+    fp2.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
+    fp2.on('pageerror', (e) => errors.push(String(e)));
+    await fp2.goto(BASE);
+    await fp2.waitForSelector('.card[data-sub="fc"]');
+    const vis = (id) => fp2.evaluate((i) => { const c = document.querySelector(`.card[data-sub="${i}"]`), r = c.getBoundingClientRect(), s = c.closest('.cards-scroll').getBoundingClientRect();
+      return r.bottom > 0 && r.top < innerHeight && r.right > s.left && r.left < s.right; }, id);
+    const tst = () => fp2.evaluate(() => ({ on: !document.getElementById('toast').hidden, text: document.getElementById('toast-text').textContent,
+      btn: document.getElementById('toast-undo').textContent, y: Math.round(scrollY), focus: document.activeElement?.closest('[data-sub]')?.dataset.sub }));
+    await fp2.click('.step[data-step="f8"] [data-act="hand-row"]');
+    await fp2.click('#dlg-hand .hand-pair');
+    const r0 = await tst();
+    const rv0 = await vis('fp');
+    await fp2.keyboard.press('Control+z'); // nút toast không phải Hoàn tác: Ctrl + Z không bấm nó
+    const r1 = await tst();
+    await fp2.click('#toast-undo');
+    await fp2.waitForFunction(() => { const r = document.querySelector('.card[data-sub="fp"]').getBoundingClientRect(); return r.top > 0 && r.bottom < innerHeight; });
+    const r2 = await tst();
+    check('bàn giao: danh sách cặp — bên giao ở hàng xa phía trên: không tự cuộn, toast "… is above, off screen", "Show" cuộn tới và focus nó',
+      !rv0 && r0.on && r0.text === '"Make table" is above, off screen' && r0.btn === 'Show' && r0.focus === 'fc' && same(r1, r0)
+      && !r2.on && r2.y < r0.y && r2.focus === 'fp', JSON.stringify({ r0, r1, r2 }));
+    await fp2.evaluate(() => { document.querySelector('.card[data-sub="fc"]').scrollIntoView({ block: 'center' }); const sc = document.querySelector('.step[data-step="f8"] .cards-scroll'); sc.scrollLeft = sc.scrollWidth; });
+    await fp2.evaluate(() => document.querySelector('.step[data-step="f8"] [data-act="hand-gap"]').click());
+    await fp2.click('#dlg-hand .hand-pair');
+    const g0 = await tst();
+    const gv0 = await vis('fw0');
+    await fp2.click('#toast-undo');
+    await fp2.waitForFunction(() => { const c = document.querySelector('.card[data-sub="fw0"]').getBoundingClientRect(), s = c && document.querySelector('.step[data-step="f8"] .cards-scroll').getBoundingClientRect(); return c.left >= s.left - 1 && c.right <= s.right + 1; });
+    check('bàn giao: danh sách cặp — bên giao ở ô xa bên trái hàng: toast "… is to the left, off screen", "Show" cuộn hàng tới nó',
+      !gv0 && g0.text === '"Wide 0" is to the left, off screen' && g0.focus === 'fw13' && (await vis('fw0')), JSON.stringify({ g0 }));
+    // Hai bên đều trong tầm nhìn (ô liền trước): không toast.
+    await fp2.evaluate(() => { document.getElementById('toast').hidden = true; const sc = document.querySelector('.step[data-step="f8"] .cards-scroll'); sc.scrollLeft = sc.scrollWidth; });
+    await fp2.evaluate(() => document.querySelector('.step[data-step="f8"] [data-act="hand-gap"]').click());
+    await fp2.locator('#dlg-hand .hand-pair', { hasText: 'Wide 12' }).click();
+    const n0 = await tst();
+    check('bàn giao: danh sách cặp — hai bên trong tầm nhìn thì không có toast', !n0.on, JSON.stringify(n0));
+    await fc2.close();
+
+    // Hộp sửa: dấu "on hold" tính theo ô Bước / Vị trí đang chọn (chưa Lưu); hộp chọn ghi đầu ra đứng sau; Lưu tạo treo thì toast báo.
+    const pc = await browser.newContext({ viewport: { width: 1280, height: 900 }, deviceScaleFactor: 1 });
+    await pc.addInitScript(seedInit, { id: 'wp', name: 'Pick', log: [], steps: [
+      { id: 'p1', title: 'First', subs: [{ id: 'pa', title: 'Consumer A' }] },
+      { id: 'p2', title: 'Second', subs: [{ id: 'pb', title: 'Producer B', outs: [{ id: 'pob', name: 'model.pkl' }] }, { id: 'pc', title: 'Consumer C', ins: ['pob'] }] },
+      { id: 'p3', title: 'Third', subs: [{ id: 'pd', title: 'Consumer D' }] }] });
+    const pp = await pc.newPage();
+    pp.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
+    pp.on('pageerror', (e) => errors.push(String(e)));
+    await pp.goto(BASE);
+    await pp.waitForSelector('.card[data-sub="pa"]');
+    const setSel = (sel, v) => pp.evaluate(([q, val]) => { const e = document.querySelector(q); e.value = val; e.dispatchEvent(new Event('change', { bubbles: true })); }, [sel, v]);
+    const chipHeld = () => pp.evaluate(() => [...document.querySelectorAll('#sub-hand .in-chip, #step-hand .in-chip')].filter((c) => c.offsetParent).map((c) => (c.classList.contains('held') ? 'held:' : '') + c.querySelector('b').textContent));
+    await pp.click('.card[data-sub="pa"] [data-act="edit-sub"]');
+    await pp.click('#sub-hand [data-in-pick]');
+    const pickTxt = await pp.textContent('#pick-groups');
+    await pp.check('#pick-groups input[value="pob"]');
+    await pp.click('#pick-ok');
+    const c0 = await chipHeld();
+    await setSel('#sub-form [name="step"]', 'p3');
+    const c1 = await chipHeld();
+    await setSel('#sub-form [name="step"]', 'p1');
+    const c2 = await chipHeld();
+    await pp.click('#sub-form button[type="submit"]');
+    const t0 = await pp.textContent('#toast-text');
+    const dotA = await pp.evaluate(() => document.querySelector('.card[data-sub="pa"] .io')?.dataset.ioIn);
+    check('hộp sửa: hộp chọn ghi đầu ra đứng sau; dấu "on hold" theo ô Bước đang chọn; Lưu tạo treo thì toast báo',
+      /model\.pkl\s*Producer B \(comes after this — will be on hold\)/.test(pickTxt) && same(c0, ['held:model.pkl']) && same(c1, ['model.pkl']) && same(c2, ['held:model.pkl'])
+      && /^Saved "Consumer A" · Input on hold: "Consumer A" now comes before "Producer B"\./.test(t0) && dotA === 'bad', JSON.stringify({ pickTxt, c0, c1, c2, t0, dotA }));
+    // Đổi Bước sang sau bên giao rồi Lưu: dời, liên kết nối, toast dời không báo treo.
+    await pp.click('.card[data-sub="pa"] [data-act="edit-sub"]');
+    await setSel('#sub-form [name="step"]', 'p3');
+    const c3 = await chipHeld();
+    await pp.click('#sub-form button[type="submit"]');
+    const t1 = await pp.textContent('#toast-text');
+    const dotA2 = await pp.evaluate(() => document.querySelector('.card[data-sub="pa"] .io')?.dataset.ioIn);
+    check('hộp sửa: đổi Bước tới sau bên giao — chip hết "on hold" trước khi Lưu, Lưu thì dời và nối lại',
+      same(c3, ['model.pkl']) && /^Moved "Consumer A" to step "Third"/.test(t1) && !/on hold/.test(t1) && dotA2 === 'ok', JSON.stringify({ c3, t1, dotA2 }));
+    // Hộp bước: Vị trí đổi thì dấu đổi theo; dời bước nhận xuống cuối khi Lưu thì không báo treo.
+    await pp.click('.step[data-step="p1"] [data-act="edit-step"]');
+    await pp.click('#step-hand [data-in-pick]');
+    await pp.check('#pick-groups input[value="pob"]');
+    await pp.click('#pick-ok');
+    const s0 = await chipHeld();
+    await setSel('#step-form [name="pos"]', '2');
+    const s1 = await chipHeld();
+    await pp.click('#step-form button[type="submit"]');
+    const t2 = await pp.textContent('#toast-text');
+    const st = (await cur(pp)).steps.map((x) => x.id);
+    check('hộp bước: dấu "on hold" theo ô Vị trí đang chọn; Lưu ở chỗ sau bên giao thì không treo',
+      same(s0, ['held:model.pkl']) && same(s1, ['model.pkl']) && same(st, ['p2', 'p3', 'p1']) && !/on hold/.test(t2), JSON.stringify({ s0, s1, st, t2 }));
+    await pc.close();
   }
 
   /* ── Dữ liệu lưu bị hỏng ── */

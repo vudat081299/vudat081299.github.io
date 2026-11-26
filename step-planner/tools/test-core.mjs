@@ -809,8 +809,8 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   };
   const ws = normWorkspace(raw);
   const s2 = ws.steps[1];
-  check('bàn giao: normWorkspace — id đầu ra trùng lấy id mới, đầu vào không còn trỏ tới đâu bị bỏ',
-    s2.subs[0].outs[1].id !== 'm' && eq(s2.ins, ['m']) && eq(ws.steps[0].subs[3].ins, ['oa', 'ob']));
+  check('bàn giao: normWorkspace — id đầu ra trùng lấy id mới, đầu vào mất nguồn vẫn giữ',
+    s2.subs[0].outs[1].id !== 'm' && eq(s2.ins, ['m', 'gone']) && eq(ws.steps[0].subs[3].ins, ['oa', 'ob']));
   const f = freshCopy(ws);
   const ids = (w) => w.steps.flatMap((s) => [s, ...s.subs]).flatMap((x) => x.outs.map((o) => o.id));
   check('bàn giao: freshCopy — id đầu ra mới, đầu vào trỏ theo', eq(shape(f), shape(ws)) && ids(f).every((id) => !ids(ws).includes(id)));
@@ -818,7 +818,28 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   const back = fromMarkdown(md);
   check('bàn giao: Markdown đi rồi về giữ nguyên (tên đầu ra trùng, bên giao trùng tên, ký tự thoát, hợp đồng)', eq(shape(ws), shape(back.workspace)) && !back.warnings.length,
     firstDiff(shape(ws), shape(back.workspace)) + back.warnings.join(' | '));
-  check('bàn giao: Markdown — tên bên giao trùng thì ghi "bước › bước con"', md.includes('  - table ← Clean › A') && md.includes('    - table ← C'));
+  check('bàn giao: Markdown — tên bên giao trùng thì ghi "N. bước › bước con"', md.includes('  - table ← 1. Clean › A') && md.includes('    - table ← C'));
+  /* Bên giao dễ nhầm: (A) bước và bước con (ở bước trước) cùng tên, cùng tên đầu ra; (B) "Data" và "data" cùng một bên giao;
+   * (C) hai bước cùng tên, mỗi bước một bước con cùng tên, cùng tên đầu ra; (D) tên bước con mở bằng "2. ". */
+  const links = (w) => H.handoffs(w).links.map((l) => `${H.holderTitle(l.to)}<-${l.out.name}@${l.from.i}.${l.from.sub ? l.from.step.subs.indexOf(l.from.sub) : '-'}`).sort();
+  const tricky = normWorkspace({ steps: [
+    { title: 'Prep', subs: [{ title: 'Train', outs: [{ id: 'o1', name: 'model' }] }, { title: '2. Train', outs: [{ id: 'o5', name: 'cfg' }] }] },
+    { title: 'Train', outs: [{ id: 'o2', name: 'model' }], subs: [{ title: 'Clean', outs: [{ id: 'o3', name: 'Data' }, { id: 'o4', name: 'data' }] }] },
+    { title: 'S', subs: [{ title: 'T', outs: [{ id: 'o6', name: 'm' }] }] },
+    { title: 'S', subs: [{ title: 'T', outs: [{ id: 'o7', name: 'm' }] }] },
+    { title: 'Serve', outs: [{ id: 'o8', name: 'cfg' }], subs: [{ title: 'API', ins: ['o2', 'o4', 'o7', 'o5'] }, { title: 'Batch', ins: ['o1', 'o3', 'o6'] }] }] });
+  const tmd = toMarkdown(tricky);
+  const tb = fromMarkdown(tmd);
+  check('bàn giao: Markdown đi rồi về — bước / bước con cùng tên, "Data" / "data", bên giao trùng hẳn, tên mở bằng số: nối đúng bên giao, không cảnh báo',
+    eq(links(tb.workspace), links(tricky)) && eq(shape(tb.workspace), shape(tricky)) && !tb.warnings.length, JSON.stringify(links(tb.workspace)) + tb.warnings.join(' | '));
+  check('bàn giao: Markdown — bên giao dễ nhầm ghi "N. tên đầy đủ", tên mở bằng số thì thoát',
+    tmd.includes('- model ← 2. Train\n') && tmd.includes('- model ← 1. Prep › Train\n') && tmd.includes('- m ← 4. S › T\n')
+    && tmd.includes('- data ← Clean\n') && tmd.includes('- cfg ← \\2. Train\n'), JSON.stringify(tmd.split('## 5.')[1]));
+  /* File xuất bằng khuôn cũ (không số, tên ngắn khi bước trùng tên bước con) vẫn nối đúng. */
+  const old = '# P\n\n## 1. Prep\n\n- [ ] Train\n  Outputs:\n    - model\n\n## 2. Train\n\nOutputs:\n  - model\n\n## 3. Serve\n\n- [ ] API\n  Inputs:\n    - model ← Train\n- [ ] Batch\n  Inputs:\n    - model ← Prep › Train\n';
+  const ob = fromMarkdown(old);
+  check('bàn giao: Markdown khuôn cũ — "model ← Train" là bước Train, "Prep › Train" là bước con', eq(shape(ob.workspace).steps[2].subs.map((x) => x.ins), [['1.-.0'], ['0.0.0']]) && !ob.warnings.length,
+    JSON.stringify(shape(ob.workspace).steps[2].subs.map((x) => x.ins)) + ob.warnings.join(' | '));
   check('bàn giao: JSON đi rồi về giữ nguyên', eq(shape(parseImport(toJSON(ws)).workspaces[0]), shape(ws)));
   const hand = '# P\n\n## Make\n\nOutputs:\n  - clean · data/c.csv · hợp đồng viết cùng dòng\n  - dup\n\n- [ ] Other\n  Outputs:\n    - dup\n\n## Use\n\nInputs:\n  - clean\n  - dup\n  - missing ← Make\n\n- [ ] x\n  Inputs:\n    - dup ← Other\n';
   const hb = fromMarkdown(hand);
@@ -852,11 +873,44 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   const relink = H.insBackup(w2, [w2.steps[0].subs[0]]);
   w2.steps[0].subs.splice(0, 1);
   const reloaded = normWorkspace(JSON.parse(JSON.stringify(w2)));
-  check('bàn giao: xoá bên giao — đọc lại thì đầu vào treo bị bỏ', !reloaded.steps[1].subs[0].ins.includes('oa'));
+  check('bàn giao: xoá bên giao — đọc lại vẫn giữ đầu vào mất nguồn, io vẫn lỗi', reloaded.steps[1].subs[0].ins.includes('oa')
+    && H.ioStatus(reloaded).get('e').in === 'bad' && H.ioStatus(reloaded).get('e').inWhy.some((w) => w.kind === 'missing' && w.id === 'oa'));
   reloaded.steps[0].subs.unshift(normWorkspace(raw).steps[0].subs[0]);
   relink(reloaded);
   check('bàn giao: Hoàn tác xoá gắn lại đầu vào của nơi khác, kể cả khi dữ liệu đã đọc lại', eq(reloaded.steps[1].subs[0].ins, ['oc', 'oa']) && eq(reloaded.steps[0].subs[3].ins, ['oa', 'ob']));
+  /* Đầu vào mất nguồn: Markdown ghi `- (deleted output)`, nhập lại vẫn mất nguồn; nhân bản đổi id nhưng vẫn không trỏ tới đâu. */
+  check('bàn giao: Markdown — đầu vào mất nguồn ghi "(deleted output)", nhập lại vẫn mất nguồn, không cảnh báo',
+    md.includes('Inputs:\n  - matches.parquet ← Clean\n  - (deleted output)\n') && eq(shape(back.workspace).steps[1].ins, ['0.-.0', '?'])
+    && back.workspace.steps[1].ins[1] !== 'gone' && H.ioStatus(back.workspace).get(back.workspace.steps[1].id).in === 'bad');
+  const g2 = normWorkspace({ steps: [{ id: 'a1', title: 'A', subs: [{ id: 'x', title: 'X', ins: ['lost'] }, { id: 'y', title: 'Y', ins: ['lost', 'lost2'] }] }] });
+  const g2c = freshCopy(g2);
+  check('bàn giao: freshCopy — đầu vào mất nguồn lấy id mới, cùng id cũ thì cùng id mới, vẫn không trỏ tới đâu',
+    g2c.steps[0].subs[0].ins[0] !== 'lost' && g2c.steps[0].subs[0].ins[0] === g2c.steps[0].subs[1].ins[0] && g2c.steps[0].subs[1].ins.length === 2
+    && [...H.ioStatus(g2c).values()].filter((v) => v.in === 'bad').length === 2);
+  const named = normWorkspace({ steps: [{ title: 'A', subs: [{ title: 'P', outs: [{ id: 'o', name: '(deleted output)' }] }] }, { title: 'B', subs: [{ title: 'U', ins: ['o'] }] }] });
+  const nb = fromMarkdown(toMarkdown(named));
+  check('bàn giao: đầu ra thật tên "(deleted output)" vẫn nối (dòng có "←")', eq(shape(nb.workspace), shape(named)) && !nb.warnings.length, nb.warnings.join(' | '));
   check('bàn giao: consumersOf — bên nhận của bước và bước con làm lại, trừ chính chúng', eq(H.consumersOf(ws, [ws.steps[0], ws.steps[0].subs[2]]).map(H.holderTitle), ['Backend', 'A', 'API']));
+}
+
+/* Hộp sửa: đầu vào treo tính theo chỗ đang chọn (heldAt, heldKeysAt), không đổi dữ liệu thật. */
+{
+  const ws = normWorkspace({ steps: [
+    { id: 't1', title: 'First', subs: [{ id: 'a', title: 'A' }] },
+    { id: 't2', title: 'Second', outs: [{ id: 'os', name: 's' }], subs: [{ id: 'b', title: 'B', outs: [{ id: 'ob', name: 'm' }] }, { id: 'c', title: 'C', ins: ['ob'] }] },
+    { id: 't3', title: 'Third', subs: [{ id: 'd', title: 'D' }] }] });
+  const before = JSON.stringify(ws);
+  const at = (...a) => [...CORE.heldAt(ws, ...a)].sort();
+  check('heldAt: bước con giữ chỗ — đầu ra của bước sau thì treo', eq(at('sub', 'a', ['os', 'ob'], null), ['ob', 'os']));
+  check('heldAt: bước con đổi sang bước sau bên giao — không treo', eq(at('sub', 'a', ['os', 'ob'], { stepId: 't3', slot: 0, join: false }), []));
+  check('heldAt: cùng hàng, đổi ô lên trước bên giao — treo; đầu ra của cả bước cùng hàng không treo',
+    eq(at('sub', 'c', ['os', 'ob'], { stepId: 't2', slot: 0, join: false }), ['ob']));
+  check('heldAt: bước con mới, bước mới theo chỗ đặt', eq(at('sub', '', ['ob'], { stepId: 't1', slot: 1, join: false }), ['ob'])
+    && eq(at('step', '', ['ob'], 0), ['ob']) && eq(at('step', '', ['ob'], 3), []));
+  check('heldAt: bước đổi Vị trí', eq(at('step', 't1', ['ob'], null), ['ob']) && eq(at('step', 't1', ['ob'], 2), []));
+  check('heldKeysAt: dời bên giao ra sau nơi dùng', eq([...CORE.heldKeysAt(ws, 'sub', 'b', { stepId: 't3', slot: 0, join: false })], ['c>ob'])
+    && !CORE.heldKeysAt(ws, 'sub', 'b', null).size);
+  check('heldAt: không đổi dữ liệu thật', JSON.stringify(ws) === before);
 }
 
 /* Trạng thái đầu vào / đầu ra (ioStatus). */

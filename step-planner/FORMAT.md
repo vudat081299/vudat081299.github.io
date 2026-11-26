@@ -45,7 +45,7 @@ Inputs:
     - tên · ref
       hợp đồng
   Inputs:
-    - tên đầu ra ← tên bước › tên bước con
+    - tên đầu ra ← 2. tên bước › tên bước con
 
 ## System design
 Path: tên lối [path: id]
@@ -109,11 +109,16 @@ Warnings:
 
 - Nhãn `Outputs:` rồi `Inputs:`, sau `Docs:`. Bước: nhãn không thụt, mục thụt hai. Bước con: nhãn thụt hai, mục thụt bốn.
 - Đầu ra `- tên · ref`; hợp đồng là dòng thụt thêm hai ngay dưới, thoát như dòng ghi chú. Viết tay `- tên · ref · hợp đồng` cũng đọc.
-- Đầu vào `- tên đầu ra ← tên bên giao` (tên bước con, hay tên bước nếu đầu ra của cả bước). Cặp tên đầu ra + tên bên giao
-  trùng thì bên giao ghi `tên bước › tên bước con`.
+- Đầu vào `- tên đầu ra ← tên bên giao` (tên bước con, hay tên bước nếu đầu ra của cả bước). Có bên giao khác cùng tên đầu ra
+  và cùng tên (bỏ dấu, không phân biệt hoa thường; kể cả bước trùng tên bước con) thì bên giao ghi `N. tên bước` hay
+  `N. tên bước › tên bước con`, N là số bước như `## N.`. Tên bên giao không số mà mở bằng `N. ` thì ghi `\N. …`.
 - Trong tên, ref: `\`, `·`, `←` thoát bằng `\`.
-- Nhập đầu vào: tìm theo tên đầu ra (bỏ dấu, không phân biệt hoa thường), trùng thì theo tên bên giao; không có tên bên giao
-  mà chỉ một đầu ra cùng tên thì lấy nó. Không thấy: cảnh báo, bỏ. Nhiều cái khớp: lấy cái đầu, cảnh báo.
+- Đầu vào mất nguồn (bên giao đã xoá): `- (deleted output)`, không có `←`. Nhập lại vẫn là đầu vào mất nguồn (bảng báo lỗi,
+  không cảnh báo). Đầu ra thật tên `(deleted output)` luôn ghi kèm `← bên giao`.
+- Nhập đầu vào: tìm theo tên đầu ra (bỏ dấu, không phân biệt hoa thường), trùng thì theo bên giao: `N. tên đầy đủ` là bước
+  thứ N nếu đúng tên, rồi tên đầy đủ (`bước › bước con`, hay tên bước), rồi tên bước con. Còn nhiều cái khớp: ưu tiên tên đầu
+  ra đúng hoa thường, rồi tên bên giao đúng hoa thường. File cũ (`bước › bước con` không số) vẫn nhập đúng. Không có tên bên
+  giao mà chỉ một đầu ra cùng tên thì lấy nó. Không thấy: cảnh báo, bỏ. Nhiều cái khớp: lấy cái đầu, cảnh báo.
 
 ### System design
 

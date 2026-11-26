@@ -108,7 +108,8 @@ export function normOut(o) {
   return { id: idOr(o.id, 'o'), name: oneLine(o.name), ref: oneLine(o.ref), note: oneLine(o.note) };
 }
 const outsOf = (/** @type {any} */ a) => (Array.isArray(a) ? a.map(normOut).filter(Boolean) : []);
-/** Đầu vào: chuỗi id, bỏ trùng, bỏ id đầu ra của chính nó (id không còn trong dự án: normWorkspace bỏ). @param {any} a @param {any[]} outs */
+/** Đầu vào: chuỗi id, bỏ trùng, bỏ id đầu ra của chính nó. Id không còn trỏ tới đầu ra nào (bên giao đã xoá) vẫn giữ: bảng báo
+ * lỗi, người dùng gỡ trong hộp sửa. @param {any} a @param {any[]} outs */
 const insOf = (a, outs) => {
   const own = new Set(outs.map((o) => o.id));
   return [...new Set((Array.isArray(a) ? a : []).filter((s) => typeof s === 'string' && s && !own.has(s)))];
@@ -187,10 +188,9 @@ export function normWorkspace(o) {
   const ids = new Set(steps.map((s) => s.id));
   /* Quyết định chỉ gắn với bước còn trong dự án. */
   const log = objs(x.log).map(normLog).map((l) => (ids.has(l.stepId) ? l : { ...l, stepId: '' }));
-  /* Id đầu ra duy nhất trong dự án (trùng thì cái sau lấy id mới); đầu vào chỉ giữ id còn trỏ tới một đầu ra. */
+  /* Id đầu ra duy nhất trong dự án (trùng thì cái sau lấy id mới). Đầu vào mất nguồn vẫn giữ (insOf). */
   const outIds = new Set();
   for (const { h } of holders({ steps })) for (const o of h.outs) { if (outIds.has(o.id)) o.id = uid('o'); outIds.add(o.id); }
-  for (const { h } of holders({ steps })) h.ins = h.ins.filter((/** @type {string} */ id) => outIds.has(id));
   return {
     id: idOr(x.id, 'w'),
     name: oneLine(x.name) || 'Project',
@@ -253,7 +253,9 @@ export function freshCopy(ws) {
   }
   const outIds = new Map();
   for (const { h } of holders(c)) for (const o of h.outs) { outIds.set(o.id, uid('o')); o.id = outIds.get(o.id); }
-  for (const { h } of holders(c)) h.ins = h.ins.map((/** @type {string} */ id) => outIds.get(id)).filter(Boolean);
+  /* Đầu vào mất nguồn cũng lấy id mới (vẫn không trỏ tới đâu), cùng id cũ thì cùng id mới. */
+  const fresh = (/** @type {string} */ id) => { if (!outIds.has(id)) outIds.set(id, uid('o')); return outIds.get(id); };
+  for (const { h } of holders(c)) h.ins = h.ins.map(fresh);
   for (const l of c.log) {
     l.id = uid('l');
     l.stepId = stepIds.get(l.stepId) || '';
@@ -437,8 +439,8 @@ export function ioStatus(ws, hand = handoffs(ws)) {
 }
 
 /**
- * Trước khi xoá các chủ này: chụp đầu vào của nơi khác đang trỏ tới đầu ra của chúng. Dữ liệu không gỡ đầu vào treo lúc xoá
- * (bảng bỏ qua, lần đọc sau chuẩn hoá bỏ); hàm trả về gắn lại chúng khi Hoàn tác, kể cả khi tab khác đã ghi đè dự án.
+ * Trước khi xoá các chủ này: chụp đầu vào của nơi khác đang trỏ tới đầu ra của chúng. Xoá không gỡ đầu vào ấy (mất nguồn, bảng
+ * báo lỗi); hàm trả về gắn lại chúng khi Hoàn tác, kể cả khi người dùng đã gỡ hay tab khác đã ghi đè dự án.
  * @param {any} ws @param {any[]} owners @returns {(w: any) => void}
  */
 export function insBackup(ws, owners) {
@@ -460,6 +462,43 @@ export function consumersOf(ws, owners) {
   const own = new Set(owners);
   const ids = new Set(owners.flatMap((o) => (o.outs || []).map((/** @type {any} */ x) => x.id)));
   return holders(ws).filter((hd) => !own.has(hd.h) && (hd.h.ins || []).some((/** @type {string} */ id) => ids.has(id)));
+}
+
+/* Hộp sửa, trước khi Lưu: liên kết nào sẽ treo nếu mục đang sửa đứng ở chỗ đang chọn trong hộp (ô Bước / Vị trí). Tính trên
+ * bản sao. kind 'sub': `place` là Place (tính khi đã nhấc nó ra); kind 'step': chỉ số khi đã nhấc ra. `place` null: giữ chỗ
+ * hiện tại. `id` rỗng: mục mới (cần `place`). */
+/** Bản sao các bước với mục đang sửa ở chỗ `place`, hay null. @param {{steps:any[]}} ws @param {'sub'|'step'} kind @param {string} id @param {any} place */
+function placedCopy(ws, kind, id, place) {
+  const c = { steps: JSON.parse(JSON.stringify(ws.steps)) };
+  const DRAFT = '\u0000draft';
+  /** @type {any} */ let h = null;
+  if (kind === 'sub') {
+    h = (id && c.steps.flatMap((/** @type {any} */ st) => st.subs).find((/** @type {any} */ x) => x.id === id)) || { id: DRAFT, outs: [], ins: [], par: false };
+    if (h.id === DRAFT && !place) return null;
+    if (place && placeSub(c, h, { ...place, at: Number.isFinite(place.at) ? place.at : Infinity }) === undefined) return null;
+  } else {
+    h = (id && c.steps.find((/** @type {any} */ st) => st.id === id)) || { id: DRAFT, outs: [], ins: [], subs: [] };
+    if (place != null || h.id === DRAFT) {
+      const i = c.steps.indexOf(h);
+      if (i >= 0) c.steps.splice(i, 1);
+      c.steps.splice(Math.max(0, Math.min(Number(place) || 0, c.steps.length)), 0, h);
+    }
+  }
+  return { c, h };
+}
+/** Các đầu ra trong `outIds` sẽ là đầu vào treo của mục đang sửa. @param {{steps:any[]}} ws @param {'sub'|'step'} kind @param {string} id
+ * @param {string[]} outIds @param {any} place @returns {Set<string>} */
+export function heldAt(ws, kind, id, outIds, place) {
+  const p = placedCopy(ws, kind, id, place);
+  if (!p) return new Set();
+  p.h.ins = [...outIds];
+  return new Set(handoffs(p.c).held.filter((l) => l.to.h === p.h).map((l) => l.out.id));
+}
+/** `heldKeys` của cả dự án khi mục đang sửa đứng ở chỗ `place` (nơi dùng đầu ra của nó có treo không).
+ * @param {{steps:any[]}} ws @param {'sub'|'step'} kind @param {string} id @param {any} place @returns {Set<string>} */
+export function heldKeysAt(ws, kind, id, place) {
+  const p = placedCopy(ws, kind, id, place);
+  return p ? handoffs(p.c).heldKeys : new Set();
 }
 
 /* ── Tiến độ ── */
@@ -691,8 +730,10 @@ function docLines(docs, ind) {
   return out;
 }
 /* Bàn giao trong Markdown: nhãn `Outputs:` rồi mỗi đầu ra một mục `- tên · ref`, hợp đồng (note) là dòng thụt thêm hai ngay
- * dưới; nhãn `Inputs:` rồi mỗi đầu vào `- tên đầu ra ← tên bên giao` (tên trùng thì `tên bước › tên bước con`). Trong tên:
- * `\`, `·`, `←` thoát bằng `\`. */
+ * dưới; nhãn `Inputs:` rồi mỗi đầu vào `- tên đầu ra ← tên bên giao` (bên giao dễ nhầm thì `N. bước › bước con`). Trong tên:
+ * `\`, `·`, `←` thoát bằng `\`. Đầu vào mất nguồn (bên giao đã xoá): `- (deleted output)`, không có `←`; nhập lại vẫn là đầu
+ * vào mất nguồn. */
+const GONE_IN = '(deleted output)';
 const escHand = (/** @type {string} */ s) => s.replace(/[\\·←]/g, '\\$&');
 const unescHand = (/** @type {string} */ s) => s.replace(/\\([\s\S])/g, '$1');
 /** Tách theo `sep` chưa thoát; phần tách ra vẫn giữ dấu thoát. @param {string} s @param {string} sep */
@@ -705,8 +746,12 @@ function splitEsc(s, sep) {
   }
   return out;
 }
-/** Nhãn bên giao cho dòng `Inputs:`: tên ngắn; tên ngắn trùng (cùng tên đầu ra) thì `bước › bước con`. @param {Holder} hd */
+/** Tên đầy đủ của bên giao: `bước › bước con`, hay tên bước. @param {Holder} hd */
 const fullTitle = (hd) => (hd.sub ? `${hd.step.title} › ${hd.sub.title}` : hd.step.title);
+/** Số bước đầu nhãn bên giao: `N. tên đầy đủ`. */
+const NUMBERED = /^(\d+)\. ([\s\S]*)$/;
+/** Nhãn bên giao không đánh số mà mở bằng `N. ` thì thoát: `\N. …`. @param {string} s đã escHand */
+const escNum = (s) => (NUMBERED.test(s) ? '\\' + s : s);
 /** Các dòng sau nhãn `Outputs:` / `Inputs:` (nhãn do người gọi ghi). @param {any} h @param {any} ws @param {Map<string, any>} idx @param {string} ind */
 function handLines(h, ws, idx, ind) {
   const outs = [], ins = [];
@@ -716,10 +761,12 @@ function handLines(h, ws, idx, ind) {
   }
   for (const id of h.ins) {
     const src = idx.get(id);
-    if (!src) continue;
+    if (!src) { ins.push(`${ind}  - ${GONE_IN}`); continue; }
     const short = holderTitle(src);
-    const same = [...idx.values()].filter((y) => fold(y.out.name) === fold(src.out.name) && fold(holderTitle(y)) === fold(short));
-    ins.push(`${ind}  - ${escHand(src.out.name)} ← ${escHand(same.length > 1 ? fullTitle(src) : short)}`);
+    /* Bên giao khác cùng tên đầu ra và cùng tên ngắn (bỏ dấu, hoa thường; kể cả bước trùng tên bước con): ghi số bước và tên
+     * đầy đủ, như `Step: N. tên` của nhật ký. */
+    const clash = [...idx.values()].some((y) => y.h !== src.h && fold(y.out.name) === fold(src.out.name) && fold(holderTitle(y)) === fold(short));
+    ins.push(`${ind}  - ${escHand(src.out.name)} ← ${clash ? `${src.i + 1}. ${escHand(fullTitle(src))}` : escNum(escHand(short))}`);
   }
   return { outs, ins };
 }
@@ -745,7 +792,11 @@ function readHand(lines, i, kind, h, min) {
   }
   return i;
 }
-/** Đầu vào đọc từ Markdown → id đầu ra: theo tên đầu ra, tên trùng thì theo tên bên giao. @param {any} ws @param {string[]} warnings */
+/**
+ * Đầu vào đọc từ Markdown → id đầu ra: theo tên đầu ra (bỏ dấu, hoa thường), trùng thì theo bên giao: `N. tên đầy đủ` (bước thứ
+ * N), rồi tên đầy đủ, rồi tên ngắn. Còn nhiều cái khớp: ưu tiên tên đầu ra đúng từng chữ hoa thường, rồi tên bên giao đúng như vậy.
+ * @param {any} ws @param {string[]} warnings
+ */
 function resolveIns(ws, warnings) {
   const all = holders(ws); // bước đọc từ Markdown luôn có `subs`
   const outs = all.flatMap((hd) => (hd.h.outs || []).map((/** @type {any} */ out) => ({ out, hd, short: fold(holderTitle(hd)), full: fold(fullTitle(hd)) })));
@@ -755,9 +806,22 @@ function resolveIns(ws, warnings) {
     for (const raw of h.inRefs) {
       const [nm, ...from] = splitEsc(raw, ' ← ');
       const name = unescHand(nm).trim();
-      const by = from.length ? unescHand(from.join(' ← ')).trim() : '';
+      const byRaw = from.join(' ← ').trim();
+      const by = from.length ? unescHand(byRaw).trim() : '';
+      if (!by && fold(oneLine(name)) === fold(GONE_IN)) { h.ins.push(uid('o')); continue; } // mất nguồn: id không trỏ tới đâu
       const cand = outs.filter((c) => c.hd.h !== h && fold(oneLine(c.out.name)) === fold(oneLine(name)));
-      const hit = by ? cand.filter((c) => c.short === fold(oneLine(by)) || c.full === fold(oneLine(by))) : cand;
+      const num = NUMBERED.exec(byRaw);
+      const fb = fold(oneLine(by));
+      /** @type {typeof outs} */ let hit = cand;
+      if (by) {
+        hit = num ? cand.filter((c) => c.hd.i === Number(num[1]) - 1 && c.full === fold(oneLine(unescHand(num[2])))) : [];
+        if (!hit.length) hit = cand.filter((c) => c.full === fb);
+        if (!hit.length) hit = cand.filter((c) => c.short === fb);
+      }
+      /** @param {typeof outs} list @param {(c: any) => boolean} f */
+      const prefer = (list, f) => (list.length > 1 && list.some(f) ? list.filter(f) : list);
+      hit = prefer(hit, (c) => c.out.name === oneLine(name));
+      if (by) hit = prefer(hit, (c) => [fullTitle(c.hd), holderTitle(c.hd), `${c.hd.i + 1}. ${fullTitle(c.hd)}`].includes(oneLine(by)));
       const pick = hit.length ? hit : cand.length === 1 ? cand : [];
       const shown = name + (by ? ` ← ${by}` : '');
       if (!pick.length) { warnings.push(`Input not found, dropped: ${shown}`); continue; }

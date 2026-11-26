@@ -8,7 +8,7 @@ import * as C from './core.js';
 const $ = (/** @type {string} */ id) => /** @type {any} */ (document.getElementById(id));
 const quote = (/** @type {string} */ t) => `"${t}"`;
 
-/** Hàm chung của main.js: h, icon, cur, findWs, labelsOf, openSub, openStep, unfilter, flashMs, focusField, showDlg. @param {any} d */
+/** Hàm chung của main.js: h, icon, cur, findWs, labelsOf, openSub, openStep, unfilter, flashMs, focusField, showDlg, toast. @param {any} d */
 export function initHand(d) {
   deps = d;
   wireList();
@@ -18,13 +18,11 @@ export function initHand(d) {
 
 /* ── Trên bảng ── */
 
-/** Số đầu vào còn trỏ tới một đầu ra (đầu vào treo, sau khi xoá bên giao, không đếm). @param {any} x @param {Map<string, any>} idx */
-export const insCount = (x, idx) => x.ins.filter((/** @type {string} */ id) => idx.has(id)).length;
-
 /** Chip "In n" / "Out n" của một bước (thẻ bước con không có chip: xem trong hộp sửa). Ngoài vòng Tab như nút phụ khác: bàn phím xem trong hộp sửa.
- * @param {any} x @param {number} insN */
-export function tags(x, insN) {
+ * n đếm mọi đầu vào, kể cả đầu vào treo và đầu vào mất nguồn (danh sách của chip nêu chúng). @param {any} x */
+export function tags(x) {
   const { h, icon } = deps;
+  const insN = x.ins.length;
   const tag = (/** @type {string} */ act, /** @type {string} */ ic, /** @type {string} */ text, /** @type {string} */ label) =>
     h('button', { type: 'button', class: 'hand-tag', 'data-act': act, tabindex: '-1', 'aria-label': label, title: label }, icon(ic), text);
   return [
@@ -108,6 +106,10 @@ export function boardAct(act, b, step, sub) {
 
 /* ── Hộp danh sách (#dlg-hand) ── */
 
+/** Tên hiện thay cho đầu vào mất nguồn (bên giao đã xoá), ở hộp danh sách và hộp sửa. */
+const GONE = 'Deleted output';
+const goneText = 'Its output was deleted. Remove this input, or undo the delete.';
+
 /** Nút nhảy → các bên cần tô; `scroll` false là không cuộn (dòng của danh sách cặp).
  * @type {WeakMap<Element, {targets: {stepId:string, subId:string|null}[], scroll: boolean}>} */
 const jumps = new WeakMap();
@@ -164,7 +166,8 @@ const ctxOf = (/** @type {any} */ ws, /** @type {C.Holder} */ hd, /** @type {'in
 function showIns(ws, hd) {
   const { h, icon } = deps;
   const { idx, heldKeys } = C.handoffs(ws);
-  const items = hd.h.ins.map((/** @type {string} */ id) => idx.get(id)).filter(Boolean).map((/** @type {any} */ src) => {
+  const items = hd.h.ins.map((/** @type {string} */ id) => idx.get(id)).map((/** @type {any} */ src) => {
+    if (!src) return h('li', { class: 'hand-item' }, h('p', { class: 'hand-name' }, icon('in'), h('b', {}, GONE)), h('p', { class: 'hand-gone' }, goneText));
     const held = heldKeys.has(C.heldKey(hd.h.id, src.out.id));
     return h('li', { class: 'hand-item' },
       h('p', { class: 'hand-name' }, icon('in'), h('b', {}, src.out.name)), outDetail(src.out), whoBtn(ws, src, 'From ', held),
@@ -203,8 +206,33 @@ function showPairs(ws, pairs, title, where) {
 }
 
 let hiTimer = 0;
+/** Tô các bên một lúc (--flash-dur). @param {HTMLElement[]} els */
+function hilite(els) {
+  clearTimeout(hiTimer);
+  document.querySelectorAll('.hand-hi').forEach((e) => e.classList.remove('hand-hi'));
+  for (const e of els) e.classList.add('hand-hi');
+  hiTimer = window.setTimeout(() => els.forEach((e) => e.classList.remove('hand-hi')), deps.flashMs());
+}
+/** Một bên nằm ngoài chỗ nhìn thấy (khung nhìn dưới thanh trên, và khung cuộn ngang của hàng thẻ) thì ở hướng nào; trong
+ * tầm nhìn (dù chỉ một phần) thì ''. @param {HTMLElement} el */
+function offSide(el) {
+  const r = el.getBoundingClientRect();
+  const top = document.querySelector('.bar')?.getBoundingClientRect().bottom ?? 0;
+  let left = 0, right = document.documentElement.clientWidth;
+  const sc = el.closest('.cards-scroll');
+  if (sc) { const b = sc.getBoundingClientRect(); left = Math.max(left, b.left); right = Math.min(right, b.right); }
+  return r.bottom <= top ? 'above' : r.top >= window.innerHeight ? 'below' : r.right <= left ? 'to the left' : r.left >= right ? 'to the right' : '';
+}
+/** Tên của một bên trên bảng (tên bước con, hay tên bước). @param {{stepId:string, subId:string|null}} t */
+function targetTitle(t) {
+  const step = deps.cur()?.steps.find((/** @type {any} */ s) => s.id === t.stepId);
+  const sub = t.subId ? step?.subs.find((/** @type {any} */ x) => x.id === t.subId) : null;
+  return (t.subId ? sub?.title : step?.title) || '';
+}
+const actSel = (/** @type {{subId:string|null}} */ t) => (t.subId ? '[data-act="edit-sub"]' : '[data-act="edit-step"]');
 /** Tới bên giao / bên nhận trên bảng: bỏ lọc nếu nó đang bị ẩn, cuộn tới, focus tên bên đầu, tô cả hai một lúc.
- * `scroll` false (dòng của danh sách cặp, hai bên đang ở trên bảng): không cuộn trang lẫn hàng thẻ, chỉ tô và focus.
+ * `scroll` false (dòng của danh sách cặp, hai bên đang ở trên bảng): không cuộn trang lẫn hàng thẻ, chỉ tô và focus; bên nào
+ * nằm ngoài tầm nhìn thì toast nói nó ở hướng nào, nút "Show" mới cuộn tới (không bao giờ tự cuộn).
  * @param {{stepId:string, subId:string|null}[]} targets @param {{scroll?: boolean}} [opt] */
 export function jump(targets, { scroll = true } = {}) {
   const sel = (/** @type {{stepId:string, subId:string|null}} */ t) => (t.subId ? `.card[data-sub="${t.subId}"]` : `.step[data-step="${t.stepId}"] > .step-head`);
@@ -213,15 +241,25 @@ export function jump(targets, { scroll = true } = {}) {
   if (els.some((e) => !e)) { deps.unfilter(); els = find(); }
   const found = /** @type {HTMLElement[]} */ (els.filter(Boolean));
   if (!found.length) return;
-  clearTimeout(hiTimer);
-  document.querySelectorAll('.hand-hi').forEach((e) => e.classList.remove('hand-hi'));
   if (scroll) {
     for (const e of found.slice(1)) e.scrollIntoView({ block: 'nearest', inline: 'nearest' });
     found[0].scrollIntoView({ block: 'center', inline: 'nearest' });
   }
-  for (const e of found) e.classList.add('hand-hi');
-  found[0].querySelector(targets[0].subId ? '[data-act="edit-sub"]' : '[data-act="edit-step"]')?.focus({ preventScroll: true });
-  hiTimer = window.setTimeout(() => found.forEach((e) => e.classList.remove('hand-hi')), deps.flashMs());
+  hilite(found);
+  found[0].querySelector(actSel(targets[0]))?.focus({ preventScroll: true });
+  if (scroll) return;
+  const off = targets.map((t, k) => ({ t, el: els[k], side: els[k] ? offSide(/** @type {HTMLElement} */ (els[k])) : '' })).filter((o) => o.side);
+  if (!off.length) return;
+  const text = (off.length > 1 && off[0].side === off[1].side ? `${off.map((o) => quote(targetTitle(o.t))).join(' and ')} are ${off[0].side}`
+    : off.map((o) => `${quote(targetTitle(o.t))} is ${o.side}`).join(' and ')) + ', off screen';
+  const first = off[0];
+  deps.toast(text, () => {
+    const el = /** @type {HTMLElement|null} */ (document.querySelector(sel(first.t)));
+    if (!el) return;
+    el.scrollIntoView({ block: 'center', inline: 'nearest' });
+    hilite([el]);
+    el.querySelector(actSel(first.t))?.focus({ preventScroll: true });
+  }, '', false, 'Show');
 }
 
 function wireList() {
@@ -247,8 +285,9 @@ function wireList() {
 /* ── Phần Inputs / Outputs trong hộp sửa: bản nháp lưu cùng nút Save (ô ẩn `ins`, `outs` mang JSON, nên hỏi lại khi đóng
  * mà chưa lưu như các ô khác) ── */
 
-/** id: bước / bước con đang sửa (rỗng khi thêm mới). @type {Record<'sub'|'step', {wsId:string, id:string, own:Set<string>, ins:string[], outs:any[]}>} */
-const draft = { sub: { wsId: '', id: '', own: new Set(), ins: [], outs: [] }, step: { wsId: '', id: '', own: new Set(), ins: [], outs: [] } };
+/** id: bước / bước con đang sửa (rỗng khi thêm mới). place: chỗ đang chọn trong hộp (ô Bước / Vị trí), null = giữ chỗ cũ
+ * (C.heldAt). @type {Record<'sub'|'step', {wsId:string, id:string, own:Set<string>, ins:string[], outs:any[], place:() => any}>} */
+const draft = { sub: { wsId: '', id: '', own: new Set(), ins: [], outs: [], place: () => null }, step: { wsId: '', id: '', own: new Set(), ins: [], outs: [], place: () => null } };
 const sec = (/** @type {'sub'|'step'} */ where) => $(where + '-hand');
 const form = (/** @type {'sub'|'step'} */ where) => $(where + '-form');
 
@@ -266,16 +305,17 @@ export function readEdit(f) {
 
 /**
  * Mở hộp sửa: dựng phần Inputs / Outputs từ bản đã lưu (null: thêm mới). `owners`: bước / bước con mà đầu ra của nó không
- * được chọn làm đầu vào (chính nó; bước: cả các bước con của nó).
- * @param {'sub'|'step'} where @param {any} ws @param {any} holder @param {any[]} owners
+ * được chọn làm đầu vào (chính nó; bước: cả các bước con của nó). `place`: chỗ đang chọn trong hộp (xem `draft`); đầu vào treo
+ * tính theo chỗ ấy, không theo chỗ đã lưu.
+ * @param {'sub'|'step'} where @param {any} ws @param {any} holder @param {any[]} owners @param {() => any} place
  */
-export function paintEdit(where, ws, holder, owners) {
-  const idx = C.outIndex(ws);
+export function paintEdit(where, ws, holder, owners, place) {
   draft[where] = {
+    place,
     wsId: ws.id,
     id: holder ? holder.id : '',
     own: new Set(owners.flatMap((o) => o.outs.map((/** @type {any} */ x) => x.id))),
-    ins: holder ? holder.ins.filter((/** @type {string} */ id) => idx.has(id)) : [],
+    ins: holder ? [...holder.ins] : [], // kể cả đầu vào mất nguồn: hiện chip "Deleted output" để gỡ
     outs: holder ? holder.outs.map((/** @type {any} */ o) => ({ ...o })) : [],
   };
   sync(where);
@@ -290,6 +330,14 @@ export function focusEdit(where, which) {
   head.focus({ preventScroll: true });
 }
 
+/** Ô Bước / Vị trí của hộp đổi: tính lại dấu "on hold" của đầu vào, của nơi dùng đầu ra. @param {'sub'|'step'} where */
+export function repaintPlace(where) {
+  paintIns(where);
+  paintOuts(where);
+}
+/** Các đầu ra trong `ids` sẽ treo nếu mục đang sửa đứng ở chỗ đang chọn. @param {'sub'|'step'} where @param {any} ws @param {string[]} ids */
+const heldNow = (where, ws, ids) => (ws ? C.heldAt(ws, where, draft[where].id, ids, draft[where].place()) : new Set());
+
 /** Ứng viên làm đầu vào: mọi đầu ra trong dự án trừ của chính nó, theo thứ tự trên bảng. @param {'sub'|'step'} where */
 function candidates(where) {
   const ws = deps.findWs(draft[where].wsId);
@@ -300,13 +348,17 @@ function candidates(where) {
 function paintIns(where) {
   const { h, icon } = deps;
   const ws = deps.findWs(draft[where].wsId);
-  const { idx, heldKeys } = ws ? C.handoffs(ws) : { idx: new Map(), heldKeys: new Set() };
+  const idx = ws ? C.outIndex(ws) : new Map();
+  const held = heldNow(where, ws, draft[where].ins);
   const s = sec(where);
-  const items = draft[where].ins.map((id) => idx.get(id)).filter(Boolean).map((src) => {
-    const held = heldKeys.has(C.heldKey(draft[where].id, src.out.id));
-    return h('li', { class: 'in-chip' + (held ? ' held' : ''), 'data-in': src.out.id, title: held ? heldText(C.holderTitle(src)) : null },
+  const items = draft[where].ins.map((id) => [id, idx.get(id)]).map(([id, src]) => {
+    if (!src) return h('li', { class: 'in-chip gone', 'data-in': id, title: goneText },
+      icon('in'), h('span', { class: 'in-text' }, h('b', {}, GONE), h('small', {}, 'its source no longer exists')),
+      h('button', { type: 'button', class: 'icon-btn', 'data-in-del': '', 'aria-label': `Remove input (${GONE.toLowerCase()})`, title: 'Remove input' }, icon('x')));
+    const on = held.has(src.out.id);
+    return h('li', { class: 'in-chip' + (on ? ' held' : ''), 'data-in': src.out.id, title: on ? heldText(C.holderTitle(src)) : null },
     icon('in'), h('span', { class: 'in-text' }, h('b', {}, src.out.name),
-      h('small', {}, `from ${C.holderTitle(src)}` + (held ? ' · on hold: it now comes after this' : ''))),
+      h('small', {}, `from ${C.holderTitle(src)}` + (on ? ' · on hold: it now comes after this' : ''))),
     h('button', { type: 'button', class: 'icon-btn', 'data-in-del': '', 'aria-label': `Remove input ${src.out.name}`, title: 'Remove input' }, icon('x')));
   });
   s.querySelector('[data-ins]').replaceChildren(...items);
@@ -320,7 +372,8 @@ function paintIns(where) {
 function paintOuts(where) {
   const { h, icon } = deps;
   const ws = deps.findWs(draft[where].wsId);
-  const { usedBy: used, heldKeys } = ws ? C.handoffs(ws) : { usedBy: new Map(), heldKeys: new Set() };
+  const used = ws ? C.handoffs(ws).usedBy : new Map();
+  const heldKeys = ws ? C.heldKeysAt(ws, where, draft[where].id, draft[where].place()) : new Set();
   const s = sec(where);
   const rows = draft[where].outs.map((o, k) => {
     const by = used.get(o.id) || [];
@@ -386,7 +439,9 @@ function openPick(where) {
   const ws = deps.findWs(draft[where].wsId);
   const chosen = new Set(draft[where].ins);
   const byStep = new Map();
-  for (const c of candidates(where)) {
+  const cands = candidates(where);
+  const later = heldNow(where, ws, cands.map((c) => c.out.id));
+  for (const c of cands) {
     if (!byStep.has(c.step)) byStep.set(c.step, []);
     byStep.get(c.step).push(c);
   }
@@ -396,7 +451,8 @@ function openPick(where) {
     h('ul', { class: 'reset-list' }, list.map((/** @type {any} */ c) => h('li', {},
       h('label', { class: 'reset-item' },
         h('input', { type: 'checkbox', name: 'pick', value: c.out.id, checked: chosen.has(c.out.id) }),
-        h('span', { class: 'reset-title' }, h('b', {}, c.out.name), h('small', {}, c.sub ? `${c.sub.title}` : 'Whole step'))))))));
+        h('span', { class: 'reset-title' }, h('b', {}, c.out.name),
+          h('small', {}, (c.sub ? c.sub.title : 'Whole step') + (later.has(c.out.id) ? ' (comes after this — will be on hold)' : '')))))))));
   $('pick-groups').replaceChildren(...(groups.length ? groups : [h('p', { class: 'muted' }, 'No outputs declared yet.')]));
   $('pick-ok').disabled = !groups.length;
   deps.showDlg($('dlg-pick'));
@@ -406,8 +462,9 @@ function wirePick() {
     e.preventDefault();
     const picked = new Set([...$('pick-groups').querySelectorAll('input[name="pick"]:checked')].map((/** @type {any} */ c) => c.value));
     const where = pickFor;
-    /* Giữ thứ tự đã có, thêm cái mới theo thứ tự trên bảng. */
-    const keep = draft[where].ins.filter((id) => picked.has(id));
+    /* Giữ thứ tự đã có (đầu vào mất nguồn không có ô chọn: giữ), thêm cái mới theo thứ tự trên bảng. */
+    const offered = new Set(candidates(where).map((c) => c.out.id));
+    const keep = draft[where].ins.filter((id) => picked.has(id) || !offered.has(id));
     draft[where].ins = [...keep, ...candidates(where).map((c) => c.out.id).filter((id) => picked.has(id) && !keep.includes(id))];
     $('dlg-pick').close();
     sync(where);
@@ -426,11 +483,12 @@ export function alsoCheck(ws, step, picked) {
 
 /* ── Sắp xếp lại: đầu vào vừa bị treo ── */
 
-/** Câu báo kèm toast dời: các liên kết vừa treo (không có trong `before`). @param {any} ws @param {Set<string>} before */
-export function newlyHeld(ws, before) {
+/** Câu báo kèm toast dời, toast Lưu của hộp sửa: các liên kết vừa treo (không có trong `before`).
+ * @param {any} ws @param {Set<string>} before @param {string} [tail] */
+export function newlyHeld(ws, before, tail = 'Links kept; move back to reconnect.') {
   const fresh = C.handoffs(ws).held.filter((l) => !before.has(C.heldKey(l.to.h.id, l.out.id)));
   if (!fresh.length) return '';
   const l = fresh[0];
   return ` · Input on hold: ${quote(C.holderTitle(l.to))} now comes before ${quote(C.holderTitle(l.from))}`
-    + (fresh.length > 1 ? ` (+${fresh.length - 1} more)` : '') + '. Links kept; move back to reconnect.';
+    + (fresh.length > 1 ? ` (+${fresh.length - 1} more)` : '') + '. ' + tail;
 }
