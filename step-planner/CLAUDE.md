@@ -15,7 +15,7 @@
 | `index.html` | markup, hộp thoại, bộ biểu tượng `<symbol id="i-…">`, script theme trước lần vẽ đầu, script báo `file://` |
 | `css/planner.css` | token ở đầu (tới dòng `/* ── hết token ── */`), rồi từng component, mỗi khối mở bằng một dòng chú thích |
 | `js/core.js` | logic thuần: chuẩn hoá, gộp khi lưu, ngày, tiến độ, việc tiếp theo, bàn giao (`holders`, `handoffs`, `ioStatus`, `consumersOf`), Markdown và JSON vào / ra; không DOM, chạy được trong Node |
-| `js/md.js` | Markdown của tài liệu văn bản → cây khối (`parseMd`, thuần) → DOM (`renderMd`, chỉ createElement / text node); khung Edit: token (`srcTokens`, thuần) → dòng có số (`renderSrc`) |
+| `js/md.js` | Markdown của tài liệu văn bản → cây khối (`parseMd`, thuần) → DOM (`renderMd`, chỉ createElement / text node); URL trần trong chữ thường (`linkParts`, thuần, dấu câu cuối ở ngoài); khung Edit: token (`srcTokens`, thuần) → dòng có số (`renderSrc`) |
 | `js/design-core.js` | System design, thuần: `normDesign`, `rankOptions`, `applyPath`, `warnings`, `archAdvice`, `flowEdges`, `diagramNodes`, `planTasks`, `planDiff`, `applyPlan`, `designMd`, `designReader` (core.js chỉ gọi hai hàm cuối) |
 | `js/design.js` | System design, UI: mục trên trang, sơ đồ SVG, hộp `#dlg-sd`, hộp xem trước Update plan; nhận hàm chung qua `initDesign` |
 | `js/hand.js` | bàn giao, UI: chip In / Out của bước, hai chấm đầu vào / đầu ra (`ioDots`), mũi tên trên bước nhận và trước ô nhận, hộp `#dlg-hand`, phần Inputs / Outputs của hộp sửa, hộp `#dlg-pick`; nhận hàm chung qua `initHand` |
