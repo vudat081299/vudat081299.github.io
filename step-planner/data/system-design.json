@@ -121,6 +121,7 @@
       "guide": "Đây là điểm bắt đầu của luồng dữ liệu.\nNguồn quyết định dữ liệu cũ hay mới, nhiều hay ít, và có cần lấy lại theo lịch không.\nMột dự án thường ghép vài nguồn, ví dụ một bộ Kaggle cộng một API.\nBước sau (Ingestion) lo việc kéo dữ liệu từ các nguồn này về.",
       "multi": true,
       "skipWhen": "",
+      "task": "Có bản dữ liệu thô đầu tiên lấy từ nguồn đã chọn; README ghi nguồn, ngày lấy và quyền sử dụng.",
       "options": [
         {
           "id": "kaggle-datasets",
@@ -334,6 +335,7 @@
       "guide": "Ingestion là đoạn code lấy dữ liệu từ nguồn và ghi vào kho thô.\nScheduling là thứ chạy đoạn code đó theo lịch, ví dụ mỗi sáng.\nDữ liệu cố định chỉ cần chạy một lần bằng tay.\nDữ liệu mới mỗi ngày cần lịch chạy; dữ liệu liên tục cần hệ thống stream.",
       "multi": false,
       "skipWhen": "Bỏ qua khi bạn chỉ tải một file về bằng trình duyệt và không cần tải lại.",
+      "task": "Một lệnh lấy dữ liệu mới chạy được từ đầu tới cuối bằng công cụ đã chọn; README có lệnh chạy lại.",
       "options": [
         {
           "id": "notebook-script",
@@ -531,6 +533,7 @@
       "guide": "Kho thô giữ dữ liệu đúng như lúc tải về, không ai sửa tay.\nNhờ vậy khi code làm sạch có lỗi, bạn chạy lại từ bản gốc mà không phải tải lại.\nDữ liệu nhỏ để trong thư mục dự án; dữ liệu lớn hoặc nhiều máy cùng đọc thì để trên object storage.\nBước sau (Processing) đọc từ đây và ghi kết quả sạch ra chỗ khác.",
       "multi": false,
       "skipWhen": "",
+      "task": "Dữ liệu thô nằm ở nơi đã chọn, không sửa tay; README ghi cách lấy lại từ đầu.",
       "options": [
         {
           "id": "project-folder",
@@ -725,6 +728,7 @@
       "guide": "Bước này đọc dữ liệu thô, sửa kiểu, bỏ trùng, xử lý thiếu, rồi ghép bảng.\nCông cụ một máy (pandas, Polars, DuckDB) chạy trên RAM và ổ đĩa của một máy, dễ cài, đủ cho phần lớn dự án.\nCông cụ phân tán (Dask, Spark) chia dữ liệu cho nhiều máy cùng xử lý, chỉ cần khi một máy không chứa nổi.\nKết quả sạch được ghi sang bước Analytical store.",
       "multi": false,
       "skipWhen": "",
+      "task": "Một lệnh biến dữ liệu thô thành bảng sạch trên dữ liệu mẫu, chạy lại ra cùng kết quả; README có lệnh ấy.",
       "options": [
         {
           "id": "pandas",
@@ -910,6 +914,7 @@
       "guide": "Kho phân tích giữ bảng sạch để notebook, dashboard và mô hình cùng đọc.\nDữ liệu nhỏ: một file Parquet hoặc SQLite, truy vấn chạy ngay trên máy bạn.\nDữ liệu vừa hoặc cần nhiều người truy cập: một server PostgreSQL nhận câu SQL qua mạng.\nDữ liệu lớn: warehouse trên cloud chia câu SQL cho nhiều máy chạy song song và tính phí theo lượng dữ liệu quét.",
       "multi": false,
       "skipWhen": "Bỏ qua khi bạn chỉ có một bảng nhỏ và đọc thẳng từ file sạch trong notebook.",
+      "task": "Bảng sạch nạp vào kho đã chọn và một truy vấn mẫu trả đúng số dòng.",
       "options": [
         {
           "id": "parquet-duckdb",
@@ -1142,6 +1147,7 @@
       "guide": "Bước này chọn máy để train mô hình từ bảng sạch.\nMô hình học máy cổ điển trên bảng (hồi quy, cây quyết định) chạy tốt trên CPU của laptop.\nDeep learning với ảnh, văn bản hay mô hình lớn cần GPU, lấy miễn phí từ notebook online hoặc thuê trên cloud.\nMô hình train xong được lưu thành file để bước phục vụ (serving) dùng.",
       "multi": false,
       "skipWhen": "Bỏ qua khi dự án chỉ phân tích và báo cáo, không train mô hình.",
+      "task": "Huấn luyện chạy được ở môi trường đã chọn trên dữ liệu mẫu; README có lệnh chạy lại.",
       "options": [
         {
           "id": "local",
@@ -1333,6 +1339,7 @@
       "guide": "Mỗi lần huấn luyện là một lần chạy: tham số, dữ liệu, chỉ số và file mô hình.\nGhi lại từng lần chạy để so sánh và chọn ra mô hình tốt nhất.\nModel registry giữ các phiên bản mô hình đã chọn.\nBước Serving phía sau nạp đúng phiên bản mô hình lấy từ đây.",
       "multi": true,
       "skipWhen": "",
+      "task": "Mỗi lần chạy ghi lại tham số, số đo và file model; tìm lại được lần chạy đã nghiệm thu.",
       "options": [
         {
           "id": "git-results",
@@ -1487,6 +1494,7 @@
       "guide": "Serving là cách đưa mô hình đã huấn luyện ra để tạo dự đoán.\nBatch: chạy mô hình theo lịch, ghi kết quả ra file hoặc bảng, người dùng đọc kết quả có sẵn.\nOnline: người dùng gửi dữ liệu và nhận dự đoán ngay, trong khoảng một giây.\nMô hình lấy từ bước tracking; giao diện ở bước sau đọc kết quả hoặc gọi API ở đây.",
       "multi": false,
       "skipWhen": "Bỏ qua khi dự án chỉ phân tích dữ liệu, không có mô hình dự đoán.",
+      "task": "Model đã lưu trả về dự đoán cho một mẫu đầu vào bằng công cụ đã chọn; README có lệnh chạy lại.",
       "options": [
         {
           "id": "batch-file",
@@ -1662,6 +1670,7 @@
       "guide": "Đây là phần người dùng nhìn thấy.\nGiao diện đọc file kết quả batch, hoặc gọi mô hình online từ bước Serving.\nChọn theo ai xem và họ cần làm gì: đọc báo cáo, lọc số liệu, hay nhập dữ liệu để nhận dự đoán.\nBước Hosting phía sau đưa giao diện này lên mạng.",
       "multi": false,
       "skipWhen": "",
+      "task": "Giao diện mở được và hiện kết quả từ dữ liệu hoặc model thật, không phải số giả.",
       "options": [
         {
           "id": "notebook-report",
@@ -1883,6 +1892,7 @@
       "guide": "Đóng gói ghi lại đúng thư viện và phiên bản để máy khác chạy y như máy bạn.\nCI/CD tự chạy test mỗi lần push và tự triển khai khi gộp code.\nBước này nối code ở các bước trước với máy chủ ở bước Hosting.",
       "multi": true,
       "skipWhen": "",
+      "task": "Máy khác cài lại được môi trường từ repo bằng lệnh ghi trong README.",
       "options": [
         {
           "id": "requirements",
@@ -2016,6 +2026,7 @@
       "guide": "Hosting là máy chủ chạy app để người khác mở bằng một đường link.\nGói miễn phí thường cho app ngủ khi không ai dùng, lần mở sau phải chờ khởi động lại.\nChọn theo loại thứ cần chạy: trang tĩnh, app Streamlit hay Gradio, hay API trong Docker.\nSau khi lên mạng, bước Monitoring theo dõi nó.",
       "multi": false,
       "skipWhen": "Bỏ qua khi chỉ bạn xem kết quả trên máy của mình.",
+      "task": "Sản phẩm có link mở được từ máy khác.",
       "options": [
         {
           "id": "streamlit-cloud",
@@ -2234,6 +2245,7 @@
       "guide": "Monitoring kiểm tra hai việc: app còn chạy không, và mô hình còn dự đoán đúng không.\nDữ liệu thật thay đổi theo thời gian nên độ chính xác có thể giảm dần.\nKết quả theo dõi cho biết khi nào cần quay lại bước huấn luyện.",
       "multi": true,
       "skipWhen": "Bỏ qua khi không triển khai gì lên mạng và dữ liệu không đổi.",
+      "task": "Có cách biết khi app hỏng hay dữ liệu cũ, và đã thử cách ấy một lần.",
       "options": [
         {
           "id": "logs-weekly",

@@ -461,10 +461,10 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
 {
   const cat = JSON.parse(readFileSync(fileURLToPath(new URL('../data/system-design.json', import.meta.url)), 'utf8'));
   check('thiết kế: danh mục đúng khuôn', !catalogErrors(cat).length, catalogErrors(cat).join(' | '));
-  check('thiết kế: chuẩn hoá bỏ id lạ, khâu trống; "không cần" bỏ lựa chọn', eq(normDesign({
+  check('thiết kế: chuẩn hoá bỏ id lạ, khâu trống; "không cần" giữ lựa chọn ẩn', eq(normDesign({
     profile: { size: 'small', Bad: 'x', budget: 'Free!' },
     stages: { serve: { pick: ['fastapi', 'fastapi', 'X Y', 3] }, host: { pick: [] }, ingest: { skip: true, pick: ['cron'], own: 'z' }, 'a b': { pick: ['q'] } },
-  }), { profile: { size: 'small' }, stages: { serve: { pick: ['fastapi'], skip: false, own: '', note: '' }, ingest: { pick: [], skip: true, own: '', note: '' } } }));
+  }), { profile: { size: 'small' }, stages: { serve: { pick: ['fastapi'], skip: false, own: '', note: '' }, ingest: { pick: ['cron'], skip: true, own: 'z', note: '' } } }));
   check('thiết kế: không còn gì thì null', normDesign({ profile: {}, stages: { a: { pick: [] } } }) === null && normDesign('x') === null);
   const s = { options: [{ id: 'a', level: 3, fit: { size: ['large'] } }, { id: 'b', level: 2, fit: { size: ['small'], budget: ['free'] } }, { id: 'c', level: 1, fit: {} }] };
   const r = rankOptions(s, { size: 'small', budget: 'free' });
@@ -480,7 +480,16 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   check('thiết kế: đếm khâu đã quyết', eq(decidedCount(cat, d), { done: 2, total: cat.stages.length }));
   const t = planTasks(cat, d);
   check('thiết kế: việc cho bảng — tên khâu: phương án, Done when, link chính thức', t.length === 1 && t[0].title === `${st0.title}: ${o0.name} + Tự viết`
-    && t[0].doneWhen === o0.task && t[0].docs.length === o0.links.length && t[0].docs.every((x) => x.url.startsWith('https://')));
+    && t[0].doneWhen === `${o0.task} ${st0.task}` && t[0].docs.length === o0.links.length && t[0].docs.every((x) => x.url.startsWith('https://')));
+  const hid = normDesign({ stages: { [st0.id]: { pick: [o0.id], own: 'X', skip: true } } });
+  check('thiết kế: khâu "không cần" — sơ đồ, việc, tên bỏ qua lựa chọn ẩn; tắt "không cần" là chúng về',
+    !diagramNodes(cat, hid).flow.some((x) => x.id === st0.id) && !planTasks(cat, hid).length
+    && planTasks(cat, normDesign({ stages: { [st0.id]: { ...hid.stages[st0.id], skip: false } } }))[0].title === `${st0.title}: ${o0.name} + X`);
+  const ownOnly = planTasks(cat, normDesign({ stages: { [st0.id]: { own: 'Công cụ riêng' } } }));
+  check('thiết kế: công cụ tự ghi — Done when là việc chung của khâu', ownOnly.length === 1 && ownOnly[0].doneWhen === st0.task && !!st0.task);
+  const hidWs = normWorkspace({ name: 'H', steps: [], design: hid });
+  check('thiết kế: lựa chọn ẩn của khâu "không cần" — JSON giữ, Markdown chỉ ghi skip',
+    eq(parseImport(toJSON(hidWs)).workspaces[0].design, hid) && eq(fromMarkdown(toMarkdown(hidWs)).workspace.design.stages[st0.id], { pick: [], skip: true, own: '', note: '' }));
   check('thiết kế: đọc dòng khâu', eq(readStageLine('Hosting: Render (free) [host: render, vps-docker]'), { id: 'host', pick: ['render', 'vps-docker'], skip: false })
     && readStageLine('Ingest: not needed [ingest: skip]').skip && readStageLine('không có ngoặc') === null);
   const ws = normWorkspace({ name: 'P', steps: [{ title: 'A', subs: [{ title: 'x' }] }], design: { profile: { size: 'small', latency: 'online' },

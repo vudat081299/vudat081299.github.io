@@ -32,7 +32,7 @@ PLAN_URL = 'https://vudat081299.github.io/masters-degree/data-management-visuali
 TOKEN_END = '/* ── hết token ── */'
 DESIGN = os.path.join(HERE, 'data/system-design.json')
 LANES = ('data', 'model', 'app', 'ops')
-STAGE_KEYS = {'id', 'title', 'lane', 'question', 'guide', 'multi', 'skipWhen', 'options'}
+STAGE_KEYS = {'id', 'title', 'lane', 'question', 'guide', 'multi', 'skipWhen', 'task', 'options'}
 OPT_KEYS = {'id', 'name', 'kind', 'summary', 'pick', 'avoid', 'cost', 'level', 'fit', 'links', 'setup', 'task'}
 ID_RE = r'[a-z0-9]+(-[a-z0-9]+)*'
 
@@ -201,7 +201,7 @@ def check_design(data):
         if not re.fullmatch(ID_RE, str(sid)) or sid in seen or sid == 'users':
             err(f'{w}: id "{sid}" sai hoặc trùng')
         seen.add(sid)
-        for k in ('title', 'question'):
+        for k in ('title', 'question', 'task'):
             need_str(w, s, k)
         english(f'{w}.title', s.get('title', ''))
         need_str(w, s, 'skipWhen', required=False)

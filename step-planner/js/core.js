@@ -507,7 +507,7 @@ export function toMarkdown(ws, labels = null) {
     for (const id of ids) {
       const st = d.stages[id];
       const more = [];
-      if (st.own) more.push(`  Own: ${st.own}`);
+      if (st.own && !st.skip) more.push(`  Own: ${st.own}`); // khâu "không cần": phương án, chữ tự ghi ẩn không ghi ra
       /* Ghi chú mở bằng `Own:` thì thoát, kẻo đọc lại thành chữ tự ghi. */
       if (st.note) more.push(...st.note.split('\n').map((/** @type {string} */ l) => '  ' + (/^own:/i.test(l) ? '\\' + l : escBlock(l))));
       out.push(...hardBreaks([stageLine(id, st, labels ? labels(id, st) : {}), ...more]));

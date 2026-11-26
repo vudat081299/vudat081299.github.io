@@ -1578,6 +1578,11 @@ const check = (name, ok, detail = '') => {
     check(`${tag}: chọn thì lưu ngay`, ws.design?.stages[proc.id]?.pick[0] === top && ws.design.profile.size === 'large');
     check(`${tag}: đã chọn thì phương án khác gập lại`, await sp.$eval('#sd-pane .sd-more', (d) => !d.open && d.querySelectorAll('.sd-opt').length > 0));
     check(`${tag}: focus ở lại ô vừa chọn`, await sp.evaluate((id) => document.activeElement?.closest('.sd-opt')?.dataset.opt === id, top));
+    await sp.click(`#sd-pane [data-skip="${proc.id}"]`);
+    await sp.click(`#sd-pane [data-skip="${proc.id}"]`);
+    ws = await cur(sp);
+    check(`${tag}: bật rồi tắt "Not needed" giữ lựa chọn cũ`, ws.design.stages[proc.id].pick[0] === top && !ws.design.stages[proc.id].skip
+      && !!(await sp.$(`#sd-pane [data-opt="${top}"].is-on`)));
     await sp.click('#sd-next');
     const ing = cat.stages[4].id;
     await sp.click(`#sd-pane [data-skip="${ing}"]`);

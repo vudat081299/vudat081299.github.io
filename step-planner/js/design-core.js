@@ -14,7 +14,8 @@ const idList = (v) => (Array.isArray(v) ? [...new Set(v.filter((x) => typeof x =
 
 /**
  * Khoá và id chỉ là chữ thường, số, gạch nối (id lạ của danh mục cũ vẫn giữ: giao diện bỏ qua cái không còn).
- * Khâu "không cần" (`skip`) không giữ phương án đã chọn. Khâu trống bị bỏ; dự án không còn gì thì null.
+ * Khâu "không cần" (`skip`) vẫn giữ phương án, chữ tự ghi (ẩn, bỏ qua ở mọi chỗ): tắt "không cần" là chúng về lại.
+ * Khâu trống bị bỏ; dự án không còn gì thì null.
  * @param {any} o
  * @returns {null | {profile: Record<string,string>, stages: Record<string,{pick:string[], skip:boolean, own:string, note:string}>}}
  */
@@ -29,7 +30,7 @@ export function normDesign(o) {
     for (const [k, v] of Object.entries(o.stages)) {
       if (!ID.test(k) || !isObj(v)) continue;
       const skip = v.skip === true;
-      const st = { pick: skip ? [] : idList(v.pick), skip, own: skip ? '' : line(v.own).slice(0, OWN_MAX), note: lines(v.note) };
+      const st = { pick: idList(v.pick), skip, own: line(v.own).slice(0, OWN_MAX), note: lines(v.note) };
       if (st.pick.length || st.skip || st.own || st.note) stages[k] = st;
     }
   }
@@ -122,7 +123,7 @@ export function diagramNodes(catalog, design) {
 }
 
 /* ── Việc cho bảng: một bước "System build", mỗi khâu đã quyết một bước con (tên khâu: phương án), "Done when" là việc của
- * phương án, ghi chú là lệnh bắt đầu, tài liệu là link chính thức. ── */
+ * phương án (công cụ tự ghi: việc chung của khâu), ghi chú là lệnh bắt đầu, tài liệu là link chính thức. ── */
 
 export const PLAN_STEP = {
   title: 'System build',
@@ -147,7 +148,7 @@ export function planTasks(catalog, design) {
     const notes = [setup.length ? 'Lệnh bắt đầu:' : '', ...setup.map((/** @type {string} */ c) => '  ' + c), st.note].filter(Boolean).join('\n');
     out.push({
       title: `${s.title}: ${names.join(' + ')}`,
-      doneWhen: opts.map((/** @type {any} */ o) => o.task).filter(Boolean).join(' '),
+      doneWhen: [...opts.map((/** @type {any} */ o) => o.task), st.own ? s.task : ''].filter(Boolean).join(' '),
       notes,
       docs: opts.flatMap((/** @type {any} */ o) => (o.links || []).map((/** @type {any} */ l) => ({ kind: 'link', title: `${o.name} · ${l.title}`, url: l.url }))),
     });
