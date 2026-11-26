@@ -7,7 +7,7 @@ import {
   nextStatus, setStatus, splitInline, mergeEdit, pick, EDIT_FIELDS, nextWaitingOn, inGroup, needsEvidence, normWorkspace, normSub, normLog, freshCopy, counts, slug, fold, parseDate, uniqueName, normDoc, safeUrl,
 } from '../js/core.js';
 import * as CORE from '../js/core.js';
-import { parseMd, inline, srcTokens } from '../js/md.js';
+import { parseMd, inline, srcTokens, linkParts } from '../js/md.js';
 import { normDesign, rankOptions, snake, planTasks, diagramNodes, decidedCount, catalogErrors, readStageLine, applyPath, effProfile, warnings, flowEdges, bothDecided, planDiff, applyPlan, PLAN_STEP, notNeededBy, archAdvice, fitOf } from '../js/design-core.js';
 
 let fails = 0;
@@ -235,6 +235,15 @@ const para = tree[1].c;
 check('md.js: link chỉ http(s); chữ HTML là chữ', para.some((n) => n.t === 'link' && n.href === 'https://a.b')
   && !para.some((n) => n.t === 'link' && /javascript/.test(n.href)) && para.some((n) => n.t === 'text' && n.v.includes('<b>')));
 check('md.js: url trần bỏ dấu câu cuối', eq(inline('xem https://a.b/c).'), [{ t: 'text', v: 'xem ' }, { t: 'link', href: 'https://a.b/c', c: [{ t: 'text', v: 'https://a.b/c' }] }, { t: 'text', v: ').' }]));
+const lp = (/** @type {string} */ t) => linkParts(t).map((p) => (p.t === 'link' ? `<${p.v}>` : p.v)).join('');
+check('md.js linkParts: dấu câu cuối, ")" thừa ở ngoài link; ngoặc đi cặp giữ trong URL; chữ giữ nguyên',
+  lp('(xem https://arxiv.org/abs/1803.09010).') === '(xem <https://arxiv.org/abs/1803.09010>).'
+  && lp('Xong khi nào (https://a.b/p.html#xong): đủ') === 'Xong khi nào (<https://a.b/p.html#xong>): đủ'
+  && lp('https://a.b/c, https://a.b/d; https://a.b/e!') === '<https://a.b/c>, <https://a.b/d>; <https://a.b/e>!'
+  && lp('wiki https://en.wikipedia.org/wiki/Bias_(statistics).') === 'wiki <https://en.wikipedia.org/wiki/Bias_(statistics)>.'
+  && lp('(https://en.wikipedia.org/wiki/Bias_(statistics))') === '(<https://en.wikipedia.org/wiki/Bias_(statistics)>)'
+  && lp('(see https://x.y/a.)') === '(see <https://x.y/a>.)' && lp('https://. không') === 'https://. không'
+  && linkParts('a https://x.y b').map((p) => p.t).join() === 'text,link,text', lp('(xem https://arxiv.org/abs/1803.09010).'));
 
 /* Token tô màu của khung Edit: theo thứ tự, không chồng nhau, không vượt dòng; đúng loại ở các dấu chính. */
 const srcT = '# Tiêu **đậm**\n> trích `c`\n- [x] [l](https://a.b "t")\n```py\nx = "s" # **không**\n```\n| a | b |\nsnake_case *n* ~~g~~ <!-- c -->';

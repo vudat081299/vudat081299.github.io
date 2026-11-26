@@ -142,11 +142,33 @@ function blocks(lines) {
 
 const PUNCT = /[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]/;
 const SAFE_URL = /^https?:\/\/\S+$/i;
-/** URL trần: bỏ dấu câu cuối không thuộc URL. @param {string} u */
+/** URL trần: bỏ dấu câu cuối và ")" thừa (không có "(" đi cặp trong URL), lặp tới khi hết. @param {string} u */
 function trimUrl(u) {
-  let x = u.replace(/[.,;:!?'"*_~]+$/, '');
-  while (x.endsWith(')') && (x.match(/\(/g) || []).length < (x.match(/\)/g) || []).length) x = x.slice(0, -1);
+  let x = u, prev = '';
+  while (x !== prev) {
+    prev = x;
+    x = x.replace(/[.,;:!?'"*_~]+$/, '');
+    if (x.endsWith(')') && (x.match(/\(/g) || []).length < (x.match(/\)/g) || []).length) x = x.slice(0, -1);
+  }
   return x;
+}
+
+/** Chữ thường (không Markdown) tách thành chữ và URL http(s) trần; dấu câu cuối, ")" thừa ở lại phần chữ.
+ * @param {string} text @returns {{t: 'text'|'link', v: string}[]} */
+export function linkParts(text) {
+  /** @type {{t: 'text'|'link', v: string}[]} */
+  const out = [];
+  const re = /https?:\/\/[^\s<>"]+/gi;
+  let last = 0, m;
+  while ((m = re.exec(text))) {
+    const u = trimUrl(m[0]);
+    if (!/^https?:\/\/./i.test(u)) continue;
+    if (m.index > last) out.push({ t: 'text', v: text.slice(last, m.index) });
+    out.push({ t: 'link', v: u });
+    last = re.lastIndex = m.index + u.length;
+  }
+  if (last < text.length) out.push({ t: 'text', v: text.slice(last) });
+  return out;
 }
 
 /** @param {string} s @returns {Inline[]} */

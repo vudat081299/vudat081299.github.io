@@ -89,6 +89,7 @@
   --grip-w: 36px; --grip-h: 4px;       /* tay nắm tấm đáy */
   --dot: 8px;                          /* chấm trạng thái trong chip */
   --ring-w: 2px;
+  --ring-out: calc(var(--ring-w) + var(--mark-w)); /* vòng focus nhô ra ngoài phần tử chừng này */
   --line-w: 1px;
   --mark-w: 2px;
   --prog-h: 6px;
@@ -619,9 +620,13 @@ svg.i {
 .redo-tag { display: inline-flex; align-items: center; gap: var(--s1); font: 600 var(--fs-xs)/1 var(--sans); color: var(--amber-fg); }
 .redo-tag svg.i { width: var(--fs-sm); height: var(--fs-sm); color: var(--amber); }
 .card-top .chip { margin-left: auto; }
-/* Thân thẻ co lại khi thẻ chạm --card-max; chữ thừa mờ dần, nút "Xem thêm" mở cả thẻ. */
-.card-body { flex: 0 1 auto; min-height: 0; overflow: hidden; display: flex; flex-direction: column; gap: var(--s2); }
-.card.cut .card-body { mask-image: linear-gradient(to bottom, var(--mask) calc(100% - var(--fade)), transparent); }
+/* Thân thẻ co lại khi thẻ chạm --card-max; chữ thừa mờ dần, nút "Xem thêm" mở cả thẻ.
+   Vùng cắt nới ra --ring-out mỗi bên (đệm bù lề âm, chữ không xê dịch) để vòng focus của tên thẻ hiện đủ; vệt mờ giữ đúng chỗ cũ. */
+.card-body {
+  flex: 0 1 auto; min-height: 0; overflow: hidden; display: flex; flex-direction: column; gap: var(--s2);
+  padding: var(--ring-out); margin: calc(-1 * var(--ring-out));
+}
+.card.cut .card-body { mask-image: linear-gradient(to bottom, var(--mask) calc(100% - var(--ring-out) - var(--fade)), transparent calc(100% - var(--ring-out))); }
 .card.open .card-body { mask-image: none; }
 .card-title { font-size: var(--fs-md); font-weight: 600; line-height: 1.35; overflow-wrap: anywhere; }
 .meta { display: flex; gap: var(--s1) var(--s2); flex-wrap: wrap; font-size: var(--fs-xs); color: var(--ink-2); }
@@ -687,8 +692,8 @@ span.chip::after { content: none; }
 .dragging-any .gap-add { display: none; }
 .drag-src { display: none !important; }
 .drag-ghost {
-  position: fixed; left: 0; top: 0; z-index: 95; margin: 0; pointer-events: none; will-change: transform;
-  box-shadow: var(--shadow-pop); rotate: var(--drag-tilt); scale: var(--drag-scale); transform-origin: top left;
+  position: fixed; left: 0; top: 0; z-index: 95; margin: 0; pointer-events: none; will-change: translate;
+  box-shadow: var(--shadow-pop); rotate: var(--drag-tilt); scale: var(--drag-scale); /* tâm xoay, thu nhỏ: điểm nắm (drag.js) */
 }
 /* Bóng thẻ nằm ngoài bảng: cao đúng bằng thẻ gốc (drag.js đặt), kể cả ở chế độ Gọn; không mang hàng nút. */
 .card.drag-ghost { min-height: 0; }
@@ -837,7 +842,7 @@ span.chip::after { content: none; }
 .log-date { font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-3); }
 .log-auto { font-weight: 600; color: var(--amber-fg); }
 .log-step {
-  position: relative; display: inline-flex; align-items: center; gap: var(--s1); max-width: var(--chip-max); height: var(--h-xs); padding: 0 var(--s2);
+  position: relative; display: inline-flex; align-items: center; gap: var(--s1); max-width: min(var(--chip-max), 100%); height: var(--h-xs); padding: 0 var(--s2);
   font: 600 var(--fs-xs)/1 var(--sans); color: var(--ink-2); background: var(--chip); border: 0; border-radius: var(--r-pill); cursor: pointer;
   transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
 }

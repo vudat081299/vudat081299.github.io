@@ -564,6 +564,28 @@ const check = (name, ok, detail = '') => {
   const before4 = await ids0();
   await dragTo(cardSel(r1[0]), async () => { const b = await box(cardSel(before4[0])); return { x: b.x + 12, y: b.y + 30 }; }, { esc: true });
   check('Esc khi đang kéo: huỷ, không đổi gì', (await ids0()).join() === before4.join() && !(await page.$('.drop-ph, .drag-src, .drag-ghost')));
+  // 4b. Bóng không trôi khỏi con trỏ: điểm nắm cách góc bóng như lúc đầu, cả ở góc phải dưới khung nhìn.
+  {
+    const a = await box(cardSel(before4[0]));
+    const gx = 24, gy = 24;
+    const off = (x, y) => page.evaluate(([x, y]) => {
+      const g = document.querySelector('.drag-ghost'), r = g.getBoundingClientRect(), cs = getComputedStyle(g);
+      return { dx: x - r.left, dy: y - r.top, scale: parseFloat(cs.scale), tilt: parseFloat(cs.rotate), h: g.offsetHeight, w: g.offsetWidth };
+    }, [x, y]);
+    await page.mouse.move(a.x + gx, a.y + gy); await page.mouse.down();
+    await page.mouse.move(a.x + gx + 10, a.y + gy + 6, { steps: 2 }); await page.waitForTimeout(60);
+    const near = await off(a.x + gx + 10, a.y + gy + 6);
+    const vp = page.viewportSize(), fx = vp.width - 150, fy = vp.height - 120;
+    await page.mouse.move(fx, fy, { steps: 8 }); await page.waitForTimeout(120);
+    const far = await off(fx, fy);
+    await page.keyboard.press('Escape'); await page.mouse.up();
+    await page.waitForFunction(() => !document.querySelector('.drag-ghost') && !document.body.classList.contains('dragging-any'), null, { timeout: 3000 }).catch(() => {});
+    /* Thu nhỏ, nghiêng quanh điểm nắm: góc hộp bao chỉ lệch (1 − scale)·nắm + cạnh·sin(nghiêng), không đổi theo chỗ con trỏ. */
+    const tol = (k) => (1 - near.scale) * 24 + k * Math.sin(Math.abs(near.tilt) * Math.PI / 180) + 1.5;
+    check('kéo: bóng không trôi khỏi con trỏ (góc phải dưới), điểm nắm ≈ chỗ nắm trên thẻ',
+      Math.abs(far.dx - near.dx) <= 1 && Math.abs(far.dy - near.dy) <= 1 && Math.abs(far.dx - gx) <= tol(near.h) && Math.abs(far.dy - gy) <= tol(near.w),
+      JSON.stringify({ near, far }));
+  }
   // 5. Tự cuộn ngang: giữ gần mép phải hàng thẻ thì hàng cuộn.
   const sc0 = await page.evaluate(() => document.querySelector('.step .cards-scroll').scrollLeft);
   await dragTo(cardSel(before4[1]), async () => { const b = await box('.step:first-child .cards-scroll'); return { x: b.x + b.width - 10, y: b.y + 40 }; }, {
@@ -832,6 +854,25 @@ const check = (name, ok, detail = '') => {
   await page.keyboard.press('Tab');
   const rg2 = await ring();
   check('sau Esc, bấm Tab: vòng focus hiện lại', rg2.fv && rg2.w > 0, JSON.stringify(rg2));
+  // Vòng focus của tên thẻ nằm trọn trong vùng cắt của thân thẻ (overflow: hidden), ở mọi thẻ có tên vừa thân.
+  const ringClip = await page.evaluate(() => {
+    const bad = [];
+    let n = 0;
+    for (const c of document.querySelectorAll('#board .card[data-sub]')) {
+      const t = /** @type {HTMLElement} */ (c.querySelector('.card-title [data-act="edit-sub"]')), body = c.querySelector('.card-body');
+      t.focus({ focusVisible: true });
+      const cs = getComputedStyle(t);
+      if (!t.matches(':focus-visible') || cs.outlineStyle === 'none') { bad.push('no ring ' + c.dataset.sub); continue; }
+      const o = parseFloat(cs.outlineWidth) + parseFloat(cs.outlineOffset), r = t.getBoundingClientRect(), b = body.getBoundingClientRect();
+      if (r.height + 2 * o > b.height) continue; // tên cao hơn cả thân (thẻ bị cắt): không đo
+      n++;
+      if (r.left - o < b.left - 0.5 || r.right + o > b.right + 0.5 || r.top - o < b.top - 0.5 || r.bottom + o > b.bottom + 0.5)
+        bad.push(`${c.dataset.sub}: ring ${[r.left - o, r.top - o, r.right + o, r.bottom + o].map(Math.round)} body ${[b.left, b.top, b.right, b.bottom].map(Math.round)}`);
+    }
+    /** @type {HTMLElement} */ (document.activeElement).blur();
+    return { n, bad };
+  });
+  check('focus tên thẻ: vòng focus nằm trọn trong vùng cắt của thân thẻ', ringClip.n > 3 && ringClip.bad.length === 0, JSON.stringify(ringClip));
 
   // Tài liệu của bước con: nhãn kẹp trên thẻ, sửa trong hộp bước con; xoá có Hoàn tác ngay trong hộp.
   const dsub = (await cur(page)).steps[1].subs[0];
@@ -1203,6 +1244,78 @@ const check = (name, ok, detail = '') => {
   check('xoá dự án: tab mở dự án còn lại, lastId hợp lệ', sA.workspaces.some((w) => w.id === sA.lastId) && (await A.textContent('#ws-name')) === w1.name);
   await tc.close();
   });
+
+  /* ── Bắt đầu kéo khi có mũi tên bàn giao (ô trước thẻ, dải trên bước), cả khi giảm chuyển động: bóng giữ đúng điểm nắm,
+   * ô viền đứt ở hàng của con trỏ (dải trên chính bước nguồn thu lại cũng vậy), Esc trả về đúng chỗ; mũi tên thu lại có trượt
+   * (FLIP) khi không giảm chuyển động ── */
+  for (const motion of ['reduce', 'no-preference']) {
+    const filler = [1, 2, 3].map((k) => ({ id: 'f' + k, title: 'Filler ' + k, subs: [{ id: 'fs' + k, title: 'Task ' + k }] }));
+    const seed = { id: 'wg', name: 'Gap', steps: [...filler,
+      { id: 'r1', title: 'Producer', subs: [{ id: 'gA', title: 'Make table', outs: [{ id: 'oA', name: 'table' }] }, { id: 'gB', title: 'Use table', ins: ['oA'] },
+        { id: 'gC', title: 'Third' }] },
+      { id: 'r2', title: 'Consumer', ins: ['oA'], subs: [{ id: 'gD', title: 'Report' }, { id: 'gE', title: 'Review' }] },
+      ...[4, 5].map((k) => ({ id: 'f' + k, title: 'Filler ' + k, subs: [{ id: 'fs' + k, title: 'Task ' + k }] }))], log: [] };
+    const gc = await browser.newContext({ viewport: { width: 1280, height: 700 }, deviceScaleFactor: 1, reducedMotion: motion });
+    await gc.addInitScript((d) => { if (!localStorage.getItem('stepPlanner.v2')) localStorage.setItem('stepPlanner.v2', JSON.stringify({ version: 2, workspaces: [d], lastId: d.id })); }, seed);
+    const gp = await gc.newPage();
+    gp.on('pageerror', (e) => errors.push(String(e)));
+    await gp.goto(BASE);
+    await gp.waitForSelector('.card[data-sub="gB"]');
+    const tag = `kéo khi có mũi tên (${motion})`;
+    const arrows = await gp.evaluate(() => [!!document.querySelector('.step[data-step="r1"] .hand-gap'), !!document.querySelector('.step[data-step="r2"] .hand-row')]);
+    /* Đưa `sel` về y = 420 trong khung nhìn (trang còn chỗ cuộn lên), nhấn ở `grab`, trôi một chút; đo; Esc; đo lại. */
+    const run = async (sel, handle, grab) => {
+      await gp.evaluate((s) => window.scrollBy(0, document.querySelector(s).getBoundingClientRect().top - 420), sel);
+      await gp.waitForTimeout(50);
+      const r = await gp.locator(sel).boundingBox(), hb = await gp.locator(handle).boundingBox();
+      const px = hb.x + grab(hb).x, py = hb.y + grab(hb).y;
+      await gp.mouse.move(px, py); await gp.mouse.down();
+      await gp.mouse.move(px + 8, py + 6, { steps: 2 });
+      await gp.waitForFunction(() => document.body.classList.contains('dragging-any'));
+      await gp.waitForTimeout(30);
+      const m = await gp.evaluate(() => {
+        const g = /** @type {HTMLElement} */ (document.querySelector('.drag-ghost')), ph = document.querySelector('.drop-ph, .step-ph');
+        const [tx, ty] = (g.style.translate || '').split(' ').map(parseFloat);
+        return { tx, ty, ph: ph && ph.getBoundingClientRect().top, slid: document.querySelector('.card[data-sub="gC"]').getAnimations().length };
+      });
+      await gp.keyboard.press('Escape'); await gp.mouse.up();
+      await gp.waitForFunction(() => !document.body.classList.contains('dragging-any'));
+      await gp.waitForTimeout(motion === 'reduce' ? 30 : 300);
+      const back = (await gp.locator(sel).boundingBox()).y;
+      return { off: [px + 8 - m.tx - (px - r.x), py + 6 - m.ty - (py - r.y)].map((v) => Math.round(v * 10) / 10), ph: m.ph - r.y, back: back - r.y, slid: m.slid };
+    };
+    const card = await run('.card[data-sub="gB"]', '.card[data-sub="gB"]', () => ({ x: 20, y: 20 }));
+    const step = await run('.step[data-step="r2"] .step-head', '.step[data-step="r2"] .step-grip', (b) => ({ x: b.width / 2, y: b.height / 2 }));
+    const near = (v, d) => Math.abs(v) <= d;
+    check(`${tag}: thẻ sau ô mũi tên — bóng giữ điểm nắm, ô viền đứt cùng hàng, Esc về chỗ cũ`, arrows[0] && near(card.off[0], 1) && near(card.off[1], 1)
+      && near(card.ph, 2) && near(card.back, 1), JSON.stringify(card));
+    check(`${tag}: bước dưới dải mũi tên — bóng giữ điểm nắm, chỗ thả ở hàng con trỏ, Esc về chỗ cũ`, arrows[1] && near(step.off[0], 1) && near(step.off[1], 1)
+      && near(step.ph, 12) && near(step.back, 1), JSON.stringify(step));
+    if (motion === 'reduce') check(`${tag}: mũi tên thu lại không trượt`, card.slid === 0, String(card.slid));
+    else check(`${tag}: mũi tên thu lại thì thẻ sau nó trượt khít vào (FLIP)`, card.slid > 0, String(card.slid));
+    await gc.close();
+  }
+
+  /* ── 320px: chip bước tên dài trong nhật ký không làm trang cuộn ngang ── */
+  {
+    const n = await open(320, 700);
+    await n.page.click('#start .tpl[data-tpl="big-data-ds"]');
+    await n.page.click('#log-compose-open');
+    await n.page.fill('#log-decision', 'Quyết định thử');
+    const long = await n.page.evaluate(() => {
+      const s = /** @type {HTMLSelectElement} */ (document.getElementById('log-step'));
+      const o = [...s.options].filter((x) => x.value).sort((a, b) => b.text.length - a.text.length)[0];
+      s.value = o.value; s.dispatchEvent(new Event('change', { bubbles: true }));
+      /** @type {HTMLFormElement} */ (document.getElementById('log-form')).requestSubmit();
+      return o.text;
+    });
+    await n.page.waitForSelector('.log-item .log-step');
+    const chip = await n.page.$eval('.log-item .log-step', (e) => { const r = e.getBoundingClientRect(), m = e.parentElement.getBoundingClientRect(); return { r: r.right, mr: m.right, vw: innerWidth }; });
+    const ov = await hOverflow(n.page);
+    check('320px: nhật ký có chip bước tên dài, chip nằm trong hàng, trang không cuộn ngang', ov <= 0 && chip.r <= chip.mr + 0.5 && long.length > 40,
+      `${ov} ${JSON.stringify(chip)} ${long}`);
+    await n.ctx.close();
+  }
 
   /* ── Điện thoại 390px ── */
   await section('Điện thoại 390px', async () => { // thân giữ thụt lề cũ cho dễ gộp
@@ -2254,6 +2367,21 @@ const check = (name, ok, detail = '') => {
     await hp.waitForFunction(() => !document.body.classList.contains('dragging-any'));
     const afterEsc = await marks();
     check('bàn giao: đang kéo thẻ thì mũi tên thu lại, ô khít nhau; Esc thì mũi tên về', mid.arrows === 0 && mid.maxGap <= 16 && same(afterEsc, m1), JSON.stringify({ mid, afterEsc }));
+    // Thẻ của bước có dải mũi tên ngay trên nó: dải thu lại mà ô viền đứt vẫn ở hàng con trỏ (trang cuộn bù); Esc về đúng chỗ.
+    await hp.evaluate(() => window.scrollBy(0, document.querySelector('.card[data-sub="hF"]').getBoundingClientRect().top - 500));
+    const cf = await hp.locator('.card[data-sub="hF"]').boundingBox();
+    const ownRow = await hp.evaluate(() => !!document.querySelector('.step[data-step="h3"] .hand-row') && scrollY > 200);
+    await hp.mouse.move(cf.x + 24, cf.y + 24);
+    await hp.mouse.down();
+    await hp.mouse.move(cf.x + 34, cf.y + 30, { steps: 3 });
+    await hp.waitForFunction(() => document.body.classList.contains('dragging-any'));
+    const phRow = await hp.evaluate(() => document.querySelector('.drop-ph').getBoundingClientRect().top);
+    await hp.keyboard.press('Escape');
+    await hp.mouse.up();
+    await hp.waitForFunction(() => !document.body.classList.contains('dragging-any'));
+    const cfBack = (await hp.locator('.card[data-sub="hF"]').boundingBox()).y;
+    check('bàn giao: kéo thẻ dưới dải mũi tên — ô viền đứt ở hàng con trỏ (lệch ≤ 3px), Esc thẻ về đúng chỗ', ownRow
+      && Math.abs(phRow - cf.y) <= 3 && Math.abs(cfBack - cf.y) <= 1, JSON.stringify({ ownRow, card: cf.y, phRow, cfBack }));
 
     // Kéo bước 2 lên đầu: liên kết theo id giữ nguyên, vạch tính lại (bên nhận nằm trên bên giao: không còn vạch); Hoàn tác về chỗ cũ.
     const g = await hp.locator('.step[data-step="h2"] .step-grip').boundingBox();

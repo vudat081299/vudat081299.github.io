@@ -3,7 +3,7 @@
  * Chữ người dùng chỉ vào DOM qua textContent (hàm h), không bao giờ qua HTML. */
 import * as C from './core.js';
 import * as S from './store.js';
-import { renderMd, renderSrc } from './md.js';
+import { renderMd, renderSrc, linkParts } from './md.js';
 import { enhanceSelect, openList, consumeJustClosed } from './dropdown.js';
 import { initDrag } from './drag.js';
 import { initDesign, renderSection as renderDesign, mdLabels } from './design.js';
@@ -26,11 +26,11 @@ function h(tag, attrs = {}, ...kids) {
   return el;
 }
 
-/** Chữ có link http(s) thành text + thẻ a; mọi phần vẫn qua textContent. @param {string} text */
+/** Chữ có link http(s) thành text + thẻ a (tách ở md.js `linkParts`); mọi phần vẫn qua textContent. @param {string} text */
 function withLinks(text) {
-  return text.split(/(https?:\/\/[^\s<>"]+)/).map((part, i) => (i % 2
-    ? h('a', { href: part, target: '_blank', rel: 'noopener noreferrer' }, part)
-    : part));
+  return linkParts(text).map((p) => (p.t === 'link'
+    ? h('a', { href: p.v, target: '_blank', rel: 'noopener noreferrer' }, p.v)
+    : p.v));
 }
 
 /* Biểu tượng: một bộ duy nhất, là các <symbol id="i-…"> trong index.html; nét và cỡ do CSS (svg.i) đặt. */
