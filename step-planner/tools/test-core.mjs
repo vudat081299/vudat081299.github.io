@@ -23,6 +23,22 @@ const firstDiff = (a, b) => {
 };
 const roundTrip = (ws) => shape(fromMarkdown(toMarkdown(ws)).workspace);
 
+/* Liên kết treo theo luật chặt của mẫu: bên giao phải đứng hẳn trước bên nhận — hàng trước, hoặc cùng hàng thì cả hai là bước
+ * con và ô của bên giao đứng trước ô của bên nhận. Cùng ô (song song), bước nhận từ bước con của chính nó, hay đứng sau: treo.
+ * Đầu vào không khớp đầu ra nào cũng tính. Trả về các cặp "bên giao > bên nhận: đầu ra". */
+const heldStrict = (ws) => {
+  const idx = CORE.outIndex(ws), slot = new Map(), bad = [];
+  for (const step of ws.steps) slotsOf(step.subs).forEach((sl, k) => sl.forEach((x) => slot.set(x.id, k)));
+  for (const to of CORE.holders(ws)) {
+    for (const id of to.h.ins || []) {
+      const src = idx.get(id);
+      const ok = src && (src.i < to.i || (src.i === to.i && src.sub && to.sub && slot.get(src.sub.id) < slot.get(to.sub.id)));
+      if (!ok) bad.push(`${src ? CORE.holderTitle(src) : '?'} > ${CORE.holderTitle(to)}: ${src ? src.out.name : id}`);
+    }
+  }
+  return bad;
+};
+
 const tplPath = fileURLToPath(new URL('../data/templates.json', import.meta.url));
 const { templates } = JSON.parse(readFileSync(tplPath, 'utf8'));
 
@@ -36,6 +52,20 @@ for (const t of templates) {
   const ho = CORE.handoffs(ws);
   check(`mẫu ${t.id}: mọi đầu vào nối được, không bàn giao treo`, ho.links.length === nIns && ho.held.length === 0,
     `${ho.links.length}/${nIns} liên kết, ${ho.held.length} treo`);
+  // Đầu vào lơ lửng: key không khớp đầu ra nào của mẫu (fromTemplate bỏ lặng lẽ, nên kiểm trên chính mẫu).
+  const keys = new Set((t.steps || []).flatMap((s) => [s, ...(s.subs || [])]).flatMap((x) => (x.outs || []).map((o) => o.key)));
+  const dangling = (t.steps || []).flatMap((s) => [s, ...(s.subs || [])]).flatMap((x) => (x.ins || []).filter((k) => !keys.has(k)));
+  check(`mẫu ${t.id}: không đầu vào lơ lửng (key không có đầu ra)`, !dangling.length, dangling.join(','));
+  const late = heldStrict(ws);
+  check(`mẫu ${t.id}: không đầu vào treo, kể cả cùng ô với bên giao`, !late.length, late.join(' | '));
+}
+{ // Bộ kiểm treo chặt bắt được: cùng ô, bước nhận từ bước con của nó, hàng sau, đầu ra không có; ô trước, hàng trước thì sạch.
+  const w = normWorkspace({ steps: [
+    { id: 's1', title: 'S1', ins: ['a'], subs: [{ id: 'a1', title: 'A', outs: [{ id: 'a', name: 'a' }] }, { id: 'b1', title: 'B', par: true, ins: ['a'] },
+      { id: 'c1', title: 'C', ins: ['a', 'z', 'gone'] }] },
+    { id: 's2', title: 'S2', subs: [{ id: 'd1', title: 'D', ins: ['a'], outs: [{ id: 'z', name: 'z' }] }] }] });
+  check('bàn giao mẫu: bộ kiểm treo chặt bắt cùng ô, cùng hàng ở cấp bước, chảy ngược, mất nguồn', eq(heldStrict(w),
+    ['A > S1: a', 'A > B: a', 'D > C: z', '? > C: gone']), heldStrict(w).join(' | '));
 }
 
 /* Dự án có đủ thứ khó: dấu ·, @, \, chữ "hạn", ghi chú nhiều dòng có dòng trống, dòng trông như mục danh sách / nhãn. */
