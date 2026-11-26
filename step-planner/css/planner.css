@@ -837,7 +837,7 @@ span.chip::after { content: none; }
 .log-date { font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-3); }
 .log-auto { font-weight: 600; color: var(--amber-fg); }
 .log-step {
-  position: relative; display: inline-flex; align-items: center; gap: var(--s1); max-width: var(--chip-max); height: var(--h-xs); padding: 0 var(--s2);
+  position: relative; display: inline-flex; align-items: center; gap: var(--s1); max-width: min(var(--chip-max), 100%); height: var(--h-xs); padding: 0 var(--s2);
   font: 600 var(--fs-xs)/1 var(--sans); color: var(--ink-2); background: var(--chip); border: 0; border-radius: var(--r-pill); cursor: pointer;
   transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
 }

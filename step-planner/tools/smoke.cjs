@@ -1208,6 +1208,27 @@ const check = (name, ok, detail = '') => {
   check('xoá dự án: tab mở dự án còn lại, lastId hợp lệ', sA.workspaces.some((w) => w.id === sA.lastId) && (await A.textContent('#ws-name')) === w1.name);
   await tc.close();
 
+  /* ── 320px: chip bước tên dài trong nhật ký không làm trang cuộn ngang ── */
+  {
+    const n = await open(320, 700);
+    await n.page.click('#start .tpl[data-tpl="big-data-ds"]');
+    await n.page.click('#log-compose-open');
+    await n.page.fill('#log-decision', 'Quyết định thử');
+    const long = await n.page.evaluate(() => {
+      const s = /** @type {HTMLSelectElement} */ (document.getElementById('log-step'));
+      const o = [...s.options].filter((x) => x.value).sort((a, b) => b.text.length - a.text.length)[0];
+      s.value = o.value; s.dispatchEvent(new Event('change', { bubbles: true }));
+      /** @type {HTMLFormElement} */ (document.getElementById('log-form')).requestSubmit();
+      return o.text;
+    });
+    await n.page.waitForSelector('.log-item .log-step');
+    const chip = await n.page.$eval('.log-item .log-step', (e) => { const r = e.getBoundingClientRect(), m = e.parentElement.getBoundingClientRect(); return { r: r.right, mr: m.right, vw: innerWidth }; });
+    const ov = await hOverflow(n.page);
+    check('320px: nhật ký có chip bước tên dài, chip nằm trong hàng, trang không cuộn ngang', ov <= 0 && chip.r <= chip.mr + 0.5 && long.length > 40,
+      `${ov} ${JSON.stringify(chip)} ${long}`);
+    await n.ctx.close();
+  }
+
   /* ── Điện thoại 390px ── */
   const m = await open(390, 844, { isMobile: true, hasTouch: true });
   await m.page.click('#start .tpl[data-tpl="it5425-sports"]');
