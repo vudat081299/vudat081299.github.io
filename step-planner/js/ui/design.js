@@ -28,6 +28,8 @@ const moreOpen = new Set();       // khâu đang mở "Show other options"
 let applied = null;
 const ARCH_PAGE = 2;
 const FIRST_STAGE = 3;
+const ARROW = 6;                  // px: đầu mũi tên của đường nối dài chừng này tính từ mũi (marker `sd-arrow`)
+const TIP_GAP = 3;                // px: mũi tên dừng trước nút chừng này
 
 
 /** @param {string} tag @param {Record<string, any>} [attrs] @param {...any} kids */
@@ -144,7 +146,7 @@ function drawDiagram() {
   const W = Math.max(fig.clientWidth - 2 * fp - 4, 240);
   const gx = px(cs, '--sd-gap-x', 40), gy = px(cs, '--sd-gap-y', 36), maxW = px(cs, '--sd-node-max', 220);
   const pad = px(cs, '--sd-pad', 12), head = px(cs, '--sd-head', 30), lh = px(cs, '--sd-line', 20);
-  const gxHand = Math.max(gx, px(cs, '--sd-gap-hand', 128));
+  const gxHand = Math.max(gx, px(cs, '--sd-gap-hand', 128)), gyHand = Math.max(gy, px(cs, '--sd-gap-y-hand', 56));
   const edges = new Map(flowEdges(cat, design()).map((e) => [e.key, e]));
   /* Khoảng giữa cột c và c + 1: một đường nối ngang qua đó có hợp đồng thì nới tới --sd-gap-hand, để nhãn không chiếm cả đường.
    * Số cột: nhiều nhất (≤ 5) mà nút còn rộng ≥ min(--sd-node-max, 180). */
@@ -167,10 +169,16 @@ function drawDiagram() {
   const lineCount = (/** @type {any} */ n) => (n.lane === 'end' ? 1 : Math.max(1, Math.min(n.names.length, MAX_NAMES + 1)));
   const nodeH = (/** @type {any} */ n) => head + lineCount(n) * lh + pad;
 
-  /* Luồng: rắn bò; mỗi hàng cao bằng nút cao nhất của hàng. */
+  /* Luồng: rắn bò; mỗi hàng cao bằng nút cao nhất của hàng. Đường nối dọc từ hàng r xuống hàng r + 1 có hợp đồng thì khoảng
+   * hàng nới tới --sd-gap-y-hand: nhãn nằm trên nét mà không đè đầu mũi tên. */
   const rows = /** @type {number[]} */ ([]);
   flow.forEach((n, i) => { const r = snake(i, cols).row; rows[r] = Math.max(rows[r] || 0, nodeH(n)); });
-  const rowY = rows.map((_, r) => rows.slice(0, r).reduce((a, b) => a + b + gy, 0));
+  const rowGap = rows.map(() => gy);
+  for (let i = 1; i < flow.length; i++) {
+    const r = snake(i - 1, cols).row;
+    if (r !== snake(i, cols).row && edges.get(`${flow[i - 1].id}>${flow[i].id}`)?.c) rowGap[r] = gyHand;
+  }
+  const rowY = rows.map((_, r) => rows.slice(0, r).reduce((a, b, k) => a + b + rowGap[k], 0));
   const pos = flow.map((n, i) => { const p = snake(i, cols); return { n, x: colX[p.col], y: rowY[p.row], h: rows[p.row], row: p.row }; });
   let y = rowY.length ? rowY[rowY.length - 1] + rows[rows.length - 1] : 0;
 
@@ -188,17 +196,18 @@ function drawDiagram() {
     const same = a.row === b.row;
     const key = `${a.n.id}>${b.n.id}`;
     const d = same
-      ? (b.x > a.x ? `M${a.x + nw} ${a.y + a.h / 2}H${b.x - 3}` : `M${a.x} ${a.y + a.h / 2}H${b.x + nw + 3}`)
-      : `M${a.x + nw / 2} ${a.y + a.h}V${b.y - 3}`;
+      ? (b.x > a.x ? `M${a.x + nw} ${a.y + a.h / 2}H${b.x - TIP_GAP}` : `M${a.x} ${a.y + a.h / 2}H${b.x + nw + TIP_GAP}`)
+      : `M${a.x + nw / 2} ${a.y + a.h}V${b.y - TIP_GAP}`;
     /* Nét liền khi cả hai đầu đã quyết, còn lại nét đứt; đầu mũi tên luôn liền. */
     const line = svg('path', { class: `sd-edge${bothDecided(a.n, b.n) ? '' : ' is-open'}`, d, 'data-pair': key, 'marker-end': 'url(#sd-arrow)' });
     const e = edges.get(key);
     if (!e) { links.append(line); continue; }
-    /* Nhãn ở giữa khoảng trống giữa hai nút; dài nhất --sd-hand-cap lần chiều dài đường (đường dọc: lần bề rộng nút). */
+    /* Nhãn ở giữa khoảng trống giữa hai nút; dài nhất --sd-hand-cap lần chiều dài đường (đường dọc: lần bề rộng nút).
+     * Đường dọc: giữa phần nét trước đầu mũi tên, nhãn không đè mũi tên. */
     const x0 = Math.min(a.x, b.x) + nw, x1 = Math.max(a.x, b.x);
     links.append(svg('g', { class: 'sd-wire', 'data-edge': key },
       svg('path', { class: 'sd-hit', d }), line,
-      handEl(e, same ? (x0 + x1) / 2 : a.x + nw / 2, same ? a.y + a.h / 2 : a.y + a.h + gy / 2, (same ? x1 - x0 : nw) * dim.cap, dim, i)));
+      handEl(e, same ? (x0 + x1) / 2 : a.x + nw / 2, same ? a.y + a.h / 2 : (a.y + a.h + b.y - TIP_GAP - ARROW) / 2, (same ? x1 - x0 : nw) * dim.cap, dim, i)));
   }
   g.append(links);
 
@@ -219,7 +228,7 @@ function drawDiagram() {
   const label = 'System diagram: ' + flow.map((n) => n.names.length ? `${n.title} (${n.names.join(', ')})` : n.title).join(' → ');
   /* Đầu mũi tên chữ V hở; đơn vị theo sơ đồ để nét bằng nét đường nối. Bản `-on`: đường đang rê. */
   const arrow = (/** @type {string} */ id, /** @type {string} */ cls) => svg('marker', { id, viewBox: '0 0 12 12', refX: 10, refY: 6, markerWidth: 12, markerHeight: 12, markerUnits: 'userSpaceOnUse', orient: 'auto-start-reverse' },
-    svg('path', { class: cls, d: 'M4 2L10 6L4 10' }));
+    svg('path', { class: cls, d: `M${10 - ARROW} 2L10 6L${10 - ARROW} 10` }));
   /* <svg> rộng bằng khung (1 đơn vị = 1 px); sơ đồ trong nhóm `.sd-cam`, diagram-view.js đặt transform kéo / thu phóng lên đó. */
   const vw = Math.max(W, width) + 4 + 2 * fp, cw = width + 4 + 2 * fp, chh = y + 4 + 2 * fp;
   const el = svg('svg', { class: 'sd-svg', viewBox: `0 0 ${vw} ${chh}`, width: vw, height: chh, role: 'img', 'aria-label': label, 'data-w': cw },

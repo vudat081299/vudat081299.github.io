@@ -2288,6 +2288,18 @@ const check = (name, ok, detail = '') => {
       return b.width > b.height ? cap.width <= (b.width + 3) / 2 + 0.5 : true;
     }));
     check('Nhãn bàn giao không rộng quá nửa đường nối ngang', halves.length === 2 && halves.every(Boolean), halves.join());
+    /* Nhãn bàn giao không đè đầu mũi tên, kể cả trên đường dọc ngắn giữa hai hàng. */
+    const clear = await vp.$$eval('#sd-fig .sd-wire', (ws) => {
+      const arrow = document.querySelector('#sd-arrow path').getBBox().width;
+      return ws.filter((w) => w.querySelector('.sd-hand:not(.is-empty)')).map((w) => {
+        const e = w.querySelector('.sd-edge'), L = e.getTotalLength(), p0 = e.getPointAtLength(0), p1 = e.getPointAtLength(L);
+        const er = e.getBoundingClientRect(), br = w.querySelector('.sd-hand-box').getBoundingClientRect();
+        const vertical = Math.abs(p1.x - p0.x) < 1;
+        const gap = vertical ? er.bottom - br.bottom : p1.x > p0.x ? er.right - br.right : br.left - er.left;
+        return { key: w.dataset.edge, vertical, gap: Math.round(gap), arrow };
+      });
+    });
+    check('Nhãn bàn giao không đè đầu mũi tên (cả đường dọc giữa hai hàng)', clear.some((c) => c.vertical) && clear.every((c) => c.gap >= c.arrow + 4), JSON.stringify(clear));
     await vp.$eval('#sd-fig', (f) => f.style.setProperty('--sd-hand-cap', '.22'));
     await vp.setViewportSize({ width: 1279, height: 900 });
     await vp.waitForSelector('#sd-fig .sd-hand.is-cut');
