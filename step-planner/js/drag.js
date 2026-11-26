@@ -117,12 +117,6 @@ export function initDrag(board, api) {
     const src = st.kind === 'sub' ? el : /** @type {HTMLElement} */ (el.querySelector('.step-head'));
     const r = src.getBoundingClientRect();
     st.offX = st.x0 - r.left; st.offY = st.y0 - r.top;
-    /* Mũi tên bàn giao (ô rộng bằng thẻ, dải trên bước) thu hẳn lại lúc kéo: chỗ thả không nằm sau một khoảng trống. Các khối
-       còn lại trượt khít vào (chỉ khối lá, không trượt cả hàng lẫn thẻ trong nó); đo chỗ thả về sau theo bố cục đã thu. */
-    const collapse = () => document.body.classList.add('dragging-any');
-    if (board.querySelector('.hand-row, .hand-gap')) {
-      flip(/** @type {HTMLElement[]} */ ([...board.querySelectorAll('.card[data-sub], .step-head, .revisit-band, .step-docs')]), collapse, () => {});
-    } else collapse();
     st.cover = document.createElement('div');
     st.cover.className = 'drag-cover';
     document.body.append(st.cover);
@@ -152,20 +146,38 @@ export function initDrag(board, api) {
     const label = document.createElement('span');
     label.textContent = st.kind === 'sub' ? 'Drop here' : 'Drop the step here';
     st.ph.append(label);
-    if (st.kind === 'sub') {
-      st.ph.style.height = r.height + 'px';
-      const slot = /** @type {HTMLElement} */ (el.closest('.slot'));
-      st.srcSlot = slot.querySelectorAll('.card[data-sub]').length === 1 ? slot : null;
-      (st.srcSlot || el).classList.add('drag-src');
-      st.target = null;
-      paint(api.placeOf(st.id), false);
-    } else {
-      el.classList.add('drag-src');
-      el.before(st.ph);
-      st.target = steps().indexOf(st.ph);
-    }
+    if (st.kind === 'sub') st.ph.style.height = r.height + 'px';
+    /* Mũi tên bàn giao (ô rộng bằng thẻ, dải trên bước) thu hẳn lại lúc kéo: chỗ thả không nằm sau một khoảng trống. Các khối
+       còn lại trượt khít vào (chỉ khối lá, không trượt cả hàng lẫn thẻ trong nó). Trong cùng một lượt FLIP: thu mũi tên, cuộn
+       trang bù để thẻ / đầu bước đang nắm vẫn ở hàng của con trỏ (kể cả khi dải nằm ngay trên chính bước ấy), rồi ô viền đứt
+       thế chỗ nó; đo chỗ thả theo bố cục đã thu, trước khi lượt trượt chạy. */
+    const lift = () => {
+      document.body.classList.add('dragging-any');
+      keepAt(src, r.top);
+      if (st.kind === 'sub') {
+        const slot = /** @type {HTMLElement} */ (el.closest('.slot'));
+        st.srcSlot = slot.querySelectorAll('.card[data-sub]').length === 1 ? slot : null;
+        (st.srcSlot || el).classList.add('drag-src');
+        st.target = null;
+        paint(api.placeOf(st.id), false);
+      } else {
+        el.classList.add('drag-src');
+        el.before(st.ph);
+        st.target = steps().indexOf(st.ph);
+      }
+    };
+    if (board.querySelector('.hand-row, .hand-gap')) {
+      flip(/** @type {HTMLElement[]} */ ([...board.querySelectorAll('.card[data-sub], .step-head, .revisit-band, .step-docs')]), lift, () => {});
+    } else lift();
     moveGhost();
     loop();
+  }
+
+  /** Cuộn trang tức thì cho `el` về lại toạ độ dọc `top` trong khung nhìn (sau khi bố cục trên nó đổi).
+   * @param {Element} el @param {number} top */
+  function keepAt(el, top) {
+    const d = el.getBoundingClientRect().top - top;
+    if (Math.abs(d) >= 0.5) window.scrollBy({ top: d, behavior: 'instant' });
   }
 
   function moveGhost() {
@@ -382,8 +394,9 @@ export function initDrag(board, api) {
   }
 
   /* ── Kết thúc: mọi đường qua cleanup(s), s là đúng lần kéo ấy, nên lần kéo cũ không đụng được lần kéo mới ── */
-  /** @param {any} s */
-  function cleanup(s) {
+  /** `hold`: phần tử giữ nguyên chỗ trong khung nhìn khi mũi tên bàn giao hiện lại (Esc: thẻ / đầu bước vừa về chỗ cũ).
+   * @param {any} s @param {Element|null} [hold] */
+  function cleanup(s, hold = null) {
     if (st === s) st = null;
     clearTimeout(s.timer);
     clearTimeout(s.flyTimer);
@@ -398,13 +411,17 @@ export function initDrag(board, api) {
     for (const r of s.touched || []) {
       for (const li of r.querySelectorAll('.cards > .slot')) li.classList.toggle('par', li.querySelectorAll('.card[data-sub]').length > 1);
     }
+    const top = hold && hold.isConnected ? hold.getBoundingClientRect().top : NaN;
     document.body.classList.remove('dragging-any');
+    if (hold && !Number.isNaN(top)) keepAt(hold, top);
   }
   function drop() {
     const s = st;
     s.phase = 'fly'; // trong lúc bay: bỏ qua pointerdown, pointermove, pointerup
     cancelAnimationFrame(s.raf);
     let once = false;
+    /* Bảng vẽ lại với mũi tên bàn giao hiện lại: cuộn bù để thẻ / đầu bước vừa thả nằm đúng chỗ ô viền đứt. */
+    const phTop = s.ph.isConnected ? s.ph.getBoundingClientRect().top : NaN;
     const done = () => {
       if (once) return;
       once = true;
@@ -412,6 +429,8 @@ export function initDrag(board, api) {
       if (s.kind === 'sub' && s.target) api.onSub(s.id, s.target);
       else if (s.kind === 'step' && s.target !== null) api.onStep(s.id, s.target);
       else api.onEnd();
+      const el = board.querySelector(s.kind === 'sub' ? `.card[data-sub="${CSS.escape(s.id)}"]` : `.step[data-step="${CSS.escape(s.id)}"] .step-head`);
+      if (el && !Number.isNaN(phTop)) keepAt(el, phTop);
     };
     if (reduced() || !s.ph.isConnected) { done(); return; }
     /* Bóng bay vào ô viền đứt rồi mới vẽ lại. Hẹn giờ dự phòng: tab ẩn thì animation có thể không chạy tới cuối. */
@@ -429,7 +448,7 @@ export function initDrag(board, api) {
     if (!st) return;
     if (st.phase === 'press') { reset(); return; }
     if (st.phase === 'fly') return;
-    cleanup(st);
+    cleanup(st, st.kind === 'sub' ? st.el : st.el.querySelector('.step-head'));
     api.onEnd();
   }
 

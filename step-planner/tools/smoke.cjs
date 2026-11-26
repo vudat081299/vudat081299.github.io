@@ -1227,6 +1227,57 @@ const check = (name, ok, detail = '') => {
   check('xoá dự án: tab mở dự án còn lại, lastId hợp lệ', sA.workspaces.some((w) => w.id === sA.lastId) && (await A.textContent('#ws-name')) === w1.name);
   await tc.close();
 
+  /* ── Bắt đầu kéo khi có mũi tên bàn giao (ô trước thẻ, dải trên bước), cả khi giảm chuyển động: bóng giữ đúng điểm nắm,
+   * ô viền đứt ở hàng của con trỏ (dải trên chính bước nguồn thu lại cũng vậy), Esc trả về đúng chỗ; mũi tên thu lại có trượt
+   * (FLIP) khi không giảm chuyển động ── */
+  for (const motion of ['reduce', 'no-preference']) {
+    const filler = [1, 2, 3].map((k) => ({ id: 'f' + k, title: 'Filler ' + k, subs: [{ id: 'fs' + k, title: 'Task ' + k }] }));
+    const seed = { id: 'wg', name: 'Gap', steps: [...filler,
+      { id: 'r1', title: 'Producer', subs: [{ id: 'gA', title: 'Make table', outs: [{ id: 'oA', name: 'table' }] }, { id: 'gB', title: 'Use table', ins: ['oA'] },
+        { id: 'gC', title: 'Third' }] },
+      { id: 'r2', title: 'Consumer', ins: ['oA'], subs: [{ id: 'gD', title: 'Report' }, { id: 'gE', title: 'Review' }] },
+      ...[4, 5].map((k) => ({ id: 'f' + k, title: 'Filler ' + k, subs: [{ id: 'fs' + k, title: 'Task ' + k }] }))], log: [] };
+    const gc = await browser.newContext({ viewport: { width: 1280, height: 700 }, deviceScaleFactor: 1, reducedMotion: motion });
+    await gc.addInitScript((d) => { if (!localStorage.getItem('stepPlanner.v2')) localStorage.setItem('stepPlanner.v2', JSON.stringify({ version: 2, workspaces: [d], lastId: d.id })); }, seed);
+    const gp = await gc.newPage();
+    gp.on('pageerror', (e) => errors.push(String(e)));
+    await gp.goto(BASE);
+    await gp.waitForSelector('.card[data-sub="gB"]');
+    const tag = `kéo khi có mũi tên (${motion})`;
+    const arrows = await gp.evaluate(() => [!!document.querySelector('.step[data-step="r1"] .hand-gap'), !!document.querySelector('.step[data-step="r2"] .hand-row')]);
+    /* Đưa `sel` về y = 420 trong khung nhìn (trang còn chỗ cuộn lên), nhấn ở `grab`, trôi một chút; đo; Esc; đo lại. */
+    const run = async (sel, handle, grab) => {
+      await gp.evaluate((s) => window.scrollBy(0, document.querySelector(s).getBoundingClientRect().top - 420), sel);
+      await gp.waitForTimeout(50);
+      const r = await gp.locator(sel).boundingBox(), hb = await gp.locator(handle).boundingBox();
+      const px = hb.x + grab(hb).x, py = hb.y + grab(hb).y;
+      await gp.mouse.move(px, py); await gp.mouse.down();
+      await gp.mouse.move(px + 8, py + 6, { steps: 2 });
+      await gp.waitForFunction(() => document.body.classList.contains('dragging-any'));
+      await gp.waitForTimeout(30);
+      const m = await gp.evaluate(() => {
+        const g = /** @type {HTMLElement} */ (document.querySelector('.drag-ghost')), ph = document.querySelector('.drop-ph, .step-ph');
+        const [tx, ty] = (g.style.translate || '').split(' ').map(parseFloat);
+        return { tx, ty, ph: ph && ph.getBoundingClientRect().top, slid: document.querySelector('.card[data-sub="gC"]').getAnimations().length };
+      });
+      await gp.keyboard.press('Escape'); await gp.mouse.up();
+      await gp.waitForFunction(() => !document.body.classList.contains('dragging-any'));
+      await gp.waitForTimeout(motion === 'reduce' ? 30 : 300);
+      const back = (await gp.locator(sel).boundingBox()).y;
+      return { off: [px + 8 - m.tx - (px - r.x), py + 6 - m.ty - (py - r.y)].map((v) => Math.round(v * 10) / 10), ph: m.ph - r.y, back: back - r.y, slid: m.slid };
+    };
+    const card = await run('.card[data-sub="gB"]', '.card[data-sub="gB"]', () => ({ x: 20, y: 20 }));
+    const step = await run('.step[data-step="r2"] .step-head', '.step[data-step="r2"] .step-grip', (b) => ({ x: b.width / 2, y: b.height / 2 }));
+    const near = (v, d) => Math.abs(v) <= d;
+    check(`${tag}: thẻ sau ô mũi tên — bóng giữ điểm nắm, ô viền đứt cùng hàng, Esc về chỗ cũ`, arrows[0] && near(card.off[0], 1) && near(card.off[1], 1)
+      && near(card.ph, 2) && near(card.back, 1), JSON.stringify(card));
+    check(`${tag}: bước dưới dải mũi tên — bóng giữ điểm nắm, chỗ thả ở hàng con trỏ, Esc về chỗ cũ`, arrows[1] && near(step.off[0], 1) && near(step.off[1], 1)
+      && near(step.ph, 12) && near(step.back, 1), JSON.stringify(step));
+    if (motion === 'reduce') check(`${tag}: mũi tên thu lại không trượt`, card.slid === 0, String(card.slid));
+    else check(`${tag}: mũi tên thu lại thì thẻ sau nó trượt khít vào (FLIP)`, card.slid > 0, String(card.slid));
+    await gc.close();
+  }
+
   /* ── 320px: chip bước tên dài trong nhật ký không làm trang cuộn ngang ── */
   {
     const n = await open(320, 700);
@@ -2283,6 +2334,21 @@ const check = (name, ok, detail = '') => {
     await hp.waitForFunction(() => !document.body.classList.contains('dragging-any'));
     const afterEsc = await marks();
     check('bàn giao: đang kéo thẻ thì mũi tên thu lại, ô khít nhau; Esc thì mũi tên về', mid.arrows === 0 && mid.maxGap <= 16 && same(afterEsc, m1), JSON.stringify({ mid, afterEsc }));
+    // Thẻ của bước có dải mũi tên ngay trên nó: dải thu lại mà ô viền đứt vẫn ở hàng con trỏ (trang cuộn bù); Esc về đúng chỗ.
+    await hp.evaluate(() => window.scrollBy(0, document.querySelector('.card[data-sub="hF"]').getBoundingClientRect().top - 500));
+    const cf = await hp.locator('.card[data-sub="hF"]').boundingBox();
+    const ownRow = await hp.evaluate(() => !!document.querySelector('.step[data-step="h3"] .hand-row') && scrollY > 200);
+    await hp.mouse.move(cf.x + 24, cf.y + 24);
+    await hp.mouse.down();
+    await hp.mouse.move(cf.x + 34, cf.y + 30, { steps: 3 });
+    await hp.waitForFunction(() => document.body.classList.contains('dragging-any'));
+    const phRow = await hp.evaluate(() => document.querySelector('.drop-ph').getBoundingClientRect().top);
+    await hp.keyboard.press('Escape');
+    await hp.mouse.up();
+    await hp.waitForFunction(() => !document.body.classList.contains('dragging-any'));
+    const cfBack = (await hp.locator('.card[data-sub="hF"]').boundingBox()).y;
+    check('bàn giao: kéo thẻ dưới dải mũi tên — ô viền đứt ở hàng con trỏ (lệch ≤ 3px), Esc thẻ về đúng chỗ', ownRow
+      && Math.abs(phRow - cf.y) <= 3 && Math.abs(cfBack - cf.y) <= 1, JSON.stringify({ ownRow, card: cf.y, phRow, cfBack }));
 
     // Kéo bước 2 lên đầu: liên kết theo id giữ nguyên, vạch tính lại (bên nhận nằm trên bên giao: không còn vạch); Hoàn tác về chỗ cũ.
     const g = await hp.locator('.step[data-step="h2"] .step-grip').boundingBox();
