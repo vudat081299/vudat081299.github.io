@@ -7,7 +7,7 @@ import {
   nextStatus, setStatus, splitInline, normWorkspace, normSub, normLog, freshCopy, counts, slug, fold, parseDate, uniqueName, normDoc, safeUrl,
 } from '../js/core.js';
 import { parseMd, inline, srcTokens } from '../js/md.js';
-import { normDesign, rankOptions, snake, planTasks, diagramNodes, decidedCount, catalogErrors, readStageLine, applyPath, effProfile, warnings } from '../js/design-core.js';
+import { normDesign, rankOptions, snake, planTasks, diagramNodes, decidedCount, catalogErrors, readStageLine, applyPath, effProfile, warnings, flowEdges } from '../js/design-core.js';
 
 let fails = 0;
 const check = (name, ok, detail = '') => {
@@ -464,7 +464,7 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   check('thiết kế: chuẩn hoá bỏ id lạ, khâu trống; "không cần" giữ lựa chọn ẩn', eq(normDesign({
     profile: { size: 'small', Bad: 'x', budget: 'Free!' },
     stages: { serve: { pick: ['fastapi', 'fastapi', 'X Y', 3] }, host: { pick: [] }, ingest: { skip: true, pick: ['cron'], own: 'z' }, 'a b': { pick: ['q'] } },
-  }), { path: '', profile: { size: 'small' }, stages: { serve: { pick: ['fastapi'], skip: false, own: '', note: '' }, ingest: { pick: ['cron'], skip: true, own: 'z', note: '' } } }));
+  }), { path: '', profile: { size: 'small' }, stages: { serve: { pick: ['fastapi'], skip: false, own: '', note: '' }, ingest: { pick: ['cron'], skip: true, own: 'z', note: '' } }, edges: {} }));
   check('thiết kế: không còn gì thì null', normDesign({ profile: {}, stages: { a: { pick: [] } } }) === null && normDesign('x') === null);
   const s = { options: [{ id: 'a', level: 3, fit: { size: ['large'] } }, { id: 'b', level: 2, fit: { size: ['small'], budget: ['free'] } }, { id: 'c', level: 1, fit: {} }] };
   const r = rankOptions(s, { size: 'small', budget: 'free' });
@@ -541,10 +541,29 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
     return !W(stages, profile, path).includes(c.id);
   });
   check('thiết kế: luật — mọi luật trong danh mục bắn được', !dead.length, dead.map((c) => c.id).join());
+  /* Bàn giao trên đường nối: chuẩn hoá, chỉ đường giữa hai khâu đã quyết liền nhau, việc tích hợp, Markdown đi rồi về. */
+  check('thiết kế: bàn giao — bỏ khoá sai, via lạ, mục trống; giữ cả khi khâu chưa quyết', eq(normDesign({ edges: {
+    'process>store': { via: 'file', what: ' matches.parquet ', promise: 'a\n\nb', check: 'x' }, 'a b>c': { via: 'file' }, 'raw>process': { via: 'fax' } } }).edges,
+  { 'process>store': { via: 'file', what: 'matches.parquet', where: '', promise: 'a\n\nb', check: 'x' } }));
+  const ed = normDesign({ stages: { raw: P('project-folder'), process: P('duckdb'), store: P('parquet-duckdb'), serve: P('fastapi') },
+    edges: { 'process>store': { via: 'file', what: 'matches.parquet, một dòng mỗi trận, khoá match_id', where: 'data/clean/', check: 'Backend đọc file mẫu, lọc một mùa, trả đúng số trận',
+      promise: 'Cột bắt buộc: match_id, season\n\n# home_win = 0 gồm cả hoà\n- thứ tự theo seq' }, 'store>train': { via: 'sql' } } });
+  check('thiết kế: đường nối chỉ giữa hai khâu đã quyết liền nhau', flowEdges(cat, ed).map((e) => e.key).join() === 'raw>process,process>store');
+  const et = planTasks(cat, ed).find((x) => x.title.startsWith('Handoff:'));
+  check('thiết kế: mỗi bàn giao đã ghi một việc tích hợp — Done when là phép kiểm, ghi chú là hợp đồng',
+    planTasks(cat, ed).filter((x) => x.title.startsWith('Handoff:')).length === 1 && et.title === 'Handoff: Processing & cleaning → Analytical store & query'
+    && et.doneWhen === ed.edges['process>store'].check && /^Via: File\nWhat: matches/.test(et.notes));
+  const ews = normWorkspace({ name: 'E', steps: [], design: { ...ed, profile: { users: 'public' }, stages: { ...ed.stages, monitor: { skip: true } } } });
+  const emd = toMarkdown(ews, cat);
+  const eback = fromMarkdown(emd);
+  check('thiết kế: Markdown ghi Handoffs (cả đường chưa hiện) và Warnings; nhập lại giữ nguyên, không cảnh báo',
+    /^Handoffs:$/m.test(emd) && emd.includes('[handoff: process > store]') && emd.includes('[handoff: store > train]') && /^Warnings:$/m.test(emd)
+    && eq(shape(ews), shape(eback.workspace)) && !eback.warnings.length, firstDiff(shape(ews), shape(eback.workspace)) + eback.warnings.join());
+  check('thiết kế: Markdown không danh mục vẫn đi rồi về', eq(shape(ews), roundTrip(ews)));
   const md = '# P\n\n## System design\n\nProfile: size small · budget free\n\n- dòng lạ\n- Serving: FastAPI [serve: fastapi]\n';
   const back = fromMarkdown(md);
   check('thiết kế: Markdown viết tay — dòng không có [khâu: …] thì cảnh báo, không thành bước', back.workspace.steps.length === 0
-    && eq(back.workspace.design, { path: '', profile: { size: 'small', budget: 'free' }, stages: { serve: { pick: ['fastapi'], skip: false, own: '', note: '' } } }) && back.warnings.length === 1);
+    && eq(back.workspace.design, { path: '', profile: { size: 'small', budget: 'free' }, stages: { serve: { pick: ['fastapi'], skip: false, own: '', note: '' } }, edges: {} }) && back.warnings.length === 1);
 }
 
 if (fails) { console.log(`test-core: ${fails} LỖI`); process.exit(1); }

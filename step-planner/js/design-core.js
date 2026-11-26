@@ -1,7 +1,8 @@
 /* Thiết kế hệ thống của một dự án (PLAN-016) — logic thuần, không DOM, chạy được trong Node.
  * Danh mục (data/system-design.json): lối bắt đầu theo thứ bàn giao (`paths`), hồ sơ dự án (câu hỏi → lựa chọn) và các khâu
  * theo đường đi của dữ liệu, mỗi khâu nhiều phương án có `fit` (khoá hồ sơ → các câu trả lời hợp).
- * Dự án giữ `design = {path, profile, stages}`; không có gì thì null. */
+ * Dự án giữ `design = {path, profile, stages, edges}`; không có gì thì null. `edges`: bàn giao trên đường nối hai khâu liền nhau
+ * của sơ đồ, khoá `khâu trước>khâu sau`. */
 
 const ID = /^[a-z0-9][a-z0-9-]{0,39}$/;
 const isObj = (/** @type {any} */ v) => !!v && typeof v === 'object' && !Array.isArray(v);
@@ -9,6 +10,27 @@ const line = (/** @type {any} */ s) => (typeof s === 'string' ? s : '').replace(
 const lines = (/** @type {any} */ s) => (typeof s === 'string' ? s : '').replace(/\r\n?/g, '\n').split('\n')
   .map((l) => l.replace(/\s+$/, '')).join('\n').replace(/^\n+|\n+$/g, '');
 export const OWN_MAX = 120;
+export const EDGE_MAX = 300;
+const EDGE_KEY = /^([a-z0-9][a-z0-9-]{0,39})>([a-z0-9][a-z0-9-]{0,39})$/;
+/** Cách bàn giao giữa hai khâu; `short`: chữ trên nhãn của đường nối trong sơ đồ. */
+export const VIA = [
+  { id: 'file', label: 'File', short: 'File' },
+  { id: 'sql', label: 'SQL table', short: 'SQL' },
+  { id: 'api', label: 'HTTP API', short: 'API' },
+  { id: 'call', label: 'Function call', short: 'Call' },
+  { id: 'results', label: 'Precomputed results', short: 'Results' },
+];
+export const EDGE_FIELDS = ['via', 'what', 'where', 'promise', 'check'];
+
+/** Hợp đồng của một đường nối; trống thì null. @param {any} v */
+export function normEdge(v) {
+  if (!isObj(v)) return null;
+  const e = {
+    via: VIA.some((x) => x.id === v.via) ? v.via : '',
+    what: line(v.what).slice(0, EDGE_MAX), where: line(v.where).slice(0, EDGE_MAX), promise: lines(v.promise), check: line(v.check).slice(0, EDGE_MAX),
+  };
+  return e.via || e.what || e.where || e.promise || e.check ? e : null;
+}
 
 /** @param {any} v @returns {string[]} */
 const idList = (v) => (Array.isArray(v) ? [...new Set(v.filter((x) => typeof x === 'string' && ID.test(x)))] : []);
@@ -36,11 +58,15 @@ export function normDesign(o) {
       if (st.pick.length || st.skip || st.own || st.note) stages[k] = st;
     }
   }
-  return path || Object.keys(profile).length || Object.keys(stages).length ? { path, profile, stages } : null;
+  /* Bàn giao giữ cả khi hai khâu chưa cùng quyết (sơ đồ, việc chỉ dùng đường nối đang có). */
+  /** @type {Record<string,any>} */
+  const edges = {};
+  if (isObj(o.edges)) for (const [k, v] of Object.entries(o.edges)) { const e = EDGE_KEY.test(k) ? normEdge(v) : null; if (e) edges[k] = e; }
+  return path || Object.keys(profile).length || Object.keys(stages).length || Object.keys(edges).length ? { path, profile, stages, edges } : null;
 }
 
-/** Bản trống để sửa. @returns {{path: string, profile: Record<string,string>, stages: Record<string,any>}} */
-export const emptyDesign = () => ({ path: '', profile: {}, stages: {} });
+/** Bản trống để sửa. @returns {{path: string, profile: Record<string,string>, stages: Record<string,any>, edges: Record<string,any>}} */
+export const emptyDesign = () => ({ path: '', profile: {}, stages: {}, edges: {} });
 
 /** Lối đã chọn (còn trong danh mục) hay null. @param {any} cat @param {any} design */
 export const pathOf = (cat, design) => (design && design.path && (cat.paths || []).find((/** @type {any} */ p) => p.id === design.path)) || null;
@@ -196,6 +222,26 @@ export function diagramNodes(catalog, design) {
   return { flow, ops };
 }
 
+/**
+ * Đường nối có thể ghi bàn giao: hai khâu liền nhau trên luồng của sơ đồ (bỏ khâu "không cần"), cả hai đã quyết.
+ * @param {any} catalog @param {any} design
+ * @returns {{key: string, from: any, to: any, c: any}[]}
+ */
+export function flowEdges(catalog, design) {
+  const flow = diagramNodes(catalog, design).flow.filter((n) => n.lane !== 'end');
+  const out = [];
+  for (let i = 1; i < flow.length; i++) {
+    const a = flow[i - 1], b = flow[i];
+    if (a.open || b.open) continue;
+    const key = `${a.id}>${b.id}`;
+    out.push({ key, from: a, to: b, c: (design && design.edges[key]) || null });
+  }
+  return out;
+}
+
+/** Chữ "đi qua" của một bàn giao. @param {string} id */
+export const viaLabel = (id) => VIA.find((x) => x.id === id)?.label || '';
+
 /* ── Việc cho bảng: một bước "System build", mỗi khâu đã quyết một bước con (tên khâu: phương án), "Done when" là việc của
  * phương án (công cụ tự ghi: việc chung của khâu), ghi chú là lệnh bắt đầu, tài liệu là link chính thức. ── */
 
@@ -227,13 +273,25 @@ export function planTasks(catalog, design) {
       docs: opts.flatMap((/** @type {any} */ o) => (o.links || []).map((/** @type {any} */ l) => ({ kind: 'link', title: `${o.name} · ${l.title}`, url: l.url }))),
     });
   }
+  /* Mỗi đường nối đã ghi bàn giao một việc tích hợp: Done when là phép kiểm, ghi chú là hợp đồng. */
+  for (const e of flowEdges(catalog, design)) {
+    if (!e.c) continue;
+    out.push({
+      title: `Handoff: ${e.from.title} → ${e.to.title}`,
+      doneWhen: e.c.check || `${e.to.title} đọc được đầu ra của ${e.from.title} theo hợp đồng bàn giao, trên dữ liệu mẫu.`,
+      notes: [e.c.via ? `Via: ${viaLabel(e.c.via)}` : '', e.c.what ? `What: ${e.c.what}` : '', e.c.where ? `Where: ${e.c.where}` : '',
+        e.c.promise ? `Promise: ${e.c.promise}` : ''].filter(Boolean).join('\n'),
+      docs: [],
+    });
+  }
   return out;
 }
 
 /* ── Markdown: mục "## System design" (core.js gọi designMd, designReader). `Path: tên [path: id]` (dòng thụt dưới nó: luồng
  * và mốc nghiệm thu của lối, chép từ danh mục cho người và AI đọc, nhập bỏ qua). Mỗi khâu một dòng: chữ đọc được, cuối dòng
  * là `[khâu: id, id]` (hay `[khâu: skip]`; lựa chọn ẩn của khâu "không cần" không ghi) — trang chỉ đọc phần trong ngoặc.
- * Dòng thụt: `Own: …` rồi ghi chú. ── */
+ * Dòng thụt: `Own: …` rồi ghi chú. `Handoffs:` rồi mỗi đường nối một mục `- A → B [handoff: a > b]`, dòng thụt `Via:`, `What:`,
+ * `Where:`, `Promise:` (dòng tiếp thụt bốn), `Check:`. `Warnings:` (luật phối hợp đang báo, cho người và AI đọc) nhập bỏ qua. ── */
 
 export const DESIGN_HEADING = 'System design';
 export const DESIGN_HEAD_RE = /^(?:system design|thiết kế hệ thống)$/i;
@@ -323,6 +381,22 @@ export function designMd(d, cat, esc, hard) {
     const s = cat && cat.stages.find((/** @type {any} */ x) => x.id === id);
     out.push(...hard([stageLine(id, st, s ? { stage: s.title, names: pickNames(s, st) } : {}), ...more]));
   }
+  const keys = Object.keys(d.edges || {});
+  if (keys.length) {
+    const order = (/** @type {string} */ k) => (cat ? cat.stages.findIndex((/** @type {any} */ x) => x.id === k.split('>')[0]) : 0);
+    out.push('', 'Handoffs:');
+    for (const k of keys.sort((a, b) => order(a) - order(b))) {
+      const e = d.edges[k];
+      const [a, b] = k.split('>');
+      const t = (/** @type {string} */ id) => (cat && cat.stages.find((/** @type {any} */ x) => x.id === id)?.title) || id;
+      const pr = e.promise ? e.promise.split('\n') : [];
+      out.push(...hard([`- ${cat ? `${t(a)} → ${t(b)} ` : ''}[handoff: ${a} > ${b}]`, ...(e.via ? [`  Via: ${e.via}`] : []),
+        ...(e.what ? [`  What: ${e.what}`] : []), ...(e.where ? [`  Where: ${e.where}`] : []),
+        ...pr.map((/** @type {string} */ l, /** @type {number} */ i) => (i ? '    ' + esc(l) : `  Promise: ${esc(l)}`)), ...(e.check ? [`  Check: ${e.check}`] : [])]));
+    }
+  }
+  const warns = cat ? warnings(cat, d) : [];
+  if (warns.length) out.push('', 'Warnings:', ...hard(warns.map((w) => `- ${w.title}: ${w.msg}`)));
   return out;
 }
 
@@ -332,15 +406,30 @@ export function designMd(d, cat, esc, hard) {
  */
 export function designReader(warnings, unesc) {
   /** @type {any} */
-  const design = { path: '', profile: {}, stages: {} };
-  let block = /** @type {'' | 'path' | 'stage'} */ ('');
+  const design = { path: '', profile: {}, stages: {}, edges: {} };
+  let block = /** @type {'' | 'path' | 'stage' | 'edge' | 'warn'} */ ('');
+  let list = /** @type {'' | 'handoffs' | 'warnings'} */ ('');
   let first = false;
+  let inPromise = false;
   /** @type {any} */ let dst = null;
+  /** @type {any} */ let edge = null;
+  const unread = (/** @type {string} */ raw) => warnings.push(`Line in System design not read: ${raw.trim()}`);
   /** @param {string} raw */
   const line = (raw) => {
     const ind = /^( {2}|\t)(.*)$/.exec(raw);
     if (ind && block) {
       const l = ind[2];
+      if (block === 'edge') {
+        const m = /^(via|what|where|promise|check):\s?(.*)$/i.exec(l);
+        if (inPromise && /^ {2}/.test(l)) edge.promise += '\n' + unesc(l.slice(2));
+        else if (m) {
+          const k = m[1].toLowerCase();
+          inPromise = k === 'promise';
+          if (k === 'via') edge.via = (VIA.find((x) => x.id === m[2].trim().toLowerCase() || x.label.toLowerCase() === m[2].trim().toLowerCase()) || { id: '' }).id;
+          else edge[k] = k === 'promise' ? unesc(m[2]) : m[2];
+        } else unread(raw);
+        return;
+      }
       if (block === 'stage') {
         const own = /^Own:\s?(.*)$/i.exec(l);
         if (first && own) dst.own = own[1].slice(0, OWN_MAX);
@@ -350,20 +439,31 @@ export function designReader(warnings, unesc) {
       return;
     }
     block = '';
+    inPromise = false;
     if (!raw.trim()) return;
+    if (/^Handoffs:\s*$/i.test(raw)) { list = 'handoffs'; return; }
+    if (/^Warnings:\s*$/i.test(raw)) { list = 'warnings'; return; }
+    if (list === 'warnings' && /^[-*+]\s/.test(raw)) { block = 'warn'; return; } // chép từ danh mục: bỏ qua
+    const hm = /^[-*+]\s+.*\[handoff:\s*([a-z0-9-]+)\s*>\s*([a-z0-9-]+)\s*\]\s*$/i.exec(raw);
+    if (hm) {
+      edge = design.edges[`${hm[1].toLowerCase()}>${hm[2].toLowerCase()}`] = { via: '', what: '', where: '', promise: '', check: '' };
+      block = 'edge';
+      return;
+    }
+    list = '';
     const pm = /^Profile:\s*(.*)$/i.exec(raw);
     const pa = /^Path:\s*(.*)$/i.exec(raw);
     const item = /^(?:[-*+]|\d+[.)])\s+(.*)$/.exec(raw);
     const sl = item ? readStageLine(item[1]) : null;
     if (pa) {
       const m = /\[path:\s*([a-z0-9-]+)\s*\]\s*$/i.exec(pa[1]) || /^([a-z0-9-]+)$/i.exec(pa[1].trim());
-      if (m) design.path = m[1].toLowerCase(); else warnings.push(`Line in System design not read: ${raw.trim()}`);
+      if (m) design.path = m[1].toLowerCase(); else unread(raw);
       block = 'path';
     } else if (pm) Object.assign(design.profile, readProfile(pm[1]));
     else if (sl) {
       dst = design.stages[sl.id] = { pick: sl.pick, skip: sl.skip, own: '', note: null };
       block = 'stage'; first = true;
-    } else warnings.push(`Line in System design not read: ${raw.trim()}`);
+    } else unread(raw);
   };
   return { design, line };
 }

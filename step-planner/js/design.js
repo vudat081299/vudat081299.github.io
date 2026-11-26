@@ -32,7 +32,7 @@ const ws = () => deps.cur();
 const design = () => ws()?.design || null;
 const stageAt = (/** @type {number} */ k) => cat.stages[k - FIRST_STAGE];
 /* Sau các khâu: trang xem lại (luật phối hợp). */
-const EXTRA = ['checks'];
+const EXTRA = ['handoffs', 'checks'];
 const lastPage = () => cat.stages.length + FIRST_STAGE - 1 + EXTRA.length;
 const extraAt = (/** @type {number} */ k) => EXTRA[k - FIRST_STAGE - cat.stages.length] || '';
 const extraPage = (/** @type {string} */ kind) => cat.stages.length + FIRST_STAGE + EXTRA.indexOf(kind);
@@ -50,6 +50,9 @@ function edit(fn) {
 
 /** Trạng thái lưu của một khâu (bản sửa được). @param {any} d @param {string} id */
 const stageRec = (d, id) => (d.stages[id] = d.stages[id] || { pick: [], skip: false, own: '', note: '' });
+
+/** Bàn giao của một đường nối (bản sửa được). @param {any} d @param {string} key */
+const edgeRec = (d, key) => ((d.edges = d.edges || {})[key] = d.edges[key] || { via: '', what: '', where: '', promise: '', check: '' });
 
 /* ── Mục trên trang ── */
 
@@ -94,6 +97,13 @@ function fitText(text, max, font) {
 
 const px = (/** @type {CSSStyleDeclaration} */ cs, /** @type {string} */ name, /** @type {number} */ dflt) => parseFloat(cs.getPropertyValue(name)) || dflt;
 const MAX_NAMES = 3;
+/** Bề rộng chữ theo font (canvas). @param {string} text @param {string} font */
+function textW(text, font) {
+  measureCtx = measureCtx || document.createElement('canvas').getContext('2d');
+  if (!measureCtx) return text.length * 8;
+  measureCtx.font = font;
+  return measureCtx.measureText(text).width;
+}
 
 function drawDiagram() {
   const fig = $('sd-fig');
@@ -117,15 +127,25 @@ function drawDiagram() {
   let y = rowY.length ? rowY[rowY.length - 1] + rows[rows.length - 1] : 0;
 
   const g = svg('g', { class: 'sd-flow' });
+  const hands = svg('g', { class: 'sd-hands' });
+  const edges = new Map(D.flowEdges(cat, design()).map((e) => [e.key, e]));
+  const badgeFont = `600 ${cs.getPropertyValue('--fs-xs').trim() || '12px'} ${cs.getPropertyValue('--sans').trim()}`;
+  const bh = px(cs, '--sd-badge-h', 20);
   for (let i = 1; i < pos.length; i++) {
     const a = pos[i - 1], b = pos[i];
-    const d = a.row === b.row
+    const same = a.row === b.row;
+    const d = same
       ? (b.x > a.x ? `M${a.x + nw} ${a.y + a.h / 2}H${b.x - 3}` : `M${a.x} ${a.y + a.h / 2}H${b.x + nw + 3}`)
       : `M${a.x + nw / 2} ${a.y + a.h}V${b.y - 3}`;
     g.append(svg('path', { class: 'sd-edge', d, 'marker-end': 'url(#sd-arrow)' }));
+    /* Bàn giao: đường đã ghi có nhãn bấm được (Tab tới được); đường trống có dấu + khi rê chuột (bàn phím: trang Handoffs). */
+    const e = edges.get(`${a.n.id}>${b.n.id}`);
+    if (e) hands.append(handEl(e, same ? Math.min(a.x, b.x) + nw + gx / 2 : a.x + nw / 2, same ? a.y + a.h / 2 : a.y + a.h + gy / 2,
+      same ? gx - 6 : nw, bh, badgeFont));
   }
   const fonts = { name: nameFont, title: titleFont };
   for (const p of pos) g.append(nodeEl(p.n, p.x, p.y, nw, p.h, head, lh, pad, fonts));
+  g.append(hands);
 
   /* Vận hành: dải riêng dưới luồng, không mũi tên — chạy song song với mọi khâu. */
   const og = svg('g', { class: 'sd-ops' });
@@ -147,6 +167,27 @@ function drawDiagram() {
       svg('path', { class: 'sd-arrow', d: 'M0 0L10 5L0 10z' }))),
     g, og);
   fig.replaceChildren(el);
+}
+
+/** Nhãn bàn giao trên đường nối, tâm (cx, cy). @param {any} e @param {number} cx @param {number} cy @param {number} maxW @param {number} bh @param {string} font */
+function handEl(e, cx, cy, maxW, bh, font) {
+  const name = `${e.from.title} → ${e.to.title}`;
+  if (!e.c) {
+    const r = bh / 2;
+    return svg('g', { class: 'sd-hand is-empty', transform: `translate(${cx} ${cy})`, 'data-edge': e.key, 'aria-hidden': 'true' },
+      svg('title', {}, `Describe the handoff ${name}`),
+      svg('circle', { class: 'sd-hand-box', r }),
+      svg('path', { class: 'sd-hand-plus', d: `M${-r / 2} 0H${r / 2}M0 ${-r / 2}V${r / 2}` }));
+  }
+  const bp = bh / 3;
+  const label = fitText(D.VIA.find((v) => v.id === e.c.via)?.short || 'Spec', maxW - 2 * bp, font);
+  const w = Math.min(maxW, textW(label, font) + 2 * bp);
+  const what = [D.viaLabel(e.c.via), e.c.what].filter(Boolean).join(', ');
+  return svg('g', { class: 'sd-hand', transform: `translate(${cx - w / 2} ${cy - bh / 2})`, 'data-edge': e.key, tabindex: 0, role: 'button',
+    'aria-label': `Handoff ${name}${what ? ': ' + what : ''}. Edit` },
+  svg('title', {}, `Handoff ${name}${what ? ': ' + what : ''}`),
+  svg('rect', { class: 'sd-hand-box', width: w, height: bh, rx: bh / 2 }),
+  svg('text', { class: 'sd-hand-txt', x: w / 2, y: bh / 2, 'text-anchor': 'middle', 'dominant-baseline': 'central' }, label));
 }
 
 /** @param {any} n @param {number} x @param {number} y @param {number} w @param {number} hh @param {number} head @param {number} lh @param {number} pad @param {{name: string, title: string}} font */
@@ -225,13 +266,19 @@ function addToPlan() {
 
 /* ── Hộp chọn: cột trái là hồ sơ + các khâu theo làn, phải là khâu đang xem; Back / Next ở chân ── */
 
-function openDesign(k = 0) {
+/** @param {number} [k] @param {string} [edgeKey] mở trang Handoffs ở đúng đường nối này */
+function openDesign(k = 0, edgeKey = '') {
   if (!cat) return;
   at = k;
   applied = null;
+  if (edgeKey) moreOpen.add('edge:' + edgeKey);
   paint();
   deps.showDlg($('dlg-sd'));
-  $('sd-pane').focus({ preventScroll: true });
+  const item = edgeKey && $('sd-pane').querySelector(`[data-edge-item="${edgeKey}"]`);
+  if (item) {
+    item.scrollIntoView({ block: 'start' });
+    item.querySelector('input:checked, input')?.focus({ preventScroll: true });
+  } else $('sd-pane').focus({ preventScroll: true });
 }
 
 function paint() {
@@ -240,7 +287,9 @@ function paint() {
   const last = lastPage();
   $('sd-prev').disabled = at === 0;
   $('sd-next-text').textContent = at === last ? 'Done' : 'Next';
-  $('sd-pos').textContent = at === 0 ? 'Deliverable' : at === 1 ? 'Project profile' : extraAt(at) === 'checks' ? 'Checks' : `Stage ${at - 1} of ${cat.stages.length}`;
+  const ex = extraAt(at);
+  $('sd-pos').textContent = at === 0 ? 'Deliverable' : at === 1 ? 'Project profile' : ex === 'checks' ? 'Checks' : ex === 'handoffs' ? 'Handoffs'
+    : `Stage ${at - 1} of ${cat.stages.length}`;
   paintSub();
 }
 
@@ -267,6 +316,9 @@ function paintNav() {
     items.push(h('li', {}, navBtn(i + FIRST_STAGE, s.title, st, st === 'skip' ? 'Not needed' : D.pickNames(s, d?.stages[s.id]).join(', '), warned.has(s.id))));
   });
   items.push(h('li', { class: 'sd-nav-lane', 'aria-hidden': 'true' }, 'Review'));
+  const fe = D.flowEdges(cat, d);
+  const set = fe.filter((e) => e.c).length;
+  items.push(h('li', {}, navBtn(extraPage('handoffs'), 'Handoffs', set ? 'done' : 'open', fe.length ? `${set} of ${fe.length} described` : '')));
   items.push(h('li', {}, navBtn(extraPage('checks'), 'Checks', warns.length ? 'open' : 'done', warns.length ? C.plural(warns.length, 'warning') : 'No conflicts', warns.length > 0)));
   $('sd-nav').replaceChildren(...items);
   $('sd-nav').querySelector('[aria-current]')?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
@@ -283,7 +335,8 @@ function navBtn(k, title, state, sub, warn = false) {
 
 function paintPane() {
   const ex = extraAt(at);
-  $('sd-pane').replaceChildren(...(at === 0 ? pathPane() : at === 1 ? profilePane() : ex === 'checks' ? checksPane() : stagePane(stageAt(at))).filter(Boolean));
+  $('sd-pane').replaceChildren(...(at === 0 ? pathPane() : at === 1 ? profilePane() : ex === 'checks' ? checksPane() : ex === 'handoffs' ? handoffsPane()
+    : stagePane(stageAt(at))).filter(Boolean));
   $('sd-pane').scrollTop = 0;
   $('sd-pane').closest('.dlg-body').scrollTop = 0;
 }
@@ -378,6 +431,44 @@ function profilePane() {
       h('summary', {}, deps.icon('chev'), `${C.plural(rest.length, 'question')} the ${p.label} path doesn't need`),
       ...rest.map(q2)) : null,
   ];
+}
+
+/* ── Bàn giao: mỗi đường nối giữa hai khâu đã quyết liền nhau — đi qua gì, giao gì, bên sau đọc ở đâu, hứa gì, kiểm thế nào ── */
+
+function handoffsPane() {
+  const h = deps.h;
+  const d = design();
+  const edges = D.flowEdges(cat, d);
+  const kept = Object.keys(d?.edges || {}).filter((k) => !edges.some((e) => e.key === k)).length;
+  return [
+    h('p', { class: 'dlg-kicker' }, 'Review'),
+    h('h3', { class: 'sd-h' }, 'Handoffs'),
+    h('p', { class: 'sd-q' }, 'Mỗi đường nối giữa hai khâu đã quyết là một chỗ bàn giao: bên trước đưa gì, bên sau đọc ở đâu và bằng cách nào, hai bên hứa gì, kiểm thế nào là đã nối được. Điền vài đường quan trọng là đủ.'),
+    edges.length ? null : h('p', { class: 'sd-tip' }, 'Decide two neighbouring stages on the diagram to describe the handoff between them.'),
+    ...edges.map(edgeItem),
+    kept ? h('p', { class: 'sd-help' }, `${C.plural(kept, 'handoff')} kept for stages that are no longer decided or next to each other.`) : null,
+  ];
+}
+
+/** @param {any} e */
+function edgeItem(e) {
+  const h = deps.h;
+  const c = e.c || {};
+  const id = 'edge:' + e.key;
+  const sum = e.c ? [D.viaLabel(c.via), c.what].filter(Boolean).join(' · ') || 'Described' : 'Not described yet';
+  const field = (/** @type {string} */ label, /** @type {string} */ f, /** @type {string} */ ph) => h('label', { class: 'field' }, h('span', {}, label),
+    f === 'promise'
+      ? h('textarea', { rows: 3, 'data-ef': f, 'data-edge': e.key, placeholder: ph }, c[f] || '')
+      : h('input', { type: 'text', class: 'input', maxlength: D.EDGE_MAX, value: c[f] || '', 'data-ef': f, 'data-edge': e.key, placeholder: ph }));
+  return h('details', { class: `sd-edge-item${e.c ? ' is-set' : ''}`, 'data-more': id, 'data-edge-item': e.key, open: moreOpen.has(id) },
+    h('summary', {}, deps.icon('chev'), h('span', { class: 'sd-edge-name' }, h('b', {}, `${e.from.title} → ${e.to.title}`), h('small', {}, sum))),
+    h('fieldset', { class: 'sd-prof' }, h('legend', {}, 'Handed over as'),
+      h('div', { class: 'sd-pills' }, ...[...D.VIA, { id: '', label: 'Not set' }].map((v) => h('label', { class: 'sd-pill' },
+        h('input', { type: 'radio', name: `sd-via-${e.key}`, value: v.id, 'data-via': e.key, checked: (c.via || '') === v.id }), h('span', {}, v.label))))),
+    field('What is handed over', 'what', 'e.g. matches.parquet: one row per match, key match_id'),
+    field('Where and how the next stage reads it', 'where', 'e.g. data/clean/ in the repo; the backend opens it read-only'),
+    field('Promises: columns, meaning, order, version', 'promise', 'e.g. required columns; home_win = 0 also counts draws; rows ordered by seq; snapshot date in the file name'),
+    field('How to check the connection', 'check', 'e.g. the backend reads the sample file, filters one season and returns the expected match count'));
 }
 
 /* ── Xem lại: các luật phối hợp đang báo (danh mục `checks`), mỗi cái kèm lối tới khâu liên quan ── */
@@ -493,6 +584,8 @@ function wire() {
   });
   const fig = $('sd-fig');
   const openNode = (/** @type {any} */ e) => {
+    const hand = e.target.closest && e.target.closest('[data-edge]');
+    if (hand && cat) { openDesign(extraPage('handoffs'), hand.dataset.edge); return; }
     const n = e.target.closest && e.target.closest('[data-stage]');
     if (!n || !cat) return;
     openDesign(stagePage(n.dataset.stage));
@@ -529,7 +622,11 @@ function wire() {
   }, true);
   pane.addEventListener('change', (/** @type {any} */ e) => {
     const t = e.target;
-    if (t.dataset.path) {
+    if (t.dataset.via) {
+      const k = t.dataset.via;
+      edit((d) => { const r = edgeRec(d, k); r.via = t.value; });
+      repaint(`input[data-via="${k}"][value="${t.value}"]`);
+    } else if (t.dataset.path) {
       applied = null;
       edit((d) => { d.path = t.value; });
       repaint(`input[data-path][value="${t.value}"]`);
@@ -551,6 +648,11 @@ function wire() {
   /* Chữ: ghi khi gõ (không vẽ lại hộp, kẻo mất con trỏ), chỉ cập nhật cột trái và mục trên trang. */
   pane.addEventListener('input', (/** @type {any} */ e) => {
     const t = e.target;
+    if (t.dataset.ef) {
+      edit((d) => { edgeRec(d, t.dataset.edge)[t.dataset.ef] = t.value; });
+      paintNav();
+      return;
+    }
     const id = t.dataset.own || t.dataset.note;
     if (!id) return;
     edit((d) => { const r = stageRec(d, id); if (t.dataset.own) r.own = t.value; else r.note = t.value; });

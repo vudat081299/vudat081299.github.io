@@ -1566,7 +1566,7 @@ const check = (name, ok, detail = '') => {
     await sp.click('#sd-open');
     await sp.waitForSelector('#dlg-sd[open] .sd-paths');
     const before = await sp.$$eval('#sd-nav .sd-nav-btn', (b) => b.length);
-    check(`${tag}: hộp mở ở lối bắt đầu, có hồ sơ, mọi khâu và trang xem lại`, before === cat.stages.length + 3
+    check(`${tag}: hộp mở ở lối bắt đầu, có hồ sơ, mọi khâu và hai trang xem lại`, before === cat.stages.length + 4
       && (await sp.$$eval('#sd-pane input[data-path]', (r) => r.length)) === cat.paths.length + 1);
     await sp.click('#sd-nav [data-at="1"]');
     await sp.click('input[data-q="size"][value="large"]', { force: true });
@@ -1616,7 +1616,7 @@ const check = (name, ok, detail = '') => {
     check(`${tag}: luật phối hợp báo ở khâu, cột trái, dưới sơ đồ`, /API on a static host/.test(await sp.textContent('#sd-pane'))
       && (await sp.$$eval('#sd-nav .has-warn', (b) => b.length)) >= 3 && (await sp.$$eval('#sd-warns li', (l) => l.length)) === 1
       && /warning/.test(await sp.textContent('#sd-sub')));
-    await sp.click(`#sd-nav [data-at="${cat.stages.length + 2}"]`);
+    await sp.click(`#sd-nav [data-at="${cat.stages.length + 3}"]`);
     check(`${tag}: trang Checks liệt kê cảnh báo, có nút tới khâu`, (await sp.$$eval('#sd-pane .sd-warnbox', (l) => l.length)) === 1
       && (await sp.$$eval('#sd-pane .sd-warnbox [data-at]', (b) => b.length)) === 2);
     if (w === 390) check(`${tag}: trang Checks không tràn ngang`, await sp.$eval('#dlg-sd', (d) => d.scrollWidth <= d.clientWidth + 1));
@@ -1661,7 +1661,41 @@ const check = (name, ok, detail = '') => {
       });
       check(`${tag}: Markdown đi rồi về giữ nguyên thiết kế`, rt);
     }
-    await sp.click('#toast-undo').catch(() => {});
+    /* Bàn giao: hai khâu liền nhau đã quyết thì đường nối có dấu +; bấm là mở đúng mục ở trang Handoffs; điền xong thì đường có
+     * nhãn bấm được bằng bàn phím; việc tích hợp sang bảng; Markdown có mục Handoffs. */
+    await sp.click(`#sd-fig [data-stage="${proc.id}"]`);
+    await sp.click(`#sd-nav [data-at="${pg('raw')}"]`);
+    await sp.click('#sd-pane .sd-opt input');
+    await sp.click(`#sd-nav [data-at="${pg('train')}"]`);
+    await sp.click('#sd-pane .sd-opt input');
+    await sp.keyboard.press('Escape');
+    check(`${tag}: đường nối giữa hai khâu đã quyết có dấu + (ẩn với bàn phím)`, (await sp.$$eval('#sd-fig .sd-hand.is-empty', (l) => l.length)) === 2
+      && (await sp.$$eval('#sd-fig .sd-hand.is-empty[tabindex]', (l) => l.length)) === 0);
+    await sp.click('#sd-fig .sd-hand.is-empty[data-edge="raw>process"]', { force: true });
+    await sp.waitForSelector('#dlg-sd[open] [data-edge-item="raw>process"][open]');
+    check(`${tag}: bấm dấu + mở trang Handoffs ở đúng đường, focus vào ô đầu`, await sp.evaluate(() => !!document.activeElement?.closest('[data-edge-item="raw>process"]')));
+    await sp.click('#sd-pane input[data-via="raw>process"][value="file"]', { force: true });
+    await sp.fill('#sd-pane [data-edge="raw>process"][data-ef="what"]', 'raw/*.csv, một file mỗi mùa');
+    await sp.fill('#sd-pane [data-edge="raw>process"][data-ef="check"]', 'Script làm sạch đọc đủ mọi file mùa và đếm đúng số dòng');
+    ws = await cur(sp);
+    check(`${tag}: bàn giao lưu ngay`, ws.design.edges['raw>process']?.via === 'file' && /đếm đúng/.test(ws.design.edges['raw>process'].check));
+    if (w === 390) check(`${tag}: trang Handoffs không tràn ngang`, await sp.$eval('#dlg-sd', (d) => d.scrollWidth <= d.clientWidth + 1));
+    await sp.keyboard.press('Escape');
+    check(`${tag}: đường đã ghi có nhãn đọc được, Tab tới được`, (await sp.textContent('#sd-fig .sd-hand[data-edge="raw>process"]')).includes('File')
+      && (await sp.$eval('#sd-fig .sd-hand[data-edge="raw>process"]', (g) => g.getAttribute('tabindex') === '0' && /Handoff/.test(g.getAttribute('aria-label')))));
+    check(`${tag}: sơ đồ có nhãn vẫn nằm trong khung`, await sp.$eval('#sd-fig', (f) => f.scrollWidth <= f.clientWidth + 1) && (await hOverflow(sp)) <= 0);
+    await sp.focus('#sd-fig .sd-hand[data-edge="raw>process"]');
+    await sp.keyboard.press('Enter');
+    await sp.waitForSelector('#dlg-sd[open] [data-edge-item="raw>process"][open]');
+    await sp.keyboard.press('Escape');
+    if (w === 1280) {
+      const md2 = await sp.evaluate(async () => {
+        const C = await import(new URL('js/core.js', location.href).href);
+        const s = JSON.parse(localStorage.getItem('stepPlanner.v2'));
+        return C.toMarkdown(s.workspaces.find((x) => x.id === s.lastId));
+      });
+      check(`${tag}: Markdown có mục Handoffs`, md2.includes('[handoff: raw > process]') && md2.includes('  Check: Script làm sạch'));
+    }
     await sx.close();
   }
 
