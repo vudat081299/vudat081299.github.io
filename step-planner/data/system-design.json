@@ -1,5 +1,360 @@
 {
   "note": "Danh mục System design của Step Planner (PLAN-016): hồ sơ dự án và các khâu theo đường đi của dữ liệu; trang đọc bằng vòng lặp (REPO-001). Khuôn và luật: step-planner/CLAUDE.md.",
+  "paths": [
+    {
+      "id": "report",
+      "label": "Notebook & report",
+      "summary": "Bài phân tích để đọc hoặc nộp: notebook và báo cáo, không có app chạy suốt.",
+      "flow": [
+        "Lấy dữ liệu một lần (hoặc vài lần), giữ nguyên bản thô.",
+        "Một script làm sạch, ghi snapshot sạch (Parquet hoặc CSV) kèm ngày tạo.",
+        "Notebook chỉ đọc snapshot sạch, phân tích và vẽ hình.",
+        "Quarto hoặc Jupyter xuất notebook thành báo cáo HTML hoặc PDF."
+      ],
+      "why": "Người nhận chỉ đọc kết quả, nên không cần API, máy chủ chạy suốt hay giám sát. Tách snapshot sạch khỏi notebook để chạy lại từ đầu ra đúng hình và số.",
+      "switch": "Đổi sang Interactive demo khi người xem cần tự lọc, kéo thanh trượt hay nhập dữ liệu. Đổi sang Scheduled pipeline khi báo cáo phải làm lại theo lịch với dữ liệu mới.",
+      "ask": [
+        "size",
+        "fresh",
+        "gpu"
+      ],
+      "implies": {
+        "latency": "report"
+      },
+      "stages": {
+        "source": "need",
+        "ingest": "maybe",
+        "raw": "need",
+        "process": "need",
+        "store": "maybe",
+        "train": "maybe",
+        "track": "maybe",
+        "serve": "skip",
+        "app": "need",
+        "package": "need",
+        "host": "maybe",
+        "monitor": "skip"
+      },
+      "suggest": {
+        "ingest": [
+          "notebook-script"
+        ],
+        "raw": [
+          "project-folder"
+        ],
+        "process": [
+          "pandas",
+          "duckdb",
+          "polars"
+        ],
+        "store": [
+          "parquet-duckdb"
+        ],
+        "train": [
+          "local",
+          "colab"
+        ],
+        "track": [
+          "git-results"
+        ],
+        "app": [
+          "notebook-report"
+        ],
+        "package": [
+          "requirements",
+          "uv"
+        ],
+        "host": [
+          "github-pages"
+        ]
+      },
+      "accept": [
+        "Chạy lại từ dữ liệu thô tới báo cáo bằng các lệnh trong README ra đúng hình và số.",
+        "Snapshot sạch có ngày tạo, số dòng và mô tả từng cột.",
+        "Báo cáo nêu câu hỏi, phương pháp, kết luận và giới hạn của kết luận."
+      ]
+    },
+    {
+      "id": "demo",
+      "label": "Interactive demo",
+      "summary": "Một app Python đọc dữ liệu và gọi hàm phân tích hoặc model ngay trong cùng tiến trình.",
+      "flow": [
+        "Script làm sạch ghi snapshot sạch (Parquet) và, nếu có, file model đã train.",
+        "App Streamlit hoặc Gradio đọc snapshot và nạp model một lần khi khởi động.",
+        "Mỗi lần người dùng lọc hay nhập, app gọi thẳng hàm phân tích hoặc predict, không qua API.",
+        "Đẩy repo lên một host chạy app Python để có link."
+      ],
+      "why": "Ít phần phải dựng nhất cho một sản phẩm tương tác: không API, không frontend riêng, chỉ viết Python. Hợp khi người dùng là bạn hoặc vài người.",
+      "switch": "Đổi sang Separate frontend + backend khi một app khác (web, mobile) cũng cần gọi model, hay khi nhiều người dùng cùng lúc. Đổi sang Notebook & report khi người xem không cần tương tác.",
+      "ask": [
+        "size",
+        "fresh",
+        "users",
+        "budget",
+        "gpu"
+      ],
+      "implies": {
+        "latency": "online"
+      },
+      "stages": {
+        "source": "need",
+        "ingest": "maybe",
+        "raw": "need",
+        "process": "need",
+        "store": "maybe",
+        "train": "maybe",
+        "track": "maybe",
+        "serve": "maybe",
+        "app": "need",
+        "package": "need",
+        "host": "need",
+        "monitor": "maybe"
+      },
+      "suggest": {
+        "ingest": [
+          "notebook-script"
+        ],
+        "raw": [
+          "project-folder"
+        ],
+        "process": [
+          "pandas",
+          "duckdb",
+          "polars"
+        ],
+        "store": [
+          "parquet-duckdb"
+        ],
+        "train": [
+          "local",
+          "colab"
+        ],
+        "track": [
+          "git-results"
+        ],
+        "serve": [
+          "in-app"
+        ],
+        "app": [
+          "streamlit",
+          "gradio"
+        ],
+        "package": [
+          "requirements",
+          "uv"
+        ],
+        "host": [
+          "streamlit-cloud",
+          "hf-spaces"
+        ],
+        "monitor": [
+          "logs-weekly"
+        ]
+      },
+      "accept": [
+        "App mở được qua link từ máy khác và chạy trên snapshot thật.",
+        "Mỗi điều khiển (bộ lọc, ô nhập) cho kết quả khớp notebook trên cùng dữ liệu.",
+        "Đầu vào sai hay không có dữ liệu thì app báo rõ, không hiện lỗi Python.",
+        "README ghi phiên bản snapshot và model mà app đang dùng."
+      ]
+    },
+    {
+      "id": "api",
+      "label": "Separate frontend + backend",
+      "summary": "Pipeline xuất file hay bảng; backend đọc và mở API có schema rõ; frontend gọi API.",
+      "flow": [
+        "Pipeline làm sạch ghi bảng sạch (Parquet hoặc bảng SQL) với khoá và schema cố định.",
+        "Backend (vd. FastAPI) đọc bảng sạch, nạp model nếu có, mở các endpoint trả JSON theo schema đã hẹn.",
+        "Frontend (web hoặc mobile) chỉ gọi API, không đọc file dữ liệu trực tiếp.",
+        "Backend và frontend deploy riêng; frontend lấy địa chỉ API từ cấu hình."
+      ],
+      "why": "Nhiều client dùng chung một API, và đổi giao diện không đụng tới logic dữ liệu. Schema của API là hợp đồng giữa hai bên.",
+      "switch": "Lùi về Interactive demo khi chỉ có một giao diện Python và vài người dùng: bớt hẳn một service phải deploy. Thêm Scheduled pipeline khi bảng sạch phải làm mới theo lịch.",
+      "ask": [
+        "size",
+        "fresh",
+        "latency",
+        "users",
+        "budget",
+        "gpu"
+      ],
+      "implies": {
+        "latency": "online"
+      },
+      "stages": {
+        "source": "need",
+        "ingest": "maybe",
+        "raw": "need",
+        "process": "need",
+        "store": "need",
+        "train": "maybe",
+        "track": "maybe",
+        "serve": "need",
+        "app": "need",
+        "package": "need",
+        "host": "need",
+        "monitor": "need"
+      },
+      "suggest": {
+        "ingest": [
+          "notebook-script",
+          "github-actions"
+        ],
+        "raw": [
+          "project-folder",
+          "cloudflare-r2"
+        ],
+        "process": [
+          "duckdb",
+          "polars",
+          "pandas"
+        ],
+        "store": [
+          "parquet-duckdb",
+          "postgresql",
+          "supabase",
+          "neon"
+        ],
+        "train": [
+          "local",
+          "colab"
+        ],
+        "track": [
+          "git-results",
+          "mlflow"
+        ],
+        "serve": [
+          "fastapi",
+          "serverless"
+        ],
+        "app": [
+          "web-app",
+          "mobile-app"
+        ],
+        "package": [
+          "uv",
+          "docker",
+          "github-actions",
+          "requirements"
+        ],
+        "host": [
+          "render",
+          "cloud-run",
+          "vps-docker"
+        ],
+        "monitor": [
+          "uptime",
+          "logs-weekly"
+        ]
+      },
+      "accept": [
+        "Tài liệu API (trang /docs của FastAPI) khớp schema đã hẹn, có ví dụ request và response.",
+        "Một phép thử gọi API với dữ liệu mẫu trả đúng số đã đối chiếu với notebook.",
+        "Frontend xử lý được lúc API chậm, lỗi hay trả rỗng.",
+        "Backend và frontend đều mở được từ máy khác."
+      ]
+    },
+    {
+      "id": "pipeline",
+      "label": "Scheduled pipeline",
+      "summary": "Job theo lịch tạo bản dữ liệu mới, qua cổng chất lượng rồi mới công bố; bên dùng đọc bản sạch gần nhất.",
+      "flow": [
+        "Job theo lịch lấy dữ liệu mới, lưu bản thô có ngày.",
+        "Làm sạch thành một phiên bản mới, chưa công bố.",
+        "Cổng chất lượng kiểm schema, số dòng, giá trị thiếu, khoá trùng; trượt thì dừng và giữ bản cũ.",
+        "Qua cổng thì công bố: \"bản mới nhất\" trỏ sang phiên bản mới.",
+        "Báo cáo, dashboard hay API chỉ đọc bản đã công bố."
+      ],
+      "why": "Dữ liệu tới đều đặn nên việc chính là chạy lại không cần người, không công bố bản lỗi, và biết ngay khi một lần chạy hỏng.",
+      "switch": "Lùi về Notebook & report khi thực ra chỉ chạy vài lần bằng tay. Thêm Separate frontend + backend khi người dùng cần hỏi dữ liệu theo yêu cầu.",
+      "ask": [
+        "size",
+        "fresh",
+        "latency",
+        "users",
+        "budget"
+      ],
+      "implies": {
+        "fresh": "batch"
+      },
+      "stages": {
+        "source": "need",
+        "ingest": "need",
+        "raw": "need",
+        "process": "need",
+        "store": "need",
+        "train": "maybe",
+        "track": "maybe",
+        "serve": "maybe",
+        "app": "maybe",
+        "package": "need",
+        "host": "maybe",
+        "monitor": "need"
+      },
+      "suggest": {
+        "ingest": [
+          "github-actions",
+          "prefect",
+          "cron",
+          "airflow"
+        ],
+        "raw": [
+          "cloudflare-r2",
+          "gcs",
+          "s3",
+          "postgres-raw",
+          "dvc"
+        ],
+        "process": [
+          "duckdb",
+          "polars",
+          "dbt",
+          "pandas"
+        ],
+        "store": [
+          "parquet-duckdb",
+          "postgresql",
+          "bigquery"
+        ],
+        "train": [
+          "local"
+        ],
+        "track": [
+          "mlflow",
+          "git-results"
+        ],
+        "serve": [
+          "batch-file"
+        ],
+        "app": [
+          "bi-dashboard",
+          "streamlit",
+          "notebook-report"
+        ],
+        "package": [
+          "requirements",
+          "uv",
+          "github-actions",
+          "docker"
+        ],
+        "host": [
+          "github-pages",
+          "cloud-run"
+        ],
+        "monitor": [
+          "logs-weekly",
+          "re-eval",
+          "evidently"
+        ]
+      },
+      "accept": [
+        "Job chạy theo lịch không cần người, mỗi lần chạy có log xem lại được.",
+        "Một lô cố ý sai schema bị cổng chất lượng chặn, bên dùng vẫn đọc bản sạch trước đó.",
+        "Chạy lại cùng một lô không tạo bản ghi trùng.",
+        "Xem được bản đã công bố gần nhất là bản nào, tạo lúc nào."
+      ]
+    }
+  ],
   "profile": [
     {
       "id": "size",
@@ -121,6 +476,7 @@
       "guide": "Đây là điểm bắt đầu của luồng dữ liệu.\nNguồn quyết định dữ liệu cũ hay mới, nhiều hay ít, và có cần lấy lại theo lịch không.\nMột dự án thường ghép vài nguồn, ví dụ một bộ Kaggle cộng một API.\nBước sau (Ingestion) lo việc kéo dữ liệu từ các nguồn này về.",
       "multi": true,
       "skipWhen": "",
+      "task": "Có bản dữ liệu thô đầu tiên lấy từ nguồn đã chọn; README ghi nguồn, ngày lấy và quyền sử dụng.",
       "options": [
         {
           "id": "kaggle-datasets",
@@ -334,6 +690,7 @@
       "guide": "Ingestion là đoạn code lấy dữ liệu từ nguồn và ghi vào kho thô.\nScheduling là thứ chạy đoạn code đó theo lịch, ví dụ mỗi sáng.\nDữ liệu cố định chỉ cần chạy một lần bằng tay.\nDữ liệu mới mỗi ngày cần lịch chạy; dữ liệu liên tục cần hệ thống stream.",
       "multi": false,
       "skipWhen": "Bỏ qua khi bạn chỉ tải một file về bằng trình duyệt và không cần tải lại.",
+      "task": "Một lệnh lấy dữ liệu mới chạy được từ đầu tới cuối bằng công cụ đã chọn; README có lệnh chạy lại.",
       "options": [
         {
           "id": "notebook-script",
@@ -424,6 +781,10 @@
             {
               "title": "Actions billing",
               "url": "https://docs.github.com/en/billing/concepts/product-billing/github-actions"
+            },
+            {
+              "title": "Workflow artifacts",
+              "url": "https://docs.github.com/en/actions/concepts/workflows-and-actions/workflow-artifacts"
             }
           ],
           "setup": [],
@@ -531,6 +892,7 @@
       "guide": "Kho thô giữ dữ liệu đúng như lúc tải về, không ai sửa tay.\nNhờ vậy khi code làm sạch có lỗi, bạn chạy lại từ bản gốc mà không phải tải lại.\nDữ liệu nhỏ để trong thư mục dự án; dữ liệu lớn hoặc nhiều máy cùng đọc thì để trên object storage.\nBước sau (Processing) đọc từ đây và ghi kết quả sạch ra chỗ khác.",
       "multi": false,
       "skipWhen": "",
+      "task": "Dữ liệu thô nằm ở nơi đã chọn, không sửa tay; README ghi cách lấy lại từ đầu.",
       "options": [
         {
           "id": "project-folder",
@@ -725,6 +1087,7 @@
       "guide": "Bước này đọc dữ liệu thô, sửa kiểu, bỏ trùng, xử lý thiếu, rồi ghép bảng.\nCông cụ một máy (pandas, Polars, DuckDB) chạy trên RAM và ổ đĩa của một máy, dễ cài, đủ cho phần lớn dự án.\nCông cụ phân tán (Dask, Spark) chia dữ liệu cho nhiều máy cùng xử lý, chỉ cần khi một máy không chứa nổi.\nKết quả sạch được ghi sang bước Analytical store.",
       "multi": false,
       "skipWhen": "",
+      "task": "Một lệnh biến dữ liệu thô thành bảng sạch trên dữ liệu mẫu, chạy lại ra cùng kết quả; README có lệnh ấy.",
       "options": [
         {
           "id": "pandas",
@@ -910,6 +1273,7 @@
       "guide": "Kho phân tích giữ bảng sạch để notebook, dashboard và mô hình cùng đọc.\nDữ liệu nhỏ: một file Parquet hoặc SQLite, truy vấn chạy ngay trên máy bạn.\nDữ liệu vừa hoặc cần nhiều người truy cập: một server PostgreSQL nhận câu SQL qua mạng.\nDữ liệu lớn: warehouse trên cloud chia câu SQL cho nhiều máy chạy song song và tính phí theo lượng dữ liệu quét.",
       "multi": false,
       "skipWhen": "Bỏ qua khi bạn chỉ có một bảng nhỏ và đọc thẳng từ file sạch trong notebook.",
+      "task": "Bảng sạch nạp vào kho đã chọn và một truy vấn mẫu trả đúng số dòng.",
       "options": [
         {
           "id": "parquet-duckdb",
@@ -938,6 +1302,10 @@
             {
               "title": "Python API",
               "url": "https://duckdb.org/docs/stable/clients/python/overview"
+            },
+            {
+              "title": "Concurrency",
+              "url": "https://duckdb.org/docs/stable/connect/concurrency"
             }
           ],
           "setup": [
@@ -967,6 +1335,10 @@
             {
               "title": "Command line shell",
               "url": "https://sqlite.org/cli.html"
+            },
+            {
+              "title": "When to use SQLite",
+              "url": "https://sqlite.org/whentouse.html"
             }
           ],
           "setup": [],
@@ -1142,6 +1514,7 @@
       "guide": "Bước này chọn máy để train mô hình từ bảng sạch.\nMô hình học máy cổ điển trên bảng (hồi quy, cây quyết định) chạy tốt trên CPU của laptop.\nDeep learning với ảnh, văn bản hay mô hình lớn cần GPU, lấy miễn phí từ notebook online hoặc thuê trên cloud.\nMô hình train xong được lưu thành file để bước phục vụ (serving) dùng.",
       "multi": false,
       "skipWhen": "Bỏ qua khi dự án chỉ phân tích và báo cáo, không train mô hình.",
+      "task": "Huấn luyện chạy được ở môi trường đã chọn trên dữ liệu mẫu; README có lệnh chạy lại.",
       "options": [
         {
           "id": "local",
@@ -1333,6 +1706,7 @@
       "guide": "Mỗi lần huấn luyện là một lần chạy: tham số, dữ liệu, chỉ số và file mô hình.\nGhi lại từng lần chạy để so sánh và chọn ra mô hình tốt nhất.\nModel registry giữ các phiên bản mô hình đã chọn.\nBước Serving phía sau nạp đúng phiên bản mô hình lấy từ đây.",
       "multi": true,
       "skipWhen": "",
+      "task": "Mỗi lần chạy ghi lại tham số, số đo và file model; tìm lại được lần chạy đã nghiệm thu.",
       "options": [
         {
           "id": "git-results",
@@ -1487,6 +1861,7 @@
       "guide": "Serving là cách đưa mô hình đã huấn luyện ra để tạo dự đoán.\nBatch: chạy mô hình theo lịch, ghi kết quả ra file hoặc bảng, người dùng đọc kết quả có sẵn.\nOnline: người dùng gửi dữ liệu và nhận dự đoán ngay, trong khoảng một giây.\nMô hình lấy từ bước tracking; giao diện ở bước sau đọc kết quả hoặc gọi API ở đây.",
       "multi": false,
       "skipWhen": "Bỏ qua khi dự án chỉ phân tích dữ liệu, không có mô hình dự đoán.",
+      "task": "Model đã lưu trả về dự đoán cho một mẫu đầu vào bằng công cụ đã chọn; README có lệnh chạy lại.",
       "options": [
         {
           "id": "batch-file",
@@ -1662,6 +2037,7 @@
       "guide": "Đây là phần người dùng nhìn thấy.\nGiao diện đọc file kết quả batch, hoặc gọi mô hình online từ bước Serving.\nChọn theo ai xem và họ cần làm gì: đọc báo cáo, lọc số liệu, hay nhập dữ liệu để nhận dự đoán.\nBước Hosting phía sau đưa giao diện này lên mạng.",
       "multi": false,
       "skipWhen": "",
+      "task": "Giao diện mở được và hiện kết quả từ dữ liệu hoặc model thật, không phải số giả.",
       "options": [
         {
           "id": "notebook-report",
@@ -1883,6 +2259,7 @@
       "guide": "Đóng gói ghi lại đúng thư viện và phiên bản để máy khác chạy y như máy bạn.\nCI/CD tự chạy test mỗi lần push và tự triển khai khi gộp code.\nBước này nối code ở các bước trước với máy chủ ở bước Hosting.",
       "multi": true,
       "skipWhen": "",
+      "task": "Máy khác cài lại được môi trường từ repo bằng lệnh ghi trong README.",
       "options": [
         {
           "id": "requirements",
@@ -2016,6 +2393,7 @@
       "guide": "Hosting là máy chủ chạy app để người khác mở bằng một đường link.\nGói miễn phí thường cho app ngủ khi không ai dùng, lần mở sau phải chờ khởi động lại.\nChọn theo loại thứ cần chạy: trang tĩnh, app Streamlit hay Gradio, hay API trong Docker.\nSau khi lên mạng, bước Monitoring theo dõi nó.",
       "multi": false,
       "skipWhen": "Bỏ qua khi chỉ bạn xem kết quả trên máy của mình.",
+      "task": "Sản phẩm có link mở được từ máy khác.",
       "options": [
         {
           "id": "streamlit-cloud",
@@ -2047,6 +2425,10 @@
             {
               "title": "App hibernation",
               "url": "https://docs.streamlit.io/deploy/streamlit-community-cloud/manage-your-app"
+            },
+            {
+              "title": "App dependencies",
+              "url": "https://docs.streamlit.io/deploy/streamlit-community-cloud/deploy-your-app/app-dependencies"
             }
           ],
           "setup": [],
@@ -2151,6 +2533,10 @@
             {
               "title": "Free tier",
               "url": "https://docs.cloud.google.com/free/docs/free-cloud-features"
+            },
+            {
+              "title": "Container runtime contract",
+              "url": "https://docs.cloud.google.com/run/docs/container-contract"
             }
           ],
           "setup": [
@@ -2211,6 +2597,10 @@
           },
           "links": [
             {
+              "title": "What is GitHub Pages",
+              "url": "https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages"
+            },
+            {
               "title": "Create a Pages site",
               "url": "https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site"
             },
@@ -2234,6 +2624,7 @@
       "guide": "Monitoring kiểm tra hai việc: app còn chạy không, và mô hình còn dự đoán đúng không.\nDữ liệu thật thay đổi theo thời gian nên độ chính xác có thể giảm dần.\nKết quả theo dõi cho biết khi nào cần quay lại bước huấn luyện.",
       "multi": true,
       "skipWhen": "Bỏ qua khi không triển khai gì lên mạng và dữ liệu không đổi.",
+      "task": "Có cách biết khi app hỏng hay dữ liệu cũ, và đã thử cách ấy một lần.",
       "options": [
         {
           "id": "logs-weekly",
@@ -2375,6 +2766,255 @@
           "task": "Dashboard Grafana hiện số request và tỉ lệ lỗi của app."
         }
       ]
+    }
+  ],
+  "checks": [
+    {
+      "id": "api-on-static-host",
+      "title": "API on a static host",
+      "if": {
+        "serve": [
+          "fastapi",
+          "bentoml"
+        ],
+        "host": [
+          "github-pages"
+        ]
+      },
+      "unless": {
+        "host": [
+          "own"
+        ]
+      },
+      "msg": "API cần một máy chủ chạy Python suốt; GitHub Pages là dịch vụ host trang tĩnh, chỉ phục vụ file HTML, CSS, JS. Frontend để trên Pages được, nhưng API phải chạy ở host khác (Render, Cloud Run, VPS); ghi host ấy vào ô \"Another tool\" của khâu Hosting."
+    },
+    {
+      "id": "python-app-on-static-host",
+      "title": "Python app on a static host",
+      "if": {
+        "app": [
+          "streamlit",
+          "gradio"
+        ],
+        "host": [
+          "github-pages"
+        ]
+      },
+      "unless": {
+        "host": [
+          "own"
+        ]
+      },
+      "msg": "App Streamlit hay Gradio là một tiến trình Python phải chạy trên máy chủ; GitHub Pages chỉ phục vụ file tĩnh. Chọn host chạy được app Python (Streamlit Community Cloud, Hugging Face Spaces, Render)."
+    },
+    {
+      "id": "api-on-streamlit-cloud",
+      "title": "API on Streamlit Community Cloud",
+      "if": {
+        "serve": [
+          "fastapi",
+          "bentoml"
+        ],
+        "host": [
+          "streamlit-cloud"
+        ]
+      },
+      "unless": {
+        "host": [
+          "own"
+        ]
+      },
+      "msg": "Streamlit Community Cloud để deploy app Streamlit, không phải để mở một API cho app khác gọi. API FastAPI / BentoML cần host chạy web service (Render, Cloud Run, VPS + Docker)."
+    },
+    {
+      "id": "non-streamlit-ui-on-streamlit-cloud",
+      "title": "Non-Streamlit app on Streamlit Community Cloud",
+      "if": {
+        "app": [
+          "gradio",
+          "web-app",
+          "bi-dashboard"
+        ],
+        "host": [
+          "streamlit-cloud"
+        ]
+      },
+      "unless": {
+        "host": [
+          "own"
+        ]
+      },
+      "msg": "Streamlit Community Cloud để deploy app Streamlit. Giao diện đã chọn cần nơi chạy khác: Gradio lên Hugging Face Spaces, bản build tĩnh của web Vue / React lên GitHub Pages; Data Studio, Power BI chạy trên dịch vụ của chính chúng, Metabase cần máy chủ riêng."
+    },
+    {
+      "id": "docker-only-on-streamlit-cloud",
+      "title": "Docker is not what Community Cloud installs",
+      "if": {
+        "package": [
+          "docker"
+        ],
+        "host": [
+          "streamlit-cloud"
+        ]
+      },
+      "unless": {
+        "package": [
+          "requirements",
+          "uv"
+        ]
+      },
+      "msg": "Streamlit Community Cloud cài thư viện từ file phụ thuộc trong repo (uv.lock, Pipfile, environment.yml, requirements.txt, pyproject.toml); thiếu file ấy thì app chỉ có Streamlit. Giữ thêm requirements.txt hoặc uv cạnh Dockerfile."
+    },
+    {
+      "id": "schedule-without-scheduler",
+      "title": "New data, no scheduler",
+      "if": {
+        "fresh": [
+          "batch"
+        ]
+      },
+      "unless": {
+        "ingest": [
+          "cron",
+          "github-actions",
+          "prefect",
+          "airflow",
+          "own"
+        ]
+      },
+      "msg": "Dữ liệu mới tới hằng ngày hay hằng tuần nhưng khâu Ingestion không có công cụ chạy theo lịch: phải nhớ chạy tay, và không có log của từng lần chạy. Chọn cron, GitHub Actions, Prefect hoặc Airflow."
+    },
+    {
+      "id": "stream-with-batch-ingest",
+      "title": "Continuous data, batch ingestion",
+      "if": {
+        "fresh": [
+          "stream"
+        ],
+        "ingest": [
+          "notebook-script",
+          "cron",
+          "github-actions",
+          "prefect",
+          "airflow"
+        ]
+      },
+      "msg": "Bạn trả lời dữ liệu tới liên tục, nhưng khâu Ingestion chạy theo lịch hay chạy tay: kết quả chỉ mới tới lần chạy gần nhất. Ổn nếu chừng ấy là đủ; cần thấy sự kiện gần như ngay khi nó xảy ra thì cần một consumer chạy liên tục, như Kafka."
+    },
+    {
+      "id": "actions-runner-is-fresh",
+      "title": "Files on a GitHub Actions runner do not stay",
+      "if": {
+        "ingest": [
+          "github-actions"
+        ],
+        "raw": [
+          "project-folder"
+        ]
+      },
+      "msg": "Mỗi job GitHub Actions chạy trên một bản runner mới, nên file job tải vào data/raw không còn ở lần chạy sau. Lưu lại bằng cách commit vào repo, tải lên thành artifact, hoặc ghi ra object storage (R2, GCS, S3)."
+    },
+    {
+      "id": "file-db-on-ephemeral-disk",
+      "title": "File database on a host without a lasting disk",
+      "if": {
+        "store": [
+          "sqlite",
+          "parquet-duckdb"
+        ],
+        "host": [
+          "render",
+          "cloud-run",
+          "hf-spaces"
+        ]
+      },
+      "msg": "Ổ đĩa của host này không giữ dữ liệu ghi lúc chạy: Render Free mất thay đổi khi service khởi động lại, deploy lại hay ngủ; Cloud Run ghi vào bộ nhớ của instance và mất khi instance dừng; đĩa của Space Hugging Face không bền. Chỉ đọc file đóng gói sẵn thì ổn; cần ghi bền thì dùng DB server (PostgreSQL, Supabase, Neon) hoặc object storage."
+    },
+    {
+      "id": "duckdb-file-many-processes",
+      "title": "DuckDB file behind an API",
+      "if": {
+        "store": [
+          "parquet-duckdb"
+        ],
+        "serve": [
+          "fastapi",
+          "bentoml"
+        ]
+      },
+      "msg": "Một file .duckdb chỉ cho một tiến trình mở để đọc và ghi; nhiều tiến trình cùng mở thì phải ở chế độ chỉ đọc (read_only). API chạy nhiều worker hay nhiều instance nên mở file read_only (hoặc chỉ đọc Parquet) và để pipeline ghi bản mới; web cần ghi đồng thời thì dùng PostgreSQL."
+    },
+    {
+      "id": "sqlite-public-writers",
+      "title": "SQLite for a public app",
+      "if": {
+        "store": [
+          "sqlite"
+        ],
+        "users": [
+          "public"
+        ]
+      },
+      "msg": "SQLite cho nhiều người đọc cùng lúc nhưng chỉ một người ghi tại một thời điểm. App công khai mà nhiều người cùng ghi (đăng ký, lưu kết quả) nên dùng cơ sở dữ liệu client/server như PostgreSQL; chỉ đọc thì SQLite vẫn ổn."
+    },
+    {
+      "id": "model-without-versioned-file",
+      "title": "Serving a model with no model store",
+      "if": {
+        "serve": [
+          "batch-file",
+          "in-app",
+          "fastapi",
+          "bentoml",
+          "serverless"
+        ],
+        "track": [
+          "skip"
+        ]
+      },
+      "msg": "Có khâu phục vụ model nhưng khâu Experiment tracking & model registry là Not needed: app không biết chắc đang nạp file model nào. Tối thiểu lưu file model kèm phiên bản (git tag, DVC hoặc Hugging Face Hub) và số đo lúc nghiệm thu."
+    },
+    {
+      "id": "public-without-monitoring",
+      "title": "Public app with no monitoring",
+      "if": {
+        "users": [
+          "public"
+        ],
+        "monitor": [
+          "skip"
+        ]
+      },
+      "msg": "App cho người ngoài dùng mà khâu Monitoring là Not needed: app ngủ, lỗi hay dữ liệu cũ sẽ không ai báo. Tối thiểu có một kiểm tra uptime và đọc log định kỳ."
+    },
+    {
+      "id": "free-host-sleeps",
+      "title": "Free hosting sleeps",
+      "if": {
+        "latency": [
+          "online"
+        ],
+        "host": [
+          "streamlit-cloud",
+          "render",
+          "hf-spaces"
+        ]
+      },
+      "msg": "Ở gói miễn phí, app ngủ khi không có truy cập một thời gian; người mở đầu tiên sau đó phải chờ app khởi động lại (Render ghi khoảng một phút), xa với \"trả lời trong khoảng một giây\". Ổn cho demo; cần luôn nhanh thì dùng gói trả phí không ngủ hoặc host khác."
+    },
+    {
+      "id": "in-app-model-for-web-client",
+      "title": "Model inside the app, but the app is not Python",
+      "if": {
+        "serve": [
+          "in-app"
+        ],
+        "app": [
+          "web-app",
+          "mobile-app"
+        ]
+      },
+      "msg": "Model inside the UI app nghĩa là model chạy trong tiến trình Python của app Streamlit hay Gradio. Web Vue / React và app mobile chạy trên máy người dùng, nên cần một API (FastAPI, serverless) để gọi model."
     }
   ]
 }

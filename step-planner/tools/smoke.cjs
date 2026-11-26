@@ -1566,11 +1566,13 @@ const check = (name, ok, detail = '') => {
       && (await sp.$$eval('#sd-fig .sd-node.is-open', (ns) => ns.length)) === cat.stages.length);
     await sp.click('#sd-btn');
     await sp.click('#sd-open');
-    await sp.waitForSelector('#dlg-sd[open] .sd-prof');
+    await sp.waitForSelector('#dlg-sd[open] .sd-paths');
     const before = await sp.$$eval('#sd-nav .sd-nav-btn', (b) => b.length);
-    check(`${tag}: hộp có hồ sơ và mọi khâu`, before === cat.stages.length + 1);
+    check(`${tag}: hộp mở ở lối bắt đầu, có hồ sơ, mọi khâu và hai trang xem lại`, before === cat.stages.length + 4
+      && (await sp.$$eval('#sd-pane input[data-path]', (r) => r.length)) === cat.paths.length + 1);
+    await sp.click('#sd-nav [data-at="1"]');
     await sp.click('input[data-q="size"][value="large"]', { force: true });
-    await sp.click('#sd-nav [data-at="4"]');
+    await sp.click('#sd-nav [data-at="5"]');
     const proc = cat.stages[3];
     const top = await sp.$eval('#sd-pane .sd-opt:has(.sd-tag.top)', (e) => e.dataset.opt).catch(() => '');
     const want = proc.options.find((o) => !o.fit || !o.fit.size || o.fit.size.includes('large'));
@@ -1580,12 +1582,52 @@ const check = (name, ok, detail = '') => {
     check(`${tag}: chọn thì lưu ngay`, ws.design?.stages[proc.id]?.pick[0] === top && ws.design.profile.size === 'large');
     check(`${tag}: đã chọn thì phương án khác gập lại`, await sp.$eval('#sd-pane .sd-more', (d) => !d.open && d.querySelectorAll('.sd-opt').length > 0));
     check(`${tag}: focus ở lại ô vừa chọn`, await sp.evaluate((id) => document.activeElement?.closest('.sd-opt')?.dataset.opt === id, top));
+    await sp.click(`#sd-pane [data-skip="${proc.id}"]`);
+    await sp.click(`#sd-pane [data-skip="${proc.id}"]`);
+    ws = await cur(sp);
+    check(`${tag}: bật rồi tắt "Not needed" giữ lựa chọn cũ`, ws.design.stages[proc.id].pick[0] === top && !ws.design.stages[proc.id].skip
+      && !!(await sp.$(`#sd-pane [data-opt="${top}"].is-on`)));
     await sp.click('#sd-next');
     const ing = cat.stages[4].id;
     await sp.click(`#sd-pane [data-skip="${ing}"]`);
     await sp.fill('#sd-pane [data-note]', 'Own: lý do\n- không phải việc');
     ws = await cur(sp);
     check(`${tag}: "Not needed" và ghi chú lưu`, ws.design.stages[ing].skip && /không phải việc/.test(ws.design.stages[ing].note));
+    /* Lối bắt đầu: chọn lối thì thấy luồng tối thiểu; Apply path chỉ điền khâu chưa quyết; Hoàn tác trong hộp trả lại. */
+    await sp.click('#sd-nav [data-at="0"]');
+    await sp.click('#sd-pane input[data-path][value="report"]', { force: true });
+    check(`${tag}: chọn lối thì hiện luồng tối thiểu và mốc nghiệm thu`, (await sp.$$eval('#sd-pane .sd-flowlist li', (l) => l.length)) > 1
+      && (await sp.$$eval('#sd-pane .sd-accept li', (l) => l.length)) > 0);
+    await sp.click('#sd-pane [data-apply]');
+    ws = await cur(sp);
+    check(`${tag}: Apply path — khâu lối bỏ thành Not needed, khâu cần được chọn, khâu đã quyết giữ nguyên`, ws.design.path === 'report'
+      && ws.design.stages.serve?.skip && ws.design.stages.app?.pick[0] === 'notebook-report' && ws.design.stages[proc.id].pick[0] === top
+      && ws.design.stages[ing].skip && /Filled/.test(await sp.textContent('#sd-pane .sd-applied')));
+    if (w === 390) check(`${tag}: hộp lối bắt đầu không tràn ngang`, await sp.$eval('#dlg-sd', (d) => d.scrollWidth <= d.clientWidth + 1));
+    await sp.click('#sd-pane [data-unapply]');
+    ws = await cur(sp);
+    check(`${tag}: Hoàn tác Apply path trả các khâu vừa điền`, !ws.design.stages.serve && !ws.design.stages.app && ws.design.stages[proc.id].pick[0] === top
+      && ws.design.path === 'report');
+    await sp.click('#sd-pane input[data-path][value=""]', { force: true });
+    /* Luật phối hợp: API + GitHub Pages báo ở khâu, ở cột trái, ở trang Checks và dưới sơ đồ; bỏ chọn thì hết. */
+    const pg = (id) => cat.stages.findIndex((x) => x.id === id) + 2;
+    await sp.click(`#sd-nav [data-at="${pg('serve')}"]`);
+    await sp.click('#sd-pane [data-opt="fastapi"] input');
+    await sp.click(`#sd-nav [data-at="${pg('host')}"]`);
+    await sp.click('#sd-pane [data-opt="github-pages"] input');
+    check(`${tag}: luật phối hợp báo ở khâu, cột trái, dưới sơ đồ`, /API on a static host/.test(await sp.textContent('#sd-pane'))
+      && (await sp.$$eval('#sd-nav .has-warn', (b) => b.length)) >= 3 && (await sp.$$eval('#sd-warns li', (l) => l.length)) === 1
+      && /warning/.test(await sp.textContent('#sd-sub')));
+    await sp.click(`#sd-nav [data-at="${cat.stages.length + 3}"]`);
+    check(`${tag}: trang Checks liệt kê cảnh báo, có nút tới khâu`, (await sp.$$eval('#sd-pane .sd-warnbox', (l) => l.length)) === 1
+      && (await sp.$$eval('#sd-pane .sd-warnbox [data-at]', (b) => b.length)) === 2);
+    if (w === 390) check(`${tag}: trang Checks không tràn ngang`, await sp.$eval('#dlg-sd', (d) => d.scrollWidth <= d.clientWidth + 1));
+    await sp.click(`#sd-pane .sd-warnbox [data-at="${pg('serve')}"]`);
+    await sp.click('#sd-pane [data-opt="fastapi"] input');
+    await sp.click(`#sd-nav [data-at="${pg('host')}"]`);
+    await sp.click('#sd-pane [data-opt="github-pages"] input');
+    ws = await cur(sp);
+    check(`${tag}: bỏ chọn thì hết cảnh báo`, !(await sp.$$eval('#sd-warns li', (l) => l.length)) && !ws.design.stages.serve && !ws.design.stages.host);
     if (w === 390) check(`${tag}: hộp không tràn ngang`, await sp.$eval('#dlg-sd', (d) => d.scrollWidth <= d.clientWidth + 1));
     await sp.keyboard.press('Escape');
     check(`${tag}: sơ đồ bỏ khâu không cần, khâu đã chọn có tên`, !(await sp.$(`#sd-fig [data-stage="${ing}"]`))
@@ -1593,12 +1635,21 @@ const check = (name, ok, detail = '') => {
     check(`${tag}: sơ đồ nằm trong khung, trang không tràn ngang`, await sp.$eval('#sd-fig', (f) => f.scrollWidth <= f.clientWidth + 1) && (await hOverflow(sp)) <= 0);
     const steps0 = (await cur(sp)).steps.length;
     await sp.click('#sd-plan');
+    await sp.waitForSelector('#dlg-sdp[open] .sdp-item');
+    check(`${tag}: Add tasks to plan mở bản xem trước, mặc định bước mới System build`, (await sp.textContent('#dlg-sdp-title')) === 'Add tasks to plan'
+      && (await sp.$eval('#sdp-step', (s) => s.value)) === '' && (await sp.$$eval('#sdp-list .sdp-item', (l) => l.length)) === 1);
+    if (w === 390) check(`${tag}: hộp Update plan không tràn ngang`, await sp.$eval('#dlg-sdp', (d) => d.scrollWidth <= d.clientWidth + 1));
+    await sp.click('#sdp-go');
     ws = await cur(sp);
     const build = ws.steps[1];
-    check(`${tag}: Add tasks to plan thêm bước System build ở vị trí 2, có link`, ws.steps.length === steps0 + 1 && build.title === 'System build'
-      && build.subs.length === 1 && build.subs[0].docs.length > 0 && build.subs[0].title.startsWith(proc.title));
+    check(`${tag}: Add tasks to plan thêm bước System build ở vị trí 2, có link, có dấu nguồn`, ws.steps.length === steps0 + 1 && build.title === 'System build'
+      && build.subs.length === 1 && build.subs[0].docs.length > 0 && build.subs[0].title.startsWith(proc.title) && /^stage:/.test(build.subs[0].sd));
+    check(`${tag}: đã có việc sinh ra thì nút thành Update plan`, (await sp.textContent('#sd-plan')).trim() === 'Update plan');
     await sp.click('#sd-plan');
-    check(`${tag}: bấm lại không thêm trùng`, (await cur(sp)).steps[1].subs.length === 1 && /already/.test(await sp.textContent('#toast-text')));
+    await sp.waitForSelector('#dlg-sdp[open]');
+    check(`${tag}: bấm lại: mọi việc đã khớp, Apply tắt`, await sp.$eval('#sdp-go', (b) => b.disabled) && /already match/.test(await sp.textContent('#dlg-sdp')));
+    await sp.keyboard.press('Escape');
+    check(`${tag}: không thêm trùng`, (await cur(sp)).steps[1].subs.length === 1);
     if (w === 1280) {
       const [dl] = await Promise.all([sp.waitForEvent('download'), sp.click('#sd-svg')]);
       const body = fs.readFileSync(await dl.path(), 'utf8');
@@ -1621,7 +1672,60 @@ const check = (name, ok, detail = '') => {
       });
       check(`${tag}: Markdown đi rồi về giữ nguyên thiết kế`, rt);
     }
-    await sp.click('#toast-undo').catch(() => {});
+    /* Bàn giao: hai khâu liền nhau đã quyết thì đường nối có dấu +; bấm là mở đúng mục ở trang Handoffs; điền xong thì đường có
+     * nhãn bấm được bằng bàn phím; việc tích hợp sang bảng; Markdown có mục Handoffs. */
+    await sp.click(`#sd-fig [data-stage="${proc.id}"]`);
+    await sp.click(`#sd-nav [data-at="${pg('raw')}"]`);
+    await sp.click('#sd-pane .sd-opt input');
+    await sp.click(`#sd-nav [data-at="${pg('train')}"]`);
+    await sp.click('#sd-pane .sd-opt input');
+    await sp.keyboard.press('Escape');
+    check(`${tag}: đường nối giữa hai khâu đã quyết có dấu + (ẩn với bàn phím)`, (await sp.$$eval('#sd-fig .sd-hand.is-empty', (l) => l.length)) === 2
+      && (await sp.$$eval('#sd-fig .sd-hand.is-empty[tabindex]', (l) => l.length)) === 0);
+    await sp.click('#sd-fig .sd-hand.is-empty[data-edge="raw>process"]', { force: true });
+    await sp.waitForSelector('#dlg-sd[open] [data-edge-item="raw>process"][open]');
+    check(`${tag}: bấm dấu + mở trang Handoffs ở đúng đường, focus vào ô đầu`, await sp.evaluate(() => !!document.activeElement?.closest('[data-edge-item="raw>process"]')));
+    await sp.click('#sd-pane input[data-via="raw>process"][value="file"]', { force: true });
+    await sp.fill('#sd-pane [data-edge="raw>process"][data-ef="what"]', 'raw/*.csv, một file mỗi mùa');
+    await sp.fill('#sd-pane [data-edge="raw>process"][data-ef="check"]', 'Script làm sạch đọc đủ mọi file mùa và đếm đúng số dòng');
+    ws = await cur(sp);
+    check(`${tag}: bàn giao lưu ngay`, ws.design.edges['raw>process']?.via === 'file' && /đếm đúng/.test(ws.design.edges['raw>process'].check));
+    if (w === 390) check(`${tag}: trang Handoffs không tràn ngang`, await sp.$eval('#dlg-sd', (d) => d.scrollWidth <= d.clientWidth + 1));
+    await sp.keyboard.press('Escape');
+    check(`${tag}: đường đã ghi có nhãn đọc được, Tab tới được`, (await sp.textContent('#sd-fig .sd-hand[data-edge="raw>process"]')).includes('File')
+      && (await sp.$eval('#sd-fig .sd-hand[data-edge="raw>process"]', (g) => g.getAttribute('tabindex') === '0' && /Handoff/.test(g.getAttribute('aria-label')))));
+    check(`${tag}: sơ đồ có nhãn vẫn nằm trong khung`, await sp.$eval('#sd-fig', (f) => f.scrollWidth <= f.clientWidth + 1) && (await hOverflow(sp)) <= 0);
+    await sp.focus('#sd-fig .sd-hand[data-edge="raw>process"]');
+    await sp.keyboard.press('Enter');
+    await sp.waitForSelector('#dlg-sd[open] [data-edge-item="raw>process"][open]');
+    await sp.keyboard.press('Escape');
+    if (w === 1280) {
+      const md2 = await sp.evaluate(async () => {
+        const C = await import(new URL('js/core.js', location.href).href);
+        const s = JSON.parse(localStorage.getItem('stepPlanner.v2'));
+        return C.toMarkdown(s.workspaces.find((x) => x.id === s.lastId));
+      });
+      check(`${tag}: Markdown có mục Handoffs`, md2.includes('[handoff: raw > process]') && md2.includes('  Check: Script làm sạch'));
+    }
+    /* Đổi phương án sau khi đã sinh việc (review: pandas → DuckDB để lại hai việc): Update plan sửa đúng việc cũ; Hoàn tác trả hết. */
+    const oldTitle = (await cur(sp)).steps[1].subs[0].title;
+    await sp.click(`#sd-fig [data-stage="${proc.id}"]`);
+    await sp.click('#sd-pane .sd-more > summary');
+    const other = await sp.$eval('#sd-pane .sd-more .sd-opt', (e) => e.dataset.opt);
+    await sp.click(`#sd-pane [data-opt="${other}"] input`);
+    await sp.keyboard.press('Escape');
+    await sp.click('#sd-plan');
+    await sp.waitForSelector('#dlg-sdp[open] .sdp-item');
+    const groups = await sp.$$eval('#sdp-list .sdp-group h3', (l) => l.map((x) => x.textContent));
+    check(`${tag}: Update plan: việc mới (khâu, bàn giao) và việc đổi`, groups.some((t) => /^New \(3\)/.test(t)) && groups.some((t) => /^Changed \(1\)/.test(t)), groups.join());
+    await sp.click('#sdp-go');
+    ws = await cur(sp);
+    const procSubs = ws.steps[1].subs.filter((x) => x.title.startsWith(proc.title));
+    check(`${tag}: Update sửa việc cũ, không để hai việc cùng khâu; việc bàn giao có Done when là phép kiểm`, procSubs.length === 1 && procSubs[0].title !== oldTitle
+      && ws.steps[1].subs.some((x) => x.title === 'Handoff: Raw storage → Processing & cleaning' && /đếm đúng/.test(x.doneWhen)) && /Plan updated/.test(await sp.textContent('#toast-text')));
+    await sp.click('#toast-undo');
+    ws = await cur(sp);
+    check(`${tag}: Hoàn tác trả việc cũ, gỡ việc mới`, ws.steps[1].subs.length === 1 && ws.steps[1].subs[0].title === oldTitle);
     await sx.close();
   }
 

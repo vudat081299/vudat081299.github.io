@@ -132,8 +132,8 @@
   --tpl-pick: 220px;                   /* thẻ mẫu trong hộp Dự án */
   --ws-prog-w: 140px;                  /* thanh tiến độ của một dự án trong hộp Dự án */
   /* Sơ đồ System design (js/design.js đọc các token này để xếp nút) và cột trái của hộp chọn. */
-  --sd-node-max: 220px; --sd-gap-x: 40px; --sd-gap-y: 36px; --sd-pad: 12px; --sd-head: 30px; --sd-line: 20px;
-  --sd-nav-w: 250px; --sd-dash: 5 4;
+  --sd-node-max: 220px; --sd-gap-x: 64px; --sd-gap-y: 36px; --sd-pad: 12px; --sd-head: 30px; --sd-line: 20px;
+  --sd-nav-w: 250px; --sd-dash: 5 4; --sd-badge-h: 20px; --sd-faint: .55;
   --sa-b: env(safe-area-inset-bottom, 0px);
 
   /* Cỡ điều khiển thật: máy tính dùng cao thường; cảm ứng và điện thoại ≥ --h-touch. */
@@ -924,6 +924,21 @@ span.chip::after { content: none; }
 .sd-node:focus { outline: none; }
 .sd-node:focus-visible .sd-box { stroke: var(--ring); stroke-width: var(--ring-w); stroke-dasharray: none; }
 @media (hover: hover) { .sd-node[data-stage]:hover .sd-box { stroke: var(--ink-2); } }
+/* Bàn giao trên đường nối: nhãn viên thuốc (đã ghi) hay dấu + (trống, hiện khi rê chuột; cảm ứng: luôn hiện mờ). */
+.sd-hand { cursor: pointer; }
+.sd-hand-box { fill: var(--surface); stroke: var(--accent); stroke-width: var(--mark-w); }
+.sd-hand-txt { font: 600 var(--fs-xs)/1 var(--sans); fill: var(--green); }
+.sd-hand-plus { fill: none; stroke: var(--green); stroke-width: var(--mark-w); stroke-linecap: round; }
+.sd-hand:focus { outline: none; }
+.sd-hand:focus-visible .sd-hand-box { stroke: var(--ring); stroke-width: var(--ring-w); }
+.sd-hand.is-empty { opacity: 0; transition: opacity var(--dur) var(--ease); }
+.sd-hand.is-empty .sd-hand-box { stroke: var(--accent-line); }
+@media (hover: hover) {
+  .sd-fig:hover .sd-hand.is-empty { opacity: var(--sd-faint); }
+  .sd-hand.is-empty:hover { opacity: 1; }
+  .sd-hand:hover .sd-hand-box { fill: var(--accent-soft); }
+}
+@media (hover: none) { .sd-hand.is-empty { opacity: var(--sd-faint); } }
 .sd-legend { display: flex; flex-wrap: wrap; gap: var(--s1) var(--s4); list-style: none; font: 500 var(--fs-xs)/var(--lh-tight) var(--mono); color: var(--ink-3); }
 .sd-legend li { display: inline-flex; align-items: center; gap: var(--s2); }
 .sd-legend li::before { content: ''; width: var(--s3); height: var(--s3); border-radius: var(--r-xs); background: var(--ink-4); }
@@ -1020,6 +1035,65 @@ span.chip::after { content: none; }
 .sd-pill input:checked + span { color: var(--on-accent); background: var(--accent); border-color: var(--accent); font-weight: 600; }
 .sd-pill input:focus-visible + span { outline: var(--ring-w) solid var(--ring); outline-offset: var(--mark-w); }
 .sd-pos { font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-3); }
+/* Trang Handoffs: mỗi đường nối một khối gập. */
+.sd-edge-item {
+  display: flex; flex-direction: column; gap: var(--s3); padding: var(--s3) var(--s4) var(--s3) var(--s3);
+  background: var(--surface); border: var(--line-w) solid var(--line); border-radius: var(--r); box-shadow: var(--shadow-1);
+}
+.sd-edge-item.is-set { border-color: var(--accent-line); }
+.sd-edge-item[open] { padding-bottom: var(--s4); }
+.sd-edge-item > summary { display: flex; align-items: flex-start; gap: var(--s2); min-height: var(--ctl-sm); cursor: pointer; list-style: none; }
+.sd-edge-item > summary::-webkit-details-marker { display: none; }
+.sd-edge-item > summary svg.i { flex: none; width: var(--s4); height: var(--s4); margin-top: var(--s1); transform: rotate(-90deg); transition: transform var(--dur) var(--ease); }
+.sd-edge-item[open] > summary svg.i { transform: none; }
+.sd-edge-name { min-width: 0; display: flex; flex-direction: column; gap: var(--mark-w); }
+.sd-edge-name b { font: 600 var(--fs-md)/var(--lh-tight) var(--display); }
+.sd-edge-name small { font-size: var(--fs-sm); color: var(--ink-3); overflow-wrap: anywhere; }
+.sd-edge-item > :not(summary) { margin-left: calc(var(--s4) + var(--s2)); }
+/* Hộp "Update plan" (#dlg-sdp): nhóm New / Changed / No longer in the design, mỗi mục một dòng kèm lựa chọn. */
+.sdp-groups { display: flex; flex-direction: column; gap: var(--s5); }
+.sdp-group { display: flex; flex-direction: column; gap: var(--s2); }
+.sdp-list { display: flex; flex-direction: column; gap: var(--s2); }
+.sdp-item {
+  display: flex; flex-direction: column; gap: var(--s2); padding: var(--s3);
+  background: var(--surface); border: var(--line-w) solid var(--line); border-radius: var(--r-sm);
+}
+.sdp-check { display: flex; align-items: flex-start; gap: var(--s3); cursor: pointer; }
+.sdp-check input { flex: none; width: var(--icon); height: var(--icon); margin-top: var(--mark-w); accent-color: var(--green); }
+.sdp-txt { min-width: 0; display: flex; flex-direction: column; gap: var(--s1); font-size: var(--fs-sm); line-height: var(--lh); }
+.sdp-txt b { font-weight: 600; color: var(--ink); overflow-wrap: anywhere; }
+.sdp-txt small { color: var(--ink-3); overflow-wrap: anywhere; }
+.sdp-txt small.sd-warn { color: var(--amber-fg); }
+/* Cảnh báo phối hợp (danh mục `checks`): trên trang dưới sơ đồ, trong hộp ở khâu liên quan và ở trang Checks. */
+.sd-warns { display: flex; flex-direction: column; gap: var(--s2); list-style: none; }
+.sd-warnbox {
+  display: flex; flex-direction: column; gap: var(--s1); padding: var(--s3); font-size: var(--fs-sm); line-height: var(--lh);
+  color: var(--ink); background: var(--amber-soft); border: var(--line-w) solid var(--amber-line); border-radius: var(--r-sm);
+}
+li.sd-warnbox { display: block; }
+.sd-warnbox b { font-weight: 600; color: var(--amber-fg); }
+.sd-warnbox .sd-link { color: var(--amber-fg); }
+.sd-warn-go { display: flex; flex-wrap: wrap; gap: var(--s2); margin-top: var(--s1); }
+.sd-nav-btn.has-warn .sd-dot { border-color: var(--amber); box-shadow: 0 0 0 var(--mark-w) var(--amber-soft); }
+.sd-deliv { font: 500 var(--fs-xs)/var(--lh-tight) var(--mono); letter-spacing: var(--track); text-transform: uppercase; color: var(--green); }
+/* Lối bắt đầu: thẻ radio, rồi luồng tối thiểu, mốc nghiệm thu, nút Apply path. */
+.sd-paths { display: grid; grid-template-columns: repeat(auto-fill, minmax(var(--tpl-min), 1fr)); gap: var(--s3); border: 0; padding: 0; }
+.sd-path-card {
+  position: relative; display: flex; align-items: flex-start; gap: var(--s3); padding: var(--s3); cursor: pointer;
+  background: var(--surface); border: var(--line-w) solid var(--line); border-radius: var(--r); box-shadow: var(--shadow-1);
+}
+.sd-path-card input { flex: none; width: var(--icon); height: var(--icon); margin-top: var(--mark-w); accent-color: var(--green); }
+.sd-path-card:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); }
+.sd-path-txt { min-width: 0; display: flex; flex-direction: column; gap: var(--s1); }
+.sd-path-txt b { font: 600 var(--fs-md)/var(--lh-tight) var(--display); }
+.sd-path-txt small { font-size: var(--fs-sm); line-height: var(--lh); color: var(--ink-2); }
+.sd-path-det { display: flex; flex-direction: column; gap: var(--s3); }
+.sd-h4 { margin: 0; font: 600 var(--fs-lg)/var(--lh-tight) var(--display); }
+.sd-flowlist, .sd-accept { display: flex; flex-direction: column; gap: var(--s1); padding-left: var(--s5); font-size: var(--fs-md); line-height: var(--lh); }
+.sd-flowlist { list-style: decimal; }
+.sd-accept { list-style: disc; }
+.sd-apply { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2) var(--s3); }
+.sd-applied { padding: var(--s3); font-size: var(--fs-sm); color: var(--ink); background: var(--accent-soft); border-radius: var(--r-sm); }
 @media (max-width: 640px) {
   .sd { grid-template-columns: minmax(0, 1fr); padding-top: var(--s5); }
   .sd-acts { flex-direction: row; flex-wrap: wrap; }

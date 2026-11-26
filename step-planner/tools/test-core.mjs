@@ -6,8 +6,9 @@ import {
   fromTemplate, toMarkdown, fromMarkdown, parseImport, toJSON, toBackup, shape, progress, nextActionIds, projectNextIds, slotsOf, subPlace, placeSub, takeSub, shiftTarget, liveLabels, redoCount, canReopen,
   nextStatus, setStatus, splitInline, mergeEdit, pick, EDIT_FIELDS, nextWaitingOn, inGroup, needsEvidence, normWorkspace, normSub, normLog, freshCopy, counts, slug, fold, parseDate, uniqueName, normDoc, safeUrl,
 } from '../js/core.js';
+import * as CORE from '../js/core.js';
 import { parseMd, inline, srcTokens } from '../js/md.js';
-import { normDesign, rankOptions, snake, planTasks, diagramNodes, decidedCount, catalogErrors, readStageLine } from '../js/design-core.js';
+import { normDesign, rankOptions, snake, planTasks, diagramNodes, decidedCount, catalogErrors, readStageLine, applyPath, effProfile, warnings, flowEdges, planDiff, applyPlan, PLAN_STEP } from '../js/design-core.js';
 
 let fails = 0;
 const check = (name, ok, detail = '') => {
@@ -461,10 +462,10 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
 {
   const cat = JSON.parse(readFileSync(fileURLToPath(new URL('../data/system-design.json', import.meta.url)), 'utf8'));
   check('thiết kế: danh mục đúng khuôn', !catalogErrors(cat).length, catalogErrors(cat).join(' | '));
-  check('thiết kế: chuẩn hoá bỏ id lạ, khâu trống; "không cần" bỏ lựa chọn', eq(normDesign({
+  check('thiết kế: chuẩn hoá bỏ id lạ, khâu trống; "không cần" giữ lựa chọn ẩn', eq(normDesign({
     profile: { size: 'small', Bad: 'x', budget: 'Free!' },
     stages: { serve: { pick: ['fastapi', 'fastapi', 'X Y', 3] }, host: { pick: [] }, ingest: { skip: true, pick: ['cron'], own: 'z' }, 'a b': { pick: ['q'] } },
-  }), { profile: { size: 'small' }, stages: { serve: { pick: ['fastapi'], skip: false, own: '', note: '' }, ingest: { pick: [], skip: true, own: '', note: '' } } }));
+  }), { path: '', profile: { size: 'small' }, stages: { serve: { pick: ['fastapi'], skip: false, own: '', note: '' }, ingest: { pick: ['cron'], skip: true, own: 'z', note: '' } }, edges: {} }));
   check('thiết kế: không còn gì thì null', normDesign({ profile: {}, stages: { a: { pick: [] } } }) === null && normDesign('x') === null);
   const s = { options: [{ id: 'a', level: 3, fit: { size: ['large'] } }, { id: 'b', level: 2, fit: { size: ['small'], budget: ['free'] } }, { id: 'c', level: 1, fit: {} }] };
   const r = rankOptions(s, { size: 'small', budget: 'free' });
@@ -480,19 +481,126 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   check('thiết kế: đếm khâu đã quyết', eq(decidedCount(cat, d), { done: 2, total: cat.stages.length }));
   const t = planTasks(cat, d);
   check('thiết kế: việc cho bảng — tên khâu: phương án, Done when, link chính thức', t.length === 1 && t[0].title === `${st0.title}: ${o0.name} + Tự viết`
-    && t[0].doneWhen === o0.task && t[0].docs.length === o0.links.length && t[0].docs.every((x) => x.url.startsWith('https://')));
+    && t[0].doneWhen === `${o0.task} ${st0.task}` && t[0].docs.length === o0.links.length && t[0].docs.every((x) => x.url.startsWith('https://')));
+  const hid = normDesign({ stages: { [st0.id]: { pick: [o0.id], own: 'X', skip: true } } });
+  check('thiết kế: khâu "không cần" — sơ đồ, việc, tên bỏ qua lựa chọn ẩn; tắt "không cần" là chúng về',
+    !diagramNodes(cat, hid).flow.some((x) => x.id === st0.id) && !planTasks(cat, hid).length
+    && planTasks(cat, normDesign({ stages: { [st0.id]: { ...hid.stages[st0.id], skip: false } } }))[0].title === `${st0.title}: ${o0.name} + X`);
+  const ownOnly = planTasks(cat, normDesign({ stages: { [st0.id]: { own: 'Công cụ riêng' } } }));
+  check('thiết kế: công cụ tự ghi — Done when là việc chung của khâu', ownOnly.length === 1 && ownOnly[0].doneWhen === st0.task && !!st0.task);
+  const hidWs = normWorkspace({ name: 'H', steps: [], design: hid });
+  check('thiết kế: lựa chọn ẩn của khâu "không cần" — JSON giữ, Markdown chỉ ghi skip',
+    eq(parseImport(toJSON(hidWs)).workspaces[0].design, hid) && eq(fromMarkdown(toMarkdown(hidWs)).workspace.design.stages[st0.id], { pick: [], skip: true, own: '', note: '' }));
   check('thiết kế: đọc dòng khâu', eq(readStageLine('Hosting: Render (free) [host: render, vps-docker]'), { id: 'host', pick: ['render', 'vps-docker'], skip: false })
     && readStageLine('Ingest: not needed [ingest: skip]').skip && readStageLine('không có ngoặc') === null);
   const ws = normWorkspace({ name: 'P', steps: [{ title: 'A', subs: [{ title: 'x' }] }], design: { profile: { size: 'small', latency: 'online' },
     stages: { serve: { pick: ['fastapi', 'in-app'], own: 'Vapor', note: 'Own: dòng mở bằng nhãn\n\n# không phải tiêu đề\n- không phải việc' }, ingest: { skip: true, note: 'dữ liệu cố định' } } } });
-  const labels = (id, st) => ({ stage: id.toUpperCase(), names: [...st.pick, st.own].filter(Boolean) });
-  check('thiết kế: Markdown đi rồi về giữ nguyên (có và không có nhãn)', eq(shape(ws), roundTrip(ws)) && eq(shape(ws), shape(fromMarkdown(toMarkdown(ws, labels)).workspace)),
+  check('thiết kế: Markdown đi rồi về giữ nguyên (có và không có nhãn)', eq(shape(ws), roundTrip(ws)) && eq(shape(ws), shape(fromMarkdown(toMarkdown(ws, cat)).workspace)),
     firstDiff(shape(ws), roundTrip(ws)));
   check('thiết kế: JSON đi rồi về giữ nguyên', eq(parseImport(toJSON(ws)).workspaces[0].design, ws.design));
+  /* Lối bắt đầu: gợi ý ưu tiên phương án của lối, áp lối chỉ điền khâu chưa quyết, không đè khâu đã quyết. */
+  const demo = cat.paths.find((p) => p.id === 'demo');
+  const app = cat.stages.find((x) => x.id === 'app');
+  check('thiết kế: lối — chưa trả lời hồ sơ vẫn có Recommended, phương án lối gợi ý đứng đầu',
+    rankOptions(app, effProfile(cat, { path: 'demo', profile: {}, stages: {} }), demo)[0].top
+    && demo.suggest.app.includes(rankOptions(app, effProfile(cat, { path: 'demo', profile: {}, stages: {} }), demo)[0].opt.id));
+  const mine = { path: '', profile: { users: 'public' }, stages: { app: { pick: ['web-app'], skip: false, own: '', note: '' }, monitor: { pick: [], skip: false, own: '', note: 'giữ' } } };
+  const ap = applyPath(cat, mine, 'report');
+  check('thiết kế: áp lối — khâu lối bỏ thành Not needed, khâu cần có gợi ý được chọn, khâu đã quyết giữ nguyên, ghi chú giữ',
+    ap.next.path === 'report' && ap.next.stages.app.pick[0] === 'web-app' && ap.next.stages.serve.skip && ap.next.stages.monitor.skip
+    && ap.next.stages.monitor.note === 'giữ' && ap.next.stages.process.pick.length === 1 && !ap.filled.includes('app') && !ap.next.stages.ingest
+    && ap.skipped.includes('serve') && mine.path === '');
+  const pws = normWorkspace({ name: 'P', steps: [], design: ap.next });
+  const pmd = toMarkdown(pws, cat);
+  check('thiết kế: Markdown ghi lối (tên, luồng, mốc nghiệm thu) và nhập lại chỉ đọc id', /^Path: Notebook & report \[path: report\]/m.test(pmd)
+    && /^ {2}Accept: /m.test(pmd) && eq(shape(pws), shape(fromMarkdown(pmd).workspace)) && !fromMarkdown(pmd).warnings.length);
+  /* Luật phối hợp: báo khi đủ điều kiện; khâu trong `unless` chưa quyết thì chưa báo; `own` ở `unless` tắt cảnh báo. */
+  const W = (stages, profile = {}, path = '') => warnings(cat, normDesign({ path, profile, stages })).map((x) => x.id);
+  const P = (...ids) => ({ pick: ids });
+  check('thiết kế: luật — API trên GitHub Pages báo, có host tự ghi thì thôi',
+    W({ serve: P('fastapi'), host: P('github-pages') }).includes('api-on-static-host')
+    && !W({ serve: P('fastapi'), host: { pick: ['github-pages'], own: 'Render cho API' } }).includes('api-on-static-host'));
+  check('thiết kế: luật — dữ liệu theo lịch: Ingestion chưa quyết thì chưa báo, Not needed thì báo, cron thì thôi',
+    !W({}, { fresh: 'batch' }).includes('schedule-without-scheduler') && W({ ingest: { skip: true } }, { fresh: 'batch' }).includes('schedule-without-scheduler')
+    && !W({ ingest: P('cron') }, { fresh: 'batch' }).includes('schedule-without-scheduler'));
+  check('thiết kế: luật — câu hồ sơ lối giả định cũng tính', W({ host: P('render') }, {}, 'demo').includes('free-host-sleeps'));
+  /* Mọi luật trong danh mục bắn được: dựng thiết kế thoả `if`, khâu trong `unless` quyết bằng thứ không khớp. */
+  const stageIds = new Set(cat.stages.map((x) => x.id));
+  const dead = cat.checks.filter((c) => {
+    const stages = {}, profile = {};
+    let path = '';
+    for (const [k, v] of Object.entries(c.if)) {
+      if (k === 'path') path = v[0];
+      else if (!stageIds.has(k)) profile[k] = v[0];
+      else stages[k] = v[0] === 'skip' ? { skip: true } : v[0] === 'own' ? { own: 'x' } : P(v[0]);
+    }
+    for (const [k, v] of Object.entries(c.unless || {})) {
+      if (!stageIds.has(k) || stages[k]) continue;
+      const other = cat.stages.find((x) => x.id === k).options.find((o) => !v.includes(o.id));
+      stages[k] = other ? P(other.id) : { skip: true };
+    }
+    return !W(stages, profile, path).includes(c.id);
+  });
+  check('thiết kế: luật — mọi luật trong danh mục bắn được', !dead.length, dead.map((c) => c.id).join());
+  /* Bàn giao trên đường nối: chuẩn hoá, chỉ đường giữa hai khâu đã quyết liền nhau, việc tích hợp, Markdown đi rồi về. */
+  check('thiết kế: bàn giao — bỏ khoá sai, via lạ, mục trống; giữ cả khi khâu chưa quyết', eq(normDesign({ edges: {
+    'process>store': { via: 'file', what: ' matches.parquet ', promise: 'a\n\nb', check: 'x' }, 'a b>c': { via: 'file' }, 'raw>process': { via: 'fax' } } }).edges,
+  { 'process>store': { via: 'file', what: 'matches.parquet', where: '', promise: 'a\n\nb', check: 'x' } }));
+  const ed = normDesign({ stages: { raw: P('project-folder'), process: P('duckdb'), store: P('parquet-duckdb'), serve: P('fastapi') },
+    edges: { 'process>store': { via: 'file', what: 'matches.parquet, một dòng mỗi trận, khoá match_id', where: 'data/clean/', check: 'Backend đọc file mẫu, lọc một mùa, trả đúng số trận',
+      promise: 'Cột bắt buộc: match_id, season\n\n# home_win = 0 gồm cả hoà\n- thứ tự theo seq' }, 'store>train': { via: 'sql' } } });
+  check('thiết kế: đường nối chỉ giữa hai khâu đã quyết liền nhau', flowEdges(cat, ed).map((e) => e.key).join() === 'raw>process,process>store');
+  const et = planTasks(cat, ed).find((x) => x.title.startsWith('Handoff:'));
+  check('thiết kế: mỗi bàn giao đã ghi một việc tích hợp — Done when là phép kiểm, ghi chú là hợp đồng',
+    planTasks(cat, ed).filter((x) => x.title.startsWith('Handoff:')).length === 1 && et.title === 'Handoff: Processing & cleaning → Analytical store & query'
+    && et.doneWhen === ed.edges['process>store'].check && /^Via: File\nWhat: matches/.test(et.notes));
+  const ews = normWorkspace({ name: 'E', steps: [], design: { ...ed, profile: { users: 'public' }, stages: { ...ed.stages, monitor: { skip: true } } } });
+  const emd = toMarkdown(ews, cat);
+  const eback = fromMarkdown(emd);
+  check('thiết kế: Markdown ghi Handoffs (cả đường chưa hiện) và Warnings; nhập lại giữ nguyên, không cảnh báo',
+    /^Handoffs:$/m.test(emd) && emd.includes('[handoff: process > store]') && emd.includes('[handoff: store > train]') && /^Warnings:$/m.test(emd)
+    && eq(shape(ews), shape(eback.workspace)) && !eback.warnings.length, firstDiff(shape(ews), shape(eback.workspace)) + eback.warnings.join());
+  check('thiết kế: Markdown không danh mục vẫn đi rồi về', eq(shape(ews), roundTrip(ews)));
+  /* Giữ kế hoạch theo thiết kế: pandas → DuckDB không để lại hai việc; Done về New khi cập nhật; huỷ có lý do; việc cũ chưa có dấu
+   * khớp theo tên; một bản so áp xong thì lần so sau là "same". */
+  const pw = normWorkspace({ name: 'S', steps: [{ title: 'A', subs: [] }, { title: PLAN_STEP.title, subs: [] }], design: { stages: { process: P('pandas'), raw: P('project-folder') } } });
+  const build = pw.steps[1];
+  const kinds = (items) => items.map((x) => `${x.kind}:${(x.task?.src || x.sub?.title)}`).join();
+  let diff = planDiff(cat, pw);
+  applyPlan(diff, diff.map(() => 'add'), build, CORE);
+  check('kế hoạch: lần đầu thêm mỗi khâu một việc có dấu sd; so lại là same', build.subs.length === 2 && build.subs.every((x) => /^stage:[a-z-]+@/.test(x.sd))
+    && planDiff(cat, pw).every((x) => x.kind === 'same'));
+  check('kế hoạch: sd đi qua JSON', eq(parseImport(toJSON(pw)).workspaces[0].steps[1].subs.map((x) => x.sd), build.subs.map((x) => x.sd)));
+  const procSub = build.subs.find((x) => x.title.startsWith('Processing'));
+  setStatus(procSub, 'done');
+  procSub.notes += '\nghi chú của tôi';
+  procSub.docs.push(normDoc({ kind: 'link', title: 'Của tôi', url: 'https://example.org/x' }));
+  pw.design = normDesign({ stages: { process: P('duckdb'), raw: P('project-folder') } });
+  diff = planDiff(cat, pw);
+  check('kế hoạch: đổi pandas → DuckDB là changed, khâu khác same', kinds(diff) === 'same:stage:raw,changed:stage:process', kinds(diff));
+  const rec = applyPlan(diff, diff.map((x) => (x.kind === 'changed' ? 'update' : '')), build, CORE);
+  check('kế hoạch: Update — một việc, tên mới, Done về New, giữ ghi chú và link của người dùng, thêm link mới',
+    build.subs.length === 2 && procSub.title === 'Processing & cleaning: DuckDB' && procSub.status === 'todo' && /ghi chú của tôi/.test(procSub.notes)
+    && procSub.docs.some((d) => d.url === 'https://example.org/x') && procSub.docs.some((d) => /duckdb/.test(d.url)) && rec.counts.reset === 1
+    && rec.before.get(procSub.id).status === 'done' && planDiff(cat, pw).every((x) => x.kind === 'same'));
+  pw.design = normDesign({ stages: { process: P('polars'), raw: { pick: ['project-folder'], skip: true } } });
+  diff = planDiff(cat, pw);
+  applyPlan(diff, diff.map((x) => (x.kind === 'changed' ? 'replace' : x.kind === 'removed' ? 'cancel' : '')), build, CORE);
+  const rawSub = build.subs.find((x) => x.title.startsWith('Raw'));
+  check('kế hoạch: Keep old and add new — cũ huỷ có lý do, mới thêm; khâu Not needed — huỷ, lý do nói vì sao',
+    procSub.status === 'cancel' && /^Replaced in system design: Processing & cleaning: Polars/.test(procSub.reason) && !procSub.sd
+    && build.subs.some((x) => x.title === 'Processing & cleaning: Polars' && x.sd) && rawSub.status === 'cancel' && /Raw storage is Not needed/.test(rawSub.reason)
+    && planDiff(cat, pw).every((x) => x.kind === 'same'));
+  const old = normWorkspace({ name: 'O', steps: [{ title: 'System build', subs: [{ title: 'Processing & cleaning: pandas' }, { title: 'Processing & cleaning: DuckDB' }, { title: 'Việc riêng' }] }],
+    design: { stages: { process: P('duckdb') } } });
+  diff = planDiff(cat, old);
+  check('kế hoạch: việc cũ chưa có dấu — khớp theo tên, việc thừa cùng khâu là removed (thay bởi việc mới), việc riêng không đụng',
+    diff.length === 2 && diff[0].kind === 'changed' && diff[0].sub.title === 'Processing & cleaning: DuckDB' && !diff[0].tagged
+    && diff[1].kind === 'removed' && diff[1].sub.title === 'Processing & cleaning: pandas' && /replaced by/.test(diff[1].why), kinds(diff));
   const md = '# P\n\n## System design\n\nProfile: size small · budget free\n\n- dòng lạ\n- Serving: FastAPI [serve: fastapi]\n';
   const back = fromMarkdown(md);
   check('thiết kế: Markdown viết tay — dòng không có [khâu: …] thì cảnh báo, không thành bước', back.workspace.steps.length === 0
-    && eq(back.workspace.design, { profile: { size: 'small', budget: 'free' }, stages: { serve: { pick: ['fastapi'], skip: false, own: '', note: '' } } }) && back.warnings.length === 1);
+    && eq(back.workspace.design, { path: '', profile: { size: 'small', budget: 'free' }, stages: { serve: { pick: ['fastapi'], skip: false, own: '', note: '' } }, edges: {} }) && back.warnings.length === 1);
 }
 
 /* Quyết định gắn với bước trùng tên: Markdown ghi `Step: N. tên`, nhập lại đúng bước thứ N; file cũ `Step: tên` vẫn đọc. */

@@ -1248,7 +1248,7 @@ function flash(kind, id, swapId) {
 
 function duplicateSub(/** @type {any} */ step, /** @type {any} */ sub) {
   const c = C.normSub({ ...sub, id: '', title: sub.title + ' (copy)', docs: sub.docs.map((/** @type {any} */ d) => ({ ...d, id: '' })),
-    outs: sub.outs.map((/** @type {any} */ o) => ({ ...o, id: '' })) }); // bản sao giữ đầu vào; đầu ra mang id mới, nơi dùng vẫn trỏ bản gốc
+    outs: sub.outs.map((/** @type {any} */ o) => ({ ...o, id: '' })), sd: '' }); // bản sao giữ đầu vào; đầu ra mang id mới, nơi dùng vẫn trỏ bản gốc; không mang dấu việc sinh từ System design
   /* Bản sao đứng ngay sau bản gốc: trong cùng ô song song nếu bản gốc ở ô song song, không thì một ô mới. */
   const p = C.subPlace(cur(), sub.id);
   if (!p) return;
