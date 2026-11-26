@@ -30,9 +30,9 @@ export function tags(x) {
     x.outs.length > 0 && tag('hand-out', 'out', `Out ${x.outs.length}`, `${C.plural(x.outs.length, 'output')}: path, contract, who uses it`),
   ];
 }
-/** Câu của một đầu vào lỗi. @param {C.InWhy} w */
-const inLine = (w) => (w.kind === 'missing' ? 'an input whose output was deleted'
-  : `${quote(w.name)} on hold: ${quote(w.from)} now comes after this`);
+/** Câu của một đầu vào lỗi; của bước con (chấm đầu bước) thì mở bằng tên bước con. @param {C.InWhy} w */
+const inLine = (w) => (w.at ? `${quote(w.at)}: ` : '') + (w.kind === 'missing' ? 'an input whose output was deleted'
+  : `${quote(w.name)} on hold: ${quote(w.from)} now comes after ${w.at ? 'it' : 'this'}`);
 /** Câu của một đầu ra lỗi: không ai dùng, hay có nơi dùng treo (chỉ những nơi ấy, hay thêm nơi dùng khác còn nối). @param {C.OutWhy} w */
 const outLine = (w) => (w.kind === 'unused' ? `${quote(w.name)} is not used by any later step`
   : `${quote(w.name)} is ${w.live ? '' : 'only '}used by ${w.to.map(quote).join(', ')}, which now ${w.to.length > 1 ? 'come' : 'comes'} before it (on hold)`);

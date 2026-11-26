@@ -104,7 +104,8 @@
 - Bước không chọn được đầu ra của chính nó và các bước con của nó. Inputs / Outputs lưu cùng Save của hộp sửa.
 - Thẻ bước con không liệt kê đầu vào, đầu ra; xem và sửa trong hộp sửa. Bước có chip "In n" (mọi đầu vào, kể cả treo, mất nguồn), "Out n".
 - Thẻ và đầu bước hiện trạng thái đầu vào, đầu ra (`ioStatus`, PLAN-025): ổn, lỗi, không có; không có cả hai thì không hiện.
-  Đầu vào lỗi: treo hoặc trỏ tới đầu ra không còn; bước chỉ xét đầu vào của chính nó. Đầu ra lỗi: không có nơi nhận đang nối
+  Đầu vào lỗi: treo hoặc trỏ tới đầu ra không còn. Bước gộp đầu vào của bước con: có đầu vào khi nó hay một bước con nhận từ
+  ngoài bước; lỗi khi một đầu vào nào lỗi, kể cả nhận trong bước. Đầu ra lỗi: không có nơi nhận đang nối
   (chỉ nơi nhận treo cũng tính) hoặc có một nơi nhận treo. Bước con lỗi khi một đầu ra lỗi; bước gộp đầu ra của bước con, lỗi khi
   không đầu ra nào có nơi nhận đang nối hoặc một đầu ra có nơi nhận treo.
 - Hàng j nhận từ hàng trước nó (`handoffs().rows`): mũi tên trên hàng j. Ô k + 1 nhận từ ô trước nó cùng hàng (`gaps`): một ô

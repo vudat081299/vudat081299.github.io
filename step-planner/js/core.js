@@ -384,18 +384,21 @@ export function handoffs(ws) {
 }
 
 /**
- * @typedef {{kind:'held'|'missing', id:string, name:string, from:string}} InWhy đầu vào lỗi: treo (nguồn giờ đứng sau), hay trỏ
- * tới đầu ra không còn (name, from rỗng)
+ * @typedef {{kind:'held'|'missing', id:string, name:string, from:string, at:string}} InWhy đầu vào lỗi: treo (nguồn giờ đứng sau),
+ * hay trỏ tới đầu ra không còn (name, from rỗng); at: tên bước con giữ đầu vào ấy khi xét cho bước, rỗng là của chính chủ
  * @typedef {{kind:'unused'|'held', id:string, name:string, to:string[], live:number}} OutWhy đầu ra lỗi: không ai dùng, hay có
  * nơi dùng đang treo (to: tên các nơi ấy; live: số nơi dùng còn nối, 0 = chỉ có nơi dùng treo)
  * @typedef {{in:'ok'|'bad'|'none', out:'ok'|'bad'|'none', inWhy:InWhy[], outWhy:OutWhy[]}} IoStatus
  */
 /**
- * Trạng thái đầu vào / đầu ra của mỗi bước, bước con (id → IoStatus). Đầu vào: 'bad' nếu có một đầu vào treo hay trỏ tới đầu ra
- * không còn; không có đầu vào: 'none'. Bước chỉ xét đầu vào của chính nó. Đầu ra của bước con: 'bad' nếu một đầu ra không có
- * nơi nhận đang nối (không ai dùng, hay chỉ nơi dùng treo) hoặc có nơi dùng treo. Đầu ra của bước gộp đầu ra của nó và mọi bước
- * con: 'bad' khi không đầu ra nào có nơi nhận đang nối, hoặc một đầu ra có nơi dùng treo. Không có đầu ra: 'none'. outWhy nêu mọi
- * đầu ra không ai dùng và mọi đầu ra có nơi dùng treo, kể cả khi nó còn nơi dùng khác đang nối.
+ * Trạng thái đầu vào / đầu ra của mỗi bước, bước con (id → IoStatus). Đầu vào của bước con: 'bad' nếu có một đầu vào treo hay trỏ
+ * tới đầu ra không còn; không có đầu vào: 'none'. Đầu vào của bước gộp đầu vào của nó và mọi bước con: 'bad' nếu một đầu vào trong
+ * số ấy lỗi (kể cả đầu vào nhận từ chính bước, từ bước con cùng bước); 'none' nếu không đầu vào nào nhận từ ngoài bước và không cái
+ * nào lỗi; còn lại 'ok'. inWhy của bước ghi tên bước con giữ đầu vào lỗi (at).
+ * Đầu ra của bước con: 'bad' nếu một đầu ra không có nơi nhận đang nối (không ai dùng, hay chỉ nơi dùng treo) hoặc có nơi dùng treo.
+ * Đầu ra của bước gộp đầu ra của nó và mọi bước con: 'bad' khi không đầu ra nào có nơi nhận đang nối, hoặc một đầu ra có nơi dùng
+ * treo. Không có đầu ra: 'none'. outWhy nêu mọi đầu ra không ai dùng và mọi đầu ra có nơi dùng treo, kể cả khi nó còn nơi dùng
+ * khác đang nối.
  * @param {{steps:any[]}} ws @param {ReturnType<typeof handoffs>} [hand] @returns {Map<string, IoStatus>}
  */
 export function ioStatus(ws, hand = handoffs(ws)) {
@@ -414,29 +417,31 @@ export function ioStatus(ws, hand = handoffs(ws)) {
     if (u && !u.held.length) return [];
     return [{ kind: u ? 'held' : 'unused', id: o.id, name: o.name, to: u ? u.held : [], live: u ? u.live : 0 }];
   });
-  /** @param {any} x @returns {InWhy[]} */
-  const inWhy = (x) => (x.ins || []).flatMap((/** @type {string} */ id) => {
+  /** @param {any} x @param {string} [at] @returns {InWhy[]} */
+  const inWhy = (x, at = '') => (x.ins || []).flatMap((/** @type {string} */ id) => {
     const src = idx.get(id);
-    if (!src) return [{ kind: 'missing', id, name: '', from: '' }];
-    return heldKeys.has(heldKey(x.id, id)) ? [{ kind: 'held', id, name: src.out.name, from: holderTitle(src) }] : [];
+    if (!src) return [{ kind: 'missing', id, name: '', from: '', at }];
+    return heldKeys.has(heldKey(x.id, id)) ? [{ kind: 'held', id, name: src.out.name, from: holderTitle(src), at }] : [];
   });
   /** @type {Map<string, IoStatus>} */
   const m = new Map();
-  /** @param {any} x @param {any[]} outs @param {boolean} all bước: đầu ra 'bad' khi không đầu ra nào có nơi nhận đang nối hay
-   * một đầu ra có nơi dùng treo; bước con: khi một đầu ra lỗi */
-  const put = (x, outs, all) => {
-    const iw = inWhy(x), ow = outWhy(outs);
-    const ins = (x.ins || []).length;
+  /** @param {any} x @param {number} ins số đầu vào xét @param {InWhy[]} iw @param {any[]} outs @param {boolean} all bước: đầu ra
+   * 'bad' khi không đầu ra nào có nơi nhận đang nối hay một đầu ra có nơi dùng treo; bước con: khi một đầu ra lỗi */
+  const put = (x, ins, iw, outs, all) => {
+    const ow = outWhy(outs);
     const bad = all ? !outs.some((o) => use.get(o.id)?.live) || ow.some((w) => w.kind === 'held') : ow.length > 0;
     m.set(x.id, {
-      in: !ins ? 'none' : iw.length ? 'bad' : 'ok',
+      in: iw.length ? 'bad' : ins ? 'ok' : 'none',
       out: !outs.length ? 'none' : bad ? 'bad' : 'ok',
       inWhy: iw, outWhy: ow,
     });
   };
   for (const step of ws.steps) {
-    put(step, [...(step.outs || []), ...step.subs.flatMap((/** @type {any} */ s) => s.outs || [])], true);
-    for (const sub of step.subs) put(sub, sub.outs || [], false);
+    /* Bước con nhận từ chính bước hay bước con cùng bước: việc bên trong, không làm bước "có đầu vào"; lỗi thì vẫn báo. */
+    const outside = step.subs.flatMap((/** @type {any} */ s) => s.ins || []).filter((/** @type {string} */ id) => idx.get(id)?.step !== step).length;
+    const iw = [...inWhy(step), ...step.subs.flatMap((/** @type {any} */ s) => inWhy(s, s.title))];
+    put(step, (step.ins || []).length + outside, iw, [...(step.outs || []), ...step.subs.flatMap((/** @type {any} */ s) => s.outs || [])], true);
+    for (const sub of step.subs) put(sub, (sub.ins || []).length, inWhy(sub), sub.outs || [], false);
   }
   return m;
 }

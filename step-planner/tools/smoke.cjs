@@ -2537,18 +2537,20 @@ const check = (name, ok, detail = '') => {
     const labelOf = (sel) => ip.$eval(sel, (el) => ({ a: el.getAttribute('aria-label'), t: el.title, role: el.getAttribute('role') }));
     const io0 = await ioOf();
     const want0 = { gA: 'none/ok', gI: 'ok/none', gN: '-', gB: 'none/bad', gC: 'ok/ok', gD: 'bad/none', gE: 'none/bad', gF: 'ok/none', gG: 'none/bad',
-      g1: 'none/ok', g2: 'ok/ok', g3: 'none/bad', g4: 'none/bad' };
+      g1: 'none/ok', g2: 'bad/ok', g3: 'ok/bad', g4: 'none/bad' };
     const dIn = await labelOf('.card[data-sub="gD"] .io-dot.in');
     const eOut = await labelOf('.card[data-sub="gE"] .io-dot.out');
     const bOut = await labelOf('.card[data-sub="gB"] .io-dot.out');
     const aIn = await labelOf('.card[data-sub="gA"] .io-dot.in');
+    const s2In = await labelOf('.step[data-step="g2"] .step-top .io-dot.in');
     const arrowHidden = await ip.$eval('.card[data-sub="gA"] .io-arrow', (el) => el.getAttribute('aria-hidden') === 'true');
     check('đầu vào / đầu ra: mỗi trạng thái trên thẻ và đầu bước (ổn, lỗi, không có), không có cả hai thì không có chấm', same(io0, want0), JSON.stringify(io0));
     check('đầu vào / đầu ra: chấm có nhãn đọc được, nói vì sao; mũi tên chỉ để trang trí',
       dIn.role === 'img' && dIn.a === dIn.t && /^Input: broken\. "late\.json" on hold: "Late producer" now comes after this$/.test(dIn.a)
       && /^Output: broken\. "late\.json" is only used by "Late input", which now comes before it \(on hold\)$/.test(eOut.a)
-      && bOut.a === 'Output: broken. "unused.md" is not used by any later step' && aIn.a === 'Input: none' && arrowHidden,
-      JSON.stringify({ dIn, eOut, bOut, aIn }));
+      && bOut.a === 'Output: broken. "unused.md" is not used by any later step' && aIn.a === 'Input: none' && arrowHidden
+      && s2In.a === 'Input: broken. "Late input": "late.json" on hold: "Late producer" now comes after it',
+      JSON.stringify({ dIn, eOut, bOut, aIn, s2In }));
     /* Chấm nằm bên trái chip trạng thái, cùng hàng; đầu bước: cùng hàng với số bước. */
     const place = () => ip.evaluate(() => [...document.querySelectorAll('.card[data-sub]')].filter((c) => c.querySelector('.io')).map((c) => {
       const io = c.querySelector('.io').getBoundingClientRect(), chip = c.querySelector('.chip').getBoundingClientRect(), card = c.getBoundingClientRect();
@@ -2577,7 +2579,7 @@ const check = (name, ok, detail = '') => {
     const order1 = (await cur(ip)).steps[0].subs.map((x) => x.id);
     const aOut1 = await labelOf('.card[data-sub="gA"] .io-dot.out');
     check('đầu vào / đầu ra: kéo bên nhận lên trước bên giao — đầu vào của nó lỗi ngay; bên giao còn nơi dùng khác vẫn lỗi, nêu nơi treo',
-      order1[0] === 'gI' && io1.gI === 'bad/none' && io1.gA === 'none/bad' && io1.g1 === 'none/bad'
+      order1[0] === 'gI' && io1.gI === 'bad/none' && io1.gA === 'none/bad' && io1.g1 === 'bad/bad'
       && aOut1.a === 'Output: broken. "raw.csv" is used by "Check raw", which now comes before it (on hold)', JSON.stringify({ order1, io1, aOut1 }));
     await ip.keyboard.press('Control+z');
     await ip.waitForFunction(() => document.querySelector('.card[data-sub="gI"] .io')?.dataset.ioIn === 'ok');
@@ -2587,7 +2589,7 @@ const check = (name, ok, detail = '') => {
     await ip.keyboard.press('Alt+ArrowUp');
     const io2 = await ioOf();
     check('đầu vào / đầu ra: dời bước — đầu vào của bên nhận và đầu ra (nơi dùng duy nhất) của bên giao lỗi ngay; liên kết nối lại thì ổn',
-      io2.gF === 'bad/none' && io2.gC === 'ok/bad' && io2.gD === 'ok/none' && io2.gE === 'none/ok' && io2.g2 === 'ok/bad' && io2.g3 === 'none/ok', JSON.stringify(io2));
+      io2.gF === 'bad/none' && io2.gC === 'ok/bad' && io2.gD === 'ok/none' && io2.gE === 'none/ok' && io2.g2 === 'ok/bad' && io2.g3 === 'bad/ok', JSON.stringify(io2));
     await ip.keyboard.press('Control+z');
     await ip.waitForFunction(() => document.querySelector('#board > .step:nth-child(2)')?.dataset.step === 'g2');
 

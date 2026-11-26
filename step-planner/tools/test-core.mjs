@@ -895,7 +895,7 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   const g2c = freshCopy(g2);
   check('bàn giao: freshCopy — đầu vào mất nguồn lấy id mới, cùng id cũ thì cùng id mới, vẫn không trỏ tới đâu',
     g2c.steps[0].subs[0].ins[0] !== 'lost' && g2c.steps[0].subs[0].ins[0] === g2c.steps[0].subs[1].ins[0] && g2c.steps[0].subs[1].ins.length === 2
-    && [...H.ioStatus(g2c).values()].filter((v) => v.in === 'bad').length === 2);
+    && [...H.ioStatus(g2c).values()].filter((v) => v.in === 'bad').length === 3); // hai bước con và bước gộp chúng
   const named = normWorkspace({ steps: [{ title: 'A', subs: [{ title: 'P', outs: [{ id: 'o', name: '(deleted output)' }] }] }, { title: 'B', subs: [{ title: 'U', ins: ['o'] }] }] });
   const nb = fromMarkdown(toMarkdown(named));
   check('bàn giao: đầu ra thật tên "(deleted output)" vẫn nối (dòng có "←")', eq(shape(nb.workspace), shape(named)) && !nb.warnings.length, nb.warnings.join(' | '));
@@ -932,13 +932,13 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   check('io: bước con có cả đầu vào lẫn đầu ra đều nối → ok / ok', st(a, 'q') === 'ok/ok');
   check('io: chỉ có đầu ra → đầu vào none; chỉ có đầu vào → đầu ra none', st(a, 'p') === 'none/ok' && st(a, 'r') === 'ok/none');
   check('io: không có cả hai → none / none', st(a, 'n') === 'none/none' && !a.get('n').inWhy.length && !a.get('n').outWhy.length);
-  check('io: bước không có đầu vào riêng → đầu vào none, đầu ra gộp bước con', st(a, 's1') === 'none/ok' && st(a, 's2') === 'none/ok');
+  check('io: bước — đầu vào gộp bước con: chỉ nhận trong bước → none; bước con nhận từ bước trước → ok; đầu ra gộp bước con', st(a, 's1') === 'none/ok' && st(a, 's2') === 'ok/ok');
   /* Đầu vào treo, đầu ra chỉ có nơi dùng treo: R (bước 1) dùng đầu ra của W (bước 2). */
   const b = io(normWorkspace({ steps: [
     { id: 't1', title: 'T1', subs: [{ id: 'u', title: 'U', ins: ['ow'] }] },
     { id: 't2', title: 'T2', subs: [{ id: 'w', title: 'W', outs: [{ id: 'ow', name: 'model' }] }] }] }));
   check('io: đầu vào treo → bad, nêu tên đầu ra và bên giao', st(b, 'u') === 'bad/none'
-    && eq(b.get('u').inWhy, [{ kind: 'held', id: 'ow', name: 'model', from: 'W' }]));
+    && eq(b.get('u').inWhy, [{ kind: 'held', id: 'ow', name: 'model', from: 'W', at: '' }]));
   check('io: đầu ra chỉ được dùng bởi liên kết treo → bad, nêu nơi dùng', st(b, 'w') === 'none/bad'
     && eq(b.get('w').outWhy, [{ kind: 'held', id: 'ow', name: 'model', to: ['U'], live: 0 }]));
   check('io: bước — mọi đầu ra của bước con không có nơi nhận đang nối → bad', st(b, 't2') === 'none/bad');
@@ -951,7 +951,7 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   const cs = io(c);
   check('io: đầu ra không ai dùng → bad "unused"', st(cs, 'z') === 'none/bad' && eq(cs.get('z').outWhy, [{ kind: 'unused', id: 'oz', name: 'lonely', to: [], live: 0 }]));
   check('io: nhiều đầu ra, một cái không ai dùng → bad, nêu đúng cái ấy', st(cs, 'x') === 'none/bad' && eq(cs.get('x').outWhy.map((w) => w.name), ['b']));
-  check('io: đầu vào trỏ tới đầu ra không còn → bad "missing"', st(cs, 'y') === 'bad/none' && eq(cs.get('y').inWhy, [{ kind: 'missing', id: 'gone', name: '', from: '' }]));
+  check('io: đầu vào trỏ tới đầu ra không còn → bad "missing"', st(cs, 'y') === 'bad/none' && eq(cs.get('y').inWhy, [{ kind: 'missing', id: 'gone', name: '', from: '', at: '' }]));
   check('io: bước — một đầu ra (của bước con) được dùng → ok, vẫn nêu cái chưa dùng', st(cs, 'v1') === 'none/ok'
     && eq(cs.get('v1').outWhy.map((w) => w.name), ['spec', 'b']));
   check('io: bước — đầu vào riêng của bước trỏ tới đầu ra không còn → bad', st(cs, 'v2') === 'bad/bad' && cs.get('v2').inWhy[0].kind === 'missing');
@@ -972,6 +972,21 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
     && eq(f.get('o').outWhy, [{ kind: 'held', id: 'oo', name: 'table', to: ['G'], live: 1 }]) && st(f, 'g') === 'bad/none' && st(f, 'hh') === 'ok/none');
   check('io: bước — một đầu ra có nơi dùng treo → bad dù đầu ra khác còn nối', st(f, 'h2') === 'none/bad' && eq(f.get('h2').outWhy.map((w) => w.name), ['table'])
     && st(f, 'o2') === 'none/ok');
+  /* Đầu vào của bước gộp bước con: chỉ nhận trong bước → none; bước con nhận từ bước trước → ok; treo giữa hai bước con cùng
+   * bước, mất nguồn ở bước con → bad, ghi tên bước con. */
+  const g = normWorkspace({ steps: [
+    { id: 'j1', title: 'J1', subs: [{ id: 'ja', title: 'A', outs: [{ id: 'oa', name: 'raw' }] }, { id: 'jb', title: 'B', ins: ['oa'], outs: [{ id: 'ob', name: 'clean' }] }] },
+    { id: 'j2', title: 'J2', subs: [{ id: 'jc', title: 'C', ins: ['ob'], outs: [{ id: 'oc', name: 'feat' }] }, { id: 'jc2', title: 'C2', ins: ['oc'] }] },
+    { id: 'j3', title: 'J3', subs: [{ id: 'jd', title: 'D', ins: ['oe'] }, { id: 'je', title: 'E', outs: [{ id: 'oe', name: 'late' }] }] },
+    { id: 'j4', title: 'J4', subs: [{ id: 'jf', title: 'F', ins: ['oa'] }] }] });
+  g.steps[3].subs[0].ins.push('gone');
+  const gs = io(g);
+  check('io: bước — bước con chỉ nhận từ bước con cùng bước → đầu vào none', st(gs, 'j1') === 'none/ok' && st(gs, 'jb') === 'ok/ok' && !gs.get('j1').inWhy.length);
+  check('io: bước — bước con nhận đầu ra của bước trước → đầu vào ok', st(gs, 'j2') === 'ok/ok' && st(gs, 'jc') === 'ok/ok');
+  check('io: bước — treo giữa hai bước con cùng bước → đầu vào bad, ghi bước con', st(gs, 'j3') === 'bad/bad' && st(gs, 'jd') === 'bad/none'
+    && eq(gs.get('j3').inWhy, [{ kind: 'held', id: 'oe', name: 'late', from: 'E', at: 'D' }]) && eq(gs.get('jd').inWhy[0].at, ''));
+  check('io: bước — bước con trỏ tới đầu ra không còn → đầu vào bad, ghi bước con', st(gs, 'j4') === 'bad/none'
+    && eq(gs.get('j4').inWhy, [{ kind: 'missing', id: 'gone', name: '', from: '', at: 'F' }]));
 }
 
 /* ── Ảnh chụp gợi ý của System design (tools/design-snapshot.json) ──
