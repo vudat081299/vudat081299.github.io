@@ -543,9 +543,20 @@ function initHead() {
   $('tree-hint-import').addEventListener('click', function () { $('tree-dir-in').click(); });
 }
 
-/* BÀN PHÍM của cây (WAI-ARIA tree): ↑ ↓ Home End, → mở / vào con, ← gập / lên cha, Space mở, Enter / F2 đổi tên, Delete (cả
+/* BÀN PHÍM của cây (WAI-ARIA tree): ↑ ↓ Home End, → mở / vào con, ← gập / lên cha (tới file nào thì mở file ấy, MDAN-092),
+   Space mở, Enter / F2 đổi tên, Delete (cả
    nhóm chọn), Esc bỏ nhóm,
    Shift+F10 / phím Menu, gõ chữ nhảy tới tên. Phím đã xử lý không lan ra phím tắt của trang (X, J, K, ?). */
+/* Chọn theo focus (MDAN-092): phím đưa hàng hiện tại tới một file thì mở file ấy (thẻ xanh và văn bản đi theo). Giữ phím
+   (lặp) thì chỉ mở file dừng lại sau FOLLOW_MS: đi qua nhiều file không dựng từng file. */
+var FOLLOW_MS = 150, followTimer = 0;
+function follow(id, held) {
+  clearTimeout(followTimer);
+  var n = byId[id];
+  if (!n || n.kind !== 'file' || id === model.open) return;
+  if (held) followTimer = setTimeout(function () { if (cur === id && byId[id]) call('open', id); }, FOLLOW_MS);
+  else call('open', id);
+}
 function treeKey(e) {
   if (editing) return;
   var li = e.target.closest && e.target.closest('.ma-trow');
@@ -553,7 +564,7 @@ function treeKey(e) {
   var id = li.dataset.id, i = at[id], r = rows[i], n = r.node, k = e.key;
   var del = k === 'Delete' || (e.metaKey && k === 'Backspace');
   if ((e.ctrlKey || e.metaKey || e.altKey) && !del) return;
-  var go = function (j) { if (rows[j]) setCur(rows[j].node.id, true); };
+  var go = function (j) { if (rows[j]) { clearPicks(); setCur(rows[j].node.id, true); follow(rows[j].node.id, e.repeat); } };
   if (/^(?:Arrow(?:Up|Down|Left|Right)|Home|End)$/.test(k)) kbd();
   if (k === 'ArrowDown') go(i + 1);
   else if (k === 'ArrowUp') go(i - 1);
@@ -653,7 +664,7 @@ export function initTree() {
   $('tree-new-file').addEventListener('click', function () { call('newFile', targetDir()); });
   $('tree-new-dir').addEventListener('click', function () { call('newDir', targetDir()); });
   initHead();
-  initTreeFind(function () { if (model) renderTree(model, act); }, function () { if (rows.length) { kbd(); setCur(rows[0].node.id, true); } });
+  initTreeFind(function () { if (model) renderTree(model, act); }, function () { if (rows.length) { kbd(); setCur(rows[0].node.id, true); follow(rows[0].node.id, false); } });
   if (window.ResizeObserver) new ResizeObserver(function () { syncTall(); syncCramp(); }).observe($('tree-body'));
   $('tree-dir-in').addEventListener('change', function (e) {
     if (e.target.files && e.target.files.length) call('importDir', e.target.files, null);

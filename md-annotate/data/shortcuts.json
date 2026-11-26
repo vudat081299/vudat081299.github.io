@@ -57,7 +57,7 @@
       "note": "The file list on the left. Keys work when a row has focus.",
       "rows": [
         { "keys": [["Ctrl", "B"], ["⌘", "B"]], "action": "Show or hide the file list (not while typing in a box or while the comment box is open)" },
-        { "keys": [["↑"], ["↓"], ["Home"], ["End"]], "action": "Move between rows" },
+        { "keys": [["↑"], ["↓"], ["Home"], ["End"]], "action": "Move between rows; landing on a file opens it" },
         { "keys": [["→"], ["←"]], "action": "Open or close a folder; go to its first file, or back to the parent folder" },
         { "keys": [["Space"], ["Click"]], "action": "Open a file, or open or close a folder" },
         { "keys": [["Enter"], ["F2"]], "action": "Rename (Enter saves, Esc cancels)" },

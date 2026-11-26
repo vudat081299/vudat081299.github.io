@@ -61,6 +61,7 @@
 - MDAN-089 · File không phải markdown: hai tab Edit / Source · thay cho MDAN-074 · `md-annotate/index.html`, `md-annotate/js/ui/views.js`
 - MDAN-090 · Cây file: Enter đổi tên, Space mở · `md-annotate/js/ui/tree.js`, `md-annotate/data/shortcuts.json`
 - MDAN-091 · Cây file: chọn nhiều bằng ⌘ / Ctrl + bấm · `md-annotate/js/ui/tree.js`, `md-annotate/css/tree.css`, `md-annotate/js/core/tree.js`, `md-annotate/js/core/session.js`, `md-annotate/js/ui/files.js`
+- MDAN-092 · Cây file: phím di chuyển tới file nào thì mở file ấy · `md-annotate/js/ui/tree.js`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Source tô màu cú pháp markdown kiểu VS Code
@@ -510,3 +511,10 @@ mở file, hay mở / gập folder; bấm chuột như cũ.
 Delete, kéo thả, menu ⋯ (Move to…, Delete) trên một hàng trong nhóm làm cho cả nhóm, một toast, một Undo trả lại cả
 nhóm; folder và file trong nó cùng được chọn thì chỉ tính folder. Một mục trong nhóm không chuyển được (trùng tên) thì
 không chuyển gì. Bấm thường hay Esc bỏ nhóm. Màn cảm ứng không có.
+
+## MDAN-092 · Cây file: phím di chuyển tới file nào thì mở file ấy
+26/11/2026 · `md-annotate/js/ui/tree.js`
+
+Trong cây, ↑ ↓ ← → Home End, gõ chữ nhảy tới tên, hay ↓ từ ô lọc vào hàng đầu mà dừng ở một file thì mở file ấy: thẻ
+file đang mở và văn bản bên phải đi theo hàng hiện tại. Dừng ở folder thì không đổi file. Giữ phím lướt qua nhiều file
+thì chỉ mở file dừng lại. Hộp nhận xét đang có chữ thì không rời file (như bấm chuột).

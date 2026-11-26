@@ -2722,7 +2722,7 @@ const cornerClash = (page) => page.evaluate(() => {
     const tl = () => tp.evaluate(() => window.__tree.log.slice(-1)[0] || []);
     check('cây: bấm folder gập thì mở, không có vòng focus', (await tl())[0] === 'toggle' && ring === 'none' && (await tp.$eval(row('archive'), (l) => l.getAttribute('aria-expanded'))) === 'true', ring);
     await tp.keyboard.press('ArrowDown');
-    check('cây: ↓ sang hàng con (old.md)', (await focusName(tp)) === 'old.md', await focusName(tp));
+    check('cây: ↓ sang hàng con (old.md) và mở nó (MDAN-092)', (await focusName(tp)) === 'old.md' && JSON.stringify(await tl()) === JSON.stringify(['open', ids['old.md']]), await focusName(tp));
     const arrowRing = await tp.evaluate(() => [document.documentElement.classList.contains('ma-tabbing'), getComputedStyle(document.activeElement, '::before').outlineStyle]);
     check('cây: bấm hàng rồi ↓ — mũi tên là bàn phím, hàng có vòng focus (MDAN-020)', arrowRing[0] && arrowRing[1] === 'solid', JSON.stringify(arrowRing));
     await tp.keyboard.press('ArrowLeft');
@@ -2880,6 +2880,14 @@ const cornerClash = (page) => page.evaluate(() => {
     const pdr = await tl();
     check('chọn nhiều: kéo hàng trong nhóm chuyển cả nhóm', pdr[0] === 'move' && Array.isArray(pdr[1]) && pdr[1].length === 2 && pdr[2] === ids['level-1'], JSON.stringify(pdr));
     await tp.evaluate((a) => { const m = window.__tree; m.by(a[0]).parent = a[1]; m.by(a[2]).parent = null; m.render(); }, [ids['old.md'], ids.archive, ids['README.md']]); await tp.waitForTimeout(80);
+    await tp.click(row('README.md')); await tp.waitForTimeout(80);
+    /* Mũi tên tới file thì mở file ấy (MDAN-092); giữ phím (lặp) thì chỉ mở file dừng lại. */
+    const opens = () => tp.evaluate(() => window.__tree.log.filter((x) => x[0] === 'open').map((x) => x[1]));
+    await tp.focus(row('note-0.md')); const o0 = (await opens()).length;
+    await tp.keyboard.down('ArrowDown'); await tp.keyboard.down('ArrowDown'); await tp.keyboard.down('ArrowDown'); await tp.keyboard.up('ArrowDown');
+    const oNow = (await opens()).slice(o0); await tp.waitForTimeout(300); const oLate = (await opens()).slice(o0);
+    const selN = await tp.evaluate(() => document.querySelector('#tree-list .ma-trow[aria-selected="true"] .ma-trow__name').textContent);
+    check('cây: giữ ↓ qua nhiều file: lần bấm đầu mở ngay, lặp thì chỉ mở file dừng lại; thẻ xanh ở hàng focus', JSON.stringify(oNow) === JSON.stringify([ids['note-8.md']]) && JSON.stringify(oLate) === JSON.stringify([ids['note-8.md'], ids['note-24.md']]) && selN === 'note-24.md' && (await focusName(tp)) === 'note-24.md', JSON.stringify([oNow, oLate, selN, await focusName(tp)]));
     await tp.click(row('README.md')); await tp.waitForTimeout(80);
 
     // Collapse all, rồi kéo thả bằng chuột (mọi hàng trong khung, không cuộn): lên folder → move; lên hậu duệ → không gọi.
