@@ -1,7 +1,7 @@
 # Khuôn Markdown và JSON của step-planner
 
-Luật chung của project ở [CLAUDE.md](CLAUDE.md). Code: `toMarkdown`, `fromMarkdown`, `parseImport` (`js/core.js`);
-mục System design: `designMd`, `designReader` (`js/design-core.js`). Đổi khuôn thì sửa file này và `tools/test-core.mjs`.
+Luật chung của project ở [CLAUDE.md](CLAUDE.md). Code: `toMarkdown`, `fromMarkdown`, `parseImport` (`js/core/markdown.js`, `js/core/io.js`);
+mục System design: `designMd`, `designReader` (`js/core/design-md.js`). Đổi khuôn thì sửa file này và `tools/test-core.mjs`.
 
 ## Markdown xuất ra
 

@@ -33,6 +33,7 @@
 - PLAN-031 · Sơ đồ System design kéo và thu phóng được; khung nhìn không lưu · `step-planner/js/ui/design.js`, `step-planner/js/ui/diagram-view.js`, `step-planner/js/core/view-math.js`
 - PLAN-032 · System design phủ nguồn đẩy, trang dựng bằng JavaScript, lag của consumer; báo công cụ đã nghỉ hưu và API hỏi theo chu kỳ dùng như luồng · `step-planner/data/system-design.json`
 - PLAN-033 · Mẫu đặt sẵn hồ sơ System design mà nó ngụ ý, áp một lần lúc tạo dự án · `step-planner/data/templates.json`, `step-planner/js/core/model.js`, `step-planner/js/core/design.js`
+- PLAN-034 · Code tách thành logic thuần, giao diện, luật / cấu hình như md-annotate · `step-planner/js/`, `step-planner/css/`
 <!-- index:end -->
 
 ## PLAN-001 · Dự án là các bước có thứ tự, mỗi bước có bước con có thứ tự
@@ -194,3 +195,11 @@ Khâu nguồn có thêm nguồn đẩy qua WebSocket (dùng được cho dữ li
 26/11/2026 · `step-planner/data/templates.json`, `step-planner/js/core/model.js`, `step-planner/js/core/design.js`
 
 Mỗi mẫu (trừ mẫu trống) mang sẵn phần hồ sơ System design mà nội dung của nó thật sự ngụ ý, và lối "What do you deliver?" khi mẫu chỉ rõ thứ bàn giao; câu nào mẫu không nói thì để trống cho người dùng trả lời. Ví dụ: lakehouse mã nguồn mở là dữ liệu lớn, dạng bảng, theo lịch, tự host, miễn phí, vài người dùng, lối pipeline; báo cáo thống kê là dữ liệu nhỏ, dạng bảng, cố định, đọc bằng báo cáo, lối báo cáo. Mẫu chỉ đặt hồ sơ và lối, không chọn sẵn công cụ: gợi ý ở từng khâu và kiến trúc đi từ hồ sơ như mọi dự án. Bộ đặt sẵn chép vào dự án đúng một lần, lúc tạo dự án từ mẫu; sau đó nó là dữ liệu của dự án, người dùng đổi hay bỏ mọi câu được. Dự án đã có, nhân bản, nhập Markdown hay JSON không bị đụng tới; tạo từ mẫu trống vẫn bắt đầu với System design trống. Khi hồ sơ và lối còn đúng như mẫu đặt, System design nói chúng đến từ mẫu nào; người dùng đổi một câu thì thôi nói. Mỗi bộ đặt sẵn phải cho gợi ý kiến trúc hợp với mẫu, và "Apply path" trên nó không chọn phương án lệch hồ sơ hay làm luật báo.
+
+## PLAN-034 · Code tách thành logic thuần, giao diện, luật / cấu hình như md-annotate
+26/11/2026 · `step-planner/js/`, `step-planner/css/`
+
+Code của Step Planner theo cùng nguyên tắc với md-annotate (MDAN-070) để dễ bảo trì: logic thuần (dữ liệu vào, dữ liệu ra,
+không chạm trình duyệt) tách khỏi giao diện; luật và cấu hình (mẫu, danh mục System design, token) nằm ở dữ liệu và token;
+mỗi tính năng một module trong lớp của nó; thứ dùng ở hai chỗ trở lên nằm một chỗ chung. Tách lại không đổi hành vi hay
+giao diện của trang.

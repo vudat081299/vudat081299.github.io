@@ -9,22 +9,27 @@
 - Khuôn Markdown và JSON: [FORMAT.md](FORMAT.md). Đổi khuôn thì sửa file ấy cùng commit.
 - Không build. Mở qua HTTP: `python3 -m http.server` ở gốc repo, `http://localhost:8000/step-planner/` (`file://`: trang báo).
 
-## File
+## Code (PLAN-034)
 
 | File | Việc |
 |---|---|
-| `index.html` | markup, hộp thoại, bộ biểu tượng `<symbol id="i-…">`, script theme trước lần vẽ đầu, script báo `file://` |
-| `css/*.css` | `tokens` → `base` → `project` → `board` → `cards` → `drag` → `foot` → `log` → `design` → `dropdown` → `dialogs` → `docs` → `hand` → `md` → `start` → `toast`; thứ tự link là cascade; mỗi khối mở bằng một dòng chú thích |
-| `js/core.js` | logic thuần: chuẩn hoá, gộp khi lưu, ngày, tiến độ, việc tiếp theo, bàn giao (`holders`, `handoffs`, `ioStatus`, `consumersOf`), Markdown và JSON vào / ra; không DOM, chạy được trong Node |
-| `js/md.js` | Markdown của tài liệu văn bản → cây khối (`parseMd`, thuần) → DOM (`renderMd`, chỉ createElement / text node); URL trần trong chữ thường (`linkParts`, thuần, dấu câu cuối ở ngoài); khung Edit: token (`srcTokens`, thuần) → dòng có số (`renderSrc`) |
-| `js/design-core.js` | System design, thuần: `normDesign`, `rankOptions`, `applyPath`, `warnings`, `archAdvice`, `flowEdges`, `diagramNodes`, `planTasks`, `planDiff`, `applyPlan`, `designMd`, `designReader`, `presetDesign`, `isPreset` (core.js chỉ gọi `normDesign`, `presetDesign`, `designMd`, `designReader`) |
-| `js/design.js` | System design, UI: mục trên trang, sơ đồ SVG, hộp `#dlg-sd`, hộp xem trước Update plan; nhận hàm chung qua `initDesign` |
-| `js/view-math.js`, `js/diagram-view.js` | khung nhìn của sơ đồ: toán thuần (thu phóng quanh điểm, kẹp, hai ngón, vừa khung; hằng ở đầu file); DOM (bánh xe, kéo, phím, cụm nút; `attach` sau mỗi lần vẽ) |
-| `js/hand.js` | bàn giao, UI: chip In / Out của bước, hai chấm đầu vào / đầu ra (`ioDots`), mũi tên trên bước nhận và trước ô nhận, hộp `#dlg-hand`, phần Inputs / Outputs của hộp sửa, hộp `#dlg-pick`; nhận hàm chung qua `initHand` |
-| `js/store.js` | `localStorage` (dữ liệu, mẹo `stepPlanner.hintOff`, Compact `stepPlanner.compact`, theme `hub-theme`), `sessionStorage` (dự án của tab); mọi truy cập bọc try/catch |
-| `js/dropdown.js` | danh sách chọn tự dựng: `enhanceSelect` (thay giao diện `<select>`, giữ nó làm nguồn value và `change`), `openList` |
-| `js/drag.js` | kéo thả bằng pointer events (chuột, chạm, bút): bóng, ô "Drop here", FLIP, tự cuộn, Esc; mỗi khung hình một lượt |
-| `js/main.js` | vẽ bảng theo hàng (`renderBoard`: khoá mỗi hàng, chỉ hàng đổi dựng lại), sự kiện, hộp thoại, kéo thả, toast, nhắc sao lưu |
+| `index.html`, `js/main.js` | markup, hộp thoại, bộ biểu tượng `<symbol id="i-…">`, script theme trước lần vẽ đầu, script báo `file://`; gọi `init…` theo thứ tự ghi ở đầu file, rồi nạp mẫu, chọn dự án, vẽ |
+| `css/*.css` | `tokens` → `base` → `project` → `board` → `cards` → `drag` → `foot` → `log` → `design` → `dropdown` → `dialogs` → `docs` → `hand` → `md` → `start` → `toast`; thứ tự link là cascade |
+| `js/core/model.js`, `js/core/board.js`, `js/core/handoffs.js` | trạng thái, ngày, id, chuẩn hoá (`normSub`, `normStep`, `normWorkspace`), gộp khi lưu (`EDIT_FIELDS`, `mergeEdit`), `freshCopy`, `fromTemplate`; tiến độ, ô, chỗ (`Place`) và mọi phép dời, số, việc tiếp theo, nhóm lọc; bàn giao (`holders`, `handoffs`, `ioStatus`, `consumersOf`, "on hold" theo chỗ chưa lưu) |
+| `js/core/markdown.js`, `js/core/io.js` | Markdown dự án vào / ra; JSON, sao lưu, `parseImport`, `counts`, `plural`, `slug`, `shape` (cho test) |
+| `js/core/design.js`, `js/core/design-plan.js`, `js/core/design-md.js` | System design: `normDesign`, `rankOptions`, `applyPath`, `archAdvice`, `warnings`, `catalogErrors`, `presetDesign`, `isPreset`; sơ đồ (`diagramNodes`, `flowEdges`), việc (`planTasks`, `planDiff`, `applyPlan`); mục Markdown (`designMd`, `designReader`) |
+| `js/core/md.js`, `js/ui/md-view.js`, `js/ui/md-dialog.js` | tài liệu văn bản: cây khối (`parseMd`), URL trần (`linkParts`, dấu câu cuối ở ngoài), token khung Edit (`srcTokens`); DOM (`renderMd`, `renderSrc`, chỉ createElement / text node); hộp `#dlg-md` |
+| `js/core/view-math.js`, `js/ui/diagram-view.js`, `js/ui/design.js` | khung nhìn của sơ đồ: toán (hằng ở đầu file), DOM (bánh xe, kéo, phím, cụm nút; `attach` sau mỗi lần vẽ); System design: mục trên trang, sơ đồ SVG, `#dlg-sd`, hộp Update plan |
+| `js/ui/store.js`, `js/ui/state.js`, `js/ui/dom.js`, `js/ui/toast.js`, `js/ui/dialogs.js` | `localStorage` (dữ liệu, `stepPlanner.hintOff`, `stepPlanner.compact`, `hub-theme`), `sessionStorage` (dự án của tab), mọi truy cập bọc try/catch; `state`, `curId`, `templates`, `ui`, `persist`, `commit`, `refocus`; `$`, `h()`, `icon()`, `withLinks()`, `field()`, `fmtDate()`; toast có Hoàn tác; mở / đóng hộp, `ask` (`#dlg-ask`), `mergeSaved` |
+| `js/ui/render.js`, `js/ui/board.js`, `js/ui/step-row.js`, `js/ui/clamp.js` | vẽ cả trang (`render`); bảng theo hàng (`renderBoard`: khoá mỗi hàng, chỉ hàng đổi dựng lại), số đứng yên; một hàng (`stepRow`); chữ dài bị cắt, "Show more" |
+| `js/ui/actions.js`, `js/ui/move.js`, `js/ui/drag.js`, `js/ui/dropdown.js` | bấm, phím trên bảng, danh sách trạng thái, nhân bản, xoá; dời, toast "Moved", tô; kéo thả bằng pointer events (bóng, "Drop here", FLIP, tự cuộn, Esc; mỗi khung hình một lượt); danh sách chọn tự dựng (`enhanceSelect`, `openList`) |
+| `js/ui/sub-dialog.js`, `js/ui/step-dialog.js`, `js/ui/docs.js`, `js/ui/revisit.js`, `js/ui/hand.js` | hộp sửa bước con, bước; tài liệu (`#dlg-doc`); Reopen (`#dlg-revisit`); bàn giao: chip In / Out, hai chấm (`ioDots`), mũi tên, `#dlg-hand`, Inputs / Outputs, `#dlg-pick` |
+| `js/ui/projects.js`, `js/ui/start.js`, `js/ui/toolbar.js`, `js/ui/filter.js`, `js/ui/log.js`, `js/ui/export.js`, `js/ui/import.js` | dự án (`#dlg-ws`); màn đầu; mẹo, Compact, ghi chú dự án, theme; tìm, lọc, "Next waits on"; nhật ký; xuất, nhắc sao lưu; nhập |
+
+- Ba lớp tách nhau: giao diện (`js/ui/`, `css/`), logic (`js/core/`: dữ liệu vào, dữ liệu ra; không DOM, `window`, bộ nhớ trình duyệt, lớp CSS; chỉ import `js/core/`; `lint.py` kiểm), luật / cấu hình (`data/*.json`, `css/tokens.css`, hằng đầu module).
+- Tính năng mới: module riêng trong lớp của nó. Thứ dùng ≥ 2 chỗ nằm một chỗ chung (`ui/dom.js`, `ui/state.js`, `css/base.css`); dùng một chỗ thì không tách.
+- Sự kiện gắn trong `init…()` của module `js/ui/`, `main.js` gọi; thứ tự gọi là thứ tự đăng ký (cặp cùng phần tử ghi ở đầu `main.js`). Code cấp cao của module không gọi sang module khác.
+- Biến dùng chung: `export let` ở module sở hữu; nơi khác chỉ đọc, gán lại qua hàm của chủ (`setCur`, `resetBoard`, `clearDocUndo`). Mỗi file mở đầu bằng chú thích: làm gì, `Xuất:`, `Dùng:`.
 
 ## Dữ liệu
 
@@ -37,7 +42,7 @@
 - Sub `{id, title, status, reason, due, doneAt, doneWhen, notes, docs[], outs[], ins[], par, redo, sd?}`.
 - `status` ∈ `todo doing pending blocked done skip cancel`. `reason` (nhiều dòng) chỉ giữ khi `pending`, `blocked`, `cancel`.
 - `due`, `doneAt`: `YYYY-MM-DD` hoặc rỗng. `doneAt`: ngày sang Done (`setStatus`), chỉ giữ khi `done`; dữ liệu cũ rỗng, không bịa ngày.
-- `par: true` = nhập ô của bước con ngay trước; `subs[0].par` luôn false. Ô (slot), chỗ (`Place`), mọi phép dời ở `core.js`.
+- `par: true` = nhập ô của bước con ngay trước; `subs[0].par` luôn false. Ô (slot), chỗ (`Place`), mọi phép dời ở `core/board.js`.
 - `redo: true` = được gửi lại làm trong vòng đang mở; bước không mở lại thì mọi `redo` là false.
 - `sd`: `stage:<khâu>@<chữ ký>` hoặc `edge:<a>><b>@<chữ ký>`, chỉ ở bước con System design sinh ra; nhân bản bước con thì bỏ.
 - Doc `{id, kind: 'link', title, url, proof}` hoặc `{id, kind: 'md', title, body, proof}`. `url` chỉ http(s) (`safeUrl`); link
@@ -61,8 +66,7 @@
 - Hạn qua: "(overdue)", trừ thẻ xong, bỏ qua, huỷ. Thẻ xong có `doneAt` hiện ngày xong.
 - Lọc trạng thái (`STATUS_GROUPS`): All statuses, Actionable (New, In progress), Waiting (Pending, Blocked), Done, Skipped, cancelled.
   Lọc và tìm là giao; "Clear filters" bỏ cả hai. Mỗi tab một bộ lọc, không lưu; đổi / tạo / nhập dự án thì bỏ.
-- Tìm bỏ qua dấu và hoa thường, khớp cả lý do, tài liệu, tên và `ref` của đầu ra; bước khớp thì hiện cả hàng.
-  Đang tìm hay lọc thì tắt sắp xếp, thêm bước, ẩn vạch bàn giao.
+- Tìm bỏ qua dấu và hoa thường, khớp cả lý do, tài liệu, tên và `ref` của đầu ra; bước khớp thì hiện cả hàng. Đang tìm hay lọc thì tắt sắp xếp, thêm bước, ẩn vạch bàn giao.
 - Song song (PLAN-013): mỗi ô một cột của hàng; ô k thẻ đánh `n.1` … `n.k`. Alt + ← →: đổi ô (thẻ ở ô song song thì tách ra
   ô riêng), Alt + ↑ ↓: đổi thứ tự trong ô. Toast dời tả chỗ mới bằng tên hàng xóm, không bằng số.
 - Số đứng yên trong phiên (PLAN-014): chụp số khi dự án hiện lần đầu sau khi mở trang (và sau nhập thay nội dung); dời,
@@ -84,8 +88,7 @@
   Hoàn tác của toast; Ctrl/Cmd + Z hoàn tác khi không gõ chữ, không có hộp mở, và không bấm nút toast khác Hoàn tác.
 - Hoàn tác tìm lại dự án và bước theo id (tab khác có thể đã thay `state`).
 - Hộp sửa: Enter ở tên lưu; Esc, ×, Close, Duplicate khi chữ đổi thì hỏi lại. Nút đóng ghi "Close", không "Cancel". Đóng: focus về chỗ mở.
-- Lưu hộp sửa (bước con, bước, quyết định): chỉ ghi trường đã đổi so với lúc mở (`EDIT_FIELDS`, `mergeEdit`) lên bản mới nhất.
-  Trường mới của hộp sửa phải thêm vào `EDIT_FIELDS`.
+- Lưu hộp sửa (bước con, bước, quyết định): chỉ ghi trường đã đổi so với lúc mở (`EDIT_FIELDS`, `mergeEdit`) lên bản mới nhất. Trường mới của hộp sửa phải thêm vào `EDIT_FIELDS`.
 - Cùng trường bị tab khác đổi khác: `#dlg-ask` liệt kê, "Keep mine" / "Keep the other tab's"; Close thì hộp sửa vẫn mở.
   Mục đã bị tab khác xoá: "Re-create" / "Discard my edits". Vị trí chỉ đổi khi người dùng đổi ô Bước / Vị trí.
 - Tài liệu (PLAN-011): thêm / sửa / xoá trong hộp sửa, lưu ngay. Link mở tab mới (`noopener noreferrer`); văn bản mở `#dlg-md`.
@@ -117,8 +120,7 @@
 - Treo (`handoffs().held`): bên nhận đứng trước bên giao sau khi sắp xếp, hay cùng ô song song với nó (`parKeys`; chữ ghi "runs in parallel"). Giữ nguyên `ins`, không mũi tên; danh sách ghi "on hold";
   toast dời, toast Lưu của hộp sửa báo cái vừa treo. Dời về đúng thứ tự là nối lại, không cần làm gì.
 - Hộp sửa tính "on hold" theo ô Bước / Vị trí đang chọn, chưa Lưu (`heldInfoAt`, `handoffsAt`); hộp chọn đầu ra ghi đầu ra đứng sau hay cùng ô.
-- Xoá bên giao không gỡ đầu vào nơi khác: đầu vào mất nguồn giữ qua lần tải lại, xuất / nhập, chấm đỏ; danh sách, hộp sửa ghi
-  "Deleted output", gỡ bằng nút x. Hoàn tác xoá nối lại (`insBackup`).
+- Xoá bên giao không gỡ đầu vào nơi khác: đầu vào mất nguồn giữ qua lần tải lại, xuất / nhập, chấm đỏ; danh sách, hộp sửa ghi "Deleted output", gỡ bằng nút x. Hoàn tác xoá nối lại (`insBackup`).
 
 ## Mẫu (`data/templates.json`)
 
@@ -159,11 +161,9 @@
   đánh dấu Not needed; độ phủ của `lint.py` bỏ qua câu trả lời ấy. Câu chưa trả lời: khâu vẫn hiện.
 - Catalog của table format (Polaris, Hive Metastore, Nessie, JDBC) là phương án của khâu `raw`, cùng chỗ lưu và table format; không có khâu riêng.
 - Câu `selfhost` = `yes`: dịch vụ được quản lý mang `fit.selfhost: ["no"]`; phương án mới chạy trên hạ tầng người khác thì thêm khoá ấy.
-- Công cụ nên tránh khi làm một mình vẫn có trong danh mục nếu người học hay gặp: `avoid` nói vì sao và chọn gì thay, có luật báo,
-  không đứng đầu `suggest` của lối nào.
+- Công cụ nên tránh khi làm một mình vẫn có trong danh mục nếu người học hay gặp: `avoid` nói vì sao và chọn gì thay, có luật báo, không đứng đầu `suggest` của lối nào.
 - "Apply path" (`applyPath`): chỉ khâu chưa quyết; `skip` → Not needed; `need` có gợi ý → phương án hợp đầu tiên làm ít luật báo
-  nhất; `maybe` để trống. Không tự gây luật báo (trừ `caveat`): bỏ khâu, hay phương án lấy được, mà làm luật báo thì để khâu ấy
-  trống. `test-core` dò lưới hồ sơ × lối.
+  nhất; `maybe` để trống. Không tự gây luật báo (trừ `caveat`): bỏ khâu, hay phương án lấy được, mà làm luật báo thì để khâu ấy trống. `test-core` dò lưới hồ sơ × lối.
 - Luật phối hợp (`warnings`): báo khi mọi `if` khớp và mọi khâu trong `unless` đã quyết mà không khớp; khâu chưa quyết thì chưa báo.
   Khoá điều kiện: id khâu (phương án, `skip`, `own`), câu hồ sơ hay `path`. Phương án không được có id `skip`, `own`.
   `caveat: true`: luật chỉ nhắc cách dùng, phương án vẫn đúng (host miễn phí ngủ, đĩa không bền, file DuckDB sau API).
@@ -172,7 +172,7 @@
   Kiến trúc được gợi ý phải có ở mỗi khâu một công cụ không làm luật báo với hồ sơ ấy (`test-core`); hồ sơ nói ngược khâu đã quyết thì luật hồ sơ đứng trước.
 - Bàn giao (`edges`): đường nối hai khâu liền nhau của luồng, cả hai đã quyết (`flowEdges`). Hợp đồng giữ cả khi đường nối không còn.
 - Sơ đồ: đường nối nét liền khi cả hai khâu đã quyết (`bothDecided`, cùng luật với `flowEdges`), còn lại nét đứt.
-- Sơ đồ là khung nhìn (PLAN-031): không lưu, tải lại về khung ban đầu; bánh xe trơn chỉ kéo khung khi khung có focus hay giữ Space. Luật đủ: đầu `diagram-view.js`.
+- Sơ đồ là khung nhìn (PLAN-031): không lưu, tải lại về khung ban đầu; bánh xe trơn chỉ kéo khung khi khung có focus hay giữ Space. Luật đủ: đầu `ui/diagram-view.js`.
 - "Add tasks to plan" / "Update plan": luôn xem trước New / Changed / No longer in the design, chọn từng mục và bước nhận
   (mặc định "System build", chưa có thì tạo ở vị trí 2). Mỗi khâu đã quyết một việc, mỗi bàn giao đã ghi một việc `Handoff: A → B`.
 - Đối chiếu theo `sd`; bước con chưa có `sd` thì theo tên trong bước "System build".
@@ -189,10 +189,10 @@
 
 ## Cổng: `sh step-planner/tools/check.sh`
 
-- `tools/lint.py`: khuôn mẫu và bàn giao trong mẫu, ngôn ngữ (giao diện, mẫu, System design), danh mục System design, mẫu đồ án khớp nguồn và neo, không `innerHTML`, mã màu chỉ trong `css/tokens.css`, mọi file CSS được link.
+- `tools/lint.py`: khuôn mẫu và bàn giao trong mẫu, ngôn ngữ (giao diện, mẫu, System design), danh mục System design, mẫu đồ án khớp nguồn và neo, không `innerHTML`, mã màu chỉ trong `css/tokens.css`, mọi file CSS được link, `js/core/` thuần, import có file, không file mồ côi.
   `lint.py --self-test`: cài lỗi vào bản sao tạm, mỗi lỗi phải bị bắt.
-- `node --input-type=module --check < file` cho `js/*.js` (`node --check file.js` bỏ sót lỗi của module).
-- `tools/test-core.mjs`: logic thuần của `core.js`, `md.js`, `design-core.js`, `view-math.js`; danh sách ở chính file.
+- `node --input-type=module --check < file` cho mọi file dưới `js/` (`node --check file.js` bỏ sót lỗi của module).
+- `tools/test-core.mjs`: logic thuần của `js/core/`; danh sách ở chính file.
   Gợi ý kiến trúc và luật báo so với ảnh chụp `tools/design-snapshot.json`; đổi danh mục có chủ ý thì sinh lại: `node step-planner/tools/test-core.mjs --write-snapshot`.
 - `tools/smoke.cjs` (cổng tự dựng máy chủ tạm; thiếu playwright thì bỏ qua, CI chạy ở job smoke): bấm thật các hành vi trên,
   hai tab, 390px, bộ nhớ bị chặn / hỏng / khoá cũ, lỗi console; số mẫu đọc từ `templates.json`. Chạy tay: `node <file> <url>`.
