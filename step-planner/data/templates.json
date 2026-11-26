@@ -927,6 +927,243 @@
       ]
     },
     {
+      "id": "data-pipeline",
+      "name": "Scheduled data pipeline (Data engineering lifecycle)",
+      "description": "Chọn khi dữ liệu mới tới định kỳ và cần một job tự chạy, chặn lô lỗi, giữ bản sạch tốt gần nhất cho bên dùng. Theo vòng đời data engineering (Reis & Housley, Fundamentals of Data Engineering, 2022). Làm một mình: Storage có thể chỉ là một thư mục phân vùng; Security chỉ cần giữ secret ngoài code.",
+      "steps": [
+        {
+          "title": "Generation: Source Systems",
+          "goal": "Biết dữ liệu sinh ra ở đâu, đổi thế nào, và được dùng tới đâu.",
+          "doneWhen": "Có hợp đồng với nguồn và một mẫu dữ liệu thật để viết test.",
+          "notes": "Mẫu theo vòng đời data engineering trong Reis & Housley, Fundamentals of Data Engineering (O'Reilly, 2022), chương 2: năm khâu Generation, Storage, Ingestion, Transformation, Serving và các mạch ngầm (undercurrents) Security, Data Management, DataOps, Data Architecture, Orchestration, Software Engineering. Tên bước là tên mục của chương 2. Bước con là việc cụ thể cho một người làm; việc lấy từ nguồn khác ghi nguồn trong tên thẻ.\nBài của tác giả nhắc lại khung này: https://joereis.substack.com/p/the-data-engineering-lifecycle-and\nBẫy hay gặp: nguồn đổi cột hay sửa dữ liệu cũ mà không báo; job vẫn chạy xanh và ghi dữ liệu sai.",
+          "subs": [
+            {
+              "title": "Identify the source and its terms",
+              "doneWhen": "Ghi nguồn, cách lấy (API, file, cơ sở dữ liệu), điều khoản dùng, hạn mức gọi, nguồn cập nhật lúc nào.",
+              "notes": "Hỏi: nguồn có sửa hay bổ sung dữ liệu của ngày đã qua không? Nguồn báo đổi cột bằng cách nào?"
+            },
+            {
+              "title": "Write the source contract",
+              "doneWhen": "Hợp đồng nguồn: mỗi cột (tên, kiểu, được trống không), khoá của một dòng, tần suất cập nhật, cách nguồn sửa dữ liệu cũ, số ngày lùi phải chạy lại.",
+              "notes": "Hợp đồng là thứ job kiểm mỗi lần chạy, không chỉ là tài liệu.",
+              "outs": [
+                {
+                  "key": "source-contract",
+                  "name": "Hợp đồng nguồn",
+                  "ref": "docs/source-contract.md",
+                  "note": "Cột, kiểu, khoá, tần suất cập nhật, cửa sổ chạy lại; job đọc lại file này để kiểm schema"
+                }
+              ]
+            },
+            {
+              "title": "Save a sample snapshot",
+              "doneWhen": "Vài trăm dòng thật (kể cả dòng lạ) lưu làm dữ liệu test; ghi ngày lấy.",
+              "outs": [
+                {
+                  "key": "sample-snapshot",
+                  "name": "Mẫu dữ liệu nguồn",
+                  "ref": "tests/fixtures/",
+                  "note": "Dòng thật của nguồn, kể cả dòng lạ; test parser và test schema chạy trên đây"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Storage",
+          "goal": "Chọn nơi lưu thô và sạch sao cho chạy lại, quay về bản cũ được.",
+          "doneWhen": "Có sơ đồ thư mục hay bảng: thô chỉ thêm, sạch theo phiên bản, một chỗ trỏ bản đang công bố.",
+          "subs": [
+            {
+              "title": "Choose raw and clean storage",
+              "doneWhen": "Đã chọn nơi lưu (thư mục, object storage, cơ sở dữ liệu) và định dạng (ví dụ Parquet) cho vùng thô và vùng sạch, kèm lý do.",
+              "notes": "Vùng thô chỉ thêm, không sửa: lô nào cũng dựng lại được từ đây."
+            },
+            {
+              "title": "Partition and version layout (Airflow)",
+              "doneWhen": "Vùng thô phân vùng theo khoảng dữ liệu (ví dụ theo ngày); vùng sạch có phiên bản; có con trỏ tới bản sạch đang công bố.",
+              "notes": "Airflow, Best practices: đọc và ghi theo một phân vùng cụ thể (ví dụ lấy data_interval_start làm phân vùng), không đọc \"dữ liệu mới nhất\" trong task: https://airflow.apache.org/docs/apache-airflow/stable/best-practices.html",
+              "outs": [
+                {
+                  "key": "storage-layout",
+                  "name": "Sơ đồ lưu trữ",
+                  "ref": "docs/storage.md",
+                  "note": "raw/dt=YYYY-MM-DD/, clean/version=N/, con trỏ current; bản cũ giữ bao lâu"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Ingestion",
+          "goal": "Lấy dữ liệu về theo lô, chạy lại không sinh trùng, phát hiện nguồn đổi.",
+          "doneWhen": "Chạy hai lần cùng một lô ra cùng kết quả; lô đổi schema dừng lại kèm báo lỗi rõ.",
+          "notes": "Airflow, Best practices: mỗi task như một transaction, chạy lại ra cùng kết quả; đọc và ghi theo phân vùng; không dùng giờ máy (now()) trong task; INSERT khi chạy lại sinh dòng trùng, dùng UPSERT: https://airflow.apache.org/docs/apache-airflow/stable/best-practices.html",
+          "subs": [
+            {
+              "title": "Batch ingestion job",
+              "doneWhen": "Job lấy đúng một khoảng dữ liệu (data interval) truyền vào, ghi vào phân vùng của khoảng ấy ở vùng thô, kèm số dòng và SHA-256.",
+              "notes": "Khoảng dữ liệu là tham số của lần chạy, không phải \"hôm nay\": chạy lại hay chạy bù mới đúng lô.",
+              "outs": [
+                {
+                  "key": "raw-batch",
+                  "name": "Lô dữ liệu thô",
+                  "ref": "data/raw/dt=YYYY-MM-DD/",
+                  "note": "Một phân vùng mỗi khoảng dữ liệu; kèm số dòng và SHA-256; không sửa sau khi ghi"
+                }
+              ],
+              "ins": [
+                "source-contract",
+                "storage-layout"
+              ]
+            },
+            {
+              "title": "Idempotent re-runs (Airflow)",
+              "doneWhen": "Chạy lại cùng một lô hai lần: số dòng và tổng kiểm như nhau, không dòng trùng khoá (ghi đè phân vùng hoặc UPSERT theo khoá).",
+              "notes": "Dữ liệu tới trễ hay nguồn sửa ngày cũ: chạy lại đúng các phân vùng trong cửa sổ đã ghi ở hợp đồng nguồn; làm được vì mỗi lần chạy đã idempotent."
+            },
+            {
+              "title": "Schema change detection (ML Test Score)",
+              "doneWhen": "Mỗi lô so cột, kiểu với hợp đồng nguồn; thiếu, thừa hay đổi kiểu thì dừng trước vùng sạch, báo lỗi nêu tên cột.",
+              "notes": "ML Test Score, Monitor 1: nguồn đổi (hỏng một phần, nâng phiên bản) có thể đổi nghĩa dữ liệu mà không gây lỗi; thay đổi phải sinh thông báo: https://research.google/pubs/the-ml-test-score-a-rubric-for-ml-production-readiness-and-technical-debt-reduction/\nTest schema chạy trên mẫu dữ liệu nguồn trong CI, và trên mỗi lô thật lúc chạy.",
+              "ins": [
+                "source-contract",
+                "sample-snapshot"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Transformation",
+          "goal": "Biến lô thô thành bảng sạch đúng hợp đồng, và chặn lô lỗi.",
+          "doneWhen": "Bảng sạch dựng lại được từ vùng thô; mọi lô qua cổng chất lượng trước khi công bố.",
+          "subs": [
+            {
+              "title": "Clean and model the data",
+              "doneWhen": "Bảng sạch: một dòng mỗi thực thể, khoá không trùng, cột và kiểu theo hợp đồng; mỗi luật làm sạch có lý do, số dòng trước và sau.",
+              "outs": [
+                {
+                  "key": "clean-table",
+                  "name": "Bảng sạch theo phiên bản",
+                  "ref": "data/clean/version=N/",
+                  "note": "Một dòng mỗi thực thể, khoá không trùng; cột và kiểu như hợp đồng; ghi kèm lô thô đã dùng"
+                }
+              ],
+              "ins": [
+                "raw-batch"
+              ]
+            },
+            {
+              "title": "Data quality tests (dbt)",
+              "doneWhen": "Mỗi lần chạy kiểm: khoá duy nhất, cột bắt buộc không trống, giá trị trong miền cho phép, khoá ngoại có thật, số dòng không lệch xa lô trước.",
+              "notes": "dbt có sẵn bốn test: unique, not_null, accepted_values, relationships; test trả về các dòng sai: https://docs.getdbt.com/docs/build/data-tests\nKhông dùng dbt thì viết các luật này bằng SQL hay pandas; điều cần là chúng chạy mỗi lần, không chỉ lúc viết."
+            },
+            {
+              "title": "Quality gate before publish (dbt)",
+              "doneWhen": "Lô không qua test thì không công bố: bản sạch đang công bố giữ nguyên, lô lỗi giữ lại kèm báo cáo chất lượng để sửa.",
+              "notes": "dbt build: test của bảng trước hỏng thì các bảng sau bị bỏ qua (SKIP): https://docs.getdbt.com/reference/commands/build\nBẫy: ghi đè bản sạch trước rồi mới kiểm; bên dùng đọc phải bản hỏng.",
+              "outs": [
+                {
+                  "key": "quality-report",
+                  "name": "Báo cáo chất lượng mỗi lô",
+                  "ref": "reports/quality/",
+                  "note": "Một file mỗi lần chạy: test nào đạt, test nào hỏng, số dòng sai, quyết định công bố hay giữ bản cũ"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Serving Data",
+          "goal": "Bên dùng đọc một bản sạch ổn định và biết nó mới tới đâu.",
+          "doneWhen": "Bên dùng chỉ đọc bản đang công bố; đọc thử ra đúng số đối chiếu.",
+          "subs": [
+            {
+              "title": "Publish the current version",
+              "doneWhen": "Công bố bằng cách trỏ con trỏ sang phiên bản mới sau khi qua cổng; bản trước còn giữ để lùi lại.",
+              "outs": [
+                {
+                  "key": "published-data",
+                  "name": "Bản sạch đang công bố",
+                  "ref": "data/published/current",
+                  "note": "Bên dùng chỉ đọc đường này; kèm số phiên bản, khoảng dữ liệu, giờ công bố"
+                }
+              ],
+              "ins": [
+                "clean-table",
+                "quality-report"
+              ]
+            },
+            {
+              "title": "Document the data for consumers",
+              "doneWhen": "Từ điển dữ liệu của bảng công bố, khoá, độ mới cam kết (dữ liệu trễ tối đa bao lâu), cách báo khi đổi cột."
+            },
+            {
+              "title": "Consumer check",
+              "doneWhen": "Bên dùng (notebook, dashboard, app) đọc bản công bố, lọc một khoảng, ra đúng số dòng và tổng đã đối chiếu với nguồn.",
+              "ins": [
+                "published-data"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Undercurrents",
+          "goal": "Job tự chạy đúng lịch, hỏng thì biết ngay, sửa và chạy bù được.",
+          "doneWhen": "Có lịch chạy, nhật ký mỗi lần chạy, cảnh báo, runbook; đã thử một lần backfill.",
+          "notes": "Mạch ngầm (undercurrents) chạy qua mọi khâu. Mẫu giữ Orchestration, DataOps, Security; Data Management nằm ở hợp đồng nguồn và test chất lượng.",
+          "subs": [
+            {
+              "title": "Orchestration: schedule and dependencies",
+              "doneWhen": "Lịch chạy, thứ tự các bước, số lần thử lại khi lỗi; chạy tay được với khoảng dữ liệu tự chọn.",
+              "notes": "GitHub Actions schedule: có thể trễ khi tải cao, tải đủ cao thì job trong hàng chờ có thể bị bỏ; giờ tròn là lúc tải cao, nên đặt phút lẻ; chỉ chạy trên nhánh mặc định; repo công khai 60 ngày không hoạt động thì lịch tự tắt: https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule\nVì vậy đừng giả định lần chạy nào cũng có: mỗi lần chạy tự bù các khoảng còn thiếu, và kiểm độ mới riêng."
+            },
+            {
+              "title": "DataOps: run log and freshness (dbt)",
+              "doneWhen": "Nhật ký mỗi lần chạy và kiểm độ mới: bản công bố cũ quá mức cam kết thì báo.",
+              "notes": "dbt khuyên chạy kiểm độ mới ít nhất gấp đôi tần suất của SLA ngắn nhất: https://docs.getdbt.com/docs/deploy/source-freshness",
+              "outs": [
+                {
+                  "key": "run-log",
+                  "name": "Nhật ký chạy",
+                  "ref": "logs/runs.csv",
+                  "note": "Một dòng mỗi lần chạy: run id, khoảng dữ liệu, giờ bắt đầu và xong, trạng thái, số dòng vào, ra, lỗi, phiên bản công bố"
+                }
+              ]
+            },
+            {
+              "title": "DataOps: alerting and runbook",
+              "doneWhen": "Lỗi chạy, lô bị cổng chặn, dữ liệu quá cũ đều gửi cảnh báo tới chỗ mình đọc hằng ngày; runbook ghi mỗi loại lỗi: kiểm gì, sửa thế nào, chạy lại lệnh nào.",
+              "outs": [
+                {
+                  "key": "runbook",
+                  "name": "Runbook",
+                  "ref": "docs/runbook.md",
+                  "note": "Mỗi loại cảnh báo: dấu hiệu, kiểm gì, lệnh chạy lại hay lùi bản, khi nào báo bên dùng"
+                }
+              ],
+              "ins": [
+                "run-log"
+              ]
+            },
+            {
+              "title": "Orchestration: backfill (Airflow)",
+              "doneWhen": "Chạy bù một khoảng lịch sử theo từng phân vùng; sau đó số khoá trùng bằng 0 và số dòng mỗi phân vùng khớp nguồn.",
+              "notes": "Airflow gọi việc chạy lại pipeline cho một khoảng thời gian đã qua là backfill: https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/dag-run.html\nChạy bù trên bản sạch mới rồi mới công bố, như một lô thường.",
+              "ins": [
+                "run-log"
+              ]
+            },
+            {
+              "title": "Security: secrets and access",
+              "doneWhen": "Khoá API, mật khẩu nằm trong secret, không trong code hay log; chỉ job cần mới đọc được.",
+              "notes": "GitHub Actions: secret đọc qua context secrets, bị che trong log, không truyền cho workflow chạy từ fork: https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "blank",
       "name": "Blank",
       "description": "Không có bước nào; tự thêm.",
