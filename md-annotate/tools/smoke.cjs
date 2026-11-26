@@ -1744,6 +1744,18 @@ const cornerClash = (page) => page.evaluate(() => {
     await rctx.close();
   }
   // ── end đánh dấu đã đọc ──
+  // Dàn ý Review theo nhãn (MDAN-093): văn bản không tiêu đề, chỉ có đoạn chữ đậm và dòng "Nhãn:" trước danh sách.
+  {
+    const lctx2 = await browser.newContext({ viewport: { width: 1280, height: 900 }, colorScheme: 'light' });
+    const lp2 = await openPage(lctx2);
+    await pasteText(lp2, ['**Phương án A: bóng đá**', '', 'Ưu điểm:', '- một', '- hai', '', 'Nhược điểm:', '- ba', '', '**A so với B**', '- bốn', '- năm'].join('\n'));
+    await lp2.waitForTimeout(200); await lp2.click('#tab-view'); await lp2.waitForTimeout(300); await lp2.click('#ptab-review'); await lp2.waitForTimeout(200);
+    const lo = await lp2.$$eval('#rv-secs .ma-rvs', (ls) => ls.map((l) => getComputedStyle(l).getPropertyValue('--d').trim() + ':' + l.querySelector('.ma-rvs__t').textContent));
+    const lsq = await lp2.$$eval('#wrap-md .ma-lane__b.is-head', (x) => x.length);
+    check('Review: văn bản không tiêu đề có dàn ý theo nhãn — chữ đậm trọn đoạn cấp trên, "Ưu điểm:" thụt một cấp; nhãn có ô vuông bật cả section',
+      lo.join('|') === '0:Phương án A: bóng đá|1:Ưu điểm|1:Nhược điểm|0:A so với B' && lsq === 4, JSON.stringify([lo, lsq]));
+    await lctx2.close();
+  }
 
   // ── hộp của các dòng đã chọn không đóng khi bấm ra ngoài (MDAN-014) ──
   {
@@ -2722,7 +2734,7 @@ const cornerClash = (page) => page.evaluate(() => {
     const tl = () => tp.evaluate(() => window.__tree.log.slice(-1)[0] || []);
     check('cây: bấm folder gập thì mở, không có vòng focus', (await tl())[0] === 'toggle' && ring === 'none' && (await tp.$eval(row('archive'), (l) => l.getAttribute('aria-expanded'))) === 'true', ring);
     await tp.keyboard.press('ArrowDown');
-    check('cây: ↓ sang hàng con (old.md)', (await focusName(tp)) === 'old.md', await focusName(tp));
+    check('cây: ↓ sang hàng con (old.md) và mở nó (MDAN-092)', (await focusName(tp)) === 'old.md' && JSON.stringify(await tl()) === JSON.stringify(['open', ids['old.md']]), await focusName(tp));
     const arrowRing = await tp.evaluate(() => [document.documentElement.classList.contains('ma-tabbing'), getComputedStyle(document.activeElement, '::before').outlineStyle]);
     check('cây: bấm hàng rồi ↓ — mũi tên là bàn phím, hàng có vòng focus (MDAN-020)', arrowRing[0] && arrowRing[1] === 'solid', JSON.stringify(arrowRing));
     await tp.keyboard.press('ArrowLeft');
@@ -2880,6 +2892,14 @@ const cornerClash = (page) => page.evaluate(() => {
     const pdr = await tl();
     check('chọn nhiều: kéo hàng trong nhóm chuyển cả nhóm', pdr[0] === 'move' && Array.isArray(pdr[1]) && pdr[1].length === 2 && pdr[2] === ids['level-1'], JSON.stringify(pdr));
     await tp.evaluate((a) => { const m = window.__tree; m.by(a[0]).parent = a[1]; m.by(a[2]).parent = null; m.render(); }, [ids['old.md'], ids.archive, ids['README.md']]); await tp.waitForTimeout(80);
+    await tp.click(row('README.md')); await tp.waitForTimeout(80);
+    /* Mũi tên tới file thì mở file ấy (MDAN-092); giữ phím (lặp) thì chỉ mở file dừng lại. */
+    const opens = () => tp.evaluate(() => window.__tree.log.filter((x) => x[0] === 'open').map((x) => x[1]));
+    await tp.focus(row('note-0.md')); const o0 = (await opens()).length;
+    await tp.keyboard.down('ArrowDown'); await tp.keyboard.down('ArrowDown'); await tp.keyboard.down('ArrowDown'); await tp.keyboard.up('ArrowDown');
+    const oNow = (await opens()).slice(o0); await tp.waitForTimeout(300); const oLate = (await opens()).slice(o0);
+    const selN = await tp.evaluate(() => document.querySelector('#tree-list .ma-trow[aria-selected="true"] .ma-trow__name').textContent);
+    check('cây: giữ ↓ qua nhiều file: lần bấm đầu mở ngay, lặp thì chỉ mở file dừng lại; thẻ xanh ở hàng focus', JSON.stringify(oNow) === JSON.stringify([ids['note-8.md']]) && JSON.stringify(oLate) === JSON.stringify([ids['note-8.md'], ids['note-24.md']]) && selN === 'note-24.md' && (await focusName(tp)) === 'note-24.md', JSON.stringify([oNow, oLate, selN, await focusName(tp)]));
     await tp.click(row('README.md')); await tp.waitForTimeout(80);
 
     // Collapse all, rồi kéo thả bằng chuột (mọi hàng trong khung, không cuộn): lên folder → move; lên hậu duệ → không gọi.

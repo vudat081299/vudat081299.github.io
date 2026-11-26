@@ -467,6 +467,17 @@ check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi
     eq(u0.map((u) => [u.a, u.b, u.item]), [[0, 0, -1], [2, 2, -1], [4, 5, 0], [6, 6, 1], [10, 10, -1], [12, 12, -1], [14, 14, -1], [16, 16, 0], [17, 17, 1]]), JSON.stringify(u0.map((u) => [u.a, u.b, u.item])));
   check('reviewUnits: section và cấp tiêu đề', eq(u0.map((u) => u.sec), [1, 1, 1, 1, 2, 2, 2, 2, 2]) && u0[0].depth === 1 && u0[4].depth === 2 && u0[4].head && !u0[5].head);
   {
+    // Nhãn (MDAN-093): đoạn một dòng toàn chữ đậm là cấp 7; dòng ngắn kết thúc bằng ':' ngay trước danh sách là cấp 8.
+    const t = ['**Phương án A: bóng đá**', 'Ưu điểm:', '- một\n- hai', 'Một câu thường kết thúc bằng hai chấm:', 'Đoạn thường.', '__Nhãn hai:__', 'Ghi chú **đậm** giữa câu.', '- x\n- y'].join('\n\n');
+    const ul = (a) => ({ a, b: a + 1, heading: false, tag: 'UL', items: [a, a + 1] }), P = (a) => ({ a, b: a, heading: false, tag: 'P' });
+    const sp = [P(0), P(2), ul(4), P(7), P(9), P(11), P(13), ul(15)];
+    const lt = sp.map((x, k) => R.labelDepth(t, sp, k));
+    check('labelDepth: chữ đậm trọn đoạn 7, nhãn ":" trước danh sách 8, câu ":" không trước danh sách 0, đậm giữa câu 0', eq(lt, [7, 8, 0, 0, 0, 7, 0, 0]), JSON.stringify(lt));
+    const lu = R.reviewUnits(t, sp), ls = R.reviewSections(lu, lu.map(() => 'todo'), []);
+    check('reviewSections: văn bản không tiêu đề có dàn ý theo nhãn, tên bỏ dấu đậm và ":"', eq(ls.map((x) => [x.title, x.depth]), [['Phương án A: bóng đá', 7], ['Ưu điểm', 8], ['Nhãn hai', 7]]) && lu[0].head && lu[1].head && !lu[2].head, JSON.stringify(ls.map((x) => [x.title, x.depth])));
+    check('labelDepth: tiêu đề h1–h6 không là nhãn; đoạn nhiều dòng không là nhãn', R.labelDepth('**A**', [{ a: 0, b: 0, heading: true, tag: 'H2' }], 0) === 0 && R.labelDepth('**A\nB**', [{ a: 0, b: 1, heading: false, tag: 'P' }], 0) === 0);
+  }
+  {
     // Mục con có chữ giống hệt mục cấp cao kế tiếp: mục kế tiếp vẫn bắt đầu ở đúng dòng (cùng thụt lề với mục đầu).
     const t = '- a\n  - b\n- b\n';
     const sp = lexSpans(t, () => [{ type: 'list', raw: '- a\n  - b\n- b', items: [{ raw: '- a\n  - b\n' }, { raw: '- b' }] }]);
