@@ -41,7 +41,7 @@
 - Doc `{id, kind: 'link', title, url, proof}` hoặc `{id, kind: 'md', title, body, proof}`. `url` chỉ http(s) (`safeUrl`); link
   khác bị bỏ (nhập thì cảnh báo). `body` giữ nguyên từng dòng. `proof: true` = bằng chứng cho "Done when".
 - Out `{id, name, ref, note}`: `name` bắt buộc (không tên thì bỏ); `ref` đường dẫn file hay link; `note` hợp đồng một dòng.
-- `ins`: id đầu ra ở chỗ khác trong dự án; bỏ trùng, bỏ id của chính nó. `normWorkspace`: id đầu ra duy nhất, bỏ đầu vào treo.
+- `ins`: id đầu ra ở chỗ khác trong dự án; bỏ trùng, bỏ id của chính nó; id không còn đầu ra (mất nguồn) vẫn giữ. `normWorkspace`: id đầu ra duy nhất.
 - `design`: null hoặc `{path, profile, stages: {khâu: {pick[], skip, own, note}}, edges: {"a>b": {via, what, where, promise, check}}}`
   (`normDesign`). Khâu `skip` vẫn giữ `pick`, `own` (ẩn, bỏ qua ở mọi chỗ); bỏ `skip` là chúng về lại.
 - Mọi dữ liệu đi qua `normSub` / `normStep` / `normWorkspace`: chuỗi một dòng gộp khoảng trắng, phần tử sai kiểu bị bỏ,
@@ -101,7 +101,7 @@
 
 - Đầu ra khai ở bước / bước con tạo ra nó; nơi dùng chọn "Use existing output". Một đầu ra nhiều nơi dùng; liên kết theo id.
 - Bước không chọn được đầu ra của chính nó và các bước con của nó. Inputs / Outputs lưu cùng Save của hộp sửa.
-- Thẻ bước con không liệt kê đầu vào, đầu ra; xem và sửa trong hộp sửa. Bước có chip "In n" (đầu vào còn trỏ tới đầu ra), "Out n".
+- Thẻ bước con không liệt kê đầu vào, đầu ra; xem và sửa trong hộp sửa. Bước có chip "In n" (mọi đầu vào, kể cả treo, mất nguồn), "Out n".
 - Thẻ và đầu bước hiện trạng thái đầu vào, đầu ra (`ioStatus`, PLAN-025): ổn, lỗi, không có; không có cả hai thì không hiện.
   Đầu vào lỗi: treo hoặc trỏ tới đầu ra không còn; bước chỉ xét đầu vào của chính nó. Đầu ra lỗi: không có nơi nhận đang nối
   (chỉ nơi nhận treo cũng tính); bước con lỗi khi một đầu ra lỗi, bước gộp đầu ra của bước con và lỗi chỉ khi mọi đầu ra lỗi.
@@ -111,7 +111,8 @@
 - Chọn dòng trong danh sách cặp: tô hai bên, focus bên nhận, không cuộn; nút một bên vẫn bỏ lọc và cuộn tới.
 - Treo (`handoffs().held`): bên nhận đứng trước bên giao sau khi sắp xếp. Giữ nguyên `ins`, không mũi tên; hộp sửa, danh sách
   ghi "on hold"; toast dời báo cái vừa treo. Dời về đúng thứ tự là nối lại, không cần làm gì.
-- Xoá bên giao không gỡ đầu vào nơi khác (bảng bỏ qua, lần đọc sau chuẩn hoá bỏ). Hoàn tác xoá gắn lại theo `insBackup`.
+- Xoá bên giao không gỡ đầu vào nơi khác: đầu vào mất nguồn giữ qua lần tải lại, xuất / nhập, chấm đỏ; danh sách, hộp sửa ghi
+  "Deleted output", gỡ bằng nút x. Hoàn tác xoá nối lại (`insBackup`).
 
 ## Mẫu (`data/templates.json`)
 

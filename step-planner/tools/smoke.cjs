@@ -2437,6 +2437,25 @@ const check = (name, ok, detail = '') => {
     const io4 = await ioOf();
     check('đầu vào / đầu ra: xoá bên giao thì đầu vào nơi dùng lỗi ngay ("output was deleted"); Hoàn tác trả lại',
       io3.gI === 'bad/none' && io3.gC === 'bad/ok' && io3.g2 === 'bad/ok' && /output was deleted/.test(gone.a) && same(io4, want0), JSON.stringify({ io3, io4, gone }));
+    // Xoá "Fetch", tải lại: đầu vào mất nguồn vẫn còn, vẫn lỗi; chip In của bước đếm nó; hộp sửa hiện chip "Deleted output", gỡ rồi Save.
+    await ip.click('.card[data-sub="gA"] [data-act="edit-sub"]');
+    await ip.click('#sub-del');
+    await ip.reload();
+    await ip.waitForSelector('.card[data-sub="gI"]');
+    const io5 = await ioOf();
+    const inTag = await ip.textContent('.step[data-step="g2"] [data-act="hand-in"]');
+    await ip.click('.step[data-step="g2"] [data-act="hand-in"]');
+    const goneList = await ip.textContent('#hand-list');
+    await ip.keyboard.press('Escape');
+    await ip.click('.card[data-sub="gI"] [data-act="edit-sub"]');
+    const goneChip = await ip.evaluate(() => [...document.querySelectorAll('#sub-hand .in-chip')].map((c) => (c.classList.contains('gone') ? 'gone:' : '') + c.textContent));
+    await ip.click('#sub-hand .in-chip.gone [data-in-del]');
+    await ip.click('#sub-form button[type="submit"]');
+    const io6 = await ioOf();
+    const gIins = (await cur(ip)).steps[0].subs.find((x) => x.id === 'gI').ins;
+    check('đầu vào / đầu ra: đầu vào mất nguồn giữ qua lần tải lại, chip In đếm nó, danh sách và hộp sửa ghi "Deleted output", gỡ được',
+      io5.gI === 'bad/none' && io5.gC === 'bad/ok' && io5.g2 === 'bad/ok' && /In 1/.test(inTag) && /Deleted output.*output was deleted/.test(goneList)
+      && same(goneChip, ['gone:Deleted outputits source no longer exists']) && io6.gI === '-' && same(gIins, []), JSON.stringify({ io5, inTag, goneList, goneChip, io6, gIins }));
     await ic.close();
 
     // 390px: không tràn ngang, chấm nằm trong thẻ và đầu bước.

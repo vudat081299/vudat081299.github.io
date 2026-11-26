@@ -1557,6 +1557,10 @@ html { scrollbar-gutter: stable; }   /* khoá cuộn không làm trang nhảy ng
 .in-chip.held { border-style: dashed; border-color: var(--amber-line); background: var(--amber-soft); }
 .in-chip.held .in-text small, .hand-who.held small, .hand-held { color: var(--amber-fg); }
 .hand-held { font-size: var(--fs-sm); overflow-wrap: anywhere; }
+/* Đầu vào mất nguồn (bên giao đã xoá): đỏ như chấm lỗi; gỡ bằng nút x. */
+.in-chip.gone { border-color: var(--red-line); background: var(--red-soft); }
+.in-chip.gone .in-text small, .hand-gone { color: var(--danger); }
+.hand-gone { font-size: var(--fs-sm); overflow-wrap: anywhere; }
 @media (hover: hover) { .in-chip .icon-btn:hover, .out-row .icon-btn:hover { color: var(--danger); } }
 .out-list { display: flex; flex-direction: column; gap: var(--s2); }
 .out-row {

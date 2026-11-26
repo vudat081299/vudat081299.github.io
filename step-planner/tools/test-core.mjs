@@ -759,8 +759,8 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   };
   const ws = normWorkspace(raw);
   const s2 = ws.steps[1];
-  check('bàn giao: normWorkspace — id đầu ra trùng lấy id mới, đầu vào không còn trỏ tới đâu bị bỏ',
-    s2.subs[0].outs[1].id !== 'm' && eq(s2.ins, ['m']) && eq(ws.steps[0].subs[3].ins, ['oa', 'ob']));
+  check('bàn giao: normWorkspace — id đầu ra trùng lấy id mới, đầu vào mất nguồn vẫn giữ',
+    s2.subs[0].outs[1].id !== 'm' && eq(s2.ins, ['m', 'gone']) && eq(ws.steps[0].subs[3].ins, ['oa', 'ob']));
   const f = freshCopy(ws);
   const ids = (w) => w.steps.flatMap((s) => [s, ...s.subs]).flatMap((x) => x.outs.map((o) => o.id));
   check('bàn giao: freshCopy — id đầu ra mới, đầu vào trỏ theo', eq(shape(f), shape(ws)) && ids(f).every((id) => !ids(ws).includes(id)));
@@ -802,10 +802,23 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   const relink = H.insBackup(w2, [w2.steps[0].subs[0]]);
   w2.steps[0].subs.splice(0, 1);
   const reloaded = normWorkspace(JSON.parse(JSON.stringify(w2)));
-  check('bàn giao: xoá bên giao — đọc lại thì đầu vào treo bị bỏ', !reloaded.steps[1].subs[0].ins.includes('oa'));
+  check('bàn giao: xoá bên giao — đọc lại vẫn giữ đầu vào mất nguồn, io vẫn lỗi', reloaded.steps[1].subs[0].ins.includes('oa')
+    && H.ioStatus(reloaded).get('e').in === 'bad' && H.ioStatus(reloaded).get('e').inWhy.some((w) => w.kind === 'missing' && w.id === 'oa'));
   reloaded.steps[0].subs.unshift(normWorkspace(raw).steps[0].subs[0]);
   relink(reloaded);
   check('bàn giao: Hoàn tác xoá gắn lại đầu vào của nơi khác, kể cả khi dữ liệu đã đọc lại', eq(reloaded.steps[1].subs[0].ins, ['oc', 'oa']) && eq(reloaded.steps[0].subs[3].ins, ['oa', 'ob']));
+  /* Đầu vào mất nguồn: Markdown ghi `- (deleted output)`, nhập lại vẫn mất nguồn; nhân bản đổi id nhưng vẫn không trỏ tới đâu. */
+  check('bàn giao: Markdown — đầu vào mất nguồn ghi "(deleted output)", nhập lại vẫn mất nguồn, không cảnh báo',
+    md.includes('Inputs:\n  - matches.parquet ← Clean\n  - (deleted output)\n') && eq(shape(back.workspace).steps[1].ins, ['0.-.0', '?'])
+    && back.workspace.steps[1].ins[1] !== 'gone' && H.ioStatus(back.workspace).get(back.workspace.steps[1].id).in === 'bad');
+  const g2 = normWorkspace({ steps: [{ id: 'a1', title: 'A', subs: [{ id: 'x', title: 'X', ins: ['lost'] }, { id: 'y', title: 'Y', ins: ['lost', 'lost2'] }] }] });
+  const g2c = freshCopy(g2);
+  check('bàn giao: freshCopy — đầu vào mất nguồn lấy id mới, cùng id cũ thì cùng id mới, vẫn không trỏ tới đâu',
+    g2c.steps[0].subs[0].ins[0] !== 'lost' && g2c.steps[0].subs[0].ins[0] === g2c.steps[0].subs[1].ins[0] && g2c.steps[0].subs[1].ins.length === 2
+    && [...H.ioStatus(g2c).values()].filter((v) => v.in === 'bad').length === 2);
+  const named = normWorkspace({ steps: [{ title: 'A', subs: [{ title: 'P', outs: [{ id: 'o', name: '(deleted output)' }] }] }, { title: 'B', subs: [{ title: 'U', ins: ['o'] }] }] });
+  const nb = fromMarkdown(toMarkdown(named));
+  check('bàn giao: đầu ra thật tên "(deleted output)" vẫn nối (dòng có "←")', eq(shape(nb.workspace), shape(named)) && !nb.warnings.length, nb.warnings.join(' | '));
   check('bàn giao: consumersOf — bên nhận của bước và bước con làm lại, trừ chính chúng', eq(H.consumersOf(ws, [ws.steps[0], ws.steps[0].subs[2]]).map(H.holderTitle), ['Backend', 'A', 'API']));
 }
 

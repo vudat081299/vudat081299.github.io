@@ -108,7 +108,8 @@ export function normOut(o) {
   return { id: idOr(o.id, 'o'), name: oneLine(o.name), ref: oneLine(o.ref), note: oneLine(o.note) };
 }
 const outsOf = (/** @type {any} */ a) => (Array.isArray(a) ? a.map(normOut).filter(Boolean) : []);
-/** Đầu vào: chuỗi id, bỏ trùng, bỏ id đầu ra của chính nó (id không còn trong dự án: normWorkspace bỏ). @param {any} a @param {any[]} outs */
+/** Đầu vào: chuỗi id, bỏ trùng, bỏ id đầu ra của chính nó. Id không còn trỏ tới đầu ra nào (bên giao đã xoá) vẫn giữ: bảng báo
+ * lỗi, người dùng gỡ trong hộp sửa. @param {any} a @param {any[]} outs */
 const insOf = (a, outs) => {
   const own = new Set(outs.map((o) => o.id));
   return [...new Set((Array.isArray(a) ? a : []).filter((s) => typeof s === 'string' && s && !own.has(s)))];
@@ -187,10 +188,9 @@ export function normWorkspace(o) {
   const ids = new Set(steps.map((s) => s.id));
   /* Quyết định chỉ gắn với bước còn trong dự án. */
   const log = objs(x.log).map(normLog).map((l) => (ids.has(l.stepId) ? l : { ...l, stepId: '' }));
-  /* Id đầu ra duy nhất trong dự án (trùng thì cái sau lấy id mới); đầu vào chỉ giữ id còn trỏ tới một đầu ra. */
+  /* Id đầu ra duy nhất trong dự án (trùng thì cái sau lấy id mới). Đầu vào mất nguồn vẫn giữ (insOf). */
   const outIds = new Set();
   for (const { h } of holders({ steps })) for (const o of h.outs) { if (outIds.has(o.id)) o.id = uid('o'); outIds.add(o.id); }
-  for (const { h } of holders({ steps })) h.ins = h.ins.filter((/** @type {string} */ id) => outIds.has(id));
   return {
     id: idOr(x.id, 'w'),
     name: oneLine(x.name) || 'Project',
@@ -253,7 +253,9 @@ export function freshCopy(ws) {
   }
   const outIds = new Map();
   for (const { h } of holders(c)) for (const o of h.outs) { outIds.set(o.id, uid('o')); o.id = outIds.get(o.id); }
-  for (const { h } of holders(c)) h.ins = h.ins.map((/** @type {string} */ id) => outIds.get(id)).filter(Boolean);
+  /* Đầu vào mất nguồn cũng lấy id mới (vẫn không trỏ tới đâu), cùng id cũ thì cùng id mới. */
+  const fresh = (/** @type {string} */ id) => { if (!outIds.has(id)) outIds.set(id, uid('o')); return outIds.get(id); };
+  for (const { h } of holders(c)) h.ins = h.ins.map(fresh);
   for (const l of c.log) {
     l.id = uid('l');
     l.stepId = stepIds.get(l.stepId) || '';
@@ -437,8 +439,8 @@ export function ioStatus(ws, hand = handoffs(ws)) {
 }
 
 /**
- * Trước khi xoá các chủ này: chụp đầu vào của nơi khác đang trỏ tới đầu ra của chúng. Dữ liệu không gỡ đầu vào treo lúc xoá
- * (bảng bỏ qua, lần đọc sau chuẩn hoá bỏ); hàm trả về gắn lại chúng khi Hoàn tác, kể cả khi tab khác đã ghi đè dự án.
+ * Trước khi xoá các chủ này: chụp đầu vào của nơi khác đang trỏ tới đầu ra của chúng. Xoá không gỡ đầu vào ấy (mất nguồn, bảng
+ * báo lỗi); hàm trả về gắn lại chúng khi Hoàn tác, kể cả khi người dùng đã gỡ hay tab khác đã ghi đè dự án.
  * @param {any} ws @param {any[]} owners @returns {(w: any) => void}
  */
 export function insBackup(ws, owners) {
@@ -687,7 +689,9 @@ function docLines(docs, ind) {
 }
 /* Bàn giao trong Markdown: nhãn `Outputs:` rồi mỗi đầu ra một mục `- tên · ref`, hợp đồng (note) là dòng thụt thêm hai ngay
  * dưới; nhãn `Inputs:` rồi mỗi đầu vào `- tên đầu ra ← tên bên giao` (tên trùng thì `tên bước › tên bước con`). Trong tên:
- * `\`, `·`, `←` thoát bằng `\`. */
+ * `\`, `·`, `←` thoát bằng `\`. Đầu vào mất nguồn (bên giao đã xoá): `- (deleted output)`, không có `←`; nhập lại vẫn là đầu
+ * vào mất nguồn. */
+const GONE_IN = '(deleted output)';
 const escHand = (/** @type {string} */ s) => s.replace(/[\\·←]/g, '\\$&');
 const unescHand = (/** @type {string} */ s) => s.replace(/\\([\s\S])/g, '$1');
 /** Tách theo `sep` chưa thoát; phần tách ra vẫn giữ dấu thoát. @param {string} s @param {string} sep */
@@ -711,7 +715,7 @@ function handLines(h, ws, idx, ind) {
   }
   for (const id of h.ins) {
     const src = idx.get(id);
-    if (!src) continue;
+    if (!src) { ins.push(`${ind}  - ${GONE_IN}`); continue; }
     const short = holderTitle(src);
     const same = [...idx.values()].filter((y) => fold(y.out.name) === fold(src.out.name) && fold(holderTitle(y)) === fold(short));
     ins.push(`${ind}  - ${escHand(src.out.name)} ← ${escHand(same.length > 1 ? fullTitle(src) : short)}`);
@@ -751,6 +755,7 @@ function resolveIns(ws, warnings) {
       const [nm, ...from] = splitEsc(raw, ' ← ');
       const name = unescHand(nm).trim();
       const by = from.length ? unescHand(from.join(' ← ')).trim() : '';
+      if (!by && fold(oneLine(name)) === fold(GONE_IN)) { h.ins.push(uid('o')); continue; } // mất nguồn: id không trỏ tới đâu
       const cand = outs.filter((c) => c.hd.h !== h && fold(oneLine(c.out.name)) === fold(oneLine(name)));
       const hit = by ? cand.filter((c) => c.short === fold(oneLine(by)) || c.full === fold(oneLine(by))) : cand;
       const pick = hit.length ? hit : cand.length === 1 ? cand : [];

@@ -18,13 +18,11 @@ export function initHand(d) {
 
 /* ── Trên bảng ── */
 
-/** Số đầu vào còn trỏ tới một đầu ra (đầu vào treo, sau khi xoá bên giao, không đếm). @param {any} x @param {Map<string, any>} idx */
-export const insCount = (x, idx) => x.ins.filter((/** @type {string} */ id) => idx.has(id)).length;
-
 /** Chip "In n" / "Out n" của một bước (thẻ bước con không có chip: xem trong hộp sửa). Ngoài vòng Tab như nút phụ khác: bàn phím xem trong hộp sửa.
- * @param {any} x @param {number} insN */
-export function tags(x, insN) {
+ * n đếm mọi đầu vào, kể cả đầu vào treo và đầu vào mất nguồn (danh sách của chip nêu chúng). @param {any} x */
+export function tags(x) {
   const { h, icon } = deps;
+  const insN = x.ins.length;
   const tag = (/** @type {string} */ act, /** @type {string} */ ic, /** @type {string} */ text, /** @type {string} */ label) =>
     h('button', { type: 'button', class: 'hand-tag', 'data-act': act, tabindex: '-1', 'aria-label': label, title: label }, icon(ic), text);
   return [
@@ -108,6 +106,10 @@ export function boardAct(act, b, step, sub) {
 
 /* ── Hộp danh sách (#dlg-hand) ── */
 
+/** Tên hiện thay cho đầu vào mất nguồn (bên giao đã xoá), ở hộp danh sách và hộp sửa. */
+const GONE = 'Deleted output';
+const goneText = 'Its output was deleted. Remove this input, or undo the delete.';
+
 /** Nút nhảy → các bên cần tô; `scroll` false là không cuộn (dòng của danh sách cặp).
  * @type {WeakMap<Element, {targets: {stepId:string, subId:string|null}[], scroll: boolean}>} */
 const jumps = new WeakMap();
@@ -164,7 +166,8 @@ const ctxOf = (/** @type {any} */ ws, /** @type {C.Holder} */ hd, /** @type {'in
 function showIns(ws, hd) {
   const { h, icon } = deps;
   const { idx, heldKeys } = C.handoffs(ws);
-  const items = hd.h.ins.map((/** @type {string} */ id) => idx.get(id)).filter(Boolean).map((/** @type {any} */ src) => {
+  const items = hd.h.ins.map((/** @type {string} */ id) => idx.get(id)).map((/** @type {any} */ src) => {
+    if (!src) return h('li', { class: 'hand-item' }, h('p', { class: 'hand-name' }, icon('in'), h('b', {}, GONE)), h('p', { class: 'hand-gone' }, goneText));
     const held = heldKeys.has(C.heldKey(hd.h.id, src.out.id));
     return h('li', { class: 'hand-item' },
       h('p', { class: 'hand-name' }, icon('in'), h('b', {}, src.out.name)), outDetail(src.out), whoBtn(ws, src, 'From ', held),
@@ -270,12 +273,11 @@ export function readEdit(f) {
  * @param {'sub'|'step'} where @param {any} ws @param {any} holder @param {any[]} owners
  */
 export function paintEdit(where, ws, holder, owners) {
-  const idx = C.outIndex(ws);
   draft[where] = {
     wsId: ws.id,
     id: holder ? holder.id : '',
     own: new Set(owners.flatMap((o) => o.outs.map((/** @type {any} */ x) => x.id))),
-    ins: holder ? holder.ins.filter((/** @type {string} */ id) => idx.has(id)) : [],
+    ins: holder ? [...holder.ins] : [], // kể cả đầu vào mất nguồn: hiện chip "Deleted output" để gỡ
     outs: holder ? holder.outs.map((/** @type {any} */ o) => ({ ...o })) : [],
   };
   sync(where);
@@ -302,7 +304,10 @@ function paintIns(where) {
   const ws = deps.findWs(draft[where].wsId);
   const { idx, heldKeys } = ws ? C.handoffs(ws) : { idx: new Map(), heldKeys: new Set() };
   const s = sec(where);
-  const items = draft[where].ins.map((id) => idx.get(id)).filter(Boolean).map((src) => {
+  const items = draft[where].ins.map((id) => [id, idx.get(id)]).map(([id, src]) => {
+    if (!src) return h('li', { class: 'in-chip gone', 'data-in': id, title: goneText },
+      icon('in'), h('span', { class: 'in-text' }, h('b', {}, GONE), h('small', {}, 'its source no longer exists')),
+      h('button', { type: 'button', class: 'icon-btn', 'data-in-del': '', 'aria-label': `Remove input (${GONE.toLowerCase()})`, title: 'Remove input' }, icon('x')));
     const held = heldKeys.has(C.heldKey(draft[where].id, src.out.id));
     return h('li', { class: 'in-chip' + (held ? ' held' : ''), 'data-in': src.out.id, title: held ? heldText(C.holderTitle(src)) : null },
     icon('in'), h('span', { class: 'in-text' }, h('b', {}, src.out.name),
@@ -406,8 +411,9 @@ function wirePick() {
     e.preventDefault();
     const picked = new Set([...$('pick-groups').querySelectorAll('input[name="pick"]:checked')].map((/** @type {any} */ c) => c.value));
     const where = pickFor;
-    /* Giữ thứ tự đã có, thêm cái mới theo thứ tự trên bảng. */
-    const keep = draft[where].ins.filter((id) => picked.has(id));
+    /* Giữ thứ tự đã có (đầu vào mất nguồn không có ô chọn: giữ), thêm cái mới theo thứ tự trên bảng. */
+    const offered = new Set(candidates(where).map((c) => c.out.id));
+    const keep = draft[where].ins.filter((id) => picked.has(id) || !offered.has(id));
     draft[where].ins = [...keep, ...candidates(where).map((c) => c.out.id).filter((id) => picked.has(id) && !keep.includes(id))];
     $('dlg-pick').close();
     sync(where);

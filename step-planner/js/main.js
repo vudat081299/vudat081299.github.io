@@ -265,7 +265,7 @@ function renderBoard(ws, opt = {}) {
     if (!step.revisit && step.round > 1) reopenedOn.set(step.id, lastReopened(ws, step));
     const key = JSON.stringify([step, filtering ? visible.map((/** @type {any} */ x) => x.id) : null,
       labels.get(step.id) ?? null, step.subs.map((/** @type {any} */ x) => [labels.get(x.id) ?? null, nextIds.has(x.id)]), todayStr,
-      reopenedOn.get(step.id) ?? null, Hd.insCount(step, hand.idx), handSig(hand.rows.get(i)), [...(hand.gaps.get(step.id) || [])].map(([k, ps]) => [k, handSig(ps)]),
+      reopenedOn.get(step.id) ?? null, handSig(hand.rows.get(i)), [...(hand.gaps.get(step.id) || [])].map(([k, ps]) => [k, handSig(ps)]),
       [step, ...step.subs].map((/** @type {any} */ x) => io.get(x.id))]);
     const prev = old.get(step.id);
     plan.push({ step, i, visible, key, row: reuse && prev && rowKeys.get(prev) === key ? prev : null, prev });
@@ -380,7 +380,7 @@ const handSig = (pairs) => (pairs || []).map((p) => [p.from.h.id, p.to.h.id, p.o
  * @param {{filtering:boolean, todayStr:string, nextIds:Set<string>, labels:Map<string,string>, keep:{notes:Set<string>, open:Set<string>}, reopenedOn:Map<string,string>, hand:any, io:Map<string, C.IoStatus>}} ctx */
 function stepRow(step, i, visible, ctx) {
   const { filtering, todayStr, nextIds, labels, keep, reopenedOn, hand, io } = ctx;
-  const stepTags = Hd.tags(step, Hd.insCount(step, hand.idx)).filter(Boolean);
+  const stepTags = Hd.tags(step).filter(Boolean);
   const prog = C.progress(step.subs);
   const done = prog.total > 0 && prog.done === prog.total;
   const head = h('div', { class: 'step-head' },

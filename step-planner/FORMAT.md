@@ -112,6 +112,8 @@ Warnings:
 - Đầu vào `- tên đầu ra ← tên bên giao` (tên bước con, hay tên bước nếu đầu ra của cả bước). Cặp tên đầu ra + tên bên giao
   trùng thì bên giao ghi `tên bước › tên bước con`.
 - Trong tên, ref: `\`, `·`, `←` thoát bằng `\`.
+- Đầu vào mất nguồn (bên giao đã xoá): `- (deleted output)`, không có `←`. Nhập lại vẫn là đầu vào mất nguồn (bảng báo lỗi,
+  không cảnh báo). Đầu ra thật tên `(deleted output)` luôn ghi kèm `← bên giao`.
 - Nhập đầu vào: tìm theo tên đầu ra (bỏ dấu, không phân biệt hoa thường), trùng thì theo tên bên giao; không có tên bên giao
   mà chỉ một đầu ra cùng tên thì lấy nó. Không thấy: cảnh báo, bỏ. Nhiều cái khớp: lấy cái đầu, cảnh báo.
 
