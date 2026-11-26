@@ -3,8 +3,9 @@
  * vẫn ở trong DOM, vẫn giữ value, vẫn phát `change`) và cho menu trạng thái của chip (openList).
  * Danh sách nằm trong lớp trên cùng (popover) nên không đẩy bố cục, nổi được cả trên hộp thoại modal. Chữ chỉ qua text node.
  * Xuất: isOpenFor, closeList, openList, consumeJustClosed, enhanceSelect.
- * Dùng: ui/dom.js. */
-import { icon } from './dom.js';
+ * Dùng: core/board.js, ui/dom.js. */
+import { fold } from '../core/board.js';
+import { h, icon } from './dom.js';
 
 /** @typedef {{value:string, label:string, hint?:string, dot?:string, selected?:boolean, disabled?:boolean}} Item */
 
@@ -13,15 +14,6 @@ let seq = 0;
 let cur = null;
 let typed = '';
 let typedAt = 0;
-
-/** @param {string} tag @param {Record<string, string>} [attrs] @param {...(Node|string)} kids */
-function el(tag, attrs = {}, ...kids) {
-  const e = document.createElement(tag);
-  for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
-  e.append(...kids);
-  return e;
-}
-const fold = (/** @type {string} */ s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[đĐ]/g, 'd').toLowerCase();
 
 /** Danh sách đang mở thuộc phần tử này không. @param {Element} anchor */
 export const isOpenFor = (anchor) => !!cur && cur.anchor === anchor;
@@ -51,8 +43,8 @@ function place() {
   const up = ph > below && above > below;
   const room = Math.max(up ? above : below, 120);
   pop.style.maxHeight = Math.floor(room) + 'px';
-  const h = Math.min(ph, room);
-  pop.style.top = Math.round(up ? r.top - gap - h : r.bottom + gap) + 'px';
+  const ht = Math.min(ph, room);
+  pop.style.top = Math.round(up ? r.top - gap - ht : r.bottom + gap) + 'px';
   pop.style.left = Math.round(Math.max(edge, Math.min(r.left, innerWidth - pw - edge))) + 'px';
   pop.dataset.side = up ? 'up' : 'down';
 }
@@ -103,12 +95,12 @@ function pick(i) {
 export function openList(anchor, items, onPick, opts = {}) {
   closeList();
   const id = 'dd' + (++seq);
-  const pop = el('div', { class: 'dd-pop' + (opts.className ? ' ' + opts.className : ''), role: 'listbox', tabindex: '-1', id,
+  const pop = h('div', { class: 'dd-pop' + (opts.className ? ' ' + opts.className : ''), role: 'listbox', tabindex: '-1', id,
     'aria-label': opts.label || anchor.getAttribute('aria-label') || anchor.textContent?.trim() || '' });
   items.forEach((it, i) => {
-    const o = el('div', { class: 'dd-opt', role: 'option', id: `${id}-${i}`, 'aria-selected': String(!!it.selected), 'data-value': it.value },
-      it.dot ? el('span', { class: `st-dot st-${it.dot}`, 'aria-hidden': 'true' }) : '',
-      el('span', { class: 'dd-text' }, el('span', { class: 'dd-label' }, it.label), it.hint ? el('span', { class: 'dd-hint' }, it.hint) : ''));
+    const o = h('div', { class: 'dd-opt', role: 'option', id: `${id}-${i}`, 'aria-selected': String(!!it.selected), 'data-value': it.value },
+      it.dot ? h('span', { class: `st-dot st-${it.dot}`, 'aria-hidden': 'true' }) : '',
+      h('span', { class: 'dd-text' }, h('span', { class: 'dd-label' }, it.label), it.hint ? h('span', { class: 'dd-hint' }, it.hint) : ''));
     if (it.selected) o.append(icon('check'));
     if (it.disabled) o.setAttribute('aria-disabled', 'true');
     pop.append(o);
@@ -198,8 +190,8 @@ export function consumeJustClosed(anchor) {
 export function enhanceSelect(sel) {
   if (sel.dataset.native !== undefined || sel.dataset.enhanced) return;
   sel.dataset.enhanced = '1';
-  const val = el('span', { class: 'dd-val' });
-  const btn = el('button', { type: 'button', class: 'dd-btn', 'aria-haspopup': 'listbox', 'aria-expanded': 'false' }, val, icon('chev'));
+  const val = h('span', { class: 'dd-val' });
+  const btn = h('button', { type: 'button', class: 'dd-btn', 'aria-haspopup': 'listbox', 'aria-expanded': 'false' }, val, icon('chev'));
   sel.before(btn);
   sel.classList.add('dd-native');
   sel.tabIndex = -1;
@@ -209,7 +201,7 @@ export function enhanceSelect(sel) {
     val.textContent = o ? o.textContent || '' : '';
     /** @type {HTMLButtonElement} */ (btn).disabled = sel.disabled;
     const dot = o?.dataset.dot;
-    if (dot) val.prepend(el('span', { class: `st-dot st-${dot}`, 'aria-hidden': 'true' }));
+    if (dot) val.prepend(h('span', { class: `st-dot st-${dot}`, 'aria-hidden': 'true' }));
   };
   /* Gán value / selectedIndex bằng JS không phát sự kiện: bọc setter của chính phần tử này. */
   const proto = HTMLSelectElement.prototype;

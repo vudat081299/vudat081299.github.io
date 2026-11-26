@@ -12,7 +12,7 @@ import { STATUSES, STATUS_HINT, STATUS_LABEL, needsEvidence, nextStatus, normSub
 import { boxKey, markCut, unclip } from './clamp.js';
 import { ask } from './dialogs.js';
 import { openDocNew } from './docs.js';
-import { $ } from './dom.js';
+import { $, quote } from './dom.js';
 import { consumeJustClosed, openList } from './dropdown.js';
 import { clearFilter } from './filter.js';
 import { boardAct } from './hand.js';
@@ -33,7 +33,7 @@ import { toast } from './toast.js';
 export function evidenceHint(step, sub) {
   if (!needsEvidence(sub)) return;
   const ids = { wsId: curId, stepId: step.id, subId: sub.id };
-  toast(`Done. Add evidence for "${sub.title.length > 40 ? sub.title.slice(0, 39) + '…' : sub.title}"? (a run, report, commit link)`, () => {
+  toast(`Done. Add evidence for ${quote(sub.title)}? (a run, report, commit link)`, () => {
     const ws = findWs(ids.wsId);
     const st = ws && ws.steps.find((/** @type {any} */ s) => s.subs.some((/** @type {any} */ x) => x.id === ids.subId));
     const x = st && st.subs.find((/** @type {any} */ y) => y.id === ids.subId);

@@ -2,7 +2,8 @@
 /* System design, thuần: nút và đường nối của sơ đồ, việc cho bảng (planTasks), so kế hoạch với bảng (planDiff) và áp
    lựa chọn (applyPlan).
    Xuất: snake, diagramNodes, bothDecided, flowEdges, viaLabel, PLAN_STEP, planTasks, SD_RE, planDiff, applyPlan.
-   Dùng: core/design.js, core/model.js. */
+   Dùng: core/board.js, core/design.js, core/model.js. */
+import { fold } from './board.js';
 import { VIA, pickNames, stageState } from './design.js';
 import { normDoc, normSub, setStatus } from './model.js';
 
@@ -121,7 +122,8 @@ export function planTasks(catalog, design) {
  * thì theo tên trong bước "System build": đúng tên, rồi mở bằng `Tên khâu:`). ── */
 
 export const SD_RE = /^(stage|edge):([a-z0-9>-]{1,81})@([a-z0-9]{1,13})$/;
-const foldT = (/** @type {string} */ s) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D').toLowerCase().trim();
+/** Tên so không dấu, không hoa thường, bỏ khoảng trắng hai đầu. @param {string} s */
+const foldT = (s) => fold(s).trim();
 const closed = (/** @type {any} */ x) => x.status === 'cancel' || x.status === 'skip';
 
 /** Vì sao một nguồn không còn sinh việc. @param {any} cat @param {any} design @param {string} src @param {any[]} tasks */

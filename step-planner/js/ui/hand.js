@@ -24,7 +24,9 @@ import { toast } from './toast.js';
 /** @typedef {import('../core/handoffs.js').IoStatus} IoStatus */
 /** @typedef {import('../core/handoffs.js').Pair} Pair */
 
-const quote = (/** @type {string} */ t) => `"${t}"`;
+/** Tên trong ngoặc kép, đủ chữ: nhãn và danh sách bàn giao nêu đủ tên (`quote` của ui/dom.js cắt ở 40 ký tự, cho toast).
+ * @param {string} t */
+const quoteFull = (t) => `"${t}"`;
 
 /** Gắn sự kiện của hộp danh sách, phần Inputs / Outputs của hai hộp sửa, hộp chọn đầu ra; chạy một lần lúc khởi động. */
 export function initHand() {
@@ -47,17 +49,17 @@ export function tags(x) {
   ];
 }
 /** Câu của một đầu vào lỗi; của bước con (chấm đầu bước) thì mở bằng tên bước con. @param {InWhy} w */
-const inLine = (w) => (w.at ? `${quote(w.at)}: ` : '') + (w.kind === 'missing' ? 'an input whose output was deleted'
-  : `${quote(w.name)} on hold: ${quote(w.from)} ${w.par ? 'runs in parallel with' : 'now comes after'} ${w.at ? 'it' : 'this'}`);
+const inLine = (w) => (w.at ? `${quoteFull(w.at)}: ` : '') + (w.kind === 'missing' ? 'an input whose output was deleted'
+  : `${quoteFull(w.name)} on hold: ${quoteFull(w.from)} ${w.par ? 'runs in parallel with' : 'now comes after'} ${w.at ? 'it' : 'this'}`);
 /** "A, B, which now come before it": nơi dùng treo, theo lý do (đứng trước / cùng ô song song). @param {string[]} names @param {boolean} par */
-const heldBy = (names, par) => `${names.map(quote).join(', ')}, which ${par ? (names.length > 1 ? 'run' : 'runs') + ' in parallel with'
+const heldBy = (names, par) => `${names.map(quoteFull).join(', ')}, which ${par ? (names.length > 1 ? 'run' : 'runs') + ' in parallel with'
   : 'now ' + (names.length > 1 ? 'come' : 'comes') + ' before'} it`;
 /** Câu của một đầu ra lỗi: không ai dùng, hay có nơi dùng treo (chỉ những nơi ấy, hay thêm nơi dùng khác còn nối). @param {OutWhy} w */
 function outLine(w) {
-  if (w.kind === 'unused') return `${quote(w.name)} is not used by any later step`;
+  if (w.kind === 'unused') return `${quoteFull(w.name)} is not used by any later step`;
   const before = w.to.filter((t) => !w.par.includes(t));
   const parts = [before.length && heldBy(before, false), w.par.length && heldBy(w.par, true)].filter(Boolean);
-  return `${quote(w.name)} is ${w.live ? '' : 'only '}used by ${parts.join(', and ')} (on hold)`;
+  return `${quoteFull(w.name)} is ${w.live ? '' : 'only '}used by ${parts.join(', and ')} (on hold)`;
 }
 const cap = (/** @type {string} */ t) => t.charAt(0).toUpperCase() + t.slice(1);
 /** Chữ của chấm đầu ra. Bước: lỗi vì nơi dùng treo thì nêu chúng, đầu ra chưa ai dùng ghi thêm sau; lỗi vì không đầu ra nào được
@@ -65,7 +67,7 @@ const cap = (/** @type {string} */ t) => t.charAt(0).toUpperCase() + t.slice(1);
 function outText(s, step) {
   if (s.out === 'none') return 'Output: none';
   const held = s.outWhy.filter((w) => w.kind === 'held'), unused = s.outWhy.filter((w) => w.kind === 'unused');
-  const notYet = unused.length ? `. Not used yet: ${unused.map((w) => quote(w.name)).join(', ')}` : '';
+  const notYet = unused.length ? `. Not used yet: ${unused.map((w) => quoteFull(w.name)).join(', ')}` : '';
   if (s.out === 'ok') return `Output: OK${notYet}`;
   if (!step) return `Output: broken. ${s.outWhy.map(outLine).join('; ')}`;
   if (held.length) return `Output: broken. ${held.map(outLine).join('; ')}${notYet}`;
@@ -125,10 +127,10 @@ export function boardAct(act, b, step, sub) {
   else if (act === 'hand-row') {
     const pairs = handoffs(ws).rows.get(hd.i) || [];
     const near = pairs.every((p) => p.from.i === hd.i - 1);
-    showPairs(ws, pairs, near ? 'From the step above' : 'From earlier steps', `Into step ${quote(step.title)}`);
+    showPairs(ws, pairs, near ? 'From the step above' : 'From earlier steps', `Into step ${quoteFull(step.title)}`);
   } else if (act === 'hand-gap') {
     const k = Number(b.dataset.gap);
-    showPairs(ws, handoffs(ws).gaps.get(step.id)?.get(k) || [], 'From earlier columns', `Step ${quote(step.title)} · into column ${k + 2}`);
+    showPairs(ws, handoffs(ws).gaps.get(step.id)?.get(k) || [], 'From earlier columns', `Step ${quoteFull(step.title)} · into column ${k + 2}`);
   } else return false;
   return true;
 }
@@ -177,8 +179,8 @@ function whoBtn(ws, hd, pre = '', held = false) {
 }
 /** Câu giải thích một đầu vào treo. @param {string} from tên bên giao @param {boolean} [par] treo vì cùng ô song song */
 const heldText = (from, par = false) => (par
-  ? `On hold: ${quote(from)} runs in parallel with this, so it cannot hand this over in time. Put one after the other, or remove the input.`
-  : `On hold: ${quote(from)} now comes after this, so it cannot hand this over yet. Move one of them, or remove the input.`);
+  ? `On hold: ${quoteFull(from)} runs in parallel with this, so it cannot hand this over in time. Put one after the other, or remove the input.`
+  : `On hold: ${quoteFull(from)} now comes after this, so it cannot hand this over yet. Move one of them, or remove the input.`);
 /** @param {string} kicker @param {string} title @param {string} where @param {any[]} items @param {typeof listCtx} ctx */
 function openList(kicker, title, where, items, ctx) {
   listCtx = ctx;
@@ -202,7 +204,7 @@ function showIns(ws, hd) {
       held && h('p', { class: 'hand-held' }, heldText(holderTitle(src), parKeys.has(heldKey(hd.h.id, src.out.id)))));
   });
   const w = who(ws, hd);
-  openList('Inputs', `Inputs of ${quote(w.title)}`, w.ctx, items, ctxOf(ws, hd, 'ins'));
+  openList('Inputs', `Inputs of ${quoteFull(w.title)}`, w.ctx, items, ctxOf(ws, hd, 'ins'));
 }
 /** Đầu ra của một bên: đường dẫn (link mở tab mới), hợp đồng, nơi dùng (nhảy tới). @param {any} ws @param {Holder} hd */
 function showOuts(ws, hd) {
@@ -215,7 +217,7 @@ function showOuts(ws, hd) {
         by.map((x) => whoBtn(ws, x, '', heldKeys.has(heldKey(x.h.id, o.id))))));
   });
   const w = who(ws, hd);
-  openList('Outputs', `Outputs of ${quote(w.title)}`, w.ctx, items, ctxOf(ws, hd, 'outs'));
+  openList('Outputs', `Outputs of ${quoteFull(w.title)}`, w.ctx, items, ctxOf(ws, hd, 'outs'));
 }
 /** Các cặp bên giao → bên nhận (vạch giữa hai hàng, nút giữa hai ô): chọn một dòng là tô cả hai. @param {any} ws @param {Pair[]} pairs @param {string} title @param {string} where */
 function showPairs(ws, pairs, title, where) {
@@ -276,8 +278,8 @@ export function jump(targets, { scroll = true } = {}) {
   if (scroll) return;
   const off = targets.map((t, k) => ({ t, el: els[k], side: els[k] ? offSide(/** @type {HTMLElement} */ (els[k])) : '' })).filter((o) => o.side);
   if (!off.length) return;
-  const text = (off.length > 1 && off[0].side === off[1].side ? `${off.map((o) => quote(targetTitle(o.t))).join(' and ')} are ${off[0].side}`
-    : off.map((o) => `${quote(targetTitle(o.t))} is ${o.side}`).join(' and ')) + ', off screen';
+  const text = (off.length > 1 && off[0].side === off[1].side ? `${off.map((o) => quoteFull(targetTitle(o.t))).join(' and ')} are ${off[0].side}`
+    : off.map((o) => `${quoteFull(targetTitle(o.t))} is ${o.side}`).join(' and ')) + ', off screen';
   const first = off[0];
   toast(text, () => {
     const el = /** @type {HTMLElement|null} */ (document.querySelector(sel(first.t)));
@@ -506,7 +508,7 @@ function wirePick() {
 /** Tên các bên nhận đầu ra của bước và các bước con được chọn làm lại. @param {any} ws @param {any} step @param {string[]} picked */
 export function alsoCheck(ws, step, picked) {
   const owners = [step, ...step.subs.filter((/** @type {any} */ x) => picked.includes(x.id))];
-  return consumersOf(ws, owners).map((hd) => (hd.sub ? `${quote(hd.sub.title)} in ${quote(hd.step.title)}` : `step ${quote(hd.step.title)}`));
+  return consumersOf(ws, owners).map((hd) => (hd.sub ? `${quoteFull(hd.sub.title)} in ${quoteFull(hd.step.title)}` : `step ${quoteFull(hd.step.title)}`));
 }
 
 /* ── Sắp xếp lại: đầu vào vừa bị treo ── */
@@ -519,6 +521,6 @@ export function newlyHeld(ws, before, tail = 'Links kept; move back to reconnect
   if (!fresh.length) return '';
   const l = fresh[0];
   const rel = parKeys.has(heldKey(l.to.h.id, l.out.id)) ? 'runs in parallel with' : 'now comes before';
-  return ` · Input on hold: ${quote(holderTitle(l.to))} ${rel} ${quote(holderTitle(l.from))}`
+  return ` · Input on hold: ${quoteFull(holderTitle(l.to))} ${rel} ${quoteFull(holderTitle(l.from))}`
     + (fresh.length > 1 ? ` (+${fresh.length - 1} more)` : '') + '. ' + tail;
 }
