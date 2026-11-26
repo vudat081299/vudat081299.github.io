@@ -1,13 +1,13 @@
 // @ts-check
 /* Nhập (#dlg-import): dán chữ hay chọn file .md / .json, xem trước số mục và cảnh báo, thêm dự án mới hay thay nội dung
-   dự án đang mở (có Hoàn tác).
+   dự án đang mở (có Hoàn tác). Đóng mà chữ đã dán chưa nhập thì hỏi lại như hộp sửa.
    Xuất: openImport, initImport.
    Dùng: core/io.js, core/model.js, ui/board.js, ui/dialogs.js, ui/dom.js, ui/filter.js, ui/projects.js, ui/state.js,
      ui/toast.js. */
 import { counts, parseImport, plural } from '../core/io.js';
 import { uniqueName } from '../core/model.js';
 import { resetBoard } from './board.js';
-import { showDlg } from './dialogs.js';
+import { closeSaved, openDlg } from './dialogs.js';
 import { $, h } from './dom.js';
 import { resetFilters } from './filter.js';
 import { afterOpen, switchTo } from './projects.js';
@@ -23,7 +23,7 @@ export function openImport() {
   $('import-text').value = '';
   /** @type {any} */ (document.querySelector('input[name="import-mode"][value="new"]')).checked = true;
   previewImport();
-  showDlg($('dlg-import'));
+  openDlg($('dlg-import'));
 }
 function previewImport() {
   const p = $('import-preview');
@@ -73,7 +73,7 @@ export function initImport() {
     if (!importParsed) return;
     const mode = /** @type {any} */ (document.querySelector('input[name="import-mode"]:checked')).value;
     const parsed = importParsed;
-    $('dlg-import').close();
+    closeSaved($('dlg-import'));
     resetFilters();
     const ws = cur();
     if (mode === 'replace' && ws && parsed.workspaces.length === 1) {

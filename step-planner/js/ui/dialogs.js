@@ -1,21 +1,25 @@
 // @ts-check
 /* Hộp thoại: mở (showDlg, openDlg: thân về đầu, focus ô đầu trừ màn cảm ứng), đóng thì hỏi lại khi chữ chưa lưu
    (tryClose, closeSaved), vòng focus ẩn sau khi đóng bằng phím, hộp hỏi #dlg-ask (ask, thay alert / confirm / prompt), gộp khi
-   Lưu mà tab khác đã ghi (mergeSaved, askRecreate); mọi <select> có nghĩa dùng danh sách tự dựng (ui/dropdown.js).
+   Lưu mà tab khác đã ghi (mergeSaved, askRecreate); đóng mà nút mở đã bị vẽ lại thì focus nút mới (openerSel);
+   mọi <select> có nghĩa dùng danh sách tự dựng (ui/dropdown.js).
    Xuất: focusField, showDlg, openDlg, tryClose, closeSaved, ask, mergeSaved, askRecreate, initDialogs.
    Dùng: core/io.js, core/model.js, ui/dom.js, ui/dropdown.js, ui/state.js. */
 import { plural } from '../core/io.js';
 import { STATUS_LABEL, mergeEdit, oneLine } from '../core/model.js';
 import { $, autosize, field, fmtDate, h } from './dom.js';
 import { enhanceSelect } from './dropdown.js';
-import { stepOf } from './state.js';
+import { refocus, stepOf } from './state.js';
 
 /* ── Hộp thoại: mở, focus ô đầu, hỏi lại khi đóng mà chữ chưa lưu ── */
 
-const snapshot = (/** @type {any} */ form) => JSON.stringify([...form.elements].filter((e) => e.name).map((e) => (e.type === 'radio' || e.type === 'checkbox' ? e.checked : e.value)));
+/* Khung chữ của hộp: <form>, hay .dlg-form khi hộp không gửi form (Import: ô theo id). */
+const formOf = (/** @type {any} */ dlg) => dlg.querySelector('form') || dlg.querySelector('.dlg-form');
+const snapshot = (/** @type {any} */ form) => JSON.stringify([...(form.elements || form.querySelectorAll('input, textarea, select'))]
+  .filter((e) => e.name || e.id).map((e) => (e.type === 'radio' || e.type === 'checkbox' ? e.checked : e.value)));
 /** @type {WeakMap<any, string>} */
 const snaps = new WeakMap();
-const GUARDED = ['dlg-sub', 'dlg-step', 'dlg-revisit', 'dlg-log', 'dlg-notes', 'dlg-doc', 'dlg-md'];
+const GUARDED = ['dlg-sub', 'dlg-step', 'dlg-revisit', 'dlg-log', 'dlg-notes', 'dlg-doc', 'dlg-md', 'dlg-import'];
 
 /* Màn cảm ứng: mở hộp không tự focus ô chữ (bàn phím ảo bật lên che hộp). showModal focus phần tử đầu tiên: mọi hộp
  * trừ #dlg-ask mở đầu bằng nút ×; #dlg-ask trên màn cảm ứng đặt autofocus vào nút OK. */
@@ -36,22 +40,59 @@ export function focusField(el, select = false) {
 const NAV_KEYS = ['Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Home', 'End', 'PageUp', 'PageDown'];
 const quietFocus = () => document.documentElement.classList.add('quiet-focus');
 
+/* Nút mở hộp: bảng vẽ lại trong lúc hộp mở (thêm, xoá tài liệu, Evidence) thay nút ấy bằng nút mới, và trình duyệt trả focus
+ * về nút cũ đã rời trang: focus rơi về body. Lúc mở nhớ bộ chọn của nút mở; đóng mà focus ở body thì tìm lại theo bộ chọn. */
+const KEYS = ['data-act', 'data-sub', 'data-step', 'data-doc', 'data-doc-act', 'data-doc-add', 'data-log', 'data-ws', 'data-edge',
+  'data-k', 'data-in', 'data-out', 'data-gap', 'data-at', 'data-tpl', 'data-goto'];
+/** @type {WeakMap<any, string>} */
+const openers = new WeakMap();
+/** Bộ chọn tìm lại phần tử sau khi vẽ lại: khoá của nó và của các tổ tiên có khoá tới tổ tiên có id; rồi chỉ tổ tiên gần nhất.
+ * Phần tử không có id hay khoá riêng: ''. @param {any} el */
+function openerSel(el) {
+  const own = (/** @type {any} */ e) => (e.id ? '#' + CSS.escape(e.id) : KEYS.filter((k) => e.hasAttribute(k)).map((k) => `[${k}="${CSS.escape(e.getAttribute(k))}"]`).join(''));
+  if (!el || el === document.body || !own(el)) return '';
+  const parts = [];
+  for (let e = el; e && e !== document.body; e = e.parentElement) {
+    const o = own(e);
+    if (o) parts.unshift(o);
+    if (e.id) break;
+  }
+  return parts.length > 2 ? `${parts.join(' ')} || ${parts.slice(-2).join(' ')}` : parts.join(' ');
+}
+/** @param {any} dlg */
+function showModalFrom(dlg) {
+  openers.set(dlg, openerSel(document.activeElement));
+  dlg.showModal();
+}
+/** Đóng hộp mà focus còn trong hộp ấy (trình duyệt không trả được, sẽ rơi về body) hay đã ở body: về nút mở, hay nút cùng chỗ
+ * sau khi vẽ lại; hộp dưới còn mở thì ở trong hộp ấy. @param {any} dlg */
+function restoreFocus(dlg) {
+  const sel = openers.get(dlg) || '';
+  openers.delete(dlg);
+  const a = document.activeElement;
+  if (a && a !== document.body && !dlg.contains(a)) return;
+  const under = [...document.querySelectorAll('dialog[open]')].at(-1);
+  if (!under) { refocus(sel); return; }
+  const el = sel.split('||').map((x) => x.trim() && under.querySelector(x.trim())).find(Boolean) || under.querySelector('button');
+  if (el) el.focus();
+}
+
 /** Hộp dùng lại cho mục khác: thân về đầu, không giữ chỗ cuộn của lần mở trước. @param {any} dlg */
 export function showDlg(dlg) {
-  dlg.showModal(); // hộp đóng không cuộn được: đặt lại sau khi mở
+  showModalFrom(dlg); // hộp đóng không cuộn được: đặt lại sau khi mở
   for (const b of dlg.querySelectorAll('.dlg-body')) b.scrollTop = 0;
 }
 /** @param {any} dlg @param {any} [focusEl] */
 export function openDlg(dlg, focusEl) {
   showDlg(dlg);
   dlg.querySelectorAll('textarea.grow-title').forEach(autosize);
-  const form = dlg.querySelector('form');
+  const form = formOf(dlg);
   if (form && GUARDED.includes(dlg.id)) snaps.set(dlg, snapshot(form));
   focusField(focusEl, true);
 }
 /** Đóng hộp; chữ đã sửa mà chưa lưu thì hỏi lại. @param {any} dlg */
 export async function tryClose(dlg) {
-  const form = dlg.querySelector('form');
+  const form = formOf(dlg);
   if (form && snaps.has(dlg) && snapshot(form) !== snaps.get(dlg)) {
     const ok = await ask({ title: 'Discard changes?', text: 'Unsaved edits in this dialog will be lost.', ok: 'Discard', danger: true });
     if (ok === null) return false;
@@ -90,7 +131,7 @@ export function ask(o) {
   $('ask-ok').className = 'btn ' + (o.danger ? 'danger' : 'go');
   dlg.returnValue = '';
   $('ask-ok').autofocus = coarse.matches;
-  dlg.showModal();
+  showModalFrom(dlg);
   if (o.label) focusField($('ask-input'), true); else $('ask-ok').focus();
   return new Promise((resolve) => {
     dlg.addEventListener('close', () => resolve(dlg.returnValue === 'ok' ? $('ask-input').value : dlg.returnValue === 'alt' ? ASK_ALT : null), { once: true });
@@ -143,6 +184,7 @@ export function initDialogs() {
   });
 
   document.addEventListener('cancel', (/** @type {any} */ e) => { if (e.target instanceof HTMLDialogElement) quietFocus(); }, true);
+  document.addEventListener('close', (/** @type {any} */ e) => { if (e.target instanceof HTMLDialogElement) restoreFocus(e.target); }, true);
   document.addEventListener('submit', (/** @type {any} */ e) => { if (e.target.closest('dialog')) quietFocus(); }, true);
   window.addEventListener('keydown', (e) => { if (NAV_KEYS.includes(e.key)) document.documentElement.classList.remove('quiet-focus'); }, true);
   window.addEventListener('pointerdown', () => document.documentElement.classList.remove('quiet-focus'), true);

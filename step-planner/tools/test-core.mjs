@@ -1355,6 +1355,31 @@ function designSnapshot(cat) {
     !diffs.length, `${diffs.length} khác: ${diffs.slice(0, 6).join(' | ')}`);
 }
 
+/* Thứ còn thiếu để có gợi ý kiến trúc (archMissing): trang Architecture chỉ tới đúng trang (lối, hồ sơ, khâu). */
+{
+  const { archMissing } = await import('../js/core/design.js');
+  const cat = JSON.parse(readFileSync(fileURLToPath(new URL('../data/system-design.json', import.meta.url)), 'utf8'));
+  const none = archMissing(cat, null);
+  check('kiến trúc thiếu gì: chưa có gì thì thiếu lối và hồ sơ', none.path && none.profile.length > 0 && none.profile.every((id) => cat.profile.some((q) => q.id === id)));
+  /* Mỗi mẫu có design: nhóm nào chưa gợi ý thì phải chỉ ra ít nhất một thứ còn thiếu; chưa có lối mà luật cần lối thì nêu lối;
+   * mọi nhóm đã gợi ý thì không thiếu gì. Trả lời đúng thứ được chỉ ra thì không còn bị chỉ ra nữa. */
+  const bad = [];
+  for (const t of templates) {
+    const d = normDesign(t.design || null);
+    const nulls = archAdvice(cat, d).filter((a) => a.id === null).length;
+    const m = archMissing(cat, d);
+    const any = m.path || m.profile.length || m.stages.length;
+    if (nulls ? !any : any) bad.push(`${t.id}: ${nulls} nhóm chưa gợi ý, thiếu ${JSON.stringify(m)}`);
+    if (m.path && d?.path) bad.push(`${t.id}: đã có lối mà vẫn nêu lối`);
+    for (const id of m.profile) {
+      const q = cat.profile.find((x) => x.id === id);
+      const again = archMissing(cat, normDesign({ ...(d || {}), profile: { ...(d?.profile || {}), [id]: q.choices[0].id } }));
+      if (again.profile.includes(id)) bad.push(`${t.id}: trả lời ${id} mà vẫn bị nêu`);
+    }
+  }
+  check('kiến trúc thiếu gì: khớp với nhóm chưa gợi ý ở mọi mẫu, không nêu thứ đã có', !bad.length, bad.slice(0, 4).join(' | '));
+}
+
 /* Khung nhìn của sơ đồ (js/core/view-math.js): thu phóng quanh điểm, giới hạn, kéo, hai ngón, vừa khung. */
 {
   const V = await import('../js/core/view-math.js');
@@ -1377,7 +1402,21 @@ function designSnapshot(cat) {
   check('view-math: panBy dời, giữ tỉ lệ', p.x === 30 && p.y === -12 && p.k === 1);
   check('view-math: clampPan không đụng khung ban đầu', JSON.stringify(V.clampPan(V.HOME, 800, 400, 800, 400)) === JSON.stringify(V.HOME));
   const far = V.clampPan({ x: -5000, y: 9000, k: 2 }, 800, 400, 800, 400);
-  check('view-math: kéo quá xa thì còn KEEP px của sơ đồ trong khung', near(far.x, V.KEEP - 1600) && near(far.y, 400 - V.KEEP) && far.k === 2, JSON.stringify(far));
+  check('view-math: trục tràn khung — kéo quá xa thì còn KEEP px của sơ đồ trong khung', near(far.x, V.KEEP - 1600) && near(far.y, 400 - V.KEEP) && far.k === 2, JSON.stringify(far));
+  const small = V.clampPan({ x: -300, y: 500, k: 0.5 }, 800, 400, 800, 400), mixed = V.clampPan({ x: -5000, y: -90, k: 1 }, 1600, 300, 800, 400);
+  check('view-math: trục vừa khung — sơ đồ luôn thấy trọn (lệch làm tròn dưới FIT_EPS vẫn là vừa)', small.x === 0 && small.y === 200
+    && near(mixed.x, V.KEEP - 1600) && mixed.y === 0 && V.clampPan({ x: -3, y: 0, k: 1 }, 800.2, 400, 800, 400).x === 0, JSON.stringify({ small, mixed }));
+  const fitAll = { x: 0, y: 0, k: 1 };
+  check('view-math: bánh xe — sơ đồ vừa khung thì không dời (trả đúng khung cũ, trang cuộn)', V.wheelStep(fitAll, -40, -40, 800, 400, 800, 400) === fitAll
+    && V.wheelStep({ x: 10, y: 20, k: 0.5 }, 30, 30, 800, 400, 800, 400).x === 10);
+  const wide = { x: 0, y: 0, k: 1 };
+  const w1 = V.wheelStep(wide, -100, -100, 1600, 300, 800, 400), w2 = V.wheelStep({ x: -790, y: 0, k: 1 }, -100, 0, 1600, 300, 800, 400);
+  check('view-math: bánh xe — chỉ trục tràn khung dời, dừng ở mép sơ đồ; tới mép thì trả khung cũ', w1.x === -100 && w1.y === 0
+    && w2.x === -800 && V.wheelStep({ x: -800, y: 0, k: 1 }, -50, 0, 1600, 300, 800, 400).x === -800
+    && V.wheelStep(wide, 50, 0, 1600, 300, 800, 400) === wide, JSON.stringify({ w1, w2 }));
+  const out = { x: -1500, y: 0, k: 1 };
+  check('view-math: bánh xe — khung đã kéo ra ngoài mép không bị giật về, chỉ đi vào', V.wheelStep(out, -20, 0, 1600, 300, 800, 400) === out
+    && V.wheelStep(out, 20, 0, 1600, 300, 800, 400).x === -1480);
   const f = V.fit(1000, 500, 500, 500);
   check('view-math: fit vừa khung, nằm giữa, không phóng quá 1', near(f.k, 0.5) && near(f.x, 0) && near(f.y, 125) && V.fit(100, 100, 500, 500).k === 1
     && JSON.stringify(V.fit(0, 10, 10, 10)) === JSON.stringify(V.HOME));

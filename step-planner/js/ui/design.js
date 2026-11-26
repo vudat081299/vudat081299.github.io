@@ -7,7 +7,7 @@
 import { fold as foldText } from '../core/board.js';
 import { initDiagramView, attach as attachView, resetView } from './diagram-view.js';
 import { PLAN_STEP, applyPlan, bothDecided, diagramNodes, flowEdges, planDiff, snake, viaLabel } from '../core/design-plan.js';
-import { EDGE_MAX, OWN_MAX, VIA, applyPath, archAdvice, catalogErrors, decidedCount, effProfile, emptyDesign, isPreset, normDesign, notNeededBy, pathOf, pickNames, presetDesign, rankOptions, stageState, warnings } from '../core/design.js';
+import { EDGE_MAX, OWN_MAX, VIA, applyPath, archAdvice, archMissing, catalogErrors, decidedCount, effProfile, emptyDesign, isPreset, normDesign, notNeededBy, pathOf, pickNames, presetDesign, rankOptions, stageState, warnings } from '../core/design.js';
 import { plural, slug } from '../core/io.js';
 import { normStep, normSub } from '../core/model.js';
 import { showDlg } from './dialogs.js';
@@ -28,6 +28,8 @@ const moreOpen = new Set();       // khâu đang mở "Show other options"
 let applied = null;
 const ARCH_PAGE = 2;
 const FIRST_STAGE = 3;
+const ARROW = 6;                  // px: đầu mũi tên của đường nối dài chừng này tính từ mũi (marker `sd-arrow`)
+const TIP_GAP = 3;                // px: mũi tên dừng trước nút chừng này
 
 
 /** @param {string} tag @param {Record<string, any>} [attrs] @param {...any} kids */
@@ -144,7 +146,7 @@ function drawDiagram() {
   const W = Math.max(fig.clientWidth - 2 * fp - 4, 240);
   const gx = px(cs, '--sd-gap-x', 40), gy = px(cs, '--sd-gap-y', 36), maxW = px(cs, '--sd-node-max', 220);
   const pad = px(cs, '--sd-pad', 12), head = px(cs, '--sd-head', 30), lh = px(cs, '--sd-line', 20);
-  const gxHand = Math.max(gx, px(cs, '--sd-gap-hand', 128));
+  const gxHand = Math.max(gx, px(cs, '--sd-gap-hand', 128)), gyHand = Math.max(gy, px(cs, '--sd-gap-y-hand', 56));
   const edges = new Map(flowEdges(cat, design()).map((e) => [e.key, e]));
   /* Khoảng giữa cột c và c + 1: một đường nối ngang qua đó có hợp đồng thì nới tới --sd-gap-hand, để nhãn không chiếm cả đường.
    * Số cột: nhiều nhất (≤ 5) mà nút còn rộng ≥ min(--sd-node-max, 180). */
@@ -167,10 +169,16 @@ function drawDiagram() {
   const lineCount = (/** @type {any} */ n) => (n.lane === 'end' ? 1 : Math.max(1, Math.min(n.names.length, MAX_NAMES + 1)));
   const nodeH = (/** @type {any} */ n) => head + lineCount(n) * lh + pad;
 
-  /* Luồng: rắn bò; mỗi hàng cao bằng nút cao nhất của hàng. */
+  /* Luồng: rắn bò; mỗi hàng cao bằng nút cao nhất của hàng. Đường nối dọc từ hàng r xuống hàng r + 1 có hợp đồng thì khoảng
+   * hàng nới tới --sd-gap-y-hand: nhãn nằm trên nét mà không đè đầu mũi tên. */
   const rows = /** @type {number[]} */ ([]);
   flow.forEach((n, i) => { const r = snake(i, cols).row; rows[r] = Math.max(rows[r] || 0, nodeH(n)); });
-  const rowY = rows.map((_, r) => rows.slice(0, r).reduce((a, b) => a + b + gy, 0));
+  const rowGap = rows.map(() => gy);
+  for (let i = 1; i < flow.length; i++) {
+    const r = snake(i - 1, cols).row;
+    if (r !== snake(i, cols).row && edges.get(`${flow[i - 1].id}>${flow[i].id}`)?.c) rowGap[r] = gyHand;
+  }
+  const rowY = rows.map((_, r) => rows.slice(0, r).reduce((a, b, k) => a + b + rowGap[k], 0));
   const pos = flow.map((n, i) => { const p = snake(i, cols); return { n, x: colX[p.col], y: rowY[p.row], h: rows[p.row], row: p.row }; });
   let y = rowY.length ? rowY[rowY.length - 1] + rows[rows.length - 1] : 0;
 
@@ -188,17 +196,18 @@ function drawDiagram() {
     const same = a.row === b.row;
     const key = `${a.n.id}>${b.n.id}`;
     const d = same
-      ? (b.x > a.x ? `M${a.x + nw} ${a.y + a.h / 2}H${b.x - 3}` : `M${a.x} ${a.y + a.h / 2}H${b.x + nw + 3}`)
-      : `M${a.x + nw / 2} ${a.y + a.h}V${b.y - 3}`;
+      ? (b.x > a.x ? `M${a.x + nw} ${a.y + a.h / 2}H${b.x - TIP_GAP}` : `M${a.x} ${a.y + a.h / 2}H${b.x + nw + TIP_GAP}`)
+      : `M${a.x + nw / 2} ${a.y + a.h}V${b.y - TIP_GAP}`;
     /* Nét liền khi cả hai đầu đã quyết, còn lại nét đứt; đầu mũi tên luôn liền. */
     const line = svg('path', { class: `sd-edge${bothDecided(a.n, b.n) ? '' : ' is-open'}`, d, 'data-pair': key, 'marker-end': 'url(#sd-arrow)' });
     const e = edges.get(key);
     if (!e) { links.append(line); continue; }
-    /* Nhãn ở giữa khoảng trống giữa hai nút; dài nhất --sd-hand-cap lần chiều dài đường (đường dọc: lần bề rộng nút). */
+    /* Nhãn ở giữa khoảng trống giữa hai nút; dài nhất --sd-hand-cap lần chiều dài đường (đường dọc: lần bề rộng nút).
+     * Đường dọc: giữa phần nét trước đầu mũi tên, nhãn không đè mũi tên. */
     const x0 = Math.min(a.x, b.x) + nw, x1 = Math.max(a.x, b.x);
     links.append(svg('g', { class: 'sd-wire', 'data-edge': key },
       svg('path', { class: 'sd-hit', d }), line,
-      handEl(e, same ? (x0 + x1) / 2 : a.x + nw / 2, same ? a.y + a.h / 2 : a.y + a.h + gy / 2, (same ? x1 - x0 : nw) * dim.cap, dim, i)));
+      handEl(e, same ? (x0 + x1) / 2 : a.x + nw / 2, same ? a.y + a.h / 2 : (a.y + a.h + b.y - TIP_GAP - ARROW) / 2, (same ? x1 - x0 : nw) * dim.cap, dim, i)));
   }
   g.append(links);
 
@@ -219,7 +228,7 @@ function drawDiagram() {
   const label = 'System diagram: ' + flow.map((n) => n.names.length ? `${n.title} (${n.names.join(', ')})` : n.title).join(' → ');
   /* Đầu mũi tên chữ V hở; đơn vị theo sơ đồ để nét bằng nét đường nối. Bản `-on`: đường đang rê. */
   const arrow = (/** @type {string} */ id, /** @type {string} */ cls) => svg('marker', { id, viewBox: '0 0 12 12', refX: 10, refY: 6, markerWidth: 12, markerHeight: 12, markerUnits: 'userSpaceOnUse', orient: 'auto-start-reverse' },
-    svg('path', { class: cls, d: 'M4 2L10 6L4 10' }));
+    svg('path', { class: cls, d: `M${10 - ARROW} 2L10 6L${10 - ARROW} 10` }));
   /* <svg> rộng bằng khung (1 đơn vị = 1 px); sơ đồ trong nhóm `.sd-cam`, diagram-view.js đặt transform kéo / thu phóng lên đó. */
   const vw = Math.max(W, width) + 4 + 2 * fp, cw = width + 4 + 2 * fp, chh = y + 4 + 2 * fp;
   const el = svg('svg', { class: 'sd-svg', viewBox: `0 0 ${vw} ${chh}`, width: vw, height: chh, role: 'img', 'aria-label': label, 'data-w': cw },
@@ -282,7 +291,11 @@ function nodeEl(n, x, y, w, hh, head, lh, pad, font) {
   return grp;
 }
 
-/** Tải sơ đồ: chép màu, nét, font đã tính vào thuộc tính để file đứng một mình đúng theme đang xem. */
+/* text-transform của CSS không có thuộc tính SVG tương ứng: đổi thẳng chữ của file tải về. */
+const TEXT_CASE = { uppercase: (/** @type {string} */ t) => t.toUpperCase(), lowercase: (/** @type {string} */ t) => t.toLowerCase(),
+  capitalize: (/** @type {string} */ t) => t.replace(/(^|\s)(\S)/g, (_, sp, c) => sp + c.toUpperCase()) };
+/** Tải sơ đồ: chép màu, nét, font (cả nghiêng), chữ hoa của CSS vào thuộc tính, chữ để file đứng một mình đúng theme đang xem;
+ * rộng, cao, viewBox làm tròn tới px nguyên. */
 function downloadSvg() {
   const src = $('sd-fig').querySelector('svg');
   if (!src) return;
@@ -290,18 +303,22 @@ function downloadSvg() {
   const a = [src, ...src.querySelectorAll('*')], b = [out, ...out.querySelectorAll('*')];
   const drop = b.filter((_, i) => a[i].matches('.sd-hit, .sd-hand.is-empty'));
   const camOut = b[a.findIndex((x) => x.matches('.sd-cam'))];
-  const props = ['fill', 'stroke', 'stroke-width', 'stroke-dasharray', 'stroke-linecap', 'stroke-linejoin', 'font-family', 'font-size', 'font-weight', 'letter-spacing', 'opacity'];
+  const props = ['fill', 'stroke', 'stroke-width', 'stroke-dasharray', 'stroke-linecap', 'stroke-linejoin', 'font-family', 'font-size', 'font-weight', 'font-style', 'letter-spacing', 'opacity'];
   a.forEach((el, i) => {
     const cs = getComputedStyle(el);
     for (const p of props) b[i].setAttribute(p, cs.getPropertyValue(p));
+    const tc = TEXT_CASE[/** @type {'uppercase'} */ (cs.getPropertyValue('text-transform'))];
+    if (tc) for (const t of b[i].childNodes) if (t.nodeType === Node.TEXT_NODE) t.nodeValue = tc(t.nodeValue || '');
     b[i].removeAttribute('class');
     b[i].removeAttribute('tabindex');
     b[i].removeAttribute('role');
   });
   for (const x of drop) x.remove();
   camOut?.removeAttribute('style');
-  const cw = src.getAttribute('data-w') || src.getAttribute('width') || '0', chh = src.getAttribute('height') || '0';
+  const cw = String(Math.round(Number(src.getAttribute('data-w') || src.getAttribute('width') || 0)));
+  const chh = String(Math.round(Number(src.getAttribute('height') || 0)));
   out.setAttribute('width', cw);
+  out.setAttribute('height', chh);
   out.setAttribute('viewBox', `0 0 ${cw} ${chh}`);
   out.removeAttribute('data-w');
   out.setAttribute('xmlns', NS);
@@ -595,10 +612,31 @@ function archPane() {
     h('p', { class: 'dlg-kicker' }, 'Your project'),
     h('h3', { class: 'sd-h' }, 'Architecture'),
     h('p', { class: 'sd-q' }, 'Kiến trúc là hình dạng lớn của hệ thống, quyết trước khi chọn công cụ cho từng khâu. Mỗi nhóm dưới đây trả lời một câu hỏi bằng vài kiến trúc chuẩn; trang gợi ý một kiến trúc mỗi nhóm theo hồ sơ dự án, lối đã chọn và các khâu đã quyết.'), // lang: vi — lời giải thích, nội dung
-    adv.every((a) => a.id === null) ? h('p', { class: 'sd-tip' }, 'Answer the project profile to get a recommendation. ',
-      h('button', { type: 'button', class: 'sd-link', 'data-at': 1 }, 'Go to profile')) : null,
+    archTip(fams, adv, d),
     ...fams.map((/** @type {any} */ f, /** @type {number} */ i) => archFamily(f, adv[i], d)),
   ];
+}
+
+/** Nhóm chưa có gợi ý: nói đúng thứ còn thiếu (archMissing) kèm lối tới trang ấy — lối, hồ sơ; chỉ còn khâu thì các khâu.
+ * @param {any[]} fams @param {{id: string | null}[]} adv @param {any} d */
+function archTip(fams, adv, d) {
+  const none = fams.filter((_, i) => adv[i].id === null);
+  if (!none.length) return null;
+  const m = archMissing(cat, d);
+  const go = (/** @type {number} */ at, /** @type {string} */ t) => h('button', { type: 'button', class: 'sd-link', 'data-at': at }, t);
+  const title = (/** @type {string} */ id) => cat.stages.find((/** @type {any} */ s) => s.id === id).title;
+  /** @type {[string, string, any[]][]} [loại, việc, nút] */
+  const asks = [];
+  if (m.path) asks.push(['path', 'pick what you deliver', [go(0, 'Go to What do you deliver?')]]);
+  const qs = m.profile.map((id) => cat.profile.find((/** @type {any} */ q) => q.id === id).label);
+  if (qs.length) asks.push(['profile', `answer the project profile${qs.length <= 3 ? ` (${qs.join(' · ')})` : ''}`, [go(1, 'Go to profile')]]);
+  if (!asks.length && m.stages.length) asks.push(['stages', `decide ${m.stages.map(title).join(' or ')}`, m.stages.map((id) => go(stagePage(id), title(id)))]);
+  if (!asks.length) return null;
+  const what = asks.map((a) => a[1]).join(' or ');
+  const forWhom = none.length < fams.length ? ` for ${none.map((f) => f.label).join(', ')}` : '';
+  return h('p', { class: 'sd-tip', 'data-missing': asks.map((a) => a[0]).join(' ') },
+    `${what[0].toUpperCase()}${what.slice(1)} to get a recommendation${forWhom}. `,
+    ...asks.flatMap((a) => a[2]).flatMap((b, k) => (k ? [' · ', b] : [b])));
 }
 
 /** @param {any} f @param {{id: string | null, why: string}} a @param {any} d */

@@ -6,7 +6,7 @@
    Dự án giữ `design = {path, profile, stages, edges}`; không có gì thì null. `edges`: bàn giao trên đường nối hai khâu liền nhau
    của sơ đồ, khoá `khâu trước>khâu sau`.
    Xuất: OWN_MAX, EDGE_MAX, VIA, EDGE_FIELDS, normEdge, normDesign, emptyDesign, presetDesign, isPreset, pathOf, effProfile,
-     stageState, fitOf, rankOptions, notNeededBy, applyPath, condTerm, archAdvice, warnings, decidedCount, pickNames,
+     stageState, fitOf, rankOptions, notNeededBy, applyPath, condTerm, archAdvice, archMissing, warnings, decidedCount, pickNames,
      catalogErrors.
    Dùng: không. */
 
@@ -224,6 +224,27 @@ export function archAdvice(cat, design) {
     const r = (f.rules || []).find((/** @type {any} */ x) => Object.entries(x.if).every(([k, v]) => term(k, /** @type {string[]} */ (v)) === true));
     return { family: f.id, id: r ? r.arch : null, why: r ? r.why : '' };
   });
+}
+
+/**
+ * Thứ còn thiếu để mọi nhóm kiến trúc chưa có gợi ý (`archAdvice` null) có gợi ý: khoá chưa biết của các luật chưa bị loại
+ * (không điều kiện nào sai). `path`: chưa chọn lối; `profile`: id câu hồ sơ chưa trả lời; `stages`: id khâu chưa quyết.
+ * @param {any} cat @param {any} design @returns {{path: boolean, profile: string[], stages: string[]}}
+ */
+export function archMissing(cat, design) {
+  const term = condTerm(cat, design);
+  const adv = archAdvice(cat, design);
+  const miss = new Set();
+  (Array.isArray(cat.architectures) ? cat.architectures : []).forEach((/** @type {any} */ f, /** @type {number} */ i) => {
+    if (adv[i].id !== null) return;
+    for (const r of f.rules || []) {
+      const t = Object.entries(r.if).map(([k, v]) => [k, k === 'path' && !design?.path ? null : term(k, /** @type {string[]} */ (v))]);
+      if (t.some(([, x]) => x === false)) continue;
+      for (const [k, x] of t) if (x === null) miss.add(k);
+    }
+  });
+  return { path: miss.has('path'), profile: cat.profile.map((/** @type {any} */ q) => q.id).filter((/** @type {string} */ id) => miss.has(id)),
+    stages: cat.stages.map((/** @type {any} */ s) => s.id).filter((/** @type {string} */ id) => miss.has(id)) };
 }
 
 /**

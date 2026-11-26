@@ -140,8 +140,8 @@
   /* Sơ đồ System design (js/ui/design.js đọc các token này để xếp nút) và cột trái của hộp chọn. */
   --sd-node-max: 220px; --sd-gap-x: 64px; --sd-gap-y: 36px; --sd-pad: 12px; --sd-head: 30px; --sd-line: 20px;
   --sd-nav-w: 250px; --sd-dash: 5 4; --sd-badge-h: 20px;
-  /* Đường nối có bàn giao: khoảng cột tối thiểu, nhãn dài nhất (phần chiều dài đường), độ mờ đuôi, vùng rê, dấu +. */
-  --sd-gap-hand: 128px; --sd-hand-cap: .5; --sd-hand-fade: var(--s4); --sd-hit: 16px; --sd-plus: 16px;
+  /* Đường nối có bàn giao: khoảng cột, khoảng hàng tối thiểu, nhãn dài nhất (phần chiều dài đường), độ mờ đuôi, vùng rê, dấu +. */
+  --sd-gap-hand: 128px; --sd-gap-y-hand: 56px; --sd-hand-cap: .5; --sd-hand-fade: var(--s4); --sd-hit: 16px; --sd-plus: 16px;
   --sd-hand-hover: color-mix(in srgb, var(--accent) 12%, var(--surface)); /* nền đặc: nét đường nối không lộ qua nhãn */
   --sd-fig-pad: var(--s4);             /* lề trong khung sơ đồ: vẽ trong <svg>, nên sơ đồ phóng to chạm tới viền khung */
   --sd-pct-w: 52px;                    /* nút phần trăm của khung nhìn: "300%" không làm cụm nút nhảy */

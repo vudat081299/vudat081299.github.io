@@ -2,8 +2,8 @@
 /* Khung nhìn của sơ đồ System design (PLAN-031): toán thuần cho kéo và thu phóng, không DOM, chạy được trong Node.
    Một khung nhìn là {x, y, k}: điểm (u, v) của sơ đồ hiện ở (u·k + x, v·k + y) trong khung (px, gốc ở góc trên trái).
    DOM (bánh xe, kéo, chạm, phím, cụm nút): ui/diagram-view.js.
-   Xuất: ZOOM_MIN, ZOOM_MAX, ZOOM_STEP, WHEEL_ZOOM, PAN_STEP, LINE_PX, KEEP, DRAG_SLOP, HOME, clamp, clampZoom, isHome,
-     zoomAt, wheelZoom, panBy, wheelPx, wheelPan, clampPan, fit, pinch, lerpView, zoomPct.
+   Xuất: ZOOM_MIN, ZOOM_MAX, ZOOM_STEP, WHEEL_ZOOM, PAN_STEP, LINE_PX, KEEP, DRAG_SLOP, FIT_EPS, HOME, clamp, clampZoom, isHome,
+     zoomAt, wheelZoom, panBy, wheelPx, wheelPan, clampPan, wheelStep, fit, pinch, lerpView, zoomPct.
    Dùng: không. */
 
 export const ZOOM_MIN = 0.25;          // thu nhỏ nhất
@@ -14,6 +14,7 @@ export const PAN_STEP = 48;            // một lần bấm phím mũi tên, px
 export const LINE_PX = 16;             // bánh xe tính theo dòng (deltaMode 1): một dòng chừng này px
 export const KEEP = 48;                // kéo xa nhất: còn ít nhất chừng này px của sơ đồ trong khung
 export const DRAG_SLOP = 4;            // px: dời ít hơn thì vẫn là bấm, không là kéo
+export const FIT_EPS = 0.5;            // px: sơ đồ lớn hơn khung chừng này (làm tròn) vẫn tính là vừa khung
 
 /** Khung ban đầu: cỡ thật, góc trên trái. */
 export const HOME = Object.freeze({ x: 0, y: 0, k: 1 });
@@ -49,12 +50,29 @@ export const wheelPx = (d, mode, page) => (mode === 1 ? d * LINE_PX : mode === 2
  * @param {number} dx @param {number} dy @param {boolean} shift @returns {[number, number]} */
 export const wheelPan = (dx, dy, shift) => (shift && !dx ? [-dy, 0] : [-dx, -dy]);
 
-/** Giữ sơ đồ (cw × ch ở k = 1) không trôi hẳn ra ngoài khung vw × vh: còn ít nhất KEEP px (hay cả sơ đồ, nếu nhỏ hơn).
+/** Sơ đồ dài size px có vừa khung dài room px không (lệch dưới FIT_EPS px do làm tròn vẫn là vừa). */
+const fits = (/** @type {number} */ size, /** @type {number} */ room) => size <= room + FIT_EPS;
+
+/** Giữ sơ đồ (cw × ch ở k = 1) trong khung vw × vh. Trục sơ đồ vừa khung: thấy trọn, không ra ngoài mép. Trục sơ đồ tràn
+ * khung: không trôi hẳn ra ngoài, còn ít nhất KEEP px (hay cả khung, nếu khung nhỏ hơn).
  * @param {View} v @param {number} cw @param {number} ch @param {number} vw @param {number} vh @returns {View} */
 export function clampPan(v, cw, ch, vw, vh) {
-  const w = cw * v.k, h = ch * v.k;
-  const kx = Math.min(KEEP, w, vw), ky = Math.min(KEEP, h, vh);
-  return { x: clamp(v.x, kx - w, vw - kx), y: clamp(v.y, ky - h, vh - ky), k: v.k };
+  const axis = (/** @type {number} */ p, /** @type {number} */ size, /** @type {number} */ room) => {
+    if (fits(size, room)) return clamp(p, 0, Math.max(0, room - size));
+    const keep = Math.min(KEEP, room);
+    return clamp(p, keep - size, room - keep);
+  };
+  return { x: axis(v.x, cw * v.k, vw), y: axis(v.y, ch * v.k, vh), k: v.k };
+}
+
+/** Bánh xe trơn dời khung (dx, dy, px) như một hộp cuộn: chỉ trục sơ đồ tràn khung mới dời, và dừng khi mép sơ đồ chạm mép
+ * khung. Khung đã ra ngoài mép (kéo tay) thì không bị giật về. Trả khung cũ khi không dời được: trang cuộn tiếp.
+ * @param {View} v @param {number} dx @param {number} dy @param {number} cw @param {number} ch @param {number} vw @param {number} vh @returns {View} */
+export function wheelStep(v, dx, dy, cw, ch, vw, vh) {
+  const axis = (/** @type {number} */ p, /** @type {number} */ d, /** @type {number} */ size, /** @type {number} */ room) =>
+    (fits(size, room) ? p : clamp(p + d, Math.min(p, room - size), Math.max(p, 0)));
+  const x = axis(v.x, dx, cw * v.k, vw), y = axis(v.y, dy, ch * v.k, vh);
+  return x === v.x && y === v.y ? v : { x, y, k: v.k };
 }
 
 /** Vừa khung: sơ đồ cw × ch nằm giữa khung vw × vh, không phóng quá maxK. @returns {View} */
