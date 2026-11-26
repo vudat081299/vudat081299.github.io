@@ -163,13 +163,13 @@
 - Câu `selfhost` = `yes`: dịch vụ được quản lý mang `fit.selfhost: ["no"]`; phương án mới chạy trên hạ tầng người khác thì thêm khoá ấy.
 - Công cụ nên tránh khi làm một mình vẫn có trong danh mục nếu người học hay gặp: `avoid` nói vì sao và chọn gì thay, có luật báo, không đứng đầu `suggest` của lối nào.
 - "Apply path" (`applyPath`): chỉ khâu chưa quyết; `skip` → Not needed (`when` của khâu khớp hồ sơ thì để trống); `need` có gợi ý → phương án hợp đầu tiên làm ít luật báo
-  nhất, không phương án nào hợp thì để trống; `maybe` để trống. Không tự gây luật báo (trừ `caveat`): bỏ khâu, hay phương án lấy được, mà làm luật báo thì để khâu ấy trống. `test-core` dò lưới hồ sơ × lối.
+  nhất, công cụ của kiến trúc xử lý đang gợi ý đứng trước gợi ý của lối (PLAN-037), không phương án nào hợp thì để trống; `maybe` để trống. Không tự gây luật báo (trừ `caveat`): bỏ khâu, hay phương án lấy được, mà làm luật báo thì để khâu ấy trống. `test-core` dò lưới hồ sơ × lối.
 - Luật phối hợp (`warnings`): báo khi mọi `if` khớp và mọi khâu trong `unless` đã quyết mà không khớp; khâu chưa quyết thì chưa báo.
   Khoá điều kiện: id khâu (phương án, `skip`, `own`), câu hồ sơ hay `path`. Phương án không được có id `skip`, `own`.
   `caveat: true`: luật chỉ nhắc cách dùng, phương án vẫn đúng (host miễn phí ngủ, đĩa không bền, file DuckDB sau API).
 - Kiến trúc (`architectures`): nhóm → kiến trúc (khi dùng, khi tránh, luồng, công cụ theo khâu, nguồn). Không lưu lựa chọn;
   `archAdvice` lấy luật đầu tiên khớp của nhóm (khoá điều kiện như `checks`), `""` = nhóm không cần. Lối là kiến trúc của nhóm app (`path`).
-  Kiến trúc được gợi ý phải có ở mỗi khâu một công cụ không làm luật báo với hồ sơ ấy (`test-core`); hồ sơ nói ngược khâu đã quyết thì luật hồ sơ đứng trước.
+  Kiến trúc được gợi ý phải có ở mỗi khâu một công cụ không làm luật báo với hồ sơ ấy (`test-core`; khâu nhiều công cụ đã quyết thì thêm bên cạnh); hồ sơ nói ngược khâu đã quyết thì luật hồ sơ đứng trước.
 - Bàn giao (`edges`): đường nối hai khâu liền nhau của luồng, cả hai đã quyết (`flowEdges`). Hợp đồng giữ cả khi đường nối không còn.
 - Sơ đồ: đường nối nét liền khi cả hai khâu đã quyết (`bothDecided`, cùng luật với `flowEdges`), còn lại nét đứt.
 - Sơ đồ là khung nhìn (PLAN-031): không lưu, tải lại về khung ban đầu; bánh xe trơn chỉ kéo khung khi khung có focus hay giữ Space. Luật đủ: đầu `ui/diagram-view.js`.

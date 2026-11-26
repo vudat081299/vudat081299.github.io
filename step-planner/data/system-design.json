@@ -872,7 +872,7 @@
       "title": "Ingestion & scheduling",
       "lane": "data",
       "question": "Bạn kéo dữ liệu về bằng cách nào và bao lâu một lần?",
-      "guide": "Ingestion là đoạn code lấy dữ liệu từ nguồn và ghi vào kho thô.\nScheduling là thứ chạy đoạn code đó theo lịch, ví dụ mỗi sáng.\nDữ liệu cố định chỉ cần chạy một lần bằng tay.\nDữ liệu mới mỗi ngày cần lịch chạy; dữ liệu liên tục cần hệ thống stream.\nCó cả luồng lẫn nguồn theo lịch (Lambda, nạp bù lịch sử, luồng giả lập bên cạnh pipeline theo ngày) thì chọn cả hai: Kafka cho luồng, một công cụ lịch cho job batch.",
+      "guide": "Ingestion là đoạn code lấy dữ liệu từ nguồn và ghi vào kho thô.\nScheduling là thứ chạy đoạn code đó theo lịch, ví dụ mỗi sáng.\nDữ liệu cố định chỉ cần chạy một lần bằng tay.\nDữ liệu mới mỗi ngày cần lịch chạy.\nDữ liệu tới liên tục mà người dùng cần câu trả lời ngay: cần hệ thống stream (Kafka); chỉ xem kết quả theo lịch: một công cụ lịch gom phần mới thành lô là đủ.\nCó cả luồng lẫn nguồn theo lịch (Lambda, nạp bù lịch sử, luồng giả lập bên cạnh pipeline theo ngày) thì chọn cả hai: Kafka cho luồng, một công cụ lịch cho job batch.",
       "multi": true,
       "skipWhen": "Bỏ qua khi bạn chỉ tải một file về bằng trình duyệt và không cần tải lại.",
       "task": "Một lệnh lấy dữ liệu mới chạy được từ đầu tới cuối bằng công cụ đã chọn; README có lệnh chạy lại.",
@@ -919,7 +919,8 @@
           "level": 2,
           "fit": {
             "fresh": [
-              "batch"
+              "batch",
+              "stream"
             ]
           },
           "links": [
@@ -948,7 +949,8 @@
           "level": 2,
           "fit": {
             "fresh": [
-              "batch"
+              "batch",
+              "stream"
             ],
             "size": [
               "small",
@@ -986,7 +988,8 @@
           "level": 2,
           "fit": {
             "fresh": [
-              "batch"
+              "batch",
+              "stream"
             ]
           },
           "links": [
@@ -1016,7 +1019,8 @@
           "level": 2,
           "fit": {
             "fresh": [
-              "batch"
+              "batch",
+              "stream"
             ],
             "size": [
               "medium",
@@ -1048,7 +1052,8 @@
           "level": 3,
           "fit": {
             "fresh": [
-              "batch"
+              "batch",
+              "stream"
             ],
             "size": [
               "medium",
@@ -1080,7 +1085,8 @@
           "level": 3,
           "fit": {
             "fresh": [
-              "batch"
+              "batch",
+              "stream"
             ],
             "size": [
               "large"
@@ -1643,8 +1649,8 @@
       "title": "Processing & cleaning",
       "lane": "data",
       "question": "Bạn dùng công cụ nào để làm sạch và biến đổi dữ liệu?",
-      "guide": "Bước này đọc dữ liệu thô, sửa kiểu, bỏ trùng, xử lý thiếu, rồi ghép bảng.\nCông cụ một máy (pandas, Polars, DuckDB) chạy trên RAM và ổ đĩa của một máy, dễ cài, đủ cho phần lớn dự án.\nCông cụ phân tán (Dask, Spark) chia dữ liệu cho nhiều máy cùng xử lý, chỉ cần khi một máy không chứa nổi.\nDữ liệu tới liên tục mà cần kết quả ngay: công cụ stream (consumer Python, Spark Structured Streaming, Flink) xử lý từng sự kiện hay từng lô nhỏ khi nó tới.\nKết quả sạch được ghi sang bước Analytical store.",
-      "multi": false,
+      "guide": "Bước này đọc dữ liệu thô, sửa kiểu, bỏ trùng, xử lý thiếu, rồi ghép bảng.\nCông cụ một máy (pandas, Polars, DuckDB) chạy trên RAM và ổ đĩa của một máy, dễ cài, đủ cho phần lớn dự án.\nCông cụ phân tán (Dask, Spark) chia dữ liệu cho nhiều máy cùng xử lý, chỉ cần khi một máy không chứa nổi.\nDữ liệu tới liên tục mà cần kết quả ngay: công cụ stream (consumer Python, Spark Structured Streaming, Flink) xử lý từng sự kiện hay từng lô nhỏ khi nó tới.\nChọn được nhiều công cụ: luồng có cả lớp batch (Lambda, hay job stream ghi bảng bronze rồi dbt, Spark batch biến đổi theo lịch) thì chọn một công cụ stream cùng một công cụ lô.\nKết quả sạch được ghi sang bước Analytical store.",
+      "multi": true,
       "skipWhen": "",
       "task": "Một lệnh biến dữ liệu thô thành bảng sạch trên dữ liệu mẫu, chạy lại ra cùng kết quả; README có lệnh ấy.",
       "when": {},
@@ -1743,13 +1749,14 @@
           "name": "dbt",
           "kind": "SQL transformation framework",
           "summary": "Công cụ tổ chức các câu SQL biến đổi thành model có thứ tự, có test và tài liệu. dbt không tự chạy SQL: một adapter gửi SQL tới engine. DuckDB: adapter duckdb (gói dbt-duckdb), đọc Parquet, CSV trên S3, MinIO qua extension httpfs. Spark: adapter spark (gói dbt-spark) nối Spark Thrift Server, ghi bảng file_format iceberg, delta hay hudi, cập nhật tăng dần bằng merge. Trino: gói dbt-trino. Cũng chạy trên BigQuery, Snowflake và các warehouse khác.",
-          "pick": "Chọn khi pipeline chạy lại theo lịch và có nhiều bảng phụ thuộc nhau (silver, gold). Chọn adapter theo engine đã có: dữ liệu vừa một máy thì DuckDB; bảng lớn trên lakehouse thì Spark hay Trino.",
+          "pick": "Chọn khi pipeline chạy lại theo lịch và có nhiều bảng phụ thuộc nhau (silver, gold). Chọn adapter theo engine đã có: dữ liệu vừa một máy thì DuckDB; bảng lớn trên lakehouse thì Spark hay Trino. Dữ liệu tới liên tục: dbt làm lớp batch trên bảng bronze do job stream ghi, chọn thêm một công cụ stream đọc topic ở khâu này.",
           "avoid": "Tránh khi chỉ có vài bước làm sạch chạy một lần. Bản dbt cài bằng pip (dbt v2) có sẵn adapter DuckDB và Spark (Spark đang beta, chỉ dòng lệnh); Trino dùng gói dbt-trino của dbt v1. Cần đúng bản mã nguồn mở Apache 2.0 thì cài dbt-oss.",
           "cost": "free",
           "level": 2,
           "fit": {
             "fresh": [
-              "batch"
+              "batch",
+              "stream"
             ]
           },
           "links": [
@@ -2089,7 +2096,8 @@
           "level": 2,
           "fit": {
             "fresh": [
-              "batch"
+              "batch",
+              "stream"
             ]
           },
           "links": [
@@ -5015,7 +5023,8 @@
           "level": 1,
           "fit": {
             "fresh": [
-              "batch"
+              "batch",
+              "stream"
             ]
           },
           "links": [
@@ -5299,6 +5308,12 @@
           "oozie"
         ]
       },
+      "unless": {
+        "ingest": [
+          "kafka",
+          "own"
+        ]
+      },
       "msg": "Dữ liệu tới liên tục và người dùng cần câu trả lời trong khoảng một giây, nhưng khâu Ingestion chạy theo lịch hay chạy tay: kết quả chỉ mới tới lần chạy gần nhất. Cần một consumer chạy liên tục, như Kafka. Người dùng xem theo lịch thì nạp theo lịch là đủ."
     },
     {
@@ -5519,10 +5534,6 @@
       "if": {
         "ingest": [
           "kafka"
-        ],
-        "latency": [
-          "report",
-          "batch"
         ]
       },
       "unless": {
@@ -5780,6 +5791,22 @@
         ]
       },
       "msg": "Dữ liệu mới tới theo lịch mà khâu Data validation là Not needed: một lô sai schema hay thiếu dòng sẽ được công bố và lan sang báo cáo, model. Tối thiểu kiểm cột, kiểu, khoá trùng và số dòng trước khi ghi bản sạch mới."
+    },
+    {
+      "id": "dbt-tests-without-dbt",
+      "title": "dbt tests without dbt",
+      "if": {
+        "validate": [
+          "dbt-tests"
+        ]
+      },
+      "unless": {
+        "process": [
+          "dbt",
+          "own"
+        ]
+      },
+      "msg": "dbt test chạy trong một project dbt, nhưng khâu Processing không có dbt: phải dựng project dbt chỉ để kiểm. Chọn Pandera hay Great Expectations, hoặc thêm dbt ở khâu Processing."
     },
     {
       "id": "vector-index-for-keyword-search",
@@ -6441,6 +6468,7 @@
               "bigquery",
               "snowflake",
               "parquet-duckdb",
+              "duckdb-iceberg",
               "trino"
             ]
           },

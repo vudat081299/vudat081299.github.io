@@ -145,6 +145,22 @@ export function notNeededBy(stage, profile) {
   return Object.entries(when).filter(([k, v]) => profile[k] && Array.isArray(v) && !v.includes(profile[k])).map(([k]) => k);
 }
 
+/** Nhóm kiến trúc Apply path theo (PLAN-037): luật của nó gộp độ mới × độ trễ, điều `fit` từng câu không diễn tả được. */
+const APPLY_FAMILY = 'processing';
+
+/**
+ * Phương án mà kiến trúc xử lý đang gợi ý (với thiết kế lúc ấy) liệt kê ở khâu `sid` lên trước, giữ thứ tự của `rankOptions`
+ * trong mỗi nhóm. Chỉ đổi thứ tự: phương án lệch hồ sơ vẫn không được chọn. Vd. dữ liệu liên tục mà xem theo lịch: công cụ lịch
+ * và công cụ lô của batch ETL đứng trước Kafka; chưa trả lời câu độ trễ: Kafka và công cụ stream của kiến trúc streaming.
+ * @param {any} cat @param {any} design @param {string} sid @param {any[]} rows hàng của `rankOptions`
+ */
+function byArch(cat, design, sid, rows) {
+  const a = archAdvice(cat, design).find((x) => x.family === APPLY_FAMILY);
+  const tools = (a?.id && cat.architectures.find((/** @type {any} */ f) => f.id === APPLY_FAMILY).entries
+    .find((/** @type {any} */ e) => e.id === a.id)?.tools?.[sid]) || [];
+  return [...rows.filter((x) => tools.includes(x.opt.id)), ...rows.filter((x) => !tools.includes(x.opt.id))];
+}
+
 /**
  * Áp lối vào thiết kế: chỉ khâu chưa quyết. Khâu lối bỏ (`skip`, trừ khi `when` của khâu nêu đúng câu trả lời của hồ sơ) hay
  * hồ sơ cho là không cần (`when`) thành "không cần"; khâu
@@ -178,7 +194,7 @@ export function applyPath(cat, design, pathId) {
       skipped.push(s.id);
     } else if (need === 'need' && path.suggest[s.id]) {
       const r = rankOptions(s, prof, path);
-      const ok = r.filter((x) => x.ok).map((x) => ({ x, n: clash(s.id, { ...rec, pick: [x.opt.id] }) }));
+      const ok = byArch(cat, d, s.id, r.filter((x) => x.ok)).map((x) => ({ x, n: clash(s.id, { ...rec, pick: [x.opt.id] }) }));
       /* Không phương án nào hợp hồ sơ (vd. người dùng công khai, ngân sách miễn phí, chỉ tự host), hay phương án hợp nhất vẫn
        * làm luật báo: để khâu cho người dùng quyết. */
       if (!ok.length) continue;
