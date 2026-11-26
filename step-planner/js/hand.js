@@ -73,7 +73,8 @@ export function boardAct(act, b, step, sub) {
 
 /* ── Hộp danh sách (#dlg-hand) ── */
 
-/** @type {WeakMap<Element, {targets: {stepId:string, subId:string|null}[]}>} */
+/** Nút nhảy → các bên cần tô; `scroll` false là không cuộn (dòng của danh sách cặp).
+ * @type {WeakMap<Element, {targets: {stepId:string, subId:string|null}[], scroll: boolean}>} */
 const jumps = new WeakMap();
 /** @type {null | {wsId:string, stepId:string, subId:string|null, which:'ins'|'outs'}} */
 let listCtx = null;
@@ -87,9 +88,9 @@ function who(ws, hd) {
     : { title: hd.step.title, ctx: `Step ${n} · whole step` };
 }
 const target = (/** @type {C.Holder} */ hd) => ({ stepId: hd.step.id, subId: hd.sub ? hd.sub.id : null });
-/** Nút nhảy tới một bên (hay một cặp: bên đầu là chỗ focus). @param {Element} el @param {C.Holder[]} hds */
-function jumpBtn(el, hds) {
-  jumps.set(el, { targets: hds.map(target) });
+/** Nút nhảy tới một bên (hay một cặp: bên đầu là chỗ focus). @param {Element} el @param {C.Holder[]} hds @param {boolean} [scroll] */
+function jumpBtn(el, hds, scroll = true) {
+  jumps.set(el, { targets: hds.map(target), scroll });
   return el;
 }
 /** Đường dẫn / link và hợp đồng của một đầu ra. Link chỉ khi http(s); đường dẫn file là chữ mono. @param {any} o */
@@ -160,7 +161,7 @@ function showPairs(ws, pairs, title, where) {
       jumpBtn(h('button', { type: 'button', class: 'hand-pair', title: 'Show both on the board' },
         h('span', { class: 'hand-end' }, h('b', {}, a.title), h('small', {}, a.ctx)),
         h('span', { class: 'hand-arrow', 'aria-label': 'to' }, icon('hand-right')),
-        h('span', { class: 'hand-end' }, h('b', {}, b.title), h('small', {}, b.ctx))), [p.to, p.from]),
+        h('span', { class: 'hand-end' }, h('b', {}, b.title), h('small', {}, b.ctx))), [p.to, p.from], false),
       h('ul', { class: 'hand-outs' }, p.outs.map((o) => h('li', {}, h('p', { class: 'hand-name' }, icon('out'), h('b', {}, o.name)), outDetail(o)))));
   });
   openList('Handoff', `${title} · ${C.plural(pairs.length, 'link')}`, where, items, null);
@@ -168,8 +169,9 @@ function showPairs(ws, pairs, title, where) {
 
 let hiTimer = 0;
 /** Tới bên giao / bên nhận trên bảng: bỏ lọc nếu nó đang bị ẩn, cuộn tới, focus tên bên đầu, tô cả hai một lúc.
- * @param {{stepId:string, subId:string|null}[]} targets */
-export function jump(targets) {
+ * `scroll` false (dòng của danh sách cặp, hai bên đang ở trên bảng): không cuộn trang lẫn hàng thẻ, chỉ tô và focus.
+ * @param {{stepId:string, subId:string|null}[]} targets @param {{scroll?: boolean}} [opt] */
+export function jump(targets, { scroll = true } = {}) {
   const sel = (/** @type {{stepId:string, subId:string|null}} */ t) => (t.subId ? `.card[data-sub="${t.subId}"]` : `.step[data-step="${t.stepId}"] > .step-head`);
   const find = () => targets.map((t) => /** @type {HTMLElement|null} */ (document.querySelector(sel(t))));
   let els = find();
@@ -178,8 +180,10 @@ export function jump(targets) {
   if (!found.length) return;
   clearTimeout(hiTimer);
   document.querySelectorAll('.hand-hi').forEach((e) => e.classList.remove('hand-hi'));
-  for (const e of found.slice(1)) e.scrollIntoView({ block: 'nearest', inline: 'nearest' });
-  found[0].scrollIntoView({ block: 'center', inline: 'nearest' });
+  if (scroll) {
+    for (const e of found.slice(1)) e.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    found[0].scrollIntoView({ block: 'center', inline: 'nearest' });
+  }
   for (const e of found) e.classList.add('hand-hi');
   found[0].querySelector(targets[0].subId ? '[data-act="edit-sub"]' : '[data-act="edit-step"]')?.focus({ preventScroll: true });
   hiTimer = window.setTimeout(() => found.forEach((e) => e.classList.remove('hand-hi')), deps.flashMs());
@@ -191,7 +195,7 @@ function wireList() {
     const j = b && jumps.get(b);
     if (!j) return;
     $('dlg-hand').close();
-    jump(j.targets);
+    jump(j.targets, { scroll: j.scroll });
   });
   $('hand-edit').addEventListener('click', () => {
     const c = listCtx;
