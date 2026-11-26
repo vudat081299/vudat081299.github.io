@@ -234,6 +234,9 @@ export function diagramNodes(catalog, design) {
   return { flow, ops };
 }
 
+/** Đường nối hai nút của sơ đồ đã chốt: cả hai đầu đã quyết (Users luôn đã quyết). @param {any} a @param {any} b */
+export const bothDecided = (a, b) => !a.open && !b.open;
+
 /**
  * Đường nối có thể ghi bàn giao: hai khâu liền nhau trên luồng của sơ đồ (bỏ khâu "không cần"), cả hai đã quyết.
  * @param {any} catalog @param {any} design
@@ -244,7 +247,7 @@ export function flowEdges(catalog, design) {
   const out = [];
   for (let i = 1; i < flow.length; i++) {
     const a = flow[i - 1], b = flow[i];
-    if (a.open || b.open) continue;
+    if (!bothDecided(a, b)) continue;
     const key = `${a.id}>${b.id}`;
     out.push({ key, from: a, to: b, c: (design && design.edges[key]) || null });
   }

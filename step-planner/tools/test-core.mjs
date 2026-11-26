@@ -8,7 +8,7 @@ import {
 } from '../js/core.js';
 import * as CORE from '../js/core.js';
 import { parseMd, inline, srcTokens } from '../js/md.js';
-import { normDesign, rankOptions, snake, planTasks, diagramNodes, decidedCount, catalogErrors, readStageLine, applyPath, effProfile, warnings, flowEdges, planDiff, applyPlan, PLAN_STEP, notNeededBy } from '../js/design-core.js';
+import { normDesign, rankOptions, snake, planTasks, diagramNodes, decidedCount, catalogErrors, readStageLine, applyPath, effProfile, warnings, flowEdges, bothDecided, planDiff, applyPlan, PLAN_STEP, notNeededBy } from '../js/design-core.js';
 
 let fails = 0;
 const check = (name, ok, detail = '') => {
@@ -582,6 +582,10 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
     edges: { 'process>store': { via: 'file', what: 'matches.parquet, một dòng mỗi trận, khoá match_id', where: 'data/clean/', check: 'Backend đọc file mẫu, lọc một mùa, trả đúng số trận',
       promise: 'Cột bắt buộc: match_id, season\n\n# home_win = 0 gồm cả hoà\n- thứ tự theo seq' }, 'store>train': { via: 'sql' } } });
   check('thiết kế: đường nối chỉ giữa hai khâu đã quyết liền nhau', flowEdges(cat, ed).map((e) => e.key).join() === 'raw>process,process>store');
+  const ef = diagramNodes(cat, ed).flow;
+  check('thiết kế: nét liền của sơ đồ cùng luật với đường nối ghi được bàn giao (thêm khâu cuối → Users)',
+    ef.slice(1).map((b, i) => bothDecided(ef[i], b) ? `${ef[i].id}>${b.id}` : '').filter(Boolean).join()
+      === [...flowEdges(cat, ed).map((e) => e.key), ...(ef.at(-2).open ? [] : [`${ef.at(-2).id}>users`])].join());
   const et = planTasks(cat, ed).find((x) => x.title.startsWith('Handoff:'));
   check('thiết kế: mỗi bàn giao đã ghi một việc tích hợp — Done when là phép kiểm, ghi chú là hợp đồng',
     planTasks(cat, ed).filter((x) => x.title.startsWith('Handoff:')).length === 1 && et.title === 'Handoff: Processing & cleaning → Analytical store & query'

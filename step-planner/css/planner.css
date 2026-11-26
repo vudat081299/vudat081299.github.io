@@ -919,7 +919,8 @@ span.chip::after { content: none; }
 .sd-name.muted { font-weight: 400; font-style: italic; fill: var(--ink-3); }
 .sd-band { font: 500 var(--fs-xs)/1 var(--mono); letter-spacing: var(--track); text-transform: uppercase; fill: var(--ink-3); }
 .sd-edge { fill: none; stroke: var(--ink-4); stroke-width: var(--mark-w); }
-.sd-arrow { fill: var(--ink-4); }
+.sd-edge.is-open { stroke-dasharray: var(--sd-dash); }
+.sd-arrow { fill: none; stroke: var(--ink-4); stroke-width: var(--mark-w); stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: none; }
 .sd-node[data-stage] { cursor: pointer; }
 .sd-node:focus { outline: none; }
 .sd-node:focus-visible .sd-box { stroke: var(--ring); stroke-width: var(--ring-w); stroke-dasharray: none; }

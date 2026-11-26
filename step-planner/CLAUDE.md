@@ -144,6 +144,7 @@
 - Luật phối hợp (`warnings`): báo khi mọi `if` khớp và mọi khâu trong `unless` đã quyết mà không khớp; khâu chưa quyết thì chưa báo.
   Khoá điều kiện: id khâu (phương án, `skip`, `own`), câu hồ sơ hay `path`. Phương án không được có id `skip`, `own`.
 - Bàn giao (`edges`): đường nối hai khâu liền nhau của luồng, cả hai đã quyết (`flowEdges`). Hợp đồng giữ cả khi đường nối không còn.
+- Sơ đồ: đường nối nét liền khi cả hai khâu đã quyết (`bothDecided`, cùng luật với `flowEdges`), còn lại nét đứt.
 - "Add tasks to plan" / "Update plan": luôn xem trước New / Changed / No longer in the design, chọn từng mục và bước nhận
   (mặc định "System build", chưa có thì tạo ở vị trí 2). Mỗi khâu đã quyết một việc, mỗi bàn giao đã ghi một việc `Handoff: A → B`.
 - Đối chiếu theo `sd`; bước con chưa có `sd` thì theo tên trong bước "System build".

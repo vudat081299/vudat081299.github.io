@@ -1690,6 +1690,17 @@ const check = (name, ok, detail = '') => {
     await sp.keyboard.press('Escape');
     check(`${tag}: đường nối giữa hai khâu đã quyết có dấu + (ẩn với bàn phím)`, (await sp.$$eval('#sd-fig .sd-hand.is-empty', (l) => l.length)) === 2
       && (await sp.$$eval('#sd-fig .sd-hand.is-empty[tabindex]', (l) => l.length)) === 0);
+    /* Nét đường nối: liền khi cả hai đầu đã quyết (Users luôn đã quyết), còn lại đứt; đầu mũi tên chữ V hở, luôn liền. */
+    const lines = await sp.$$eval('#sd-fig .sd-edge', (es) => es.map((e) => {
+      const open = (id) => !!document.querySelector(`#sd-fig [data-stage="${id}"].is-open`);
+      const [a, b] = e.dataset.pair.split('>');
+      return { pair: e.dataset.pair, dashed: getComputedStyle(e).strokeDasharray !== 'none', open: open(a) || open(b), head: e.getAttribute('marker-end') };
+    }));
+    check(`${tag}: đường nối nét liền khi cả hai khâu đã quyết, nét đứt khi còn khâu chưa quyết`, lines.length > 2
+      && lines.every((l) => l.dashed === l.open) && lines.filter((l) => !l.dashed).map((l) => l.pair).join() === 'raw>process,process>store'
+      && lines.some((l) => l.dashed), lines.filter((l) => l.dashed !== l.open).map((l) => l.pair).join());
+    check(`${tag}: mọi đường nối có đầu mũi tên chữ V hở, nét liền`, lines.every((l) => l.head === 'url(#sd-arrow)')
+      && await sp.$eval('#sd-fig #sd-arrow path', (p) => { const c = getComputedStyle(p); return c.fill === 'none' && c.stroke !== 'none' && c.strokeDasharray === 'none'; }));
     await sp.click('#sd-fig .sd-hand.is-empty[data-edge="raw>process"]', { force: true });
     await sp.waitForSelector('#dlg-sd[open] [data-edge-item="raw>process"][open]');
     check(`${tag}: bấm dấu + mở trang Handoffs ở đúng đường, focus vào ô đầu`, await sp.evaluate(() => !!document.activeElement?.closest('[data-edge-item="raw>process"]')));

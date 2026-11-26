@@ -139,7 +139,8 @@ function drawDiagram() {
     const d = same
       ? (b.x > a.x ? `M${a.x + nw} ${a.y + a.h / 2}H${b.x - 3}` : `M${a.x} ${a.y + a.h / 2}H${b.x + nw + 3}`)
       : `M${a.x + nw / 2} ${a.y + a.h}V${b.y - 3}`;
-    g.append(svg('path', { class: 'sd-edge', d, 'marker-end': 'url(#sd-arrow)' }));
+    /* Nét liền khi cả hai đầu đã quyết, còn lại nét đứt; đầu mũi tên luôn liền. */
+    g.append(svg('path', { class: `sd-edge${D.bothDecided(a.n, b.n) ? '' : ' is-open'}`, d, 'data-pair': `${a.n.id}>${b.n.id}`, 'marker-end': 'url(#sd-arrow)' }));
     /* Bàn giao: đường đã ghi có nhãn bấm được (Tab tới được); đường trống có dấu + khi rê chuột (bàn phím: trang Handoffs). */
     const e = edges.get(`${a.n.id}>${b.n.id}`);
     if (e) hands.append(handEl(e, same ? Math.min(a.x, b.x) + nw + gx / 2 : a.x + nw / 2, same ? a.y + a.h / 2 : a.y + a.h + gy / 2,
@@ -165,8 +166,9 @@ function drawDiagram() {
   const width = cols * nw + (cols - 1) * gx;
   const label = 'System diagram: ' + flow.map((n) => n.names.length ? `${n.title} (${n.names.join(', ')})` : n.title).join(' → ');
   const el = svg('svg', { class: 'sd-svg', viewBox: `-2 -2 ${width + 4} ${y + 4}`, width: width + 4, height: y + 4, role: 'img', 'aria-label': label },
-    svg('defs', {}, svg('marker', { id: 'sd-arrow', viewBox: '0 0 10 10', refX: 9, refY: 5, markerWidth: 7, markerHeight: 7, orient: 'auto-start-reverse' },
-      svg('path', { class: 'sd-arrow', d: 'M0 0L10 5L0 10z' }))),
+    /* Đầu mũi tên chữ V hở; đơn vị theo sơ đồ để nét bằng nét đường nối. */
+    svg('defs', {}, svg('marker', { id: 'sd-arrow', viewBox: '0 0 12 12', refX: 10, refY: 6, markerWidth: 12, markerHeight: 12, markerUnits: 'userSpaceOnUse', orient: 'auto-start-reverse' },
+      svg('path', { class: 'sd-arrow', d: 'M4 2L10 6L4 10' }))),
     g, og);
   fig.replaceChildren(el);
 }
@@ -217,7 +219,7 @@ function downloadSvg() {
   if (!src) return;
   const out = /** @type {SVGSVGElement} */ (src.cloneNode(true));
   const a = [src, ...src.querySelectorAll('*')], b = [out, ...out.querySelectorAll('*')];
-  const props = ['fill', 'stroke', 'stroke-width', 'stroke-dasharray', 'font-family', 'font-size', 'font-weight', 'letter-spacing', 'opacity'];
+  const props = ['fill', 'stroke', 'stroke-width', 'stroke-dasharray', 'stroke-linecap', 'stroke-linejoin', 'font-family', 'font-size', 'font-weight', 'letter-spacing', 'opacity'];
   a.forEach((el, i) => {
     const cs = getComputedStyle(el);
     for (const p of props) b[i].setAttribute(p, cs.getPropertyValue(p));
