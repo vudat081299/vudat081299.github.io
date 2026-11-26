@@ -102,6 +102,7 @@
   --bar-h: 60px;
   --head-w: 260px;                     /* cột tên bước */
   --card-w: 236px;                     /* mọi thẻ cùng rộng: các hàng thẳng cột */
+  --par-out: var(--s1);                /* nền chung của ô song song tràn ra quanh thẻ; hàng cuộn chừa đúng chừng ấy */
   --card-min: 120px;                   /* thẻ cao theo nội dung, trong khoảng này */
   --card-min-compact: 64px;            /* chế độ Gọn: thẻ chỉ còn hàng đầu và tên */
   --goal-clamp: 2;                     /* chế độ Gọn: số dòng mục tiêu bước */
@@ -497,17 +498,24 @@ svg.i {
   .card .acts, .step-head .acts .aux { opacity: 0; transition: opacity var(--dur) var(--ease); }
   .card:hover .acts, .card:focus-within .acts, .step-head:hover .acts .aux, .step-head:focus-within .acts .aux { opacity: 1; }
 }
-/* Hàng thẻ cuộn ngang bằng con lăn, bàn di, chạm, bàn phím; không hiện thanh cuộn, mép mờ báo còn thẻ. */
+/* Hàng thẻ cuộn ngang bằng con lăn, bàn di, chạm, bàn phím; không hiện thanh cuộn, mép mờ báo còn thẻ.
+   Cuộn ngang thì cắt cả chiều dọc: hàng chừa --par-out ở trên và hai bên cho nền ô song song, lề âm trả lại, thẻ không xê dịch;
+   mép mờ, scroll-padding tính từ mép cũ. */
 .cards-scroll {
-  min-width: 0; overflow-x: auto; overscroll-behavior-x: contain; padding-bottom: var(--s2);
-  scroll-padding-inline: var(--fade); scrollbar-width: none;
+  min-width: 0; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none;
+  padding: var(--par-out) var(--par-out) var(--s2); margin: calc(-1 * var(--par-out)) calc(-1 * var(--par-out)) 0;
+  scroll-padding-inline: calc(var(--fade) + var(--par-out));
 }
 .cards-scroll::-webkit-scrollbar { display: none; }
-.cards-scroll.more-right { mask-image: linear-gradient(to right, var(--mask) calc(100% - var(--fade)), transparent); }
-.cards-scroll.more-left { mask-image: linear-gradient(to left, var(--mask) calc(100% - var(--fade)), transparent); }
-.cards-scroll.more-left.more-right { mask-image: linear-gradient(to right, transparent, var(--mask) var(--fade), var(--mask) calc(100% - var(--fade)), transparent); }
-/* Thẻ không bị kéo cao bằng thẻ cao nhất hàng: mỗi thẻ cao theo nội dung (--card-min … --card-max). */
-.cards { display: flex; gap: var(--s3); align-items: flex-start; }
+.cards-scroll.more-right { mask-image: linear-gradient(to right, var(--mask) calc(100% - var(--par-out) - var(--fade)), transparent calc(100% - var(--par-out))); }
+.cards-scroll.more-left { mask-image: linear-gradient(to left, var(--mask) calc(100% - var(--par-out) - var(--fade)), transparent calc(100% - var(--par-out))); }
+.cards-scroll.more-left.more-right {
+  mask-image: linear-gradient(to right, transparent var(--par-out), var(--mask) calc(var(--par-out) + var(--fade)),
+    var(--mask) calc(100% - var(--par-out) - var(--fade)), transparent calc(100% - var(--par-out)));
+}
+/* Thẻ không bị kéo cao bằng thẻ cao nhất hàng: mỗi thẻ cao theo nội dung (--card-min … --card-max).
+   Rộng theo thẻ: lề phải của hàng cuộn mới được tính vào đoạn cuộn. */
+.cards { display: flex; gap: var(--s3); align-items: flex-start; width: max-content; min-width: 100%; }
 /* Một cột: bước đọc liền một khối — đầu bước (số, tên) trước, rồi băng Reopened, dải tài liệu, hàng thẻ. */
 @media (max-width: 640px) {
   .step { grid-template-columns: minmax(0, 1fr); }
@@ -585,8 +593,8 @@ svg.i {
 /* ── Ô của hàng thẻ: mỗi ô một cột; ô song song xếp chồng thẻ trên một nền chung, bề rộng ngoài vẫn thẳng cột ── */
 .slot { flex: 0 0 var(--card-w); min-width: 0; display: flex; flex-direction: column; gap: var(--s2); }
 .slot.par {
-  flex-basis: calc(var(--card-w) + 2 * var(--s1)); margin: calc(-1 * var(--s1)); padding: var(--s1);
-  background: var(--chip); border-radius: calc(var(--r) + var(--s1));
+  flex-basis: calc(var(--card-w) + 2 * var(--par-out)); margin: calc(-1 * var(--par-out)); padding: var(--par-out);
+  background: var(--chip); border-radius: calc(var(--r) + var(--par-out));
 }
 
 /* ── Thẻ bước con ── */
