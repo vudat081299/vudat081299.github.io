@@ -9,6 +9,7 @@
      (≤ 40), không trùng trong một mẫu; `ins` trỏ tới đầu ra có thật, không phải của chính nó, khai ở bước trước hoặc ở bước
      con đứng trước trong cùng bước (dữ liệu chỉ chảy xuôi). `ref`: đường dẫn hay link https, một dòng.
   2. Mẫu `it5425-sports` khớp từng chữ với bản sinh từ trang đồ án môn (COURSE_JSON, COURSE_HTML): không thêm nội dung.
+     outs / ins của nó suy từ đường dẫn trong `io_html` từng pha (`course_flow`).
      Sinh lại:  python3 step-planner/tools/lint.py --write-course
   3. js/*.js: không innerHTML / outerHTML / insertAdjacentHTML / document.write — chữ người dùng chỉ qua textContent.
   4. css/planner.css: mã màu chỉ nằm trong khối token (từ đầu file tới dòng `/* ── hết token ── */`).
@@ -55,6 +56,48 @@ def text(s):
     return s
 
 
+def io_paths(part):
+    """Đường dẫn trong <code> của một vế `io_html`; tên trần (không có /) nằm cùng thư mục với đường dẫn ngay trước nó."""
+    out, base = [], ''
+    for c in re.findall(r'<code>(.*?)</code>', part):
+        c = html.unescape(c).strip()
+        if '/' in c:
+            base = c[:c.rfind('/') + 1]
+        else:
+            c = base + c
+        out.append(c)
+    return out
+
+
+def course_flow(phases, page, src):
+    """Bàn giao của mẫu đồ án, suy từ `io_html` của từng pha ("vào → ra"): mỗi đường dẫn bên phải là một đầu ra (khai ở
+    pha đầu tiên nhắc tới nó); đường dẫn bên trái trùng một đầu ra của pha trước, hoặc là thư mục chứa nó, là đầu vào."""
+    m = re.search(r'Data dictionary của bảng (\w+)', page)
+    pk = next((r['col'] for r in src.get('dictionary', []) if 'khoá chính' in r.get('mean_html', '')), '')
+    if 'id="mo-hinh-du-lieu"' not in page:
+        err(f'{COURSE_HTML}: mất neo #mo-hinh-du-lieu mà mẫu {COURSE_ID} trỏ tới')
+    declared, flows = {}, []
+    for p in phases:
+        left, _, right = p['io_html'].partition('→')
+        ins = []
+        for path in io_paths(left):
+            for o, key in declared.items():
+                if (o == path or (path.endswith('/') and o.startswith(path))) and key not in ins:
+                    ins.append(key)
+        outs = []
+        for path in io_paths(right):
+            if path in declared:
+                continue
+            key = re.sub(r'[^a-z0-9]+', '-', path.lower()).strip('-')[:40].strip('-')
+            out = {'key': key, 'name': path, 'ref': path}
+            if path.startswith('data/clean/') and m and pk:
+                out['note'] = f'Bảng {m.group(1)}, khoá chính {pk}; data dictionary: {COURSE_URL}#mo-hinh-du-lieu'
+            declared[path] = key
+            outs.append(out)
+        flows.append((outs, ins))
+    return flows
+
+
 def course_template():
     src = json.load(open(COURSE_JSON, encoding='utf-8'))
     roles = [t['role'] for t in src['team']]
@@ -69,7 +112,8 @@ def course_template():
     if 'id="can-xac-nhan"' not in open(PLAN_HTML, encoding='utf-8').read():
         err(f'{PLAN_HTML}: mất neo #can-xac-nhan mà mẫu {COURSE_ID} trỏ tới')
     steps = []
-    for p in src['phases']:
+    flows = course_flow(src['phases'], page, src)
+    for p, (outs, ins) in zip(src['phases'], flows):
         phase_roles = [roles[i - 1] for i in p['roles']]
         subs = [{'title': text(t)} for t in p['tasks_html']]
         notes = ['Vai: ' + ', '.join(phase_roles), 'Công cụ: ' + text(p['tools']),
@@ -84,6 +128,8 @@ def course_template():
             'doneWhen': text(p['done_html']),
             'notes': '\n'.join(notes),
             'subs': subs,
+            **({'outs': outs} if outs else {}),
+            **({'ins': ins} if ins else {}),
         })
     return {
         'id': COURSE_ID,
