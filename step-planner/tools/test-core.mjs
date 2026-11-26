@@ -495,5 +495,67 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
     && eq(back.workspace.design, { profile: { size: 'small', budget: 'free' }, stages: { serve: { pick: ['fastapi'], skip: false, own: '', note: '' } } }) && back.warnings.length === 1);
 }
 
+/* ── Bàn giao: đầu ra / đầu vào — chuẩn hoá, nhân bản đổi id, mẫu theo key, Markdown đi rồi về (cả tên trùng), cảnh báo,
+ * vạch giữa hai hàng và nút giữa hai ô, Hoàn tác xoá gắn lại đầu vào ── */
+{
+  const H = await import('../js/core.js');
+  const sub = normSub({ outs: [{ id: 'o1', name: '  a  b ', ref: 'x\ny', note: 7 }, { name: '' }, 'bad', { id: 'o2', name: 'c' }], ins: ['o1', 'z', 'z', 3, ''] });
+  check('bàn giao: normSub — đầu ra không tên bị bỏ, chuỗi một dòng; đầu vào bỏ trùng, bỏ id của chính nó',
+    eq(sub.outs, [{ id: 'o1', name: 'a b', ref: 'x y', note: '7' }, { id: 'o2', name: 'c', ref: '', note: '' }]) && eq(sub.ins, ['z']));
+  const raw = {
+    name: 'PL', steps: [
+      { id: 't1', title: 'Clean', outs: [{ id: 'm', name: 'matches.parquet', ref: 'data/clean/matches.parquet', note: 'one row per match · key match_id' }],
+        subs: [{ id: 'a', title: 'A', outs: [{ id: 'oa', name: 'table', ref: 'https://x.y/a_(b)' }] },
+          { id: 'b', title: 'B', outs: [{ id: 'ob', name: 'teams ← list \\ x' }] },
+          { id: 'c', title: 'C', outs: [{ id: 'oc', name: 'table', note: '- trông như mục' }] },
+          { id: 'd', title: 'D', par: true, ins: ['oa', 'ob'] }] },
+      { id: 't2', title: 'Backend', ins: ['m', 'gone'],
+        subs: [{ id: 'e', title: 'A', ins: ['oc', 'oa'], outs: [{ id: 'oe', name: 'table' }, { id: 'm', name: 'dup id' }] }, { id: 'f', title: 'API', ins: ['m', 'ob', 'oe'] }] },
+    ],
+  };
+  const ws = normWorkspace(raw);
+  const s2 = ws.steps[1];
+  check('bàn giao: normWorkspace — id đầu ra trùng lấy id mới, đầu vào không còn trỏ tới đâu bị bỏ',
+    s2.subs[0].outs[1].id !== 'm' && eq(s2.ins, ['m']) && eq(ws.steps[0].subs[3].ins, ['oa', 'ob']));
+  const f = freshCopy(ws);
+  const ids = (w) => w.steps.flatMap((s) => [s, ...s.subs]).flatMap((x) => x.outs.map((o) => o.id));
+  check('bàn giao: freshCopy — id đầu ra mới, đầu vào trỏ theo', eq(shape(f), shape(ws)) && ids(f).every((id) => !ids(ws).includes(id)));
+  const md = toMarkdown(ws);
+  const back = fromMarkdown(md);
+  check('bàn giao: Markdown đi rồi về giữ nguyên (tên đầu ra trùng, bên giao trùng tên, ký tự thoát, hợp đồng)', eq(shape(ws), shape(back.workspace)) && !back.warnings.length,
+    firstDiff(shape(ws), shape(back.workspace)) + back.warnings.join(' | '));
+  check('bàn giao: Markdown — tên bên giao trùng thì ghi "bước › bước con"', md.includes('  - table ← Clean › A') && md.includes('    - table ← C'));
+  check('bàn giao: JSON đi rồi về giữ nguyên', eq(shape(parseImport(toJSON(ws)).workspaces[0]), shape(ws)));
+  const hand = '# P\n\n## Make\n\nOutputs:\n  - clean · data/c.csv · hợp đồng viết cùng dòng\n  - dup\n\n- [ ] Other\n  Outputs:\n    - dup\n\n## Use\n\nInputs:\n  - clean\n  - dup\n  - missing ← Make\n\n- [ ] x\n  Inputs:\n    - dup ← Other\n';
+  const hb = fromMarkdown(hand);
+  const hs = shape(hb.workspace);
+  check('bàn giao: Markdown viết tay — note cùng dòng, tên trùng không có bên giao thì lấy cái đầu và cảnh báo, không có thì cảnh báo',
+    eq(hs.steps[0].outs[0], { name: 'clean', ref: 'data/c.csv', note: 'hợp đồng viết cùng dòng' }) && eq(hs.steps[1].ins, ['0.-.0', '0.-.1'])
+    && eq(hs.steps[1].subs[0].ins, ['0.0.0']) && hb.warnings.length === 2 && /matches 2/.test(hb.warnings[0]) && /not found.*missing ← Make/.test(hb.warnings[1]), hb.warnings.join(' | '));
+  const tpl = fromTemplate({ id: 't', name: 'T', steps: [
+    { title: 'S1', outs: [{ key: 'k1', name: 'snap', ref: 'a.parquet' }, { key: 'k1', name: 'again' }], subs: [{ title: 'x', ins: ['k2', 'nope'] }] },
+    { title: 'S2', ins: ['k1'], subs: [{ title: 'y', outs: [{ key: 'k2', name: 'later' }] }] }] });
+  const ts = shape(tpl);
+  check('bàn giao: fromTemplate — key thành id mới, key lạ bị bỏ, key trùng lấy cái đầu', eq(ts.steps[0].subs[0].ins, ['1.0.0']) && eq(ts.steps[1].ins, ['0.-.0'])
+    && ts.steps[0].outs.length === 2 && !JSON.stringify(tpl).includes('"key"'));
+  const ho = H.handoffs(ws);
+  const name = (p) => `${H.holderTitle(p.from)}>${H.holderTitle(p.to)}:${p.outs.map((o) => o.name).join('+')}`;
+  check('bàn giao: vạch giữa hai hàng gom theo cặp bên giao → bên nhận', eq((ho.rows.get(1) || []).map(name),
+    ['Clean>Backend:matches.parquet', 'C>A:table', 'A>A:table', 'Clean>API:matches.parquet', 'B>API:teams ← list \\ x']));
+  const gaps = ho.gaps.get(ws.steps[0].id);
+  check('bàn giao: nút giữa hai ô — chỉ ô kề nhau, một nút cho mọi cặp', eq([...gaps.keys()], [1]) && eq(gaps.get(1).map(name), ['B>D:teams ← list \\ x']));
+  /* A ở ô 0, D ở ô 2 (ô song song với C): A → D không kề nhau, không có nút; vẫn có trong usedBy. */
+  check('bàn giao: nơi dùng của một đầu ra', eq((ho.usedBy.get('oa') || []).map(H.holderTitle), ['D', 'A']));
+  const w2 = normWorkspace(raw);
+  const relink = H.insBackup(w2, [w2.steps[0].subs[0]]);
+  w2.steps[0].subs.splice(0, 1);
+  const reloaded = normWorkspace(JSON.parse(JSON.stringify(w2)));
+  check('bàn giao: xoá bên giao — đọc lại thì đầu vào treo bị bỏ', !reloaded.steps[1].subs[0].ins.includes('oa'));
+  reloaded.steps[0].subs.unshift(normWorkspace(raw).steps[0].subs[0]);
+  relink(reloaded);
+  check('bàn giao: Hoàn tác xoá gắn lại đầu vào của nơi khác, kể cả khi dữ liệu đã đọc lại', eq(reloaded.steps[1].subs[0].ins, ['oc', 'oa']) && eq(reloaded.steps[0].subs[3].ins, ['oa', 'ob']));
+  check('bàn giao: consumersOf — bên nhận của bước và bước con làm lại, trừ chính chúng', eq(H.consumersOf(ws, [ws.steps[0], ws.steps[0].subs[2]]).map(H.holderTitle), ['Backend', 'A', 'API']));
+}
+
 if (fails) { console.log(`test-core: ${fails} LỖI`); process.exit(1); }
 console.log('test-core: OK');

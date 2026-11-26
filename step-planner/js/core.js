@@ -94,6 +94,20 @@ export function normDoc(o) {
 }
 const docsOf = (/** @type {any} */ a) => (Array.isArray(a) ? a.map(normDoc).filter(Boolean) : []);
 
+/* Bàn giao (handoff): đầu ra khai ở bước / bước con tạo ra nó, `{id, name, ref, note}` (tên bắt buộc; ref: đường dẫn file
+ * hay link; note: hợp đồng — schema, khoá, cam kết, cách kiểm). Đầu vào `ins` là id đầu ra ở chỗ khác trong dự án. */
+/** Một đầu ra, hoặc null nếu không có tên. @param {any} o */
+export function normOut(o) {
+  if (!isObj(o) || !oneLine(o.name)) return null;
+  return { id: idOr(o.id, 'o'), name: oneLine(o.name), ref: oneLine(o.ref), note: oneLine(o.note) };
+}
+const outsOf = (/** @type {any} */ a) => (Array.isArray(a) ? a.map(normOut).filter(Boolean) : []);
+/** Đầu vào: chuỗi id, bỏ trùng, bỏ id đầu ra của chính nó (id không còn trong dự án: normWorkspace bỏ). @param {any} a @param {any[]} outs */
+const insOf = (a, outs) => {
+  const own = new Set(outs.map((o) => o.id));
+  return [...new Set((Array.isArray(a) ? a : []).filter((s) => typeof s === 'string' && s && !own.has(s)))];
+};
+
 /** @param {any} o */
 export function normSub(o) {
   const x = isObj(o) ? o : {};
@@ -109,7 +123,13 @@ export function normSub(o) {
     docs: docsOf(x.docs),
     par: x.par === true,
     redo: x.redo === true,
+    ...handOf(x),
   };
+}
+/** outs, ins của một bước / bước con. @param {any} x */
+function handOf(x) {
+  const outs = outsOf(x.outs);
+  return { outs, ins: insOf(x.ins, outs) };
 }
 
 /** Số nguyên dương, không thì 0. @param {any} v */
@@ -135,6 +155,7 @@ export function normStep(o) {
     revisit: rv,
     round: rv ? rv.round : Math.max(1, posInt(x.round)),
     docs: docsOf(x.docs),
+    ...handOf(x),
     subs,
   };
 }
@@ -158,6 +179,10 @@ export function normWorkspace(o) {
   const ids = new Set(steps.map((s) => s.id));
   /* Quyết định chỉ gắn với bước còn trong dự án. */
   const log = objs(x.log).map(normLog).map((l) => (ids.has(l.stepId) ? l : { ...l, stepId: '' }));
+  /* Id đầu ra duy nhất trong dự án (trùng thì cái sau lấy id mới); đầu vào chỉ giữ id còn trỏ tới một đầu ra. */
+  const outIds = new Set();
+  for (const { h } of holders({ steps })) for (const o of h.outs) { if (outIds.has(o.id)) o.id = uid('o'); outIds.add(o.id); }
+  for (const { h } of holders({ steps })) h.ins = h.ins.filter((/** @type {string} */ id) => outIds.has(id));
   return {
     id: idOr(x.id, 'w'),
     name: oneLine(x.name) || 'Project',
@@ -188,6 +213,9 @@ export function freshCopy(ws) {
       for (const d of x.docs) d.id = uid('d');
     }
   }
+  const outIds = new Map();
+  for (const { h } of holders(c)) for (const o of h.outs) { outIds.set(o.id, uid('o')); o.id = outIds.get(o.id); }
+  for (const { h } of holders(c)) h.ins = h.ins.map((/** @type {string} */ id) => outIds.get(id)).filter(Boolean);
   for (const l of c.log) {
     l.id = uid('l');
     l.stepId = stepIds.get(l.stepId) || '';
@@ -205,20 +233,130 @@ export function uniqueName(name, taken, tag = 'imported') {
   }
 }
 
-/** Dự án mới từ một mẫu của data/templates.json. @param {any} tpl @param {string} [name] */
+/** Dự án mới từ một mẫu của data/templates.json. Đầu ra của mẫu có `key` (duy nhất trong mẫu), đầu vào là danh sách key:
+ * key thành id mới; key lạ bị bỏ. @param {any} tpl @param {string} [name] */
 export function fromTemplate(tpl, name) {
   const t = isObj(tpl) ? tpl : {};
   const now = new Date().toISOString();
-  return normWorkspace({
-    name: oneLine(name) || t.name || 'Project',
-    templateId: t.id || '',
-    createdAt: now,
-    updatedAt: now,
-    steps: objs(t.steps).map((/** @type {any} */ s) => ({
-      title: s.title, goal: s.goal, doneWhen: s.doneWhen, notes: s.notes,
-      subs: objs(s.subs).map((/** @type {any} */ x) => ({ title: x.title, doneWhen: x.doneWhen, notes: x.notes })),
-    })),
+  /** @type {Map<string, string>} */
+  const keys = new Map();
+  const outs = (/** @type {any} */ o) => objs(o.outs).map((/** @type {any} */ y) => {
+    const id = uid('o');
+    if (typeof y.key === 'string' && y.key && !keys.has(y.key)) keys.set(y.key, id);
+    return { id, name: y.name, ref: y.ref, note: y.note };
   });
+  const steps = objs(t.steps).map((/** @type {any} */ s) => ({
+    title: s.title, goal: s.goal, doneWhen: s.doneWhen, notes: s.notes, outs: outs(s), insKeys: s.ins,
+    subs: objs(s.subs).map((/** @type {any} */ x) => ({ title: x.title, doneWhen: x.doneWhen, notes: x.notes, outs: outs(x), insKeys: x.ins })),
+  }));
+  const ins = (/** @type {any} */ k) => (Array.isArray(k) ? k : []).map((key) => keys.get(key)).filter(Boolean);
+  for (const s of steps) {
+    Object.assign(s, { ins: ins(s.insKeys) });
+    for (const x of s.subs) Object.assign(x, { ins: ins(x.insKeys) });
+  }
+  return normWorkspace({ name: oneLine(name) || t.name || 'Project', templateId: t.id || '', createdAt: now, updatedAt: now, steps });
+}
+
+/* ── Bàn giao: ai tạo, ai dùng ── */
+
+/** @typedef {{h:any, step:any, sub:any, i:number}} Holder bước (sub null) hay bước con giữ đầu ra / đầu vào; i: chỉ số bước */
+/** Mọi chủ của đầu ra, đầu vào theo thứ tự trên bảng: bước rồi các bước con của nó. @param {{steps:any[]}} ws @returns {Holder[]} */
+export function holders(ws) {
+  /** @type {Holder[]} */
+  const out = [];
+  ws.steps.forEach((step, i) => {
+    out.push({ h: step, step, sub: null, i });
+    for (const sub of step.subs) out.push({ h: sub, step, sub, i });
+  });
+  return out;
+}
+/** id đầu ra → {out, chủ của nó}. @param {{steps:any[]}} ws @returns {Map<string, {out:any} & Holder>} */
+export function outIndex(ws) {
+  const m = new Map();
+  for (const hd of holders(ws)) for (const out of hd.h.outs || []) m.set(out.id, { out, ...hd });
+  return m;
+}
+/** Tên chủ: tên bước con, hay tên bước. @param {Holder} hd */
+export const holderTitle = (hd) => (hd.sub ? hd.sub.title : hd.step.title);
+
+/** @typedef {{from:Holder, to:Holder, outs:any[]}} Pair một cặp bên giao → bên nhận, kèm các đầu ra được chuyển */
+/**
+ * Mọi bàn giao đã khai và cách bảng hiện chúng. links: mỗi (đầu ra, bên nhận) một mục. usedBy: id đầu ra → bên nhận.
+ * rows: chỉ số bước j → các cặp từ bước j − 1 sang bước j (vạch giữa hai hàng). gaps: id bước → (k → các cặp từ ô k sang
+ * ô k + 1 của cùng hàng). Cặp gộp các đầu ra cùng bên giao, cùng bên nhận.
+ * @param {{steps:any[]}} ws
+ */
+export function handoffs(ws) {
+  const idx = outIndex(ws);
+  /** @type {{out:any, from:Holder, to:Holder}[]} */
+  const links = [];
+  /** @type {Map<string, Holder[]>} */
+  const usedBy = new Map();
+  const slotOf = new Map();
+  for (const step of ws.steps) slotsOf(step.subs).forEach((sl, k) => sl.forEach((x) => slotOf.set(x.id, k)));
+  for (const to of holders(ws)) {
+    for (const id of to.h.ins || []) {
+      const src = idx.get(id);
+      if (!src) continue;
+      const { out, ...from } = src;
+      links.push({ out, from, to });
+      if (!usedBy.has(id)) usedBy.set(id, []);
+      /** @type {Holder[]} */ (usedBy.get(id)).push(to);
+    }
+  }
+  /** @param {typeof links} list @returns {Pair[]} */
+  const pairs = (list) => {
+    const m = new Map();
+    for (const l of list) {
+      const k = l.from.h.id + '>' + l.to.h.id;
+      if (!m.has(k)) m.set(k, { from: l.from, to: l.to, outs: [] });
+      m.get(k).outs.push(l.out);
+    }
+    return [...m.values()];
+  };
+  /** @type {Map<number, Pair[]>} */
+  const rows = new Map();
+  /** @type {Map<string, Map<number, Pair[]>>} */
+  const gaps = new Map();
+  for (const p of pairs(links)) {
+    if (p.to.i === p.from.i + 1) {
+      if (!rows.has(p.to.i)) rows.set(p.to.i, []);
+      /** @type {Pair[]} */ (rows.get(p.to.i)).push(p);
+    } else if (p.to.i === p.from.i && p.from.sub && p.to.sub && slotOf.get(p.to.sub.id) === slotOf.get(p.from.sub.id) + 1) {
+      const id = p.to.step.id, k = slotOf.get(p.from.sub.id);
+      if (!gaps.has(id)) gaps.set(id, new Map());
+      const g = /** @type {Map<number, Pair[]>} */ (gaps.get(id));
+      if (!g.has(k)) g.set(k, []);
+      /** @type {Pair[]} */ (g.get(k)).push(p);
+    }
+  }
+  return { idx, links, usedBy, rows, gaps };
+}
+
+/**
+ * Trước khi xoá các chủ này: chụp đầu vào của nơi khác đang trỏ tới đầu ra của chúng. Dữ liệu không gỡ đầu vào treo lúc xoá
+ * (bảng bỏ qua, lần đọc sau chuẩn hoá bỏ); hàm trả về gắn lại chúng khi Hoàn tác, kể cả khi tab khác đã ghi đè dự án.
+ * @param {any} ws @param {any[]} owners @returns {(w: any) => void}
+ */
+export function insBackup(ws, owners) {
+  const ids = new Set(owners.flatMap((o) => (o.outs || []).map((/** @type {any} */ x) => x.id)));
+  const saved = holders(ws).filter((hd) => !owners.includes(hd.h) && hd.h.ins.some((/** @type {string} */ id) => ids.has(id)))
+    .map((hd) => /** @type {[string, string[]]} */ ([hd.h.id, [...hd.h.ins]]));
+  /* Gắn lại theo thứ tự cũ; đầu vào khác đã gỡ trong lúc chờ thì thôi, đầu vào mới thêm thì giữ ở cuối. */
+  return (w) => {
+    const byId = new Map(holders(w).map((hd) => [hd.h.id, hd.h]));
+    for (const [id, old] of saved) {
+      const h = byId.get(id);
+      if (h) h.ins = [...old.filter((x) => ids.has(x) || h.ins.includes(x)), ...h.ins.filter((/** @type {string} */ x) => !old.includes(x))];
+    }
+  };
+}
+
+/** Bên nhận các đầu ra của những chủ này (trừ chính chúng), không lặp, theo thứ tự trên bảng. @param {any} ws @param {any[]} owners */
+export function consumersOf(ws, owners) {
+  const own = new Set(owners);
+  const ids = new Set(owners.flatMap((o) => (o.outs || []).map((/** @type {any} */ x) => x.id)));
+  return holders(ws).filter((hd) => !own.has(hd.h) && (hd.h.ins || []).some((/** @type {string} */ id) => ids.has(id)));
 }
 
 /* ── Tiến độ ── */
@@ -376,6 +514,7 @@ const LABELS = {
   /* Lý do của bước con: xuất nhãn theo trạng thái (REASON_LABEL); nhập nhận nhãn nào cũng được nếu trạng thái có lý do. */
   reason: ['Cancelled because', 'Huỷ vì', 'Blocked by', 'Waiting on'],
   step: ['Step', 'Bước'],
+  outs: ['Outputs'], ins: ['Inputs'],
 };
 const labelRe = (/** @type {string[]} */ names) => names.join('|');
 const ANY_LABEL = labelRe(Object.values(LABELS).flat());
@@ -418,6 +557,83 @@ function docLines(docs, ind) {
       ...(d.body ? d.body.split('\n').map((l) => (l ? fi + l : '')) : []), fi + fence);
   }
   return out;
+}
+/* Bàn giao trong Markdown: nhãn `Outputs:` rồi mỗi đầu ra một mục `- tên · ref`, hợp đồng (note) là dòng thụt thêm hai ngay
+ * dưới; nhãn `Inputs:` rồi mỗi đầu vào `- tên đầu ra ← tên bên giao` (tên trùng thì `tên bước › tên bước con`). Trong tên:
+ * `\`, `·`, `←` thoát bằng `\`. */
+const escHand = (/** @type {string} */ s) => s.replace(/[\\·←]/g, '\\$&');
+const unescHand = (/** @type {string} */ s) => s.replace(/\\([\s\S])/g, '$1');
+/** Tách theo `sep` chưa thoát; phần tách ra vẫn giữ dấu thoát. @param {string} s @param {string} sep */
+function splitEsc(s, sep) {
+  const out = [''];
+  for (let i = 0; i < s.length; i++) {
+    if (s[i] === '\\' && i + 1 < s.length) out[out.length - 1] += s[i] + s[++i];
+    else if (s.startsWith(sep, i)) { out.push(''); i += sep.length - 1; }
+    else out[out.length - 1] += s[i];
+  }
+  return out;
+}
+/** Nhãn bên giao cho dòng `Inputs:`: tên ngắn; tên ngắn trùng (cùng tên đầu ra) thì `bước › bước con`. @param {Holder} hd */
+const fullTitle = (hd) => (hd.sub ? `${hd.step.title} › ${hd.sub.title}` : hd.step.title);
+/** Các dòng sau nhãn `Outputs:` / `Inputs:` (nhãn do người gọi ghi). @param {any} h @param {any} ws @param {Map<string, any>} idx @param {string} ind */
+function handLines(h, ws, idx, ind) {
+  const outs = [], ins = [];
+  for (const o of h.outs) {
+    const head = `${ind}  - ${escHand(o.name)}${o.ref ? ' · ' + escHand(o.ref) : ''}`;
+    outs.push(...(o.note ? hardBreaks([head, `${ind}    ${escBlock(o.note)}`]) : [head]));
+  }
+  for (const id of h.ins) {
+    const src = idx.get(id);
+    if (!src) continue;
+    const short = holderTitle(src);
+    const same = [...idx.values()].filter((y) => fold(y.out.name) === fold(src.out.name) && fold(holderTitle(y)) === fold(short));
+    ins.push(`${ind}  - ${escHand(src.out.name)} ← ${escHand(same.length > 1 ? fullTitle(src) : short)}`);
+  }
+  return { outs, ins };
+}
+/**
+ * Đọc các mục bàn giao bắt đầu ở dòng i (ngay sau nhãn), thụt ít nhất `min`. Đầu ra vào `h.outs` (id mới); đầu vào giữ chữ ở
+ * `h.inRefs`, giải sau khi đọc hết file (resolveIns). Trả dòng đầu tiên không thuộc chúng.
+ * @param {string[]} lines @param {number} i @param {'outs'|'ins'} kind @param {any} h @param {number} min
+ */
+function readHand(lines, i, kind, h, min) {
+  const ITEM_RE = /^(\s*)[-*+][ \t]+(.*?)\s*$/;
+  while (i < lines.length) {
+    const m = ITEM_RE.exec(lines[i]);
+    if (!m || m[1].length < min) break;
+    if (kind === 'ins') (h.inRefs = h.inRefs || []).push(m[2]);
+    else {
+      const [name, ref = '', ...rest] = splitEsc(m[2], ' · ').map((p) => unescHand(p).trim());
+      let note = rest.join(' · ');
+      const nx = lines[i + 1] ?? '';
+      if (nx.trim() && /^\s*/.exec(nx)[0].length > m[1].length && !ITEM_RE.test(nx)) { note = unescBlock(nx.trim()); i++; }
+      (h.outs = h.outs || []).push({ id: uid('o'), name, ref, note });
+    }
+    i++;
+  }
+  return i;
+}
+/** Đầu vào đọc từ Markdown → id đầu ra: theo tên đầu ra, tên trùng thì theo tên bên giao. @param {any} ws @param {string[]} warnings */
+function resolveIns(ws, warnings) {
+  const all = holders(ws); // bước đọc từ Markdown luôn có `subs`
+  const outs = all.flatMap((hd) => (hd.h.outs || []).map((/** @type {any} */ out) => ({ out, hd, short: fold(holderTitle(hd)), full: fold(fullTitle(hd)) })));
+  for (const { h } of all) {
+    if (!h.inRefs) continue;
+    h.ins = [];
+    for (const raw of h.inRefs) {
+      const [nm, ...from] = splitEsc(raw, ' ← ');
+      const name = unescHand(nm).trim();
+      const by = from.length ? unescHand(from.join(' ← ')).trim() : '';
+      const cand = outs.filter((c) => c.hd.h !== h && fold(oneLine(c.out.name)) === fold(oneLine(name)));
+      const hit = by ? cand.filter((c) => c.short === fold(oneLine(by)) || c.full === fold(oneLine(by))) : cand;
+      const pick = hit.length ? hit : cand.length === 1 ? cand : [];
+      const shown = name + (by ? ` ← ${by}` : '');
+      if (!pick.length) { warnings.push(`Input not found, dropped: ${shown}`); continue; }
+      if (pick.length > 1) warnings.push(`Input matches ${pick.length} outputs, linked to the first: ${shown}`);
+      h.ins.push(pick[0].out.id);
+    }
+    delete h.inRefs;
+  }
 }
 /** Bỏ tối đa n dấu cách đầu dòng. @param {string} l @param {number} n */
 const dedent = (l, n) => l.replace(new RegExp(`^ {0,${n}}`), '');
@@ -471,6 +687,7 @@ function readDocs(lines, i, docs, warnings, min) {
  */
 export function toMarkdown(ws, labels = null) {
   const out = [`# ${ws.name}`, '', `> ${APP_NAME} · format ${MD_VERSION}`];
+  const idx = outIndex(ws);
   if (ws.templateId) out.push('>', `> Template: ${ws.templateId}`);
   if (ws.notes) out.push('', ...hardBreaks(ws.notes.split('\n').map(escBlock)));
   ws.steps.forEach((/** @type {any} */ s, /** @type {number} */ i) => {
@@ -481,6 +698,9 @@ export function toMarkdown(ws, labels = null) {
     else if (s.round > 1) out.push('', `Iteration: ${s.round}`);
     if (s.notes) out.push('', ...hardBreaks(['Notes:', ...s.notes.split('\n').map((l) => '  ' + escBlock(l))]));
     if (s.docs.length) out.push('', 'Docs:', ...docLines(s.docs, ''));
+    const sh = handLines(s, ws, idx, '');
+    if (sh.outs.length) out.push('', 'Outputs:', ...sh.outs);
+    if (sh.ins.length) out.push('', 'Inputs:', ...sh.ins);
     if (s.subs.length) out.push('');
     for (const x of s.subs) {
       let line = `- [${MARK[x.status]}] ${escInline(x.title)}`;
@@ -495,7 +715,9 @@ export function toMarkdown(ws, labels = null) {
       }
       if (x.notes) more.push(...x.notes.split('\n').map((l) => '  ' + escBlock(l)));
       if (x.docs.length) more.push('  Docs:');
-      out.push(...hardBreaks([line, ...more]), ...docLines(x.docs, '  '));
+      const xh = handLines(x, ws, idx, '  ');
+      out.push(...hardBreaks([line, ...more]), ...docLines(x.docs, '  '),
+        ...(xh.outs.length ? ['  Outputs:', ...xh.outs] : []), ...(xh.ins.length ? ['  Inputs:', ...xh.ins] : []));
     }
   });
   if (ws.design) {
@@ -624,6 +846,12 @@ export function fromMarkdown(text) {
       blockFirst = false;
       continue;
     }
+    const hk = ind && block === 'sub' ? (['outs', 'ins'].find((k) => /^\s*$/.test(after(ind[2], /** @type {any} */ (k)) ?? 'x')) || '') : '';
+    if (hk) {
+      i = readHand(lines, i + 1, /** @type {'outs'|'ins'} */ (hk), sub, 3) - 1;
+      blockFirst = false;
+      continue;
+    }
     if (ind && block === 'sub' && /^\s*$/.test(after(ind[2], 'docs') ?? 'x')) {
       sub.docs = sub.docs || [];
       i = readDocs(lines, i + 1, sub.docs, warnings, 2) - 1;
@@ -699,7 +927,7 @@ export function fromMarkdown(text) {
     sub = null;
     const mm = new RegExp(`^\\**(${ANY_LABEL}):\\**\\s?(.*)$`, 'i').exec(raw);
     const key = mm ? labelKey(mm[1]) : '';
-    const meta = mm && ['goal', 'doneWhen', 'reopened', 'iteration', 'notes', 'docs'].includes(key) ? [mm[0], key, mm[2]] : null;
+    const meta = mm && ['goal', 'doneWhen', 'reopened', 'iteration', 'notes', 'docs', 'outs', 'ins'].includes(key) ? [mm[0], key, mm[2]] : null;
     if (meta && meta[1] === 'goal') step.goal = meta[2];
     else if (meta && meta[1] === 'doneWhen') step.doneWhen = meta[2];
     else if (meta && meta[1] === 'reopened') {
@@ -714,9 +942,11 @@ export function fromMarkdown(text) {
       step.docs = step.docs || [];
       i = readDocs(lines, i + 1, step.docs, warnings, 0) - 1;
     }
+    else if (meta && (meta[1] === 'outs' || meta[1] === 'ins') && !meta[2].trim()) i = readHand(lines, i + 1, /** @type {any} */ (meta[1]), step, 2) - 1;
     else addNote(step, 'notes', raw);
   }
   if (!ws.name && !ws.steps.length) throw new Error('No "# …" title, "## …" step or "- [ ] …" task found.');
+  resolveIns(ws, warnings);
   /* `Step: tên` của quyết định: gắn với bước đầu tiên cùng tên (bỏ dấu, không phân biệt hoa thường). */
   for (const l of ws.log) {
     if (l.stepTitle == null) continue;
@@ -813,13 +1043,20 @@ export function slug(/** @type {string} */ s) {
 }
 
 const docShape = (/** @type {any} */ d) => (d.kind === 'link' ? { kind: d.kind, title: d.title, url: d.url } : { kind: d.kind, title: d.title, body: d.body });
-/** Phần so được khi kiểm Markdown đi rồi về: bỏ id và mốc thời gian. @param {any} ws */
+/** Phần so được khi kiểm Markdown đi rồi về: bỏ id và mốc thời gian; đầu vào thành chỗ của đầu ra ("bước.bước con.đầu ra"). @param {any} ws */
 export function shape(ws) {
+  /** @type {Map<string, string>} */
+  const at = new Map();
+  ws.steps.forEach((/** @type {any} */ s, /** @type {number} */ i) => {
+    s.outs.forEach((/** @type {any} */ o, /** @type {number} */ k) => at.set(o.id, `${i}.-.${k}`));
+    s.subs.forEach((/** @type {any} */ x, /** @type {number} */ j) => x.outs.forEach((/** @type {any} */ o, /** @type {number} */ k) => at.set(o.id, `${i}.${j}.${k}`)));
+  });
+  const hand = (/** @type {any} */ h) => ({ outs: h.outs.map((/** @type {any} */ o) => ({ name: o.name, ref: o.ref, note: o.note })), ins: h.ins.map((/** @type {string} */ id) => at.get(id) || '?') });
   return {
     name: ws.name, templateId: ws.templateId, notes: ws.notes,
     steps: ws.steps.map((/** @type {any} */ s) => ({
-      title: s.title, goal: s.goal, doneWhen: s.doneWhen, notes: s.notes, revisit: s.revisit, round: s.round, docs: s.docs.map(docShape),
-      subs: s.subs.map((/** @type {any} */ x) => ({ title: x.title, status: x.status, reason: x.reason, due: x.due, doneWhen: x.doneWhen, notes: x.notes, par: x.par, redo: x.redo, docs: x.docs.map(docShape) })),
+      title: s.title, goal: s.goal, doneWhen: s.doneWhen, notes: s.notes, revisit: s.revisit, round: s.round, docs: s.docs.map(docShape), ...hand(s),
+      subs: s.subs.map((/** @type {any} */ x) => ({ title: x.title, status: x.status, reason: x.reason, due: x.due, doneWhen: x.doneWhen, notes: x.notes, par: x.par, redo: x.redo, docs: x.docs.map(docShape), ...hand(x) })),
     })),
     log: ws.log.map((/** @type {any} */ l) => ({ date: l.date, decision: l.decision, why: l.why, step: ws.steps.findIndex((/** @type {any} */ s) => s.id === l.stepId) })),
     design: ws.design,
