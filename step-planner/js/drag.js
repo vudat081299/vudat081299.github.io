@@ -142,6 +142,8 @@ export function initDrag(board, api) {
     ghost.inert = true;
     ghost.style.width = r.width + 'px';
     if (st.kind === 'sub') ghost.style.height = r.height + 'px';
+    /* Nghiêng, thu nhỏ quanh điểm nắm; dời bằng `translate` (áp ngoài cùng): điểm nắm luôn ở đúng dưới con trỏ. */
+    ghost.style.transformOrigin = `${st.offX}px ${st.offY}px`;
     document.body.append(ghost);
     st.rows = null; st.slots = new Map(); st.touched = new Set(); st.mids = null; st.sy = NaN;
     st.ghost = ghost;
@@ -167,7 +169,7 @@ export function initDrag(board, api) {
   }
 
   function moveGhost() {
-    st.ghost.style.transform = `translate3d(${st.x - st.offX}px, ${st.y - st.offY}px, 0)`;
+    st.ghost.style.translate = `${st.x - st.offX}px ${st.y - st.offY}px`;
   }
 
   /** Tính lại chỗ thả (con trỏ vừa đi, hay đang tự cuộn) rồi dời bóng: đọc toạ độ trước, ghi sau. */
@@ -413,9 +415,11 @@ export function initDrag(board, api) {
     };
     if (reduced() || !s.ph.isConnected) { done(); return; }
     /* Bóng bay vào ô viền đứt rồi mới vẽ lại. Hẹn giờ dự phòng: tab ẩn thì animation có thể không chạy tới cuối. */
-    const r = s.ph.getBoundingClientRect();
-    const a = s.ghost.animate([{ transform: s.ghost.style.transform }, { transform: `translate(${r.left}px, ${r.top}px)` }],
-      { duration: dur(), easing: 'cubic-bezier(.2, .7, .2, 1)', fill: 'forwards' });
+    const r = s.ph.getBoundingClientRect(), cs = getComputedStyle(s.ghost);
+    /* Bay tới góc ô viền đứt, đồng thời về cỡ thật, hết nghiêng: góc bóng trùng góc ô khi tới nơi. */
+    const a = s.ghost.animate([{ translate: s.ghost.style.translate, scale: cs.scale, rotate: cs.rotate },
+      { translate: `${r.left}px ${r.top}px`, scale: '1', rotate: '0deg' }],
+    { duration: dur(), easing: 'cubic-bezier(.2, .7, .2, 1)', fill: 'forwards' });
     s.anims.push(a);
     a.finished.then(done, done);
     s.flyTimer = window.setTimeout(done, dur() + 250);

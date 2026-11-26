@@ -544,6 +544,28 @@ const check = (name, ok, detail = '') => {
   const before4 = await ids0();
   await dragTo(cardSel(r1[0]), async () => { const b = await box(cardSel(before4[0])); return { x: b.x + 12, y: b.y + 30 }; }, { esc: true });
   check('Esc khi đang kéo: huỷ, không đổi gì', (await ids0()).join() === before4.join() && !(await page.$('.drop-ph, .drag-src, .drag-ghost')));
+  // 4b. Bóng không trôi khỏi con trỏ: điểm nắm cách góc bóng như lúc đầu, cả ở góc phải dưới khung nhìn.
+  {
+    const a = await box(cardSel(before4[0]));
+    const gx = 24, gy = 24;
+    const off = (x, y) => page.evaluate(([x, y]) => {
+      const g = document.querySelector('.drag-ghost'), r = g.getBoundingClientRect(), cs = getComputedStyle(g);
+      return { dx: x - r.left, dy: y - r.top, scale: parseFloat(cs.scale), tilt: parseFloat(cs.rotate), h: g.offsetHeight, w: g.offsetWidth };
+    }, [x, y]);
+    await page.mouse.move(a.x + gx, a.y + gy); await page.mouse.down();
+    await page.mouse.move(a.x + gx + 10, a.y + gy + 6, { steps: 2 }); await page.waitForTimeout(60);
+    const near = await off(a.x + gx + 10, a.y + gy + 6);
+    const vp = page.viewportSize(), fx = vp.width - 150, fy = vp.height - 120;
+    await page.mouse.move(fx, fy, { steps: 8 }); await page.waitForTimeout(120);
+    const far = await off(fx, fy);
+    await page.keyboard.press('Escape'); await page.mouse.up();
+    await page.waitForFunction(() => !document.querySelector('.drag-ghost') && !document.body.classList.contains('dragging-any'), null, { timeout: 3000 }).catch(() => {});
+    /* Thu nhỏ, nghiêng quanh điểm nắm: góc hộp bao chỉ lệch (1 − scale)·nắm + cạnh·sin(nghiêng), không đổi theo chỗ con trỏ. */
+    const tol = (k) => (1 - near.scale) * 24 + k * Math.sin(Math.abs(near.tilt) * Math.PI / 180) + 1.5;
+    check('kéo: bóng không trôi khỏi con trỏ (góc phải dưới), điểm nắm ≈ chỗ nắm trên thẻ',
+      Math.abs(far.dx - near.dx) <= 1 && Math.abs(far.dy - near.dy) <= 1 && Math.abs(far.dx - gx) <= tol(near.h) && Math.abs(far.dy - gy) <= tol(near.w),
+      JSON.stringify({ near, far }));
+  }
   // 5. Tự cuộn ngang: giữ gần mép phải hàng thẻ thì hàng cuộn.
   const sc0 = await page.evaluate(() => document.querySelector('.step .cards-scroll').scrollLeft);
   await dragTo(cardSel(before4[1]), async () => { const b = await box('.step:first-child .cards-scroll'); return { x: b.x + b.width - 10, y: b.y + 40 }; }, {

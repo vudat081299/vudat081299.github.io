@@ -687,8 +687,8 @@ span.chip::after { content: none; }
 .dragging-any .gap-add { display: none; }
 .drag-src { display: none !important; }
 .drag-ghost {
-  position: fixed; left: 0; top: 0; z-index: 95; margin: 0; pointer-events: none; will-change: transform;
-  box-shadow: var(--shadow-pop); rotate: var(--drag-tilt); scale: var(--drag-scale); transform-origin: top left;
+  position: fixed; left: 0; top: 0; z-index: 95; margin: 0; pointer-events: none; will-change: translate;
+  box-shadow: var(--shadow-pop); rotate: var(--drag-tilt); scale: var(--drag-scale); /* tâm xoay, thu nhỏ: điểm nắm (drag.js) */
 }
 /* Bóng thẻ nằm ngoài bảng: cao đúng bằng thẻ gốc (drag.js đặt), kể cả ở chế độ Gọn; không mang hàng nút. */
 .card.drag-ghost { min-height: 0; }
