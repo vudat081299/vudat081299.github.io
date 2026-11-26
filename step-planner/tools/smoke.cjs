@@ -2434,6 +2434,17 @@ const check = (name, ok, detail = '') => {
     const [dl] = await Promise.all([vp.waitForEvent('download'), vp.click('#sd-svg')]);
     const body = fs.readFileSync(await dl.path(), 'utf8');
     check('Tải SVG đang phóng: không mang transform của khung nhìn', !/scale\(/.test(body) && /viewBox="0 0 /.test(body));
+    /* Tải SVG giữ chữ nghiêng ("Not decided"), chữ hoa của CSS (dải Operations); rộng, cao, viewBox là số nguyên. */
+    const svgOut = await vp.evaluate((src) => {
+      const d = new DOMParser().parseFromString(src, 'image/svg+xml').documentElement;
+      const texts = [...d.querySelectorAll('text')];
+      const nd = texts.filter((t) => /^not decided$/i.test(t.textContent.trim()));
+      const band = texts.filter((t) => /^operations/i.test(t.textContent.trim()));
+      return { nd: nd.length, italic: nd.every((t) => t.getAttribute('font-style') === 'italic'), band: band.map((t) => t.textContent),
+        sizes: [d.getAttribute('width'), d.getAttribute('height'), ...d.getAttribute('viewBox').split(' ')] };
+    }, body);
+    check('Tải SVG: giữ chữ nghiêng, chữ hoa của CSS; cỡ là số nguyên', svgOut.nd > 0 && svgOut.italic && svgOut.band.length === 1
+      && svgOut.band.every((t) => t === t.toUpperCase()) && svgOut.sizes.every((x) => /^\d+$/.test(x)), JSON.stringify(svgOut));
     await vx.close();
     /* 320px, theme tối: cụm nút nằm trong khung, trang không cuộn ngang, phóng được. */
     const { ctx: nx2, page: np } = await open(320, 700, { colorScheme: 'dark' });
@@ -2451,6 +2462,13 @@ const check = (name, ok, detail = '') => {
     });
     check('320px, theme tối: cụm nút trong khung, trang không cuộn ngang, phóng được', narrow.right <= narrow.vw && (await hOverflow(np)) <= 0
       && (await camView(np)).k > 1 && narrow.dark, JSON.stringify(narrow));
+    /* Cỡ sơ đồ là tổng số lẻ (vd. 762.9999… ở vài bề rộng khung): giả cỡ lẻ trên trang, file tải về vẫn là số nguyên. */
+    await np.$eval('#sd-fig svg', (s) => { s.setAttribute('data-w', String(+s.getAttribute('data-w') - 1e-4)); s.setAttribute('height', String(+s.getAttribute('height') + 0.3)); });
+    const [dl2] = await Promise.all([np.waitForEvent('download'), np.click('#sd-svg')]);
+    const head2 = fs.readFileSync(await dl2.path(), 'utf8').match(/<svg[^>]*>/)[0];
+    const sizes2 = ['width', 'height', 'viewBox'].map((k) => (head2.match(new RegExp(` ${k}="([^"]*)"`)) || [])[1]);
+    check('tải SVG khi sơ đồ rộng lẻ px: rộng, cao, viewBox là số nguyên', sizes2.every((x) => x && x.split(' ').every((n) => /^\d+$/.test(n))),
+      `${sizes2.join(' | ')} (trên trang: ${await np.$eval('#sd-fig svg', (s) => s.getAttribute('data-w'))})`);
     await nx2.close();
     /* Cảm ứng: không có dấu + (không rê được); nhãn có hợp đồng vẫn bấm được. */
     const { ctx: tx, page: tp } = await open(390, 844, { hasTouch: true, isMobile: true });

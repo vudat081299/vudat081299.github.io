@@ -282,7 +282,11 @@ function nodeEl(n, x, y, w, hh, head, lh, pad, font) {
   return grp;
 }
 
-/** Tải sơ đồ: chép màu, nét, font đã tính vào thuộc tính để file đứng một mình đúng theme đang xem. */
+/* text-transform của CSS không có thuộc tính SVG tương ứng: đổi thẳng chữ của file tải về. */
+const TEXT_CASE = { uppercase: (/** @type {string} */ t) => t.toUpperCase(), lowercase: (/** @type {string} */ t) => t.toLowerCase(),
+  capitalize: (/** @type {string} */ t) => t.replace(/(^|\s)(\S)/g, (_, sp, c) => sp + c.toUpperCase()) };
+/** Tải sơ đồ: chép màu, nét, font (cả nghiêng), chữ hoa của CSS vào thuộc tính, chữ để file đứng một mình đúng theme đang xem;
+ * rộng, cao, viewBox làm tròn tới px nguyên. */
 function downloadSvg() {
   const src = $('sd-fig').querySelector('svg');
   if (!src) return;
@@ -290,18 +294,22 @@ function downloadSvg() {
   const a = [src, ...src.querySelectorAll('*')], b = [out, ...out.querySelectorAll('*')];
   const drop = b.filter((_, i) => a[i].matches('.sd-hit, .sd-hand.is-empty'));
   const camOut = b[a.findIndex((x) => x.matches('.sd-cam'))];
-  const props = ['fill', 'stroke', 'stroke-width', 'stroke-dasharray', 'stroke-linecap', 'stroke-linejoin', 'font-family', 'font-size', 'font-weight', 'letter-spacing', 'opacity'];
+  const props = ['fill', 'stroke', 'stroke-width', 'stroke-dasharray', 'stroke-linecap', 'stroke-linejoin', 'font-family', 'font-size', 'font-weight', 'font-style', 'letter-spacing', 'opacity'];
   a.forEach((el, i) => {
     const cs = getComputedStyle(el);
     for (const p of props) b[i].setAttribute(p, cs.getPropertyValue(p));
+    const tc = TEXT_CASE[/** @type {'uppercase'} */ (cs.getPropertyValue('text-transform'))];
+    if (tc) for (const t of b[i].childNodes) if (t.nodeType === Node.TEXT_NODE) t.nodeValue = tc(t.nodeValue || '');
     b[i].removeAttribute('class');
     b[i].removeAttribute('tabindex');
     b[i].removeAttribute('role');
   });
   for (const x of drop) x.remove();
   camOut?.removeAttribute('style');
-  const cw = src.getAttribute('data-w') || src.getAttribute('width') || '0', chh = src.getAttribute('height') || '0';
+  const cw = String(Math.round(Number(src.getAttribute('data-w') || src.getAttribute('width') || 0)));
+  const chh = String(Math.round(Number(src.getAttribute('height') || 0)));
   out.setAttribute('width', cw);
+  out.setAttribute('height', chh);
   out.setAttribute('viewBox', `0 0 ${cw} ${chh}`);
   out.removeAttribute('data-w');
   out.setAttribute('xmlns', NS);
