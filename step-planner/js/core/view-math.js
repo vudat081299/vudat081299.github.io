@@ -1,7 +1,10 @@
 // @ts-check
 /* Khung nhìn của sơ đồ System design (PLAN-031): toán thuần cho kéo và thu phóng, không DOM, chạy được trong Node.
- * Một khung nhìn là {x, y, k}: điểm (u, v) của sơ đồ hiện ở (u·k + x, v·k + y) trong khung (px, gốc ở góc trên trái).
- * DOM (bánh xe, kéo, chạm, phím, cụm nút): diagram-view.js. */
+   Một khung nhìn là {x, y, k}: điểm (u, v) của sơ đồ hiện ở (u·k + x, v·k + y) trong khung (px, gốc ở góc trên trái).
+   DOM (bánh xe, kéo, chạm, phím, cụm nút): ui/diagram-view.js.
+   Xuất: ZOOM_MIN, ZOOM_MAX, ZOOM_STEP, WHEEL_ZOOM, PAN_STEP, LINE_PX, KEEP, DRAG_SLOP, HOME, clamp, clampZoom, isHome,
+     zoomAt, wheelZoom, panBy, wheelPx, wheelPan, clampPan, fit, pinch, lerpView, zoomPct.
+   Dùng: không. */
 
 export const ZOOM_MIN = 0.25;          // thu nhỏ nhất
 export const ZOOM_MAX = 3;             // phóng to nhất

@@ -55,7 +55,7 @@ const check = (name, ok, detail = '') => {
   const afterSave = (page) => page.evaluate(() => new Promise((r) => requestAnimationFrame(() => setTimeout(r, 0))));
   const stored = async (page) => { await afterSave(page); return page.evaluate(() => JSON.parse(localStorage.getItem('stepPlanner.v2') || 'null')); };
   const cur = async (page) => { const s = await stored(page); return s.workspaces.find((w) => w.id === s.lastId); };
-  const shape = (page, ws) => page.evaluate(async (w) => (await import(new URL('js/core.js', location.href).href)).shape(w), ws);
+  const shape = (page, ws) => page.evaluate(async (w) => (await import(new URL('js/core/io.js', location.href).href)).shape(w), ws);
   const subSel = (id, act) => `.card[data-sub="${id}"] [data-act="${act}"]`;
   /* Đổi trạng thái qua danh sách: Shift + bấm chip luôn mở danh sách. */
   const setSt = async (page, subId, st) => {
@@ -1988,7 +1988,7 @@ const check = (name, ok, detail = '') => {
       const body = fs.readFileSync(await dl.path(), 'utf8');
       check(`${tag}: tải SVG đứng một mình (màu chép vào thuộc tính)`, /^<\?xml/.test(body) && /<svg[^>]+xmlns=/.test(body) && !/class=/.test(body) && /fill="rgb/.test(body));
       const md = await sp.evaluate(async () => {
-        const C = await import(new URL('js/core.js', location.href).href);
+        const C = await import(new URL('js/core/markdown.js', location.href).href);
         const s = JSON.parse(localStorage.getItem('stepPlanner.v2'));
         return C.toMarkdown(s.workspaces.find((x) => x.id === s.lastId));
       });
@@ -1998,7 +1998,7 @@ const check = (name, ok, detail = '') => {
         && shown.includes(`- ${proc.title}: `) && shown.includes(`[${proc.id}: ${top}]`));
       await sp.keyboard.press('Escape');
       const rt = await sp.evaluate(async () => {
-        const C = await import(new URL('js/core.js', location.href).href);
+        const C = Object.assign({}, ...(await Promise.all(['markdown', 'io', 'model'].map((m) => import(new URL(`js/core/${m}.js`, location.href).href))))); // toMarkdown, fromMarkdown, shape, normWorkspace
         const s = JSON.parse(localStorage.getItem('stepPlanner.v2'));
         const w0 = s.workspaces.find((x) => x.id === s.lastId);
         return JSON.stringify(C.shape(C.fromMarkdown(C.toMarkdown(w0)).workspace)) === JSON.stringify(C.shape(C.normWorkspace(w0)));
@@ -2046,7 +2046,7 @@ const check = (name, ok, detail = '') => {
     await sp.keyboard.press('Escape');
     if (w === 1280) {
       const md2 = await sp.evaluate(async () => {
-        const C = await import(new URL('js/core.js', location.href).href);
+        const C = await import(new URL('js/core/markdown.js', location.href).href);
         const s = JSON.parse(localStorage.getItem('stepPlanner.v2'));
         return C.toMarkdown(s.workspaces.find((x) => x.id === s.lastId));
       });
@@ -2626,7 +2626,7 @@ const check = (name, ok, detail = '') => {
     ep.on('pageerror', (e) => errors.push(String(e)));
     await ep.goto(BASE);
     await ep.waitForSelector('.card[data-sub="se1"]');
-    const today = await ep.evaluate(async () => (await import(new URL('js/core.js', location.href).href)).today());
+    const today = await ep.evaluate(async () => (await import(new URL('js/core/model.js', location.href).href)).today());
     const se = async (id) => (await cur(ep)).steps[0].subs.find((x) => x.id === id);
     await ep.click(subSel('se2', 'status'));
     check('bằng chứng: xong mà không có Done when thì không gợi ý', !(await ep.isVisible('#toast')) && (await se('se2')).doneAt === today);
@@ -2652,7 +2652,7 @@ const check = (name, ok, detail = '') => {
       pressed === 'true' && d1.proof === true && d1.title === 'Lần chạy 12 (AUC 0,83)' && tag === 'Evidence: Lần chạy 12 (AUC 0,83)'
       && /^done \d{1,2} \w{3} \d{4}$/.test(doneTxt), `${pressed} ${tag} ${doneTxt}`);
     const md = await ep.evaluate(async () => {
-      const C = await import(new URL('js/core.js', location.href).href);
+      const C = await import(new URL('js/core/markdown.js', location.href).href);
       const s = JSON.parse(localStorage.getItem('stepPlanner.v2'));
       return C.toMarkdown(s.workspaces[0]);
     });

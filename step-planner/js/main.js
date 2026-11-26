@@ -1,13 +1,18 @@
 // @ts-check
-/* Giao diện Data Science Step Planner: nạp mẫu, vẽ bảng, sự kiện, hộp thoại. Logic thuần ở core.js, bộ nhớ ở store.js.
+/* Giao diện Data Science Step Planner: nạp mẫu, vẽ bảng, sự kiện, hộp thoại. Logic thuần ở core/, bộ nhớ ở ui/store.js.
  * Chữ người dùng chỉ vào DOM qua textContent (hàm h), không bao giờ qua HTML. */
-import * as C from './core.js';
-import * as S from './store.js';
-import { renderMd, renderSrc, linkParts } from './md.js';
-import { enhanceSelect, openList, consumeJustClosed } from './dropdown.js';
-import { initDrag } from './drag.js';
-import { initDesign, renderSection as renderDesign, mdLabels } from './design.js';
-import * as Hd from './hand.js';
+import * as S from './ui/store.js';
+import { enhanceSelect, openList, consumeJustClosed } from './ui/dropdown.js';
+import { initDrag } from './ui/drag.js';
+import { initDesign, renderSection as renderDesign, mdLabels } from './ui/design.js';
+import * as Hd from './ui/hand.js';
+import { canReopen, fold, inGroup, liveLabels, nextWaitingOn, overall, placeSub, progress, projectNextIds, redoCount, shiftTarget, slotsOf, subPlace, takeSub } from './core/board.js';
+import { handoffs, insBackup, ioStatus } from './core/handoffs.js';
+import { counts, parseImport, plural, slug, toBackup, toJSON } from './core/io.js';
+import { toMarkdown } from './core/markdown.js';
+import { linkParts } from './core/md.js';
+import { EDIT_FIELDS, REASON_LABEL, STATUSES, STATUS_HINT, STATUS_LABEL, freshCopy, fromTemplate, hasReason, mergeEdit, multiLine, needsEvidence, nextStatus, normDoc, normLog, normStep, normSub, oneLine, outOfScope, pick, safeUrl, setStatus, today, uniqueName } from './core/model.js';
+import { renderMd, renderSrc } from './ui/md-view.js';
 
 /** @param {string} id @returns {any} */
 const $ = (id) => document.getElementById(id);
@@ -26,7 +31,7 @@ function h(tag, attrs = {}, ...kids) {
   return el;
 }
 
-/** Chữ có link http(s) thành text + thẻ a (tách ở md.js `linkParts`); mọi phần vẫn qua textContent. @param {string} text */
+/** Chữ có link http(s) thành text + thẻ a (tách ở core/md.js `linkParts`); mọi phần vẫn qua textContent. @param {string} text */
 function withLinks(text) {
   return linkParts(text).map((p) => (p.t === 'link'
     ? h('a', { href: p.v, target: '_blank', rel: 'noopener noreferrer' }, p.v)
@@ -62,7 +67,7 @@ let curId = '';
 let templates = [];
 /** q: chữ tìm; st: nhóm trạng thái đang lọc (C.STATUS_GROUPS, '' = mọi trạng thái). Mỗi tab một bộ lọc, không lưu. */
 const ui = { q: '', st: '' };
-/** Kéo thả (js/drag.js); render() dọn lần kéo dở trước khi vẽ lại bảng. @type {{abort: () => void}|null} */
+/** Kéo thả (ui/drag.js); render() dọn lần kéo dở trước khi vẽ lại bảng. @type {{abort: () => void}|null} */
 let dragCtl = null;
 const banners = new Map();
 
@@ -184,7 +189,7 @@ function render(opt = {}) {
   $('overall').hidden = !ws;
   renderNudge();
   if (!ws) { renderStart(); return; }
-  const o = C.overall(ws);
+  const o = overall(ws);
   $('overall-text').textContent = `${o.done}/${o.total} done · ${o.pct}%`;
   $('overall-bar').style.width = o.pct + '%';
   renderLegend(ws);
@@ -199,16 +204,16 @@ function render(opt = {}) {
 
 /** Chú giải bảy trạng thái (chip mẫu + chữ + số bước con), cũng là tiến độ chi tiết của dự án. @param {any} ws */
 function renderLegend(ws) {
-  const n = Object.fromEntries(C.STATUSES.map((st) => [st, 0]));
+  const n = Object.fromEntries(STATUSES.map((st) => [st, 0]));
   for (const s of ws.steps) for (const x of s.subs) n[x.status]++;
-  $('legend').replaceChildren(...C.STATUSES.map((st) => h('li', {},
-    h('span', { class: `chip st-${st}` }, C.STATUS_LABEL[st]), h('b', {}, String(n[st])))));
+  $('legend').replaceChildren(...STATUSES.map((st) => h('li', {},
+    h('span', { class: `chip st-${st}` }, STATUS_LABEL[st]), h('b', {}, String(n[st])))));
 }
 
 function renderWsNotes(/** @type {any} */ ws) {
   $('ws-notes-text').replaceChildren(...withLinks(ws.notes));
   $('ws-notes-text').hidden = !ws.notes;
-  $('ws-notes-hint').textContent = ws.notes ? `(${C.plural(ws.notes.split('\n').length, 'line')})` : '(empty)';
+  $('ws-notes-hint').textContent = ws.notes ? `(${plural(ws.notes.split('\n').length, 'line')})` : '(empty)';
 }
 
 /** Nhắc sao lưu: có thay đổi chưa sao lưu từ ≥ 3 ngày. */
@@ -217,7 +222,7 @@ function renderNudge() {
   const since = state.dirtySince ? Date.now() - Date.parse(state.dirtySince) : 0;
   b.hidden = !state.workspaces.length || since < BACKUP_NUDGE_DAYS * DAY;
   b.textContent = state.lastBackup
-    ? `Not backed up for ${C.plural(Math.floor((Date.now() - Date.parse(state.lastBackup)) / DAY), 'day')}`
+    ? `Not backed up for ${plural(Math.floor((Date.now() - Date.parse(state.lastBackup)) / DAY), 'day')}`
     : 'Never backed up';
   b.title = 'Download a JSON backup of every project';
   $('backup-when').textContent = state.lastBackup ? `Last backup: ${fmtDate(state.lastBackup.slice(0, 10))}` : 'Never backed up.';
@@ -233,11 +238,11 @@ let boardWsId = '';
 /** @param {any} ws @param {{full?:boolean}} [opt] full: bỏ mọi hàng cũ, dựng lại cả bảng */
 function renderBoard(ws, opt = {}) {
   const board = $('board');
-  const q = C.fold(ui.q.trim());
+  const q = fold(ui.q.trim());
   const st = ui.st;
   const filtering = !!q || !!st;
-  const todayStr = C.today();
-  const nextIds = new Set(C.projectNextIds(ws));
+  const todayStr = today();
+  const nextIds = new Set(projectNextIds(ws));
   const labels = labelsOf(ws);
   const compact = S.compactOn();
   const reuse = !opt.full && boardWsId === ws.id;
@@ -248,9 +253,9 @@ function renderBoard(ws, opt = {}) {
   const docTitles = (/** @type {any[]} */ docs) => docs.map((d) => d.title).join(' ');
   const outText = (/** @type {any[]} */ outs) => outs.map((o) => `${o.name} ${o.ref}`).join(' ');
   /* Bàn giao: chip "In n" đếm đầu vào còn trỏ tới đầu ra (đọc cả hàng khác), vạch trên hàng đếm cặp từ hàng trên: vào khoá. */
-  const hand = C.handoffs(ws);
+  const hand = handoffs(ws);
   /* Hai chấm đầu vào / đầu ra đọc liên kết ở hàng khác (treo, không ai dùng): trạng thái của bước và các bước con vào khoá. */
-  const io = C.ioStatus(ws, hand);
+  const io = ioStatus(ws, hand);
   /* 1. Dữ liệu: hàng nào hiện, khoá của nó, dùng lại được hàng cũ không. Chưa đọc, chưa ghi DOM. */
   const plan = [];
   /** Ngày mở lại cuối của bước đã đóng vòng (chú thích nhãn "Iteration N"); nằm trong khoá hàng vì nó đọc nhật ký. */
@@ -258,7 +263,7 @@ function renderBoard(ws, opt = {}) {
   let shown = 0;
   ws.steps.forEach((/** @type {any} */ step, /** @type {number} */ i) => {
     const stepHit = !!q && foldOf(step, () => [step.title, step.goal, step.doneWhen, step.notes, step.revisit?.reason, docTitles(step.docs), outText(step.outs)]).includes(q);
-    const visible = step.subs.filter((/** @type {any} */ x) => C.inGroup(st, x.status)
+    const visible = step.subs.filter((/** @type {any} */ x) => inGroup(st, x.status)
       && (!q || stepHit || foldOf(x, () => [x.title, x.doneWhen, x.notes, x.reason, docTitles(x.docs), outText(x.outs)]).includes(q)));
     if (filtering && !visible.length && !(stepHit && !st)) return;
     shown += visible.length;
@@ -304,7 +309,7 @@ function renderBoard(ws, opt = {}) {
   placeChildren(board, nodes, moved);
   for (const p of plan) if (p.row) patchRowIndex(p.row, p.i);
   $('renumber-btn').hidden = !labelsStale(ws);
-  $('filter-note').textContent = filtering ? `${C.plural(shown, 'sub-step')} match · reordering is off while ${q ? 'searching' : 'filtering'}` : '';
+  $('filter-note').textContent = filtering ? `${plural(shown, 'sub-step')} match · reordering is off while ${q ? 'searching' : 'filtering'}` : '';
   $('add-step').hidden = filtering;
   /* 4. Đo: thẻ của hàng mới (Compact vừa đổi: mọi thẻ) — một lần dàn trang cho cả lượt. */
   if (compactChanged) markCut(cutBoxes(nodes), new Set([...keep.open, ...openKeys(cutBoxes(nodes))]));
@@ -325,7 +330,7 @@ function foldOf(o, parts) {
   const src = parts().join(' ');
   const c = folds.get(o);
   if (c && c.src === src) return c.folded;
-  const folded = C.fold(src);
+  const folded = fold(src);
   folds.set(o, { src, folded });
   return folded;
 }
@@ -378,7 +383,7 @@ const handSig = (pairs) => (pairs || []).map((p) => [p.from.h.id, p.to.h.id, p.o
 function stepRow(step, i, visible, ctx) {
   const { filtering, todayStr, nextIds, labels, keep, reopenedOn, hand, io } = ctx;
   const stepTags = Hd.tags(step).filter(Boolean);
-  const prog = C.progress(step.subs);
+  const prog = progress(step.subs);
   const done = prog.total > 0 && prog.done === prog.total;
   const head = h('div', { class: 'step-head', id: 'sh-' + step.id },
     h('div', { class: 'step-top' },
@@ -399,11 +404,11 @@ function stepRow(step, i, visible, ctx) {
     h('div', { class: 'acts' },
       h('button', { type: 'button', class: 'btn small', 'data-act': 'add-sub' }, icon('plus'), 'Sub-step'),
       /* Nút phụ chỉ biểu tượng (tên ở aria-label, title): cả hàng nằm gọn một dòng trong cột tên bước. */
-      !step.revisit && C.canReopen(step) && iconBtn('redo', 'Reopen step: a later step showed this one must be redone', 'revisit'),
+      !step.revisit && canReopen(step) && iconBtn('redo', 'Reopen step: a later step showed this one must be redone', 'revisit'),
       !step.docs.length && iconBtn('clip', 'Add a doc: a link or a Markdown note for the whole step', 'add-doc'),
       iconBtn('trash', 'Delete step', 'del-step')));
   /* Băng "Reopened": vòng, ngày, lý do (bấm để sửa), còn mấy việc phải làm lại; làm lại xong hết thì mời đóng vòng. */
-  const redo = C.redoCount(step);
+  const redo = redoCount(step);
   const band = step.revisit && h('div', { class: 'revisit-band' + (redo.total && !redo.left ? ' all-redone' : '') },
     icon('redo'),
     h('button', { type: 'button', class: 'badge', 'data-act': 'revisit', title: 'Edit the reason' }, h('span', { class: 'clamp' },
@@ -411,20 +416,20 @@ function stepRow(step, i, visible, ctx) {
       ' · Iteration ' + step.revisit.round,
       step.revisit.date ? ' · ' + fmtDate(step.revisit.date) : '',
       step.revisit.reason ? ' · ' + step.revisit.reason : '')),
-    redo.total > 0 && h('span', { class: 'redo-left' }, redo.left ? `${redo.left} of ${C.plural(redo.total, 'redo task')} left` : `All ${C.plural(redo.total, 'redo task')} done`),
+    redo.total > 0 && h('span', { class: 'redo-left' }, redo.left ? `${redo.left} of ${plural(redo.total, 'redo task')} left` : `All ${plural(redo.total, 'redo task')} done`),
     h('button', { type: 'button', class: 'btn small' + (redo.total && !redo.left ? ' go' : ''), 'data-act': 'revisit-clear',
       title: 'Finish this iteration: remove the band and the Redo marks' }, 'Close iteration'));
   const card = (/** @type {any} */ x) => {
-    const overdue = x.due && x.due < todayStr && x.status !== 'done' && !C.outOfScope(x.status);
+    const overdue = x.due && x.due < todayStr && x.status !== 'done' && !outOfScope(x.status);
     const isNext = nextIds.has(x.id);
     const doneOn = x.status === 'done' && x.doneAt;
     return h('div', { class: `card st-${x.status}${isNext ? ' next' : ''}`, 'data-sub': x.id },
       h('div', { class: 'card-top' },
         numTag('num', labels.get(x.id)),
         isNext && h('span', { class: 'next-tag' }, 'Next'),
-        x.redo && x.status !== 'done' && !C.outOfScope(x.status) && h('span', { class: 'redo-tag', title: `Sent back to redo in iteration ${step.revisit?.round}` }, icon('redo'), 'Redo'),
+        x.redo && x.status !== 'done' && !outOfScope(x.status) && h('span', { class: 'redo-tag', title: `Sent back to redo in iteration ${step.revisit?.round}` }, icon('redo'), 'Redo'),
         x.docs.length > 0 && h('button', { type: 'button', class: 'doc-tag', 'data-act': 'sub-docs', tabindex: '-1',
-          'aria-label': `${C.plural(x.docs.length, 'doc')}. Open the list`, title: x.docs.map((/** @type {any} */ d) => d.title).join('\n') },
+          'aria-label': `${plural(x.docs.length, 'doc')}. Open the list`, title: x.docs.map((/** @type {any} */ d) => d.title).join('\n') },
         icon('clip'), String(x.docs.length)),
         proofTag(x),
         Hd.ioDots(io.get(x.id), false),
@@ -434,7 +439,7 @@ function stepRow(step, i, visible, ctx) {
         (x.due || doneOn) && h('p', { class: 'meta' },
           x.due && h('span', { class: 'due' + (overdue ? ' overdue' : '') }, 'due ' + fmtDate(x.due) + (overdue ? ' (overdue)' : '')),
           doneOn && h('span', { class: 'done-at', title: `Marked Done on ${fmtDate(x.doneAt)}` }, 'done ' + fmtDate(x.doneAt))),
-        x.reason && h('p', { class: 'card-reason clamp' }, h('span', { class: 'lbl' }, C.REASON_LABEL[x.status] + ' '), withLinks(x.reason)),
+        x.reason && h('p', { class: 'card-reason clamp' }, h('span', { class: 'lbl' }, REASON_LABEL[x.status] + ' '), withLinks(x.reason)),
         x.doneWhen && h('p', { class: 'card-done clamp' }, h('span', { class: 'lbl' }, 'Done when '), x.doneWhen),
         x.notes && cardNotes(x.notes, keep.open.has(x.id))),
       h('div', { class: 'acts' },
@@ -446,7 +451,7 @@ function stepRow(step, i, visible, ctx) {
   const shownIds = new Set(visible.map((/** @type {any} */ x) => x.id));
   /* Giữa ô k và ô k + 1 có bàn giao: một nút chung (ẩn khi đang lọc). */
   const gaps = filtering ? null : hand.gaps.get(step.id);
-  const slots = C.slotsOf(step.subs).flatMap((sl, si) => {
+  const slots = slotsOf(step.subs).flatMap((sl, si) => {
     const vis = sl.filter((x) => shownIds.has(x.id));
     const pairs = gaps?.get(si) || [];
     return [vis.length > 0 && h('li', { class: 'slot' + (sl.length > 1 ? ' par' : ''), 'data-slot': String(si),
@@ -478,13 +483,13 @@ const frozen = new Map();
 /** @param {any} ws @returns {Map<string, string>} */
 function labelsOf(ws) {
   let m = frozen.get(ws.id);
-  if (!m) { m = C.liveLabels(ws); frozen.set(ws.id, m); }
+  if (!m) { m = liveLabels(ws); frozen.set(ws.id, m); }
   return m;
 }
 /** Số đang hiện khác số thật (đã dời, thêm, xoá)? @param {any} ws */
 function labelsStale(ws) {
   const m = labelsOf(ws);
-  const live = C.liveLabels(ws);
+  const live = liveLabels(ws);
   return [...live].some(([id, l]) => m.get(id) !== l);
 }
 /** @param {string} cls @param {string|undefined} label */
@@ -503,9 +508,9 @@ $('renumber-btn').addEventListener('click', () => {
 /** Chip trạng thái: New, In progress bấm là sang trạng thái kế; Done và các trạng thái khác bấm là mở danh sách.
  * Shift + bấm hoặc Alt + ↓ luôn mở danh sách. @param {any} x */
 function statusChip(x) {
-  const label = C.STATUS_LABEL[x.status];
-  const nx = C.nextStatus(x.status);
-  const how = nx ? `Click: ${C.STATUS_LABEL[nx]}. Shift-click or Alt+Down: all statuses` : 'Click: choose a status';
+  const label = STATUS_LABEL[x.status];
+  const nx = nextStatus(x.status);
+  const how = nx ? `Click: ${STATUS_LABEL[nx]}. Shift-click or Alt+Down: all statuses` : 'Click: choose a status';
   return h('button', { type: 'button', class: `chip st-${x.status}`, 'data-act': 'status', 'aria-haspopup': nx ? null : 'listbox',
     'aria-expanded': nx ? null : 'false', 'aria-keyshortcuts': 'Alt+ArrowDown', 'aria-label': `Status: ${label}. ${how}`, title: how }, label);
 }
@@ -662,7 +667,7 @@ const lastReopened = (ws, step) => ws.log.filter((/** @type {any} */ l) => l.ste
 /** Bước đã mở lại rồi đóng vòng (không còn băng): nhãn "Iteration N" ở đầu bước, chú thích số lần mở lại, ngày mở lại cuối.
  * @param {any} step @param {string} last */
 function iterTag(step, last) {
-  const title = `Reopened ${C.plural(step.round - 1, 'time')}, every iteration closed${last ? ` · last reopened ${fmtDate(last)}` : ''}`;
+  const title = `Reopened ${plural(step.round - 1, 'time')}, every iteration closed${last ? ` · last reopened ${fmtDate(last)}` : ''}`;
   return h('p', { class: 'step-iter', title }, icon('redo'), `Iteration ${step.round}`);
 }
 /** Quyết định đang mở hết lý do ("Show more"); vẽ lại vẫn giữ. */
@@ -683,7 +688,7 @@ function fillStepSelect(sel, ws, value) {
 let logKey = '';
 /** @param {any} ws @param {{full?:boolean}} [opt] */
 function renderLog(ws, opt = {}) {
-  if (!$('log-date').value) $('log-date').value = C.today();
+  if (!$('log-date').value) $('log-date').value = today();
   const labels0 = labelsOf(ws);
   const key = JSON.stringify([ws.id, ws.log, ws.steps.map((/** @type {any} */ s) => [s.id, s.title, labels0.get(s.id) ?? null]), [...logOpen]]);
   if (!opt.full && key === logKey) return;
@@ -724,7 +729,7 @@ function renderLog(ws, opt = {}) {
   };
   $('log-list').replaceChildren(...[...months].map(([k, list]) => h('section', { class: 'log-group', 'aria-labelledby': `log-m-${k}` },
     h('h3', { class: 'log-month', id: `log-m-${k}` }, `${MONTH_NAMES[+k.slice(5, 7) - 1]} ${k.slice(0, 4)}`,
-      h('span', { class: 'log-month-n' }, C.plural(list.length, 'decision'))),
+      h('span', { class: 'log-month-n' }, plural(list.length, 'decision'))),
     h('ol', { class: 'log-entries' }, ...list.map(item)))));
   measureLog();
 }
@@ -753,7 +758,7 @@ const BLANK_TPL = { id: 'blank', name: 'Blank', description: '', steps: [] };
 function tplInfo(t) {
   const subs = t.steps.reduce((/** @type {number} */ n, /** @type {any} */ s) => n + (s.subs || []).length, 0);
   return h('span', {}, h('b', {}, t.name), t.description && h('small', {}, t.description),
-    t.steps.length > 0 && h('span', { class: 'tpl-n' }, [t.output, C.plural(t.steps.length, 'step'), C.plural(subs, 'sub-step')].filter(Boolean).join(' · ')));
+    t.steps.length > 0 && h('span', { class: 'tpl-n' }, [t.output, plural(t.steps.length, 'step'), plural(subs, 'sub-step')].filter(Boolean).join(' · ')));
 }
 function renderStart() {
   const list = templates.length ? templates : [BLANK_TPL];
@@ -880,8 +885,8 @@ const FIELD_LABEL = { title: 'Title', status: 'Status', reason: 'Reason', due: '
   date: 'Date', decision: 'Decision', why: 'Why', stepId: 'Step', outs: 'Outputs', ins: 'Inputs' };
 /** Giá trị một trường để so trong hộp hỏi. @param {any} ws @param {string} k @param {any} v */
 function fieldText(ws, k, v) {
-  const t = k === 'outs' ? (v || []).map((/** @type {any} */ o) => o.name).join(', ') : k === 'ins' ? C.plural((v || []).length, 'input') : k === 'status' ? C.STATUS_LABEL[v] : k === 'stepId' ? stepOf(ws, v)?.title || '' : k === 'due' || k === 'date' ? fmtDate(v) : String(v ?? '');
-  const one = C.oneLine(t);
+  const t = k === 'outs' ? (v || []).map((/** @type {any} */ o) => o.name).join(', ') : k === 'ins' ? plural((v || []).length, 'input') : k === 'status' ? STATUS_LABEL[v] : k === 'stepId' ? stepOf(ws, v)?.title || '' : k === 'due' || k === 'date' ? fmtDate(v) : String(v ?? '');
+  const one = oneLine(t);
   return !one ? '(empty)' : one.length > 80 ? one.slice(0, 79) + '…' : one;
 }
 /**
@@ -892,14 +897,14 @@ function fieldText(ws, k, v) {
 async function mergeSaved(ws, snap, mine, latest) {
   const now = latest();
   if (!now) return null;
-  const first = C.mergeEdit(snap, mine, now);
+  const first = mergeEdit(snap, mine, now);
   if (!first.conflicts.length) return first.merged;
   const r = await ask({ title: 'Changed in another tab', text: 'Another tab saved these fields after you opened this dialog. Keep which version?',
     list: first.conflicts.map((k) => [FIELD_LABEL[k] || k, fieldText(ws, k, mine[k]), fieldText(ws, k, now[k])]), ok: 'Keep mine', alt: "Keep the other tab's" });
   if (r === null) return null;
   const again = latest();
   if (!again) return null;
-  const { merged, conflicts } = C.mergeEdit(snap, mine, again);
+  const { merged, conflicts } = mergeEdit(snap, mine, again);
   if (r === ASK_ALT) for (const k of conflicts) merged[k] = again[k];
   return merged;
 }
@@ -927,7 +932,7 @@ function afterOpen() {
 }
 function createFrom(/** @type {string} */ tplId, /** @type {string} */ name = '') {
   const tpl = templates.find((t) => t.id === tplId) || { id: 'blank', name: 'Untitled project', steps: [] };
-  addWorkspace(C.fromTemplate(tpl, name));
+  addWorkspace(fromTemplate(tpl, name));
   commit();
   afterOpen();
 }
@@ -980,10 +985,10 @@ function openWs() {
 function renderWsList() {
   $('ws-count').textContent = String(state.workspaces.length);
   $('ws-list').replaceChildren(...state.workspaces.map((w) => {
-    const o = C.overall(w);
+    const o = overall(w);
     const tpl = templates.find((t) => t.id === w.templateId);
     const now = w.id === curId;
-    const meta = [tpl && tpl.steps.length && C.fold(tpl.name) !== C.fold(w.name) ? tpl.name : '', C.plural(w.steps.length, 'step'), `edited ${fmtDate(w.updatedAt.slice(0, 10))}`];
+    const meta = [tpl && tpl.steps.length && fold(tpl.name) !== fold(w.name) ? tpl.name : '', plural(w.steps.length, 'step'), `edited ${fmtDate(w.updatedAt.slice(0, 10))}`];
     return h('li', { class: 'ws-item' + (now ? ' now' : ''), 'data-ws': w.id },
       h('button', { type: 'button', class: 'ws-open', 'data-act': 'ws-open', 'aria-current': now ? 'true' : null },
         h('span', { class: 'ws-top' }, h('b', { class: 'ws-title' }, w.name), now && h('span', { class: 'ws-now' }, 'Open now')),
@@ -1009,12 +1014,12 @@ $('ws-list').addEventListener('click', async (/** @type {any} */ e) => {
     const w = findWs(id);
     const name = w && await ask({ title: 'Rename project', label: 'Name', value: w.name, ok: 'Rename' });
     const w2 = findWs(id);
-    if (w2 && name && C.oneLine(name)) { w2.name = C.oneLine(name); w2.updatedAt = new Date().toISOString(); persist(); render(); }
+    if (w2 && name && oneLine(name)) { w2.name = oneLine(name); w2.updatedAt = new Date().toISOString(); persist(); render(); }
   } else if (act === 'ws-dup') {
     const w = findWs(id);
     if (!w) return;
-    const c = C.freshCopy(w);
-    c.name = C.uniqueName(w.name, state.workspaces.map((x) => x.name), 'copy');
+    const c = freshCopy(w);
+    c.name = uniqueName(w.name, state.workspaces.map((x) => x.name), 'copy');
     state.workspaces.splice(state.workspaces.indexOf(w) + 1, 0, c);
     persist(); render();
   } else if (act === 'ws-del') {
@@ -1075,7 +1080,7 @@ $('notes-form').addEventListener('submit', (/** @type {any} */ e) => {
   const ws = cur();
   closeSaved($('dlg-notes'));
   if (!ws) return;
-  ws.notes = C.multiLine(field($('notes-form'), 'notes').value);
+  ws.notes = multiLine(field($('notes-form'), 'notes').value);
   commit('#ws-notes-edit');
 });
 
@@ -1114,11 +1119,11 @@ $('board').addEventListener('click', (/** @type {any} */ e) => {
     case 'revisit-clear': closeIteration(ws.id, step.id); break;
     case 'del-step': deleteStep(ws.id, step.id); break;
     case 'add-sub': openSub(step, null); break;
-    case 'add-par': { const p = C.subPlace(ws, sub.id); openSub(step, null, { pos: `j:${p ? p.slot : 0}` }); break; }
+    case 'add-par': { const p = subPlace(ws, sub.id); openSub(step, null, { pos: `j:${p ? p.slot : 0}` }); break; }
     case 'status': {
       if (consumeJustClosed(b)) break;
-      const nx = C.nextStatus(sub.status);
-      if (nx && !e.shiftKey) { C.setStatus(sub, nx); commit(subSel(sub.id, 'status')); evidenceHint(step, sub); } else openStatusMenu(b, step, sub);
+      const nx = nextStatus(sub.status);
+      if (nx && !e.shiftKey) { setStatus(sub, nx); commit(subSel(sub.id, 'status')); evidenceHint(step, sub); } else openStatusMenu(b, step, sub);
       break;
     }
     case 'edit-sub': openSub(step, sub); break;
@@ -1130,7 +1135,7 @@ $('board').addEventListener('click', (/** @type {any} */ e) => {
 /** Vừa xong mà "Done when" chưa có tài liệu bằng chứng: toast gợi ý, nút mở hộp sửa ở phần tài liệu. Không chặn.
  * @param {any} step @param {any} sub */
 function evidenceHint(step, sub) {
-  if (!C.needsEvidence(sub)) return;
+  if (!needsEvidence(sub)) return;
   const ids = { wsId: curId, stepId: step.id, subId: sub.id };
   toast(`Done. Add evidence for "${sub.title.length > 40 ? sub.title.slice(0, 39) + '…' : sub.title}"? (a run, report, commit link)`, () => {
     const ws = findWs(ids.wsId);
@@ -1146,13 +1151,13 @@ function evidenceHint(step, sub) {
  * (lý do không bắt buộc, sửa trong hộp). @param {any} chip @param {any} step @param {any} sub */
 function openStatusMenu(chip, step, sub) {
   const ids = { wsId: cur().id, stepId: step.id, subId: sub.id };
-  openList(chip, C.STATUSES.map((st) => ({ value: st, label: C.STATUS_LABEL[st], hint: C.STATUS_HINT[st], dot: st, selected: st === sub.status })), (v) => {
+  openList(chip, STATUSES.map((st) => ({ value: st, label: STATUS_LABEL[st], hint: STATUS_HINT[st], dot: st, selected: st === sub.status })), (v) => {
     const s = stepOf(findWs(ids.wsId), ids.stepId);
     const x = s && s.subs.find((/** @type {any} */ y) => y.id === ids.subId);
     if (!x) return;
     if (v === 'cancel') { openSub(s, x, { status: 'cancel' }); return; }
     if (v === x.status) return;
-    C.setStatus(x, v);
+    setStatus(x, v);
     commit(subSel(x.id, 'status'));
     evidenceHint(s, x);
   }, { label: `Status of "${sub.title}"`, className: 'dd-status' });
@@ -1179,7 +1184,7 @@ $('board').addEventListener('keydown', (/** @type {any} */ e) => {
   } else if (act === 'edit-sub' && /^Arrow(Left|Right|Up|Down)$/.test(e.key)) {
     e.preventDefault();
     const sub = step.subs.find((/** @type {any} */ x) => x.id === e.target.closest('[data-sub]').dataset.sub);
-    const to = sub && C.shiftTarget(ws, sub.id, /** @type {any} */ (e.key.slice(5).toLowerCase()));
+    const to = sub && shiftTarget(ws, sub.id, /** @type {any} */ (e.key.slice(5).toLowerCase()));
     if (to) moveSubTo(ws, sub, to);
   }
 });
@@ -1202,7 +1207,7 @@ function moveSubTo(ws, sub, to, focusSel = subSel(sub.id, 'edit-sub'), held0 = n
   const m = keepHeld(beginMove('sub', sub.id), held0);
   const before = ws.steps.find((/** @type {any} */ s) => s.subs.includes(sub));
   const j = before ? before.subs.indexOf(sub) : -1;
-  if (C.placeSub(ws, sub, to) === undefined) return;
+  if (placeSub(ws, sub, to) === undefined) return;
   const target = stepOf(ws, to.stepId);
   if (target !== before) sub.redo = false; // dấu Redo chỉ có nghĩa trong vòng của bước đã gửi nó lại
   const k = target.subs.indexOf(sub);
@@ -1223,17 +1228,17 @@ let flashTimer = 0;
 
 const quote = (/** @type {string} */ t) => `"${t.length > 40 ? t.slice(0, 39) + '…' : t}"`;
 /** Chỗ hiện tại: bước con → C.Place, bước → chỉ số. @param {any} ws @param {'sub'|'step'} kind @param {string} id */
-const placeNow = (ws, kind, id) => (kind === 'step' ? ws.steps.findIndex((/** @type {any} */ s) => s.id === id) : C.subPlace(ws, id));
+const placeNow = (ws, kind, id) => (kind === 'step' ? ws.steps.findIndex((/** @type {any} */ s) => s.id === id) : subPlace(ws, id));
 /** Câu tả chỗ mới cho toast. @param {any} ws @param {'sub'|'step'} kind @param {string} id @param {string} fromStepId */
 function movedText(ws, kind, id, fromStepId) {
   if (kind === 'step') {
     const i = ws.steps.findIndex((/** @type {any} */ s) => s.id === id);
     return `Moved step ${quote(ws.steps[i].title)} ` + (i === 0 ? 'to the top' : `below ${quote(ws.steps[i - 1].title)}`);
   }
-  const p = C.subPlace(ws, id);
+  const p = subPlace(ws, id);
   const step = stepOf(ws, p.stepId);
   const sub = step.subs.find((/** @type {any} */ x) => x.id === id);
-  const slots = C.slotsOf(step.subs.filter((/** @type {any} */ x) => x !== sub));
+  const slots = slotsOf(step.subs.filter((/** @type {any} */ x) => x !== sub));
   const where = p.join ? `in parallel with ${quote(slots[p.slot].find((x) => x !== sub).title)}`
     : p.slot === 0 ? 'the start of the row' : `after ${quote(slots[p.slot - 1].at(-1).title)}`;
   if (p.stepId !== fromStepId) return `Moved ${quote(sub.title)} to step ${quote(step.title)}, ${where}`;
@@ -1242,7 +1247,7 @@ function movedText(ws, kind, id, fromStepId) {
 /** Toast của hộp sửa khi Lưu làm treo một đầu vào mà không dời gì. */
 const HELD_TAIL = 'Link kept; move the input after its source to connect.';
 /** heldKeys của dự án lúc này (trước khi Lưu hộp sửa). @param {string} wsId */
-const heldNow = (wsId) => { const w = findWs(wsId); return w ? C.handoffs(w).heldKeys : new Set(); };
+const heldNow = (wsId) => { const w = findWs(wsId); return w ? handoffs(w).heldKeys : new Set(); };
 /** Lưu hộp sửa rồi dời: toast báo cả đầu vào vừa treo vì đầu vào mới chọn (bỏ khỏi `m.held` cái chưa treo lúc mở Lưu).
  * @param {any} m @param {Set<string>|null} held0 */
 function keepHeld(m, held0) {
@@ -1256,7 +1261,7 @@ function beginMove(kind, id) {
     && !$('toast').hidden && toastUndo && toastUndo === lastMove.undo) return lastMove;
   const from = placeNow(ws, kind, id);
   const sub = kind === 'sub' && from ? stepOf(ws, from.stepId).subs.find((/** @type {any} */ x) => x.id === id) : null;
-  lastMove = { kind, id, wsId: ws.id, from, fromStepId: kind === 'sub' ? from?.stepId : id, redo: !!sub?.redo, undo: null, held: C.handoffs(ws).heldKeys };
+  lastMove = { kind, id, wsId: ws.id, from, fromStepId: kind === 'sub' ? from?.stepId : id, redo: !!sub?.redo, undo: null, held: handoffs(ws).heldKeys };
   return lastMove;
 }
 /** Gọi sau khi đổi chỗ: lưu, vẽ, giữ focus, tô, báo. @param {any} m @param {string|null|undefined} swapId @param {string} focusSel */
@@ -1288,7 +1293,7 @@ function undoMove(/** @type {any} */ m) {
     if (!from) { toast('Cannot undo: the sub-step was deleted.'); return; }
     if (!stepOf(w, m.from.stepId)) { toast('Cannot undo: its step was deleted.'); return; }
     const sub = from.subs.find((/** @type {any} */ x) => x.id === m.id);
-    C.placeSub(w, sub, m.from);
+    placeSub(w, sub, m.from);
     if (m.redo && stepOf(w, m.from.stepId).revisit) sub.redo = true;
   }
   if (curId !== m.wsId) switchTo(m.wsId);
@@ -1321,12 +1326,12 @@ function flash(kind, id, swapId) {
 }
 
 function duplicateSub(/** @type {any} */ step, /** @type {any} */ sub) {
-  const c = C.normSub({ ...sub, id: '', title: sub.title + ' (copy)', docs: sub.docs.map((/** @type {any} */ d) => ({ ...d, id: '' })),
+  const c = normSub({ ...sub, id: '', title: sub.title + ' (copy)', docs: sub.docs.map((/** @type {any} */ d) => ({ ...d, id: '' })),
     outs: sub.outs.map((/** @type {any} */ o) => ({ ...o, id: '' })), sd: '' }); // bản sao giữ đầu vào; đầu ra mang id mới, nơi dùng vẫn trỏ bản gốc; không mang dấu việc sinh từ System design
   /* Bản sao đứng ngay sau bản gốc: trong cùng ô song song nếu bản gốc ở ô song song, không thì một ô mới. */
-  const p = C.subPlace(cur(), sub.id);
+  const p = subPlace(cur(), sub.id);
   if (!p) return;
-  C.placeSub(cur(), c, p.join ? { ...p, at: p.at + 1 } : { ...p, slot: p.slot + 1 });
+  placeSub(cur(), c, p.join ? { ...p, at: p.at + 1 } : { ...p, slot: p.slot + 1 });
   commit(subSel(c.id, 'edit-sub'));
 }
 
@@ -1336,9 +1341,9 @@ function deleteSub(/** @type {string} */ wsId, /** @type {string} */ stepId, /**
   const step = stepOf(ws, stepId);
   const j = step ? step.subs.findIndex((/** @type {any} */ x) => x.id === subId) : -1;
   if (j < 0) return;
-  const place = /** @type {C.Place} */ (C.subPlace(ws, subId));
-  const relink = C.insBackup(ws, [step.subs[j]]);
-  const sub = C.takeSub(ws, subId);
+  const place = /** @type {C.Place} */ (subPlace(ws, subId));
+  const relink = insBackup(ws, [step.subs[j]]);
+  const sub = takeSub(ws, subId);
   commit();
   const back = `${subSel(step.subs[Math.min(j, step.subs.length - 1)]?.id, 'edit-sub')} || ${stepSel(stepId, 'add-sub')}`;
   toast(`Deleted "${sub.title}".`, () => {
@@ -1346,7 +1351,7 @@ function deleteSub(/** @type {string} */ wsId, /** @type {string} */ stepId, /**
     const s = stepOf(w, stepId);
     if (!w) { toast('Cannot undo: the project was deleted.'); return; }
     if (!s) { toast('Cannot undo: its step was deleted.'); return; }
-    if (!s.subs.some((/** @type {any} */ x) => x.id === sub.id)) C.placeSub(w, sub, place);
+    if (!s.subs.some((/** @type {any} */ x) => x.id === sub.id)) placeSub(w, sub, place);
     relink(w);
     if (curId !== wsId) switchTo(wsId);
     commit(subSel(sub.id, 'edit-sub'));
@@ -1357,18 +1362,18 @@ async function deleteStep(/** @type {string} */ wsId, /** @type {string} */ step
   let step = stepOf(findWs(wsId), stepId);
   if (!step) return;
   if (step.subs.length) {
-    const ok = await ask({ title: 'Delete step?', text: `"${step.title}" and its ${C.plural(step.subs.length, 'sub-step')} will be deleted (you can undo right after).`, ok: 'Delete step', danger: true });
+    const ok = await ask({ title: 'Delete step?', text: `"${step.title}" and its ${plural(step.subs.length, 'sub-step')} will be deleted (you can undo right after).`, ok: 'Delete step', danger: true });
     if (ok === null) return;
   }
   const ws = findWs(wsId);
   step = stepOf(ws, stepId);
   if (!step) return;
   const i = ws.steps.indexOf(step);
-  const relink = C.insBackup(ws, [step, ...step.subs]);
+  const relink = insBackup(ws, [step, ...step.subs]);
   ws.steps.splice(i, 1);
   commit();
   const near = ws.steps[Math.min(i, ws.steps.length - 1)];
-  toast(`Deleted step "${step.title}" (${C.plural(step.subs.length, 'sub-step')}).`, () => {
+  toast(`Deleted step "${step.title}" (${plural(step.subs.length, 'sub-step')}).`, () => {
     const w = findWs(wsId);
     if (!w) { toast('Cannot undo: the project was deleted.'); return; }
     if (!stepOf(w, step.id)) w.steps.splice(Math.min(i, w.steps.length), 0, step);
@@ -1397,7 +1402,7 @@ function subPosOptions(keep = true) {
   const target = stepOf(ws, field(f, 'step').value);
   if (!target || !subCtx) return;
   const self = subCtx.subId;
-  const slots = C.slotsOf(target.subs.filter((/** @type {any} */ x) => x.id !== self));
+  const slots = slotsOf(target.subs.filter((/** @type {any} */ x) => x.id !== self));
   const opts = [];
   for (let i = 0; i <= slots.length; i++) {
     const hint = i < slots.length ? `Before ${quote(slots[i][0].title)}` : slots.length ? `After ${quote(slots[i - 1].at(-1).title)}` : 'First in this step';
@@ -1405,7 +1410,7 @@ function subPosOptions(keep = true) {
     if (i < slots.length) opts.push(h('option', { value: `j:${i}`, 'data-hint': `Runs alongside ${slots[i].map((x) => quote(x.title)).join(', ')}` }, `Parallel with ${i + 1}`));
   }
   field(f, 'pos').replaceChildren(...opts);
-  const p = self && target.id === subCtx.stepId ? C.subPlace(ws, self) : null;
+  const p = self && target.id === subCtx.stepId ? subPlace(ws, self) : null;
   field(f, 'pos').value = p ? `${p.join ? 'j' : 'n'}:${p.slot}` : keep && subCtx.pos ? subCtx.pos : `n:${slots.length}`;
 }
 
@@ -1419,7 +1424,7 @@ function openSub(step, sub, opt = {}) {
   $('sub-where').textContent = docWhere({ wsId: ws.id, stepId: step.id, subId: null, docId: null });
   const labels = labelsOf(ws);
   field(f, 'step').replaceChildren(...ws.steps.map((/** @type {any} */ s) => h('option', { value: s.id }, (labels.has(s.id) ? `${labels.get(s.id)}. ` : '') + s.title)));
-  const x = sub || C.normSub({ title: '' });
+  const x = sub || normSub({ title: '' });
   field(f, 'title').value = sub ? x.title : '';
   field(f, 'status').value = opt.status || x.status;
   field(f, 'due').value = x.due;
@@ -1456,13 +1461,13 @@ function subDraftPlace() {
 function paintReason() {
   const st = field($('sub-form'), 'status').value;
   const ta = field($('sub-form'), 'reason');
-  $('sub-reason').hidden = !C.hasReason(st);
-  if (!C.hasReason(st)) return;
-  $('sub-reason-label').textContent = C.REASON_LABEL[st];
+  $('sub-reason').hidden = !hasReason(st);
+  if (!hasReason(st)) return;
+  $('sub-reason-label').textContent = REASON_LABEL[st];
   ta.placeholder = ta.dataset['ph' + st[0].toUpperCase() + st.slice(1)] || '';
 }
-/* Bảy viên trạng thái nằm sẵn trong HTML; chữ giải thích của mỗi viên lấy từ core.js. */
-for (const r of /** @type {any} */ ($('sub-status').querySelectorAll('input[name="status"]'))) r.closest('label').title = C.STATUS_HINT[r.value];
+/* Bảy viên trạng thái nằm sẵn trong HTML; chữ giải thích của mỗi viên lấy từ core/model.js. */
+for (const r of /** @type {any} */ ($('sub-status').querySelectorAll('input[name="status"]'))) r.closest('label').title = STATUS_HINT[r.value];
 $('sub-status').addEventListener('change', () => {
   paintReason();
   /* Chỉ Cancelled đưa focus vào ô lý do: lý do của Pending, Blocked không bắt buộc, và mũi tên trong nhóm viên phải đi tiếp. */
@@ -1484,8 +1489,8 @@ $('sub-form').addEventListener('submit', async (/** @type {any} */ e) => {
   e.preventDefault();
   const f = $('sub-form');
   const ctx = /** @type {any} */ (subCtx);
-  const F = C.EDIT_FIELDS.sub;
-  const mine = C.pick(C.normSub({ title: field(f, 'title').value, status: field(f, 'status').value, due: field(f, 'due').value,
+  const F = EDIT_FIELDS.sub;
+  const mine = pick(normSub({ title: field(f, 'title').value, status: field(f, 'status').value, due: field(f, 'due').value,
     doneWhen: field(f, 'doneWhen').value, notes: field(f, 'notes').value, reason: field(f, 'reason').value, ...Hd.readEdit(f) }), F);
   const held0 = heldNow(ctx.wsId);
   let { ws, step, sub } = subFromCtx();
@@ -1496,27 +1501,27 @@ $('sub-form').addEventListener('submit', async (/** @type {any} */ e) => {
     if (!again) { closeSaved($('dlg-sub')); return; }
     ({ ws, step, sub } = subFromCtx());
     if (!sub) {
-      item = C.normSub({ ...ctx.orig, ...mine, status: ctx.orig.status, redo: false });
-      C.setStatus(item, mine.status);
+      item = normSub({ ...ctx.orig, ...mine, status: ctx.orig.status, redo: false });
+      setStatus(item, mine.status);
       item.reason = mine.reason;
     }
   }
   if (ws && sub) {
-    const merged = await mergeSaved(ws, C.pick(ctx.orig, F), mine, () => C.pick(subFromCtx().sub || {}, F));
+    const merged = await mergeSaved(ws, pick(ctx.orig, F), mine, () => pick(subFromCtx().sub || {}, F));
     if (!merged) return;
     ({ ws, step, sub } = subFromCtx());
     if (sub) {
-      const n = C.normSub({ ...sub, ...merged });
-      C.setStatus(sub, n.status); // doneAt theo lần đổi trạng thái
-      Object.assign(sub, C.pick(n, F));
+      const n = normSub({ ...sub, ...merged });
+      setStatus(sub, n.status); // doneAt theo lần đổi trạng thái
+      Object.assign(sub, pick(n, F));
     }
   }
   const target = ws && (stepOf(ws, field(f, 'step').value) || step || stepOf(ws, ctx.stepId));
   closeSaved($('dlg-sub'));
   if (!ws || !target || (ctx.subId && !sub && !item)) { toast('Not saved: the step was deleted elsewhere.'); return; }
   if (!ctx.subId) {
-    item = C.normSub({ ...mine, status: 'todo', redo: false });
-    C.setStatus(item, mine.status);
+    item = normSub({ ...mine, status: 'todo', redo: false });
+    setStatus(item, mine.status);
     item.reason = mine.reason;
   }
   const pos = String(field(f, 'pos').value || 'n:999');
@@ -1527,7 +1532,7 @@ $('sub-form').addEventListener('submit', async (/** @type {any} */ e) => {
   const moved = !!sub && (target.id !== ctx.stepId || pos !== ctx.pos0);
   if (moved) moveSubTo(ws, sub, to, focusSel, held0);
   else {
-    if (!sub) C.placeSub(ws, item, to);
+    if (!sub) placeSub(ws, item, to);
     commit(focusSel);
   }
   const heldMsg = moved ? '' : Hd.newlyHeld(ws, held0, HELD_TAIL);
@@ -1567,7 +1572,7 @@ function openStep(step, at, opt = {}) {
   fillPos(field(f, 'pos'), n, step ? ws.steps.indexOf(step) : at ?? n - 1);
   stepCtx.pos0 = field(f, 'pos').value;
   $('step-del').hidden = !step;
-  $('step-revisit').hidden = !step || (!step.revisit && !C.canReopen(step));
+  $('step-revisit').hidden = !step || (!step.revisit && !canReopen(step));
   docUndo = null;
   renderDocsEdit('step');
   Hd.paintEdit('step', ws, step, step ? [step, ...step.subs] : [], stepDraftPlace);
@@ -1586,8 +1591,8 @@ $('step-form').addEventListener('submit', async (/** @type {any} */ e) => {
   e.preventDefault();
   const f = $('step-form');
   const ctx = /** @type {any} */ (stepCtx);
-  const F = C.EDIT_FIELDS.step;
-  const mine = C.pick(C.normStep({ title: field(f, 'title').value, goal: field(f, 'goal').value, doneWhen: field(f, 'doneWhen').value, notes: field(f, 'notes').value, ...Hd.readEdit(f) }), F);
+  const F = EDIT_FIELDS.step;
+  const mine = pick(normStep({ title: field(f, 'title').value, goal: field(f, 'goal').value, doneWhen: field(f, 'doneWhen').value, notes: field(f, 'notes').value, ...Hd.readEdit(f) }), F);
   const held0 = heldNow(ctx.wsId);
   const now = () => (ctx.stepId ? stepOf(findWs(ctx.wsId), ctx.stepId) : null);
   let ws = findWs(ctx.wsId);
@@ -1599,14 +1604,14 @@ $('step-form').addEventListener('submit', async (/** @type {any} */ e) => {
     if (!again) { closeSaved($('dlg-step')); return; }
     ws = findWs(ctx.wsId);
     step = now();
-    if (!step) fresh = C.normStep({ ...ctx.orig, ...mine });
+    if (!step) fresh = normStep({ ...ctx.orig, ...mine });
   }
   if (ws && step) {
-    const merged = await mergeSaved(ws, C.pick(ctx.orig, F), mine, () => { const s = now(); return s ? C.pick(s, F) : null; });
+    const merged = await mergeSaved(ws, pick(ctx.orig, F), mine, () => { const s = now(); return s ? pick(s, F) : null; });
     if (!merged) return;
     ws = findWs(ctx.wsId);
     step = now();
-    if (step) Object.assign(step, C.pick(C.normStep({ ...step, ...merged }), F));
+    if (step) Object.assign(step, pick(normStep({ ...step, ...merged }), F));
   }
   closeSaved($('dlg-step'));
   if (!ws || (ctx.stepId && !step && !fresh)) { toast('Not saved: the step was deleted elsewhere.'); return; }
@@ -1614,7 +1619,7 @@ $('step-form').addEventListener('submit', async (/** @type {any} */ e) => {
   const i = step ? ws.steps.indexOf(step) : -1;
   const posVal = field(f, 'pos').value;
   if (step) ws.steps.splice(i, 1);
-  else step = fresh || C.normStep(mine);
+  else step = fresh || normStep(mine);
   const k = Math.min(step && i >= 0 && posVal === ctx.pos0 ? i : Number(posVal) || 0, ws.steps.length);
   ws.steps.splice(k, 0, step);
   const focusSel = `${stepSel(step.id, 'edit-step')} || #q`;
@@ -1802,19 +1807,19 @@ $('doc-form').addEventListener('submit', (/** @type {any} */ e) => {
   const f = $('doc-form');
   const ctx = docCtx;
   if (!ctx) return;
-  const title = C.oneLine(field(f, 'title').value);
+  const title = oneLine(field(f, 'title').value);
   if (docKind() === 'md' && !ctx.docId) {
     closeSaved($('dlg-doc'));
     openMd(ctx, title);
     return;
   }
-  const url = C.safeUrl(field(f, 'url').value);
+  const url = safeUrl(field(f, 'url').value);
   if (!url) { field(f, 'url').setCustomValidity('The link must start with http:// or https://'); field(f, 'url').reportValidity(); return; }
   const owner = docOwner(ctx);
   closeSaved($('dlg-doc'));
   if (!owner) { toast('Not saved: the step was deleted elsewhere.'); return; }
   const old = ctx.docId ? owner.docs.find((/** @type {any} */ d) => d.id === ctx.docId) : null;
-  const doc = C.normDoc({ id: old ? old.id : '', kind: 'link', title, url, proof: !!old?.proof });
+  const doc = normDoc({ id: old ? old.id : '', kind: 'link', title, url, proof: !!old?.proof });
   if (old) Object.assign(old, doc); else owner.docs.push(doc);
   commit();
   refreshDocLists();
@@ -1892,7 +1897,7 @@ $('md-form').addEventListener('submit', (/** @type {any} */ e) => {
   closeSaved($('dlg-md'));
   if (!owner) { toast('Not saved: the step was deleted elsewhere.'); return; }
   const old = ctx.docId ? owner.docs.find((/** @type {any} */ d) => d.id === ctx.docId) : null;
-  const doc = C.normDoc({ id: old ? old.id : '', kind: 'md', title: field(f, 'title').value, body: field(f, 'body').value, proof: !!old?.proof });
+  const doc = normDoc({ id: old ? old.id : '', kind: 'md', title: field(f, 'title').value, body: field(f, 'body').value, proof: !!old?.proof });
   if (old) Object.assign(old, doc); else owner.docs.push(doc);
   commit();
   refreshDocLists();
@@ -1910,7 +1915,7 @@ let revisitCtx = { wsId: '', stepId: '' };
 /** Hộp "Reopen step": mở lại thì có lý do (bắt buộc) và danh sách bước con đã xong để gửi lại làm; đang mở lại thì chỉ sửa
  * lý do hay đóng vòng. Chưa có bước con nào xong thì không mở lại (nút cũng không hiện). @param {any} step */
 function openRevisit(step) {
-  if (!step.revisit && !C.canReopen(step)) return;
+  if (!step.revisit && !canReopen(step)) return;
   const ws = cur();
   revisitCtx = { wsId: ws.id, stepId: step.id };
   const labels = labelsOf(ws);
@@ -1920,13 +1925,13 @@ function openRevisit(step) {
   field($('revisit-form'), 'reason').value = step.revisit ? step.revisit.reason : '';
   const done = step.subs.filter((/** @type {any} */ x) => x.status === 'done');
   $('revisit-subs').hidden = !!step.revisit;
-  $('revisit-round').textContent = `This starts iteration ${(step.round || 1) + 1}. Picked sub-steps go back to ${C.STATUS_LABEL.todo} with a Redo mark.`;
+  $('revisit-round').textContent = `This starts iteration ${(step.round || 1) + 1}. Picked sub-steps go back to ${STATUS_LABEL.todo} with a Redo mark.`;
   $('revisit-all-done').hidden = done.length < 2;
   $('revisit-list').replaceChildren(...done.map((/** @type {any} */ x) => h('li', {},
     h('label', { class: 'reset-item' },
       h('input', { type: 'checkbox', name: 'reset', value: x.id }),
       numTag('num', labels.get(x.id)), h('span', { class: 'reset-title' }, x.title),
-      h('span', { class: `chip st-${x.status}` }, C.STATUS_LABEL[x.status])))));
+      h('span', { class: `chip st-${x.status}` }, STATUS_LABEL[x.status])))));
   $('revisit-clear').hidden = !step.revisit;
   paintAlsoCheck();
   /** @type {any} */ ($('revisit-form').querySelector('button[type="submit"]')).textContent = step.revisit ? 'Save reason' : 'Reopen step';
@@ -1956,7 +1961,7 @@ $('revisit-form').addEventListener('submit', (/** @type {any} */ e) => {
   const { wsId, stepId } = revisitCtx;
   const ws = findWs(wsId);
   const step = revisitStep();
-  const reason = C.oneLine(field($('revisit-form'), 'reason').value);
+  const reason = oneLine(field($('revisit-form'), 'reason').value);
   const picked = revisitPicked();
   closeSaved($('dlg-revisit'));
   if (!ws || !step) return;
@@ -1965,21 +1970,21 @@ $('revisit-form').addEventListener('submit', (/** @type {any} */ e) => {
   const before = { round: step.round, marks: subMarks(step) };
   const round = (step.round || 1) + 1;
   step.round = round;
-  step.revisit = { reason, date: C.today(), round };
+  step.revisit = { reason, date: today(), round };
   let n = 0;
   for (const x of step.subs) {
     x.redo = false;
     if (!picked.includes(x.id)) continue;
-    C.setStatus(x, 'todo');
+    setStatus(x, 'todo');
     x.redo = true;
     n++;
   }
   const also = Hd.alsoCheck(ws, step, picked);
   const why = [reason, also.length ? `Also check: ${also.join(', ')}` : ''].filter(Boolean).join('\n');
-  const entry = C.normLog({ date: C.today(), decision: `Reopened: ${step.title} (iteration ${round})`, why, stepId: step.id });
+  const entry = normLog({ date: today(), decision: `Reopened: ${step.title} (iteration ${round})`, why, stepId: step.id });
   ws.log.push(entry);
   commit(focusSel);
-  toast(`Step reopened · iteration ${round}${n ? ` · ${C.plural(n, 'sub-step')} to redo` : ''} · logged.`, () => {
+  toast(`Step reopened · iteration ${round}${n ? ` · ${plural(n, 'sub-step')} to redo` : ''} · logged.`, () => {
     const w = findWs(wsId);
     const s = stepOf(w, stepId);
     if (!w) { toast('Cannot undo: the project was deleted.'); return; }
@@ -2039,15 +2044,15 @@ $('st-filter').addEventListener('change', (/** @type {any} */ e) => { ui.st = e.
  * khác thì nút lọc "Actionable". "Next" vẫn không vượt qua chỗ chờ (PLAN-003). */
 function renderNextWait(/** @type {any} */ ws) {
   const box = $('next-wait');
-  const wait = ws ? C.nextWaitingOn(ws) : [];
+  const wait = ws ? nextWaitingOn(ws) : [];
   box.hidden = !wait.length;
   if (!wait.length) { box.replaceChildren(); return; }
-  const more = ws.steps.flatMap((/** @type {any} */ s) => s.subs).filter((/** @type {any} */ x) => C.inGroup('act', x.status)).length;
+  const more = ws.steps.flatMap((/** @type {any} */ s) => s.subs).filter((/** @type {any} */ x) => inGroup('act', x.status)).length;
   /* Tên và lý do dài thì cắt "…" (đọc đủ trên thẻ). */
   const short = (/** @type {string} */ t) => (t.length > 60 ? t.slice(0, 59) + '…' : t);
   const why = (/** @type {any} */ x) => {
     const r = x.reason.split('\n')[0];
-    return ` (${C.STATUS_LABEL[x.status]}${r ? ': ' + short(r) : ''})`;
+    return ` (${STATUS_LABEL[x.status]}${r ? ': ' + short(r) : ''})`;
   };
   const shown = wait.slice(0, 2);
   box.replaceChildren(icon('wait'), h('span', {}, h('b', {}, 'Next waits on '),
@@ -2094,12 +2099,12 @@ $('log-form').addEventListener('submit', (/** @type {any} */ e) => {
   e.preventDefault();
   const ws = cur();
   if (!ws) return;
-  const entry = C.normLog({ date: $('log-date').value, decision: $('log-decision').value, why: $('log-why').value, stepId: $('log-step').value });
+  const entry = normLog({ date: $('log-date').value, decision: $('log-decision').value, why: $('log-why').value, stepId: $('log-step').value });
   ws.log.push(entry);
   $('log-decision').value = '';
   $('log-why').value = '';
   $('log-step').value = '';
-  $('log-date').value = C.today();
+  $('log-date').value = today();
   closeCompose(false);
   commit(`[data-log="${entry.id}"] [data-act="edit-log"]`, { preventScroll: true });
   flash('log', entry.id, null);
@@ -2140,8 +2145,8 @@ $('log-edit-form').addEventListener('submit', async (/** @type {any} */ e) => {
   e.preventDefault();
   const f = $('log-edit-form');
   const ctx = logCtx;
-  const F = C.EDIT_FIELDS.log;
-  const mine = C.pick(C.normLog({ date: field(f, 'date').value, decision: field(f, 'decision').value, why: field(f, 'why').value, stepId: field(f, 'step').value }), F);
+  const F = EDIT_FIELDS.log;
+  const mine = pick(normLog({ date: field(f, 'date').value, decision: field(f, 'decision').value, why: field(f, 'why').value, stepId: field(f, 'step').value }), F);
   const now = () => findWs(ctx.wsId)?.log.find((/** @type {any} */ l) => l.id === ctx.id);
   let entry = now();
   if (findWs(ctx.wsId) && !entry) {
@@ -2151,15 +2156,15 @@ $('log-edit-form').addEventListener('submit', async (/** @type {any} */ e) => {
     entry = now();
     if (!entry) {
       const ws = /** @type {any} */ (findWs(ctx.wsId));
-      entry = C.normLog({ ...ctx.orig, ...mine });
+      entry = normLog({ ...ctx.orig, ...mine });
       if (ws && !stepOf(ws, entry.stepId)) entry.stepId = '';
       ws?.log.push(entry);
     }
   } else if (entry) {
-    const merged = await mergeSaved(findWs(ctx.wsId), C.pick(ctx.orig, F), mine, () => { const l = now(); return l ? C.pick(l, F) : null; });
+    const merged = await mergeSaved(findWs(ctx.wsId), pick(ctx.orig, F), mine, () => { const l = now(); return l ? pick(l, F) : null; });
     if (!merged) return;
     entry = now();
-    if (entry) Object.assign(entry, C.pick(C.normLog({ ...entry, ...merged }), F));
+    if (entry) Object.assign(entry, pick(normLog({ ...entry, ...merged }), F));
   }
   closeSaved($('dlg-log'));
   if (!entry || !findWs(ctx.wsId)) { toast('Not saved: the decision was deleted elsewhere.'); return; }
@@ -2189,9 +2194,9 @@ function deleteLog(/** @type {string} */ wsId, /** @type {string} */ id) {
 const exportKind = () => /** @type {any} */ (document.querySelector('input[name="export-kind"]:checked')).value;
 function exportText(kind = exportKind()) {
   const ws = cur();
-  if (kind === 'md') return { text: C.toMarkdown(ws, mdLabels()), file: C.slug(ws.name) + '.md', type: 'text/markdown' };
-  if (kind === 'json') return { text: C.toJSON(ws), file: C.slug(ws.name) + '.json', type: 'application/json' };
-  return { text: C.toBackup(state.workspaces), file: `step-planner-backup-${C.today()}.json`, type: 'application/json' };
+  if (kind === 'md') return { text: toMarkdown(ws, mdLabels()), file: slug(ws.name) + '.md', type: 'text/markdown' };
+  if (kind === 'json') return { text: toJSON(ws), file: slug(ws.name) + '.json', type: 'application/json' };
+  return { text: toBackup(state.workspaces), file: `step-planner-backup-${today()}.json`, type: 'application/json' };
 }
 function download(/** @type {{text:string, file:string, type:string}} */ x) {
   const url = URL.createObjectURL(new Blob([x.text], { type: x.type + ';charset=utf-8' }));
@@ -2271,13 +2276,13 @@ function previewImport() {
   };
   if (!text.trim()) { p.replaceChildren('Nothing to import yet.'); $('import-go').disabled = true; setReplace(false); return; }
   try {
-    importParsed = C.parseImport(text);
-    const c = C.counts(importParsed.workspaces);
+    importParsed = parseImport(text);
+    const c = counts(importParsed.workspaces);
     const kind = { md: 'Markdown', json: 'JSON (one project)', backup: 'JSON backup' }[importParsed.kind];
     const w = importParsed.warnings;
-    p.replaceChildren(h('p', {}, `${kind}: ${C.plural(c.workspaces, 'project')} · ${C.plural(c.steps, 'step')} · ${C.plural(c.subs, 'sub-step')} · ${C.plural(c.log, 'decision')}`
-      + (c.docs ? ` · ${C.plural(c.docs, 'doc')}` : '')
-      + (w.length ? ` · ${C.plural(w.length, 'warning')}:` : '')),
+    p.replaceChildren(h('p', {}, `${kind}: ${plural(c.workspaces, 'project')} · ${plural(c.steps, 'step')} · ${plural(c.subs, 'sub-step')} · ${plural(c.log, 'decision')}`
+      + (c.docs ? ` · ${plural(c.docs, 'doc')}` : '')
+      + (w.length ? ` · ${plural(w.length, 'warning')}:` : '')),
     w.length ? h('ul', { class: 'warn-list' }, w.map((x) => h('li', {}, x))) : '');
     $('import-go').disabled = false;
     setReplace(!!cur() && importParsed.workspaces.length === 1);
@@ -2328,20 +2333,20 @@ $('import-go').addEventListener('click', () => {
     return;
   }
   for (const w of parsed.workspaces) {
-    w.name = C.uniqueName(w.name, state.workspaces.map((x) => x.name));
+    w.name = uniqueName(w.name, state.workspaces.map((x) => x.name));
     state.workspaces.push(w);
   }
   setCur(parsed.workspaces[0].id);
   commit();
   afterOpen();
-  toast(`Imported ${C.plural(parsed.workspaces.length, 'new project')}.`);
+  toast(`Imported ${plural(parsed.workspaces.length, 'new project')}.`);
 });
 
-/* ── Kéo thả (js/drag.js): chuột, chạm (giữ rồi kéo), bút. Bàn phím: Alt + mũi tên, ô Vị trí trong hộp sửa ── */
+/* ── Kéo thả (ui/drag.js): chuột, chạm (giữ rồi kéo), bút. Bàn phím: Alt + mũi tên, ô Vị trí trong hộp sửa ── */
 
 dragCtl = initDrag($('board'), {
   enabled: () => !!cur() && !ui.q.trim() && !ui.st,
-  placeOf: (id) => C.subPlace(cur(), id),
+  placeOf: (id) => subPlace(cur(), id),
   onSub: (id, to) => {
     const ws = cur();
     const sub = ws && ws.steps.flatMap((/** @type {any} */ s) => s.subs).find((/** @type {any} */ x) => x.id === id);

@@ -15,7 +15,10 @@
      (trừ `design`: trang đồ án không có, sinh lại thì giữ).
      outs / ins của nó suy từ đường dẫn trong `io_html` từng pha (`course_flow`).
      Sinh lại:  python3 step-planner/tools/lint.py --write-course
-  3. js/*.js: không innerHTML / outerHTML / insertAdjacentHTML / document.write — chữ người dùng chỉ qua textContent.
+  3. js/**/*.js: không innerHTML / outerHTML / insertAdjacentHTML / document.write — chữ người dùng chỉ qua textContent.
+     Import trỏ tới file có thật; mọi file trừ main.js có nơi import (không mồ côi).
+     js/core/ là logic thuần: code (bỏ chú thích) không chạm document, window, localStorage, sessionStorage, navigator,
+     không gọi querySelector, addEventListener, createElement, getBoundingClientRect, không đọc classList; chỉ import js/core/.
   4. css/: mỗi file css/*.css được link đúng một lần trong index.html, tokens.css trước hết (thứ tự link là cascade); mã màu
      chỉ nằm trong css/tokens.css.
   5. data/system-design.json (PLAN-016): khuôn hồ sơ, khâu, phương án; id không trùng; `fit` chỉ dùng câu và câu trả lời
@@ -27,7 +30,7 @@
      không né nó).
   6. Ngôn ngữ (PLAN-028): mọi chữ của mẫu có chữ Việt (trừ chuỗi chỉ là đường dẫn, tên file, và LATIN_OK); mọi chuỗi của
      system-design.json là lời giải thích tiếng Việt, trừ nhãn và tên (DESIGN_EN, tiếng Anh), tên trang ngoài (DESIGN_TITLES,
-     giữ chữ của trang), id, URL, lệnh (DESIGN_CODE); chuỗi trong js/*.js và chữ của index.html không có chữ Việt, trừ chuỗi
+     giữ chữ của trang), id, URL, lệnh (DESIGN_CODE); chuỗi trong js/**/*.js và chữ của index.html không có chữ Việt, trừ chuỗi
      có chú thích `lang: vi — lý do` trên dòng mở hoặc dòng đóng (một chú thích miễn đúng một chuỗi).
   Tự kiểm cổng này: python3 step-planner/tools/lint.py --self-test (cài lỗi vào bản sao tạm, mỗi lỗi phải bị bắt).
 
@@ -576,14 +579,46 @@ def check_paths(data, answers, options):
                 err(f'{w}: suggest.{sid} có phương án lạ {sorted(set(ids) - options[sid])}')
 
 
+def js_files(js_dir):
+    """Mọi file .js dưới js_dir, đường dẫn tương đối kiểu posix ("main.js", "core/model.js"), theo thứ tự."""
+    out = []
+    for d, _, names in os.walk(js_dir):
+        out += [os.path.relpath(os.path.join(d, n), js_dir).replace(os.sep, '/') for n in names if n.endswith('.js')]
+    return sorted(out)
+
+
+# js/core/ thuần (dữ liệu vào, dữ liệu ra): không chạm trình duyệt. Chữ "document" trong chuỗi không tính: chỉ bắt tên dùng như đối tượng
+# (`document.`, `window[`), lời gọi (`querySelector(`) và `.classList`.
+PURE_BANNED = re.compile(r'\b(?:document|window|globalThis|localStorage|sessionStorage|navigator)\s*[.\[]'
+                         r'|\b(?:querySelector\w*|addEventListener|createElement\w*|getBoundingClientRect)\s*\('
+                         r'|\.classList\b')
+IMPORT_RE = re.compile(r'''^\s*import\s+(?:[^'";]+?\s+from\s+)?['"]([^'"]+)['"]|(?<![\w$.])import\(\s*['"]([^'"]+)['"]\s*\)''', re.M)
+
+
 def check_code():
-    for name in sorted(os.listdir(os.path.join(HERE, 'js'))):
-        if not name.endswith('.js'):
-            continue
-        src = open(os.path.join(HERE, 'js', name), encoding='utf-8').read()
+    js_dir = os.path.join(HERE, 'js')
+    files = js_files(js_dir)
+    imported = set()
+    for name in files:
+        src = open(os.path.join(js_dir, name), encoding='utf-8').read()
         for bad in ('innerHTML', 'outerHTML', 'insertAdjacentHTML', 'document.write'):
             if bad in src:
                 err(f'js/{name}: có `{bad}` — dựng DOM bằng createElement / textContent')
+        code = re.sub(r'/\*.*?\*/', lambda m: '\n' * m.group(0).count('\n'), src, flags=re.S)
+        code = re.sub(r'(^|\s)//.*$', r'\1', code, flags=re.M)
+        for spec in (a or b for a, b in IMPORT_RE.findall(code)):
+            target = os.path.normpath(os.path.join(os.path.dirname(name), spec)).replace(os.sep, '/')
+            imported.add(target)
+            if target not in files:
+                err(f'js/{name}: import {spec} không có file')
+            elif name.startswith('core/') and not target.startswith('core/'):
+                err(f'js/{name}: module thuần import js/{target} — js/core/ chỉ import js/core/')
+        if name.startswith('core/'):
+            for m in sorted({m.group(0).strip() for m in PURE_BANNED.finditer(code)}):
+                err(f'js/{name}: module thuần dùng `{m}` — việc chạm trình duyệt thuộc js/ui/')
+    for name in files:
+        if name != 'main.js' and name not in imported:
+            err(f'js/{name}: không ai import (file mồ côi)')
     css_files = sorted(f for f in os.listdir(os.path.join(HERE, 'css')) if f.endswith('.css'))
     links = re.findall(r'<link rel="stylesheet" href="css/([^"]+)">', open(os.path.join(HERE, 'index.html'), encoding='utf-8').read())
     for f in sorted(set(css_files) | set(links)):
@@ -743,9 +778,7 @@ def check_ui_language(js_dir=None):
     `lang: vi — lý do` trên dòng mở hoặc dòng đóng của chuỗi. Một chú thích miễn đúng một chuỗi có chữ Việt: dòng có hai
     chuỗi như thế thì tách dòng; chú thích không còn chuỗi nào để miễn thì xoá."""
     js_dir = js_dir or os.path.join(HERE, 'js')
-    for name in sorted(os.listdir(js_dir)):
-        if not name.endswith('.js'):
-            continue
+    for name in js_files(js_dir):
         src = open(os.path.join(js_dir, name), encoding='utf-8').read()
         comments = []
         strs = js_strings(src, comments)
@@ -793,6 +826,12 @@ def self_test():
 
     def js(code):
         return lambda root: open(os.path.join(root, 'js', 'main.js'), 'a', encoding='utf-8').write('\n' + code + '\n')
+
+    def core_js(code):
+        return lambda root: open(os.path.join(root, 'js', 'core', 'io.js'), 'a', encoding='utf-8').write('\n' + code + '\n')
+
+    def new_js(name, code):
+        return lambda root: open(os.path.join(root, 'js', name), 'w', encoding='utf-8').write(code + '\n')
 
     def css(name, code):
         return lambda root: open(os.path.join(root, 'css', name), 'a', encoding='utf-8').write('\n' + code + '\n')
@@ -854,6 +893,13 @@ def self_test():
         ('design: tên trang ngoài bị dịch', design(lambda d: d['stages'][0]['options'][0]['links'][0].update(title='Trang chủ')), 'không dịch'),
         ('design: nhãn giao diện tiếng Việt', design(lambda d: d['stages'][0].update(title='Nguồn dữ liệu')), 'phải tiếng Anh'),
         ('mẫu: tên bước con tiếng Anh', tpl, 'nội dung mẫu phải tiếng Việt'),
+        ('js/core: chạm DOM', core_js("export const __h = () => document.body;"), 'module thuần dùng `document.`'),
+        ('js/core: đọc localStorage', core_js("export const __i = () => localStorage['k'];"), 'module thuần dùng `localStorage['),
+        ('js/core: đổi lớp CSS', core_js("export const __j = (el) => el.classList.add('x');"), 'module thuần dùng `.classList`'),
+        ('js/core: import js/ui/', core_js("import { KEY } from '../ui/store.js';\nexport const __k = KEY;"), 'chỉ import js/core/'),
+        ('js/core: chữ "document", "window." trong chuỗi, chú thích không tính', core_js("export const __l = 'a document'; // window.x\n/* document.body */"), None),
+        ('js: import file không có', core_js("import { x } from './khong-co.js';\nexport const __m = x;"), 'không có file'),
+        ('js: file không ai import', new_js('ui/mo-coi.js', 'export const __n = 1;'), 'file mồ côi'),
         ('css: mã màu trong file component', css('board.css', '.x { color: #fff; }'), 'mã màu ngoài css/tokens.css'),
         ('css: mã màu trong chú thích không tính', css('board.css', '/* #fff */'), None),
         ('css: file không được link', css('extra.css', '.x { color: var(--ink); }'), 'được link đúng một lần'),

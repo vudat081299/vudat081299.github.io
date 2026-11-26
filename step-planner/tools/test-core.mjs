@@ -1,14 +1,16 @@
-/* Bài thử của js/core.js (logic thuần), chạy bằng node:  node step-planner/tools/test-core.mjs
+/* Bài thử của js/core/ (logic thuần), chạy bằng node:  node step-planner/tools/test-core.mjs
  * Mọi mẫu trong data/templates.json phải đi Markdown → về mà không mất gì; JSON cũng vậy. */
 import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import {
-  fromTemplate, toMarkdown, fromMarkdown, parseImport, toJSON, toBackup, shape, progress, nextActionIds, projectNextIds, slotsOf, subPlace, placeSub, takeSub, shiftTarget, liveLabels, redoCount, canReopen,
-  nextStatus, setStatus, splitInline, mergeEdit, pick, EDIT_FIELDS, nextWaitingOn, inGroup, needsEvidence, normWorkspace, normSub, normLog, freshCopy, counts, slug, fold, parseDate, uniqueName, normDoc, safeUrl,
-} from '../js/core.js';
-import * as CORE from '../js/core.js';
-import { parseMd, inline, srcTokens, linkParts } from '../js/md.js';
-import { normDesign, rankOptions, snake, planTasks, diagramNodes, decidedCount, catalogErrors, readStageLine, applyPath, effProfile, warnings, flowEdges, bothDecided, planDiff, applyPlan, PLAN_STEP, notNeededBy, archAdvice, fitOf, presetDesign, isPreset } from '../js/design-core.js';
+import { progress, nextActionIds, projectNextIds, slotsOf, subPlace, placeSub, takeSub, shiftTarget, liveLabels, redoCount, canReopen, nextWaitingOn, inGroup, fold } from '../js/core/board.js';
+import { normDesign, rankOptions, decidedCount, catalogErrors, applyPath, effProfile, warnings, notNeededBy, archAdvice, fitOf, presetDesign, isPreset } from '../js/core/design.js';
+import { readStageLine } from '../js/core/design-md.js';
+import { snake, planTasks, diagramNodes, flowEdges, bothDecided, planDiff, applyPlan, PLAN_STEP } from '../js/core/design-plan.js';
+import { parseImport, toJSON, toBackup, shape, counts, slug } from '../js/core/io.js';
+import { toMarkdown, fromMarkdown, splitInline } from '../js/core/markdown.js';
+import { parseMd, inline, srcTokens, linkParts } from '../js/core/md.js';
+import { fromTemplate, nextStatus, setStatus, mergeEdit, pick, EDIT_FIELDS, needsEvidence, normWorkspace, normSub, normLog, freshCopy, parseDate, uniqueName, normDoc, safeUrl } from '../js/core/model.js';
+import * as CORE from '../js/core/handoffs.js';
 
 let fails = 0;
 const check = (name, ok, detail = '') => {
@@ -256,7 +258,7 @@ check('tài liệu viết tay: mục không thụt, rào ~~~, link lạ có cả
   && hs.subs[1].title === 'việc hai' && handD.warnings.some((w) => /ftp/.test(w) || /Lạ/.test(w)), JSON.stringify(hs.docs) + handD.warnings.join('|'));
 check('file cũ không có tài liệu: nhập được, docs rỗng', fromMarkdown('# A\n## 1. S\n- [ ] x\n').workspace.steps[0].subs[0].docs.length === 0);
 
-/* Bộ dựng Markdown của tài liệu (js/md.js): cây khối, không HTML. */
+/* Bộ dựng Markdown của tài liệu (js/core/md.js): cây khối, không HTML. */
 const tree = parseMd('# T\n\nđoạn **đậm** *nghiêng* `code` [l](https://a.b) [x](javascript:alert(1)) <b>\n\n- a\n  - b\n- [x] c\n\n1. một\n2. hai\n\n> trích\n\n````\n```\nin\n```\n````\n\n| a | b |\n|---|:-:|\n| 1 | 2 |\n\n---');
 check('md.js: tiêu đề, đoạn, danh sách lồng, việc, đánh số, trích dẫn, rào lồng, bảng, vạch',
   eq(tree.map((b) => b.t), ['h', 'p', 'list', 'list', 'quote', 'code', 'table', 'hr']) && tree[2].items[0].c[1].t === 'list'
@@ -835,7 +837,7 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   const build = pw.steps[1];
   const kinds = (items) => items.map((x) => `${x.kind}:${(x.task?.src || x.sub?.title)}`).join();
   let diff = planDiff(cat, pw);
-  applyPlan(diff, diff.map(() => 'add'), build, CORE);
+  applyPlan(diff, diff.map(() => 'add'), build);
   check('kế hoạch: lần đầu thêm mỗi khâu một việc có dấu sd; so lại là same', build.subs.length === 2 && build.subs.every((x) => /^stage:[a-z-]+@/.test(x.sd))
     && planDiff(cat, pw).every((x) => x.kind === 'same'));
   check('kế hoạch: sd đi qua JSON', eq(parseImport(toJSON(pw)).workspaces[0].steps[1].subs.map((x) => x.sd), build.subs.map((x) => x.sd)));
@@ -846,14 +848,14 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   pw.design = normDesign({ stages: { process: P('duckdb'), raw: P('project-folder') } });
   diff = planDiff(cat, pw);
   check('kế hoạch: đổi pandas → DuckDB là changed, khâu khác same', kinds(diff) === 'same:stage:raw,changed:stage:process', kinds(diff));
-  const rec = applyPlan(diff, diff.map((x) => (x.kind === 'changed' ? 'update' : '')), build, CORE);
+  const rec = applyPlan(diff, diff.map((x) => (x.kind === 'changed' ? 'update' : '')), build);
   check('kế hoạch: Update — một việc, tên mới, Done về New, giữ ghi chú và link của người dùng, thêm link mới',
     build.subs.length === 2 && procSub.title === 'Processing & cleaning: DuckDB' && procSub.status === 'todo' && /ghi chú của tôi/.test(procSub.notes)
     && procSub.docs.some((d) => d.url === 'https://example.org/x') && procSub.docs.some((d) => /duckdb/.test(d.url)) && rec.counts.reset === 1
     && rec.before.get(procSub.id).status === 'done' && planDiff(cat, pw).every((x) => x.kind === 'same'));
   pw.design = normDesign({ stages: { process: P('polars'), raw: { pick: ['project-folder'], skip: true } } });
   diff = planDiff(cat, pw);
-  applyPlan(diff, diff.map((x) => (x.kind === 'changed' ? 'replace' : x.kind === 'removed' ? 'cancel' : '')), build, CORE);
+  applyPlan(diff, diff.map((x) => (x.kind === 'changed' ? 'replace' : x.kind === 'removed' ? 'cancel' : '')), build);
   const rawSub = build.subs.find((x) => x.title.startsWith('Raw'));
   check('kế hoạch: Keep old and add new — cũ huỷ có lý do, mới thêm; khâu Not needed — huỷ, lý do nói vì sao',
     procSub.status === 'cancel' && /^Replaced in system design: Processing & cleaning: Polars/.test(procSub.reason) && !procSub.sd
@@ -942,7 +944,7 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
 /* ── Bàn giao: đầu ra / đầu vào — chuẩn hoá, nhân bản đổi id, mẫu theo key, Markdown đi rồi về (cả tên trùng), cảnh báo,
  * vạch giữa hai hàng và nút giữa hai ô, Hoàn tác xoá gắn lại đầu vào ── */
 {
-  const H = await import('../js/core.js');
+  const H = await import('../js/core/handoffs.js');
   const sub = normSub({ outs: [{ id: 'o1', name: '  a  b ', ref: 'x\ny', note: 7 }, { name: '' }, 'bad', { id: 'o2', name: 'c' }], ins: ['o1', 'z', 'z', 3, ''] });
   check('bàn giao: normSub — đầu ra không tên bị bỏ, chuỗi một dòng; đầu vào bỏ trùng, bỏ id của chính nó',
     eq(sub.outs, [{ id: 'o1', name: 'a b', ref: 'x y', note: '7' }, { id: 'o2', name: 'c', ref: '', note: '' }]) && eq(sub.ins, ['z']));
@@ -1223,9 +1225,9 @@ function designSnapshot(cat) {
     !diffs.length, `${diffs.length} khác: ${diffs.slice(0, 6).join(' | ')}`);
 }
 
-/* Khung nhìn của sơ đồ (view-math.js): thu phóng quanh điểm, giới hạn, kéo, hai ngón, vừa khung. */
+/* Khung nhìn của sơ đồ (js/core/view-math.js): thu phóng quanh điểm, giới hạn, kéo, hai ngón, vừa khung. */
 {
-  const V = await import('../js/view-math.js');
+  const V = await import('../js/core/view-math.js');
   const near = (a, b) => Math.abs(a - b) < 1e-9;
   const under = (v, px, py) => [(px - v.x) / v.k, (py - v.y) / v.k];
   const v0 = { x: 10, y: -20, k: 1.3 };

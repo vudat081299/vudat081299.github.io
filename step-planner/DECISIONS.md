@@ -22,17 +22,17 @@
 - PLAN-020 · "Next" nói đang chờ gì; lọc theo nhóm trạng thái · `step-planner/`
 - PLAN-021 · System design bắt đầu từ thứ bàn giao, kiểm phối hợp, ghi hợp đồng giữa các khâu, việc đi theo thiết kế · `step-planner/`
 - PLAN-022 · Mẫu ghi loại đầu ra, khai bàn giao giữa các bước; có mẫu pipeline dữ liệu định kỳ · `step-planner/data/templates.json`
-- PLAN-023 · System design phủ kiểm dữ liệu, gán nhãn, tìm kiếm và LLM; giữ cả công cụ nên tránh, kèm lý do · `step-planner/data/system-design.json`, `step-planner/js/design-core.js`
+- PLAN-023 · System design phủ kiểm dữ liệu, gán nhãn, tìm kiếm và LLM; giữ cả công cụ nên tránh, kèm lý do · `step-planner/data/system-design.json`, `step-planner/js/core/design.js`
 - PLAN-024 · Mẫu Data Science on big data: CRISP-DM cho dữ liệu quá lớn hay quá nhanh cho một máy · `step-planner/data/templates.json`
 - PLAN-025 · Mỗi bước và bước con cho thấy đầu vào, đầu ra đang ổn, lỗi hay không có · `step-planner/`
 - PLAN-026 · System design phủ big data: HDFS, table format, xử lý stream, SQL trên file, NoSQL phân tán, học máy phân tán · `step-planner/data/system-design.json`
-- PLAN-027 · System design có danh mục kiến trúc theo nhóm, gợi ý một kiến trúc mỗi nhóm từ hồ sơ dự án · `step-planner/data/system-design.json`, `step-planner/js/design-core.js`
+- PLAN-027 · System design có danh mục kiến trúc theo nhóm, gợi ý một kiến trúc mỗi nhóm từ hồ sơ dự án · `step-planner/data/system-design.json`, `step-planner/js/core/design.js`
 - PLAN-028 · Chữ giao diện tiếng Anh, mọi nội dung mẫu tiếng Việt, tên chuẩn giữ trong ngoặc · `step-planner/`
 - PLAN-029 · Mẫu nền tảng lakehouse mã nguồn mở: hạ tầng và dữ liệu trước, pipeline sau, có bước kiểm tuân thủ medallion · `step-planner/data/templates.json`
-- PLAN-030 · System design phủ lakehouse tự host: MinIO, Hudi, catalog cho Iceberg, medallion là cách chia tầng, hồ sơ chỉ mã nguồn mở · `step-planner/data/system-design.json`, `step-planner/js/design-core.js`
-- PLAN-031 · Sơ đồ System design kéo và thu phóng được; khung nhìn không lưu · `step-planner/js/design.js`, `step-planner/js/diagram-view.js`, `step-planner/js/view-math.js`
+- PLAN-030 · System design phủ lakehouse tự host: MinIO, Hudi, catalog cho Iceberg, medallion là cách chia tầng, hồ sơ chỉ mã nguồn mở · `step-planner/data/system-design.json`, `step-planner/js/core/design.js`
+- PLAN-031 · Sơ đồ System design kéo và thu phóng được; khung nhìn không lưu · `step-planner/js/ui/design.js`, `step-planner/js/ui/diagram-view.js`, `step-planner/js/core/view-math.js`
 - PLAN-032 · System design phủ nguồn đẩy, trang dựng bằng JavaScript, lag của consumer; báo công cụ đã nghỉ hưu và API hỏi theo chu kỳ dùng như luồng · `step-planner/data/system-design.json`
-- PLAN-033 · Mẫu đặt sẵn hồ sơ System design mà nó ngụ ý, áp một lần lúc tạo dự án · `step-planner/data/templates.json`, `step-planner/js/core.js`, `step-planner/js/design-core.js`
+- PLAN-033 · Mẫu đặt sẵn hồ sơ System design mà nó ngụ ý, áp một lần lúc tạo dự án · `step-planner/data/templates.json`, `step-planner/js/core/model.js`, `step-planner/js/core/design.js`
 <!-- index:end -->
 
 ## PLAN-001 · Dự án là các bước có thứ tự, mỗi bước có bước con có thứ tự
@@ -141,7 +141,7 @@ System design (PLAN-016) mở bằng câu hỏi dự án giao ra gì; mỗi lố
 Mỗi mẫu ghi loại đầu ra (báo cáo, mô hình dự đoán / app, tính năng app, pipeline dữ liệu, đồ án môn) và mô tả nói khi nào chọn, phần nào bỏ được khi làm một mình. Bước và bước con của mẫu khai đầu ra (tên, đường dẫn quy ước, hợp đồng một dòng) và đầu vào lấy từ đầu ra của bước trước; dữ liệu chỉ chảy xuôi. Mẫu pipeline dữ liệu định kỳ theo vòng đời data engineering: chạy lại không sinh trùng, phát hiện đổi schema, cổng chất lượng trước khi công bố (lô lỗi thì giữ bản sạch tốt gần nhất), chạy bù, nhật ký chạy, độ mới, cảnh báo, runbook. Trong mẫu Data Science, giữ baseline hoặc kết luận chưa có tín hiệu là kết quả hợp lệ của pha Modeling.
 
 ## PLAN-023 · System design phủ kiểm dữ liệu, gán nhãn, tìm kiếm và LLM; giữ cả công cụ nên tránh, kèm lý do
-26/11/2026 · `step-planner/data/system-design.json`, `step-planner/js/design-core.js`
+26/11/2026 · `step-planner/data/system-design.json`, `step-planner/js/core/design.js`
 
 Hồ sơ hỏi thêm loại dữ liệu (bảng, văn bản, ảnh / âm thanh) và sản phẩm có tìm kiếm hay LLM không. Có khâu kiểm dữ liệu, gán nhãn, tìm kiếm và truy xuất; khâu không hợp hồ sơ được báo là thường không cần, áp lối thì thành không cần. Danh mục giữ cả công cụ người học hay nghe tên nhưng nên tránh khi làm một mình (Hadoop, Kubernetes, feature store, cụm Elasticsearch tự chạy), kèm lý do, lựa chọn thay và luật báo. Gợi ý ưu tiên thứ tự công cụ mà lối ghi; hồ sơ dùng để loại phương án không hợp, không để đẩy hạng.
 
@@ -161,7 +161,7 @@ Sau khi sắp xếp lại, người dùng nhìn bảng là biết bước, bư�
 Danh mục có các công cụ big data người học gặp trong môn dữ liệu lớn, mỗi cái kèm khi nào dùng, khi nào tránh, link chính thức: HDFS, Delta Lake và Iceberg ở kho thô (kho thô chọn được cả chỗ lưu lẫn table format), consumer Python, Spark Structured Streaming và Flink ở khâu xử lý, Hive, Trino, Cassandra, HBase ở kho, Spark MLlib và Databricks ở khâu huấn luyện. Luật phối hợp báo khi: dữ liệu cỡ cụm mà xử lý bằng thư viện một máy; dữ liệu liên tục cần trả lời ngay mà xử lý theo lô; Kafka mà không gì đọc topic; công cụ stream cho dữ liệu không stream; HDFS, Cassandra, HBase với ngân sách miễn phí hay trên host chỉ chạy app; BigQuery sandbox (ngân sách miễn phí) cho dữ liệu vừa hay lớn; công cụ cụm hay MLlib cho dữ liệu vừa một máy.
 
 ## PLAN-027 · System design có danh mục kiến trúc theo nhóm, gợi ý một kiến trúc mỗi nhóm từ hồ sơ dự án
-26/11/2026 · `step-planner/data/system-design.json`, `step-planner/js/design-core.js`
+26/11/2026 · `step-planner/data/system-design.json`, `step-planner/js/core/design.js`
 
 Sau hồ sơ dự án, System design có trang kiến trúc chia bốn nhóm: dữ liệu nằm ở đâu (file + một database, warehouse, data lake, lakehouse có tầng Bronze / Silver / Gold), xử lý thế nào (batch ETL, batch ELT, streaming, Lambda, Kappa), người dùng nhận kết quả qua gì (báo cáo tĩnh, một app, frontend + backend API, microservices, serverless), model trả lời lúc nào (batch prediction, online prediction, đặc trưng từ luồng, RAG). Mỗi kiến trúc nói nó là gì, khi nào dùng, khi nào tránh, luồng, công cụ theo từng khâu và nguồn. Mỗi nhóm gợi ý một kiến trúc kèm lý do một dòng, từ hồ sơ, lối và các khâu đã quyết; khâu đã quyết thắng hồ sơ, trừ khi hồ sơ nói ngược (công cụ stream cho dữ liệu tới một lần hay theo ngày; Serving Not needed mà sản phẩm dùng LLM); chưa đủ câu trả lời thì chưa gợi ý. Kiến trúc được gợi ý luôn có công cụ dùng được với hồ sơ ở mỗi khâu của nó. Ba lối "What do you deliver?" chính là ba kiến trúc của nhóm app; chọn lối được ngay từ kiến trúc. Data mesh chỉ được nhắc là cách tổ chức nhiều đội, dự án nhỏ không cần. Gợi ý không lưu vào dự án.
 
@@ -176,12 +176,12 @@ Mọi chữ thuộc giao diện là tiếng Anh: nút, tiêu đề, gợi ý khi
 Có mẫu cho dự án dựng nền tảng dữ liệu lakehouse tự chạy bằng công cụ mã nguồn mở, đủ chung cho mọi nhóm; stack của một nhóm cụ thể (Docker Compose, MinIO, Iceberg + Polaris, Spark, dbt, DuckDB, Superset) chỉ là ví dụ trong ghi chú. Thứ tự: phạm vi và kiểm kê nguồn, hạ tầng dạng code (một lệnh dựng mọi dịch vụ, kiểm sức khoẻ), lưu trữ + table format + catalog, bronze, silver, gold; sau đó giả lập luồng, dashboard, rồi mới điều phối pipeline; cuối cùng tài liệu và một bước kiểm tuân thủ medallion trả lời có bằng chứng câu "README và hệ thống còn đúng medallion không". Bronze giữ nguồn nguyên dạng, chỉ thêm, có metadata thu nạp, nạp lại không trùng; silver ép kiểu, khử trùng, có test và cổng chất lượng trước gold; gold là bảng nghiệp vụ dựng bằng dbt, mỗi câu hỏi của dashboard một bảng; dashboard chỉ đọc gold. Mỗi lựa chọn công cụ ghi giấy phép và tình trạng bảo trì, không chỉ tên. Trong mọi mẫu, không đầu vào nào đứng trước hay cùng ô với đầu ra nó dùng, và không đầu vào nào trỏ tới đầu ra không có.
 
 ## PLAN-030 · System design phủ lakehouse tự host: MinIO, Hudi, catalog cho Iceberg, medallion là cách chia tầng, hồ sơ chỉ mã nguồn mở
-26/11/2026 · `step-planner/data/system-design.json`, `step-planner/js/design-core.js`
+26/11/2026 · `step-planner/data/system-design.json`, `step-planner/js/core/design.js`
 
 Danh mục đủ cho một nhóm tự dựng lakehouse mã nguồn mở: object storage tự host (MinIO, nói rõ bản cộng đồng đã ngừng bảo trì, chỉ còn mã nguồn, và lựa chọn thay), Hudi bên cạnh Delta Lake và Iceberg, DuckDB truy vấn bảng trên object storage, máy của nhóm làm nơi chạy, và Data Studio, Power BI, Looker bên cạnh Superset, Metabase, mỗi công cụ BI nói rõ cách nối với DuckDB, Trino. Catalog cho Iceberg (Polaris, Hive Metastore, Nessie, JDBC) chọn ngay ở khâu lưu thô, cùng chỗ lưu và table format, không thêm khâu mới; Iceberg không có catalog thì báo. Hồ sơ có câu "chỉ mã nguồn mở, tự host": trả lời có thì dịch vụ được quản lý không hợp, và dữ liệu lớn được gợi ý lakehouse tự host thay warehouse. Medallion (bronze / silver / gold) là một nhóm kiến trúc riêng: cách chia tầng theo chất lượng, độc lập với nơi lưu; gợi ý khi dữ liệu tới đều, lớn hay đã có table format, còn bộ dữ liệu cố định thì hai tầng thô + sạch. dbt nói chọn adapter theo engine; Docker Compose cho một máy, Kubernetes chỉ khi thật sự cần nhiều node; chưa có nguồn stream thật thì giả lập bằng script phát lại CSV vào Kafka. Luật mới nhắc MinIO trên host không giữ đĩa và file DuckDB dùng chung với Superset, báo DuckDB không đọc được Hudi. Áp lối không lấy phương án nào vẫn làm luật báo: khi ấy khâu để trống cho người dùng quyết.
 
 ## PLAN-031 · Sơ đồ System design kéo và thu phóng được; khung nhìn không lưu
-26/11/2026 · `step-planner/js/design.js`, `step-planner/js/diagram-view.js`, `step-planner/js/view-math.js`
+26/11/2026 · `step-planner/js/ui/design.js`, `step-planner/js/ui/diagram-view.js`, `step-planner/js/core/view-math.js`
 
 Sơ đồ System design là một khung nhìn: người dùng kéo và thu phóng để xem phần mình cần, bằng chuột, bàn phím hay cảm ứng, và về lại khung ban đầu bằng một thao tác. Khung nhìn chỉ sống trong một lần mở trang: vẽ lại sơ đồ (sửa thiết kế) giữ khung đang xem; tải lại trang luôn về cỡ thật và vị trí ban đầu; không ghi vào dự án, không ghi vào bộ nhớ, không xuất. Sơ đồ không giành cuộn của trang: cuộn thường chỉ kéo sơ đồ sau khi người dùng chọn vào sơ đồ, thu phóng cần phím bổ trợ hay hai ngón. Kéo để xem không tính là bấm vào khâu hay đường nối.
 
@@ -191,6 +191,6 @@ Sơ đồ System design là một khung nhìn: người dùng kéo và thu phón
 Khâu nguồn có thêm nguồn đẩy qua WebSocket (dùng được cho dữ liệu liên tục) và trình duyệt không giao diện cho trang chỉ hiện dữ liệu sau khi chạy JavaScript. Khâu giám sát có đo lag của consumer group Kafka cho dữ liệu liên tục. Oozie có trong danh mục như công cụ nên tránh: đã nghỉ hưu, vẫn tính là công cụ chạy theo lịch, chọn nó thì báo và chỉ sang cron hay Airflow. Dữ liệu liên tục mà nguồn chỉ là API hay trang web phải hỏi theo chu kỳ, không có nguồn đẩy đi kèm, thì báo: hạn mức gọi chặn độ mới. Kiến trúc Lambda nói cách gộp batch view và real-time view tại mốc as-of, và nhận consumer Python làm speed layer; kiến trúc streaming nhận nguồn WebSocket.
 
 ## PLAN-033 · Mẫu đặt sẵn hồ sơ System design mà nó ngụ ý, áp một lần lúc tạo dự án
-26/11/2026 · `step-planner/data/templates.json`, `step-planner/js/core.js`, `step-planner/js/design-core.js`
+26/11/2026 · `step-planner/data/templates.json`, `step-planner/js/core/model.js`, `step-planner/js/core/design.js`
 
 Mỗi mẫu (trừ mẫu trống) mang sẵn phần hồ sơ System design mà nội dung của nó thật sự ngụ ý, và lối "What do you deliver?" khi mẫu chỉ rõ thứ bàn giao; câu nào mẫu không nói thì để trống cho người dùng trả lời. Ví dụ: lakehouse mã nguồn mở là dữ liệu lớn, dạng bảng, theo lịch, tự host, miễn phí, vài người dùng, lối pipeline; báo cáo thống kê là dữ liệu nhỏ, dạng bảng, cố định, đọc bằng báo cáo, lối báo cáo. Mẫu chỉ đặt hồ sơ và lối, không chọn sẵn công cụ: gợi ý ở từng khâu và kiến trúc đi từ hồ sơ như mọi dự án. Bộ đặt sẵn chép vào dự án đúng một lần, lúc tạo dự án từ mẫu; sau đó nó là dữ liệu của dự án, người dùng đổi hay bỏ mọi câu được. Dự án đã có, nhân bản, nhập Markdown hay JSON không bị đụng tới; tạo từ mẫu trống vẫn bắt đầu với System design trống. Khi hồ sơ và lối còn đúng như mẫu đặt, System design nói chúng đến từ mẫu nào; người dùng đổi một câu thì thôi nói. Mỗi bộ đặt sẵn phải cho gợi ý kiến trúc hợp với mẫu, và "Apply path" trên nó không chọn phương án lệch hồ sơ hay làm luật báo.

@@ -1,7 +1,7 @@
 // @ts-check
 /* Bộ nhớ trình duyệt. Mọi lần đọc / ghi bọc try/catch: chặn bộ nhớ (chế độ riêng tư, chính sách) thì trang
  * vẫn chạy trong bộ nhớ tạm và báo bằng banner. */
-import { normWorkspace } from './core.js';
+import { normWorkspace } from '../core/model.js';
 
 export const KEY = 'stepPlanner.v2';
 /* Khoá của khuôn cũ: đọc một lần khi KEY chưa có, rồi chuẩn hoá sang khuôn mới. Khoá cũ giữ nguyên (bản dự phòng);

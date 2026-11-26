@@ -1,5 +1,5 @@
 // @ts-check
-/* Sơ đồ System design như khung nhìn (PLAN-031): DOM của kéo và thu phóng. Toán thuần ở view-math.js.
+/* Sơ đồ System design như khung nhìn (PLAN-031): DOM của kéo và thu phóng. Toán thuần ở core/view-math.js.
  * - Ctrl / ⌘ + bánh xe (cả pinch của trackpad, tới như bánh xe có ctrlKey): thu phóng quanh con trỏ, luôn bắt.
  * - Bánh xe trơn, Shift + bánh xe: kéo khung, chỉ bắt khi chính khung có focus (đã bấm vào chỗ trống, hay Tab tới)
  *   hay đang giữ Space; còn lại trang cuộn như thường. Esc trả bánh xe cho trang.
@@ -8,10 +8,11 @@
  * - Phím khi sơ đồ có focus: + / - thu phóng, 0 về khung ban đầu, mũi tên kéo, Esc trả bánh xe cho trang.
  * - Kéo xong không tính là bấm: nút, đường nối dưới con trỏ không mở hộp.
  * Khung nhìn chỉ ở bộ nhớ của trang: vẽ lại sơ đồ giữ khung, tải lại trang về khung ban đầu. */
-import * as V from './view-math.js';
+import { DRAG_SLOP, HOME, PAN_STEP, ZOOM_MAX, ZOOM_MIN, ZOOM_STEP, clampPan, clampZoom, panBy, pinch, wheelPan, wheelPx, wheelZoom, zoomAt, zoomPct } from '../core/view-math.js';
+/** @typedef {import('../core/view-math.js').View} View */
 
-/** @type {V.View} */
-let view = { ...V.HOME };
+/** @type {View} */
+let view = { ...HOME };
 /** @type {any} */ let fig = null;
 /** @type {any} */ let ui = null;
 /** @type {SVGSVGElement | null} */ let svgEl = null;
@@ -31,10 +32,10 @@ const typing = (/** @type {any} */ el) => !!el && (el.isContentEditable || /^(IN
 const active = () => spaceHeld || (!!fig && document.activeElement === fig);
 const box = () => (svgEl ? svgEl.getBoundingClientRect() : new DOMRect());
 
-/** Đặt khung (kẹp tỉ lệ và độ dời), vẽ lại transform và số phần trăm. @param {V.View} v @param {boolean} [ease] */
+/** Đặt khung (kẹp tỉ lệ và độ dời), vẽ lại transform và số phần trăm. @param {View} v @param {boolean} [ease] */
 function set(v, ease = false) {
   const r = box();
-  view = V.clampPan({ x: v.x, y: v.y, k: V.clampZoom(v.k) }, cw, ch, r.width || cw, r.height || ch);
+  view = clampPan({ x: v.x, y: v.y, k: clampZoom(v.k) }, cw, ch, r.width || cw, r.height || ch);
   paint(ease);
 }
 
@@ -44,23 +45,23 @@ function paint(ease = false) {
     cam.style.transform = `translate(${view.x}px, ${view.y}px) scale(${view.k})`;
   }
   if (ui) {
-    const pct = V.zoomPct(view.k);
+    const pct = zoomPct(view.k);
     ui.pct.textContent = pct;
     ui.pct.setAttribute('aria-label', `Zoom ${pct}. Reset to 100%`);
-    ui.out.disabled = view.k <= V.ZOOM_MIN;
-    ui.in.disabled = view.k >= V.ZOOM_MAX;
+    ui.out.disabled = view.k <= ZOOM_MIN;
+    ui.in.disabled = view.k >= ZOOM_MAX;
   }
 }
 
 /** Thu phóng quanh giữa khung. @param {number} k */
 function zoomCenter(k) {
   const r = box();
-  set(V.zoomAt(view, k, r.width / 2, r.height / 2), true);
+  set(zoomAt(view, k, r.width / 2, r.height / 2), true);
 }
 
 /** Về khung ban đầu (cỡ thật, góc trên trái); có chuyển động trừ khi người dùng giảm chuyển động. */
 export function resetView(ease = true) {
-  view = { ...V.HOME };
+  view = { ...HOME };
   paint(ease);
 }
 
@@ -85,16 +86,16 @@ function hint() {
 function onWheel(/** @type {WheelEvent} */ e) {
   if (!cam) return;
   const r = box();
-  const dx = V.wheelPx(e.deltaX, e.deltaMode, r.width), dy = V.wheelPx(e.deltaY, e.deltaMode, r.height);
+  const dx = wheelPx(e.deltaX, e.deltaMode, r.width), dy = wheelPx(e.deltaY, e.deltaMode, r.height);
   if (e.ctrlKey || e.metaKey) {
     e.preventDefault();
-    set(V.wheelZoom(view, dy, e.clientX - r.left, e.clientY - r.top));
+    set(wheelZoom(view, dy, e.clientX - r.left, e.clientY - r.top));
     return;
   }
   if (!active()) return;
   e.preventDefault();
-  const [mx, my] = V.wheelPan(dx, dy, e.shiftKey);
-  set(V.panBy(view, mx, my));
+  const [mx, my] = wheelPan(dx, dy, e.shiftKey);
+  set(panBy(view, mx, my));
 }
 
 /* ── Kéo: chuột (Space + nút trái, nút giữa), chạm, bút ── */
@@ -141,15 +142,15 @@ function onMove(/** @type {PointerEvent} */ e) {
   if (gest.mode === 'pan') {
     const dx = p.x - gest.a.x, dy = p.y - gest.a.y;
     if (!gest.moved) {
-      if (Math.hypot(dx, dy) < V.DRAG_SLOP) return;
+      if (Math.hypot(dx, dy) < DRAG_SLOP) return;
       startDrag(e);
     }
-    set(V.panBy(gest.v0, dx, dy));
+    set(panBy(gest.v0, dx, dy));
     return;
   }
   const [a, b] = [...pts.values()], r = box();
   if (!gest.moved) startDrag(e);
-  set(V.pinch(gest.v0, gest.m0, gest.d0, { x: (a.x + b.x) / 2 - r.left, y: (a.y + b.y) / 2 - r.top }, Math.hypot(a.x - b.x, a.y - b.y)));
+  set(pinch(gest.v0, gest.m0, gest.d0, { x: (a.x + b.x) / 2 - r.left, y: (a.y + b.y) / 2 - r.top }, Math.hypot(a.x - b.x, a.y - b.y)));
 }
 
 function onUp(/** @type {PointerEvent} */ e) {
@@ -163,14 +164,14 @@ function onUp(/** @type {PointerEvent} */ e) {
 
 function onKey(/** @type {KeyboardEvent} */ e) {
   if (e.altKey || e.ctrlKey || e.metaKey || !cam || typing(e.target)) return;
-  const step = V.PAN_STEP;
+  const step = PAN_STEP;
   /** @type {Record<string, () => void>} */
   const acts = {
-    '+': () => zoomCenter(view.k * V.ZOOM_STEP), '=': () => zoomCenter(view.k * V.ZOOM_STEP),
-    '-': () => zoomCenter(view.k / V.ZOOM_STEP), _: () => zoomCenter(view.k / V.ZOOM_STEP),
+    '+': () => zoomCenter(view.k * ZOOM_STEP), '=': () => zoomCenter(view.k * ZOOM_STEP),
+    '-': () => zoomCenter(view.k / ZOOM_STEP), _: () => zoomCenter(view.k / ZOOM_STEP),
     0: () => resetView(),
-    ArrowLeft: () => set(V.panBy(view, step, 0), true), ArrowRight: () => set(V.panBy(view, -step, 0), true),
-    ArrowUp: () => set(V.panBy(view, 0, step), true), ArrowDown: () => set(V.panBy(view, 0, -step), true),
+    ArrowLeft: () => set(panBy(view, step, 0), true), ArrowRight: () => set(panBy(view, -step, 0), true),
+    ArrowUp: () => set(panBy(view, 0, step), true), ArrowDown: () => set(panBy(view, 0, -step), true),
     Escape: () => /** @type {any} */ (document.activeElement)?.blur(),
   };
   const f = acts[e.key];
@@ -242,8 +243,8 @@ export function initDiagramView(o) {
   addEventListener('keydown', onSpace);
   addEventListener('keyup', onSpace);
   addEventListener('blur', dropSpace);
-  o.out.addEventListener('click', () => zoomCenter(view.k / V.ZOOM_STEP));
-  o.in.addEventListener('click', () => zoomCenter(view.k * V.ZOOM_STEP));
+  o.out.addEventListener('click', () => zoomCenter(view.k / ZOOM_STEP));
+  o.in.addEventListener('click', () => zoomCenter(view.k * ZOOM_STEP));
   o.pct.addEventListener('click', () => zoomCenter(1));
   o.reset.addEventListener('click', () => resetView());
   hint();

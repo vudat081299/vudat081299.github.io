@@ -1,9 +1,12 @@
 // @ts-check
 /* System design (PLAN-016): mục trên trang (sơ đồ tự vẽ, nút) và hộp chọn từng khâu (#dlg-sd).
- * Danh mục: data/system-design.json. Logic thuần: design-core.js. Chữ người dùng chỉ vào DOM qua text node. */
-import * as D from './design-core.js';
-import * as C from './core.js';
+ * Danh mục: data/system-design.json. Logic thuần: core/design.js, core/design-plan.js. Chữ người dùng chỉ vào DOM qua text node. */
+import { fold as foldText } from '../core/board.js';
 import { initDiagramView, attach as attachView, resetView } from './diagram-view.js';
+import { PLAN_STEP, applyPlan, bothDecided, diagramNodes, flowEdges, planDiff, snake, viaLabel } from '../core/design-plan.js';
+import { EDGE_MAX, OWN_MAX, VIA, applyPath, archAdvice, catalogErrors, decidedCount, effProfile, emptyDesign, isPreset, normDesign, notNeededBy, pathOf, pickNames, presetDesign, rankOptions, stageState, warnings } from '../core/design.js';
+import { plural, slug } from '../core/io.js';
+import { normStep, normSub } from '../core/model.js';
 
 const NS = 'http://www.w3.org/2000/svg';
 const LANE_LABEL = { data: 'Data', model: 'Model', app: 'App', ops: 'Operations' };
@@ -44,9 +47,9 @@ const stagePage = (/** @type {string} */ id) => cat.stages.findIndex((/** @type 
 function edit(fn) {
   const w = ws();
   if (!w) return;
-  const d = w.design ? w.design : D.emptyDesign();
+  const d = w.design ? w.design : emptyDesign();
   fn(d);
-  w.design = D.normDesign(d);
+  w.design = normDesign(d);
   deps.commit();
 }
 
@@ -72,20 +75,20 @@ export function renderSection() {
     attachView(null, 0, 0);
     return;
   }
-  const n = D.decidedCount(cat, w.design);
+  const n = decidedCount(cat, w.design);
   $('sd-count').textContent = `${n.done}/${n.total}`;
   $('sd-open').disabled = false;
   $('sd-open-text').textContent = n.done ? 'Edit the design' : 'Design the system';
-  const diff = D.planDiff(cat, w);
+  const diff = planDiff(cat, w);
   $('sd-plan').hidden = !diff.length;
   $('sd-plan-text').textContent = diff.some((x) => x.sub) ? 'Update plan' : 'Add tasks to plan';
-  const p = D.pathOf(cat, w.design);
+  const p = pathOf(cat, w.design);
   $('sd-path').hidden = !p;
   $('sd-path').textContent = p ? `Deliverable: ${p.label}` : '';
   renderArchLine(w.design);
   $('sd-svg').hidden = !n.done;
   drawDiagram();
-  const warns = D.warnings(cat, w.design);
+  const warns = warnings(cat, w.design);
   $('sd-warns').hidden = !warns.length;
   $('sd-warns').replaceChildren(...warns.map((x) => deps.h('li', { class: 'sd-warnbox' },
     deps.h('button', { type: 'button', class: 'sd-link', 'data-warn-stage': x.stages[0] || '' }, x.title), ' ', x.msg)));
@@ -96,7 +99,7 @@ function renderArchLine(d) {
   const el = $('sd-arch');
   const fams = Array.isArray(cat.architectures) ? cat.architectures : [];
   el.hidden = !fams.length;
-  const names = D.archAdvice(cat, d).map((a, i) => fams[i].entries.find((/** @type {any} */ e) => e.id === a.id)?.name).filter(Boolean);
+  const names = archAdvice(cat, d).map((a, i) => fams[i].entries.find((/** @type {any} */ e) => e.id === a.id)?.name).filter(Boolean);
   el.replaceChildren(deps.h('button', { type: 'button', class: 'sd-link', 'data-arch-open': '1' }, names.length ? 'Architecture' : 'Architecture guide'),
     names.length ? `: ${names.join(' · ')}` : ': answer the profile for a recommendation');
 }
@@ -129,7 +132,7 @@ let viewWs = '';                  // dự án của khung nhìn đang xem: đổ
 
 function drawDiagram() {
   const fig = $('sd-fig');
-  const { flow, ops } = D.diagramNodes(cat, design());
+  const { flow, ops } = diagramNodes(cat, design());
   const cs = getComputedStyle(fig);
   /* Lề trong khung nằm trong <svg> (--sd-fig-pad): sơ đồ phóng to, kéo đi chạm tới viền khung chứ không bị cắt giữa lề. */
   const fp = px(cs, '--sd-fig-pad', 16);
@@ -137,13 +140,13 @@ function drawDiagram() {
   const gx = px(cs, '--sd-gap-x', 40), gy = px(cs, '--sd-gap-y', 36), maxW = px(cs, '--sd-node-max', 220);
   const pad = px(cs, '--sd-pad', 12), head = px(cs, '--sd-head', 30), lh = px(cs, '--sd-line', 20);
   const gxHand = Math.max(gx, px(cs, '--sd-gap-hand', 128));
-  const edges = new Map(D.flowEdges(cat, design()).map((e) => [e.key, e]));
+  const edges = new Map(flowEdges(cat, design()).map((e) => [e.key, e]));
   /* Khoảng giữa cột c và c + 1: một đường nối ngang qua đó có hợp đồng thì nới tới --sd-gap-hand, để nhãn không chiếm cả đường.
    * Số cột: nhiều nhất (≤ 5) mà nút còn rộng ≥ min(--sd-node-max, 180). */
   const gapsFor = (/** @type {number} */ k) => {
     const g = Array(Math.max(0, k - 1)).fill(gx);
     for (let i = 1; i < flow.length; i++) {
-      const a = D.snake(i - 1, k), b = D.snake(i, k);
+      const a = snake(i - 1, k), b = snake(i, k);
       if (a.row === b.row && edges.get(`${flow[i - 1].id}>${flow[i].id}`)?.c) g[Math.min(a.col, b.col)] = gxHand;
     }
     return g;
@@ -161,9 +164,9 @@ function drawDiagram() {
 
   /* Luồng: rắn bò; mỗi hàng cao bằng nút cao nhất của hàng. */
   const rows = /** @type {number[]} */ ([]);
-  flow.forEach((n, i) => { const r = D.snake(i, cols).row; rows[r] = Math.max(rows[r] || 0, nodeH(n)); });
+  flow.forEach((n, i) => { const r = snake(i, cols).row; rows[r] = Math.max(rows[r] || 0, nodeH(n)); });
   const rowY = rows.map((_, r) => rows.slice(0, r).reduce((a, b) => a + b + gy, 0));
-  const pos = flow.map((n, i) => { const p = D.snake(i, cols); return { n, x: colX[p.col], y: rowY[p.row], h: rows[p.row], row: p.row }; });
+  const pos = flow.map((n, i) => { const p = snake(i, cols); return { n, x: colX[p.col], y: rowY[p.row], h: rows[p.row], row: p.row }; });
   let y = rowY.length ? rowY[rowY.length - 1] + rows[rows.length - 1] : 0;
 
   const g = svg('g', { class: 'sd-flow' });
@@ -183,7 +186,7 @@ function drawDiagram() {
       ? (b.x > a.x ? `M${a.x + nw} ${a.y + a.h / 2}H${b.x - 3}` : `M${a.x} ${a.y + a.h / 2}H${b.x + nw + 3}`)
       : `M${a.x + nw / 2} ${a.y + a.h}V${b.y - 3}`;
     /* Nét liền khi cả hai đầu đã quyết, còn lại nét đứt; đầu mũi tên luôn liền. */
-    const line = svg('path', { class: `sd-edge${D.bothDecided(a.n, b.n) ? '' : ' is-open'}`, d, 'data-pair': key, 'marker-end': 'url(#sd-arrow)' });
+    const line = svg('path', { class: `sd-edge${bothDecided(a.n, b.n) ? '' : ' is-open'}`, d, 'data-pair': key, 'marker-end': 'url(#sd-arrow)' });
     const e = edges.get(key);
     if (!e) { links.append(line); continue; }
     /* Nhãn ở giữa khoảng trống giữa hai nút; dài nhất --sd-hand-cap lần chiều dài đường (đường dọc: lần bề rộng nút). */
@@ -236,11 +239,11 @@ function handEl(e, cx, cy, cap, dim, n) {
       svg('path', { class: 'sd-hand-plus', d: `M${-k} 0H${k}M0 ${-k}V${k}` }));
   }
   const bh = dim.bh, bp = bh / 3;
-  const label = D.VIA.find((v) => v.id === e.c.via)?.short || 'Spec';
+  const label = VIA.find((v) => v.id === e.c.via)?.short || 'Spec';
   const tw = textW(label, dim.font);
   const cut = tw + 2 * bp > cap;
   const w = Math.max(bh, cut ? cap : tw + 2 * bp);
-  const what = [D.viaLabel(e.c.via), e.c.what].filter(Boolean).join(', ');
+  const what = [viaLabel(e.c.via), e.c.what].filter(Boolean).join(', ');
   const id = `sd-fade-${n}`;
   const f = Math.min(dim.fade, (w - 2 * bp) / 2);
   return svg('g', { class: `sd-hand${cut ? ' is-cut' : ''}`, transform: `translate(${cx - w / 2} ${cy - bh / 2})`, 'data-edge': e.key, tabindex: 0, role: 'button',
@@ -301,7 +304,7 @@ function downloadSvg() {
   out.insertBefore(svg('rect', { x: vb[0], y: vb[1], width: vb[2], height: vb[3], fill: getComputedStyle(document.body).backgroundColor }), out.firstChild);
   const blob = new Blob(['<?xml version="1.0" encoding="UTF-8"?>\n' + new XMLSerializer().serializeToString(out)], { type: 'image/svg+xml' });
   const url = URL.createObjectURL(blob);
-  const link = deps.h('a', { href: url, download: C.slug(ws().name) + '-system.svg' });
+  const link = deps.h('a', { href: url, download: slug(ws().name) + '-system.svg' });
   document.body.append(link);
   link.click();
   link.remove();
@@ -320,11 +323,11 @@ function openPlan() {
   const w = ws();
   if (!w || !cat) return;
   const h = deps.h;
-  const items = D.planDiff(cat, w);
+  const items = planDiff(cat, w);
   planCtx = { wsId: w.id, items, key: diffKey(items) };
-  const build = w.steps.find((/** @type {any} */ s) => C.fold(s.title) === C.fold(D.PLAN_STEP.title));
+  const build = w.steps.find((/** @type {any} */ s) => foldText(s.title) === foldText(PLAN_STEP.title));
   const sel = $('sdp-step');
-  sel.replaceChildren(...(build ? [] : [h('option', { value: '' }, `New step: ${D.PLAN_STEP.title} (step ${Math.min(1, w.steps.length) + 1})`)]),
+  sel.replaceChildren(...(build ? [] : [h('option', { value: '' }, `New step: ${PLAN_STEP.title} (step ${Math.min(1, w.steps.length) + 1})`)]),
     ...w.steps.map((/** @type {any} */ s, /** @type {number} */ k) => h('option', { value: s.id }, `${k + 1}. ${s.title}`)));
   sel.value = build ? build.id : '';
   const stepName = (/** @type {string} */ id) => w.steps.find((/** @type {any} */ s) => s.id === id)?.title || '';
@@ -354,7 +357,7 @@ function openPlan() {
   });
   const same = items.filter((x) => x.kind === 'same').length;
   const todo = items.some((x) => x.kind !== 'same');
-  $('sdp-list').replaceChildren(...lists.filter(Boolean), same ? h('p', { class: 'sd-help' }, `${C.plural(same, 'task')} already match the design.`) : null);
+  $('sdp-list').replaceChildren(...lists.filter(Boolean), same ? h('p', { class: 'sd-help' }, `${plural(same, 'task')} already match the design.`) : null);
   const update = items.some((x) => x.sub);
   $('dlg-sdp-title').textContent = update ? 'Update plan' : 'Add tasks to plan';
   $('sdp-sub').textContent = todo ? 'Pick what to do with each task. One Undo reverts everything.' : 'Every task already matches the design.';
@@ -371,7 +374,7 @@ function applyPlanNow() {
   const w = ctx && deps.findWs(ctx.wsId);
   if (!w) return;
   /* Tab khác đổi dự án trong lúc hộp mở: bản so không còn đúng. */
-  if (diffKey(D.planDiff(cat, w)) !== ctx.key) { deps.toast('The plan changed meanwhile; open "Update plan" again.'); return; }
+  if (diffKey(planDiff(cat, w)) !== ctx.key) { deps.toast('The plan changed meanwhile; open "Update plan" again.'); return; }
   const list = $('sdp-list');
   const choices = ctx.items.map((it, i) => (it.kind === 'new'
     ? (list.querySelector(`input[type="checkbox"][data-i="${i}"]`)?.checked ? 'add' : 'skip')
@@ -379,21 +382,21 @@ function applyPlanNow() {
   let step = w.steps.find((/** @type {any} */ s) => s.id === $('sdp-step').value);
   let created = false;
   if (!step) {
-    step = C.normStep({ ...D.PLAN_STEP, subs: [] });
+    step = normStep({ ...PLAN_STEP, subs: [] });
     w.steps.splice(Math.min(1, w.steps.length), 0, step);
     created = true;
   }
-  const r = D.applyPlan(ctx.items, choices, step, C);
+  const r = applyPlan(ctx.items, choices, step);
   if (created && !step.subs.length) { w.steps = w.steps.filter((/** @type {any} */ s) => s !== step); created = false; }
   const n = r.counts;
   const parts = [n.added ? `${n.added} added` : '', n.updated ? `${n.updated} updated` : '', n.cancelled ? `${n.cancelled} cancelled` : ''].filter(Boolean);
   deps.commit();
   if (!parts.length && !r.before.size) { deps.toast('Nothing changed.'); return; }
   const wsId = w.id, stepId = step.id, added = new Set(r.added), before = r.before;
-  deps.toast(`Plan updated: ${parts.join(', ') || 'tasks linked to the design'}.${n.reset ? ` ${C.plural(n.reset, 'done task')} set back to New.` : ''}`, () => {
+  deps.toast(`Plan updated: ${parts.join(', ') || 'tasks linked to the design'}.${n.reset ? ` ${plural(n.reset, 'done task')} set back to New.` : ''}`, () => {
     const ww = deps.findWs(wsId);
     if (!ww) return;
-    for (const s of ww.steps) s.subs = s.subs.filter((/** @type {any} */ x) => !added.has(x.id)).map((/** @type {any} */ x) => (before.has(x.id) ? C.normSub(before.get(x.id)) : x));
+    for (const s of ww.steps) s.subs = s.subs.filter((/** @type {any} */ x) => !added.has(x.id)).map((/** @type {any} */ x) => (before.has(x.id) ? normSub(before.get(x.id)) : x));
     if (created) ww.steps = ww.steps.filter((/** @type {any} */ s) => s.id !== stepId || s.subs.length);
     deps.commit('#sd-plan');
   }, '#sd-plan');
@@ -430,34 +433,34 @@ function paint() {
 
 /** Dòng dưới tên hộp: số khâu đã quyết, số cảnh báo. */
 function paintSub() {
-  const n = D.decidedCount(cat, design());
-  const k = D.warnings(cat, design()).length;
-  $('sd-sub').textContent = `${n.done} of ${n.total} stages decided${k ? ` · ${C.plural(k, 'warning')}` : ''}. Changes save as you go.`;
+  const n = decidedCount(cat, design());
+  const k = warnings(cat, design()).length;
+  $('sd-sub').textContent = `${n.done} of ${n.total} stages decided${k ? ` · ${plural(k, 'warning')}` : ''}. Changes save as you go.`;
 }
 
 function paintNav() {
   const d = design();
-  const warns = D.warnings(cat, d);
+  const warns = warnings(cat, d);
   const warned = new Set(warns.flatMap((x) => x.stages));
   const h = deps.h;
   /** @type {any[]} */
-  const p = D.pathOf(cat, d);
+  const p = pathOf(cat, d);
   const items = [h('li', {}, navBtn(0, 'Deliverable', p ? 'done' : 'open', p ? p.label : '')),
     h('li', {}, navBtn(1, 'Project profile', Object.keys(d?.profile || {}).length ? 'done' : 'open', ''))];
-  const adv = D.archAdvice(cat, d);
+  const adv = archAdvice(cat, d);
   const recs = adv.filter((a) => a.id !== null).length;
   items.push(h('li', {}, navBtn(ARCH_PAGE, 'Architecture', adv.length && recs === adv.length ? 'done' : 'open', adv.length ? `${recs} of ${adv.length} recommended` : '')));
   let lane = '';
   cat.stages.forEach((/** @type {any} */ s, /** @type {number} */ i) => {
     if (s.lane !== lane) { lane = s.lane; items.push(h('li', { class: 'sd-nav-lane', 'aria-hidden': 'true' }, LANE_LABEL[/** @type {'data'} */ (lane)])); }
-    const st = D.stageState(d, s.id);
-    items.push(h('li', {}, navBtn(i + FIRST_STAGE, s.title, st, st === 'skip' ? 'Not needed' : D.pickNames(s, d?.stages[s.id]).join(', '), warned.has(s.id))));
+    const st = stageState(d, s.id);
+    items.push(h('li', {}, navBtn(i + FIRST_STAGE, s.title, st, st === 'skip' ? 'Not needed' : pickNames(s, d?.stages[s.id]).join(', '), warned.has(s.id))));
   });
   items.push(h('li', { class: 'sd-nav-lane', 'aria-hidden': 'true' }, 'Review'));
-  const fe = D.flowEdges(cat, d);
+  const fe = flowEdges(cat, d);
   const set = fe.filter((e) => e.c).length;
   items.push(h('li', {}, navBtn(extraPage('handoffs'), 'Handoffs', set ? 'done' : 'open', fe.length ? `${set} of ${fe.length} described` : '')));
-  items.push(h('li', {}, navBtn(extraPage('checks'), 'Checks', warns.length ? 'open' : 'done', warns.length ? C.plural(warns.length, 'warning') : 'No conflicts', warns.length > 0)));
+  items.push(h('li', {}, navBtn(extraPage('checks'), 'Checks', warns.length ? 'open' : 'done', warns.length ? plural(warns.length, 'warning') : 'No conflicts', warns.length > 0)));
   $('sd-nav').replaceChildren(...items);
   $('sd-nav').querySelector('[aria-current]')?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
 }
@@ -483,7 +486,7 @@ function paintPane() {
 function presetNote() {
   const w = ws();
   const t = w && w.templateId ? deps.tplOf(w.templateId) : null;
-  return t && D.isPreset(w.design, D.presetDesign(t))
+  return t && isPreset(w.design, presetDesign(t))
     ? deps.h('p', { class: 'sd-tip', 'data-preset': t.id }, `Preset from template "${t.name}" — change any answer.`) : null;
 }
 
@@ -492,7 +495,7 @@ function presetNote() {
 function pathPane() {
   const h = deps.h;
   const d = design();
-  const p = D.pathOf(cat, d);
+  const p = pathOf(cat, d);
   return [
     h('p', { class: 'dlg-kicker' }, 'Start here'),
     h('h3', { class: 'sd-h' }, 'What do you deliver?'),
@@ -531,7 +534,7 @@ function applyPathNow(id) {
   const w = ws();
   if (!w) return;
   const before = w.design ? JSON.parse(JSON.stringify(w.design)) : null;
-  const r = D.applyPath(cat, w.design, id);
+  const r = applyPath(cat, w.design, id);
   const ids = [...r.filled, ...r.skipped];
   /** @type {Record<string, any>} */
   const prev = {};
@@ -539,7 +542,7 @@ function applyPathNow(id) {
   w.design = r.next;
   deps.commit();
   applied = { wsId: w.id, prev: ids.length ? prev : null, text: ids.length
-    ? `Filled ${C.plural(r.filled.length, 'stage')}; marked ${r.skipped.length} Not needed.` : 'Nothing to fill: every stage is already decided.' };
+    ? `Filled ${plural(r.filled.length, 'stage')}; marked ${r.skipped.length} Not needed.` : 'Nothing to fill: every stage is already decided.' };
 }
 
 function undoApply() {
@@ -554,7 +557,7 @@ function profilePane() {
   const h = deps.h;
   const d = design();
   const prof = d?.profile || {};
-  const p = D.pathOf(cat, d);
+  const p = pathOf(cat, d);
   const q2 = (/** @type {any} */ q) => {
     const assumed = !prof[q.id] && p && p.implies[q.id] ? q.choices.find((/** @type {any} */ c) => c.id === p.implies[q.id]) : null;
     return h('fieldset', { class: 'sd-prof' },
@@ -576,7 +579,7 @@ function profilePane() {
     h('p', { class: 'sd-q' }, 'Trả lời những câu bạn biết; câu nào chưa chắc thì để "Not sure". Gợi ý ở từng khâu đổi theo câu trả lời.'), // lang: vi — lời giải thích, nội dung
     ...asked.map(q2),
     rest.length ? fold({ class: 'sd-more', 'data-more': 'profile-rest', open: moreOpen.has('profile-rest') },
-      h('summary', {}, deps.icon('chev'), `${C.plural(rest.length, 'question')} the ${p.label} path doesn't need`),
+      h('summary', {}, deps.icon('chev'), `${plural(rest.length, 'question')} the ${p.label} path doesn't need`),
       ...rest.map(q2)) : null,
   ];
 }
@@ -588,7 +591,7 @@ function archPane() {
   const h = deps.h;
   const d = design();
   const fams = Array.isArray(cat.architectures) ? cat.architectures : [];
-  const adv = D.archAdvice(cat, d);
+  const adv = archAdvice(cat, d);
   return [
     h('p', { class: 'dlg-kicker' }, 'Your project'),
     h('h3', { class: 'sd-h' }, 'Architecture'),
@@ -650,7 +653,7 @@ function archItem(e, on, d) {
 function handoffsPane() {
   const h = deps.h;
   const d = design();
-  const edges = D.flowEdges(cat, d);
+  const edges = flowEdges(cat, d);
   const kept = Object.keys(d?.edges || {}).filter((k) => !edges.some((e) => e.key === k)).length;
   return [
     h('p', { class: 'dlg-kicker' }, 'Review'),
@@ -658,7 +661,7 @@ function handoffsPane() {
     h('p', { class: 'sd-q' }, 'Mỗi đường nối giữa hai khâu đã quyết là một chỗ bàn giao: bên trước đưa gì, bên sau đọc ở đâu và bằng cách nào, hai bên hứa gì, kiểm thế nào là đã nối được. Điền vài đường quan trọng là đủ.'), // lang: vi — lời giải thích, nội dung
     edges.length ? null : h('p', { class: 'sd-tip' }, 'Decide two neighbouring stages on the diagram to describe the handoff between them.'),
     ...edges.map(edgeItem),
-    kept ? h('p', { class: 'sd-help' }, `${C.plural(kept, 'handoff')} kept for stages that are no longer decided or next to each other.`) : null,
+    kept ? h('p', { class: 'sd-help' }, `${plural(kept, 'handoff')} kept for stages that are no longer decided or next to each other.`) : null,
   ];
 }
 
@@ -667,15 +670,15 @@ function edgeItem(e) {
   const h = deps.h;
   const c = e.c || {};
   const id = 'edge:' + e.key;
-  const sum = e.c ? [D.viaLabel(c.via), c.what].filter(Boolean).join(' · ') || 'Described' : 'Not described yet';
+  const sum = e.c ? [viaLabel(c.via), c.what].filter(Boolean).join(' · ') || 'Described' : 'Not described yet';
   const field = (/** @type {string} */ label, /** @type {string} */ f, /** @type {string} */ ph) => h('label', { class: 'field' }, h('span', {}, label),
     f === 'promise'
       ? h('textarea', { rows: 3, 'data-ef': f, 'data-edge': e.key, placeholder: ph }, c[f] || '')
-      : h('input', { type: 'text', class: 'input', maxlength: D.EDGE_MAX, value: c[f] || '', 'data-ef': f, 'data-edge': e.key, placeholder: ph }));
+      : h('input', { type: 'text', class: 'input', maxlength: EDGE_MAX, value: c[f] || '', 'data-ef': f, 'data-edge': e.key, placeholder: ph }));
   return fold({ class: `sd-edge-item${e.c ? ' is-set' : ''}`, 'data-more': id, 'data-edge-item': e.key, open: moreOpen.has(id) },
     h('summary', {}, deps.icon('chev'), h('span', { class: 'sd-edge-name' }, h('b', {}, `${e.from.title} → ${e.to.title}`), h('small', {}, sum))),
     h('fieldset', { class: 'sd-prof' }, h('legend', {}, 'Handed over as'),
-      h('div', { class: 'sd-pills' }, ...[...D.VIA, { id: '', label: 'Not set' }].map((v) => h('label', { class: 'sd-pill' },
+      h('div', { class: 'sd-pills' }, ...[...VIA, { id: '', label: 'Not set' }].map((v) => h('label', { class: 'sd-pill' },
         h('input', { type: 'radio', name: `sd-via-${e.key}`, value: v.id, 'data-via': e.key, checked: (c.via || '') === v.id }), h('span', {}, v.label))))),
     field('What is handed over', 'what', 'e.g. matches.parquet: one row per match, key match_id'),
     field('Where and how the next stage reads it', 'where', 'e.g. data/clean/ in the repo; the backend opens it read-only'),
@@ -687,7 +690,7 @@ function edgeItem(e) {
 
 function checksPane() {
   const h = deps.h;
-  const warns = D.warnings(cat, design());
+  const warns = warnings(cat, design());
   const title = (/** @type {string} */ id) => cat.stages.find((/** @type {any} */ s) => s.id === id)?.title || id;
   return [
     h('p', { class: 'dlg-kicker' }, 'Review'),
@@ -704,10 +707,10 @@ function checksPane() {
 function stagePane(s) {
   const h = deps.h;
   const d = design();
-  const prof = D.effProfile(cat, d);
-  const p = D.pathOf(cat, d);
+  const prof = effProfile(cat, d);
+  const p = pathOf(cat, d);
   const st = d?.stages[s.id] || { pick: [], skip: false, own: '', note: '' };
-  const ranked = D.rankOptions(s, prof, p);
+  const ranked = rankOptions(s, prof, p);
   const picked = ranked.filter((r) => st.pick.includes(r.opt.id));
   const rest = ranked.filter((r) => !st.pick.includes(r.opt.id));
   const hasPick = picked.length > 0 || !!st.own;
@@ -715,7 +718,7 @@ function stagePane(s) {
   const card = (/** @type {any} */ r) => optionCard(s, r, st.pick.includes(r.opt.id), answered, prof);
   const need = p ? p.stages[s.id] : '';
   /* Hồ sơ cho là khâu không cần (`when` của khâu): nói câu trả lời nào. */
-  const notNeeded = D.notNeededBy(s, prof).map((k) => {
+  const notNeeded = notNeededBy(s, prof).map((k) => {
     const q = cat.profile.find((/** @type {any} */ x) => x.id === k);
     return `${q?.label || k} ${q?.choices.find((/** @type {any} */ c) => c.id === prof[k])?.label || prof[k]}`;
   });
@@ -729,17 +732,17 @@ function stagePane(s) {
     need === 'skip' ? h('p', { class: 'sd-tip' }, `The ${p.label} path doesn't need this stage.`)
       : notNeeded.length ? h('p', { class: 'sd-tip' }, `Usually not needed for your profile (${notNeeded.join(' · ')}).`)
         : need === 'maybe' ? h('p', { class: 'sd-tip' }, `Optional on the ${p.label} path.`) : null,
-    ...D.warnings(cat, d).filter((x) => x.stages.includes(s.id)).map((x) => h('div', { class: 'sd-warnbox', role: 'note' }, h('b', {}, x.title), h('p', {}, x.msg))),
+    ...warnings(cat, d).filter((x) => x.stages.includes(s.id)).map((x) => h('div', { class: 'sd-warnbox', role: 'note' }, h('b', {}, x.title), h('p', {}, x.msg))),
     h('div', { class: 'sd-skip' },
       h('button', { type: 'button', class: 'btn small', 'aria-pressed': String(st.skip), 'data-skip': s.id }, 'Not needed'),
       s.skipWhen ? h('span', { class: 'sd-help' }, s.skipWhen) : null),
     st.skip ? null : h('div', { class: 'sd-opts', role: 'group', 'aria-label': s.multi ? 'Options (pick one or more)' : 'Options (pick one)' },
       ...(hasPick ? picked : ranked).map(card),
       hasPick && rest.length ? fold({ class: 'sd-more', 'data-more': s.id, open: moreOpen.has(s.id) },
-        h('summary', {}, deps.icon('chev'), `Show ${C.plural(rest.length, 'other option')}`),
+        h('summary', {}, deps.icon('chev'), `Show ${plural(rest.length, 'other option')}`),
         ...rest.map(card)) : null),
     st.skip ? null : h('label', { class: 'field' }, h('span', {}, 'Another tool (not in the list)'),
-      h('input', { type: 'text', class: 'input', maxlength: D.OWN_MAX, value: st.own, 'data-own': s.id, placeholder: 'e.g. a tool your class or team already uses' })),
+      h('input', { type: 'text', class: 'input', maxlength: OWN_MAX, value: st.own, 'data-own': s.id, placeholder: 'e.g. a tool your class or team already uses' })),
     h('label', { class: 'field' }, h('span', {}, 'Why this choice (optional)'),
       h('textarea', { rows: 3, 'data-note': s.id, placeholder: 'The reason, what you ruled out, what would make you switch' }, st.note)),
   ];
@@ -906,7 +909,7 @@ export async function initDesign(d) {
     const res = await fetch('data/system-design.json');
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const c = await res.json();
-    const err = D.catalogErrors(c);
+    const err = catalogErrors(c);
     if (err.length) throw new Error(err[0]);
     cat = c;
   } catch (e) {
