@@ -382,6 +382,61 @@ export function handoffs(ws) {
 }
 
 /**
+ * @typedef {{kind:'held'|'missing', id:string, name:string, from:string}} InWhy đầu vào lỗi: treo (nguồn giờ đứng sau), hay trỏ
+ * tới đầu ra không còn (name, from rỗng)
+ * @typedef {{kind:'unused'|'held', id:string, name:string, to:string[]}} OutWhy đầu ra chưa có nơi nhận đang nối: không ai dùng,
+ * hay chỉ có nơi dùng đang treo (to: tên các nơi ấy)
+ * @typedef {{in:'ok'|'bad'|'none', out:'ok'|'bad'|'none', inWhy:InWhy[], outWhy:OutWhy[]}} IoStatus
+ */
+/**
+ * Trạng thái đầu vào / đầu ra của mỗi bước, bước con (id → IoStatus). Đầu vào: 'bad' nếu có một đầu vào treo hay trỏ tới đầu ra
+ * không còn; không có đầu vào: 'none'. Bước chỉ xét đầu vào của chính nó. Đầu ra của bước con: 'bad' nếu có một đầu ra không có
+ * nơi nhận đang nối (không ai dùng, hay chỉ nơi dùng treo). Đầu ra của bước gộp đầu ra của nó và mọi bước con: 'bad' chỉ khi
+ * không đầu ra nào có nơi nhận đang nối. Không có đầu ra: 'none'. outWhy luôn nêu mọi đầu ra chưa có nơi nhận đang nối.
+ * @param {{steps:any[]}} ws @param {ReturnType<typeof handoffs>} [hand] @returns {Map<string, IoStatus>}
+ */
+export function ioStatus(ws, hand = handoffs(ws)) {
+  const { idx, links, heldKeys } = hand;
+  /** @type {Map<string, {live:number, held:string[]}>} id đầu ra → số nơi nhận đang nối, tên nơi nhận treo */
+  const use = new Map();
+  for (const l of links) {
+    if (!use.has(l.out.id)) use.set(l.out.id, { live: 0, held: [] });
+    const u = /** @type {{live:number, held:string[]}} */ (use.get(l.out.id));
+    if (heldKeys.has(heldKey(l.to.h.id, l.out.id))) u.held.push(holderTitle(l.to));
+    else u.live++;
+  }
+  /** @param {any[]} outs @returns {OutWhy[]} */
+  const outWhy = (outs) => outs.flatMap((o) => {
+    const u = use.get(o.id);
+    if (u && u.live) return [];
+    return [{ kind: u ? 'held' : 'unused', id: o.id, name: o.name, to: u ? u.held : [] }];
+  });
+  /** @param {any} x @returns {InWhy[]} */
+  const inWhy = (x) => (x.ins || []).flatMap((/** @type {string} */ id) => {
+    const src = idx.get(id);
+    if (!src) return [{ kind: 'missing', id, name: '', from: '' }];
+    return heldKeys.has(heldKey(x.id, id)) ? [{ kind: 'held', id, name: src.out.name, from: holderTitle(src) }] : [];
+  });
+  /** @type {Map<string, IoStatus>} */
+  const m = new Map();
+  /** @param {any} x @param {any[]} outs @param {boolean} all đầu ra 'bad' khi mọi đầu ra lỗi (bước) hay khi một đầu ra lỗi (bước con) */
+  const put = (x, outs, all) => {
+    const iw = inWhy(x), ow = outWhy(outs);
+    const ins = (x.ins || []).length;
+    m.set(x.id, {
+      in: !ins ? 'none' : iw.length ? 'bad' : 'ok',
+      out: !outs.length ? 'none' : (all ? ow.length === outs.length : ow.length > 0) ? 'bad' : 'ok',
+      inWhy: iw, outWhy: ow,
+    });
+  };
+  for (const step of ws.steps) {
+    put(step, [...(step.outs || []), ...step.subs.flatMap((/** @type {any} */ s) => s.outs || [])], true);
+    for (const sub of step.subs) put(sub, sub.outs || [], false);
+  }
+  return m;
+}
+
+/**
  * Trước khi xoá các chủ này: chụp đầu vào của nơi khác đang trỏ tới đầu ra của chúng. Dữ liệu không gỡ đầu vào treo lúc xoá
  * (bảng bỏ qua, lần đọc sau chuẩn hoá bỏ); hàm trả về gắn lại chúng khi Hoàn tác, kể cả khi tab khác đã ghi đè dự án.
  * @param {any} ws @param {any[]} owners @returns {(w: any) => void}

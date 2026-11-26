@@ -2227,6 +2227,109 @@ const check = (name, ok, detail = '') => {
     check('bàn giao: ô mũi tên giữ rộng bằng thẻ; nút giữa hai ô dài tối đa nửa nét đứt, ở giữa; tên dài mờ ở đuôi, icon và "+n" đủ; tên ngắn không mờ (thường, Compact)',
       fitOk(fit0) && fitOk(fit1), JSON.stringify({ fit0, fit1 }));
     await fc.close();
+
+    // Hai chấm đầu vào → đầu ra: mỗi trạng thái trên thẻ và đầu bước; kéo / dời tạo liên kết treo thì chấm đổi ngay; xoá bên giao
+    // thì đầu vào thành lỗi, Hoàn tác trả lại; không có cả hai thì không có chấm; chấm nằm trước chip, cùng hàng (thường, Compact, 390px).
+    const ioSeed = { id: 'wi', name: 'IO', steps: [
+      { id: 'g1', title: 'Collect', subs: [{ id: 'gA', title: 'Fetch', outs: [{ id: 'oF', name: 'raw.csv' }] }, { id: 'gI', title: 'Check raw', ins: ['oF'] },
+        { id: 'gN', title: 'Neither' }, { id: 'gB', title: 'Spec', outs: [{ id: 'oU', name: 'unused.md' }] }] },
+      { id: 'g2', title: 'Model', ins: ['oF'], subs: [{ id: 'gC', title: 'Train', ins: ['oF'], outs: [{ id: 'oM', name: 'model.pkl' }] }, { id: 'gD', title: 'Late input', ins: ['oL'] }] },
+      { id: 'g3', title: 'Ship', subs: [{ id: 'gE', title: 'Late producer', outs: [{ id: 'oL', name: 'late.json' }] }, { id: 'gF', title: 'Deploy', ins: ['oM'] }] },
+      { id: 'g4', title: 'Orphan', subs: [{ id: 'gG', title: 'Dead end', outs: [{ id: 'oZ', name: 'z.bin' }] }] },
+    ], log: [] };
+    const ic = await browser.newContext({ viewport: { width: 1600, height: 1400 }, deviceScaleFactor: 1 });
+    await ic.addInitScript(seedInit, ioSeed);
+    const ip = await ic.newPage();
+    ip.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
+    ip.on('pageerror', (e) => errors.push(String(e)));
+    await ip.goto(BASE);
+    await ip.waitForSelector('.card[data-sub="gA"]');
+    const ioOf = () => ip.evaluate(() => {
+      const o = {};
+      const read = (el, k) => { const io = el.querySelector(':scope > .io'); o[k] = io ? `${io.dataset.ioIn}/${io.dataset.ioOut}` : '-'; };
+      for (const c of document.querySelectorAll('.card[data-sub]')) read(c.querySelector('.card-top'), c.dataset.sub);
+      for (const s of document.querySelectorAll('.step[data-step]')) read(s.querySelector('.step-top'), s.dataset.step);
+      return o;
+    });
+    const labelOf = (sel) => ip.$eval(sel, (el) => ({ a: el.getAttribute('aria-label'), t: el.title, role: el.getAttribute('role') }));
+    const io0 = await ioOf();
+    const want0 = { gA: 'none/ok', gI: 'ok/none', gN: '-', gB: 'none/bad', gC: 'ok/ok', gD: 'bad/none', gE: 'none/bad', gF: 'ok/none', gG: 'none/bad',
+      g1: 'none/ok', g2: 'ok/ok', g3: 'none/bad', g4: 'none/bad' };
+    const dIn = await labelOf('.card[data-sub="gD"] .io-dot.in');
+    const eOut = await labelOf('.card[data-sub="gE"] .io-dot.out');
+    const bOut = await labelOf('.card[data-sub="gB"] .io-dot.out');
+    const aIn = await labelOf('.card[data-sub="gA"] .io-dot.in');
+    const arrowHidden = await ip.$eval('.card[data-sub="gA"] .io-arrow', (el) => el.getAttribute('aria-hidden') === 'true');
+    check('đầu vào / đầu ra: mỗi trạng thái trên thẻ và đầu bước (ổn, lỗi, không có), không có cả hai thì không có chấm', same(io0, want0), JSON.stringify(io0));
+    check('đầu vào / đầu ra: chấm có nhãn đọc được, nói vì sao; mũi tên chỉ để trang trí',
+      dIn.role === 'img' && dIn.a === dIn.t && /^Input: broken\. "late\.json" on hold: "Late producer" now comes after this$/.test(dIn.a)
+      && /^Output: broken\. "late\.json" is only used by "Late input", which now comes before it \(on hold\)$/.test(eOut.a)
+      && bOut.a === 'Output: broken. "unused.md" is not used by any later step' && aIn.a === 'Input: none' && arrowHidden,
+      JSON.stringify({ dIn, eOut, bOut, aIn }));
+    /* Chấm nằm bên trái chip trạng thái, cùng hàng; đầu bước: cùng hàng với số bước. */
+    const place = () => ip.evaluate(() => [...document.querySelectorAll('.card[data-sub]')].filter((c) => c.querySelector('.io')).map((c) => {
+      const io = c.querySelector('.io').getBoundingClientRect(), chip = c.querySelector('.chip').getBoundingClientRect(), card = c.getBoundingClientRect();
+      return io.right <= chip.left && Math.abs((io.top + io.bottom) / 2 - (chip.top + chip.bottom) / 2) <= 2 && io.left >= card.left && chip.right <= card.right ? '' : c.dataset.sub;
+    }).concat([...document.querySelectorAll('.step-top')].filter((t) => t.querySelector('.io')).map((t) => {
+      const io = t.querySelector('.io').getBoundingClientRect(), num = t.querySelector('.step-num').getBoundingClientRect();
+      return Math.abs((io.top + io.bottom) / 2 - (num.top + num.bottom) / 2) <= 2 && io.right <= t.getBoundingClientRect().right ? '' : t.closest('.step').dataset.step;
+    })).filter(Boolean));
+    const pl0 = await place();
+    await ip.click('#compact-btn');
+    await ip.waitForSelector('.board.compact');
+    const pl1 = await place();
+    await ip.click('#compact-btn');
+    check('đầu vào / đầu ra: chấm trước chip, cùng hàng; đầu bước cùng hàng số bước (thường, Compact)', !pl0.length && !pl1.length, JSON.stringify({ pl0, pl1 }));
+
+    // Kéo "Check raw" lên trước "Fetch" (cùng hàng): đầu vào của nó treo; "Fetch" còn nơi dùng khác nên đầu ra vẫn ổn.
+    const fa = await ip.locator('.card[data-sub="gI"]').boundingBox();
+    const fb = await ip.locator('.card[data-sub="gA"]').boundingBox();
+    await ip.mouse.move(fa.x + 24, fa.y + 24);
+    await ip.mouse.down();
+    await ip.mouse.move(fa.x + 34, fa.y + 30, { steps: 2 });
+    await ip.mouse.move(fb.x + 20, fb.y + 20, { steps: 8 });
+    await ip.mouse.up();
+    await ip.waitForFunction(() => !document.querySelector('.drag-ghost') && !document.body.classList.contains('dragging-any'));
+    const io1 = await ioOf();
+    const order1 = (await cur(ip)).steps[0].subs.map((x) => x.id);
+    check('đầu vào / đầu ra: kéo bên nhận lên trước bên giao — đầu vào của nó lỗi ngay; bên giao còn nơi dùng khác thì vẫn ổn',
+      order1[0] === 'gI' && io1.gI === 'bad/none' && io1.gA === 'none/ok' && io1.g1 === 'none/ok', JSON.stringify({ order1, io1 }));
+    await ip.keyboard.press('Control+z');
+    await ip.waitForFunction(() => document.querySelector('.card[data-sub="gI"] .io')?.dataset.ioIn === 'ok');
+
+    // Dời bước "Ship" lên trên "Model" (Alt + ↑): "Deploy" giờ đứng trước "Train" → cả hai lỗi; "Late input" nối lại → cả hai ổn.
+    await ip.focus('.step[data-step="g3"] [data-act="edit-step"]');
+    await ip.keyboard.press('Alt+ArrowUp');
+    const io2 = await ioOf();
+    check('đầu vào / đầu ra: dời bước — đầu vào của bên nhận và đầu ra (nơi dùng duy nhất) của bên giao lỗi ngay; liên kết nối lại thì ổn',
+      io2.gF === 'bad/none' && io2.gC === 'ok/bad' && io2.gD === 'ok/none' && io2.gE === 'none/ok' && io2.g2 === 'ok/bad' && io2.g3 === 'none/ok', JSON.stringify(io2));
+    await ip.keyboard.press('Control+z');
+    await ip.waitForFunction(() => document.querySelector('#board > .step:nth-child(2)')?.dataset.step === 'g2');
+
+    // Xoá "Fetch": đầu vào của nơi dùng trỏ tới đầu ra không còn → lỗi; Hoàn tác trả lại.
+    await ip.click('.card[data-sub="gA"] [data-act="edit-sub"]');
+    await ip.click('#sub-del');
+    const io3 = await ioOf();
+    const gone = await labelOf('.card[data-sub="gC"] .io-dot.in');
+    await ip.click('#toast-undo');
+    const io4 = await ioOf();
+    check('đầu vào / đầu ra: xoá bên giao thì đầu vào nơi dùng lỗi ngay ("output was deleted"); Hoàn tác trả lại',
+      io3.gI === 'bad/none' && io3.gC === 'bad/ok' && io3.g2 === 'bad/ok' && /output was deleted/.test(gone.a) && same(io4, want0), JSON.stringify({ io3, io4, gone }));
+    await ic.close();
+
+    // 390px: không tràn ngang, chấm nằm trong thẻ và đầu bước.
+    const ic2 = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 1, isMobile: true, hasTouch: true });
+    await ic2.addInitScript(seedInit, ioSeed);
+    const ip2 = await ic2.newPage();
+    ip2.on('pageerror', (e) => errors.push(String(e)));
+    await ip2.goto(BASE);
+    await ip2.waitForSelector('.card[data-sub="gA"] .io');
+    const narrow = await ip2.evaluate(() => [...document.querySelectorAll('.card[data-sub] .io, .step-top .io')].filter((io) => {
+      const r = io.getBoundingClientRect(), box = io.closest('.card, .step-top').getBoundingClientRect();
+      return r.left < box.left || r.right > box.right;
+    }).length);
+    check('đầu vào / đầu ra 390px: không tràn ngang, chấm nằm trong thẻ và đầu bước', (await hOverflow(ip2)) === 0 && narrow === 0, String(narrow));
+    await ic2.close();
   }
 
   /* ── Dữ liệu lưu bị hỏng ── */

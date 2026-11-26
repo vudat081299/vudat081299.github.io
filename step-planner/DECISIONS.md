@@ -24,6 +24,7 @@
 - PLAN-021 · System design bắt đầu từ thứ bàn giao, kiểm phối hợp, ghi hợp đồng giữa các khâu, việc đi theo thiết kế · `step-planner/`
 - PLAN-022 · Mẫu ghi loại đầu ra, khai bàn giao giữa các bước; có mẫu pipeline dữ liệu định kỳ · `step-planner/data/templates.json`
 - PLAN-023 · System design phủ kiểm dữ liệu, gán nhãn, tìm kiếm và LLM; giữ cả công cụ nên tránh, kèm lý do · `step-planner/data/system-design.json`, `step-planner/js/design-core.js`
+- PLAN-024 · Mỗi bước và bước con cho thấy đầu vào, đầu ra đang ổn, lỗi hay không có · `step-planner/`
 <!-- index:end -->
 
 ## PLAN-001 · Dự án là các bước có thứ tự, mỗi bước có bước con có thứ tự
@@ -140,3 +141,8 @@ Mỗi mẫu ghi loại đầu ra (báo cáo, mô hình dự đoán / app, tính 
 26/11/2026 · `step-planner/data/system-design.json`, `step-planner/js/design-core.js`
 
 Hồ sơ hỏi thêm loại dữ liệu (bảng, văn bản, ảnh / âm thanh) và sản phẩm có tìm kiếm hay LLM không. Có khâu kiểm dữ liệu, gán nhãn, tìm kiếm và truy xuất; khâu không hợp hồ sơ được báo là thường không cần, áp lối thì thành không cần. Danh mục giữ cả công cụ người học hay nghe tên nhưng nên tránh khi làm một mình (Hadoop, Kubernetes, feature store, cụm Elasticsearch tự chạy), kèm lý do, lựa chọn thay và luật báo. Gợi ý ưu tiên thứ tự công cụ mà lối ghi; hồ sơ dùng để loại phương án không hợp, không để đẩy hạng.
+
+## PLAN-024 · Mỗi bước và bước con cho thấy đầu vào, đầu ra đang ổn, lỗi hay không có
+26/11/2026 · `step-planner/`
+
+Sau khi sắp xếp lại, người dùng nhìn bảng là biết bước, bước con nào có bàn giao hỏng mà không phải mở từng cái. Mỗi bước con cho thấy riêng trạng thái đầu vào và đầu ra: ổn, lỗi hay không có. Đầu vào lỗi khi một đầu vào đang treo (nguồn giờ đứng sau) hoặc trỏ tới đầu ra không còn. Đầu ra lỗi khi một đầu ra không có nơi nhận đang nối: không ai dùng, hoặc chỉ những nơi dùng đang treo. Bước xét đầu vào của chính nó theo cùng luật; đầu ra của bước gộp đầu ra của nó và của mọi bước con, lỗi chỉ khi không đầu ra nào có nơi nhận đang nối. Chỉ có một phía thì phía kia là không có; không có cả hai thì không hiện gì. Mỗi trạng thái nói được bằng chữ cái gì hỏng và vì sao; trạng thái đổi ngay sau mỗi lần dời, kéo, sửa đầu vào / đầu ra, xoá hay hoàn tác.

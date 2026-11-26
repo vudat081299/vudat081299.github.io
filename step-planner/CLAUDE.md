@@ -13,11 +13,11 @@
 |---|---|
 | `index.html` | markup, hộp thoại, bộ biểu tượng `<symbol id="i-…">`, script theme trước lần vẽ đầu, script báo `file://` |
 | `css/planner.css` | token ở đầu (tới dòng `/* ── hết token ── */`), rồi từng component, mỗi khối mở bằng một dòng chú thích |
-| `js/core.js` | logic thuần: chuẩn hoá, gộp khi lưu, ngày, tiến độ, việc tiếp theo, bàn giao (`holders`, `handoffs`, `consumersOf`), Markdown và JSON vào / ra; không DOM, chạy được trong Node |
+| `js/core.js` | logic thuần: chuẩn hoá, gộp khi lưu, ngày, tiến độ, việc tiếp theo, bàn giao (`holders`, `handoffs`, `ioStatus`, `consumersOf`), Markdown và JSON vào / ra; không DOM, chạy được trong Node |
 | `js/md.js` | Markdown của tài liệu văn bản → cây khối (`parseMd`, thuần) → DOM (`renderMd`, chỉ createElement / text node); khung Edit: token (`srcTokens`, thuần) → dòng có số (`renderSrc`) |
 | `js/design-core.js` | System design, thuần: `normDesign`, `rankOptions`, `applyPath`, `warnings`, `flowEdges`, `diagramNodes`, `planTasks`, `planDiff`, `applyPlan`, `designMd`, `designReader` (core.js chỉ gọi hai hàm cuối) |
 | `js/design.js` | System design, UI: mục trên trang, sơ đồ SVG, hộp `#dlg-sd`, hộp xem trước Update plan; nhận hàm chung qua `initDesign` |
-| `js/hand.js` | bàn giao, UI: chip In / Out của bước, mũi tên trên bước nhận và trước ô nhận, hộp `#dlg-hand`, phần Inputs / Outputs của hộp sửa, hộp `#dlg-pick`; nhận hàm chung qua `initHand` |
+| `js/hand.js` | bàn giao, UI: chip In / Out của bước, hai chấm đầu vào / đầu ra (`ioDots`), mũi tên trên bước nhận và trước ô nhận, hộp `#dlg-hand`, phần Inputs / Outputs của hộp sửa, hộp `#dlg-pick`; nhận hàm chung qua `initHand` |
 | `js/store.js` | `localStorage` (dữ liệu, mẹo `stepPlanner.hintOff`, Compact `stepPlanner.compact`, theme `hub-theme`), `sessionStorage` (dự án của tab); mọi truy cập bọc try/catch |
 | `js/dropdown.js` | danh sách chọn tự dựng: `enhanceSelect` (thay giao diện `<select>`, giữ nó làm nguồn value và `change`), `openList` |
 | `js/drag.js` | kéo thả bằng pointer events (chuột, chạm, bút): bóng, ô "Drop here", FLIP, tự cuộn, Esc; mỗi khung hình một lượt |
@@ -100,7 +100,10 @@
 
 - Đầu ra khai ở bước / bước con tạo ra nó; nơi dùng chọn "Use existing output". Một đầu ra nhiều nơi dùng; liên kết theo id.
 - Bước không chọn được đầu ra của chính nó và các bước con của nó. Inputs / Outputs lưu cùng Save của hộp sửa.
-- Thẻ bước con không hiện đầu vào, đầu ra; xem và sửa trong hộp sửa. Bước có chip "In n" (đầu vào còn trỏ tới đầu ra), "Out n".
+- Thẻ bước con không liệt kê đầu vào, đầu ra; xem và sửa trong hộp sửa. Bước có chip "In n" (đầu vào còn trỏ tới đầu ra), "Out n".
+- Thẻ và đầu bước hiện trạng thái đầu vào, đầu ra (`ioStatus`, PLAN-024): ổn, lỗi, không có; không có cả hai thì không hiện.
+  Đầu vào lỗi: treo hoặc trỏ tới đầu ra không còn; bước chỉ xét đầu vào của chính nó. Đầu ra lỗi: không có nơi nhận đang nối
+  (chỉ nơi nhận treo cũng tính); bước con lỗi khi một đầu ra lỗi, bước gộp đầu ra của bước con và lỗi chỉ khi mọi đầu ra lỗi.
 - Hàng j nhận từ hàng trước nó (`handoffs().rows`): mũi tên trên hàng j. Ô k + 1 nhận từ ô trước nó cùng hàng (`gaps`): một ô
   mũi tên trước ô k + 1. Nút giữa mũi tên ghi tên đầu ra; bấm thì nêu từng cặp. Chảy ngược hay cùng ô: chỉ trong hộp sửa.
 - Danh sách nêu đường dẫn, hợp đồng, bên giao / nơi dùng, mỗi bên nhảy tới được.

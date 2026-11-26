@@ -249,6 +249,8 @@ function renderBoard(ws, opt = {}) {
   const outText = (/** @type {any[]} */ outs) => outs.map((o) => `${o.name} ${o.ref}`).join(' ');
   /* Bàn giao: chip "In n" đếm đầu vào còn trỏ tới đầu ra (đọc cả hàng khác), vạch trên hàng đếm cặp từ hàng trên: vào khoá. */
   const hand = C.handoffs(ws);
+  /* Hai chấm đầu vào / đầu ra đọc liên kết ở hàng khác (treo, không ai dùng): trạng thái của bước và các bước con vào khoá. */
+  const io = C.ioStatus(ws, hand);
   /* 1. Dữ liệu: hàng nào hiện, khoá của nó, dùng lại được hàng cũ không. Chưa đọc, chưa ghi DOM. */
   const plan = [];
   /** Ngày mở lại cuối của bước đã đóng vòng (chú thích nhãn "Iteration N"); nằm trong khoá hàng vì nó đọc nhật ký. */
@@ -263,7 +265,8 @@ function renderBoard(ws, opt = {}) {
     if (!step.revisit && step.round > 1) reopenedOn.set(step.id, lastReopened(ws, step));
     const key = JSON.stringify([step, filtering ? visible.map((/** @type {any} */ x) => x.id) : null,
       labels.get(step.id) ?? null, step.subs.map((/** @type {any} */ x) => [labels.get(x.id) ?? null, nextIds.has(x.id)]), todayStr,
-      reopenedOn.get(step.id) ?? null, Hd.insCount(step, hand.idx), handSig(hand.rows.get(i)), [...(hand.gaps.get(step.id) || [])].map(([k, ps]) => [k, handSig(ps)])]);
+      reopenedOn.get(step.id) ?? null, Hd.insCount(step, hand.idx), handSig(hand.rows.get(i)), [...(hand.gaps.get(step.id) || [])].map(([k, ps]) => [k, handSig(ps)]),
+      [step, ...step.subs].map((/** @type {any} */ x) => io.get(x.id))]);
     const prev = old.get(step.id);
     plan.push({ step, i, visible, key, row: reuse && prev && rowKeys.get(prev) === key ? prev : null, prev });
   });
@@ -285,7 +288,7 @@ function renderBoard(ws, opt = {}) {
   const compactChanged = board.classList.contains('compact') !== compact;
   board.classList.toggle('compact', compact);
   $('compact-btn').setAttribute('aria-pressed', String(compact));
-  const ctx = { filtering, todayStr, nextIds, labels, keep, reopenedOn, hand };
+  const ctx = { filtering, todayStr, nextIds, labels, keep, reopenedOn, hand, io };
   /** @type {HTMLElement[]} */
   const fresh = [];
   const nodes = plan.map((p) => {
@@ -374,9 +377,9 @@ const handSig = (pairs) => (pairs || []).map((p) => [p.from.h.id, p.to.h.id, p.o
 
 /** Dựng một hàng (bước): đầu bước, băng Reopened, dải tài liệu, hàng thẻ theo ô.
  * @param {any} step @param {number} i @param {any[]} visible
- * @param {{filtering:boolean, todayStr:string, nextIds:Set<string>, labels:Map<string,string>, keep:{notes:Set<string>, open:Set<string>}, reopenedOn:Map<string,string>, hand:any}} ctx */
+ * @param {{filtering:boolean, todayStr:string, nextIds:Set<string>, labels:Map<string,string>, keep:{notes:Set<string>, open:Set<string>}, reopenedOn:Map<string,string>, hand:any, io:Map<string, C.IoStatus>}} ctx */
 function stepRow(step, i, visible, ctx) {
-  const { filtering, todayStr, nextIds, labels, keep, reopenedOn, hand } = ctx;
+  const { filtering, todayStr, nextIds, labels, keep, reopenedOn, hand, io } = ctx;
   const stepTags = Hd.tags(step, Hd.insCount(step, hand.idx)).filter(Boolean);
   const prog = C.progress(step.subs);
   const done = prog.total > 0 && prog.done === prog.total;
@@ -385,7 +388,8 @@ function stepRow(step, i, visible, ctx) {
       !filtering && h('span', { class: 'step-grip', title: 'Drag to move the step (keyboard: Alt + ↑ ↓ on its name)', 'aria-hidden': 'true' }, icon('grip')),
       numTag('step-num', labels.get(step.id)),
       h('h2', { class: 'step-title', id: 'st-' + step.id },
-        h('button', { type: 'button', class: 'link', 'data-act': 'edit-step', 'aria-label': `Step ${labels.get(step.id) ?? '(added this session)'}: ${step.title}. Edit`, 'aria-keyshortcuts': 'Alt+ArrowUp Alt+ArrowDown' }, step.title))),
+        h('button', { type: 'button', class: 'link', 'data-act': 'edit-step', 'aria-label': `Step ${labels.get(step.id) ?? '(added this session)'}: ${step.title}. Edit`, 'aria-keyshortcuts': 'Alt+ArrowUp Alt+ArrowDown' }, step.title)),
+      Hd.ioDots(io.get(step.id), true)),
     reopenedOn.has(step.id) && iterTag(step, reopenedOn.get(step.id)),
     step.goal && h('p', { class: 'step-goal' }, step.goal),
     step.doneWhen && h('p', { class: 'step-done' }, h('span', { class: 'lbl' }, 'Done when '), step.doneWhen),
@@ -425,6 +429,7 @@ function stepRow(step, i, visible, ctx) {
           'aria-label': `${C.plural(x.docs.length, 'doc')}. Open the list`, title: x.docs.map((/** @type {any} */ d) => d.title).join('\n') },
         icon('clip'), String(x.docs.length)),
         proofTag(x),
+        Hd.ioDots(io.get(x.id), false),
         statusChip(x)),
       h('div', { class: 'card-body' },
         h('h3', { class: 'card-title' }, h('button', { type: 'button', class: 'link', 'data-act': 'edit-sub', 'aria-keyshortcuts': 'Alt+ArrowLeft Alt+ArrowRight Alt+ArrowUp Alt+ArrowDown' }, x.title)),
