@@ -2056,7 +2056,64 @@ const check = (name, ok, detail = '') => {
     const more = await vp.$$eval('#sd-pane .sd-more .sd-opt', (os) => os.slice(1).map((o, i) => Math.round(o.getBoundingClientRect().top - os[i].getBoundingClientRect().bottom)));
     check('"Show other options": các phương án cách nhau --s3 như danh sách chính', more.length > 1 && more.every((g) => g === s3), more.join());
     await vp.keyboard.press('Escape');
+    /* Dấu + của đường trống: ẩn, rê lên đường (không phải lên dấu) thì hiện; không ở vòng Tab (bàn phím: trang Handoffs). */
+    const along = (key, t) => vp.$eval(`#sd-fig .sd-wire[data-edge="${key}"] .sd-hit`, (p, k) => {
+      const pt = p.getPointAtLength(p.getTotalLength() * k), m = p.getScreenCTM();
+      return { x: pt.x * m.a + pt.y * m.c + m.e, y: pt.x * m.b + pt.y * m.d + m.f };
+    }, t);
+    const plusOp = (key) => vp.$eval(`#sd-fig .sd-hand.is-empty[data-edge="${key}"]`, (g) => getComputedStyle(g).opacity);
+    const emptyKey = await vp.$eval('#sd-fig .sd-hand.is-empty', (g) => g.dataset.edge);
+    await vp.mouse.move(5, 5);
+    const op0 = await plusOp(emptyKey);
+    let at = await along(emptyKey, 0.2);
+    await vp.mouse.move(at.x, at.y);
+    const shown = await waitTo(vp, 'dấu + hiện khi rê đường', (k) => getComputedStyle(document.querySelector(`#sd-fig .sd-hand.is-empty[data-edge="${k}"]`)).opacity === '1', emptyKey);
+    check('Dấu + của đường trống ẩn, rê lên đường thì hiện, không nhận Tab', op0 === '0' && shown
+      && await vp.$$eval('#sd-fig .sd-hand.is-empty', (l) => l.every((g) => !g.hasAttribute('tabindex') && g.getAttribute('aria-hidden') === 'true')), op0);
+    /* Rê đường có hợp đồng: nhãn vẫn ở trên nét (điểm giữa nhãn thuộc nhãn), nền nhãn đặc, nét đổi màu. */
+    const capKey = 'source>ingest';
+    at = await along(capKey, 0.1);
+    await vp.mouse.move(at.x, at.y);
+    await waitTo(vp, 'nét đường đang rê đổi màu', (k) => {
+      const w = document.querySelector(`#sd-fig .sd-wire[data-edge="${k}"]`);
+      return getComputedStyle(w.querySelector('.sd-edge')).stroke === getComputedStyle(w.querySelector('.sd-hand-box')).stroke;
+    }, capKey);
+    const top = await vp.$eval(`#sd-fig .sd-hand[data-edge="${capKey}"]`, (g) => {
+      const r = g.getBoundingClientRect(), hit = document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2);
+      const fill = getComputedStyle(g.querySelector('.sd-hand-box')).fill;
+      return { above: !!hit && g.contains(hit), last: g.parentNode.lastElementChild === g, fill };
+    });
+    check('Rê đường có hợp đồng: nhãn ở trên nét, nền đặc', top.above && top.last && /^rgb\(/.test(top.fill), JSON.stringify(top));
+    await vp.mouse.move(5, 5);
+    /* Nhãn rộng nhất nửa chiều dài đường; chữ dài hơn thì mờ ở đuôi (mask), đủ chữ trong tooltip. Ép nhãn tràn bằng token. */
+    const halves = await vp.$$eval('#sd-fig .sd-wire', (ws) => ws.filter((w) => w.querySelector('.sd-hand:not(.is-empty)')).map((w) => {
+      const b = w.querySelector('.sd-edge').getBBox(), cap = w.querySelector('.sd-hand-box').getBBox();
+      return b.width > b.height ? cap.width <= (b.width + 3) / 2 + 0.5 : true;
+    }));
+    check('Nhãn bàn giao không rộng quá nửa đường nối ngang', halves.length === 2 && halves.every(Boolean), halves.join());
+    await vp.$eval('#sd-fig', (f) => f.style.setProperty('--sd-hand-cap', '.22'));
+    await vp.setViewportSize({ width: 1279, height: 900 });
+    await vp.waitForSelector('#sd-fig .sd-hand.is-cut');
+    const cut = await vp.$eval(`#sd-fig .sd-hand.is-cut[data-edge="${capKey}"]`, (g) => {
+      const t = g.querySelector('text'), box = g.querySelector('.sd-hand-box').getBBox();
+      const mask = t.getAttribute('mask') && document.querySelector(t.getAttribute('mask').slice(4, -1));
+      return { masked: !!mask, overflow: t.getComputedTextLength() > box.width, title: g.querySelector('title').textContent };
+    });
+    check('Nhãn dài bị chặn và mờ ở đuôi, tooltip đủ chữ', cut.masked && cut.overflow && /: Results \(Precomputed results/.test(cut.title), JSON.stringify(cut));
+    await vp.$eval('#sd-fig', (f) => f.style.removeProperty('--sd-hand-cap'));
+    await vp.setViewportSize({ width: 1280, height: 900 });
+    await vp.waitForFunction(() => !document.querySelector('#sd-fig .sd-hand.is-cut'));
     await vx.close();
+    /* Cảm ứng: không có dấu + (không rê được); nhãn có hợp đồng vẫn bấm được. */
+    const { ctx: tx, page: tp } = await open(390, 844, { hasTouch: true, isMobile: true });
+    await tp.click('#start .tpl[data-tpl="crisp-dm"]');
+    await tp.waitForSelector('#sd-fig svg');
+    await seedDesign(tp);
+    await tp.reload();
+    await tp.waitForSelector('#sd-fig .sd-hand');
+    check('Cảm ứng: đường trống không có dấu +, nhãn có hợp đồng vẫn hiện', await tp.$$eval('#sd-fig .sd-hand', (l) => l.every((g) =>
+      (getComputedStyle(g).display === 'none') === g.classList.contains('is-empty'))));
+    await tx.close();
   });
 
   /* ── Dấu Redo qua hộp sửa: chỉ sửa Notes thì giữ dấu và số "k of n"; chuyển sang bước khác thì bỏ dấu, Hoàn tác trả lại ── */

@@ -135,7 +135,10 @@
   --ws-prog-w: 140px;                  /* thanh tiến độ của một dự án trong hộp Dự án */
   /* Sơ đồ System design (js/design.js đọc các token này để xếp nút) và cột trái của hộp chọn. */
   --sd-node-max: 220px; --sd-gap-x: 64px; --sd-gap-y: 36px; --sd-pad: 12px; --sd-head: 30px; --sd-line: 20px;
-  --sd-nav-w: 250px; --sd-dash: 5 4; --sd-badge-h: 20px; --sd-faint: .55;
+  --sd-nav-w: 250px; --sd-dash: 5 4; --sd-badge-h: 20px;
+  /* Đường nối có bàn giao: khoảng cột tối thiểu, nhãn dài nhất (phần chiều dài đường), độ mờ đuôi, vùng rê, dấu +. */
+  --sd-gap-hand: 128px; --sd-hand-cap: .5; --sd-hand-fade: var(--s4); --sd-hit: 16px; --sd-plus: 16px;
+  --sd-hand-hover: color-mix(in srgb, var(--accent) 12%, var(--surface)); /* nền đặc: nét đường nối không lộ qua nhãn */
   --sa-b: env(safe-area-inset-bottom, 0px);
 
   /* Cỡ điều khiển thật: máy tính dùng cao thường; cảm ứng và điện thoại ≥ --h-touch. */
@@ -938,21 +941,26 @@ span.chip::after { content: none; }
 .sd-node:focus { outline: none; }
 .sd-node:focus-visible .sd-box { stroke: var(--ring); stroke-width: var(--ring-w); stroke-dasharray: none; }
 @media (hover: hover) { .sd-node[data-stage]:hover .sd-box { stroke: var(--ink-2); } }
-/* Bàn giao trên đường nối: nhãn viên thuốc (đã ghi) hay dấu + (trống, hiện khi rê chuột; cảm ứng: luôn hiện mờ). */
+/* Bàn giao trên đường nối (`.sd-wire`: vùng rê rộng, nét, nhãn trên cùng). Nhãn viên thuốc nền đặc che nét; chữ dài mờ ở đuôi
+   (mask trong design.js). Đường trống: dấu + chỉ hiện khi rê đường; cảm ứng không có (trang Handoffs của hộp thay). */
+.sd-hit { fill: none; stroke: transparent; stroke-width: var(--sd-hit); pointer-events: stroke; cursor: pointer; }
+.sd-wire .sd-edge { transition: stroke var(--dur) var(--ease); }
+.sd-arrow.is-on { stroke: var(--accent); }
 .sd-hand { cursor: pointer; }
-.sd-hand-box { fill: var(--surface); stroke: var(--accent); stroke-width: var(--mark-w); }
+.sd-hand-box { fill: var(--surface); stroke: var(--accent); stroke-width: var(--mark-w); transition: fill var(--dur) var(--ease); }
 .sd-hand-txt { font: 600 var(--fs-xs)/1 var(--sans); fill: var(--green); }
-.sd-hand-plus { fill: none; stroke: var(--green); stroke-width: var(--mark-w); stroke-linecap: round; }
 .sd-hand:focus { outline: none; }
 .sd-hand:focus-visible .sd-hand-box { stroke: var(--ring); stroke-width: var(--ring-w); }
+.sd-wire:has(.sd-hand:focus-visible) .sd-edge { stroke: var(--accent); marker-end: url(#sd-arrow-on); }
 .sd-hand.is-empty { opacity: 0; transition: opacity var(--dur) var(--ease); }
-.sd-hand.is-empty .sd-hand-box { stroke: var(--accent-line); }
+.sd-hand.is-empty .sd-hand-box { fill: var(--accent); stroke: var(--surface); stroke-width: var(--mark-w); }
+.sd-hand-plus { fill: none; stroke: var(--on-accent); stroke-width: var(--mark-w); stroke-linecap: round; }
 @media (hover: hover) {
-  .sd-fig:hover .sd-hand.is-empty { opacity: var(--sd-faint); }
-  .sd-hand.is-empty:hover { opacity: 1; }
-  .sd-hand:hover .sd-hand-box { fill: var(--accent-soft); }
+  .sd-wire:hover .sd-edge { stroke: var(--accent); marker-end: url(#sd-arrow-on); }
+  .sd-wire:hover .sd-hand.is-empty { opacity: 1; }
+  .sd-hand:not(.is-empty):hover .sd-hand-box { fill: var(--sd-hand-hover); }
 }
-@media (hover: none) { .sd-hand.is-empty { opacity: var(--sd-faint); } }
+@media (hover: none) { .sd-hand.is-empty { display: none; } }
 .sd-legend { display: flex; flex-wrap: wrap; gap: var(--s1) var(--s4); list-style: none; font: 500 var(--fs-xs)/var(--lh-tight) var(--mono); color: var(--ink-3); }
 .sd-legend li { display: inline-flex; align-items: center; gap: var(--s2); }
 .sd-legend li::before { content: ''; width: var(--s3); height: var(--s3); border-radius: var(--r-xs); background: var(--ink-4); }
