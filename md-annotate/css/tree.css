@@ -140,6 +140,14 @@ html.ma-tree-on body > .ma-tree {
 /* Nền thẻ đậm hơn: % review dùng --ink-2 để giữ ≥ 4,5:1 ở theme tối. */
 .ma-trow[aria-selected="true"] .ma-trow__ic, .ma-trow[aria-selected="true"] .ma-trow__rv { color: var(--ink-2); }
 .ma-trow[aria-selected="true"] .ma-trow__c { background: var(--surface); }
+/* Chọn nhiều (MDAN-091): hàng trong nhóm cùng thẻ với file đang mở, tên không đậm; đang có nhóm thì file đang mở ngoài nhóm
+   chỉ còn tên đậm (rê vẫn tô). */
+.ma-trow.is-picked { color: var(--ink); --row-solid: color-mix(in srgb, var(--accent) var(--open-a), var(--surface)); }
+.ma-trow.is-picked::before { background: color-mix(in srgb, var(--accent) var(--open-a), transparent); }
+.ma-trow.is-picked .ma-trow__ic, .ma-trow.is-picked .ma-trow__rv { color: var(--ink-2); }
+.ma-trow.is-picked .ma-trow__c { background: var(--surface); }
+.ma-tree__list.is-picking .ma-trow[aria-selected="true"]:not(.is-picked, :hover) { --row-solid: var(--surface); }
+.ma-tree__list.is-picking .ma-trow[aria-selected="true"]:not(.is-picked, :hover)::before { background: none; }
 .ma-trow.is-drop::before { background: var(--accent-soft); box-shadow: inset 0 0 0 1px var(--edge-on); }
 .ma-trow.is-dragging { opacity: .5; }
 .ma-trow__chev, .ma-trow__ic { flex: none; height: var(--ic-w); display: grid; place-items: center; color: var(--ink-3); }

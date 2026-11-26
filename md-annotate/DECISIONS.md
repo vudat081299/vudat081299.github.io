@@ -60,6 +60,7 @@
 - MDAN-088 · Gợi ý nhận xét riêng cho từng phiên · `md-annotate/js/core/hints.js`, `md-annotate/js/core/session.js`, `md-annotate/js/ui/hints.js`
 - MDAN-089 · File không phải markdown: hai tab Edit / Source · thay cho MDAN-074 · `md-annotate/index.html`, `md-annotate/js/ui/views.js`
 - MDAN-090 · Cây file: Enter đổi tên, Space mở · `md-annotate/js/ui/tree.js`, `md-annotate/data/shortcuts.json`
+- MDAN-091 · Cây file: chọn nhiều bằng ⌘ / Ctrl + bấm · `md-annotate/js/ui/tree.js`, `md-annotate/css/tree.css`, `md-annotate/js/core/tree.js`, `md-annotate/js/core/session.js`, `md-annotate/js/ui/files.js`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Source tô màu cú pháp markdown kiểu VS Code
@@ -500,3 +501,12 @@ Chế độ đã chọn cho markdown (Preview, Split) vẫn được nhớ qua E
 
 Enter trên một hàng của cây (file hay folder) mở ô đổi tên, như F2 và bấm đúp, như Finder; Enter trong ô thì lưu. Space
 mở file, hay mở / gập folder; bấm chuột như cũ.
+
+## MDAN-091 · Cây file: chọn nhiều bằng ⌘ / Ctrl + bấm
+26/11/2026 · `md-annotate/js/ui/tree.js`, `md-annotate/css/tree.css`, `md-annotate/js/core/tree.js`, `md-annotate/js/core/session.js`, `md-annotate/js/ui/files.js`
+
+⌘ + bấm ở Mac, Ctrl + bấm ở máy khác thêm hay bỏ một file / folder khỏi nhóm chọn, không mở file, không gập folder; lần
+đầu thì file đang mở vào nhóm cùng hàng ấy. Hàng trong nhóm có thẻ như file đang mở; file đang mở ngoài nhóm thì không.
+Delete, kéo thả, menu ⋯ (Move to…, Delete) trên một hàng trong nhóm làm cho cả nhóm, một toast, một Undo trả lại cả
+nhóm; folder và file trong nó cùng được chọn thì chỉ tính folder. Một mục trong nhóm không chuyển được (trùng tên) thì
+không chuyển gì. Bấm thường hay Esc bỏ nhóm. Màn cảm ứng không có.

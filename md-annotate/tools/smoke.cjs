@@ -2420,7 +2420,7 @@ const cornerClash = (page) => page.evaluate(() => {
         toggle(i) { log.push(['toggle', i]); const k = model.collapsed.indexOf(i); if (k < 0) model.collapsed.push(i); else model.collapsed.splice(k, 1); render(); },
         newFile(p) { log.push(['newFile', p]); }, newDir(p) { log.push(['newDir', p]); },
         rename(i, name) { log.push(['rename', i, name]); if (!name || /[/\\]/.test(name)) return 'Names cannot contain / or \\'; by(i).name = name; render(); return ''; },
-        move(i, p) { log.push(['move', i, p]); by(i).parent = p; render(); return ''; },
+        move(i, p) { log.push(['move', i, p]); [].concat(i).forEach((x) => { by(x).parent = p; }); render(); return ''; },
         remove(i) { log.push(['remove', i]); }, importDir(x, p) { log.push(['importDir', p]); }, download(i) { log.push(['download', i]); },
         collapseAll() { log.push(['collapseAll']); model.collapsed = nodes.filter((x) => x.kind === 'dir').map((x) => x.id); render(); }
       };
@@ -2838,6 +2838,49 @@ const cornerClash = (page) => page.evaluate(() => {
     const menuOpen = await tp.isVisible('#tree-menu');
     await tp.keyboard.press('Escape');
     check('cây: Shift+F10 mở menu, Esc đóng và trả focus', menuOpen && !(await tp.isVisible('#tree-menu')) && (await focusName(tp)) === 'older.md');
+
+    /* Chọn nhiều (MDAN-091): Ctrl + bấm (máy không phải Mac) thêm / bỏ hàng, không mở / gập; lần đầu file đang mở vào nhóm.
+       Menu ⋯, Delete, kéo trên hàng trong nhóm làm cho cả nhóm; Esc, bấm thường bỏ nhóm. */
+    const picked = () => tp.evaluate(() => ({ ids: [...document.querySelectorAll('#tree-list .ma-trow.is-picked')].map((l) => l.querySelector('.ma-trow__name').textContent).join('|'),
+      on: document.getElementById('tree-list').classList.contains('is-picking') }));
+    const fillOf = (sel) => tp.$eval(sel, (l) => getComputedStyle(l, '::before').backgroundColor);
+    await tp.click(row('README.md')); await tp.waitForTimeout(80);   // bấm đúp old.md ở trên đã mở old.md
+    const nlog0 = () => tp.evaluate(() => window.__tree.log.length);
+    const n0 = await nlog0();
+    await tp.click(row('old.md'), { modifiers: ['Control'] }); await tp.waitForTimeout(250);
+    let pk = await picked();
+    check('chọn nhiều: Ctrl + bấm thêm hàng và file đang mở vào nhóm, không mở file', pk.on && pk.ids === 'older.md|README.md' && (await nlog0()) === n0, JSON.stringify(pk));
+    await tp.click(row('archive'), { modifiers: ['Control'] });
+    pk = await picked();
+    check('chọn nhiều: Ctrl + bấm folder thêm folder, không gập', pk.ids === 'archive|older.md|README.md' && (await nlog0()) === n0 && (await tp.$eval(row('archive'), (l) => l.getAttribute('aria-expanded'))) === 'true', JSON.stringify(pk));
+    await tp.click(row('archive'), { modifiers: ['Control'] }); await tp.click(row('README.md'), { modifiers: ['Control'] }); await tp.mouse.move(5, 5); await tp.waitForTimeout(250);
+    pk = await picked();
+    const fills = [await fillOf(row('old.md')), await fillOf(row('README.md'))];
+    check('chọn nhiều: Ctrl + bấm lần nữa bỏ hàng; hàng trong nhóm có thẻ, file đang mở ngoài nhóm không', pk.ids === 'older.md' && pk.on && !/, 0\)$|transparent/.test(fills[0]) && /, 0\)$|transparent/.test(fills[1]), JSON.stringify([pk, fills]));
+    await tp.click(row('README.md'), { modifiers: ['Control'] });
+    await tp.hover(row('old.md')); await tp.click(row('old.md') + ' >> .ma-trow__more'); await tp.waitForTimeout(80);
+    const pm = await mi();
+    check('chọn nhiều: ⋯ trên hàng trong nhóm: Move 2 items to…, Delete 2 items', pm.join('|') === 'Move 2 items to…|Delete 2 items', pm.join('|'));
+    await tp.click('#tree-menu >> text=Move 2 items to…'); await tp.waitForTimeout(50);
+    const pm2 = await mi();
+    await tp.click('#tree-menu >> text=level-1'); await tp.waitForTimeout(80);
+    const pmv = await tl();
+    check('chọn nhiều: Move to… chuyển cả nhóm (theo thứ tự hàng), nhóm bỏ sau đó', pm2.join('|').startsWith('Back|Top level|archive|level-1') && pmv[0] === 'move' && JSON.stringify(pmv[1]) === JSON.stringify([ids['old.md'], ids['README.md']]) && pmv[2] === ids['level-1'] && !(await picked()).on, JSON.stringify([pm2, pmv]));
+    await tp.evaluate((a) => { const m = window.__tree; m.by(a[0]).parent = a[1]; m.by(a[2]).parent = null; m.render(); }, [ids['old.md'], ids.archive, ids['README.md']]); await tp.waitForTimeout(80);
+    await tp.click(row('old.md'), { modifiers: ['Control'] }); await tp.keyboard.press('Delete');
+    const pdel = await tl();
+    check('chọn nhiều: Delete xoá cả nhóm một lần', pdel[0] === 'remove' && Array.isArray(pdel[1]) && pdel[1].length === 2 && pdel[1].includes(ids['old.md']) && pdel[1].includes(ids['README.md']) && !(await picked()).on, JSON.stringify(pdel));
+    await tp.click(row('old.md'), { modifiers: ['Control'] }); await tp.keyboard.press('Escape');
+    check('chọn nhiều: Esc bỏ nhóm', !(await picked()).on);
+    await tp.click(row('old.md'), { modifiers: ['Control'] }); await tp.click(row('archive')); await tp.waitForTimeout(80);
+    check('chọn nhiều: bấm thường bỏ nhóm và làm như thường (gập folder)', !(await picked()).on && (await tl())[0] === 'toggle');
+    await tp.click(row('archive')); await tp.waitForTimeout(80);
+    await tp.click(row('old.md'), { modifiers: ['Control'] });
+    await tp.dragAndDrop(row('old.md'), row('level-1')); await tp.waitForTimeout(80);
+    const pdr = await tl();
+    check('chọn nhiều: kéo hàng trong nhóm chuyển cả nhóm', pdr[0] === 'move' && Array.isArray(pdr[1]) && pdr[1].length === 2 && pdr[2] === ids['level-1'], JSON.stringify(pdr));
+    await tp.evaluate((a) => { const m = window.__tree; m.by(a[0]).parent = a[1]; m.by(a[2]).parent = null; m.render(); }, [ids['old.md'], ids.archive, ids['README.md']]); await tp.waitForTimeout(80);
+    await tp.click(row('README.md')); await tp.waitForTimeout(80);
 
     // Collapse all, rồi kéo thả bằng chuột (mọi hàng trong khung, không cuộn): lên folder → move; lên hậu duệ → không gọi.
     await tp.click('#tree-more'); await tp.click('#tree-collapse');

@@ -18,7 +18,7 @@
      removeNodes, renameIn, renameIndex, renameSession, reveal, sessionTitle, textTitle, toggleDir, touchSession, treeFiles,
      uid, UNTITLED, zipOf.
    Dùng: core/tree.js, core/text.js, core/file-type.js, core/zip.js, core/hints.js. */
-import { addNode, afterRemove, byId, filesInOrder, firstFile, fromPaths, kids, moveNode, nameError, pathOf, removeNode, renameNode,
+import { addNode, afterRemove, byId, filesInOrder, firstFile, fromPaths, kids, moveMany, nameError, pathOf, removeNode, renameNode,
   subtree, uniqueName, visibleRows } from './tree.js';
 import { slug } from './text.js';
 import { fileType } from './file-type.js';
@@ -342,11 +342,13 @@ export function renameIn(s, id, name) {
   if (docs[id] && !docs[id].real) { docs = Object.assign({}, docs); docs[id] = Object.assign({}, docs[id], { real: true }); }
   return { s: withTree(s, r.nodes, docs), error: '' };
 }
-/* Chuyển nút vào folder parentId (null = gốc). Trả { s, error, undo } (undo: cho applyUndo; null khi không chuyển). */
-export function moveIn(s, id, parentId) {
-  var r = moveNode(s.nodes, id, parentId);
-  if (r.error || r.nodes === s.nodes) return { s: s, error: r.error, undo: null };
-  return { s: withTree(s, r.nodes), error: '', undo: { kind: 'move', id: id, parent: dirOf(s, id) } };
+/* Chuyển các nút ids (một id hay mảng; core moveMany) vào folder parentId (null = gốc). Trả { s, error, moved: id[], undo }
+   (undo: cho applyUndo; null khi không chuyển gì). */
+export function moveIn(s, ids, parentId) {
+  var r = moveMany(s.nodes, ids, parentId);
+  if (r.error || !r.moved.length) return { s: s, error: r.error, moved: [], undo: null };
+  var items = r.moved.map(function (id) { return { id: id, parent: dirOf(s, id) }; });
+  return { s: withTree(s, r.nodes), error: '', moved: r.moved, undo: { kind: 'move', items: items } };
 }
 /* Mở file id: mọi folder chứa nó được mở ra (bỏ khỏi collapsed). id không phải file thì trả phiên đầu vào. */
 export function openFile(s, id) {
@@ -370,7 +372,7 @@ export function collapseAll(s) {
   return withTree(s, s.nodes, s.docs, { collapsed: s.nodes.filter(function (n) { return n.kind === 'dir'; }).map(function (n) { return n.id; }) });
 }
 /* Undo của xoá / chuyển (MDAN-028) trên phiên HIỆN TẠI cur: chỉ trả lại đúng mục ấy, mọi việc làm sau (file mới, tên
-   mới, chữ) giữ nguyên. u là undo của removeNodes / moveIn. Trả { s, id: nút được trả lại ('' khi không làm gì) }.
+   mới, chữ) giữ nguyên. u là undo của removeNodes / moveIn (chuyển nhiều nút: trả lại từng nút). Trả { s, id: nút được trả lại ('' khi không làm gì) }.
    Xoá: chèn lại các nút đã xoá cùng doc của chúng; folder cha không còn thì về gốc; tên trùng anh em thì đổi (uniqueName);
    folder gập như trước; file mở bị xoá thì mở lại nó; file untitled.md mà lần xoá thêm vào (xoá hết file) còn trống thì bỏ.
    Chuyển: nút về folder cũ (không còn, hay giờ là hậu duệ của nó, thì gốc); tên trùng thì đổi. Nút không còn thì thôi.
@@ -379,14 +381,20 @@ export function applyUndo(cur, u) {
   if (!u) return { s: cur, id: '' };
   var has = function (nodes, id) { return nodes.some(function (n) { return n.id === id; }); };
   if (u.kind === 'move') {
-    if (!has(cur.nodes, u.id)) return { s: cur, id: '' };
-    var p = u.parent != null && cur.nodes.some(function (n) { return n.id === u.parent && n.kind === 'dir'; }) &&
-      subtree(cur.nodes, u.id).indexOf(u.parent) < 0 ? u.parent : null;
-    if (dirOf(cur, u.id) === p) return { s: reveal(cur, u.id), id: u.id };
-    var me = byId(cur.nodes, u.id);
-    var nm = uniqueName(cur.nodes.filter(function (n) { return n.id !== u.id; }), p, me.name);
-    var mv = cur.nodes.map(function (n) { return n.id === u.id ? { id: n.id, parent: p, kind: n.kind, name: nm } : n; });
-    return { s: reveal(withTree(cur, mv), u.id), id: u.id };
+    var o = cur, first = '';
+    u.items.forEach(function (it) {
+      if (!has(o.nodes, it.id)) return;
+      var p = it.parent != null && o.nodes.some(function (n) { return n.id === it.parent && n.kind === 'dir'; }) &&
+        subtree(o.nodes, it.id).indexOf(it.parent) < 0 ? it.parent : null;
+      if (dirOf(o, it.id) !== p) {
+        var me = byId(o.nodes, it.id);
+        var nm = uniqueName(o.nodes.filter(function (n) { return n.id !== it.id; }), p, me.name);
+        o = withTree(o, o.nodes.map(function (n) { return n.id === it.id ? { id: n.id, parent: p, kind: n.kind, name: nm } : n; }));
+      }
+      o = reveal(o, it.id);
+      if (!first) first = it.id;
+    });
+    return first ? { s: o, id: first } : { s: cur, id: '' };
   }
   var nodes = cur.nodes.slice(), docs = Object.assign({}, cur.docs), top = '';
   var drop = u.added && cur.docs[u.added] && !cur.docs[u.added].real && !cur.docs[u.added].text.trim() && !cur.docs[u.added].comments.length;

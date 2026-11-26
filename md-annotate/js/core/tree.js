@@ -6,8 +6,8 @@
    Tên: không rỗng, không dấu cách ở đầu / cuối, không chứa / hay \, không phải . / .., tối đa 255 ký tự, không trùng anh em
    (không phân biệt hoa thường, NFC).
    Nút có cha mất hay vòng cha – con không tới được từ gốc: các hàm duyệt bỏ qua, không treo (session.js sửa lúc đọc).
-   Xuất: addNode, afterRemove, byId, canMove, filesInOrder, firstFile, fromPaths, kids, MAX_NAME, moveNode, moveTargets, nameError,
-     nameKey, pathOf, removeNode, renameNode, subtree, uniqueName, visibleRows.
+   Xuất: addNode, afterRemove, byId, canMove, filesInOrder, firstFile, fromPaths, kids, MAX_NAME, moveMany, moveNode, moveTargets,
+     nameError, nameKey, pathOf, removeNode, renameNode, subtree, topIds, uniqueName, visibleRows.
    Dùng: không module nào. */
 
 export var MAX_NAME = 255;
@@ -143,18 +143,48 @@ export function moveNode(nodes, id, parentId) {
   if (nameError(nodes, p, n.name, id)) return { nodes: nodes, error: 'A file or folder named "' + n.name + '" already exists in that folder.' };
   return { nodes: nodes.map(function (x) { return x.id === id ? { id: x.id, parent: p, kind: x.kind, name: x.name } : x; }), error: '' };
 }
-/* Chuyển id vào to (null = gốc) được không: nút có, to khác folder đang chứa nó, moveNode không lỗi (vòng, trùng tên).
-   Cùng luật cho chỗ thả khi kéo và danh sách Move to…. */
-export function canMove(nodes, id, to) {
-  var n = byId(nodes, id), p = to == null ? null : to;
-  return !!n && parentOf(n) !== p && !moveNode(nodes, id, p).error;
+/* Bỏ id không có, id trùng, và id nằm trong một folder cũng có trong ids (chuyển / xoá folder đã mang nó theo). Giữ thứ tự. */
+export function topIds(nodes, ids) {
+  var set = new Set(ids), seen = new Set();
+  return ids.filter(function (id) {
+    var n = byId(nodes, id);
+    if (!n || seen.has(id)) return false;
+    seen.add(id);
+    for (var up = n.parent, guard = 0; up != null && guard < nodes.length; guard++) {
+      if (set.has(up)) return false;
+      var p = byId(nodes, up); up = p ? p.parent : null;
+    }
+    return true;
+  });
 }
-/* Chỗ chuyển id tới, cho menu Move to…: gốc rồi mọi folder theo thứ tự hiển thị trừ chính nó và hậu duệ.
-   [{ id: null | dirId, name, depth (gốc 0), ok: canMove }]. */
-export function moveTargets(nodes, id) {
-  var skip = new Set(subtree(nodes, id)), out = [{ id: null, name: '', depth: 0, ok: canMove(nodes, id, null) }];
+/* Chuyển các nút ids (một id hay mảng; topIds) vào parentId; nút đã ở đó thì để yên. Một nút lỗi (vòng, trùng tên, kể cả
+   trùng nhau) thì không chuyển gì. Trả { nodes, error, moved: id[] đã chuyển }. */
+export function moveMany(nodes, ids, parentId) {
+  var p = parentId == null ? null : parentId, out = nodes, moved = [];
+  var top = topIds(nodes, [].concat(ids));
+  for (var i = 0; i < top.length; i++) {
+    if (parentOf(byId(out, top[i])) === p) continue;
+    var r = moveNode(out, top[i], p);
+    if (r.error) return { nodes: nodes, error: r.error, moved: [] };
+    out = r.nodes; moved.push(top[i]);
+  }
+  return { nodes: out, error: '', moved: moved };
+}
+/* Chuyển ids (một id hay mảng) vào to (null = gốc) được không: có ít nhất một nút đổi chỗ, moveMany không lỗi (vòng, trùng
+   tên). Cùng luật cho chỗ thả khi kéo và danh sách Move to…. */
+export function canMove(nodes, ids, to) {
+  var r = moveMany(nodes, ids, to);
+  return !r.error && r.moved.length > 0;
+}
+/* Chỗ chuyển ids (một id hay mảng) tới, cho menu Move to…: gốc rồi mọi folder theo thứ tự hiển thị trừ các nút ấy và hậu
+   duệ. [{ id: null | dirId, name, depth (gốc 0), ok: canMove }]. */
+export function moveTargets(nodes, ids) {
+  ids = [].concat(ids);
+  var skip = new Set();
+  ids.forEach(function (id) { subtree(nodes, id).forEach(function (x) { skip.add(x); }); });
+  var out = [{ id: null, name: '', depth: 0, ok: canMove(nodes, ids, null) }];
   walk(nodes, function (n) { return skip.has(n.id); }, function (n, depth) {
-    if (n.kind === 'dir' && !skip.has(n.id)) out.push({ id: n.id, name: n.name, depth: depth + 1, ok: canMove(nodes, id, n.id) });
+    if (n.kind === 'dir' && !skip.has(n.id)) out.push({ id: n.id, name: n.name, depth: depth + 1, ok: canMove(nodes, ids, n.id) });
   });
   return out;
 }

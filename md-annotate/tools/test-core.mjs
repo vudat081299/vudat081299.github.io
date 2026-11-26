@@ -1019,7 +1019,7 @@ check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi
     let s = S.addPaths(S.createSession('', {}), null, [{ path: 'a/f.md', text: 'F' }, { path: 'b/g.md', text: 'G' }]).s;
     const a = byName(s, 'a').id, b = byName(s, 'b').id, f = byName(s, 'f.md').id;
     const mv = S.moveIn(s, f, b);
-    check('moveIn: undo ghi folder cũ; chuyển về chỗ cũ thì không có undo', mv.undo.kind === 'move' && mv.undo.parent === a && S.moveIn(s, f, a).undo === null);
+    check('moveIn: undo ghi folder cũ; chuyển về chỗ cũ thì không có undo', mv.undo.kind === 'move' && mv.undo.items.length === 1 && mv.undo.items[0].parent === a && S.moveIn(s, f, a).undo === null);
     let cur = S.renameIn(mv.s, byName(mv.s, 'g.md').id, 'g2.md').s;
     let u = S.applyUndo(cur, mv.undo).s;
     check('applyUndo (chuyển): về folder cũ, đổi tên làm sau giữ', eq(paths(u), ['a/f.md', 'b/g2.md', 'untitled.md']), JSON.stringify(paths(u)));
@@ -1027,6 +1027,20 @@ check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi
     check('applyUndo (chuyển): trùng tên ở folder cũ thì f-2.md', eq(paths(S.applyUndo(cur, mv.undo).s), ['a/f-2.md', 'a/f.md', 'b/g.md', 'untitled.md']));
     cur = S.removeNodes(mv.s, [a]).s;
     check('applyUndo (chuyển): folder cũ mất thì về gốc; nút mất thì không làm gì', eq(paths(S.applyUndo(cur, mv.undo).s), ['b/g.md', 'f.md', 'untitled.md']) && S.applyUndo(S.removeNodes(mv.s, [f]).s, mv.undo).id === '');
+  }
+  // Chuyển nhiều nút: con của folder cũng chọn đi theo folder; nút đã ở đích để yên; một nút lỗi thì không chuyển gì; Undo trả từng nút.
+  {
+    let s = S.addPaths(S.createSession('', {}), null, [{ path: 'a/f.md', text: 'F' }, { path: 'a/k/x.md', text: 'X' }, { path: 'b/g.md', text: 'G' }, { path: 'c/f.md', text: 'F2' }, { path: 'h.md', text: 'H' }]).s;
+    const id = (n) => byName(s, n).id, a = id('a'), b = id('b'), k = id('k'), h = id('h.md'), g = id('g.md');
+    check('topIds: bỏ con của folder cũng chọn, id lạ, id trùng', eq(T.topIds(s.nodes, [k, a, 'zz', h, h]), [a, h]));
+    const mv = S.moveIn(s, [h, k, g], b);
+    check('moveIn nhiều nút: nút đã ở đích để yên, undo chỉ ghi nút đã chuyển', !mv.error && eq(mv.moved, [h, k]) && eq(paths(mv.s), ['a/f.md', 'b/k/x.md', 'b/g.md', 'b/h.md', 'c/f.md', 'untitled.md']) && mv.undo.items.length === 2, JSON.stringify(paths(mv.s)));
+    const back = S.applyUndo(mv.s, mv.undo);
+    check('applyUndo (chuyển nhiều): mọi nút về chỗ cũ', eq(paths(back.s), paths(s)) && back.id === h, JSON.stringify(paths(back.s)));
+    const two = S.moveIn(s, [s.nodes.find((n) => n.name === 'f.md' && n.parent === a).id, s.nodes.find((n) => n.name === 'f.md' && n.parent === byName(s, 'c').id).id], null);
+    check('moveIn nhiều nút: hai f.md cùng lên gốc thì lỗi, phiên giữ nguyên', /already exists/.test(two.error) && two.s === s && two.undo === null);
+    check('canMove nhiều nút: vào một trong các nút hay hậu duệ thì không', !T.canMove(s.nodes, [h, a], k) && T.canMove(s.nodes, [h, k], b) && !T.canMove(s.nodes, [g], b));
+    check('moveTargets nhiều nút: bỏ mọi nút chọn và hậu duệ', eq(T.moveTargets(s.nodes, [a, b]).map((x) => x.name), ['', 'c']));
   }
   // Phiên cũ: path không tách được thành tên file — nhãn y hệt bản một văn bản (so với chuỗi của bản cũ).
   {

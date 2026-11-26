@@ -11,7 +11,7 @@
    Dùng: core/session.js, core/tree.js, core/text.js, ui/dom.js, ui/state.js, ui/prompt.js, ui/views.js, ui/tree.js, ui/tree-find.js. */
 import { addDir, addFile, applyUndo, collapseAll, dirOf, docOf, downloadOf, importPaths, moveIn, openFile, openFromDisk,
   removeNodes, renameIn, sessionTitle, toggleDir, UNTITLED, zipOf } from '../core/session.js';
-import { byId } from '../core/tree.js';
+import { byId, topIds } from '../core/tree.js';
 import { hasNul, importCheck, isTextFile, normNewlines, plural, skipEntry } from '../core/text.js';
 import { saveFile, toast } from './dom.js';
 import { canLeave, loadSession, openFileId, putSession, S, saveClosed, saveNow, scheduleSave, sessionFor } from './state.js';
@@ -97,18 +97,23 @@ var ACTIONS = {
     setTree(r.s);
     return '';
   },
-  move: function (id, parentId) {
-    var r = moveIn(S, id, parentId), n = nodeOf(id);
+  move: function (ids, parentId) {
+    ids = [].concat(ids);
+    var r = moveIn(S, ids, parentId);
     if (r.error) return r.error;
     if (!r.undo) return '';
-    setTree(r.s, 'Moved ' + n.name + ' to ' + (parentId == null ? 'the top level' : nodeOf(parentId).name) + '.', { undo: r.undo });
+    var what = r.moved.length === 1 ? nodeOf(r.moved[0]).name : plural(r.moved.length, 'item');
+    setTree(r.s, 'Moved ' + what + ' to ' + (parentId == null ? 'the top level' : nodeOf(parentId).name) + '.', { undo: r.undo });
     return '';
   },
-  remove: function (id) {
-    var n = nodeOf(id);
-    if (!n) return;
-    var r = removeNodes(S, [id]), files = r.removed.filter(function (x) { return nodeOf(x).kind === 'file'; }).length;
-    setTree(r.s, n.kind === 'dir' ? 'Deleted folder ' + n.name + ' (' + fileWord(files) + ').' : 'Deleted ' + n.name + '.', { undo: r.undo });
+  remove: function (ids) {
+    ids = [].concat(ids).filter(function (id) { return !!nodeOf(id); });
+    if (!ids.length) return;
+    var top = topIds(S.nodes, ids), n = nodeOf(top[0]);
+    var r = removeNodes(S, top), files = r.removed.filter(function (x) { return nodeOf(x).kind === 'file'; }).length;
+    var msg = top.length > 1 ? 'Deleted ' + plural(top.length, 'item') + ' (' + fileWord(files) + ').'
+      : n.kind === 'dir' ? 'Deleted folder ' + n.name + ' (' + fileWord(files) + ').' : 'Deleted ' + n.name + '.';
+    setTree(r.s, msg, { undo: r.undo });
   },
   importDir: function (list, parentId) { clearFind(); importItems(list, parentId); },
   download: download,
