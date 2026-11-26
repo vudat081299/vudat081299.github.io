@@ -1511,6 +1511,55 @@ const check = (name, ok, detail = '') => {
     await lc.close();
   }
 
+  /* ── Nền chung của ô song song: hàng cuộn ngang cắt cả chiều dọc, nên nền (tràn ra quanh thẻ) phải nằm trọn trong vùng
+   * cắt của hàng — trên, dưới, trái khi là cột đầu, phải khi là cột cuối — lúc chưa cuộn và lúc cuộn tới cuối; thẻ vẫn
+   * thẳng cột với hàng không có ô song song (đầu hàng, cuối hàng), trang không cuộn ngang. ── */
+  const pS = (id, x = {}) => ({ id, title: id.toUpperCase(), status: 'todo', ...x });
+  const parSeed = { version: 2, lastId: 'wq', workspaces: [{ id: 'wq', name: 'Song song', steps: [
+    { id: 'tq1', title: 'Ô song song ở đầu và cuối', subs: [pS('q1'), pS('q2', { par: true }), pS('q3', { outs: [{ id: 'oq', name: 'bang.csv' }] }),
+      pS('q4', { ins: ['oq'] }), pS('q5'), pS('q6'), pS('q7'), pS('q8', { par: true })] },
+    { id: 'tq2', title: 'Không song song', subs: ['r1', 'r2', 'r3', 'r4', 'r5', 'r6', 'r7'].map((id) => pS(id)) },
+    { id: 'tq3', title: 'Ô song song ở giữa', subs: [pS('u1'), pS('u2'), pS('u3', { par: true })] }], log: [] }] };
+  for (const [w, hgt] of [[1280, 1200], [390, 1400]]) {
+    const qc = await browser.newContext({ viewport: { width: w, height: hgt }, hasTouch: w < 500, isMobile: w < 500 });
+    await qc.addInitScript((d) => { if (!localStorage.getItem('stepPlanner.v2')) localStorage.setItem('stepPlanner.v2', d); }, JSON.stringify(parSeed));
+    const qp = await qc.newPage();
+    qp.on('pageerror', (e) => errors.push(String(e)));
+    await qp.goto(BASE);
+    await qp.waitForSelector('#app:not([hidden]) .card[data-sub]');
+    for (const dens of ['thường', 'Gọn']) {
+      if (dens === 'Gọn') await qp.click('#compact-btn');
+      for (const pos of ['chưa cuộn', 'cuộn tới cuối']) {
+        const q = await qp.evaluate((end) => {
+          document.querySelectorAll('.cards-scroll').forEach((sc) => { sc.scrollLeft = end ? sc.scrollWidth : 0; });
+          const out = [];
+          for (const sl of document.querySelectorAll('.cards > .slot.par')) {
+            const sc = sl.closest('.cards-scroll'), r = sc.getBoundingClientRect(), s = sl.getBoundingClientRect();
+            const l = r.left + sc.clientLeft, t = r.top + sc.clientTop, rr = l + sc.clientWidth, b = t + sc.clientHeight;
+            if (s.right <= l || s.left >= rr) continue; // ô đã cuộn khuất
+            const slots = [...sl.parentElement.querySelectorAll(':scope > .slot')];
+            const e = { top: s.top - t, bottom: b - s.bottom };
+            if (slots[0] === sl && sc.scrollLeft < 1) e.left = s.left - l;
+            if (slots.at(-1) === sl && sc.scrollLeft + sc.clientWidth >= sc.scrollWidth - 1) e.right = rr - s.right;
+            out.push(`${sl.querySelector('.card').dataset.sub}:${Object.entries(e).map(([k, v]) => k + '=' + v.toFixed(1)).join(',')}`);
+          }
+          const R = (id) => document.querySelector(`.card[data-sub="${id}"]`).getBoundingClientRect();
+          const T = (id) => document.querySelector(`.step[data-step="${id}"]`).getBoundingClientRect().top;
+          const align = end ? [R('q8').right, R('r7').right] : [R('q1').left, R('r1').left];
+          return { out, inside: out.every((x) => x.split(':')[1].split(',').every((kv) => +kv.split('=')[1] >= -0.5)),
+            edge: out.some((x) => end ? /^q7:.*right=/.test(x) : /^q1:.*left=/.test(x)),
+            align: align.map((v) => +v.toFixed(1)), top: [R('q1').top - T('tq1'), R('r1').top - T('tq2')].map((v) => +v.toFixed(1)),
+            gap: !!document.querySelector('.step[data-step="tq1"] .hand-gap'),
+            over: document.documentElement.scrollWidth - document.documentElement.clientWidth };
+        }, pos !== 'chưa cuộn');
+        check(`${w}px, ${dens}, ${pos}: nền ô song song không bị hàng cuộn cắt mép; thẻ thẳng cột với hàng không song song`,
+          q.inside && q.edge && Math.abs(q.align[0] - q.align[1]) < 0.5 && Math.abs(q.top[0] - q.top[1]) < 0.5 && q.gap && q.over <= 0,
+          JSON.stringify(q));
+      }
+    }
+    await qc.close();
+  }
+
   /* ── Hàng đầu thẻ chật (số, "Tiếp theo", nhãn kẹp, chip dài): không chữ nào bị bẻ dòng, không tràn thẻ ── */
   const crowd = { version: 2, lastId: 'wc', workspaces: [{ id: 'wc', name: 'Chật', steps: [{ id: 'tc', title: 'B', subs: [
     { id: 'sc1', title: 'Một', status: 'doing', docs: [{ id: 'dc1', kind: 'link', title: 'L', url: 'https://a.example' }] },
