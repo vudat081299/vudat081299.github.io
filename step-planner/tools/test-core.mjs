@@ -860,6 +860,8 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   check('kế hoạch: lần đầu thêm mỗi khâu một việc có dấu sd; so lại là same', build.subs.length === 2 && build.subs.every((x) => /^stage:[a-z-]+@/.test(x.sd))
     && planDiff(cat, pw).every((x) => x.kind === 'same'));
   check('kế hoạch: sd đi qua JSON', eq(parseImport(toJSON(pw)).workspaces[0].steps[1].subs.map((x) => x.sd), build.subs.map((x) => x.sd)));
+  check('kế hoạch: sd không phải chuỗi (mảng, đối tượng có toString) bị bỏ', ['sd' in normSub({ sd: 'stage:raw@abc' }), 'sd' in normSub({ sd: ['stage:raw@abc'] }),
+    'sd' in normSub({ sd: { toString: () => 'kept' } }), 'sd' in normSub({ sd: 'kept' })].join() === 'true,false,false,true');
   const procSub = build.subs.find((x) => x.title.startsWith('Processing'));
   setStatus(procSub, 'done');
   procSub.notes += '\nghi chú của tôi';

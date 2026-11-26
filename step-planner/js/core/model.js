@@ -143,7 +143,7 @@ export function normSub(o) {
     par: x.par === true,
     redo: x.redo === true,
     ...handOf(x),
-    ...(SD_OK.test(x.sd) ? { sd: x.sd } : {}),
+    ...(typeof x.sd === 'string' && SD_OK.test(x.sd) ? { sd: x.sd } : {}), // test() ép mảng ['stage:a@b'] thành chuỗi: kiểm kiểu trước
   };
 }
 /** outs, ins của một bước / bước con. @param {any} x */
