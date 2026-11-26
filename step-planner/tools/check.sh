@@ -4,8 +4,9 @@
 set -u
 cd "$(git rev-parse --show-toplevel)"
 python3 step-planner/tools/lint.py || exit 1
+# js/ là ES module: `node --check file.js` bỏ qua lỗi cú pháp của file module, nên đọc qua stdin với --input-type=module.
 for f in step-planner/js/*.js; do
-  node --check "$f" || { echo "step-planner: lỗi cú pháp $f"; exit 1; }
+  node --input-type=module --check < "$f" || { echo "step-planner: lỗi cú pháp $f"; exit 1; }
 done
 out=$(node step-planner/tools/test-core.mjs) || { printf '%s\n' "$out" | grep -v '^  ok'; exit 1; }
 printf '%s\n' "$out" | tail -1

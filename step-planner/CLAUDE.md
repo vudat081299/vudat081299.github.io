@@ -193,6 +193,6 @@ Nhập file cũ và Markdown viết tay (dễ dãi):
 ## Cổng: `sh step-planner/tools/check.sh`
 
 - `tools/lint.py`: khuôn mẫu, danh mục System design, mẫu đồ án khớp nguồn và neo, không `innerHTML`, mã màu chỉ trong khối token.
-- `node --check` cho `js/*.js`; `tools/test-core.mjs`: logic thuần của `core.js`, `md.js`, `design-core.js`; danh sách ở chính file.
+- `node --input-type=module --check` cho `js/*.js` (đọc qua stdin: `node --check file.js` bỏ sót lỗi của module); `tools/test-core.mjs`: logic thuần của `core.js`, `md.js`, `design-core.js`; danh sách ở chính file.
 - `tools/smoke.cjs` (cổng tự dựng máy chủ tạm; thiếu playwright thì bỏ qua, CI chạy ở job smoke): bấm thật các hành vi trên,
   hai tab, 390px, bộ nhớ bị chặn / hỏng / khoá cũ, lỗi console; số mẫu đọc từ `templates.json`. Chạy tay: `node <file> <url>`.
