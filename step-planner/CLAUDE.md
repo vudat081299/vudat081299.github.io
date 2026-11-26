@@ -151,11 +151,14 @@
   đánh dấu Not needed; độ phủ của `lint.py` bỏ qua câu trả lời ấy. Câu chưa trả lời: khâu vẫn hiện.
 - Công cụ nên tránh khi làm một mình vẫn có trong danh mục nếu người học hay gặp: `avoid` nói vì sao và chọn gì thay, có luật báo,
   không đứng đầu `suggest` của lối nào.
-- "Apply path" (`applyPath`): chỉ khâu chưa quyết; `skip` → Not needed; `need` có gợi ý → phương án đầu; `maybe` để trống.
+- "Apply path" (`applyPath`): chỉ khâu chưa quyết; `skip` → Not needed; `need` có gợi ý → phương án hợp đầu tiên làm ít luật báo
+  nhất; `maybe` để trống. Không tự gây luật báo (trừ `caveat`): bỏ khâu mà làm luật báo thì để khâu ấy trống. `test-core` dò lưới hồ sơ × lối.
 - Luật phối hợp (`warnings`): báo khi mọi `if` khớp và mọi khâu trong `unless` đã quyết mà không khớp; khâu chưa quyết thì chưa báo.
   Khoá điều kiện: id khâu (phương án, `skip`, `own`), câu hồ sơ hay `path`. Phương án không được có id `skip`, `own`.
+  `caveat: true`: luật chỉ nhắc cách dùng, phương án vẫn đúng (host miễn phí ngủ, đĩa không bền, file DuckDB sau API).
 - Kiến trúc (`architectures`): nhóm → kiến trúc (khi dùng, khi tránh, luồng, công cụ theo khâu, nguồn). Không lưu lựa chọn;
   `archAdvice` lấy luật đầu tiên khớp của nhóm (khoá điều kiện như `checks`), `""` = nhóm không cần. Lối là kiến trúc của nhóm app (`path`).
+  Kiến trúc được gợi ý phải có ở mỗi khâu một công cụ không làm luật báo với hồ sơ ấy (`test-core`); hồ sơ nói ngược khâu đã quyết thì luật hồ sơ đứng trước.
 - Bàn giao (`edges`): đường nối hai khâu liền nhau của luồng, cả hai đã quyết (`flowEdges`). Hợp đồng giữ cả khi đường nối không còn.
 - Sơ đồ: đường nối nét liền khi cả hai khâu đã quyết (`bothDecided`, cùng luật với `flowEdges`), còn lại nét đứt.
 - "Add tasks to plan" / "Update plan": luôn xem trước New / Changed / No longer in the design, chọn từng mục và bước nhận

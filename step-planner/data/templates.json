@@ -338,7 +338,7 @@
             {
               "title": "Xác định yêu cầu độ trễ: batch hay real-time (Latency Requirements)",
               "doneWhen": "Mỗi kết quả (phân khúc, điểm dự đoán, dashboard) có độ mới cần (ngày, giờ, phút, giây), ai cần và vì sao; chỉ kết quả cần mới hơn chu kỳ batch mới đi đường streaming.",
-              "notes": "Phân khúc khách cho chiến dịch email: tính lại mỗi ngày là đủ. Gợi ý khi khách còn trong phiên: cần trong vài giây, phải xử lý dòng.\nStreaming tốn công vận hành hơn batch nhiều (chạy liên tục, giữ state, dữ liệu tới trễ). Đừng chọn chỉ vì nghe hiện đại.\nSpark Structured Streaming mặc định chạy micro-batch: độ trễ đầu-cuối thấp tới khoảng 100 ms, exactly-once. Continuous processing xuống khoảng 1 ms nhưng chỉ at-least-once: https://spark.apache.org/docs/latest/streaming/index.html",
+              "notes": "Phân khúc khách cho chiến dịch email: tính lại mỗi ngày là đủ. Gợi ý khi khách còn trong phiên: cần trong vài giây, phải xử lý dòng.\nStreaming tốn công vận hành hơn batch nhiều (chạy liên tục, giữ state, dữ liệu tới trễ). Đừng chọn chỉ vì nghe hiện đại.\nSpark Structured Streaming mặc định chạy micro-batch: độ trễ từ đầu tới cuối thấp tới khoảng 100 ms, exactly-once: https://spark.apache.org/docs/latest/streaming/index.html\nReal-time Mode (từ Spark 4.1) xuống cỡ vài mili giây, vẫn exactly-once, nhưng mới hỗ trợ một phần phép tính. Continuous Processing (khoảng 1 ms, at-least-once, không có phép có trạng thái) là chế độ cũ, tài liệu khuyên dùng Real-time Mode thay: https://spark.apache.org/docs/latest/streaming/real-time-mode.html",
               "outs": [
                 {
                   "key": "latency-reqs",
@@ -395,7 +395,7 @@
             {
               "title": "Chọn định dạng lưu trữ và cách phân vùng (Storage Format, Partitioning; Delta Lake)",
               "doneWhen": "Đã chọn nơi lưu (HDFS hay object storage), định dạng (Parquet hay Delta), cột phân vùng, đường dẫn ba vùng bronze / silver / gold; mỗi lựa chọn có lý do.",
-              "notes": "Parquet lưu theo cột: truy vấn chỉ đọc cột cần. Bài giảng, định dạng tệp: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b3-3-fig-rowcol\nDelta Lake thêm trên Parquet: giao dịch ACID, chặn ghi sai schema (schema enforcement), time travel để đọc lại phiên bản cũ và tái lập thí nghiệm: https://docs.delta.io/latest/index.html\nCột phân vùng thường là ngày. Đừng phân vùng theo cột nhiều giá trị (user_id); chỉ phân vùng khi mỗi phân vùng có ít nhất khoảng 1 GB (Delta Lake, Best practices): https://docs.delta.io/latest/best-practices.html\nNhiều tệp nhỏ làm đọc chậm; trên HDFS mỗi tệp còn chiếm RAM của NameNode. Streaming ghi mỗi micro-batch thành tệp mới: lên lịch gộp tệp (compaction).",
+              "notes": "Parquet lưu theo cột: truy vấn chỉ đọc cột cần. Bài giảng, định dạng tệp: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b3-3-fig-rowcol\nDelta Lake thêm trên Parquet: giao dịch ACID, chặn ghi sai schema (schema enforcement), time travel để đọc lại phiên bản cũ và tái lập thí nghiệm (có thời hạn, xem thẻ Bảo đảm tái lập): https://docs.delta.io/latest/index.html\nCột phân vùng thường là ngày. Đừng phân vùng theo cột nhiều giá trị (user_id); chỉ phân vùng khi mỗi phân vùng có ít nhất khoảng 1 GB (Delta Lake, Best practices): https://docs.delta.io/latest/best-practices.html\nNhiều tệp nhỏ làm đọc chậm; trên HDFS mỗi tệp còn chiếm RAM của NameNode. Streaming ghi mỗi micro-batch thành tệp mới: lên lịch gộp tệp (compaction).",
               "outs": [
                 {
                   "key": "storage-layout",
@@ -411,7 +411,7 @@
             {
               "title": "Tạo Kafka topic cho luồng sự kiện",
               "doneWhen": "Topic có tên, key, số partition, thời gian giữ (retention), mức xác nhận của producer; gửi thử được, đọc lại đúng thứ tự trong từng partition.",
-              "notes": "Sự kiện cùng key vào cùng partition, và người đọc một partition luôn thấy đúng thứ tự đã ghi: https://kafka.apache.org/intro\nKey là user_id hay session_id để sự kiện của một khách giữ thứ tự. Một key quá đông (bot) dồn vào một partition: lệch tải.\nThêm partition về sau làm key cũ có thể sang partition khác: chọn đủ từ đầu.\nKafka không xoá sự kiện khi đã đọc mà theo thời gian giữ của topic. Đặt retention đủ dài để job hỏng còn kịp đọc lại.\nacks=all: chờ mọi bản sao trong ISR nhận rồi mới xác nhận, bền nhất. Bài giảng, producer: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b5-prod",
+              "notes": "Sự kiện cùng key vào cùng partition, và người đọc một partition luôn thấy đúng thứ tự đã ghi: https://kafka.apache.org/intro\nKey là user_id hay session_id để sự kiện của một khách giữ thứ tự. Một key quá đông (bot) dồn vào một partition: lệch tải.\nThêm partition về sau làm key cũ có thể sang partition khác: chọn đủ từ đầu.\nKafka không xoá sự kiện khi đã đọc mà xoá khi hết thời gian giữ (retention) của topic. Đặt retention đủ dài để job hỏng còn kịp đọc lại.\nacks=all (mặc định của producer từ Kafka 3.0): chờ mọi bản sao trong ISR nhận rồi mới xác nhận. Chỉ bền thật khi topic có replication factor 3 và min.insync.replicas=2; mặc định min.insync.replicas=1 thì ISR còn một bản vẫn nhận ghi: https://kafka.apache.org/44/configuration/topic-configs/ Bài giảng, producer: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b5-prod",
               "outs": [
                 {
                   "key": "kafka-topic",
@@ -427,7 +427,7 @@
             {
               "title": "Ghi luồng sự kiện vào lớp bronze (Structured Streaming)",
               "doneWhen": "Job readStream đọc topic, ghi vào bronze theo ngày, có checkpointLocation; tắt rồi bật lại không mất, không trùng; dòng sai schema được giữ và đánh dấu.",
-              "notes": "Kafka source của Spark: https://spark.apache.org/docs/latest/streaming/structured-streaming-kafka-integration.html\nGiữ cả value thô, topic, partition, offset, timestamp của Kafka: bronze là bản như nguồn, bước sau sai còn tính lại được.\nNguồn phát lại được, checkpoint, sink idempotent (file sink) cho exactly-once đầu-cuối. Bài giảng Structured Streaming: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b8-ss\nKafka source của Spark không commit offset lên Kafka; offset nằm trong checkpoint. Query mới (checkpoint mới) mới đọc theo startingOffsets.\nJob chậm hơn retention thì offset cần đọc bị Kafka xoá: mất dữ liệu. failOnDataLoss (mặc định true) làm query dừng thay vì lặng lẽ bỏ qua.",
+              "notes": "Kafka source của Spark: https://spark.apache.org/docs/latest/streaming/structured-streaming-kafka-integration.html\nGiữ cả value thô, topic, partition, offset, timestamp của Kafka: bronze là bản như nguồn, bước sau sai còn tính lại được.\nNguồn phát lại được, checkpoint, sink idempotent (file sink) cho exactly-once từ đầu tới cuối. Bài giảng Structured Streaming: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b8-ss\nKafka source của Spark không commit offset lên Kafka; offset nằm trong checkpoint. Query mới (checkpoint mới) mới đọc theo startingOffsets.\nJob tụt lại lâu hơn thời gian giữ (retention) thì offset cần đọc bị Kafka xoá: mất dữ liệu. failOnDataLoss (mặc định true) làm query dừng thay vì lặng lẽ bỏ qua.",
               "outs": [
                 {
                   "key": "bronze-events",
@@ -445,7 +445,7 @@
             {
               "title": "Nạp bù dữ liệu lịch sử vào bronze (Backfill)",
               "doneWhen": "Log lịch sử (trước khi có Kafka) nạp vào bronze bằng job batch, cùng schema, cùng phân vùng; số sự kiện mỗi ngày khớp nguồn; chạy lại một ngày không sinh trùng.",
-              "notes": "Mô hình cần lịch sử dài hơn những gì Kafka còn giữ.\nJob batch ghi đè đúng phân vùng ngày của nó, nên chạy lại an toàn.\nGhi rõ ngày nối giữa dữ liệu nạp bù và dữ liệu từ Kafka: chỗ nối hay trùng hoặc hở.",
+              "notes": "Mô hình cần lịch sử dài hơn những gì Kafka còn giữ.\nJob batch chỉ ghi đè phân vùng ngày của nó, nên chạy lại an toàn. Cẩn thận: mode(\"overwrite\") với spark.sql.sources.partitionOverwriteMode mặc định (static) xoá mọi phân vùng của bảng rồi mới ghi. Parquet: đặt partitionOverwriteMode=dynamic; Delta: dùng replaceWhere theo ngày: https://docs.delta.io/latest/delta-batch.html\nGhi rõ ngày nối giữa dữ liệu nạp bù và dữ liệu từ Kafka: chỗ nối hay trùng hoặc hở.",
               "ins": [
                 "event-schema",
                 "storage-layout"
@@ -462,7 +462,7 @@
             {
               "title": "Mô tả dữ liệu: khối lượng, số file, phân vùng (Describe Data)",
               "doneWhen": "Theo từng ngày: số sự kiện, dung lượng, số tệp và cỡ tệp; số partition khi Spark đọc; khoảng ngày có dữ liệu.",
-              "notes": "df.rdd.getNumPartitions(): số partition khi đọc. Spark UI, tab Stages: byte đọc, shuffle read / write của từng stage: https://spark.apache.org/docs/latest/web-ui.html\nNgày hụt hay vọt thường là job nạp hỏng, không phải hành vi khách.",
+              "notes": "df.rdd.getNumPartitions(): số partition khi đọc. Spark UI, tab Stages: byte đọc, shuffle read / write của từng stage: https://spark.apache.org/docs/latest/web-ui.html\nDatabricks Free Edition chạy serverless: không có Spark UI (chỉ có query profile), không có RDD API nên df.rdd lỗi, không tự đặt số executor. Các số đo ở đây và ở pha Đánh giá chạy trên Spark local: https://docs.databricks.com/aws/en/compute/serverless/limitations\nNgày hụt hay vọt thường là job nạp hỏng, không phải hành vi khách.",
               "ins": [
                 "bronze-events"
               ]
@@ -511,7 +511,7 @@
             {
               "title": "Kiểm tra chất lượng dữ liệu (Verify Data Quality)",
               "doneWhen": "Báo cáo chất lượng: sự kiện trùng (theo event_id), sự kiện tới trễ (event_time so với giờ nạp), giờ máy khách sai, user_id trống, bot; mỗi vấn đề có hướng xử lý.",
-              "notes": "Producer gửi lại, job đọc lại: một sự kiện có thể tới hơn một lần (at-least-once). Đếm trùng theo event_id. Bài giảng, ngữ nghĩa giao nhận: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b5-sem\nĐộ trễ của sự kiện quyết định watermark của job streaming ở pha Triển khai: ghi phân phối độ trễ (ví dụ phân vị 99).",
+              "notes": "Một sự kiện có thể tới hơn một lần (at-least-once): ứng dụng gửi lại sau lỗi hay timeout, consumer đọc lại sau khi khởi động lại. Producer Kafka bản mới bật idempotence mặc định, nên lần tự thử lại của producer không sinh bản trùng. Đếm trùng theo event_id. Bài giảng, ngữ nghĩa giao nhận: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b5-sem\nĐộ trễ của sự kiện quyết định watermark của job streaming ở pha Triển khai: ghi phân phối độ trễ (ví dụ phân vị 99).",
               "outs": [
                 {
                   "key": "quality-report",
@@ -544,7 +544,7 @@
             {
               "title": "Làm sạch dữ liệu: bronze sang silver (Clean Data)",
               "doneWhen": "Silver: khử trùng theo event_id, kiểu và múi giờ chuẩn (UTC), dòng hỏng tách ra bảng riêng; số dòng trước và sau mỗi luật đã ghi.",
-              "notes": "Ở đây chỉ làm sạch không học từ dữ liệu (khử trùng, ép kiểu, đổi múi giờ): làm như nhau trên mọi tập. Điền thiếu, cắt ngoại lai theo ngưỡng học từ dữ liệu: để vào Pipeline, fit trên train.\ndropDuplicates([\"event_id\"]) gây shuffle theo event_id trên cả bảng. Biết trùng chỉ xảy ra gần nhau thì khử trong từng khoảng ngày.\nKhông cache bảng Delta: mất data skipping, và bản cache có thể cũ khi bảng được ghi qua đường khác (Delta Lake, Best practices).",
+              "notes": "Ở đây chỉ làm sạch không học từ dữ liệu (khử trùng, ép kiểu, đổi múi giờ): làm như nhau trên mọi tập. Điền thiếu, cắt ngoại lai theo ngưỡng học từ dữ liệu: để vào Pipeline, fit trên train.\ndropDuplicates([\"event_id\"]) gây shuffle theo event_id trên cả bảng. Biết trùng chỉ xảy ra gần nhau thì khử trong từng khoảng ngày.\nĐừng cache() DataFrame đọc thẳng từ bảng Delta rồi lọc tiếp: mất data skipping, và bản cache có thể cũ khi bảng được ghi qua đường khác (Delta Lake, Best practices). Bảng trung gian đã lọc, dùng lại nhiều lần trong cùng một job thì cache() được, như thẻ Tạo dữ liệu mới.",
               "outs": [
                 {
                   "key": "silver-events",
@@ -561,7 +561,7 @@
             {
               "title": "Ghép dữ liệu: phiên và join (Integrate Data)",
               "doneWhen": "Bảng phiên (một dòng mỗi phiên) và sự kiện đã nối danh mục sản phẩm; số dòng trước và sau mỗi join đã đối chiếu; biết join nào broadcast, join nào shuffle.",
-              "notes": "Bảng nhỏ (danh mục sản phẩm) nối bằng broadcast join: gửi bảng nhỏ tới mọi máy, bảng lớn khỏi shuffle. Spark tự broadcast bảng dưới spark.sql.autoBroadcastJoinThreshold (mặc định 10 MB).\nChia phiên bằng Window partitionBy(user_id).orderBy(event_time): khoảng nghỉ quá một ngưỡng (ghi vào kế hoạch) thì mở phiên mới. Đừng gom sự kiện về driver.\nGộp theo thời gian chỉ dùng sự kiện trước mốc dự đoán.",
+              "notes": "Bảng nhỏ (danh mục sản phẩm) nối bằng broadcast join: gửi bảng nhỏ tới mọi máy, bảng lớn khỏi shuffle. Spark tự broadcast bảng dưới spark.sql.autoBroadcastJoinThreshold (mặc định 10 MB).\nNguồn đã có session_id thì gộp theo session_id. Phải tự chia phiên thì Window partitionBy(id thiết bị hay cookie ẩn danh).orderBy(event_time): khoảng nghỉ quá một ngưỡng (ghi vào kế hoạch) thì mở phiên mới. Đừng partitionBy(user_id): user_id trống của khách chưa đăng nhập dồn thành một nhóm rất lớn. Đừng gom sự kiện về driver.\nGộp theo thời gian chỉ dùng sự kiện trước mốc dự đoán.",
               "outs": [
                 {
                   "key": "sessions",
@@ -670,7 +670,7 @@
             {
               "title": "Bảo đảm tái lập (Assure Reproducibility; theo CRISP-ML(Q))",
               "doneWhen": "Mỗi lần chạy nối được với phiên bản bảng đặc trưng, commit code, seed, phiên bản Spark và thư viện, cấu hình cụm; chạy lại ra cùng số.",
-              "notes": "Delta time travel đọc lại đúng phiên bản bảng đã dùng để train: https://docs.delta.io/latest/index.html\nSeed cho sample, randomSplit và thuật toán có ngẫu nhiên. Ghi cấu hình cụm (số executor, bộ nhớ) cùng run."
+              "notes": "Delta time travel đọc lại phiên bản bảng đã dùng để train: ghi số phiên bản cùng run. Mặc định chỉ đọc lại được khoảng 30 ngày, và VACUUM xoá file bảng đã bỏ quá 7 ngày. Cần tái lập lâu hơn thì tăng delta.logRetentionDuration và delta.deletedFileRetentionDuration, hoặc ghi bảng train ra một bảng riêng: https://docs.delta.io/latest/delta-batch.html\nSeed cho sample, randomSplit và thuật toán có ngẫu nhiên. Ghi cấu hình cụm (số executor, bộ nhớ) cùng run."
             }
           ]
         },
@@ -738,7 +738,7 @@
           "title": "Triển khai (Deployment)",
           "goal": "Đưa kết quả tới người dùng theo kiến trúc Lambda, và giữ nó đúng, đủ mới theo thời gian.",
           "doneWhen": "Batch layer chạy theo lịch, speed layer chạy liên tục (nếu cần), truy vấn trả kết quả gộp; dashboard có người dùng; giám sát drift, độ trễ, độ mới có ngưỡng báo.",
-          "notes": "Khác dự án thường: triển khai là một hệ chạy liên tục, không chỉ một file mô hình.\nKiến trúc Lambda (Marz và Warren, Big Data, Manning, 2015): batch layer tính lại view từ master dataset bất biến; speed layer xử lý dòng cho phần batch chưa tính; serving layer phục vụ batch view; truy vấn gộp batch view và real-time view. Bài giảng: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b9\nKiến trúc Kappa (Kreps, 2014): chỉ một đường streaming; đổi code thì chạy job thứ hai đọc lại từ đầu log Kafka đã giữ, bắt kịp rồi mới đổi bảng đọc. Hợp khi Kafka giữ đủ lịch sử cần tính lại và không muốn giữ hai bộ code: https://www.oreilly.com/radar/questioning-the-lambda-architecture/\nLàm một mình: batch layer và dashboard là đủ. Skip speed layer khi ở pha Hiểu bài toán kinh doanh không có kết quả nào cần mới hơn chu kỳ batch.",
+          "notes": "Khác dự án thường: triển khai là một hệ chạy liên tục, không chỉ một file mô hình.\nKiến trúc Lambda (Marz và Warren, Big Data, Manning, 2015): batch layer tính lại view từ master dataset bất biến; speed layer xử lý dòng cho phần batch chưa tính; serving layer phục vụ batch view; truy vấn gộp batch view và real-time view. Bài giảng: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b9\nKiến trúc Kappa (Kreps, 2014): chỉ một đường streaming; đổi code thì chạy job thứ hai đọc lại từ đầu log Kafka đã giữ, bắt kịp rồi mới đổi bảng đọc. Hợp khi Kafka giữ đủ lịch sử cần tính lại và không muốn giữ hai bộ code: https://www.oreilly.com/radar/questioning-the-lambda-architecture/\nMẫu theo Lambda vì môn học dạy Lambda. Dự án một người thường chỉ cần batch (batch layer và dashboard), hay Kappa khi có kết quả cần mới tới từng giây; System design cũng gợi ý như vậy. Chọn một kiến trúc, ghi lý do vào nhật ký quyết định. Skip speed layer khi ở pha Hiểu bài toán kinh doanh không có kết quả nào cần mới hơn chu kỳ batch.",
           "subs": [
             {
               "title": "Lập kế hoạch triển khai: chấm điểm theo lô hay theo luồng (Plan Deployment)",
@@ -752,7 +752,7 @@
             {
               "title": "Lớp batch (Batch Layer): tính lại view và điểm theo lô",
               "doneWhen": "Job theo lịch đọc bronze (master dataset), dựng lại silver, gold, chấm điểm mọi khách, ghi batch view kèm mốc dữ liệu; chạy lại cùng ngày ra cùng kết quả.",
-              "notes": "Master dataset chỉ ghi thêm. Code sai thì sửa code rồi tính lại, lỗi trong view tự hết.\nGhi đè đúng phân vùng ngày của lần chạy, không ghi thêm, để chạy lại không sinh trùng.\nPhân khúc: gán cụm mỗi lần batch; huấn luyện lại KMeans theo lịch riêng, thưa hơn.",
+              "notes": "Master dataset chỉ ghi thêm. Code sai thì sửa code rồi tính lại, lỗi trong view tự hết.\nGhi đè đúng phân vùng ngày của lần chạy, không ghi thêm, để chạy lại không sinh trùng: partitionOverwriteMode=dynamic hay replaceWhere của Delta, như thẻ Nạp bù dữ liệu lịch sử.\nPhân khúc: gán cụm mỗi lần batch; huấn luyện lại KMeans theo lịch riêng, thưa hơn.",
               "outs": [
                 {
                   "key": "batch-view",
@@ -769,7 +769,7 @@
             {
               "title": "Lớp tốc độ (Speed Layer): Structured Streaming",
               "doneWhen": "Job streaming đọc Kafka, tính đặc trưng từ sự kiện sau mốc batch cuối, chấm điểm, ghi real-time view; có watermark và checkpoint; tắt bật lại không mất, không trùng.",
-              "notes": "withWatermark(cột event time, ngưỡng): sự kiện trễ quá ngưỡng bị bỏ, state cũ được dọn. Ngưỡng lấy từ phân phối độ trễ ở thẻ Kiểm tra chất lượng dữ liệu. Bài giảng watermark: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b8-ss\nChấm điểm trong foreachBatch: mỗi micro-batch là một DataFrame thường, gọi model.transform() như batch. foreachBatch mặc định chỉ at-least-once; dùng batchId để khử trùng khi ghi: https://spark.apache.org/docs/latest/streaming/apis-on-dataframes-and-datasets.html\nReal-time view chỉ phủ từ mốc batch cuối tới nay; batch mới xong thì phần cũ được thay.",
+              "notes": "withWatermark(cột event time, ngưỡng) chỉ có tác dụng với phép có trạng thái (gộp theo cửa sổ, khử trùng, join luồng): sự kiện trễ trong ngưỡng chắc chắn được tính; trễ hơn ngưỡng thì có thể bị bỏ, không chắc; state cũ hơn ngưỡng được dọn. Ngưỡng lấy từ phân phối độ trễ ở thẻ Kiểm tra chất lượng dữ liệu. Bài giảng watermark: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b8-ss\nChấm điểm trong foreachBatch: mỗi micro-batch là một DataFrame thường, gọi model.transform() như batch. foreachBatch mặc định chỉ at-least-once; dùng batchId để khử trùng khi ghi: https://spark.apache.org/docs/latest/streaming/apis-on-dataframes-and-datasets.html\nReal-time view chỉ phủ từ mốc batch cuối tới nay; batch mới xong thì phần cũ được thay.",
               "outs": [
                 {
                   "key": "realtime-view",
@@ -787,7 +787,7 @@
             {
               "title": "Lớp phục vụ (Serving Layer) và dashboard",
               "doneWhen": "Truy vấn trả kết quả gộp batch view và real-time view; dashboard đọc qua đó; số trên dashboard khớp một truy vấn tay.",
-              "notes": "Tra theo user_id (app, gửi ưu đãi): kho NoSQL đọc ngẫu nhiên nhanh như Cassandra. Bài giảng NoSQL: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b4-1\nDashboard, truy vấn phân tích trên bảng gold: SQL engine đọc thẳng lake như Presto / Trino. Bài giảng Presto: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b4-6\nCassandra chọn mức nhất quán theo từng thao tác (consistency level, theo kiểu R + W > N của Dynamo): đọc chỉ chắc thấy bản vừa ghi khi tập node đọc giao tập node ghi. Bài giảng quorum: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b4-3-quorum\nBài giảng CAP: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b4-2",
+              "notes": "Tra theo user_id (app, gửi ưu đãi): kho NoSQL đọc ngẫu nhiên nhanh, ví dụ Cassandra. Bài giảng NoSQL: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b4-1\nDashboard, truy vấn phân tích trên bảng gold: engine SQL đọc thẳng dữ liệu trong lake, ví dụ Presto / Trino. Bài giảng Presto: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b4-6\nCassandra chọn mức nhất quán theo từng thao tác (consistency level, theo kiểu R + W > N của Dynamo): đọc chỉ chắc thấy bản vừa ghi khi tập node đọc giao tập node ghi. Bài giảng quorum: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b4-3-quorum\nBài giảng CAP: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b4-2",
               "outs": [
                 {
                   "key": "dashboard",

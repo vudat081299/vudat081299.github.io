@@ -419,7 +419,7 @@
     {
       "id": "size",
       "label": "How much data?",
-      "help": "Ước lượng cỡ dữ liệu thô. pandas cần RAM gấp vài lần cỡ file, nên “vừa bộ nhớ” nghĩa là file nhỏ hơn nhiều so với RAM máy.",
+      "help": "Ước lượng cỡ phần dữ liệu thật sự dùng (các cột, khoảng thời gian cần), không phải tổng log thô. pandas cần RAM gấp vài lần cỡ file, nên “vừa bộ nhớ” nghĩa là file nhỏ hơn nhiều so với RAM máy.",
       "choices": [
         {
           "id": "small",
@@ -1488,6 +1488,7 @@
             }
           ],
           "setup": [
+            "# PySpark cần Java 17 trở lên (JAVA_HOME) và Python 3.11 trở lên",
             "pip install pyspark"
           ],
           "task": "Job PySpark đọc dữ liệu thô từ object storage, làm sạch, và ghi Parquet chia partition theo ngày."
@@ -1498,7 +1499,7 @@
           "kind": "Managed Spark notebooks",
           "summary": "Workspace Databricks không mất phí cho người học: notebook, Spark, SQL chạy serverless, có hạn mức. Thay cho Community Edition đã ngừng năm 2025.",
           "pick": "Chọn khi muốn học hay chạy Spark mà không tự dựng cụm, hoặc khi dữ liệu quá lớn cho một máy.",
-          "avoid": "Tránh làm nơi chạy pipeline của sản phẩm: bản Free có hạn mức và chỉ chạy serverless. Dữ liệu vừa một ổ đĩa thì DuckDB / Polars nhanh và đơn giản hơn. Stream trên serverless chỉ chạy từng đợt (trigger availableNow), không chạy liên tục.",
+          "avoid": "Tránh làm nơi chạy pipeline của sản phẩm: bản Free có hạn mức và chỉ chạy serverless. Dữ liệu vừa một ổ đĩa thì DuckDB / Polars nhanh và đơn giản hơn. Stream trên serverless chỉ chạy từng đợt (trigger availableNow), không chạy liên tục. Serverless không có Spark UI, không có RDD API (df.rdd), không tự đặt cấu hình cụm hay số executor, mạng ra ngoài chỉ tới một số domain: đo partition, shuffle, mở rộng theo số executor thì chạy Spark local.",
           "cost": "free",
           "level": 2,
           "fit": {
@@ -1583,7 +1584,7 @@
           "name": "Spark Structured Streaming",
           "kind": "Stream processing engine",
           "summary": "Phần stream của Spark: viết truy vấn DataFrame hay SQL như với batch, Spark chạy dần trên dữ liệu mới tới (mặc định theo từng micro-batch nhỏ). Đọc Kafka hay file mới trong thư mục; có cửa sổ thời gian, watermark cho sự kiện tới trễ, checkpoint để chạy lại không mất dữ liệu.",
-          "pick": "Chọn khi đã dùng PySpark, cần gộp theo cửa sổ thời gian hay join luồng, hoặc muốn cùng một code cho cả batch lẫn stream (kiến trúc Kappa).",
+          "pick": "Chọn khi đã dùng PySpark, cần gộp theo cửa sổ thời gian hay join luồng, hoặc muốn cùng một code DataFrame cho cả job batch lẫn job stream (đỡ viết logic hai lần khi theo Lambda).",
           "avoid": "Tránh khi chỉ cần kết quả theo ngày: một job batch theo lịch đơn giản hơn. Luồng nhỏ, xử lý từng sự kiện độc lập thì một consumer Python ít phần hơn.",
           "cost": "free",
           "level": 3,
@@ -1607,7 +1608,10 @@
             }
           ],
           "setup": [
-            "pip install pyspark"
+            "# PySpark cần Java 17 trở lên (JAVA_HOME) và Python 3.11 trở lên",
+            "pip install pyspark",
+            "# Đọc Kafka cần gói connector; số cuối là phiên bản Spark đang dùng (pyspark.__version__)",
+            "spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.13:4.3.0 job.py"
           ],
           "task": "Truy vấn stream đọc topic Kafka (hay thư mục file mới), ghi kết quả ra Parquet hay Delta với checkpoint; dừng rồi chạy lại thì đọc tiếp đúng chỗ."
         },
@@ -1640,6 +1644,7 @@
             }
           ],
           "setup": [
+            "# PyFlink cần Python 3.9, 3.10, 3.11 hoặc 3.12",
             "python -m pip install apache-flink"
           ],
           "task": "Job Flink đọc topic, gộp theo cửa sổ thời gian và ghi kết quả ra bảng; checkpoint bật, dừng giữa chừng rồi chạy lại không mất trạng thái."
@@ -1775,7 +1780,7 @@
       "title": "Analytical store & query",
       "lane": "data",
       "question": "Dữ liệu sạch được lưu ở đâu để truy vấn, phân tích và phục vụ app?",
-      "guide": "Kho phân tích giữ bảng sạch để notebook, dashboard và mô hình cùng đọc.\nDữ liệu nhỏ: một file Parquet hoặc SQLite, truy vấn chạy ngay trên máy bạn.\nDữ liệu vừa hoặc cần nhiều người truy cập: một server PostgreSQL nhận câu SQL qua mạng.\nDữ liệu lớn: warehouse trên cloud chia câu SQL cho nhiều máy chạy song song và tính phí theo lượng dữ liệu quét.\nDữ liệu cỡ cụm nằm ở kho thô (HDFS, object storage): Hive, Trino chạy SQL thẳng trên các file ấy. Cassandra, HBase là NoSQL phân tán cho đọc ghi theo khoá rất nhanh, không phải kho phân tích.\nApp cần thêm kho phục vụ (cache, tài liệu JSON) thì chọn thêm, cạnh kho phân tích.",
+      "guide": "Kho phân tích giữ bảng sạch để notebook, dashboard và mô hình cùng đọc.\nDữ liệu nhỏ: một file Parquet hoặc SQLite, truy vấn chạy ngay trên máy bạn.\nDữ liệu vừa hoặc cần nhiều người truy cập: một server PostgreSQL nhận câu SQL qua mạng.\nDữ liệu lớn: warehouse trên cloud chia câu SQL cho nhiều máy chạy song song và tính phí theo dữ liệu quét (BigQuery) hay theo thời gian chạy (Snowflake).\nDữ liệu cỡ cụm nằm ở kho thô (HDFS, object storage): Hive, Trino chạy SQL thẳng trên các file ấy. Cassandra, HBase là NoSQL phân tán cho đọc ghi theo khoá rất nhanh, không phải kho phân tích.\nApp cần thêm kho phục vụ (cache, tài liệu JSON) thì chọn thêm, cạnh kho phân tích.",
       "multi": true,
       "skipWhen": "Bỏ qua khi bạn chỉ có một bảng nhỏ và đọc thẳng từ file sạch trong notebook.",
       "task": "Bảng sạch nạp vào kho đã chọn và một truy vấn mẫu trả đúng số dòng.",
@@ -1943,7 +1948,7 @@
           "id": "bigquery",
           "name": "BigQuery",
           "kind": "Serverless cloud warehouse",
-          "summary": "Data warehouse của Google Cloud: bạn gửi câu SQL, Google chia cho nhiều máy chạy và tính phí theo lượng dữ liệu quét. Có sandbox dùng không cần thẻ thanh toán.",
+          "summary": "Data warehouse của Google Cloud: bạn gửi câu SQL, Google chia cho nhiều máy chạy và tính phí theo lượng dữ liệu quét. Có sandbox dùng không cần thẻ thanh toán, nhưng sandbox giới hạn dung lượng lưu trữ trọn đời (xoá dữ liệu không được trả lại) và bảng tự hết hạn sau một số ngày.",
           "pick": "Chọn khi dữ liệu quá lớn cho một máy, hoặc muốn dùng các bộ dữ liệu công khai có sẵn trong BigQuery.",
           "avoid": "Tránh dùng làm database cho app cần trả lời từng yêu cầu nhỏ trong vài mili giây.",
           "cost": "freemium",
@@ -2071,7 +2076,8 @@
           ],
           "setup": [
             "docker pull apache/hive:4.2.1",
-            "docker run -d -p 10000:10000 -p 10002:10002 --env SERVICE_NAME=hiveserver2 --name hive4 apache/hive:4.2.1"
+            "docker run -d -p 10000:10000 -p 10002:10002 --env SERVICE_NAME=hiveserver2 --name hive4 apache/hive:4.2.1",
+            "docker exec -it hive4 beeline -u 'jdbc:hive2://localhost:10000/'"
           ],
           "task": "Bảng ngoài (external table) trỏ vào thư mục Parquet đã có; SELECT COUNT(*) qua beeline trả đúng số dòng, và partition theo ngày hiện trong Metastore."
         },
@@ -2470,7 +2476,7 @@
           "kind": "Managed Spark notebooks",
           "summary": "Notebook Databricks chạy serverless: PySpark, Spark ML (MLlib) và thư viện Python, không phải tự dựng cụm. Bản Free có hạn mức tính toán theo ngày, chỉ chạy serverless, và giới hạn cỡ mô hình Spark ML.",
           "pick": "Chọn khi muốn train MLlib trên dữ liệu lớn mà không có cụm, hoặc dữ liệu đã nằm trong Databricks từ khâu Processing.",
-          "avoid": "Tránh làm nơi train thường xuyên của sản phẩm: vượt hạn mức thì máy tắt tới hết ngày. Dữ liệu vừa RAM thì laptop, Colab hay Kaggle đơn giản hơn.",
+          "avoid": "Tránh làm nơi train thường xuyên của sản phẩm: vượt hạn mức thì máy tắt tới hết ngày. Dữ liệu vừa RAM thì laptop, Colab hay Kaggle đơn giản hơn. Serverless không có Spark UI, không có RDD API (API spark.mllib cũ không chạy), không tự đặt số executor, mạng ra ngoài chỉ tới một số domain (tải dữ liệu, gọi API ngoài có thể bị chặn).",
           "cost": "free",
           "level": 2,
           "fit": {
@@ -2523,6 +2529,7 @@
             }
           ],
           "setup": [
+            "# PySpark cần Java 17 trở lên (JAVA_HOME) và Python 3.11 trở lên",
             "pip install pyspark"
           ],
           "task": "Pipeline pyspark.ml (biến đổi đặc trưng + mô hình) train trên tập train, đánh giá trên tập test bằng Evaluator, và mô hình lưu được bằng save()."
@@ -4605,6 +4612,9 @@
         "fresh": [
           "stream"
         ],
+        "latency": [
+          "online"
+        ],
         "ingest": [
           "notebook-script",
           "cron",
@@ -4614,7 +4624,7 @@
           "airflow"
         ]
       },
-      "msg": "Bạn trả lời dữ liệu tới liên tục, nhưng khâu Ingestion chạy theo lịch hay chạy tay: kết quả chỉ mới tới lần chạy gần nhất. Ổn nếu chừng ấy là đủ; cần thấy sự kiện gần như ngay khi nó xảy ra thì cần một consumer chạy liên tục, như Kafka."
+      "msg": "Dữ liệu tới liên tục và người dùng cần câu trả lời trong khoảng một giây, nhưng khâu Ingestion chạy theo lịch hay chạy tay: kết quả chỉ mới tới lần chạy gần nhất. Cần một consumer chạy liên tục, như Kafka. Người dùng xem theo lịch thì nạp theo lịch là đủ."
     },
     {
       "id": "actions-runner-is-fresh",
@@ -4643,7 +4653,8 @@
           "hf-spaces"
         ]
       },
-      "msg": "Ổ đĩa của host này không giữ dữ liệu ghi lúc chạy: Render Free mất thay đổi khi service khởi động lại, deploy lại hay ngủ; Cloud Run ghi vào bộ nhớ của instance và mất khi instance dừng; đĩa của Space Hugging Face không bền. Chỉ đọc file đóng gói sẵn thì ổn; cần ghi bền thì dùng DB server (PostgreSQL, Supabase, Neon) hoặc object storage."
+      "msg": "Ổ đĩa của host này không giữ dữ liệu ghi lúc chạy: Render Free mất thay đổi khi service khởi động lại, deploy lại hay ngủ; Cloud Run ghi vào bộ nhớ của instance và mất khi instance dừng; đĩa của Space Hugging Face không bền. Chỉ đọc file đóng gói sẵn thì ổn; cần ghi bền thì dùng DB server (PostgreSQL, Supabase, Neon) hoặc object storage.",
+      "caveat": true
     },
     {
       "id": "duckdb-file-many-processes",
@@ -4657,7 +4668,8 @@
           "bentoml"
         ]
       },
-      "msg": "Một file .duckdb chỉ cho một tiến trình mở để đọc và ghi; nhiều tiến trình cùng mở thì phải ở chế độ chỉ đọc (read_only). API chạy nhiều worker hay nhiều instance nên mở file read_only (hoặc chỉ đọc Parquet) và để pipeline ghi bản mới; web cần ghi đồng thời thì dùng PostgreSQL."
+      "msg": "Một file .duckdb chỉ cho một tiến trình mở để đọc và ghi; nhiều tiến trình cùng mở thì phải ở chế độ chỉ đọc (read_only). API chạy nhiều worker hay nhiều instance nên mở file read_only (hoặc chỉ đọc Parquet) và để pipeline ghi bản mới; web cần ghi đồng thời thì dùng PostgreSQL.",
+      "caveat": true
     },
     {
       "id": "sqlite-public-writers",
@@ -4708,7 +4720,12 @@
           "skip"
         ]
       },
-      "msg": "App cho người ngoài dùng mà khâu Monitoring là Not needed: app ngủ, lỗi hay dữ liệu cũ sẽ không ai báo. Tối thiểu có một kiểm tra uptime và đọc log định kỳ."
+      "msg": "App cho người ngoài dùng mà khâu Monitoring là Not needed: app ngủ, lỗi hay dữ liệu cũ sẽ không ai báo. Tối thiểu có một kiểm tra uptime và đọc log định kỳ.",
+      "unless": {
+        "path": [
+          "report"
+        ]
+      }
     },
     {
       "id": "free-host-sleeps",
@@ -4724,7 +4741,8 @@
           "railway"
         ]
       },
-      "msg": "Ở gói miễn phí, app ngủ khi không có truy cập một thời gian (Streamlit Community Cloud, Render Free, Hugging Face Spaces, Railway Free); người mở đầu tiên sau đó phải chờ app khởi động lại, xa với \"trả lời trong khoảng một giây\". Ổn cho demo; cần luôn nhanh thì dùng gói trả phí không ngủ hoặc host khác."
+      "msg": "Ở gói miễn phí, app ngủ khi không có truy cập một thời gian (Streamlit Community Cloud, Render Free, Hugging Face Spaces, Railway Free); người mở đầu tiên sau đó phải chờ app khởi động lại, xa với \"trả lời trong khoảng một giây\". Ổn cho demo; cần luôn nhanh thì dùng gói trả phí không ngủ hoặc host khác.",
+      "caveat": true
     },
     {
       "id": "in-app-model-for-web-client",
@@ -4884,6 +4902,23 @@
         ]
       },
       "msg": "Cassandra, HBase chạy thành cụm nhiều máy luôn bật (HBase phân tán còn cần HDFS và ZooKeeper); host miễn phí không chạy chúng. Ngân sách miễn phí thì chạy một node trên máy bạn (Docker, standalone) để học và demo; app cho người khác dùng mà dữ liệu chưa cỡ cụm thì PostgreSQL miễn phí (Supabase, Neon) là đủ."
+    },
+    {
+      "id": "bigquery-sandbox-for-big-data",
+      "title": "BigQuery sandbox for medium or large data",
+      "if": {
+        "store": [
+          "bigquery"
+        ],
+        "budget": [
+          "free"
+        ],
+        "size": [
+          "medium",
+          "large"
+        ]
+      },
+      "msg": "Ngân sách miễn phí nghĩa là dùng sandbox BigQuery: dung lượng lưu trữ có giới hạn trọn đời, xoá bảng không được trả lại, và bảng tự hết hạn. Dữ liệu cỡ này thường vượt giới hạn ấy. Ước dung lượng sau khi nạp; vượt thì gắn tài khoản thanh toán, hoặc giữ Parquet và truy vấn bằng DuckDB (vừa một máy), Trino hay Spark."
     },
     {
       "id": "cluster-store-on-app-host",
@@ -5165,7 +5200,8 @@
             "process": [
               "pandas",
               "polars",
-              "duckdb"
+              "duckdb",
+              "python-consumer"
             ],
             "store": [
               "parquet-duckdb",
@@ -5234,7 +5270,8 @@
             ],
             "process": [
               "spark",
-              "databricks"
+              "databricks",
+              "spark-streaming"
             ],
             "store": [
               "hive",
@@ -5332,6 +5369,10 @@
             ],
             "latency": [
               "report"
+            ],
+            "budget": [
+              "low",
+              "cloud"
             ]
           },
           "arch": "warehouse",
@@ -5476,14 +5517,14 @@
         {
           "id": "lambda",
           "name": "Lambda architecture",
-          "what": "Hai đường song song trên cùng dữ liệu gốc chỉ ghi thêm: batch layer định kỳ tính lại toàn bộ cho kết quả đúng, speed layer tính phần sự kiện mới cho kết quả ngay; serving layer gộp hai bên khi trả lời. Kết quả của speed layer luôn bị batch layer ghi đè về sau.",
+          "what": "Hai đường song song trên cùng dữ liệu gốc chỉ ghi thêm: batch layer định kỳ tính lại toàn bộ cho kết quả đúng, speed layer tính phần sự kiện batch chưa kịp tính cho kết quả ngay; serving layer lưu và đánh chỉ mục batch view. Truy vấn đọc cả batch view lẫn real-time view rồi gộp. Batch view mới xong thì phần real-time view nó đã phủ bị bỏ.",
           "use": "Cần cả kết quả tức thì lẫn kết quả tính lại chính xác trên toàn bộ lịch sử, và đường batch (Hadoop, Spark) đã có sẵn; môn học yêu cầu.",
           "avoid": "Đồ án một người: phải viết và giữ cùng một logic ở hai hệ khác nhau sao cho ra cùng kết quả, chính điểm đau mà bài phê bình của Kreps nêu. Kappa, hay chỉ batch, thường đủ.",
           "flow": [
             "Append-only raw events",
             "Batch layer (recompute all) + speed layer (recent events)",
-            "Serving layer merges both",
-            "Queries"
+            "Serving layer (batch views) + real-time views",
+            "Queries merge both"
           ],
           "tools": {
             "ingest": [
@@ -5612,6 +5653,39 @@
               "python-consumer",
               "spark-streaming",
               "flink"
+            ],
+            "fresh": [
+              "once",
+              "batch"
+            ],
+            "size": [
+              "large"
+            ]
+          },
+          "arch": "batch-elt",
+          "why": "Dữ liệu lớn tới một lần hay theo ngày: công cụ stream đã chọn không có gì để đón; nạp thô rồi biến đổi theo lô bằng Spark hay SQL (xem Checks)."
+        },
+        {
+          "if": {
+            "process": [
+              "python-consumer",
+              "spark-streaming",
+              "flink"
+            ],
+            "fresh": [
+              "once",
+              "batch"
+            ]
+          },
+          "arch": "batch-etl",
+          "why": "Dữ liệu tới một lần hay theo ngày: công cụ stream đã chọn không có gì để đón; một script theo lịch là đủ (xem Checks)."
+        },
+        {
+          "if": {
+            "process": [
+              "python-consumer",
+              "spark-streaming",
+              "flink"
             ]
           },
           "arch": "streaming",
@@ -5719,7 +5793,8 @@
           ],
           "tools": {
             "serve": [
-              "in-app"
+              "in-app",
+              "llm-api"
             ],
             "app": [
               "streamlit",
@@ -5753,7 +5828,8 @@
           "tools": {
             "serve": [
               "fastapi",
-              "bentoml"
+              "bentoml",
+              "llm-api"
             ],
             "app": [
               "web-app",
@@ -5819,7 +5895,8 @@
           ],
           "tools": {
             "serve": [
-              "serverless"
+              "serverless",
+              "llm-api"
             ],
             "host": [
               "cloud-run",
@@ -6077,21 +6154,21 @@
       "rules": [
         {
           "if": {
-            "serve": [
-              "skip"
-            ]
-          },
-          "arch": "",
-          "why": "Khâu Serving là Not needed: dự án không phục vụ dự đoán."
-        },
-        {
-          "if": {
             "ai": [
               "llm"
             ]
           },
           "arch": "rag",
           "why": "Sản phẩm dùng LLM hay tìm theo nghĩa trên tài liệu."
+        },
+        {
+          "if": {
+            "serve": [
+              "skip"
+            ]
+          },
+          "arch": "",
+          "why": "Khâu Serving là Not needed: dự án không phục vụ dự đoán."
         },
         {
           "if": {
