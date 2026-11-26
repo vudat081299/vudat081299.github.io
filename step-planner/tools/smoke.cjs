@@ -502,7 +502,7 @@ const check = (name, ok, detail = '') => {
   check('Alt + ↑ trên tên bước: đưa bước lên', stepsAfter[0] === stepsBefore[1] && stepsAfter[1] === stepsBefore[0]);
   mk = await marks();
   check('dời bước: hàng vừa dời tô nổi, hàng bị đổi chỗ tô nhẹ, toast "Moved step … to the top"',
-    mk.moved.join() === stepsBefore[1] && mk.swapped.join() === stepsBefore[0] && /^Moved step ".*" to the top$/.test(mk.toast), JSON.stringify(mk));
+    mk.moved.join() === stepsBefore[1] && mk.swapped.join() === stepsBefore[0] && /^Moved step ".*" to the top( · Input on hold: .*)?$/.test(mk.toast), JSON.stringify(mk));
   await page.keyboard.press('Alt+ArrowDown');
   check('Alt + ↓: về chỗ cũ', (await cur(page)).steps.map((s) => s.id).join() === stepsBefore.join());
 
@@ -613,7 +613,7 @@ const check = (name, ok, detail = '') => {
   const mkd = await marks();
   check('kéo thả bước con sang bước khác', (await cur(page)).steps[0].subs.at(-1).id === r2[0], JSON.stringify((await cur(page)).steps.slice(0, 3).map((x) => x.subs.map((y) => y.id.slice(-4) + (y.par ? 'p' : '')))) + ' ' + r2[0].slice(-4));
   check('kéo thả: thẻ vừa thả tô nổi, toast "Moved … to step …, after …"', mkd.moved.join() === r2[0]
-    && /^Moved ".*" to step ".*", after ".*"$/.test(mkd.toast), JSON.stringify(mkd));
+    && /^Moved ".*" to step ".*", after ".*"( · Input on hold: .*)?$/.test(mkd.toast), JSON.stringify(mkd));
   // 8. Bóng ma: lúc kéo đúng một bóng (không "Show more", không data-sub); mọi đường kết thúc (thả rồi chuột đi tiếp ngay,
   // Esc, pointercancel, bảng vẽ lại giữa chừng) để lại không bóng, không ô viền đứt, không thẻ còn transform; kéo liền
   // nhiều lần không dồn bóng. Thả về đúng chỗ cũ nên thứ tự không đổi.

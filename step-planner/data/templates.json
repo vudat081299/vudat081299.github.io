@@ -27,7 +27,15 @@
             {
               "title": "Đánh giá tình hình (Assess Situation)",
               "doneWhen": "Có danh sách nguồn lực (người, dữ liệu, máy, phần mềm); yêu cầu, giả định, ràng buộc; rủi ro và phương án dự phòng; bảng thuật ngữ; chi phí và lợi ích.",
-              "notes": "Kiểm ngay quyền dùng dữ liệu: điều khoản, dữ liệu cá nhân.\nGhi cả giả định không kiểm được bằng dữ liệu: kết luận cuối đứng trên chúng."
+              "notes": "Kiểm ngay quyền dùng dữ liệu: điều khoản, dữ liệu cá nhân.\nGhi cả giả định không kiểm được bằng dữ liệu: kết luận cuối đứng trên chúng.",
+              "outs": [
+                {
+                  "key": "resource-inventory",
+                  "name": "Danh sách nguồn lực và yêu cầu (Inventory of Resources)",
+                  "ref": "references/resource-inventory.md",
+                  "note": "Người, dữ liệu, máy, phần mềm có được; yêu cầu, giả định, ràng buộc; nguồn dữ liệu nào được phép dùng"
+                }
+              ]
             },
             {
               "title": "Xác định mục tiêu khai phá dữ liệu (Determine Data Mining Goals)",
@@ -59,6 +67,9 @@
               "title": "Thu thập dữ liệu ban đầu (Collect Initial Data)",
               "doneWhen": "Báo cáo thu thập: tập dữ liệu nào, để ở đâu, lấy bằng cách nào, gặp vấn đề gì và đã xử lý ra sao.",
               "notes": "Ghi thêm ngày lấy, điều khoản, mã băm (SHA-256) từng file để người khác lấy lại đúng bản.\nKhông sửa tay file gốc; mọi thay đổi đi qua script.",
+              "ins": [
+                "resource-inventory"
+              ],
               "outs": [
                 {
                   "key": "raw-snapshot",
@@ -72,6 +83,9 @@
               "title": "Mô tả dữ liệu (Describe Data)",
               "doneWhen": "Báo cáo mô tả: định dạng, số dòng và số cột mỗi bảng, tên, kiểu, đơn vị từng trường; dữ liệu có đáp ứng yêu cầu không.",
               "notes": "Viết luôn data card: nguồn, ai tạo, để làm gì, giai đoạn, hạn chế (Datasheets for Datasets, Gebru et al.: https://arxiv.org/abs/1803.09010).",
+              "ins": [
+                "resource-inventory"
+              ],
               "outs": [
                 {
                   "key": "data-dictionary",
@@ -89,7 +103,15 @@
             {
               "title": "Kiểm tra chất lượng dữ liệu (Verify Data Quality)",
               "doneWhen": "Báo cáo chất lượng: dữ liệu đủ chưa (phủ hết trường hợp), sai ở đâu và nhiều không, thiếu ở đâu và ghi thế nào; mỗi vấn đề có hướng xử lý.",
-              "notes": "Hướng xử lý cần cả hiểu biết về dữ liệu lẫn về lĩnh vực: hỏi chuyên gia trước khi xoá."
+              "notes": "Hướng xử lý cần cả hiểu biết về dữ liệu lẫn về lĩnh vực: hỏi chuyên gia trước khi xoá.",
+              "outs": [
+                {
+                  "key": "quality-report",
+                  "name": "Báo cáo chất lượng dữ liệu (Data Quality Report)",
+                  "ref": "reports/data-quality.md",
+                  "note": "Mỗi vấn đề: bảng, cột, số dòng bị ảnh hưởng, ví dụ, hướng xử lý; làm sạch phải trả lời từng dòng"
+                }
+              ]
             }
           ]
         },
@@ -102,7 +124,10 @@
             {
               "title": "Chọn dữ liệu (Select Data)",
               "doneWhen": "Danh sách dữ liệu đưa vào và loại ra (cả cột lẫn dòng) kèm lý do.",
-              "notes": "Tiêu chí: liên quan mục tiêu, chất lượng, giới hạn kỹ thuật.\nLoại cột chỉ biết sau sự kiện cần đoán: nguồn rò rỉ hay gặp nhất."
+              "notes": "Tiêu chí: liên quan mục tiêu, chất lượng, giới hạn kỹ thuật.\nLoại cột chỉ biết sau sự kiện cần đoán: nguồn rò rỉ hay gặp nhất.",
+              "ins": [
+                "quality-report"
+              ]
             },
             {
               "title": "Ghép dữ liệu (Integrate Data)",
@@ -143,7 +168,8 @@
               "notes": "Sửa kiểu, đơn vị, lỗi nhập (không học gì từ dữ liệu): làm như nhau trên mọi tập.\nĐiền thiếu, cắt ngoại lai theo ngưỡng học từ dữ liệu: học trên train, áp cho validation và test; dùng cross-validation thì để chúng trong Pipeline để mỗi fold học lại.",
               "ins": [
                 "analysis-table",
-                "split"
+                "split",
+                "quality-report"
               ]
             },
             {
@@ -409,7 +435,7 @@
             {
               "title": "Thiết kế quanh hạn mức của nguồn (Rate Limits, Quotas)",
               "doneWhen": "Bảng hạn mức của từng nguồn (lượt gọi mỗi phút, giờ, ngày; số kết nối; số kênh mỗi kết nối); số lượt cần = số khoá × số lần mỗi giờ, nằm dưới hạn mức và còn khoảng dư; job đếm lượt đã dùng và lùi lại khi bị từ chối.",
-              "notes": "Hạn mức của nguồn quyết định độ mới làm được. Tính trước khi chọn kiến trúc: vượt hạn mức thì giảm tần suất, gom nhiều khoá vào một lượt gọi, hay chỉ lấy realtime cho một tập khoá quan trọng và để batch phủ phần còn lại.\nNguồn đẩy (WebSocket) thường giới hạn số kết nối và số kênh mỗi kết nối: số khoá realtime tối đa = số kết nối × số kênh mỗi kết nối ÷ số kênh mỗi khoá.\nHTTP 429 (Too Many Requests) là trả lời chuẩn khi gọi quá nhiều; Retry-After, nếu có, nói phải chờ bao lâu: https://www.rfc-editor.org/rfc/rfc6585#section-4\nThử lại theo backoff mũ, có jitter và có trần; đừng thử lại ngay trong vòng lặp.\nGhi số lượt đã dùng vào kho trạng thái vận hành, không chỉ trong RAM, để khởi động lại không vượt hạn mức trong ngày.\nCào web: đọc điều khoản và robots.txt trước; giãn cách giữa các trang; HTML đổi thì báo như schema đổi."
+              "notes": "Nguồn của ví dụ clickstream là chính trang web, không có hạn mức; thẻ này cho nguồn ngoài ghép thêm (API, WebSocket). Không có nguồn ngoài thì Skip.\nHạn mức của nguồn quyết định độ mới làm được. Tính trước khi chọn kiến trúc: vượt hạn mức thì giảm tần suất, gom nhiều khoá vào một lượt gọi, hay chỉ lấy realtime cho một tập khoá quan trọng và để batch phủ phần còn lại.\nNguồn đẩy (WebSocket) thường giới hạn số kết nối và số kênh mỗi kết nối: số khoá realtime tối đa = số kết nối × số kênh mỗi kết nối ÷ số kênh mỗi khoá.\nHTTP 429 (Too Many Requests) là trả lời chuẩn khi gọi quá nhiều; Retry-After, nếu có, nói phải chờ bao lâu: https://www.rfc-editor.org/rfc/rfc6585.html#section-4\nThử lại theo backoff mũ, có jitter và có trần; đừng thử lại ngay trong vòng lặp.\nGhi số lượt đã dùng vào kho trạng thái vận hành, không chỉ trong RAM, để khởi động lại không vượt hạn mức trong ngày.\nCào web: đọc điều khoản và robots.txt trước; giãn cách giữa các trang; HTML đổi thì báo như schema đổi."
             },
             {
               "title": "Chọn định dạng lưu trữ và cách phân vùng (Storage Format, Partitioning; Delta Lake)",
@@ -428,7 +454,7 @@
               ]
             },
             {
-              "title": "Tạo Kafka topic cho luồng sự kiện",
+              "title": "Tạo Kafka topic cho luồng sự kiện (Kafka Topic Setup)",
               "doneWhen": "Topic có tên, key, số partition, thời gian giữ (retention), mức xác nhận của producer; gửi thử được, đọc lại đúng thứ tự trong từng partition.",
               "notes": "Sự kiện cùng key vào cùng partition, và người đọc một partition luôn thấy đúng thứ tự đã ghi: https://kafka.apache.org/intro\nKey là user_id hay session_id để sự kiện của một khách giữ thứ tự. Một key quá đông (bot) dồn vào một partition: lệch tải.\nThêm partition về sau làm key cũ có thể sang partition khác: chọn đủ từ đầu.\nKafka không xoá sự kiện khi đã đọc mà xoá khi hết thời gian giữ (retention) của topic. Đặt retention đủ dài để job hỏng còn kịp đọc lại.\nacks=all (mặc định của producer từ Kafka 3.0): chờ mọi bản sao trong ISR nhận rồi mới xác nhận. Chỉ bền thật khi topic có replication factor 3 và min.insync.replicas=2; mặc định min.insync.replicas=1 thì ISR còn một bản vẫn nhận ghi: https://kafka.apache.org/44/configuration/topic-configs/ Bài giảng, producer: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b5-prod",
               "outs": [
@@ -446,12 +472,18 @@
             {
               "title": "Consumer ghi ra kho: nhóm consumer, commit sau khi ghi (Consumer Groups, At-least-once)",
               "doneWhen": "Mỗi nơi đọc topic có group.id riêng; tự commit đã tắt, offset commit sau khi ghi xong; dừng consumer giữa chừng rồi bật lại: không mất sự kiện, ghi lại không sinh dòng trùng.",
-              "notes": "Trong một consumer group, mỗi partition chỉ do một consumer đọc tại một lúc; các group khác nhau đọc cùng topic độc lập, mỗi group giữ offset riêng: https://kafka.apache.org/44/design/design/\nSink vào kho thô, speed layer, sink vào kho tìm kiếm là ba group: một cái chậm hay hỏng không làm cái khác mất dữ liệu. Group có nhiều consumer hơn số partition thì phần dư ngồi không.\nAt-least-once: ghi xong rồi mới lưu offset; chết giữa hai việc thì đọc lại một đoạn. Lưu offset trước rồi mới ghi là at-most-once: chết giữa chừng thì mất. Exactly-once của Kafka (transaction) chỉ phủ khi đích cũng là Kafka.\nenable.auto.commit mặc định true: offset được commit định kỳ ở nền, có thể trước khi ghi xong. Tắt nó, commit tay sau khi ghi: https://kafka.apache.org/44/configuration/consumer-configs/\nĐọc lại sinh bản trùng, nên ghi phải idempotent: upsert theo khoá sự kiện (MongoDB updateOne với upsert: true, khoá có unique index: https://www.mongodb.com/docs/manual/reference/method/db.collection.updateOne/), hay ghi file tạm rồi rename.\nRename trên HDFS là nguyên tử; trên object storage thì không (đổi từng file), nên ở đó dùng table format như Delta, Iceberg: https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-common/filesystem/introduction.html\nKafka source của Spark không làm theo cách này: offset nằm trong checkpoint (thẻ Ghi luồng sự kiện vào lớp bronze)."
+              "notes": "Trong một consumer group, mỗi partition chỉ do một consumer đọc tại một lúc; các group khác nhau đọc cùng topic độc lập, mỗi group giữ offset riêng: https://kafka.apache.org/44/design/design/\nSink vào kho thô (bronze) và speed layer là hai group riêng; thêm nơi đọc nào (vd. đếm sự kiện cho dashboard vận hành) thì thêm group ấy. Một group chậm hay hỏng không làm group khác mất dữ liệu. Group có nhiều consumer hơn số partition thì phần dư ngồi không.\nAt-least-once: ghi xong rồi mới lưu offset; chết giữa hai việc thì đọc lại một đoạn. Lưu offset trước rồi mới ghi là at-most-once: chết giữa chừng thì mất. Exactly-once của Kafka (transaction) chỉ phủ khi đích cũng là Kafka.\nenable.auto.commit mặc định true: offset được commit định kỳ ở nền, có thể trước khi ghi xong. Tắt nó, commit tay sau khi ghi: https://kafka.apache.org/44/configuration/consumer-configs/\nĐọc lại sinh bản trùng, nên ghi phải idempotent: upsert theo khoá sự kiện (MongoDB updateOne với upsert: true, khoá có unique index: https://www.mongodb.com/docs/manual/reference/method/db.collection.updateOne/), hay ghi file tạm rồi rename.\nRename trên HDFS là nguyên tử; trên object storage thì không (đổi từng file), nên ở đó dùng table format như Delta, Iceberg: https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-common/filesystem/introduction.html\nKafka source của Spark không làm theo cách này: offset nằm trong checkpoint (thẻ Ghi luồng sự kiện vào lớp bronze).",
+              "ins": [
+                "kafka-topic"
+              ]
             },
             {
               "title": "Hàng thư chết và cảnh báo vận hành (Dead-letter Topic, Ops Alerts)",
               "doneWhen": "Bản ghi không parse được hay bị kho đích từ chối đi vào một topic riêng kèm lỗi và vị trí gốc; consumer chạy tiếp; số bản ghi lỗi có ngưỡng báo tới kênh vận hành; có lệnh đưa lại sau khi sửa.",
-              "notes": "Một bản ghi hỏng không được làm cả consumer dừng, cũng không được bị bỏ im lặng.\nDead-letter topic giữ: bản ghi gốc, lỗi, topic, partition, offset, giờ. Kafka Connect làm sẵn việc này cho sink connector bằng errors.tolerance=all và errors.deadletterqueue.topic.name: https://kafka.apache.org/44/configuration/kafka-connect-configs/\nGhi bulk vào kho tìm kiếm: đọc lỗi của từng tài liệu trong kết quả bulk; lỗi mapping đưa vào dead-letter.\nTách kênh cảnh báo nghiệp vụ (cho người dùng) và kênh vận hành (nguồn đứt, lag, dead-letter, sắp hết hạn mức), để cảnh báo vận hành không bị chìm. Gộp cảnh báo giống nhau trong một khoảng thời gian.\nURL webhook của kênh chat là secret: ai có URL đều đăng được tin: https://docs.slack.dev/messaging/sending-messages-using-incoming-webhooks/"
+              "notes": "Một bản ghi hỏng không được làm cả consumer dừng, cũng không được bị bỏ im lặng.\nDead-letter topic giữ: bản ghi gốc, lỗi, topic, partition, offset, giờ. Kafka Connect làm sẵn việc này cho sink connector bằng errors.tolerance=all và errors.deadletterqueue.topic.name: https://kafka.apache.org/44/configuration/kafka-connect-configs/\nGhi theo lô (bulk) vào kho đích: đọc lỗi của từng bản ghi trong kết quả; bản ghi bị kho từ chối đưa vào dead-letter.\nTách kênh cảnh báo nghiệp vụ (cho người dùng) và kênh vận hành (nguồn đứt, lag, dead-letter, sắp hết hạn mức), để cảnh báo vận hành không bị chìm. Gộp cảnh báo giống nhau trong một khoảng thời gian.\nURL webhook của kênh chat là secret: ai có URL đều đăng được tin: https://docs.slack.dev/messaging/sending-messages-using-incoming-webhooks/",
+              "ins": [
+                "kafka-topic"
+              ]
             },
             {
               "title": "Ghi luồng sự kiện vào lớp bronze (Structured Streaming)",
@@ -650,7 +682,7 @@
           "notes": "Khác dự án thường: phải chọn huấn luyện ở đâu. Hai đường:\nA. Huấn luyện phân tán bằng Spark MLlib: khi bảng train không vừa một máy, hay cần huấn luyện lại định kỳ ngay trên cụm giữ dữ liệu. MLlib có LogisticRegression, RandomForestClassifier, GBTClassifier, KMeans, ALS…\nB. Gộp hay lấy mẫu xuống rồi huấn luyện trên một máy (scikit-learn, LightGBM, XGBoost): bảng một dòng mỗi khách thường nhỏ hơn log thô rất nhiều. Lấy mẫu theo lớp thì ghi tỉ lệ và hiệu chỉnh xác suất.\nKhông vượt baseline cũng là kết quả hợp lệ, như mẫu CRISP-DM.\nBài giảng MLlib (Transformer, Estimator, Pipeline): https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b10",
           "subs": [
             {
-              "title": "Chọn đường huấn luyện: MLlib hay một máy",
+              "title": "Chọn đường huấn luyện: MLlib hay một máy (Training Path Choice)",
               "doneWhen": "Có số đo: số dòng và dung lượng bảng train, số đặc trưng, RAM máy đơn; chọn đường A hay B; lý do và số đo ghi vào nhật ký quyết định.",
               "notes": "Đo, đừng đoán: đếm dòng, đọc thử một phần vào pandas để ước RAM cần (thường lớn hơn nhiều so với tệp Parquet nén).\nChọn B: ghi ngưỡng dữ liệu mà từ đó sẽ chuyển sang A.\nChọn A: chỉ dùng thuật toán có trong MLlib; mô hình ngoài MLlib đi đường B.",
               "ins": [
@@ -816,7 +848,7 @@
             {
               "title": "Lớp phục vụ (Serving Layer) và dashboard",
               "doneWhen": "Truy vấn trả kết quả gộp batch view và real-time view; dashboard đọc qua đó; số trên dashboard khớp một truy vấn tay.",
-              "notes": "Tra theo user_id (app, gửi ưu đãi): kho NoSQL đọc ngẫu nhiên nhanh, ví dụ Cassandra. Bài giảng NoSQL: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b4-1\nDashboard, truy vấn phân tích trên bảng gold: engine SQL đọc thẳng dữ liệu trong lake, ví dụ Presto / Trino. Bài giảng Presto: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b4-6\nCassandra chọn mức nhất quán theo từng thao tác (consistency level, theo kiểu R + W > N của Dynamo): đọc chỉ chắc thấy bản vừa ghi khi tập node đọc giao tập node ghi. Bài giảng quorum: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b4-3-quorum\nBài giảng CAP: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b4-2\nGộp tại mốc as-of: mỗi batch view ghi batch_as_of, là sự kiện mới nhất lần batch ấy đã tính; real-time view chỉ tính sự kiện sau mốc ấy.\nSố chụp nhanh (giá trị mới nhất, trạng thái): lấy bên mới hơn. Số cộng được (đếm, tổng): batch tới batch_as_of cộng speed sau batch_as_of; đừng cộng hai phần chồng nhau. Số không cộng được (trung vị, số giá trị khác nhau): lấy từ một bên và ghi rõ.\nSpeed layer có thể chỉ phủ một phần khoá (hạn mức nguồn): mốc tính theo từng khoá. Kết quả trả kèm as_of, batch_as_of, speed_as_of để người xem biết số mới tới đâu.\nBatch mới xong thì dời batch_as_of; phần real-time view cũ hơn mốc mới bị bỏ. Mọi thứ speed layer tính rồi sẽ bị batch layer thay: https://nathanmarz.com/blog/how-to-beat-the-cap-theorem.html\nKho serving là bản sao để đọc, dựng lại được từ batch view; nạp bản mới vào chỗ mới rồi đổi con trỏ, như mẫu Pipeline dữ liệu định kỳ. Dữ liệu người dùng nhập (danh sách theo dõi, luật cảnh báo) không dựng lại được: sao lưu riêng.",
+              "notes": "Tra theo user_id (app, gửi ưu đãi): kho NoSQL đọc ngẫu nhiên nhanh, ví dụ Cassandra. Bài giảng NoSQL: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b4-1\nDashboard, truy vấn phân tích trên bảng gold: engine SQL đọc thẳng dữ liệu trong lake, ví dụ Presto / Trino. Bài giảng Presto: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b4-6\nCassandra chọn mức nhất quán theo từng thao tác (consistency level, theo kiểu R + W > N của Dynamo): đọc chỉ chắc thấy bản vừa ghi khi tập node đọc giao tập node ghi. Bài giảng quorum: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b4-3-quorum\nBài giảng CAP: https://vudat081299.github.io/masters-degree/big-data-storage-processing/big-data-storage-processing.html#b4-2\nGộp tại mốc as-of: mỗi batch view ghi batch_as_of, là sự kiện mới nhất lần batch ấy đã tính; real-time view chỉ tính sự kiện sau mốc ấy.\nSố chụp nhanh (giá trị mới nhất, trạng thái): lấy bên mới hơn. Số cộng được (đếm, tổng): batch tới batch_as_of cộng speed sau batch_as_of; đừng cộng hai phần chồng nhau. Số không cộng được (trung vị, số giá trị khác nhau): lấy từ một bên và ghi rõ.\nSpeed layer có thể chỉ phủ một phần khoá (hạn mức nguồn): mốc tính theo từng khoá. Kết quả trả kèm as_of, batch_as_of, speed_as_of để người xem biết số mới tới đâu.\nBatch mới xong thì dời batch_as_of; phần real-time view cũ hơn mốc mới bị bỏ. Mọi thứ speed layer tính rồi sẽ bị batch layer thay: https://nathanmarz.com/blog/how-to-beat-the-cap-theorem.html\nKho serving là bản sao để đọc, dựng lại được từ batch view; nạp bản mới vào chỗ mới rồi đổi con trỏ, như mẫu Pipeline dữ liệu định kỳ. Dữ liệu người dùng nhập (phân khúc đội marketing tự đặt tên, luật gửi ưu đãi) không dựng lại được: sao lưu riêng.",
               "outs": [
                 {
                   "key": "dashboard",
@@ -832,13 +864,13 @@
             },
             {
               "title": "Thời gian giữ dữ liệu theo từng kho (Retention)",
-              "doneWhen": "Bảng mỗi kho (Kafka, kho thô, batch view, kho serving, kho tìm kiếm): giữ bao lâu, cơ chế xoá, dung lượng ước tính, vì sao; Kafka giữ lâu hơn lần ngừng dài nhất mà job còn đọc lại kịp; kho thô giữ đủ lịch sử để tính lại.",
-              "notes": "Kafka xoá theo retention của topic, không theo việc đã đọc (thẻ Tạo Kafka topic). Retention ngắn hơn lần consumer ngừng lâu nhất (máy tắt, nghỉ dài) là mất dữ liệu chưa sink.\nKho thô (master dataset) giữ toàn bộ; kho nào dựng lại được từ đây thì giữ ngắn được.\nElasticsearch: index theo ngày, ILM rollover rồi xoá sau một số ngày: https://www.elastic.co/docs/manage-data/lifecycle/index-lifecycle-management\nMongoDB: TTL index xoá tài liệu sau một khoảng; tác vụ nền chạy mỗi 60 giây nên không xoá đúng giây: https://www.mongodb.com/docs/manual/core/index-ttl/\nDung lượng mỗi ngày × số ngày giữ, cộng mọi kho, so với đĩa có; đĩa đầy là cả hệ dừng."
+              "doneWhen": "Bảng mỗi kho (Kafka, kho thô, batch view, kho serving, và kho khác nếu có): giữ bao lâu, cơ chế xoá, dung lượng ước tính, vì sao; Kafka giữ lâu hơn lần ngừng dài nhất mà job còn đọc lại kịp; kho thô giữ đủ lịch sử để tính lại.",
+              "notes": "Kafka xoá theo retention của topic, không theo việc đã đọc (thẻ Tạo Kafka topic). Retention ngắn hơn lần consumer ngừng lâu nhất (máy tắt, nghỉ dài) là mất dữ liệu chưa sink.\nKho thô (master dataset) giữ toàn bộ; kho nào dựng lại được từ đây thì giữ ngắn được.\nElasticsearch: ghi vào data stream có chính sách ILM: rollover theo cỡ hay tuổi của index, rồi pha delete xoá index cũ sau một số ngày: https://www.elastic.co/docs/manage-data/lifecycle/index-lifecycle-management\nMongoDB: TTL index xoá tài liệu sau một khoảng; tác vụ nền chạy mỗi 60 giây nên không xoá đúng giây: https://www.mongodb.com/docs/manual/core/index-ttl/\nDung lượng mỗi ngày × số ngày giữ, cộng mọi kho, so với đĩa có; đĩa đầy là cả hệ dừng."
             },
             {
               "title": "Lập kế hoạch giám sát: drift, độ trễ, độ mới (Plan Monitoring)",
               "doneWhen": "Mỗi chỉ số có ngưỡng báo, chỗ xem và việc phải làm: phân phối đặc trưng và điểm so với lúc train, chất lượng khi nhãn về, độ trễ streaming, độ mới batch view, thời gian job batch.",
-              "notes": "Drift: so phân phối từng đặc trưng và điểm dự đoán mỗi ngày với lúc train. Nhãn \"mua trong 7 ngày\" về sau 7 ngày, nên chất lượng thật đo trễ 7 ngày.\nLag streaming: lastProgress của query có inputRowsPerSecond và processedRowsPerSecond; xử lý chậm hơn tốc độ vào trong thời gian dài thì lag tăng dần.\nKafka source của Spark không commit offset lên Kafka, nên công cụ consumer group của Kafka không thấy lag của job này: đo bằng tiến độ của query.\nJob chậm tới mức Kafka xoá offset chưa đọc là mất dữ liệu; để failOnDataLoss mặc định để query dừng và báo.\nBatch view cũ hơn chu kỳ cam kết: báo, và dashboard ghi rõ mốc dữ liệu.\nConsumer không phải Spark (Python) commit offset lên Kafka: kafka-consumer-groups.sh --describe --group tên-group cho LAG từng partition; báo khi lag tăng liên tục: https://kafka.apache.org/44/operations/basic-kafka-operations/\nBáo khi nguồn im lặng quá ngưỡng trong giờ nguồn hoạt động (giờ giao dịch, trừ ngày nghỉ): ngoài giờ ấy, im lặng là bình thường.\nTheo dõi thêm: số bản ghi dead-letter, lượt gọi còn lại trong hạn mức, dung lượng đĩa của từng kho.",
+              "notes": "Drift: so phân phối từng đặc trưng và điểm dự đoán mỗi ngày với lúc train. Nhãn \"mua trong 7 ngày\" về sau 7 ngày, nên chất lượng thật đo trễ 7 ngày.\nLag streaming: lastProgress của query có inputRowsPerSecond và processedRowsPerSecond; xử lý chậm hơn tốc độ vào trong thời gian dài thì lag tăng dần.\nKafka source của Spark không commit offset lên Kafka, nên công cụ consumer group của Kafka không thấy lag của job này: đo bằng tiến độ của query.\nJob chậm tới mức Kafka xoá offset chưa đọc là mất dữ liệu; để failOnDataLoss mặc định để query dừng và báo.\nBatch view cũ hơn chu kỳ cam kết: báo, và dashboard ghi rõ mốc dữ liệu.\nConsumer không phải Spark (Python) commit offset lên Kafka: kafka-consumer-groups.sh --describe --group tên-group cho LAG từng partition; báo khi lag tăng liên tục: https://kafka.apache.org/44/operations/basic-kafka-operations/\nBáo khi nguồn im lặng bất thường so với cùng khung giờ những ngày trước (clickstream ban đêm vốn thưa), không dùng một ngưỡng cố định cho mọi giờ.\nTheo dõi thêm: số bản ghi dead-letter, lượt gọi còn lại trong hạn mức, dung lượng đĩa của từng kho.",
               "ins": [
                 "system-metrics",
                 "realtime-view"
@@ -1700,7 +1732,7 @@
             {
               "title": "Xác định nguồn và điều khoản sử dụng",
               "doneWhen": "Ghi nguồn, cách lấy (API, file, cơ sở dữ liệu), điều khoản dùng, hạn mức gọi, nguồn cập nhật lúc nào.",
-              "notes": "Hỏi: nguồn có sửa hay bổ sung dữ liệu của ngày đã qua không? Nguồn báo đổi cột bằng cách nào?\nHạn mức gọi quyết định chạy được bao lâu một lần: số lượt cần = số khoá × số lần mỗi ngày. Gọi quá thì nhận HTTP 429; chờ theo Retry-After: https://www.rfc-editor.org/rfc/rfc6585#section-4"
+              "notes": "Hỏi: nguồn có sửa hay bổ sung dữ liệu của ngày đã qua không? Nguồn báo đổi cột bằng cách nào?\nHạn mức gọi quyết định chạy được bao lâu một lần: số lượt cần = số khoá × số lần mỗi ngày. Gọi quá thì nhận HTTP 429; chờ theo Retry-After: https://www.rfc-editor.org/rfc/rfc6585.html#section-4"
             },
             {
               "title": "Viết hợp đồng nguồn (source contract)",
@@ -1946,7 +1978,7 @@
           "title": "Phạm vi và kiểm kê nguồn (Scope and Source Inventory)",
           "goal": "Biết nền tảng trả lời câu hỏi nào, nhận những nguồn nào, mỗi nguồn ở định dạng gì và tới ra sao.",
           "doneWhen": "Có danh sách câu hỏi cho dashboard, bảng kiểm kê nguồn, mẫu thật của từng nguồn, và quyết định công cụ cho từng lớp.",
-          "notes": "Mẫu cho mọi lakehouse mã nguồn mở tự chạy. Tên bước, bước con: tiếng Việt, tên gốc trong ngoặc.\nLakehouse: dữ liệu nằm trên object storage dưới dạng file Parquet, một table format (Iceberg, Hudi, Delta) thêm giao dịch và schema, một catalog cho mọi engine cùng thấy một bảng. Ba tầng theo medallion architecture: bronze (thô, chưa kiểm), silver (đã kiểm, làm sạch), gold (gộp theo nghiệp vụ, cho dashboard): https://docs.databricks.com/aws/en/lakehouse/medallion\nVí dụ xuyên suốt: một nhóm sinh viên dựng hạ tầng bằng Docker Compose; MinIO giữ file Parquet; bảng Iceberg với catalog Apache Polaris; biến đổi bằng Spark, dbt, DuckDB; nguồn là trang HTML, CSV, Parquet, sau thêm một luồng giả lập; dashboard Apache Superset nối DuckDB bằng SQL.\nThứ tự của mẫu: hạ tầng và dữ liệu chạy tay được trước (bước 2–6), giả lập luồng, dashboard, rồi mới điều phối pipeline (bước 9). Điều phối một chuỗi chưa chạy tay được chỉ làm lỗi khó tìm hơn.",
+          "notes": "Mẫu cho mọi lakehouse mã nguồn mở tự chạy. Tên bước, bước con ghi tên gốc tiếng Anh trong ngoặc để tra cứu.\nLakehouse: dữ liệu nằm trên object storage dưới dạng file Parquet, một table format (Iceberg, Hudi, Delta) thêm giao dịch và schema, một catalog cho mọi engine cùng thấy một bảng. Ba tầng theo medallion architecture: bronze (thô, chưa kiểm), silver (đã kiểm, làm sạch), gold (gộp theo nghiệp vụ, cho dashboard): https://docs.databricks.com/aws/en/lakehouse/medallion\nVí dụ xuyên suốt: một nhóm sinh viên dựng hạ tầng bằng Docker Compose; MinIO giữ file Parquet; bảng Iceberg với catalog Apache Polaris; biến đổi bằng Spark, dbt, DuckDB; nguồn là trang HTML, CSV, Parquet, sau thêm một luồng giả lập; dashboard Apache Superset nối DuckDB bằng SQL.\nThứ tự của mẫu: hạ tầng và dữ liệu chạy tay được trước (bước 2–6), giả lập luồng, dashboard, rồi mới điều phối pipeline (bước 9). Điều phối một chuỗi chưa chạy tay được chỉ làm lỗi khó tìm hơn.",
           "subs": [
             {
               "title": "Chốt câu hỏi và người dùng (Use Cases)",
@@ -1993,7 +2025,7 @@
             {
               "title": "Chọn công cụ cho từng lớp (Stack Decision)",
               "doneWhen": "Bản quyết định (ADR) cho từng lớp: object storage, table format, catalog, engine xử lý, engine truy vấn, BI, điều phối; mỗi lựa chọn có lý do, giấy phép, tình trạng bảo trì.",
-              "notes": "Kiểm tình trạng bảo trì, không chỉ giấy phép. MinIO: mã nguồn vẫn AGPLv3, nhưng repo cộng đồng đã ngừng bảo trì và lưu trữ (archived, chỉ đọc) từ 25/04/2026; không còn phát hành binary cho bản cộng đồng, image phải tự build từ Dockerfile: https://github.com/minio/minio\nNên: dùng MinIO để học thì ghim một phiên bản và ghi rủi ro \"không còn bản vá bảo mật\"; hoặc chọn một object storage tương thích S3 còn bảo trì (quickstart của Polaris dùng RustFS; SeaweedFS, Garage cũng hay gặp). Code chỉ nói S3 API thì đổi được về sau.\nApache Polaris (Iceberg REST Catalog) đã tốt nghiệp incubator, thành dự án cấp cao của Apache ngày 19/02/2026: https://polaris.apache.org/blog/2026/02/19/apache-polaris-graduates-to-top-level-project/\nSo với System design của dự án: mục Architecture, nhóm Where the data lives, kiến trúc Lakehouse (medallion).",
+              "notes": "Kiểm tình trạng bảo trì, không chỉ giấy phép. MinIO: mã nguồn vẫn AGPLv3, nhưng repo cộng đồng đã ngừng bảo trì và lưu trữ (archived, chỉ đọc) từ 25/04/2026; bản cộng đồng chỉ còn mã nguồn: clone repo, build binary Linux bằng Go (phiên bản tối thiểu ghi trong README) rồi mới build image từ Dockerfile (lệnh ở phương án MinIO, khâu Raw storage của System design): https://github.com/minio/minio\nNên: dùng MinIO để học thì ghim một phiên bản và ghi rủi ro \"không còn bản vá bảo mật\"; hoặc chọn một object storage tương thích S3 còn bảo trì (quickstart của Polaris dùng RustFS; SeaweedFS, Garage cũng hay gặp). Code chỉ nói S3 API thì đổi được về sau.\nApache Polaris (Iceberg REST Catalog) đã tốt nghiệp incubator, thành dự án cấp cao của Apache ngày 19/02/2026: https://polaris.apache.org/blog/2026/02/19/apache-polaris-graduates-to-top-level-project/\nSo với System design của dự án: mục Architecture, nhóm Where the data lives, kiến trúc Lakehouse (medallion).",
               "ins": [
                 "use-cases",
                 "source-inventory"
@@ -2227,7 +2259,7 @@
           "title": "Tầng silver: làm sạch và kiểm (Silver Layer)",
           "goal": "Mỗi thực thể một bảng sạch: đúng kiểu, không trùng khoá, qua test chất lượng.",
           "doneWhen": "Bảng silver dựng lại được từ bronze; test chất lượng chạy mỗi lần; dòng hỏng nằm ở bảng riêng kèm lý do.",
-          "notes": "Silver là bản đã kiểm, làm sạch, làm giàu của dữ liệu; làm sạch và kiểm chất lượng nằm ở tầng này: https://docs.databricks.com/aws/en/lakehouse/medallion",
+          "notes": "Silver là bản đã kiểm, làm sạch, làm giàu của dữ liệu; làm sạch và kiểm chất lượng nằm ở tầng này: https://docs.databricks.com/aws/en/lakehouse/medallion\nBảng silver là model dbt đọc source bronze, nên bước này mở đầu bằng chọn adapter và dựng project dbt; tầng gold (bước 6) viết mart trong cùng project ấy.",
           "subs": [
             {
               "title": "Viết hợp đồng bảng silver (Data Contract)",
@@ -2246,13 +2278,48 @@
               ]
             },
             {
+              "title": "Chọn adapter dbt: DuckDB hay Spark (dbt Adapter)",
+              "doneWhen": "ADR: adapter nào, silver và gold ghi vào đâu (bảng Iceberg qua catalog, hay file Parquet), engine nào chạy biến đổi, lý do.",
+              "notes": "dbt-spark: nối một Spark đang chạy (Thrift server); file_format iceberg, hudi hay delta; incremental merge chỉ với ba format này: https://docs.getdbt.com/reference/resource-configs/spark-configs\nDuckDB: dbt v2 có sẵn adapter DuckDB, ghi bảng Iceberg qua catalogs.yml (materialization table, incremental) khi bật cờ use_catalogs_v2 trong dbt_project.yml; adapter Python dbt-duckdb của dbt v1 không có catalogs.yml: https://docs.getdbt.com/docs/build/iceberg/adapters/duckdb-iceberg-support\nChọn theo cỡ: gold vừa một máy thì DuckDB nhanh, ít dịch vụ; biến đổi nặng hơn một máy thì Spark.",
+              "ins": [
+                "table-format-adr",
+                "engine-config"
+              ],
+              "outs": [
+                {
+                  "key": "dbt-adapter-adr",
+                  "name": "Quyết định adapter dbt",
+                  "ref": "docs/adr/dbt-adapter.md",
+                  "note": "Adapter, nơi gold ghi vào, engine chạy, lý do"
+                }
+              ]
+            },
+            {
+              "title": "Dựng project dbt: sources, silver và marts (dbt Project)",
+              "doneWhen": "Project dbt có sources trỏ bảng bronze, thư mục model silver và marts (fct_, dim_); dbt build chạy từ một lệnh; profiles.yml lấy secret từ biến môi trường.",
+              "ins": [
+                "dbt-adapter-adr",
+                "bronze-files",
+                "bronze-html"
+              ],
+              "outs": [
+                {
+                  "key": "dbt-project",
+                  "name": "Dự án dbt (dbt project)",
+                  "ref": "transform/dbt/",
+                  "note": "sources trỏ bronze, model silver, marts; dbt build chạy được trên máy sạch"
+                }
+              ]
+            },
+            {
               "title": "Ép kiểu, chuẩn hoá, khử trùng (Clean and Deduplicate)",
               "doneWhen": "Cột đúng kiểu hợp đồng, giờ UTC, tên cột snake_case; trùng theo khoá giữ bản _ingested_at mới nhất; dòng ép kiểu hỏng sang bảng quarantine kèm lý do; số dòng trước, sau mỗi luật.",
-              "notes": "TRY_CAST (DuckDB) và try_cast (Spark SQL) trả NULL thay vì lỗi: đếm NULL trước và sau để bắt dòng hỏng, đừng để chúng biến mất lặng lẽ.\nKhử trùng: ROW_NUMBER() OVER (PARTITION BY khoá ORDER BY _ingested_at DESC) = 1. Cập nhật bảng silver Iceberg bằng MERGE INTO.",
+              "notes": "Mỗi bảng silver là một model dbt đọc source bronze; dbt build dựng lại silver từ bronze.\nTRY_CAST (DuckDB) và try_cast (Spark SQL) trả NULL thay vì lỗi: đếm NULL trước và sau để bắt dòng hỏng, đừng để chúng biến mất lặng lẽ.\nKhử trùng: ROW_NUMBER() OVER (PARTITION BY khoá ORDER BY _ingested_at DESC) = 1. Cập nhật bảng silver Iceberg bằng MERGE INTO.",
               "ins": [
                 "silver-contract",
                 "bronze-files",
-                "bronze-html"
+                "bronze-html",
+                "dbt-project"
               ],
               "outs": [
                 {
@@ -2303,45 +2370,13 @@
           "notes": "Gold gộp dữ liệu theo nghiệp vụ cho phân tích và báo cáo: https://docs.databricks.com/aws/en/lakehouse/medallion\ndbt: mỗi model là một câu SELECT; ref() nối các model thành DAG, nên dbt biết thứ tự chạy, test và lineage.",
           "subs": [
             {
-              "title": "Chọn adapter dbt: DuckDB hay Spark (dbt Adapter)",
-              "doneWhen": "ADR: adapter nào, gold ghi vào đâu (bảng Iceberg qua catalog, hay file Parquet), engine nào chạy biến đổi, lý do.",
-              "notes": "dbt-spark: nối một Spark đang chạy (Thrift server); file_format iceberg, hudi hay delta; incremental merge chỉ với ba format này: https://docs.getdbt.com/reference/resource-configs/spark-configs\nDuckDB: dbt v2 có sẵn adapter DuckDB, ghi bảng Iceberg qua catalogs.yml (materialization table, incremental); adapter Python dbt-duckdb của dbt v1 không có catalogs.yml: https://docs.getdbt.com/docs/build/iceberg/adapters/duckdb-iceberg-support\nChọn theo cỡ: gold vừa một máy thì DuckDB nhanh, ít dịch vụ; biến đổi nặng hơn một máy thì Spark.",
-              "ins": [
-                "table-format-adr",
-                "engine-config"
-              ],
-              "outs": [
-                {
-                  "key": "dbt-adapter-adr",
-                  "name": "Quyết định adapter dbt",
-                  "ref": "docs/adr/dbt-adapter.md",
-                  "note": "Adapter, nơi gold ghi vào, engine chạy, lý do"
-                }
-              ]
-            },
-            {
-              "title": "Dựng project dbt: staging và marts (dbt Project)",
-              "doneWhen": "Project dbt có sources trỏ bảng silver, model staging (stg_), marts (fct_, dim_); dbt build chạy từ một lệnh; profiles.yml lấy secret từ biến môi trường.",
-              "ins": [
-                "dbt-adapter-adr",
-                "silver-tables"
-              ],
-              "outs": [
-                {
-                  "key": "dbt-project",
-                  "name": "Dự án dbt (dbt project)",
-                  "ref": "transform/dbt/",
-                  "note": "sources trỏ silver, staging, marts; dbt build chạy được trên máy sạch"
-                }
-              ]
-            },
-            {
               "title": "Viết mart cho từng câu hỏi (Business Marts)",
               "doneWhen": "Mỗi câu hỏi một mart: grain (một dòng là gì) ghi trong mô tả, test unique trên khoá grain; số tổng đối chiếu với silver.",
               "notes": "Mart chỉ đọc silver hay mart khác, không đọc bronze. Grain mơ hồ thì join, gộp dễ đếm trùng hay đếm thiếu.",
               "ins": [
                 "dbt-project",
-                "use-cases"
+                "use-cases",
+                "silver-tables"
               ],
               "outs": [
                 {
@@ -2374,7 +2409,7 @@
           "title": "Giả lập luồng dữ liệu (Mock Streaming)",
           "goal": "Có một nguồn luồng giả lập để thử đường thu nạp liên tục khi chưa có hệ thống thật.",
           "doneWhen": "Script phát lại dữ liệu vào topic theo tốc độ đặt; job micro-batch ghi vào bronze; tắt bật lại không mất, không trùng.",
-          "notes": "Làm sau khi đường batch đã chạy từ bronze tới gold. Không có nguồn luồng trong phạm vi thì Skip cả bước.",
+          "notes": "Làm sau khi đường batch đã chạy từ bronze tới gold. Không có nguồn luồng trong phạm vi thì Skip cả bước.\nHồ sơ System design của mẫu là Daily or weekly: thêm Kafka thì System design báo \"Kafka for data that does not stream\", chọn Spark Structured Streaming ở khâu Processing thì báo \"Stream processor for data that does not stream\". Làm bước này thì đổi câu How often does new data arrive? sang Continuously (events, sensors) và chọn Kafka cùng công cụ lịch đang có ở khâu Ingestion & scheduling, hoặc ghi vào nhật ký quyết định rằng luồng là giả lập để học.",
           "subs": [
             {
               "title": "Dựng broker Kafka hoặc Redpanda (Message Broker)",
@@ -2501,10 +2536,11 @@
           "subs": [
             {
               "title": "Một lệnh chạy cả chuỗi (Pipeline Entrypoint)",
-              "doneWhen": "scripts/run_pipeline.sh chạy nạp bronze → silver → dbt build theo thứ tự, nhận khoảng ngày làm tham số, dừng ở bước hỏng với mã lỗi khác 0.",
+              "doneWhen": "scripts/run_pipeline.sh chạy nạp bronze rồi dbt build (silver, test, gold) theo thứ tự, nhận khoảng ngày làm tham số, dừng ở bước hỏng với mã lỗi khác 0.",
               "ins": [
                 "bronze-files",
                 "bronze-html",
+                "silver-tables",
                 "dbt-project"
               ],
               "outs": [
