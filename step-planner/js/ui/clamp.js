@@ -31,8 +31,9 @@ export function unclip(card) {
 /* ── Chữ dài trên bảng: mỗi khối chữ (.clamp: tên, lý do, Done when, ghi chú, mục tiêu) dừng ở số dòng của token --lines-*;
  * thẻ còn dừng ở --card-max. Tràn thì khối mờ dần ở dòng cuối (.clip) và thẻ, đầu bước có một nút "Show more" mở cả khối
  * (.open; không lưu, vẽ lại vẫn giữ). Nút của thẻ ngoài vòng Tab (thẻ hai điểm dừng); nút của đầu bước trong vòng Tab.
- * Link ở phần bị che ra khỏi vòng Tab tới khi mở. CSS không tự biết chữ có tràn hay không nên đo: lúc vẽ hàng mới, đổi Compact,
- * font tải xong, đổi cỡ cửa sổ, mở ghi chú bước. Băng Reopened chỉ cắt (bấm là mở hộp sửa lý do, ghi đủ). ── */
+ * Link bị che, dù chỉ một phần (vắt qua chỗ cắt), ra khỏi vòng Tab tới khi mở. CSS không tự biết chữ có tràn hay không nên
+ * đo: lúc vẽ hàng mới, đổi Compact, font tải xong, đổi cỡ cửa sổ, mở ghi chú bước. Băng Reopened chỉ cắt (bấm là mở hộp
+ * sửa lý do, ghi đủ). ── */
 /** Khoá của một khối trong `keep.open`: id bước con, hay "h:" + id bước cho đầu bước. @param {HTMLElement} box */
 export const boxKey = (box) => box.dataset.sub ?? 'h:' + /** @type {HTMLElement} */ (box.closest('[data-step]')).dataset.step;
 /** Các khối cần đo trong các hàng. @param {Element[]} rows */
@@ -49,7 +50,7 @@ export function markCut(boxes, keepOpen = new Set()) {
     for (const el of box.querySelectorAll('.clip')) el.classList.remove('clip');
     for (const a of box.querySelectorAll('a[data-hid]')) { a.removeAttribute('tabindex'); a.removeAttribute('data-hid'); }
   }
-  /** Phần tử bị cắt trong khối, link nằm hẳn dưới chỗ cắt. @param {HTMLElement} box */
+  /** Phần tử bị cắt trong khối, link chạm hay qua chỗ cắt (lấp một phần thì vòng focus cũng bị cắt). @param {HTMLElement} box */
   const measure = (box) => {
     const els = /** @type {HTMLElement[]} */ ([...box.querySelectorAll('.clamp'), ...box.querySelectorAll(':scope > .card-body')]);
     /* Ghi chú bước đang đóng: trình duyệt vẫn dàn chữ bên trong (scrollHeight có số) nhưng không hiện, không tính. */
@@ -60,7 +61,7 @@ export function markCut(boxes, keepOpen = new Set()) {
       const links = el.querySelectorAll('a[href]');
       if (!links.length) continue;
       const bottom = el.getBoundingClientRect().top + el.clientHeight - parseFloat(getComputedStyle(el).paddingBottom);
-      for (const a of links) if (a.getBoundingClientRect().top >= bottom - 1) hidden.add(a);
+      for (const a of links) if (a.getBoundingClientRect().bottom > bottom + 1) hidden.add(a);
     }
     return { clipped, hidden };
   };

@@ -1543,7 +1543,8 @@ const check = (name, ok, detail = '') => {
       { id: 'l1', title: longT, goal: 'Mục tiêu dài '.repeat(30).trim(), notes: lines(30, 'Xem https://example.com/step-top') + '\nhttps://example.com/step-hidden', subs: [
         { id: 'c1', title: 'Ngắn', status: 'todo', notes: 'một dòng' },
         { id: 'c2', title: 'Ghi chú dài', status: 'todo', notes: lines(9, 'Mở https://example.com/top') + '\nhttps://example.com/hidden' },
-        { id: 'c3', title: longT, status: 'blocked', reason: lines(10), doneWhen: 'Xong khi '.repeat(40).trim(), notes: lines(20) }] },
+        { id: 'c3', title: longT, status: 'blocked', reason: lines(10), doneWhen: 'Xong khi '.repeat(40).trim(), notes: lines(20) },
+        { id: 'c4', title: 'Link vắt qua chỗ cắt', status: 'todo', notes: 'Mở https://example.com/' + 'vat'.repeat(150) }] },
       { id: 'l2', title: 'Bước ngắn', goal: 'Một dòng', notes: 'ngắn', round: 2, revisit: { reason: 'Lý do mở lại dài '.repeat(60).trim(), date: '2026-01-02', round: 2 },
         subs: [{ id: 'd1', title: 'D1', status: 'done' }] }] }] };
     const lc = await browser.newContext({ viewport: { width: 1280, height: 900 } });
@@ -1573,6 +1574,13 @@ const check = (name, ok, detail = '') => {
     const l0 = await links();
     check('chữ dài: link phần còn thấy vẫn trong vòng Tab, link phần bị che ra khỏi vòng Tab', JSON.stringify(l0)
       === JSON.stringify([['https://example.com/top', 0], ['https://example.com/hidden', -1]]), JSON.stringify(l0));
+    /* Link vắt qua chỗ cắt (thấy nửa trên): cũng ra khỏi vòng Tab, vòng focus không bị cắt. */
+    const cross = await lp.$eval('.card[data-sub="c4"] .card-notes', (p) => {
+      const a = p.querySelector('a'), r = a.getBoundingClientRect();
+      const bottom = p.getBoundingClientRect().top + p.clientHeight - parseFloat(getComputedStyle(p).paddingBottom);
+      return { crosses: r.top < bottom - 1 && r.bottom > bottom + 1, tab: a.tabIndex };
+    });
+    check('chữ dài: link vắt qua chỗ cắt (lấp một phần) ra khỏi vòng Tab', cross.crosses && cross.tab === -1, JSON.stringify(cross));
     const [pop] = await Promise.all([lc.waitForEvent('page'), lp.click('.card[data-sub="c2"] .card-notes a')]);
     await pop.waitForLoadState();
     check('chữ dài: bấm link trong ghi chú bị cắt mở tab mới, không mở hộp sửa', pop.url() === 'https://example.com/top' && !(await lp.isVisible('#dlg-sub')), pop.url());
@@ -3384,7 +3392,8 @@ const check = (name, ok, detail = '') => {
     await fp.waitForSelector('.card[data-sub]');
     const sub = await fp.$eval('.card[data-sub]', (x) => x.dataset.sub);
     const step = await fp.$eval('.step[data-step]', (x) => x.dataset.step);
-    const at = (sel) => fp.evaluate((q) => document.activeElement === document.querySelector(q), sel);
+    /* Sự kiện close tới sau khi thuộc tính open đã gỡ: chờ focus về chỗ, không đọc ngay. */
+    const at = (sel) => fp.waitForFunction((q) => document.activeElement === document.querySelector(q), sel, { timeout: 2000 }).then(() => true, () => false);
     const addLink = async (where, title) => {
       await fp.click(`#dlg-${where} [data-doc-add]`);
       await fp.fill('#dlg-doc input[name="title"]', title);
