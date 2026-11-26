@@ -1,5 +1,5 @@
 /* Bấm thật trong Chromium: tạo từ mọi mẫu, thêm / sửa / xoá, hoàn tác, sắp xếp bằng nút và kéo thả, lọc, quay lại,
- * nhật ký, lưu qua lần tải lại, Markdown và JSON đi rồi về, bộ nhớ bị chặn, tràn ngang ở 390px, lỗi console.
+ * nhật ký, bàn giao, lưu qua lần tải lại, Markdown và JSON đi rồi về, bộ nhớ bị chặn, tràn ngang ở 390px, lỗi console.
  * Chạy: python3 -m http.server 8347 (ở gốc repo), rồi
  *       node step-planner/tools/smoke.cjs http://127.0.0.1:8347/step-planner/
  * Thiếu playwright thì thoát mã 2 (BỎ QUA), như tools/smoke-index.js. */
@@ -584,6 +584,7 @@ const check = (name, ok, detail = '') => {
   const order8 = JSON.stringify((await cur(page)).steps.map((s) => [s.id, s.subs.map((x) => x.id + (x.par ? 'p' : ''))]));
   /** Nhấn trên `sel`, trôi 20px (vẫn trong ô viền đứt ở chỗ cũ), đếm bóng; rồi kết thúc bằng `end`. */
   const ghostRun = async (sel, end) => {
+    await page.locator(sel).scrollIntoViewIfNeeded();
     const a = await box(sel);
     const x = a.x + Math.min(24, a.width / 2), y = a.y + Math.min(24, a.height / 2);
     await page.mouse.move(x, y);
@@ -676,7 +677,7 @@ const check = (name, ok, detail = '') => {
   const sentBack = rs.steps[1].subs.filter((x) => picked.includes(x.id));
   check('Reopen: bước con đã chọn về New và mang dấu redo, iteration 2, nhật ký tự ghi',
     sentBack.every((x) => x.status === 'todo' && x.redo) && rs.steps[1].revisit.round === 2 && rs.steps[1].round === 2
-    && rs.log.length === nLogR + 1 && autoLog.decision === `Reopened: ${r0.title} (iteration 2)` && autoLog.why === 'EDA lộ cột thiếu'
+    && rs.log.length === nLogR + 1 && autoLog.decision === `Reopened: ${r0.title} (iteration 2)` && autoLog.why.split('\nAlso check: ')[0] === 'EDA lộ cột thiếu'
     && /Reopened: /.test(await page.textContent('#log-list')), JSON.stringify(autoLog));
   check('Reopen: dòng nhật ký tự ghi gắn với bước, có dấu riêng và chip bước', autoLog.stepId === s2id
     && (await page.textContent(`.log-item.auto[data-log="${autoLog.id}"] .log-step`)).includes(r0.title)
@@ -1296,7 +1297,7 @@ const check = (name, ok, detail = '') => {
       const at = (x, y) => { const t = document.elementFromPoint(x, y); return !!t && (t === el || el.contains(t)); };
       const tall = r.height >= 44 || (at(cx, cy - 21.5) && at(cx, cy + 21.5));
       const wide = r.width >= 44 || (at(cx - 21.5, cy) && at(cx + 21.5, cy));
-      if (!tall || !wide) bad.push(`${el.dataset.act || el.id || el.className} ${Math.round(r.width)}x${Math.round(r.height)}`);
+      if (!tall || !wide) bad.push(`${el.dataset.act || el.id || el.className || el.parentElement.className + ' > ' + el.tagName} ${Math.round(r.width)}x${Math.round(r.height)}`);
     }
     window.scrollTo(0, 0);
     return bad;
@@ -1834,6 +1835,185 @@ const check = (name, ok, detail = '') => {
     check('bằng chứng: rời Done thì bỏ ngày xong và dấu bằng chứng (tài liệu vẫn là bằng chứng)', (await se('se1')).doneAt === ''
       && !(await ep.$('.card[data-sub="se1"] .proof-tag')) && !(await ep.$('.card[data-sub="se1"] .done-at')) && (await se('se1')).docs[0].proof);
     await ec.close();
+  }
+
+  /* ── Bàn giao: khai đầu ra trên thẻ A (bước 1), dùng ở bước 2 và ở thẻ song song; vạch giữa hai hàng, nút giữa hai ô, chip,
+   * danh sách và lối nhảy (bỏ lọc nếu cần), tìm theo tên đầu ra, kéo bước giữ liên kết, xoá + Hoàn tác, mở lại có "Also
+   * check", Markdown và JSON đi rồi về, 390px ── */
+  {
+    const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+    const seed = { id: 'wh', name: 'Handoff', steps: [
+      { id: 'h1', title: 'Clean data', subs: [{ id: 'hA', title: 'Build snapshot', status: 'done' }, { id: 'hB', title: 'Profile columns' }, { id: 'hC', title: 'Quality report', par: true }] },
+      { id: 'h2', title: 'Backend', subs: [{ id: 'hD', title: 'Read snapshot in API' }, { id: 'hE', title: 'Season endpoint' }] },
+      { id: 'h3', title: 'Report', subs: [{ id: 'hF', title: 'Write up' }] },
+    ], log: [] };
+    const seedInit = (d) => { if (!sessionStorage.getItem('seeded')) { sessionStorage.setItem('seeded', '1'); localStorage.setItem('stepPlanner.v2', JSON.stringify({ version: 2, workspaces: [d], lastId: d.id })); } };
+    const hc = await browser.newContext({ viewport: { width: 1280, height: 1000 }, deviceScaleFactor: 1, permissions: ['clipboard-read', 'clipboard-write'] });
+    await hc.addInitScript(seedInit, seed);
+    const hp = await hc.newPage();
+    hp.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
+    hp.on('pageerror', (e) => errors.push(String(e)));
+    await hp.goto(BASE);
+    await hp.waitForSelector('.card[data-sub="hA"]');
+    const subOf = (w, id) => w.steps.flatMap((s) => s.subs).find((x) => x.id === id);
+
+    // Khai đầu ra: thêm, tên trống thì Save không qua; đóng khi chưa lưu thì hỏi lại; lưu cùng nút Save.
+    await hp.click('.card[data-sub="hA"] [data-act="edit-sub"]');
+    await hp.click('#sub-hand [data-out-add]');
+    await hp.fill('#sub-hand .out-row:last-child [data-k="name"]', 'matches.parquet');
+    await hp.fill('#sub-hand .out-row:last-child [data-k="ref"]', 'data/clean/matches.parquet');
+    await hp.fill('#sub-hand .out-row:last-child [data-k="note"]', 'one row per match, key match_id');
+    await hp.click('#sub-hand [data-out-add]');
+    await hp.click('#sub-form button[type="submit"]');
+    const blocked = await hp.evaluate(() => document.getElementById('dlg-sub').open && document.activeElement?.dataset.k === 'name');
+    await hp.click('#sub-hand .out-row:last-child [data-out-del]');
+    await hp.keyboard.press('Escape');
+    const asked = await hp.evaluate(() => document.getElementById('dlg-ask').open);
+    await hp.click('#dlg-ask [data-close]');
+    await hp.click('#sub-form button[type="submit"]');
+    let w = await cur(hp);
+    const outId = subOf(w, 'hA').outs[0]?.id;
+    check('bàn giao: đầu ra khai trong hộp sửa, tên bắt buộc, đóng chưa lưu thì hỏi, lưu cùng Save', blocked && asked && /^o/.test(outId || '')
+      && same(subOf(w, 'hA').outs.map(({ name, ref, note }) => ({ name, ref, note })), [{ name: 'matches.parquet', ref: 'data/clean/matches.parquet', note: 'one row per match, key match_id' }]),
+      JSON.stringify({ blocked, asked, outs: subOf(w, 'hA').outs }));
+
+    // Dùng đầu ra ấy ở bước 2 (D) và ở thẻ song song của ô kế bên (C).
+    const useOut = async (id) => {
+      await hp.click(`.card[data-sub="${id}"] [data-act="edit-sub"]`);
+      await hp.click('#sub-hand [data-in-pick]');
+      await hp.check(`#pick-groups input[value="${outId}"]`);
+      await hp.click('#pick-ok');
+      const chip = await hp.textContent('#sub-hand [data-ins]');
+      await hp.click('#sub-form button[type="submit"]');
+      return chip;
+    };
+    const chipD = await useOut('hD');
+    await useOut('hC');
+    w = await cur(hp);
+    check('bàn giao: chọn đầu ra có sẵn làm đầu vào (chip ghi tên và bên giao)', /matches\.parquet/.test(chipD) && /from Build snapshot/.test(chipD)
+      && same(subOf(w, 'hD').ins, [outId]) && same(subOf(w, 'hC').ins, [outId]));
+    const marks = () => hp.evaluate(() => ({
+      row: [...document.querySelectorAll('[data-act="hand-row"]')].map((b) => b.closest('[data-step]').dataset.step + ':' + b.textContent),
+      gap: [...document.querySelectorAll('[data-act="hand-gap"]')].map((b) => b.closest('[data-step]').dataset.step + ':' + b.dataset.gap + ':' + b.textContent),
+      tags: [...document.querySelectorAll('.hand-tag')].map((b) => b.closest('[data-sub]').dataset.sub + ':' + b.textContent),
+    }));
+    const m1 = await marks();
+    check('bàn giao: vạch giữa hàng 1 và 2, nút giữa ô 1 và 2, chip In / Out trên thẻ', same(m1.row, ['h2:Handoff · 1']) && same(m1.gap, ['h1:0:Handoff · 1'])
+      && same(m1.tags, ['hA:Out 1', 'hC:In 1', 'hD:In 1']), JSON.stringify(m1));
+
+    // Nút giữa hai ô: danh sách cặp; chọn dòng thì đóng hộp, tô cả hai thẻ, focus bên nhận.
+    await hp.click('[data-act="hand-gap"]');
+    const pairTxt = await hp.textContent('#hand-list');
+    await hp.click('#hand-list .hand-pair');
+    const hi = await hp.evaluate(() => ({ hi: [...document.querySelectorAll('.hand-hi')].map((e) => e.dataset.sub).sort(),
+      focus: document.activeElement.closest('.card')?.dataset.sub, open: document.getElementById('dlg-hand').open }));
+    check('bàn giao: nút giữa hai ô — cặp A → C, chọn dòng tô cả hai, focus bên nhận', /Build snapshot.*Quality report.*matches\.parquet/.test(pairTxt)
+      && same(hi.hi, ['hA', 'hC']) && hi.focus === 'hC' && !hi.open, JSON.stringify(hi) + pairTxt);
+    // Chip In: đường dẫn (không phải link thì chữ mono), hợp đồng, bên giao.
+    await hp.click('.card[data-sub="hD"] [data-act="hand-in"]');
+    const inInfo = await hp.evaluate(() => ({ t: document.getElementById('hand-list').textContent, links: document.querySelectorAll('#hand-list a').length,
+      code: document.querySelector('#hand-list code')?.textContent, edit: document.getElementById('hand-edit').textContent }));
+    await hp.click('#hand-edit');
+    const toHand = await hp.evaluate(() => document.getElementById('dlg-sub').open && document.activeElement?.hasAttribute('data-in-pick'));
+    await hp.keyboard.press('Escape');
+    check('bàn giao: chip In — đường dẫn, hợp đồng, bên giao; "Edit sub-step" mở hộp sửa ở phần Inputs', inInfo.links === 0 && inInfo.code === 'data/clean/matches.parquet'
+      && /Contract one row per match/.test(inInfo.t) && /From Build snapshot/.test(inInfo.t) && inInfo.edit === 'Edit sub-step' && toHand, JSON.stringify(inInfo));
+    // Tìm theo tên đầu ra; nhảy tới nơi dùng đang bị lọc ẩn thì bỏ lọc.
+    await hp.fill('#q', 'matches.parquet');
+    const found = await hp.$$eval('.card[data-sub]', (cs) => cs.map((c) => c.dataset.sub));
+    await hp.click('.card[data-sub="hA"] [data-act="hand-out"]');
+    const usedTxt = await hp.textContent('#hand-list .hand-used');
+    await hp.locator('#hand-list .hand-who', { hasText: 'Read snapshot in API' }).click();
+    const jumped = await hp.evaluate(() => ({ q: document.getElementById('q').value, focus: document.activeElement.closest('.card')?.dataset.sub }));
+    check('bàn giao: tìm khớp tên đầu ra; chip Out liệt kê nơi dùng, nhảy tới thẻ bị lọc thì bỏ lọc', same(found, ['hA']) && /Used by.*Quality report.*Read snapshot in API/.test(usedTxt)
+      && jumped.q === '' && jumped.focus === 'hD', JSON.stringify({ found, usedTxt, jumped }));
+
+    // Kéo bước 2 lên đầu: liên kết theo id giữ nguyên, vạch tính lại (bên nhận nằm trên bên giao: không còn vạch); Hoàn tác về chỗ cũ.
+    const g = await hp.locator('.step[data-step="h2"] .step-grip').boundingBox();
+    const t = await hp.locator('.step[data-step="h1"]').boundingBox();
+    await hp.mouse.move(g.x + g.width / 2, g.y + g.height / 2);
+    await hp.mouse.down();
+    await hp.mouse.move(g.x + 10, g.y + 6, { steps: 2 });
+    await hp.mouse.move(t.x + 40, t.y + 10, { steps: 8 });
+    await hp.mouse.up();
+    await hp.waitForFunction(() => !document.body.classList.contains('dragging-any'));
+    w = await cur(hp);
+    const m2 = await marks();
+    check('bàn giao: kéo đổi chỗ bước giữ liên kết, vạch tính lại', same(w.steps.map((s) => s.id), ['h2', 'h1', 'h3']) && same(subOf(w, 'hD').ins, [outId])
+      && same(m2.row, []) && same(m2.gap, ['h1:0:Handoff · 1']), JSON.stringify(m2));
+    await hp.keyboard.press('Control+z');
+    await hp.waitForFunction(() => document.querySelector('#board > .step')?.dataset.step === 'h1');
+
+    // Xoá bên giao: chip, vạch, nút biến mất; Hoàn tác trả cả liên kết.
+    await hp.click('.card[data-sub="hA"] [data-act="edit-sub"]');
+    await hp.click('#sub-del');
+    const m3 = await marks();
+    await hp.click('#toast-undo');
+    const m4 = await marks();
+    w = await cur(hp);
+    check('bàn giao: xoá bên giao thì nơi dùng mất chip, vạch; Hoàn tác trả lại', same(m3, { row: [], gap: [], tags: [] }) && same(m4, m1)
+      && same(subOf(w, 'hD').ins, [outId]) && same(subOf(w, 'hC').ins, [outId]), JSON.stringify({ m3, m4 }));
+
+    // Mở lại bước 1, chọn làm lại A: "Also check" liệt kê nơi dùng đầu ra của A, ghi vào nhật ký; Hoàn tác.
+    await hp.click('.step[data-step="h1"] .step-head [data-act="revisit"]');
+    const also0 = await hp.isHidden('#revisit-also');
+    await hp.check('#revisit-list input[value="hA"]');
+    const also1 = await hp.textContent('#revisit-also-text');
+    await hp.fill('#revisit-form [name="reason"]', 'schema changed');
+    await hp.click('#revisit-form button[type="submit"]');
+    w = await cur(hp);
+    const why = w.log.at(-1)?.why || '';
+    check('bàn giao: mở lại — "Also check" theo bước con chọn làm lại, ghi vào nhật ký', also0 && also1 === '"Quality report" in "Clean data", "Read snapshot in API" in "Backend"'
+      && why === `schema changed\nAlso check: ${also1}`, JSON.stringify({ also0, also1, why }));
+    await hp.click('#toast-undo');
+
+    // Markdown và JSON đi rồi về: đầu vào vẫn trỏ đúng đầu ra.
+    await hp.click('#export-btn');
+    const md = await hp.inputValue('#export-text');
+    await hp.check('input[name="export-kind"][value="json"]');
+    const json = await hp.inputValue('#export-text');
+    await hp.click('#dlg-export [data-close]');
+    const before = await shape(hp, await cur(hp));
+    const back = [];
+    for (const text of [md, json]) {
+      await hp.click('#import-btn');
+      await hp.$eval('#import-text', (el, v) => { el.value = v; el.dispatchEvent(new Event('input', { bubbles: true })); }, text);
+      await hp.click('#import-go');
+      back.push(await shape(hp, await cur(hp)));
+    }
+    check('bàn giao: Markdown có Outputs / Inputs; Markdown và JSON đi rồi về giữ liên kết', /\n {2}Outputs:\n {4}- matches\.parquet · data\/clean\/matches\.parquet {2}\n {6}one row per match, key match_id\n/.test(md)
+      && /\n {2}Inputs:\n {4}- matches\.parquet ← Build snapshot\n/.test(md) && back.every((b) => same({ ...b, name: '' }, { ...before, name: '' })) && same(before.steps[1].subs[0].ins, ['0.0.0']),
+      md.split('\n').filter((l) => /Outputs|Inputs|←/.test(l)).join(' / '));
+    await hc.close();
+
+    // 390px: không tràn ngang, nút bàn giao đủ vùng bấm, danh sách ghi đủ tên.
+    const mc = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 1, isMobile: true, hasTouch: true });
+    const linked = JSON.parse(JSON.stringify(seed));
+    linked.steps[0].subs[0].outs = [{ id: 'oX', name: 'matches.parquet with a rather long name for phones', ref: 'https://example.com/snapshots/matches' }];
+    linked.steps[0].subs[2].ins = ['oX'];
+    linked.steps[1].subs[0].ins = ['oX'];
+    await mc.addInitScript(seedInit, linked);
+    const mp = await mc.newPage();
+    mp.on('pageerror', (e) => errors.push(String(e)));
+    await mp.goto(BASE);
+    await mp.waitForSelector('[data-act="hand-row"]');
+    const hits = await mp.evaluate(() => [...document.querySelectorAll('[data-act="hand-row"], [data-act="hand-gap"], .hand-tag')].map((el) => {
+      el.scrollIntoView({ block: 'center', inline: 'center' });
+      const r = el.getBoundingClientRect();
+      const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+      const at = (x, y) => { const t = document.elementFromPoint(x, y); return !!t && (t === el || el.contains(t)); };
+      const ok = (r.height >= 44 || (at(cx, cy - 21.5) && at(cx, cy + 21.5))) && (r.width >= 44 || (at(cx - 21.5, cy) && at(cx + 21.5, cy)));
+      return ok ? '' : `${el.dataset.act} ${Math.round(r.width)}x${Math.round(r.height)}`;
+    }).filter(Boolean));
+    await mp.evaluate(() => window.scrollTo(0, 0));
+    const ov0 = await hOverflow(mp);
+    await mp.click('[data-act="hand-row"]');
+    const sheet = await mp.$eval('#dlg-hand', (d) => ({ right: d.getBoundingClientRect().right <= innerWidth, cut: [...d.querySelectorAll('.hand-item *')].filter((e) => e.scrollWidth > e.clientWidth + 1).length,
+      t: d.querySelector('#hand-list').textContent, link: d.querySelector('#hand-list a')?.target }));
+    check('bàn giao 390px: không tràn ngang, nút ≥ 44px, danh sách ghi đủ bên giao, đầu ra, bên nhận; link mở tab mới', ov0 === 0 && hits.length === 0
+      && sheet.right && sheet.cut === 0 && /Build snapshot.*Read snapshot in API.*matches\.parquet with a rather long name for phones/.test(sheet.t) && sheet.link === '_blank',
+      JSON.stringify({ ov0, hits, sheet }));
+    await mc.close();
   }
 
   /* ── Dữ liệu lưu bị hỏng ── */
