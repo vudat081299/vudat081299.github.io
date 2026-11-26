@@ -8,7 +8,7 @@ import {
 } from '../js/core.js';
 import * as CORE from '../js/core.js';
 import { parseMd, inline, srcTokens } from '../js/md.js';
-import { normDesign, rankOptions, snake, planTasks, diagramNodes, decidedCount, catalogErrors, readStageLine, applyPath, effProfile, warnings, flowEdges, bothDecided, planDiff, applyPlan, PLAN_STEP, notNeededBy, archAdvice } from '../js/design-core.js';
+import { normDesign, rankOptions, snake, planTasks, diagramNodes, decidedCount, catalogErrors, readStageLine, applyPath, effProfile, warnings, flowEdges, bothDecided, planDiff, applyPlan, PLAN_STEP, notNeededBy, archAdvice, fitOf } from '../js/design-core.js';
 
 let fails = 0;
 const check = (name, ok, detail = '') => {
@@ -590,9 +590,10 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   check('kiến trúc: liên tục nhưng xem theo lịch — batch là đủ', A({}, { fresh: 'stream', latency: 'batch' }).processing === 'batch-etl');
   check('kiến trúc: lối đã chọn quyết nhóm app (lối chính là kiến trúc app)',
     A({}, {}, 'demo').app === 'monolith' && A({}, {}, 'api').app === 'client-server' && A({}, {}, 'report').app === 'static-report');
-  check('kiến trúc: khâu đã quyết thắng hồ sơ; Serving Not needed thì nhóm model không cần',
+  check('kiến trúc: khâu đã quyết thắng hồ sơ; Serving Not needed thì nhóm model không cần, trừ khi sản phẩm dùng LLM',
     A({ store: P('bigquery') }, { size: 'small' }).storage === 'warehouse' && A({ raw: P('delta-lake') }, { size: 'small' }).storage === 'lakehouse'
-    && A({ serve: { skip: true } }, { ai: 'llm' }).ml === '' && A({ process: P('flink') }).processing === 'streaming');
+    && A({ serve: { skip: true } }, { ai: 'none' }).ml === '' && A({ serve: { skip: true } }, { ai: 'llm' }).ml === 'rag'
+    && A({ process: P('flink') }).processing === 'streaming' && A({ process: P('flink') }, { fresh: 'once' }).processing === 'batch-etl');
   /* Mọi luật gợi ý tới được: dựng thiết kế thoả đúng `if` của luật thì luật ấy (không phải luật trước nó) thắng. */
   const shadowed = cat.architectures.flatMap((f) => f.rules.map((r, i) => {
     const stages = {}, profile = {};
@@ -606,6 +607,50 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
     return got.id === r.arch && got.why === r.why ? '' : `${f.id}[${i}]`;
   })).filter(Boolean);
   check('kiến trúc: mọi luật gợi ý tới được, không bị luật trước che', !shadowed.length, shadowed.join());
+  /* Gợi ý không tự mâu thuẫn với luật báo, trên lưới hồ sơ × lối. Luật `caveat` chỉ nhắc cách dùng nên không tính.
+   * Ngoại lệ có lý do: dữ liệu cỡ cụm mà cần trả lời ngay thì mọi kho hợp đều là cụm (Cassandra, HBase); luật báo cụm trên
+   * ngân sách miễn phí hay trên host app là chính chỗ người dùng phải quyết, không có phương án hợp nào né được. */
+  const EXCEPT = new Set(['cluster-store-on-free-budget', 'cluster-store-on-app-host']);
+  const GRID_Q = ['size', 'fresh', 'latency', 'ai', 'users', 'budget'];
+  const grid = GRID_Q.reduce((acc, q) => acc.flatMap((p) => [...(q === 'latency' ? [p] : []),
+    ...cat.profile.find((x) => x.id === q).choices.map((c) => ({ ...p, [q]: c.id }))]), [{}]);
+  const hard = (d, ids) => warnings(cat, normDesign(d)).filter((w) => !w.caveat && !EXCEPT.has(w.id) && w.stages.some((x) => ids.includes(x)));
+  const selfWarn = new Set();
+  for (const pp of cat.paths) {
+    for (const profile of grid) {
+      const r = applyPath(cat, { path: '', profile, stages: {}, edges: {} }, pp.id);
+      for (const w of hard(r.next, [...r.filled, ...r.skipped])) selfWarn.add(`${pp.id}/${w.id} ${JSON.stringify(profile)}`);
+    }
+  }
+  check('thiết kế: Apply path không chọn phương án (hay bỏ khâu) làm luật báo', !selfWarn.size, [...selfWarn].slice(0, 5).join(' | '));
+  /* Mỗi kiến trúc được gợi ý có ở mỗi khâu ít nhất một công cụ không làm luật báo; khâu đã quyết theo luật gợi ý cũng thử
+   * khi X hợp hồ sơ (luật nói "đã chọn X nên là kiến trúc Y" thì Y phải có công cụ dùng được). Gợi ý "không cần" thì khâu ấy
+   * không bị báo. */
+  const decided = [{}, ...cat.architectures.flatMap((f) => f.rules.flatMap((rl) => Object.entries(rl.if).filter(([k]) => stageIds.has(k))
+    .reduce((acc, [k, vals]) => acc.flatMap((st) => vals.map((v) => ({ ...st, [k]: v === 'skip' ? { skip: true } : P(v) }))), [{}])
+    .filter((st) => Object.keys(st).length)))];
+  const badArch = new Set();
+  for (const path of ['', ...cat.paths.map((x) => x.id)]) {
+    for (const profile of grid) {
+      for (const stages of path ? [{}] : decided) {
+        if (!Object.entries(stages).every(([k, v]) => !v.pick || fitOf(cat.stages.find((x) => x.id === k).options.find((o) => o.id === v.pick[0]), profile).ok)) continue;
+        for (const a of archAdvice(cat, normDesign({ path, profile, stages }))) {
+          if (a.id === null) continue;
+          if (a.id === '') {
+            for (const w of hard({ path, profile, stages }, Object.keys(stages))) badArch.add(`${a.family}:"" ${w.id} ${JSON.stringify({ path, profile, stages })}`);
+            continue;
+          }
+          const e = cat.architectures.find((f) => f.id === a.family).entries.find((x) => x.id === a.id);
+          for (const [sid, tools] of Object.entries(e.tools)) {
+            if (!tools.some((t) => !hard({ path, profile, stages: { ...stages, [sid]: P(t) } }, [sid]).length)) {
+              badArch.add(`${a.family}:${a.id}/${sid} ${JSON.stringify({ path, profile, stages: Object.keys(stages) })}`);
+            }
+          }
+        }
+      }
+    }
+  }
+  check('kiến trúc: kiến trúc được gợi ý có công cụ không làm luật báo ở mọi khâu của nó', !badArch.size, [...badArch].slice(0, 5).join(' | '));
   /* Bàn giao trên đường nối: chuẩn hoá, chỉ đường giữa hai khâu đã quyết liền nhau, việc tích hợp, Markdown đi rồi về. */
   check('thiết kế: bàn giao — bỏ khoá sai, via lạ, mục trống; giữ cả khi khâu chưa quyết', eq(normDesign({ edges: {
     'process>store': { via: 'file', what: ' matches.parquet ', promise: 'a\n\nb', check: 'x' }, 'a b>c': { via: 'file' }, 'raw>process': { via: 'fax' } } }).edges,
