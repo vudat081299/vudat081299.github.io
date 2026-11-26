@@ -1032,6 +1032,20 @@ span.chip::after { content: none; }
 .sd-edge-name b { font: 600 var(--fs-md)/var(--lh-tight) var(--display); }
 .sd-edge-name small { font-size: var(--fs-sm); color: var(--ink-3); overflow-wrap: anywhere; }
 .sd-edge-item > :not(summary) { margin-left: calc(var(--s4) + var(--s2)); }
+/* Hộp "Update plan" (#dlg-sdp): nhóm New / Changed / No longer in the design, mỗi mục một dòng kèm lựa chọn. */
+.sdp-groups { display: flex; flex-direction: column; gap: var(--s5); }
+.sdp-group { display: flex; flex-direction: column; gap: var(--s2); }
+.sdp-list { display: flex; flex-direction: column; gap: var(--s2); }
+.sdp-item {
+  display: flex; flex-direction: column; gap: var(--s2); padding: var(--s3);
+  background: var(--surface); border: var(--line-w) solid var(--line); border-radius: var(--r-sm);
+}
+.sdp-check { display: flex; align-items: flex-start; gap: var(--s3); cursor: pointer; }
+.sdp-check input { flex: none; width: var(--icon); height: var(--icon); margin-top: var(--mark-w); accent-color: var(--green); }
+.sdp-txt { min-width: 0; display: flex; flex-direction: column; gap: var(--s1); font-size: var(--fs-sm); line-height: var(--lh); }
+.sdp-txt b { font-weight: 600; color: var(--ink); overflow-wrap: anywhere; }
+.sdp-txt small { color: var(--ink-3); overflow-wrap: anywhere; }
+.sdp-txt small.sd-warn { color: var(--amber-fg); }
 /* Cảnh báo phối hợp (danh mục `checks`): trên trang dưới sơ đồ, trong hộp ở khâu liên quan và ở trang Checks. */
 .sd-warns { display: flex; flex-direction: column; gap: var(--s2); list-style: none; }
 .sd-warnbox {

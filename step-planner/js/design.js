@@ -69,7 +69,9 @@ export function renderSection() {
   $('sd-count').textContent = `${n.done}/${n.total}`;
   $('sd-open').disabled = false;
   $('sd-open-text').textContent = n.done ? 'Edit the design' : 'Design the system';
-  $('sd-plan').hidden = !D.planTasks(cat, w.design).length;
+  const diff = D.planDiff(cat, w);
+  $('sd-plan').hidden = !diff.length;
+  $('sd-plan-text').textContent = diff.some((x) => x.sub) ? 'Update plan' : 'Add tasks to plan';
   const p = D.pathOf(cat, w.design);
   $('sd-path').hidden = !p;
   $('sd-path').textContent = p ? `Deliverable: ${p.label}` : '';
@@ -235,31 +237,93 @@ function downloadSvg() {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-/* ── Đưa việc sang bảng: bước "System build" (đặt sau bước đầu tiên: dựng đường chạy thông sớm), mỗi khâu một bước con;
- * bước con trùng tên đã có thì bỏ qua. Hoàn tác gỡ đúng những gì vừa thêm. ── */
+/* ── Đưa việc sang bảng / giữ kế hoạch theo thiết kế: hộp xem trước #dlg-sdp liệt kê việc mới, việc đổi, việc không còn trong
+ * thiết kế; người dùng chọn từng mục và bước nhận việc mới (mặc định "System build", chưa có thì tạo ở vị trí 2). Một Hoàn tác
+ * trả hết. ── */
 
-function addToPlan() {
+/** @type {null | {wsId: string, items: any[], key: string}} */
+let planCtx = null;
+const diffKey = (/** @type {any[]} */ items) => items.map((x) => `${x.kind}:${x.task?.src || ''}:${x.sub?.id || ''}`).join('|');
+
+function openPlan() {
   const w = ws();
-  const tasks = D.planTasks(cat, w.design);
-  let step = w.steps.find((/** @type {any} */ s) => C.fold(s.title) === C.fold(D.PLAN_STEP.title));
-  const created = !step;
+  if (!w || !cat) return;
+  const h = deps.h;
+  const items = D.planDiff(cat, w);
+  planCtx = { wsId: w.id, items, key: diffKey(items) };
+  const build = w.steps.find((/** @type {any} */ s) => C.fold(s.title) === C.fold(D.PLAN_STEP.title));
+  const sel = $('sdp-step');
+  sel.replaceChildren(...(build ? [] : [h('option', { value: '' }, `New step: ${D.PLAN_STEP.title} (step ${Math.min(1, w.steps.length) + 1})`)]),
+    ...w.steps.map((/** @type {any} */ s, /** @type {number} */ k) => h('option', { value: s.id }, `${k + 1}. ${s.title}`)));
+  sel.value = build ? build.id : '';
+  const stepName = (/** @type {string} */ id) => w.steps.find((/** @type {any} */ s) => s.id === id)?.title || '';
+  const radios = (/** @type {number} */ i, /** @type {string[][]} */ opts) => h('div', { class: 'sd-pills', role: 'radiogroup', 'aria-label': 'Action' },
+    ...opts.map(([v, l], k) => h('label', { class: 'sd-pill' }, h('input', { type: 'radio', name: `sdp-${i}`, value: v, 'data-i': i, checked: k === 0 }), h('span', {}, l))));
+  /** @param {any} it @param {number} i */
+  const row = (it, i) => {
+    if (it.kind === 'new') {
+      return h('li', { class: 'sdp-item' }, h('label', { class: 'sdp-check' }, h('input', { type: 'checkbox', 'data-i': i, checked: true }),
+        h('span', { class: 'sdp-txt' }, h('b', {}, it.task.title), it.task.doneWhen ? h('small', {}, `Done when: ${it.task.doneWhen}`) : null)));
+    }
+    if (it.kind === 'changed') {
+      return h('li', { class: 'sdp-item' }, h('span', { class: 'sdp-txt' }, h('b', {}, it.task.title),
+        h('small', {}, it.sub.title !== it.task.title ? `Was: ${it.sub.title} (in ${stepName(it.stepId)})` : `Done when, notes or links changed (in ${stepName(it.stepId)}).`),
+        it.sub.status === 'done' ? h('small', { class: 'sd-warn' }, 'Done now: Update sets it back to New.') : null),
+      radios(i, [['update', 'Update'], ['replace', 'Keep old and add new']]));
+    }
+    return h('li', { class: 'sdp-item' }, h('span', { class: 'sdp-txt' }, h('b', {}, it.sub.title), h('small', {}, `In ${stepName(it.stepId)}: ${it.why}.`)),
+      radios(i, it.tagged ? [['cancel', 'Cancel'], ['keep', 'Keep']] : [['keep', 'Keep'], ['cancel', 'Cancel']]));
+  };
+  const groups = /** @type {const} */ ([['new', 'New', ''], ['changed', 'Changed', 'Update rewrites the title and Done when and adds new links; your notes and links stay. Keep old and add new cancels the old task.'],
+    ['removed', 'No longer in the design', 'Cancel marks the task Cancelled with the reason; Keep leaves it as your own task.']]);
+  const lists = groups.map(([kind, title, help]) => {
+    const rows = items.map((it, i) => (it.kind === kind ? row(it, i) : null)).filter(Boolean);
+    return rows.length ? h('section', { class: 'sdp-group' }, h('h3', { class: 'sd-h4' }, `${title} (${rows.length})`), help ? h('p', { class: 'sd-help' }, help) : null,
+      h('ul', { class: 'sdp-list' }, ...rows)) : null;
+  });
+  const same = items.filter((x) => x.kind === 'same').length;
+  const todo = items.some((x) => x.kind !== 'same');
+  $('sdp-list').replaceChildren(...lists.filter(Boolean), same ? h('p', { class: 'sd-help' }, `${C.plural(same, 'task')} already match the design.`) : null);
+  const update = items.some((x) => x.sub);
+  $('dlg-sdp-title').textContent = update ? 'Update plan' : 'Add tasks to plan';
+  $('sdp-sub').textContent = todo ? 'Pick what to do with each task. One Undo reverts everything.' : 'Every task already matches the design.';
+  $('sdp-step-field').hidden = !items.some((x) => x.kind === 'new' || x.kind === 'changed');
+  $('sdp-go').disabled = !todo;
+  deps.showDlg($('dlg-sdp'));
+  ($('sdp-list').querySelector('input') || $('dlg-sdp').querySelector('[data-close]')).focus({ preventScroll: true });
+}
+
+function applyPlanNow() {
+  const ctx = planCtx;
+  planCtx = null;
+  $('dlg-sdp').close();
+  const w = ctx && deps.findWs(ctx.wsId);
+  if (!w) return;
+  /* Tab khác đổi dự án trong lúc hộp mở: bản so không còn đúng. */
+  if (diffKey(D.planDiff(cat, w)) !== ctx.key) { deps.toast('The plan changed meanwhile; open "Update plan" again.'); return; }
+  const list = $('sdp-list');
+  const choices = ctx.items.map((it, i) => (it.kind === 'new'
+    ? (list.querySelector(`input[type="checkbox"][data-i="${i}"]`)?.checked ? 'add' : 'skip')
+    : list.querySelector(`input[type="radio"][data-i="${i}"]:checked`)?.value || ''));
+  let step = w.steps.find((/** @type {any} */ s) => s.id === $('sdp-step').value);
+  let created = false;
   if (!step) {
     step = C.normStep({ ...D.PLAN_STEP, subs: [] });
     w.steps.splice(Math.min(1, w.steps.length), 0, step);
+    created = true;
   }
-  const have = new Set(step.subs.map((/** @type {any} */ x) => C.fold(x.title)));
-  const added = tasks.filter((t) => !have.has(C.fold(t.title))).map((t) => C.normSub(t));
-  step.subs.push(...added);
-  const stepId = step.id, wsId = w.id, ids = new Set(added.map((x) => x.id));
-  const where = `"${D.PLAN_STEP.title}" (step ${w.steps.indexOf(step) + 1})`;
+  const r = D.applyPlan(ctx.items, choices, step, C);
+  if (created && !step.subs.length) { w.steps = w.steps.filter((/** @type {any} */ s) => s !== step); created = false; }
+  const n = r.counts;
+  const parts = [n.added ? `${n.added} added` : '', n.updated ? `${n.updated} updated` : '', n.cancelled ? `${n.cancelled} cancelled` : ''].filter(Boolean);
   deps.commit();
-  if (!added.length) { deps.toast(`Every task is already in ${where}.`); return; }
-  deps.toast(`Added ${C.plural(added.length, 'task')} to ${where}.`, () => {
+  if (!parts.length && !r.before.size) { deps.toast('Nothing changed.'); return; }
+  const wsId = w.id, stepId = step.id, added = new Set(r.added), before = r.before;
+  deps.toast(`Plan updated: ${parts.join(', ') || 'tasks linked to the design'}.${n.reset ? ` ${C.plural(n.reset, 'done task')} set back to New.` : ''}`, () => {
     const ww = deps.findWs(wsId);
-    const s = ww && ww.steps.find((/** @type {any} */ x) => x.id === stepId);
-    if (!s) return;
-    s.subs = s.subs.filter((/** @type {any} */ x) => !ids.has(x.id));
-    if (created && !s.subs.length) ww.steps = ww.steps.filter((/** @type {any} */ x) => x !== s);
+    if (!ww) return;
+    for (const s of ww.steps) s.subs = s.subs.filter((/** @type {any} */ x) => !added.has(x.id)).map((/** @type {any} */ x) => (before.has(x.id) ? C.normSub(before.get(x.id)) : x));
+    if (created) ww.steps = ww.steps.filter((/** @type {any} */ s) => s.id !== stepId || s.subs.length);
     deps.commit('#sd-plan');
   }, '#sd-plan');
 }
@@ -575,7 +639,8 @@ function go(/** @type {number} */ k) {
 function wire() {
   $('sd-open').addEventListener('click', () => openDesign(0));
   $('sd-svg').addEventListener('click', downloadSvg);
-  $('sd-plan').addEventListener('click', addToPlan);
+  $('sd-plan').addEventListener('click', openPlan);
+  $('sdp-form').addEventListener('submit', (/** @type {any} */ e) => { e.preventDefault(); applyPlanNow(); });
   $('sd-prev').addEventListener('click', () => go(at - 1));
   $('sd-next').addEventListener('click', () => (at === lastPage() ? $('dlg-sd').close() : go(at + 1)));
   $('sd-nav').addEventListener('click', (/** @type {any} */ e) => {

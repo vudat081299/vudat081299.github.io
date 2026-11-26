@@ -109,6 +109,7 @@ export function normSub(o) {
     docs: docsOf(x.docs),
     par: x.par === true,
     redo: x.redo === true,
+    ...(/^(?:stage|edge):[a-z0-9>-]{1,81}@[a-z0-9]{1,13}$/.test(x.sd) ? { sd: x.sd } : {}), // việc sinh từ System design (design-core.js)
   };
 }
 

@@ -140,7 +140,7 @@
       <p class="sd-deliv" id="sd-path" hidden></p>
       <div class="sd-acts">
         <button type="button" class="btn go" id="sd-open"><svg class="i" aria-hidden="true"><use href="#i-flow"/></svg><span id="sd-open-text">Design the system</span></button>
-        <button type="button" class="btn" id="sd-plan" hidden title="Add one sub-step per decided stage to the step System build"><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg>Add tasks to plan</button>
+        <button type="button" class="btn" id="sd-plan" hidden title="One sub-step per decided stage and described handoff; later, keep them in step with the design"><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg><span id="sd-plan-text">Add tasks to plan</span></button>
         <button type="button" class="btn quiet" id="sd-svg" hidden><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Download SVG</button>
       </div>
     </header>
@@ -617,6 +617,29 @@
       <button type="button" class="btn go" id="sd-next"><span id="sd-next-text">Next</span></button>
     </footer>
   </div>
+</dialog>
+
+<!-- System design → bảng: xem trước việc mới / đổi / không còn trong thiết kế (js/design.js) -->
+<dialog class="dlg sdp-dlg" id="dlg-sdp" aria-labelledby="dlg-sdp-title" aria-describedby="sdp-sub">
+  <form method="dialog" id="sdp-form" class="dlg-form">
+    <header class="dlg-head">
+      <div class="dlg-titles">
+        <p class="dlg-kicker">System design</p>
+        <h2 id="dlg-sdp-title">Update plan</h2>
+        <p class="dlg-sub" id="sdp-sub"></p>
+      </div>
+      <button type="button" class="icon-btn dlg-x" data-close aria-label="Close" title="Close"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button>
+    </header>
+    <div class="dlg-body">
+      <label class="field" id="sdp-step-field"><span>Put new tasks in step</span><select id="sdp-step"></select></label>
+      <div class="sdp-groups" id="sdp-list"></div>
+    </div>
+    <footer class="dlg-foot">
+      <span class="dlg-gap"></span>
+      <button type="button" class="btn" data-close>Close</button>
+      <button type="submit" class="btn go" id="sdp-go">Apply</button>
+    </footer>
+  </form>
 </dialog>
 
 <dialog class="dlg dlg-sm dlg-ask" id="dlg-ask" aria-labelledby="dlg-ask-title" aria-describedby="ask-text">

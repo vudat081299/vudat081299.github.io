@@ -1633,12 +1633,21 @@ const check = (name, ok, detail = '') => {
     check(`${tag}: sơ đồ nằm trong khung, trang không tràn ngang`, await sp.$eval('#sd-fig', (f) => f.scrollWidth <= f.clientWidth + 1) && (await hOverflow(sp)) <= 0);
     const steps0 = (await cur(sp)).steps.length;
     await sp.click('#sd-plan');
+    await sp.waitForSelector('#dlg-sdp[open] .sdp-item');
+    check(`${tag}: Add tasks to plan mở bản xem trước, mặc định bước mới System build`, (await sp.textContent('#dlg-sdp-title')) === 'Add tasks to plan'
+      && (await sp.$eval('#sdp-step', (s) => s.value)) === '' && (await sp.$$eval('#sdp-list .sdp-item', (l) => l.length)) === 1);
+    if (w === 390) check(`${tag}: hộp Update plan không tràn ngang`, await sp.$eval('#dlg-sdp', (d) => d.scrollWidth <= d.clientWidth + 1));
+    await sp.click('#sdp-go');
     ws = await cur(sp);
     const build = ws.steps[1];
-    check(`${tag}: Add tasks to plan thêm bước System build ở vị trí 2, có link`, ws.steps.length === steps0 + 1 && build.title === 'System build'
-      && build.subs.length === 1 && build.subs[0].docs.length > 0 && build.subs[0].title.startsWith(proc.title));
+    check(`${tag}: Add tasks to plan thêm bước System build ở vị trí 2, có link, có dấu nguồn`, ws.steps.length === steps0 + 1 && build.title === 'System build'
+      && build.subs.length === 1 && build.subs[0].docs.length > 0 && build.subs[0].title.startsWith(proc.title) && /^stage:/.test(build.subs[0].sd));
+    check(`${tag}: đã có việc sinh ra thì nút thành Update plan`, (await sp.textContent('#sd-plan')).trim() === 'Update plan');
     await sp.click('#sd-plan');
-    check(`${tag}: bấm lại không thêm trùng`, (await cur(sp)).steps[1].subs.length === 1 && /already/.test(await sp.textContent('#toast-text')));
+    await sp.waitForSelector('#dlg-sdp[open]');
+    check(`${tag}: bấm lại: mọi việc đã khớp, Apply tắt`, await sp.$eval('#sdp-go', (b) => b.disabled) && /already match/.test(await sp.textContent('#dlg-sdp')));
+    await sp.keyboard.press('Escape');
+    check(`${tag}: không thêm trùng`, (await cur(sp)).steps[1].subs.length === 1);
     if (w === 1280) {
       const [dl] = await Promise.all([sp.waitForEvent('download'), sp.click('#sd-svg')]);
       const body = fs.readFileSync(await dl.path(), 'utf8');
@@ -1696,6 +1705,25 @@ const check = (name, ok, detail = '') => {
       });
       check(`${tag}: Markdown có mục Handoffs`, md2.includes('[handoff: raw > process]') && md2.includes('  Check: Script làm sạch'));
     }
+    /* Đổi phương án sau khi đã sinh việc (review: pandas → DuckDB để lại hai việc): Update plan sửa đúng việc cũ; Hoàn tác trả hết. */
+    const oldTitle = (await cur(sp)).steps[1].subs[0].title;
+    await sp.click(`#sd-fig [data-stage="${proc.id}"]`);
+    await sp.click('#sd-pane .sd-more > summary');
+    const other = await sp.$eval('#sd-pane .sd-more .sd-opt', (e) => e.dataset.opt);
+    await sp.click(`#sd-pane [data-opt="${other}"] input`);
+    await sp.keyboard.press('Escape');
+    await sp.click('#sd-plan');
+    await sp.waitForSelector('#dlg-sdp[open] .sdp-item');
+    const groups = await sp.$$eval('#sdp-list .sdp-group h3', (l) => l.map((x) => x.textContent));
+    check(`${tag}: Update plan: việc mới (khâu, bàn giao) và việc đổi`, groups.some((t) => /^New \(3\)/.test(t)) && groups.some((t) => /^Changed \(1\)/.test(t)), groups.join());
+    await sp.click('#sdp-go');
+    ws = await cur(sp);
+    const procSubs = ws.steps[1].subs.filter((x) => x.title.startsWith(proc.title));
+    check(`${tag}: Update sửa việc cũ, không để hai việc cùng khâu; việc bàn giao có Done when là phép kiểm`, procSubs.length === 1 && procSubs[0].title !== oldTitle
+      && ws.steps[1].subs.some((x) => x.title === 'Handoff: Raw storage → Processing & cleaning' && /đếm đúng/.test(x.doneWhen)) && /Plan updated/.test(await sp.textContent('#toast-text')));
+    await sp.click('#toast-undo');
+    ws = await cur(sp);
+    check(`${tag}: Hoàn tác trả việc cũ, gỡ việc mới`, ws.steps[1].subs.length === 1 && ws.steps[1].subs[0].title === oldTitle);
     await sx.close();
   }
 
