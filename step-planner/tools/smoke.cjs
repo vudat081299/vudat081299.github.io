@@ -2605,6 +2605,116 @@ const check = (name, ok, detail = '') => {
     await pc.close();
   });
 
+  /* ── Hàng không dựng lại vẫn đúng: khoá hàng đọc trạng thái chấm và tên đầu ra; đang tìm thì ẩn mũi tên; danh sách ghi "on hold";
+   * tên dài vừa thêm mờ ngay, không nhờ sự kiện font; Architecture chưa đủ gợi ý thì chưa xong. Font Google bị chặn trong các
+   * context này nên không lần tải font nào sửa hộ lần vẽ. ── */
+  await section('Hàng không dựng lại, font tải muộn, nav Architecture', async () => {
+    const LONG = 'matches_with_odds_and_lineups_2019_2024.parquet';
+    const noFonts = (c) => c.route(/^https:\/\/fonts\.(googleapis|gstatic)\.com\//, (r) => r.abort());
+    const seedWs = (d) => { if (!sessionStorage.getItem('seeded')) { sessionStorage.setItem('seeded', '1'); localStorage.setItem('stepPlanner.v2', JSON.stringify({ version: 2, workspaces: [d], lastId: d.id })); } };
+    /* Hàng 1 (Make) nhận late.json của hàng 2: treo. P giao model.pkl cho C (hàng 2) và feat.csv cho Q (cùng hàng). */
+    const seed = { id: 'wk', name: 'Keys', steps: [
+      { id: 'k1', title: 'Make', ins: ['oz'], subs: [
+        { id: 'kP', title: 'Produce', outs: [{ id: 'op', name: 'model.pkl' }, { id: 'ox', name: 'feat.csv' }] },
+        { id: 'kQ', title: 'Use features', ins: ['ox'] },
+        { id: 'kR', title: 'Long output', outs: [{ id: 'or', name: LONG }] },
+        { id: 'kT', title: 'Take long' }] },
+      { id: 'k2', title: 'Use', outs: [{ id: 'oz', name: 'late.json' }], subs: [{ id: 'kC', title: 'Consume model', ins: ['op'] }] },
+    ], log: [] };
+    const kc = await browser.newContext({ viewport: { width: 1600, height: 900 }, deviceScaleFactor: 1 });
+    await noFonts(kc);
+    await kc.addInitScript(seedWs, seed);
+    const kp = await kc.newPage();
+    kp.on('pageerror', (e) => errors.push('khoá hàng: ' + e));
+    await kp.goto(BASE);
+    await kp.waitForSelector('.card[data-sub="kC"]');
+    const arrows = () => kp.evaluate(() => ({ n: document.querySelectorAll('.hand-row, .hand-gap').length,
+      row: document.querySelector('.step[data-step="k2"] [data-act="hand-row"]')?.textContent || '',
+      gap: [...document.querySelectorAll('[data-act="hand-gap"]')].map((b) => b.textContent) }));
+
+    // Đang tìm, khớp cả bên giao (P: tên đầu ra) và bên nhận (C): không mũi tên nào; xoá chữ tìm thì về.
+    const a0 = await arrows();
+    await kp.fill('#q', 'model');
+    await waitTo(kp, 'bảng vào chế độ tìm', () => document.getElementById('board').classList.contains('filtering'));
+    const a1 = await arrows();
+    const hits = await kp.$$eval('.card[data-sub]', (cs) => cs.map((c) => c.dataset.sub).sort());
+    await kp.fill('#q', '');
+    await waitTo(kp, 'bảng thôi chế độ tìm', () => !document.getElementById('board').classList.contains('filtering'));
+    const a2 = await arrows();
+    check('khoá hàng: đang tìm (khớp cả bên giao lẫn bên nhận) thì không mũi tên; xoá chữ tìm thì mũi tên về',
+      a0.n === 2 && a0.row === 'model.pkl' && a1.n === 0 && hits.join() === 'kC,kP' && JSON.stringify(a2) === JSON.stringify(a0), JSON.stringify({ a0, a1, hits, a2 }));
+
+    // Liên kết treo: danh sách Out của bên giao và In của bên nhận ghi "on hold".
+    const heldIn = async (sel) => {
+      await kp.click(sel);
+      const r = await kp.$$eval('#hand-list .hand-who', (bs) => bs.map((b) => (b.classList.contains('held') ? 'held:' : '') + b.textContent));
+      await kp.keyboard.press('Escape');
+      return r;
+    };
+    const outList = await heldIn('.step[data-step="k2"] [data-act="hand-out"]');
+    const inList = await heldIn('.step[data-step="k1"] [data-act="hand-in"]');
+    check('khoá hàng: danh sách Out / In của liên kết treo đánh dấu "on hold"', outList.length === 1 && /^held:.*on hold/.test(outList[0])
+      && inList.length === 1 && /^held:.*on hold/.test(inList[0]), JSON.stringify({ outList, inList }));
+
+    // Đổi tên đầu ra ở hàng 1: mũi tên trên hàng 2 (hàng ấy không đổi gì khác) và nút giữa hai ô ghi tên mới.
+    await kp.click('.card[data-sub="kP"] [data-act="edit-sub"]');
+    await kp.locator('#sub-hand .out-row [data-k="name"]').nth(0).fill('model-v2.pkl');
+    await kp.locator('#sub-hand .out-row [data-k="name"]').nth(1).fill('feat-v2.csv');
+    await kp.click('#sub-form button[type="submit"]');
+    const a3 = await arrows();
+    check('khoá hàng: đổi tên đầu ra thì mũi tên trên hàng nhận và nút giữa hai ô ghi tên mới', a3.row === 'model-v2.pkl' && a3.gap.join() === 'feat-v2.csv', JSON.stringify(a3));
+
+    // Tên dài vừa thêm (sau khi font đã xong, không còn sự kiện font nào): mờ ở đuôi ngay sau lần vẽ.
+    await kp.evaluate(() => document.fonts.ready.then(() => new Promise((r) => requestAnimationFrame(() => r()))));
+    await kp.click('.card[data-sub="kT"] [data-act="edit-sub"]');
+    await kp.click('#sub-hand [data-in-pick]');
+    await kp.check('#pick-groups input[value="or"]');
+    await kp.click('#pick-ok');
+    await kp.click('#sub-form button[type="submit"]');
+    const longGap = await kp.evaluate((name) => [...document.querySelectorAll('.hand-gap .hand-btn-name')].filter((n) => n.textContent === name)
+      .map((n) => ({ cut: n.classList.contains('cut'), over: n.scrollWidth > n.clientWidth })), LONG);
+    check('khoá hàng: tên đầu ra dài vừa nối mờ ở đuôi ngay (không chờ font)', longGap.length === 1 && longGap[0].cut && longGap[0].over, JSON.stringify(longGap));
+
+    // Xoá nơi dùng duy nhất của model.pkl (hàng 2): chấm đầu ra của P (hàng 1, không đổi gì khác) thành lỗi ngay.
+    const pOut0 = await kp.$eval('.card[data-sub="kP"] .io', (e) => e.dataset.ioOut);
+    await kp.click('.card[data-sub="kC"] [data-act="edit-sub"]');
+    await kp.click('#sub-del');
+    await waitTo(kp, 'thẻ đã xoá rời bảng', () => !document.querySelector('.card[data-sub="kC"]'));
+    const pOut1 = await kp.$eval('.card[data-sub="kP"] .io', (e) => e.dataset.ioOut);
+    check('khoá hàng: xoá nơi dùng duy nhất ở hàng khác thì chấm đầu ra của bên giao lỗi ngay', pOut0 === 'ok' && pOut1 === 'bad', `${pOut0} → ${pOut1}`);
+    await kc.close();
+
+    // Font tải muộn: tên vừa chỗ với font dự phòng; font về (to gấp bốn) thì tên tràn và phải mờ — chỉ lần đo lại khi font
+    // tải xong làm việc này. Font "về" là @font-face trỏ font hệ thống, size-adjust 400%.
+    const lc = await browser.newContext({ viewport: { width: 1280, height: 900 }, deviceScaleFactor: 1 });
+    await noFonts(lc);
+    await lc.addInitScript(seedWs, { id: 'wl', name: 'Late font', steps: [{ id: 'l1', title: 'A', subs: [
+      { id: 'lA', title: 'Give', outs: [{ id: 'oa', name: 'teams.csv' }] }, { id: 'lB', title: 'Take', ins: ['oa'] }] }], log: [] });
+    const lp = await lc.newPage();
+    lp.on('pageerror', (e) => errors.push('font muộn: ' + e));
+    await lp.goto(BASE);
+    await lp.waitForSelector('.hand-gap .hand-btn-name');
+    const fit0 = await lp.$eval('.hand-gap .hand-btn-name', (n) => n.classList.contains('cut') || n.scrollWidth > n.clientWidth);
+    await lp.addStyleTag({ content: "@font-face { font-family: 'Be Vietnam Pro'; src: local('DejaVu Sans'), local('Liberation Sans'), local('FreeSans'), local('Arial'), local('Helvetica'); size-adjust: 400%; }" });
+    const loaded = await lp.evaluate(() => document.fonts.ready.then(() => [...document.fonts].some((f) => f.family.replace(/"/g, '') === 'Be Vietnam Pro' && f.status === 'loaded')));
+    const cut1 = await lp.waitForFunction(() => document.querySelector('.hand-gap .hand-btn-name.cut'), null, { timeout: 2000 }).then(() => true, () => false);
+    check('font tải muộn: tên vừa chỗ thì không mờ; font về làm tên tràn thì đo lại và mờ', !fit0 && loaded && cut1, JSON.stringify({ fit0, loaded, cut1 }));
+    await lc.close();
+
+    // Architecture: mới chọn thứ bàn giao thì chỉ nhóm app có gợi ý — mục ấy chưa xong ("k of n recommended", k < n).
+    const { ctx: nx, page: np } = await open(1280, 900);
+    await np.click('#start .tpl[data-tpl="crisp-dm"]');
+    await np.click('#sd-btn');
+    await np.click('#sd-open');
+    await np.waitForSelector('#dlg-sd[open] .sd-paths');
+    await np.click('#sd-pane input[data-path][value="demo"]', { force: true });
+    await waitTo(np, 'nav ghi lối đã chọn', () => document.querySelector('#sd-nav [data-at="0"]')?.classList.contains('is-done'));
+    const nav = await np.$eval('#sd-nav [data-at="2"]', (b) => ({ cls: b.className, t: b.textContent }));
+    const [, k, n] = nav.t.match(/(\d+) of (\d+) recommended/) || [];
+    check('Architecture: chưa đủ gợi ý cho mọi nhóm thì mục chưa xong', /\bis-open\b/.test(nav.cls) && !/\bis-done\b/.test(nav.cls) && +k >= 1 && +k < +n, JSON.stringify(nav));
+    await nx.close();
+  });
+
   /* ── Dữ liệu lưu bị hỏng ── */
   await section('Dữ liệu lưu bị hỏng', async () => { // thân giữ thụt lề cũ cho dễ gộp
   const bad = await browser.newContext();

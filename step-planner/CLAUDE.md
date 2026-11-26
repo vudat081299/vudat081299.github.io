@@ -186,3 +186,5 @@
   Gợi ý kiến trúc và luật báo so với ảnh chụp `tools/design-snapshot.json`; đổi danh mục có chủ ý thì sinh lại: `node step-planner/tools/test-core.mjs --write-snapshot`.
 - `tools/smoke.cjs` (cổng tự dựng máy chủ tạm; thiếu playwright thì bỏ qua, CI chạy ở job smoke): bấm thật các hành vi trên,
   hai tab, 390px, bộ nhớ bị chặn / hỏng / khoá cũ, lỗi console; số mẫu đọc từ `templates.json`. Chạy tay: `node <file> <url>`.
+  Mỗi phần `section(tên, …)` chạy riêng: một phần ném lỗi thì báo LỖI, phần sau vẫn chạy. `SMOKE_ONLY=<chữ trong tên>` chạy riêng phần ấy.
+  Chờ bằng điều kiện (`waitTo`, `synced` cho hai tab), không ngủ cố định. Font Google tải thật; phần đo lần vẽ chặn font để sự kiện font không sửa hộ.
