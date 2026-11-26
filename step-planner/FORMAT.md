@@ -149,6 +149,8 @@ Warnings:
 - Một dự án: `{format: "step-planner", version: 3, exportedAt, workspace}`. Sao lưu: `{…, workspaces: [...]}`. Trang không
   dựa vào `version`: bản 1 (có người, không tài liệu), bản 2 (không ô song song) vẫn nhập.
 - Trường mới có mặc định (`outs`, `ins`, `doneAt`, `proof`, `sd`, `design.path`, `design.edges`) không tăng `version`: đi qua chuẩn hoá.
+- `sd` của bước con: `stage:<khâu>@<chữ ký>` hay `edge:<a>><b>@<chữ ký>` (việc sinh từ System design), hay `kept` (đã chọn
+  Keep ở "Update plan": không đối chiếu lại). Giá trị khác bị bỏ. Markdown không ghi `sd`.
 - Nhập nhận cả hai, mảng dự án, hoặc một dự án trần. Mục sai khuôn thì bỏ, kèm cảnh báo; không còn dự án nào thì báo lỗi,
   không lộ TypeError. Chữ mở bằng `{`, hay `[` rồi một giá trị JSON, là JSON; còn lại (kể cả `[tên](url)`) là Markdown.
 - Mặc định tạo dự án mới (id mới cho bước, bước con, tài liệu, đầu ra; đầu vào, quyết định trỏ theo; trùng tên thì

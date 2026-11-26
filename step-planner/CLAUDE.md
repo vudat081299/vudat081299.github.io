@@ -44,7 +44,7 @@
 - `due`, `doneAt`: `YYYY-MM-DD` hoặc rỗng. `doneAt`: ngày sang Done (`setStatus`), chỉ giữ khi `done`; dữ liệu cũ rỗng, không bịa ngày.
 - `par: true` = nhập ô của bước con ngay trước; `subs[0].par` luôn false. Ô (slot), chỗ (`Place`), mọi phép dời ở `core/board.js`.
 - `redo: true` = được gửi lại làm trong vòng đang mở; bước không mở lại thì mọi `redo` là false.
-- `sd`: `stage:<khâu>@<chữ ký>` hoặc `edge:<a>><b>@<chữ ký>`, chỉ ở bước con System design sinh ra; nhân bản bước con thì bỏ.
+- `sd`: `stage:<khâu>@<chữ ký>` hoặc `edge:<a>><b>@<chữ ký>`, chỉ ở bước con System design sinh ra; nhân bản bước con thì bỏ. `kept`: đã chọn Keep, nhân bản giữ.
 - Doc `{id, kind: 'link', title, url, proof}` hoặc `{id, kind: 'md', title, body, proof}`. `url` chỉ http(s) (`safeUrl`); link
   khác bị bỏ (nhập thì cảnh báo). `body` giữ nguyên từng dòng. `proof: true` = bằng chứng cho "Done when".
 - Out `{id, name, ref, note}`: `name` bắt buộc (không tên thì bỏ); `ref` đường dẫn file hay link; `note` hợp đồng một dòng.
@@ -177,7 +177,7 @@
   (mặc định "System build", chưa có thì tạo ở vị trí 2). Mỗi khâu đã quyết một việc, mỗi bàn giao đã ghi một việc `Handoff: A → B`.
 - Đối chiếu theo `sd`; bước con chưa có `sd` thì theo tên trong bước "System build".
 - Update: thay tên, Done when, thêm link và dòng ghi chú mới; giữ ghi chú, tài liệu của người dùng; Done về New.
-  "Keep old and add new": cũ thành Cancelled ("Replaced in system design: …"). Cancel: "No longer in system design: …". Một Hoàn tác.
+  "Keep old and add new": cũ thành Cancelled ("Replaced in system design: …"). Cancel: "No longer in system design: …". Keep: `sd` = `kept`, không đối chiếu lại. Một Hoàn tác.
 
 ## Giao diện
 

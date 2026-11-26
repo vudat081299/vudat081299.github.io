@@ -4,7 +4,7 @@
    tên không trùng, tạo dự án từ mẫu (fromTemplate).
    Xuất: STATUSES, STATUS_LABEL, MARK, FROM_MARK, STATUS_HINT, REASON_LABEL, hasReason, outOfScope, nextStatus, setStatus,
      needsEvidence, FORMAT, VERSION, MD_VERSION, APP_NAME, LOG_HEADING, LOOSE_STEP, uid, today, parseDate, isObj, oneLine,
-     multiLine, DOC_KINDS, safeUrl, normDoc, normOut, normSub, normStep, normLog, normWorkspace, EDIT_FIELDS, pick,
+     multiLine, DOC_KINDS, safeUrl, normDoc, normOut, SD_KEPT, normSub, normStep, normLog, normWorkspace, EDIT_FIELDS, pick,
      mergeEdit, freshCopy, uniqueName, fromTemplate.
    Dùng: core/design.js, core/handoffs.js. */
 import { normDesign, presetDesign } from './design.js';
@@ -121,6 +121,11 @@ const insOf = (a, outs) => {
   return [...new Set((Array.isArray(a) ? a : []).filter((s) => typeof s === 'string' && s && !own.has(s)))];
 };
 
+/** Dấu `sd` của bước con: việc sinh từ System design (`stage:khâu@chữ ký`, `edge:a>b@chữ ký`), hay `SD_KEPT` — người dùng
+ * chọn Keep khi việc không còn trong thiết kế: thành việc của người dùng, không đối chiếu lại (core/design-plan.js). */
+export const SD_KEPT = 'kept';
+const SD_OK = /^(?:(?:stage|edge):[a-z0-9>-]{1,81}@[a-z0-9]{1,13}|kept)$/;
+
 /** @param {any} o */
 export function normSub(o) {
   const x = isObj(o) ? o : {};
@@ -138,7 +143,7 @@ export function normSub(o) {
     par: x.par === true,
     redo: x.redo === true,
     ...handOf(x),
-    ...(/^(?:stage|edge):[a-z0-9>-]{1,81}@[a-z0-9]{1,13}$/.test(x.sd) ? { sd: x.sd } : {}), // việc sinh từ System design (core/design-plan.js)
+    ...(SD_OK.test(x.sd) ? { sd: x.sd } : {}),
   };
 }
 /** outs, ins của một bước / bước con. @param {any} x */

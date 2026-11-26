@@ -877,6 +877,25 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   check('kế hoạch: việc cũ chưa có dấu — khớp theo tên, việc thừa cùng khâu là removed (thay bởi việc mới), việc riêng không đụng',
     diff.length === 2 && diff[0].kind === 'changed' && diff[0].sub.title === 'Processing & cleaning: DuckDB' && !diff[0].tagged
     && diff[1].kind === 'removed' && diff[1].sub.title === 'Processing & cleaning: pandas' && /replaced by/.test(diff[1].why), kinds(diff));
+  /* Keep ở "No longer in the design" bền: việc có dấu và việc khớp theo tên đều thành `kept`, lần so sau không hỏi lại;
+   * đi qua JSON; khâu quay lại thì là việc mới, không ăn vào việc đã giữ. */
+  const kw = normWorkspace({ name: 'K', steps: [{ title: PLAN_STEP.title, subs: [{ id: 'kOld', title: 'Raw storage: Project folder (data/raw)' }] }],
+    design: { stages: { process: P('pandas') } } });
+  const kb = kw.steps[0];
+  diff = planDiff(cat, kw);
+  const kinds0 = kinds(diff);
+  const kr = applyPlan(diff, diff.map((x) => (x.kind === 'new' ? 'add' : 'keep')), kb);
+  const kinds1 = kinds(planDiff(cat, kw));
+  kw.design = normDesign({ stages: { raw: P('project-folder') } });
+  diff = planDiff(cat, kw);
+  const kinds2 = kinds(diff);
+  const kr2 = applyPlan(diff, diff.map((x) => (x.kind === 'new' ? 'add' : 'keep')), kb);
+  const kj = parseImport(toJSON(kw)).workspaces[0].steps[0].subs;
+  check('kế hoạch: Keep bền — việc khớp theo tên và việc có dấu thành kept, so lại không hỏi lại, qua JSON; khâu quay lại là việc mới',
+    kinds0 === 'new:stage:process,removed:Raw storage: Project folder (data/raw)' && kr.counts.kept === 1 && !kr.before.get('kOld').sd
+    && kinds1 === 'same:stage:process' && kinds2 === 'new:stage:raw,removed:Processing & cleaning: pandas' && kr2.counts.kept === 1
+    && eq(kb.subs.map((x) => x.sd === 'kept'), [true, true, false]) && eq(kinds(planDiff(cat, kw)), 'same:stage:raw')
+    && eq(kj.map((x) => x.sd), kb.subs.map((x) => x.sd)), `${kinds0} → ${kinds1} → ${kinds2} → ${kinds(planDiff(cat, kw))}`);
   const md = '# P\n\n## System design\n\nProfile: size small · budget free\n\n- dòng lạ\n- Serving: FastAPI [serve: fastapi]\n';
   const back = fromMarkdown(md);
   check('thiết kế: Markdown viết tay — dòng không có [khâu: …] thì cảnh báo, không thành bước', back.workspace.steps.length === 0

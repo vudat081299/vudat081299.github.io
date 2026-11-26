@@ -8,7 +8,7 @@
 import { placeSub, shiftTarget, subPlace, takeSub } from '../core/board.js';
 import { insBackup } from '../core/handoffs.js';
 import { plural } from '../core/io.js';
-import { STATUSES, STATUS_HINT, STATUS_LABEL, needsEvidence, nextStatus, normSub, setStatus } from '../core/model.js';
+import { SD_KEPT, STATUSES, STATUS_HINT, STATUS_LABEL, needsEvidence, nextStatus, normSub, setStatus } from '../core/model.js';
 import { boxKey, markCut, unclip } from './clamp.js';
 import { ask } from './dialogs.js';
 import { openDocNew } from './docs.js';
@@ -61,7 +61,7 @@ function openStatusMenu(chip, step, sub) {
 
 export function duplicateSub(/** @type {any} */ step, /** @type {any} */ sub) {
   const c = normSub({ ...sub, id: '', title: sub.title + ' (copy)', docs: sub.docs.map((/** @type {any} */ d) => ({ ...d, id: '' })),
-    outs: sub.outs.map((/** @type {any} */ o) => ({ ...o, id: '' })), sd: '' }); // bản sao giữ đầu vào; đầu ra mang id mới, nơi dùng vẫn trỏ bản gốc; không mang dấu việc sinh từ System design
+    outs: sub.outs.map((/** @type {any} */ o) => ({ ...o, id: '' })), sd: sub.sd === SD_KEPT ? SD_KEPT : '' }); // bản sao giữ đầu vào; đầu ra mang id mới, nơi dùng vẫn trỏ bản gốc; không mang dấu việc sinh từ System design (việc đã chọn Keep thì bản sao cũng vậy)
   /* Bản sao đứng ngay sau bản gốc: trong cùng ô song song nếu bản gốc ở ô song song, không thì một ô mới. */
   const p = subPlace(cur(), sub.id);
   if (!p) return;
