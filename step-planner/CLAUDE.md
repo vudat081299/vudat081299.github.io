@@ -124,6 +124,8 @@
 - `smoke.cjs` tìm `VERIFY data quality` (đúng một bước con) và `BUSINESS understanding` (đúng một bước) trên `crisp-dm`.
 - `stats-report` theo PPDAC, tên bước, bước con đúng hình 1(a) của Wild & Pfannkuch (1999). Không thêm thẻ ngoài hình.
 - `data-pipeline` theo vòng đời data engineering (Reis & Housley, 2022): năm khâu và Undercurrents; việc từ nguồn khác ghi nguồn trong tên thẻ.
+- `big-data-ds` (PLAN-024): sáu pha CRISP-DM, thêm bước Data Ingestion and Storage sau Business Understanding; ghi chú mỗi bước
+  nói khác gì dự án thường; link bài giảng `masters-degree/big-data-storage-processing/` theo neo (`lint.py` kiểm neo).
 - `app-feature` không theo chuẩn; việc phát hành theo tài liệu App Store Connect, Google Play, Flutter (link ở ghi chú bước).
 - `it5425-sports` sinh từ `masters-degree/data-management-visualization/data/sports-monitoring-build.json` và "Xong khi nào"
   (`#xong`) của trang 2 đồ án: `python3 step-planner/tools/lint.py --write-course`, không sửa tay; cổng đỏ khi nguồn đổi mà chưa sinh lại.

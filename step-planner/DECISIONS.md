@@ -24,6 +24,7 @@
 - PLAN-021 · System design bắt đầu từ thứ bàn giao, kiểm phối hợp, ghi hợp đồng giữa các khâu, việc đi theo thiết kế · `step-planner/`
 - PLAN-022 · Mẫu ghi loại đầu ra, khai bàn giao giữa các bước; có mẫu pipeline dữ liệu định kỳ · `step-planner/data/templates.json`
 - PLAN-023 · System design phủ kiểm dữ liệu, gán nhãn, tìm kiếm và LLM; giữ cả công cụ nên tránh, kèm lý do · `step-planner/data/system-design.json`, `step-planner/js/design-core.js`
+- PLAN-024 · Mẫu Data Science on big data: CRISP-DM cho dữ liệu quá lớn hay quá nhanh cho một máy · `step-planner/data/templates.json`
 <!-- index:end -->
 
 ## PLAN-001 · Dự án là các bước có thứ tự, mỗi bước có bước con có thứ tự
@@ -140,3 +141,8 @@ Mỗi mẫu ghi loại đầu ra (báo cáo, mô hình dự đoán / app, tính 
 26/11/2026 · `step-planner/data/system-design.json`, `step-planner/js/design-core.js`
 
 Hồ sơ hỏi thêm loại dữ liệu (bảng, văn bản, ảnh / âm thanh) và sản phẩm có tìm kiếm hay LLM không. Có khâu kiểm dữ liệu, gán nhãn, tìm kiếm và truy xuất; khâu không hợp hồ sơ được báo là thường không cần, áp lối thì thành không cần. Danh mục giữ cả công cụ người học hay nghe tên nhưng nên tránh khi làm một mình (Hadoop, Kubernetes, feature store, cụm Elasticsearch tự chạy), kèm lý do, lựa chọn thay và luật báo. Gợi ý ưu tiên thứ tự công cụ mà lối ghi; hồ sơ dùng để loại phương án không hợp, không để đẩy hạng.
+
+## PLAN-024 · Mẫu Data Science on big data: CRISP-DM cho dữ liệu quá lớn hay quá nhanh cho một máy
+26/11/2026 · `step-planner/data/templates.json`
+
+Có mẫu Data Science cho big data, khung là sáu pha CRISP-DM, thêm một bước thu nạp và lưu trữ (Kafka, vùng thô bất biến, bronze / silver / gold) trước pha hiểu dữ liệu. Pha hiểu bài toán quyết định có cần cụm máy không (khối lượng, tốc độ) và kết quả cần mới tới mức nào (batch hay real-time). Khám phá trên mẫu bằng pandas trước, rồi kiểm trên toàn bộ bằng Spark. Pha mô hình chọn giữa huấn luyện phân tán bằng Spark MLlib và gộp hay lấy mẫu xuống một máy, ghi lý do. Đánh giá cả chỉ số mô hình lẫn số đo hệ thống (thời gian, shuffle, mở rộng khi dữ liệu tăng, tài nguyên). Triển khai theo kiến trúc Lambda: batch layer, speed layer, serving layer, giám sát drift, độ trễ, độ mới. Ví dụ xuyên suốt là clickstream thương mại điện tử; ghi chú trỏ tới bài giảng môn Lưu trữ và xử lý dữ liệu lớn.

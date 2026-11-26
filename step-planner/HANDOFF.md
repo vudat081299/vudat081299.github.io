@@ -27,6 +27,7 @@ Làm xong mục nào thì xoá mục ấy.
 - Mẫu `data-pipeline`: chỉ kiểm tên khâu qua mục lục sách (Reis & Housley); bước con chưa đối chiếu với chữ trong sách.
   Ba yếu tố của DataOps trong sách chưa ghi vì chưa mở được nguồn.
 - Mẫu `it5425-sports`: pha P7 có 7 đầu vào; đầu ra của P0 chưa nơi nào dùng. Xem lại khi trang đồ án đổi.
+- Mẫu `big-data-ds`: sách Lambda (Marz & Warren, 2015) chưa mở được; mô tả Lambda đối chiếu với bài giảng của môn.
 - Mẫu CRISP-DM: thẻ TDSP (Customer Acceptance), Model Cards, Datasheets for Datasets chưa mở lại được nguồn để kiểm.
 - Danh mục System design: luật `non-streamlit-ui-on-streamlit-cloud`, `api-on-streamlit-cloud` suy từ câu "create, deploy,
   and manage your Streamlit apps", tài liệu không viết thẳng "chỉ chạy app Streamlit"; luật nhắc Metabase cần máy chủ riêng chưa mở lại trang.

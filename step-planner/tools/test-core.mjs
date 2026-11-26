@@ -31,6 +31,11 @@ for (const t of templates) {
   check(`mẫu ${t.id}: Markdown đi rồi về giữ nguyên`, eq(shape(ws), roundTrip(ws)), firstDiff(shape(ws), roundTrip(ws)));
   const j = parseImport(toJSON(ws)).workspaces[0];
   check(`mẫu ${t.id}: JSON đi rồi về giữ nguyên, id mới`, eq(shape(ws), shape(j)) && j.id !== ws.id);
+  // Mọi `ins` của mẫu nối được tới một đầu ra, và mở mẫu ra không có bàn giao treo (bên nhận đứng trước bên giao).
+  const nIns = (t.steps || []).flatMap((s) => [s, ...(s.subs || [])]).reduce((n, x) => n + (x.ins || []).length, 0);
+  const ho = CORE.handoffs(ws);
+  check(`mẫu ${t.id}: mọi đầu vào nối được, không bàn giao treo`, ho.links.length === nIns && ho.held.length === 0,
+    `${ho.links.length}/${nIns} liên kết, ${ho.held.length} treo`);
 }
 
 /* Dự án có đủ thứ khó: dấu ·, @, \, chữ "hạn", ghi chú nhiều dòng có dòng trống, dòng trông như mục danh sách / nhãn. */
