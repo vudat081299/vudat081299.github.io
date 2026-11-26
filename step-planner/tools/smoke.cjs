@@ -2564,7 +2564,7 @@ const check = (name, ok, detail = '') => {
     await ip.click('#compact-btn');
     check('đầu vào / đầu ra: chấm trước chip, cùng hàng; đầu bước cùng hàng số bước (thường, Compact)', !pl0.length && !pl1.length, JSON.stringify({ pl0, pl1 }));
 
-    // Kéo "Check raw" lên trước "Fetch" (cùng hàng): đầu vào của nó treo; "Fetch" còn nơi dùng khác nên đầu ra vẫn ổn.
+    // Kéo "Check raw" lên trước "Fetch" (cùng hàng): đầu vào của nó treo; "Fetch" còn nơi dùng khác mà vẫn lỗi, nêu nơi treo.
     const fa = await ip.locator('.card[data-sub="gI"]').boundingBox();
     const fb = await ip.locator('.card[data-sub="gA"]').boundingBox();
     await ip.mouse.move(fa.x + 24, fa.y + 24);
@@ -2575,8 +2575,10 @@ const check = (name, ok, detail = '') => {
     await ip.waitForFunction(() => !document.querySelector('.drag-ghost') && !document.body.classList.contains('dragging-any'));
     const io1 = await ioOf();
     const order1 = (await cur(ip)).steps[0].subs.map((x) => x.id);
-    check('đầu vào / đầu ra: kéo bên nhận lên trước bên giao — đầu vào của nó lỗi ngay; bên giao còn nơi dùng khác thì vẫn ổn',
-      order1[0] === 'gI' && io1.gI === 'bad/none' && io1.gA === 'none/ok' && io1.g1 === 'none/ok', JSON.stringify({ order1, io1 }));
+    const aOut1 = await labelOf('.card[data-sub="gA"] .io-dot.out');
+    check('đầu vào / đầu ra: kéo bên nhận lên trước bên giao — đầu vào của nó lỗi ngay; bên giao còn nơi dùng khác vẫn lỗi, nêu nơi treo',
+      order1[0] === 'gI' && io1.gI === 'bad/none' && io1.gA === 'none/bad' && io1.g1 === 'none/bad'
+      && aOut1.a === 'Output: broken. "raw.csv" is used by "Check raw", which now comes before it (on hold)', JSON.stringify({ order1, io1, aOut1 }));
     await ip.keyboard.press('Control+z');
     await ip.waitForFunction(() => document.querySelector('.card[data-sub="gI"] .io')?.dataset.ioIn === 'ok');
 

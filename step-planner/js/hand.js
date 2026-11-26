@@ -33,18 +33,26 @@ export function tags(x) {
 /** Câu của một đầu vào lỗi. @param {C.InWhy} w */
 const inLine = (w) => (w.kind === 'missing' ? 'an input whose output was deleted'
   : `${quote(w.name)} on hold: ${quote(w.from)} now comes after this`);
-/** Câu của một đầu ra chưa có nơi nhận đang nối. @param {C.OutWhy} w */
+/** Câu của một đầu ra lỗi: không ai dùng, hay có nơi dùng treo (chỉ những nơi ấy, hay thêm nơi dùng khác còn nối). @param {C.OutWhy} w */
 const outLine = (w) => (w.kind === 'unused' ? `${quote(w.name)} is not used by any later step`
-  : `${quote(w.name)} is only used by ${w.to.map(quote).join(', ')}, which now ${w.to.length > 1 ? 'come' : 'comes'} before it (on hold)`);
+  : `${quote(w.name)} is ${w.live ? '' : 'only '}used by ${w.to.map(quote).join(', ')}, which now ${w.to.length > 1 ? 'come' : 'comes'} before it (on hold)`);
 const cap = (/** @type {string} */ t) => t.charAt(0).toUpperCase() + t.slice(1);
+/** Chữ của chấm đầu ra. Bước: lỗi vì nơi dùng treo thì nêu chúng, đầu ra chưa ai dùng ghi thêm sau; lỗi vì không đầu ra nào được
+ * dùng thì nêu cả. @param {C.IoStatus} s @param {boolean} step */
+function outText(s, step) {
+  if (s.out === 'none') return 'Output: none';
+  const held = s.outWhy.filter((w) => w.kind === 'held'), unused = s.outWhy.filter((w) => w.kind === 'unused');
+  const notYet = unused.length ? `. Not used yet: ${unused.map((w) => quote(w.name)).join(', ')}` : '';
+  if (s.out === 'ok') return `Output: OK${notYet}`;
+  if (!step) return `Output: broken. ${s.outWhy.map(outLine).join('; ')}`;
+  if (held.length) return `Output: broken. ${held.map(outLine).join('; ')}${notYet}`;
+  return `Output: broken. ${unused.length > 1 ? 'None of the step\'s outputs is used: ' : ''}${unused.map(outLine).join('; ')}`;
+}
 /** Nhãn đọc được của hai chấm (tên, title): trạng thái và vì sao, không dựa vào màu. @param {C.IoStatus} s @param {boolean} step */
 function ioLabels(s, step) {
   const input = s.in === 'none' ? 'Input: none'
     : s.in === 'ok' ? 'Input: OK' : `Input: broken. ${cap(s.inWhy.map(inLine).join('; '))}`;
-  const output = s.out === 'none' ? 'Output: none'
-    : s.out === 'bad' ? `Output: broken. ${step && s.outWhy.length > 1 ? 'None of the step\'s outputs is used: ' : ''}${s.outWhy.map(outLine).join('; ')}`
-      : `Output: OK${s.outWhy.length ? `. Not used yet: ${s.outWhy.map((w) => quote(w.name)).join(', ')}` : ''}`;
-  return { input, output };
+  return { input, output: outText(s, step) };
 }
 /** Hai chấm đầu vào → đầu ra của một bước / bước con (trái: đầu vào, phải: đầu ra, mũi tên trang trí ở giữa). Không có cả
  * hai: không vẽ gì. @param {C.IoStatus|undefined} s @param {boolean} step */

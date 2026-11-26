@@ -940,7 +940,7 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   check('io: đầu vào treo → bad, nêu tên đầu ra và bên giao', st(b, 'u') === 'bad/none'
     && eq(b.get('u').inWhy, [{ kind: 'held', id: 'ow', name: 'model', from: 'W' }]));
   check('io: đầu ra chỉ được dùng bởi liên kết treo → bad, nêu nơi dùng', st(b, 'w') === 'none/bad'
-    && eq(b.get('w').outWhy, [{ kind: 'held', id: 'ow', name: 'model', to: ['U'] }]));
+    && eq(b.get('w').outWhy, [{ kind: 'held', id: 'ow', name: 'model', to: ['U'], live: 0 }]));
   check('io: bước — mọi đầu ra của bước con không có nơi nhận đang nối → bad', st(b, 't2') === 'none/bad');
   /* Đầu ra không ai dùng; một bước con nhiều đầu ra, một cái không ai dùng; đầu vào trỏ tới đầu ra đã xoá (chưa đọc lại). */
   const c = normWorkspace({ steps: [
@@ -949,7 +949,7 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   c.steps[1].subs[0].ins.push('gone');
   c.steps[1].ins.push('gone2');
   const cs = io(c);
-  check('io: đầu ra không ai dùng → bad "unused"', st(cs, 'z') === 'none/bad' && eq(cs.get('z').outWhy, [{ kind: 'unused', id: 'oz', name: 'lonely', to: [] }]));
+  check('io: đầu ra không ai dùng → bad "unused"', st(cs, 'z') === 'none/bad' && eq(cs.get('z').outWhy, [{ kind: 'unused', id: 'oz', name: 'lonely', to: [], live: 0 }]));
   check('io: nhiều đầu ra, một cái không ai dùng → bad, nêu đúng cái ấy', st(cs, 'x') === 'none/bad' && eq(cs.get('x').outWhy.map((w) => w.name), ['b']));
   check('io: đầu vào trỏ tới đầu ra không còn → bad "missing"', st(cs, 'y') === 'bad/none' && eq(cs.get('y').inWhy, [{ kind: 'missing', id: 'gone', name: '', from: '' }]));
   check('io: bước — một đầu ra (của bước con) được dùng → ok, vẫn nêu cái chưa dùng', st(cs, 'v1') === 'none/ok'
@@ -963,6 +963,15 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   e.steps.reverse();
   const es = io(e);
   check('io: dời về đúng thứ tự thì cả hai bên ok', st(es, 'k1') === 'ok/none' && st(es, 'm') === 'none/ok');
+  /* Một đầu ra hai nơi dùng: G (bước 1) treo, H (bước 3) còn nối → bên giao vẫn lỗi, nêu nơi treo kèm số nơi còn nối. */
+  const f = io(normWorkspace({ steps: [
+    { id: 'h1', title: 'H1', subs: [{ id: 'g', title: 'G', ins: ['oo'] }] },
+    { id: 'h2', title: 'H2', subs: [{ id: 'o', title: 'O', outs: [{ id: 'oo', name: 'table' }] }, { id: 'o2', title: 'O2', outs: [{ id: 'oo2', name: 'side' }] }] },
+    { id: 'h3', title: 'H3', subs: [{ id: 'hh', title: 'H', ins: ['oo', 'oo2'] }] }] }));
+  check('io: đầu ra có một nơi dùng treo, một nơi còn nối → bước con bad, nêu nơi treo và live', st(f, 'o') === 'none/bad'
+    && eq(f.get('o').outWhy, [{ kind: 'held', id: 'oo', name: 'table', to: ['G'], live: 1 }]) && st(f, 'g') === 'bad/none' && st(f, 'hh') === 'ok/none');
+  check('io: bước — một đầu ra có nơi dùng treo → bad dù đầu ra khác còn nối', st(f, 'h2') === 'none/bad' && eq(f.get('h2').outWhy.map((w) => w.name), ['table'])
+    && st(f, 'o2') === 'none/ok');
 }
 
 /* ── Ảnh chụp gợi ý của System design (tools/design-snapshot.json) ──
