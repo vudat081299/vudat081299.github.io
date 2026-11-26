@@ -1261,5 +1261,64 @@ function designSnapshot(cat) {
   check('view-math: isHome, zoomPct', V.isHome({ x: 0, y: 0, k: 1 }) && !V.isHome(v0) && V.zoomPct(1.25) === '125%' && V.zoomPct(0.333) === '33%');
 }
 
+/* Ca nhỏ, mỗi ca giữ đúng một nhánh của logic (danh mục, dự án tự dựng; không phụ thuộc dữ liệu mẫu). */
+{
+  const pre = { path: 'report', profile: { size: 'small', users: 'me' } };
+  check('isPreset: lối khác thì không còn là bộ đặt sẵn', isPreset({ ...pre, stages: {}, edges: {} }, pre)
+    && !isPreset({ ...pre, path: 'pipeline', stages: {}, edges: {} }, pre) && !isPreset({ ...pre, path: '', stages: {}, edges: {} }, pre));
+  check('isPreset: trả lời thêm một câu, hay bỏ trống một câu của bộ đặt sẵn, thì không còn là bộ đặt sẵn',
+    !isPreset({ ...pre, profile: { ...pre.profile, budget: 'free' }, stages: {}, edges: {} }, pre)
+    && !isPreset({ ...pre, profile: { size: 'small' }, stages: {}, edges: {} }, pre));
+
+  /* Danh mục tí hon: khâu a có hai phương án đều hợp, a1 đứng đầu gợi ý nhưng làm luật báo; khâu r xếp theo level. */
+  const mini = {
+    paths: [{ id: 'p', label: 'P', implies: {}, stages: { a: 'need' }, suggest: { a: ['a1', 'a2'] } }],
+    profile: [], checks: [{ id: 'x', title: 'X', msg: 'm', if: { a: ['a1'] } }],
+    stages: [{ id: 'a', lane: 'data', options: [{ id: 'a1' }, { id: 'a2' }] },
+      { id: 'r', lane: 'data', options: [{ id: 'hard', level: 3 }, { id: 'plain' }, { id: 'easy', level: 1 }] }],
+  };
+  const ap = applyPath(mini, null, 'p');
+  check('applyPath: chọn phương án hợp làm ít luật báo nhất, không phải phương án hợp đầu tiên', eq(ap.next.stages.a?.pick, ['a2']) && eq(ap.filled, ['a']),
+    JSON.stringify(ap));
+  check('rankOptions: cùng hạng thì dễ trước (level 1, không ghi = 2, rồi 3)',
+    eq(rankOptions(mini.stages[1], {}).map((x) => x.opt.id), ['easy', 'plain', 'hard']));
+
+  /* Bước X giao ox cho bước con P của chính nó; P giao op cho Q. Bên nhận của {X, P}: chỉ Q (P là một trong các chủ). */
+  const own = normWorkspace({ steps: [{ id: 'X', title: 'X', outs: [{ id: 'ox', name: 'ox' }], subs: [
+    { id: 'P', title: 'P', ins: ['ox'], outs: [{ id: 'op', name: 'op' }] }, { id: 'Q', title: 'Q', ins: ['op'] }] }] });
+  check('consumersOf: chủ nhận đầu ra của chủ khác (cùng nhóm làm lại) không tính là bên nhận',
+    eq(CORE.consumersOf(own, [own.steps[0], own.steps[0].subs[0]]).map(CORE.holderTitle), ['Q']));
+
+  /* Xoá bên giao, rồi người dùng thêm đầu vào mới cho bên nhận; Hoàn tác gắn lại đầu vào cũ, giữ đầu vào mới ở cuối. */
+  const mk = () => normWorkspace({ steps: [{ id: 's1', title: 'S1', subs: [{ id: 'g', title: 'G', outs: [{ id: 'og', name: 'og' }] },
+    { id: 'n', title: 'N', outs: [{ id: 'on', name: 'on' }] }] }, { id: 's2', title: 'S2', subs: [{ id: 'u', title: 'U', ins: ['og'] }] }] });
+  const wb = mk();
+  const relink = CORE.insBackup(wb, [wb.steps[0].subs[0]]);
+  wb.steps[0].subs.splice(0, 1);
+  wb.steps[1].subs[0].ins = ['og', 'on'];
+  wb.steps[0].subs.unshift(mk().steps[0].subs[0]);
+  relink(wb);
+  check('insBackup: Hoàn tác giữ đầu vào thêm sau khi xoá', eq(wb.steps[1].subs[0].ins, ['og', 'on']), JSON.stringify(wb.steps[1].subs[0].ins));
+  const wc = mk();
+  const relink2 = CORE.insBackup(wc, [wc.steps[0].subs[0]]);
+  wc.steps[1].subs[0].ins = ['on'];
+  relink2(wc);
+  check('insBackup: Hoàn tác gắn lại đầu vào cũ trước, đầu vào mới sau', eq(wc.steps[1].subs[0].ins, ['og', 'on']), JSON.stringify(wc.steps[1].subs[0].ins));
+}
+
+{
+  const two = fromMarkdown('# A\n## 1. S\n- [x] T · done 2026-01-02 · done 2026-01-05\n').workspace.steps[0].subs[0];
+  check('Markdown viết tay: hai "· done" thì lấy cái đầu, cái sau giữ trong tên', two.doneAt === '2026-01-02' && two.title === 'T · done 2026-01-05',
+    JSON.stringify({ doneAt: two.doneAt, title: two.title }));
+}
+
+{
+  const V = await import('../js/core/view-math.js');
+  /* Sơ đồ hẹp hơn KEEP: kéo hết cỡ vẫn thấy trọn sơ đồ (KEEP bị cắt về bề rộng sơ đồ). */
+  const lo = V.clampPan({ x: -500, y: -500, k: 1 }, 30, 20, 800, 400), hi = V.clampPan({ x: 5000, y: 5000, k: 1 }, 30, 20, 800, 400);
+  check('view-math: clampPan — sơ đồ hẹp hơn KEEP thì kéo hết cỡ vẫn thấy trọn', lo.x === 0 && lo.y === 0 && hi.x === 770 && hi.y === 380,
+    JSON.stringify({ lo, hi }));
+}
+
 if (fails) { console.log(`test-core: ${fails} LỖI`); process.exit(1); }
 console.log('test-core: OK');
