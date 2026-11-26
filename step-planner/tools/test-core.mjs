@@ -607,6 +607,46 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
     A({ store: P('bigquery') }, { size: 'small' }).storage === 'warehouse' && A({ raw: P('delta-lake') }, { size: 'small' }).storage === 'lakehouse'
     && A({ serve: { skip: true } }, { ai: 'none' }).ml === '' && A({ serve: { skip: true } }, { ai: 'llm' }).ml === 'rag'
     && A({ process: P('flink') }).processing === 'streaming' && A({ process: P('flink') }, { fresh: 'once' }).processing === 'batch-etl');
+  /* Chia tầng (PLAN-030): medallion là cách chia tầng, độc lập với nơi lưu; một bộ dữ liệu cố định thì hai tầng là đủ. */
+  check('kiến trúc: medallion — dữ liệu theo ngày, kể cả nhỏ trên thư mục Parquet; cố định thì thô + sạch; khâu có table format thắng hồ sơ',
+    A({}, { size: 'small', fresh: 'batch' }).layers === 'medallion' && A({}, { size: 'small', fresh: 'batch' }).storage === 'files-db'
+    && A({}, { size: 'medium', fresh: 'once' }).layers === 'two-layers' && A({}, { size: 'large', fresh: 'once' }).layers === 'medallion'
+    && A({ raw: P('hudi') }, { size: 'small', fresh: 'once' }).layers === 'medallion' && A({}, { size: 'small' }).layers === null);
+  /* Chỉ mã nguồn mở, tự host (PLAN-030): dịch vụ được quản lý không hợp hồ sơ; dữ liệu lớn theo lịch ra lakehouse tự host. */
+  const oss = { size: 'large', fresh: 'batch', selfhost: 'yes' };
+  const rawStage = cat.stages.find((x) => x.id === 'raw');
+  const rawOk = rankOptions(rawStage, oss).filter((x) => x.ok).map((x) => x.opt.id);
+  const ossPlan = applyPath(cat, { path: '', profile: oss, stages: {}, edges: {} }, 'pipeline').next.stages;
+  const lake = cat.architectures.find((f) => f.id === 'storage').entries.find((e) => e.id === 'lakehouse');
+  check('hồ sơ tự host: lớn + theo lịch + mã nguồn mở — lakehouse + medallion; Apply path chọn MinIO, dbt, DuckDB trên Iceberg; kho thô hợp có MinIO, Iceberg, catalog, không có S3, GCS, R2',
+    A({}, oss).storage === 'lakehouse' && A({}, oss).layers === 'medallion'
+    && A({}, { ...oss, selfhost: 'no', latency: 'report', budget: 'low' }).storage === 'warehouse' && A({}, { ...oss, latency: 'report', budget: 'low' }).storage === 'lakehouse'
+    && ['minio', 'iceberg', 'polaris', 'iceberg-jdbc'].every((x) => rawOk.includes(x)) && !['s3', 'gcs', 'cloudflare-r2'].some((x) => rawOk.includes(x))
+    && eq(ossPlan.raw.pick, ['minio']) && eq(ossPlan.process.pick, ['dbt']) && eq(ossPlan.store.pick, ['duckdb-iceberg'])
+    && lake.tools.raw.includes('minio') && lake.tools.raw.includes('iceberg') && lake.tools.raw.includes('polaris'),
+  JSON.stringify({ raw: rawOk, plan: Object.fromEntries(Object.entries(ossPlan).map(([k, v]) => [k, v.skip ? 'skip' : v.pick.join()])) }));
+  check('hồ sơ tự host: mọi phương án được quản lý bị loại khi selfhost = yes, vẫn hợp khi no',
+    cat.stages.every((x) => x.options.filter((o) => o.fit.selfhost).every((o) => !fitOf(o, { selfhost: 'yes' }).ok && fitOf(o, { selfhost: 'no' }).ok))
+    && !fitOf(cat.stages.find((x) => x.id === 'host').options.find((o) => o.id === 'streamlit-cloud'), { selfhost: 'yes' }).ok);
+  /* Luật mới (PLAN-030). */
+  const has = (ids, id) => ids.includes(id);
+  check('luật: Iceberg không có catalog thì báo; có Polaris, catalog JDBC hay tự ghi thì thôi; Delta không cần catalog',
+    has(W({ raw: P('iceberg') }), 'iceberg-without-catalog') && has(W({ raw: P('minio', 'iceberg') }), 'iceberg-without-catalog')
+    && !has(W({ raw: P('minio', 'iceberg', 'polaris') }), 'iceberg-without-catalog') && !has(W({ raw: P('iceberg', 'iceberg-jdbc') }), 'iceberg-without-catalog')
+    && !has(W({ raw: { pick: ['iceberg'], own: 'AWS Glue' } }), 'iceberg-without-catalog') && !has(W({ raw: P('delta-lake') }), 'iceberg-without-catalog'));
+  const wd = (stages) => warnings(cat, normDesign({ stages }));
+  check('luật: MinIO trên host không giữ đĩa chỉ nhắc (caveat); trên máy của nhóm, VPS thì không báo',
+    wd({ raw: P('minio'), host: P('cloud-run') }).some((x) => x.id === 'object-store-on-ephemeral-disk' && x.caveat)
+    && !has(W({ raw: P('minio'), host: P('own-server') }), 'object-store-on-ephemeral-disk') && !has(W({ raw: P('minio'), host: P('vps-docker') }), 'object-store-on-ephemeral-disk'));
+  check('luật: file DuckDB dùng chung với Superset chỉ nhắc (caveat); DuckDB trên Iceberg thì không',
+    wd({ store: P('parquet-duckdb'), app: P('superset') }).some((x) => x.id === 'duckdb-file-shared-with-bi' && x.caveat)
+    && !has(W({ store: P('duckdb-iceberg'), app: P('superset') }), 'duckdb-file-shared-with-bi') && !has(W({ store: P('parquet-duckdb'), app: P('streamlit') }), 'duckdb-file-shared-with-bi'));
+  check('luật: bảng Hudi đọc bằng DuckDB thì báo; Iceberg có catalog, hay Hudi đọc bằng Trino thì không',
+    has(W({ raw: P('hudi'), store: P('duckdb-iceberg') }), 'hudi-read-by-duckdb') && !has(W({ raw: P('iceberg', 'polaris'), store: P('duckdb-iceberg') }), 'hudi-read-by-duckdb')
+    && !has(W({ raw: P('hudi', 'hive-metastore'), store: P('trino') }), 'hudi-read-by-duckdb'));
+  check('luật: Kubernetes cho vài người thì báo, lời báo chỉ sang Docker Compose trên một máy',
+    has(W({ host: P('kubernetes') }, { users: 'few' }), 'kubernetes-for-few-users') && !has(W({ host: P('kubernetes') }, { users: 'public' }), 'kubernetes-for-few-users')
+    && /Docker Compose trên một máy/.test(cat.checks.find((x) => x.id === 'kubernetes-for-few-users').msg));
   /* Mọi luật gợi ý tới được: dựng thiết kế thoả đúng `if` của luật thì luật ấy (không phải luật trước nó) thắng. */
   const shadowed = cat.architectures.flatMap((f) => f.rules.map((r, i) => {
     const stages = {}, profile = {};

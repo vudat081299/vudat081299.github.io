@@ -28,6 +28,7 @@
 - PLAN-026 · System design phủ big data: HDFS, table format, xử lý stream, SQL trên file, NoSQL phân tán, học máy phân tán · `step-planner/data/system-design.json`
 - PLAN-027 · System design có danh mục kiến trúc theo nhóm, gợi ý một kiến trúc mỗi nhóm từ hồ sơ dự án · `step-planner/data/system-design.json`, `step-planner/js/design-core.js`
 - PLAN-028 · Chữ giao diện tiếng Anh, mọi nội dung mẫu tiếng Việt, tên chuẩn giữ trong ngoặc · `step-planner/`
+- PLAN-030 · System design phủ lakehouse tự host: MinIO, Hudi, catalog cho Iceberg, medallion là cách chia tầng, hồ sơ chỉ mã nguồn mở · `step-planner/data/system-design.json`, `step-planner/js/design-core.js`
 <!-- index:end -->
 
 ## PLAN-001 · Dự án là các bước có thứ tự, mỗi bước có bước con có thứ tự
@@ -164,3 +165,8 @@ Sau hồ sơ dự án, System design có trang kiến trúc chia bốn nhóm: d�
 26/11/2026 · `step-planner/` · thay cho PLAN-015
 
 Mọi chữ thuộc giao diện là tiếng Anh: nút, tiêu đề, gợi ý khi rê chuột, nhãn cho trình đọc màn hình, tiêu đề hộp thoại, mục menu, thông báo, chỗ trống, chữ gợi ý trong ô nhập, tên trạng thái; trong System design thêm tên khâu, tên phương án, nhãn câu hỏi hồ sơ và lựa chọn, tên lối, tên kiến trúc. Mọi nội dung của mẫu là tiếng Việt: tên mẫu, tên bước, tên bước con, mục tiêu, tiêu chí xong, ghi chú, tên và mô tả đầu ra, loại đầu ra; lời giải thích, hướng dẫn, cảnh báo của System design cũng tiếng Việt. Tên bước, bước con theo một chuẩn ghi tiếng Việt và giữ tên gốc tiếng Anh trong ngoặc để người học nhận ra thuật ngữ, ví dụ "Hiểu dữ liệu (Data Understanding)". Tên công cụ, thư viện, file, lệnh, URL giữ nguyên. Mẫu đồ án môn học giữ nguyên chữ của trang đồ án. Một cổng kiểm luật này để nó không trôi.
+
+## PLAN-030 · System design phủ lakehouse tự host: MinIO, Hudi, catalog cho Iceberg, medallion là cách chia tầng, hồ sơ chỉ mã nguồn mở
+26/11/2026 · `step-planner/data/system-design.json`, `step-planner/js/design-core.js`
+
+Danh mục đủ cho một nhóm tự dựng lakehouse mã nguồn mở: object storage tự host (MinIO, nói rõ bản cộng đồng đã ngừng bảo trì, chỉ còn mã nguồn, và lựa chọn thay), Hudi bên cạnh Delta Lake và Iceberg, DuckDB truy vấn bảng trên object storage, máy của nhóm làm nơi chạy, và Data Studio, Power BI, Looker bên cạnh Superset, Metabase, mỗi công cụ BI nói rõ cách nối với DuckDB, Trino. Catalog cho Iceberg (Polaris, Hive Metastore, Nessie, JDBC) chọn ngay ở khâu lưu thô, cùng chỗ lưu và table format, không thêm khâu mới; Iceberg không có catalog thì báo. Hồ sơ có câu "chỉ mã nguồn mở, tự host": trả lời có thì dịch vụ được quản lý không hợp, và dữ liệu lớn được gợi ý lakehouse tự host thay warehouse. Medallion (bronze / silver / gold) là một nhóm kiến trúc riêng: cách chia tầng theo chất lượng, độc lập với nơi lưu; gợi ý khi dữ liệu tới đều, lớn hay đã có table format, còn bộ dữ liệu cố định thì hai tầng thô + sạch. dbt nói chọn adapter theo engine; Docker Compose cho một máy, Kubernetes chỉ khi thật sự cần nhiều node; chưa có nguồn stream thật thì giả lập bằng script phát lại CSV vào Kafka. Luật mới nhắc MinIO trên host không giữ đĩa và file DuckDB dùng chung với Superset, báo DuckDB không đọc được Hudi. Áp lối không lấy phương án nào vẫn làm luật báo: khi ấy khâu để trống cho người dùng quyết.

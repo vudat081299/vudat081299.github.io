@@ -5435,6 +5435,68 @@
       "msg": "Công cụ stream chạy suốt để đón sự kiện mới; bạn trả lời dữ liệu tới một lần hay theo ngày. Một job batch theo lịch (pandas, DuckDB, Spark) đơn giản hơn, không có tiến trình nào phải chạy suốt."
     },
     {
+      "id": "iceberg-without-catalog",
+      "title": "Iceberg tables with no catalog",
+      "if": {
+        "raw": [
+          "iceberg"
+        ]
+      },
+      "unless": {
+        "raw": [
+          "polaris",
+          "hive-metastore",
+          "nessie",
+          "iceberg-jdbc",
+          "own"
+        ]
+      },
+      "msg": "Bảng Iceberg cần một catalog giữ danh sách bảng và con trỏ tới metadata hiện tại; thiếu nó thì Spark, Trino, DuckDB không cùng thấy một bảng, và DuckDB chỉ đọc từng bảng bằng iceberg_scan, không ghi được. Chọn thêm ở khâu này: Polaris (Iceberg REST, DuckDB gắn được), Hive Metastore, Nessie, hay catalog JDBC trong SQLite, PostgreSQL khi chỉ một người dùng."
+    },
+    {
+      "id": "object-store-on-ephemeral-disk",
+      "title": "MinIO on a host without a lasting disk",
+      "if": {
+        "raw": [
+          "minio"
+        ],
+        "host": [
+          "render",
+          "cloud-run",
+          "hf-spaces"
+        ]
+      },
+      "msg": "MinIO ghi dữ liệu lên đĩa của máy nó chạy. Host này không giữ đĩa qua lần khởi động lại hay deploy lại (Render Free, Cloud Run, Space Hugging Face), nên bucket mất theo. Chạy MinIO trên máy có volume bền (máy của nhóm, VPS, Kubernetes với PersistentVolume), hoặc dùng object storage được quản lý (R2, S3, GCS).",
+      "caveat": true
+    },
+    {
+      "id": "duckdb-file-shared-with-bi",
+      "title": "DuckDB file shared with Superset",
+      "if": {
+        "store": [
+          "parquet-duckdb"
+        ],
+        "app": [
+          "superset"
+        ]
+      },
+      "msg": "Superset mở DuckDB qua gói duckdb-engine. Một file .duckdb chỉ cho một tiến trình vừa đọc vừa ghi; nhiều tiến trình cùng mở thì phải ở chế độ chỉ đọc (read_only). Khi dbt hay script đang ghi file thì Superset không mở được, và ngược lại. Cho pipeline ghi xong rồi Superset mở file read_only, hoặc để gold là Parquet, Iceberg và Superset đọc chúng qua DuckDB trong bộ nhớ (:memory:) hay qua Trino.",
+      "caveat": true
+    },
+    {
+      "id": "hudi-read-by-duckdb",
+      "title": "Hudi tables read by DuckDB",
+      "if": {
+        "raw": [
+          "hudi"
+        ],
+        "store": [
+          "duckdb-iceberg"
+        ]
+      },
+      "msg": "DuckDB có extension đọc Iceberg và Delta, không có cho Hudi, nên DuckDB (và Superset qua DuckDB) không đọc thẳng được bảng Hudi. Đổi table format sang Iceberg, hoặc truy vấn Hudi bằng Spark hay Trino (Trino chỉ đọc, cần Hive Metastore) rồi xuất bảng gold ra Parquet cho DuckDB."
+    },
+    {
       "id": "hdfs-on-free-budget",
       "title": "HDFS on a free budget",
       "if": {
@@ -5685,7 +5747,7 @@
           "few"
         ]
       },
-      "msg": "Một cụm Kubernetes cho bạn hay vài người dùng là nhiều phần phải vận hành hơn chính app. Cloud Run, Render, Fly.io hay một VPS + Docker Compose cho cùng kết quả; học Kubernetes thì chạy minikube trên máy."
+      "msg": "Một cụm Kubernetes cho bạn hay vài người dùng là nhiều phần phải vận hành hơn chính app. Docker Compose trên một máy (máy của nhóm, máy lab, VPS) chạy được cả bộ service của đồ án; Cloud Run, Render, Fly.io cho app công khai. Kubernetes chỉ đáng khi thật sự cần nhiều node; học Kubernetes thì chạy minikube trên máy."
     },
     {
       "id": "feature-store-for-one-model",

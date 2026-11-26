@@ -151,6 +151,8 @@
   dễ hơn, thứ tự danh mục. Lựa chọn lưu ngay. `fit` nghĩa là "dùng được", không thêm khoá `fit` chỉ để đẩy hạng.
 - Khâu có `when` (câu hồ sơ → câu trả lời cần khâu): trả lời ngoài `when` thì khâu "thường không cần" (`notNeededBy`), "Apply path"
   đánh dấu Not needed; độ phủ của `lint.py` bỏ qua câu trả lời ấy. Câu chưa trả lời: khâu vẫn hiện.
+- Catalog của table format (Polaris, Hive Metastore, Nessie, JDBC) là phương án của khâu `raw`, cùng chỗ lưu và table format; không có khâu riêng.
+- Câu `selfhost` = `yes`: dịch vụ được quản lý mang `fit.selfhost: ["no"]`; phương án mới chạy trên hạ tầng người khác thì thêm khoá ấy.
 - Công cụ nên tránh khi làm một mình vẫn có trong danh mục nếu người học hay gặp: `avoid` nói vì sao và chọn gì thay, có luật báo,
   không đứng đầu `suggest` của lối nào.
 - "Apply path" (`applyPath`): chỉ khâu chưa quyết; `skip` → Not needed; `need` có gợi ý → phương án hợp đầu tiên làm ít luật báo
