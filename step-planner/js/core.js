@@ -377,6 +377,23 @@ export function projectNextIds(ws) {
   return [];
 }
 
+/** "Next" đang chờ: ô đầu tiên còn việc (của bước đầu tiên còn việc) không có thẻ làm được ngay, chỉ thẻ Pending / Blocked.
+ * Trả các thẻ ấy (để báo "Next waits on …"), không thì []. "Next" vẫn không vượt qua chỗ chờ. @param {any} ws @returns {any[]} */
+export function nextWaitingOn(ws) {
+  for (const s of ws.steps) {
+    const sl = slotsOf(s.subs).find((x) => x.some(open));
+    if (!sl) continue;
+    const live = sl.filter(open);
+    return live.some((x) => x.status === 'todo' || x.status === 'doing') ? [] : live;
+  }
+  return [];
+}
+
+/** Lọc thẻ theo nhóm trạng thái (thanh công cụ): '' là mọi trạng thái. */
+export const STATUS_GROUPS = { '': null, act: ['todo', 'doing'], wait: ['pending', 'blocked'], done: ['done'], out: ['skip', 'cancel'] };
+/** @param {string} group @param {string} status */
+export const inGroup = (group, status) => !STATUS_GROUPS[group] || STATUS_GROUPS[group].includes(status);
+
 /** So khớp không phân biệt hoa thường và dấu. */
 export const fold = (/** @type {string} */ s) => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '')
   .replace(/[đĐ]/g, 'd').toLowerCase();

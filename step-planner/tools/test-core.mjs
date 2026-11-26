@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import {
   fromTemplate, toMarkdown, fromMarkdown, parseImport, toJSON, toBackup, shape, progress, nextActionIds, projectNextIds, slotsOf, subPlace, placeSub, takeSub, shiftTarget, liveLabels, redoCount, canReopen,
-  nextStatus, setStatus, splitInline, mergeEdit, pick, EDIT_FIELDS, normWorkspace, normSub, normLog, freshCopy, counts, slug, fold, parseDate, uniqueName, normDoc, safeUrl,
+  nextStatus, setStatus, splitInline, mergeEdit, pick, EDIT_FIELDS, nextWaitingOn, inGroup, normWorkspace, normSub, normLog, freshCopy, counts, slug, fold, parseDate, uniqueName, normDoc, safeUrl,
 } from '../js/core.js';
 import { parseMd, inline, srcTokens } from '../js/md.js';
 import { normDesign, rankOptions, snake, planTasks, diagramNodes, decidedCount, catalogErrors, readStageLine } from '../js/design-core.js';
@@ -507,6 +507,18 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   const w = old.workspace;
   const idx = w.log.map((l) => w.steps.findIndex((x) => x.id === l.stepId));
   check('Markdown cũ: `Step: tên` gắn bước đầu tiên cùng tên; tên có số đầu vẫn khớp; số sai thì theo tên', eq(idx, [0, 3, 1]) && !old.warnings.length, JSON.stringify(idx));
+}
+
+/* "Next" đang chờ: ô đầu còn việc chỉ có Pending / Blocked thì báo các thẻ ấy; có thẻ làm được thì không báo. */
+{
+  const ws = (subs) => normWorkspace({ steps: [{ title: 'A', subs: [{ title: 'xong', status: 'done' }, ...subs] }, { title: 'B', subs: [{ title: 'độc lập' }] }] });
+  const ids = (w) => nextWaitingOn(w).map((x) => x.title);
+  check('Next chờ: ô đầu chỉ có Pending thì báo thẻ ấy, Next rỗng', eq(ids(ws([{ title: 'p', status: 'pending' }, { title: 'sau' }])), ['p'])
+    && projectNextIds(ws([{ title: 'p', status: 'pending' }])).length === 0);
+  check('Next chờ: ô song song Pending + Blocked thì báo cả hai', eq(ids(ws([{ title: 'p', status: 'pending' }, { title: 'b', status: 'blocked', par: true }])), ['p', 'b']));
+  check('Next chờ: ô có thẻ làm được thì không báo', eq(ids(ws([{ title: 'p', status: 'pending' }, { title: 'n', par: true }])), [])
+    && eq(ids(ws([{ title: 'n' }])), []) && eq(nextWaitingOn(normWorkspace({ steps: [] })), []));
+  check('lọc trạng thái: nhóm', inGroup('', 'cancel') && inGroup('act', 'doing') && !inGroup('act', 'pending') && inGroup('wait', 'blocked') && inGroup('out', 'skip') && !inGroup('done', 'todo'));
 }
 
 /* Sửa cùng lúc ở hai tab: chỉ trường mình đổi đè lên bản mới nhất; cùng trường khác giá trị là xung đột. */

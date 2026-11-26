@@ -117,6 +117,7 @@
   --dlg-md: 1180px;                    /* hộp văn bản Markdown: gần toàn màn */
   --md-max: 720px;                     /* cột đọc / viết của hộp Markdown */
   --search-w: 300px;
+  --filter-w: 168px;                   /* ô lọc trạng thái cạnh ô tìm */
   --chip-max: 280px;                   /* chip tài liệu của bước: tên dài thì cắt "…" */
   --gap-add: 16px;                     /* vùng rê chuột trên vạch chia hai bước */
   --step-ph: 64px;                     /* chỗ thả khi kéo cả bước */
@@ -394,12 +395,15 @@ svg.i {
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M6 6l12 12M18 6 6 18'/%3E%3C/svg%3E") center / contain no-repeat;
 }
 @media (hover: hover) { .search .input::-webkit-search-cancel-button:hover { background: var(--ink); } }
+/* Lọc trạng thái: danh sách tự dựng cạnh ô tìm. */
+.st-filter { position: relative; flex: 0 0 var(--filter-w); min-width: 0; }
 .filter-note { font-size: var(--fs-sm); color: var(--ink-3); }
 .tool-btns { display: flex; align-items: center; gap: var(--s1); flex-wrap: wrap; }
 /* Nút bật / tắt (Gọn): đang bật thì nền rãnh, chữ đậm. */
 .btn[aria-pressed="true"] { color: var(--ink); background: var(--surface-2); border-color: var(--line); }
 @media (max-width: 640px) {
   .search { flex: 1 1 100%; }
+  .st-filter { flex: 1 1 100%; }
   .tools-gap { display: none; }
   .tool-btns { flex: 1 1 100%; }
   .tool-btns .btn { flex: 1 1 0; padding: 0 var(--s2); }
@@ -423,6 +427,16 @@ svg.i {
 @media (hover: none) { .board.compact .card .acts { display: none; } }
 
 /* ── Ghi chú dự án (gập) ── */
+/* ── "Next" đang chờ: một dòng trên bảng, tên thẻ bấm được, nút lọc việc làm được ngay ── */
+.next-wait {
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: var(--s2) var(--s3); margin: 0 0 var(--s3); padding: var(--s2) var(--s3);
+  font-size: var(--fs-sm); color: var(--ink-2); background: var(--violet-soft); border: var(--line-w) solid var(--violet-line); border-radius: var(--r);
+}
+.next-wait > svg.i { color: var(--violet-fg); flex: 0 0 auto; }
+.next-wait > span { min-width: 0; overflow-wrap: anywhere; }
+@media (max-width: 640px) { .next-wait > .btn { grid-column: 2 / -1; justify-self: start; } }
+.next-wait b { color: var(--ink); font-weight: 600; }
+.next-wait .link { color: var(--ink); text-decoration: underline; text-underline-offset: 2px; }
 .ws-notes { padding: 0 0 var(--s3); font-size: var(--fs-sm); }
 .ws-notes summary {
   display: inline-flex; align-items: center; gap: var(--s1); min-height: var(--ctl-sm); cursor: pointer; list-style: none;

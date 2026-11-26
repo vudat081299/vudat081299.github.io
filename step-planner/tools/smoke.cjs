@@ -1746,6 +1746,46 @@ const check = (name, ok, detail = '') => {
     await mc.close();
   }
 
+  /* ── "Next" đang chờ và lọc trạng thái: dòng "Next waits on …" khi ô đầu chỉ có thẻ chờ; lọc Actionable / Waiting, cùng với tìm ── */
+  for (const [w, hh] of [[1280, 900], [390, 844]]) {
+    const seed = { version: 2, lastId: 'wn', workspaces: [{ id: 'wn', name: 'Chờ', steps: [
+      { id: 'tn1', title: 'Dữ liệu', subs: [{ id: 'sn0', title: 'Đã xong', status: 'done' }, { id: 'sn1', title: 'Chờ quyền truy cập', status: 'pending', reason: 'IT cấp quyền\ndòng hai' },
+        { id: 'sn2', title: 'Làm sạch', status: 'todo' }] },
+      { id: 'tn2', title: 'Báo cáo', subs: [{ id: 'sn3', title: 'Dàn ý báo cáo', status: 'todo' }, { id: 'sn4', title: 'Bị chặn', status: 'blocked' }] }], log: [] }] };
+    const nc = await browser.newContext({ viewport: { width: w, height: hh }, isMobile: w < 500, hasTouch: w < 500 });
+    await nc.addInitScript((d) => { if (!localStorage.getItem('stepPlanner.v2')) localStorage.setItem('stepPlanner.v2', d); }, JSON.stringify(seed));
+    const np = await nc.newPage();
+    np.on('pageerror', (e) => errors.push(String(e)));
+    await np.goto(BASE);
+    await np.waitForSelector('.card[data-sub="sn1"]');
+    const tag = `Next chờ ${w}px`;
+    const nw = await np.textContent('#next-wait');
+    check(`${tag}: không thẻ nào "Next", dòng báo chờ thẻ nào và lý do (dòng đầu), có nút xem việc làm được`, !(await np.$('.card.next'))
+      && await np.isVisible('#next-wait') && /^Next waits on Chờ quyền truy cập \(Pending: IT cấp quyền\)\./.test(nw.trim()) && /Show what can be done now \(2\)/.test(nw), nw);
+    await np.click('#next-wait [data-act="show-act"]');
+    const shownIds = () => np.$$eval('.card[data-sub]', (cs) => cs.map((c) => c.dataset.sub).join());
+    check(`${tag}: "Show what can be done now" lọc Actionable: chỉ New / In progress, tắt sắp xếp và thêm bước`, (await shownIds()) === 'sn2,sn3'
+      && (await np.textContent('.st-filter .dd-btn')).trim() === 'Actionable' && /reordering is off while filtering/.test(await np.textContent('#filter-note'))
+      && !(await np.isVisible('#add-step')) && !(await np.$('.step-grip')) && !(await np.isVisible('#next-wait [data-act="show-act"]')), await shownIds());
+    await np.click('.st-filter .dd-btn');
+    await np.click('.dd-pop [role="option"][data-value="wait"]');
+    check(`${tag}: lọc Waiting: Pending và Blocked`, (await shownIds()) === 'sn1,sn4', await shownIds());
+    await np.fill('#q', 'chặn');
+    check(`${tag}: lọc cùng với tìm: giao của hai`, (await shownIds()) === 'sn4', await shownIds());
+    await np.fill('#q', 'làm sạch');
+    check(`${tag}: không thẻ nào khớp: nút "Clear filters" bỏ cả hai`, /No sub-step matches/.test(await np.textContent('#board')) && (await np.textContent('#board [data-act="clear-filter"]')) === 'Clear filters');
+    await np.click('#board [data-act="clear-filter"]');
+    check(`${tag}: bỏ lọc: mọi thẻ, ô tìm trống, lọc về All statuses`, (await shownIds()) === 'sn0,sn1,sn2,sn3,sn4' && (await np.inputValue('#q')) === ''
+      && (await np.textContent('.st-filter .dd-btn')).trim() === 'All statuses');
+    await np.click('.st-filter .dd-btn');
+    await np.click('.dd-pop [role="option"][data-value="done"]');
+    await np.click('#next-wait [data-goto="sn1"]');
+    check(`${tag}: bấm tên thẻ đang chờ: bỏ lọc nếu nó bị ẩn, focus vào thẻ`, await np.evaluate(() => document.activeElement?.closest('.card')?.dataset.sub) === 'sn1'
+      && (await shownIds()).split(',').length === 5);
+    check(`${tag}: trang không tràn ngang`, (await hOverflow(np)) <= 0);
+    await nc.close();
+  }
+
   /* ── Dữ liệu lưu bị hỏng ── */
   const bad = await browser.newContext();
   await bad.addInitScript(() => { if (!sessionStorage.getItem('x')) { sessionStorage.setItem('x', '1'); localStorage.setItem('stepPlanner.v2', '{hỏng'); } });

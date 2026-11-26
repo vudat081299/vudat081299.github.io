@@ -59,7 +59,8 @@ let state = loaded.state;
 let curId = '';
 /** @type {any[]} */
 let templates = [];
-const ui = { q: '' };
+/** q: chữ tìm; st: nhóm trạng thái đang lọc (C.STATUS_GROUPS, '' = mọi trạng thái). Mỗi tab một bộ lọc, không lưu. */
+const ui = { q: '', st: '' };
 /** Kéo thả (js/drag.js); render() dọn lần kéo dở trước khi vẽ lại bảng. @type {{abort: () => void}|null} */
 let dragCtl = null;
 const banners = new Map();
@@ -183,6 +184,7 @@ function render(opt = {}) {
   $('hint').hidden = S.hintHidden();
   renderWsNotes(ws);
   $('log-btn-text').textContent = `Log (${ws.log.length})`;
+  renderNextWait(ws);
   renderBoard(ws, opt);
   renderDesign();
   renderLog(ws, opt);
@@ -225,7 +227,8 @@ let boardWsId = '';
 function renderBoard(ws, opt = {}) {
   const board = $('board');
   const q = C.fold(ui.q.trim());
-  const filtering = !!q;
+  const st = ui.st;
+  const filtering = !!q || !!st;
   const todayStr = C.today();
   const nextIds = new Set(C.projectNextIds(ws));
   const labels = labelsOf(ws);
@@ -243,8 +246,9 @@ function renderBoard(ws, opt = {}) {
   let shown = 0;
   ws.steps.forEach((/** @type {any} */ step, /** @type {number} */ i) => {
     const stepHit = !!q && foldOf(step, () => [step.title, step.goal, step.doneWhen, step.notes, step.revisit?.reason, docTitles(step.docs)]).includes(q);
-    const visible = step.subs.filter((/** @type {any} */ x) => !q || stepHit || foldOf(x, () => [x.title, x.doneWhen, x.notes, x.reason, docTitles(x.docs)]).includes(q));
-    if (filtering && !visible.length && !stepHit) return;
+    const visible = step.subs.filter((/** @type {any} */ x) => C.inGroup(st, x.status)
+      && (!q || stepHit || foldOf(x, () => [x.title, x.doneWhen, x.notes, x.reason, docTitles(x.docs)]).includes(q)));
+    if (filtering && !visible.length && !(stepHit && !st)) return;
     shown += visible.length;
     if (!step.revisit && step.round > 1) reopenedOn.set(step.id, lastReopened(ws, step));
     const key = JSON.stringify([step, filtering ? visible.map((/** @type {any} */ x) => x.id) : null,
@@ -283,11 +287,11 @@ function renderBoard(ws, opt = {}) {
   });
   if (!ws.steps.length) nodes.push(h('p', { class: 'empty' }, 'No steps yet. Click "Add step" below.'));
   else if (!plan.length) nodes.push(h('p', { class: 'empty' }, 'No sub-step matches. ',
-    h('button', { type: 'button', class: 'btn', 'data-act': 'clear-filter' }, 'Clear search')));
+    h('button', { type: 'button', class: 'btn', 'data-act': 'clear-filter' }, st ? 'Clear filters' : 'Clear search')));
   placeChildren(board, nodes, moved);
   for (const p of plan) if (p.row) patchRowIndex(p.row, p.i);
   $('renumber-btn').hidden = !labelsStale(ws);
-  $('filter-note').textContent = filtering ? `${C.plural(shown, 'sub-step')} match · reordering is off while searching` : '';
+  $('filter-note').textContent = filtering ? `${C.plural(shown, 'sub-step')} match · reordering is off while ${q ? 'searching' : 'filtering'}` : '';
   $('add-step').hidden = filtering;
   /* 4. Đo: thẻ của hàng mới (Compact vừa đổi: mọi thẻ) — một lần dàn trang cho cả lượt. */
   const cards = (/** @type {Element[]} */ rows) => rows.flatMap((r) => /** @type {HTMLElement[]} */ ([...r.querySelectorAll('.card[data-sub]')]));
@@ -823,8 +827,7 @@ document.querySelectorAll('select').forEach((s) => enhanceSelect(/** @type {HTML
 function addWorkspace(ws) {
   state.workspaces.push(ws);
   setCur(ws.id);
-  ui.q = '';
-  $('q').value = '';
+  resetFilters();
 }
 function afterOpen() {
   window.scrollTo(0, 0);
@@ -838,8 +841,7 @@ function createFrom(/** @type {string} */ tplId, /** @type {string} */ name = ''
 }
 function switchTo(/** @type {string} */ id) {
   setCur(id);
-  ui.q = '';
-  $('q').value = '';
+  resetFilters();
   persist();
   render({ full: true });
 }
@@ -1829,13 +1831,55 @@ $('revisit-clear').addEventListener('click', () => {
 
 /* ── Lọc ── */
 
-function clearFilter() {
+/** Bỏ chữ tìm và lọc trạng thái (chưa vẽ lại). */
+function resetFilters() {
   ui.q = '';
   $('q').value = '';
+  ui.st = '';
+  $('st-filter').value = '';
+}
+function clearFilter() {
+  resetFilters();
   render();
   $('q').focus();
 }
 $('q').addEventListener('input', (/** @type {any} */ e) => { ui.q = e.target.value; render(); });
+/* Lọc theo nhóm trạng thái: như tìm, tắt sắp xếp và thêm bước; số, "Next" vẫn tính trên cả dự án. */
+$('st-filter').addEventListener('change', (/** @type {any} */ e) => { ui.st = e.target.value; render(); });
+
+/* "Next" đang chờ (C.nextWaitingOn): một dòng trên bảng nói chờ thẻ nào, lý do; bấm tên là tới thẻ; còn việc làm được ở chỗ
+ * khác thì nút lọc "Actionable". "Next" vẫn không vượt qua chỗ chờ (PLAN-003). */
+function renderNextWait(/** @type {any} */ ws) {
+  const box = $('next-wait');
+  const wait = ws ? C.nextWaitingOn(ws) : [];
+  box.hidden = !wait.length;
+  if (!wait.length) { box.replaceChildren(); return; }
+  const more = ws.steps.flatMap((/** @type {any} */ s) => s.subs).filter((/** @type {any} */ x) => C.inGroup('act', x.status)).length;
+  const why = (/** @type {any} */ x) => {
+    const r = x.reason.split('\n')[0];
+    return ` (${C.STATUS_LABEL[x.status]}${r ? ': ' + (r.length > 60 ? r.slice(0, 59) + '…' : r) : ''})`;
+  };
+  const shown = wait.slice(0, 2);
+  box.replaceChildren(icon('wait'), h('span', {}, h('b', {}, 'Next waits on '),
+    ...shown.flatMap((x, k) => [k ? ', ' : '', h('button', { type: 'button', class: 'link', 'data-goto': x.id, title: 'Go to this card' }, x.title), why(x)]),
+    wait.length > shown.length ? ` and ${wait.length - shown.length} more` : '', '.'),
+  more > 0 && ui.st !== 'act' && h('button', { type: 'button', class: 'btn small', 'data-act': 'show-act' },
+    `Show what can be done now (${more})`));
+}
+$('next-wait').addEventListener('click', (/** @type {any} */ e) => {
+  const go = e.target.closest('[data-goto]');
+  if (go) {
+    const id = go.dataset.goto;
+    if (!document.querySelector(`.card[data-sub="${id}"]`)) { resetFilters(); render(); }
+    flash('sub', id, null);
+    refocus(subSel(id, 'edit-sub'));
+  } else if (e.target.closest('[data-act="show-act"]')) {
+    ui.st = 'act';
+    $('st-filter').value = 'act';
+    render();
+    refocus('#board .card[data-sub] [data-act="edit-sub"] || .st-filter .dd-btn');
+  }
+});
 
 /* ── Nhật ký quyết định ── */
 
@@ -1888,7 +1932,7 @@ $('log-list').addEventListener('click', (/** @type {any} */ e) => {
     refocus(`[data-log="${id}"] [data-act="more-log"]`, { preventScroll: true });
   } else if (act === 'goto-step') {
     /* Bước đang bị lọc ẩn thì bỏ lọc trước. */
-    if (!document.querySelector(`.step[data-step="${entry.stepId}"]`)) { ui.q = ''; $('q').value = ''; render(); }
+    if (!document.querySelector(`.step[data-step="${entry.stepId}"]`)) { resetFilters(); render(); }
     flash('step', entry.stepId, null);
     refocus(stepSel(entry.stepId, 'edit-step'), { preventScroll: true });
   } else {
@@ -2071,7 +2115,7 @@ $('import-go').addEventListener('click', () => {
   const mode = /** @type {any} */ (document.querySelector('input[name="import-mode"]:checked')).value;
   const parsed = importParsed;
   $('dlg-import').close();
-  ui.q = ''; $('q').value = '';
+  resetFilters();
   const ws = cur();
   if (mode === 'replace' && ws && parsed.workspaces.length === 1) {
     const before = JSON.parse(JSON.stringify(ws));
@@ -2106,7 +2150,7 @@ $('import-go').addEventListener('click', () => {
 /* ── Kéo thả (js/drag.js): chuột, chạm (giữ rồi kéo), bút. Bàn phím: Alt + mũi tên, ô Vị trí trong hộp sửa ── */
 
 dragCtl = initDrag($('board'), {
-  enabled: () => !!cur() && !ui.q.trim(),
+  enabled: () => !!cur() && !ui.q.trim() && !ui.st,
   placeOf: (id) => C.subPlace(cur(), id),
   onSub: (id, to) => {
     const ws = cur();
