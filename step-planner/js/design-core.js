@@ -68,6 +68,17 @@ export function normDesign(o) {
 /** Bản trống để sửa. @returns {{path: string, profile: Record<string,string>, stages: Record<string,any>, edges: Record<string,any>}} */
 export const emptyDesign = () => ({ path: '', profile: {}, stages: {}, edges: {} });
 
+/** Thiết kế đặt sẵn của một mẫu (`design` trong templates.json, PLAN-033): chỉ hồ sơ và lối, không phương án; không có thì null.
+ * @param {any} tpl */
+export const presetDesign = (tpl) => (isObj(tpl) && isObj(tpl.design) ? normDesign({ path: tpl.design.path, profile: tpl.design.profile }) : null);
+
+/** Hồ sơ và lối còn đúng như mẫu đặt sẵn (người dùng chưa đổi câu nào). @param {any} design @param {any} preset */
+export function isPreset(design, preset) {
+  if (!design || !preset) return false;
+  const a = Object.entries(design.profile), b = preset.profile;
+  return design.path === preset.path && a.length === Object.keys(b).length && a.every(([k, v]) => b[k] === v);
+}
+
 /** Lối đã chọn (còn trong danh mục) hay null. @param {any} cat @param {any} design */
 export const pathOf = (cat, design) => (design && design.path && (cat.paths || []).find((/** @type {any} */ p) => p.id === design.path)) || null;
 

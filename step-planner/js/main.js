@@ -2402,7 +2402,7 @@ async function boot() {
   if (loaded.migrated) { persist(); flushSave(); } // khoá cũ: ghi ngay sang khoá mới
   render();
 }
-initDesign({ cur, findWs, commit, toast, h, icon, showDlg });
+initDesign({ cur, findWs, commit, toast, h, icon, showDlg, tplOf: (/** @type {string} */ id) => templates.find((t) => t.id === id) || null });
 /* Tới một thẻ đang bị ô tìm ẩn: bỏ lọc, không lấy focus (Bàn giao đưa focus tới thẻ). */
 const unfilter = () => { ui.q = ''; $('q').value = ''; render(); };
 Hd.initHand({ h, icon, cur, findWs, labelsOf, openSub, openStep, unfilter, flashMs, focusField, showDlg, toast });

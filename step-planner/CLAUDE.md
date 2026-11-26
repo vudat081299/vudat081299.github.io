@@ -17,7 +17,7 @@
 | `css/planner.css` | token ở đầu (tới dòng `/* ── hết token ── */`), rồi từng component, mỗi khối mở bằng một dòng chú thích |
 | `js/core.js` | logic thuần: chuẩn hoá, gộp khi lưu, ngày, tiến độ, việc tiếp theo, bàn giao (`holders`, `handoffs`, `ioStatus`, `consumersOf`), Markdown và JSON vào / ra; không DOM, chạy được trong Node |
 | `js/md.js` | Markdown của tài liệu văn bản → cây khối (`parseMd`, thuần) → DOM (`renderMd`, chỉ createElement / text node); URL trần trong chữ thường (`linkParts`, thuần, dấu câu cuối ở ngoài); khung Edit: token (`srcTokens`, thuần) → dòng có số (`renderSrc`) |
-| `js/design-core.js` | System design, thuần: `normDesign`, `rankOptions`, `applyPath`, `warnings`, `archAdvice`, `flowEdges`, `diagramNodes`, `planTasks`, `planDiff`, `applyPlan`, `designMd`, `designReader` (core.js chỉ gọi hai hàm cuối) |
+| `js/design-core.js` | System design, thuần: `normDesign`, `rankOptions`, `applyPath`, `warnings`, `archAdvice`, `flowEdges`, `diagramNodes`, `planTasks`, `planDiff`, `applyPlan`, `designMd`, `designReader`, `presetDesign`, `isPreset` (core.js chỉ gọi `normDesign`, `presetDesign`, `designMd`, `designReader`) |
 | `js/design.js` | System design, UI: mục trên trang, sơ đồ SVG, hộp `#dlg-sd`, hộp xem trước Update plan; nhận hàm chung qua `initDesign` |
 | `js/hand.js` | bàn giao, UI: chip In / Out của bước, hai chấm đầu vào / đầu ra (`ioDots`), mũi tên trên bước nhận và trước ô nhận, hộp `#dlg-hand`, phần Inputs / Outputs của hộp sửa, hộp `#dlg-pick`; nhận hàm chung qua `initHand` |
 | `js/store.js` | `localStorage` (dữ liệu, mẹo `stepPlanner.hintOff`, Compact `stepPlanner.compact`, theme `hub-theme`), `sessionStorage` (dự án của tab); mọi truy cập bọc try/catch |
@@ -59,8 +59,7 @@
 - Ô ấy chỉ còn Pending / Blocked (`nextWaitingOn`): dòng "Next waits on …" nêu thẻ và lý do; nút lọc Actionable. "Next" không vượt chỗ chờ.
 - Hạn qua: "(overdue)", trừ thẻ xong, bỏ qua, huỷ. Thẻ xong có `doneAt` hiện ngày xong.
 - Lọc trạng thái (`STATUS_GROUPS`): All statuses, Actionable (New, In progress), Waiting (Pending, Blocked), Done, Skipped, cancelled.
-  Lọc và tìm là giao; "Clear filters" bỏ cả hai.
-  Mỗi tab một bộ lọc, không lưu; đổi / tạo / nhập dự án thì bỏ.
+  Lọc và tìm là giao; "Clear filters" bỏ cả hai. Mỗi tab một bộ lọc, không lưu; đổi / tạo / nhập dự án thì bỏ.
 - Tìm bỏ qua dấu và hoa thường, khớp cả lý do, tài liệu, tên và `ref` của đầu ra; bước khớp thì hiện cả hàng.
   Đang tìm hay lọc thì tắt sắp xếp, thêm bước, ẩn vạch bàn giao.
 - Song song (PLAN-013): mỗi ô một cột của hàng; ô k thẻ đánh `n.1` … `n.k`. Alt + ← →: đổi ô (thẻ ở ô song song thì tách ra
@@ -122,8 +121,9 @@
 
 ## Mẫu (`data/templates.json`)
 
-- Khuôn, khoá, chuỗi, ngôn ngữ, `output`, bàn giao: `lint.py` (docstring đầu file); khuôn đầy đủ ở đó, đừng chép lại.
+- Khuôn, khoá, chuỗi, ngôn ngữ, `output`, bàn giao, `design`: `lint.py` (docstring đầu file); khuôn đầy đủ ở đó, đừng chép lại.
 - Đúng một mẫu trống. Mẫu chung không gắn vào một bài toán. Không thẻ HTML, không người làm.
+- `design` (PLAN-033): chỉ câu hồ sơ, lối mẫu thật sự ngụ ý, không phương án; `fromTemplate` chép một lần. Hộp ghi "Preset from template" khi còn đúng (`isPreset`).
 - Mọi chữ của mẫu tiếng Việt (PLAN-028); tên bước, bước con theo chuẩn: tên tiếng Việt, tên gốc trong ngoặc, ví dụ
   "Hiểu dữ liệu (Data Understanding)". Giữ nguyên tên công cụ, thư viện, file, lệnh, URL.
 - `output`: loại đầu ra, hiện trên thẻ mẫu. `description` nói khi nào chọn mẫu, phần nào bỏ được khi làm một mình.
