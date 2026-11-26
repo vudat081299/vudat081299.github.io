@@ -363,9 +363,7 @@ function placeChildren(parent, nodes, moved) {
  * @param {HTMLElement} row @param {number} i */
 function patchRowIndex(row, i) {
   const set = (/** @type {Element|null} */ el, /** @type {string} */ k, /** @type {string} */ v) => { if (el && el.getAttribute(k) !== v) el.setAttribute(k, v); };
-  const gap = row.querySelector(':scope > .gap-add');
-  if (gap && gap.classList.contains('first') !== (i === 0)) gap.classList.toggle('first', i === 0);
-  const btn = gap && gap.querySelector('.gap-add-btn');
+  const btn = row.querySelector(':scope > .gap-add > .gap-add-btn');
   set(btn, 'data-at', String(i));
   set(btn, 'aria-label', `Add a step before step ${i + 1}`);
   set(btn, 'title', `Add a step here (before step ${i + 1})`);
@@ -460,7 +458,7 @@ function stepRow(step, i, visible, ctx) {
     h('ul', { class: 'doc-chips', 'aria-label': `Docs of step ${i + 1}` }, step.docs.map(docChip)),
     h('button', { type: 'button', class: 'doc-chip add aux', 'data-act': 'add-doc', tabindex: '-1', 'aria-label': 'Add a doc to this step', title: 'Add a link or a Markdown note for the whole step' }, icon('plus'), 'Doc'));
   /* Vạch chia phía trên bước: rê chuột vào thì hiện nút "Add step" chèn bước mới vào chỗ này (nút nổi, không đẩy bố cục). */
-  const gap = !filtering && h('div', { class: 'gap-add' + (i === 0 ? ' first' : '') },
+  const gap = !filtering && h('div', { class: 'gap-add' },
     h('button', { type: 'button', class: 'gap-add-btn', 'data-act': 'insert-step', 'data-at': String(i), tabindex: '-1',
       'aria-label': `Add a step before step ${i + 1}`, title: `Add a step here (before step ${i + 1})` }, icon('plus'), h('span', {}, 'Add step')));
   return h('section', { class: 'step' + (step.revisit ? ' revisit' : '') + (done ? ' is-done' : ''), 'data-step': step.id, 'aria-labelledby': 'st-' + step.id },
