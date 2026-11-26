@@ -1824,6 +1824,36 @@ const check = (name, ok, detail = '') => {
   }
   });
 
+  /* ── Vạch chia "Add step": nút của vạch đầu bảng thẳng hàng với nút của vạch sau (cùng tâm ngang, cùng độ lệch so với
+   * giữa viền trên của bước, cùng cỡ), ở máy rộng hai theme, Compact, và màn cảm ứng 320px ── */
+  await section('Vạch chia thêm bước', async () => {
+  const gws = { version: 2, lastId: 'wg', workspaces: [{ id: 'wg', name: 'Vạch', steps: [
+    { id: 'tg1', title: 'Một', subs: [{ id: 'sg1', title: 'a', status: 'todo' }] },
+    { id: 'tg2', title: 'Hai', subs: [{ id: 'sg2', title: 'b', status: 'todo' }] }], log: [] }] };
+  for (const [w, touch, scheme, compact] of [[1280, false, 'light', false], [1280, false, 'dark', true], [320, true, 'light', false]]) {
+    const gc = await browser.newContext({ viewport: { width: w, height: 800 }, hasTouch: touch, isMobile: touch, colorScheme: scheme });
+    await gc.addInitScript(([d, c]) => {
+      if (!localStorage.getItem('stepPlanner.v2')) { localStorage.setItem('stepPlanner.v2', d); localStorage.setItem('stepPlanner.compact', c ? '1' : '0'); }
+    }, [JSON.stringify(gws), compact]);
+    const gp = await gc.newPage();
+    gp.on('pageerror', (e) => errors.push(String(e)));
+    await gp.goto(BASE);
+    await gp.waitForSelector('#app:not([hidden]) .card[data-sub]');
+    const m = await gp.evaluate(() => [...document.querySelectorAll('#board > .step')].slice(0, 2).map((s) => {
+      const b = s.querySelector(':scope > .gap-add .gap-add-btn').getBoundingClientRect();
+      const line = s.getBoundingClientRect().top + parseFloat(getComputedStyle(s).borderTopWidth) / 2;
+      return { cx: b.left + b.width / 2, dy: b.top + b.height / 2 - line, w: b.width, h: b.height };
+    }));
+    const compactOn = await gp.$eval('#board', (bd) => bd.classList.contains('compact'));
+    const [a, b] = m;
+    const near = (x, y) => Math.abs(x - y) <= 1;
+    check(`vạch chia ${w}px ${scheme}${compactOn ? ' Compact' : ''}${touch ? ' cảm ứng' : ''}: nút "Add step" của vạch đầu bảng thẳng hàng vạch thứ hai, tâm trên vạch`,
+      m.length === 2 && compactOn === compact && near(a.cx, b.cx) && near(a.dy, b.dy) && near(a.w, b.w) && near(a.h, b.h) && Math.abs(a.dy) <= 1,
+      JSON.stringify(m.map((x) => Object.fromEntries(Object.entries(x).map(([k, v]) => [k, Math.round(v * 10) / 10])))));
+    await gc.close();
+  }
+  });
+
   /* ── Bộ nhớ khoá cũ (v1, có người làm): đọc, chuẩn hoá bỏ người, ghi sang khoá mới, giữ khoá cũ ── */
   await section('Bộ nhớ khoá cũ', async () => { // thân giữ thụt lề cũ cho dễ gộp
   const oldCtx = await browser.newContext();

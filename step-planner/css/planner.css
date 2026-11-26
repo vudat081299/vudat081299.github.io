@@ -527,17 +527,16 @@ svg.i {
 }
 
 /* ── Vạch chia giữa hai bước: rê chuột vào thì hiện nút "Add step" nổi trên vạch (tuyệt đối, không đẩy bố cục).
-   Màn cảm ứng không rê được: nút tròn nhỏ luôn hiện, lề trên của bước nới để vùng chạm không đè lên nội dung. ── */
+   Màn cảm ứng không rê được: nút tròn nhỏ luôn hiện, lề trên của bước nới để vùng chạm không đè lên nội dung.
+   Mọi vạch, cả vạch đầu bảng, cùng một luật: tâm dải nằm trên giữa viền trên của bước (top tính từ mép trong viền). ── */
 .gap-add {
-  position: absolute; z-index: 3; left: 0; right: 0; top: calc(-1 * var(--gap-add) / 2); height: var(--gap-add);
+  position: absolute; z-index: 3; left: 0; right: 0; top: calc(-1 * (var(--gap-add) + var(--line-w)) / 2); height: var(--gap-add);
   display: flex; align-items: center; justify-content: center;
 }
-.gap-add.first { top: 0; }
 .gap-add::before {
   content: ''; position: absolute; left: 0; right: 0; top: 50%; height: var(--mark-w); transform: translateY(-50%);
   background: var(--accent); opacity: 0; transition: opacity var(--dur) var(--ease);
 }
-.gap-add.first::before { top: 0; }
 .gap-add-btn {
   position: relative; display: inline-flex; align-items: center; gap: var(--s1); min-height: var(--h-xs); padding: 0 var(--s3) 0 var(--s2);
   font: 600 var(--fs-xs)/1 var(--sans); color: var(--on-accent); background: var(--accent); border: 0; border-radius: var(--r-pill);
