@@ -653,11 +653,11 @@ function logEmpty() {
 }
 
 const BLANK_TPL = { id: 'blank', name: 'Blank', description: '', steps: [] };
-/** Tên, mô tả và số bước / bước con của một mẫu (đếm từ templates.json). @param {any} t */
+/** Tên, mô tả, loại đầu ra và số bước / bước con của một mẫu (đếm từ templates.json). @param {any} t */
 function tplInfo(t) {
   const subs = t.steps.reduce((/** @type {number} */ n, /** @type {any} */ s) => n + (s.subs || []).length, 0);
   return h('span', {}, h('b', {}, t.name), t.description && h('small', {}, t.description),
-    t.steps.length > 0 && h('span', { class: 'tpl-n' }, `${C.plural(t.steps.length, 'step')} · ${C.plural(subs, 'sub-step')}`));
+    t.steps.length > 0 && h('span', { class: 'tpl-n' }, [t.output, C.plural(t.steps.length, 'step'), C.plural(subs, 'sub-step')].filter(Boolean).join(' · ')));
 }
 function renderStart() {
   const list = templates.length ? templates : [BLANK_TPL];

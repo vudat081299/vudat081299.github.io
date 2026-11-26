@@ -4,7 +4,8 @@
     {
       "id": "crisp-dm",
       "name": "Data Science project (CRISP-DM)",
-      "description": "Chuẩn CRISP-DM 1.0: sáu pha, mỗi bước con là một việc chung (generic task) của pha, áp cho mọi dự án dữ liệu; thêm tái lập, giám sát, model card theo CRISP-ML(Q) và TDSP. Pha nào lộ vấn đề thì quay lại pha trước.",
+      "output": "Prediction model / app",
+      "description": "Chọn khi đầu ra là mô hình dự đoán hay app dùng mô hình. CRISP-DM 1.0: sáu pha, bước con là generic task; thêm tái lập, giám sát theo CRISP-ML(Q), ML Test Score. Làm một mình chỉ nộp báo cáo: Skip Plan Monitoring and Maintenance, Customer Acceptance.",
       "steps": [
         {
           "title": "Business Understanding",
@@ -307,7 +308,8 @@
     {
       "id": "it5425-sports",
       "name": "Đồ án IT5425 — giám sát thể thao (Premier League)",
-      "description": "Các giai đoạn P0–P8 của đồ án môn Data Management and Visualization, lấy từ trang đồ án.",
+      "output": "Course project",
+      "description": "Chọn khi làm đồ án môn Data Management and Visualization (IT5425). Các giai đoạn P0–P8 lấy từ trang đồ án. Làm một mình: Skip việc chia vai, họp tuần; app demo và slide tuỳ yêu cầu nộp.",
       "steps": [
         {
           "title": "P0 · Khởi động",
@@ -556,7 +558,8 @@
     {
       "id": "stats-report",
       "name": "Statistical analysis and report (PPDAC)",
-      "description": "Chu trình PPDAC (Problem, Plan, Data, Analysis, Conclusions) của tư duy thống kê: từ câu hỏi tới báo cáo, không học máy.",
+      "output": "Report",
+      "description": "Chọn khi đầu ra là báo cáo trả lời một câu hỏi bằng dữ liệu, không cần mô hình dự đoán. Chu trình PPDAC (Wild & Pfannkuch, 1999). Làm một mình với dữ liệu có sẵn: Skip Sampling design và phần thử thu thập, ghi lý do; giữ việc chốt kế hoạch phân tích trước khi xem kết quả.",
       "steps": [
         {
           "title": "Problem",
@@ -747,7 +750,8 @@
     {
       "id": "app-feature",
       "name": "App feature (iOS / Flutter)",
-      "description": "Một tính năng từ spec tới phát hành: spec, thiết kế, làm, kiểm thử, phát hành.",
+      "output": "App feature",
+      "description": "Chọn khi đầu ra là một tính năng của app iOS / Flutter, từ spec tới phát hành. Không theo một chuẩn; việc phát hành theo tài liệu App Store Connect, Google Play, Flutter. Làm một mình, app ít người dùng: Skip Design review, feature flag, staged rollout.",
       "steps": [
         {
           "title": "Spec",
@@ -929,6 +933,7 @@
     {
       "id": "data-pipeline",
       "name": "Scheduled data pipeline (Data engineering lifecycle)",
+      "output": "Data pipeline",
       "description": "Chọn khi dữ liệu mới tới định kỳ và cần một job tự chạy, chặn lô lỗi, giữ bản sạch tốt gần nhất cho bên dùng. Theo vòng đời data engineering (Reis & Housley, Fundamentals of Data Engineering, 2022). Làm một mình: Storage có thể chỉ là một thư mục phân vùng; Security chỉ cần giữ secret ngoài code.",
       "steps": [
         {
@@ -1166,7 +1171,7 @@
     {
       "id": "blank",
       "name": "Blank",
-      "description": "Không có bước nào; tự thêm.",
+      "description": "Chọn khi không mẫu nào hợp: không có bước nào, tự thêm.",
       "steps": []
     }
   ]

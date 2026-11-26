@@ -4,6 +4,7 @@
   1. data/templates.json: khuôn mẫu (khoá, kiểu, chuỗi không rỗng, id không trùng, không thẻ HTML, có đúng một mẫu
      trống). Không có khái niệm người làm: mẫu không có `people` / `owner`.
      Tên mẫu, tên bước, tên bước con tiếng Anh (trừ mẫu đồ án); nội dung khác tiếng Việt.
+     Mẫu có bước thì có `output`: loại đầu ra, tiếng Anh, ≤ 30 ký tự.
      Bàn giao: bước hay bước con có thể có `outs` [{key, name, ref?, note?}] và `ins` [key]. Khoá dạng `[a-z0-9][a-z0-9-]*`
      (≤ 40), không trùng trong một mẫu; `ins` trỏ tới đầu ra có thật, không phải của chính nó, khai ở bước trước hoặc ở bước
      con đứng trước trong cùng bước (dữ liệu chỉ chảy xuôi). `ref`: đường dẫn hay link https, một dòng.
@@ -87,7 +88,9 @@ def course_template():
     return {
         'id': COURSE_ID,
         'name': 'Đồ án IT5425 — giám sát thể thao (Premier League)',
-        'description': 'Các giai đoạn P0–P8 của đồ án môn Data Management and Visualization, lấy từ trang đồ án.',
+        'output': 'Course project',
+        'description': 'Chọn khi làm đồ án môn Data Management and Visualization (IT5425). Các giai đoạn P0–P8 lấy từ trang đồ án. '
+                       'Làm một mình: Skip việc chia vai, họp tuần; app demo và slide tuỳ yêu cầu nộp.',
         'steps': steps,
     }
 
@@ -96,7 +99,7 @@ STEP_KEYS = {'title', 'goal', 'doneWhen', 'notes', 'subs', 'outs', 'ins'}
 SUB_KEYS = {'title', 'doneWhen', 'notes', 'outs', 'ins'}
 OUT_KEYS = {'key', 'name', 'ref', 'note'}
 KEY_RE = r'[a-z0-9][a-z0-9-]{0,39}'
-TPL_KEYS = {'id', 'name', 'description', 'steps'}
+TPL_KEYS = {'id', 'name', 'output', 'description', 'steps'}
 
 
 def need_str(where, obj, key, required=True):
@@ -198,6 +201,11 @@ def check_templates(data):
             err(f'{w}: `steps` phải là danh sách')
             continue
         blanks += not steps
+        if steps or 'output' in t:  # loại đầu ra hiện trên thẻ mẫu; mẫu trống không cần
+            need_str(w, t, 'output')
+            english(f'{w}.output', t.get('output', ''))
+            if len(str(t.get('output', ''))) > 30:
+                err(f'{w}: `output` tối đa 30 ký tự (một dòng trên thẻ mẫu)')
         for j, s in enumerate(steps):
             ws = f'{w} ({tid}) steps[{j}]'
             if extra := set(s) - STEP_KEYS:
