@@ -3310,6 +3310,48 @@ const check = (name, ok, detail = '') => {
     await nx.close();
   });
 
+  /* ── Đóng hộp về nút mở: thêm, xoá tài liệu, Evidence vẽ lại hàng và thay nút mở; đóng hộp vẫn về nút mở (nút mới) ── */
+  await section('Đóng hộp về nút mở', async () => {
+    const { ctx: fx, page: fp } = await open(1280, 900);
+    await fp.click('#start .tpl[data-tpl="stats-report"]');
+    await fp.waitForSelector('.card[data-sub]');
+    const sub = await fp.$eval('.card[data-sub]', (x) => x.dataset.sub);
+    const step = await fp.$eval('.step[data-step]', (x) => x.dataset.step);
+    const at = (sel) => fp.evaluate((q) => document.activeElement === document.querySelector(q), sel);
+    const addLink = async (where, title) => {
+      await fp.click(`#dlg-${where} [data-doc-add]`);
+      await fp.fill('#dlg-doc input[name="title"]', title);
+      await fp.fill('#dlg-doc input[name="url"]', 'https://example.com/' + title);
+      await fp.click('#doc-save');
+      await fp.waitForSelector('#dlg-doc:not([open])', { state: 'attached' });
+    };
+    const r = {};
+    await fp.focus(subSel(sub, 'edit-sub'));
+    await fp.keyboard.press('Enter');
+    await fp.waitForSelector('#dlg-sub[open]');
+    await addLink('sub', 'a');
+    await fp.keyboard.press('Escape');
+    await fp.waitForSelector('#dlg-sub:not([open])', { state: 'attached' });
+    r.subEsc = await at(subSel(sub, 'edit-sub'));
+    await fp.focus(subSel(sub, 'edit-sub'));
+    await fp.keyboard.press('Enter');
+    await fp.click('#dlg-sub [data-doc-act="proof"]');
+    await fp.click('#dlg-sub .dlg-foot [data-close]');
+    await fp.waitForSelector('#dlg-sub:not([open])', { state: 'attached' });
+    r.subProof = await at(subSel(sub, 'edit-sub'));
+    const head = `.step[data-step="${step}"] .step-head [data-act="edit-step"]`;
+    await fp.focus(head);
+    await fp.keyboard.press('Enter');
+    await fp.waitForSelector('#dlg-step[open]');
+    await addLink('step', 'b');
+    await fp.click('#dlg-step [data-doc-act="del"]');
+    await fp.keyboard.press('Escape');
+    await fp.waitForSelector('#dlg-step:not([open])', { state: 'attached' });
+    r.stepEsc = await at(head);
+    check('đóng hộp sửa sau khi thêm / xoá tài liệu, Evidence: focus về nút mở mới, không về body', r.subEsc && r.subProof && r.stepEsc, JSON.stringify(r));
+    await fx.close();
+  });
+
   /* ── Dữ liệu lưu bị hỏng ── */
   await section('Dữ liệu lưu bị hỏng', async () => { // thân giữ thụt lề cũ cho dễ gộp
   const bad = await browser.newContext();
