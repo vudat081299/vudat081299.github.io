@@ -7,7 +7,7 @@
 import { fold as foldText } from '../core/board.js';
 import { initDiagramView, attach as attachView, resetView } from './diagram-view.js';
 import { PLAN_STEP, applyPlan, bothDecided, diagramNodes, flowEdges, planDiff, snake, viaLabel } from '../core/design-plan.js';
-import { EDGE_MAX, OWN_MAX, VIA, applyPath, archAdvice, catalogErrors, decidedCount, effProfile, emptyDesign, isPreset, normDesign, notNeededBy, pathOf, pickNames, presetDesign, rankOptions, stageState, warnings } from '../core/design.js';
+import { EDGE_MAX, OWN_MAX, VIA, applyPath, archAdvice, archMissing, catalogErrors, decidedCount, effProfile, emptyDesign, isPreset, normDesign, notNeededBy, pathOf, pickNames, presetDesign, rankOptions, stageState, warnings } from '../core/design.js';
 import { plural, slug } from '../core/io.js';
 import { normStep, normSub } from '../core/model.js';
 import { showDlg } from './dialogs.js';
@@ -602,10 +602,31 @@ function archPane() {
     h('p', { class: 'dlg-kicker' }, 'Your project'),
     h('h3', { class: 'sd-h' }, 'Architecture'),
     h('p', { class: 'sd-q' }, 'Kiến trúc là hình dạng lớn của hệ thống, quyết trước khi chọn công cụ cho từng khâu. Mỗi nhóm dưới đây trả lời một câu hỏi bằng vài kiến trúc chuẩn; trang gợi ý một kiến trúc mỗi nhóm theo hồ sơ dự án, lối đã chọn và các khâu đã quyết.'), // lang: vi — lời giải thích, nội dung
-    adv.every((a) => a.id === null) ? h('p', { class: 'sd-tip' }, 'Answer the project profile to get a recommendation. ',
-      h('button', { type: 'button', class: 'sd-link', 'data-at': 1 }, 'Go to profile')) : null,
+    archTip(fams, adv, d),
     ...fams.map((/** @type {any} */ f, /** @type {number} */ i) => archFamily(f, adv[i], d)),
   ];
+}
+
+/** Nhóm chưa có gợi ý: nói đúng thứ còn thiếu (archMissing) kèm lối tới trang ấy — lối, hồ sơ; chỉ còn khâu thì các khâu.
+ * @param {any[]} fams @param {{id: string | null}[]} adv @param {any} d */
+function archTip(fams, adv, d) {
+  const none = fams.filter((_, i) => adv[i].id === null);
+  if (!none.length) return null;
+  const m = archMissing(cat, d);
+  const go = (/** @type {number} */ at, /** @type {string} */ t) => h('button', { type: 'button', class: 'sd-link', 'data-at': at }, t);
+  const title = (/** @type {string} */ id) => cat.stages.find((/** @type {any} */ s) => s.id === id).title;
+  /** @type {[string, string, any[]][]} [loại, việc, nút] */
+  const asks = [];
+  if (m.path) asks.push(['path', 'pick what you deliver', [go(0, 'Go to What do you deliver?')]]);
+  const qs = m.profile.map((id) => cat.profile.find((/** @type {any} */ q) => q.id === id).label);
+  if (qs.length) asks.push(['profile', `answer the project profile${qs.length <= 3 ? ` (${qs.join(' · ')})` : ''}`, [go(1, 'Go to profile')]]);
+  if (!asks.length && m.stages.length) asks.push(['stages', `decide ${m.stages.map(title).join(' or ')}`, m.stages.map((id) => go(stagePage(id), title(id)))]);
+  if (!asks.length) return null;
+  const what = asks.map((a) => a[1]).join(' or ');
+  const forWhom = none.length < fams.length ? ` for ${none.map((f) => f.label).join(', ')}` : '';
+  return h('p', { class: 'sd-tip', 'data-missing': asks.map((a) => a[0]).join(' ') },
+    `${what[0].toUpperCase()}${what.slice(1)} to get a recommendation${forWhom}. `,
+    ...asks.flatMap((a) => a[2]).flatMap((b, k) => (k ? [' · ', b] : [b])));
 }
 
 /** @param {any} f @param {{id: string | null, why: string}} a @param {any} d */

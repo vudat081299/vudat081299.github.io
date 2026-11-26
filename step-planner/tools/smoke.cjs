@@ -2134,6 +2134,23 @@ const check = (name, ok, detail = '') => {
     await pp.click('#sd-nav [data-at="1"]');
     check('mẫu đặt sẵn: tạo từ mẫu trống thì hồ sơ trống, không có dòng Preset from template', ws.templateId === 'blank' && ws.design === null
       && !(await pp.$$eval('#sd-pane input[data-q]:checked', (rs) => rs.filter((r) => r.value).length)) && !(await pp.$('#sd-pane [data-preset]')));
+    await pp.keyboard.press('Escape');
+    /* Mẫu đặt sẵn hồ sơ mà chưa có lối: trang Architecture đòi chọn lối (thứ thật sự thiếu), nút dẫn tới "What do you deliver?". */
+    const noPath = (await pp.evaluate(async () => (await (await fetch('data/templates.json')).json()).templates))
+      .find((t) => t.design && !t.design.path && Object.keys(t.design.profile || {}).length);
+    if (noPath) {
+      await pp.click('#ws-btn');
+      await pp.click('#ws-tab-new');
+      await pp.check(`#ws-new-templates input[value="${noPath.id}"]`);
+      await pp.click('#ws-new button[type="submit"]');
+      await pp.waitForSelector('#sd-arch [data-arch-open]');
+      await pp.click('#sd-arch [data-arch-open]');
+      await pp.waitForSelector('#dlg-sd[open] .sd-fam');
+      const tip = await pp.$eval('#sd-pane', (p) => { const t = p.querySelector('.sd-tip[data-missing]'); return t && { miss: t.dataset.missing, text: t.textContent }; });
+      await pp.click('#sd-pane .sd-tip [data-at="0"]');
+      check(`mẫu ${noPath.id} (hồ sơ đặt sẵn, chưa có lối): Architecture đòi chọn lối, nút tới "What do you deliver?"`,
+        !!tip && /\bpath\b/.test(tip.miss) && /^Pick what you deliver/.test(tip.text) && !!(await pp.$('#sd-pane .sd-paths')), JSON.stringify(tip));
+    }
     await px.close();
   });
 
@@ -2152,9 +2169,10 @@ const check = (name, ok, detail = '') => {
     const navTo = (title) => ap.click(`#sd-nav .sd-nav-btn:has-text("${title}")`);
     const recs = () => ap.$$eval('#sd-pane .sd-fam', (fs) => Object.fromEntries(fs.map((f) => [f.dataset.fam, f.querySelector('.sd-rec')?.dataset.rec ?? null])));
     const fams = await ap.$$eval('#sd-pane .sd-fam', (fs) => fs.map((f) => [f.dataset.fam, f.querySelectorAll('.sd-arch').length]));
-    check(`${tag}: mọi nhóm, mọi kiến trúc hiện; chưa trả lời thì chưa gợi ý, có lối tới hồ sơ`,
+    check(`${tag}: mọi nhóm, mọi kiến trúc hiện; chưa trả lời thì chưa gợi ý, có lối tới "What do you deliver?" và hồ sơ`,
       JSON.stringify(fams) === JSON.stringify(cat.architectures.map((f) => [f.id, f.entries.length]))
-      && Object.values(await recs()).every((x) => x === null) && !!(await ap.$('#sd-pane .sd-tip [data-at="1"]')), JSON.stringify(fams));
+      && Object.values(await recs()).every((x) => x === null) && !!(await ap.$('#sd-pane .sd-tip[data-missing~="path"] [data-at="0"]'))
+      && !!(await ap.$('#sd-pane .sd-tip [data-at="1"]')), JSON.stringify(fams));
     await navTo('Project profile');
     for (const [q, a] of [['size', 'small'], ['fresh', 'batch']]) await ap.click(`input[data-q="${q}"][value="${a}"]`, { force: true });
     await navTo('Architecture');
@@ -2175,8 +2193,9 @@ const check = (name, ok, detail = '') => {
     await ap.click('#sd-pane [data-arch="monolith"] > summary');
     await ap.click('#sd-pane [data-arch="monolith"] [data-arch-path]');
     const ws = await cur(ap);
-    check(`${tag}: "Use this deliverable" đặt lối, kiến trúc mang dấu Your deliverable`, ws.design.path === 'demo'
-      && /Your deliverable/.test(await ap.textContent('#sd-pane [data-arch="monolith"] > summary')) && (await recs()).app === 'monolith');
+    check(`${tag}: "Use this deliverable" đặt lối, kiến trúc mang dấu Your deliverable; mẹo không còn đòi chọn lối`, ws.design.path === 'demo'
+      && /Your deliverable/.test(await ap.textContent('#sd-pane [data-arch="monolith"] > summary')) && (await recs()).app === 'monolith'
+      && !(await ap.$('#sd-pane .sd-tip[data-missing~="path"]')));
     const stage = cat.architectures.find((f) => f.id === 'processing').entries.find((e) => e.id === r.processing);
     const sid = Object.keys(stage.tools)[0];
     await ap.click(`#sd-pane [data-arch="${r.processing}"] .sd-arch-tools [data-at]`);

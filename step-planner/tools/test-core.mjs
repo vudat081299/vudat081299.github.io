@@ -1225,6 +1225,31 @@ function designSnapshot(cat) {
     !diffs.length, `${diffs.length} khác: ${diffs.slice(0, 6).join(' | ')}`);
 }
 
+/* Thứ còn thiếu để có gợi ý kiến trúc (archMissing): trang Architecture chỉ tới đúng trang (lối, hồ sơ, khâu). */
+{
+  const { archMissing } = await import('../js/core/design.js');
+  const cat = JSON.parse(readFileSync(fileURLToPath(new URL('../data/system-design.json', import.meta.url)), 'utf8'));
+  const none = archMissing(cat, null);
+  check('kiến trúc thiếu gì: chưa có gì thì thiếu lối và hồ sơ', none.path && none.profile.length > 0 && none.profile.every((id) => cat.profile.some((q) => q.id === id)));
+  /* Mỗi mẫu có design: nhóm nào chưa gợi ý thì phải chỉ ra ít nhất một thứ còn thiếu; chưa có lối mà luật cần lối thì nêu lối;
+   * mọi nhóm đã gợi ý thì không thiếu gì. Trả lời đúng thứ được chỉ ra thì không còn bị chỉ ra nữa. */
+  const bad = [];
+  for (const t of templates) {
+    const d = normDesign(t.design || null);
+    const nulls = archAdvice(cat, d).filter((a) => a.id === null).length;
+    const m = archMissing(cat, d);
+    const any = m.path || m.profile.length || m.stages.length;
+    if (nulls ? !any : any) bad.push(`${t.id}: ${nulls} nhóm chưa gợi ý, thiếu ${JSON.stringify(m)}`);
+    if (m.path && d?.path) bad.push(`${t.id}: đã có lối mà vẫn nêu lối`);
+    for (const id of m.profile) {
+      const q = cat.profile.find((x) => x.id === id);
+      const again = archMissing(cat, normDesign({ ...(d || {}), profile: { ...(d?.profile || {}), [id]: q.choices[0].id } }));
+      if (again.profile.includes(id)) bad.push(`${t.id}: trả lời ${id} mà vẫn bị nêu`);
+    }
+  }
+  check('kiến trúc thiếu gì: khớp với nhóm chưa gợi ý ở mọi mẫu, không nêu thứ đã có', !bad.length, bad.slice(0, 4).join(' | '));
+}
+
 /* Khung nhìn của sơ đồ (js/core/view-math.js): thu phóng quanh điểm, giới hạn, kéo, hai ngón, vừa khung. */
 {
   const V = await import('../js/core/view-math.js');
