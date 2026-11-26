@@ -547,8 +547,9 @@ export function toMarkdown(ws, labels = null) {
     out.push('', `## ${LOG_HEADING}`, '');
     for (const l of ws.log) {
       const why = l.why ? l.why.split('\n') : [];
-      const step = ws.steps.find((/** @type {any} */ s) => s.id === l.stepId);
-      out.push(...hardBreaks([`- ${l.date} · ${l.decision}`, ...(step ? [`  Step: ${step.title}`] : []),
+      /* Số thứ tự như tiêu đề `## N. tên`: hai bước trùng tên vẫn phân biệt được. */
+      const k = ws.steps.findIndex((/** @type {any} */ s) => s.id === l.stepId);
+      out.push(...hardBreaks([`- ${l.date} · ${l.decision}`, ...(k >= 0 ? [`  Step: ${k + 1}. ${ws.steps[k].title}`] : []),
         ...why.map((w, k) => (k ? '  ' + escBlock(w) : `  Why: ${w}`))]));
     }
   }
@@ -747,10 +748,14 @@ export function fromMarkdown(text) {
     else addNote(step, 'notes', raw);
   }
   if (!ws.name && !ws.steps.length) throw new Error('No "# …" title, "## …" step or "- [ ] …" task found.');
-  /* `Step: tên` của quyết định: gắn với bước đầu tiên cùng tên (bỏ dấu, không phân biệt hoa thường). */
+  /* `Step: N. tên` của quyết định: bước thứ N nếu đúng tên ấy; không thì bước đầu tiên tên đúng cả chuỗi (file cũ ghi
+   * `Step: tên`), rồi bước đầu tiên tên đúng phần sau số. So tên bỏ dấu, không phân biệt hoa thường. */
+  const named = (/** @type {string} */ t) => ws.steps.find((/** @type {any} */ x) => fold(oneLine(x.title)) === fold(t));
   for (const l of ws.log) {
     if (l.stepTitle == null) continue;
-    const s = ws.steps.find((/** @type {any} */ x) => fold(oneLine(x.title)) === fold(l.stepTitle));
+    const nm = /^(\d+)\.\s+(.+)$/.exec(l.stepTitle);
+    const at = nm ? ws.steps[+nm[1] - 1] : null;
+    const s = (nm && at && fold(oneLine(at.title)) === fold(nm[2]) ? at : null) || named(l.stepTitle) || (nm ? named(nm[2]) : null);
     if (s) l.stepId = s.id = s.id || uid('t');
     else if (l.stepTitle) warnings.push(`Decision linked to a missing step, link dropped: ${l.stepTitle}`);
     delete l.stepTitle;

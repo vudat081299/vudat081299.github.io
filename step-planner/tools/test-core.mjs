@@ -67,7 +67,7 @@ const back = fromMarkdown(md);
 check('dự án khó: Markdown đi rồi về giữ nguyên', eq(shape(hard), shape(back.workspace)), firstDiff(shape(hard), shape(back.workspace)));
 check('dự án khó: không cảnh báo', back.warnings.length === 0, back.warnings.join(' | '));
 check('nhật ký gắn bước: dòng "Step:" ngay dưới quyết định, id lạ bị bỏ, đi rồi về gắn lại đúng bước',
-  md.includes('\n- 2026-11-22 · Chọn A · không B  \n  Step: Ba  \n  Why: vì') && hard.log[1].stepId === '' && !md.includes('Không lý do  \n  Step')
+  md.includes('\n- 2026-11-22 · Chọn A · không B  \n  Step: 4. Ba  \n  Why: vì') && hard.log[1].stepId === '' && !md.includes('Không lý do  \n  Step')
   && back.workspace.log[0].stepId === back.workspace.steps[3].id && back.workspace.log[2].stepId === back.workspace.steps[3].id
   && back.workspace.log[0].why.endsWith('\nStep: giả\nBước: giả'));
 {
@@ -493,6 +493,20 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   const back = fromMarkdown(md);
   check('thiết kế: Markdown viết tay — dòng không có [khâu: …] thì cảnh báo, không thành bước', back.workspace.steps.length === 0
     && eq(back.workspace.design, { profile: { size: 'small', budget: 'free' }, stages: { serve: { pick: ['fastapi'], skip: false, own: '', note: '' } } }) && back.warnings.length === 1);
+}
+
+/* Quyết định gắn với bước trùng tên: Markdown ghi `Step: N. tên`, nhập lại đúng bước thứ N; file cũ `Step: tên` vẫn đọc. */
+{
+  const ws = normWorkspace({ name: 'Trùng', steps: [{ id: 'a', title: 'Validation' }, { id: 'b', title: 'Model' }, { id: 'c', title: 'Validation' }, { id: 'd', title: '2. Lạ' }],
+    log: [{ date: '2026-11-01', decision: 'Q1', stepId: 'c' }, { date: '2026-11-02', decision: 'Q2', stepId: 'a' }, { date: '2026-11-03', decision: 'Q3', stepId: 'd' }] });
+  const md = toMarkdown(ws);
+  check('Markdown: dòng Step của quyết định có số thứ tự như tiêu đề', md.includes('  Step: 3. Validation') && md.includes('  Step: 1. Validation') && md.includes('  Step: 4. 2. Lạ'));
+  const back = shape(fromMarkdown(md).workspace);
+  check('Markdown: quyết định của bước trùng tên thứ hai về đúng bước ấy', eq(back.log.map((l) => l.step), [2, 0, 3]) && eq(back, shape(ws)), JSON.stringify(back.log));
+  const old = fromMarkdown('# P\n\n## 1. Validation\n\n## 2. Model\n\n## 3. Validation\n\n## 4. 2. Lạ\n\n## Decision log\n\n- 2026-11-01 · Q\n  Step: Validation\n- 2026-11-02 · R\n  Step: 2. Lạ\n- 2026-11-03 · S\n  Step: 9. Model\n');
+  const w = old.workspace;
+  const idx = w.log.map((l) => w.steps.findIndex((x) => x.id === l.stepId));
+  check('Markdown cũ: `Step: tên` gắn bước đầu tiên cùng tên; tên có số đầu vẫn khớp; số sai thì theo tên', eq(idx, [0, 3, 1]) && !old.warnings.length, JSON.stringify(idx));
 }
 
 /* Sửa cùng lúc ở hai tab: chỉ trường mình đổi đè lên bản mới nhất; cùng trường khác giá trị là xung đột. */
