@@ -16,6 +16,9 @@
   4. css/planner.css: mã màu chỉ nằm trong khối token (từ đầu file tới dòng `/* ── hết token ── */`).
   5. data/system-design.json (PLAN-016): khuôn hồ sơ, khâu, phương án; id không trùng; `fit` chỉ dùng câu và câu trả lời
      có trong hồ sơ; link https; mỗi câu trả lời đơn lẻ của hồ sơ có ít nhất một phương án hợp ở mọi khâu.
+     `architectures`: nhóm kiến trúc {id, label, question, note?, sources?, entries, rules}; kiến trúc {id, name, what, use,
+     avoid, flow, tools, path?, sources}: `tools` trỏ phương án có thật, `path` trỏ lối có thật; luật gợi ý {if, arch, why}
+     dùng cùng khoá điều kiện với `checks`, `arch` là kiến trúc của nhóm ("" = nhóm không cần).
 
 Chạy:  python3 step-planner/tools/lint.py
 """
@@ -40,7 +43,9 @@ DESIGN = os.path.join(HERE, 'data/system-design.json')
 LANES = ('data', 'model', 'app', 'ops')
 STAGE_KEYS = {'id', 'title', 'lane', 'question', 'guide', 'multi', 'skipWhen', 'task', 'when', 'options'}
 OPT_KEYS = {'id', 'name', 'kind', 'summary', 'pick', 'avoid', 'cost', 'level', 'fit', 'links', 'setup', 'task'}
-DESIGN_KEYS = {'note', 'paths', 'profile', 'stages', 'checks'}
+DESIGN_KEYS = {'note', 'paths', 'profile', 'stages', 'checks', 'architectures'}
+FAMILY_KEYS = {'id', 'label', 'question', 'note', 'sources', 'entries', 'rules'}
+ARCH_KEYS = {'id', 'name', 'what', 'use', 'avoid', 'flow', 'tools', 'path', 'sources'}
 CHECK_KEYS = {'id', 'title', 'if', 'unless', 'msg'}
 PATH_KEYS = {'id', 'label', 'summary', 'flow', 'why', 'switch', 'ask', 'implies', 'stages', 'suggest', 'accept'}
 ID_RE = r'[a-z0-9]+(-[a-z0-9]+)*'
@@ -388,6 +393,91 @@ def check_design(data):
     options = {s.get('id'): {o.get('id') for o in s.get('options') or []} for s in data['stages']}
     check_paths(data, answers, options)
     check_checks(data, answers, options)
+    check_architectures(data, answers, options)
+
+
+def check_cond(w, cond, answers, options, paths):
+    """Điều kiện của luật (`if`, `unless`): khoá là khâu (phương án có thật, `skip`, `own`), câu hồ sơ hay `path`."""
+    for k, vals in cond.items():
+        ok = options[k] | {'skip', 'own'} if k in options else set(answers[k]) if k in answers else paths if k == 'path' else None
+        if ok is None:
+            err(f'{w}.{k} — không phải khâu, câu hồ sơ hay path')
+        elif not isinstance(vals, list) or not vals or set(vals) - ok:
+            err(f'{w}.{k} có giá trị lạ {vals}')
+
+
+def check_sources(w, srcs):
+    if not isinstance(srcs, list) or not all(isinstance(x, dict) and set(x) == {'title', 'url'} and str(x['url']).startswith('https://')
+                                             and str(x['title']).strip() for x in srcs):
+        err(f'{w}: sources là danh sách {{title, url https}}')
+
+
+def check_architectures(data, answers, options):
+    """Danh mục kiến trúc theo nhóm; mỗi nhóm có luật gợi ý theo hồ sơ và các khâu đã quyết (luật đầu tiên khớp thắng)."""
+    paths = {p.get('id') for p in data.get('paths') or []}
+    fams = data.get('architectures')
+    if not isinstance(fams, list) or len(fams) < 2:
+        err('system-design.json: `architectures` cần ít nhất hai nhóm')
+        return
+    seen = set()
+    for i, f in enumerate(fams):
+        fid = f.get('id', '')
+        w = f'system-design.json architectures[{i}] ({fid})'
+        if set(f) - FAMILY_KEYS or not {'id', 'label', 'question', 'entries', 'rules'} <= set(f):
+            err(f'{w}: khoá là id, label, question, entries, rules; note, sources tuỳ chọn (đang có {sorted(f)})')
+            continue
+        if not re.fullmatch(ID_RE, str(fid)) or fid in seen:
+            err(f'{w}: id sai hoặc trùng')
+        seen.add(fid)
+        for k in ('label', 'question'):
+            need_str(w, f, k)
+        need_str(w, f, 'note', required=False)
+        english(f'{w}.label', f.get('label', ''))
+        check_sources(w, f.get('sources', []))
+        ids = set()
+        entries = f.get('entries') or []
+        if len(entries) < 2:
+            err(f'{w}: cần ít nhất hai kiến trúc')
+        for j, a in enumerate(entries):
+            wa = f'{w}.entries[{j}] ({a.get("id")})'
+            if set(a) - ARCH_KEYS or not ARCH_KEYS - {'path'} <= set(a):
+                err(f'{wa}: khoá phải là {sorted(ARCH_KEYS)}, path tuỳ chọn (đang có {sorted(a)})')
+                continue
+            if not re.fullmatch(ID_RE, str(a['id'])) or a['id'] in ids:
+                err(f'{wa}: id sai hoặc trùng')
+            ids.add(a['id'])
+            for k in ('name', 'what', 'use', 'avoid'):
+                need_str(wa, a, k)
+            english(f'{wa}.name', a.get('name', ''))
+            flow = a.get('flow')
+            if not isinstance(flow, list) or len(flow) < 2 or not all(isinstance(x, str) and x.strip() and '\n' not in x for x in flow):
+                err(f'{wa}: flow là danh sách ít nhất hai bước, mỗi bước một dòng')
+            else:
+                for x in flow:
+                    english(f'{wa}.flow', x)
+            tools = a.get('tools')
+            if not isinstance(tools, dict) or not tools:
+                err(f'{wa}: tools là object khâu → phương án')
+            else:
+                for sid, opt_ids in tools.items():
+                    if sid not in options or not isinstance(opt_ids, list) or not opt_ids or set(opt_ids) - options[sid]:
+                        err(f'{wa}: tools.{sid} = {opt_ids} không khớp khâu, phương án')
+            if 'path' in a and a['path'] not in paths:
+                err(f'{wa}: path "{a["path"]}" không có trong `paths`')
+            check_sources(wa, a.get('sources'))
+        rules = f.get('rules')
+        if not isinstance(rules, list) or not rules:
+            err(f'{w}: cần ít nhất một luật gợi ý')
+            continue
+        for j, r in enumerate(rules):
+            wr = f'{w}.rules[{j}]'
+            if not isinstance(r, dict) or set(r) != {'if', 'arch', 'why'} or not isinstance(r['if'], dict) or not r['if']:
+                err(f'{wr}: khoá là if (không rỗng), arch, why')
+                continue
+            if r['arch'] != '' and r['arch'] not in ids:
+                err(f'{wr}: arch "{r["arch"]}" không phải kiến trúc của nhóm')
+            need_str(wr, r, 'why')
+            check_cond(f'{wr}.if', r['if'], answers, options, paths)
 
 
 def check_checks(data, answers, options):
@@ -414,12 +504,7 @@ def check_checks(data, answers, options):
             err(f'{w}: `if` cần ít nhất một điều kiện')
             continue
         for part in ('if', 'unless'):
-            for k, vals in (c.get(part) or {}).items():
-                ok = options[k] | {'skip', 'own'} if k in options else set(answers[k]) if k in answers else paths if k == 'path' else None
-                if ok is None:
-                    err(f'{w}: {part}.{k} — không phải khâu, câu hồ sơ hay path')
-                elif not isinstance(vals, list) or not vals or set(vals) - ok:
-                    err(f'{w}: {part}.{k} có giá trị lạ {vals}')
+            check_cond(f'{w}: {part}', c.get(part) or {}, answers, options, paths)
 
 
 def check_paths(data, answers, options):
@@ -501,7 +586,7 @@ def main():
             print(f'step-planner: {e}')
         print(f'step-planner: {len(errors)} lỗi.')
         return 1
-    print(f'step-planner: lint OK ({len(data["templates"])} mẫu; thiết kế: {len(design["stages"])} khâu, {len(design["paths"])} lối, {len(design["checks"])} luật).')
+    print(f'step-planner: lint OK ({len(data["templates"])} mẫu; thiết kế: {len(design["stages"])} khâu, {len(design["paths"])} lối, {len(design["checks"])} luật, {sum(len(f["entries"]) for f in design["architectures"])} kiến trúc).')
     return 0
 
 

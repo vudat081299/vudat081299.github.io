@@ -15,7 +15,7 @@
 | `css/planner.css` | token ở đầu (tới dòng `/* ── hết token ── */`), rồi từng component, mỗi khối mở bằng một dòng chú thích |
 | `js/core.js` | logic thuần: chuẩn hoá, gộp khi lưu, ngày, tiến độ, việc tiếp theo, bàn giao (`holders`, `handoffs`, `ioStatus`, `consumersOf`), Markdown và JSON vào / ra; không DOM, chạy được trong Node |
 | `js/md.js` | Markdown của tài liệu văn bản → cây khối (`parseMd`, thuần) → DOM (`renderMd`, chỉ createElement / text node); khung Edit: token (`srcTokens`, thuần) → dòng có số (`renderSrc`) |
-| `js/design-core.js` | System design, thuần: `normDesign`, `rankOptions`, `applyPath`, `warnings`, `flowEdges`, `diagramNodes`, `planTasks`, `planDiff`, `applyPlan`, `designMd`, `designReader` (core.js chỉ gọi hai hàm cuối) |
+| `js/design-core.js` | System design, thuần: `normDesign`, `rankOptions`, `applyPath`, `warnings`, `archAdvice`, `flowEdges`, `diagramNodes`, `planTasks`, `planDiff`, `applyPlan`, `designMd`, `designReader` (core.js chỉ gọi hai hàm cuối) |
 | `js/design.js` | System design, UI: mục trên trang, sơ đồ SVG, hộp `#dlg-sd`, hộp xem trước Update plan; nhận hàm chung qua `initDesign` |
 | `js/hand.js` | bàn giao, UI: chip In / Out của bước, hai chấm đầu vào / đầu ra (`ioDots`), mũi tên trên bước nhận và trước ô nhận, hộp `#dlg-hand`, phần Inputs / Outputs của hộp sửa, hộp `#dlg-pick`; nhận hàm chung qua `initHand` |
 | `js/store.js` | `localStorage` (dữ liệu, mẹo `stepPlanner.hintOff`, Compact `stepPlanner.compact`, theme `hub-theme`), `sessionStorage` (dự án của tab); mọi truy cập bọc try/catch |
@@ -137,9 +137,9 @@
 
 ## System design (`data/system-design.json`, PLAN-016)
 
-- Danh mục `{note, paths[], profile[], stages[], checks[]}`; khuôn, độ phủ, luật: `lint.py`. Số khâu, phương án, luật đọc từ file.
+- Danh mục `{note, paths[], profile[], stages[], checks[], architectures[]}`; khuôn, độ phủ, luật: `lint.py`. Số khâu, phương án, luật đọc từ file.
 - `label`, `title`, `kind` tiếng Anh, chữ khác tiếng Việt. Link chỉ trang chính thức đã mở được; không ghi giá, hạn mức bằng số; lệnh chép từ quickstart.
-- Hộp mở ở "What do you deliver?" (lối), rồi hồ sơ, từng khâu, Handoffs, Checks. Câu hồ sơ ngoài `ask` của lối gập lại, vẫn trả lời được.
+- Hộp mở ở "What do you deliver?" (lối), rồi hồ sơ, Architecture, từng khâu, Handoffs, Checks. Câu hồ sơ ngoài `ask` của lối gập lại, vẫn trả lời được.
 - Gợi ý: câu chưa trả lời lấy theo `implies` của lối; xếp hợp hồ sơ trước, rồi `suggest` của lối theo đúng thứ tự, rồi khớp nhiều câu,
   dễ hơn, thứ tự danh mục. Lựa chọn lưu ngay. `fit` nghĩa là "dùng được", không thêm khoá `fit` chỉ để đẩy hạng.
 - Khâu có `when` (câu hồ sơ → câu trả lời cần khâu): trả lời ngoài `when` thì khâu "thường không cần" (`notNeededBy`), "Apply path"
@@ -149,6 +149,8 @@
 - "Apply path" (`applyPath`): chỉ khâu chưa quyết; `skip` → Not needed; `need` có gợi ý → phương án đầu; `maybe` để trống.
 - Luật phối hợp (`warnings`): báo khi mọi `if` khớp và mọi khâu trong `unless` đã quyết mà không khớp; khâu chưa quyết thì chưa báo.
   Khoá điều kiện: id khâu (phương án, `skip`, `own`), câu hồ sơ hay `path`. Phương án không được có id `skip`, `own`.
+- Kiến trúc (`architectures`): nhóm → kiến trúc (khi dùng, khi tránh, luồng, công cụ theo khâu, nguồn). Không lưu lựa chọn;
+  `archAdvice` lấy luật đầu tiên khớp của nhóm (khoá điều kiện như `checks`), `""` = nhóm không cần. Lối là kiến trúc của nhóm app (`path`).
 - Bàn giao (`edges`): đường nối hai khâu liền nhau của luồng, cả hai đã quyết (`flowEdges`). Hợp đồng giữ cả khi đường nối không còn.
 - Sơ đồ: đường nối nét liền khi cả hai khâu đã quyết (`bothDecided`, cùng luật với `flowEdges`), còn lại nét đứt.
 - "Add tasks to plan" / "Update plan": luôn xem trước New / Changed / No longer in the design, chọn từng mục và bước nhận

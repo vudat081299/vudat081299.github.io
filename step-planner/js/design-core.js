@@ -161,6 +161,40 @@ export function applyPath(cat, design, pathId) {
 }
 
 /**
+ * Một điều kiện của luật (`checks`, luật gợi ý kiến trúc): khớp (true), không khớp (false) hay chưa biết (null). Khoá: `path`
+ * (lối đã chọn), id khâu (phương án đã chọn, `skip` = khâu "không cần", `own` = có công cụ tự ghi; khâu chưa quyết: chưa biết)
+ * hay id câu hồ sơ (câu trả lời, kể cả câu lối giả định; chưa trả lời: chưa biết).
+ * @param {any} cat @param {any} design @returns {(k: string, vals: string[]) => boolean | null}
+ */
+export function condTerm(cat, design) {
+  const prof = effProfile(cat, design);
+  const stageIds = new Set(cat.stages.map((/** @type {any} */ s) => s.id));
+  return (k, vals) => {
+    if (k === 'path') return vals.includes(design?.path || '');
+    if (!stageIds.has(k)) return prof[k] ? vals.includes(prof[k]) : null;
+    const state = stageState(design, k);
+    if (state === 'open') return null;
+    if (state === 'skip') return vals.includes('skip');
+    const st = design.stages[k];
+    return st.pick.some((/** @type {string} */ id) => vals.includes(id)) || (!!st.own && vals.includes('own'));
+  };
+}
+
+/**
+ * Gợi ý kiến trúc (danh mục `architectures`): mỗi nhóm lấy luật đầu tiên mà mọi điều kiện `if` khớp. `id`: kiến trúc gợi ý,
+ * '' = nhóm không cần (vd. không phục vụ dự đoán), null = chưa đủ câu trả lời. `why`: lý do một dòng của luật.
+ * @param {any} cat @param {any} design
+ * @returns {{family: string, id: string | null, why: string}[]}
+ */
+export function archAdvice(cat, design) {
+  const term = condTerm(cat, design);
+  return (Array.isArray(cat.architectures) ? cat.architectures : []).map((/** @type {any} */ f) => {
+    const r = (f.rules || []).find((/** @type {any} */ x) => Object.entries(x.if).every(([k, v]) => term(k, /** @type {string[]} */ (v)) === true));
+    return { family: f.id, id: r ? r.arch : null, why: r ? r.why : '' };
+  });
+}
+
+/**
  * Luật phối hợp của danh mục (`checks`): báo khi mọi điều kiện `if` khớp, và mọi khâu trong `unless` đã quyết mà không khớp
  * (khâu chưa quyết: chưa biết, chưa báo). Khoá điều kiện: id khâu (giá trị là id phương án đã chọn, `skip` = khâu "không cần",
  * `own` = có công cụ tự ghi), id câu hồ sơ (câu trả lời, kể cả câu lối giả định) hay `path`.
@@ -169,18 +203,8 @@ export function applyPath(cat, design, pathId) {
  */
 export function warnings(cat, design) {
   if (!design || !Array.isArray(cat.checks)) return [];
-  const prof = effProfile(cat, design);
   const stageIds = new Set(cat.stages.map((/** @type {any} */ s) => s.id));
-  /** Khớp (true), không khớp (false) hay chưa biết (null). @param {string} k @param {string[]} vals */
-  const term = (k, vals) => {
-    if (k === 'path') return vals.includes(design.path);
-    if (!stageIds.has(k)) return prof[k] ? vals.includes(prof[k]) : null;
-    const st = design.stages[k];
-    const state = stageState(design, k);
-    if (state === 'open') return null;
-    if (state === 'skip') return vals.includes('skip');
-    return st.pick.some((/** @type {string} */ id) => vals.includes(id)) || (!!st.own && vals.includes('own'));
-  };
+  const term = condTerm(cat, design);
   const out = [];
   for (const c of cat.checks) {
     const hit = Object.entries(c.if).every(([k, v]) => term(k, /** @type {string[]} */ (v)) === true)

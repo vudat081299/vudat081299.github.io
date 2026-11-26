@@ -8,7 +8,7 @@ import {
 } from '../js/core.js';
 import * as CORE from '../js/core.js';
 import { parseMd, inline, srcTokens } from '../js/md.js';
-import { normDesign, rankOptions, snake, planTasks, diagramNodes, decidedCount, catalogErrors, readStageLine, applyPath, effProfile, warnings, flowEdges, bothDecided, planDiff, applyPlan, PLAN_STEP, notNeededBy } from '../js/design-core.js';
+import { normDesign, rankOptions, snake, planTasks, diagramNodes, decidedCount, catalogErrors, readStageLine, applyPath, effProfile, warnings, flowEdges, bothDecided, planDiff, applyPlan, PLAN_STEP, notNeededBy, archAdvice } from '../js/design-core.js';
 
 let fails = 0;
 const check = (name, ok, detail = '') => {
@@ -579,6 +579,33 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
     return !W(stages, profile, path).includes(c.id);
   });
   check('thiết kế: luật — mọi luật trong danh mục bắn được', !dead.length, dead.map((c) => c.id).join());
+  /* Kiến trúc: mỗi nhóm gợi ý một kiến trúc theo hồ sơ, lối và các khâu đã quyết; chưa đủ câu trả lời thì chưa gợi ý. */
+  const A = (stages = {}, profile = {}, path = '') => Object.fromEntries(archAdvice(cat, normDesign({ path, profile, stages })).map((x) => [x.family, x.id]));
+  check('kiến trúc: chưa trả lời gì thì mọi nhóm chưa gợi ý', Object.values(A()).every((x) => x === null) && archAdvice(cat, null).length === cat.architectures.length);
+  check('kiến trúc: dữ liệu nhỏ, cố định — file + một DB, batch ETL',
+    eq(A({}, { size: 'small', fresh: 'once' }), { storage: 'files-db', processing: 'batch-etl', app: null, ml: null }), JSON.stringify(A({}, { size: 'small', fresh: 'once' })));
+  const live = A({}, { size: 'large', fresh: 'stream', latency: 'online' });
+  check('kiến trúc: dữ liệu lớn, liên tục, cần trả lời ngay — lakehouse, Kappa, app một tiến trình, đặc trưng từ luồng',
+    eq(live, { storage: 'lakehouse', processing: 'kappa', app: 'monolith', ml: 'streaming-inference' }), JSON.stringify(live));
+  check('kiến trúc: liên tục nhưng xem theo lịch — batch là đủ', A({}, { fresh: 'stream', latency: 'batch' }).processing === 'batch-etl');
+  check('kiến trúc: lối đã chọn quyết nhóm app (lối chính là kiến trúc app)',
+    A({}, {}, 'demo').app === 'monolith' && A({}, {}, 'api').app === 'client-server' && A({}, {}, 'report').app === 'static-report');
+  check('kiến trúc: khâu đã quyết thắng hồ sơ; Serving Not needed thì nhóm model không cần',
+    A({ store: P('bigquery') }, { size: 'small' }).storage === 'warehouse' && A({ raw: P('delta-lake') }, { size: 'small' }).storage === 'lakehouse'
+    && A({ serve: { skip: true } }, { ai: 'llm' }).ml === '' && A({ process: P('flink') }).processing === 'streaming');
+  /* Mọi luật gợi ý tới được: dựng thiết kế thoả đúng `if` của luật thì luật ấy (không phải luật trước nó) thắng. */
+  const shadowed = cat.architectures.flatMap((f) => f.rules.map((r, i) => {
+    const stages = {}, profile = {};
+    let path = '';
+    for (const [k, v] of Object.entries(r.if)) {
+      if (k === 'path') path = v[0];
+      else if (!stageIds.has(k)) profile[k] = v[0];
+      else stages[k] = v[0] === 'skip' ? { skip: true } : P(v[0]);
+    }
+    const got = archAdvice(cat, normDesign({ path, profile, stages })).find((x) => x.family === f.id);
+    return got.id === r.arch && got.why === r.why ? '' : `${f.id}[${i}]`;
+  })).filter(Boolean);
+  check('kiến trúc: mọi luật gợi ý tới được, không bị luật trước che', !shadowed.length, shadowed.join());
   /* Bàn giao trên đường nối: chuẩn hoá, chỉ đường giữa hai khâu đã quyết liền nhau, việc tích hợp, Markdown đi rồi về. */
   check('thiết kế: bàn giao — bỏ khoá sai, via lạ, mục trống; giữ cả khi khâu chưa quyết', eq(normDesign({ edges: {
     'process>store': { via: 'file', what: ' matches.parquet ', promise: 'a\n\nb', check: 'x' }, 'a b>c': { via: 'file' }, 'raw>process': { via: 'fax' } } }).edges,

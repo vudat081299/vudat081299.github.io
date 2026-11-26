@@ -12,11 +12,12 @@ const LEVEL_LABEL = { 1: 'Beginner', 2: 'Some setup', 3: 'Advanced' };
 /** @type {any} */ let cat = null;
 let catError = '';
 /** @type {any} */ let deps = null;
-let at = 0;                       // trang của hộp: 0 = lối bắt đầu, 1 = hồ sơ dự án, k ≥ 2 = khâu thứ k − 1
+let at = 0;                       // trang của hộp: 0 = lối bắt đầu, 1 = hồ sơ dự án, 2 = kiến trúc, k ≥ 3 = khâu thứ k − 2
 const moreOpen = new Set();       // khâu đang mở "Show other options"
 /** Lần "Apply path" gần nhất (Hoàn tác là một dòng trong hộp: toast bị hộp modal che). @type {any} */
 let applied = null;
-const FIRST_STAGE = 2;
+const ARCH_PAGE = 2;
+const FIRST_STAGE = 3;
 
 const $ = (/** @type {string} */ id) => /** @type {any} */ (document.getElementById(id));
 
@@ -75,12 +76,23 @@ export function renderSection() {
   const p = D.pathOf(cat, w.design);
   $('sd-path').hidden = !p;
   $('sd-path').textContent = p ? `Deliverable: ${p.label}` : '';
+  renderArchLine(w.design);
   $('sd-svg').hidden = !n.done;
   drawDiagram();
   const warns = D.warnings(cat, w.design);
   $('sd-warns').hidden = !warns.length;
   $('sd-warns').replaceChildren(...warns.map((x) => deps.h('li', { class: 'sd-warnbox' },
     deps.h('button', { type: 'button', class: 'sd-link', 'data-warn-stage': x.stages[0] || '' }, x.title), ' ', x.msg)));
+}
+
+/** Dòng kiến trúc trên trang: tên các kiến trúc gợi ý (bấm là mở trang Architecture của hộp). @param {any} d */
+function renderArchLine(d) {
+  const el = $('sd-arch');
+  const fams = Array.isArray(cat.architectures) ? cat.architectures : [];
+  el.hidden = !fams.length;
+  const names = D.archAdvice(cat, d).map((a, i) => fams[i].entries.find((/** @type {any} */ e) => e.id === a.id)?.name).filter(Boolean);
+  el.replaceChildren(deps.h('button', { type: 'button', class: 'sd-link', 'data-arch-open': '1' }, names.length ? 'Architecture' : 'Architecture guide'),
+    names.length ? `: ${names.join(' · ')}` : ': answer the profile for a recommendation');
 }
 
 /* ── Sơ đồ (SVG dựng bằng createElementNS; cỡ đọc từ token --sd-*) ── */
@@ -354,8 +366,8 @@ function paint() {
   $('sd-prev').disabled = at === 0;
   $('sd-next-text').textContent = at === last ? 'Done' : 'Next';
   const ex = extraAt(at);
-  $('sd-pos').textContent = at === 0 ? 'Deliverable' : at === 1 ? 'Project profile' : ex === 'checks' ? 'Checks' : ex === 'handoffs' ? 'Handoffs'
-    : `Stage ${at - 1} of ${cat.stages.length}`;
+  $('sd-pos').textContent = at === 0 ? 'Deliverable' : at === 1 ? 'Project profile' : at === ARCH_PAGE ? 'Architecture'
+    : ex === 'checks' ? 'Checks' : ex === 'handoffs' ? 'Handoffs' : `Stage ${at - FIRST_STAGE + 1} of ${cat.stages.length}`;
   paintSub();
 }
 
@@ -375,6 +387,9 @@ function paintNav() {
   const p = D.pathOf(cat, d);
   const items = [h('li', {}, navBtn(0, 'Deliverable', p ? 'done' : 'open', p ? p.label : '')),
     h('li', {}, navBtn(1, 'Project profile', Object.keys(d?.profile || {}).length ? 'done' : 'open', ''))];
+  const adv = D.archAdvice(cat, d);
+  const recs = adv.filter((a) => a.id !== null).length;
+  items.push(h('li', {}, navBtn(ARCH_PAGE, 'Architecture', adv.length && recs === adv.length ? 'done' : 'open', adv.length ? `${recs} of ${adv.length} recommended` : '')));
   let lane = '';
   cat.stages.forEach((/** @type {any} */ s, /** @type {number} */ i) => {
     if (s.lane !== lane) { lane = s.lane; items.push(h('li', { class: 'sd-nav-lane', 'aria-hidden': 'true' }, LANE_LABEL[/** @type {'data'} */ (lane)])); }
@@ -401,7 +416,7 @@ function navBtn(k, title, state, sub, warn = false) {
 
 function paintPane() {
   const ex = extraAt(at);
-  $('sd-pane').replaceChildren(...(at === 0 ? pathPane() : at === 1 ? profilePane() : ex === 'checks' ? checksPane() : ex === 'handoffs' ? handoffsPane()
+  $('sd-pane').replaceChildren(...(at === 0 ? pathPane() : at === 1 ? profilePane() : at === ARCH_PAGE ? archPane() : ex === 'checks' ? checksPane() : ex === 'handoffs' ? handoffsPane()
     : stagePane(stageAt(at))).filter(Boolean));
   $('sd-pane').scrollTop = 0;
   $('sd-pane').closest('.dlg-body').scrollTop = 0;
@@ -499,6 +514,70 @@ function profilePane() {
   ];
 }
 
+/* ── Kiến trúc: các nhóm (danh mục `architectures`), mỗi nhóm một kiến trúc gợi ý từ hồ sơ, lối, khâu đã quyết (`archAdvice`);
+ * mỗi kiến trúc gập: khi dùng, khi tránh, luồng, công cụ theo khâu (bấm tới khâu), lối tương ứng, nguồn ── */
+
+function archPane() {
+  const h = deps.h;
+  const d = design();
+  const fams = Array.isArray(cat.architectures) ? cat.architectures : [];
+  const adv = D.archAdvice(cat, d);
+  return [
+    h('p', { class: 'dlg-kicker' }, 'Your project'),
+    h('h3', { class: 'sd-h' }, 'Architecture'),
+    h('p', { class: 'sd-q' }, 'Kiến trúc là hình dạng lớn của hệ thống, quyết trước khi chọn công cụ cho từng khâu. Mỗi nhóm dưới đây trả lời một câu hỏi bằng vài kiến trúc chuẩn; trang gợi ý một kiến trúc mỗi nhóm theo hồ sơ dự án, lối đã chọn và các khâu đã quyết.'),
+    adv.every((a) => a.id === null) ? h('p', { class: 'sd-tip' }, 'Answer the project profile to get a recommendation. ',
+      h('button', { type: 'button', class: 'sd-link', 'data-at': 1 }, 'Go to profile')) : null,
+    ...fams.map((/** @type {any} */ f, /** @type {number} */ i) => archFamily(f, adv[i], d)),
+  ];
+}
+
+/** @param {any} f @param {{id: string | null, why: string}} a @param {any} d */
+function archFamily(f, a, d) {
+  const h = deps.h;
+  const rec = a.id ? f.entries.find((/** @type {any} */ e) => e.id === a.id) : null;
+  return h('section', { class: 'sd-fam', 'data-fam': f.id, 'aria-labelledby': `sd-fam-${f.id}` },
+    h('h4', { class: 'sd-h4', id: `sd-fam-${f.id}` }, f.label),
+    h('p', { class: 'sd-help' }, f.question),
+    rec ? h('p', { class: 'sd-rec', 'data-rec': rec.id }, h('span', { class: 'sd-k' }, 'Recommended'), h('b', {}, rec.name), '. ', a.why)
+      : a.id === '' ? h('p', { class: 'sd-rec is-none', 'data-rec': '' }, h('span', { class: 'sd-k' }, 'Not needed'), a.why) : null,
+    h('div', { class: 'sd-archs' }, ...f.entries.map((/** @type {any} */ e) => archItem(e, e.id === a.id, d))),
+    f.note ? h('p', { class: 'sd-help' }, f.note) : null,
+    (f.sources || []).length ? archLinks(f.sources) : null);
+}
+
+/** @param {any[]} list */
+const archLinks = (list) => deps.h('ul', { class: 'sd-links' }, ...list.map((/** @type {any} */ l) =>
+  deps.h('li', {}, deps.h('a', { href: l.url, target: '_blank', rel: 'noopener noreferrer' }, deps.icon('link'), l.title))));
+
+/** @param {any} e @param {boolean} on kiến trúc được gợi ý @param {any} d */
+function archItem(e, on, d) {
+  const h = deps.h;
+  const id = 'arch:' + e.id;
+  const p = e.path ? cat.paths.find((/** @type {any} */ x) => x.id === e.path) : null;
+  const mine = !!p && d?.path === p.id;
+  const row = (/** @type {string} */ k, /** @type {any[]} */ ...v) => h('p', { class: 'sd-when' }, h('span', { class: 'sd-k' }, k), ...v);
+  const tools = Object.entries(e.tools || {}).map(([sid, ids]) => {
+    const s = cat.stages.find((/** @type {any} */ x) => x.id === sid);
+    if (!s) return null;
+    const names = /** @type {string[]} */ (ids).map((oid) => s.options.find((/** @type {any} */ o) => o.id === oid)?.name).filter(Boolean);
+    return h('li', {}, h('button', { type: 'button', class: 'sd-link', 'data-at': stagePage(sid) }, s.title), `: ${names.join(', ')}`);
+  }).filter(Boolean);
+  return h('details', { class: `sd-arch${on ? ' is-rec' : ''}`, 'data-more': id, 'data-arch': e.id, open: moreOpen.has(id) },
+    h('summary', {}, deps.icon('chev'), h('span', { class: 'sd-arch-name' },
+      h('span', { class: 'sd-arch-head' }, h('b', {}, e.name),
+        on ? h('span', { class: 'sd-tag top' }, 'Recommended') : null, mine ? h('span', { class: 'sd-tag' }, 'Your deliverable') : null),
+      h('small', {}, e.what))),
+    row('Use when', e.use),
+    row('Avoid when', e.avoid),
+    h('div', { class: 'sd-when' }, h('span', { class: 'sd-k' }, 'Flow'),
+      h('ol', { class: 'sd-chain' }, ...e.flow.map((/** @type {string} */ x) => h('li', {}, h('span', {}, x))))),
+    tools.length ? h('div', { class: 'sd-when' }, h('span', { class: 'sd-k' }, 'Tools by stage'), h('ul', { class: 'sd-arch-tools' }, ...tools)) : null,
+    p ? row('Deliverable', p.label, mine ? ' (chosen)' : ' ',
+      mine ? null : h('button', { type: 'button', class: 'sd-link', 'data-arch-path': p.id }, 'Use this deliverable')) : null,
+    (e.sources || []).length ? archLinks(e.sources) : null);
+}
+
 /* ── Bàn giao: mỗi đường nối giữa hai khâu đã quyết liền nhau — đi qua gì, giao gì, bên sau đọc ở đâu, hứa gì, kiểm thế nào ── */
 
 function handoffsPane() {
@@ -574,7 +653,7 @@ function stagePane(s) {
     return `${q?.label || k} ${q?.choices.find((/** @type {any} */ c) => c.id === prof[k])?.label || prof[k]}`;
   });
   return [
-    h('p', { class: 'dlg-kicker' }, `${LANE_LABEL[/** @type {'data'} */ (s.lane)]} · stage ${at - 1}`),
+    h('p', { class: 'dlg-kicker' }, `${LANE_LABEL[/** @type {'data'} */ (s.lane)]} · stage ${at - FIRST_STAGE + 1}`),
     h('h3', { class: 'sd-h' }, s.title),
     h('p', { class: 'sd-q' }, s.question),
     h('div', { class: 'sd-guide' }, ...s.guide.split('\n').map((/** @type {string} */ l) => h('p', {}, l))),
@@ -664,6 +743,7 @@ function wire() {
     openDesign(stagePage(n.dataset.stage));
   };
   fig.addEventListener('click', openNode);
+  $('sd-arch').addEventListener('click', (/** @type {any} */ e) => { if (e.target.closest('[data-arch-open]') && cat) openDesign(ARCH_PAGE); });
   $('sd-warns').addEventListener('click', (/** @type {any} */ e) => {
     const b = e.target.closest('[data-warn-stage]');
     if (b && cat) openDesign(b.dataset.warnStage ? stagePage(b.dataset.warnStage) : extraPage('checks'));
@@ -679,6 +759,14 @@ function wire() {
   pane.addEventListener('click', (/** @type {any} */ e) => {
     const b = e.target.closest('[data-at]');
     if (b) { go(+b.dataset.at); return; }
+    const ar = e.target.closest('[data-arch-path]');
+    if (ar) {
+      const arch = ar.closest('[data-arch]').dataset.arch;
+      applied = null;
+      edit((d) => { d.path = ar.dataset.archPath; });
+      repaint(`[data-arch="${arch}"] > summary`);
+      return;
+    }
     const ap = e.target.closest('[data-apply]');
     if (ap) { applyPathNow(ap.dataset.apply); repaint('[data-apply]'); return; }
     if (e.target.closest('[data-unapply]')) { undoApply(); repaint('[data-apply]'); return; }

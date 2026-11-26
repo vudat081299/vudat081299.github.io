@@ -27,6 +27,7 @@
 - PLAN-024 · Mẫu Data Science on big data: CRISP-DM cho dữ liệu quá lớn hay quá nhanh cho một máy · `step-planner/data/templates.json`
 - PLAN-025 · Mỗi bước và bước con cho thấy đầu vào, đầu ra đang ổn, lỗi hay không có · `step-planner/`
 - PLAN-026 · System design phủ big data: HDFS, table format, xử lý stream, SQL trên file, NoSQL phân tán, học máy phân tán · `step-planner/data/system-design.json`
+- PLAN-027 · System design có danh mục kiến trúc theo nhóm, gợi ý một kiến trúc mỗi nhóm từ hồ sơ dự án · `step-planner/data/system-design.json`, `step-planner/js/design-core.js`
 <!-- index:end -->
 
 ## PLAN-001 · Dự án là các bước có thứ tự, mỗi bước có bước con có thứ tự
@@ -158,3 +159,8 @@ Sau khi sắp xếp lại, người dùng nhìn bảng là biết bước, bư�
 26/11/2026 · `step-planner/data/system-design.json`
 
 Danh mục có các công cụ big data người học gặp trong môn dữ liệu lớn, mỗi cái kèm khi nào dùng, khi nào tránh, link chính thức: HDFS, Delta Lake và Iceberg ở kho thô (kho thô chọn được cả chỗ lưu lẫn table format), consumer Python, Spark Structured Streaming và Flink ở khâu xử lý, Hive, Trino, Cassandra, HBase ở kho, Spark MLlib và Databricks ở khâu huấn luyện. Luật phối hợp báo khi: dữ liệu cỡ cụm mà xử lý bằng thư viện một máy; dữ liệu liên tục cần trả lời ngay mà xử lý theo lô; Kafka mà không gì đọc topic; công cụ stream cho dữ liệu không stream; HDFS, Cassandra, HBase với ngân sách miễn phí hay trên host chỉ chạy app; công cụ cụm hay MLlib cho dữ liệu vừa một máy.
+
+## PLAN-027 · System design có danh mục kiến trúc theo nhóm, gợi ý một kiến trúc mỗi nhóm từ hồ sơ dự án
+26/11/2026 · `step-planner/data/system-design.json`, `step-planner/js/design-core.js`
+
+Sau hồ sơ dự án, System design có trang kiến trúc chia bốn nhóm: dữ liệu nằm ở đâu (file + một database, warehouse, data lake, lakehouse có tầng Bronze / Silver / Gold), xử lý thế nào (batch ETL, batch ELT, streaming, Lambda, Kappa), người dùng nhận kết quả qua gì (báo cáo tĩnh, một app, frontend + backend API, microservices, serverless), model trả lời lúc nào (batch prediction, online prediction, đặc trưng từ luồng, RAG). Mỗi kiến trúc nói nó là gì, khi nào dùng, khi nào tránh, luồng, công cụ theo từng khâu và nguồn. Mỗi nhóm gợi ý một kiến trúc kèm lý do một dòng, từ hồ sơ, lối và các khâu đã quyết; khâu đã quyết thắng hồ sơ, chưa đủ câu trả lời thì chưa gợi ý. Ba lối "What do you deliver?" chính là ba kiến trúc của nhóm app; chọn lối được ngay từ kiến trúc. Data mesh chỉ được nhắc là cách tổ chức nhiều đội, dự án nhỏ không cần. Gợi ý không lưu vào dự án.

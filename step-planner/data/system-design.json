@@ -5131,5 +5131,1021 @@
       },
       "msg": "Spaces có ba kiểu: Gradio, Docker và HTML tĩnh; app Streamlit phải chạy qua Space Docker, mà Space Gradio hay Docker cần gói trả phí (tài khoản miễn phí chỉ được vài Space Gradio chạy ZeroGPU). Đổi giao diện sang Gradio, hoặc host Streamlit trên Streamlit Community Cloud."
     }
+  ],
+  "architectures": [
+    {
+      "id": "storage",
+      "label": "Where the data lives",
+      "question": "Dữ liệu thô và dữ liệu sạch được giữ theo kiểu nào, và cái gì truy vấn chúng?",
+      "note": "Data mesh không phải một kiểu kho mà là cách tổ chức: mỗi nhóm nghiệp vụ tự sở hữu dữ liệu của mình và công bố nó như một sản phẩm, trên một nền tảng tự phục vụ, theo luật quản trị chung. Nó giải bài toán nhiều đội cùng sở hữu dữ liệu trong một tổ chức lớn; dự án một người hay một nhóm nhỏ thì không cần.",
+      "sources": [
+        {
+          "title": "Data Mesh Principles and Logical Architecture (Zhamak Dehghani)",
+          "url": "https://martinfowler.com/articles/data-mesh-principles.html"
+        }
+      ],
+      "entries": [
+        {
+          "id": "files-db",
+          "name": "Files + one database",
+          "what": "Không dựng nền tảng nào: dữ liệu thô là file trong thư mục dự án, bản sạch là Parquet đọc bằng DuckDB hay một bảng SQLite, PostgreSQL; mọi thứ chạy trên một máy.",
+          "use": "Dữ liệu vừa một máy, một người hay một nhóm nhỏ dùng: phần lớn đồ án và dự án học. Vẫn chia ba thư mục raw, clean, gold theo tinh thần medallion.",
+          "avoid": "Dữ liệu vượt một máy; nhiều nhóm, nhiều công cụ cùng đọc ghi và cần phân quyền theo bảng.",
+          "flow": [
+            "Files in data/raw",
+            "Clean script",
+            "Parquet or one database",
+            "Notebook, app"
+          ],
+          "tools": {
+            "raw": [
+              "project-folder",
+              "dvc"
+            ],
+            "process": [
+              "pandas",
+              "polars",
+              "duckdb"
+            ],
+            "store": [
+              "parquet-duckdb",
+              "sqlite",
+              "postgresql"
+            ]
+          },
+          "sources": [
+            {
+              "title": "Why DuckDB",
+              "url": "https://duckdb.org/why_duckdb"
+            }
+          ]
+        },
+        {
+          "id": "warehouse",
+          "name": "Data warehouse",
+          "what": "Một kho SQL trung tâm giữ bảng đã làm sạch với schema khai trước; dữ liệu từ các hệ nguồn được nạp vào theo lịch để phân tích và báo cáo (BI).",
+          "use": "Dữ liệu dạng bảng, câu hỏi chủ yếu là SQL, dashboard, báo cáo định kỳ; muốn dịch vụ được quản lý, không tự vận hành máy.",
+          "avoid": "Dữ liệu chủ yếu là ảnh, âm thanh, văn bản thô; app cần trả lời từng yêu cầu nhỏ thật nhanh; ML cần đọc dữ liệu bằng Spark hay Python với khối lượng lớn.",
+          "flow": [
+            "Sources",
+            "Load on a schedule",
+            "Warehouse tables",
+            "SQL, BI dashboards"
+          ],
+          "tools": {
+            "process": [
+              "dbt"
+            ],
+            "store": [
+              "bigquery",
+              "snowflake",
+              "clickhouse"
+            ],
+            "app": [
+              "bi-dashboard",
+              "superset"
+            ]
+          },
+          "sources": [
+            {
+              "title": "What is a data warehouse? (AWS)",
+              "url": "https://aws.amazon.com/what-is/data-warehouse/"
+            }
+          ]
+        },
+        {
+          "id": "lake",
+          "name": "Data lake",
+          "what": "Giữ mọi dữ liệu ở dạng gốc (bảng, JSON, ảnh, âm thanh) trên object storage hay HDFS, không cần khai schema lúc ghi; công cụ đọc tự áp cấu trúc khi dùng.",
+          "use": "Nhiều loại dữ liệu, nhất là file phi cấu trúc cho ML; muốn giữ bản gốc rẻ và lâu; Spark, Python cùng đọc.",
+          "avoid": "Chỉ có bảng và câu hỏi SQL: warehouse hay lakehouse dễ quản hơn. Không có danh mục, quy ước thư mục, phân quyền thì lake thành \"data swamp\": không ai tìm ra hay tin được dữ liệu.",
+          "flow": [
+            "Sources",
+            "Raw files on object storage or HDFS",
+            "Spark, Python read what they need",
+            "ML, ad-hoc analysis"
+          ],
+          "tools": {
+            "raw": [
+              "cloudflare-r2",
+              "gcs",
+              "s3",
+              "hdfs"
+            ],
+            "process": [
+              "spark",
+              "databricks"
+            ],
+            "store": [
+              "hive",
+              "trino"
+            ]
+          },
+          "sources": [
+            {
+              "title": "What is a data lake? (AWS)",
+              "url": "https://aws.amazon.com/what-is/data-lake/"
+            }
+          ]
+        },
+        {
+          "id": "lakehouse",
+          "name": "Lakehouse (medallion)",
+          "what": "Lake cộng một lớp bảng có giao dịch ACID (Delta Lake, Iceberg): một bản dữ liệu trên object storage dùng chung cho SQL, BI và ML. Thường chia ba tầng medallion: Bronze giữ dữ liệu như nguồn, Silver đã làm sạch, khớp, bỏ trùng, Gold là bảng tổng hợp cho báo cáo và đặc trưng cho model.",
+          "use": "Dữ liệu lớn vừa cần SQL vừa cần Spark, Python cho ML; dữ liệu được ghi thêm, sửa nhiều lần; muốn quay lại đúng phiên bản đã dùng để train.",
+          "avoid": "Dữ liệu vừa một máy: ba thư mục Parquet (raw, clean, gold) cộng DuckDB đã cho đủ ba tầng, không cần table format hay Spark.",
+          "flow": [
+            "Bronze: raw as-is",
+            "Silver: cleaned, conformed",
+            "Gold: aggregates, features",
+            "BI, ML"
+          ],
+          "tools": {
+            "raw": [
+              "delta-lake",
+              "iceberg"
+            ],
+            "process": [
+              "spark",
+              "databricks",
+              "spark-streaming"
+            ],
+            "validate": [
+              "great-expectations",
+              "dbt-tests"
+            ],
+            "store": [
+              "trino",
+              "hive"
+            ]
+          },
+          "sources": [
+            {
+              "title": "What is a data lakehouse? (Databricks)",
+              "url": "https://www.databricks.com/blog/what-is-data-lakehouse"
+            },
+            {
+              "title": "What is a medallion architecture? (Databricks)",
+              "url": "https://www.databricks.com/blog/what-is-medallion-architecture"
+            }
+          ]
+        }
+      ],
+      "rules": [
+        {
+          "if": {
+            "store": [
+              "bigquery",
+              "snowflake"
+            ]
+          },
+          "arch": "warehouse",
+          "why": "Kho phân tích đã chọn là một warehouse."
+        },
+        {
+          "if": {
+            "raw": [
+              "delta-lake",
+              "iceberg"
+            ]
+          },
+          "arch": "lakehouse",
+          "why": "Kho thô đã chọn có table format (Delta Lake, Iceberg): đó là lớp lưu trữ của lakehouse."
+        },
+        {
+          "if": {
+            "size": [
+              "large"
+            ],
+            "kind": [
+              "text",
+              "media"
+            ]
+          },
+          "arch": "lake",
+          "why": "Dữ liệu lớn là văn bản, ảnh, âm thanh: giữ file gốc trên object storage, chỉ đưa nhãn và metadata vào bảng."
+        },
+        {
+          "if": {
+            "size": [
+              "large"
+            ],
+            "latency": [
+              "report"
+            ]
+          },
+          "arch": "warehouse",
+          "why": "Bảng lớn và kết quả là báo cáo: warehouse được quản lý cho chạy SQL ngay, không phải dựng Spark."
+        },
+        {
+          "if": {
+            "size": [
+              "large"
+            ]
+          },
+          "arch": "lakehouse",
+          "why": "Bảng lớn hơn một máy, vừa cần SQL vừa cần Spark, Python cho ML: một bản dữ liệu trên object storage với Delta Lake hay Iceberg phục vụ cả hai."
+        },
+        {
+          "if": {
+            "size": [
+              "small",
+              "medium"
+            ]
+          },
+          "arch": "files-db",
+          "why": "Dữ liệu vừa một máy: Parquet với DuckDB hay một PostgreSQL là đủ; warehouse, lake chỉ thêm phần phải vận hành."
+        }
+      ]
+    },
+    {
+      "id": "processing",
+      "label": "How data is processed",
+      "question": "Dữ liệu mới được xử lý theo lô định kỳ, hay ngay khi tới?",
+      "entries": [
+        {
+          "id": "batch-etl",
+          "name": "Batch ETL",
+          "what": "Theo lịch hay chạy một lần, một job lấy dữ liệu (Extract), biến đổi bằng code trên một máy xử lý riêng (Transform), rồi mới ghi bản sạch vào kho (Load).",
+          "use": "Dữ liệu cố định hay tới theo ngày, vừa một máy, biến đổi viết bằng Python; nguồn có định dạng cố định chỉ cần biến đổi một lần; cần lọc, gộp dữ liệu tần số cao (cảm biến) trước khi nạp.",
+          "avoid": "Đã có warehouse hay lakehouse đủ mạnh: nạp thô rồi biến đổi trong kho (ELT) bớt một chỗ chạy code; cần kết quả trong vài giây.",
+          "flow": [
+            "Extract",
+            "Transform in a script",
+            "Load clean tables",
+            "Report, model"
+          ],
+          "tools": {
+            "ingest": [
+              "notebook-script",
+              "cron",
+              "github-actions",
+              "prefect",
+              "airflow"
+            ],
+            "process": [
+              "pandas",
+              "polars",
+              "duckdb"
+            ]
+          },
+          "sources": [
+            {
+              "title": "ETL vs ELT (AWS)",
+              "url": "https://aws.amazon.com/compare/the-difference-between-etl-and-elt/"
+            }
+          ]
+        },
+        {
+          "id": "batch-elt",
+          "name": "Batch ELT",
+          "what": "Nạp dữ liệu thô thẳng vào kho trước (Extract, Load), rồi biến đổi bằng SQL hay Spark ngay trong kho khi cần (Transform), thường thành các model dbt có test.",
+          "use": "Đã có warehouse hay lakehouse; biến đổi viết được bằng SQL; dữ liệu lớn, muốn biến đổi song song tại chỗ và giữ bản thô để biến đổi lại khi luật đổi.",
+          "avoid": "Không có kho SQL nào, chỉ có file nhỏ và pandas: một script ETL đơn giản hơn.",
+          "flow": [
+            "Extract",
+            "Load raw into the warehouse or lake",
+            "Transform in place (SQL, dbt, Spark)",
+            "BI, model"
+          ],
+          "tools": {
+            "process": [
+              "dbt",
+              "duckdb",
+              "spark",
+              "databricks"
+            ],
+            "validate": [
+              "dbt-tests"
+            ],
+            "store": [
+              "bigquery",
+              "snowflake",
+              "parquet-duckdb",
+              "trino"
+            ]
+          },
+          "sources": [
+            {
+              "title": "ETL vs ELT (AWS)",
+              "url": "https://aws.amazon.com/compare/the-difference-between-etl-and-elt/"
+            }
+          ]
+        },
+        {
+          "id": "streaming",
+          "name": "Streaming (event-driven)",
+          "what": "Mỗi sự kiện được xử lý khi nó tới: nguồn gửi sự kiện vào một log (Kafka), một bộ xử lý stream đọc liên tục rồi cập nhật bảng kết quả, gửi cảnh báo hay gọi model.",
+          "use": "Kết quả phải mới trong vài giây: cảnh báo, phát hiện gian lận, cảm biến, bảng điều khiển trực tiếp.",
+          "avoid": "Người dùng chỉ xem kết quả theo giờ, theo ngày: gom sự kiện thành lô rồi chạy batch rẻ và dễ hơn nhiều.",
+          "flow": [
+            "Events",
+            "Kafka topic",
+            "Stream processor",
+            "Result table or alert"
+          ],
+          "tools": {
+            "source": [
+              "event-stream"
+            ],
+            "ingest": [
+              "kafka"
+            ],
+            "process": [
+              "python-consumer",
+              "spark-streaming",
+              "flink"
+            ],
+            "store": [
+              "clickhouse",
+              "cassandra",
+              "redis"
+            ]
+          },
+          "sources": [
+            {
+              "title": "Apache Kafka: Introduction",
+              "url": "https://kafka.apache.org/intro"
+            },
+            {
+              "title": "Structured Streaming Programming Guide",
+              "url": "https://spark.apache.org/docs/latest/streaming/index.html"
+            }
+          ]
+        },
+        {
+          "id": "lambda",
+          "name": "Lambda architecture",
+          "what": "Hai đường song song trên cùng dữ liệu gốc chỉ ghi thêm: batch layer định kỳ tính lại toàn bộ cho kết quả đúng, speed layer tính phần sự kiện mới cho kết quả ngay; serving layer gộp hai bên khi trả lời. Kết quả của speed layer luôn bị batch layer ghi đè về sau.",
+          "use": "Cần cả kết quả tức thì lẫn kết quả tính lại chính xác trên toàn bộ lịch sử, và đường batch (Hadoop, Spark) đã có sẵn; môn học yêu cầu.",
+          "avoid": "Đồ án một người: phải viết và giữ cùng một logic ở hai hệ khác nhau sao cho ra cùng kết quả, chính điểm đau mà bài phê bình của Kreps nêu. Kappa, hay chỉ batch, thường đủ.",
+          "flow": [
+            "Append-only raw events",
+            "Batch layer (recompute all) + speed layer (recent events)",
+            "Serving layer merges both",
+            "Queries"
+          ],
+          "tools": {
+            "ingest": [
+              "kafka"
+            ],
+            "raw": [
+              "hdfs",
+              "s3"
+            ],
+            "process": [
+              "spark",
+              "hadoop",
+              "spark-streaming",
+              "flink"
+            ],
+            "store": [
+              "hbase",
+              "cassandra"
+            ]
+          },
+          "sources": [
+            {
+              "title": "How to beat the CAP theorem (Nathan Marz, Lambda)",
+              "url": "https://nathanmarz.com/blog/how-to-beat-the-cap-theorem.html"
+            },
+            {
+              "title": "Questioning the Lambda Architecture (Jay Kreps, Kappa)",
+              "url": "https://www.oreilly.com/radar/questioning-the-lambda-architecture/"
+            }
+          ]
+        },
+        {
+          "id": "kappa",
+          "name": "Kappa architecture",
+          "what": "Chỉ một đường stream: dữ liệu là log sự kiện giữ đủ lâu (Kafka). Code đổi thì chạy bản job mới đọc lại log từ đầu ra một bảng mới; bắt kịp rồi thì chuyển app sang bảng mới và dừng job cũ.",
+          "use": "Cần kết quả tức thì và đôi khi phải tính lại lịch sử; muốn một codebase thay cho hai; log giữ được đủ khoảng lịch sử cần tính lại.",
+          "avoid": "Không cần kết quả tức thì: batch đơn giản hơn. Phép tính cần quét lịch sử dài hơn khoảng log giữ được.",
+          "flow": [
+            "Events",
+            "Kafka log (kept long enough)",
+            "Stream job v1 writes table v1",
+            "Replay with job v2 into table v2, then switch"
+          ],
+          "tools": {
+            "ingest": [
+              "kafka"
+            ],
+            "process": [
+              "spark-streaming",
+              "flink"
+            ],
+            "store": [
+              "clickhouse",
+              "cassandra",
+              "postgresql"
+            ]
+          },
+          "sources": [
+            {
+              "title": "Questioning the Lambda Architecture (Jay Kreps, Kappa)",
+              "url": "https://www.oreilly.com/radar/questioning-the-lambda-architecture/"
+            }
+          ]
+        }
+      ],
+      "rules": [
+        {
+          "if": {
+            "fresh": [
+              "stream"
+            ],
+            "latency": [
+              "report",
+              "batch"
+            ],
+            "size": [
+              "large"
+            ]
+          },
+          "arch": "batch-elt",
+          "why": "Sự kiện tới liên tục nhưng người dùng xem kết quả theo lịch: gom sự kiện thành lô ở kho rồi biến đổi tại chỗ là đủ, không cần bộ xử lý stream chạy suốt."
+        },
+        {
+          "if": {
+            "fresh": [
+              "stream"
+            ],
+            "latency": [
+              "report",
+              "batch"
+            ]
+          },
+          "arch": "batch-etl",
+          "why": "Sự kiện tới liên tục nhưng người dùng xem kết quả theo lịch: gom sự kiện thành lô rồi chạy một job batch là đủ, không cần bộ xử lý stream chạy suốt."
+        },
+        {
+          "if": {
+            "fresh": [
+              "stream"
+            ],
+            "latency": [
+              "online"
+            ],
+            "size": [
+              "large"
+            ]
+          },
+          "arch": "kappa",
+          "why": "Sự kiện liên tục, cần trả lời ngay, lịch sử lớn: một đường stream đọc log Kafka giữ đủ lâu; tính lại bằng cách chạy lại job trên log, không phải giữ hai codebase như Lambda."
+        },
+        {
+          "if": {
+            "fresh": [
+              "stream"
+            ],
+            "latency": [
+              "online"
+            ]
+          },
+          "arch": "streaming",
+          "why": "Sự kiện liên tục và người dùng cần trả lời ngay: xử lý từng sự kiện khi tới; luồng nhỏ thì một consumer Python là đủ."
+        },
+        {
+          "if": {
+            "process": [
+              "python-consumer",
+              "spark-streaming",
+              "flink"
+            ]
+          },
+          "arch": "streaming",
+          "why": "Khâu Processing đã chọn một công cụ stream."
+        },
+        {
+          "if": {
+            "fresh": [
+              "stream"
+            ]
+          },
+          "arch": "streaming",
+          "why": "Dữ liệu tới liên tục. Trả lời câu \"How do people get the results?\": xem theo lịch thì batch là đủ."
+        },
+        {
+          "if": {
+            "process": [
+              "dbt"
+            ]
+          },
+          "arch": "batch-elt",
+          "why": "Khâu Processing là dbt: biến đổi bằng SQL ngay trong kho, đúng kiểu ELT."
+        },
+        {
+          "if": {
+            "store": [
+              "bigquery",
+              "snowflake"
+            ]
+          },
+          "arch": "batch-elt",
+          "why": "Kho đã chọn là warehouse: nạp thô vào rồi biến đổi bằng SQL ngay trong kho."
+        },
+        {
+          "if": {
+            "size": [
+              "large"
+            ]
+          },
+          "arch": "batch-elt",
+          "why": "Dữ liệu lớn: nạp thô vào lake hay warehouse rồi biến đổi tại chỗ bằng Spark hay SQL, không kéo về một máy để biến đổi."
+        },
+        {
+          "if": {
+            "fresh": [
+              "once",
+              "batch"
+            ]
+          },
+          "arch": "batch-etl",
+          "why": "Dữ liệu cố định hay tới theo ngày: một script (chạy một lần hay theo lịch) làm sạch rồi ghi bản sạch là đủ."
+        },
+        {
+          "if": {
+            "size": [
+              "small",
+              "medium"
+            ]
+          },
+          "arch": "batch-etl",
+          "why": "Dữ liệu vừa một máy: một script làm sạch rồi ghi bản sạch là đủ."
+        }
+      ]
+    },
+    {
+      "id": "app",
+      "label": "How people use the results",
+      "question": "Kết quả tới tay người dùng qua thứ gì, và phần mềm ấy chia thành mấy phần? Ba kiến trúc đầu chính là ba lối ở \"What do you deliver?\".",
+      "entries": [
+        {
+          "id": "static-report",
+          "name": "Static report or dashboard",
+          "path": "report",
+          "what": "Không có máy chủ chạy suốt: notebook xuất HTML hay PDF, hoặc dashboard đọc bảng đã tính sẵn; muốn số mới thì chạy lại pipeline.",
+          "use": "Người nhận chỉ đọc, lọc kết quả, không gửi dữ liệu mới vào.",
+          "avoid": "Người dùng cần nhập dữ liệu và nhận câu trả lời ngay.",
+          "flow": [
+            "Clean data",
+            "Notebook or BI tool",
+            "HTML, PDF or dashboard"
+          ],
+          "tools": {
+            "app": [
+              "notebook-report",
+              "bi-dashboard",
+              "superset"
+            ],
+            "host": [
+              "github-pages"
+            ]
+          },
+          "sources": []
+        },
+        {
+          "id": "monolith",
+          "name": "Single app (monolith)",
+          "path": "demo",
+          "what": "Một chương trình làm mọi thứ: giao diện, đọc dữ liệu, gọi model trong cùng một tiến trình (Streamlit, Gradio), deploy một lần.",
+          "use": "Một giao diện Python, một người hay một nhóm nhỏ dùng; muốn ít phần phải dựng nhất. Dự án mới nên bắt đầu ở đây, tách ra khi thật cần.",
+          "avoid": "App khác (web, mobile) cũng cần gọi model; nhiều người dùng cùng lúc làm app chậm.",
+          "flow": [
+            "Clean data + model file",
+            "One Python app",
+            "Users"
+          ],
+          "tools": {
+            "serve": [
+              "in-app"
+            ],
+            "app": [
+              "streamlit",
+              "gradio"
+            ],
+            "host": [
+              "streamlit-cloud",
+              "hf-spaces"
+            ]
+          },
+          "sources": [
+            {
+              "title": "MonolithFirst (Martin Fowler)",
+              "url": "https://martinfowler.com/bliki/MonolithFirst.html"
+            }
+          ]
+        },
+        {
+          "id": "client-server",
+          "name": "Frontend + backend API",
+          "path": "api",
+          "what": "Hai phần riêng: backend mở API trả JSON theo schema đã hẹn, đọc dữ liệu và gọi model; frontend web hay mobile chỉ gọi API. Hai bên deploy riêng.",
+          "use": "Nhiều client dùng chung một logic; giao diện không viết bằng Python; muốn đổi giao diện mà không đụng model.",
+          "avoid": "Chỉ một giao diện Python và vài người dùng: thêm một service phải deploy và một schema phải giữ.",
+          "flow": [
+            "Clean tables + model",
+            "Backend API",
+            "Web or mobile frontend",
+            "Users"
+          ],
+          "tools": {
+            "serve": [
+              "fastapi",
+              "bentoml"
+            ],
+            "app": [
+              "web-app",
+              "mobile-app"
+            ],
+            "host": [
+              "render",
+              "cloud-run",
+              "fly-io",
+              "vercel"
+            ]
+          },
+          "sources": [
+            {
+              "title": "MLOps: continuous delivery and automation pipelines in ML (Google Cloud)",
+              "url": "https://docs.cloud.google.com/architecture/mlops-continuous-delivery-and-automation-pipelines-in-machine-learning"
+            }
+          ]
+        },
+        {
+          "id": "microservices",
+          "name": "Microservices",
+          "what": "Ứng dụng chia thành nhiều service nhỏ, mỗi service lo một năng lực nghiệp vụ, chạy tiến trình riêng, gọi nhau qua API nhẹ (thường là HTTP) và deploy độc lập.",
+          "use": "Nhiều đội cùng làm một sản phẩm lớn, mỗi đội cần deploy phần mình độc lập, và đã tự động hoá deploy, giám sát.",
+          "avoid": "Dự án mới, một người hay một nhóm nhỏ: bài MonolithFirst khuyên không bắt đầu dự án mới bằng microservices; bắt đầu bằng một app, tách khi ranh giới đã rõ.",
+          "flow": [
+            "Gateway",
+            "Service A + service B + model service",
+            "One database per service"
+          ],
+          "tools": {
+            "package": [
+              "docker",
+              "docker-compose"
+            ],
+            "host": [
+              "kubernetes",
+              "cloud-run"
+            ]
+          },
+          "sources": [
+            {
+              "title": "Microservices (Lewis & Fowler)",
+              "url": "https://martinfowler.com/articles/microservices.html"
+            },
+            {
+              "title": "MonolithFirst (Martin Fowler)",
+              "url": "https://martinfowler.com/bliki/MonolithFirst.html"
+            }
+          ]
+        },
+        {
+          "id": "serverless",
+          "name": "Serverless functions",
+          "what": "Code chạy thành hàm theo từng yêu cầu trên nền tảng của nhà cung cấp (Functions as a Service): không giữ máy chủ chạy suốt, tự co giãn, trả tiền theo lượt chạy.",
+          "use": "Lượt gọi thưa và không đều; mỗi yêu cầu xử lý nhanh, không giữ trạng thái; không muốn quản máy chủ.",
+          "avoid": "Model lớn nạp lâu: mỗi lần khởi động lạnh (cold start) phải chờ; job chạy lâu, kết nối giữ lâu; cần GPU.",
+          "flow": [
+            "Request",
+            "Function starts (cold or warm)",
+            "Loads model, answers",
+            "Scales back to zero"
+          ],
+          "tools": {
+            "serve": [
+              "serverless"
+            ],
+            "host": [
+              "cloud-run",
+              "vercel"
+            ]
+          },
+          "sources": [
+            {
+              "title": "Serverless Architectures (Mike Roberts)",
+              "url": "https://martinfowler.com/articles/serverless.html"
+            }
+          ]
+        }
+      ],
+      "rules": [
+        {
+          "if": {
+            "path": [
+              "report"
+            ]
+          },
+          "arch": "static-report",
+          "why": "Khớp lối Notebook & report đã chọn ở \"What do you deliver?\"."
+        },
+        {
+          "if": {
+            "path": [
+              "demo"
+            ]
+          },
+          "arch": "monolith",
+          "why": "Khớp lối Interactive demo đã chọn ở \"What do you deliver?\"."
+        },
+        {
+          "if": {
+            "path": [
+              "api"
+            ]
+          },
+          "arch": "client-server",
+          "why": "Khớp lối Separate frontend + backend đã chọn ở \"What do you deliver?\"."
+        },
+        {
+          "if": {
+            "path": [
+              "pipeline"
+            ]
+          },
+          "arch": "static-report",
+          "why": "Lối Scheduled pipeline công bố bảng mới theo lịch: báo cáo hay dashboard đọc bản mới nhất là đủ; cần hỏi theo yêu cầu thì thêm backend API."
+        },
+        {
+          "if": {
+            "serve": [
+              "serverless"
+            ]
+          },
+          "arch": "serverless",
+          "why": "Khâu Serving đã chọn hàm serverless."
+        },
+        {
+          "if": {
+            "app": [
+              "web-app",
+              "mobile-app"
+            ]
+          },
+          "arch": "client-server",
+          "why": "Giao diện đã chọn chạy trên máy người dùng nên cần một backend API."
+        },
+        {
+          "if": {
+            "app": [
+              "streamlit",
+              "gradio"
+            ]
+          },
+          "arch": "monolith",
+          "why": "Giao diện đã chọn là một app Python chạy cả giao diện lẫn model."
+        },
+        {
+          "if": {
+            "latency": [
+              "report",
+              "batch"
+            ]
+          },
+          "arch": "static-report",
+          "why": "Người dùng nhận báo cáo hay bảng làm mới theo lịch: không cần máy chủ chạy suốt."
+        },
+        {
+          "if": {
+            "latency": [
+              "online"
+            ],
+            "users": [
+              "public"
+            ]
+          },
+          "arch": "client-server",
+          "why": "Nhiều người dùng cần trả lời ngay: một API riêng co giãn được và cho nhiều client dùng chung."
+        },
+        {
+          "if": {
+            "latency": [
+              "online"
+            ]
+          },
+          "arch": "monolith",
+          "why": "Cần trả lời ngay cho một hay vài người: một app Streamlit, Gradio gọi model trong cùng tiến trình là ít phần nhất."
+        }
+      ]
+    },
+    {
+      "id": "ml",
+      "label": "How the model answers",
+      "question": "Dự đoán, hay câu trả lời của model, được tính lúc nào?",
+      "entries": [
+        {
+          "id": "batch-prediction",
+          "name": "Batch prediction",
+          "what": "Chạy model theo lịch trên mọi bản ghi, ghi dự đoán ra bảng; app chỉ đọc kết quả tính sẵn.",
+          "use": "Dự đoán vẫn dùng được sau vài giờ, vài ngày (gợi ý hằng ngày, chấm điểm khách hàng); muốn đơn giản, rẻ.",
+          "avoid": "Người dùng mới hay dữ liệu vừa nhập chưa có dự đoán cho tới lần chạy sau.",
+          "flow": [
+            "Scheduled job",
+            "Model scores every row",
+            "Predictions table",
+            "App reads it"
+          ],
+          "tools": {
+            "serve": [
+              "batch-file"
+            ],
+            "ingest": [
+              "cron",
+              "github-actions",
+              "airflow"
+            ],
+            "store": [
+              "postgresql",
+              "parquet-duckdb"
+            ]
+          },
+          "sources": [
+            {
+              "title": "Real-time machine learning: challenges and solutions (Chip Huyen)",
+              "url": "https://huyenchip.com/2022/01/02/real-time-machine-learning-challenges-and-solutions.html"
+            },
+            {
+              "title": "MLOps: continuous delivery and automation pipelines in ML (Google Cloud)",
+              "url": "https://docs.cloud.google.com/architecture/mlops-continuous-delivery-and-automation-pipelines-in-machine-learning"
+            }
+          ]
+        },
+        {
+          "id": "online-prediction",
+          "name": "Online prediction",
+          "what": "Model nằm sau một API hay trong app; mỗi yêu cầu gửi dữ liệu vào và nhận dự đoán tính ngay lúc đó.",
+          "use": "Đầu vào chỉ có khi người dùng gửi (form, ảnh tải lên) và cần trả lời trong khoảng một giây.",
+          "avoid": "Tính trước được cho mọi bản ghi: batch rẻ hơn, không có service nào phải chạy suốt.",
+          "flow": [
+            "Request with input",
+            "Model loaded in the API or app",
+            "Prediction in the response"
+          ],
+          "tools": {
+            "serve": [
+              "in-app",
+              "fastapi",
+              "bentoml",
+              "serverless"
+            ]
+          },
+          "sources": [
+            {
+              "title": "MLOps: continuous delivery and automation pipelines in ML (Google Cloud)",
+              "url": "https://docs.cloud.google.com/architecture/mlops-continuous-delivery-and-automation-pipelines-in-machine-learning"
+            },
+            {
+              "title": "Real-time machine learning: challenges and solutions (Chip Huyen)",
+              "url": "https://huyenchip.com/2022/01/02/real-time-machine-learning-challenges-and-solutions.html"
+            }
+          ]
+        },
+        {
+          "id": "streaming-inference",
+          "name": "Streaming features + online prediction",
+          "what": "Đặc trưng được tính liên tục từ luồng sự kiện (vd. số lần bấm trong vài phút vừa qua), model dự đoán ngay khi sự kiện tới hay khi có yêu cầu.",
+          "use": "Dự đoán phụ thuộc điều vừa xảy ra trong phiên này, vài phút này: gian lận, gợi ý theo phiên, cảnh báo cảm biến.",
+          "avoid": "Đặc trưng tính theo ngày là đủ: online prediction với đặc trưng tính sẵn đơn giản hơn nhiều.",
+          "flow": [
+            "Events",
+            "Stream processor computes features",
+            "Model scores",
+            "Alert or response"
+          ],
+          "tools": {
+            "ingest": [
+              "kafka"
+            ],
+            "process": [
+              "python-consumer",
+              "spark-streaming",
+              "flink"
+            ],
+            "store": [
+              "redis",
+              "feast"
+            ],
+            "serve": [
+              "fastapi"
+            ]
+          },
+          "sources": [
+            {
+              "title": "Real-time machine learning: challenges and solutions (Chip Huyen)",
+              "url": "https://huyenchip.com/2022/01/02/real-time-machine-learning-challenges-and-solutions.html"
+            }
+          ]
+        },
+        {
+          "id": "rag",
+          "name": "Retrieval-augmented generation (RAG)",
+          "what": "Câu hỏi được dùng để tìm các đoạn tài liệu liên quan trong một chỉ mục; LLM đọc các đoạn ấy rồi trả lời. Tài liệu đổi thì dựng lại chỉ mục, không train lại model.",
+          "use": "Hỏi đáp, chatbot trên tài liệu riêng hay tài liệu hay đổi; cần chỉ ra đoạn nguồn của câu trả lời.",
+          "avoid": "Câu trả lời là một con số, một nhãn từ bảng: model học máy thường hay một truy vấn SQL chính xác, rẻ và kiểm được hơn.",
+          "flow": [
+            "Documents into chunks into an index",
+            "Question retrieves the closest chunks",
+            "LLM answers from those chunks"
+          ],
+          "tools": {
+            "search": [
+              "sqlite-fts5",
+              "chroma",
+              "faiss",
+              "pgvector",
+              "qdrant"
+            ],
+            "serve": [
+              "llm-api",
+              "hf-inference",
+              "ollama"
+            ]
+          },
+          "sources": [
+            {
+              "title": "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks (Lewis et al., 2020)",
+              "url": "https://arxiv.org/abs/2005.11401"
+            }
+          ]
+        }
+      ],
+      "rules": [
+        {
+          "if": {
+            "serve": [
+              "skip"
+            ]
+          },
+          "arch": "",
+          "why": "Khâu Serving là Not needed: dự án không phục vụ dự đoán."
+        },
+        {
+          "if": {
+            "ai": [
+              "llm"
+            ]
+          },
+          "arch": "rag",
+          "why": "Sản phẩm dùng LLM hay tìm theo nghĩa trên tài liệu."
+        },
+        {
+          "if": {
+            "fresh": [
+              "stream"
+            ],
+            "latency": [
+              "online"
+            ]
+          },
+          "arch": "streaming-inference",
+          "why": "Dữ liệu tới liên tục và cần trả lời ngay: đặc trưng mới nhất phải tính từ luồng sự kiện."
+        },
+        {
+          "if": {
+            "serve": [
+              "batch-file"
+            ]
+          },
+          "arch": "batch-prediction",
+          "why": "Khâu Serving đã chọn kết quả tính sẵn."
+        },
+        {
+          "if": {
+            "serve": [
+              "in-app",
+              "fastapi",
+              "bentoml",
+              "serverless"
+            ]
+          },
+          "arch": "online-prediction",
+          "why": "Khâu Serving đã chọn model trả lời theo từng yêu cầu."
+        },
+        {
+          "if": {
+            "latency": [
+              "online"
+            ]
+          },
+          "arch": "online-prediction",
+          "why": "Người dùng gửi dữ liệu và cần câu trả lời trong khoảng một giây."
+        },
+        {
+          "if": {
+            "latency": [
+              "report",
+              "batch"
+            ]
+          },
+          "arch": "batch-prediction",
+          "why": "Kết quả xem qua báo cáo hay bảng làm mới theo lịch: tính dự đoán sẵn cho mọi bản ghi."
+        }
+      ]
+    }
   ]
 }

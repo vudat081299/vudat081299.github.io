@@ -1103,6 +1103,36 @@ li.sd-warnbox { display: block; }
 .sd-accept { list-style: disc; }
 .sd-apply { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2) var(--s3); }
 .sd-applied { padding: var(--s3); font-size: var(--fs-sm); color: var(--ink); background: var(--accent-soft); border-radius: var(--r-sm); }
+/* Trang Architecture: mỗi nhóm một mục (tên, câu hỏi, dòng gợi ý), mỗi kiến trúc một khối gập; kiến trúc được gợi ý viền xanh. */
+.sd-fam { display: flex; flex-direction: column; gap: var(--s2); }
+.sd-fam + .sd-fam { padding-top: var(--s4); border-top: var(--line-w) solid var(--line-2); }
+.sd-rec { padding: var(--s3); font-size: var(--fs-sm); line-height: var(--lh); color: var(--ink); background: var(--accent-soft); border-radius: var(--r-sm); }
+.sd-rec b { font-weight: 600; }
+.sd-rec.is-none { color: var(--ink-2); background: var(--chip); }
+.sd-archs { display: flex; flex-direction: column; gap: var(--s2); }
+.sd-arch {
+  display: flex; flex-direction: column; gap: var(--s2); padding: var(--s2) var(--s4) var(--s2) var(--s3);
+  background: var(--surface); border: var(--line-w) solid var(--line); border-radius: var(--r); box-shadow: var(--shadow-1);
+}
+.sd-arch.is-rec { border-color: var(--accent); }
+.sd-arch[open] { padding-bottom: var(--s4); }
+.sd-arch > summary { display: flex; align-items: flex-start; gap: var(--s2); min-height: var(--ctl-sm); padding-top: var(--s1); cursor: pointer; list-style: none; }
+.sd-arch > summary::-webkit-details-marker { display: none; }
+.sd-arch > summary svg.i { flex: none; width: var(--s4); height: var(--s4); margin-top: var(--mark-w); transform: rotate(-90deg); transition: transform var(--dur) var(--ease); }
+.sd-arch[open] > summary svg.i { transform: none; }
+.sd-arch > :not(summary) { margin-left: calc(var(--s4) + var(--s2)); }
+.sd-arch-name { min-width: 0; display: flex; flex-direction: column; gap: var(--s1); }
+.sd-arch-head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s1) var(--s2); }
+.sd-arch-head b { font: 600 var(--fs-md)/var(--lh-tight) var(--display); }
+.sd-arch-name small { font-size: var(--fs-sm); line-height: var(--lh); color: var(--ink-2); }
+.sd-chain { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s1); margin-top: var(--s1); list-style: none; }
+.sd-chain li { display: inline-flex; align-items: center; gap: var(--s1); min-width: 0; }
+.sd-chain li + li::before {
+  content: ''; flex: none; width: var(--s2); height: var(--s2); margin-right: var(--s1);
+  border-top: var(--mark-w) solid var(--ink-4); border-right: var(--mark-w) solid var(--ink-4); transform: rotate(45deg);
+}
+.sd-chain span { padding: var(--s1) var(--s2); font: 500 var(--fs-xs)/var(--lh-tight) var(--sans); color: var(--ink-2); background: var(--chip); border-radius: var(--r-sm); }
+.sd-arch-tools { display: flex; flex-direction: column; gap: var(--s1); margin-top: var(--s1); list-style: none; }
 @media (max-width: 640px) {
   .sd { grid-template-columns: minmax(0, 1fr); padding-top: var(--s5); }
   .sd-acts { flex-direction: row; flex-wrap: wrap; }

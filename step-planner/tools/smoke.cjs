@@ -1617,7 +1617,7 @@ const check = (name, ok, detail = '') => {
     await sp.click('#sd-open');
     await sp.waitForSelector('#dlg-sd[open] .sd-paths');
     const before = await sp.$$eval('#sd-nav .sd-nav-btn', (b) => b.length);
-    check(`${tag}: hộp mở ở lối bắt đầu, có hồ sơ, mọi khâu và hai trang xem lại`, before === cat.stages.length + 4
+    check(`${tag}: hộp mở ở lối bắt đầu, có hồ sơ, kiến trúc, mọi khâu và hai trang xem lại`, before === cat.stages.length + 5
       && (await sp.$$eval('#sd-pane input[data-path]', (r) => r.length)) === cat.paths.length + 1);
     await sp.click('#sd-nav [data-at="1"]');
     await sp.click('input[data-q="size"][value="large"]', { force: true });
@@ -1626,9 +1626,9 @@ const check = (name, ok, detail = '') => {
     const [gq, gok] = Object.entries(gated.when)[0];
     const goff = cat.profile.find((x) => x.id === gq).choices.find((c) => !gok.includes(c.id)).id;
     await sp.click(`input[data-q="${gq}"][value="${goff}"]`, { force: true });
-    await sp.click(`#sd-nav [data-at="${cat.stages.indexOf(gated) + 2}"]`);
+    await sp.click(`#sd-nav [data-at="${cat.stages.indexOf(gated) + 3}"]`);
     check(`${tag}: hồ sơ không cần khâu ${gated.id} thì khâu nói vì sao`, /Usually not needed for your profile/.test(await sp.textContent('#sd-pane')));
-    await sp.click('#sd-nav [data-at="5"]');
+    await sp.click('#sd-nav [data-at="6"]');
     const proc = cat.stages[3];
     const top = await sp.$eval('#sd-pane .sd-opt:has(.sd-tag.top)', (e) => e.dataset.opt).catch(() => '');
     const want = proc.options.find((o) => !o.fit || !o.fit.size || o.fit.size.includes('large'));
@@ -1666,7 +1666,7 @@ const check = (name, ok, detail = '') => {
       && ws.design.path === 'report');
     await sp.click('#sd-pane input[data-path][value=""]', { force: true });
     /* Luật phối hợp: API + GitHub Pages báo ở khâu, ở cột trái, ở trang Checks và dưới sơ đồ; bỏ chọn thì hết. */
-    const pg = (id) => cat.stages.findIndex((x) => x.id === id) + 2;
+    const pg = (id) => cat.stages.findIndex((x) => x.id === id) + 3;
     await sp.click(`#sd-nav [data-at="${pg('serve')}"]`);
     await sp.click('#sd-pane [data-opt="fastapi"] input');
     await sp.click(`#sd-nav [data-at="${pg('host')}"]`);
@@ -1674,7 +1674,7 @@ const check = (name, ok, detail = '') => {
     check(`${tag}: luật phối hợp báo ở khâu, cột trái, dưới sơ đồ`, /API on a static host/.test(await sp.textContent('#sd-pane'))
       && (await sp.$$eval('#sd-nav .has-warn', (b) => b.length)) >= 3 && (await sp.$$eval('#sd-warns li', (l) => l.length)) === 1
       && /warning/.test(await sp.textContent('#sd-sub')));
-    await sp.click(`#sd-nav [data-at="${cat.stages.length + 3}"]`);
+    await sp.click(`#sd-nav [data-at="${cat.stages.length + 4}"]`);
     check(`${tag}: trang Checks liệt kê cảnh báo, có nút tới khâu`, (await sp.$$eval('#sd-pane .sd-warnbox', (l) => l.length)) === 1
       && (await sp.$$eval('#sd-pane .sd-warnbox [data-at]', (b) => b.length)) === 2);
     if (w === 390) check(`${tag}: trang Checks không tràn ngang`, await sp.$eval('#dlg-sd', (d) => d.scrollWidth <= d.clientWidth + 1));
@@ -1819,6 +1819,55 @@ const check = (name, ok, detail = '') => {
     await bp.click('#sd-pane [data-opt="python-consumer"] input');
     check('big data: đổi sang consumer Python thì luật stream thôi báo', !/Answers in a second/.test(await bp.textContent('#sd-warns')));
     await bx.close();
+  }
+
+  /* ── System design, kiến trúc: trang Architecture vẽ mọi nhóm, mọi kiến trúc; gợi ý đổi theo hồ sơ; công cụ dẫn tới khâu;
+   * "Use this deliverable" đặt lối; dòng kiến trúc trên trang; 390px không tràn ngang ── */
+  for (const [w, hh] of [[1280, 900], [390, 844]]) {
+    const { ctx: ax, page: ap } = await open(w, hh);
+    const tag = `kiến trúc ${w}px`;
+    await ap.click('#start .tpl[data-tpl="crisp-dm"]');
+    await ap.waitForSelector('#sd-fig svg');
+    const cat = await ap.evaluate(async () => (await fetch('data/system-design.json')).json());
+    check(`${tag}: trên trang có lối vào trang Architecture`, /Architecture guide/.test(await ap.textContent('#sd-arch')));
+    await ap.click('#sd-arch [data-arch-open]');
+    await ap.waitForSelector('#dlg-sd[open] .sd-fam');
+    const navTo = (title) => ap.click(`#sd-nav .sd-nav-btn:has-text("${title}")`);
+    const recs = () => ap.$$eval('#sd-pane .sd-fam', (fs) => Object.fromEntries(fs.map((f) => [f.dataset.fam, f.querySelector('.sd-rec')?.dataset.rec ?? null])));
+    const fams = await ap.$$eval('#sd-pane .sd-fam', (fs) => fs.map((f) => [f.dataset.fam, f.querySelectorAll('.sd-arch').length]));
+    check(`${tag}: mọi nhóm, mọi kiến trúc hiện; chưa trả lời thì chưa gợi ý, có lối tới hồ sơ`,
+      JSON.stringify(fams) === JSON.stringify(cat.architectures.map((f) => [f.id, f.entries.length]))
+      && Object.values(await recs()).every((x) => x === null) && !!(await ap.$('#sd-pane .sd-tip [data-at="1"]')), JSON.stringify(fams));
+    await navTo('Project profile');
+    for (const [q, a] of [['size', 'small'], ['fresh', 'batch']]) await ap.click(`input[data-q="${q}"][value="${a}"]`, { force: true });
+    await navTo('Architecture');
+    let r = await recs();
+    check(`${tag}: dữ liệu nhỏ theo ngày — file + một DB, batch ETL`, r.storage === 'files-db' && r.processing === 'batch-etl', JSON.stringify(r));
+    await navTo('Project profile');
+    for (const [q, a] of [['fresh', 'stream'], ['latency', 'online']]) await ap.click(`input[data-q="${q}"][value="${a}"]`, { force: true });
+    await navTo('Architecture');
+    r = await recs();
+    check(`${tag}: dữ liệu liên tục, cần trả lời ngay — gợi ý nhóm xử lý thành stream, kiến trúc ấy viền xanh`,
+      ['streaming', 'lambda', 'kappa'].includes(r.processing) && r.ml === 'streaming-inference'
+      && !!(await ap.$(`#sd-pane .sd-arch.is-rec[data-arch="${r.processing}"]`)), JSON.stringify(r));
+    await ap.click(`#sd-pane [data-arch="${r.processing}"] > summary`);
+    const open1 = await ap.$eval(`#sd-pane [data-arch="${r.processing}"]`, (d) => d.open && d.querySelectorAll('.sd-chain li').length > 1 && d.querySelectorAll('.sd-links a').length > 0);
+    check(`${tag}: mở kiến trúc thấy luồng, công cụ theo khâu, nguồn`, open1);
+    if (w === 390) check(`${tag}: trang Architecture không tràn ngang`, await ap.$eval('#dlg-sd', (d) => d.scrollWidth <= d.clientWidth + 1)
+      && await ap.$eval('#sd-pane', (p) => p.scrollWidth <= p.clientWidth + 1));
+    await ap.click('#sd-pane [data-arch="monolith"] > summary');
+    await ap.click('#sd-pane [data-arch="monolith"] [data-arch-path]');
+    const ws = await cur(ap);
+    check(`${tag}: "Use this deliverable" đặt lối, kiến trúc mang dấu Your deliverable`, ws.design.path === 'demo'
+      && /Your deliverable/.test(await ap.textContent('#sd-pane [data-arch="monolith"] > summary')) && (await recs()).app === 'monolith');
+    const stage = cat.architectures.find((f) => f.id === 'processing').entries.find((e) => e.id === r.processing);
+    const sid = Object.keys(stage.tools)[0];
+    await ap.click(`#sd-pane [data-arch="${r.processing}"] .sd-arch-tools [data-at]`);
+    check(`${tag}: bấm khâu trong Tools by stage tới đúng trang khâu`, (await ap.textContent('#sd-pane .sd-h')) === cat.stages.find((x) => x.id === sid).title);
+    await ap.keyboard.press('Escape');
+    const line = await ap.textContent('#sd-arch');
+    check(`${tag}: dòng kiến trúc trên trang nêu các kiến trúc gợi ý`, /^Architecture: /.test(line) && line.includes(stage.name), line);
+    await ax.close();
   }
 
   /* ── Dấu Redo qua hộp sửa: chỉ sửa Notes thì giữ dấu và số "k of n"; chuyển sang bước khác thì bỏ dấu, Hoàn tác trả lại ── */
