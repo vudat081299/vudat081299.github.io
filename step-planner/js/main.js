@@ -1049,6 +1049,7 @@ function moveSubTo(ws, sub, to, focusSel = subSel(sub.id, 'edit-sub')) {
   const j = before ? before.subs.indexOf(sub) : -1;
   if (C.placeSub(ws, sub, to) === undefined) return;
   const target = stepOf(ws, to.stepId);
+  if (target !== before) sub.redo = false; // dấu Redo chỉ có nghĩa trong vòng của bước đã gửi nó lại
   const k = target.subs.indexOf(sub);
   /* Cái bị đổi chỗ: dời tới trong cùng hàng thì cái nó vừa vượt qua (đứng ngay trước); còn lại cái bị đẩy lùi (ngay sau). */
   const swap = before === target && k > j ? target.subs[k - 1] : target.subs[k + 1] || target.subs[k - 1];
@@ -1059,7 +1060,8 @@ function moveSubTo(ws, sub, to, focusSel = subSel(sub.id, 'edit-sub')) {
  * Toast tả chỗ mới bằng tên hàng xóm, không bằng số (số giữ nguyên tới khi tải lại). Dời liền nhiều lần cùng một thứ
  * (toast của nó còn hiện) thì Hoàn tác trả về chỗ trước lần dời đầu. ── */
 
-/** @type {null | {kind:'sub'|'step', id:string, wsId:string, from:any, fromStepId:string, undo:null|(() => void)}} */
+/** redo: dấu Redo của bước con lúc bắt đầu dời (sang bước khác thì mất dấu; Hoàn tác trả lại).
+ * @type {null | {kind:'sub'|'step', id:string, wsId:string, from:any, fromStepId:string, redo:boolean, undo:null|(() => void)}} */
 let lastMove = null;
 let flashTimer = 0;
 
@@ -1087,7 +1089,8 @@ function beginMove(kind, id) {
   if (lastMove && lastMove.kind === kind && lastMove.id === id && lastMove.wsId === ws.id
     && !$('toast').hidden && toastUndo && toastUndo === lastMove.undo) return lastMove;
   const from = placeNow(ws, kind, id);
-  lastMove = { kind, id, wsId: ws.id, from, fromStepId: kind === 'sub' ? from?.stepId : id, undo: null };
+  const sub = kind === 'sub' && from ? stepOf(ws, from.stepId).subs.find((/** @type {any} */ x) => x.id === id) : null;
+  lastMove = { kind, id, wsId: ws.id, from, fromStepId: kind === 'sub' ? from?.stepId : id, redo: !!sub?.redo, undo: null };
   return lastMove;
 }
 /** Gọi sau khi đổi chỗ: lưu, vẽ, giữ focus, tô, báo. @param {any} m @param {string|null|undefined} swapId @param {string} focusSel */
@@ -1118,7 +1121,9 @@ function undoMove(/** @type {any} */ m) {
     const from = w.steps.find((/** @type {any} */ s) => s.subs.some((/** @type {any} */ x) => x.id === m.id));
     if (!from) { toast('Cannot undo: the sub-step was deleted.'); return; }
     if (!stepOf(w, m.from.stepId)) { toast('Cannot undo: its step was deleted.'); return; }
-    C.placeSub(w, from.subs.find((/** @type {any} */ x) => x.id === m.id), m.from);
+    const sub = from.subs.find((/** @type {any} */ x) => x.id === m.id);
+    C.placeSub(w, sub, m.from);
+    if (m.redo && stepOf(w, m.from.stepId).revisit) sub.redo = true;
   }
   if (curId !== m.wsId) switchTo(m.wsId);
   commit(m.kind === 'step' ? stepSel(m.id, 'edit-step') : subSel(m.id, 'edit-sub'));
@@ -1301,7 +1306,8 @@ $('sub-form').addEventListener('submit', (/** @type {any} */ e) => {
   const target = stepOf(ws, field(f, 'step').value) || step;
   const pos = String(field(f, 'pos').value || 'n:999');
   const to = { stepId: target.id, slot: Number(pos.slice(2)) || 0, join: pos[0] === 'j', at: Infinity };
-  const { par, ...rest } = data; // ô song song do chỗ đặt quyết định, không do hộp sửa
+  /* Ô song song do chỗ đặt quyết định; dấu Redo do vòng của bước quyết định (moveSubTo bỏ dấu khi sang bước khác). */
+  const { par, redo, ...rest } = data;
   const item = sub ? Object.assign(sub, rest) : data;
   if (curId !== ws.id) switchTo(ws.id);
   const focusSel = `${subSel(item.id, 'edit-sub')} || ${stepSel(target.id, 'add-sub')} || #q`;

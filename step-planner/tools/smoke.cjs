@@ -1623,6 +1623,39 @@ const check = (name, ok, detail = '') => {
     await sx.close();
   }
 
+  /* ── Dấu Redo qua hộp sửa: chỉ sửa Notes thì giữ dấu và số "k of n"; chuyển sang bước khác thì bỏ dấu, Hoàn tác trả lại ── */
+  {
+    const seed = { version: 2, lastId: 'wr', workspaces: [{ id: 'wr', name: 'Redo', steps: [
+      { id: 'tr1', title: 'Mở lại', round: 2, revisit: { reason: 'r', date: '2026-11-20', round: 2 },
+        subs: [{ id: 'sr1', title: 'Một', status: 'done' }, { id: 'sr2', title: 'Hai', status: 'todo', redo: true }, { id: 'sr3', title: 'Ba', status: 'todo', redo: true }] },
+      { id: 'tr2', title: 'Khác', subs: [{ id: 'sr4', title: 'Bốn', status: 'todo' }] }], log: [] }] };
+    const rc = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+    await rc.addInitScript((d) => { if (!localStorage.getItem('stepPlanner.v2')) localStorage.setItem('stepPlanner.v2', d); }, JSON.stringify(seed));
+    const rp = await rc.newPage();
+    rp.on('pageerror', (e) => errors.push(String(e)));
+    await rp.goto(BASE);
+    await rp.waitForSelector('#app:not([hidden]) .card[data-sub]');
+    const left = () => rp.textContent('.step[data-step="tr1"] .redo-left');
+    const left0 = await left();
+    await rp.click(subSel('sr2', 'edit-sub'));
+    await rp.fill('#sub-form [name="notes"]', 'chỉ sửa ghi chú');
+    await rp.click('#sub-form button[type="submit"]');
+    const sr2 = (await cur(rp)).steps[0].subs[1];
+    check('Redo: chỉ sửa Notes rồi Save thì giữ dấu, số việc làm lại không đổi', left0 === '2 of 2 redo tasks left' && (await left()) === left0
+      && sr2.redo && sr2.notes === 'chỉ sửa ghi chú' && !!(await rp.$('.card[data-sub="sr2"] .redo-tag')), `${left0} → ${await left()}`);
+    await rp.click(subSel('sr3', 'edit-sub'));
+    await rp.selectOption('#sub-form [name="step"]', 'tr2');
+    await rp.click('#sub-form button[type="submit"]');
+    let rw = await cur(rp);
+    const moved = rw.steps[1].subs.find((x) => x.id === 'sr3');
+    check('Redo: chuyển sang bước khác qua hộp sửa thì bỏ dấu (Redo chỉ có nghĩa ở bước đã mở lại)', !!moved && !moved.redo
+      && (await left()) === '1 of 1 redo task left' && !(await rp.$('.card[data-sub="sr3"] .redo-tag')), await left());
+    await rp.click('#toast-undo');
+    rw = await cur(rp);
+    check('Redo: Hoàn tác việc chuyển bước trả cả dấu', rw.steps[0].subs.find((x) => x.id === 'sr3')?.redo === true && (await left()) === '2 of 2 redo tasks left');
+    await rc.close();
+  }
+
   /* ── Dữ liệu lưu bị hỏng ── */
   const bad = await browser.newContext();
   await bad.addInitScript(() => { if (!sessionStorage.getItem('x')) { sessionStorage.setItem('x', '1'); localStorage.setItem('stepPlanner.v2', '{hỏng'); } });
