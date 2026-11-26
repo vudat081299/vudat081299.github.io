@@ -313,6 +313,7 @@ function renderBoard(ws, opt = {}) {
     if (sc) { sc.scrollLeft = left; scrolls.push(sc); }
   }
   updateScrollCues([...fresh.map((r) => r.querySelector('.cards-scroll')), ...scrolls]);
+  Hd.fadeGapNames(board);
 }
 
 /** Chữ đã bỏ dấu để tìm, nhớ theo đối tượng; nguồn đổi thì tính lại. @type {WeakMap<object, {src:string, folded:string}>} */
@@ -578,9 +579,10 @@ function updateScrollCues(list = document.querySelectorAll('.cards-scroll')) {
   }
 }
 $('board').addEventListener('scroll', (/** @type {any} */ e) => { if (e.target.classList?.contains('cards-scroll')) updateScrollCues([e.target]); }, true);
-window.addEventListener('resize', () => updateScrollCues());
+window.addEventListener('resize', () => { updateScrollCues(); Hd.fadeGapNames($('board')); });
 /* Hàng dùng lại không được đo lại: font tải xong sau lần vẽ đầu (chữ dàn lại) thì đo lại mọi thẻ, giữ thẻ đang mở. */
 document.fonts?.addEventListener('loadingdone', () => {
+  Hd.fadeGapNames($('board'));
   const cards = /** @type {HTMLElement[]} */ ([...$('board').querySelectorAll('.card[data-sub]')]);
   markCutCards(cards, new Set(cards.filter((c) => c.classList.contains('open')).map((c) => /** @type {string} */ (c.dataset.sub))));
 });

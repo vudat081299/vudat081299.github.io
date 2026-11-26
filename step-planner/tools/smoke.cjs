@@ -2163,6 +2163,39 @@ const check = (name, ok, detail = '') => {
       && sheet.right && sheet.cut === 0 && /Build snapshot.*Read snapshot in API.*matches\.parquet with a rather long name for phones/.test(sheet.t) && sheet.link === '_blank',
       JSON.stringify({ ov0, hits, sheet }));
     await mc.close();
+
+    // Nút giữa hai ô: dài tối đa nửa nét đứt, nằm giữa; tên dài mờ dần ở đuôi, icon và "+n" hiện đủ; tên ngắn không mờ; cả Compact.
+    const longName = 'matches_with_odds_and_lineups_2019_2024.parquet';
+    const faded = JSON.parse(JSON.stringify(seed));
+    faded.steps[0].subs = [
+      { id: 'fA', title: 'Build snapshot', outs: [{ id: 'oL', name: longName }, { id: 'oL2', name: 'teams.csv' }] },
+      { id: 'fB', title: 'Profile columns', ins: ['oL', 'oL2'], outs: [{ id: 'oT', name: 'x.csv' }] },
+      { id: 'fC', title: 'Quality report', ins: ['oT'] },
+    ];
+    const fc = await browser.newContext({ viewport: { width: 1280, height: 900 }, deviceScaleFactor: 1 });
+    await fc.addInitScript(seedInit, faded);
+    const fp = await fc.newPage();
+    fp.on('pageerror', (e) => errors.push(String(e)));
+    await fp.goto(BASE);
+    await fp.waitForSelector('[data-act="hand-gap"]');
+    await fp.evaluate(() => document.fonts.ready);
+    const gapFit = () => fp.evaluate(() => [...document.querySelectorAll('.hand-gap')].map((g) => {
+      const b = g.querySelector('.hand-btn'), n = b.querySelector('.hand-btn-name'), more = b.querySelector('.hand-btn-more'), ic = b.querySelector('svg');
+      const br = b.getBoundingClientRect(), gr = g.getBoundingClientRect(), mask = (el) => getComputedStyle(el).getPropertyValue('mask-image');
+      const inside = (el) => { const r = el.getBoundingClientRect(); return r.left >= br.left && r.right <= br.right && r.width > 0; };
+      return { name: n.textContent, w: Math.round(gr.width - document.querySelector('.slot:not(.par)').getBoundingClientRect().width), label: b.title.includes(n.textContent), half: br.width <= parseFloat(getComputedStyle(g, '::before').width) / 2 + 1,
+        mid: Math.abs(br.left + br.width / 2 - (gr.left + gr.width / 2)) <= 1, fade: n.classList.contains('cut') && mask(n) !== 'none',
+        icon: inside(ic), more: !more || (inside(more) && more.scrollWidth <= more.clientWidth && mask(more) === 'none') };
+    }));
+    const fitOk = (r) => r.length === 2 && r.every((x) => x.w === 0 && x.label && x.half && x.mid && x.icon && x.more)
+      && r[0].name === longName && r[0].fade && r[1].name === 'x.csv' && !r[1].fade;
+    const fit0 = await gapFit();
+    await fp.click('#compact-btn');
+    await fp.waitForSelector('.board.compact');
+    const fit1 = await gapFit();
+    check('bàn giao: ô mũi tên giữ rộng bằng thẻ; nút giữa hai ô dài tối đa nửa nét đứt, ở giữa; tên dài mờ ở đuôi, icon và "+n" đủ; tên ngắn không mờ (thường, Compact)',
+      fitOk(fit0) && fitOk(fit1), JSON.stringify({ fit0, fit1 }));
+    await fc.close();
   }
 
   /* ── Dữ liệu lưu bị hỏng ── */

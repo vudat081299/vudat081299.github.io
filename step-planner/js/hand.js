@@ -53,6 +53,14 @@ export function gapItem(k, pairs) {
   return deps.h('li', { class: 'hand-gap' }, infoBtn('hand-gap', pairs, 'Handoff into the next column', { 'data-gap': String(k) }));
 }
 
+/** Tên trên nút giữa hai ô dài hơn chỗ của nó thì mờ dần ở đuôi (lớp .cut); CSS không tự biết chữ có tràn hay không.
+ * Đọc hết rồi mới ghi; nút đang ẩn (đang kéo) giữ nguyên. Gọi sau mỗi lần vẽ bảng, khi đổi cỡ cửa sổ, khi font tải xong.
+ * @param {ParentNode} [root] */
+export function fadeGapNames(root = document) {
+  const m = [...root.querySelectorAll('.hand-gap .hand-btn-name')].filter((el) => el.clientWidth > 0).map((el) => /** @type {[Element, boolean]} */ ([el, el.scrollWidth > el.clientWidth]));
+  for (const [el, cut] of m) el.classList.toggle('cut', cut);
+}
+
 /** Bấm trên bảng: trả true nếu là việc của bàn giao. @param {string} act @param {any} b @param {any} step @param {any} sub */
 export function boardAct(act, b, step, sub) {
   const ws = deps.cur();
