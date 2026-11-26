@@ -23,6 +23,7 @@
 - PLAN-020 · "Next" nói đang chờ gì; lọc theo nhóm trạng thái · `step-planner/`
 - PLAN-021 · System design bắt đầu từ thứ bàn giao, kiểm phối hợp, ghi hợp đồng giữa các khâu, việc đi theo thiết kế · `step-planner/`
 - PLAN-022 · Mẫu ghi loại đầu ra, khai bàn giao giữa các bước; có mẫu pipeline dữ liệu định kỳ · `step-planner/data/templates.json`
+- PLAN-023 · System design phủ kiểm dữ liệu, gán nhãn, tìm kiếm và LLM; giữ cả công cụ nên tránh, kèm lý do · `step-planner/data/system-design.json`, `step-planner/js/design-core.js`
 <!-- index:end -->
 
 ## PLAN-001 · Dự án là các bước có thứ tự, mỗi bước có bước con có thứ tự
@@ -134,3 +135,8 @@ System design (PLAN-016) mở bằng câu hỏi dự án giao ra gì; mỗi lố
 26/11/2026 · `step-planner/data/templates.json`
 
 Mỗi mẫu ghi loại đầu ra (báo cáo, mô hình dự đoán / app, tính năng app, pipeline dữ liệu, đồ án môn) và mô tả nói khi nào chọn, phần nào bỏ được khi làm một mình. Bước và bước con của mẫu khai đầu ra (tên, đường dẫn quy ước, hợp đồng một dòng) và đầu vào lấy từ đầu ra của bước trước; dữ liệu chỉ chảy xuôi. Mẫu pipeline dữ liệu định kỳ theo vòng đời data engineering: chạy lại không sinh trùng, phát hiện đổi schema, cổng chất lượng trước khi công bố (lô lỗi thì giữ bản sạch tốt gần nhất), chạy bù, nhật ký chạy, độ mới, cảnh báo, runbook. Trong mẫu Data Science, giữ baseline hoặc kết luận chưa có tín hiệu là kết quả hợp lệ của pha Modeling.
+
+## PLAN-023 · System design phủ kiểm dữ liệu, gán nhãn, tìm kiếm và LLM; giữ cả công cụ nên tránh, kèm lý do
+26/11/2026 · `step-planner/data/system-design.json`, `step-planner/js/design-core.js`
+
+Hồ sơ hỏi thêm loại dữ liệu (bảng, văn bản, ảnh / âm thanh) và sản phẩm có tìm kiếm hay LLM không. Có khâu kiểm dữ liệu, gán nhãn, tìm kiếm và truy xuất; khâu không hợp hồ sơ được báo là thường không cần, áp lối thì thành không cần. Danh mục giữ cả công cụ người học hay nghe tên nhưng nên tránh khi làm một mình (Hadoop, Kubernetes, feature store, cụm Elasticsearch tự chạy), kèm lý do, lựa chọn thay và luật báo. Gợi ý ưu tiên thứ tự công cụ mà lối ghi; hồ sơ dùng để loại phương án không hợp, không để đẩy hạng.
