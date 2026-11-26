@@ -139,6 +139,8 @@
   /* Đường nối có bàn giao: khoảng cột tối thiểu, nhãn dài nhất (phần chiều dài đường), độ mờ đuôi, vùng rê, dấu +. */
   --sd-gap-hand: 128px; --sd-hand-cap: .5; --sd-hand-fade: var(--s4); --sd-hit: 16px; --sd-plus: 16px;
   --sd-hand-hover: color-mix(in srgb, var(--accent) 12%, var(--surface)); /* nền đặc: nét đường nối không lộ qua nhãn */
+  --sd-fig-pad: var(--s4);             /* lề trong khung sơ đồ: vẽ trong <svg>, nên sơ đồ phóng to chạm tới viền khung */
+  --sd-pct-w: 52px;                    /* nút phần trăm của khung nhìn: "300%" không làm cụm nút nhảy */
   --sa-b: env(safe-area-inset-bottom, 0px);
 
   /* Cỡ điều khiển thật: máy tính dùng cao thường; cảm ứng và điện thoại ≥ --h-touch. */
@@ -147,7 +149,7 @@
   --hit: var(--h-sm);
 }
 @media (pointer: coarse), (max-width: 640px) {
-  :root { --ctl: var(--h-touch); --ctl-sm: var(--h-touch); --hit: var(--h-touch); --pad: 16px; }
+  :root { --ctl: var(--h-touch); --ctl-sm: var(--h-touch); --hit: var(--h-touch); --pad: 16px; --sd-fig-pad: var(--s3); }
 }
 
 @media (prefers-color-scheme: dark) {
@@ -915,11 +917,12 @@ span.chip::after { content: none; }
 .sd-acts { display: flex; flex-direction: column; align-items: stretch; gap: var(--s2); margin-top: var(--s2); }
 .sd-main { min-width: 0; display: flex; flex-direction: column; gap: var(--s3); }
 .sd-fig {
-  min-width: 0; overflow-x: auto; padding: var(--s4); background: var(--surface);
+  min-width: 0; overflow: hidden; padding: 0; background: var(--surface);
   border: var(--line-w) solid var(--line); border-radius: var(--r); box-shadow: var(--shadow-1);
+  transition: border-color var(--dur) var(--ease);
 }
-.sd-empty { font-size: var(--fs-sm); color: var(--ink-3); }
-.sd-svg { display: block; max-width: none; overflow: visible; }
+.sd-empty { padding: var(--sd-fig-pad); font-size: var(--fs-sm); color: var(--ink-3); }
+.sd-svg { display: block; max-width: none; overflow: hidden; }
 .sd-box { fill: var(--surface); stroke: var(--line); stroke-width: var(--line-w); transition: stroke var(--dur) var(--ease); }
 .sd-bar { fill: var(--ink-4); }
 .lane-data .sd-bar { fill: var(--blue); }
@@ -961,6 +964,21 @@ span.chip::after { content: none; }
   .sd-hand:not(.is-empty):hover .sd-hand-box { fill: var(--sd-hand-hover); }
 }
 @media (hover: none) { .sd-hand.is-empty { display: none; } }
+/* Khung nhìn (js/diagram-view.js): khung có focus thì bánh xe kéo khung (viền đậm báo); giữ Space: bàn tay; đang kéo: nắm.
+   Chạm: một ngón dọc cuộn trang tới khi chạm vào chỗ trống của sơ đồ, rồi một ngón kéo khung; hai ngón luôn thu phóng. */
+.sd-fig:focus { outline: none; border-color: var(--ink-4); }
+.sd-fig:focus-visible { outline: var(--ring-w) solid var(--ring); outline-offset: var(--mark-w); }
+.sd-svg { touch-action: pan-y; -webkit-user-select: none; user-select: none; }
+.sd-fig:focus .sd-svg { touch-action: none; }
+.sd-fig.is-grab, .sd-fig.is-grab * { cursor: grab; }
+.sd-fig.is-panning, .sd-fig.is-panning * { cursor: grabbing; }
+.sd-cam.is-easing { transition: transform var(--dur-sheet) var(--ease); }
+.sd-under { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--s2) var(--s4); }
+.sd-zoom { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--s1); margin-left: auto; }
+.sd-zoom .icon-btn { width: var(--ctl-sm); height: var(--ctl-sm); }
+.sd-zoom-pct { min-width: var(--sd-pct-w); padding: 0 var(--s1); font: 500 var(--fs-xs)/1 var(--mono); font-variant-numeric: tabular-nums; }
+.sd-zoom-hint { margin-right: var(--s2); font-size: var(--fs-xs); color: var(--ink-3); }
+@media (hover: none), (max-width: 640px) { .sd-zoom-hint { display: none; } }
 .sd-legend { display: flex; flex-wrap: wrap; gap: var(--s1) var(--s4); list-style: none; font: 500 var(--fs-xs)/var(--lh-tight) var(--mono); color: var(--ink-3); }
 .sd-legend li { display: inline-flex; align-items: center; gap: var(--s2); }
 .sd-legend li::before { content: ''; width: var(--s3); height: var(--s3); border-radius: var(--r-xs); background: var(--ink-4); }
@@ -1158,7 +1176,6 @@ li.sd-warnbox { display: block; }
   .sd { grid-template-columns: minmax(0, 1fr); padding-top: var(--s5); }
   .sd-acts { flex-direction: row; flex-wrap: wrap; }
   .sd-acts .btn { flex: 1 1 auto; }
-  .sd-fig { padding: var(--s3); }
   .dlg.sd-dlg { width: 100vw; height: 100dvh; max-height: 100dvh; margin: 0; border-radius: 0; border-width: 0; }
   .dlg.sd-dlg .dlg-head::before { content: none; }
   .dlg.sd-dlg .dlg-head { padding: var(--s3) var(--s2) var(--s3) var(--s4); }

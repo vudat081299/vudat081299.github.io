@@ -28,6 +28,7 @@
 - PLAN-026 · System design phủ big data: HDFS, table format, xử lý stream, SQL trên file, NoSQL phân tán, học máy phân tán · `step-planner/data/system-design.json`
 - PLAN-027 · System design có danh mục kiến trúc theo nhóm, gợi ý một kiến trúc mỗi nhóm từ hồ sơ dự án · `step-planner/data/system-design.json`, `step-planner/js/design-core.js`
 - PLAN-028 · Chữ giao diện tiếng Anh, mọi nội dung mẫu tiếng Việt, tên chuẩn giữ trong ngoặc · `step-planner/`
+- PLAN-031 · Sơ đồ System design kéo và thu phóng được; khung nhìn không lưu · `step-planner/js/design.js`, `step-planner/js/diagram-view.js`, `step-planner/js/view-math.js`
 <!-- index:end -->
 
 ## PLAN-001 · Dự án là các bước có thứ tự, mỗi bước có bước con có thứ tự
@@ -164,3 +165,8 @@ Sau hồ sơ dự án, System design có trang kiến trúc chia bốn nhóm: d�
 26/11/2026 · `step-planner/` · thay cho PLAN-015
 
 Mọi chữ thuộc giao diện là tiếng Anh: nút, tiêu đề, gợi ý khi rê chuột, nhãn cho trình đọc màn hình, tiêu đề hộp thoại, mục menu, thông báo, chỗ trống, chữ gợi ý trong ô nhập, tên trạng thái; trong System design thêm tên khâu, tên phương án, nhãn câu hỏi hồ sơ và lựa chọn, tên lối, tên kiến trúc. Mọi nội dung của mẫu là tiếng Việt: tên mẫu, tên bước, tên bước con, mục tiêu, tiêu chí xong, ghi chú, tên và mô tả đầu ra, loại đầu ra; lời giải thích, hướng dẫn, cảnh báo của System design cũng tiếng Việt. Tên bước, bước con theo một chuẩn ghi tiếng Việt và giữ tên gốc tiếng Anh trong ngoặc để người học nhận ra thuật ngữ, ví dụ "Hiểu dữ liệu (Data Understanding)". Tên công cụ, thư viện, file, lệnh, URL giữ nguyên. Mẫu đồ án môn học giữ nguyên chữ của trang đồ án. Một cổng kiểm luật này để nó không trôi.
+
+## PLAN-031 · Sơ đồ System design kéo và thu phóng được; khung nhìn không lưu
+26/11/2026 · `step-planner/js/design.js`, `step-planner/js/diagram-view.js`, `step-planner/js/view-math.js`
+
+Sơ đồ System design là một khung nhìn: người dùng kéo và thu phóng để xem phần mình cần, bằng chuột, bàn phím hay cảm ứng, và về lại khung ban đầu bằng một thao tác. Khung nhìn chỉ sống trong một lần mở trang: vẽ lại sơ đồ (sửa thiết kế) giữ khung đang xem; tải lại trang luôn về cỡ thật và vị trí ban đầu; không ghi vào dự án, không ghi vào bộ nhớ, không xuất. Sơ đồ không giành cuộn của trang: cuộn thường chỉ kéo sơ đồ sau khi người dùng chọn vào sơ đồ, thu phóng cần phím bổ trợ hay hai ngón. Kéo để xem không tính là bấm vào khâu hay đường nối.

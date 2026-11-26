@@ -1082,5 +1082,41 @@ function designSnapshot(cat) {
     !diffs.length, `${diffs.length} khác: ${diffs.slice(0, 6).join(' | ')}`);
 }
 
+/* Khung nhìn của sơ đồ (view-math.js): thu phóng quanh điểm, giới hạn, kéo, hai ngón, vừa khung. */
+{
+  const V = await import('../js/view-math.js');
+  const near = (a, b) => Math.abs(a - b) < 1e-9;
+  const under = (v, px, py) => [(px - v.x) / v.k, (py - v.y) / v.k];
+  const v0 = { x: 10, y: -20, k: 1.3 };
+  const z = V.zoomAt(v0, 2, 200, 150);
+  check('view-math: zoomAt giữ điểm của sơ đồ dưới con trỏ', z.k === 2 && under(z, 200, 150).every((u, i) => near(u, under(v0, 200, 150)[i])));
+  const back = V.zoomAt(z, v0.k, 200, 150);
+  check('view-math: phóng rồi thu về đúng tỉ lệ cũ quanh cùng điểm thì về đúng khung cũ', near(back.x, v0.x) && near(back.y, v0.y) && near(back.k, v0.k));
+  check('view-math: tỉ lệ bị kẹp trong [ZOOM_MIN, ZOOM_MAX], giá trị hỏng về 1', V.zoomAt(v0, 100, 0, 0).k === V.ZOOM_MAX && V.zoomAt(v0, 1e-4, 0, 0).k === V.ZOOM_MIN
+    && V.clampZoom(NaN) === 1 && V.ZOOM_MIN < 1 && V.ZOOM_MAX > 1);
+  const zin = V.wheelZoom(V.HOME, -100, 50, 50), zout = V.wheelZoom(V.HOME, 100, 50, 50);
+  check('view-math: Ctrl + bánh xe — deltaY âm phóng to, dương thu nhỏ, giữ điểm dưới con trỏ', zin.k > 1 && zout.k < 1
+    && under(zin, 50, 50).every((u) => near(u, 50)) && near(V.wheelZoom(zin, 100, 50, 50).k, 1));
+  check('view-math: bánh xe trơn cuộn dọc / ngang, Shift + bánh xe cuộn ngang', JSON.stringify(V.wheelPan(0, 30, false)) === JSON.stringify([-0, -30])
+    && JSON.stringify(V.wheelPan(0, 30, true)) === JSON.stringify([-30, 0]) && JSON.stringify(V.wheelPan(12, 5, true)) === JSON.stringify([-12, -5])
+    && V.wheelPx(3, 1, 500) === 3 * V.LINE_PX && V.wheelPx(1, 2, 500) === 500 && V.wheelPx(7, 0, 500) === 7);
+  const p = V.panBy(V.HOME, 30, -12);
+  check('view-math: panBy dời, giữ tỉ lệ', p.x === 30 && p.y === -12 && p.k === 1);
+  check('view-math: clampPan không đụng khung ban đầu', JSON.stringify(V.clampPan(V.HOME, 800, 400, 800, 400)) === JSON.stringify(V.HOME));
+  const far = V.clampPan({ x: -5000, y: 9000, k: 2 }, 800, 400, 800, 400);
+  check('view-math: kéo quá xa thì còn KEEP px của sơ đồ trong khung', near(far.x, V.KEEP - 1600) && near(far.y, 400 - V.KEEP) && far.k === 2, JSON.stringify(far));
+  const f = V.fit(1000, 500, 500, 500);
+  check('view-math: fit vừa khung, nằm giữa, không phóng quá 1', near(f.k, 0.5) && near(f.x, 0) && near(f.y, 125) && V.fit(100, 100, 500, 500).k === 1
+    && JSON.stringify(V.fit(0, 10, 10, 10)) === JSON.stringify(V.HOME));
+  const m0 = { x: 100, y: 100 };
+  const same = V.pinch(v0, m0, 80, m0, 80), dbl = V.pinch(v0, m0, 80, { x: 140, y: 90 }, 160);
+  check('view-math: hai ngón — giữ nguyên thì không đổi; xa gấp đôi thì phóng gấp đôi, điểm dưới trung điểm đi theo ngón',
+    near(same.x, v0.x) && near(same.y, v0.y) && near(same.k, v0.k)
+    && near(dbl.k, 2.6) && under(dbl, 140, 90).every((u, i) => near(u, under(v0, 100, 100)[i])));
+  check('view-math: lerpView đi từ a tới b, kẹp t', JSON.stringify(V.lerpView(v0, V.HOME, 0)) === JSON.stringify(v0)
+    && JSON.stringify(V.lerpView(v0, V.HOME, 2)) === JSON.stringify(V.HOME) && near(V.lerpView(V.HOME, { x: 10, y: 0, k: 2 }, 0.5).k, 1.5));
+  check('view-math: isHome, zoomPct', V.isHome({ x: 0, y: 0, k: 1 }) && !V.isHome(v0) && V.zoomPct(1.25) === '125%' && V.zoomPct(0.333) === '33%');
+}
+
 if (fails) { console.log(`test-core: ${fails} LỖI`); process.exit(1); }
 console.log('test-core: OK');

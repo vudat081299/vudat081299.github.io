@@ -3,6 +3,7 @@
  * Danh mục: data/system-design.json. Logic thuần: design-core.js. Chữ người dùng chỉ vào DOM qua text node. */
 import * as D from './design-core.js';
 import * as C from './core.js';
+import { initDiagramView, attach as attachView, resetView } from './diagram-view.js';
 
 const NS = 'http://www.w3.org/2000/svg';
 const LANE_LABEL = { data: 'Data', model: 'Model', app: 'App', ops: 'Operations' };
@@ -68,6 +69,7 @@ export function renderSection() {
     $('sd-count').textContent = '';
     $('sd-open').disabled = true;
     $('sd-fig').replaceChildren(deps.h('p', { class: 'sd-empty' }, catError || 'Loading the stage list…'));
+    attachView(null, 0, 0);
     return;
   }
   const n = D.decidedCount(cat, w.design);
@@ -123,11 +125,15 @@ function textW(text, font) {
   return measureCtx.measureText(text).width;
 }
 
+let viewWs = '';                  // dự án của khung nhìn đang xem: đổi dự án thì về khung ban đầu
+
 function drawDiagram() {
   const fig = $('sd-fig');
   const { flow, ops } = D.diagramNodes(cat, design());
   const cs = getComputedStyle(fig);
-  const W = Math.max(fig.clientWidth - px(cs, 'padding-left', 0) - px(cs, 'padding-right', 0) - 4, 240);
+  /* Lề trong khung nằm trong <svg> (--sd-fig-pad): sơ đồ phóng to, kéo đi chạm tới viền khung chứ không bị cắt giữa lề. */
+  const fp = px(cs, '--sd-fig-pad', 16);
+  const W = Math.max(fig.clientWidth - 2 * fp - 4, 240);
   const gx = px(cs, '--sd-gap-x', 40), gy = px(cs, '--sd-gap-y', 36), maxW = px(cs, '--sd-node-max', 220);
   const pad = px(cs, '--sd-pad', 12), head = px(cs, '--sd-head', 30), lh = px(cs, '--sd-line', 20);
   const gxHand = Math.max(gx, px(cs, '--sd-gap-hand', 128));
@@ -206,10 +212,14 @@ function drawDiagram() {
   /* Đầu mũi tên chữ V hở; đơn vị theo sơ đồ để nét bằng nét đường nối. Bản `-on`: đường đang rê. */
   const arrow = (/** @type {string} */ id, /** @type {string} */ cls) => svg('marker', { id, viewBox: '0 0 12 12', refX: 10, refY: 6, markerWidth: 12, markerHeight: 12, markerUnits: 'userSpaceOnUse', orient: 'auto-start-reverse' },
     svg('path', { class: cls, d: 'M4 2L10 6L4 10' }));
-  const el = svg('svg', { class: 'sd-svg', viewBox: `-2 -2 ${width + 4} ${y + 4}`, width: width + 4, height: y + 4, role: 'img', 'aria-label': label },
+  /* <svg> rộng bằng khung (1 đơn vị = 1 px); sơ đồ trong nhóm `.sd-cam`, diagram-view.js đặt transform kéo / thu phóng lên đó. */
+  const vw = Math.max(W, width) + 4 + 2 * fp, cw = width + 4 + 2 * fp, chh = y + 4 + 2 * fp;
+  const el = svg('svg', { class: 'sd-svg', viewBox: `0 0 ${vw} ${chh}`, width: vw, height: chh, role: 'img', 'aria-label': label, 'data-w': cw },
     svg('defs', {}, arrow('sd-arrow', 'sd-arrow'), arrow('sd-arrow-on', 'sd-arrow is-on')),
-    g, og);
+    svg('g', { class: 'sd-cam' }, svg('g', { transform: `translate(${fp + 2} ${fp + 2})` }, g, og)));
   fig.replaceChildren(el);
+  if (ws().id !== viewWs) { viewWs = ws().id; resetView(false); }
+  attachView(el, cw, chh);
 }
 
 /** Nhãn bàn giao trên đường nối, tâm (cx, cy), rộng nhất `cap`. Đường trống: dấu + chỉ cho chuột, hiện khi rê đường (bàn phím,
@@ -271,6 +281,7 @@ function downloadSvg() {
   const out = /** @type {SVGSVGElement} */ (src.cloneNode(true));
   const a = [src, ...src.querySelectorAll('*')], b = [out, ...out.querySelectorAll('*')];
   const drop = b.filter((_, i) => a[i].matches('.sd-hit, .sd-hand.is-empty'));
+  const camOut = b[a.findIndex((x) => x.matches('.sd-cam'))];
   const props = ['fill', 'stroke', 'stroke-width', 'stroke-dasharray', 'stroke-linecap', 'stroke-linejoin', 'font-family', 'font-size', 'font-weight', 'letter-spacing', 'opacity'];
   a.forEach((el, i) => {
     const cs = getComputedStyle(el);
@@ -280,6 +291,11 @@ function downloadSvg() {
     b[i].removeAttribute('role');
   });
   for (const x of drop) x.remove();
+  camOut?.removeAttribute('style');
+  const cw = src.getAttribute('data-w') || src.getAttribute('width') || '0', chh = src.getAttribute('height') || '0';
+  out.setAttribute('width', cw);
+  out.setAttribute('viewBox', `0 0 ${cw} ${chh}`);
+  out.removeAttribute('data-w');
   out.setAttribute('xmlns', NS);
   const vb = out.getAttribute('viewBox')?.split(' ').map(Number) || [0, 0, 0, 0];
   out.insertBefore(svg('rect', { x: vb[0], y: vb[1], width: vb[2], height: vb[3], fill: getComputedStyle(document.body).backgroundColor }), out.firstChild);
@@ -789,7 +805,10 @@ function wire() {
     const b = e.target.closest('[data-warn-stage]');
     if (b && cat) openDesign(b.dataset.warnStage ? stagePage(b.dataset.warnStage) : extraPage('checks'));
   });
-  fig.addEventListener('keydown', (/** @type {KeyboardEvent} */ e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openNode(e); } });
+  /* Enter mở nút / nhãn có focus; Space do diagram-view.js lo (giữ Space là kéo, thả mà chưa kéo mới là bấm). */
+  fig.addEventListener('keydown', (/** @type {KeyboardEvent} */ e) => { if (e.key === 'Enter') { e.preventDefault(); openNode(e); } });
+  initDiagramView({ fig, bar: $('sd-zoom'), out: $('sd-zoom-out'), in: $('sd-zoom-in'), pct: $('sd-zoom-pct'), reset: $('sd-view-reset'), hint: $('sd-zoom-hint'),
+    activate: (el) => openNode({ target: el }) });
   let lastW = 0;
   new ResizeObserver(() => {
     const w = fig.clientWidth;
