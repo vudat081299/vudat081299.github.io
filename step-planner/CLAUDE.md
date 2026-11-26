@@ -139,7 +139,7 @@
 ## System design (`data/system-design.json`, PLAN-016)
 
 - Danh mục `{note, paths[], profile[], stages[], checks[], architectures[]}`; khuôn, độ phủ, luật: `lint.py`. Số khâu, phương án, luật đọc từ file.
-- `label`, `title`, `kind` tiếng Anh, chữ khác tiếng Việt. Link chỉ trang chính thức đã mở được; không ghi giá, hạn mức bằng số; lệnh chép từ quickstart.
+- `label`, `title`, `kind`, `name`, `flow` của kiến trúc tiếng Anh (giao diện); chữ khác tiếng Việt (lời giải thích). Link chỉ trang chính thức đã mở được; không ghi giá, hạn mức bằng số; lệnh chép từ quickstart.
 - Hộp mở ở "What do you deliver?" (lối), rồi hồ sơ, Architecture, từng khâu, Handoffs, Checks. Câu hồ sơ ngoài `ask` của lối gập lại, vẫn trả lời được.
 - Gợi ý: câu chưa trả lời lấy theo `implies` của lối; xếp hợp hồ sơ trước, rồi `suggest` của lối theo đúng thứ tự, rồi khớp nhiều câu,
   dễ hơn, thứ tự danh mục. Lựa chọn lưu ngay. `fit` nghĩa là "dùng được", không thêm khoá `fit` chỉ để đẩy hạng.

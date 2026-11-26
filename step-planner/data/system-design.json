@@ -2635,7 +2635,7 @@
       "options": [
         {
           "id": "git-results",
-          "name": "Git + bảng kết quả",
+          "name": "Git + results log",
           "kind": "Version control + notes",
           "summary": "Code nằm trong Git. Mỗi lần chạy ghi một dòng vào file kết quả (CSV hoặc Markdown): commit, tham số, chỉ số.",
           "pick": "Chọn khi dự án nhỏ, ít lần chạy và bạn muốn bắt đầu ngay.",
