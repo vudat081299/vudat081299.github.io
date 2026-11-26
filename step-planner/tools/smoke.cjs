@@ -154,7 +154,7 @@ const check = (name, ok, detail = '') => {
   });
   check('thẻ cao theo nội dung, không kéo cao theo thẻ cao nhất hàng', ch.max > ch.min && ch.a >= ch.min - 1 && ch.a < ch.b - 40,
     JSON.stringify(ch));
-  check('thẻ dài dừng ở max-height, cắt và có "Xem thêm"', Math.abs(ch.b - ch.max) < 1 && ch.cut && ch.more, JSON.stringify(ch));
+  check('ghi chú 40 dòng: thẻ vẫn dưới max-height (ghi chú dừng ở --lines-text dòng), cắt và có "Show more"', ch.b < ch.max && ch.cut && ch.more, JSON.stringify(ch));
   const notesLines = () => page.$eval('.card.cut .card-notes', (p) => [p.hasAttribute('data-clip'), p.textContent.split('\n').length]);
   const nl0 = await notesLines();
   await page.click('.card .more');
@@ -1527,11 +1527,110 @@ const check = (name, ok, detail = '') => {
   check('vẽ theo hàng: Compact bật / tắt không dựng lại hàng, thẻ dài vẫn cắt, có "Show more"', pr4.same === 'p1,p2,p3'
     && await pp.$eval('.card[data-sub="b2"]', (c) => c.classList.contains('cut') && !!c.querySelector('.more')), JSON.stringify(pr4));
   // Thẻ cao hơn (token đổi) mà phần đầu ghi chú không tràn đủ xa: dựng đủ, không cắt.
-  await pp.addStyleTag({ content: ':root { --card-max: 4000px; }' });
+  await pp.addStyleTag({ content: ':root { --card-max: 4000px; --lines-text: 999; }' });
   await setSt(pp, 'b1', 'todo');
   const tall = await pp.$eval('.card[data-sub="b2"]', (c) => [c.classList.contains('cut'), !!c.querySelector('.card-notes[data-clip]'), c.querySelector('.card-notes').textContent.split('\n').length]);
   check('thẻ đủ chỗ: ghi chú dựng đủ, không cắt', !tall[0] && !tall[1] && tall[2] === 40, String(tall));
   await pc.close();
+  });
+
+  /* ── Chữ dài trên bảng: tên, lý do, Done when, ghi chú dừng ở --lines-* dòng, mờ dần khi tràn; "Show more" chỉ khi bị cắt ── */
+  await section('Chữ dài trên bảng', async () => {
+    const lines = (n, first = '') => Array.from({ length: n }, (_, i) => (i === 0 && first) || 'dòng ghi chú số ' + i).join('\n');
+    const longT = 'Tên rất dài '.repeat(30).trim();
+    const data = { version: 2, lastId: 'wl', workspaces: [{ id: 'wl', name: 'Chữ dài', log: [], steps: [
+      { id: 'l1', title: longT, goal: 'Mục tiêu dài '.repeat(30).trim(), notes: lines(30, 'Xem https://example.com/step-top') + '\nhttps://example.com/step-hidden', subs: [
+        { id: 'c1', title: 'Ngắn', status: 'todo', notes: 'một dòng' },
+        { id: 'c2', title: 'Ghi chú dài', status: 'todo', notes: lines(9, 'Mở https://example.com/top') + '\nhttps://example.com/hidden' },
+        { id: 'c3', title: longT, status: 'blocked', reason: lines(10), doneWhen: 'Xong khi '.repeat(40).trim(), notes: lines(20) }] },
+      { id: 'l2', title: 'Bước ngắn', goal: 'Một dòng', notes: 'ngắn', round: 2, revisit: { reason: 'Lý do mở lại dài '.repeat(60).trim(), date: '2026-01-02', round: 2 },
+        subs: [{ id: 'd1', title: 'D1', status: 'done' }] }] }] };
+    const lc = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+    await lc.addInitScript((d) => { if (!sessionStorage.getItem('x')) { sessionStorage.setItem('x', '1'); localStorage.setItem('stepPlanner.v2', d); } }, JSON.stringify(data));
+    await lc.route('https://example.com/**', (r) => r.fulfill({ status: 200, contentType: 'text/plain', body: 'ok' }));
+    const lp = await lc.newPage();
+    lp.on('pageerror', (e) => errors.push('chữ dài: ' + e));
+    await lp.goto(BASE);
+    await lp.waitForSelector('#app:not([hidden]) .card[data-sub]');
+    await lp.evaluate(() => document.fonts.ready);
+    /** Trạng thái một khối chữ: cao, số dòng tối đa theo token, bị cắt / mờ, nút "Show more" của thẻ hay đầu bước. */
+    const st = (sel) => lp.$eval(sel, (el) => {
+      const cs = getComputedStyle(el), box = el.closest('.card, .step-head'), more = box?.querySelector(':scope > .more');
+      const pad = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom);
+      return { h: el.getBoundingClientRect().height, rows: (el.getBoundingClientRect().height - pad) / parseFloat(cs.lineHeight), clip: el.classList.contains('clip'),
+        mask: cs.maskImage !== 'none', over: el.scrollHeight > el.clientHeight + 1, more: more?.textContent ?? null, expanded: more?.getAttribute('aria-expanded') ?? null,
+        tab: more ? more.tabIndex : null, open: !!box?.classList.contains('open'), lines: getComputedStyle(el).getPropertyValue('--lines').trim() };
+    });
+    const tok = (name) => lp.evaluate((n) => +getComputedStyle(document.documentElement).getPropertyValue(n), name);
+    const [lt, ltitle, lnotes] = [await tok('--lines-text'), await tok('--lines-title'), await tok('--lines-notes')];
+    const c1 = await st('.card[data-sub="c1"] .card-notes');
+    check('chữ dài: ghi chú ngắn không cắt, không mờ, không "Show more"', !c1.clip && !c1.mask && c1.more === null, JSON.stringify(c1));
+    const c2 = await st('.card[data-sub="c2"] .card-notes');
+    check(`chữ dài: ghi chú 10 dòng dừng ở ${lt} dòng, mờ ở đáy, thẻ có "Show more" (ngoài vòng Tab)`, Math.abs(c2.rows - lt) < 0.1 && c2.clip && c2.mask
+      && c2.more === 'Show more' && c2.expanded === 'false' && c2.tab === -1, JSON.stringify(c2));
+    const links = () => lp.$$eval('.card[data-sub="c2"] .card-notes a', (as) => as.map((a) => [a.textContent, a.tabIndex]));
+    const l0 = await links();
+    check('chữ dài: link phần còn thấy vẫn trong vòng Tab, link phần bị che ra khỏi vòng Tab', JSON.stringify(l0)
+      === JSON.stringify([['https://example.com/top', 0], ['https://example.com/hidden', -1]]), JSON.stringify(l0));
+    const [pop] = await Promise.all([lc.waitForEvent('page'), lp.click('.card[data-sub="c2"] .card-notes a')]);
+    await pop.waitForLoadState();
+    check('chữ dài: bấm link trong ghi chú bị cắt mở tab mới, không mở hộp sửa', pop.url() === 'https://example.com/top' && !(await lp.isVisible('#dlg-sub')), pop.url());
+    await pop.close();
+    await lp.click('.card[data-sub="c2"] .more');
+    const c2o = await st('.card[data-sub="c2"] .card-notes');
+    const l1 = await links();
+    check('chữ dài: "Show more" mở hết ghi chú, bỏ mờ, link khuất vào lại vòng Tab', c2o.open && !c2o.over && !c2o.mask && c2o.rows > 9.5
+      && c2o.more === 'Show less' && c2o.expanded === 'true' && l1.every((x) => x[1] === 0), JSON.stringify([c2o, l1]));
+    // Vẽ lại hàng (đổi trạng thái thẻ khác cùng hàng): thẻ đã mở vẫn mở.
+    await lp.click('.card[data-sub="c1"] [data-act="status"]');
+    const c2k = await st('.card[data-sub="c2"] .card-notes');
+    check('chữ dài: vẽ lại hàng giữ thẻ đã mở', c2k.open && c2k.more === 'Show less' && !c2k.mask, JSON.stringify(c2k));
+    await lp.click('.card[data-sub="c2"] .more');
+    const c2c = await st('.card[data-sub="c2"] .card-notes');
+    check('chữ dài: "Show less" cắt lại, link khuất ra lại khỏi vòng Tab', !c2c.open && c2c.clip && Math.abs(c2c.rows - lt) < 0.1 && c2c.more === 'Show more'
+      && JSON.stringify(await links()) === JSON.stringify(l0), JSON.stringify(c2c));
+    // Thẻ dài đủ thứ: mỗi khối dừng ở số dòng của nó, thẻ vẫn dừng ở --card-max (thân mờ ở đáy).
+    const c3 = await lp.$eval('.card[data-sub="c3"]', (c) => ({ h: c.getBoundingClientRect().height, max: parseFloat(getComputedStyle(c).maxHeight),
+      body: c.querySelector('.card-body').classList.contains('clip'), clips: [...c.querySelectorAll('.clamp')].map((e) => e.classList.contains('clip')).join() }));
+    const c3t = await st('.card[data-sub="c3"] .card-title .clamp');
+    check(`chữ dài: thẻ dài mọi trường — tên dừng ở ${ltitle} dòng, lý do, Done when, ghi chú cắt, thẻ dừng ở --card-max`, c3.clips === 'true,true,true,true'
+      && Math.abs(c3t.rows - ltitle) < 0.1 && Math.abs(c3.h - c3.max) < 1 && c3.body, JSON.stringify([c3, c3t]));
+    // Đầu bước: tên, mục tiêu dài thì cắt; nút "Show more" trong vòng Tab, Enter mở / đóng; ghi chú mở ra mới đo.
+    const h0 = await st('.step[data-step="l1"] .step-title .clamp');
+    const g0 = await st('.step[data-step="l1"] .step-goal');
+    const hid = await lp.$eval('.step[data-step="l1"] .step-head', (hd) => [hd.id, hd.querySelector(':scope > .more')?.getAttribute('aria-controls'),
+      hd.querySelector(':scope > .more')?.previousElementSibling.className]);
+    check(`chữ dài: đầu bước — tên dừng ở ${ltitle} dòng, mục tiêu ở ${lt} dòng, "Show more" ngay dưới khối cắt cuối, trong vòng Tab, aria-controls`,
+      h0.clip && Math.abs(h0.rows - ltitle) < 0.1 && g0.clip && Math.abs(g0.rows - lt) < 0.1 && h0.more === 'Show more' && h0.tab === 0
+      && hid[1] === hid[0] && /step-goal/.test(hid[2]), JSON.stringify([h0, g0, hid]));
+    check('chữ dài: bước chữ ngắn không có "Show more"', !(await lp.$('.step[data-step="l2"] .step-head > .more')), '');
+    const band = await st('.step[data-step="l2"] .revisit-band .badge .clamp');
+    check(`chữ dài: lý do mở lại dài dừng ở ${lt} dòng, mờ, không nút (bấm là mở hộp sửa)`, band.clip && band.mask && Math.abs(band.rows - lt) < 0.1
+      && !(await lp.$('.revisit-band .more')), JSON.stringify(band));
+    await lp.click('.step[data-step="l1"] .step-notes summary');
+    // Sự kiện toggle của <details> đến sau lần bấm (một lượt việc sau): chờ đo xong.
+    await waitTo(lp, 'đo ghi chú bước vừa mở', () => document.querySelector('.step[data-step="l1"] .notes-text.clip'));
+    const n0 = await st('.step[data-step="l1"] .notes-text');
+    const nAt = await lp.$eval('.step[data-step="l1"] .step-head > .more', (b) => b.previousElementSibling.className);
+    const nl = await lp.$$eval('.step[data-step="l1"] .notes-text a', (as) => as.map((a) => a.tabIndex).join());
+    check(`chữ dài: mở ghi chú bước — dừng ở ${lnotes} dòng, mờ, "Show more" dời xuống dưới ghi chú, link khuất ngoài vòng Tab`, n0.clip && Math.abs(n0.rows - lnotes) < 0.1
+      && n0.mask && nAt === 'step-notes' && nl === '0,-1', JSON.stringify([n0, nAt, nl]));
+    await lp.focus('.step[data-step="l1"] .step-head > .more');
+    await lp.keyboard.press('Enter');
+    const h1 = await st('.step[data-step="l1"] .notes-text');
+    const focused = await lp.evaluate(() => document.activeElement?.classList.contains('more'));
+    check('chữ dài: Enter trên "Show more" của bước mở hết tên, mục tiêu, ghi chú; focus giữ ở nút', h1.open && !h1.over && !h1.mask && h1.expanded === 'true'
+      && h1.more === 'Show less' && focused && !(await st('.step[data-step="l1"] .step-title .clamp')).over, JSON.stringify(h1));
+    await lp.keyboard.press('Enter');
+    const h2 = await st('.step[data-step="l1"] .notes-text');
+    check('chữ dài: Enter lần nữa cắt lại', !h2.open && h2.clip && h2.expanded === 'false', JSON.stringify(h2));
+    // 320px: không tràn ngang, đầu bước vẫn cắt.
+    await lp.setViewportSize({ width: 320, height: 700 });
+    await waitTo(lp, 'đo lại khi đổi cỡ', () => document.querySelector('.step[data-step="l1"] .step-title .clamp.clip'));
+    const w320 = await st('.step[data-step="l1"] .step-title .clamp');
+    check('chữ dài: 320px không tràn ngang, tên bước vẫn dừng ở số dòng của nó', (await hOverflow(lp)) <= 0 && Math.abs(w320.rows - ltitle) < 0.1 && w320.clip,
+      `${await hOverflow(lp)} ${JSON.stringify(w320)}`);
+    await lc.close();
   });
 
   /* ── Bộ nhớ bị chặn ── */

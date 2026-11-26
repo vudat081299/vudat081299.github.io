@@ -279,7 +279,7 @@ function renderBoard(ws, opt = {}) {
     const src = p.row || p.prev;
     if (!src) continue;
     if (!p.row && src.querySelector('.step-notes')?.open) keep.notes.add(p.step.id);
-    if (!p.row) for (const c of /** @type {NodeListOf<HTMLElement>} */ (src.querySelectorAll('.card.open[data-sub]'))) keep.open.add(/** @type {string} */ (c.dataset.sub));
+    if (!p.row) for (const c of /** @type {NodeListOf<HTMLElement>} */ (src.querySelectorAll('.card.open[data-sub], .step-head.open'))) keep.open.add(boxKey(c));
     const sc = src.querySelector('.cards-scroll');
     if (sc && sc.scrollLeft) keep.left.set(p.step.id, sc.scrollLeft);
   }
@@ -307,9 +307,8 @@ function renderBoard(ws, opt = {}) {
   $('filter-note').textContent = filtering ? `${C.plural(shown, 'sub-step')} match · reordering is off while ${q ? 'searching' : 'filtering'}` : '';
   $('add-step').hidden = filtering;
   /* 4. Đo: thẻ của hàng mới (Compact vừa đổi: mọi thẻ) — một lần dàn trang cho cả lượt. */
-  const cards = (/** @type {Element[]} */ rows) => rows.flatMap((r) => /** @type {HTMLElement[]} */ ([...r.querySelectorAll('.card[data-sub]')]));
-  if (compactChanged) markCutCards(cards(nodes), new Set([...keep.open, ...cards(nodes).filter((c) => c.classList.contains('open')).map((c) => /** @type {string} */ (c.dataset.sub))]));
-  else markCutCards(cards(fresh), keep.open);
+  if (compactChanged) markCut(cutBoxes(nodes), new Set([...keep.open, ...openKeys(cutBoxes(nodes))]));
+  else markCut(cutBoxes(fresh), keep.open);
   const scrolls = [];
   for (const [id, left] of keep.left) {
     const sc = board.querySelector(`.step[data-step="${id}"] .cards-scroll`);
@@ -383,17 +382,18 @@ function stepRow(step, i, visible, ctx) {
   const stepTags = Hd.tags(step).filter(Boolean);
   const prog = C.progress(step.subs);
   const done = prog.total > 0 && prog.done === prog.total;
-  const head = h('div', { class: 'step-head' },
+  const head = h('div', { class: 'step-head', id: 'sh-' + step.id },
     h('div', { class: 'step-top' },
       !filtering && h('span', { class: 'step-grip', title: 'Drag to move the step (keyboard: Alt + ↑ ↓ on its name)', 'aria-hidden': 'true' }, icon('grip')),
       numTag('step-num', labels.get(step.id)),
       h('h2', { class: 'step-title', id: 'st-' + step.id },
-        h('button', { type: 'button', class: 'link', 'data-act': 'edit-step', 'aria-label': `Step ${labels.get(step.id) ?? '(added this session)'}: ${step.title}. Edit`, 'aria-keyshortcuts': 'Alt+ArrowUp Alt+ArrowDown' }, step.title)),
+        h('button', { type: 'button', class: 'link', 'data-act': 'edit-step', 'aria-label': `Step ${labels.get(step.id) ?? '(added this session)'}: ${step.title}. Edit`, 'aria-keyshortcuts': 'Alt+ArrowUp Alt+ArrowDown' },
+          h('span', { class: 'clamp' }, step.title))),
       Hd.ioDots(io.get(step.id), true)),
     reopenedOn.has(step.id) && iterTag(step, reopenedOn.get(step.id)),
-    step.goal && h('p', { class: 'step-goal' }, step.goal),
-    step.doneWhen && h('p', { class: 'step-done' }, h('span', { class: 'lbl' }, 'Done when '), step.doneWhen),
-    step.notes && h('details', { class: 'step-notes', open: keep.notes.has(step.id) }, h('summary', {}, icon('chev'), 'Notes'), h('p', { class: 'notes-text' }, withLinks(step.notes))),
+    step.goal && h('p', { class: 'step-goal clamp' }, step.goal),
+    step.doneWhen && h('p', { class: 'step-done clamp' }, h('span', { class: 'lbl' }, 'Done when '), step.doneWhen),
+    step.notes && h('details', { class: 'step-notes', open: keep.notes.has(step.id) }, h('summary', {}, icon('chev'), 'Notes'), h('p', { class: 'notes-text clamp' }, withLinks(step.notes))),
     stepTags.length > 0 && h('div', { class: 'hand-tags' }, stepTags),
     h('div', { class: 'prog' },
       h('span', {}, `${prog.done}/${prog.total}`, h('span', { class: 'sr' }, ' sub-steps done')),
@@ -408,11 +408,11 @@ function stepRow(step, i, visible, ctx) {
   const redo = C.redoCount(step);
   const band = step.revisit && h('div', { class: 'revisit-band' + (redo.total && !redo.left ? ' all-redone' : '') },
     icon('redo'),
-    h('button', { type: 'button', class: 'badge', 'data-act': 'revisit', title: 'Edit the reason' },
+    h('button', { type: 'button', class: 'badge', 'data-act': 'revisit', title: 'Edit the reason' }, h('span', { class: 'clamp' },
       h('b', {}, 'Reopened'),
       ' · Iteration ' + step.revisit.round,
       step.revisit.date ? ' · ' + fmtDate(step.revisit.date) : '',
-      step.revisit.reason ? ' · ' + step.revisit.reason : ''),
+      step.revisit.reason ? ' · ' + step.revisit.reason : '')),
     redo.total > 0 && h('span', { class: 'redo-left' }, redo.left ? `${redo.left} of ${C.plural(redo.total, 'redo task')} left` : `All ${C.plural(redo.total, 'redo task')} done`),
     h('button', { type: 'button', class: 'btn small' + (redo.total && !redo.left ? ' go' : ''), 'data-act': 'revisit-clear',
       title: 'Finish this iteration: remove the band and the Redo marks' }, 'Close iteration'));
@@ -432,12 +432,12 @@ function stepRow(step, i, visible, ctx) {
         Hd.ioDots(io.get(x.id), false),
         statusChip(x)),
       h('div', { class: 'card-body' },
-        h('h3', { class: 'card-title' }, h('button', { type: 'button', class: 'link', 'data-act': 'edit-sub', 'aria-keyshortcuts': 'Alt+ArrowLeft Alt+ArrowRight Alt+ArrowUp Alt+ArrowDown' }, x.title)),
+        h('h3', { class: 'card-title' }, h('button', { type: 'button', class: 'link', 'data-act': 'edit-sub', 'aria-keyshortcuts': 'Alt+ArrowLeft Alt+ArrowRight Alt+ArrowUp Alt+ArrowDown' }, h('span', { class: 'clamp' }, x.title))),
         (x.due || doneOn) && h('p', { class: 'meta' },
           x.due && h('span', { class: 'due' + (overdue ? ' overdue' : '') }, 'due ' + fmtDate(x.due) + (overdue ? ' (overdue)' : '')),
           doneOn && h('span', { class: 'done-at', title: `Marked Done on ${fmtDate(x.doneAt)}` }, 'done ' + fmtDate(x.doneAt))),
-        x.reason && h('p', { class: 'card-reason' }, h('span', { class: 'lbl' }, C.REASON_LABEL[x.status] + ' '), withLinks(x.reason)),
-        x.doneWhen && h('p', { class: 'card-done' }, h('span', { class: 'lbl' }, 'Done when '), x.doneWhen),
+        x.reason && h('p', { class: 'card-reason clamp' }, h('span', { class: 'lbl' }, C.REASON_LABEL[x.status] + ' '), withLinks(x.reason)),
+        x.doneWhen && h('p', { class: 'card-done clamp' }, h('span', { class: 'lbl' }, 'Done when '), x.doneWhen),
         x.notes && cardNotes(x.notes, keep.open.has(x.id))),
       h('div', { class: 'acts' },
         iconBtn('parallel', 'Add a parallel sub-step (runs alongside this one)', 'add-par'),
@@ -520,8 +520,6 @@ function proofTag(x) {
   return h('span', { class: 'proof-tag', role: 'img', 'aria-label': t, title: t }, icon('proof'));
 }
 
-/** Thẻ chạm --card-max thì thân bị cắt: mờ dần ở đáy và thêm nút "Xem thêm" (mở cả thẻ). Nút ngoài vòng Tab:
- * bàn phím đọc trọn trong hộp sửa. */
 /** Một tài liệu của bước (chip): link mở tab mới, văn bản mở hộp đọc. @param {any} d */
 function docChip(d) {
   return h('li', {}, d.kind === 'link'
@@ -537,7 +535,7 @@ const CLIP_SLACK = 64; // px: phần đầu phải tràn quá chỗ cắt chừn
 /** @param {string} notes @param {boolean} full */
 function cardNotes(notes, full) {
   const head = full ? notes : notes.split('\n', NOTE_LINES).join('\n').slice(0, NOTE_CHARS);
-  return h('p', { class: 'card-notes', 'data-clip': head !== notes }, withLinks(head));
+  return h('p', { class: 'card-notes clamp', 'data-clip': head !== notes }, withLinks(head));
 }
 /** Thẻ đang hiện phần đầu ghi chú: dựng đủ. @param {Element} card */
 function unclip(card) {
@@ -549,30 +547,72 @@ function unclip(card) {
   if (x) p.replaceChildren(...withLinks(x.notes));
 }
 
-/** Đo các thẻ: đọc hết rồi mới ghi, nên cả lượt chỉ một lần dàn trang. Thẻ đã đo thì gỡ dấu cũ, đo lại.
- * @param {HTMLElement[]} cards @param {Set<string>} [keepOpen] thẻ đang mở trước lần vẽ này */
-function markCutCards(cards, keepOpen = new Set()) {
-  for (const card of cards) {
-    if (!card.classList.contains('cut')) continue;
-    card.classList.remove('cut', 'open');
-    card.querySelector(':scope > .more')?.remove();
+/* ── Chữ dài trên bảng: mỗi khối chữ (.clamp: tên, lý do, Done when, ghi chú, mục tiêu) dừng ở số dòng của token --lines-*;
+ * thẻ còn dừng ở --card-max. Tràn thì khối mờ dần ở dòng cuối (.clip) và thẻ, đầu bước có một nút "Show more" mở cả khối
+ * (.open; không lưu, vẽ lại vẫn giữ). Nút của thẻ ngoài vòng Tab (thẻ hai điểm dừng); nút của đầu bước trong vòng Tab.
+ * Link ở phần bị che ra khỏi vòng Tab tới khi mở. CSS không tự biết chữ có tràn hay không nên đo: lúc vẽ hàng mới, đổi Compact,
+ * font tải xong, đổi cỡ cửa sổ, mở ghi chú bước. Băng Reopened chỉ cắt (bấm là mở hộp sửa lý do, ghi đủ). ── */
+/** Khoá của một khối trong `keep.open`: id bước con, hay "h:" + id bước cho đầu bước. @param {HTMLElement} box */
+const boxKey = (box) => box.dataset.sub ?? 'h:' + /** @type {HTMLElement} */ (box.closest('[data-step]')).dataset.step;
+/** Các khối cần đo trong các hàng. @param {Element[]} rows */
+const cutBoxes = (rows) => rows.flatMap((r) => /** @type {HTMLElement[]} */ ([...r.querySelectorAll('.card[data-sub], .step-head, .revisit-band')]));
+/** @param {HTMLElement[]} boxes */
+const openKeys = (boxes) => boxes.filter((b) => b.classList.contains('open')).map(boxKey);
+
+/** Đo các khối: đọc hết rồi mới ghi, nên cả lượt chỉ một lần dàn trang. Khối đã đo thì gỡ dấu cũ, đo lại; nút "Show more"
+ * còn cần thì giữ nguyên nút (focus không mất). @param {HTMLElement[]} boxes @param {Set<string>} [keepOpen] khối đang mở */
+function markCut(boxes, keepOpen = new Set()) {
+  for (const box of boxes) {
+    if (!box.classList.contains('cut')) continue;
+    box.classList.remove('open');
+    for (const el of box.querySelectorAll('.clip')) el.classList.remove('clip');
+    for (const a of box.querySelectorAll('a[data-hid]')) { a.removeAttribute('tabindex'); a.removeAttribute('data-hid'); }
   }
-  const bodies = cards.map((card) => /** @type {HTMLElement} */ (card.querySelector('.card-body')));
-  let over = bodies.map((b) => b.scrollHeight - b.clientHeight);
+  /** Phần tử bị cắt trong khối, link nằm hẳn dưới chỗ cắt. @param {HTMLElement} box */
+  const measure = (box) => {
+    const els = /** @type {HTMLElement[]} */ ([...box.querySelectorAll('.clamp'), ...box.querySelectorAll(':scope > .card-body')]);
+    /* Ghi chú bước đang đóng: trình duyệt vẫn dàn chữ bên trong (scrollHeight có số) nhưng không hiện, không tính. */
+    const clipped = els.filter((el) => el.scrollHeight > el.clientHeight + 1 && !el.closest('details:not([open])'));
+    /** @type {Set<Element>} */
+    const hidden = new Set();
+    for (const el of clipped) {
+      const links = el.querySelectorAll('a[href]');
+      if (!links.length) continue;
+      const bottom = el.getBoundingClientRect().top + el.clientHeight - parseFloat(getComputedStyle(el).paddingBottom);
+      for (const a of links) if (a.getBoundingClientRect().top >= bottom - 1) hidden.add(a);
+    }
+    return { clipped, hidden };
+  };
+  let res = boxes.map(measure);
   /* Ghi chú chỉ có phần đầu mà tràn chưa đủ xa (Compact ẩn ghi chú thì không tính): dựng đủ, đo lại riêng các thẻ ấy. */
   const compact = $('board').classList.contains('compact');
-  const short = compact ? [] : cards.filter((c, k) => over[k] < CLIP_SLACK && c.querySelector('.card-notes[data-clip]'));
+  const short = compact ? [] : boxes.filter((b) => {
+    const p = b.querySelector('.card-notes[data-clip]');
+    return p && p.scrollHeight - p.clientHeight < CLIP_SLACK;
+  });
   if (short.length) {
     short.forEach(unclip);
-    over = bodies.map((b, k) => (short.includes(cards[k]) ? b.scrollHeight - b.clientHeight : over[k]));
+    res = boxes.map((b, k) => (short.includes(b) ? measure(b) : res[k]));
   }
-  const cut = cards.filter((_, k) => over[k] > 1);
-  for (const card of cut) {
-    card.classList.add('cut');
-    const open = keepOpen.has(/** @type {string} */ (card.dataset.sub));
-    if (open) card.classList.add('open');
-    card.querySelector(':scope > .card-body')?.after(h('button', { type: 'button', class: 'more', 'data-act': 'more', 'aria-expanded': String(open), tabindex: '-1' }, open ? 'Show less' : 'Show more'));
-  }
+  boxes.forEach((box, k) => {
+    const { clipped, hidden } = res[k];
+    let more = /** @type {HTMLElement|null} */ (box.querySelector(':scope > .more'));
+    box.classList.toggle('cut', clipped.length > 0);
+    if (!clipped.length) { more?.remove(); return; }
+    for (const el of clipped) el.classList.add('clip');
+    if (box.classList.contains('revisit-band')) return;
+    const open = keepOpen.has(boxKey(box));
+    box.classList.toggle('open', open);
+    for (const a of hidden) { a.setAttribute('data-hid', ''); if (!open) a.setAttribute('tabindex', '-1'); }
+    const isCard = box.classList.contains('card');
+    more ??= h('button', { type: 'button', class: 'more', 'data-act': 'more', tabindex: isCard ? '-1' : null, 'aria-controls': isCard ? null : box.id });
+    /* Thẻ: dưới thân. Đầu bước: ngay dưới khối cuối cùng bị cắt (dòng tên, mục tiêu, Done when hay ghi chú). Nút đã đúng chỗ
+     * thì không dời (dời là mất focus). */
+    const at = /** @type {Element} */ (isCard ? box.querySelector(':scope > .card-body') : clipped.at(-1)?.closest('.step-head > *'));
+    if (more.previousElementSibling !== at) at.after(more);
+    more.textContent = open ? 'Show less' : 'Show more';
+    more.setAttribute('aria-expanded', String(open));
+  });
 }
 
 /** Hàng thẻ còn chỗ cuộn thì mờ dần ở mép ấy. Đọc hết rồi mới ghi. @param {Iterable<any>} [list] mặc định mọi hàng */
@@ -584,13 +624,29 @@ function updateScrollCues(list = document.querySelectorAll('.cards-scroll')) {
   }
 }
 $('board').addEventListener('scroll', (/** @type {any} */ e) => { if (e.target.classList?.contains('cards-scroll')) updateScrollCues([e.target]); }, true);
-window.addEventListener('resize', () => { updateScrollCues(); Hd.fadeGapNames($('board')); });
-/* Hàng dùng lại không được đo lại: font tải xong sau lần vẽ đầu (chữ dàn lại) thì đo lại mọi thẻ, giữ thẻ đang mở. */
+/** Đo lại mọi khối, giữ khối đang mở. */
+function remeasureCut() {
+  const boxes = cutBoxes([$('board')]);
+  markCut(boxes, new Set(openKeys(boxes)));
+}
+/* Đổi cỡ cửa sổ: cột tên bước đổi rộng (một cột ở màn hẹp), chữ dàn lại; đo một lần mỗi khung hình. */
+let resizeFrame = 0;
+window.addEventListener('resize', () => {
+  updateScrollCues();
+  Hd.fadeGapNames($('board'));
+  if (!resizeFrame) resizeFrame = requestAnimationFrame(() => { resizeFrame = 0; remeasureCut(); });
+});
+/* Hàng dùng lại không được đo lại: font tải xong sau lần vẽ đầu (chữ dàn lại) thì đo lại mọi khối, giữ khối đang mở. */
 document.fonts?.addEventListener('loadingdone', () => {
   Hd.fadeGapNames($('board'));
-  const cards = /** @type {HTMLElement[]} */ ([...$('board').querySelectorAll('.card[data-sub]')]);
-  markCutCards(cards, new Set(cards.filter((c) => c.classList.contains('open')).map((c) => /** @type {string} */ (c.dataset.sub))));
+  remeasureCut();
 });
+/* Ghi chú bước đóng thì chữ không dàn: mở ra mới đo được. Sự kiện toggle không nổi lên, nghe ở pha bắt. */
+$('board').addEventListener('toggle', (/** @type {any} */ e) => {
+  if (!e.target.classList?.contains('step-notes')) return;
+  const head = /** @type {HTMLElement} */ (e.target.closest('.step-head'));
+  markCut([head], new Set(openKeys([head])));
+}, true);
 
 function barFill(/** @type {number} */ pct) {
   const i = h('i');
@@ -1039,10 +1095,10 @@ $('board').addEventListener('click', (/** @type {any} */ e) => {
   if (act === 'clear-filter') { clearFilter(); return; }
   if (act === 'insert-step') { openStep(null, Number(b.dataset.at) || 0); return; }
   if (act === 'more') {
-    unclip(b.closest('.card'));
-    const open = b.closest('.card').classList.toggle('open');
-    b.textContent = open ? 'Show less' : 'Show more';
-    b.setAttribute('aria-expanded', String(open));
+    const box = b.closest('.card, .step-head');
+    const open = !box.classList.contains('open');
+    if (open && box.classList.contains('card')) unclip(box);
+    markCut([box], new Set(open ? [boxKey(box)] : []));
     return;
   }
   const row = b.closest('[data-step]');
@@ -1989,13 +2045,15 @@ function renderNextWait(/** @type {any} */ ws) {
   box.hidden = !wait.length;
   if (!wait.length) { box.replaceChildren(); return; }
   const more = ws.steps.flatMap((/** @type {any} */ s) => s.subs).filter((/** @type {any} */ x) => C.inGroup('act', x.status)).length;
+  /* Tên và lý do dài thì cắt "…" (đọc đủ trên thẻ). */
+  const short = (/** @type {string} */ t) => (t.length > 60 ? t.slice(0, 59) + '…' : t);
   const why = (/** @type {any} */ x) => {
     const r = x.reason.split('\n')[0];
-    return ` (${C.STATUS_LABEL[x.status]}${r ? ': ' + (r.length > 60 ? r.slice(0, 59) + '…' : r) : ''})`;
+    return ` (${C.STATUS_LABEL[x.status]}${r ? ': ' + short(r) : ''})`;
   };
   const shown = wait.slice(0, 2);
   box.replaceChildren(icon('wait'), h('span', {}, h('b', {}, 'Next waits on '),
-    ...shown.flatMap((x, k) => [k ? ', ' : '', h('button', { type: 'button', class: 'link', 'data-goto': x.id, title: 'Go to this card' }, x.title), why(x)]),
+    ...shown.flatMap((x, k) => [k ? ', ' : '', h('button', { type: 'button', class: 'link', 'data-goto': x.id, title: 'Go to this card' }, short(x.title)), why(x)]),
     wait.length > shown.length ? ` and ${wait.length - shown.length} more` : '', '.'),
   more > 0 && ui.st !== 'act' && h('button', { type: 'button', class: 'btn small', 'data-act': 'show-act' },
     `Show what can be done now (${more})`));

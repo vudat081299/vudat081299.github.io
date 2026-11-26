@@ -93,7 +93,8 @@
 - Vừa sang Done mà có "Done when" và chưa có bằng chứng (`needsEvidence`): toast gợi ý "Add evidence", không chặn.
 - Nhật ký (PLAN-005): mới nhất trước, nhóm theo tháng; bấm mục là sửa; bấm chip bước là tới bước ấy (bỏ lọc nếu cần).
 - Ghi bộ nhớ ở lượt việc kế, không chờ khung hình (tab nền bị hãm); rời, ẩn trang: ghi ngay. Tab khác sửa cùng khoá thì đọc lại (`storage`), giữ dự án của tab.
-- Thẻ dài thì cắt, "Show more" mở cả thẻ; vẽ lại giữ ghi chú đang mở, thẻ đã mở, chỗ cuộn ngang; hàng không đổi giữ nút DOM.
+- Chữ dài trên bảng dừng ở số dòng của token `--lines-*`, thẻ ở `--card-max`; bị cắt thì "Show more" mở cả thẻ / đầu bước (nút của đầu bước
+  trong vòng Tab), link ở phần bị che ra khỏi vòng Tab. Vẽ lại giữ ghi chú đang mở, khối đã mở, chỗ cuộn ngang; hàng không đổi giữ nút DOM.
 - Mẹo tắt bằng ×; "Compact" ẩn "Done when", ghi chú, lý do (cả hai nhớ ở máy này). "Log (N)" tới nhật ký.
 - Nhắc sao lưu: thay đổi chưa sao lưu ≥ 3 ngày thì nút nhắc hiện cạnh Export, bấm là tải sao lưu mọi dự án.
 - Chữ người dùng chỉ vào DOM qua text node; không `innerHTML` ở `js/`. Không `alert` / `confirm` / `prompt` (`#dlg-ask`).

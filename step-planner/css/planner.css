@@ -108,6 +108,9 @@
   --card-min-compact: 64px;            /* chế độ Gọn: thẻ chỉ còn hàng đầu và tên */
   --goal-clamp: 2;                     /* chế độ Gọn: số dòng mục tiêu bước */
   --card-max: 300px;
+  --lines-title: 4;                    /* tên bước, tên thẻ: số dòng trước khi mờ dần và có "Show more" */
+  --lines-text: 3;                     /* thẻ: lý do, Done when, ghi chú; bước: mục tiêu, Done when; lý do mở lại */
+  --lines-notes: 8;                    /* ghi chú của bước (khi mở) */
   --how-w: 680px;
   --dlg-w: 660px;
   --dlg-sm: 440px;                     /* hộp hỏi lại, hộp tài liệu */
@@ -414,9 +417,7 @@ svg.i {
 /* ── Chế độ Gọn: thẻ và cột bước chỉ còn số, tên, chip, hạn, nhãn tài liệu; thẻ co theo nội dung, hàng sát hơn ── */
 .board.compact :is(.card-done, .card-notes, .card-reason, .step-done, .step-notes) { display: none; }
 .board.compact .step { padding-bottom: var(--s4); }
-.board.compact .step-goal {
-  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: var(--goal-clamp); line-clamp: var(--goal-clamp); overflow: hidden;
-}
+.board.compact .step-goal { --lines: var(--goal-clamp); }
 .board.compact .card { min-height: var(--card-min-compact); }
 /* Chuột: nút của thẻ nổi ở góc dưới khi rê hay focus, không giữ chỗ một hàng trống. Cảm ứng: ẩn (song song, nhân bản, xoá
    có trong hộp sửa, chạm thẻ là mở). */
@@ -492,7 +493,7 @@ svg.i {
 .step-notes summary::-webkit-details-marker { display: none; }
 .step-notes summary svg.i { transform: rotate(-90deg); transition: transform var(--dur) var(--ease); color: var(--ink-3); }
 .step-notes[open] summary svg.i { transform: none; }
-.step-notes .notes-text { margin-top: var(--s1); }
+.step-notes .notes-text { margin-top: calc(var(--s1) - var(--clamp-pad)); }
 .acts { display: flex; gap: var(--s1); flex-wrap: wrap; align-items: center; }
 /* Nút phụ (dời, nhân bản, xoá, cần làm lại) hiện khi rê chuột hoặc focus; máy cảm ứng luôn hiện. */
 @media (hover: hover) {
@@ -626,7 +627,7 @@ svg.i {
   flex: 0 1 auto; min-height: 0; overflow: hidden; display: flex; flex-direction: column; gap: var(--s2);
   padding: var(--ring-out); margin: calc(-1 * var(--ring-out));
 }
-.card.cut .card-body { mask-image: linear-gradient(to bottom, var(--mask) calc(100% - var(--ring-out) - var(--fade)), transparent calc(100% - var(--ring-out))); }
+.card-body.clip { mask-image: linear-gradient(to bottom, var(--mask) calc(100% - var(--ring-out) - var(--fade)), transparent calc(100% - var(--ring-out))); }
 .card.open .card-body { mask-image: none; }
 .card-title { font-size: var(--fs-md); font-weight: 600; line-height: 1.35; overflow-wrap: anywhere; }
 .meta { display: flex; gap: var(--s1) var(--s2); flex-wrap: wrap; font-size: var(--fs-xs); color: var(--ink-2); }
@@ -648,6 +649,22 @@ svg.i {
 .card.st-skip .card-title .link, .card.st-cancel .card-title .link { text-decoration: line-through; }
 .card.st-cancel .card-title { color: var(--ink-3); }
 .card-reason { font-size: var(--fs-xs); color: var(--ink-2); white-space: pre-line; overflow-wrap: anywhere; }
+
+/* ── Chữ dài trên bảng (main.js markCut): mỗi khối .clamp dừng ở --lines dòng; tràn thì main.js gắn .clip, dòng cuối mờ dần,
+   thẻ và đầu bước có nút "Show more" (.open mở hết). Khối có thể chứa link chừa --ring-out mỗi bên (lề âm trả lại, chữ không
+   xê dịch) để vòng focus của link hiện đủ; tên nằm trong nút nên vòng focus ở ngoài khối, không cần chừa. ── */
+.clamp {
+  --lines: var(--lines-text); --clamp-pad: var(--ring-out);
+  display: block; flex: none; max-height: calc(var(--lines) * 1lh + 2 * var(--clamp-pad)); overflow: hidden;
+  padding: var(--clamp-pad); margin: calc(-1 * var(--clamp-pad));
+}
+.clamp.clip { mask-image: linear-gradient(to bottom, var(--mask) calc(100% - var(--clamp-pad) - 1lh), transparent calc(100% - var(--clamp-pad))); }
+:is(.card, .step-head).open .clamp { max-height: none; mask-image: none; }
+:is(.card-title, .step-title, .badge) .clamp { --clamp-pad: 0px; }
+:is(.card-title, .step-title) .clamp { --lines: var(--lines-title); }
+.step-notes .notes-text { --lines: var(--lines-notes); }
+/* Nút "Show more" của đầu bước: ngay dưới khối bị cắt; cách nhãn Notes, chip In / Out đủ để hai vùng bấm --hit không chồng. */
+.step-head > .more + :is(.step-notes, .hand-tags) { margin-top: calc(var(--hit) - var(--h-xs) - var(--s1)); }
 .add-step {
   display: flex; align-items: center; justify-content: center; gap: var(--s2); width: 100%; min-height: var(--h-touch); margin: var(--s4) 0 var(--s6);
   font: 600 var(--fs-md)/1 var(--sans); color: var(--ink-2); background: none; cursor: pointer;
