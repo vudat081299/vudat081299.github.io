@@ -2027,14 +2027,34 @@ const check = (name, ok, detail = '') => {
       same(m1.row, ['h2:matches.parquet', 'h3:clean schema']) && same(m1.gap, ['h1:0:matches.parquet']) && same(m1.gapW, [0])
       && same(m1.tags, ['h1:Out 1', 'h3:In 1']), JSON.stringify(m1));
 
-    // Nút giữa hai ô: danh sách cặp; chọn dòng thì đóng hộp, tô cả hai thẻ, focus bên nhận.
-    await hp.click('[data-act="hand-gap"]');
+    // Nút giữa hai ô: danh sách cặp; chọn dòng thì đóng hộp, tô cả hai thẻ, focus bên nhận, không cuộn trang lẫn hàng thẻ.
+    // Khung nhìn hẹp, thẻ nhận lấn ra ngoài mép dưới trang và mép phải hàng thẻ: cách cũ (cuộn tới) phải cuộn cả hai.
+    // off: thẻ nhận lấn ra ngoài mép dưới khung nhìn, mép phải hàng thẻ bao nhiêu px.
+    const scrollPos = () => hp.evaluate(() => {
+      const c = document.querySelector('.card[data-sub="hC"]').getBoundingClientRect();
+      const row = document.querySelector('.card[data-sub="hC"]').closest('.cards-scroll');
+      return { x: scrollX, y: scrollY, row: row.scrollLeft, off: [Math.round(c.bottom - innerHeight), Math.round(c.right - row.getBoundingClientRect().right)] };
+    });
+    await hp.setViewportSize({ width: 760, height: 600 });
+    await hp.evaluate(() => {
+      const c = document.querySelector('.card[data-sub="hC"]');
+      window.scrollBy(0, c.getBoundingClientRect().bottom - innerHeight - 12);
+      const row = c.closest('.cards-scroll');
+      row.scrollLeft += c.getBoundingClientRect().right - row.getBoundingClientRect().right - 12;
+      const g = document.querySelector('[data-act="hand-gap"]'); // bấm qua DOM: hp.click tự cuộn nút vào khung nhìn
+      g.focus({ preventScroll: true });
+      g.click();
+    });
     const pairTxt = await hp.textContent('#hand-list');
+    const pos0 = await scrollPos();
     await hp.click('#hand-list .hand-pair');
+    await hp.waitForTimeout(300);
     const hi = await hp.evaluate(() => ({ hi: [...document.querySelectorAll('.hand-hi')].map((e) => e.dataset.sub).sort(),
       focus: document.activeElement.closest('.card')?.dataset.sub, open: document.getElementById('dlg-hand').open }));
-    check('bàn giao: nút giữa hai ô — cặp A → C, chọn dòng tô cả hai, focus bên nhận', /Build snapshot.*Quality report.*matches\.parquet/.test(pairTxt)
-      && same(hi.hi, ['hA', 'hC']) && hi.focus === 'hC' && !hi.open, JSON.stringify(hi) + pairTxt);
+    const pos1 = await scrollPos();
+    await hp.setViewportSize({ width: 1280, height: 1000 });
+    check('bàn giao: nút giữa hai ô — cặp A → C, chọn dòng tô cả hai, focus bên nhận, không cuộn', /Build snapshot.*Quality report.*matches\.parquet/.test(pairTxt)
+      && same(hi.hi, ['hA', 'hC']) && hi.focus === 'hC' && !hi.open && pos0.off.every((d) => d > 0) && same(pos1, pos0), JSON.stringify({ hi, pos0, pos1 }) + pairTxt);
     // Mũi tên trên bước 2: đường dẫn (không phải link thì chữ mono), hợp đồng, hai bên.
     await hp.click('.step[data-step="h2"] [data-act="hand-row"]');
     const inInfo = await hp.evaluate(() => ({ t: document.getElementById('hand-list').textContent, links: document.querySelectorAll('#hand-list a').length,

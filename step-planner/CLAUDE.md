@@ -104,6 +104,7 @@
 - Hàng j nhận từ hàng trước nó (`handoffs().rows`): mũi tên trên hàng j. Ô k + 1 nhận từ ô trước nó cùng hàng (`gaps`): một ô
   mũi tên trước ô k + 1. Nút giữa mũi tên ghi tên đầu ra; bấm thì nêu từng cặp. Chảy ngược hay cùng ô: chỉ trong hộp sửa.
 - Danh sách nêu đường dẫn, hợp đồng, bên giao / nơi dùng, mỗi bên nhảy tới được.
+- Chọn dòng trong danh sách cặp: tô hai bên, focus bên nhận, không cuộn; nút một bên vẫn bỏ lọc và cuộn tới.
 - Treo (`handoffs().held`): bên nhận đứng trước bên giao sau khi sắp xếp. Giữ nguyên `ins`, không mũi tên; hộp sửa, danh sách
   ghi "on hold"; toast dời báo cái vừa treo. Dời về đúng thứ tự là nối lại, không cần làm gì.
 - Xoá bên giao không gỡ đầu vào nơi khác (bảng bỏ qua, lần đọc sau chuẩn hoá bỏ). Hoàn tác xoá gắn lại theo `insBackup`.
