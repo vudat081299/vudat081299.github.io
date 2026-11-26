@@ -34,6 +34,7 @@
 - PLAN-032 · System design phủ nguồn đẩy, trang dựng bằng JavaScript, lag của consumer; báo công cụ đã nghỉ hưu và API hỏi theo chu kỳ dùng như luồng · `step-planner/data/system-design.json`
 - PLAN-033 · Mẫu đặt sẵn hồ sơ System design mà nó ngụ ý, áp một lần lúc tạo dự án · `step-planner/data/templates.json`, `step-planner/js/core/model.js`, `step-planner/js/core/design.js`
 - PLAN-034 · Code tách thành logic thuần, giao diện, luật / cấu hình như md-annotate · `step-planner/js/`, `step-planner/css/`
+- PLAN-035 · Gợi ý model chỉ khi dự án có model; Ingestion giữ được cả luồng lẫn lịch; báo kho thô mà kho phân tích không đọc được · `step-planner/data/system-design.json`
 <!-- index:end -->
 
 ## PLAN-001 · Dự án là các bước có thứ tự, mỗi bước có bước con có thứ tự
@@ -203,3 +204,8 @@ Code của Step Planner theo cùng nguyên tắc với md-annotate (MDAN-070) đ
 không chạm trình duyệt) tách khỏi giao diện; luật và cấu hình (mẫu, danh mục System design, token) nằm ở dữ liệu và token;
 mỗi tính năng một module trong lớp của nó; thứ dùng ở hai chỗ trở lên nằm một chỗ chung. Tách lại không đổi hành vi hay
 giao diện của trang.
+
+## PLAN-035 · Gợi ý model chỉ khi dự án có model; Ingestion giữ được cả luồng lẫn lịch; báo kho thô mà kho phân tích không đọc được
+26/11/2026 · `step-planner/data/system-design.json`
+
+Nhóm kiến trúc "model trả lời lúc nào" chỉ gợi ý theo hồ sơ (độ trễ, độ mới) khi khâu Training đã quyết; Serving đã chọn thì vẫn quyết như trước; Training Not needed mà Serving chưa chọn thì nhóm không cần; chưa quyết cả hai thì chưa gợi ý, kể cả với bộ đặt sẵn của mẫu. Khâu Ingestion chọn được nhiều công cụ, để một dự án vừa có luồng (Kafka) vừa có job theo lịch (Lambda, nạp bù, luồng giả lập cạnh pipeline theo ngày). Spark, Databricks dùng được cả khi dữ liệu tới liên tục (lớp batch đọc bảng bronze do job stream ghi). Luật mới báo: BigQuery làm kho phân tích mà kho thô là R2, MinIO hay HDFS (BigQuery chỉ nạp, đọc từ Cloud Storage hay file trên máy); MinIO hay catalog tự host mà chỉ đóng gói bằng requirements, uv, không có Docker Compose. Lối pipeline gợi ý Docker Compose ngay sau requirements và đo lag Kafka trước tiên ở khâu giám sát (chỉ hợp dữ liệu liên tục).

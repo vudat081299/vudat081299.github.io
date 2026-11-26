@@ -399,6 +399,7 @@
         ],
         "package": [
           "requirements",
+          "docker-compose",
           "uv",
           "github-actions",
           "docker"
@@ -410,6 +411,7 @@
           "vps-docker"
         ],
         "monitor": [
+          "kafka-lag",
           "healthchecks",
           "logs-weekly",
           "re-eval",
@@ -838,7 +840,7 @@
           "id": "websocket-feed",
           "name": "WebSocket feed (websockets)",
           "kind": "Push API client",
-          "summary": "Nguồn đẩy dữ liệu qua một kết nối giữ mở (giá, tỉ giá, sự kiện) thay vì để bạn hỏi lại theo chu kỳ. Client của thư viện websockets tự kết nối lại khi lỗi, chờ theo backoff mũ.",
+          "summary": "Nguồn đẩy dữ liệu qua một kết nối giữ mở (giá, tỉ giá, sự kiện) thay vì để bạn hỏi lại theo chu kỳ. Dùng connect() trong vòng lặp async for thì thư viện websockets tự kết nối lại khi lỗi tạm thời, chờ theo backoff mũ có jitter (trần 60 giây); async with hay await connect() thì không tự kết nối lại.",
           "pick": "Chọn khi nguồn có API WebSocket và kết quả cần mới trong vài giây.",
           "avoid": "Tránh khi nguồn chỉ cho ít kết nối, ít kênh hơn số khoá cần theo dõi: đẩy realtime cho một tập khoá, phần còn lại lấy theo lô. Thông điệp lỡ lúc mất kết nối thường không lấy lại được.",
           "cost": "free",
@@ -870,8 +872,8 @@
       "title": "Ingestion & scheduling",
       "lane": "data",
       "question": "Bạn kéo dữ liệu về bằng cách nào và bao lâu một lần?",
-      "guide": "Ingestion là đoạn code lấy dữ liệu từ nguồn và ghi vào kho thô.\nScheduling là thứ chạy đoạn code đó theo lịch, ví dụ mỗi sáng.\nDữ liệu cố định chỉ cần chạy một lần bằng tay.\nDữ liệu mới mỗi ngày cần lịch chạy; dữ liệu liên tục cần hệ thống stream.",
-      "multi": false,
+      "guide": "Ingestion là đoạn code lấy dữ liệu từ nguồn và ghi vào kho thô.\nScheduling là thứ chạy đoạn code đó theo lịch, ví dụ mỗi sáng.\nDữ liệu cố định chỉ cần chạy một lần bằng tay.\nDữ liệu mới mỗi ngày cần lịch chạy; dữ liệu liên tục cần hệ thống stream.\nCó cả luồng lẫn nguồn theo lịch (Lambda, nạp bù lịch sử, luồng giả lập bên cạnh pipeline theo ngày) thì chọn cả hai: Kafka cho luồng, một công cụ lịch cho job batch.",
+      "multi": true,
       "skipWhen": "Bỏ qua khi bạn chỉ tải một file về bằng trình duyệt và không cần tải lại.",
       "task": "Một lệnh lấy dữ liệu mới chạy được từ đầu tới cuối bằng công cụ đã chọn; README có lệnh chạy lại.",
       "when": {},
@@ -1334,7 +1336,9 @@
             }
           ],
           "setup": [
-            "# Bản cộng đồng chỉ còn mã nguồn: build image từ Dockerfile trong repo minio/minio",
+            "git clone https://github.com/minio/minio && cd minio",
+            "# Bản cộng đồng chỉ phát hành mã nguồn: build binary Linux trước (phiên bản Go tối thiểu ghi trong README), Dockerfile chép binary ấy",
+            "env GOOS=linux go build",
             "docker build -t myminio:minio .",
             "# Gắn thêm volume (-v) cho thư mục dữ liệu, nếu không dữ liệu mất khi xoá container",
             "docker run -p 9000:9000 -p 9001:9001 myminio:minio server /tmp/minio --console-address :9001"
@@ -1822,16 +1826,12 @@
           "kind": "Distributed processing engine",
           "summary": "Engine xử lý phân tán chuẩn của ngành dữ liệu lớn. Một driver chia việc cho nhiều executor trên nhiều máy; viết bằng PySpark hoặc Spark SQL.",
           "pick": "Chọn khi dữ liệu trên 100 GB hoặc nằm rải trên object storage, và bạn có cụm máy để chạy. Spark đọc ghi bảng Iceberg, Delta, Hudi trên MinIO, S3 khi thêm gói của table format và khai catalog trong cấu hình.",
-          "avoid": "Tránh khi dữ liệu nhỏ, vì thời gian khởi động và cấu hình lớn hơn thời gian xử lý. Dữ liệu tới liên tục thì chọn Spark Structured Streaming.",
+          "avoid": "Tránh khi dữ liệu nhỏ, vì thời gian khởi động và cấu hình lớn hơn thời gian xử lý. Cần kết quả mới trong vài giây thì chọn Spark Structured Streaming; dữ liệu tới liên tục mà chỉ cần kết quả theo lịch thì Spark batch đọc bảng bronze do job stream ghi (batch layer của Lambda) là đủ.",
           "cost": "free",
           "level": 3,
           "fit": {
             "size": [
               "large"
-            ],
-            "fresh": [
-              "once",
-              "batch"
             ]
           },
           "links": [
@@ -1866,10 +1866,6 @@
             "budget": [
               "free",
               "low"
-            ],
-            "fresh": [
-              "once",
-              "batch"
             ],
             "selfhost": [
               "no"
@@ -2193,7 +2189,7 @@
           "name": "DuckDB on Iceberg / S3",
           "kind": "In-process SQL over lakehouse tables",
           "summary": "DuckDB truy vấn thẳng bảng trên object storage, không cần server: extension httpfs đọc ghi Parquet, CSV trên S3 hay MinIO; extension iceberg đọc bảng Iceberg. Gắn (ATTACH) một Iceberg REST catalog như Polaris thì ghi được: CREATE TABLE, INSERT, UPDATE, DELETE, MERGE INTO (chỉ kiểu merge-on-read). Đọc thẳng file metadata bằng iceberg_scan thì không cần catalog nhưng chỉ đọc.",
-          "pick": "Chọn khi bảng gold (đã gộp, nhỏ) nằm trên MinIO, S3 dạng Iceberg hay Parquet và vài người truy vấn, dựng dashboard: một máy là đủ, không phải dựng Trino. Hợp với dbt-duckdb ở khâu Processing và Superset ở khâu App.",
+          "pick": "Chọn khi bảng gold (đã gộp, nhỏ) nằm trên MinIO, S3 dạng Iceberg hay Parquet và vài người truy vấn, dựng dashboard: một máy là đủ, không phải dựng Trino. Hợp với dbt ở khâu Processing (dbt v2 ghi bảng Iceberg qua catalogs.yml khi bật cờ use_catalogs_v2; adapter dbt-duckdb của dbt v1 không có catalogs.yml) và Superset ở khâu App.",
           "avoid": "Tránh khi nhiều người cùng truy vấn bảng lớn hay cần phân quyền theo người: dùng Trino. DuckDB không đọc Hudi. Catalog không theo chuẩn Iceberg REST (Hive Metastore, JDBC) thì DuckDB không gắn được; khi ấy đọc bằng iceberg_scan (chỉ đọc) hay qua Trino.",
           "cost": "free",
           "level": 2,
@@ -2620,7 +2616,7 @@
           },
           "links": [
             {
-              "title": "Get started with Atlas",
+              "title": "Get Started",
               "url": "https://www.mongodb.com/docs/atlas/getting-started/"
             }
           ],
@@ -5241,7 +5237,7 @@
           "own"
         ]
       },
-      "msg": "Streamlit Community Cloud để deploy app Streamlit. Giao diện đã chọn cần nơi chạy khác: Gradio lên Hugging Face Spaces, bản build tĩnh của web Vue / React lên GitHub Pages hay Vercel; Data Studio, Power BI chạy trên dịch vụ của chính chúng, Metabase và Superset cần máy chủ riêng."
+      "msg": "Streamlit Community Cloud để deploy app Streamlit. Giao diện đã chọn cần nơi chạy khác: Gradio lên Hugging Face Spaces, bản build tĩnh của web Vue / React lên GitHub Pages hay Vercel; Metabase và Superset cần máy chủ riêng."
     },
     {
       "id": "docker-only-on-streamlit-cloud",
@@ -5693,6 +5689,29 @@
       "msg": "Ngân sách miễn phí nghĩa là dùng sandbox BigQuery: dung lượng lưu trữ có giới hạn trọn đời, xoá bảng không được trả lại, và bảng tự hết hạn. Dữ liệu cỡ này thường vượt giới hạn ấy. Ước dung lượng sau khi nạp; vượt thì gắn tài khoản thanh toán, hoặc giữ Parquet và truy vấn bằng DuckDB (vừa một máy), Trino hay Spark."
     },
     {
+      "id": "bigquery-raw-outside-gcs",
+      "title": "BigQuery reading raw data outside Cloud Storage",
+      "if": {
+        "store": [
+          "bigquery"
+        ],
+        "raw": [
+          "cloudflare-r2",
+          "minio",
+          "hdfs"
+        ]
+      },
+      "unless": {
+        "raw": [
+          "gcs",
+          "s3",
+          "project-folder",
+          "own"
+        ]
+      },
+      "msg": "BigQuery nạp dữ liệu từ Cloud Storage (GCS) hay file trên máy, và đọc bảng ngoài trên Cloud Storage (AWS, Azure qua kết nối ngoài); nó không đọc thẳng R2, MinIO hay HDFS. Chọn thêm GCS ở khâu Raw storage và chép bảng sạch sang đó trước khi nạp, hoặc giữ dữ liệu trên lake và truy vấn bằng Trino hay DuckDB."
+    },
+    {
       "id": "cluster-store-on-app-host",
       "title": "Cluster database on an app host",
       "if": {
@@ -5901,6 +5920,31 @@
         ]
       },
       "msg": "Một cụm Kubernetes cho bạn hay vài người dùng là nhiều phần phải vận hành hơn chính app. Docker Compose trên một máy (máy của nhóm, máy lab, VPS) chạy được cả bộ service của đồ án; Cloud Run, Render, Fly.io cho app công khai. Kubernetes chỉ đáng khi thật sự cần nhiều node; học Kubernetes thì chạy minikube trên máy."
+    },
+    {
+      "id": "self-hosted-storage-without-compose",
+      "title": "Self-hosted storage services with no container setup",
+      "if": {
+        "raw": [
+          "minio",
+          "polaris",
+          "nessie",
+          "hive-metastore"
+        ],
+        "package": [
+          "requirements",
+          "uv",
+          "github-actions"
+        ]
+      },
+      "unless": {
+        "package": [
+          "docker",
+          "docker-compose",
+          "own"
+        ]
+      },
+      "msg": "MinIO và catalog (Polaris, Nessie, Hive Metastore) là service phải chạy suốt; requirements.txt hay uv chỉ cài thư viện Python, không dựng được chúng. Ghi các service ấy vào docker-compose.yml (image, cổng, volume, healthcheck) để máy khác dựng lại cả bộ bằng một lệnh."
     },
     {
       "id": "feature-store-for-one-model",
@@ -6277,8 +6321,8 @@
           },
           "sources": [
             {
-              "title": "Medallion Architecture (Databricks glossary)",
-              "url": "https://www.databricks.com/glossary/medallion-architecture"
+              "title": "What is the medallion lakehouse architecture? (Databricks)",
+              "url": "https://docs.databricks.com/aws/en/lakehouse/medallion"
             },
             {
               "title": "What is the medallion lakehouse architecture? (Microsoft Learn)",
@@ -6950,6 +6994,7 @@
       "id": "ml",
       "label": "How the model answers",
       "question": "Dự đoán, hay câu trả lời của model, được tính lúc nào?",
+      "note": "Nhóm này chỉ gợi ý khi dự án có model: khâu Training hay Serving đã quyết, hoặc sản phẩm dùng LLM. Chưa quyết hai khâu ấy thì chưa gợi ý; Not needed ở cả hai thì nhóm không cần.",
       "entries": [
         {
           "id": "batch-prediction",
@@ -7113,10 +7158,21 @@
             ],
             "latency": [
               "online"
+            ],
+            "train": [
+              "local",
+              "colab",
+              "kaggle-notebooks",
+              "databricks",
+              "spark-mllib",
+              "compute-engine-gpu",
+              "sagemaker",
+              "gemini-agent-platform",
+              "own"
             ]
           },
           "arch": "streaming-inference",
-          "why": "Dữ liệu tới liên tục và cần trả lời ngay: đặc trưng mới nhất phải tính từ luồng sự kiện."
+          "why": "Dự án có train model, dữ liệu tới liên tục và cần trả lời ngay: đặc trưng mới nhất phải tính từ luồng sự kiện."
         },
         {
           "if": {
@@ -7141,22 +7197,53 @@
         },
         {
           "if": {
+            "train": [
+              "skip"
+            ]
+          },
+          "arch": "",
+          "why": "Khâu Training là Not needed và khâu Serving chưa chọn model: dự án không có model để trả lời."
+        },
+        {
+          "if": {
             "latency": [
               "online"
+            ],
+            "train": [
+              "local",
+              "colab",
+              "kaggle-notebooks",
+              "databricks",
+              "spark-mllib",
+              "compute-engine-gpu",
+              "sagemaker",
+              "gemini-agent-platform",
+              "own"
             ]
           },
           "arch": "online-prediction",
-          "why": "Người dùng gửi dữ liệu và cần câu trả lời trong khoảng một giây."
+          "why": "Dự án có train model và người dùng gửi dữ liệu, cần câu trả lời trong khoảng một giây."
         },
         {
           "if": {
             "latency": [
               "report",
               "batch"
+            ],
+            "train": [
+              "local",
+              "colab",
+              "kaggle-notebooks",
+              "databricks",
+              "spark-mllib",
+              "compute-engine-gpu",
+              "sagemaker",
+              "gemini-agent-platform",
+              "own"
             ]
           },
           "arch": "batch-prediction",
-          "why": "Kết quả xem qua báo cáo hay bảng làm mới theo lịch: tính dự đoán sẵn cho mọi bản ghi."
+          "why": "Dự án có train model, kết quả xem qua báo cáo hay bảng làm mới theo lịch: tính dự đoán sẵn cho mọi bản ghi."
         }
       ]
     }

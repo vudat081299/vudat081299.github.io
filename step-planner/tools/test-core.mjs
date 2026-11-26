@@ -629,9 +629,15 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   check('kiến trúc: chưa trả lời gì thì mọi nhóm chưa gợi ý', Object.values(A()).every((x) => x === null) && archAdvice(cat, null).length === cat.architectures.length);
   check('kiến trúc: dữ liệu nhỏ, cố định — file + một DB, hai tầng thô + sạch, batch ETL',
     eq(A({}, { size: 'small', fresh: 'once' }), { storage: 'files-db', layers: 'two-layers', processing: 'batch-etl', app: null, ml: null }), JSON.stringify(A({}, { size: 'small', fresh: 'once' })));
-  const live = A({}, { size: 'large', fresh: 'stream', latency: 'online' });
-  check('kiến trúc: dữ liệu lớn, liên tục, cần trả lời ngay — lakehouse, medallion, Kappa, app một tiến trình, đặc trưng từ luồng',
+  const live = A({ train: P('spark-mllib') }, { size: 'large', fresh: 'stream', latency: 'online' });
+  check('kiến trúc: dữ liệu lớn, liên tục, cần trả lời ngay, có train — lakehouse, medallion, Kappa, app một tiến trình, đặc trưng từ luồng',
     eq(live, { storage: 'lakehouse', layers: 'medallion', processing: 'kappa', app: 'monolith', ml: 'streaming-inference' }), JSON.stringify(live));
+  /* Nhóm model chỉ gợi ý khi dự án có model: luật theo hồ sơ (độ trễ, độ mới) cần khâu Training đã quyết. */
+  check('kiến trúc: chưa quyết Training thì nhóm model chưa gợi ý theo hồ sơ; Training Not needed thì không cần; Serving đã chọn vẫn thắng',
+    A({}, { latency: 'online' }).ml === null && A({}, { latency: 'batch' }).ml === null && A({}, { fresh: 'stream', latency: 'online' }).ml === null
+    && A({ train: P('local') }, { latency: 'online' }).ml === 'online-prediction' && A({ train: { own: 'x' } }, { latency: 'report' }).ml === 'batch-prediction'
+    && A({ train: { skip: true } }, { latency: 'online' }).ml === '' && A({ train: { skip: true }, serve: P('fastapi') }, { latency: 'online' }).ml === 'online-prediction'
+    && A({ train: { skip: true } }, { ai: 'llm' }).ml === 'rag');
   check('kiến trúc: liên tục nhưng xem theo lịch — batch là đủ', A({}, { fresh: 'stream', latency: 'batch' }).processing === 'batch-etl');
   check('kiến trúc: lối đã chọn quyết nhóm app (lối chính là kiến trúc app)',
     A({}, {}, 'demo').app === 'monolith' && A({}, {}, 'api').app === 'client-server' && A({}, {}, 'report').app === 'static-report');
@@ -688,6 +694,20 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
     has(W({ source: P('rest-api') }, { fresh: 'stream' }), 'polling-source-as-stream') && has(W({ source: P('playwright') }, { fresh: 'stream' }), 'polling-source-as-stream')
     && !has(W({ source: P('rest-api', 'websocket-feed') }, { fresh: 'stream' }), 'polling-source-as-stream')
     && !has(W({ source: P('rest-api') }, { fresh: 'batch' }), 'polling-source-as-stream') && !has(W({ source: P('websocket-feed') }, { fresh: 'stream' }), 'polling-source-as-stream'));
+  check('luật: BigQuery với kho thô R2, MinIO, HDFS thì báo; có thêm GCS, hay thư mục dự án (nạp file trên máy) thì thôi',
+    has(W({ store: P('bigquery'), raw: P('cloudflare-r2') }), 'bigquery-raw-outside-gcs') && has(W({ store: P('bigquery'), raw: P('minio', 'iceberg') }), 'bigquery-raw-outside-gcs')
+    && !has(W({ store: P('bigquery'), raw: P('cloudflare-r2', 'gcs') }), 'bigquery-raw-outside-gcs') && !has(W({ store: P('bigquery'), raw: P('gcs') }), 'bigquery-raw-outside-gcs')
+    && !has(W({ store: P('bigquery') }), 'bigquery-raw-outside-gcs') && !has(W({ store: P('trino'), raw: P('cloudflare-r2') }), 'bigquery-raw-outside-gcs'));
+  check('luật: MinIO, catalog tự host mà chỉ đóng gói requirements, uv thì báo; có Docker Compose thì thôi',
+    has(W({ raw: P('minio'), package: P('requirements') }), 'self-hosted-storage-without-compose')
+    && !has(W({ raw: P('minio'), package: P('requirements', 'docker-compose') }), 'self-hosted-storage-without-compose')
+    && !has(W({ raw: P('minio') }), 'self-hosted-storage-without-compose') && !has(W({ raw: P('cloudflare-r2'), package: P('requirements') }), 'self-hosted-storage-without-compose'));
+  /* Ingestion nhận nhiều công cụ: Kafka cho luồng cùng một công cụ lịch cho job batch (Lambda, nạp bù, luồng giả lập). */
+  check('khâu Ingestion chọn được nhiều công cụ; Kafka + cron: dữ liệu theo lịch có công cụ lịch, luồng không báo nạp theo lô khi có Kafka',
+    cat.stages.find((x) => x.id === 'ingest').multi === true && eq(normDesign({ stages: { ingest: P('kafka', 'cron') } }).stages.ingest.pick, ['kafka', 'cron'])
+    && !has(W({ ingest: P('kafka', 'cron') }, { fresh: 'batch' }), 'schedule-without-scheduler')
+    && has(W({ ingest: P('kafka', 'cron') }, { fresh: 'batch' }), 'kafka-for-batch-data')
+    && eq(readStageLine('Ingestion & scheduling: Kafka, cron [ingest: kafka, cron]'), { id: 'ingest', pick: ['kafka', 'cron'], skip: false }));
   const optOf = (sid, oid) => cat.stages.find((x) => x.id === sid).options.find((o) => o.id === oid);
   check('phương án: WebSocket, lag Kafka hợp dữ liệu liên tục, không hợp theo lịch; Playwright ngược lại; Apply path không chọn Oozie',
     fitOf(optOf('source', 'websocket-feed'), { fresh: 'stream' }).ok && !fitOf(optOf('source', 'websocket-feed'), { fresh: 'batch' }).ok
@@ -727,7 +747,7 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
    * khi X hợp hồ sơ (luật nói "đã chọn X nên là kiến trúc Y" thì Y phải có công cụ dùng được). Gợi ý "không cần" thì khâu ấy
    * không bị báo. */
   const decided = [{}, ...cat.architectures.flatMap((f) => f.rules.flatMap((rl) => Object.entries(rl.if).filter(([k]) => stageIds.has(k))
-    .reduce((acc, [k, vals]) => acc.flatMap((st) => vals.map((v) => ({ ...st, [k]: v === 'skip' ? { skip: true } : P(v) }))), [{}])
+    .reduce((acc, [k, vals]) => acc.flatMap((st) => vals.map((v) => ({ ...st, [k]: v === 'skip' ? { skip: true } : v === 'own' ? { own: 'x' } : P(v) }))), [{}])
     .filter((st) => Object.keys(st).length)))];
   const badArch = new Set();
   for (const path of ['', ...cat.paths.map((x) => x.id)]) {
@@ -807,6 +827,36 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
     && fitOf(stageOf('train').options.find((o) => o.id === 'spark-mllib'), bd).ok && !fitOf(stageOf('process').options.find((o) => o.id === 'pandas'), bd).ok,
   rankOptions(stageOf('process'), bd)[0].opt.id);
   check('mẫu đặt sẵn crisp-dm: dữ liệu bảng thì khâu gán nhãn thường không cần', notNeededBy(stageOf('label'), effProfile(cat, fromTemplate(templates[0]).design)).includes('kind'));
+  /* Không mẫu nào có kiến trúc model khi chưa quyết Training (bộ đặt sẵn, và sau Apply path khi lối để Training là maybe). */
+  const mlOf = (d) => archAdvice(cat, d).find((a) => a.family === 'ml').id;
+  const isOpen = (d, k) => !d.stages[k] || (!d.stages[k].skip && !d.stages[k].pick.length && !d.stages[k].own);
+  const mlBad = templates.filter((t) => t.design).flatMap((t) => {
+    const d0 = fromTemplate(t).design;
+    return [d0, ...(d0.path ? [plans[t.id]] : cat.paths.map((pp) => applyPath(cat, d0, pp.id).next))]
+      .filter((d) => isOpen(d, 'train') && isOpen(d, 'serve') && effProfile(cat, d).ai !== 'llm' && mlOf(d) !== null)
+      .map((d) => `${t.id}${d.path ? '/' + d.path : ''}: ${mlOf(d)}`);
+  });
+  check('mẫu đặt sẵn: chưa quyết Training, Serving thì không gợi ý kiến trúc model (it5425-sports, app-feature, stats-report, data-pipeline, lakehouse-oss)',
+    !mlBad.length && mlOf(plans['it5425-sports']) === null && mlOf(plans['data-pipeline']) === null && mlOf(plans['lakehouse-oss']) === null, mlBad.join(' | '));
+  /* big-data-ds với lối pipeline: kho phân tích không phải BigQuery đọc R2; giám sát lag Kafka; xử lý bằng công cụ stream của cụm. */
+  const bdPipe = applyPath(cat, fromTemplate(templates.find((t) => t.id === 'big-data-ds')).design, 'pipeline').next;
+  const bdp = (sid) => (bdPipe.stages[sid]?.skip ? 'skip' : bdPipe.stages[sid]?.pick.join('+'));
+  check('mẫu đặt sẵn big-data-ds, lối pipeline: Kafka, Spark Structured Streaming, giám sát lag Kafka; không ghép R2 với BigQuery',
+    bdp('ingest') === 'kafka' && bdp('process') === 'spark-streaming' && bdp('monitor') === 'kafka-lag'
+    && !(bdp('store') === 'bigquery' && ['cloudflare-r2', 'minio', 'hdfs'].includes(bdp('raw'))) && !warnings(cat, bdPipe).filter((w) => !w.caveat).length,
+  JSON.stringify(Object.fromEntries(Object.keys(bdPipe.stages).map((k) => [k, bdp(k)]))));
+  /* lakehouse-oss: Apply path đóng gói bằng Docker Compose; stack ví dụ của mẫu không làm luật báo với bộ đặt sẵn. Bước giả lập
+   * luồng (Kafka + một công cụ lịch ở Ingestion) không báo khi đổi câu độ mới sang Continuously, như ghi chú bước 7 dặn. */
+  const lhPre = fromTemplate(templates.find((t) => t.id === 'lakehouse-oss')).design;
+  const lhStack = { raw: P('minio', 'iceberg', 'polaris'), process: P('dbt'), validate: P('dbt-tests'), store: P('duckdb-iceberg'),
+    app: P('superset'), package: P('docker-compose', 'requirements'), host: P('own-server'), source: P('web-scraping', 'open-data'), monitor: P('healthchecks') };
+  const hardIds = (d) => warnings(cat, normDesign(d)).filter((w) => !w.caveat).map((w) => w.id);
+  const lhBatch = hardIds({ ...lhPre, stages: { ...lhStack, ingest: P('prefect') } });
+  const lhStream = hardIds({ ...lhPre, profile: { ...lhPre.profile, fresh: 'stream' }, stages: { ...lhStack, source: P('web-scraping', 'open-data', 'event-stream'), ingest: P('kafka', 'cron'), process: P('spark-streaming') } });
+  check('mẫu đặt sẵn lakehouse-oss: Apply path chọn Docker Compose; stack của mẫu không làm luật báo, kể cả có luồng giả lập (Kafka + cron)',
+    pick('lakehouse-oss', 'package') === 'docker-compose' && !lhBatch.length && !lhStream.length
+    && hardIds({ ...lhPre, stages: { ...lhStack, ingest: P('kafka', 'cron') } }).includes('kafka-for-batch-data'),
+  JSON.stringify({ package: pick('lakehouse-oss', 'package'), lhBatch, lhStream }));
   designSnapshot(cat);
   /* Bàn giao trên đường nối: chuẩn hoá, chỉ đường giữa hai khâu đã quyết liền nhau, việc tích hợp, Markdown đi rồi về. */
   check('thiết kế: bàn giao — bỏ khoá sai, via lạ, mục trống; giữ cả khi khâu chưa quyết', eq(normDesign({ edges: {

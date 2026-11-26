@@ -2164,8 +2164,8 @@ const check = (name, ok, detail = '') => {
     for (const [q, a] of [['fresh', 'stream'], ['latency', 'online']]) await ap.click(`input[data-q="${q}"][value="${a}"]`, { force: true });
     await navTo('Architecture');
     r = await recs();
-    check(`${tag}: dữ liệu liên tục, cần trả lời ngay — gợi ý nhóm xử lý thành stream, kiến trúc ấy viền xanh`,
-      r.processing === 'streaming' && r.ml === 'streaming-inference'
+    check(`${tag}: dữ liệu liên tục, cần trả lời ngay — gợi ý nhóm xử lý thành stream, kiến trúc ấy viền xanh; chưa quyết Training thì nhóm model chưa gợi ý`,
+      r.processing === 'streaming' && r.ml === null
       && !!(await ap.$(`#sd-pane .sd-arch.is-rec[data-arch="${r.processing}"]`)), JSON.stringify(r));
     await ap.click(`#sd-pane [data-arch="${r.processing}"] > summary`);
     const open1 = await ap.$eval(`#sd-pane [data-arch="${r.processing}"]`, (d) => d.open && d.querySelectorAll('.sd-chain li').length > 1 && d.querySelectorAll('.sd-links a').length > 0);
