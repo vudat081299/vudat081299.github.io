@@ -725,7 +725,7 @@ function docLines(docs, ind) {
   return out;
 }
 /* Bàn giao trong Markdown: nhãn `Outputs:` rồi mỗi đầu ra một mục `- tên · ref`, hợp đồng (note) là dòng thụt thêm hai ngay
- * dưới; nhãn `Inputs:` rồi mỗi đầu vào `- tên đầu ra ← tên bên giao` (tên trùng thì `tên bước › tên bước con`). Trong tên:
+ * dưới; nhãn `Inputs:` rồi mỗi đầu vào `- tên đầu ra ← tên bên giao` (bên giao dễ nhầm thì `N. bước › bước con`). Trong tên:
  * `\`, `·`, `←` thoát bằng `\`. Đầu vào mất nguồn (bên giao đã xoá): `- (deleted output)`, không có `←`; nhập lại vẫn là đầu
  * vào mất nguồn. */
 const GONE_IN = '(deleted output)';
@@ -741,8 +741,12 @@ function splitEsc(s, sep) {
   }
   return out;
 }
-/** Nhãn bên giao cho dòng `Inputs:`: tên ngắn; tên ngắn trùng (cùng tên đầu ra) thì `bước › bước con`. @param {Holder} hd */
+/** Tên đầy đủ của bên giao: `bước › bước con`, hay tên bước. @param {Holder} hd */
 const fullTitle = (hd) => (hd.sub ? `${hd.step.title} › ${hd.sub.title}` : hd.step.title);
+/** Số bước đầu nhãn bên giao: `N. tên đầy đủ`. */
+const NUMBERED = /^(\d+)\. ([\s\S]*)$/;
+/** Nhãn bên giao không đánh số mà mở bằng `N. ` thì thoát: `\N. …`. @param {string} s đã escHand */
+const escNum = (s) => (NUMBERED.test(s) ? '\\' + s : s);
 /** Các dòng sau nhãn `Outputs:` / `Inputs:` (nhãn do người gọi ghi). @param {any} h @param {any} ws @param {Map<string, any>} idx @param {string} ind */
 function handLines(h, ws, idx, ind) {
   const outs = [], ins = [];
@@ -754,8 +758,10 @@ function handLines(h, ws, idx, ind) {
     const src = idx.get(id);
     if (!src) { ins.push(`${ind}  - ${GONE_IN}`); continue; }
     const short = holderTitle(src);
-    const same = [...idx.values()].filter((y) => fold(y.out.name) === fold(src.out.name) && fold(holderTitle(y)) === fold(short));
-    ins.push(`${ind}  - ${escHand(src.out.name)} ← ${escHand(same.length > 1 ? fullTitle(src) : short)}`);
+    /* Bên giao khác cùng tên đầu ra và cùng tên ngắn (bỏ dấu, hoa thường; kể cả bước trùng tên bước con): ghi số bước và tên
+     * đầy đủ, như `Step: N. tên` của nhật ký. */
+    const clash = [...idx.values()].some((y) => y.h !== src.h && fold(y.out.name) === fold(src.out.name) && fold(holderTitle(y)) === fold(short));
+    ins.push(`${ind}  - ${escHand(src.out.name)} ← ${clash ? `${src.i + 1}. ${escHand(fullTitle(src))}` : escNum(escHand(short))}`);
   }
   return { outs, ins };
 }
@@ -781,7 +787,11 @@ function readHand(lines, i, kind, h, min) {
   }
   return i;
 }
-/** Đầu vào đọc từ Markdown → id đầu ra: theo tên đầu ra, tên trùng thì theo tên bên giao. @param {any} ws @param {string[]} warnings */
+/**
+ * Đầu vào đọc từ Markdown → id đầu ra: theo tên đầu ra (bỏ dấu, hoa thường), trùng thì theo bên giao: `N. tên đầy đủ` (bước thứ
+ * N), rồi tên đầy đủ, rồi tên ngắn. Còn nhiều cái khớp: ưu tiên tên đầu ra đúng từng chữ hoa thường, rồi tên bên giao đúng như vậy.
+ * @param {any} ws @param {string[]} warnings
+ */
 function resolveIns(ws, warnings) {
   const all = holders(ws); // bước đọc từ Markdown luôn có `subs`
   const outs = all.flatMap((hd) => (hd.h.outs || []).map((/** @type {any} */ out) => ({ out, hd, short: fold(holderTitle(hd)), full: fold(fullTitle(hd)) })));
@@ -791,10 +801,22 @@ function resolveIns(ws, warnings) {
     for (const raw of h.inRefs) {
       const [nm, ...from] = splitEsc(raw, ' ← ');
       const name = unescHand(nm).trim();
-      const by = from.length ? unescHand(from.join(' ← ')).trim() : '';
+      const byRaw = from.join(' ← ').trim();
+      const by = from.length ? unescHand(byRaw).trim() : '';
       if (!by && fold(oneLine(name)) === fold(GONE_IN)) { h.ins.push(uid('o')); continue; } // mất nguồn: id không trỏ tới đâu
       const cand = outs.filter((c) => c.hd.h !== h && fold(oneLine(c.out.name)) === fold(oneLine(name)));
-      const hit = by ? cand.filter((c) => c.short === fold(oneLine(by)) || c.full === fold(oneLine(by))) : cand;
+      const num = NUMBERED.exec(byRaw);
+      const fb = fold(oneLine(by));
+      /** @type {typeof outs} */ let hit = cand;
+      if (by) {
+        hit = num ? cand.filter((c) => c.hd.i === Number(num[1]) - 1 && c.full === fold(oneLine(unescHand(num[2])))) : [];
+        if (!hit.length) hit = cand.filter((c) => c.full === fb);
+        if (!hit.length) hit = cand.filter((c) => c.short === fb);
+      }
+      /** @param {typeof outs} list @param {(c: any) => boolean} f */
+      const prefer = (list, f) => (list.length > 1 && list.some(f) ? list.filter(f) : list);
+      hit = prefer(hit, (c) => c.out.name === oneLine(name));
+      if (by) hit = prefer(hit, (c) => [fullTitle(c.hd), holderTitle(c.hd), `${c.hd.i + 1}. ${fullTitle(c.hd)}`].includes(oneLine(by)));
       const pick = hit.length ? hit : cand.length === 1 ? cand : [];
       const shown = name + (by ? ` ← ${by}` : '');
       if (!pick.length) { warnings.push(`Input not found, dropped: ${shown}`); continue; }

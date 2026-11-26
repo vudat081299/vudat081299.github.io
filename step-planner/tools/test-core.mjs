@@ -768,7 +768,28 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   const back = fromMarkdown(md);
   check('bàn giao: Markdown đi rồi về giữ nguyên (tên đầu ra trùng, bên giao trùng tên, ký tự thoát, hợp đồng)', eq(shape(ws), shape(back.workspace)) && !back.warnings.length,
     firstDiff(shape(ws), shape(back.workspace)) + back.warnings.join(' | '));
-  check('bàn giao: Markdown — tên bên giao trùng thì ghi "bước › bước con"', md.includes('  - table ← Clean › A') && md.includes('    - table ← C'));
+  check('bàn giao: Markdown — tên bên giao trùng thì ghi "N. bước › bước con"', md.includes('  - table ← 1. Clean › A') && md.includes('    - table ← C'));
+  /* Bên giao dễ nhầm: (A) bước và bước con (ở bước trước) cùng tên, cùng tên đầu ra; (B) "Data" và "data" cùng một bên giao;
+   * (C) hai bước cùng tên, mỗi bước một bước con cùng tên, cùng tên đầu ra; (D) tên bước con mở bằng "2. ". */
+  const links = (w) => H.handoffs(w).links.map((l) => `${H.holderTitle(l.to)}<-${l.out.name}@${l.from.i}.${l.from.sub ? l.from.step.subs.indexOf(l.from.sub) : '-'}`).sort();
+  const tricky = normWorkspace({ steps: [
+    { title: 'Prep', subs: [{ title: 'Train', outs: [{ id: 'o1', name: 'model' }] }, { title: '2. Train', outs: [{ id: 'o5', name: 'cfg' }] }] },
+    { title: 'Train', outs: [{ id: 'o2', name: 'model' }], subs: [{ title: 'Clean', outs: [{ id: 'o3', name: 'Data' }, { id: 'o4', name: 'data' }] }] },
+    { title: 'S', subs: [{ title: 'T', outs: [{ id: 'o6', name: 'm' }] }] },
+    { title: 'S', subs: [{ title: 'T', outs: [{ id: 'o7', name: 'm' }] }] },
+    { title: 'Serve', outs: [{ id: 'o8', name: 'cfg' }], subs: [{ title: 'API', ins: ['o2', 'o4', 'o7', 'o5'] }, { title: 'Batch', ins: ['o1', 'o3', 'o6'] }] }] });
+  const tmd = toMarkdown(tricky);
+  const tb = fromMarkdown(tmd);
+  check('bàn giao: Markdown đi rồi về — bước / bước con cùng tên, "Data" / "data", bên giao trùng hẳn, tên mở bằng số: nối đúng bên giao, không cảnh báo',
+    eq(links(tb.workspace), links(tricky)) && eq(shape(tb.workspace), shape(tricky)) && !tb.warnings.length, JSON.stringify(links(tb.workspace)) + tb.warnings.join(' | '));
+  check('bàn giao: Markdown — bên giao dễ nhầm ghi "N. tên đầy đủ", tên mở bằng số thì thoát',
+    tmd.includes('- model ← 2. Train\n') && tmd.includes('- model ← 1. Prep › Train\n') && tmd.includes('- m ← 4. S › T\n')
+    && tmd.includes('- data ← Clean\n') && tmd.includes('- cfg ← \\2. Train\n'), JSON.stringify(tmd.split('## 5.')[1]));
+  /* File xuất bằng khuôn cũ (không số, tên ngắn khi bước trùng tên bước con) vẫn nối đúng. */
+  const old = '# P\n\n## 1. Prep\n\n- [ ] Train\n  Outputs:\n    - model\n\n## 2. Train\n\nOutputs:\n  - model\n\n## 3. Serve\n\n- [ ] API\n  Inputs:\n    - model ← Train\n- [ ] Batch\n  Inputs:\n    - model ← Prep › Train\n';
+  const ob = fromMarkdown(old);
+  check('bàn giao: Markdown khuôn cũ — "model ← Train" là bước Train, "Prep › Train" là bước con', eq(shape(ob.workspace).steps[2].subs.map((x) => x.ins), [['1.-.0'], ['0.0.0']]) && !ob.warnings.length,
+    JSON.stringify(shape(ob.workspace).steps[2].subs.map((x) => x.ins)) + ob.warnings.join(' | '));
   check('bàn giao: JSON đi rồi về giữ nguyên', eq(shape(parseImport(toJSON(ws)).workspaces[0]), shape(ws)));
   const hand = '# P\n\n## Make\n\nOutputs:\n  - clean · data/c.csv · hợp đồng viết cùng dòng\n  - dup\n\n- [ ] Other\n  Outputs:\n    - dup\n\n## Use\n\nInputs:\n  - clean\n  - dup\n  - missing ← Make\n\n- [ ] x\n  Inputs:\n    - dup ← Other\n';
   const hb = fromMarkdown(hand);
