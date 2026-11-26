@@ -202,6 +202,7 @@
         "ai",
         "users",
         "budget",
+        "selfhost",
         "gpu"
       ],
       "implies": {
@@ -318,7 +319,8 @@
         "fresh",
         "latency",
         "users",
-        "budget"
+        "budget",
+        "selfhost"
       ],
       "implies": {
         "fresh": "batch"
@@ -553,6 +555,21 @@
         {
           "id": "cloud",
           "label": "Pay as you go (cloud account)"
+        }
+      ]
+    },
+    {
+      "id": "selfhost",
+      "label": "Open source and self-hosted only?",
+      "help": "Có bắt buộc mọi phần chạy bằng phần mềm mã nguồn mở trên máy của nhóm (máy lab, laptop, VPS tự quản) không, như một đồ án tự dựng lakehouse? Có thì dịch vụ cloud được quản lý (S3, BigQuery, Databricks, Streamlit Community Cloud…) không dùng được, gợi ý chuyển sang MinIO, Iceberg, Polaris, Superset. Khác câu ngân sách: gói miễn phí của cloud vẫn là dịch vụ được quản lý.",
+      "choices": [
+        {
+          "id": "no",
+          "label": "No, managed services are fine"
+        },
+        {
+          "id": "yes",
+          "label": "Yes, open source on our own machines"
         }
       ]
     },
@@ -878,6 +895,9 @@
             "size": [
               "small",
               "medium"
+            ],
+            "selfhost": [
+              "no"
             ]
           },
           "links": [
@@ -1106,7 +1126,11 @@
           "avoid": "Tránh khi toàn bộ hệ thống khác của bạn đã nằm trong AWS hoặc Google Cloud.",
           "cost": "freemium",
           "level": 2,
-          "fit": {},
+          "fit": {
+            "selfhost": [
+              "no"
+            ]
+          },
           "links": [
             {
               "title": "Get started",
@@ -1140,6 +1164,9 @@
             "budget": [
               "low",
               "cloud"
+            ],
+            "selfhost": [
+              "no"
             ]
           },
           "links": [
@@ -1171,6 +1198,9 @@
             "budget": [
               "low",
               "cloud"
+            ],
+            "selfhost": [
+              "no"
             ]
           },
           "links": [
@@ -1758,6 +1788,9 @@
             "fresh": [
               "once",
               "batch"
+            ],
+            "selfhost": [
+              "no"
             ]
           },
           "links": [
@@ -2189,6 +2222,9 @@
           "fit": {
             "size": [
               "small"
+            ],
+            "selfhost": [
+              "no"
             ]
           },
           "links": [
@@ -2216,6 +2252,9 @@
           "fit": {
             "size": [
               "small"
+            ],
+            "selfhost": [
+              "no"
             ]
           },
           "links": [
@@ -2248,6 +2287,9 @@
             "latency": [
               "report",
               "batch"
+            ],
+            "selfhost": [
+              "no"
             ]
           },
           "links": [
@@ -2283,6 +2325,9 @@
             "latency": [
               "report",
               "batch"
+            ],
+            "selfhost": [
+              "no"
             ]
           },
           "links": [
@@ -2722,6 +2767,9 @@
             "size": [
               "small",
               "medium"
+            ],
+            "selfhost": [
+              "no"
             ]
           },
           "links": [
@@ -2750,6 +2798,9 @@
             "size": [
               "small",
               "medium"
+            ],
+            "selfhost": [
+              "no"
             ]
           },
           "links": [
@@ -2777,6 +2828,9 @@
             "budget": [
               "free",
               "low"
+            ],
+            "selfhost": [
+              "no"
             ]
           },
           "links": [
@@ -2841,6 +2895,9 @@
             "budget": [
               "low",
               "cloud"
+            ],
+            "selfhost": [
+              "no"
             ]
           },
           "links": [
@@ -2872,6 +2929,9 @@
             "size": [
               "medium",
               "large"
+            ],
+            "selfhost": [
+              "no"
             ]
           },
           "links": [
@@ -2903,6 +2963,9 @@
             "size": [
               "medium",
               "large"
+            ],
+            "selfhost": [
+              "no"
             ]
           },
           "links": [
@@ -3001,6 +3064,9 @@
           "fit": {
             "gpu": [
               "yes"
+            ],
+            "selfhost": [
+              "no"
             ]
           },
           "links": [
@@ -3060,6 +3126,9 @@
             "users": [
               "few",
               "public"
+            ],
+            "selfhost": [
+              "no"
             ]
           },
           "links": [
@@ -3506,6 +3575,9 @@
             ],
             "gpu": [
               "no"
+            ],
+            "selfhost": [
+              "no"
             ]
           },
           "links": [
@@ -3533,6 +3605,9 @@
           "fit": {
             "ai": [
               "llm"
+            ],
+            "selfhost": [
+              "no"
             ]
           },
           "links": [
@@ -3568,6 +3643,9 @@
           "fit": {
             "ai": [
               "llm"
+            ],
+            "selfhost": [
+              "no"
             ]
           },
           "links": [
@@ -3591,7 +3669,7 @@
           "name": "Ollama",
           "kind": "Local LLM runner",
           "summary": "Chạy LLM mở trên máy bạn bằng một lệnh, mở API cục bộ ở cổng 11434 (có endpoint tương thích OpenAI). Model càng lớn càng cần nhiều RAM hay VRAM.",
-          "pick": "Chọn để thử LLM miễn phí, offline trên laptop đủ mạnh, hoặc khi dữ liệu không được rời máy.",
+          "pick": "Chọn để thử LLM miễn phí, offline trên laptop đủ mạnh, khi dữ liệu không được rời máy, hoặc khi phải tự host cho vài người trên một máy lab đủ RAM hay GPU.",
           "avoid": "Tránh làm chỗ chạy LLM khi deploy lên host gói thường: model không vừa RAM, chạy CPU rất chậm. Khi deploy thì gọi API (Inference Providers, LLM API).",
           "cost": "free",
           "level": 2,
@@ -3600,10 +3678,8 @@
               "llm"
             ],
             "users": [
-              "me"
-            ],
-            "budget": [
-              "free"
+              "me",
+              "few"
             ]
           },
           "links": [
@@ -3751,6 +3827,9 @@
             "users": [
               "few",
               "public"
+            ],
+            "selfhost": [
+              "no"
             ]
           },
           "links": [
@@ -3787,6 +3866,9 @@
             "users": [
               "few",
               "public"
+            ],
+            "selfhost": [
+              "no"
             ]
           },
           "links": [
@@ -3833,6 +3915,9 @@
             ],
             "budget": [
               "cloud"
+            ],
+            "selfhost": [
+              "no"
             ]
           },
           "links": [
@@ -4222,6 +4307,9 @@
             "users": [
               "me",
               "few"
+            ],
+            "selfhost": [
+              "no"
             ]
           },
           "links": [
@@ -4256,6 +4344,9 @@
             ],
             "gpu": [
               "yes"
+            ],
+            "selfhost": [
+              "no"
             ]
           },
           "links": [
@@ -4289,6 +4380,9 @@
               "online"
             ],
             "gpu": [
+              "no"
+            ],
+            "selfhost": [
               "no"
             ]
           },
@@ -4326,6 +4420,9 @@
             "budget": [
               "low",
               "cloud"
+            ],
+            "selfhost": [
+              "no"
             ]
           },
           "links": [
@@ -4427,6 +4524,9 @@
             "latency": [
               "report",
               "batch"
+            ],
+            "selfhost": [
+              "no"
             ]
           },
           "links": [
@@ -4468,6 +4568,9 @@
             "budget": [
               "low",
               "cloud"
+            ],
+            "selfhost": [
+              "no"
             ]
           },
           "links": [
@@ -4510,6 +4613,9 @@
             "budget": [
               "free",
               "low"
+            ],
+            "selfhost": [
+              "no"
             ]
           },
           "links": [
@@ -4551,6 +4657,9 @@
             "latency": [
               "online",
               "batch"
+            ],
+            "selfhost": [
+              "no"
             ]
           },
           "links": [
@@ -4708,6 +4817,9 @@
             "users": [
               "few",
               "public"
+            ],
+            "selfhost": [
+              "no"
             ]
           },
           "links": [
@@ -4778,6 +4890,9 @@
             ],
             "latency": [
               "online"
+            ],
+            "selfhost": [
+              "no"
             ]
           },
           "links": [
@@ -5685,7 +5800,10 @@
             ],
             "app": [
               "bi-dashboard",
-              "superset"
+              "superset",
+              "data-studio",
+              "power-bi",
+              "looker"
             ]
           },
           "sources": [
@@ -5733,23 +5851,29 @@
         },
         {
           "id": "lakehouse",
-          "name": "Lakehouse (medallion)",
-          "what": "Lake cộng một lớp bảng có giao dịch ACID (Delta Lake, Iceberg): một bản dữ liệu trên object storage dùng chung cho SQL, BI và ML. Thường chia ba tầng medallion: Bronze giữ dữ liệu như nguồn, Silver đã làm sạch, khớp, bỏ trùng, Gold là bảng tổng hợp cho báo cáo và đặc trưng cho model.",
-          "use": "Dữ liệu lớn vừa cần SQL vừa cần Spark, Python cho ML; dữ liệu được ghi thêm, sửa nhiều lần; muốn quay lại đúng phiên bản đã dùng để train.",
+          "name": "Lakehouse",
+          "what": "Lake cộng một lớp bảng có giao dịch ACID (Delta Lake, Iceberg, Hudi) và một catalog giữ danh sách bảng: một bản dữ liệu trên object storage (S3, MinIO) dùng chung cho SQL, BI và ML. Bảng thường được chia tầng theo medallion (xem nhóm How tables are layered).",
+          "use": "Dữ liệu lớn vừa cần SQL vừa cần Spark, Python cho ML; dữ liệu được ghi thêm, sửa nhiều lần; muốn quay lại đúng phiên bản đã dùng để train; hoặc phải tự host bằng mã nguồn mở: MinIO + Iceberg + Polaris thay cho warehouse được quản lý.",
           "avoid": "Dữ liệu vừa một máy: ba thư mục Parquet (raw, clean, gold) cộng DuckDB đã cho đủ ba tầng, không cần table format hay Spark.",
           "flow": [
-            "Bronze: raw as-is",
-            "Silver: cleaned, conformed",
-            "Gold: aggregates, features",
+            "Object storage (S3, MinIO)",
+            "Table format + catalog",
+            "Spark, Trino, DuckDB",
             "BI, ML"
           ],
           "tools": {
             "raw": [
+              "minio",
+              "s3",
               "delta-lake",
-              "iceberg"
+              "iceberg",
+              "hudi",
+              "polaris",
+              "iceberg-jdbc"
             ],
             "process": [
               "spark",
+              "dbt",
               "databricks",
               "spark-streaming"
             ],
@@ -5759,17 +5883,17 @@
             ],
             "store": [
               "trino",
+              "duckdb-iceberg",
               "hive"
+            ],
+            "app": [
+              "superset"
             ]
           },
           "sources": [
             {
               "title": "What is a data lakehouse? (Databricks)",
               "url": "https://www.databricks.com/blog/what-is-data-lakehouse"
-            },
-            {
-              "title": "What is a medallion architecture? (Databricks)",
-              "url": "https://www.databricks.com/blog/what-is-medallion-architecture"
             }
           ]
         }
@@ -5789,11 +5913,12 @@
           "if": {
             "raw": [
               "delta-lake",
-              "iceberg"
+              "iceberg",
+              "hudi"
             ]
           },
           "arch": "lakehouse",
-          "why": "Kho thô đã chọn có table format (Delta Lake, Iceberg): đó là lớp lưu trữ của lakehouse."
+          "why": "Kho thô đã chọn có table format (Delta Lake, Iceberg, Hudi): đó là lớp lưu trữ của lakehouse."
         },
         {
           "if": {
@@ -5807,6 +5932,18 @@
           },
           "arch": "lake",
           "why": "Dữ liệu lớn là văn bản, ảnh, âm thanh: giữ file gốc trên object storage, chỉ đưa nhãn và metadata vào bảng."
+        },
+        {
+          "if": {
+            "size": [
+              "large"
+            ],
+            "selfhost": [
+              "yes"
+            ]
+          },
+          "arch": "lakehouse",
+          "why": "Bảng lớn hơn một máy mà chỉ dùng mã nguồn mở tự host: warehouse được quản lý không dùng được; MinIO + Iceberg + một catalog (Polaris) cho một bản dữ liệu mà Spark ghi, Trino hay DuckDB đọc."
         },
         {
           "if": {
@@ -5842,6 +5979,142 @@
           },
           "arch": "files-db",
           "why": "Dữ liệu vừa một máy: Parquet với DuckDB hay một PostgreSQL là đủ; warehouse, lake chỉ thêm phần phải vận hành."
+        }
+      ]
+    },
+    {
+      "id": "layers",
+      "label": "How tables are layered",
+      "question": "Dữ liệu đi qua mấy tầng từ bản thô tới bảng người dùng đọc? Câu này độc lập với nơi lưu: cùng một cách chia tầng dựng được trên thư mục Parquet, lake hay lakehouse.",
+      "entries": [
+        {
+          "id": "two-layers",
+          "name": "Raw + clean (two layers)",
+          "what": "Hai tầng: dữ liệu thô giữ nguyên như lúc tải về, và một bộ bảng sạch mà báo cáo, model đọc thẳng. Biến đổi chạy một mạch từ thô ra sạch.",
+          "use": "Một bộ dữ liệu cố định, một nguồn, ít bảng, một người hay một nhóm nhỏ dùng: phần lớn bài tập và đồ án phân tích.",
+          "avoid": "Nhiều nguồn phải khớp với nhau, dữ liệu mới tới đều đặn, hay nhiều bảng tổng hợp được nhiều báo cáo dùng lại: tách thêm tầng như medallion.",
+          "flow": [
+            "Raw files",
+            "Clean script",
+            "Clean tables",
+            "Report, model"
+          ],
+          "tools": {
+            "raw": [
+              "project-folder",
+              "dvc"
+            ],
+            "process": [
+              "pandas",
+              "polars",
+              "duckdb"
+            ],
+            "store": [
+              "parquet-duckdb",
+              "sqlite",
+              "postgresql"
+            ]
+          },
+          "sources": [
+            {
+              "title": "Cookiecutter Data Science",
+              "url": "https://cookiecutter-data-science.drivendata.org/"
+            }
+          ]
+        },
+        {
+          "id": "medallion",
+          "name": "Medallion (bronze / silver / gold)",
+          "what": "Một cách chia bảng theo mức chất lượng, không phải một kiểu kho. Bronze giữ dữ liệu đúng như nguồn gửi (kể cả file HTML, CSV, Parquet gốc), chỉ thêm cột như thời điểm nạp, tên nguồn. Silver là bản đã làm sạch, ép kiểu, bỏ trùng, mỗi bản ghi một dòng. Gold là bảng tổng hợp theo nghiệp vụ cho báo cáo, dashboard, đặc trưng cho model. Tầng nào lưu Iceberg, tầng nào lưu Parquet hay bảng DuckDB thì vẫn là medallion, miễn mỗi tầng giữ đúng vai trò ấy và tầng sau chỉ đọc từ tầng trước.",
+          "use": "Dữ liệu mới tới đều đặn hay từ nhiều nguồn; cần tính lại silver, gold từ bronze khi luật làm sạch đổi mà không tải lại nguồn; nhiều báo cáo, model dùng chung bảng sạch. Đây là cách tổ chức thường gặp của lakehouse; trên một máy chỉ cần ba thư mục.",
+          "avoid": "Một bộ dữ liệu cố định cho một báo cáo: ba tầng chỉ thêm việc, thô + sạch là đủ. Theo medallion là khuyến nghị, không bắt buộc; đừng tạo tầng chỉ để chép nguyên bảng sang tầng sau.",
+          "flow": [
+            "Bronze: as the source sent it",
+            "Silver: cleaned, one row per record",
+            "Gold: aggregates for BI and models",
+            "Dashboards, ML"
+          ],
+          "tools": {
+            "raw": [
+              "project-folder",
+              "minio",
+              "delta-lake",
+              "iceberg",
+              "hudi"
+            ],
+            "process": [
+              "duckdb",
+              "dbt",
+              "spark",
+              "spark-streaming",
+              "python-consumer"
+            ],
+            "validate": [
+              "dbt-tests",
+              "great-expectations",
+              "pandera"
+            ],
+            "store": [
+              "parquet-duckdb",
+              "duckdb-iceberg",
+              "trino"
+            ]
+          },
+          "sources": [
+            {
+              "title": "Medallion Architecture (Databricks glossary)",
+              "url": "https://www.databricks.com/glossary/medallion-architecture"
+            },
+            {
+              "title": "What is the medallion lakehouse architecture? (Microsoft Learn)",
+              "url": "https://learn.microsoft.com/en-us/azure/databricks/lakehouse/medallion"
+            },
+            {
+              "title": "What is a medallion architecture? (Databricks)",
+              "url": "https://www.databricks.com/blog/what-is-medallion-architecture"
+            }
+          ]
+        }
+      ],
+      "rules": [
+        {
+          "if": {
+            "raw": [
+              "delta-lake",
+              "iceberg",
+              "hudi"
+            ]
+          },
+          "arch": "medallion",
+          "why": "Kho thô có table format: bronze là bảng thô, silver, gold là bảng cùng format; ba tầng là cách tổ chức thường gặp của lakehouse."
+        },
+        {
+          "if": {
+            "size": [
+              "large"
+            ]
+          },
+          "arch": "medallion",
+          "why": "Dữ liệu lớn hơn một máy: giữ bronze để tính lại mà không tải lại nguồn, gold nhỏ để dashboard đọc nhanh."
+        },
+        {
+          "if": {
+            "fresh": [
+              "batch",
+              "stream"
+            ]
+          },
+          "arch": "medallion",
+          "why": "Dữ liệu mới tới đều: bronze nhận thêm mỗi lần, silver, gold tính lại từ đó; dữ liệu nhỏ thì ba thư mục Parquet là đủ."
+        },
+        {
+          "if": {
+            "fresh": [
+              "once"
+            ]
+          },
+          "arch": "two-layers",
+          "why": "Một bộ dữ liệu cố định: thô + sạch là đủ; thêm tầng gold khi có nhiều bảng tổng hợp được dùng lại."
         }
       ]
     },

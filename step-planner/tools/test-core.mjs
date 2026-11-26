@@ -595,11 +595,11 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   /* Kiến trúc: mỗi nhóm gợi ý một kiến trúc theo hồ sơ, lối và các khâu đã quyết; chưa đủ câu trả lời thì chưa gợi ý. */
   const A = (stages = {}, profile = {}, path = '') => Object.fromEntries(archAdvice(cat, normDesign({ path, profile, stages })).map((x) => [x.family, x.id]));
   check('kiến trúc: chưa trả lời gì thì mọi nhóm chưa gợi ý', Object.values(A()).every((x) => x === null) && archAdvice(cat, null).length === cat.architectures.length);
-  check('kiến trúc: dữ liệu nhỏ, cố định — file + một DB, batch ETL',
-    eq(A({}, { size: 'small', fresh: 'once' }), { storage: 'files-db', processing: 'batch-etl', app: null, ml: null }), JSON.stringify(A({}, { size: 'small', fresh: 'once' })));
+  check('kiến trúc: dữ liệu nhỏ, cố định — file + một DB, hai tầng thô + sạch, batch ETL',
+    eq(A({}, { size: 'small', fresh: 'once' }), { storage: 'files-db', layers: 'two-layers', processing: 'batch-etl', app: null, ml: null }), JSON.stringify(A({}, { size: 'small', fresh: 'once' })));
   const live = A({}, { size: 'large', fresh: 'stream', latency: 'online' });
-  check('kiến trúc: dữ liệu lớn, liên tục, cần trả lời ngay — lakehouse, Kappa, app một tiến trình, đặc trưng từ luồng',
-    eq(live, { storage: 'lakehouse', processing: 'kappa', app: 'monolith', ml: 'streaming-inference' }), JSON.stringify(live));
+  check('kiến trúc: dữ liệu lớn, liên tục, cần trả lời ngay — lakehouse, medallion, Kappa, app một tiến trình, đặc trưng từ luồng',
+    eq(live, { storage: 'lakehouse', layers: 'medallion', processing: 'kappa', app: 'monolith', ml: 'streaming-inference' }), JSON.stringify(live));
   check('kiến trúc: liên tục nhưng xem theo lịch — batch là đủ', A({}, { fresh: 'stream', latency: 'batch' }).processing === 'batch-etl');
   check('kiến trúc: lối đã chọn quyết nhóm app (lối chính là kiến trúc app)',
     A({}, {}, 'demo').app === 'monolith' && A({}, {}, 'api').app === 'client-server' && A({}, {}, 'report').app === 'static-report');
@@ -624,7 +624,7 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
    * Ngoại lệ có lý do: dữ liệu cỡ cụm mà cần trả lời ngay thì mọi kho hợp đều là cụm (Cassandra, HBase); luật báo cụm trên
    * ngân sách miễn phí hay trên host app là chính chỗ người dùng phải quyết, không có phương án hợp nào né được. */
   const EXCEPT = new Set(['cluster-store-on-free-budget', 'cluster-store-on-app-host']);
-  const GRID_Q = ['size', 'fresh', 'latency', 'ai', 'users', 'budget'];
+  const GRID_Q = ['size', 'fresh', 'latency', 'ai', 'users', 'budget', 'selfhost'];
   const grid = GRID_Q.reduce((acc, q) => acc.flatMap((p) => [...(q === 'latency' ? [p] : []),
     ...cat.profile.find((x) => x.id === q).choices.map((c) => ({ ...p, [q]: c.id }))]), [{}]);
   const hard = (d, ids) => warnings(cat, normDesign(d)).filter((w) => !w.caveat && !EXCEPT.has(w.id) && w.stages.some((x) => ids.includes(x)));
