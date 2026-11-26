@@ -1406,6 +1406,23 @@ html { scrollbar-gutter: stable; }   /* khoá cuộn không làm trang nhảy ng
 .docs-note:empty { display: none; }
 .doc-open { display: inline-flex; align-items: center; gap: var(--s2); min-height: var(--hit); align-self: flex-start; font-weight: 600; color: var(--green); text-underline-offset: 3px; }
 
+/* ── Hai chấm đầu vào → đầu ra (Hd.ioDots): trên thẻ trước chip trạng thái, ở đầu bước cuối dòng tên. Hình riêng cho mỗi
+   trạng thái, không chỉ màu: ổn tròn đặc, lỗi hình thoi, không có vòng rỗng nét mảnh ── */
+/* Lề hai bên: hình thoi xoay vượt khung của nó, vẫn nằm trong .io. */
+.io { display: inline-flex; align-items: center; gap: var(--s1); min-height: var(--h-xs); padding-inline: var(--mark-w); flex: none; }
+.card-top .io { margin-left: auto; }
+.card-top .io + .chip { margin-left: 0; }
+.step-top .io { margin-left: auto; margin-top: 1px; }
+.io-dot { flex: none; width: var(--dot); height: var(--dot); border-radius: var(--r-pill); border: var(--mark-w) solid var(--ink-4); }
+.io-dot.ok { border-color: var(--done-edge); background: var(--done-edge); }
+.io-dot.bad { border-radius: 0; transform: rotate(45deg); border-color: var(--danger); background: var(--danger); }
+.io-dot.none { border-width: var(--line-w); }
+.io-arrow { position: relative; flex: none; width: var(--s3); height: var(--line-w); background: var(--ink-4); }
+.io-arrow::after {
+  content: ''; position: absolute; right: 0; top: 50%; width: var(--s1); height: var(--s1);
+  border-top: var(--line-w) solid var(--ink-4); border-right: var(--line-w) solid var(--ink-4); transform: translateY(-50%) rotate(45deg);
+}
+
 /* ── Bàn giao (js/hand.js): chip In / Out ở cột tên bước, mũi tên nét đứt trên bước nhận và trước ô nhận, tô hai bên,
    hộp danh sách (#dlg-hand), phần Inputs / Outputs trong hộp sửa, hộp chọn đầu ra (#dlg-pick) ── */
 .hand-tags { display: flex; flex-wrap: wrap; gap: var(--s2); }

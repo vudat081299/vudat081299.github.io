@@ -32,6 +32,33 @@ export function tags(x, insN) {
     x.outs.length > 0 && tag('hand-out', 'out', `Out ${x.outs.length}`, `${C.plural(x.outs.length, 'output')}: path, contract, who uses it`),
   ];
 }
+/** Câu của một đầu vào lỗi. @param {C.InWhy} w */
+const inLine = (w) => (w.kind === 'missing' ? 'an input whose output was deleted'
+  : `${quote(w.name)} on hold: ${quote(w.from)} now comes after this`);
+/** Câu của một đầu ra chưa có nơi nhận đang nối. @param {C.OutWhy} w */
+const outLine = (w) => (w.kind === 'unused' ? `${quote(w.name)} is not used by any later step`
+  : `${quote(w.name)} is only used by ${w.to.map(quote).join(', ')}, which now ${w.to.length > 1 ? 'come' : 'comes'} before it (on hold)`);
+const cap = (/** @type {string} */ t) => t.charAt(0).toUpperCase() + t.slice(1);
+/** Nhãn đọc được của hai chấm (tên, title): trạng thái và vì sao, không dựa vào màu. @param {C.IoStatus} s @param {boolean} step */
+function ioLabels(s, step) {
+  const input = s.in === 'none' ? 'Input: none'
+    : s.in === 'ok' ? 'Input: OK' : `Input: broken. ${cap(s.inWhy.map(inLine).join('; '))}`;
+  const output = s.out === 'none' ? 'Output: none'
+    : s.out === 'bad' ? `Output: broken. ${step && s.outWhy.length > 1 ? 'None of the step\'s outputs is used: ' : ''}${s.outWhy.map(outLine).join('; ')}`
+      : `Output: OK${s.outWhy.length ? `. Not used yet: ${s.outWhy.map((w) => quote(w.name)).join(', ')}` : ''}`;
+  return { input, output };
+}
+/** Hai chấm đầu vào → đầu ra của một bước / bước con (trái: đầu vào, phải: đầu ra, mũi tên trang trí ở giữa). Không có cả
+ * hai: không vẽ gì. @param {C.IoStatus|undefined} s @param {boolean} step */
+export function ioDots(s, step) {
+  if (!s || (s.in === 'none' && s.out === 'none')) return null;
+  const { h } = deps;
+  const { input, output } = ioLabels(s, step);
+  const dot = (/** @type {string} */ side, /** @type {string} */ st, /** @type {string} */ label) =>
+    h('span', { class: `io-dot ${side} ${st}`, role: 'img', 'aria-label': label, title: label });
+  return h('span', { class: 'io', 'data-io-in': s.in, 'data-io-out': s.out, title: `${input}\n${output}` },
+    dot('in', s.in, input), h('span', { class: 'io-arrow', 'aria-hidden': 'true' }), dot('out', s.out, output));
+}
 /** Tên các đầu ra được chuyển, không trùng, theo thứ tự cặp. @param {C.Pair[]} pairs */
 const outNames = (pairs) => [...new Set(pairs.flatMap((p) => p.outs.map((/** @type {any} */ o) => o.name)))];
 /** Nút thông tin nằm giữa mũi tên: tên đầu ra đầu tiên, "+n" nếu còn; tên đủ ở aria-label, title.

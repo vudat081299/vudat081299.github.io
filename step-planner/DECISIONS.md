@@ -25,6 +25,7 @@
 - PLAN-022 · Mẫu ghi loại đầu ra, khai bàn giao giữa các bước; có mẫu pipeline dữ liệu định kỳ · `step-planner/data/templates.json`
 - PLAN-023 · System design phủ kiểm dữ liệu, gán nhãn, tìm kiếm và LLM; giữ cả công cụ nên tránh, kèm lý do · `step-planner/data/system-design.json`, `step-planner/js/design-core.js`
 - PLAN-024 · Mẫu Data Science on big data: CRISP-DM cho dữ liệu quá lớn hay quá nhanh cho một máy · `step-planner/data/templates.json`
+- PLAN-025 · Mỗi bước và bước con cho thấy đầu vào, đầu ra đang ổn, lỗi hay không có · `step-planner/`
 <!-- index:end -->
 
 ## PLAN-001 · Dự án là các bước có thứ tự, mỗi bước có bước con có thứ tự
@@ -146,3 +147,8 @@ Hồ sơ hỏi thêm loại dữ liệu (bảng, văn bản, ảnh / âm thanh) 
 26/11/2026 · `step-planner/data/templates.json`
 
 Có mẫu Data Science cho big data, khung là sáu pha CRISP-DM, thêm một bước thu nạp và lưu trữ (Kafka, vùng thô bất biến, bronze / silver / gold) trước pha hiểu dữ liệu. Pha hiểu bài toán quyết định có cần cụm máy không (khối lượng, tốc độ) và kết quả cần mới tới mức nào (batch hay real-time). Khám phá trên mẫu bằng pandas trước, rồi kiểm trên toàn bộ bằng Spark. Pha mô hình chọn giữa huấn luyện phân tán bằng Spark MLlib và gộp hay lấy mẫu xuống một máy, ghi lý do. Đánh giá cả chỉ số mô hình lẫn số đo hệ thống (thời gian, shuffle, mở rộng khi dữ liệu tăng, tài nguyên). Triển khai theo kiến trúc Lambda: batch layer, speed layer, serving layer, giám sát drift, độ trễ, độ mới. Ví dụ xuyên suốt là clickstream thương mại điện tử; ghi chú trỏ tới bài giảng môn Lưu trữ và xử lý dữ liệu lớn.
+
+## PLAN-025 · Mỗi bước và bước con cho thấy đầu vào, đầu ra đang ổn, lỗi hay không có
+26/11/2026 · `step-planner/`
+
+Sau khi sắp xếp lại, người dùng nhìn bảng là biết bước, bước con nào có bàn giao hỏng mà không phải mở từng cái. Mỗi bước con cho thấy riêng trạng thái đầu vào và đầu ra: ổn, lỗi hay không có. Đầu vào lỗi khi một đầu vào đang treo (nguồn giờ đứng sau) hoặc trỏ tới đầu ra không còn. Đầu ra lỗi khi một đầu ra không có nơi nhận đang nối: không ai dùng, hoặc chỉ những nơi dùng đang treo. Bước xét đầu vào của chính nó theo cùng luật; đầu ra của bước gộp đầu ra của nó và của mọi bước con, lỗi chỉ khi không đầu ra nào có nơi nhận đang nối. Chỉ có một phía thì phía kia là không có; không có cả hai thì không hiện gì. Mỗi trạng thái nói được bằng chữ cái gì hỏng và vì sao; trạng thái đổi ngay sau mỗi lần dời, kéo, sửa đầu vào / đầu ra, xoá hay hoàn tác.

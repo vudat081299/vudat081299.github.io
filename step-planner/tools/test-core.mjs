@@ -782,5 +782,48 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   check('bàn giao: consumersOf — bên nhận của bước và bước con làm lại, trừ chính chúng', eq(H.consumersOf(ws, [ws.steps[0], ws.steps[0].subs[2]]).map(H.holderTitle), ['Backend', 'A', 'API']));
 }
 
+/* Trạng thái đầu vào / đầu ra (ioStatus). */
+{
+  const io = (raw) => CORE.ioStatus(raw);
+  const st = (m, id) => { const s = m.get(id); return `${s.in}/${s.out}`; };
+  const a = io(normWorkspace({ steps: [
+    { id: 's1', title: 'S1', subs: [{ id: 'p', title: 'P', outs: [{ id: 'op', name: 'raw' }] }, { id: 'n', title: 'Neither' }] },
+    { id: 's2', title: 'S2', subs: [{ id: 'q', title: 'Q', ins: ['op'], outs: [{ id: 'oq', name: 'clean' }] }, { id: 'r', title: 'R', ins: ['oq'] }] }] }));
+  check('io: bước con có cả đầu vào lẫn đầu ra đều nối → ok / ok', st(a, 'q') === 'ok/ok');
+  check('io: chỉ có đầu ra → đầu vào none; chỉ có đầu vào → đầu ra none', st(a, 'p') === 'none/ok' && st(a, 'r') === 'ok/none');
+  check('io: không có cả hai → none / none', st(a, 'n') === 'none/none' && !a.get('n').inWhy.length && !a.get('n').outWhy.length);
+  check('io: bước không có đầu vào riêng → đầu vào none, đầu ra gộp bước con', st(a, 's1') === 'none/ok' && st(a, 's2') === 'none/ok');
+  /* Đầu vào treo, đầu ra chỉ có nơi dùng treo: R (bước 1) dùng đầu ra của W (bước 2). */
+  const b = io(normWorkspace({ steps: [
+    { id: 't1', title: 'T1', subs: [{ id: 'u', title: 'U', ins: ['ow'] }] },
+    { id: 't2', title: 'T2', subs: [{ id: 'w', title: 'W', outs: [{ id: 'ow', name: 'model' }] }] }] }));
+  check('io: đầu vào treo → bad, nêu tên đầu ra và bên giao', st(b, 'u') === 'bad/none'
+    && eq(b.get('u').inWhy, [{ kind: 'held', id: 'ow', name: 'model', from: 'W' }]));
+  check('io: đầu ra chỉ được dùng bởi liên kết treo → bad, nêu nơi dùng', st(b, 'w') === 'none/bad'
+    && eq(b.get('w').outWhy, [{ kind: 'held', id: 'ow', name: 'model', to: ['U'] }]));
+  check('io: bước — mọi đầu ra của bước con không có nơi nhận đang nối → bad', st(b, 't2') === 'none/bad');
+  /* Đầu ra không ai dùng; một bước con nhiều đầu ra, một cái không ai dùng; đầu vào trỏ tới đầu ra đã xoá (chưa đọc lại). */
+  const c = normWorkspace({ steps: [
+    { id: 'v1', title: 'V1', outs: [{ id: 'ov', name: 'spec' }], subs: [{ id: 'x', title: 'X', outs: [{ id: 'ox1', name: 'a' }, { id: 'ox2', name: 'b' }] }] },
+    { id: 'v2', title: 'V2', ins: ['ox1'], subs: [{ id: 'y', title: 'Y', ins: ['ox1'] }, { id: 'z', title: 'Z', outs: [{ id: 'oz', name: 'lonely' }] }] }] });
+  c.steps[1].subs[0].ins.push('gone');
+  c.steps[1].ins.push('gone2');
+  const cs = io(c);
+  check('io: đầu ra không ai dùng → bad "unused"', st(cs, 'z') === 'none/bad' && eq(cs.get('z').outWhy, [{ kind: 'unused', id: 'oz', name: 'lonely', to: [] }]));
+  check('io: nhiều đầu ra, một cái không ai dùng → bad, nêu đúng cái ấy', st(cs, 'x') === 'none/bad' && eq(cs.get('x').outWhy.map((w) => w.name), ['b']));
+  check('io: đầu vào trỏ tới đầu ra không còn → bad "missing"', st(cs, 'y') === 'bad/none' && eq(cs.get('y').inWhy, [{ kind: 'missing', id: 'gone', name: '', from: '' }]));
+  check('io: bước — một đầu ra (của bước con) được dùng → ok, vẫn nêu cái chưa dùng', st(cs, 'v1') === 'none/ok'
+    && eq(cs.get('v1').outWhy.map((w) => w.name), ['spec', 'b']));
+  check('io: bước — đầu vào riêng của bước trỏ tới đầu ra không còn → bad', st(cs, 'v2') === 'bad/bad' && cs.get('v2').inWhy[0].kind === 'missing');
+  /* Bước nhận đầu ra của bước con đứng sau nó → đầu vào của bước treo. */
+  const d = io(normWorkspace({ steps: [{ id: 'k1', title: 'K1', ins: ['om'] }, { id: 'k2', title: 'K2', subs: [{ id: 'm', title: 'M', outs: [{ id: 'om', name: 'm' }] }] }] }));
+  check('io: bước — đầu vào riêng của bước treo → bad', st(d, 'k1') === 'bad/none' && d.get('k1').inWhy[0].from === 'M');
+  /* Dời về đúng thứ tự: liên kết nối lại, cả hai bên ok. */
+  const e = normWorkspace({ steps: [{ id: 'k1', title: 'K1', ins: ['om'] }, { id: 'k2', title: 'K2', subs: [{ id: 'm', title: 'M', outs: [{ id: 'om', name: 'm' }] }] }] });
+  e.steps.reverse();
+  const es = io(e);
+  check('io: dời về đúng thứ tự thì cả hai bên ok', st(es, 'k1') === 'ok/none' && st(es, 'm') === 'none/ok');
+}
+
 if (fails) { console.log(`test-core: ${fails} LỖI`); process.exit(1); }
 console.log('test-core: OK');
