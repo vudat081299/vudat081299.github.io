@@ -156,10 +156,11 @@ export function ioStatus(ws, hand = handoffs(ws)) {
     });
   };
   for (const step of ws.steps) {
-    /* Bước con nhận từ chính bước hay bước con cùng bước: việc bên trong, không làm bước "có đầu vào"; lỗi thì vẫn báo. */
-    const outside = step.subs.flatMap((/** @type {any} */ s) => s.ins || []).filter((/** @type {string} */ id) => idx.get(id)?.step !== step).length;
+    /* Bước hay bước con nhận từ chính bước hay bước con cùng bước: việc bên trong, không làm bước "có đầu vào"; lỗi thì vẫn
+     * báo. (Bước nhận đầu ra của bước con của nó chỉ có khi dời bước con ấy vào bước: hộp sửa ghi "inside this step".) */
+    const outside = [step, ...step.subs].flatMap((/** @type {any} */ s) => s.ins || []).filter((/** @type {string} */ id) => idx.get(id)?.step !== step).length;
     const iw = [...inWhy(step), ...step.subs.flatMap((/** @type {any} */ s) => inWhy(s, s.title))];
-    put(step, (step.ins || []).length + outside, iw, [...(step.outs || []), ...step.subs.flatMap((/** @type {any} */ s) => s.outs || [])], true);
+    put(step, outside, iw, [...(step.outs || []), ...step.subs.flatMap((/** @type {any} */ s) => s.outs || [])], true);
     for (const sub of step.subs) put(sub, (sub.ins || []).length, inWhy(sub), sub.outs || [], false);
   }
   return m;

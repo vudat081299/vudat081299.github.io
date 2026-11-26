@@ -3310,6 +3310,33 @@ const check = (name, ok, detail = '') => {
     await nx.close();
   });
 
+  /* ── Bước nhận đầu ra của bước con của chính nó (bước con dời vào sau khi đã nối): chấm đầu vào của bước "none"; hộp sửa bước
+   * hiện chip "inside this step" để gỡ, hộp chọn không đưa ra đầu ra ấy. ── */
+  await section('Đầu vào trong chính bước', async () => {
+    const seed = { version: 2, lastId: 'wi', workspaces: [{ id: 'wi', name: 'Trong bước', steps: [
+      { id: 'i1', title: 'Prep', subs: [{ id: 'iz', title: 'Other', outs: [{ id: 'oz', name: 'other' }] }] },
+      { id: 'i2', title: 'Use', ins: ['oi'], subs: [{ id: 'ix', title: 'Make table', outs: [{ id: 'oi', name: 'table' }] }, { id: 'iy', title: 'Read' }] }], log: [] }] };
+    const ic = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+    await ic.addInitScript((d) => { if (!sessionStorage.getItem('seeded')) { sessionStorage.setItem('seeded', '1'); localStorage.setItem('stepPlanner.v2', d); } }, JSON.stringify(seed));
+    const ip = await ic.newPage();
+    ip.on('pageerror', (e) => errors.push(String(e)));
+    await ip.goto(BASE);
+    await ip.waitForSelector('.card[data-sub="ix"]');
+    const dotIn = await ip.$eval('.step[data-step="i2"] .step-top .io', (el) => el.dataset.ioIn);
+    await ip.click('.step[data-step="i2"] [data-act="edit-step"]');
+    const chip = await ip.$eval('#step-hand [data-ins] .in-chip', (el) => ({ cls: el.className, t: el.textContent, title: el.title }));
+    await ip.click('#step-hand [data-in-pick]');
+    const offered = await ip.$$eval('#pick-groups input[name="pick"]', (cs) => cs.map((c) => c.value));
+    await ip.keyboard.press('Escape');
+    await ip.click('#step-hand .in-chip [data-in-del]');
+    await ip.click('#step-form button[type="submit"]');
+    const w = await cur(ip);
+    check('đầu vào trong chính bước: chấm đầu vào của bước none; hộp sửa ghi "inside this step" (chip lỗi), hộp chọn không đưa ra; gỡ được',
+      dotIn === 'none' && /\bgone\b/.test(chip.cls) && /inside this step/.test(chip.t) && /not an input/.test(chip.title) && !offered.includes('oi')
+      && JSON.stringify(w.steps[1].ins) === '[]', JSON.stringify({ dotIn, chip, offered, ins: w.steps[1].ins }));
+    await ic.close();
+  });
+
   /* ── Dữ liệu lưu bị hỏng ── */
   await section('Dữ liệu lưu bị hỏng', async () => { // thân giữ thụt lề cũ cho dễ gộp
   const bad = await browser.newContext();

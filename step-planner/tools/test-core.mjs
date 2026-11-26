@@ -1143,6 +1143,13 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   /* Bước nhận đầu ra của bước con đứng sau nó → đầu vào của bước treo. */
   const d = io(normWorkspace({ steps: [{ id: 'k1', title: 'K1', ins: ['om'] }, { id: 'k2', title: 'K2', subs: [{ id: 'm', title: 'M', outs: [{ id: 'om', name: 'm' }] }] }] }));
   check('io: bước — đầu vào riêng của bước treo → bad', st(d, 'k1') === 'bad/none' && d.get('k1').inWhy[0].from === 'M');
+  /* Bước nhận đầu ra của X (bước trước); dời X vào chính bước ấy: đầu vào giờ là việc bên trong → none, không phải ok. */
+  const sw = normWorkspace({ steps: [{ id: 'j1', title: 'J1', subs: [{ id: 'jx', title: 'X', outs: [{ id: 'oj', name: 'o' }] }] },
+    { id: 'j2', title: 'J2', ins: ['oj'], subs: [{ id: 'jy', title: 'Y' }] }] });
+  const swBefore = io(sw).get('j2').in;
+  placeSub(sw, sw.steps[0].subs[0], { stepId: 'j2', slot: 0 });
+  check('io: bước nhận đầu ra của bước con của chính nó (sau khi dời bước con vào) → đầu vào none', swBefore === 'ok' && io(sw).get('j2').in === 'none'
+    && eq(sw.steps[1].ins, ['oj']), `${swBefore} → ${io(sw).get('j2').in}`);
   /* Dời về đúng thứ tự: liên kết nối lại, cả hai bên ok. */
   const e = normWorkspace({ steps: [{ id: 'k1', title: 'K1', ins: ['om'] }, { id: 'k2', title: 'K2', subs: [{ id: 'm', title: 'M', outs: [{ id: 'om', name: 'm' }] }] }] });
   e.steps.reverse();
