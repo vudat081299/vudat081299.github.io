@@ -801,8 +801,9 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
     ...cat.profile.find((x) => x.id === q).choices.map((c) => ({ ...p, [q]: c.id }))]), [{}]);
   const hard = (d, ids) => warnings(cat, normDesign(d)).filter((w) => !w.caveat && !EXCEPT.has(w.id) && w.stages.some((x) => ids.includes(x)));
   const selfWarn = new Set(), misfitGrid = new Set(), wantedSkip = new Set();
-  const offArch = new Set();
+  const offArch = new Set(), offStorage = new Set(), minioGrid = new Set();
   const procArch = cat.architectures.find((f) => f.id === 'processing').entries;
+  const storArch = cat.architectures.find((f) => f.id === 'storage').entries;
   for (const pp of cat.paths) {
     for (const profile of grid) {
       const r = applyPath(cat, { path: '', profile, stages: {}, edges: {} }, pp.id);
@@ -825,6 +826,19 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
         if (!st || st.skip || !tools[sid] || st.pick.some((id) => tools[sid].includes(id))) continue;
         if (tools[sid].some((id) => fitOf(optOf(sid, id), effProfile(cat, r.next)).ok)) offArch.add(`${pp.id}/${adv.id}/${sid}=${st.pick} ${JSON.stringify(profile)}`);
       }
+      /* Kho thô, kho phân tích theo kiến trúc lưu trữ đang gợi ý: có công cụ của nó hợp hồ sơ, không làm luật báo ở khâu ấy, thì
+       * phải chọn trong số đó. */
+      const sAdv = archAdvice(cat, r.next).find((a) => a.family === 'storage');
+      const sTools = sAdv.id ? storArch.find((e) => e.id === sAdv.id).tools : {};
+      for (const sid of ['raw', 'store']) {
+        const st = r.next.stages[sid];
+        if (!st || st.skip || !sTools[sid] || st.pick.some((id) => sTools[sid].includes(id))) continue;
+        const usable = sTools[sid].filter((id) => fitOf(optOf(sid, id), eff).ok
+          && !hard({ ...r.next, stages: { ...r.next.stages, [sid]: { ...st, pick: [id] } } }, [sid]).length);
+        if (usable.length) offStorage.add(`${pp.id}/${sAdv.id}/${sid}=${st.pick} (có ${usable}) ${JSON.stringify(profile)}`);
+      }
+      /* MinIO chỉ khi phải tự host dữ liệu cỡ cụm (MinIO: dữ liệu vừa một máy thì thư mục dự án là đủ). */
+      if (r.next.stages.raw?.pick.includes('minio') && !(profile.selfhost === 'yes' && profile.size === 'large')) minioGrid.add(`${pp.id} ${JSON.stringify(profile)}`);
     }
   }
   check('thiết kế: Apply path không chọn phương án (hay bỏ khâu) làm luật báo', !selfWarn.size, [...selfWarn].slice(0, 5).join(' | '));
@@ -838,6 +852,14 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
     && !llm.skipped.includes('search'), [...wantedSkip].slice(0, 5).join(' | '));
   check('thiết kế: Apply path chọn Ingestion, Processing trong công cụ của kiến trúc xử lý đang gợi ý (khi có công cụ hợp hồ sơ)',
     !offArch.size, [...offArch].slice(0, 5).join(' | '));
+  check('thiết kế: Apply path chọn Raw storage, Analytical store trong công cụ của kiến trúc lưu trữ đang gợi ý (khi có công cụ hợp hồ sơ, không làm luật báo)',
+    !offStorage.size, [...offStorage].slice(0, 5).join(' | '));
+  /* Nhóm chia tầng không lái Apply path: medallion liệt kê MinIO ở kho thô, theo nó thì mọi pipeline chưa trả lời câu cỡ dữ
+   * liệu ra MinIO. */
+  const noSize = ['crisp-dm', 'data-pipeline', 'app-feature'].map((id) => [id, applyPath(cat, fromTemplate(templates.find((t) => t.id === id)).design, 'pipeline').next]);
+  check('thiết kế: Apply path không theo nhóm chia tầng — MinIO chỉ khi tự host dữ liệu cỡ cụm; pipeline chưa trả lời cỡ dữ liệu (kiến trúc medallion) không ra MinIO',
+    !minioGrid.size && noSize.every(([, d]) => archAdvice(cat, d).find((a) => a.family === 'layers').id === 'medallion' && !d.stages.raw?.pick.includes('minio')),
+  [...minioGrid].slice(0, 3).join(' | ') + ' ' + noSize.map(([id, d]) => `${id}: ${d.stages.raw?.pick}`).join(', '));
   /* Mỗi kiến trúc được gợi ý có ở mỗi khâu ít nhất một công cụ không làm luật báo; khâu đã quyết theo luật gợi ý cũng thử
    * khi X hợp hồ sơ (luật nói "đã chọn X nên là kiến trúc Y" thì Y phải có công cụ dùng được). Khâu đã quyết nhận nhiều công cụ
    * (`multi`) thì được thêm một công cụ của Y bên cạnh X (dbt cho dữ liệu liên tục: Kafka cần thêm bộ xử lý stream đọc topic).
@@ -871,7 +893,8 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   check('kiến trúc: kiến trúc được gợi ý có công cụ không làm luật báo ở mọi khâu của nó', !badArch.size, [...badArch].slice(0, 5).join(' | '));
   /* Mẫu đặt sẵn hồ sơ, lối (PLAN-033): tạo từ mẫu thì có đúng bộ ấy, không phương án nào được chọn; mẫu trống không có.
    * Mỗi bộ đặt sẵn cho gợi ý kiến trúc hợp mẫu; Apply path (lối của mẫu, mẫu không có lối thì mọi lối) không chọn phương án
-   * nào lệch hồ sơ hay làm luật báo (trừ `caveat`), và Ingestion, Processing nằm trong công cụ của kiến trúc xử lý đang gợi ý. */
+   * nào lệch hồ sơ hay làm luật báo (trừ `caveat`); Ingestion, Processing nằm trong công cụ của kiến trúc xử lý đang gợi ý,
+   * Raw storage, Analytical store trong công cụ của kiến trúc lưu trữ đang gợi ý. */
   const blankWs = fromTemplate(templates.find((t) => !t.steps.length));
   check('mẫu đặt sẵn: mẫu trống không có System design; mọi mẫu khác có', blankWs.design === null && templates.filter((t) => t.steps.length).every((t) => presetDesign(t)));
   const PRESET_ARCH = {
@@ -910,8 +933,14 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
         const st = r.next.stages[sid];
         if (st && !st.skip && tools[sid] && !st.pick.some((o) => tools[sid].includes(o))) bad.push(`${path}: ${sid}=${st.pick} ngoài kiến trúc ${adv.id}`);
       }
+      const sAdv = archAdvice(cat, r.next).find((x) => x.family === 'storage');
+      const sTools = sAdv.id ? cat.architectures.find((f) => f.id === 'storage').entries.find((e) => e.id === sAdv.id).tools : {};
+      for (const sid of ['raw', 'store']) {
+        const st = r.next.stages[sid];
+        if (st && !st.skip && sTools[sid] && !st.pick.some((o) => sTools[sid].includes(o))) bad.push(`${path}: ${sid}=${st.pick} ngoài kiến trúc ${sAdv.id}`);
+      }
     }
-    check(`mẫu đặt sẵn ${t.id}: Apply path không làm luật báo, không chọn phương án lệch hồ sơ, Ingestion và Processing theo kiến trúc xử lý đang gợi ý`, !bad.length && Object.keys(prof).length > 0, bad.join(' | '));
+    check(`mẫu đặt sẵn ${t.id}: Apply path không làm luật báo, không chọn phương án lệch hồ sơ, Ingestion và Processing theo kiến trúc xử lý, Raw storage và Analytical store theo kiến trúc lưu trữ đang gợi ý`, !bad.length && Object.keys(prof).length > 0, bad.join(' | '));
   }
   const pick = (id, sid) => plans[id]?.stages[sid]?.skip ? 'skip' : plans[id]?.stages[sid]?.pick.join('+');
   check('mẫu đặt sẵn lakehouse-oss: Apply path chọn công cụ tự host — MinIO, dbt + dbt test, DuckDB trên Iceberg',
@@ -943,15 +972,31 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   check('mẫu đặt sẵn: chưa quyết Training, Serving thì không gợi ý kiến trúc model (it5425-sports, app-feature, stats-report, data-pipeline, lakehouse-oss)',
     !mlBad.length && mlOf(plans['it5425-sports']) === null && mlOf(plans['data-pipeline']) === null && mlOf(plans['lakehouse-oss']) === null, mlBad.join(' | '));
   /* big-data-ds với lối pipeline: kho phân tích không phải BigQuery đọc R2; giám sát lag Kafka; xử lý bằng công cụ stream của cụm. */
-  const bdPipe = applyPath(cat, fromTemplate(templates.find((t) => t.id === 'big-data-ds')).design, 'pipeline').next;
+  const bdTpl = templates.find((t) => t.id === 'big-data-ds');
+  const bdPipe = applyPath(cat, fromTemplate(bdTpl).design, 'pipeline').next;
   const bdp = (sid) => (bdPipe.stages[sid]?.skip ? 'skip' : bdPipe.stages[sid]?.pick.join('+'));
   const bdArch = archAdvice(cat, bdPipe).find((a) => a.family === 'processing').id;
-  const bdStore = cat.architectures.find((f) => f.id === 'processing').entries.find((e) => e.id === bdArch).tools.store;
-  check('mẫu đặt sẵn big-data-ds, lối pipeline: Kafka, Spark Structured Streaming, kho kết quả của kiến trúc streaming, giám sát lag Kafka; không dbt test thiếu dbt, không ghép R2 với BigQuery',
+  check('mẫu đặt sẵn big-data-ds, lối pipeline: Kafka, Spark Structured Streaming, giám sát lag Kafka; không dbt test thiếu dbt, không ghép R2 với BigQuery',
     bdp('ingest') === 'kafka' && bdp('process') === 'spark-streaming' && bdp('monitor') === 'kafka-lag' && bdArch === 'streaming'
-    && bdStore.includes(bdp('store')) && bdp('validate') !== 'dbt-tests'
+    && bdp('validate') !== 'dbt-tests'
     && !(bdp('store') === 'bigquery' && ['cloudflare-r2', 'minio', 'hdfs'].includes(bdp('raw'))) && !warnings(cat, bdPipe).filter((w) => !w.caveat).length,
   JSON.stringify(Object.fromEntries(Object.keys(bdPipe.stages).map((k) => [k, bdp(k)]))));
+  /* big-data-ds, mọi lối: kho thô, kho phân tích là công cụ của lakehouse (bước của mẫu: Delta Lake trên object storage hay
+   * HDFS, engine SQL đọc thẳng lake như Trino, DuckDB), không phải kho kết quả của kiến trúc streaming (ClickHouse). Công cụ
+   * phải có tên, hay loại (hai chữ cuối của `kind`: "object storage"), được bước của mẫu nhắc tới. */
+  const bdText = JSON.stringify(bdTpl.steps).toLowerCase();
+  const lakeTools = cat.architectures.find((f) => f.id === 'storage').entries.find((e) => e.id === 'lakehouse').tools;
+  const bdLake = cat.paths.flatMap((pp) => {
+    const d = applyPath(cat, fromTemplate(bdTpl).design, pp.id).next;
+    const why = archAdvice(cat, d).find((a) => a.family === 'storage').id === 'lakehouse' ? [] : [`${pp.id}: không còn lakehouse`];
+    return [...why, ...['raw', 'store'].flatMap((sid) => (d.stages[sid]?.pick || []).filter((o) => {
+      const opt = optOf(sid, o);
+      return !lakeTools[sid].includes(o) || ![opt.name.split(' ')[0], opt.kind.split(' ').slice(-2).join(' ')].some((w) => bdText.includes(w.toLowerCase()));
+    }).map((o) => `${pp.id}: ${sid}=${o}`))];
+  });
+  check('mẫu đặt sẵn big-data-ds, mọi lối: Raw storage, Analytical store là công cụ lakehouse mà bước của mẫu nhắc tới; lối pipeline có cả hai',
+    !bdLake.length && !!bdp('raw') && !!bdp('store') && bdp('store') !== 'clickhouse',
+  bdLake.join(' | ') + ' ' + JSON.stringify({ raw: bdp('raw'), store: bdp('store') }));
   /* lakehouse-oss: Apply path đóng gói bằng Docker Compose; stack ví dụ của mẫu không làm luật báo với bộ đặt sẵn. Bước giả lập
    * luồng (Kafka + một công cụ lịch ở Ingestion, Spark Structured Streaming + dbt ở Processing) không báo khi đổi câu độ mới
    * sang Continuously, như ghi chú bước 7 dặn. */

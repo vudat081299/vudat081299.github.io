@@ -144,20 +144,34 @@ export function notNeededBy(stage, profile) {
   return Object.entries(when).filter(([k, v]) => profile[k] && Array.isArray(v) && !v.includes(profile[k])).map(([k]) => k);
 }
 
-/** Nhóm kiến trúc Apply path theo (PLAN-037): luật của nó gộp độ mới × độ trễ, điều `fit` từng câu không diễn tả được. */
-const APPLY_FAMILY = 'processing';
+/**
+ * Nhóm kiến trúc Apply path theo (PLAN-037), theo khâu, nhóm đứng trước được ưu tiên. Kho thô, kho phân tích: nhóm lưu trữ
+ * (cỡ × loại dữ liệu × tự host × ngân sách) rồi nhóm xử lý; kho phân tích là lựa chọn chính của khâu, kho phục vụ của kiến trúc
+ * stream (Cassandra, Redis) người dùng chọn thêm. Mọi khâu khác: nhóm xử lý (độ mới × độ trễ). Luật của các nhóm ấy gộp nhiều
+ * câu hồ sơ, điều `fit` từng câu không diễn tả được. Nhóm chia tầng (layers) không có ở đây: cách chia tầng độc lập với nơi
+ * lưu, công cụ của nó chỉ là ví dụ chỗ dựng các tầng; theo nó thì medallion đẩy MinIO vào mọi pipeline.
+ */
+const APPLY_BY_STAGE = { raw: ['storage', 'processing'], store: ['storage', 'processing'] };
+const APPLY_DEFAULT = ['processing'];
 
 /**
- * Phương án mà kiến trúc xử lý đang gợi ý (với thiết kế lúc ấy) liệt kê ở khâu `sid` lên trước, giữ thứ tự của `rankOptions`
- * trong mỗi nhóm. Chỉ đổi thứ tự: phương án lệch hồ sơ vẫn không được chọn. Vd. dữ liệu liên tục mà xem theo lịch: công cụ lịch
- * và công cụ lô của batch ETL đứng trước Kafka; chưa trả lời câu độ trễ: Kafka và công cụ stream của kiến trúc streaming.
+ * Phương án mà kiến trúc đang gợi ý (với thiết kế lúc ấy) liệt kê ở khâu `sid` lên trước theo thứ tự nhóm của `APPLY_BY_STAGE`,
+ * giữ thứ tự của `rankOptions` trong mỗi nhóm. Chỉ đổi thứ tự: phương án lệch hồ sơ vẫn không được chọn. Vd. dữ liệu
+ * liên tục mà xem theo lịch: công cụ lịch và công cụ lô của batch ETL đứng trước Kafka; dữ liệu lớn: object storage, table
+ * format, engine SQL của lakehouse đứng trước R2 và ClickHouse của streaming.
  * @param {any} cat @param {any} design @param {string} sid @param {any[]} rows hàng của `rankOptions`
  */
 function byArch(cat, design, sid, rows) {
-  const a = archAdvice(cat, design).find((x) => x.family === APPLY_FAMILY);
-  const tools = (a?.id && cat.architectures.find((/** @type {any} */ f) => f.id === APPLY_FAMILY).entries
-    .find((/** @type {any} */ e) => e.id === a.id)?.tools?.[sid]) || [];
-  return [...rows.filter((x) => tools.includes(x.opt.id)), ...rows.filter((x) => !tools.includes(x.opt.id))];
+  const adv = archAdvice(cat, design);
+  const toolsOf = (/** @type {string} */ fam) => {
+    const id = adv.find((x) => x.family === fam)?.id;
+    return (id && cat.architectures.find((/** @type {any} */ f) => f.id === fam)?.entries
+      .find((/** @type {any} */ e) => e.id === id)?.tools?.[sid]) || [];
+  };
+  const lists = (/** @type {Record<string, string[]>} */ (APPLY_BY_STAGE)[sid] || APPLY_DEFAULT).map(toolsOf);
+  /* Khoá so sánh: có trong danh sách nhóm thứ nhất, rồi nhóm thứ hai (công cụ cả hai nhóm cùng liệt kê đứng đầu). */
+  const rank = (/** @type {any} */ x) => lists.reduce((n, l) => n * 2 + (l.includes(x.opt.id) ? 0 : 1), 0);
+  return rows.map((x, i) => ({ x, i, k: rank(x) })).sort((a, b) => (a.k - b.k) || (a.i - b.i)).map((r) => r.x);
 }
 
 /**

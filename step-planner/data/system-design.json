@@ -6030,7 +6030,7 @@
         {
           "id": "files-db",
           "name": "Files + one database",
-          "what": "Không dựng nền tảng nào: dữ liệu thô là file trong thư mục dự án, bản sạch là Parquet đọc bằng DuckDB hay một bảng SQLite, PostgreSQL; mọi thứ chạy trên một máy.",
+          "what": "Không dựng nền tảng nào: dữ liệu thô là file trong thư mục dự án, bản sạch là Parquet đọc bằng DuckDB hay một bảng SQLite, PostgreSQL (tự chạy hay được host như Supabase, Neon); mọi thứ chạy trên một máy.",
           "use": "Dữ liệu vừa một máy, một người hay một nhóm nhỏ dùng: phần lớn đồ án và dự án học. Vẫn chia ba thư mục raw, clean, gold theo tinh thần medallion.",
           "avoid": "Dữ liệu vượt một máy; nhiều nhóm, nhiều công cụ cùng đọc ghi và cần phân quyền theo bảng.",
           "flow": [
@@ -6053,7 +6053,9 @@
             "store": [
               "parquet-duckdb",
               "sqlite",
-              "postgresql"
+              "postgresql",
+              "supabase",
+              "neon"
             ]
           },
           "sources": [
@@ -6138,7 +6140,7 @@
         {
           "id": "lakehouse",
           "name": "Lakehouse",
-          "what": "Lake cộng một lớp bảng có giao dịch ACID (Delta Lake, Iceberg, Hudi) và một catalog giữ danh sách bảng: một bản dữ liệu trên object storage (S3, MinIO) dùng chung cho SQL, BI và ML. Bảng thường được chia tầng theo medallion (xem nhóm How tables are layered).",
+          "what": "Lake cộng một lớp bảng có giao dịch ACID (Delta Lake, Iceberg, Hudi) và một catalog giữ danh sách bảng: một bản dữ liệu trên object storage (S3, R2, GCS, MinIO) dùng chung cho SQL, BI và ML. Bảng thường được chia tầng theo medallion (xem nhóm How tables are layered).",
           "use": "Dữ liệu lớn vừa cần SQL vừa cần Spark, Python cho ML; dữ liệu được ghi thêm, sửa nhiều lần; muốn quay lại đúng phiên bản đã dùng để train; hoặc phải tự host bằng mã nguồn mở: MinIO + Iceberg + Polaris thay cho warehouse được quản lý.",
           "avoid": "Dữ liệu vừa một máy: ba thư mục Parquet (raw, clean, gold) cộng DuckDB đã cho đủ ba tầng, không cần table format hay Spark.",
           "flow": [
@@ -6151,6 +6153,8 @@
             "raw": [
               "minio",
               "s3",
+              "cloudflare-r2",
+              "gcs",
               "delta-lake",
               "iceberg",
               "hudi",
