@@ -2,7 +2,8 @@
 
 /* ── Đầu dự án: tên (bấm để đổi), tiến độ chung, chú giải trạng thái có số đếm ── */
 .proj { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--s3) var(--s5); flex-wrap: wrap; padding: var(--s5) 0 var(--s4); }
-.proj-name { min-width: 0; flex: 1 1 var(--proj-name-min); }
+/* Cùng một dòng: tên lấy gần hết chỗ trống. Tiến độ xuống dòng riêng: nó lấp cả dòng, thanh chạy tới mép nội dung. */
+.proj-name { min-width: 0; flex: 1000 1 var(--proj-name-min); }
 .proj-k { font: 500 var(--fs-xs)/var(--lh-tight) var(--mono); color: var(--ink-3); letter-spacing: .04em; text-transform: uppercase; margin-bottom: var(--s1); }
 .top-name { font: inherit; min-width: 0; }
 .ws-btn {
@@ -14,7 +15,7 @@
 .ws-btn svg.i { color: var(--ink-3); }
 @media (hover: hover) { .ws-btn:hover { background: var(--chip); } }
 .ws-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
-.overall { display: flex; flex-direction: column; gap: var(--s2); flex: 0 1 auto; min-width: 0; }
+.overall { display: flex; flex-direction: column; gap: var(--s2); flex: 1 1 auto; min-width: 0; }
 .overall-row { display: flex; align-items: center; gap: var(--s3); }
 .overall-text { font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-2); white-space: nowrap; }
 .overall-row .bar-prog { flex: 1 1 auto; min-width: calc(var(--card-w) * .6); }
@@ -24,7 +25,7 @@
 @media (max-width: 640px) {
   .proj { padding: var(--s4) 0 var(--s3); }
   .ws-btn { font-size: var(--fs-xl); }
-  .overall { flex: 1 1 100%; }
+  .overall { flex-basis: 100%; }
 }
 
 /* ── Thanh tiến độ (đầu dự án, mỗi bước) ── */
@@ -51,7 +52,7 @@
 .tools { display: flex; align-items: center; gap: var(--s2); flex-wrap: wrap; padding: 0 0 var(--s3); }
 .search { position: relative; flex: 0 1 var(--search-w); min-width: 0; display: flex; align-items: center; }
 .search svg.i { position: absolute; left: var(--s3); color: var(--ink-3); pointer-events: none; }
-.search .input { padding-left: calc(var(--s3) + var(--icon) + var(--s2)); }
+.search .input { padding-left: calc(var(--s3) + var(--icon) + var(--s2)); text-overflow: ellipsis; }
 /* Nút xoá chữ của ô tìm: thay dấu × màu xanh của trình duyệt bằng × của bộ biểu tượng, màu chữ phụ. */
 .search .input::-webkit-search-cancel-button {
   -webkit-appearance: none; appearance: none; width: var(--fs-sm); height: var(--fs-sm); cursor: pointer; background: var(--ink-3);
@@ -61,7 +62,11 @@
 @media (hover: hover) { .search .input::-webkit-search-cancel-button:hover { background: var(--ink); } }
 /* Lọc trạng thái: danh sách tự dựng cạnh ô tìm. */
 .st-filter { position: relative; flex: 0 0 var(--filter-w); min-width: 0; }
-.filter-note { font-size: var(--fs-sm); color: var(--ink-3); }
+/* Ghi chú "n match": lấp chỗ trống của hàng, không bao giờ đẩy hàng xuống dòng (chữ dài thì "…", đủ ở title); rỗng thì không chiếm chỗ. */
+.filter-note { display: flex; flex: 1 1 0; min-width: 0; white-space: nowrap; font-size: var(--fs-sm); color: var(--ink-3); }
+.filter-note > :last-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.filter-note:empty { display: none; }
+.filter-note:not(:empty) ~ .tools-gap { display: none; }
 .tool-btns { display: flex; align-items: center; gap: var(--s1); flex-wrap: wrap; }
 /* Nút bật / tắt (Gọn): đang bật thì nền rãnh, chữ đậm. */
 .btn[aria-pressed="true"] { color: var(--ink); background: var(--surface-2); border-color: var(--line); }
@@ -69,6 +74,7 @@
   .search { flex: 1 1 100%; }
   .st-filter { flex: 1 1 100%; }
   .tools-gap { display: none; }
+  .filter-note { display: block; white-space: normal; }
   .tool-btns { flex: 1 1 100%; }
   .tool-btns .btn { flex: 1 1 0; padding: 0 var(--s2); }
 }

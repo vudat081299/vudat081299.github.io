@@ -99,8 +99,11 @@ export function renderBoard(ws, opt = {}) {
     h('button', { type: 'button', class: 'btn', 'data-act': 'clear-filter' }, st ? 'Clear filters' : 'Clear search')));
   placeChildren(board, nodes, moved);
   for (const p of plan) if (p.row) patchRowIndex(p.row, p.i);
-  $('renumber-btn').hidden = !labelsStale(ws);
-  $('filter-note').textContent = filtering ? `${plural(shown, 'sub-step')} match · reordering is off while ${q ? 'searching' : 'filtering'}` : '';
+  /* Đang lọc thì không dời được, số không lệch thêm: Renumber nhường chỗ cho ghi chú số khớp. */
+  $('renumber-btn').hidden = filtering || !labelsStale(ws);
+  const why = `\u00a0· reordering is off while ${q ? 'searching' : 'filtering'}`;
+  $('filter-note').replaceChildren(...(filtering ? [h('span', {}, `${plural(shown, 'sub-step')} match`), h('span', {}, why)] : []));
+  $('filter-note').title = filtering ? `${plural(shown, 'sub-step')} match${why}` : '';
   $('add-step').hidden = filtering;
   /* 4. Đo: thẻ của hàng mới (Compact vừa đổi: mọi thẻ) — một lần dàn trang cho cả lượt. */
   if (compactChanged) markCut(cutBoxes(nodes), new Set([...keep.open, ...openKeys(cutBoxes(nodes))]));
@@ -171,7 +174,8 @@ const handSig = (pairs) => (pairs || []).map((p) => [p.from.h.id, p.to.h.id, p.o
 /* ── Số đứng yên trong phiên: chụp số của mọi bước, bước con khi dự án hiện lần đầu trong lần mở trang này (và sau khi nhập
  * thay nội dung). Dời chỗ không đổi số, nên hàng đọc được "1 3 2" và người dùng thấy vừa đổi chỗ những gì; tải lại trang
  * hay bấm "Renumber" mới đánh số lại. Cái thêm trong phiên chưa có số: hiện dấu chấm "added this session". ── */
-/** @type {Map<string, Map<string, string>>} */
+/** Dự án chưa có bước lúc chụp (vừa tạo trống): cái thêm nhận số ngay, tới lần đầu một số đã có phải đổi (dời, xoá giữa
+ * chừng); từ đó số đứng yên như mọi dự án. @type {Map<string, {m: Map<string, string>, grow: boolean}>} */
 const frozen = new Map();
 /** Nhập thay nội dung dự án: chụp số lại, lần vẽ sau dựng lại cả bảng. @param {string} wsId */
 export function resetBoard(wsId) {
@@ -180,9 +184,14 @@ export function resetBoard(wsId) {
 }
 /** @param {any} ws @returns {Map<string, string>} */
 export function labelsOf(ws) {
-  let m = frozen.get(ws.id);
-  if (!m) { m = liveLabels(ws); frozen.set(ws.id, m); }
-  return m;
+  let f = frozen.get(ws.id);
+  if (!f) { f = { m: liveLabels(ws), grow: !ws.steps.length }; frozen.set(ws.id, f); }
+  if (f.grow) {
+    const live = liveLabels(ws);
+    if ([...f.m].every(([id, l]) => !live.has(id) || live.get(id) === l)) f.m = live;
+    else f.grow = false;
+  }
+  return f.m;
 }
 /** Số đang hiện khác số thật (đã dời, thêm, xoá)? @param {any} ws */
 function labelsStale(ws) {

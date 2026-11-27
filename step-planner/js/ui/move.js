@@ -106,7 +106,7 @@ export function endMove(m, swapId, focusSel) {
     return;
   }
   m.undo = () => undoMove(m);
-  toast(movedText(ws, m.kind, m.id, m.fromStepId) + newlyHeld(ws, m.held), m.undo, focusSel, false);
+  toast(movedText(ws, m.kind, m.id, m.fromStepId) + newlyHeld(ws, m.held, undefined, m.id), m.undo, focusSel, false);
 }
 function undoMove(/** @type {any} */ m) {
   lastMove = null;

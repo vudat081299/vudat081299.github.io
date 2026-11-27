@@ -120,8 +120,8 @@
 
   <div class="hint" id="hint" hidden>
     <svg class="i" aria-hidden="true"><use href="#i-hint"/></svg>
-    <p><b>Tip:</b> click a card to edit it · click the status chip for New → In progress → Done, Shift-click for any status
-      <span class="only-mouse">· drag a card to move it, drop it under another card to run both in parallel (keyboard: Alt + arrows on its title)</span><span class="only-touch">· press and hold a card to drag it; drop it under another card to run both in parallel</span></p>
+    <p><b>Tip:</b>
+      <span class="only-mouse">click a card to edit it · click the status chip for New → In progress → Done, Shift-click for any status · drag a card to move it, drop it under another card to run both in parallel (keyboard: Alt + arrows on its title)</span><span class="only-touch">tap the status chip for New → In progress → Done · tap a card to edit it and pick any status · press and hold a card to drag it; drop it under another card to run both in parallel</span></p>
     <button type="button" class="icon-btn" id="hint-off" aria-label="Hide tip" title="Hide tip">
       <svg class="i" aria-hidden="true"><use href="#i-x"/></svg>
     </button>
@@ -131,7 +131,7 @@
     <label class="search">
       <svg class="i" aria-hidden="true"><use href="#i-search"/></svg>
       <span class="sr">Search</span>
-      <input type="search" class="input" id="q" placeholder="Search steps, sub-steps, notes" autocomplete="off">
+      <input type="search" class="input" id="q" placeholder="Search steps and notes" autocomplete="off">
     </label>
     <label class="st-filter" title="Show only sub-steps with these statuses">
       <span class="sr">Status filter</span>
@@ -143,8 +143,8 @@
         <option value="out">Skipped, cancelled</option>
       </select>
     </label>
+    <button type="button" class="btn" id="renumber-btn" hidden title="Numbers stay put until you reload, so you can see what moved. Click to number everything in the current order">Renumber</button>
     <span class="filter-note" id="filter-note" role="status"></span>
-    <button type="button" class="btn small quiet" id="renumber-btn" hidden title="Numbers stay put until you reload, so you can see what moved. Click to number everything in the current order">Renumber</button>
     <span class="tools-gap"></span>
     <div class="tool-btns">
       <button type="button" class="btn quiet" id="compact-btn" aria-pressed="false" title="Hide Done when and notes on cards and steps"><svg class="i" aria-hidden="true"><use href="#i-compact"/></svg>Compact</button>

@@ -930,10 +930,10 @@ function wire() {
   fig.addEventListener('click', openNode);
   /* Đóng hộp mà nút sơ đồ mở hộp không còn (khâu vừa thành Not needed, đường nối mất): focus về khung, trang đứng yên.
    * Window, pha bắt: chạy trước restoreFocus của dialogs.js (document), vốn rơi về bảng và cuộn trang. Còn nút cùng chỗ thì để
-   * restoreFocus tìm lại. */
+   * restoreFocus tìm lại. Hộp đã mở lại (sự kiện close cũ tới muộn): giữ nút mở của lần mở mới. */
   addEventListener('close', (/** @type {Event} */ e) => {
     const o = figOpener;
-    if (e.target !== $('dlg-sd') || !o) return;
+    if (e.target !== $('dlg-sd') || !o || $('dlg-sd').open) return;
     figOpener = null;
     const a = document.activeElement;
     if (o.isConnected || (a && a !== document.body && !$('dlg-sd').contains(a))) return;

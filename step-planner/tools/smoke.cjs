@@ -1708,10 +1708,21 @@ const check = (name, ok, detail = '') => {
       const r = (s) => row.querySelector(s).getBoundingClientRect();
       return { head: r('.step-head'), band: r('.revisit-band'), docs: r('.step-docs'), cards: r('.cards-scroll') };
     });
-    check(`${w}px: bước đọc liền một khối (${w < 500 ? 'đầu bước, băng, tài liệu, thẻ' : 'băng, tài liệu trên cột tên và hàng thẻ'})`, w < 500
-      ? ord.head.bottom <= ord.band.top + 1 && ord.band.bottom <= ord.docs.top + 1 && ord.docs.bottom <= ord.cards.top + 1
-      : ord.band.bottom <= ord.docs.top + 1 && ord.docs.bottom <= Math.min(ord.head.top, ord.cards.top) + 1,
+    // Mọi khổ cùng thứ tự với DOM (vòng Tab): băng, tài liệu, rồi đầu bước; một cột thì đầu bước trên hàng thẻ.
+    check(`${w}px: bước đọc liền một khối, đúng thứ tự DOM (băng, tài liệu, ${w < 500 ? 'đầu bước, thẻ' : 'cột tên và hàng thẻ'})`,
+      ord.band.bottom <= ord.docs.top + 1 && ord.docs.bottom <= Math.min(ord.head.top, ord.cards.top) + 1
+      && (w >= 500 || ord.head.bottom <= ord.cards.top + 1),
     JSON.stringify(Object.fromEntries(Object.entries(ord).map(([k, v]) => [k, [Math.round(v.top), Math.round(v.bottom)]]))));
+    // Vòng Tab theo thứ tự đọc: điểm dừng Tab đi qua các khối đúng thứ tự vừa đo, không khối nào bị CSS order đảo chỗ.
+    const tabOrd = await lp.evaluate(() => {
+      const row = document.querySelector('.step[data-step="tl1"]');
+      const blocks = ['.revisit-band', '.step-docs', '.step-head', '.cards-scroll'];
+      const stops = [...row.querySelectorAll('a[href], button, summary')].filter((e) => e.tabIndex >= 0 && e.getClientRects().length);
+      return { seq: [...new Set(stops.map((e) => blocks.find((b) => e.closest(b))))].join(' '),
+        order: blocks.map((b) => getComputedStyle(row.querySelector(b)).order).join() };
+    });
+    check(`${w}px: vòng Tab trong một bước theo thứ tự đọc`, tabOrd.seq === '.revisit-band .step-docs .step-head .cards-scroll' && tabOrd.order === '0,0,0,0',
+      JSON.stringify(tabOrd));
     // Hàng nút của đầu bước (Sub-step, Reopen, Doc, xoá) nằm một dòng; nút phụ chỉ biểu tượng, có aria-label và title.
     const acts = await lp.$eval('.step[data-step="tl2"] .step-head .acts', (a) => {
       const bs = [...a.children];
@@ -2703,6 +2714,8 @@ const check = (name, ok, detail = '') => {
     check(`${tag}: "Show what can be done now" lọc Actionable: chỉ New / In progress, tắt sắp xếp và thêm bước`, (await shownIds()) === 'sn2,sn3'
       && (await np.textContent('.st-filter .dd-btn')).trim() === 'Actionable' && /reordering is off while filtering/.test(await np.textContent('#filter-note'))
       && !(await np.isVisible('#add-step')) && !(await np.$('.step-grip')) && !(await np.isVisible('#next-wait [data-act="show-act"]')), await shownIds());
+    // Không nút lọc (đang lọc Actionable): dòng kết thúc bằng dấu chấm, không có chữ "false" của điều kiện rỗng.
+    check(`${tag}: lọc Actionable: dòng "Next waits on" không in "false" / "null"`, /\.$/.test((await np.textContent('#next-wait')).trim()), await np.textContent('#next-wait'));
     await np.click('.st-filter .dd-btn');
     await np.click('.dd-pop [role="option"][data-value="wait"]');
     check(`${tag}: lọc Waiting: Pending và Blocked`, (await shownIds()) === 'sn1,sn4', await shownIds());
@@ -3604,7 +3617,11 @@ const check = (name, ok, detail = '') => {
     const cat = await dp.evaluate(async () => (await fetch('data/system-design.json')).json());
     const pageOf = (id) => cat.stages.findIndex((s) => s.id === id) + 3;
     const last = cat.stages.at(-1).id;
-    const shut = (page) => waitTo(page, 'hộp System design đóng', () => !document.getElementById('dlg-sd').open);
+    /* Sự kiện close (trả focus) tới ở lượt việc sau khi `open` tắt: chờ tới khi focus đã ra khỏi hộp, không ở body. */
+    const shut = (page) => waitTo(page, 'hộp System design đóng, focus đã về trang', () => {
+      const d = document.getElementById('dlg-sd'), a = document.activeElement;
+      return !d.open && !!a && a !== document.body && !d.contains(a);
+    });
     const focusIs = (page, sel) => page.waitForFunction((q) => document.activeElement === document.querySelector(q), sel, { timeout: 2000 }).then(() => true, () => false);
     /* Lòng nút chưa quyết (nền trong suốt, không phải `none`) nhận chuột. */
     const probe = (n) => {
@@ -4162,6 +4179,170 @@ const check = (name, ok, detail = '') => {
       await waitTo(q, 'hộp sửa đóng', () => !document.querySelector('dialog[open]'));
     }
     check('gỡ đầu vào cuối khi nút chọn tắt: focus nút còn bật, không về body', res.every((r) => r.off && r.at === 'Add output'), JSON.stringify(res));
+  });
+
+  /* ── Bảng và thanh trên: các lỗi chỉ thấy khi bấm thật ── */
+  /** Mở trang với dữ liệu gieo sẵn (mỗi context một lần). @param {number} w @param {number} hh @param {any} data */
+  const seeded = async (w, hh, data) => {
+    const ctx = await browser.newContext({ viewport: { width: w, height: hh }, isMobile: w < 500, hasTouch: w < 500 });
+    if (data) await ctx.addInitScript((d) => { if (!localStorage.getItem('stepPlanner.v2')) localStorage.setItem('stepPlanner.v2', d); }, JSON.stringify(data));
+    const page = await ctx.newPage();
+    page.on('pageerror', (e) => errors.push(String(e)));
+    await page.goto(BASE);
+    return { ctx, page };
+  };
+  const three = { version: 2, lastId: 'wk', workspaces: [{ id: 'wk', name: 'Ba bước', steps: ['Một', 'Hai', 'Ba'].map((t, i) => ({ id: 'tk' + i, title: t,
+    subs: [{ id: `k${i}a`, title: `Việc ${i}a`, status: 'todo' }, { id: `k${i}b`, title: `Việc ${i}b`, status: 'todo' }, { id: `k${i}c`, title: `Việc ${i}c ngắn`, status: 'todo' }] })), log: [] }] };
+
+  /* Chạm thật qua CDP (Input.dispatchTouchEvent): trình duyệt tự capture ngón vào phần tử dưới ngón, như trên máy thật.
+   * PointerEvent tự dựng bỏ qua bước ấy, nên phần "Điện thoại 390px" không thấy lỗi kéo bước bằng tay nắm tự huỷ. */
+  await section('Kéo bằng ngón thật (CDP)', async () => {
+    const { ctx, page } = await seeded(390, 844, three);
+    await page.waitForSelector('.step[data-step="tk0"] .step-grip');
+    const cdp = await ctx.newCDPSession(page);
+    const touch = (type, pts) => cdp.send('Input.dispatchTouchEvent', { type, touchPoints: pts.map(([x, y]) => ({ x, y, id: 1 })) });
+    const ghost = () => page.evaluate(() => !!document.querySelector('.drag-ghost'));
+    const order = () => page.$$eval('#board .step[data-step]', (s) => s.map((x) => x.dataset.step).join());
+    const g = await page.$eval('.step[data-step="tk0"] .step-grip', (e) => { e.scrollIntoView({ block: 'start' }); const r = e.getBoundingClientRect(); return [r.x + r.width / 2, r.y + r.height / 2]; });
+    const to = await page.$eval('.step[data-step="tk1"]', (e) => e.getBoundingClientRect().bottom - 8);
+    await touch('touchStart', [g]);
+    const frames = [];
+    for (let i = 1; i <= 10; i++) { await touch('touchMove', [[g[0], g[1] + (to - g[1]) * i / 10]]); frames.push(await ghost()); }
+    await touch('touchEnd', []);
+    await waitTo(page, 'bóng kéo bước gỡ sau khi thả', () => !document.querySelector('.drag-ghost'));
+    check('chạm thật: kéo bước bằng tay nắm không tự huỷ ở khung hình đầu; thả là dời', frames.every(Boolean) && (await order()) !== 'tk0,tk1,tk2',
+      `${frames.map(Number).join('')} ${await order()}`);
+    // Thẻ: giữ yên tới khi bóng hiện (đợi theo điều kiện), rồi kéo; bóng còn ở mọi khung hình.
+    const c = await page.$eval('.card[data-sub="k2a"]', (e) => { e.scrollIntoView({ block: 'center' }); const r = e.getBoundingClientRect(); return [r.x + r.width / 2, r.y + 12]; });
+    await touch('touchStart', [c]);
+    const held = await waitTo(page, 'giữ thẻ đủ lâu thì bắt đầu kéo', () => !!document.querySelector('.drag-ghost'));
+    const cf = [];
+    for (let i = 1; i <= 6; i++) { await touch('touchMove', [[c[0] + 4 * i, c[1] + 2 * i]]); cf.push(await ghost()); }
+    await touch('touchEnd', []);
+    check('chạm thật: giữ thẻ rồi kéo, bóng không mất giữa chừng', held && cf.every(Boolean), cf.map(Number).join(''));
+    await ctx.close();
+  });
+
+  /* Thanh công cụ: gõ tìm không đẩy hàng xuống dòng (bảng không nhảy); ghi chú rỗng không chiếm dòng; Renumber cao như nút bên cạnh. */
+  await section('Thanh công cụ khi tìm', async () => {
+    for (const [w, hh] of [[1440, 900], [1280, 800], [390, 844]]) {
+      const { ctx, page } = await seeded(w, hh, three);
+      await page.waitForSelector('.card[data-sub="k0a"]');
+      const m = () => page.evaluate(() => {
+        const r = (s) => { const e = document.querySelector(s); return e && e.getClientRects().length ? e.getBoundingClientRect() : null; };
+        return { tools: Math.round(r('.tools').height), board: Math.round(r('#board').top), note: !!r('#filter-note'), q: Math.round(r('#q').left),
+          ren: r('#renumber-btn') && [Math.round(r('#renumber-btn').left), Math.round(r('#renumber-btn').height)], compact: Math.round(r('#compact-btn').height) };
+      });
+      const a = await m();
+      await page.focus('.card[data-sub="k0a"] [data-act="edit-sub"]');
+      await page.keyboard.press('Alt+ArrowRight');
+      const b = await m();
+      check(`thanh công cụ ${w}px: ghi chú lọc rỗng không chiếm chỗ; Renumber cao như nút Compact${w < 500 ? ', thẳng mép ô tìm' : ''}`, !a.note && !b.note
+        && !!b.ren && b.ren[1] === b.compact && (w >= 500 || b.ren[0] === b.q), JSON.stringify({ a, b }));
+      await page.fill('#q', 'việc');
+      const c = await m();
+      const note = await page.evaluate(() => { const n = document.getElementById('filter-note'); return { text: n.textContent, title: n.title }; });
+      check(`thanh công cụ ${w}px: gõ tìm hiện số khớp${w < 500 ? '' : ', hàng không xuống dòng, bảng không nhảy'}`, c.note && /^9 sub-steps match/.test(note.text)
+        && note.title.replace(/ /g, ' ') === '9 sub-steps match · reordering is off while searching' && (w < 500 || (c.tools === a.tools && c.board === b.board)),
+        JSON.stringify({ a, c, note }));
+      check(`thanh công cụ ${w}px: trang không tràn ngang`, (await hOverflow(page)) <= 0);
+      await ctx.close();
+    }
+  });
+
+  /* Thẻ cao: "Show less" kéo nút về khung nhìn; Compact bật rồi tắt giữ khối đã mở. */
+  await section('Thẻ mở: Show less, Compact', async () => {
+    const long = Array.from({ length: 40 }, (_, i) => `Dòng ghi chú ${i + 1}, đủ dài để thẻ mở ra cao hơn khung nhìn rất nhiều.`).join('\n');
+    const data = { version: 2, lastId: 'wm', workspaces: [{ id: 'wm', name: 'Mở', steps: [{ id: 'tm', title: 'Bước', subs: [
+      { id: 'm1', title: 'Thẻ ghi chú dài', status: 'todo', notes: long }, { id: 'm2', title: 'Thẻ ngắn', status: 'todo' }] }], log: [] }] };
+    for (const [w, hh] of [[1280, 800], [390, 844]]) {
+      const { ctx, page } = await seeded(w, hh, data);
+      await page.waitForSelector('.card[data-sub="m1"] .more');
+      await page.click('.card[data-sub="m1"] .more');
+      const tall = await page.$eval('.card[data-sub="m1"]', (c) => c.getBoundingClientRect().height);
+      await page.$eval('.card[data-sub="m1"] .more', (b) => b.scrollIntoView({ block: 'end' }));
+      await page.click('.card[data-sub="m1"] .more');
+      const r = await page.$eval('.card[data-sub="m1"] .more', (b) => { const x = b.getBoundingClientRect(); return { top: Math.round(x.top), bottom: Math.round(x.bottom), vh: innerHeight, text: b.textContent }; });
+      check(`thẻ cao ${w}px: "Show less" thu thẻ, nút "Show more" vẫn trong khung nhìn`, tall > hh && r.text === 'Show more' && r.top >= 0 && r.bottom <= r.vh,
+        JSON.stringify({ tall: Math.round(tall), ...r }));
+      await page.click('.card[data-sub="m1"] .more');
+      await page.click('#compact-btn');
+      await page.click('#compact-btn');
+      const st = await page.$eval('.card[data-sub="m1"]', (c) => ({ open: c.classList.contains('open'), more: c.querySelector('.more')?.textContent }));
+      check(`thẻ đã mở ${w}px: bật rồi tắt Compact, thẻ vẫn mở`, st.open && st.more === 'Show less', JSON.stringify(st));
+      await ctx.close();
+    }
+  });
+
+  /* Dự án trống vừa tạo: cái thêm đầu tiên nhận số ngay (không chấm, không Renumber); chưa có bước con thì không có dòng tiến độ 0/0. */
+  await section('Dự án trống mới', async () => {
+    const { ctx, page } = await seeded(1280, 800, null);
+    await page.waitForSelector('#start:not([hidden]) .tpl[data-tpl="blank"]');
+    await page.click('#start .tpl[data-tpl="blank"]');
+    await page.waitForSelector('#app:not([hidden])');
+    const st = () => page.evaluate(() => ({ overall: !document.getElementById('overall').hidden, fresh: document.querySelectorAll('#board .fresh').length,
+      nums: [...document.querySelectorAll('#board .step-num, #board .num')].map((e) => e.textContent).join(' '), ren: !document.getElementById('renumber-btn').hidden }));
+    const s0 = await st();
+    for (const t of ['A', 'B']) {
+      await page.click('#add-step');
+      await page.fill('#step-form [name="title"]', t);
+      await page.keyboard.press('Enter');
+      await page.waitForSelector('#dlg-step', { state: 'hidden' });
+    }
+    const s1 = await st();
+    for (const t of ['a1', 'a2']) {
+      await page.click('.step[data-step]:first-child [data-act="add-sub"]');
+      await page.fill('#sub-form [name="title"]', t);
+      await page.keyboard.press('Enter');
+      await page.waitForSelector('#dlg-sub', { state: 'hidden' });
+    }
+    const s2 = await st();
+    check('dự án trống mới: chưa bước con thì ẩn tiến độ chung; bước, bước con thêm vào nhận số ngay, không chấm, không Renumber',
+      !s0.overall && !s1.overall && s2.overall && s1.nums === '1 2' && s2.nums === '1 1 2 2' && !s1.fresh && !s2.fresh && !s1.ren && !s2.ren, JSON.stringify({ s0, s1, s2 }));
+    await page.focus('.card[data-sub] [data-act="edit-sub"]');
+    await page.keyboard.press('Alt+ArrowRight');
+    const s3 = await st();
+    await page.click('.step[data-step]:last-child [data-act="add-sub"]');
+    await page.fill('#sub-form [name="title"]', 'b1');
+    await page.keyboard.press('Enter');
+    await page.waitForSelector('#dlg-sub', { state: 'hidden' });
+    const s4 = await st();
+    check('dự án trống mới: dời lần đầu thì số đứng yên như mọi dự án (Renumber hiện, cái thêm sau có chấm)', s3.ren && s3.nums === '1 2 1 2' && s4.fresh === 1,
+      JSON.stringify({ s3, s4 }));
+    await ctx.close();
+  });
+
+  /* Toast dời làm treo đầu vào: tên cắt ở 40 ký tự, cái vừa dời gọi là "it"; Esc trên nút Undo đóng toast. Dòng "Next waits on"
+   * cắt tên, lý do nhưng title và tên đọc có đủ chữ. */
+  await section('Toast dời dài, Next waits on chữ đủ', async () => {
+    const longA = 'Chờ phê duyệt của hội đồng đạo đức nghiên cứu về việc dùng dữ liệu cá nhân của bệnh nhân';
+    const longR = 'Hội đồng họp lại vào cuối tháng sau, cần nộp thêm bản mô tả quy trình ẩn danh hoá dữ liệu và cam kết bảo mật';
+    const longB = 'Bảng sạch đã kiểm đủ khoá chính và mọi cột ngày tháng của nguồn ERP và CRM';
+    const data = { version: 2, lastId: 'wt', workspaces: [{ id: 'wt', name: 'Toast', steps: [{ id: 'tt', title: 'Bước', subs: [
+      { id: 't1', title: longB, status: 'done', outs: [{ id: 'ot', name: 'bảng sạch' }] },
+      { id: 't2', title: longA, status: 'pending', reason: longR, ins: ['ot'] }, { id: 't3', title: 'Sau', status: 'todo' }] }], log: [] }] };
+    for (const [w, hh] of [[390, 844], [1280, 800]]) {
+      const { ctx, page } = await seeded(w, hh, data);
+      await page.waitForSelector('#next-wait [data-goto="t2"]');
+      const nw = await page.evaluate(() => {
+        const b = document.querySelector('#next-wait [data-goto="t2"]');
+        return { label: b.getAttribute('aria-label'), title: b.title, sr: [...document.querySelectorAll('#next-wait .sr')].map((e) => e.textContent).join('|') };
+      });
+      check(`Next waits on ${w}px: tên, lý do bị cắt vẫn đủ chữ ở tên đọc, title và bản cho trình đọc màn hình`, nw.label === longA && nw.title.endsWith(longA) && nw.sr === longR,
+        JSON.stringify(nw));
+      await page.focus('.card[data-sub="t2"] [data-act="edit-sub"]');
+      await page.keyboard.press('Alt+ArrowLeft');
+      await page.waitForSelector('#toast:not([hidden])');
+      const t = await page.$eval('#toast', (e) => { const r = e.getBoundingClientRect(); return { h: Math.round(r.height), text: document.getElementById('toast-text').textContent }; });
+      const quoted = t.text.match(/"[^"]*"/g) || [];
+      check(`toast dời ${w}px: báo đầu vào treo, mọi tên cắt ở 40 ký tự, không lặp tên vừa dời, toast thấp`, /Input on hold: it now comes before/.test(t.text)
+        && quoted.length === 2 && quoted.every((q) => q.length <= 42) && t.h <= 4 * 28, JSON.stringify(t));
+      await page.focus('#toast-undo');
+      await page.keyboard.press('Escape');
+      check(`toast dời ${w}px: Esc trên nút Undo đóng toast, focus về thẻ vừa dời`, await page.$eval('#toast', (e) => e.hidden)
+        && await page.evaluate(() => document.activeElement?.closest('.card')?.dataset.sub) === 't2');
+      await ctx.close();
+    }
   });
 
   /* ── Dữ liệu lưu bị hỏng ── */

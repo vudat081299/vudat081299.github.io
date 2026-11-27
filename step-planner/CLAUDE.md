@@ -66,11 +66,11 @@
 - Hạn qua: "(overdue)", trừ thẻ xong, bỏ qua, huỷ. Thẻ xong có `doneAt` hiện ngày xong.
 - Lọc trạng thái (`STATUS_GROUPS`): All statuses, Actionable (New, In progress), Waiting (Pending, Blocked), Done, Skipped, cancelled.
   Lọc và tìm là giao; "Clear filters" bỏ cả hai. Mỗi tab một bộ lọc, không lưu; đổi / tạo / nhập dự án thì bỏ.
-- Tìm bỏ qua dấu và hoa thường, khớp cả lý do, tài liệu, tên và `ref` của đầu ra; bước khớp thì hiện cả hàng. Đang tìm hay lọc thì tắt sắp xếp, thêm bước, ẩn vạch bàn giao.
+- Tìm bỏ qua dấu và hoa thường, khớp cả lý do, tài liệu, tên và `ref` của đầu ra; bước khớp thì hiện cả hàng. Đang tìm hay lọc thì tắt sắp xếp, thêm bước, Renumber, ẩn vạch bàn giao.
 - Song song (PLAN-013): mỗi ô một cột của hàng; ô k thẻ đánh `n.1` … `n.k`. Alt + ← →: đổi ô (thẻ ở ô song song thì tách ra
   ô riêng), Alt + ↑ ↓: đổi thứ tự trong ô. Toast dời tả chỗ mới bằng tên hàng xóm, không bằng số.
-- Số đứng yên trong phiên (PLAN-014): chụp số khi dự án hiện lần đầu sau khi mở trang (và sau nhập thay nội dung); dời,
-  xoá không đổi số; cái thêm trong phiên hiện chấm thay số. Số lệch thì nút "Renumber" hiện.
+- Số đứng yên trong phiên (PLAN-014): chụp số khi dự án hiện lần đầu sau khi mở trang (và sau nhập thay nội dung); dời, xoá không đổi số;
+  cái thêm trong phiên hiện chấm thay số (dự án trống lúc chụp: cái thêm nhận số tới khi một số cũ phải đổi). Số lệch thì nút "Renumber" hiện.
 - Bấm chip: New → In progress → Done; chip trạng thái khác (hoặc Shift + bấm, Alt + ↓) mở danh sách bảy trạng thái.
   Chọn Cancelled: mở hộp sửa, focus ô lý do; Lưu mới huỷ. Pending, Blocked đặt ngay, lý do sửa trong hộp.
 - Thêm bước: nút cuối bảng, hoặc "Add step" giữa hai bước (đặt sẵn vị trí). Thêm bước con: nút ở cột tên bước.

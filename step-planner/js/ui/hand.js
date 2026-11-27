@@ -11,7 +11,7 @@ import { plural } from '../core/io.js';
 import { safeUrl, uid } from '../core/model.js';
 import { labelsOf } from './board.js';
 import { focusField, showDlg } from './dialogs.js';
-import { $, focusFirst, h, icon } from './dom.js';
+import { $, focusFirst, h, icon, quote } from './dom.js';
 import { unfilter } from './filter.js';
 import { flashMs } from './move.js';
 import { cur, findWs } from './state.js';
@@ -518,14 +518,16 @@ export function alsoCheck(ws, step, picked) {
 
 /* ── Sắp xếp lại: đầu vào vừa bị treo ── */
 
-/** Câu báo kèm toast dời, toast Lưu của hộp sửa: các liên kết vừa treo (không có trong `before`).
- * @param {any} ws @param {Set<string>} before @param {string} [tail] */
-export function newlyHeld(ws, before, tail = 'Links kept; move back to reconnect.') {
+/** Câu báo kèm toast dời, toast Lưu của hộp sửa: các liên kết vừa treo (không có trong `before`). Tên cắt như mọi toast;
+ * cái vừa dời (`self`) gọi là "it", không lặp lại tên.
+ * @param {any} ws @param {Set<string>} before @param {string} [tail] @param {string} [self] */
+export function newlyHeld(ws, before, tail = 'Links kept; move back to reconnect.', self = '') {
   const { held, parKeys } = handoffs(ws);
   const fresh = held.filter((l) => !before.has(heldKey(l.to.h.id, l.out.id)));
   if (!fresh.length) return '';
   const l = fresh[0];
   const rel = parKeys.has(heldKey(l.to.h.id, l.out.id)) ? 'runs in parallel with' : 'now comes before';
-  return ` · Input on hold: ${quoteFull(holderTitle(l.to))} ${rel} ${quoteFull(holderTitle(l.from))}`
+  const name = (/** @type {any} */ hd) => (hd.h.id === self ? 'it' : quote(holderTitle(hd)));
+  return ` · Input on hold: ${name(l.to)} ${rel} ${name(l.from)}`
     + (fresh.length > 1 ? ` (+${fresh.length - 1} more)` : '') + '. ' + tail;
 }

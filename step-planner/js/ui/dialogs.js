@@ -73,8 +73,10 @@ function showModalFrom(dlg) {
   dlg.showModal();
 }
 /** Đóng hộp mà focus còn trong hộp ấy (trình duyệt không trả được, sẽ rơi về body) hay đã ở body: về nút mở, hay nút cùng chỗ
- * sau khi vẽ lại; hộp dưới còn mở thì ở trong hộp ấy. @param {any} dlg */
+ * sau khi vẽ lại; hộp dưới còn mở thì ở trong hộp ấy. Sự kiện close tới ở lượt việc sau close(): hộp đã mở lại thì sự kiện
+ * ấy cũ, bỏ qua, kẻo nó lấy mất nút mở của lần mở mới. @param {any} dlg */
 function restoreFocus(dlg) {
+  if (dlg.open) return;
   const sel = openers.get(dlg) || '';
   openers.delete(dlg);
   const a = document.activeElement;

@@ -65,10 +65,9 @@
 /* Thẻ không bị kéo cao bằng thẻ cao nhất hàng: mỗi thẻ cao theo nội dung (--card-min … --card-max).
    Rộng theo thẻ: lề phải của hàng cuộn mới được tính vào đoạn cuộn. */
 .cards { display: flex; gap: var(--s3); align-items: flex-start; width: max-content; min-width: 100%; }
-/* Một cột: bước đọc liền một khối — đầu bước (số, tên) trước, rồi băng Reopened, dải tài liệu, hàng thẻ. */
+/* Một cột: cùng thứ tự như màn rộng và như DOM (vòng Tab) — băng Reopened, dải tài liệu, đầu bước, hàng thẻ. */
 @media (max-width: 640px) {
   .step { grid-template-columns: minmax(0, 1fr); }
-  .step-head { order: -1; }
   .step-head .acts { gap: 0; }
   .step-head .acts .btn.small { padding: 0 var(--s2); }
 }

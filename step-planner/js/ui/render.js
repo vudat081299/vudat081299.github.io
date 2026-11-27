@@ -27,11 +27,15 @@ export function render(opt = {}) {
   $('app').hidden = !ws;
   $('start').hidden = !!ws;
   $('ws-name').textContent = ws ? ws.name : 'No project';
+  /* Tên dài bị cắt "…": title nêu đủ tên (tên đọc của nút đã có đủ, từ chữ của nó). */
+  $('ws-btn').title = ws ? `${ws.name}\nSwitch, create or rename projects` : 'Switch, create or rename projects';
   document.title = ws ? `${ws.name} — Data Science Step Planner` : 'Data Science Step Planner';
   $('overall').hidden = !ws;
   renderNudge();
   if (!ws) { renderStart(); return; }
   const o = overall(ws);
+  /* Chưa có bước con: không có tiến độ để nêu (tránh "0/0 done · 0%" và bảy số 0). */
+  $('overall').hidden = !ws.steps.some((/** @type {any} */ s) => s.subs.length);
   $('overall-text').textContent = `${o.done}/${o.total} done · ${o.pct}%`;
   $('overall-bar').style.width = o.pct + '%';
   renderLegend(ws);
