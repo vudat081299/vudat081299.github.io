@@ -1,7 +1,7 @@
 /* Tài liệu: dải chip của bước, nhãn kẹp trên thẻ, phần Tài liệu trong hộp sửa. Chỉ dùng token của tokens.css. */
 
 /* ── Tài liệu: dải chip của bước (trên hàng thẻ), nhãn kẹp trên thẻ, phần Tài liệu trong hộp sửa ── */
-.step-docs { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); min-width: 0; }
+.step-docs { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); min-width: 0; }
 .doc-chips { display: contents; }
 .doc-chip {
   position: relative; display: inline-flex; align-items: center; gap: var(--s1); max-width: var(--chip-max); min-height: var(--h-sm);

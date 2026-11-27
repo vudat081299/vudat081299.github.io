@@ -365,8 +365,8 @@ const check = (name, ok, detail = '') => {
   await page.click(`${c12} [data-act="status"]`);
   check('bấm chip Pending: mở danh sách', !!(await page.$('.dd-pop')) && (await page.getAttribute('.dd-pop [aria-selected="true"]', 'data-value')) === 'pending');
   await page.click('.dd-pop [role="option"][data-value="blocked"]');
-  check('Pending → Blocked: giữ ghi chú, nhãn "Blocked by"', (await cur(page)).steps[0].subs[1].reason === 'Chủ dữ liệu duyệt quyền truy cập'
-    && (await page.textContent(`${c12} .card-reason`)) === 'Blocked by Chủ dữ liệu duyệt quyền truy cập');
+  check('Pending → Blocked: giữ ghi chú, nhãn "Blocked by"; Blocked không là Next, ô vẫn giữ Next lại', (await cur(page)).steps[0].subs[1].reason === 'Chủ dữ liệu duyệt quyền truy cập'
+    && (await page.textContent(`${c12} .card-reason`)) === 'Blocked by Chủ dữ liệu duyệt quyền truy cập' && !(await page.$('.card.next')));
   await setSt(page, c12id, 'todo');
   check('Blocked → New: bỏ ghi chú', (await cur(page)).steps[0].subs[1].reason === '' && !(await page.$(`${c12} .card-reason`)));
   await page.click(`${c12} [data-act="edit-sub"]`);
@@ -1673,13 +1673,13 @@ const check = (name, ok, detail = '') => {
   await section('Bố cục bước', async () => { // thân giữ thụt lề cũ cho dễ gộp
   const lay = { version: 2, lastId: 'wl', workspaces: [{ id: 'wl', name: 'Bố cục', steps: [
     { id: 'tl1', title: 'Đang mở lại', round: 2, revisit: { reason: 'Thiếu cột', date: '2026-11-20', round: 2 },
-      docs: [{ id: 'dl1', kind: 'link', title: 'Từ điển dữ liệu', url: 'https://a.example' }],
+      docs: [{ id: 'dl1', kind: 'link', title: 'Từ điển dữ liệu', url: 'https://a.example' }], outs: [{ id: 'ol1', name: 'cot.csv' }],
       subs: [{ id: 'sl1', title: 'Một', status: 'done' }, { id: 'sl2', title: 'Hai', status: 'todo', redo: true }] },
-    { id: 'tl2', title: 'Đã đóng vòng', round: 3, subs: [{ id: 'sl3', title: 'Ba', status: 'done' }, { id: 'sl4', title: 'Bốn', status: 'todo' }] },
+    { id: 'tl2', title: 'Đã đóng vòng', round: 3, ins: ['ol1'], subs: [{ id: 'sl3', title: 'Ba', status: 'done' }, { id: 'sl4', title: 'Bốn', status: 'todo' }] },
     { id: 'tl3', title: 'Chưa xong gì', subs: [{ id: 'sl5', title: 'Năm', status: 'doing' }, { id: 'sl6', title: 'Sáu', status: 'todo', par: true }] }],
   log: [{ id: 'll1', date: '2026-11-10', decision: 'Reopened: Đã đóng vòng (iteration 2)', why: 'a', stepId: 'tl2' },
     { id: 'll2', date: '2026-11-18', decision: 'Reopened: Đã đóng vòng (iteration 3)', why: 'b', stepId: 'tl2' }] }] };
-  for (const [w, hgt] of [[1440, 900], [1280, 800], [390, 844]]) {
+  for (const [w, hgt] of [[1440, 900], [1280, 800], [768, 1024], [390, 844]]) {
     const lc = await browser.newContext({ viewport: { width: w, height: hgt }, hasTouch: w < 500, isMobile: w < 500 });
     await lc.addInitScript((d) => { if (!localStorage.getItem('stepPlanner.v2')) localStorage.setItem('stepPlanner.v2', d); }, JSON.stringify(lay));
     const lp = await lc.newPage();
@@ -1706,23 +1706,42 @@ const check = (name, ok, detail = '') => {
     const ord = await lp.evaluate(() => {
       const row = document.querySelector('.step[data-step="tl1"]');
       const r = (s) => row.querySelector(s).getBoundingClientRect();
-      return { head: r('.step-head'), band: r('.revisit-band'), docs: r('.step-docs'), cards: r('.cards-scroll') };
+      const r2 = (s) => document.querySelector('.step[data-step="tl2"] > ' + s).getBoundingClientRect();
+      return { head: r('.step-head'), band: r('.revisit-band'), docs: r('.step-docs'), cards: r('.cards-scroll'), mark2: r2('.hand-row'), head2: r2('.step-head'),
+        dom: [...row.children].map((c) => c.className.split(' ')[0]).join(' '),
+        order: [...document.querySelectorAll('.step > *')].filter((c) => getComputedStyle(c).order !== '0').length };
     });
-    // Mọi khổ cùng thứ tự với DOM (vòng Tab): băng, tài liệu, rồi đầu bước; một cột thì đầu bước trên hàng thẻ.
-    check(`${w}px: bước đọc liền một khối, đúng thứ tự DOM (băng, tài liệu, ${w < 500 ? 'đầu bước, thẻ' : 'cột tên và hàng thẻ'})`,
-      ord.band.bottom <= ord.docs.top + 1 && ord.docs.bottom <= Math.min(ord.head.top, ord.cards.top) + 1
-      && (w >= 500 || ord.head.bottom <= ord.cards.top + 1),
-    JSON.stringify(Object.fromEntries(Object.entries(ord).map(([k, v]) => [k, [Math.round(v.top), Math.round(v.bottom)]]))));
-    // Vòng Tab theo thứ tự đọc: điểm dừng Tab đi qua các khối đúng thứ tự vừa đo, không khối nào bị CSS order đảo chỗ.
-    const tabOrd = await lp.evaluate(() => {
+    // DOM (vòng Tab): đầu bước trước băng, tài liệu, thẻ. Một cột theo DOM: tên bước trên cùng. Màn rộng: băng, tài liệu thành
+    // dòng ngang trên cùng, rồi cột tên cạnh hàng thẻ, đặt bằng dòng lưới (không CSS order). Mũi tên bàn giao luôn trên đầu bước.
+    const box = (v) => [Math.round(v.left), Math.round(v.top), Math.round(v.right), Math.round(v.bottom)];
+    check(`${w}px: bước đọc liền một khối (${w < 500 ? 'đầu bước, băng, tài liệu, thẻ' : 'băng, tài liệu, rồi cột tên và hàng thẻ'}), DOM đầu bước trước, không CSS order`,
+      ord.dom === 'gap-add step-head revisit-band step-docs cards-scroll' && ord.order === 0 && ord.mark2.bottom <= ord.head2.top + 1
+      && (w < 500
+        ? ord.head.bottom <= ord.band.top + 1 && ord.band.bottom <= ord.docs.top + 1 && ord.docs.bottom <= ord.cards.top + 1
+        : ord.band.bottom <= ord.docs.top + 1 && ord.docs.bottom <= Math.min(ord.head.top, ord.cards.top) + 1 && ord.head.right <= ord.cards.left
+          && Math.abs(ord.band.width - ord.docs.width) < 1 && ord.band.width >= ord.head.width + ord.cards.width),
+    JSON.stringify({ dom: ord.dom, order: ord.order, ...Object.fromEntries(['head', 'band', 'docs', 'cards', 'mark2', 'head2'].map((k) => [k, box(ord[k])])) }));
+    // Vòng Tab thật (phím Tab) đi qua các khối theo thứ tự mắt đọc ở mọi khổ: một cột là thứ tự DOM; màn rộng `reading-flow`
+    // theo dòng lưới (băng, tài liệu ở dòng trên đầu bước).
+    await lp.evaluate(() => {
       const row = document.querySelector('.step[data-step="tl1"]');
-      const blocks = ['.revisit-band', '.step-docs', '.step-head', '.cards-scroll'];
-      const stops = [...row.querySelectorAll('a[href], button, summary')].filter((e) => e.tabIndex >= 0 && e.getClientRects().length);
-      return { seq: [...new Set(stops.map((e) => blocks.find((b) => e.closest(b))))].join(' '),
-        order: blocks.map((b) => getComputedStyle(row.querySelector(b)).order).join() };
+      const tabbable = [...document.querySelectorAll('a[href], button, summary, input, select, textarea, [tabindex]')]
+        .filter((e) => e.tabIndex >= 0 && e.getClientRects().length && !row.contains(e) && (e.compareDocumentPosition(row) & Node.DOCUMENT_POSITION_FOLLOWING));
+      tabbable.at(-1).focus();
     });
-    check(`${w}px: vòng Tab trong một bước theo thứ tự đọc`, tabOrd.seq === '.revisit-band .step-docs .step-head .cards-scroll' && tabOrd.order === '0,0,0,0',
-      JSON.stringify(tabOrd));
+    const tabSeq = [];
+    for (let k = 0; k < 40; k++) {
+      await lp.keyboard.press('Tab');
+      const blk = await lp.evaluate(() => {
+        const a = document.activeElement;
+        if (!a?.closest('.step[data-step="tl1"]')) return null;
+        return ['.revisit-band', '.step-docs', '.step-head', '.cards-scroll'].find((b) => a.closest(b)) || '?';
+      });
+      if (!blk) { if (tabSeq.length) break; continue; }
+      if (tabSeq.at(-1) !== blk) tabSeq.push(blk);
+    }
+    check(`${w}px: vòng Tab trong một bước theo thứ tự đọc`, tabSeq.join(' ') === (w < 500
+      ? '.step-head .revisit-band .step-docs .cards-scroll' : '.revisit-band .step-docs .step-head .cards-scroll'), tabSeq.join(' '));
     // Hàng nút của đầu bước (Sub-step, Reopen, Doc, xoá) nằm một dòng; nút phụ chỉ biểu tượng, có aria-label và title.
     const acts = await lp.$eval('.step[data-step="tl2"] .step-head .acts', (a) => {
       const bs = [...a.children];

@@ -109,11 +109,13 @@ export function liveLabels(ws) {
 }
 
 const open = (/** @type {{status:string}} */ x) => x.status !== 'done' && !outOfScope(x.status);
-/** Việc tiếp theo của một bước: các bước con còn mở (không xong, không bỏ qua, không huỷ) của ô đầu tiên còn việc, trừ
- * thẻ chờ (không có việc để làm). Ô đầu còn việc chỉ có thẻ chờ: rỗng, "Next" không vượt qua chỗ đang chờ.
+/** Thẻ làm được ngay: New, In progress (nhóm Actionable); Pending, Blocked là thẻ chờ (nhóm Waiting). */
+const actionable = (/** @type {{status:string}} */ x) => x.status === 'todo' || x.status === 'doing';
+/** Việc tiếp theo của một bước: các bước con làm được ngay của ô đầu tiên còn việc (còn mở: không xong, không bỏ qua,
+ * không huỷ); thẻ chờ (Pending, Blocked) không bao giờ là "Next". Ô đầu còn việc chỉ có thẻ chờ: rỗng, "Next" không vượt qua chỗ đang chờ.
  * @param {{subs:{id:string,status:string,par?:boolean}[]}} step @returns {string[]} */
 export function nextActionIds(step) {
-  for (const sl of slotsOf(step.subs)) if (sl.some(open)) return sl.filter((x) => open(x) && x.status !== 'pending').map((x) => x.id);
+  for (const sl of slotsOf(step.subs)) if (sl.some(open)) return sl.filter(actionable).map((x) => x.id);
   return [];
 }
 
@@ -139,7 +141,7 @@ export function nextWaitingOn(ws) {
     const sl = slotsOf(s.subs).find((x) => x.some(open));
     if (!sl) continue;
     const live = sl.filter(open);
-    return live.some((x) => x.status === 'todo' || x.status === 'doing') ? [] : live;
+    return live.some(actionable) ? [] : live;
   }
   return [];
 }

@@ -61,7 +61,7 @@
 
 - Bảy trạng thái (PLAN-003), thứ tự này ở mọi chỗ: New (`todo`), In progress, Pending, Blocked, Done, Skipped, Cancelled.
   Nhãn lý do (`REASON_LABEL`): Pending "Waiting on", Blocked "Blocked by", Cancelled "Cancelled because".
-- Tiến độ = xong / (tổng − bỏ qua − huỷ). "Next" = thẻ còn mở, trừ thẻ chờ, của ô đầu tiên còn việc trong bước đầu tiên còn việc.
+- Tiến độ = xong / (tổng − bỏ qua − huỷ). "Next" = thẻ còn mở, trừ thẻ chờ (Pending, Blocked), của ô đầu tiên còn việc trong bước đầu tiên còn việc.
 - Ô ấy chỉ còn Pending / Blocked (`nextWaitingOn`): dòng "Next waits on …" nêu thẻ và lý do; nút lọc Actionable. "Next" không vượt chỗ chờ.
 - Hạn qua: "(overdue)", trừ thẻ xong, bỏ qua, huỷ. Thẻ xong có `doneAt` hiện ngày xong.
 - Lọc trạng thái (`STATUS_GROUPS`): All statuses, Actionable (New, In progress), Waiting (Pending, Blocked), Done, Skipped, cancelled.
