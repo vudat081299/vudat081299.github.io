@@ -15,7 +15,7 @@
 |---|---|
 | `index.html`, `js/main.js` | markup, hộp thoại, bộ biểu tượng `<symbol id="i-…">`, script theme trước lần vẽ đầu, script báo `file://`; gọi `init…` theo thứ tự ghi ở đầu file, rồi nạp mẫu, chọn dự án, vẽ |
 | `css/*.css` | `tokens` → `base` → `project` → `board` → `cards` → `drag` → `foot` → `log` → `design` → `dropdown` → `dialogs` → `docs` → `hand` → `md` → `start` → `toast`; thứ tự link là cascade |
-| `js/core/model.js`, `js/core/board.js`, `js/core/handoffs.js` | trạng thái, ngày, id, chuẩn hoá (`normSub`, `normStep`, `normWorkspace`), gộp khi lưu (`EDIT_FIELDS`, `mergeEdit`), `freshCopy`, `fromTemplate`; tiến độ, ô, chỗ (`Place`) và mọi phép dời, số, việc tiếp theo, nhóm lọc; bàn giao (`holders`, `handoffs`, `ioStatus`, `consumersOf`, "on hold" theo chỗ chưa lưu) |
+| `js/core/model.js`, `js/core/board.js`, `js/core/handoffs.js` | trạng thái, ngày, id, chuẩn hoá (`normSub`, `normStep`, `normWorkspace`), gộp khi lưu (`EDIT_FIELDS`, `mergeEdit`), `freshCopy`, `fromTemplate`, nhóm mẫu (`tplGroups`); tiến độ, ô, chỗ (`Place`) và mọi phép dời, số, việc tiếp theo, nhóm lọc; bàn giao (`holders`, `handoffs`, `ioStatus`, `consumersOf`, "on hold" theo chỗ chưa lưu) |
 | `js/core/markdown.js`, `js/core/io.js` | Markdown dự án vào / ra; JSON, sao lưu, `parseImport`, `counts`, `plural`, `slug`, `shape` (cho test) |
 | `js/core/design.js`, `js/core/design-plan.js`, `js/core/design-md.js` | System design: `normDesign`, `rankOptions`, `applyPath`, `archAdvice`, `archMissing`, `warnings`, `catalogErrors`, `presetDesign`, `isPreset`; sơ đồ (`diagramNodes`, `flowEdges`), việc (`planTasks`, `planDiff`, `applyPlan`); mục Markdown (`designMd`, `designReader`) |
 | `js/core/md.js`, `js/ui/md-view.js`, `js/ui/md-dialog.js` | tài liệu văn bản: cây khối (`parseMd`), URL trần (`linkParts`, dấu câu cuối ở ngoài), token khung Edit (`srcTokens`); DOM (`renderMd`, `renderSrc`, chỉ createElement / text node); hộp `#dlg-md` |
@@ -125,7 +125,7 @@
 ## Mẫu (`data/templates.json`)
 
 - Khuôn, khoá, chuỗi, ngôn ngữ, `output`, bàn giao, `design`: `lint.py` (docstring đầu file); khuôn đầy đủ ở đó, đừng chép lại.
-- Đúng một mẫu trống. Mẫu chung không gắn vào một bài toán. Không thẻ HTML, không người làm.
+- Đúng một mẫu trống. Mẫu chung không gắn vào một bài toán; dự án cụ thể chủ trang đang làm ghi `"group": "specific"` (PLAN-039). Không thẻ HTML, không người làm.
 - `design` (PLAN-033): chỉ câu hồ sơ, lối mẫu thật sự ngụ ý, không phương án; `fromTemplate` chép một lần. Hộp ghi "Preset from template" khi còn đúng (`isPreset`).
 - Mọi chữ của mẫu tiếng Việt (PLAN-028); tên bước, bước con theo chuẩn: tên tiếng Việt, tên gốc trong ngoặc, ví dụ
   "Hiểu dữ liệu (Data Understanding)". Giữ nguyên tên công cụ, thư viện, file, lệnh, URL.

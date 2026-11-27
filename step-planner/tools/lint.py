@@ -3,7 +3,8 @@
 
   1. data/templates.json: khuôn mẫu (khoá, kiểu, chuỗi không rỗng, id không trùng, không thẻ HTML, có đúng một mẫu
      trống). Không có khái niệm người làm: mẫu không có `people` / `owner`.
-     Mẫu có bước thì có `output`: loại đầu ra, ≤ 30 ký tự.
+     Mẫu có bước thì có `output`: loại đầu ra, ≤ 30 ký tự. `group` (tuỳ chọn, PLAN-039): chỉ ghi "specific" — dự án cụ thể chủ
+     trang đang làm, đứng ngay sau `id`; không có `group` là mẫu chung. Mẫu trống là mẫu chung.
      Bàn giao: bước hay bước con có thể có `outs` [{key, name, ref?, note?, final?}] và `ins` [key]. `final` chỉ ghi `true`:
      sản phẩm cuối, không cần nơi nhận (test-core: mở mẫu ra không đầu ra nào lỗi). Khoá dạng `[a-z0-9][a-z0-9-]*`
      (≤ 40), không trùng trong một mẫu; `ins` trỏ tới đầu ra có thật, không phải của chính nó, khai ở bước trước hoặc ở bước
@@ -167,6 +168,7 @@ def course_template():
         })
     return {
         'id': COURSE_ID,
+        'group': 'specific',
         'name': 'Đồ án IT5425 — giám sát thể thao (Premier League)',
         'output': 'Đồ án môn',
         'description': 'Chọn khi làm đồ án môn Data Management and Visualization (IT5425). Các giai đoạn P0–P8 lấy từ trang đồ án. '
@@ -179,7 +181,8 @@ STEP_KEYS = {'title', 'goal', 'doneWhen', 'notes', 'subs', 'outs', 'ins'}
 SUB_KEYS = {'title', 'doneWhen', 'notes', 'outs', 'ins'}
 OUT_KEYS = {'key', 'name', 'ref', 'note', 'final'}
 KEY_RE = r'[a-z0-9][a-z0-9-]{0,39}'
-TPL_KEYS = {'id', 'name', 'output', 'description', 'design', 'steps'}
+TPL_KEYS = {'id', 'group', 'name', 'output', 'description', 'design', 'steps'}
+TPL_GROUPS = ('specific',)  # không có `group`: mẫu chung
 TPL_DESIGN_KEYS = {'profile', 'path'}
 
 
@@ -289,6 +292,13 @@ def check_templates(data):
         if tid in seen:
             err(f'{w}: id "{tid}" trùng')
         seen.add(tid)
+        if 'group' in t:
+            if t['group'] not in TPL_GROUPS:
+                err(f'{w} ({tid}): `group` chỉ ghi "specific" (bỏ khoá khi là mẫu chung)')
+            elif list(t)[:2] != ['id', 'group']:
+                err(f'{w} ({tid}): `group` đứng ngay sau `id`')
+            elif not t.get('steps'):
+                err(f'{w} ({tid}): mẫu trống là mẫu chung, không có `group`')
         steps = t.get('steps')
         if not isinstance(steps, list):
             err(f'{w}: `steps` phải là danh sách')
@@ -986,6 +996,9 @@ def self_test():
         ('mẫu: design — khoá lạ', preset('lakehouse-oss', lambda t: t['design'].update(stages={})), 'phải là {profile, path?}'),
         ('mẫu: design — hồ sơ rỗng', preset('lakehouse-oss', lambda t: t['design'].update(profile={})), 'phải là {profile, path?}'),
         ('mẫu: design ở mẫu trống', preset('blank', lambda t: t.update(design={'profile': {'size': 'small'}})), 'mẫu trống không đặt sẵn'),
+        ('mẫu: group lạ', preset('crisp-dm', lambda t: t.update(group='general')), '`group` chỉ ghi "specific"'),
+        ('mẫu: group không đứng sau id', preset('crisp-dm', lambda t: t.update(group='specific')), 'đứng ngay sau `id`'),
+        ('mẫu: mẫu trống có group', preset('blank', lambda t: (r := dict(t), t.clear(), t.update(id=r['id'], group='specific'), t.update(r))), 'mẫu trống là mẫu chung'),
         ('mẫu: design của mẫu đồ án không tính là lệch trang đồ án', preset('it5425-sports', lambda t: t['design'].update(path='report')), None),
         ('mẫu: đầu vào lơ lửng (key không có đầu ra)', flow(lambda st: st[1]['subs'][0]['ins'].append('khong-co')), 'không là đầu ra nào'),
         ('mẫu: đầu vào lấy từ bước sau', flow(lambda st: st[1]['subs'][0]['ins'].append('gold-marts')), 'chỉ lấy từ bước trước'),

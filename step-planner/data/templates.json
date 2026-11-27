@@ -907,6 +907,7 @@
     },
     {
       "id": "it5425-sports",
+      "group": "specific",
       "name": "Đồ án IT5425 — giám sát thể thao (Premier League)",
       "output": "Đồ án môn",
       "description": "Chọn khi làm đồ án môn Data Management and Visualization (IT5425). Các giai đoạn P0–P8 lấy từ trang đồ án. Làm một mình: Skip việc chia vai, họp tuần; app demo và slide tuỳ yêu cầu nộp.",

@@ -37,6 +37,7 @@
 - PLAN-035 · Gợi ý model chỉ khi dự án có model; Ingestion giữ được cả luồng lẫn lịch; báo kho thô mà kho phân tích không đọc được · `step-planner/data/system-design.json`
 - PLAN-037 · Processing giữ được nhiều công cụ; công cụ lịch phục vụ dữ liệu liên tục khi kết quả xem theo lịch; Apply path theo kiến trúc xử lý và kiến trúc lưu trữ được gợi ý · `step-planner/data/system-design.json`, `step-planner/js/core/design.js`
 - PLAN-038 · Đầu ra đánh dấu là sản phẩm cuối không cần nơi nhận · `step-planner/`
+- PLAN-039 · Mẫu chia hai nhóm: loại dự án chung và dự án cụ thể đang làm · `step-planner/`
 <!-- index:end -->
 
 ## PLAN-001 · Dự án là các bước có thứ tự, mỗi bước có bước con có thứ tự
@@ -221,3 +222,8 @@ Khâu Processing chọn được nhiều công cụ, để một dự án ghi c�
 27/11/2026 · `step-planner/`
 
 Người dùng đánh dấu được một đầu ra là sản phẩm cuối (báo cáo, slide, app, runbook): thứ giao cho người ngoài dự án, không bước nào sau dùng. Đầu ra cuối không ai dùng là ổn, không báo lỗi; đầu ra cuối có nơi dùng thì xét như mọi đầu ra, một nơi dùng đang treo vẫn là lỗi. Đầu ra không đánh dấu mà không ai dùng vẫn báo lỗi, để đầu ra bị quên vẫn lộ ra. Đầu ra của bước gộp bước con: bước ổn khi có ít nhất một đầu ra có nơi nhận đang nối hoặc là sản phẩm cuối không ai dùng, và không đầu ra nào có nơi dùng đang treo. Dấu đi theo đầu ra qua lưu, nhân bản, xuất / nhập Markdown và JSON. Mẫu đánh dấu sẵn các sản phẩm cuối thật của nó, nên dự án mới từ mẫu không có đầu ra lỗi; sản phẩm trung gian không đánh dấu.
+
+## PLAN-039 · Mẫu chia hai nhóm: loại dự án chung và dự án cụ thể đang làm
+27/11/2026 · `step-planner/`
+
+Mẫu chia hai nhóm. Mẫu chung là một loại dự án (CRISP-DM, Data Science trên big data, báo cáo thống kê, tính năng app, pipeline dữ liệu, lakehouse) và mẫu trống, áp được cho bài toán bất kỳ. Dự án cụ thể là bài chủ trang đang làm (hiện là đồ án môn IT5425), nội dung lấy từ trang của bài ấy. Nhóm của mẫu ghi ở dữ liệu của mẫu, không suy từ id hay tên; mẫu không ghi nhóm là mẫu chung, mẫu trống luôn là mẫu chung. Mọi nơi chọn mẫu tách hai nhóm, mẫu chung trước; trong mỗi nhóm giữ thứ tự của danh sách mẫu.

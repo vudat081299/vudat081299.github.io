@@ -9,7 +9,7 @@ import { snake, planTasks, diagramNodes, flowEdges, bothDecided, planDiff, apply
 import { parseImport, toJSON, toBackup, shape, counts, slug } from '../js/core/io.js';
 import { toMarkdown, fromMarkdown, splitInline } from '../js/core/markdown.js';
 import { parseMd, inline, srcTokens, linkParts } from '../js/core/md.js';
-import { fromTemplate, nextStatus, setStatus, mergeEdit, pick, EDIT_FIELDS, needsEvidence, normWorkspace, normSub, normLog, freshCopy, parseDate, uniqueName, normDoc, safeUrl } from '../js/core/model.js';
+import { fromTemplate, tplGroups, nextStatus, setStatus, mergeEdit, pick, EDIT_FIELDS, needsEvidence, normWorkspace, normSub, normLog, freshCopy, parseDate, uniqueName, normDoc, safeUrl } from '../js/core/model.js';
 import * as CORE from '../js/core/handoffs.js';
 
 let fails = 0;
@@ -47,6 +47,17 @@ const tplPath = fileURLToPath(new URL('../data/templates.json', import.meta.url)
  * chữ), mà chúng không phải sản phẩm cuối. */
 const IO_EXCEPT = { 'it5425-sports': ['P0 · Khởi động', 'P3 · EDA'] };
 const { templates } = JSON.parse(readFileSync(tplPath, 'utf8'));
+
+{ // Nhóm mẫu (PLAN-039): mẫu chung trước (cả mẫu trống), dự án cụ thể sau; mỗi nhóm giữ thứ tự của file, nhóm rỗng bị bỏ.
+  const g = tplGroups(templates);
+  const ids = (k) => (g.find((x) => x.key === k)?.items || []).map((t) => t.id);
+  check('nhóm mẫu: mẫu chung trước, dự án cụ thể sau, đủ mọi mẫu, giữ thứ tự file',
+    eq(g.map((x) => x.key), ['general', 'specific']) && eq([...ids('general'), ...ids('specific')].sort(), templates.map((t) => t.id).sort())
+    && eq(ids('general'), templates.filter((t) => !t.group).map((t) => t.id)) && ids('general').includes(templates.find((t) => !t.steps.length).id)
+    && ids('specific').length > 0 && templates.filter((t) => t.group).every((t) => t.group === 'specific'), JSON.stringify(g.map((x) => [x.key, x.items.map((t) => t.id)])));
+  check('nhóm mẫu: nhóm rỗng bị bỏ, group lạ là mẫu chung',
+    eq(tplGroups([{ id: 'a' }, { id: 'b', group: 'x' }]).map((x) => [x.key, x.items.length]), [['general', 2]]) && eq(tplGroups([]), []));
+}
 
 for (const t of templates) {
   const ws = fromTemplate(t);

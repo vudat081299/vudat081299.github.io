@@ -1,11 +1,11 @@
 // @ts-check
 /* Mô hình dữ liệu, thuần (không DOM, không bộ nhớ trình duyệt; chạy được trong Node): bảy trạng thái, ngày, id,
    chuẩn hoá (normSub, normStep, normWorkspace), gộp khi lưu hộp sửa (EDIT_FIELDS, mergeEdit), bản sao id mới (freshCopy),
-   tên không trùng, tạo dự án từ mẫu (fromTemplate).
+   tên không trùng, tạo dự án từ mẫu (fromTemplate), nhóm mẫu (tplGroups).
    Xuất: STATUSES, STATUS_LABEL, MARK, FROM_MARK, STATUS_HINT, REASON_LABEL, hasReason, outOfScope, nextStatus, setStatus,
      needsEvidence, FORMAT, VERSION, MD_VERSION, APP_NAME, LOG_HEADING, LOOSE_STEP, uid, today, parseDate, isObj, oneLine,
      multiLine, safeUrl, normDoc, normOut, SD_KEPT, normSub, normStep, normLog, normWorkspace, EDIT_FIELDS, pick,
-     mergeEdit, freshCopy, uniqueName, fromTemplate.
+     mergeEdit, freshCopy, uniqueName, fromTemplate, TPL_GROUPS, tplGroups.
    Dùng: core/design.js, core/handoffs.js. */
 import { normDesign, presetDesign } from './design.js';
 import { holders } from './handoffs.js';
@@ -315,4 +315,13 @@ export function fromTemplate(tpl, name) {
   }
   return normWorkspace({ name: oneLine(name) || t.name || 'Project', templateId: t.id || '', createdAt: now, updatedAt: now, steps,
     design: presetDesign(t) }); // hồ sơ, lối mẫu đặt sẵn (PLAN-033); chỉ lúc tạo
+}
+
+/* Nhóm mẫu (PLAN-039): mẫu chung (không có `group`) rồi dự án cụ thể chủ trang đang làm (`group: "specific"`). */
+export const TPL_GROUPS = ['general', 'specific'];
+/** Mẫu chia theo TPL_GROUPS, mỗi nhóm giữ thứ tự của templates.json; nhóm rỗng bị bỏ; `group` lạ tính là mẫu chung.
+ * @param {any[]} list @returns {{ key: string, items: any[] }[]} */
+export function tplGroups(list) {
+  const keyOf = (/** @type {any} */ t) => (isObj(t) && t.group === 'specific' ? 'specific' : 'general');
+  return TPL_GROUPS.map((key) => ({ key, items: list.filter((t) => keyOf(t) === key) })).filter((g) => g.items.length);
 }
