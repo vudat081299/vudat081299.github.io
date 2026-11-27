@@ -3448,7 +3448,7 @@ const check = (name, ok, detail = '') => {
     check('font tải muộn: ghi chú vừa chỗ thì không cắt; font về làm ghi chú tràn thì đo lại và cắt', !note0 && note1, JSON.stringify({ note0, note1 }));
     await lc.close();
 
-    // Architecture: mới chọn thứ bàn giao thì chỉ nhóm app có gợi ý — mục ấy chưa xong ("k of n recommended", k < n).
+    // Architecture: mới chọn thứ bàn giao thì chỉ nhóm app có gợi ý ("k of n recommended", k < n); mục là trang gợi ý, dấu "guide".
     const { ctx: nx, page: np } = await open(1280, 900);
     await np.click('#start .tpl[data-tpl="crisp-dm"]');
     await np.click('#sd-btn');
@@ -3458,7 +3458,8 @@ const check = (name, ok, detail = '') => {
     await waitTo(np, 'nav ghi lối đã chọn', () => document.querySelector('#sd-nav [data-at="0"]')?.classList.contains('is-done'));
     const nav = await np.$eval('#sd-nav [data-at="2"]', (b) => ({ cls: b.className, t: b.textContent }));
     const [, k, n] = nav.t.match(/(\d+) of (\d+) recommended/) || [];
-    check('Architecture: chưa đủ gợi ý cho mọi nhóm thì mục chưa xong', /\bis-open\b/.test(nav.cls) && !/\bis-done\b/.test(nav.cls) && +k >= 1 && +k < +n, JSON.stringify(nav));
+    check('Architecture: mục gợi ý mang dấu "guide", không phải "chưa quyết" hay "xong"; đếm k of n recommended',
+      /\bis-guide\b/.test(nav.cls) && !/\bis-(open|done)\b/.test(nav.cls) && /\(guide\)/.test(nav.t) && !/\(open\)/.test(nav.t) && +k >= 1 && +k < +n, JSON.stringify(nav));
     await nx.close();
   });
 
@@ -3591,6 +3592,255 @@ const check = (name, ok, detail = '') => {
     r.stepEsc = await at(head);
     check('đóng hộp sửa sau khi thêm / xoá tài liệu, Evidence: focus về nút mở mới, không về body', r.subEsc && r.subProof && r.stepEsc, JSON.stringify(r));
     await fx.close();
+  });
+
+  /* ── System design, hộp và sơ đồ: khâu chưa quyết bấm được cả lòng nút; đóng hộp sau khi sửa thì focus về nút đã vẽ lại
+   * (khâu, nhãn bàn giao, link cảnh báo), trang không cuộn; cột trái thấy mục đang xem; bấm lựa chọn không kéo khung phải về đầu;
+   * tóm tắt bàn giao đổi khi gõ; Esc trên nút sơ đồ về khung; Space trên nút zoom khi chuột trên sơ đồ; Architecture là trang gợi ý. ── */
+  await section('System design: hộp và sơ đồ', async () => {
+    const { ctx: dx, page: dp } = await open(1280, 900);
+    await dp.click('#start .tpl[data-tpl="crisp-dm"]');
+    await dp.waitForSelector('#sd-fig svg');
+    const cat = await dp.evaluate(async () => (await fetch('data/system-design.json')).json());
+    const pageOf = (id) => cat.stages.findIndex((s) => s.id === id) + 3;
+    const last = cat.stages.at(-1).id;
+    const shut = (page) => waitTo(page, 'hộp System design đóng', () => !document.getElementById('dlg-sd').open);
+    const focusIs = (page, sel) => page.waitForFunction((q) => document.activeElement === document.querySelector(q), sel, { timeout: 2000 }).then(() => true, () => false);
+    /* Lòng nút chưa quyết (nền trong suốt, không phải `none`) nhận chuột. */
+    const probe = (n) => {
+      n.scrollIntoView({ block: 'center' });
+      const r = n.querySelector('.sd-box').getBoundingClientRect();
+      const ok = [[0.5, 0.5], [0.85, 0.5], [0.5, 0.85]].every(([fx, fy]) => document.elementFromPoint(r.x + r.width * fx, r.y + r.height * fy)?.closest('[data-stage]') === n);
+      return { id: n.dataset.stage, x: r.x + r.width * 0.85, y: r.y + r.height / 2, ok };
+    };
+    const hitB = await dp.$eval('#sd-fig .sd-node.is-open[data-stage]', probe);
+    await dp.mouse.click(hitB.x, hitB.y);
+    const openB = await waitTo(dp, 'hộp mở khi bấm lòng nút chưa quyết', () => document.getElementById('dlg-sd').open);
+    check('sơ đồ: khâu chưa quyết nhận chuột ở cả lòng nút, không chỉ chữ và viền', hitB.ok && openB
+      && (await dp.textContent('#sd-pane .sd-h')) === cat.stages.find((s) => s.id === hitB.id).title, JSON.stringify(hitB));
+
+    /* Bấm lựa chọn ở giữa trang dài: khung phải không về đầu, ô vừa bấm đứng yên và giữ focus. */
+    const keep = async (what, nav, sel, pick) => {
+      await dp.click(`#sd-nav [data-at="${nav}"]`);
+      const b = await dp.evaluate(([s, p]) => {
+        const el = [...document.querySelectorAll('#sd-pane ' + s)].filter((x) => x.getClientRects().length).at(p);
+        el.scrollIntoView({ block: 'center' });
+        return { sel: el.matches('[data-opt]') ? `[data-opt="${el.dataset.opt}"] input` : `input[data-q="${el.dataset.q}"][value="${el.value}"]`,
+          top: Math.round(el.getBoundingClientRect().top), st: document.getElementById('sd-pane').scrollTop };
+      }, [sel, pick]);
+      const r = await dp.$eval(`#sd-pane ${b.sel}`, (i) => { const x = (i.closest('.sd-pill') || i).getBoundingClientRect(); return { x: x.x + x.width / 2, y: x.y + x.height / 2 }; });
+      await dp.mouse.click(r.x, r.y);
+      const a = await dp.$eval(`#sd-pane ${b.sel}`, (i) => ({ top: Math.round(((i.closest('.sd-opt') || i).getBoundingClientRect()).top), st: document.getElementById('sd-pane').scrollTop,
+        on: i.checked, focus: document.activeElement === i }));
+      check(`hộp: ${what} không kéo khung phải về đầu; ô vừa bấm đứng yên, giữ focus`, b.st > 0 && a.st > 0 && Math.abs(a.top - b.top) <= 2 && a.on && a.focus, JSON.stringify({ b, a }));
+    };
+    await keep('chọn phương án cuối của khâu', pageOf('process'), '.sd-opt', -1);
+    await keep('chọn câu trả lời hồ sơ ở cuối trang', 1, 'input[data-q]:not(:checked)', -2);
+
+    /* Mở ở khâu cuối từ nút sơ đồ bằng bàn phím: cột trái cho thấy mục ấy; sửa rồi Esc: focus về nút mới, trang đứng yên. */
+    await dp.keyboard.press('Escape');
+    await shut(dp);
+    const node = `#sd-fig [data-stage="${last}"]`;
+    await dp.$eval(node, (n) => n.scrollIntoView({ block: 'center' }));
+    await dp.focus(node);
+    const y0 = await dp.evaluate(() => scrollY);
+    await dp.keyboard.press('Enter');
+    await dp.waitForSelector('#dlg-sd[open]');
+    const navIn = (page, scroller) => page.$eval('#sd-nav [aria-current]', (b, s) => {
+      const r = b.getBoundingClientRect(), n = b.closest(s).getBoundingClientRect();
+      return { item: b.dataset.at, ok: r.top >= n.top - 1 && r.bottom <= n.bottom + 1 && r.left >= n.left - 1 && r.right <= n.right + 1 };
+    }, scroller);
+    const navD = await navIn(dp, 'nav');
+    check('hộp mở ở khâu cuối (máy rộng): mục đang xem của cột trái nằm trong tầm nhìn', navD.ok && +navD.item === pageOf(last), JSON.stringify(navD));
+    const gOld = await dp.$(node);
+    await dp.click('#sd-pane textarea[data-note]');
+    await dp.keyboard.type('x');
+    await dp.keyboard.press('Escape');
+    await shut(dp);
+    const backNode = await focusIs(dp, node);
+    check('sửa trong hộp rồi Esc: focus về nút sơ đồ vừa vẽ lại (cùng khâu), trang không cuộn', backNode && !(await gOld.evaluate((g) => g.isConnected))
+      && Math.abs((await dp.evaluate(() => scrollY)) - y0) <= 1, JSON.stringify({ backNode, y0, y1: await dp.evaluate(() => scrollY) }));
+    /* Khâu thành Not needed thì nút rời sơ đồ: đóng hộp thì focus về khung sơ đồ, không về bảng, trang không cuộn. */
+    await dp.keyboard.press('Enter');
+    await dp.waitForSelector('#dlg-sd[open]');
+    await dp.click('#sd-pane [data-skip]');
+    await dp.keyboard.press('Escape');
+    await shut(dp);
+    const gone = await dp.evaluate((q) => ({ id: document.activeElement.id, node: !!document.querySelector(q), y: scrollY }), node);
+    check('khâu vừa thành Not needed (nút rời sơ đồ): đóng hộp thì focus về khung sơ đồ, trang không cuộn', gone.id === 'sd-fig' && !gone.node
+      && Math.abs(gone.y - y0) <= 1, JSON.stringify({ ...gone, y0 }));
+    await dp.$eval('#sd-fig [data-stage]', (n) => n.scrollIntoView({ block: 'center' }));
+    await dp.focus('#sd-fig [data-stage]');
+
+    /* Esc trên nút sơ đồ: focus về chính khung (không rơi về body), bánh xe trả cho trang. */
+    await dp.keyboard.press('Escape');
+    const escH = await dp.evaluate(() => ({ id: document.activeElement.id, hint: document.getElementById('sd-zoom-hint').textContent }));
+    const fb = await dp.$eval('#sd-fig', (f) => { const r = f.getBoundingClientRect(); return { x: r.left + r.width / 2, y: (Math.max(r.top, 0) + Math.min(r.bottom, innerHeight)) / 2 }; });
+    await dp.mouse.move(fb.x, fb.y);
+    const sy = await dp.evaluate(() => scrollY);
+    await dp.mouse.wheel(0, -200);
+    const wheeled = await waitTo(dp, 'trang cuộn khi bánh xe đã trả về', (s) => scrollY < s, sy);
+    check('Esc trên nút sơ đồ: focus về khung #sd-fig, bánh xe cuộn trang', escH.id === 'sd-fig' && !/release/.test(escH.hint) && wheeled, JSON.stringify(escH));
+
+    /* Space trên nút Zoom in khi chuột nằm trên sơ đồ: nút nhận Space, sơ đồ không giành. */
+    const fc = await dp.$eval('#sd-fig', (f) => { f.scrollIntoView({ block: 'center' }); const r = f.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; });
+    await dp.mouse.move(fc.x, fc.y);
+    await dp.focus('#sd-zoom-in');
+    const pct0 = await dp.textContent('#sd-zoom-pct');
+    await dp.keyboard.press('Space');
+    const zoomed = await waitTo(dp, 'Space trên Zoom in thu phóng', (p) => document.getElementById('sd-zoom-pct').textContent !== p, pct0);
+    check('Space trên nút Zoom in khi chuột trên sơ đồ: nút được bấm, không thành giữ để kéo', zoomed && !(await dp.$('#sd-fig.is-grab')), pct0);
+    await dp.click('#sd-view-reset');
+
+    await dx.close();
+
+    /* Dự án mới, áp lối "Frontend + backend API": có luật báo; link cảnh báo trên trang, đóng sau khi sửa thì về link mới. */
+    const { ctx: wx, page: wp } = await open(1280, 900);
+    await wp.click('#start .tpl[data-tpl="crisp-dm"]');
+    await wp.waitForSelector('#sd-fig svg');
+    await wp.click('#sd-open');
+    await wp.click('#sd-pane input[data-path][value="api"]', { force: true });
+    await wp.click('#sd-pane [data-apply]');
+    await wp.keyboard.press('Escape');
+    await shut(wp);
+    const warn = await wp.$eval('#sd-warns [data-warn]', (b) => `#sd-warns [data-warn="${b.dataset.warn}"]`).catch(() => '');
+    if (!warn) check('lối api có cảnh báo trên trang', false);
+    else {
+      const wOld = await wp.$(warn);
+      await wp.focus(warn);
+      await wp.keyboard.press('Enter');
+      await wp.waitForSelector('#dlg-sd[open]');
+      await wp.click('#sd-pane textarea[data-note]');
+      await wp.keyboard.type('x');
+      await wp.keyboard.press('Escape');
+      await shut(wp);
+      check('sửa rồi đóng hộp mở từ link cảnh báo: focus về link vừa vẽ lại', (await focusIs(wp, warn)) && !(await wOld.evaluate((b) => b.isConnected)));
+    }
+
+    /* Handoffs: gõ hợp đồng thì đầu khối (tóm tắt, viền đã ghi) đổi ngay; nhãn trên sơ đồ mở lại hộp, đóng thì về nhãn mới. */
+    await wp.click('#sd-open');
+    await wp.click(`#sd-nav [data-at="${cat.stages.length + 3}"]`);
+    const key = await wp.$eval('#sd-pane [data-edge-item]', (d) => d.dataset.edgeItem);
+    const item = `#sd-pane [data-edge-item="${key}"]`;
+    await wp.click(`${item} > summary`);
+    const g0 = await wp.$eval(item, (d) => ({ sum: d.querySelector('summary small').textContent, set: d.classList.contains('is-set') }));
+    await wp.fill(`${item} input[data-ef="what"]`, 'clean.parquet');
+    const g1 = await wp.$eval(item, (d) => ({ sum: d.querySelector('summary small').textContent, set: d.classList.contains('is-set') }));
+    check('Handoffs: gõ "What is handed over" thì đầu khối đổi ngay (tóm tắt, viền đã ghi)', g0.sum === 'Not described yet' && !g0.set
+      && g1.sum.includes('clean.parquet') && g1.set, JSON.stringify({ g0, g1 }));
+    await wp.keyboard.press('Escape');
+    await shut(wp);
+    const cap = `#sd-fig .sd-hand[data-edge="${key}"]`;
+    const cOld = await wp.$(cap);
+    await wp.$eval(cap, (g) => g.scrollIntoView({ block: 'center' }));
+    await wp.focus(cap);
+    await wp.keyboard.press('Enter');
+    await wp.waitForSelector('#dlg-sd[open]');
+    await wp.fill(`${item} input[data-ef="where"]`, 'data/clean/');
+    await wp.keyboard.press('Escape');
+    await shut(wp);
+    check('sửa rồi đóng hộp mở từ nhãn bàn giao: focus về nhãn vừa vẽ lại', (await focusIs(wp, cap)) && !(await cOld.evaluate((g) => g.isConnected)));
+    await wx.close();
+
+    /* Một dự án mới: Architecture là trang gợi ý; "Add tasks to plan" không in "null", đếm số ít / nhiều đúng; Cancel không xanh. */
+    const { ctx: ax, page: ap } = await open(1280, 900);
+    await ap.click('#start .tpl[data-tpl="crisp-dm"]');
+    await ap.waitForSelector('#sd-fig svg');
+    await ap.click('#sd-arch [data-arch-open]');
+    await ap.waitForSelector('#dlg-sd[open] .sd-fam');
+    const guide = await ap.evaluate(() => {
+      const nav = document.querySelector('#sd-nav [data-at="2"]'), app = document.querySelector('#sd-pane [data-fam="app"]');
+      const use = [...app.querySelectorAll('[data-arch-path]')];
+      return { note: !!document.querySelector('#sd-pane .sd-note[data-guide]'), cls: nav.className, sr: nav.querySelector('.sr').textContent,
+        needs: [...document.querySelectorAll('#sd-pane .sd-fam')].every((f) => !!f.querySelector('.sd-rec, .sd-need')),
+        needPath: !!app.querySelector('.sd-need [data-need="path"][data-at="0"]'),
+        use: use.length > 0 && use.every((b) => b.getClientRects().length > 0 && !b.closest('details').open) };
+    });
+    check('Architecture: dòng "guide" ở đầu, mục trái dấu trung tính "(guide)", mỗi nhóm nêu gợi ý hay câu còn thiếu, "Use this deliverable" thấy khi thẻ gập',
+      guide.note && /\bis-guide\b/.test(guide.cls) && guide.sr.includes('(guide)') && guide.needs && guide.needPath && guide.use, JSON.stringify(guide));
+    const card = '#sd-pane [data-fam="storage"] .sd-arch:not(.is-rec)';
+    const bc0 = await ap.$eval(card, (d) => getComputedStyle(d).borderColor);
+    await ap.hover(`${card} > summary`);
+    const hovered = await ap.waitForFunction(([s, c]) => getComputedStyle(document.querySelector(s)).borderColor !== c, [card, bc0], { timeout: 2000 }).then(() => true, () => false);
+    check('Architecture: thẻ kiến trúc đổi viền khi rê chuột', hovered);
+    const arch = await ap.$eval('#sd-pane [data-fam="app"] [data-arch-path]', (b) => b.closest('[data-arch]').dataset.arch);
+    await ap.click(`#sd-pane [data-arch="${arch}"] [data-arch-path]`);
+    const used = await ap.$eval(`#sd-pane [data-arch="${arch}"]`, (d) => ({ open: d.open, mine: /Your deliverable/.test(d.querySelector('summary').textContent),
+      rec: document.querySelector('#sd-pane [data-fam="app"] .sd-rec')?.dataset.rec }));
+    check('Architecture: "Use this deliverable" đặt lối mà không mở thẻ; nhóm app gợi ý đúng kiến trúc ấy', !used.open && used.mine && used.rec === arch
+      && !!(await cur(ap)).design.path, JSON.stringify(used));
+    await ap.click(`#sd-nav [data-at="${pageOf('raw')}"]`);
+    await ap.click('#sd-pane .sd-opt input');
+    await ap.keyboard.press('Escape');
+    await shut(ap);
+    await ap.click('#sd-plan');
+    await ap.waitForSelector('#dlg-sdp[open]');
+    await ap.click('#sdp-go');
+    await waitTo(ap, 'hộp Update plan đóng', () => !document.getElementById('dlg-sdp').open);
+    await ap.click('#sd-plan');
+    await ap.waitForSelector('#dlg-sdp[open]');
+    const nulls = () => ap.$eval('#sdp-list', (l) => { const w = document.createTreeWalker(l, NodeFilter.SHOW_TEXT); let n, k = 0; while ((n = w.nextNode())) if (/^(null|undefined)$/.test(n.nodeValue.trim())) k++; return k; });
+    const same = await ap.$eval('#sdp-list', (l) => l.textContent.trim());
+    check('Add tasks to plan: không chữ "null"; một việc khớp ghi "1 task already matches"', (await nulls()) === 0 && same === '1 task already matches the design.', same);
+    await ap.keyboard.press('Escape');
+    await ap.click(`#sd-arch [data-arch-open]`);
+    await ap.click(`#sd-nav [data-at="${pageOf('raw')}"]`);
+    await ap.click('#sd-pane .sd-opt input:checked');
+    await ap.keyboard.press('Escape');
+    await shut(ap);
+    await ap.click('#sd-plan');
+    await ap.waitForSelector('#dlg-sdp[open] .sd-pill');
+    const pill = await ap.$eval('#sdp-list .sd-pill input:checked + span', (s) => {
+      const probe = document.body.appendChild(Object.assign(document.createElement('i'), { style: 'background: var(--accent)' }));
+      const accent = getComputedStyle(probe).backgroundColor;
+      probe.remove();
+      return { text: s.textContent, bg: getComputedStyle(s).backgroundColor, accent };
+    });
+    check('Update plan: lựa chọn Cancel đang chọn ở "No longer in the design" không tô màu nhấn', pill.text === 'Cancel' && pill.bg !== pill.accent && (await nulls()) === 0, JSON.stringify(pill));
+    await ax.close();
+
+    /* 390px, cảm ứng: chạm lòng nút chưa quyết mở hộp; hộp toàn màn không dáng tấm trượt; dải chip thấy mục đang xem;
+     * link chữ của mục (Architecture guide) có vùng chạm ≥ 44px. */
+    const { ctx: mx, page: mp } = await open(390, 844, { isMobile: true, hasTouch: true });
+    await mp.click('#start .tpl[data-tpl="crisp-dm"]');
+    await mp.waitForSelector('#sd-fig svg');
+    const tB = await mp.$eval('#sd-fig .sd-node.is-open[data-stage]', probe);
+    await mp.touchscreen.tap(tB.x, tB.y);
+    const tapB = await waitTo(mp, 'chạm lòng nút chưa quyết mở hộp', () => document.getElementById('dlg-sd').open);
+    const full = await mp.$eval('#dlg-sd', (d) => (d.getAnimations({ subtree: true }).forEach((x) => x.finish()), { radius: getComputedStyle(d).borderTopLeftRadius, grip: getComputedStyle(d.querySelector('.dlg-head'), '::before').content,
+      top: Math.round(d.getBoundingClientRect().top) }));
+    check('390px: chạm lòng nút chưa quyết mở hộp; hộp toàn màn không bo góc, không thanh nắm', tB.ok && tapB && full.radius === '0px' && full.grip === 'none' && full.top === 0, JSON.stringify(full));
+    await mp.keyboard.press('Escape');
+    await shut(mp);
+    await mp.$eval(`#sd-fig [data-stage="${last}"]`, (n) => n.scrollIntoView({ block: 'center' }));
+    await mp.focus(`#sd-fig [data-stage="${last}"]`);
+    await mp.keyboard.press('Enter');
+    await mp.waitForSelector('#dlg-sd[open]');
+    const navM = await navIn(mp, 'ol');
+    check('390px: hộp mở ở khâu cuối, chip đang xem nằm trong dải chip', navM.ok && +navM.item === pageOf(last), JSON.stringify(navM));
+    await mp.keyboard.press('Escape');
+    await shut(mp);
+    const link = await mp.$eval('#sd-arch [data-arch-open]', (el) => {
+      el.scrollIntoView({ block: 'center' });
+      const r = el.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+      const at = (y) => { const t = document.elementFromPoint(cx, y); return !!t && (t === el || el.contains(t)); };
+      return { h: Math.round(r.height), ok: at(cy - 21.5) && at(cy + 21.5) };
+    });
+    check('390px: link chữ "Architecture guide" có vùng chạm cao ≥ 44px', link.ok, JSON.stringify(link));
+    await mx.close();
+
+    /* 768px: sơ đồ hai cột; chữ trong nút bị cắt thì có tooltip ghi đủ. */
+    const { ctx: tx, page: tp } = await open(768, 1024);
+    await tp.click('#start .tpl[data-tpl="crisp-dm"]');
+    await tp.waitForSelector('#sd-fig svg');
+    const wide = await tp.$eval('#sd-fig', (f) => {
+      const ns = [...f.querySelectorAll('.sd-flow > .sd-node')];
+      const cols = new Set(ns.map((n) => Math.round(n.getBoundingClientRect().left))).size;
+      const cut = ns.filter((n) => [...n.querySelectorAll('text')].some((t) => t.textContent.endsWith('…')));
+      return { cols, cut: cut.length, tips: cut.every((n) => n.querySelector(':scope > title')?.textContent.length > 0) };
+    });
+    check('768px: sơ đồ xếp hai cột; chữ bị cắt có tooltip <title>', wide.cols === 2 && wide.tips, JSON.stringify(wide));
+    await tx.close();
   });
 
   /* ── Nhập: Esc, Close khi đã dán chữ thì hỏi lại như hộp sửa; chưa dán gì thì đóng ngay ── */

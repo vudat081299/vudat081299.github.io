@@ -48,7 +48,7 @@ const keyNav = (e) => e.key === 'Tab' || (!inText(e.target) && (NAV_KEYS.include
 /* Nút mở hộp: bảng vẽ lại trong lúc hộp mở (thêm, xoá tài liệu, Evidence) thay nút ấy bằng nút mới, và trình duyệt trả focus
  * về nút cũ đã rời trang: focus rơi về body. Lúc mở nhớ bộ chọn của nút mở; đóng mà focus ở body thì tìm lại theo bộ chọn. */
 const KEYS = ['data-act', 'data-sub', 'data-step', 'data-doc', 'data-doc-act', 'data-doc-add', 'data-log', 'data-ws', 'data-edge',
-  'data-k', 'data-in', 'data-out', 'data-gap', 'data-at', 'data-tpl', 'data-goto'];
+  'data-k', 'data-in', 'data-out', 'data-gap', 'data-at', 'data-tpl', 'data-goto', 'data-stage', 'data-warn', 'data-arch-open'];
 /** @type {WeakMap<any, string>} */
 const openers = new WeakMap();
 /** Bộ chọn tìm lại phần tử sau khi vẽ lại: khoá của nó và của các tổ tiên có khoá tới tổ tiên có id; rồi chỉ tổ tiên gần nhất.

@@ -6,10 +6,12 @@
  *   dừng ở mép sơ đồ; không dời được thì trang cuộn (wheelStep). Trục sơ đồ vừa khung luôn thấy trọn (clampPan).
  * - Giữ Space rồi kéo chuột, hay kéo bằng nút giữa: kéo khung. Kéo nút trái trơn không kéo khung (như Figma). Chạm: hai ngón thu phóng và kéo; một ngón kéo ngang, và kéo
  *   mọi hướng khi khung có focus (chưa thì một ngón dọc cuộn trang, CSS touch-action).
- * - Phím khi sơ đồ có focus: + / - thu phóng, 0 về khung ban đầu, mũi tên kéo, Esc trả bánh xe cho trang.
+ * - Phím khi sơ đồ có focus: + / - thu phóng, 0 về khung ban đầu, mũi tên kéo, Esc trả bánh xe cho trang (focus về chính khung,
+ *   không rơi về trang; bấm vào khung lần nữa thì bánh xe lại kéo khung).
+ * - Space trên một nút, ô ngoài sơ đồ (Zoom in, Reset view…) là của nút ấy, kể cả khi con trỏ đang nằm trên sơ đồ.
  * - Kéo xong (kể cả nút trái trơn dời quá DRAG_SLOP) không tính là bấm: nút, đường nối dưới con trỏ không mở hộp.
  * Khung nhìn chỉ ở bộ nhớ của trang: vẽ lại sơ đồ giữ khung, tải lại trang về khung ban đầu.
- * Xuất: resetView, attach, initDiagramView.
+ * Xuất: resetView, attach, focusFig, initDiagramView.
  * Dùng: core/view-math.js. */
 import { DRAG_SLOP, HOME, PAN_STEP, ZOOM_MAX, ZOOM_MIN, ZOOM_STEP, clampPan, clampZoom, panBy, pinch, wheelPan, wheelPx, wheelStep, wheelZoom, zoomAt, zoomPct } from '../core/view-math.js';
 /** @typedef {import('../core/view-math.js').View} View */
@@ -22,6 +24,7 @@ let view = { ...HOME };
 /** @type {SVGGElement | null} */ let cam = null;
 let cw = 0, ch = 0;                       // cỡ sơ đồ ở tỉ lệ 1
 let hover = false, spaceHeld = false, spaceUsed = false, suppress = false;
+let released = false;                     // Esc: khung giữ focus mà bánh xe trả cho trang
 /** @type {Map<number, {x: number, y: number}>} */
 const pts = new Map();
 /** Cử chỉ đang làm: kéo một điểm hay hai ngón; `moved` khi đã quá DRAG_SLOP. @type {any} */
@@ -34,7 +37,15 @@ const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 const typing = (/** @type {any} */ el) => !!el && (el.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName));
 /* Bánh xe trơn kéo khung khi chính khung có focus (bấm vào chỗ trống của sơ đồ, hay Tab tới), không khi một nút có focus
  * (đóng hộp xong focus về nút: trang vẫn cuộn như thường). */
-const active = () => spaceHeld || (!!fig && document.activeElement === fig);
+const active = () => spaceHeld || (!!fig && document.activeElement === fig && !released);
+/** Thả bánh xe (Esc) hay bắt lại (bấm vào khung): viền đậm của khung chỉ khi bánh xe kéo khung. @param {boolean} v */
+function release(v) {
+  released = v;
+  fig?.classList.toggle('is-free', v);
+  hint();
+}
+/* Phần tử nhận Space của riêng nó (nút, ô, link, mục gập): Space ở đó không phải giữ để kéo sơ đồ. */
+const CONTROL = 'button, input, select, textarea, a[href], summary, [contenteditable], [role="button"], [role="checkbox"], [role="radio"], [role="switch"], [role="option"], [role="tab"], [role="menuitem"]';
 const box = () => (svgEl ? svgEl.getBoundingClientRect() : new DOMRect());
 
 /** Đặt khung (kẹp tỉ lệ và độ dời), vẽ lại transform và số phần trăm. @param {View} v @param {boolean} [ease] */
@@ -62,6 +73,13 @@ function paint(ease = false) {
 function zoomCenter(k) {
   const r = box();
   set(zoomAt(view, k, r.width / 2, r.height / 2), true);
+}
+
+/** Focus chính khung (không cuộn trang) mà bánh xe vẫn của trang: Esc trên nút của sơ đồ, đóng hộp mà nút mở hộp đã mất. */
+export function focusFig() {
+  if (!fig) return;
+  if (document.activeElement !== fig) fig.focus({ preventScroll: true });
+  release(true);
 }
 
 /** Về khung ban đầu (cỡ thật, góc trên trái); có chuyển động trừ khi người dùng giảm chuyển động. */
@@ -187,7 +205,8 @@ function onKey(/** @type {KeyboardEvent} */ e) {
     0: () => resetView(),
     ArrowLeft: () => set(panBy(view, step, 0), true), ArrowRight: () => set(panBy(view, -step, 0), true),
     ArrowUp: () => set(panBy(view, 0, step), true), ArrowDown: () => set(panBy(view, 0, -step), true),
-    Escape: () => /** @type {any} */ (document.activeElement)?.blur(),
+    /* Nút, nhãn của sơ đồ có focus: về chính khung (không rơi về <body>), và trả bánh xe cho trang. */
+    Escape: () => focusFig(),
   };
   const f = acts[e.key];
   if (!f) return;
@@ -204,7 +223,7 @@ function onSpace(/** @type {KeyboardEvent} */ e) {
   if (e.type === 'keydown') {
     if (spaceHeld) { e.preventDefault(); return; }
     if (!cam || typing(el) || document.querySelector('dialog[open]')) return;
-    if (!mine && !hover) return;
+    if (!mine && (!hover || (el && el !== document.body && el.matches(CONTROL)))) return;
     e.preventDefault();
     spaceHeld = true;
     spaceUsed = false;
@@ -254,7 +273,9 @@ export function initDiagramView(o) {
   fig.addEventListener('pointerleave', () => { hover = false; });
   fig.addEventListener('keydown', onKey);
   fig.addEventListener('focus', hint);
-  fig.addEventListener('blur', hint);
+  fig.addEventListener('blur', () => release(false));
+  /* Bấm vào khung (kể cả khi đã có focus, nên không có sự kiện focus): bánh xe lại kéo khung. */
+  fig.addEventListener('pointerdown', () => { if (released) release(false); });
   addEventListener('keydown', onSpace);
   addEventListener('keyup', onSpace);
   addEventListener('blur', dropSpace);

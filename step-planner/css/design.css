@@ -26,7 +26,8 @@
 .lane-ops .sd-bar { fill: var(--amber); }
 .lane-end .sd-box { fill: var(--accent-soft); stroke: var(--accent-line); }
 .lane-end .sd-bar { fill: var(--green); }
-.sd-node.is-open .sd-box { fill: none; stroke: var(--ink-4); stroke-dasharray: var(--sd-dash); }
+/* Khâu chưa quyết: nền trong suốt (không phải `none`) để cả lòng nút nhận chuột, chạm như nút đã quyết. */
+.sd-node.is-open .sd-box { fill: transparent; stroke: var(--ink-4); stroke-dasharray: var(--sd-dash); }
 .sd-node.is-open .sd-bar { fill: var(--line); }
 .sd-title { font: 500 var(--fs-xs)/1 var(--mono); letter-spacing: .04em; fill: var(--ink-3); }
 .sd-name { font: 600 var(--fs-sm)/1 var(--sans); fill: var(--ink); }
@@ -60,12 +61,13 @@
   .sd-hand:not(.is-empty):hover .sd-hand-box { fill: var(--sd-hand-hover); }
 }
 @media (hover: none) { .sd-hand.is-empty { display: none; } }
-/* Khung nhìn (js/ui/diagram-view.js): khung có focus thì bánh xe kéo khung (viền đậm báo); giữ Space: bàn tay; đang kéo: nắm.
+/* Khung nhìn (js/ui/diagram-view.js): khung có focus thì bánh xe kéo khung (viền đậm báo; sau Esc lớp `is-free`: bánh xe của trang); giữ Space: bàn tay; đang kéo: nắm.
    Chạm: một ngón dọc cuộn trang tới khi chạm vào chỗ trống của sơ đồ, rồi một ngón kéo khung; hai ngón luôn thu phóng. */
-.sd-fig:focus { outline: none; border-color: var(--ink-4); }
+.sd-fig:focus { outline: none; }
+.sd-fig:focus:not(.is-free) { border-color: var(--ink-4); }
 :where(:root:not(.quiet-focus)) .sd-fig:focus-visible { outline: var(--ring-w) solid var(--ring); outline-offset: var(--mark-w); }
 .sd-svg { touch-action: pan-y; -webkit-user-select: none; user-select: none; }
-.sd-fig:focus .sd-svg { touch-action: none; }
+.sd-fig:focus:not(.is-free) .sd-svg { touch-action: none; }
 .sd-fig.is-grab, .sd-fig.is-grab * { cursor: grab; }
 .sd-fig.is-panning, .sd-fig.is-panning * { cursor: grabbing; }
 .sd-cam.is-easing { transition: transform var(--dur-sheet) var(--ease); }
@@ -103,6 +105,9 @@
   border: var(--mark-w) solid var(--ink-4); border-radius: var(--r-pill); color: var(--on-accent);
 }
 .sd-dot svg.i { width: var(--s3); height: var(--s3); }
+/* Trang gợi ý (Architecture): dấu trung tính, không phải vòng "chưa quyết". */
+.is-guide .sd-dot { border-color: transparent; color: var(--ink-3); }
+.is-guide .sd-dot svg.i { width: var(--icon); height: var(--icon); }
 .is-done .sd-dot { background: var(--accent); border-color: var(--accent); }
 .is-skip .sd-dot { border-style: dashed; }
 .is-skip .sd-nav-txt > span:first-child { text-decoration: line-through; color: var(--ink-3); }
@@ -116,6 +121,14 @@
 .sd-help { font-size: var(--fs-sm); line-height: var(--lh); color: var(--ink-3); }
 .sd-tip { padding: var(--s3); font-size: var(--fs-sm); color: var(--blue-fg); background: var(--blue-soft); border-radius: var(--r-sm); }
 .sd-link { padding: 0; font: inherit; font-weight: 600; color: inherit; text-decoration: underline; text-underline-offset: var(--ul-offset); cursor: pointer; background: none; border: 0; }
+/* Cảm ứng: vùng bấm cao --hit quanh chữ, dòng chữ không đổi cao. */
+@media (pointer: coarse) {
+  .sd-link { position: relative; }
+  .sd-link::after { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: var(--hit); min-width: var(--hit); transform: translateY(-50%); }
+}
+/* Dòng "đây là trang gợi ý" ở đầu trang Architecture. */
+.sd-note { display: flex; align-items: flex-start; gap: var(--s2); font-size: var(--fs-sm); line-height: var(--lh); color: var(--ink-2); }
+.sd-note svg.i { flex: none; width: var(--s4); height: var(--s4); margin-top: var(--mark-w); color: var(--ink-3); }
 .sd-skip { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2) var(--s3); }
 .sd-opts { display: flex; flex-direction: column; gap: var(--s3); }
 .sd-opt {
@@ -173,6 +186,8 @@
   color: var(--ink-2); background: var(--surface); border: var(--line-w) solid var(--line); border-radius: var(--r-pill);
 }
 .sd-pill input:checked + span { color: var(--on-accent); background: var(--accent); border-color: var(--accent); font-weight: 600; }
+/* Hộp Update plan: lựa chọn cho từng việc (Cancel, Keep, Update…) không mang màu "nên chọn". */
+.sdp-dlg .sd-pill input:checked + span { color: var(--bg); background: var(--ink); border-color: var(--ink); }
 :where(:root:not(.quiet-focus)) .sd-pill input:focus-visible + span { outline: var(--ring-w) solid var(--ring); outline-offset: var(--mark-w); }
 .sd-pos { font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-3); }
 /* Trang Handoffs: mỗi đường nối một khối gập. */
@@ -241,20 +256,26 @@ li.sd-warnbox { display: block; }
 /* Trang Architecture: mỗi nhóm một mục (tên, câu hỏi, dòng gợi ý), mỗi kiến trúc một khối gập; kiến trúc được gợi ý viền xanh. */
 .sd-fam { display: flex; flex-direction: column; gap: var(--s2); }
 .sd-fam + .sd-fam { padding-top: var(--s4); border-top: var(--line-w) solid var(--line-2); }
-.sd-rec { padding: var(--s3); font-size: var(--fs-sm); line-height: var(--lh); color: var(--ink); background: var(--accent-soft); border-radius: var(--r-sm); }
+.sd-rec, .sd-need { padding: var(--s3); font-size: var(--fs-sm); line-height: var(--lh); color: var(--ink); background: var(--accent-soft); border-radius: var(--r-sm); }
 .sd-rec b { font-weight: 600; }
-.sd-rec.is-none { color: var(--ink-2); background: var(--chip); }
+.sd-rec.is-none, .sd-need { color: var(--ink-2); background: var(--chip); }
 .sd-archs { display: flex; flex-direction: column; gap: var(--s2); }
 .sd-arch {
   display: flex; flex-direction: column; gap: var(--s2); padding: var(--s2) var(--s4) var(--s2) var(--s3);
   background: var(--surface); border: var(--line-w) solid var(--line); border-radius: var(--r); box-shadow: var(--shadow-1);
 }
 .sd-arch.is-rec { border-color: var(--accent); }
+@media (hover: hover) {
+  .sd-arch { transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease); }
+  .sd-arch:not(.is-rec):has(> summary:hover) { border-color: var(--ink-4); }
+  .sd-arch.is-rec:has(> summary:hover) { background: var(--accent-soft); }
+}
+.sd-arch-use { display: flex; margin-top: var(--s1); }
 .sd-arch[open] { padding-bottom: var(--s4); }
 .sd-arch > summary { display: flex; align-items: flex-start; gap: var(--s2); min-height: var(--ctl-sm); padding-top: var(--s1); cursor: pointer; list-style: none; }
 .sd-arch > summary::-webkit-details-marker { display: none; }
-.sd-arch > summary svg.i { flex: none; width: var(--s4); height: var(--s4); margin-top: var(--mark-w); transform: rotate(-90deg); transition: transform var(--dur) var(--ease); }
-.sd-arch[open] > summary svg.i { transform: none; }
+.sd-arch > summary > svg.i { flex: none; width: var(--s4); height: var(--s4); margin-top: var(--mark-w); transform: rotate(-90deg); transition: transform var(--dur) var(--ease); }
+.sd-arch[open] > summary > svg.i { transform: none; }
 .sd-arch > :not(summary) { margin-left: calc(var(--s4) + var(--s2)); }
 .sd-arch-name { min-width: 0; display: flex; flex-direction: column; gap: var(--s1); }
 .sd-arch-head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s1) var(--s2); }
@@ -272,9 +293,10 @@ li.sd-warnbox { display: block; }
   .sd { grid-template-columns: minmax(0, 1fr); padding-top: var(--s5); }
   .sd-acts { flex-direction: row; flex-wrap: wrap; }
   .sd-acts .btn { flex: 1 1 auto; }
-  .dlg.sd-dlg { width: 100vw; height: 100dvh; max-height: 100dvh; margin: 0; border-radius: 0; border-width: 0; }
-  .dlg.sd-dlg .dlg-head::before { content: none; }
-  .dlg.sd-dlg .dlg-head { padding: var(--s3) var(--s2) var(--s3) var(--s4); }
+  /* Toàn màn, không dáng tấm trượt: `:not(.dlg-ask)` cho bằng độ ưu tiên với luật tấm trượt của dialogs.css (link sau) rồi hơn một bậc. */
+  .dlg.sd-dlg:not(.dlg-ask) { width: 100vw; height: 100dvh; max-height: 100dvh; margin: 0; border-radius: 0; border-width: 0; }
+  .dlg.sd-dlg:not(.dlg-ask) .dlg-head::before { content: none; }
+  .dlg.sd-dlg:not(.dlg-ask) .dlg-head { padding: var(--s3) var(--s2) var(--s3) var(--s4); }
   .dlg-body.sd-body { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); }
   .sd-nav { padding: var(--s2); border-right: 0; border-bottom: var(--line-w) solid var(--line-2); }
   .sd-nav ol { flex-direction: row; overflow-x: auto; scrollbar-width: none; }

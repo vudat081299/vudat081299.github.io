@@ -5,7 +5,7 @@
  * Dùng: core/board.js, core/design-plan.js, core/design.js, core/io.js, core/model.js, ui/diagram-view.js, ui/dialogs.js,
  *   ui/dom.js, ui/state.js, ui/toast.js. */
 import { fold as foldText } from '../core/board.js';
-import { initDiagramView, attach as attachView, resetView } from './diagram-view.js';
+import { initDiagramView, attach as attachView, focusFig, resetView } from './diagram-view.js';
 import { PLAN_STEP, applyPlan, bothDecided, diagramNodes, flowEdges, planDiff, snake, viaLabel } from '../core/design-plan.js';
 import { EDGE_MAX, OWN_MAX, VIA, applyPath, archAdvice, archMissing, catalogErrors, decidedCount, effProfile, emptyDesign, isPreset, normDesign, notNeededBy, pathOf, pickNames, presetDesign, rankOptions, stageState, warnings } from '../core/design.js';
 import { plural, slug } from '../core/io.js';
@@ -23,6 +23,9 @@ const LEVEL_LABEL = { 1: 'Beginner', 2: 'Some setup', 3: 'Advanced' };
 /** @type {any} */ let cat = null;
 let catError = '';
 let at = 0;                       // trang của hộp: 0 = lối bắt đầu, 1 = hồ sơ dự án, 2 = kiến trúc, k ≥ 3 = khâu thứ k − 2
+let paneAt = -1;                  // trang khung phải vẽ lần trước: khác `at` thì về đầu trang
+/** Nút / nhãn của sơ đồ đã mở hộp (null: mở từ chỗ khác). @type {Element | null} */
+let figOpener = null;
 const moreOpen = new Set();       // khâu đang mở "Show other options"
 /** Lần "Apply path" gần nhất (Hoàn tác là một dòng trong hộp: toast bị hộp modal che). @type {any} */
 let applied = null;
@@ -98,7 +101,7 @@ export function renderSection() {
   const warns = warnings(cat, w.design);
   $('sd-warns').hidden = !warns.length;
   $('sd-warns').replaceChildren(...warns.map((x) => h('li', { class: 'sd-warnbox' },
-    h('button', { type: 'button', class: 'sd-link', 'data-warn-stage': x.stages[0] || '' }, x.title), ' ', x.msg)));
+    h('button', { type: 'button', class: 'sd-link', 'data-warn': x.id, 'data-warn-stage': x.stages[0] || '' }, x.title), ' ', x.msg)));
 }
 
 /** Dòng kiến trúc trên trang: tên các kiến trúc gợi ý (bấm là mở trang Architecture của hộp). @param {any} d */
@@ -144,12 +147,13 @@ function drawDiagram() {
   /* Lề trong khung nằm trong <svg> (--sd-fig-pad): sơ đồ phóng to, kéo đi chạm tới viền khung chứ không bị cắt giữa lề. */
   const fp = px(cs, '--sd-fig-pad', 16);
   const W = Math.max(fig.clientWidth - 2 * fp - 4, 240);
-  const gx = px(cs, '--sd-gap-x', 40), gy = px(cs, '--sd-gap-y', 36), maxW = px(cs, '--sd-node-max', 220);
+  const gx = px(cs, '--sd-gap-x', 40), gy = px(cs, '--sd-gap-y', 36), maxW = px(cs, '--sd-node-max', 260);
   const pad = px(cs, '--sd-pad', 12), head = px(cs, '--sd-head', 30), lh = px(cs, '--sd-line', 20);
   const gxHand = Math.max(gx, px(cs, '--sd-gap-hand', 128)), gyHand = Math.max(gy, px(cs, '--sd-gap-y-hand', 56));
   const edges = new Map(flowEdges(cat, design()).map((e) => [e.key, e]));
   /* Khoảng giữa cột c và c + 1: một đường nối ngang qua đó có hợp đồng thì nới tới --sd-gap-hand, để nhãn không chiếm cả đường.
-   * Số cột: nhiều nhất (≤ 5) mà nút còn rộng ≥ min(--sd-node-max, 180). */
+   * Số cột: nhiều nhất (≤ 5) mà nút còn rộng ≥ --sd-node-fit; chỉ còn một cột thì thử hai cột với nút ≥ --sd-node-min.
+   * Nút giãn ra lấp chỗ thừa, rộng nhất --sd-node-max. */
   const gapsFor = (/** @type {number} */ k) => {
     const g = Array(Math.max(0, k - 1)).fill(gx);
     for (let i = 1; i < flow.length; i++) {
@@ -159,9 +163,10 @@ function drawDiagram() {
     return g;
   };
   const sum = (/** @type {number[]} */ a) => a.reduce((t, x) => t + x, 0);
-  const minNode = Math.min(maxW, 180);
+  const fitNode = Math.min(maxW, px(cs, '--sd-node-fit', 180)), minNode = Math.min(fitNode, px(cs, '--sd-node-min', 140));
   let cols = 5, gaps = gapsFor(cols);
-  while (cols > 1 && cols * minNode + sum(gaps) > W) gaps = gapsFor(--cols);
+  while (cols > 1 && cols * fitNode + sum(gaps) > W) gaps = gapsFor(--cols);
+  if (cols === 1 && flow.length > 1 && 2 * minNode + sum(gapsFor(2)) <= W) gaps = gapsFor(cols = 2);
   const nw = Math.min(maxW, (W - sum(gaps)) / cols);
   const colX = gaps.reduce((xs, g, c) => [...xs, xs[c] + nw + g], [0]);
   const nameFont = `600 ${cs.getPropertyValue('--fs-sm').trim() || '13px'} ${cs.getPropertyValue('--sans').trim()}`;
@@ -283,11 +288,20 @@ function nodeEl(n, x, y, w, hh, head, lh, pad, font) {
   grp.append(svg('rect', { class: 'sd-bar', width: 4, height: hh - 16, x: 0, y: 8, rx: 2 }));
   const max = w - 2 * pad - 4;
   /* Tiêu đề in hoa, giãn chữ: đo rộng hơn một chút cho chắc. */
-  grp.append(svg('text', { class: 'sd-title', x: pad + 4, y: head * 0.62 }, fitText(n.lane === 'end' ? 'END' : n.title.toUpperCase(), max * 0.95, font.title)));
+  const title = n.lane === 'end' ? 'END' : n.title.toUpperCase();
+  const shown = fitText(title, max * 0.95, font.title);
+  grp.append(svg('text', { class: 'sd-title', x: pad + 4, y: head * 0.62 }, shown));
   /** @type {string[]} */
   let lines = n.lane === 'end' ? ['Users'] : n.open ? ['Not decided'] : n.names.slice(0, MAX_NAMES);
   if (!n.open && n.names.length > MAX_NAMES) lines = [...lines, `+${n.names.length - MAX_NAMES} more`];
-  lines.forEach((t, k) => grp.append(svg('text', { class: n.open ? 'sd-name muted' : 'sd-name', x: pad + 4, y: head + k * lh + lh * 0.7 }, fitText(t, max, font.name))));
+  let cut = shown !== title || (!n.open && n.names.length > MAX_NAMES);
+  lines.forEach((t, k) => {
+    const s = fitText(t, max, font.name);
+    cut = cut || s !== t;
+    grp.append(svg('text', { class: n.open ? 'sd-name muted' : 'sd-name', x: pad + 4, y: head + k * lh + lh * 0.7 }, s));
+  });
+  /* Chữ bị cắt hay tên bị gộp "+n more": tooltip ghi đủ. */
+  if (cut) grp.prepend(svg('title', {}, n.open || n.lane === 'end' ? n.title : `${n.title}: ${n.names.join(', ')}`));
   return grp;
 }
 
@@ -378,7 +392,8 @@ function openPlan() {
   });
   const same = items.filter((x) => x.kind === 'same').length;
   const todo = items.some((x) => x.kind !== 'same');
-  $('sdp-list').replaceChildren(...lists.filter(Boolean), same ? h('p', { class: 'sd-help' }, `${plural(same, 'task')} already match the design.`) : null);
+  $('sdp-list').replaceChildren(...lists.filter(Boolean),
+    ...(same ? [h('p', { class: 'sd-help', 'data-same': same }, `${plural(same, 'task')} already ${same === 1 ? 'matches' : 'match'} the design.`)] : []));
   const update = items.some((x) => x.sub);
   $('dlg-sdp-title').textContent = update ? 'Update plan' : 'Add tasks to plan';
   $('sdp-sub').textContent = todo ? 'Pick what to do with each task. One Undo reverts everything.' : 'Every task already matches the design.';
@@ -429,11 +444,17 @@ function applyPlanNow() {
 /** @param {number} [k] @param {string} [edgeKey] mở trang Handoffs ở đúng đường nối này */
 function openDesign(k = 0, edgeKey = '') {
   if (!cat) return;
+  const a = document.activeElement;
+  figOpener = a && a !== $('sd-fig') && $('sd-fig').contains(a) ? a : null;
   at = k;
+  paneAt = -1;
   applied = null;
   if (edgeKey) moreOpen.add('edge:' + edgeKey);
   paint();
   showDlg($('dlg-sd'));
+  /* Hộp đóng không có bố cục: chỗ cuộn của khung phải (giữ từ lần mở trước) và mục đang xem của cột trái chỉ đặt được sau khi mở. */
+  $('sd-pane').scrollTop = 0;
+  revealNav(true);
   const item = edgeKey && $('sd-pane').querySelector(`[data-edge-item="${edgeKey}"]`);
   if (item) {
     item.scrollIntoView({ block: 'start' });
@@ -470,7 +491,8 @@ function paintNav() {
     h('li', {}, navBtn(1, 'Project profile', Object.keys(d?.profile || {}).length ? 'done' : 'open', ''))];
   const adv = archAdvice(cat, d);
   const recs = adv.filter((a) => a.id !== null).length;
-  items.push(h('li', {}, navBtn(ARCH_PAGE, 'Architecture', adv.length && recs === adv.length ? 'done' : 'open', adv.length ? `${recs} of ${adv.length} recommended` : '')));
+  /* Architecture chỉ là trang gợi ý (không lưu): dấu trung tính "guide", không phải vòng "chưa quyết" của khâu. */
+  items.push(h('li', {}, navBtn(ARCH_PAGE, 'Architecture', 'guide', adv.length ? `${recs} of ${adv.length} recommended` : '')));
   let lane = '';
   cat.stages.forEach((/** @type {any} */ s, /** @type {number} */ i) => {
     if (s.lane !== lane) { lane = s.lane; items.push(h('li', { class: 'sd-nav-lane', 'aria-hidden': 'true' }, LANE_LABEL[/** @type {'data'} */ (lane)])); }
@@ -483,22 +505,46 @@ function paintNav() {
   items.push(h('li', {}, navBtn(extraPage('handoffs'), 'Handoffs', set ? 'done' : 'open', fe.length ? `${set} of ${fe.length} described` : '')));
   items.push(h('li', {}, navBtn(extraPage('checks'), 'Checks', warns.length ? 'open' : 'done', warns.length ? plural(warns.length, 'warning') : 'No conflicts', warns.length > 0)));
   $('sd-nav').replaceChildren(...items);
-  $('sd-nav').querySelector('[aria-current]')?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  revealNav(false);
+}
+
+/** Cuộn cột trái (máy rộng: <nav> cuộn dọc; hẹp: dải chip <ol> cuộn ngang) cho thấy mục đang xem; chỉ cuộn hai khung ấy,
+ * không cuộn hộp hay trang. `center`: lúc mở hộp, đặt mục vào giữa; còn lại chỉ cuộn khi mục khuất.
+ * @param {boolean} center */
+function revealNav(center) {
+  const b = $('sd-nav').querySelector('[aria-current]');
+  if (!b) return;
+  for (const sc of [$('sd-nav'), $('sd-nav').parentElement]) {
+    const r = sc.getBoundingClientRect(), br = b.getBoundingClientRect();
+    if (sc.scrollHeight > sc.clientHeight) {
+      if (center) sc.scrollTop += br.top + br.height / 2 - (r.top + r.height / 2);
+      else if (br.top < r.top) sc.scrollTop -= r.top - br.top;
+      else if (br.bottom > r.bottom) sc.scrollTop += br.bottom - r.bottom;
+    }
+    if (sc.scrollWidth > sc.clientWidth) {
+      if (center) sc.scrollLeft += br.left + br.width / 2 - (r.left + r.width / 2);
+      else if (br.left < r.left) sc.scrollLeft -= r.left - br.left;
+      else if (br.right > r.right) sc.scrollLeft += br.right - r.right;
+    }
+  }
 }
 
 /** @param {number} k @param {string} title @param {string} state @param {string} sub @param {boolean} [warn] */
 function navBtn(k, title, state, sub, warn = false) {
   return h('button', { type: 'button', class: `sd-nav-btn is-${state}${warn ? ' has-warn' : ''}`, 'data-at': k, 'aria-current': k === at ? 'step' : null },
-    h('span', { class: 'sd-dot', 'aria-hidden': 'true' }, state === 'done' ? icon('check') : null),
+    h('span', { class: 'sd-dot', 'aria-hidden': 'true' }, state === 'done' ? icon('check') : state === 'guide' ? icon('info') : null),
     h('span', { class: 'sd-nav-txt' }, h('span', {}, title), sub ? h('small', {}, sub) : null,
-      h('span', { class: 'sr' }, (state === 'done' ? ' (decided)' : state === 'skip' ? ' (not needed)' : ' (open)') + (warn ? ', has a warning' : ''))));
+      h('span', { class: 'sr' }, (state === 'done' ? ' (decided)' : state === 'skip' ? ' (not needed)' : state === 'guide' ? ' (guide)' : ' (open)')
+        + (warn ? ', has a warning' : ''))));
 }
 
 function paintPane() {
   const ex = extraAt(at);
   $('sd-pane').replaceChildren(...(at === 0 ? pathPane() : at === 1 ? profilePane() : at === ARCH_PAGE ? archPane() : ex === 'checks' ? checksPane() : ex === 'handoffs' ? handoffsPane()
     : stagePane(stageAt(at))).filter(Boolean));
-  $('sd-pane').scrollTop = 0;
+  /* Sang trang khác: về đầu trang. Vẽ lại cùng trang (bấm một lựa chọn): giữ chỗ cuộn (repaint giữ ô vừa bấm đứng yên). */
+  if (paneAt !== at) $('sd-pane').scrollTop = 0;
+  paneAt = at;
   $('sd-pane').closest('.dlg-body').scrollTop = 0;
 }
 
@@ -609,8 +655,10 @@ function archPane() {
   const fams = Array.isArray(cat.architectures) ? cat.architectures : [];
   const adv = archAdvice(cat, d);
   return [
-    h('p', { class: 'dlg-kicker' }, 'Your project'),
+    h('p', { class: 'dlg-kicker' }, 'Guide'),
     h('h3', { class: 'sd-h' }, 'Architecture'),
+    h('p', { class: 'sd-note', 'data-guide': '1' }, icon('info'),
+      h('span', {}, 'A guide: recommendations follow your profile and decided stages. There is nothing to pick here.')),
     h('p', { class: 'sd-q' }, 'Kiến trúc là hình dạng lớn của hệ thống, quyết trước khi chọn công cụ cho từng khâu. Mỗi nhóm dưới đây trả lời một câu hỏi bằng vài kiến trúc chuẩn; trang gợi ý một kiến trúc mỗi nhóm theo hồ sơ dự án, lối đã chọn và các khâu đã quyết.'), // lang: vi — lời giải thích, nội dung
     archTip(fams, adv, d),
     ...fams.map((/** @type {any} */ f, /** @type {number} */ i) => archFamily(f, adv[i], d)),
@@ -639,6 +687,19 @@ function archTip(fams, adv, d) {
     ...asks.flatMap((a) => a[2]).flatMap((b, k) => (k ? [' · ', b] : [b])));
 }
 
+/** Nhóm chưa có gợi ý: đúng những câu còn thiếu của riêng nhóm ấy (archMissing trên danh mục chỉ có nhóm này), mỗi câu một
+ * nút tới trang của nó. @param {any} f @param {any} d */
+function famNeeds(f, d) {
+  const m = archMissing({ ...cat, architectures: [f] }, d);
+  const go = (/** @type {string} */ id, /** @type {number} */ k, /** @type {string} */ t) => h('button', { type: 'button', class: 'sd-link', 'data-at': k, 'data-need': id }, t);
+  const list = [
+    ...(m.path ? [go('path', 0, 'What do you deliver?')] : []),
+    ...m.profile.map((id) => go(id, 1, cat.profile.find((/** @type {any} */ q) => q.id === id).label)),
+    ...m.stages.map((id) => go(id, stagePage(id), cat.stages.find((/** @type {any} */ s) => s.id === id).title)),
+  ];
+  return list.length ? h('p', { class: 'sd-need' }, h('span', { class: 'sd-k' }, 'Needs'), ...list.flatMap((b, k) => (k ? [' · ', b] : [b]))) : null;
+}
+
 /** @param {any} f @param {{id: string | null, why: string}} a @param {any} d */
 function archFamily(f, a, d) {
   const rec = a.id ? f.entries.find((/** @type {any} */ e) => e.id === a.id) : null;
@@ -646,7 +707,7 @@ function archFamily(f, a, d) {
     h('h4', { class: 'sd-h4', id: `sd-fam-${f.id}` }, f.label),
     h('p', { class: 'sd-help' }, f.question),
     rec ? h('p', { class: 'sd-rec', 'data-rec': rec.id }, h('span', { class: 'sd-k' }, 'Recommended'), h('b', {}, rec.name), '. ', a.why)
-      : a.id === '' ? h('p', { class: 'sd-rec is-none', 'data-rec': '' }, h('span', { class: 'sd-k' }, 'Not needed'), a.why) : null,
+      : a.id === '' ? h('p', { class: 'sd-rec is-none', 'data-rec': '' }, h('span', { class: 'sd-k' }, 'Not needed'), a.why) : famNeeds(f, d),
     h('div', { class: 'sd-archs' }, ...f.entries.map((/** @type {any} */ e) => archItem(e, e.id === a.id, d))),
     f.note ? h('p', { class: 'sd-help' }, f.note) : null,
     (f.sources || []).length ? archLinks(f.sources) : null);
@@ -669,17 +730,20 @@ function archItem(e, on, d) {
     return h('li', {}, h('button', { type: 'button', class: 'sd-link', 'data-at': stagePage(sid) }, s.title), `: ${names.join(', ')}`);
   }).filter(Boolean);
   return fold({ class: `sd-arch${on ? ' is-rec' : ''}`, 'data-more': id, 'data-arch': e.id, open: moreOpen.has(id) },
+    /* "Use this deliverable" (việc duy nhất của trang ghi vào dự án) nằm ngay trên đầu thẻ gập: thấy mà không cần mở;
+     * bấm không gập / mở thẻ (chặn ở sự kiện click). */
     h('summary', {}, icon('chev'), h('span', { class: 'sd-arch-name' },
       h('span', { class: 'sd-arch-head' }, h('b', {}, e.name),
         on ? h('span', { class: 'sd-tag top' }, 'Recommended') : null, mine ? h('span', { class: 'sd-tag' }, 'Your deliverable') : null),
-      h('small', {}, e.what))),
+      h('small', {}, e.what),
+      p && !mine ? h('span', { class: 'sd-arch-use' },
+        h('button', { type: 'button', class: 'btn small', 'data-arch-path': p.id, 'aria-label': `Use this deliverable: ${p.label}` }, icon('check'), 'Use this deliverable')) : null)),
     row('Use when', e.use),
     row('Avoid when', e.avoid),
     h('div', { class: 'sd-when' }, h('span', { class: 'sd-k' }, 'Flow'),
       h('ol', { class: 'sd-chain' }, ...e.flow.map((/** @type {string} */ x) => h('li', {}, h('span', {}, x))))),
     tools.length ? h('div', { class: 'sd-when' }, h('span', { class: 'sd-k' }, 'Tools by stage'), h('ul', { class: 'sd-arch-tools' }, ...tools)) : null,
-    p ? row('Deliverable', p.label, mine ? ' (chosen)' : ' ',
-      mine ? null : h('button', { type: 'button', class: 'sd-link', 'data-arch-path': p.id }, 'Use this deliverable')) : null,
+    p ? row('Deliverable', p.label, mine ? ' (chosen)' : '') : null,
     (e.sources || []).length ? archLinks(e.sources) : null);
 }
 
@@ -699,11 +763,24 @@ function handoffsPane() {
   ];
 }
 
+/** Dòng tóm tắt của một bàn giao (đầu khối gập). @param {any} c hợp đồng, null khi chưa ghi */
+const edgeSum = (c) => (c ? [viaLabel(c.via), c.what].filter(Boolean).join(' · ') || 'Described' : 'Not described yet');
+
+/** Đang gõ hợp đồng: cập nhật đầu khối gập (tóm tắt, viền đã ghi) mà không vẽ lại hộp. @param {string} key */
+function paintEdgeHead(key) {
+  const item = $('sd-pane').querySelector(`[data-edge-item="${CSS.escape(key)}"]`);
+  if (!item) return;
+  const c = flowEdges(cat, design()).find((x) => x.key === key)?.c || null;
+  item.classList.toggle('is-set', !!c);
+  const small = item.querySelector(':scope > summary .sd-edge-name small');
+  if (small) small.textContent = edgeSum(c);
+}
+
 /** @param {any} e */
 function edgeItem(e) {
   const c = e.c || {};
   const id = 'edge:' + e.key;
-  const sum = e.c ? [viaLabel(c.via), c.what].filter(Boolean).join(' · ') || 'Described' : 'Not described yet';
+  const sum = edgeSum(e.c);
   const field = (/** @type {string} */ label, /** @type {string} */ f, /** @type {string} */ ph) => h('label', { class: 'field' }, h('span', {}, label),
     f === 'promise'
       ? h('textarea', { rows: 3, 'data-ef': f, 'data-edge': e.key, placeholder: ph }, c[f] || '')
@@ -810,11 +887,19 @@ function optionCard(s, r, on, answered, prof) {
 
 /* ── Sự kiện ── */
 
-/** Vẽ lại hộp, giữ focus ở ô vừa bấm (nút DOM được dựng lại). @param {string} [sel] */
+/** Vẽ lại hộp, giữ focus ở ô vừa bấm (nút DOM được dựng lại) và giữ ô ấy đứng yên trên màn: cuộn khung phải bù phần nội dung
+ * phía trên đổi cao; ô dời tới chỗ khuất thì cuộn vừa đủ thấy. @param {string} [sel] */
 function repaint(sel) {
+  const pane = $('sd-pane');
+  const old = sel ? pane.querySelector(sel) : null;
+  const y0 = old ? old.getBoundingClientRect().top : null;
   paint();
   const el = sel && $('dlg-sd').querySelector(sel);
-  if (el) el.focus({ preventScroll: false });
+  if (!el) return;
+  if (y0 !== null && pane.contains(el)) pane.scrollTop += el.getBoundingClientRect().top - y0;
+  el.focus({ preventScroll: true });
+  const r = el.getBoundingClientRect(), p = pane.getBoundingClientRect();
+  if (pane.contains(el) && (r.bottom < p.top || r.top > p.bottom)) el.scrollIntoView({ block: 'nearest' });
 }
 
 function go(/** @type {number} */ k) {
@@ -843,6 +928,18 @@ function wire() {
     openDesign(stagePage(n.dataset.stage));
   };
   fig.addEventListener('click', openNode);
+  /* Đóng hộp mà nút sơ đồ mở hộp không còn (khâu vừa thành Not needed, đường nối mất): focus về khung, trang đứng yên.
+   * Window, pha bắt: chạy trước restoreFocus của dialogs.js (document), vốn rơi về bảng và cuộn trang. Còn nút cùng chỗ thì để
+   * restoreFocus tìm lại. */
+  addEventListener('close', (/** @type {Event} */ e) => {
+    const o = figOpener;
+    if (e.target !== $('dlg-sd') || !o) return;
+    figOpener = null;
+    const a = document.activeElement;
+    if (o.isConnected || (a && a !== document.body && !$('dlg-sd').contains(a))) return;
+    const key = o.getAttribute('data-stage') ? `[data-stage="${CSS.escape(o.getAttribute('data-stage') || '')}"]` : `[data-edge="${CSS.escape(o.getAttribute('data-edge') || '')}"]`;
+    if (!fig.querySelector(key)) focusFig();
+  }, true);
   $('sd-arch').addEventListener('click', (/** @type {any} */ e) => { if (e.target.closest('[data-arch-open]') && cat) openDesign(ARCH_PAGE); });
   $('sd-warns').addEventListener('click', (/** @type {any} */ e) => {
     const b = e.target.closest('[data-warn-stage]');
@@ -864,6 +961,7 @@ function wire() {
     if (b) { go(+b.dataset.at); return; }
     const ar = e.target.closest('[data-arch-path]');
     if (ar) {
+      e.preventDefault();                 // nút nằm trong <summary>: không gập / mở thẻ
       const arch = ar.closest('[data-arch]').dataset.arch;
       applied = null;
       edit((d) => { d.path = ar.dataset.archPath; });
@@ -915,6 +1013,7 @@ function wire() {
     if (t.dataset.ef) {
       edit((d) => { edgeRec(d, t.dataset.edge)[t.dataset.ef] = t.value; });
       paintNav();
+      paintEdgeHead(t.dataset.edge);
       return;
     }
     const id = t.dataset.own || t.dataset.note;

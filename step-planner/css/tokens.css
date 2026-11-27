@@ -142,7 +142,7 @@
   --tpl-pick: 220px;                   /* thẻ mẫu trong hộp Dự án */
   --ws-prog-w: 140px;                  /* thanh tiến độ của một dự án trong hộp Dự án */
   /* Sơ đồ System design (js/ui/design.js đọc các token này để xếp nút) và cột trái của hộp chọn. */
-  --sd-node-max: 220px; --sd-gap-x: 64px; --sd-gap-y: 36px; --sd-pad: 12px; --sd-head: 30px; --sd-line: 20px;
+  --sd-node-max: 260px; --sd-node-fit: 180px; --sd-node-min: 140px; --sd-gap-x: 64px; --sd-gap-y: 36px; --sd-pad: 12px; --sd-head: 30px; --sd-line: 20px;
   --sd-nav-w: 250px; --sd-dash: 5 4; --sd-badge-h: 20px;
   /* Đường nối có bàn giao: khoảng cột, khoảng hàng tối thiểu, nhãn dài nhất (phần chiều dài đường), độ mờ đuôi, vùng rê, dấu +. */
   --sd-gap-hand: 128px; --sd-gap-y-hand: 56px; --sd-hand-cap: .5; --sd-hand-fade: var(--s4); --sd-hit: 16px; --sd-plus: 16px;
