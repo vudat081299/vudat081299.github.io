@@ -2703,6 +2703,8 @@ const check = (name, ok, detail = '') => {
     check(`${tag}: "Show what can be done now" lọc Actionable: chỉ New / In progress, tắt sắp xếp và thêm bước`, (await shownIds()) === 'sn2,sn3'
       && (await np.textContent('.st-filter .dd-btn')).trim() === 'Actionable' && /reordering is off while filtering/.test(await np.textContent('#filter-note'))
       && !(await np.isVisible('#add-step')) && !(await np.$('.step-grip')) && !(await np.isVisible('#next-wait [data-act="show-act"]')), await shownIds());
+    // Không nút lọc (đang lọc Actionable): dòng kết thúc bằng dấu chấm, không có chữ "false" của điều kiện rỗng.
+    check(`${tag}: lọc Actionable: dòng "Next waits on" không in "false" / "null"`, /\.$/.test((await np.textContent('#next-wait')).trim()), await np.textContent('#next-wait'));
     await np.click('.st-filter .dd-btn');
     await np.click('.dd-pop [role="option"][data-value="wait"]');
     check(`${tag}: lọc Waiting: Pending và Blocked`, (await shownIds()) === 'sn1,sn4', await shownIds());

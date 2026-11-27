@@ -33,18 +33,21 @@ export function renderNextWait(/** @type {any} */ ws) {
   box.hidden = !wait.length;
   if (!wait.length) { box.replaceChildren(); return; }
   const more = ws.steps.flatMap((/** @type {any} */ s) => s.subs).filter((/** @type {any} */ x) => inGroup('act', x.status)).length;
-  /* Tên và lý do dài thì cắt "…" (đọc đủ trên thẻ). */
+  /* Tên và lý do dài thì cắt "…"; chữ đủ ở title và tên đọc của nút, lý do đủ ở bản cho trình đọc màn hình. */
   const short = (/** @type {string} */ t) => (t.length > 60 ? t.slice(0, 59) + '…' : t);
   const why = (/** @type {any} */ x) => {
     const r = x.reason.split('\n')[0];
-    return ` (${STATUS_LABEL[x.status]}${r ? ': ' + short(r) : ''})`;
+    const lead = ` (${STATUS_LABEL[x.status]}${r ? ': ' : ''}`;
+    if (r.length <= 60) return lead + r + ')';
+    return [lead, h('span', { title: r, 'aria-hidden': 'true' }, short(r)), h('span', { class: 'sr' }, r), ')'];
   };
   const shown = wait.slice(0, 2);
-  box.replaceChildren(icon('wait'), h('span', {}, h('b', {}, 'Next waits on '),
-    ...shown.flatMap((x, k) => [k ? ', ' : '', h('button', { type: 'button', class: 'link', 'data-goto': x.id, title: 'Go to this card' }, short(x.title)), why(x)]),
+  box.replaceChildren(...[icon('wait'), h('span', {}, h('b', {}, 'Next waits on '),
+    ...shown.flatMap((x, k) => [k ? ', ' : '', h('button', { type: 'button', class: 'link', 'data-goto': x.id,
+      title: `Go to this card: ${x.title}`, 'aria-label': x.title.length > 60 ? x.title : null }, short(x.title)), why(x)]),
     wait.length > shown.length ? ` and ${wait.length - shown.length} more` : '', '.'),
   more > 0 && ui.st !== 'act' && h('button', { type: 'button', class: 'btn small', 'data-act': 'show-act' },
-    `Show what can be done now (${more})`));
+    `Show what can be done now (${more})`)].filter(Boolean)); // replaceChildren in chữ "false", h() thì không
 }
 
 /* Tới một thẻ đang bị ô tìm hay lọc trạng thái ẩn: bỏ cả hai, không lấy focus (Bàn giao đưa focus tới thẻ). */
