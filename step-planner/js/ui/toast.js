@@ -47,6 +47,10 @@ const typing = (/** @type {any} */ el) => !!el && (el.isContentEditable || /^(IN
 /** Gắn sự kiện, chạy một lần lúc khởi động (main.js gọi theo thứ tự). */
 export function initToast() {
   $('toast-undo').addEventListener('click', runUndo);
+  /* Esc trên nút của toast: đóng toast, focus về chỗ đã định. */
+  $('toast').addEventListener('keydown', (/** @type {KeyboardEvent} */ e) => {
+    if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); hideToast(); }
+  });
 
   document.addEventListener('keydown', (e) => {
     if ((e.ctrlKey || e.metaKey) && !e.shiftKey && !e.altKey && e.key.toLowerCase() === 'z'

@@ -3826,6 +3826,39 @@ const check = (name, ok, detail = '') => {
     await ctx.close();
   });
 
+  /* Toast dời làm treo đầu vào: tên cắt ở 40 ký tự, cái vừa dời gọi là "it"; Esc trên nút Undo đóng toast. Dòng "Next waits on"
+   * cắt tên, lý do nhưng title và tên đọc có đủ chữ. */
+  await section('Toast dời dài, Next waits on chữ đủ', async () => {
+    const longA = 'Chờ phê duyệt của hội đồng đạo đức nghiên cứu về việc dùng dữ liệu cá nhân của bệnh nhân';
+    const longR = 'Hội đồng họp lại vào cuối tháng sau, cần nộp thêm bản mô tả quy trình ẩn danh hoá dữ liệu và cam kết bảo mật';
+    const longB = 'Bảng sạch đã kiểm đủ khoá chính và mọi cột ngày tháng của nguồn ERP và CRM';
+    const data = { version: 2, lastId: 'wt', workspaces: [{ id: 'wt', name: 'Toast', steps: [{ id: 'tt', title: 'Bước', subs: [
+      { id: 't1', title: longB, status: 'done', outs: [{ id: 'ot', name: 'bảng sạch' }] },
+      { id: 't2', title: longA, status: 'pending', reason: longR, ins: ['ot'] }, { id: 't3', title: 'Sau', status: 'todo' }] }], log: [] }] };
+    for (const [w, hh] of [[390, 844], [1280, 800]]) {
+      const { ctx, page } = await seeded(w, hh, data);
+      await page.waitForSelector('#next-wait [data-goto="t2"]');
+      const nw = await page.evaluate(() => {
+        const b = document.querySelector('#next-wait [data-goto="t2"]');
+        return { label: b.getAttribute('aria-label'), title: b.title, sr: [...document.querySelectorAll('#next-wait .sr')].map((e) => e.textContent).join('|') };
+      });
+      check(`Next waits on ${w}px: tên, lý do bị cắt vẫn đủ chữ ở tên đọc, title và bản cho trình đọc màn hình`, nw.label === longA && nw.title.endsWith(longA) && nw.sr === longR,
+        JSON.stringify(nw));
+      await page.focus('.card[data-sub="t2"] [data-act="edit-sub"]');
+      await page.keyboard.press('Alt+ArrowLeft');
+      await page.waitForSelector('#toast:not([hidden])');
+      const t = await page.$eval('#toast', (e) => { const r = e.getBoundingClientRect(); return { h: Math.round(r.height), text: document.getElementById('toast-text').textContent }; });
+      const quoted = t.text.match(/"[^"]*"/g) || [];
+      check(`toast dời ${w}px: báo đầu vào treo, mọi tên cắt ở 40 ký tự, không lặp tên vừa dời, toast thấp`, /Input on hold: it now comes before/.test(t.text)
+        && quoted.length === 2 && quoted.every((q) => q.length <= 42) && t.h <= 4 * 28, JSON.stringify(t));
+      await page.focus('#toast-undo');
+      await page.keyboard.press('Escape');
+      check(`toast dời ${w}px: Esc trên nút Undo đóng toast, focus về thẻ vừa dời`, await page.$eval('#toast', (e) => e.hidden)
+        && await page.evaluate(() => document.activeElement?.closest('.card')?.dataset.sub) === 't2');
+      await ctx.close();
+    }
+  });
+
   /* ── Dữ liệu lưu bị hỏng ── */
   await section('Dữ liệu lưu bị hỏng', async () => { // thân giữ thụt lề cũ cho dễ gộp
   const bad = await browser.newContext();
