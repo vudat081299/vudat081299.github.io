@@ -2,11 +2,12 @@
 /* Nhập (#dlg-import): dán chữ hay chọn file .md / .json, xem trước số mục và cảnh báo, thêm dự án mới hay thay nội dung
    dự án đang mở (có Hoàn tác). Đóng mà chữ đã dán chưa nhập thì hỏi lại như hộp sửa.
    Xuất: openImport, initImport.
-   Dùng: core/io.js, core/model.js, ui/board.js, ui/dialogs.js, ui/dom.js, ui/filter.js, ui/projects.js, ui/state.js,
+   Dùng: core/io.js, core/model.js, ui/board.js, ui/design.js, ui/dialogs.js, ui/dom.js, ui/filter.js, ui/projects.js, ui/state.js,
      ui/toast.js. */
 import { counts, parseImport, plural } from '../core/io.js';
 import { uniqueName } from '../core/model.js';
 import { resetBoard } from './board.js';
+import { mdLabels } from './design.js';
 import { closeSaved, openDlg } from './dialogs.js';
 import { $, h } from './dom.js';
 import { resetFilters } from './filter.js';
@@ -37,7 +38,7 @@ function previewImport() {
   };
   if (!text.trim()) { p.replaceChildren('Nothing to import yet.'); $('import-go').disabled = true; setReplace(false); return; }
   try {
-    importParsed = parseImport(text);
+    importParsed = parseImport(text, mdLabels());
     const c = counts(importParsed.workspaces);
     /* Markdown viết tay nhập được, nhưng chữ bất kỳ cũng thành một dự án trống: không có tiêu đề "# …", bước, bước con hay
      * quyết định nào thì báo và không cho nhập. */

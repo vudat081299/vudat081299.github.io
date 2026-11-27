@@ -2,8 +2,9 @@
 /* JSON vào / ra, thuần: xuất một dự án, sao lưu mọi dự án, đọc chữ nhập (JSON hay Markdown, parseImport), đếm cho
    phần xem trước, plural, slug tên file, shape (phần so được khi kiểm đi rồi về, cho test).
    Xuất: toJSON, toBackup, parseImport, counts, plural, slug, shape.
-   Dùng: core/board.js, core/markdown.js, core/model.js. */
+   Dùng: core/board.js, core/design.js, core/markdown.js, core/model.js. */
 import { fold } from './board.js';
+import { normDesign } from './design.js';
 import { fromMarkdown } from './markdown.js';
 import { FORMAT, VERSION, freshCopy, isObj, normDoc, oneLine } from './model.js';
 
@@ -34,13 +35,23 @@ function skipped(w, warnings) {
   if (parts.length) warnings.push(`"${oneLine(w.name) || 'Project'}": skipped ${parts.join(', ')} that did not fit the format.`);
 }
 
+/** Kiến trúc chọn không có trong danh mục (PLAN-042): bỏ, kèm cảnh báo. @param {any} w @param {any} cat @param {string[]} warnings */
+function pruneArch(w, cat, warnings) {
+  if (!cat || !w.design) return w;
+  const d = normDesign(w.design, cat);
+  const gone = Object.entries(w.design.arch || {}).filter(([k, v]) => d?.arch?.[k] !== v && !cat.architectures?.some((/** @type {any} */ f) => f.id === k
+    && f.entries.some((/** @type {any} */ e) => e.id === v && e.path)));
+  if (gone.length) warnings.push(`"${w.name}": skipped unknown architecture ${gone.map(([k, v]) => `${k} ${v}`).join(', ')}.`);
+  return { ...w, design: d };
+}
+
 /**
  * Đọc chữ dán vào hay file chọn: JSON (một dự án, bản sao lưu, hay mảng dự án) hoặc Markdown.
- * Luôn trả bản sao có id mới; ghi vào đâu là việc của trang.
- * @param {string} text
+ * Luôn trả bản sao có id mới; ghi vào đâu là việc của trang. `cat` (danh mục System design, tuỳ chọn): kiến trúc chọn lạ bị bỏ.
+ * @param {string} text @param {any} [cat]
  * @returns {{ kind: 'json' | 'backup' | 'md', workspaces: any[], warnings: string[] }}
  */
-export function parseImport(text) {
+export function parseImport(text, cat = null) {
   const t = String(text || '').trim();
   if (!t) throw new Error('Nothing to import yet.');
   /* Mảng JSON mở bằng `[` rồi một giá trị; `[chữ](…)` hay `[ ] việc` của Markdown viết tay thì không. */
@@ -60,13 +71,13 @@ export function parseImport(text) {
     items.forEach((w, i) => {
       if (!isObj(w) || !Array.isArray(w.steps)) { warnings.push(`Skipped item ${i + 1}: not a project (no steps list).`); return; }
       skipped(w, warnings);
-      out.push(freshCopy(w));
+      out.push(pruneArch(freshCopy(w), cat, warnings));
     });
     if (!out.length) throw new Error('No valid project in this JSON. ' + warnings.slice(0, 3).join(' '));
     return { kind, workspaces: out, warnings };
   }
   const { workspace, warnings } = fromMarkdown(t);
-  return { kind: 'md', workspaces: [freshCopy(workspace)], warnings };
+  return { kind: 'md', workspaces: [pruneArch(freshCopy(workspace), cat, warnings)], warnings };
 }
 
 /** Đếm cho phần xem trước khi nhập. @param {any[]} wss */

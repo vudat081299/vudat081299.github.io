@@ -54,6 +54,10 @@ Path: tên lối [path: id]
   Accept: …
 Profile: <câu> <trả lời> · <câu> <trả lời>
 
+Architecture: <nhóm> <kiến trúc> · <nhóm> <kiến trúc>
+  Tên nhóm: tên kiến trúc
+  Why <nhóm>: lý do một dòng
+
 - Tên khâu: phương án [khâu: id, id]
   Own: công cụ tự ghi
   dòng ghi chú
@@ -127,12 +131,15 @@ Warnings:
 - Mục `## System design` sau các bước, trước nhật ký. Nhập chỉ đọc id trong ngoặc vuông cuối dòng; tên trước ngoặc để người đọc.
 - `Path:` có dòng thụt `Flow N:`, `Accept:` chép từ danh mục; nhập bỏ qua chúng.
 - `Profile:` một dòng, mỗi câu hồ sơ `<id câu> <id trả lời>`, tách bằng ` · `.
+- `Architecture:` một dòng, mỗi kiến trúc người dùng chọn `<id nhóm> <id kiến trúc>`, tách bằng ` · ` (nhóm app chọn qua `Path:`).
+  Dòng thụt dưới nó: `Why <id nhóm>: …` là lý do của lựa chọn (cả nhóm app chọn qua lối); dòng khác (tên nhóm, tên kiến trúc) để người
+  đọc, nhập bỏ qua. Nhập có danh mục: kiến trúc lạ bị bỏ, kèm cảnh báo.
 - Khâu: `- tên: phương án [khâu: id, id]`; khâu Not needed chỉ ghi `[khâu: skip]`, không ghi lựa chọn ẩn
   (viết tay `skip` cùng id khác: Not needed, id kia là lựa chọn ẩn; `skip`, `own` không bao giờ là id phương án). Dòng thụt `Own:`
   (chỉ dòng đầu) là công cụ tự ghi, dòng thụt khác là ghi chú; ghi chú mở bằng `Own:` thì thoát `\`.
 - `Handoffs:` rồi mỗi đường nối `- A → B [handoff: a > b]`; dòng thụt `Via:` (id hay nhãn của cách bàn giao), `What:`,
   `Where:`, `Promise:` (dòng tiếp thụt bốn, thoát như ghi chú), `Check:`.
-- `Warnings:` (luật đang báo) chỉ để đọc; nhập bỏ qua. Dòng lạ trong mục: cảnh báo.
+- `Warnings:` (luật đang báo; luật kiến trúc đã chọn giải thích ghi `(expected with the chosen …)`) chỉ để đọc; nhập bỏ qua. Dòng lạ trong mục: cảnh báo.
 - Dấu `sd` của bước con không ghi vào Markdown.
 
 ## Nhập Markdown cũ và viết tay (dễ dãi)
@@ -151,7 +158,8 @@ Warnings:
 
 - Một dự án: `{format: "step-planner", version: 3, exportedAt, workspace}`. Sao lưu: `{…, workspaces: [...]}`. Trang không
   dựa vào `version`: bản 1 (có người, không tài liệu), bản 2 (không ô song song) vẫn nhập.
-- Trường mới có mặc định (`outs`, `ins`, `doneAt`, `proof`, `final`, `sd`, `design.path`, `design.edges`) không tăng `version`: đi qua chuẩn hoá.
+- Trường mới có mặc định (`outs`, `ins`, `doneAt`, `proof`, `final`, `sd`, `design.path`, `design.edges`, `design.arch`, `design.archWhy`) không tăng `version`: đi qua chuẩn hoá.
+  `design.arch` (nhóm → kiến trúc): nhập bỏ kiến trúc không có trong danh mục (cảnh báo); kiến trúc mang lối thành `design.path`.
 - `sd` của bước con: `stage:<khâu>@<chữ ký>` hay `edge:<a>><b>@<chữ ký>` (việc sinh từ System design), hay `kept` (đã chọn
   Keep ở "Update plan": không đối chiếu lại). Giá trị khác bị bỏ. Markdown không ghi `sd`.
 - Nhập nhận cả hai, mảng dự án, hoặc một dự án trần. Mục sai khuôn thì bỏ, kèm cảnh báo; không còn dự án nào thì báo lỗi,

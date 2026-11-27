@@ -914,6 +914,7 @@
       "design": {
         "path": "pipeline",
         "profile": {
+          "size": "small",
           "kind": "tables",
           "fresh": "batch",
           "latency": "batch",
@@ -922,6 +923,14 @@
           "budget": "free",
           "selfhost": "yes",
           "gpu": "no"
+        },
+        "arch": {
+          "storage": "lakehouse",
+          "layers": "medallion",
+          "processing": "batch-elt"
+        },
+        "archWhy": {
+          "storage": "Dữ liệu nhỏ nhưng chọn lakehouse có chủ đích để thể hiện Big Data và quản trị dữ liệu theo yêu cầu môn."
         }
       },
       "steps": [
@@ -1037,7 +1046,7 @@
           "title": "Hạ tầng trước: dựng và thử khói (Infrastructure as Code)",
           "goal": "Một lệnh dựng cả lakehouse trên laptop; bài thử khói chứng minh DuckDB ghi, đọc được bảng Iceberg qua Polaris trước khi viết dòng pipeline nào.",
           "doneWhen": "scripts/up.sh dựng mọi dịch vụ healthy; scripts/smoke.sh tạo bảng Iceberg 10 dòng qua catalog, đọc lại đủ 10, xoá; tắt rồi bật lại vẫn còn catalog.",
-          "notes": "Stack của nhóm, cắt cho một người với dữ liệu dưới 1 GB:\n- Giữ: Docker Compose, object storage, Parquet, Iceberg, Polaris (metastore Postgres), dbt + DuckDB, Superset.\n- Bỏ Kubernetes: một máy, vài người xem; k8s chỉ thêm việc vận hành. Ghi trong báo cáo là hướng mở rộng.\n- Bỏ Spark: DuckDB tự ghi Iceberg qua catalog REST; Spark cần JVM và nhiều RAM cho vài trăm MB. Bảng Iceberg vẫn đọc được bằng Spark, Trino khi dữ liệu lớn lên.\n- Bỏ Hudi: DuckDB không có extension Hudi chính thức (chỉ bản cộng đồng, chỉ đọc); cập nhật dày, CDC không phải nhu cầu ở đây: https://duckdb.org/docs/2.0/core_extensions/overview.html\n- Thay Kafka bằng phát lại theo gameweek (bước 13): không có nguồn sự kiện thật, và CUSUM, SPRT vốn chạy theo từng gameweek.\nHạ tầng và dữ liệu chạy tay được trước, phương pháp sau; đừng viết pipeline trên hạ tầng chưa thử khói.\nSystem design của dự án đặt sẵn hồ sơ (dạng bảng, theo tuần, tự host, miễn phí, lối Scheduled pipeline). Câu \"How much data?\" để trống có chủ ý: trả lời \"Fits in memory\" thì danh mục gợi ý thư mục dự án + một database, đúng với cỡ dữ liệu; đồ án chọn lakehouse vì môn chấm quản trị dữ liệu (giao dịch, snapshot, catalog, lineage), không vì dung lượng.\nApply path ra MinIO, DuckDB, Docker Compose; sau đó tự thêm Apache Iceberg và Apache Polaris vào Raw storage, đổi Processing sang dbt, Data validation sang dbt tests, Analytical store sang DuckDB on Iceberg, chọn Apache Superset ở User interface. Ingestion: cron đủ cho một người; Prefect là tuỳ chọn.",
+          "notes": "Stack của nhóm, cắt cho một người với dữ liệu dưới 1 GB:\n- Giữ: Docker Compose, object storage, Parquet, Iceberg, Polaris (metastore Postgres), dbt + DuckDB, Superset.\n- Bỏ Kubernetes: một máy, vài người xem; k8s chỉ thêm việc vận hành. Ghi trong báo cáo là hướng mở rộng.\n- Bỏ Spark: DuckDB tự ghi Iceberg qua catalog REST; Spark cần JVM và nhiều RAM cho vài trăm MB. Bảng Iceberg vẫn đọc được bằng Spark, Trino khi dữ liệu lớn lên.\n- Bỏ Hudi: DuckDB không có extension Hudi chính thức (chỉ bản cộng đồng, chỉ đọc); cập nhật dày, CDC không phải nhu cầu ở đây: https://duckdb.org/docs/2.0/core_extensions/overview.html\n- Thay Kafka bằng phát lại theo gameweek (bước 13): không có nguồn sự kiện thật, và CUSUM, SPRT vốn chạy theo từng gameweek.\nHạ tầng và dữ liệu chạy tay được trước, phương pháp sau; đừng viết pipeline trên hạ tầng chưa thử khói.\nSystem design của dự án đặt sẵn hồ sơ thật (dữ liệu dưới 1 GB \"Fits in memory\", dạng bảng, theo tuần, tự host, miễn phí, lối Scheduled pipeline) và chọn sẵn kiến trúc: Lakehouse, Medallion, Batch ELT. Hồ sơ gợi ý thư mục dự án + một database, đúng với cỡ dữ liệu; trang Architecture ghi điều đó, không chặn: đồ án chọn lakehouse vì môn chấm quản trị dữ liệu (giao dịch, snapshot, catalog, lineage), không vì dung lượng.\nApply path đi theo kiến trúc đã chọn: MinIO + Apache Iceberg + Apache Polaris ở Raw storage, dbt, dbt tests, DuckDB on Iceberg, Apache Superset, Docker Compose. Ingestion ra Prefect; cron đủ cho một người, đổi ở khâu ấy nếu muốn.",
           "subs": [
             {
               "title": "Quyết định stack và phiên bản (Stack ADR)",
@@ -2470,6 +2479,10 @@
           "users": "few",
           "budget": "free",
           "selfhost": "yes"
+        },
+        "arch": {
+          "storage": "lakehouse",
+          "layers": "medallion"
         }
       },
       "steps": [
@@ -2524,7 +2537,7 @@
             {
               "title": "Chọn công cụ cho từng lớp (Stack Decision)",
               "doneWhen": "Bản quyết định (ADR) cho từng lớp: object storage, table format, catalog, engine xử lý, engine truy vấn, BI, điều phối; mỗi lựa chọn có lý do, giấy phép, tình trạng bảo trì.",
-              "notes": "Kiểm tình trạng bảo trì, không chỉ giấy phép. MinIO: mã nguồn vẫn AGPLv3, nhưng repo cộng đồng đã ngừng bảo trì và lưu trữ (archived, chỉ đọc) từ 25/04/2026; bản cộng đồng chỉ còn mã nguồn: clone repo, build binary Linux bằng Go (phiên bản tối thiểu ghi trong README) rồi mới build image từ Dockerfile (lệnh ở phương án MinIO, khâu Raw storage của System design): https://github.com/minio/minio\nNên: dùng MinIO để học thì ghim một phiên bản và ghi rủi ro \"không còn bản vá bảo mật\"; hoặc chọn một object storage tương thích S3 còn bảo trì (quickstart của Polaris dùng RustFS; SeaweedFS, Garage cũng hay gặp). Code chỉ nói S3 API thì đổi được về sau.\nApache Polaris (Iceberg REST Catalog) đã tốt nghiệp incubator, thành dự án cấp cao của Apache ngày 19/02/2026: https://polaris.apache.org/blog/2026/02/19/apache-polaris-graduates-to-top-level-project/\nSo với System design của dự án: mục Architecture, nhóm Where the data lives, kiến trúc Lakehouse (medallion).",
+              "notes": "Kiểm tình trạng bảo trì, không chỉ giấy phép. MinIO: mã nguồn vẫn AGPLv3, nhưng repo cộng đồng đã ngừng bảo trì và lưu trữ (archived, chỉ đọc) từ 25/04/2026; bản cộng đồng chỉ còn mã nguồn: clone repo, build binary Linux bằng Go (phiên bản tối thiểu ghi trong README) rồi mới build image từ Dockerfile (lệnh ở phương án MinIO, khâu Raw storage của System design): https://github.com/minio/minio\nNên: dùng MinIO để học thì ghim một phiên bản và ghi rủi ro \"không còn bản vá bảo mật\"; hoặc chọn một object storage tương thích S3 còn bảo trì (quickstart của Polaris dùng RustFS; SeaweedFS, Garage cũng hay gặp). Code chỉ nói S3 API thì đổi được về sau.\nApache Polaris (Iceberg REST Catalog) đã tốt nghiệp incubator, thành dự án cấp cao của Apache ngày 19/02/2026: https://polaris.apache.org/blog/2026/02/19/apache-polaris-graduates-to-top-level-project/\nSo với System design của dự án: mục Architecture đã chọn sẵn Lakehouse (Where the data lives) và Medallion (How tables are layered).",
               "ins": [
                 "use-cases",
                 "source-inventory"

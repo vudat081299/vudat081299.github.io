@@ -258,7 +258,7 @@ li.sd-warnbox { display: block; }
 .sd-fam + .sd-fam { padding-top: var(--s4); border-top: var(--line-w) solid var(--line-2); }
 .sd-rec, .sd-need { padding: var(--s3); font-size: var(--fs-sm); line-height: var(--lh); color: var(--ink); background: var(--accent-soft); border-radius: var(--r-sm); }
 .sd-rec b { font-weight: 600; }
-.sd-rec.is-none, .sd-need { color: var(--ink-2); background: var(--chip); }
+.sd-rec.is-none, .sd-rec.is-other, .sd-need { color: var(--ink-2); background: var(--chip); }
 .sd-archs { display: flex; flex-direction: column; gap: var(--s2); }
 .sd-arch {
   display: flex; flex-direction: column; gap: var(--s2); padding: var(--s2) var(--s4) var(--s2) var(--s3);
@@ -270,7 +270,8 @@ li.sd-warnbox { display: block; }
   .sd-arch:not(.is-rec):has(> summary:hover) { border-color: var(--ink-4); }
   .sd-arch.is-rec:has(> summary:hover) { background: var(--accent-soft); }
 }
-.sd-arch-use { display: flex; margin-top: var(--s1); }
+/* Lựa chọn của nhóm: một hàng viên chọn như hồ sơ, nhãn nhỏ "Your choice". */
+.sd-arch-pick { gap: var(--s1); }
 .sd-arch[open] { padding-bottom: var(--s4); }
 .sd-arch > summary { display: flex; align-items: flex-start; gap: var(--s2); min-height: var(--ctl-sm); padding-top: var(--s1); cursor: pointer; list-style: none; }
 .sd-arch > summary::-webkit-details-marker { display: none; }
