@@ -3684,6 +3684,48 @@ const check = (name, ok, detail = '') => {
     await fc.close();
   });
 
+  /* ── Bảng và thanh trên: các lỗi chỉ thấy khi bấm thật ── */
+  /** Mở trang với dữ liệu gieo sẵn (mỗi context một lần). @param {number} w @param {number} hh @param {any} data */
+  const seeded = async (w, hh, data) => {
+    const ctx = await browser.newContext({ viewport: { width: w, height: hh }, isMobile: w < 500, hasTouch: w < 500 });
+    if (data) await ctx.addInitScript((d) => { if (!localStorage.getItem('stepPlanner.v2')) localStorage.setItem('stepPlanner.v2', d); }, JSON.stringify(data));
+    const page = await ctx.newPage();
+    page.on('pageerror', (e) => errors.push(String(e)));
+    await page.goto(BASE);
+    return { ctx, page };
+  };
+  const three = { version: 2, lastId: 'wk', workspaces: [{ id: 'wk', name: 'Ba bước', steps: ['Một', 'Hai', 'Ba'].map((t, i) => ({ id: 'tk' + i, title: t,
+    subs: [{ id: `k${i}a`, title: `Việc ${i}a`, status: 'todo' }, { id: `k${i}b`, title: `Việc ${i}b`, status: 'todo' }, { id: `k${i}c`, title: `Việc ${i}c ngắn`, status: 'todo' }] })), log: [] }] };
+
+  /* Chạm thật qua CDP (Input.dispatchTouchEvent): trình duyệt tự capture ngón vào phần tử dưới ngón, như trên máy thật.
+   * PointerEvent tự dựng bỏ qua bước ấy, nên phần "Điện thoại 390px" không thấy lỗi kéo bước bằng tay nắm tự huỷ. */
+  await section('Kéo bằng ngón thật (CDP)', async () => {
+    const { ctx, page } = await seeded(390, 844, three);
+    await page.waitForSelector('.step[data-step="tk0"] .step-grip');
+    const cdp = await ctx.newCDPSession(page);
+    const touch = (type, pts) => cdp.send('Input.dispatchTouchEvent', { type, touchPoints: pts.map(([x, y]) => ({ x, y, id: 1 })) });
+    const ghost = () => page.evaluate(() => !!document.querySelector('.drag-ghost'));
+    const order = () => page.$$eval('#board .step[data-step]', (s) => s.map((x) => x.dataset.step).join());
+    const g = await page.$eval('.step[data-step="tk0"] .step-grip', (e) => { e.scrollIntoView({ block: 'start' }); const r = e.getBoundingClientRect(); return [r.x + r.width / 2, r.y + r.height / 2]; });
+    const to = await page.$eval('.step[data-step="tk1"]', (e) => e.getBoundingClientRect().bottom - 8);
+    await touch('touchStart', [g]);
+    const frames = [];
+    for (let i = 1; i <= 10; i++) { await touch('touchMove', [[g[0], g[1] + (to - g[1]) * i / 10]]); frames.push(await ghost()); }
+    await touch('touchEnd', []);
+    await waitTo(page, 'bóng kéo bước gỡ sau khi thả', () => !document.querySelector('.drag-ghost'));
+    check('chạm thật: kéo bước bằng tay nắm không tự huỷ ở khung hình đầu; thả là dời', frames.every(Boolean) && (await order()) !== 'tk0,tk1,tk2',
+      `${frames.map(Number).join('')} ${await order()}`);
+    // Thẻ: giữ yên tới khi bóng hiện (đợi theo điều kiện), rồi kéo; bóng còn ở mọi khung hình.
+    const c = await page.$eval('.card[data-sub="k2a"]', (e) => { e.scrollIntoView({ block: 'center' }); const r = e.getBoundingClientRect(); return [r.x + r.width / 2, r.y + 12]; });
+    await touch('touchStart', [c]);
+    const held = await waitTo(page, 'giữ thẻ đủ lâu thì bắt đầu kéo', () => !!document.querySelector('.drag-ghost'));
+    const cf = [];
+    for (let i = 1; i <= 6; i++) { await touch('touchMove', [[c[0] + 4 * i, c[1] + 2 * i]]); cf.push(await ghost()); }
+    await touch('touchEnd', []);
+    check('chạm thật: giữ thẻ rồi kéo, bóng không mất giữa chừng', held && cf.every(Boolean), cf.map(Number).join(''));
+    await ctx.close();
+  });
+
   /* ── Dữ liệu lưu bị hỏng ── */
   await section('Dữ liệu lưu bị hỏng', async () => { // thân giữ thụt lề cũ cho dễ gộp
   const bad = await browser.newContext();

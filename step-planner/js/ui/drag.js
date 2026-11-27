@@ -84,7 +84,9 @@ export function initDrag(board, api) {
     endAt(e);
   });
   window.addEventListener('pointercancel', (e) => { if (st && e.pointerId === st.pointerId) cancel(); });
-  board.addEventListener('lostpointercapture', (e) => { if (st && st.phase === 'drag' && e.pointerId === st.pointerId) cancel(); });
+  /* Chỉ khi chính bảng mất capture. Ngón trên tay nắm (touch-action: none) bị trình duyệt tự capture vào tay nắm; lúc
+     board.setPointerCapture lấy lại, tay nắm nhận lostpointercapture và sự kiện ấy nổi lên tới bảng. */
+  board.addEventListener('lostpointercapture', (e) => { if (st && st.phase === 'drag' && e.pointerId === st.pointerId && e.target === board) cancel(); });
   window.addEventListener('blur', () => cancel());
   /* Đang kéo: Esc huỷ; phím khác (Ctrl+Z, Alt + mũi tên…) bị chặn để bảng không đổi dưới tay. */
   document.addEventListener('keydown', (e) => {
