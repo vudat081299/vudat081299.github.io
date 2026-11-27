@@ -1,8 +1,8 @@
 // @ts-check
 /* Hộp thoại: mở (showDlg, openDlg: thân về đầu, focus ô đầu trừ màn cảm ứng), đóng thì hỏi lại khi chữ chưa lưu
-   (tryClose, closeSaved), vòng focus ẩn sau khi đóng bằng phím, hộp hỏi #dlg-ask (ask, thay alert / confirm / prompt), gộp khi
-   Lưu mà tab khác đã ghi (mergeSaved, askRecreate); đóng mà nút mở đã bị vẽ lại thì focus nút mới (openerSel);
-   mọi <select> có nghĩa dùng danh sách tự dựng (ui/dropdown.js).
+   (tryClose, closeSaved), hộp hỏi #dlg-ask (ask, thay alert / confirm / prompt), gộp khi Lưu mà tab khác đã ghi
+   (mergeSaved, askRecreate); đóng mà nút mở đã bị vẽ lại thì focus nút mới (openerSel); mọi <select> có nghĩa dùng danh
+   sách tự dựng (ui/dropdown.js); vòng focus chỉ cho bàn phím, ở mọi phần tử của trang (lớp quiet-focus).
    Xuất: focusField, showDlg, openDlg, tryClose, closeSaved, ask, mergeSaved, askRecreate, initDialogs.
    Dùng: core/io.js, core/model.js, ui/dom.js, ui/dropdown.js, ui/state.js. */
 import { plural } from '../core/io.js';
@@ -33,12 +33,17 @@ export function focusField(el, select = false) {
   el.focus();
   if (select && typing && el.select) el.select();
 }
-/* Đóng hộp (Esc, Close, Save, Enter): focus về nút mở hay chỗ vừa sửa. Phím vừa bấm khiến trình duyệt vẽ vòng
- * focus-visible quanh chỗ ấy; lớp quiet-focus ẩn vòng tới lần bấm Tab / mũi tên kế tiếp, chuột hay chạm cũng gỡ lớp.
- * Đặt lớp ngay lúc bắt đầu đóng (Esc, submit, nút Close, closeSaved, tryClose), không chờ sự kiện close: sự kiện ấy tới
- * sau, có thể sau cả lần bấm Tab kế tiếp. */
+/* Vòng focus chỉ cho người dùng bàn phím, ở mọi phần tử. Đóng hộp, danh sách bằng Esc hay Enter thì focus về nút mở, và
+ * trình duyệt coi lần focus ấy là từ bàn phím (vẽ vòng) dù hộp mở bằng chuột. Nên trang tự nhớ cách dùng: chuột, chạm bật
+ * lớp quiet-focus trên <html>; Tab, phím điều hướng, phím tắt (Alt / Ctrl / Cmd + phím) gỡ lớp, trừ khi đang gõ trong ô chữ
+ * (mũi tên, Ctrl + A ở đó là của ô chữ); Esc, Enter, Space, gõ chữ giữ nguyên. Lớp chỉ ẩn vòng: mọi luật CSS vẽ vòng
+ * (outline, nét SVG, quầng) mở bằng `:where(:root:not(.quiet-focus))` (lint.py kiểm). */
 const NAV_KEYS = ['Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Home', 'End', 'PageUp', 'PageDown'];
-const quietFocus = () => document.documentElement.classList.add('quiet-focus');
+const MOD_KEYS = ['Alt', 'AltGraph', 'Control', 'Meta', 'Shift', 'CapsLock'];
+const NOT_TEXT = ['radio', 'checkbox', 'button', 'submit', 'reset', 'file', 'range', 'color', 'image'];
+const inText = (/** @type {any} */ t) => !!t && (t.isContentEditable || t.tagName === 'TEXTAREA' || (t.tagName === 'INPUT' && !NOT_TEXT.includes(t.type)));
+/** Phím này là đi bằng bàn phím (vòng hiện lại). @param {KeyboardEvent} e */
+const keyNav = (e) => e.key === 'Tab' || (!inText(e.target) && (NAV_KEYS.includes(e.key) || ((e.altKey || e.ctrlKey || e.metaKey) && !MOD_KEYS.includes(e.key))));
 
 /* Nút mở hộp: bảng vẽ lại trong lúc hộp mở (thêm, xoá tài liệu, Evidence) thay nút ấy bằng nút mới, và trình duyệt trả focus
  * về nút cũ đã rời trang: focus rơi về body. Lúc mở nhớ bộ chọn của nút mở; đóng mà focus ở body thì tìm lại theo bộ chọn. */
@@ -98,14 +103,12 @@ export async function tryClose(dlg) {
     if (ok === null) return false;
   }
   snaps.delete(dlg);
-  quietFocus();
   dlg.close();
   return true;
 }
 /** Lưu xong: đóng hộp không hỏi. @param {any} dlg */
 export function closeSaved(dlg) {
   snaps.delete(dlg);
-  quietFocus();
   dlg.close();
 }
 
@@ -183,11 +186,9 @@ export function initDialogs() {
     });
   });
 
-  document.addEventListener('cancel', (/** @type {any} */ e) => { if (e.target instanceof HTMLDialogElement) quietFocus(); }, true);
   document.addEventListener('close', (/** @type {any} */ e) => { if (e.target instanceof HTMLDialogElement) restoreFocus(e.target); }, true);
-  document.addEventListener('submit', (/** @type {any} */ e) => { if (e.target.closest('dialog')) quietFocus(); }, true);
-  window.addEventListener('keydown', (e) => { if (NAV_KEYS.includes(e.key)) document.documentElement.classList.remove('quiet-focus'); }, true);
-  window.addEventListener('pointerdown', () => document.documentElement.classList.remove('quiet-focus'), true);
+  window.addEventListener('keydown', (e) => { if (keyNav(e)) document.documentElement.classList.remove('quiet-focus'); }, true);
+  window.addEventListener('pointerdown', () => document.documentElement.classList.add('quiet-focus'), true);
 
   for (const id of GUARDED) {
     $(id).addEventListener('cancel', (/** @type {any} */ e) => { e.preventDefault(); tryClose($(id)); });
@@ -196,7 +197,6 @@ export function initDialogs() {
     const b = e.target.closest && e.target.closest('[data-close]');
     if (!b) return;
     const dlg = b.closest('dialog');
-    quietFocus();
     if (GUARDED.includes(dlg.id)) tryClose(dlg); else dlg.close();
   });
 

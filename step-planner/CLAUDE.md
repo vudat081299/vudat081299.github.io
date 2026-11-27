@@ -181,15 +181,15 @@
 
 ## Giao diện
 
-- Màu, cỡ, khoảng cách chỉ ở token `css/tokens.css` (REPO-028, REPO-023); dáng chung chép từ `md-annotate/`.
-- Theme theo hệ điều hành tới khi bấm nút (REPO-024), khoá `hub-theme`.
+- Màu, cỡ, khoảng cách chỉ ở token `css/tokens.css` (REPO-028, REPO-023); dáng chung chép từ `md-annotate/`; theme theo hệ điều hành tới khi bấm nút (REPO-024), khoá `hub-theme`.
 - Biểu tượng: `<symbol id="i-…">` trong `index.html` qua `<use>`, không ký tự unicode; nút chỉ biểu tượng có `aria-label`, `title`.
 - Mọi `<select>` chọn thứ có nghĩa dùng danh sách tự dựng (↑ ↓, gõ chữ đầu, Enter, Esc); ô chỉ chọn số giữ `<select>` gốc (`data-native`).
 - Nút bàn giao, nút phụ trên thẻ ngoài vòng Tab. Vùng bấm ở cảm ứng và trang không cuộn ngang: smoke đo.
+- Vòng focus chỉ khi dùng bàn phím: chuột, chạm bật lớp `quiet-focus`; Tab, phím điều hướng, phím tắt gỡ (`ui/dialogs.js`). Luật CSS vẽ vòng mở bằng `:where(:root:not(.quiet-focus))`.
 
 ## Cổng: `sh step-planner/tools/check.sh`
 
-- `tools/lint.py`: khuôn mẫu và bàn giao trong mẫu, ngôn ngữ (giao diện, mẫu, System design), danh mục System design, mẫu đồ án khớp nguồn và neo, không `innerHTML`, mã màu chỉ trong `css/tokens.css`, mọi file CSS được link, `js/core/` thuần, import có file, không file mồ côi.
+- `tools/lint.py`: khuôn mẫu và bàn giao trong mẫu, ngôn ngữ (giao diện, mẫu, System design), danh mục System design, mẫu đồ án khớp nguồn và neo, không `innerHTML`, mã màu chỉ trong `css/tokens.css`, vòng focus có gác `quiet-focus`, mọi file CSS được link, `js/core/` thuần, import có file, không file mồ côi.
   `lint.py --self-test`: cài lỗi vào bản sao tạm, mỗi lỗi phải bị bắt.
 - `node --input-type=module --check < file` cho mọi file dưới `js/` (`node --check file.js` bỏ sót lỗi của module).
 - `tools/test-core.mjs`: logic thuần của `js/core/`; danh sách ở chính file.

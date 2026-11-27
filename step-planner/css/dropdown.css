@@ -15,7 +15,7 @@ select.dd-native {
 .dd-btn > svg.i { margin-left: auto; color: var(--ink-3); transition: transform var(--dur) var(--ease); }
 .dd-btn[aria-expanded="true"] { border-color: var(--ring); box-shadow: 0 0 0 var(--halo-w) var(--accent-soft); }
 .dd-btn[aria-expanded="true"] > svg.i { transform: rotate(180deg); }
-.dd-btn:focus-visible { outline: none; border-color: var(--ring); box-shadow: 0 0 0 var(--halo-w) var(--accent-soft); }
+:where(:root:not(.quiet-focus)) .dd-btn:focus-visible { outline: none; border-color: var(--ring); box-shadow: 0 0 0 var(--halo-w) var(--accent-soft); }
 .dd-btn:disabled { opacity: .45; cursor: default; }
 @media (hover: hover) { .dd-btn:hover:not(:disabled) { border-color: var(--ink-4); } }
 @media (pointer: coarse) { .dd-btn { font-size: var(--fs-lg); } }

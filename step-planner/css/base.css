@@ -25,9 +25,9 @@ code { font: 500 .88em var(--mono); }
 .skip { position: absolute; left: var(--pad); top: calc(-2 * var(--bar-h)); background: var(--ink); color: var(--bg); padding: var(--s2) var(--s3); border-radius: var(--r-sm); z-index: 40; }
 .skip:focus { top: var(--s2); }
 :focus { outline: none; }
-:focus-visible { outline: var(--ring-w) solid var(--ring); outline-offset: var(--mark-w); }
-/* Đóng hộp thoại (Esc, Close, Save): focus về nút mở nhưng không vẽ vòng, tới lần bấm Tab / mũi tên kế (js/ui/dialogs.js). */
-:root.quiet-focus :focus-visible, :root.quiet-focus :focus-visible + span { outline: none; }
+/* Vòng focus chỉ cho bàn phím: chuột, chạm bật lớp quiet-focus, Tab, phím điều hướng gỡ (js/ui/dialogs.js). Mọi luật vẽ vòng
+   (outline, nét SVG, quầng) mở bằng :where(:root:not(.quiet-focus)); :where giữ nguyên độ ưu tiên. */
+:where(:root:not(.quiet-focus)) :focus-visible { outline: var(--ring-w) solid var(--ring); outline-offset: var(--mark-w); }
 /* Chữ chỉ cho chuột / bàn phím và chỉ cho màn cảm ứng. */
 .only-touch { display: none; }
 @media (pointer: coarse) { .only-touch { display: revert; } .only-mouse { display: none; } }
@@ -124,7 +124,7 @@ svg.i {
 }
 @media (hover: hover) { .seg label:hover span { color: var(--ink); } }
 .seg input:checked + span { background: var(--tab-on); color: var(--ink); box-shadow: var(--tab-ring); }
-.seg input:focus-visible + span { outline: var(--ring-w) solid var(--ring); outline-offset: -2px; }
+:where(:root:not(.quiet-focus)) .seg input:focus-visible + span { outline: var(--ring-w) solid var(--ring); outline-offset: -2px; }
 .seg input:disabled + span { opacity: .45; cursor: default; }
 /* Nhóm chọn trải hết bề rộng (trong hộp thoại): mục chia đều, chữ dài xuống dòng. */
 .seg-full { width: 100%; flex-wrap: nowrap; }

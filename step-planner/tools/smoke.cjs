@@ -3489,6 +3489,67 @@ const check = (name, ok, detail = '') => {
     await ic.close();
   });
 
+  /* ── Vòng focus chỉ cho bàn phím: mở bằng chuột rồi Esc thì focus về nút mở, không vòng; tới bằng Tab, Enter / Alt + ↓ mở
+     rồi Esc thì có vòng, màu token --ring; cả hai theme. Nút sơ đồ, nhãn bàn giao: vòng là nét khung, so với nút cùng loại. ── */
+  await section('Vòng focus chỉ cho bàn phím', async () => {
+    const pk = (id) => ({ pick: [id], skip: false, own: '', note: '' });
+    const rws = { id: 'wr', name: 'Ring', log: [], steps: [{ id: 'r1', title: 'One', subs: [{ id: 'ra', title: 'Alpha' }, { id: 'rb', title: 'Beta' }] }],
+      design: { path: '', profile: {}, stages: { source: pk('kaggle-datasets'), ingest: pk('notebook-script'), raw: pk('project-folder'), process: pk('pandas') },
+        edges: { 'source>ingest': { via: 'file', what: 'a.csv' }, 'raw>process': { via: 'file', what: 'b.csv' } } } };
+    const items = [
+      ['nút sơ đồ', '#sd-fig .sd-node[data-stage="process"]', '#dlg-sd', 'Enter'],
+      ['nhãn bàn giao', '#sd-fig .sd-hand[data-edge="raw>process"]', '#dlg-sd', 'Enter'],
+      ['tên thẻ', '.card[data-sub="rb"] [data-act="edit-sub"]', '#dlg-sub', 'Enter'],
+      ['tên bước', '.step[data-step="r1"] .step-head [data-act="edit-step"]', '#dlg-step', 'Enter'],
+      ['danh sách trạng thái', '.card[data-sub="rb"] [data-act="status"]', '.dd-pop', 'Alt+ArrowDown'],
+    ];
+    /* Vòng của phần tử đang focus: outline, hay nét khung SVG khác nút cùng loại không focus. Trả màu vòng ('' = không vòng). */
+    const ringOf = (page) => page.evaluate(() => {
+      document.getAnimations().forEach((x) => x.finish());
+      const a = document.activeElement, cs = getComputedStyle(a);
+      const p = document.createElement('i');
+      p.style.color = 'var(--ring)';
+      document.body.append(p);
+      const tok = getComputedStyle(p).color;
+      p.remove();
+      const box = a.querySelector(':scope > .sd-box, :scope > .sd-hand-box');
+      let col = cs.outlineStyle !== 'none' && parseFloat(cs.outlineWidth) > 0 ? cs.outlineColor : '';
+      if (box) {
+        const kind = a.matches('.sd-node') ? '.sd-node[data-stage]' : '.sd-hand:not(.is-empty)';
+        const twin = [...document.querySelectorAll('#sd-fig ' + kind)].find((x) => x !== a).querySelector(':scope > .sd-box, :scope > .sd-hand-box');
+        const b = getComputedStyle(box), t = getComputedStyle(twin);
+        if (b.stroke !== t.stroke || b.strokeWidth !== t.strokeWidth) col = b.stroke;
+      }
+      return { col, tok };
+    });
+    for (const scheme of ['light', 'dark']) {
+      const rc = await browser.newContext({ viewport: { width: 1280, height: 900 }, colorScheme: scheme, reducedMotion: 'reduce' });
+      await rc.addInitScript((d) => { if (!localStorage.getItem('stepPlanner.v2')) localStorage.setItem('stepPlanner.v2', JSON.stringify({ version: 2, workspaces: [d], lastId: d.id })); }, rws);
+      const rp = await rc.newPage();
+      rp.on('pageerror', (e) => errors.push('vòng focus: ' + e));
+      await rp.goto(BASE);
+      await rp.waitForSelector('#sd-fig .sd-hand[data-edge="raw>process"]');
+      for (const [name, sel, open, key] of items) {
+        const closeBack = async () => {
+          await rp.waitForSelector(open + (open.startsWith('#') ? '[open]' : ''));
+          await rp.keyboard.press('Escape');
+          await waitTo(rp, `${name}: focus về nút mở`, (q) => document.activeElement === document.querySelector(q), sel);
+          await rp.mouse.move(1, 1); // luật :hover không che vòng
+          return ringOf(rp);
+        };
+        await rp.click(sel, key === 'Alt+ArrowDown' ? { modifiers: ['Shift'] } : {});
+        const mouse = await closeBack();
+        await rp.focus(sel);
+        await rp.keyboard.press('Shift+Tab');
+        await rp.keyboard.press('Tab');
+        await rp.keyboard.press(key);
+        const kb = await closeBack();
+        check(`${scheme}, ${name}: chuột → Esc không vòng; Tab, ${key} → Esc có vòng màu --ring`, !mouse.col && kb.col === kb.tok, JSON.stringify({ mouse, kb }));
+      }
+      await rc.close();
+    }
+  });
+
   /* ── Đóng hộp về nút mở: thêm, xoá tài liệu, Evidence vẽ lại hàng và thay nút mở; đóng hộp vẫn về nút mở (nút mới) ── */
   await section('Đóng hộp về nút mở', async () => {
     const { ctx: fx, page: fp } = await open(1280, 900);

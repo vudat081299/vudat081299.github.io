@@ -37,7 +37,7 @@
 .sd-arrow { fill: none; stroke: var(--ink-4); stroke-width: var(--mark-w); stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: none; }
 .sd-node[data-stage] { cursor: pointer; }
 .sd-node:focus { outline: none; }
-.sd-node:focus-visible .sd-box { stroke: var(--ring); stroke-width: var(--ring-w); stroke-dasharray: none; }
+:where(:root:not(.quiet-focus)) .sd-node:focus-visible .sd-box { stroke: var(--ring); stroke-width: var(--ring-w); stroke-dasharray: none; }
 @media (hover: hover) { .sd-node[data-stage]:hover .sd-box { stroke: var(--ink-2); } }
 /* Bàn giao trên đường nối (`.sd-wire`: vùng rê rộng, nét, nhãn trên cùng). Nhãn viên thuốc nền đặc che nét; chữ dài mờ ở đuôi
    (mask trong design.js). Đường trống: dấu + chỉ hiện khi rê đường; cảm ứng không có (trang Handoffs của hộp thay). */
@@ -48,8 +48,9 @@
 .sd-hand-box { fill: var(--surface); stroke: var(--accent); stroke-width: var(--mark-w); transition: fill var(--dur) var(--ease); }
 .sd-hand-txt { font: 600 var(--fs-xs)/1 var(--sans); fill: var(--green); }
 .sd-hand:focus { outline: none; }
-.sd-hand:focus-visible .sd-hand-box { stroke: var(--ring); stroke-width: var(--ring-w); }
-.sd-wire:has(.sd-hand:focus-visible) .sd-edge { stroke: var(--accent); marker-end: url(#sd-arrow-on); }
+/* Viền nhãn đã dày --mark-w màu --accent, ở theme tối --ring cũng là --accent: vòng phải dày hơn viền mới thấy. */
+:where(:root:not(.quiet-focus)) .sd-hand:focus-visible .sd-hand-box { stroke: var(--ring); stroke-width: var(--ring-out); }
+:where(:root:not(.quiet-focus)) .sd-wire:has(.sd-hand:focus-visible) .sd-edge { stroke: var(--accent); marker-end: url(#sd-arrow-on); }
 .sd-hand.is-empty { opacity: 0; transition: opacity var(--dur) var(--ease); }
 .sd-hand.is-empty .sd-hand-box { fill: var(--accent); stroke: var(--surface); stroke-width: var(--mark-w); }
 .sd-hand-plus { fill: none; stroke: var(--on-accent); stroke-width: var(--mark-w); stroke-linecap: round; }
@@ -62,7 +63,7 @@
 /* Khung nhìn (js/ui/diagram-view.js): khung có focus thì bánh xe kéo khung (viền đậm báo); giữ Space: bàn tay; đang kéo: nắm.
    Chạm: một ngón dọc cuộn trang tới khi chạm vào chỗ trống của sơ đồ, rồi một ngón kéo khung; hai ngón luôn thu phóng. */
 .sd-fig:focus { outline: none; border-color: var(--ink-4); }
-.sd-fig:focus-visible { outline: var(--ring-w) solid var(--ring); outline-offset: var(--mark-w); }
+:where(:root:not(.quiet-focus)) .sd-fig:focus-visible { outline: var(--ring-w) solid var(--ring); outline-offset: var(--mark-w); }
 .sd-svg { touch-action: pan-y; -webkit-user-select: none; user-select: none; }
 .sd-fig:focus .sd-svg { touch-action: none; }
 .sd-fig.is-grab, .sd-fig.is-grab * { cursor: grab; }
@@ -172,7 +173,7 @@
   color: var(--ink-2); background: var(--surface); border: var(--line-w) solid var(--line); border-radius: var(--r-pill);
 }
 .sd-pill input:checked + span { color: var(--on-accent); background: var(--accent); border-color: var(--accent); font-weight: 600; }
-.sd-pill input:focus-visible + span { outline: var(--ring-w) solid var(--ring); outline-offset: var(--mark-w); }
+:where(:root:not(.quiet-focus)) .sd-pill input:focus-visible + span { outline: var(--ring-w) solid var(--ring); outline-offset: var(--mark-w); }
 .sd-pos { font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-3); }
 /* Trang Handoffs: mỗi đường nối một khối gập. */
 .sd-edge-item {

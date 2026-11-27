@@ -90,7 +90,7 @@
   cursor: pointer; opacity: 0; transition: opacity var(--dur) var(--ease); box-shadow: var(--lift);
 }
 .gap-add-btn svg.i { width: var(--fs-sm); height: var(--fs-sm); }
-.gap-add:hover::before, .gap-add:hover .gap-add-btn, .gap-add-btn:focus-visible { opacity: 1; }
+.gap-add:hover::before, .gap-add:hover .gap-add-btn, :where(:root:not(.quiet-focus)) .gap-add-btn:focus-visible { opacity: 1; }
 @media (hover: none) {
   .step { padding-top: var(--s5); }
   /* Chỉ nút nhận chạm: vạch không che vùng bấm của tên bước ngay dưới nó. */
