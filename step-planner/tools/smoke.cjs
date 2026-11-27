@@ -2355,11 +2355,23 @@ const check = (name, ok, detail = '') => {
     JSON.stringify({ notes, hard, sub }));
     await cx.close();
 
-    /* Mẫu it5425-sports: kiến trúc chọn sẵn, dòng nhắc hồ sơ nói khác, Apply path ra stack lakehouse của mẫu. */
+    /* Mẫu it5425-sports: mọi khâu đã quyết sẵn (stack của nhóm), sơ đồ đủ nút, không cảnh báo, không chấm đỏ; kiến trúc chọn
+     * sẵn; Apply path không đổi khâu nào. */
     for (const [w, hh] of [[1280, 900], [390, 844]]) {
       const { ctx: ix, page: ip } = await open(w, hh);
       await ip.click('#start .tpl[data-tpl="it5425-sports"]');
       await ip.waitForSelector('#sd-fig svg');
+      const fresh = await ip.evaluate(() => ({
+        nodes: [...document.querySelectorAll('#sd-fig .sd-node[data-stage]')].map((g) => g.dataset.stage),
+        open: document.querySelectorAll('#sd-fig .sd-node.is-open, #sd-fig .sd-edge.is-open').length,
+        warns: document.getElementById('sd-warns').hidden,
+        red: document.querySelectorAll('.io-dot.bad').length }));
+      const d0 = (await cur(ip)).design;
+      check(`mẫu it5425-sports ${w}px: dự án mới có stack đã quyết ở mọi khâu, sơ đồ đủ nút, không nút / đường trống, không cảnh báo, không chấm đỏ`,
+        ['source', 'ingest', 'raw', 'process', 'validate', 'store', 'app', 'package', 'host', 'monitor'].every((id) => fresh.nodes.includes(id))
+        && !['label', 'train', 'track', 'search', 'serve'].some((id) => fresh.nodes.includes(id)) && fresh.open === 0 && fresh.warns && fresh.red === 0
+        && d0.stages.ingest.pick.join() === 'cron' && d0.stages.raw.pick.join('+') === 'minio+iceberg+polaris' && d0.stages.train.skip,
+      JSON.stringify(fresh));
       await ip.click('#sd-arch [data-arch-open]');
       await ip.waitForSelector('#dlg-sd[open] .sd-fam');
       const st = await ip.evaluate(() => ({
@@ -2369,19 +2381,22 @@ const check = (name, ok, detail = '') => {
         why: document.querySelector('#sd-pane input[data-arch-why="storage"]')?.value || '',
         over: document.getElementById('dlg-sd').scrollWidth - document.getElementById('dlg-sd').clientWidth
           + document.getElementById('sd-pane').scrollWidth - document.getElementById('sd-pane').clientWidth }));
-      check(`mẫu it5425-sports ${w}px: kiến trúc chọn sẵn (lakehouse, medallion, batch ELT), dòng nhắc hồ sơ nói khác ở lưu trữ và xử lý, không tràn ngang`,
+      check(`mẫu it5425-sports ${w}px: kiến trúc chọn sẵn (lakehouse, medallion, batch ELT) trùng gợi ý từ các khâu đã quyết (không dòng nhắc), không tràn ngang`,
         st.checked.storage === 'lakehouse' && st.checked.layers === 'medallion' && st.checked.processing === 'batch-elt' && st.checked.ml === ''
-        && st.info.includes('storage') && st.info.includes('processing') && st.preset && /lakehouse có chủ đích/.test(st.why) && st.over <= 2, JSON.stringify(st));
+        && !st.info.length && st.preset && /lakehouse có chủ đích/.test(st.why) && st.over <= 2, JSON.stringify(st));
       if (w === 1280) {
         await ip.click('#sd-nav [data-at="0"]');
         await ip.click('#sd-pane [data-apply]');
         const d = (await cur(ip)).design;
-        const got = Object.fromEntries(Object.entries(d.stages).map(([k, v]) => [k, v.skip ? 'skip' : v.pick.join('+')]));
-        check('mẫu it5425-sports: Apply path ra MinIO + Iceberg + Polaris, dbt, dbt tests, DuckDB trên Iceberg, Superset, Docker Compose',
-          got.raw === 'minio+iceberg+polaris' && got.process === 'dbt' && got.validate === 'dbt-tests' && got.store === 'duckdb-iceberg'
-          && got.app === 'superset' && got.package === 'docker-compose', JSON.stringify(got));
-        await ip.keyboard.press('Escape');
+        check('mẫu it5425-sports: Apply path không đổi khâu nào (khâu đã quyết đứng trên kiến trúc, hồ sơ)',
+          JSON.stringify(d.stages) === JSON.stringify(d0.stages) && /every stage is already decided/.test(await ip.textContent('#sd-pane .sd-applied')));
         check('mẫu it5425-sports: sau Apply path không có cảnh báo trên trang', await ip.$eval('#sd-warns', (u) => u.hidden));
+        await ip.click('#sd-nav [data-at="4"]'); // trang khâu Ingestion (khâu thứ hai)
+        const presetTip = await ip.$('#sd-pane [data-preset-stage="ingest"]');
+        await ip.$eval('#sd-pane [data-opt="prefect"] input', (i) => i.click()); // phương án khác nằm trong phần gập
+        check('mẫu it5425-sports: khâu còn như mẫu ghi "Preset from template"; đổi phương án thì thôi ghi',
+          !!presetTip && !(await ip.$('#sd-pane [data-preset-stage="ingest"]')));
+        await ip.keyboard.press('Escape');
       }
       await ix.close();
     }

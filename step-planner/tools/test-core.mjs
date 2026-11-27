@@ -3,7 +3,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { progress, nextActionIds, projectNextIds, slotsOf, subPlace, placeSub, takeSub, shiftTarget, liveLabels, redoCount, canReopen, nextWaitingOn, inGroup, fold } from '../js/core/board.js';
-import { normDesign, rankOptions, decidedCount, catalogErrors, applyPath, effProfile, warnings, notNeededBy, archAdvice, archState, stageLists, pathOf, fitOf, presetDesign, isPreset } from '../js/core/design.js';
+import { normDesign, rankOptions, decidedCount, catalogErrors, applyPath, effProfile, warnings, notNeededBy, archAdvice, archState, stageLists, pathOf, fitOf, presetDesign, isPreset, isPresetStage, stageState } from '../js/core/design.js';
 import { readStageLine } from '../js/core/design-md.js';
 import { snake, planTasks, diagramNodes, flowEdges, bothDecided, planDiff, applyPlan, PLAN_STEP } from '../js/core/design-plan.js';
 import { parseImport, toJSON, toBackup, shape, counts, slug } from '../js/core/io.js';
@@ -919,7 +919,7 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   const PRESET_ARCH = {
     'crisp-dm': { storage: null, layers: null, processing: null, app: null, ml: null },
     'big-data-ds': { storage: 'lakehouse', layers: 'medallion', processing: 'streaming' },
-    'it5425-sports': { storage: 'files-db', layers: 'medallion', processing: 'batch-etl', app: 'static-report', ml: null },
+    'it5425-sports': { storage: 'lakehouse', layers: 'medallion', processing: 'batch-elt', app: 'static-report', ml: '' },
     'stats-report': { storage: 'files-db', layers: 'two-layers', processing: 'batch-etl', app: 'static-report' },
     'app-feature': { app: 'client-server' },
     'data-pipeline': { layers: 'medallion', processing: 'batch-etl', app: 'static-report' },
@@ -937,8 +937,8 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   const plans = {};
   for (const t of templates.filter((x) => x.design)) {
     const ws = fromTemplate(t), pre = presetDesign(t);
-    check(`mẫu đặt sẵn ${t.id}: dự án mới có đúng hồ sơ, lối của mẫu, chưa chọn phương án; đổi một câu thì không còn là bộ đặt sẵn`,
-      eq(ws.design, { ...pre, stages: {}, edges: {} }) && isPreset(ws.design, pre)
+    check(`mẫu đặt sẵn ${t.id}: dự án mới có đúng hồ sơ, lối, khâu mẫu đặt, chưa có bàn giao; đổi một câu thì không còn là bộ đặt sẵn`,
+      eq(ws.design, { ...pre, edges: {} }) && isPreset(ws.design, pre)
       && !isPreset({ ...ws.design, profile: { ...ws.design.profile, [Object.keys(pre.profile)[0]]: 'x' } }, pre)
       && !isPreset({ ...ws.design, profile: { ...ws.design.profile, users: ws.design.profile.users === 'me' ? 'few' : 'me' } }, pre),
     JSON.stringify(ws.design));
@@ -953,23 +953,26 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
       const r = applyPath(cat, ws.design, path);
       if (path === pre.path) plans[t.id] = r.next;
       for (const w of warnings(cat, r.next).filter((x) => !x.caveat)) bad.push(`${path}: luật ${w.id}`);
-      for (const [sid, st] of Object.entries(r.next.stages)) {
-        for (const o of st.pick) if (!fitsIn(r.next, sid, o)) bad.push(`${path}: ${sid}=${o} lệch hồ sơ`);
+      for (const sid of r.filled) {
+        for (const o of r.next.stages[sid].pick) if (!fitsIn(r.next, sid, o)) bad.push(`${path}: ${sid}=${o} lệch hồ sơ`);
       }
+      /* Khâu mẫu đặt sẵn đã quyết: Apply path không đổi (khâu đã quyết > kiến trúc chọn > hồ sơ). */
+      for (const sid of Object.keys(pre.stages)) if (!eq(r.next.stages[sid], pre.stages[sid])) bad.push(`${path}: ${sid} mẫu đặt sẵn bị đổi`);
       const adv = archState(cat, r.next).find((x) => x.family === 'processing');
       const tools = adv.id ? cat.architectures.find((f) => f.id === 'processing').entries.find((e) => e.id === adv.id).tools : {};
-      for (const sid of ['ingest', 'process']) {
+      for (const sid of ['ingest', 'process'].filter((x) => !pre.stages[x])) {
         const st = r.next.stages[sid];
         if (st && !st.skip && tools[sid] && !st.pick.some((o) => tools[sid].includes(o))) bad.push(`${path}: ${sid}=${st.pick} ngoài kiến trúc ${adv.id}`);
       }
       const sAdv = archState(cat, r.next).find((x) => x.family === 'storage');
       const sTools = sAdv.id ? cat.architectures.find((f) => f.id === 'storage').entries.find((e) => e.id === sAdv.id).tools : {};
-      for (const sid of ['raw', 'store']) {
+      for (const sid of ['raw', 'store'].filter((x) => !pre.stages[x])) {
         const st = r.next.stages[sid];
         if (st && !st.skip && sTools[sid] && !st.pick.some((o) => sTools[sid].includes(o))) bad.push(`${path}: ${sid}=${st.pick} ngoài kiến trúc ${sAdv.id}`);
       }
     }
-    check(`mẫu đặt sẵn ${t.id}: Apply path không làm luật báo, không chọn phương án lệch hồ sơ (trừ câu kiến trúc chọn đứng trên), Ingestion và Processing theo kiến trúc xử lý, Raw storage và Analytical store theo kiến trúc lưu trữ (chọn, hay gợi ý)`, !bad.length && Object.keys(prof).length > 0, bad.join(' | '));
+    check(`mẫu đặt sẵn ${t.id}: bộ đặt sẵn không làm luật báo; Apply path không làm luật báo, không đổi khâu mẫu đặt, không chọn phương án lệch hồ sơ (trừ câu kiến trúc chọn đứng trên), Ingestion và Processing theo kiến trúc xử lý, Raw storage và Analytical store theo kiến trúc lưu trữ (chọn, hay gợi ý)`,
+      !bad.length && Object.keys(prof).length > 0 && !warnings(cat, ws.design).filter((x) => !x.caveat).length, bad.join(' | '));
   }
   const pick = (id, sid) => plans[id]?.stages[sid]?.skip ? 'skip' : plans[id]?.stages[sid]?.pick.join('+');
   check('mẫu đặt sẵn lakehouse-oss: Apply path chọn công cụ tự host — MinIO + Iceberg + Polaris, dbt + dbt test, DuckDB trên Iceberg, Superset',
@@ -980,14 +983,33 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   check('mẫu đặt sẵn stats-report: Apply path ra thư mục dự án, notebook + báo cáo, không phục vụ model; nhóm model thành không cần',
     pick('stats-report', 'raw') === 'project-folder' && pick('stats-report', 'app') === 'notebook-report' && pick('stats-report', 'serve') === 'skip'
     && archAdvice(cat, plans['stats-report']).find((a) => a.family === 'ml').id === '');
-  /* it5425-sports (PLAN-041, PLAN-042): dữ liệu nhỏ, trả lời thật; kiến trúc chọn sẵn là lakehouse tự host, batch ELT, nên Apply
-   * path ra stack của mẫu: MinIO + Iceberg + Polaris, dbt, dbt test, DuckDB trên Iceberg, Superset, Docker Compose; không luật báo. */
-  check('mẫu đặt sẵn it5425-sports: Apply path ra MinIO + Iceberg + Polaris, dbt, dbt test, DuckDB trên Iceberg, Superset, Docker Compose; mọi phương án tự host',
-    pick('it5425-sports', 'raw') === 'minio+iceberg+polaris' && pick('it5425-sports', 'process') === 'dbt' && pick('it5425-sports', 'validate') === 'dbt-tests'
-    && pick('it5425-sports', 'store') === 'duckdb-iceberg' && pick('it5425-sports', 'app') === 'superset' && pick('it5425-sports', 'package') === 'docker-compose'
-    && !warnings(cat, plans['it5425-sports']).filter((w) => !w.caveat).length
-    && Object.entries(plans['it5425-sports'].stages).every(([sid, st]) => st.pick.every((o) => fitOf(stageOf(sid).options.find((x) => x.id === o), { selfhost: 'yes' }).ok)),
-  JSON.stringify(Object.fromEntries(Object.keys(plans['it5425-sports'].stages).map((k) => [k, pick('it5425-sports', k)]))));
+  /* it5425-sports (PLAN-041, PLAN-042, PLAN-033): mẫu mang stack nhóm đã quyết ở mọi khâu: dự án mới không còn khâu nào chưa quyết,
+   * không luật báo, sơ đồ đủ nút; Apply path không đổi gì. */
+  const t54 = templates.find((x) => x.id === 'it5425-sports');
+  const w54 = fromTemplate(t54).design;
+  const got54 = Object.fromEntries(cat.stages.map((s) => [s.id, w54.stages[s.id]?.skip ? 'skip'
+    : [...(w54.stages[s.id]?.pick || []), ...(w54.stages[s.id]?.own ? ['own'] : [])].join('+')]));
+  const nodes54 = diagramNodes(cat, w54);
+  const all54 = [...nodes54.flow, ...nodes54.ops];
+  check('mẫu it5425-sports: dự án mới có mọi khâu đã quyết (chọn hay Not needed), không luật báo kể cả lời nhắc, sơ đồ đủ nút, không nút trống',
+    cat.stages.every((s) => stageState(w54, s.id) !== 'open') && !warnings(cat, w54).length
+    && ['source', 'ingest', 'raw', 'process', 'validate', 'store', 'app', 'package', 'host', 'monitor'].every((id) => all54.some((n) => n.id === id))
+    && !all54.some((n) => n.open) && flowEdges(cat, w54).length === nodes54.flow.length - 2
+    && eq(got54, { source: 'web-scraping+own', ingest: 'cron', raw: 'minio+iceberg+polaris', process: 'dbt+duckdb', validate: 'dbt-tests',
+      store: 'duckdb-iceberg', label: 'skip', train: 'skip', track: 'skip', search: 'skip', serve: 'skip', app: 'superset',
+      package: 'docker-compose', host: 'own-server', monitor: 'logs-weekly' }), JSON.stringify(got54));
+  const ap54 = applyPath(cat, w54, 'pipeline');
+  check('mẫu it5425-sports: Apply path không đổi khâu nào (khâu đã quyết > kiến trúc chọn > hồ sơ); khâu còn như mẫu thì là đặt sẵn, đổi phương án thì thôi',
+    !ap54.filled.length && !ap54.skipped.length && eq(ap54.next.stages, w54.stages)
+    && cat.stages.every((s) => isPresetStage(w54, presetDesign(t54), s.id))
+    && !isPresetStage({ ...w54, stages: { ...w54.stages, ingest: { ...w54.stages.ingest, pick: ['prefect'] } } }, presetDesign(t54), 'ingest')
+    && isPresetStage({ ...w54, stages: { ...w54.stages, ingest: { ...w54.stages.ingest, note: 'khác' } } }, presetDesign(t54), 'ingest')
+    && !isPresetStage(w54, presetDesign(templates.find((x) => x.id === 'lakehouse-oss')), 'raw'));
+  /* Thiếu khâu đã quyết: Apply path theo kiến trúc chọn vẫn ra stack lakehouse (khâu đã quyết > kiến trúc chọn > hồ sơ). */
+  const bare54 = applyPath(cat, normDesign({ ...w54, stages: {} }), 'pipeline').next.stages;
+  check('mẫu it5425-sports không khâu đặt sẵn: Apply path theo kiến trúc chọn ra MinIO + Iceberg + Polaris, dbt, DuckDB trên Iceberg, Superset',
+    eq(bare54.raw.pick, ['minio', 'iceberg', 'polaris']) && eq(bare54.process.pick, ['dbt']) && eq(bare54.store.pick, ['duckdb-iceberg'])
+    && eq(bare54.app.pick, ['superset']), JSON.stringify(bare54));
   check('mẫu đặt sẵn data-pipeline: Apply path có lịch chạy và cổng chất lượng', !!pick('data-pipeline', 'ingest') && !!pick('data-pipeline', 'validate'));
   const bd = effProfile(cat, fromTemplate(templates.find((t) => t.id === 'big-data-ds')).design);
   check('mẫu đặt sẵn big-data-ds: khâu xử lý gợi ý công cụ stream của cụm, Spark MLlib hợp hồ sơ, pandas thì không',
@@ -1005,7 +1027,7 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
       .map((d) => `${t.id}${d.path ? '/' + d.path : ''}: ${mlOf(d)}`);
   });
   check('mẫu đặt sẵn: chưa quyết Training, Serving thì không gợi ý kiến trúc model (it5425-sports, app-feature, stats-report, data-pipeline, lakehouse-oss)',
-    !mlBad.length && mlOf(plans['it5425-sports']) === null && mlOf(plans['data-pipeline']) === null && mlOf(plans['lakehouse-oss']) === null, mlBad.join(' | '));
+    !mlBad.length && mlOf(plans['it5425-sports']) === '' && mlOf(plans['data-pipeline']) === null && mlOf(plans['lakehouse-oss']) === null, mlBad.join(' | '));
   /* big-data-ds với lối pipeline: kho phân tích không phải BigQuery đọc R2; giám sát lag Kafka; xử lý bằng công cụ stream của cụm. */
   const bdTpl = templates.find((t) => t.id === 'big-data-ds');
   const bdPipe = applyPath(cat, fromTemplate(bdTpl).design, 'pipeline').next;

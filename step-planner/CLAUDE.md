@@ -17,7 +17,7 @@
 | `css/*.css` | `tokens` → `base` → `project` → `board` → `cards` → `drag` → `foot` → `log` → `design` → `dropdown` → `dialogs` → `docs` → `hand` → `md` → `start` → `toast`; thứ tự link là cascade |
 | `js/core/model.js`, `js/core/board.js`, `js/core/handoffs.js` | trạng thái, ngày, id, chuẩn hoá (`normSub`, `normStep`, `normWorkspace`), gộp khi lưu (`EDIT_FIELDS`, `mergeEdit`), `freshCopy`, `fromTemplate`, nhóm mẫu (`tplGroups`); tiến độ, ô, chỗ (`Place`) và mọi phép dời, số, việc tiếp theo, nhóm lọc; bàn giao (`holders`, `handoffs`, `ioStatus`, `consumersOf`, "on hold" theo chỗ chưa lưu) |
 | `js/core/markdown.js`, `js/core/io.js` | Markdown dự án vào / ra; JSON, sao lưu, `parseImport`, `counts`, `plural`, `slug`, `shape` (cho test) |
-| `js/core/design.js`, `js/core/design-plan.js`, `js/core/design-md.js`, `js/core/arch-diagram.js` | System design: `normDesign`, `rankOptions`, `stageLists`, `applyPath`, `archAdvice`, `archState`, `archMissing`, `warnings`, `catalogErrors`, `presetDesign`, `isPreset`; sơ đồ (`diagramNodes`, `flowEdges`), việc (`planTasks`, `planDiff`, `applyPlan`); mục Markdown (`designMd`, `designReader`); sơ đồ của một kiến trúc (`diagramGrid`, `diagramErrors`, `layoutDiagram`) |
+| `js/core/design.js`, `js/core/design-plan.js`, `js/core/design-md.js`, `js/core/arch-diagram.js` | System design: `normDesign`, `rankOptions`, `stageLists`, `applyPath`, `archAdvice`, `archState`, `archMissing`, `warnings`, `catalogErrors`, `presetDesign`, `isPreset`, `isPresetStage`; sơ đồ (`diagramNodes`, `flowEdges`), việc (`planTasks`, `planDiff`, `applyPlan`); mục Markdown (`designMd`, `designReader`); sơ đồ của một kiến trúc (`diagramGrid`, `diagramErrors`, `layoutDiagram`) |
 | `js/core/md.js`, `js/ui/md-view.js`, `js/ui/md-dialog.js` | tài liệu văn bản: cây khối (`parseMd`), URL trần (`linkParts`, dấu câu cuối ở ngoài), token khung Edit (`srcTokens`); DOM (`renderMd`, `renderSrc`, chỉ createElement / text node); hộp `#dlg-md` |
 | `js/core/view-math.js`, `js/ui/diagram-view.js`, `js/ui/design.js`, `js/ui/arch-diagram.js` | khung nhìn của sơ đồ: toán (hằng ở đầu file), DOM (bánh xe, kéo, phím, cụm nút; `attach` sau mỗi lần vẽ); System design: mục trên trang, sơ đồ SVG, `#dlg-sd`, hộp Update plan; trang Architecture: câu hỏi chọn, sơ đồ luồng mỗi kiến trúc (vẽ khi thẻ mở, theo bề rộng) |
 | `js/ui/store.js`, `js/ui/state.js`, `js/ui/dom.js`, `js/ui/toast.js`, `js/ui/dialogs.js` | `localStorage` (dữ liệu, `stepPlanner.hintOff`, `stepPlanner.compact`, `hub-theme`), `sessionStorage` (dự án của tab), mọi truy cập bọc try/catch; `state`, `curId`, `templates`, `ui`, `persist`, `commit`, `refocus`; `$`, `h()`, `icon()`, `withLinks()`, `field()`, `fmtDate()`; toast có Hoàn tác; mở / đóng hộp, `ask` (`#dlg-ask`), `mergeSaved` |
@@ -126,7 +126,7 @@
 
 - Khuôn, khoá, chuỗi, ngôn ngữ, `output`, bàn giao, `design`: `lint.py` (docstring đầu file); khuôn đầy đủ ở đó, đừng chép lại.
 - Đúng một mẫu trống. Mẫu chung không gắn vào một bài toán; dự án cụ thể chủ trang đang làm ghi `"group": "specific"` (PLAN-039). Không thẻ HTML, không người làm.
-- `design` (PLAN-033, PLAN-042): chỉ câu hồ sơ, lối, kiến trúc mẫu thật sự chọn, không phương án; `fromTemplate` chép một lần. Hộp ghi "Preset from template" khi còn đúng (`isPreset`).
+- `design` (PLAN-033, PLAN-042): câu hồ sơ, lối, kiến trúc mẫu thật sự chọn; `stages` chỉ khi dự án của mẫu đã quyết stack (khuôn như dự án); `fromTemplate` chép một lần. Hộp ghi "Preset from template" khi còn đúng (`isPreset`, `isPresetStage`).
 - Mọi chữ của mẫu tiếng Việt (PLAN-028); tên bước, bước con theo chuẩn: tên tiếng Việt, tên gốc trong ngoặc, ví dụ
   "Hiểu dữ liệu (Data Understanding)". Giữ nguyên tên công cụ, thư viện, file, lệnh, URL.
 - `output`: loại đầu ra, hiện trên thẻ mẫu. `description` nói khi nào chọn mẫu, phần nào bỏ được khi làm một mình.
@@ -146,7 +146,7 @@
   điều phối sau; bước cuối kiểm tuân thủ medallion. Ghi chú về giấy phép, tình trạng bảo trì công cụ ghi kèm link nguồn.
 - `app-feature` không theo chuẩn; việc phát hành theo tài liệu App Store Connect, Google Play, Flutter (link ở ghi chú bước).
 - `it5425-sports` (PLAN-040, PLAN-041): mẫu viết tay, không sinh từ trang đồ án, theo mọi luật chung ở trên. Không tên người.
-  Số liệu, link, lý do bỏ công cụ ở ghi chú bước chỉ lấy từ nguồn đã mở; hồ sơ trả lời thật cỡ dữ liệu, kiến trúc chọn sẵn ra stack lakehouse (`test-core` kiểm Apply path).
+  Số liệu, link, lý do bỏ công cụ ở ghi chú bước chỉ lấy từ nguồn đã mở; hồ sơ trả lời thật cỡ dữ liệu; mọi khâu đặt sẵn stack của nhóm, không khâu trống, không luật báo (`test-core`).
 
 ## System design (`data/system-design.json`, PLAN-016)
 

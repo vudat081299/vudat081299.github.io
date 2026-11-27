@@ -6,7 +6,7 @@
    Dự án giữ `design = {path, profile, stages, edges, arch}`; không có gì thì null. `edges`: bàn giao trên đường nối hai khâu liền nhau
    của sơ đồ, khoá `khâu trước>khâu sau`. `arch`: kiến trúc người dùng chọn, nhóm → id kiến trúc; `archWhy`: nhóm → lý do một dòng
    của lựa chọn ấy (PLAN-042).
-   Xuất: OWN_MAX, EDGE_MAX, VIA, normEdge, normDesign, emptyDesign, presetDesign, isPreset, pathOf, effProfile,
+   Xuất: OWN_MAX, EDGE_MAX, VIA, normEdge, normDesign, emptyDesign, presetDesign, isPreset, isPresetStage, pathOf, effProfile,
      stageState, fitOf, rankOptions, notNeededBy, stageLists, applyPath, condTerm, archAdvice, archChosen, archState, archMissing,
      warnings, decidedCount, pickNames, catalogErrors.
    Dùng: không. */
@@ -101,10 +101,10 @@ export function normDesign(o, cat = null) {
 /** Bản trống để sửa. @returns {{path: string, profile: Record<string,string>, stages: Record<string,any>, edges: Record<string,any>, arch: Record<string,string>, archWhy: Record<string,string>}} */
 export const emptyDesign = () => ({ path: '', profile: {}, stages: {}, edges: {}, arch: {}, archWhy: {} });
 
-/** Thiết kế đặt sẵn của một mẫu (`design` trong templates.json, PLAN-033): hồ sơ, lối, kiến trúc chọn sẵn; không phương án;
- * không có thì null. @param {any} tpl */
+/** Thiết kế đặt sẵn của một mẫu (`design` trong templates.json, PLAN-033): hồ sơ, lối, kiến trúc chọn sẵn, và khâu mà dự án
+ * của mẫu đã quyết (`stages`, cùng khuôn với dự án); không bàn giao; không có thì null. @param {any} tpl */
 export const presetDesign = (tpl) => (isObj(tpl) && isObj(tpl.design)
-  ? normDesign({ path: tpl.design.path, profile: tpl.design.profile, arch: tpl.design.arch, archWhy: tpl.design.archWhy }) : null);
+  ? normDesign({ path: tpl.design.path, profile: tpl.design.profile, arch: tpl.design.arch, archWhy: tpl.design.archWhy, stages: tpl.design.stages }) : null);
 
 /** Hai bản đồ chữ → chữ giống nhau. @param {Record<string,string>} a @param {Record<string,string>} b */
 const sameMap = (a, b) => Object.keys(a).length === Object.keys(b).length && Object.entries(a).every(([k, v]) => b[k] === v);
@@ -114,6 +114,13 @@ export function isPreset(design, preset) {
   if (!design || !preset) return false;
   return design.path === preset.path && sameMap(design.profile, preset.profile) && sameMap(design.arch || {}, preset.arch || {})
     && sameMap(design.archWhy || {}, preset.archWhy || {});
+}
+
+/** Khâu `sid` còn đúng như mẫu đặt (cùng phương án, Not needed, công cụ tự ghi); mẫu không đặt khâu ấy thì false.
+ * @param {any} design @param {any} preset @param {string} sid */
+export function isPresetStage(design, preset, sid) {
+  const a = design?.stages[sid], b = preset?.stages[sid];
+  return !!a && !!b && a.skip === b.skip && a.own === b.own && a.pick.length === b.pick.length && a.pick.every((x) => b.pick.includes(x));
 }
 
 /** Lối đã chọn (còn trong danh mục) hay null. @param {any} cat @param {any} design */

@@ -8,7 +8,7 @@ import { fold as foldText } from '../core/board.js';
 import { archCombine, archExplain, archGuide } from './arch-diagram.js';
 import { initDiagramView, attach as attachView, focusFig, resetView } from './diagram-view.js';
 import { PLAN_STEP, applyPlan, bothDecided, diagramNodes, flowEdges, planDiff, snake, viaLabel } from '../core/design-plan.js';
-import { EDGE_MAX, OWN_MAX, VIA, applyPath, archMissing, archState, catalogErrors, decidedCount, effProfile, emptyDesign, isPreset, normDesign, notNeededBy, pathOf, pickNames, presetDesign, rankOptions, stageLists, stageState, warnings } from '../core/design.js';
+import { EDGE_MAX, OWN_MAX, VIA, applyPath, archMissing, archState, catalogErrors, decidedCount, effProfile, emptyDesign, isPreset, isPresetStage, normDesign, notNeededBy, pathOf, pickNames, presetDesign, rankOptions, stageLists, stageState, warnings } from '../core/design.js';
 import { plural, slug } from '../core/io.js';
 import { normStep, normSub } from '../core/model.js';
 import { showDlg } from './dialogs.js';
@@ -570,6 +570,14 @@ function presetNote() {
     ? h('p', { class: 'sd-tip', 'data-preset': t.id }, `Preset from template "${t.name}" — change any answer.`) : null;
 }
 
+/** Khâu còn đúng như mẫu của dự án đặt sẵn (stack dự án ấy đã quyết): nói là từ mẫu; đổi lựa chọn là ẩn. @param {string} sid */
+function presetStageNote(sid) {
+  const w = ws();
+  const t = w && w.templateId ? tplOf(w.templateId) : null;
+  return t && isPresetStage(w.design, presetDesign(t), sid)
+    ? h('p', { class: 'sd-tip', 'data-preset-stage': sid }, `Preset from template "${t.name}": the choice already made for this project — change it any time.`) : null;
+}
+
 /* ── Lối bắt đầu: "What do you deliver?" — luồng tối thiểu, vì sao hợp, khi nào đổi lối, khâu cần / bỏ, mốc nghiệm thu ── */
 
 function pathPane() {
@@ -878,6 +886,7 @@ function stagePane(s) {
     h('h3', { class: 'sd-h' }, s.title),
     h('p', { class: 'sd-q' }, s.question),
     h('div', { class: 'sd-guide' }, ...s.guide.split('\n').map((/** @type {string} */ l) => h('p', {}, l))),
+    presetStageNote(s.id),
     !answered ? h('p', { class: 'sd-tip' }, 'Pick what you deliver or answer the project profile to get a recommendation. ',
       h('button', { type: 'button', class: 'sd-link', 'data-at': 0 }, 'Go to start')) : null,
     need === 'skip' ? h('p', { class: 'sd-tip' }, `The ${p.label} path doesn't need this stage.`)

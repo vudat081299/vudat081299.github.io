@@ -14,7 +14,11 @@
      `design` (tuỳ chọn, PLAN-033): {profile, path?, arch?} đặt sẵn cho System design khi tạo dự án; câu và câu trả lời có trong
      hồ sơ của system-design.json, `path` là lối có thật, hồ sơ không rỗng. `arch` (PLAN-042): nhóm kiến trúc → kiến trúc
      chọn sẵn, đều có thật; kiến trúc mang lối (nhóm app) không ở đây, ghi `path`. `archWhy`: nhóm → lý do một dòng (≤ 120),
-     chỉ cho nhóm đã chọn sẵn. Mẫu trống không có `design`.
+     chỉ cho nhóm đã chọn sẵn. `stages`: khâu mà dự án của mẫu đã quyết (stack chọn thật, không gợi ý), cùng khuôn với dự án:
+     khâu → {pick?, skip?, own?, note?}; khâu, phương án có thật, phương án thuộc đúng khâu ấy, không trùng; khâu không `multi`
+     tối đa một; `skip` chỉ ghi `true`, khâu Not needed không có `pick`, `own`; `own` một dòng ≤ 120; `note` tiếng Việt; không khâu
+     rỗng. Bộ đặt sẵn không làm luật báo, Apply path không đổi khâu đã đặt: test-core (luật ở js/core/design.js).
+     Mẫu trống không có `design`.
   2. js/**/*.js: không innerHTML / outerHTML / insertAdjacentHTML / document.write — chữ người dùng chỉ qua textContent.
      Import (cả `export … from`) trỏ tới file có thật; `import(…)` chỉ nhận chuỗi cố định; mọi file trừ main.js có nơi import
      (không mồ côi). js/core/ là logic thuần: code (đọc bằng `js_scan`: bỏ chú thích, chữ trong chuỗi không tính) không gọi tên
@@ -78,7 +82,8 @@ OUT_KEYS = {'key', 'name', 'ref', 'note', 'final'}
 KEY_RE = r'[a-z0-9][a-z0-9-]{0,39}'
 TPL_KEYS = {'id', 'group', 'name', 'output', 'description', 'design', 'steps'}
 TPL_GROUPS = ('specific',)  # không có `group`: mẫu chung
-TPL_DESIGN_KEYS = {'profile', 'path', 'arch', 'archWhy'}
+TPL_DESIGN_KEYS = {'profile', 'path', 'arch', 'archWhy', 'stages'}
+TPL_STAGE_KEYS = {'pick', 'skip', 'own', 'note'}
 
 
 def need_str(where, obj, key, required=True):
@@ -229,10 +234,11 @@ def check_templates(data):
 
 
 def check_tpl_design(data, design):
-    """`design` của mẫu (PLAN-033): hồ sơ và lối đặt sẵn, chỉ id có trong danh mục System design."""
+    """`design` của mẫu (PLAN-033): hồ sơ, lối, kiến trúc, khâu đặt sẵn, chỉ id có trong danh mục System design."""
     answers = {q.get('id'): [c.get('id') for c in q.get('choices') or []] for q in design.get('profile') or []}
     paths = {p.get('id') for p in design.get('paths') or []}
     fams = {f.get('id'): {e.get('id'): e for e in f.get('entries') or []} for f in design.get('architectures') or []}
+    stages = {x.get('id'): x for x in design.get('stages') or [] if isinstance(x, dict)}
     for t in data.get('templates') or []:
         if 'design' not in t:
             continue
@@ -240,7 +246,7 @@ def check_tpl_design(data, design):
         if not t.get('steps'):
             err(f'{w}: mẫu trống không đặt sẵn System design')
         if not isinstance(d, dict) or set(d) - TPL_DESIGN_KEYS or not isinstance(d.get('profile'), dict) or not d['profile']:
-            err(f'{w}: phải là {{profile, path?, arch?, archWhy?}}, `profile` không rỗng')
+            err(f'{w}: phải là {{profile, path?, arch?, archWhy?, stages?}}, `profile` không rỗng')
             continue
         for q, a in d['profile'].items():
             if q not in answers:
@@ -266,6 +272,42 @@ def check_tpl_design(data, design):
                 err(f'{w}: archWhy.{f} không có kiến trúc chọn sẵn ở nhóm ấy')
             elif not isinstance(why, str) or not why.strip() or '\n' in why or len(why) > 120:
                 err(f'{w}: archWhy.{f} là một dòng, không rỗng, tối đa 120 ký tự')
+        check_tpl_stages(w, d.get('stages'), stages)
+
+
+def check_tpl_stages(w, st, stages):
+    """`design.stages` của mẫu: khâu dự án đã quyết, cùng khuôn với `design.stages` của dự án (normDesign)."""
+    if st is None:
+        return
+    if not isinstance(st, dict) or not st:
+        err(f'{w}: `stages` là object khâu → {{pick?, skip?, own?, note?}}, không rỗng')
+        return
+    for sid, r in st.items():
+        ws = f'{w}: stages.{sid}'
+        if sid not in stages:
+            err(f'{ws}: khâu không có trong system-design.json')
+            continue
+        if not isinstance(r, dict) or set(r) - TPL_STAGE_KEYS or not (r.get('pick') or r.get('skip') or r.get('own') or r.get('note')):
+            err(f'{ws}: phải là {{pick?, skip?, own?, note?}}, không rỗng')
+            continue
+        pick = r.get('pick', [])
+        opts = {o.get('id') for o in stages[sid].get('options') or []}
+        if not isinstance(pick, list) or len(set(map(str, pick))) != len(pick):
+            err(f'{ws}: `pick` là danh sách id phương án, không trùng')
+            pick = []
+        for o in pick:
+            if o not in opts:
+                err(f'{ws}: phương án "{o}" không thuộc khâu này (có {sorted(opts)})')
+        if len(pick) > 1 and not stages[sid].get('multi'):
+            err(f'{ws}: khâu chỉ chọn một phương án')
+        if 'skip' in r and r['skip'] is not True:
+            err(f'{ws}: `skip` chỉ ghi true (Not needed)')
+        if r.get('skip') and (pick or r.get('own')):
+            err(f'{ws}: khâu Not needed không có `pick`, `own`')
+        if 'own' in r and (not isinstance(r['own'], str) or not r['own'].strip() or '\n' in r['own'] or len(r['own']) > 120):
+            err(f'{ws}: `own` là một dòng, không rỗng, tối đa 120 ký tự')
+        if 'note' in r and (not isinstance(r['note'], str) or not VI_RE.search(r['note'])):
+            err(f'{ws}: `note` là lý do bằng tiếng Việt')
 
 
 def check_design(data):
@@ -985,8 +1027,18 @@ def self_test():
         ('mẫu: design — câu hồ sơ không có', preset('lakehouse-oss', lambda t: t['design']['profile'].update(cloud='yes')), 'câu hồ sơ "cloud"'),
         ('mẫu: design — lựa chọn không có', preset('lakehouse-oss', lambda t: t['design']['profile'].update(size='huge')), 'không có lựa chọn "huge"'),
         ('mẫu: design — lối không có', preset('lakehouse-oss', lambda t: t['design'].update(path='etl')), 'lối "etl"'),
-        ('mẫu: design — khoá lạ', preset('lakehouse-oss', lambda t: t['design'].update(stages={})), 'phải là {profile, path?, arch?, archWhy?}'),
-        ('mẫu: design — hồ sơ rỗng', preset('lakehouse-oss', lambda t: t['design'].update(profile={})), 'phải là {profile, path?, arch?, archWhy?}'),
+        ('mẫu: design — khoá lạ', preset('lakehouse-oss', lambda t: t['design'].update(edges={})), 'phải là {profile, path?, arch?, archWhy?, stages?}'),
+        ('mẫu: design — hồ sơ rỗng', preset('lakehouse-oss', lambda t: t['design'].update(profile={})), 'phải là {profile, path?, arch?, archWhy?, stages?}'),
+        ('mẫu: design — stages rỗng', preset('lakehouse-oss', lambda t: t['design'].update(stages={})), '`stages` là object'),
+        ('mẫu: design — khâu không có', preset('it5425-sports', lambda t: t['design']['stages'].update(warehouse={'pick': ['minio']})), 'stages.warehouse: khâu không có'),
+        ('mẫu: design — phương án không có', preset('it5425-sports', lambda t: t['design']['stages']['raw']['pick'].append('ceph')), 'phương án "ceph" không thuộc'),
+        ('mẫu: design — phương án của khâu khác', preset('it5425-sports', lambda t: t['design']['stages']['ingest']['pick'].append('superset')), 'phương án "superset" không thuộc'),
+        ('mẫu: design — hai phương án ở khâu một lựa chọn', preset('it5425-sports', lambda t: t['design']['stages']['validate']['pick'].append('pandera')), 'chỉ chọn một'),
+        ('mẫu: design — phương án trùng', preset('it5425-sports', lambda t: t['design']['stages']['raw']['pick'].append('minio')), 'không trùng'),
+        ('mẫu: design — Not needed mà có phương án', preset('it5425-sports', lambda t: t['design']['stages']['train'].update(pick=['local'])), 'Not needed không có'),
+        ('mẫu: design — skip khác true', preset('it5425-sports', lambda t: t['design']['stages']['label'].update(skip='yes')), 'chỉ ghi true'),
+        ('mẫu: design — khâu rỗng', preset('it5425-sports', lambda t: t['design']['stages'].update(monitor={})), 'stages.monitor: phải là'),
+        ('mẫu: design — lý do khâu tiếng Anh', preset('it5425-sports', lambda t: t['design']['stages']['raw'].update(note='Pinned image.')), '`note` là lý do bằng tiếng Việt'),
         ('mẫu: design — nhóm kiến trúc không có', preset('lakehouse-oss', lambda t: t['design'].update(arch={'mesh': 'x'})), 'nhóm kiến trúc "mesh"'),
         ('mẫu: design — kiến trúc không có', preset('lakehouse-oss', lambda t: t['design'].update(arch={'storage': 'mesh'})), 'không có kiến trúc "mesh"'),
         ('mẫu: design — lý do cho nhóm chưa chọn', preset('lakehouse-oss', lambda t: t['design'].update(archWhy={'ml': 'vì muốn thế'})), 'archWhy.ml không có'),

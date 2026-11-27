@@ -931,6 +931,90 @@
         },
         "archWhy": {
           "storage": "Dữ liệu nhỏ nhưng chọn lakehouse có chủ đích để thể hiện Big Data và quản trị dữ liệu theo yêu cầu môn."
+        },
+        "stages": {
+          "source": {
+            "pick": [
+              "web-scraping"
+            ],
+            "own": "File CSV, JSON tĩnh (repo GitHub, football-data.co.uk)",
+            "note": "HTML: trang mùa giải Wikipedia (CC BY-SA), lưu bản gốc rồi tách bảng. CSV, JSON: clone hay tải file tĩnh, không gọi trang nào bằng bot. Bộ nguồn chốt ở bước 2."
+          },
+          "ingest": {
+            "pick": [
+              "cron"
+            ],
+            "note": "Script Python chạy theo lịch bằng cron, không Prefect: một người, vài nguồn tĩnh. Laptop tắt thì lượt chạy bị bỏ: chạy lại bằng tay, script nạp không sinh trùng. Không Kafka: luồng giả lập là phát lại theo gameweek (bước 13)."
+          },
+          "raw": {
+            "pick": [
+              "minio",
+              "iceberg",
+              "polaris"
+            ],
+            "note": "MinIO ghim một image: repo cộng đồng đã lưu trữ, không còn bản vá (bước 3). Bảng Iceberg lưu dữ liệu thành file Parquet; Polaris dùng metastore PostgreSQL."
+          },
+          "process": {
+            "pick": [
+              "dbt",
+              "duckdb"
+            ],
+            "note": "Bronze → Silver → Gold bằng dbt-duckdb; Bronze ghi Iceberg bằng script Python + DuckDB (bước 3, 4). Không Spark: dữ liệu vài trăm MB."
+          },
+          "validate": {
+            "pick": [
+              "dbt-tests"
+            ],
+            "note": "Kiểm chất lượng bằng dbt tests, chạy cùng dbt."
+          },
+          "store": {
+            "pick": [
+              "duckdb-iceberg"
+            ],
+            "note": "Superset mở bản Gold chỉ đọc, không mở file pipeline đang ghi (bước 12)."
+          },
+          "label": {
+            "skip": true
+          },
+          "train": {
+            "skip": true,
+            "note": "Không học máy làm lõi: nhãn chấn thương thiếu có hệ thống, đặc trưng ít; dùng số kỳ vọng Poisson / nhị thức âm (bước 8–11)."
+          },
+          "track": {
+            "skip": true,
+            "note": "Không có mô hình học máy để theo dõi."
+          },
+          "search": {
+            "skip": true
+          },
+          "serve": {
+            "skip": true,
+            "note": "Kết quả bốn phương pháp tính sẵn ở Gold; không phục vụ dự đoán."
+          },
+          "app": {
+            "pick": [
+              "superset"
+            ],
+            "note": "Dashboard Superset; app Streamlit cho phòng thí nghiệm tham số là tuỳ chọn (bước 12)."
+          },
+          "package": {
+            "pick": [
+              "docker-compose"
+            ],
+            "note": "Một lệnh dựng cả stack; bỏ Kubernetes: một máy, vài người xem."
+          },
+          "host": {
+            "pick": [
+              "own-server"
+            ],
+            "note": "Chạy trên laptop của bạn khi demo; gắn volume cho MinIO, PostgreSQL."
+          },
+          "monitor": {
+            "pick": [
+              "logs-weekly"
+            ],
+            "note": "Mỗi lượt nạp ghi log JSONL và đối soát số dòng (bước 4); sau mỗi lượt chạy xem log và kết quả dbt tests. Một người, vài người xem: chưa cần dịch vụ giám sát."
+          }
         }
       },
       "steps": [
@@ -1046,7 +1130,7 @@
           "title": "Hạ tầng trước: dựng và thử khói (Infrastructure as Code)",
           "goal": "Một lệnh dựng cả lakehouse trên laptop; bài thử khói chứng minh DuckDB ghi, đọc được bảng Iceberg qua Polaris trước khi viết dòng pipeline nào.",
           "doneWhen": "scripts/up.sh dựng mọi dịch vụ healthy; scripts/smoke.sh tạo bảng Iceberg 10 dòng qua catalog, đọc lại đủ 10, xoá; tắt rồi bật lại vẫn còn catalog.",
-          "notes": "Stack của nhóm, cắt cho một người với dữ liệu dưới 1 GB:\n- Giữ: Docker Compose, object storage, Parquet, Iceberg, Polaris (metastore Postgres), dbt + DuckDB, Superset.\n- Bỏ Kubernetes: một máy, vài người xem; k8s chỉ thêm việc vận hành. Ghi trong báo cáo là hướng mở rộng.\n- Bỏ Spark: DuckDB tự ghi Iceberg qua catalog REST; Spark cần JVM và nhiều RAM cho vài trăm MB. Bảng Iceberg vẫn đọc được bằng Spark, Trino khi dữ liệu lớn lên.\n- Bỏ Hudi: DuckDB không có extension Hudi chính thức (chỉ bản cộng đồng, chỉ đọc); cập nhật dày, CDC không phải nhu cầu ở đây: https://duckdb.org/docs/2.0/core_extensions/overview.html\n- Thay Kafka bằng phát lại theo gameweek (bước 13): không có nguồn sự kiện thật, và CUSUM, SPRT vốn chạy theo từng gameweek.\nHạ tầng và dữ liệu chạy tay được trước, phương pháp sau; đừng viết pipeline trên hạ tầng chưa thử khói.\nSystem design của dự án đặt sẵn hồ sơ thật (dữ liệu dưới 1 GB \"Fits in memory\", dạng bảng, theo tuần, tự host, miễn phí, lối Scheduled pipeline) và chọn sẵn kiến trúc: Lakehouse, Medallion, Batch ELT. Hồ sơ gợi ý thư mục dự án + một database, đúng với cỡ dữ liệu; trang Architecture ghi điều đó, không chặn: đồ án chọn lakehouse vì môn chấm quản trị dữ liệu (giao dịch, snapshot, catalog, lineage), không vì dung lượng.\nApply path đi theo kiến trúc đã chọn: MinIO + Apache Iceberg + Apache Polaris ở Raw storage, dbt, dbt tests, DuckDB on Iceberg, Apache Superset, Docker Compose. Ingestion ra Prefect; cron đủ cho một người, đổi ở khâu ấy nếu muốn.",
+          "notes": "Stack của nhóm, cắt cho một người với dữ liệu dưới 1 GB:\n- Giữ: Docker Compose, object storage, Parquet, Iceberg, Polaris (metastore Postgres), dbt + DuckDB, Superset.\n- Bỏ Kubernetes: một máy, vài người xem; k8s chỉ thêm việc vận hành. Ghi trong báo cáo là hướng mở rộng.\n- Bỏ Spark: DuckDB tự ghi Iceberg qua catalog REST; Spark cần JVM và nhiều RAM cho vài trăm MB. Bảng Iceberg vẫn đọc được bằng Spark, Trino khi dữ liệu lớn lên.\n- Bỏ Hudi: DuckDB không có extension Hudi chính thức (chỉ bản cộng đồng, chỉ đọc); cập nhật dày, CDC không phải nhu cầu ở đây: https://duckdb.org/docs/2.0/core_extensions/overview.html\n- Thay Kafka bằng phát lại theo gameweek (bước 13): không có nguồn sự kiện thật, và CUSUM, SPRT vốn chạy theo từng gameweek.\nHạ tầng và dữ liệu chạy tay được trước, phương pháp sau; đừng viết pipeline trên hạ tầng chưa thử khói.\nSystem design của dự án đặt sẵn hồ sơ thật (dữ liệu dưới 1 GB \"Fits in memory\", dạng bảng, theo tuần, tự host, miễn phí, lối Scheduled pipeline), kiến trúc đã chọn (Lakehouse, Medallion, Batch ELT) và stack của nhóm ở từng khâu: Beautiful Soup cho HTML cùng file CSV, JSON tĩnh; cron chạy script nạp; MinIO + Apache Iceberg + Apache Polaris ở Raw storage; dbt + DuckDB; dbt tests; DuckDB on Iceberg; Apache Superset; Docker Compose trên máy của bạn. Monitoring là log của mỗi lượt nạp và kết quả dbt tests; Training, Tracking, Serving là Not needed. Mọi khâu đã quyết sẵn: Apply path không đổi khâu nào; đổi công cụ ở trang của khâu ấy.\nVới cỡ dữ liệu này hồ sơ gợi ý thư mục dự án + một database; đồ án chọn lakehouse vì môn chấm quản trị dữ liệu (giao dịch, snapshot, catalog, lineage), không vì dung lượng.",
           "subs": [
             {
               "title": "Quyết định stack và phiên bản (Stack ADR)",
