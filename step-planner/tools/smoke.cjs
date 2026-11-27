@@ -3788,6 +3788,44 @@ const check = (name, ok, detail = '') => {
     }
   });
 
+  /* Dự án trống vừa tạo: cái thêm đầu tiên nhận số ngay (không chấm, không Renumber); chưa có bước con thì không có dòng tiến độ 0/0. */
+  await section('Dự án trống mới', async () => {
+    const { ctx, page } = await seeded(1280, 800, null);
+    await page.waitForSelector('#start:not([hidden]) .tpl[data-tpl="blank"]');
+    await page.click('#start .tpl[data-tpl="blank"]');
+    await page.waitForSelector('#app:not([hidden])');
+    const st = () => page.evaluate(() => ({ overall: !document.getElementById('overall').hidden, fresh: document.querySelectorAll('#board .fresh').length,
+      nums: [...document.querySelectorAll('#board .step-num, #board .num')].map((e) => e.textContent).join(' '), ren: !document.getElementById('renumber-btn').hidden }));
+    const s0 = await st();
+    for (const t of ['A', 'B']) {
+      await page.click('#add-step');
+      await page.fill('#step-form [name="title"]', t);
+      await page.keyboard.press('Enter');
+      await page.waitForSelector('#dlg-step', { state: 'hidden' });
+    }
+    const s1 = await st();
+    for (const t of ['a1', 'a2']) {
+      await page.click('.step[data-step]:first-child [data-act="add-sub"]');
+      await page.fill('#sub-form [name="title"]', t);
+      await page.keyboard.press('Enter');
+      await page.waitForSelector('#dlg-sub', { state: 'hidden' });
+    }
+    const s2 = await st();
+    check('dự án trống mới: chưa bước con thì ẩn tiến độ chung; bước, bước con thêm vào nhận số ngay, không chấm, không Renumber',
+      !s0.overall && !s1.overall && s2.overall && s1.nums === '1 2' && s2.nums === '1 1 2 2' && !s1.fresh && !s2.fresh && !s1.ren && !s2.ren, JSON.stringify({ s0, s1, s2 }));
+    await page.focus('.card[data-sub] [data-act="edit-sub"]');
+    await page.keyboard.press('Alt+ArrowRight');
+    const s3 = await st();
+    await page.click('.step[data-step]:last-child [data-act="add-sub"]');
+    await page.fill('#sub-form [name="title"]', 'b1');
+    await page.keyboard.press('Enter');
+    await page.waitForSelector('#dlg-sub', { state: 'hidden' });
+    const s4 = await st();
+    check('dự án trống mới: dời lần đầu thì số đứng yên như mọi dự án (Renumber hiện, cái thêm sau có chấm)', s3.ren && s3.nums === '1 2 1 2' && s4.fresh === 1,
+      JSON.stringify({ s3, s4 }));
+    await ctx.close();
+  });
+
   /* ── Dữ liệu lưu bị hỏng ── */
   await section('Dữ liệu lưu bị hỏng', async () => { // thân giữ thụt lề cũ cho dễ gộp
   const bad = await browser.newContext();

@@ -34,6 +34,8 @@ export function render(opt = {}) {
   renderNudge();
   if (!ws) { renderStart(); return; }
   const o = overall(ws);
+  /* Chưa có bước con: không có tiến độ để nêu (tránh "0/0 done · 0%" và bảy số 0). */
+  $('overall').hidden = !ws.steps.some((/** @type {any} */ s) => s.subs.length);
   $('overall-text').textContent = `${o.done}/${o.total} done · ${o.pct}%`;
   $('overall-bar').style.width = o.pct + '%';
   renderLegend(ws);
