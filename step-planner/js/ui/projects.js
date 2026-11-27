@@ -5,12 +5,12 @@
      ui/state.js, ui/toast.js. */
 import { fold, overall } from '../core/board.js';
 import { plural } from '../core/io.js';
-import { freshCopy, fromTemplate, oneLine, uniqueName } from '../core/model.js';
+import { freshCopy, fromTemplate, oneLine, tplGroups, uniqueName } from '../core/model.js';
 import { ask, showDlg } from './dialogs.js';
 import { $, barFill, fmtDate, h, icon } from './dom.js';
 import { resetFilters } from './filter.js';
 import { render } from './render.js';
-import { BLANK_TPL, tplInfo } from './start.js';
+import { BLANK_TPL, GROUP_LABEL, tplInfo } from './start.js';
 import { commit, curId, findWs, persist, refocus, setCur, state, templates } from './state.js';
 import { hideToast } from './toast.js';
 
@@ -56,9 +56,13 @@ function setWsTab(tab) {
 function openWs() {
   renderWsList();
   const fs = $('ws-new-templates');
-  fs.replaceChildren(h('legend', {}, 'Template'), ...(templates.length ? templates : [BLANK_TPL]).map((t, i) =>
-    h('label', { class: 'tpl', title: t.description || null }, h('input', { type: 'radio', name: 'tpl', value: t.id, checked: i === 0 }), tplInfo(t),
-      h('span', { class: 'tpl-check', 'aria-hidden': 'true' }, icon('check')))));
+  // Hai nhóm như màn đầu (PLAN-039), mỗi nhóm một fieldset; mọi radio cùng tên nên ↑ ↓ đi xuyên nhóm. Chọn sẵn mẫu đầu tiên.
+  const groups = tplGroups(templates.length ? templates : [BLANK_TPL]);
+  fs.replaceChildren(h('legend', {}, 'Template'), ...groups.map((g, gi) => h('fieldset', { class: 'tpl-list tpl-pick' },
+    h('legend', { class: 'tpl-group-h' }, GROUP_LABEL[g.key]),
+    g.items.map((t, i) => h('label', { class: 'tpl', title: t.description || null },
+      h('input', { type: 'radio', name: 'tpl', value: t.id, checked: gi === 0 && i === 0 }), tplInfo(t),
+      h('span', { class: 'tpl-check', 'aria-hidden': 'true' }, icon('check')))))));
   $('ws-new-name').value = '';
   setWsTab(state.workspaces.length ? 'open' : 'new');
   showDlg($('dlg-ws'));

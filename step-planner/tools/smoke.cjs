@@ -81,9 +81,24 @@ const check = (name, ok, detail = '') => {
   const { ctx, page } = await open(1280, 900, { permissions: ['clipboard-read', 'clipboard-write'] });
   await page.waitForSelector('#start:not([hidden]) .tpl');
   const tplIds = await page.$$eval('#start .tpl', (bs) => bs.map((b) => b.dataset.tpl));
-  const jsonIds = (await page.evaluate(async () => (await (await fetch('data/templates.json')).json()).templates)).map((t) => t.id);
-  const nTpl = jsonIds.length;
-  check('màn đầu: đủ mẫu, đúng thứ tự như templates.json', tplIds.join() === jsonIds.join() && nTpl >= 5, tplIds.join(','));
+  const jsonTpls = await page.evaluate(async () => (await (await fetch('data/templates.json')).json()).templates);
+  const nTpl = jsonTpls.length;
+  // Hai nhóm (PLAN-039): mẫu chung (không `group`) trước, dự án cụ thể sau; mỗi nhóm giữ thứ tự của templates.json.
+  const genIds = jsonTpls.filter((t) => !t.group).map((t) => t.id), specIds = jsonTpls.filter((t) => t.group === 'specific').map((t) => t.id);
+  check('màn đầu: đủ mẫu, mẫu chung trước rồi dự án cụ thể, mỗi nhóm đúng thứ tự templates.json',
+    tplIds.join() === [...genIds, ...specIds].join() && nTpl >= 5 && specIds.length > 0, tplIds.join(','));
+  const groups = await page.$$eval('#start-templates > section', (ss) => ss.map((sc) => ({
+    h: sc.querySelector(':scope > h3')?.textContent, labelled: document.getElementById(sc.getAttribute('aria-labelledby'))?.parentElement === sc,
+    ids: [...sc.querySelectorAll(':scope > ul > li > button.tpl')].map((b) => b.dataset.tpl), loose: sc.querySelectorAll('.tpl').length })));
+  check('màn đầu: hai phần có đầu mục (General templates, Specific projects), mỗi thẻ một mục danh sách; it5425-sports ở phần hai',
+    groups.length === 2 && groups[0].h === 'General templates' && groups[1].h === 'Specific projects' && groups.every((g) => g.labelled && g.ids.length === g.loose)
+    && groups[0].ids.join() === genIds.join() && groups[1].ids.join() === specIds.join() && groups[1].ids.includes('it5425-sports')
+    && groups[0].ids.includes('blank'), JSON.stringify(groups));
+  // Bàn phím: Tab đi qua mọi thẻ mẫu theo thứ tự nhóm, từ phần một sang phần hai.
+  await page.focus('#start .tpl');
+  const tabbed = [await page.evaluate(() => document.activeElement.dataset.tpl)];
+  for (let i = 1; i < nTpl; i++) { await page.keyboard.press('Tab'); tabbed.push(await page.evaluate(() => document.activeElement.dataset.tpl)); }
+  check('màn đầu: Tab tới mọi thẻ mẫu của cả hai phần, đúng thứ tự', tabbed.join() === [...genIds, ...specIds].join(), tabbed.join(','));
   // Nút đóng hộp không lưu ghi "Close": "Cancelled" là tên một trạng thái.
   const closeBtns = await page.$$eval('dialog button', (bs) => bs.filter((b) => b.textContent.trim() && (b.hasAttribute('data-close') || /^Cancel/.test(b.textContent.trim())))
     .map((b) => b.textContent.trim()));
@@ -96,7 +111,7 @@ const check = (name, ok, detail = '') => {
   // Tạo từ từng mẫu: số bước và bước con khớp templates.json.
   const tplData = await page.evaluate(async () => (await (await fetch('data/templates.json')).json()).templates);
   await page.click('#start .tpl[data-tpl="crisp-dm"]');
-  for (const id of tplIds.filter((x) => x !== 'crisp-dm')) {
+  for (const id of jsonTpls.map((t) => t.id).filter((x) => x !== 'crisp-dm')) { // thứ tự file: mẫu trống tạo sau cùng, là dự án đang mở
     await page.click('#ws-btn');
     await page.click('#ws-tab-new');
     await page.check(`#ws-new-templates input[value="${id}"]`);
@@ -128,6 +143,14 @@ const check = (name, ok, detail = '') => {
   const wsn = await page.evaluate((sc) => ({ top: sc > 0 ? document.getElementById('ws-pane-new').scrollTop : -1, create: document.getElementById('ws-create').hidden, list: document.getElementById('ws-pane-open').hidden,
     checked: document.querySelectorAll('#ws-new-templates .tpl:has(input:checked)').length, cards: document.querySelectorAll('#ws-new-templates .tpl').length }), scrolled);
   await page.setViewportSize({ width: 1280, height: 900 });
+  const wsg = await page.$$eval('#ws-new-templates > fieldset', (fs) => fs.map((f) => ({ h: f.querySelector(':scope > legend')?.textContent,
+    ids: [...f.querySelectorAll('input[name="tpl"]')].map((x) => x.value) })));
+  await page.focus(`#ws-new-templates input[value="${genIds.at(-1)}"]`);
+  await page.keyboard.press('ArrowDown');
+  const crossed = await page.evaluate(() => [document.activeElement.value, document.querySelector('#ws-new-templates input:checked')?.value]);
+  check('hộp Dự án: mẫu chia hai nhóm như màn đầu; ↓ từ mẫu chung cuối sang dự án cụ thể đầu',
+    wsg.length === 2 && wsg[0].h === 'General templates' && wsg[1].h === 'Specific projects' && wsg[0].ids.join() === genIds.join()
+    && wsg[1].ids.join() === specIds.join() && crossed.every((v) => v === specIds[0]), JSON.stringify({ wsg, crossed }));
   check('hộp Dự án: tab Open, dòng đang mở đánh dấu, hành động gọn; tab New có Create và thẻ mẫu',
     wsd.open === 'true' && wsd.rows === nTpl && wsd.count === String(nTpl) && wsd.now === 1 && wsd.create && wsd.acts === 'Rename,Duplicate,Delete' && wsd.dupName === 0
     && !wsn.create && wsn.list && wsn.checked === 1 && wsn.top === 0 && wsn.cards === nTpl, JSON.stringify({ wsd, wsn }));
@@ -1323,6 +1346,14 @@ const check = (name, ok, detail = '') => {
   /* ── Điện thoại 390px ── */
   await section('Điện thoại 390px', async () => { // thân giữ thụt lề cũ cho dễ gộp
   const m = await open(390, 844, { isMobile: true, hasTouch: true });
+  await m.page.waitForSelector('#start:not([hidden]) .tpl');
+  const startM = await m.page.$$eval('#start-templates > section', (ss) => ss.map((sc) => {
+    const h = sc.querySelector('h3').getBoundingClientRect(), b = [...sc.querySelectorAll('.tpl')].map((x) => x.getBoundingClientRect());
+    return { h: h.height > 0, one: b.every((r) => Math.abs(r.left - b[0].left) < 1 && Math.abs(r.width - b[0].width) < 1),
+      inside: b.every((r) => r.left >= 16 - 1 && r.right <= innerWidth - 16 + 1) };
+  }));
+  check('390px màn đầu: hai phần mẫu, mỗi phần một cột trong lề 16px, không tràn ngang', startM.length === 2 && startM.every((x) => x.h && x.one && x.inside)
+    && (await hOverflow(m.page)) === 0, JSON.stringify(startM));
   await m.page.click('#start .tpl[data-tpl="it5425-sports"]');
   await m.page.waitForSelector('.step');
   const mob = await m.page.evaluate(() => {

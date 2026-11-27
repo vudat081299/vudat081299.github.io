@@ -31,6 +31,16 @@
 .tab-n { margin-left: var(--s1); font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-3); }
 /* Thẻ mẫu (màn đầu và hộp Dự án): tên, mô tả, số bước; trong hộp là radio phủ cả thẻ, dấu chọn ở góc. */
 .tpl-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--tpl-min)), 1fr)); gap: var(--s3); }
+.tpl-list > li { display: flex; min-width: 0; }
+.tpl-list > li > .tpl { flex: 1 1 auto; min-width: 0; }
+/* Nhóm mẫu (PLAN-039): đầu mục rồi lưới thẻ. Màn đầu: section > h3 + ul; hộp Dự án: fieldset > legend + lưới. */
+.tpl-groups { display: flex; flex-direction: column; gap: var(--s5); min-width: 0; }
+.tpl-group { display: flex; flex-direction: column; gap: var(--s3); min-width: 0; }
+.tpl-group-h, .dlg legend.tpl-group-h:not(.sr) {
+  margin: 0; padding: 0; font: 500 var(--fs-xs)/var(--lh-tight) var(--mono); letter-spacing: var(--track); text-transform: uppercase; color: var(--ink-3);
+}
+.dlg legend.tpl-group-h:not(.sr) { margin-bottom: var(--s3); }
+.dlg .tpl-groups { gap: var(--s4); }
 .tpl {
   position: relative; display: flex; flex-direction: column; gap: var(--s2); padding: var(--s4); text-align: left;
   font: inherit; color: inherit; cursor: pointer;
