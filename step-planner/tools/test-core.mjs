@@ -1374,7 +1374,7 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   check('io: đầu vào treo → bad, nêu tên đầu ra và bên giao', st(b, 'u') === 'bad/none'
     && eq(b.get('u').inWhy, [{ kind: 'held', id: 'ow', name: 'model', from: 'W', at: '', par: false }]));
   check('io: đầu ra chỉ được dùng bởi liên kết treo → bad, nêu nơi dùng', st(b, 'w') === 'none/bad'
-    && eq(b.get('w').outWhy, [{ kind: 'held', id: 'ow', name: 'model', to: ['U'], par: [], live: 0 }]));
+    && eq(b.get('w').outWhy, [{ kind: 'held', id: 'ow', name: 'model', to: ['U'], par: [], live: 0, at: '' }]));
   check('io: bước — mọi đầu ra của bước con không có nơi nhận đang nối → bad', st(b, 't2') === 'none/bad');
   /* Đầu ra không ai dùng; một bước con nhiều đầu ra, một cái không ai dùng; đầu vào trỏ tới đầu ra đã xoá (chưa đọc lại). */
   const c = normWorkspace({ steps: [
@@ -1383,11 +1383,11 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   c.steps[1].subs[0].ins.push('gone');
   c.steps[1].ins.push('gone2');
   const cs = io(c);
-  check('io: đầu ra không ai dùng → bad "unused"', st(cs, 'z') === 'none/bad' && eq(cs.get('z').outWhy, [{ kind: 'unused', id: 'oz', name: 'lonely', to: [], par: [], live: 0 }]));
+  check('io: đầu ra không ai dùng → bad "unused"', st(cs, 'z') === 'none/bad' && eq(cs.get('z').outWhy, [{ kind: 'unused', id: 'oz', name: 'lonely', to: [], par: [], live: 0, at: '' }]));
   check('io: nhiều đầu ra, một cái không ai dùng → bad, nêu đúng cái ấy', st(cs, 'x') === 'none/bad' && eq(cs.get('x').outWhy.map((w) => w.name), ['b']));
   check('io: đầu vào trỏ tới đầu ra không còn → bad "missing"', st(cs, 'y') === 'bad/none' && eq(cs.get('y').inWhy, [{ kind: 'missing', id: 'gone', name: '', from: '', at: '', par: false }]));
-  check('io: bước — một đầu ra (của bước con) được dùng → ok, vẫn nêu cái chưa dùng', st(cs, 'v1') === 'none/ok'
-    && eq(cs.get('v1').outWhy.map((w) => w.name), ['spec', 'b']));
+  check('io: bước — đối xứng với đầu vào: một đầu ra (của bước, của bước con) chưa dùng → bad dù đầu ra khác được dùng, ghi bước con',
+    st(cs, 'v1') === 'none/bad' && eq(cs.get('v1').outWhy.map((w) => [w.name, w.at]), [['spec', ''], ['b', 'X']]), JSON.stringify(cs.get('v1')));
   check('io: bước — đầu vào riêng của bước trỏ tới đầu ra không còn → bad', st(cs, 'v2') === 'bad/bad' && cs.get('v2').inWhy[0].kind === 'missing');
   /* Bước nhận đầu ra của bước con đứng sau nó → đầu vào của bước treo. */
   const d = io(normWorkspace({ steps: [{ id: 'k1', title: 'K1', ins: ['om'] }, { id: 'k2', title: 'K2', subs: [{ id: 'm', title: 'M', outs: [{ id: 'om', name: 'm' }] }] }] }));
@@ -1410,7 +1410,7 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
     { id: 'h2', title: 'H2', subs: [{ id: 'o', title: 'O', outs: [{ id: 'oo', name: 'table' }] }, { id: 'o2', title: 'O2', outs: [{ id: 'oo2', name: 'side' }] }] },
     { id: 'h3', title: 'H3', subs: [{ id: 'hh', title: 'H', ins: ['oo', 'oo2'] }] }] }));
   check('io: đầu ra có một nơi dùng treo, một nơi còn nối → bước con bad, nêu nơi treo và live', st(f, 'o') === 'none/bad'
-    && eq(f.get('o').outWhy, [{ kind: 'held', id: 'oo', name: 'table', to: ['G'], par: [], live: 1 }]) && st(f, 'g') === 'bad/none' && st(f, 'hh') === 'ok/none');
+    && eq(f.get('o').outWhy, [{ kind: 'held', id: 'oo', name: 'table', to: ['G'], par: [], live: 1, at: '' }]) && st(f, 'g') === 'bad/none' && st(f, 'hh') === 'ok/none');
   check('io: bước — một đầu ra có nơi dùng treo → bad dù đầu ra khác còn nối', st(f, 'h2') === 'none/bad' && eq(f.get('h2').outWhy.map((w) => w.name), ['table'])
     && st(f, 'o2') === 'none/ok');
   /* Đầu vào của bước gộp bước con: chỉ nhận trong bước → none; bước con nhận từ bước trước → ok; treo giữa hai bước con cùng
@@ -1437,7 +1437,7 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
     && eq((ph.gaps.get('p1')?.get(0) || []).map((p) => p.to.h.id), ['pr']));
   check('io: cùng ô song song — bên nhận và bên giao đều bad, ghi là song song', st(ps, 'pq') === 'bad/none' && st(ps, 'pp') === 'none/bad'
     && eq(ps.get('pq').inWhy, [{ kind: 'held', id: 'op', name: 'cut', from: 'P', at: '', par: true }])
-    && eq(ps.get('pp').outWhy, [{ kind: 'held', id: 'op', name: 'cut', to: ['Q'], par: ['Q'], live: 1 }]) && st(ps, 'p1') === 'bad/bad');
+    && eq(ps.get('pp').outWhy, [{ kind: 'held', id: 'op', name: 'cut', to: ['Q'], par: ['Q'], live: 1, at: '' }]) && st(ps, 'p1') === 'bad/bad');
   pw.steps[0].subs[1].par = false;
   check('io: tách khỏi ô song song, đứng sau bên giao → nối lại, ok', st(io(pw), 'pq') === 'ok/none' && st(io(pw), 'pp') === 'none/ok');
   /* Đầu ra cuối (final): không ai dùng là ổn; có nơi dùng treo vẫn lỗi; đầu ra thường không ai dùng vẫn lỗi; bước gộp. */
@@ -1452,15 +1452,17 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
     && eq(fs.get('fa').finals, ['report']));
   check('io: đầu ra thường không ai dùng cạnh đầu ra cuối → bước con vẫn bad, chỉ nêu cái thường', st(fs, 'fb') === 'none/bad'
     && eq(fs.get('fb').outWhy.map((w) => w.name), ['notes']));
-  check('io: bước — mọi đầu ra là đầu ra cuối không ai dùng (hay có một cái ổn) → ok', st(fs, 'f1') === 'none/ok');
+  check('io: bước — một bước con có đầu ra thường không ai dùng → bad dù cạnh đầu ra cuối, ghi bước con', st(fs, 'f1') === 'none/bad'
+    && eq(fs.get('f1').outWhy.map((w) => [w.name, w.at]), [['notes', 'B']]) && eq(fs.get('f1').finals, ['report', 'slides']));
   check('io: đầu ra cuối có nơi dùng treo → bad như đầu ra khác', st(fs, 'fd') === 'none/bad' && eq(fs.get('fd').outWhy.map((w) => w.kind), ['held'])
     && !fs.get('fd').finals.length && st(fs, 'f2') === 'bad/bad');
   check('io: đầu ra thường không ai dùng → bad (cả bước)', st(fs, 'fe') === 'none/bad' && st(fs, 'f3') === 'none/bad');
   check('io: đầu ra cuối có nơi dùng đang nối → ok', st(fs, 'fg') === 'none/ok' && st(fs, 'fh') === 'ok/none' && !fs.get('fg').finals.length);
+  fw.steps[0].subs[1].outs.pop();
+  check('io: bước — mọi đầu ra là đầu ra cuối không ai dùng → ok', st(io(fw), 'f1') === 'none/ok' && st(io(fw), 'fb') === 'none/ok');
   fw.steps[0].subs[0].outs[0].final = false;
-  check('io: bỏ final → đầu ra không ai dùng lại bad; bước còn một đầu ra cuối không ai dùng thì vẫn ok', st(io(fw), 'fa') === 'none/bad' && st(io(fw), 'f1') === 'none/ok');
-  fw.steps[0].subs[1].outs[0].final = false;
-  check('io: bước — bỏ final hết → bad', st(io(fw), 'f1') === 'none/bad');
+  check('io: bỏ final → đầu ra không ai dùng lại bad, ở bước con và ở bước (ghi bước con)', st(io(fw), 'fa') === 'none/bad' && st(io(fw), 'f1') === 'none/bad'
+    && eq(io(fw).get('f1').outWhy.map((w) => w.at), ['A']));
 }
 
 /* ── Ảnh chụp gợi ý của System design (tools/design-snapshot.json) ──

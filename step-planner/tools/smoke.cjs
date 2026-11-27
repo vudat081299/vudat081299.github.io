@@ -3328,7 +3328,7 @@ const check = (name, ok, detail = '') => {
     const labelOf = (sel) => ip.$eval(sel, (el) => ({ a: el.getAttribute('aria-label'), t: el.title, role: el.getAttribute('role') }));
     const io0 = await ioOf();
     const want0 = { gA: 'none/ok', gI: 'ok/none', gN: '-', gB: 'none/bad', gC: 'ok/ok', gD: 'bad/none', gE: 'none/bad', gF: 'ok/none', gG: 'none/bad',
-      g1: 'none/ok', g2: 'bad/ok', g3: 'ok/bad', g4: 'none/bad' };
+      g1: 'none/bad', g2: 'bad/ok', g3: 'ok/bad', g4: 'none/bad' };
     const dIn = await labelOf('.card[data-sub="gD"] .io-dot.in');
     const eOut = await labelOf('.card[data-sub="gE"] .io-dot.out');
     const bOut = await labelOf('.card[data-sub="gB"] .io-dot.out');
@@ -3353,9 +3353,11 @@ const check = (name, ok, detail = '') => {
       && parseFloat(lBad.r) === 0 && clear(lNone.bg) && lNone.t === 'none' && parseFloat(lNone.bw) < parseFloat(lOk.bw), JSON.stringify(looks));
     const s4Out = await labelOf('.step[data-step="g4"] .step-top .io-dot.out');
     const gGOut = await labelOf('.card[data-sub="gG"] .io-dot.out');
-    check('đầu vào / đầu ra: chấm đầu ra của bước nói "không đầu ra nào của bước được dùng", của thẻ thì nêu từng đầu ra',
-      s4Out.a === 'Output: broken. None of the step\'s outputs is used: "z.bin" is not used by any later step; "z2.bin" is not used by any later step'
-      && gGOut.a === 'Output: broken. "z.bin" is not used by any later step; "z2.bin" is not used by any later step', JSON.stringify({ s4Out, gGOut }));
+    const s1Out = await labelOf('.step[data-step="g1"] .step-top .io-dot.out');
+    check('đầu vào / đầu ra: chấm đầu ra của bước lỗi khi một đầu ra của bước con lỗi (đối xứng với đầu vào), nêu từng đầu ra kèm bước con; của thẻ thì nêu từng đầu ra',
+      s4Out.a === 'Output: broken. "Dead end": "z.bin" is not used by any later step; "Dead end": "z2.bin" is not used by any later step'
+      && s1Out.a === 'Output: broken. "Spec": "unused.md" is not used by any later step'
+      && gGOut.a === 'Output: broken. "z.bin" is not used by any later step; "z2.bin" is not used by any later step', JSON.stringify({ s4Out, s1Out, gGOut }));
     check('đầu vào / đầu ra: chấm có nhãn đọc được, nói vì sao; mũi tên chỉ để trang trí',
       dIn.role === 'img' && dIn.a === dIn.t && /^Input: broken\. "late\.json" on hold: "Late producer" now comes after this$/.test(dIn.a)
       && /^Output: broken\. "late\.json" is only used by "Late input", which now comes before it \(on hold\)$/.test(eOut.a)
@@ -3741,16 +3743,17 @@ const check = (name, ok, detail = '') => {
     await page.click('#sub-form button[type="submit"]');
     await waitTo(page, 'chấm đầu ra ổn sau khi bật Final', () => document.querySelector('.card[data-sub="fx"] .io')?.dataset.ioOut === 'ok');
     const w1 = await cur(page);
-    const d1 = { sub: await dot('.card[data-sub="fx"] .io'), title: await page.$eval('.card[data-sub="fx"] .io-dot.out', (e) => e.title) };
-    check('đầu ra cuối: Enter trên ô Final không gửi hộp; Space bật; Lưu thì chấm đầu ra không ai dùng từ đỏ thành ổn, nêu "Final"',
-      d0.sub === 'bad' && d0.step === 'ok' && stillOpen && ticked && d1.sub === 'ok' && /Final: "report"/.test(d1.title) && w1.steps[1].subs[0].outs[0].final === true,
+    const d1 = { sub: await dot('.card[data-sub="fx"] .io'), step: await dot('.step[data-step="f2"] .step-top .io'), title: await page.$eval('.card[data-sub="fx"] .io-dot.out', (e) => e.title) };
+    check('đầu ra cuối: Enter trên ô Final không gửi hộp; Space bật; Lưu thì chấm đầu ra không ai dùng của thẻ và của bước từ đỏ thành ổn, nêu "Final"',
+      d0.sub === 'bad' && d0.step === 'bad' && stillOpen && ticked && d1.sub === 'ok' && d1.step === 'ok' && /Final: "report"/.test(d1.title) && w1.steps[1].subs[0].outs[0].final === true,
       JSON.stringify({ d0, stillOpen, ticked, d1 }));
     await page.click(subSel('fx', 'edit-sub'));
     await page.click('#sub-hand .out-row [data-k="final"]');
     await page.click('#sub-form button[type="submit"]');
     await waitTo(page, 'chấm đầu ra đỏ lại sau khi bỏ Final', () => document.querySelector('.card[data-sub="fx"] .io')?.dataset.ioOut === 'bad');
     const w2 = await cur(page);
-    check('đầu ra cuối: bỏ Final, Lưu thì chấm đỏ lại', (await dot('.card[data-sub="fx"] .io')) === 'bad' && w2.steps[1].subs[0].outs[0].final === false);
+    check('đầu ra cuối: bỏ Final, Lưu thì chấm của thẻ và của bước đỏ lại', (await dot('.card[data-sub="fx"] .io')) === 'bad'
+      && (await dot('.step[data-step="f2"] .step-top .io')) === 'bad' && w2.steps[1].subs[0].outs[0].final === false);
     await page.click('.step[data-step="f2"] [data-act="hand-out"]');
     const list = await page.$eval('#hand-list', (l) => ({ tag: l.querySelectorAll('.final-tag').length, t: l.textContent }));
     await page.keyboard.press('Escape');

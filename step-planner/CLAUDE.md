@@ -110,8 +110,8 @@
 - Thẻ và đầu bước hiện trạng thái đầu vào, đầu ra (`ioStatus`, PLAN-025): ổn, lỗi, không có; không có cả hai thì không hiện.
   Đầu vào lỗi: treo hoặc trỏ tới đầu ra không còn. Bước gộp đầu vào của bước con: có đầu vào khi nó hay một bước con nhận từ
   ngoài bước; lỗi khi một đầu vào nào lỗi, kể cả nhận trong bước. Đầu ra lỗi: không có nơi nhận đang nối (chỉ nơi nhận treo cũng tính;
-  đầu ra `final` không ai dùng thì ổn) hoặc có một nơi nhận treo. Bước con lỗi khi một đầu ra lỗi; bước gộp đầu ra của bước con, lỗi khi
-  không đầu ra nào ổn (có nơi nhận đang nối, hay `final` không ai dùng) hoặc một đầu ra có nơi nhận treo.
+  đầu ra `final` không ai dùng thì ổn) hoặc có một nơi nhận treo. Bước con lỗi khi một đầu ra lỗi; bước gộp đầu ra của bước con, đối
+  xứng với đầu vào: lỗi khi một đầu ra nào lỗi, chữ "why" ghi tên bước con giữ nó.
 - Hàng j nhận từ hàng trước nó (`handoffs().rows`): mũi tên trên hàng j. Ô k + 1 nhận từ ô trước nó cùng hàng (`gaps`): một ô
   mũi tên trước ô k + 1. Nút giữa mũi tên ghi tên đầu ra; bấm thì nêu từng cặp. Chảy ngược hay cùng ô: chỉ trong hộp sửa.
 - Danh sách nêu đường dẫn, hợp đồng, bên giao / nơi dùng, mỗi bên nhảy tới được.

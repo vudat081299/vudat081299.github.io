@@ -54,37 +54,33 @@ const inLine = (w) => (w.at ? `${quoteFull(w.at)}: ` : '') + (w.kind === 'missin
 /** "A, B, which now come before it": nơi dùng treo, theo lý do (đứng trước / cùng ô song song). @param {string[]} names @param {boolean} par */
 const heldBy = (names, par) => `${names.map(quoteFull).join(', ')}, which ${par ? (names.length > 1 ? 'run' : 'runs') + ' in parallel with'
   : 'now ' + (names.length > 1 ? 'come' : 'comes') + ' before'} it`;
-/** Câu của một đầu ra lỗi: không ai dùng, hay có nơi dùng treo (chỉ những nơi ấy, hay thêm nơi dùng khác còn nối). @param {OutWhy} w */
+/** Câu của một đầu ra lỗi: không ai dùng, hay có nơi dùng treo (chỉ những nơi ấy, hay thêm nơi dùng khác còn nối); của bước con
+ * (chấm đầu bước) thì mở bằng tên bước con. @param {OutWhy} w */
 function outLine(w) {
-  if (w.kind === 'unused') return `${quoteFull(w.name)} is not used by any later step`;
+  const at = w.at ? `${quoteFull(w.at)}: ` : '';
+  if (w.kind === 'unused') return `${at}${quoteFull(w.name)} is not used by any later step`;
   const before = w.to.filter((t) => !w.par.includes(t));
   const parts = [before.length && heldBy(before, false), w.par.length && heldBy(w.par, true)].filter(Boolean);
-  return `${quoteFull(w.name)} is ${w.live ? '' : 'only '}used by ${parts.join(', and ')} (on hold)`;
+  return `${at}${quoteFull(w.name)} is ${w.live ? '' : 'only '}used by ${parts.join(', and ')} (on hold)`;
 }
 const cap = (/** @type {string} */ t) => t.charAt(0).toUpperCase() + t.slice(1);
-/** Chữ của chấm đầu ra. Bước: lỗi vì nơi dùng treo thì nêu chúng, đầu ra chưa ai dùng ghi thêm sau; lỗi vì không đầu ra nào được
- * dùng thì nêu cả. @param {IoStatus} s @param {boolean} step */
-function outText(s, step) {
+/** Chữ của chấm đầu ra: ổn kèm các đầu ra cuối chưa ai dùng; lỗi thì nêu từng đầu ra lỗi (của bước: cả của bước con). @param {IoStatus} s */
+function outText(s) {
   if (s.out === 'none') return 'Output: none';
-  const held = s.outWhy.filter((w) => w.kind === 'held'), unused = s.outWhy.filter((w) => w.kind === 'unused');
-  const notYet = unused.length ? `. Not used yet: ${unused.map((w) => quoteFull(w.name)).join(', ')}` : '';
-  const finals = s.finals.length ? `. Final: ${s.finals.map(quoteFull).join(', ')}` : '';
-  if (s.out === 'ok') return `Output: OK${finals}${notYet}`;
-  if (!step) return `Output: broken. ${s.outWhy.map(outLine).join('; ')}`;
-  if (held.length) return `Output: broken. ${held.map(outLine).join('; ')}${notYet}`;
-  return `Output: broken. ${unused.length > 1 ? 'None of the step\'s outputs is used: ' : ''}${unused.map(outLine).join('; ')}`;
+  if (s.out === 'ok') return `Output: OK${s.finals.length ? `. Final: ${s.finals.map(quoteFull).join(', ')}` : ''}`;
+  return `Output: broken. ${s.outWhy.map(outLine).join('; ')}`;
 }
-/** Nhãn đọc được của hai chấm (tên, title): trạng thái và vì sao, không dựa vào màu. @param {IoStatus} s @param {boolean} step */
-function ioLabels(s, step) {
+/** Nhãn đọc được của hai chấm (tên, title): trạng thái và vì sao, không dựa vào màu. @param {IoStatus} s */
+function ioLabels(s) {
   const input = s.in === 'none' ? 'Input: none'
     : s.in === 'ok' ? 'Input: OK' : `Input: broken. ${cap(s.inWhy.map(inLine).join('; '))}`;
-  return { input, output: outText(s, step) };
+  return { input, output: outText(s) };
 }
 /** Hai chấm đầu vào → đầu ra của một bước / bước con (trái: đầu vào, phải: đầu ra, mũi tên trang trí ở giữa). Không có cả
- * hai: không vẽ gì. @param {IoStatus|undefined} s @param {boolean} step */
-export function ioDots(s, step) {
+ * hai: không vẽ gì. @param {IoStatus|undefined} s */
+export function ioDots(s) {
   if (!s || (s.in === 'none' && s.out === 'none')) return null;
-  const { input, output } = ioLabels(s, step);
+  const { input, output } = ioLabels(s);
   const dot = (/** @type {string} */ side, /** @type {string} */ st, /** @type {string} */ label) =>
     h('span', { class: `io-dot ${side} ${st}`, role: 'img', 'aria-label': label, title: label });
   return h('span', { class: 'io', 'data-io-in': s.in, 'data-io-out': s.out, title: `${input}\n${output}` },
