@@ -14,7 +14,7 @@
   background: var(--surface); border: var(--line-w) solid var(--line); border-radius: var(--r); padding: var(--s3);
   box-shadow: var(--shadow-1); transition: border-color var(--dur) var(--ease);
 }
-@media (hover: hover) { .card[data-sub]:hover { border-color: var(--ink-4); } }
+@media (hover: hover) { .card[data-sub]:not(.next):hover { border-color: var(--ink-4); } }
 .card.open { max-height: none; }
 .card.next { border-color: var(--accent-line); box-shadow: inset 0 0 0 var(--line-w) var(--accent-line), var(--shadow-1); }
 /* Hàng đầu chật (số, "Tiếp theo", nhãn kẹp, chip dài) thì chip xuống dòng, không bẻ chữ. */

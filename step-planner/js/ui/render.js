@@ -27,6 +27,8 @@ export function render(opt = {}) {
   $('app').hidden = !ws;
   $('start').hidden = !!ws;
   $('ws-name').textContent = ws ? ws.name : 'No project';
+  /* Tên dài bị cắt "…": title nêu đủ tên (tên đọc của nút đã có đủ, từ chữ của nó). */
+  $('ws-btn').title = ws ? `${ws.name}\nSwitch, create or rename projects` : 'Switch, create or rename projects';
   document.title = ws ? `${ws.name} — Data Science Step Planner` : 'Data Science Step Planner';
   $('overall').hidden = !ws;
   renderNudge();

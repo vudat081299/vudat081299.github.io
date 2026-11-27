@@ -2,7 +2,8 @@
 
 /* ── Đầu dự án: tên (bấm để đổi), tiến độ chung, chú giải trạng thái có số đếm ── */
 .proj { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--s3) var(--s5); flex-wrap: wrap; padding: var(--s5) 0 var(--s4); }
-.proj-name { min-width: 0; flex: 1 1 var(--proj-name-min); }
+/* Cùng một dòng: tên lấy gần hết chỗ trống. Tiến độ xuống dòng riêng: nó lấp cả dòng, thanh chạy tới mép nội dung. */
+.proj-name { min-width: 0; flex: 1000 1 var(--proj-name-min); }
 .proj-k { font: 500 var(--fs-xs)/var(--lh-tight) var(--mono); color: var(--ink-3); letter-spacing: .04em; text-transform: uppercase; margin-bottom: var(--s1); }
 .top-name { font: inherit; min-width: 0; }
 .ws-btn {
@@ -14,7 +15,7 @@
 .ws-btn svg.i { color: var(--ink-3); }
 @media (hover: hover) { .ws-btn:hover { background: var(--chip); } }
 .ws-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
-.overall { display: flex; flex-direction: column; gap: var(--s2); flex: 0 1 auto; min-width: 0; }
+.overall { display: flex; flex-direction: column; gap: var(--s2); flex: 1 1 auto; min-width: 0; }
 .overall-row { display: flex; align-items: center; gap: var(--s3); }
 .overall-text { font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-2); white-space: nowrap; }
 .overall-row .bar-prog { flex: 1 1 auto; min-width: calc(var(--card-w) * .6); }
@@ -24,7 +25,7 @@
 @media (max-width: 640px) {
   .proj { padding: var(--s4) 0 var(--s3); }
   .ws-btn { font-size: var(--fs-xl); }
-  .overall { flex: 1 1 100%; }
+  .overall { flex-basis: 100%; }
 }
 
 /* ── Thanh tiến độ (đầu dự án, mỗi bước) ── */
