@@ -2290,7 +2290,7 @@ const check = (name, ok, detail = '') => {
   });
 
   /* ── System design, chọn kiến trúc (PLAN-042): chọn / bỏ bằng chuột và phím, focus ở lại, vòng focus chỉ cho phím; lưu qua tải
-   * lại; Apply path theo kiến trúc chọn. ── */
+   * lại; Apply path theo kiến trúc chọn; mẫu it5425-sports ra stack lakehouse; 390px không tràn ngang. ── */
   await section('System design, chọn kiến trúc', async () => {
     const { ctx: cx, page: cp } = await open(1280, 900);
     await cp.click('#start .tpl[data-tpl="crisp-dm"]');
@@ -2347,6 +2347,35 @@ const check = (name, ok, detail = '') => {
     JSON.stringify({ notes, hard, sub }));
     await cx.close();
 
+    /* Mẫu it5425-sports: kiến trúc chọn sẵn, dòng nhắc hồ sơ nói khác, Apply path ra stack lakehouse của mẫu. */
+    for (const [w, hh] of [[1280, 900], [390, 844]]) {
+      const { ctx: ix, page: ip } = await open(w, hh);
+      await ip.click('#start .tpl[data-tpl="it5425-sports"]');
+      await ip.waitForSelector('#sd-fig svg');
+      await ip.click('#sd-arch [data-arch-open]');
+      await ip.waitForSelector('#dlg-sd[open] .sd-fam');
+      const st = await ip.evaluate(() => ({
+        checked: Object.fromEntries([...document.querySelectorAll('#sd-pane input[data-arch-pick]:checked')].map((i) => [i.dataset.archPick, i.value])),
+        info: [...document.querySelectorAll('#sd-pane [data-arch-info]')].map((x) => x.dataset.archInfo),
+        preset: !!document.querySelector('#sd-pane [data-preset="it5425-sports"]'),
+        over: document.getElementById('dlg-sd').scrollWidth - document.getElementById('dlg-sd').clientWidth
+          + document.getElementById('sd-pane').scrollWidth - document.getElementById('sd-pane').clientWidth }));
+      check(`mẫu it5425-sports ${w}px: kiến trúc chọn sẵn (lakehouse, medallion, batch ELT), dòng nhắc hồ sơ nói khác ở lưu trữ và xử lý, không tràn ngang`,
+        st.checked.storage === 'lakehouse' && st.checked.layers === 'medallion' && st.checked.processing === 'batch-elt' && st.checked.ml === ''
+        && st.info.includes('storage') && st.info.includes('processing') && st.preset && st.over <= 2, JSON.stringify(st));
+      if (w === 1280) {
+        await ip.click('#sd-nav [data-at="0"]');
+        await ip.click('#sd-pane [data-apply]');
+        const d = (await cur(ip)).design;
+        const got = Object.fromEntries(Object.entries(d.stages).map(([k, v]) => [k, v.skip ? 'skip' : v.pick.join('+')]));
+        check('mẫu it5425-sports: Apply path ra MinIO + Iceberg + Polaris, dbt, dbt tests, DuckDB trên Iceberg, Superset, Docker Compose',
+          got.raw === 'minio+iceberg+polaris' && got.process === 'dbt' && got.validate === 'dbt-tests' && got.store === 'duckdb-iceberg'
+          && got.app === 'superset' && got.package === 'docker-compose', JSON.stringify(got));
+        await ip.keyboard.press('Escape');
+        check('mẫu it5425-sports: sau Apply path không có cảnh báo trên trang', await ip.$eval('#sd-warns', (u) => u.hidden));
+      }
+      await ix.close();
+    }
   });
 
   /* ── Sơ đồ System design như khung nhìn: nhịp dọc của hộp (Handoffs, "Show other options"), nhãn bàn giao trên đường nối,

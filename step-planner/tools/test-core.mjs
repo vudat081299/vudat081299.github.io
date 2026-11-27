@@ -919,7 +919,7 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   const PRESET_ARCH = {
     'crisp-dm': { storage: null, layers: null, processing: null, app: null, ml: null },
     'big-data-ds': { storage: 'lakehouse', layers: 'medallion', processing: 'streaming' },
-    'it5425-sports': { storage: null, layers: 'medallion', processing: 'batch-etl', app: 'static-report', ml: null },
+    'it5425-sports': { storage: 'files-db', layers: 'medallion', processing: 'batch-etl', app: 'static-report', ml: null },
     'stats-report': { storage: 'files-db', layers: 'two-layers', processing: 'batch-etl', app: 'static-report' },
     'app-feature': { app: 'client-server' },
     'data-pipeline': { layers: 'medallion', processing: 'batch-etl', app: 'static-report' },
@@ -927,7 +927,10 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   };
   /* Kiến trúc mẫu chọn sẵn (PLAN-042): chỉ khi đúng ý mẫu — lakehouse-oss là lakehouse có medallion; it5425-sports cố ý dựng
    * lakehouse cho dữ liệu nhỏ để học quản trị dữ liệu. Mẫu khác để trống. */
-  const PRESET_CHOSEN = {};
+  const PRESET_CHOSEN = {
+    'it5425-sports': { storage: 'lakehouse', layers: 'medallion', processing: 'batch-elt' },
+    'lakehouse-oss': { storage: 'lakehouse', layers: 'medallion' },
+  };
   const stageOf = (id) => cat.stages.find((x) => x.id === id);
   /** Phương án hợp hồ sơ, kể cả hồ sơ mà kiến trúc người dùng chọn đứng trên (PLAN-042). */
   const fitsIn = (d, sid, o) => rankOptions(stageOf(sid), effProfile(cat, d), pathOf(cat, d), stageLists(cat, d, sid, false)).find((x) => x.opt.id === o).ok;
@@ -969,30 +972,22 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
     check(`mẫu đặt sẵn ${t.id}: Apply path không làm luật báo, không chọn phương án lệch hồ sơ (trừ câu kiến trúc chọn đứng trên), Ingestion và Processing theo kiến trúc xử lý, Raw storage và Analytical store theo kiến trúc lưu trữ (chọn, hay gợi ý)`, !bad.length && Object.keys(prof).length > 0, bad.join(' | '));
   }
   const pick = (id, sid) => plans[id]?.stages[sid]?.skip ? 'skip' : plans[id]?.stages[sid]?.pick.join('+');
-  check('mẫu đặt sẵn lakehouse-oss: Apply path chọn công cụ tự host — MinIO, dbt + dbt test, DuckDB trên Iceberg',
-    pick('lakehouse-oss', 'raw') === 'minio' && pick('lakehouse-oss', 'process') === 'dbt' && pick('lakehouse-oss', 'validate') === 'dbt-tests'
-    && pick('lakehouse-oss', 'store') === 'duckdb-iceberg'
+  check('mẫu đặt sẵn lakehouse-oss: Apply path chọn công cụ tự host — MinIO + Iceberg + Polaris, dbt + dbt test, DuckDB trên Iceberg, Superset',
+    pick('lakehouse-oss', 'raw') === 'minio+iceberg+polaris' && pick('lakehouse-oss', 'process') === 'dbt' && pick('lakehouse-oss', 'validate') === 'dbt-tests'
+    && pick('lakehouse-oss', 'store') === 'duckdb-iceberg' && pick('lakehouse-oss', 'app') === 'superset'
     && Object.entries(plans['lakehouse-oss'].stages).every(([sid, st]) => st.pick.every((o) => !stageOf(sid).options.find((x) => x.id === o).fit.selfhost || fitOf(stageOf(sid).options.find((x) => x.id === o), { selfhost: 'yes' }).ok)),
   JSON.stringify(plans['lakehouse-oss']?.stages));
   check('mẫu đặt sẵn stats-report: Apply path ra thư mục dự án, notebook + báo cáo, không phục vụ model; nhóm model thành không cần',
     pick('stats-report', 'raw') === 'project-folder' && pick('stats-report', 'app') === 'notebook-report' && pick('stats-report', 'serve') === 'skip'
     && archAdvice(cat, plans['stats-report']).find((a) => a.family === 'ml').id === '');
-  /* it5425-sports để trống câu cỡ dữ liệu có chủ ý (ghi chú bước 3 của mẫu): Apply path ra phần lakehouse tự host mà danh mục cho
-   * phép với dữ liệu chưa nói cỡ; Iceberg, Polaris, dbt, Superset người dùng tự thêm theo ghi chú. */
-  check('mẫu đặt sẵn it5425-sports: Apply path ra MinIO, DuckDB, Docker Compose, mọi phương án tự host; giao diện để trống',
-    pick('it5425-sports', 'raw') === 'minio' && pick('it5425-sports', 'process') === 'duckdb' && pick('it5425-sports', 'package') === 'docker-compose'
-    && pick('it5425-sports', 'store') === 'parquet-duckdb' && !pick('it5425-sports', 'app')
+  /* it5425-sports (PLAN-041, PLAN-042): dữ liệu nhỏ, trả lời thật; kiến trúc chọn sẵn là lakehouse tự host, batch ELT, nên Apply
+   * path ra stack của mẫu: MinIO + Iceberg + Polaris, dbt, dbt test, DuckDB trên Iceberg, Superset, Docker Compose; không luật báo. */
+  check('mẫu đặt sẵn it5425-sports: Apply path ra MinIO + Iceberg + Polaris, dbt, dbt test, DuckDB trên Iceberg, Superset, Docker Compose; mọi phương án tự host',
+    pick('it5425-sports', 'raw') === 'minio+iceberg+polaris' && pick('it5425-sports', 'process') === 'dbt' && pick('it5425-sports', 'validate') === 'dbt-tests'
+    && pick('it5425-sports', 'store') === 'duckdb-iceberg' && pick('it5425-sports', 'app') === 'superset' && pick('it5425-sports', 'package') === 'docker-compose'
+    && !warnings(cat, plans['it5425-sports']).filter((w) => !w.caveat).length
     && Object.entries(plans['it5425-sports'].stages).every(([sid, st]) => st.pick.every((o) => fitOf(stageOf(sid).options.find((x) => x.id === o), { selfhost: 'yes' }).ok)),
-  JSON.stringify(plans['it5425-sports']?.stages));
-  { // Thêm tay theo ghi chú bước 3 của mẫu: lakehouse đủ (Iceberg + Polaris, dbt, dbt tests, DuckDB on Iceberg, Superset, cron), không luật báo.
-    const P = (...ids) => ({ pick: ids, skip: false, own: '', note: '' });
-    const d = { ...plans['it5425-sports'], stages: { ...plans['it5425-sports'].stages, raw: P('minio', 'iceberg', 'polaris'), process: P('dbt'),
-      validate: P('dbt-tests'), store: P('duckdb-iceberg', 'parquet-duckdb'), app: P('superset'), ingest: P('cron') } };
-    const arch = Object.fromEntries(archAdvice(cat, d).map((a) => [a.family, a.id]));
-    check('mẫu it5425-sports: thêm tay theo ghi chú thì không luật báo (trừ nhắc cách dùng), kiến trúc ra lakehouse, batch ELT',
-      !warnings(cat, d).filter((w) => !w.caveat).length && arch.storage === 'lakehouse' && arch.processing === 'batch-elt',
-    warnings(cat, d).map((w) => w.id).join(',') + ' ' + JSON.stringify(arch));
-  }
+  JSON.stringify(Object.fromEntries(Object.keys(plans['it5425-sports'].stages).map((k) => [k, pick('it5425-sports', k)]))));
   check('mẫu đặt sẵn data-pipeline: Apply path có lịch chạy và cổng chất lượng', !!pick('data-pipeline', 'ingest') && !!pick('data-pipeline', 'validate'));
   const bd = effProfile(cat, fromTemplate(templates.find((t) => t.id === 'big-data-ds')).design);
   check('mẫu đặt sẵn big-data-ds: khâu xử lý gợi ý công cụ stream của cụm, Spark MLlib hợp hồ sơ, pandas thì không',
@@ -1738,6 +1733,12 @@ function designSnapshot(cat) {
     const a = fam(normDesign({ path: 'demo' }), 'app');
     return a.chosen === 'monolith' && a.viaPath && !stageLists(cat, normDesign({ path: 'demo' }), 'serve', false).length;
   })());
+  /* Mẫu đặt sẵn kiến trúc: dự án mới mang kiến trúc của mẫu; đổi một kiến trúc thì không còn là bộ đặt sẵn. */
+  const t = templates.find((x) => x.id === 'it5425-sports');
+  const tw = fromTemplate(t), pre = presetDesign(t);
+  check('kiến trúc chọn: mẫu it5425-sports đặt sẵn lakehouse, medallion, batch ELT; đổi kiến trúc thì thôi là bộ đặt sẵn',
+    eq(tw.design.arch, { storage: 'lakehouse', layers: 'medallion', processing: 'batch-elt' }) && isPreset(tw.design, pre)
+    && !isPreset({ ...tw.design, arch: { ...tw.design.arch, processing: 'batch-etl' } }, pre) && !isPreset({ ...tw.design, arch: {} }, pre));
 }
 
 if (fails) { console.log(`test-core: ${fails} LỖI`); process.exit(1); }

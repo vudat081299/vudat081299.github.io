@@ -44,5 +44,3 @@ Làm xong mục nào thì xoá mục ấy.
 - Luật `free-host-sleeps` ghi Render "dậy mất khoảng một phút": là thời gian, không phải giá hay hạn mức; có hợp luật
   "không ghi số" của danh mục không?
 - Luật GPU trên host không có GPU: chưa thêm vì tài liệu Streamlit Community Cloud, Render không nói rõ. Có cần không?
-- Mẫu `it5425-sports` để trống câu "How much data?" (dữ liệu dưới 1 GB): trả lời thật thì System design gợi ý thư mục dự án
-  + một database thay lakehouse. Giữ trống và dặn tự thêm Iceberg, Polaris, dbt, Superset sau Apply path, hay trả lời "Fits in memory"?

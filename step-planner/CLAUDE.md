@@ -146,7 +146,7 @@
   điều phối sau; bước cuối kiểm tuân thủ medallion. Ghi chú về giấy phép, tình trạng bảo trì công cụ ghi kèm link nguồn.
 - `app-feature` không theo chuẩn; việc phát hành theo tài liệu App Store Connect, Google Play, Flutter (link ở ghi chú bước).
 - `it5425-sports` (PLAN-040, PLAN-041): mẫu viết tay, không sinh từ trang đồ án, theo mọi luật chung ở trên. Không tên người.
-  Số liệu, link, lý do bỏ công cụ ở ghi chú bước chỉ lấy từ nguồn đã mở; cỡ dữ liệu trong `design` để trống có chủ ý (ghi chú bước 3).
+  Số liệu, link, lý do bỏ công cụ ở ghi chú bước chỉ lấy từ nguồn đã mở; hồ sơ trả lời thật cỡ dữ liệu, kiến trúc chọn sẵn ra stack lakehouse (`test-core` kiểm Apply path).
 
 ## System design (`data/system-design.json`, PLAN-016)
 
