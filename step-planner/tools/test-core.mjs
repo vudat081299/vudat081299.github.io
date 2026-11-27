@@ -42,10 +42,6 @@ const heldStrict = (ws) => {
 };
 
 const tplPath = fileURLToPath(new URL('../data/templates.json', import.meta.url));
-/* Ngoại lệ được ghi của luật "mở mẫu ra không đầu ra nào lỗi": tên bước, bước con. it5425-sports sinh từ trang đồ án; trang không
- * nêu đầu ra của P0 (README, requirements, .gitignore) và notebook EDA của P3 làm đầu vào của pha sau (P4 ghi "Kết quả EDA" bằng
- * chữ), mà chúng không phải sản phẩm cuối. */
-const IO_EXCEPT = { 'it5425-sports': ['P0 · Khởi động', 'P3 · EDA'] };
 const { templates } = JSON.parse(readFileSync(tplPath, 'utf8'));
 
 { // Nhóm mẫu (PLAN-039): mẫu chung trước (cả mẫu trống), dự án cụ thể sau; mỗi nhóm giữ thứ tự của file, nhóm rỗng bị bỏ.
@@ -76,7 +72,7 @@ for (const t of templates) {
   const late = heldStrict(ws);
   check(`mẫu ${t.id}: không đầu vào treo, kể cả cùng ô với bên giao`, !late.length, late.join(' | '));
   const io = CORE.ioStatus(ws);
-  const red = ws.steps.flatMap((s) => [s, ...s.subs]).filter((x) => io.get(x.id).out === 'bad').map((x) => x.title).filter((n) => !(IO_EXCEPT[t.id] || []).includes(n));
+  const red = ws.steps.flatMap((s) => [s, ...s.subs]).filter((x) => io.get(x.id).out === 'bad').map((x) => x.title);
   check(`mẫu ${t.id}: mở mẫu ra không đầu ra nào lỗi (sản phẩm cuối có final)`, !red.length, red.join(' | '));
 }
 { // Bộ kiểm treo chặt bắt được: cùng ô, bước nhận từ bước con của nó, hàng sau, đầu ra không có; ô trước, hàng trước thì sạch.
@@ -921,7 +917,7 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   const PRESET_ARCH = {
     'crisp-dm': { storage: null, layers: null, processing: null, app: null, ml: null },
     'big-data-ds': { storage: 'lakehouse', layers: 'medallion', processing: 'streaming' },
-    'it5425-sports': { storage: 'files-db', layers: 'two-layers', processing: 'batch-etl', app: 'monolith' },
+    'it5425-sports': { storage: null, layers: 'medallion', processing: 'batch-etl', app: 'static-report', ml: null },
     'stats-report': { storage: 'files-db', layers: 'two-layers', processing: 'batch-etl', app: 'static-report' },
     'app-feature': { app: 'client-server' },
     'data-pipeline': { layers: 'medallion', processing: 'batch-etl', app: 'static-report' },
@@ -972,8 +968,22 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   check('mẫu đặt sẵn stats-report: Apply path ra thư mục dự án, notebook + báo cáo, không phục vụ model; nhóm model thành không cần',
     pick('stats-report', 'raw') === 'project-folder' && pick('stats-report', 'app') === 'notebook-report' && pick('stats-report', 'serve') === 'skip'
     && archAdvice(cat, plans['stats-report']).find((a) => a.family === 'ml').id === '');
-  check('mẫu đặt sẵn it5425-sports: Apply path ra Streamlit đọc thư mục dự án, xử lý bằng pandas',
-    pick('it5425-sports', 'app') === 'streamlit' && pick('it5425-sports', 'raw') === 'project-folder' && pick('it5425-sports', 'process') === 'pandas');
+  /* it5425-sports để trống câu cỡ dữ liệu có chủ ý (ghi chú bước 3 của mẫu): Apply path ra phần lakehouse tự host mà danh mục cho
+   * phép với dữ liệu chưa nói cỡ; Iceberg, Polaris, dbt, Superset người dùng tự thêm theo ghi chú. */
+  check('mẫu đặt sẵn it5425-sports: Apply path ra MinIO, DuckDB, Docker Compose, mọi phương án tự host; giao diện để trống',
+    pick('it5425-sports', 'raw') === 'minio' && pick('it5425-sports', 'process') === 'duckdb' && pick('it5425-sports', 'package') === 'docker-compose'
+    && pick('it5425-sports', 'store') === 'parquet-duckdb' && !pick('it5425-sports', 'app')
+    && Object.entries(plans['it5425-sports'].stages).every(([sid, st]) => st.pick.every((o) => fitOf(stageOf(sid).options.find((x) => x.id === o), { selfhost: 'yes' }).ok)),
+  JSON.stringify(plans['it5425-sports']?.stages));
+  { // Thêm tay theo ghi chú bước 3 của mẫu: lakehouse đủ (Iceberg + Polaris, dbt, dbt tests, DuckDB on Iceberg, Superset, cron), không luật báo.
+    const P = (...ids) => ({ pick: ids, skip: false, own: '', note: '' });
+    const d = { ...plans['it5425-sports'], stages: { ...plans['it5425-sports'].stages, raw: P('minio', 'iceberg', 'polaris'), process: P('dbt'),
+      validate: P('dbt-tests'), store: P('duckdb-iceberg', 'parquet-duckdb'), app: P('superset'), ingest: P('cron') } };
+    const arch = Object.fromEntries(archAdvice(cat, d).map((a) => [a.family, a.id]));
+    check('mẫu it5425-sports: thêm tay theo ghi chú thì không luật báo (trừ nhắc cách dùng), kiến trúc ra lakehouse, batch ELT',
+      !warnings(cat, d).filter((w) => !w.caveat).length && arch.storage === 'lakehouse' && arch.processing === 'batch-elt',
+    warnings(cat, d).map((w) => w.id).join(',') + ' ' + JSON.stringify(arch));
+  }
   check('mẫu đặt sẵn data-pipeline: Apply path có lịch chạy và cổng chất lượng', !!pick('data-pipeline', 'ingest') && !!pick('data-pipeline', 'validate'));
   const bd = effProfile(cat, fromTemplate(templates.find((t) => t.id === 'big-data-ds')).design);
   check('mẫu đặt sẵn big-data-ds: khâu xử lý gợi ý công cụ stream của cụm, Spark MLlib hợp hồ sơ, pandas thì không',

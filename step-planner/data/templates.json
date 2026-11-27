@@ -908,419 +908,909 @@
     {
       "id": "it5425-sports",
       "group": "specific",
-      "name": "Đồ án IT5425 — giám sát thể thao (Premier League)",
-      "output": "Đồ án môn",
-      "description": "Chọn khi làm đồ án môn Data Management and Visualization (IT5425). Các giai đoạn P0–P8 lấy từ trang đồ án. Làm một mình: Skip việc chia vai, họp tuần; app demo và slide tuỳ yêu cầu nộp.",
+      "name": "Giám sát chấn thương Premier League (Sports Injury Monitoring)",
+      "output": "Đồ án môn IT5425 · demo",
+      "description": "Chọn khi làm đồ án môn IT5425 Data Management and Visualization, đề \"Outlier detection, ANOM, CUSUM, SPRT – applications in sports\", một mình, từ đề tài tới bản demo chạy thật. Dữ liệu: chấn thương, phút thi đấu, lịch của cả 20 CLB Premier League qua vài mùa gần đây. Stack lakehouse mã nguồn mở tự chạy (Docker Compose, object storage, Iceberg + Polaris, dbt + DuckDB, Superset), cắt cho một người; lý do ghi ở ghi chú từng bước. Thiếu thời gian: Skip bước phát lại gameweek và app Streamlit.",
       "design": {
-        "path": "demo",
+        "path": "pipeline",
         "profile": {
-          "size": "small",
           "kind": "tables",
-          "fresh": "once",
+          "fresh": "batch",
+          "latency": "batch",
           "ai": "none",
           "users": "few",
+          "budget": "free",
+          "selfhost": "yes",
           "gpu": "no"
         }
       },
       "steps": [
         {
-          "title": "P0 · Khởi động",
-          "goal": "Đề bài, trang 1 → repo có README.md, requirements.txt, .gitignore; bảng phân vai.",
-          "doneWhen": "Cả bảy người clone được repo, chạy được python -c \"import pandas, duckdb, streamlit\", và mỗi người đã gộp một pull request.",
-          "notes": "Vai: Trưởng nhóm & kể chuyện, Dữ liệu & lineage, EDA & ngoại lai, ANOM, CUSUM, SPRT, Demo & tích hợp\nCông cụ: git, GitHub, Python 3, VS Code hoặc Colab\nTrang đồ án, pha P0: https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-build.html#lich\nCâu hỏi gửi giảng viên, thư xin phép: https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-project.html#can-xac-nhan",
+          "title": "Đề tài, câu hỏi và phạm vi (Problem Framing)",
+          "goal": "Biết đồ án trả lời câu hỏi nào, bằng bốn phương pháp nào, trên dữ liệu nào, nộp gì; giảng viên đã trả lời những điều chỉ giảng viên biết.",
+          "doneWhen": "docs/questions.md có một câu hỏi cho mỗi phương pháp; docs/scope.md ghi CLB, mùa, sản phẩm nộp, việc không làm; câu trả lời của giảng viên ghi lại kèm ngày.",
+          "notes": "Môn IT5425 Data Management and Visualization, đề \"Outlier detection, ANOM, CUSUM, SPRT – applications in sports\". Làm một mình: không chia vai, không họp tuần; mọi quyết định ghi vào Decision log của dự án này.\nĐồ án phải cho thấy ba phần của môn: bốn phương pháp thống kê (bước 8–11), quản trị dữ liệu: lakehouse, mô hình dữ liệu, kiểm chất lượng, lineage (bước 3–6), trực quan hoá: dashboard (bước 12). Khái niệm big data nói thật ở bước 14: dữ liệu nhỏ, kiến trúc chọn vì quản trị dữ liệu.\nLập trường cả đồ án: chỉ phân tích liên hệ, không nhân quả (association ≠ causation); không dùng kết quả để quyết định về một cầu thủ.\nRepo tham khảo cách làm (medallion, mô hình dữ liệu có grain, kiểm chất lượng, point-in-time, test, CI, log, trang giới hạn); chỉ để học cách làm, không phải đề bài: https://github.com/ivanrivasgr/Sports_Injury_Risk_Intelligence",
           "subs": [
             {
-              "title": "Gửi giảng viên các câu hỏi ở trang 1, mục Cần xác nhận."
+              "title": "Viết câu hỏi cho từng phương pháp (Analysis Questions)",
+              "doneWhen": "Bốn câu hỏi, mỗi câu một phương pháp, có grain và đơn vị đo: cầu thủ × mùa (ngoại lai), CLB × mùa (ANOM), CLB × gameweek (CUSUM, SPRT).",
+              "notes": "Gợi ý:\n- Ngoại lai: cầu thủ-mùa nào chấn thương nhiều bất thường so với số phút đá; bản ghi nào là lỗi dữ liệu?\n- ANOM: trong một mùa, CLB nào có tỉ lệ chấn thương khác hẳn mức chung của giải? ANOM chỉ ra nhóm nào khác, ANOVA chỉ nói có khác.\n- CUSUM: tỉ lệ của một CLB có vừa tăng lên mức mới không, từ gameweek nào?\n- SPRT: mùa này một CLB đang ở mức nền hay mức cao, kết luận sớm nhất có thể?\nĐơn vị chung: chấn thương trên 1000 giờ thi đấu Premier League = số chấn thương / (phút / 60 / 1000).\nTử số gồm cả chấn thương khi tập và ở giải khác, mẫu số chỉ có phút PL: đây là chỉ số để so sánh, không phải incidence theo định nghĩa đồng thuận của Fuller và cs. (2006): https://pubmed.ncbi.nlm.nih.gov/16505073/",
+              "outs": [
+                {
+                  "key": "questions",
+                  "name": "Bốn câu hỏi phân tích",
+                  "ref": "docs/questions.md",
+                  "note": "Mỗi câu: phương pháp, grain, tử số, mẫu số; bảng gold và biểu đồ về sau trả lời đúng câu này"
+                }
+              ]
             },
             {
-              "title": "Email football-data.co.uk xin phép dùng dữ liệu cho đồ án, theo thư soạn sẵn (trang dữ liệu mời liên hệ khi có câu hỏi về cách dùng)."
+              "title": "Hỏi giảng viên điều chỉ giảng viên trả lời (Lecturer Questions)",
+              "doneWhen": "Đã gửi và có trả lời: hạn nộp, dạng demo, tiêu chí chấm, có được dùng dữ liệu phái sinh từ Transfermarkt không, có được tự scrape không, repo nộp có phải public không.",
+              "notes": "Câu hỏi soạn cho kế hoạch trước (lợi thế sân nhà) vẫn dùng được phần hạn nộp, dạng demo, tiêu chí chấm, repo public: https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-project.html#can-xac-nhan\nCâu riêng của đề chấn thương: nguồn chấn thương (salimt, withqwerty) là dữ liệu phái sinh từ Transfermarkt, không có licence rõ; có được dùng cho đồ án không?\nKhông được thì dùng nhãn \"vắng mặt\" suy từ FPL (đang đá chính rồi 0 phút nhiều vòng liền), ghi rõ là proxy, không phải chấn thương.\nChưa có trả lời: để thẻ Pending, ghi \"Waiting on: giảng viên\"; bước 2, 3 làm tiếp được.",
+              "outs": [
+                {
+                  "key": "lecturer-answers",
+                  "name": "Câu trả lời của giảng viên",
+                  "ref": "docs/lecturer-answers.md",
+                  "note": "Câu hỏi, câu trả lời, ngày; phạm vi và bộ nguồn dựa vào đây"
+                }
+              ]
             },
             {
-              "title": "Chốt phương án (A, B hay C)."
-            },
-            {
-              "title": "Tạo repo theo cây repo."
-            },
-            {
-              "title": "Cài Python, VS Code (hoặc dùng Colab), git; tạo venv rồi cài requirements.txt."
-            },
-            {
-              "title": "Giao bảy vai."
-            },
-            {
-              "title": "Hẹn một buổi họp mỗi tuần."
-            }
-          ],
-          "outs": [
-            {
-              "key": "readme-md",
-              "name": "README.md",
-              "ref": "README.md"
-            },
-            {
-              "key": "requirements-txt",
-              "name": "requirements.txt",
-              "ref": "requirements.txt"
-            },
-            {
-              "key": "gitignore",
-              "name": ".gitignore",
-              "ref": ".gitignore"
+              "title": "Chốt phạm vi và sản phẩm nộp (Scope)",
+              "doneWhen": "docs/scope.md: cả 20 CLB, mùa 2021-22 tới 2024-25 (thêm 2025-26 cắt ở ngày tải nếu cần), bốn phương pháp, sản phẩm nộp (demo, báo cáo, slide), việc không làm (học máy dự đoán, phút tập, phút cúp).",
+              "notes": "Bốn mùa 2021-22 → 2024-25 có đủ ở mọi nguồn của bộ đề xuất (bước 2); 2025-26 có ở FPL, football-data, withqwerty nhưng bộ chấn thương salimt chỉ tới khoảng 12/2025 (đếm thử 27/11/2026).\nKhông huấn luyện mô hình học máy dự đoán chấn thương:\n- nhãn thiếu có hệ thống và thiếu khác nhau giữa CLB: Hoenig và cs. (2022) thấy dữ liệu Transfermarkt thấp hơn dữ liệu y khoa, nghiêng về chấn thương nặng, không khuyên dùng cho dịch tễ học trừ chấn thương nặng (doi:10.1016/j.jsams.2021.11.038);\n- đặc trưng có sẵn chỉ là phút thi đấu và lịch; không có tải tập, GPS, tiền sử y khoa, những thứ quyết định nguy cơ của một người;\n- đề chấm bốn phương pháp thống kê; mô hình hộp đen lấy thời gian của phần được chấm và dễ rò rỉ thời gian.\nThay vào đó: GLM Poisson hay nhị thức âm (negative binomial) có offset là exposure, cho số chấn thương kỳ vọng (bước 8). Đó là mô hình thống kê, giải thích được từng hệ số.",
+              "outs": [
+                {
+                  "key": "scope",
+                  "name": "Phạm vi đồ án",
+                  "ref": "docs/scope.md",
+                  "note": "CLB, mùa, phương pháp, sản phẩm nộp, việc không làm; mọi bước sau đối chiếu"
+                }
+              ],
+              "ins": [
+                "questions",
+                "lecturer-answers"
+              ]
             }
           ]
         },
         {
-          "title": "P1 · Tìm hiểu và thu thập",
-          "goal": "football-data.co.uk, notes.txt → data/raw/*.csv (không commit), data/manifest.csv, docs/data-card.md, docs/lineage.md.",
-          "doneWhen": "Chạy python -m src.download trên máy trống thì tải lại đúng các file, mã SHA-256 khớp manifest.",
-          "notes": "Vai: Dữ liệu & lineage\nCông cụ: Python: requests, hashlib\nTrang đồ án, pha P1: https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-build.html#lich",
+          "title": "Danh mục nguồn và giấy phép (Source Catalogue and Licensing)",
+          "goal": "Biết mỗi nguồn cho gì, grain và khoá nào, phủ mùa nào, được dùng tới đâu; chọn một bộ nguồn đủ 20 CLB, nhiều mùa, có HTML, CSV, JSON thật.",
+          "doneWhen": "docs/sources.md có mọi nguồn đã xét với loại (thật, proxy, một phần), grain, khoá, licence, thiên lệch; docs/adr/sources.md chốt bộ nguồn; không file dữ liệu thô nào nằm trong git.",
+          "notes": "Khuôn danh mục mượn từ trang Data Sources của repo tham khảo: mỗi nguồn có id, loại REAL / PROXY / PARTIAL, độ trễ, giới hạn, thiên lệch: https://github.com/ivanrivasgr/Sports_Injury_Risk_Intelligence\nRepo nộp bài có thể public: không commit file thô của Transfermarkt, FPL, football-data. Commit script tải, seed tự viết, bảng tổng hợp nhỏ; .gitignore chặn data/, landing/, *.duckdb, *.parquet.\nThiên lệch chung: chỉ thấy chấn thương được công bố; dữ liệu do cộng đồng nhập; ngày bắt đầu là ngày công bố hay ghi nhận, không phải lúc chấn thương.",
           "subs": [
             {
-              "title": "Đọc notes.txt để biết nghĩa từng cột."
+              "title": "Lập danh mục nguồn (Source Catalogue)",
+              "doneWhen": "Mỗi nguồn một dòng: trường, phủ mùa, định dạng, grain, khoá cầu thủ, khoá CLB, cỡ, thiên lệch.",
+              "notes": "Nguồn đã mở (27/11/2026):\n- Chấn thương: salimt/football-datasets, player_injuries.csv (player_id là ID Transfermarkt, season_name, injury_reason, from_date, end_date, days_missed, games_missed; không có cột CLB): https://github.com/salimt/football-datasets\n- Trạng thái theo vòng và CLB: withqwerty/availability-data, JSON mỗi CLB × mùa (status injured, suspended…; chỉ số vòng, không có ngày): https://github.com/withqwerty/availability-data\n- Exposure: vaastav/Fantasy-Premier-League, merged_gw.csv (phút từng cầu thủ × trận, kickoff_time UTC), players_raw.csv, fixtures.csv: https://github.com/vaastav/Fantasy-Premier-League\n- Trận, trọng tài, thẻ: football-data.co.uk, file E0.csv mỗi mùa: https://football-data.co.uk/notes.txt\n- HTML có licence rõ: trang mùa giải Wikipedia (bảng sân, đổi HLV), CC BY-SA 4.0: https://en.wikipedia.org/wiki/2024%E2%80%9325_Premier_League\n- Nối ID cầu thủ FPL ↔ Transfermarkt: withqwerty/reep, CC0, bản cuối đã đóng băng: https://github.com/withqwerty/reep\n- Tuỳ chọn: toạ độ sân từ Wikidata (CC0); thời tiết Open-Meteo (CC BY 4.0, miễn phí cho phi thương mại, phải đặt link nguồn cạnh chỗ hiển thị): https://open-meteo.com/en/licence\nKhông nguồn nào ở trên phát hành Parquet: Parquet là thứ pipeline ghi ra. Đừng ghi \"nguồn có Parquet\".",
+              "outs": [
+                {
+                  "key": "source-catalogue",
+                  "name": "Danh mục nguồn",
+                  "ref": "docs/sources.md",
+                  "note": "Mỗi nguồn: loại, trường, grain, khoá, mùa, cỡ, thiên lệch; script tải và Silver đọc lại"
+                }
+              ],
+              "ins": [
+                "scope"
+              ]
             },
             {
-              "title": "Viết src/download.py: tải Premier League (file E0) 29 mùa 1997/98–2025/26, theo mẫu …/mmz4281/2021/E0.csv; mỗi mùa 380 trận. Các giải khác chỉ tải khi làm phần mở rộng ANOM."
+              "title": "Kiểm giấy phép và điều khoản (Licence Review)",
+              "doneWhen": "Mỗi nguồn: điều khoản trích nguyên câu kèm link, cách lấy được phép (tải tay, clone, gọi API), có được đưa vào repo không; thư hỏi chủ dữ liệu đã gửi nếu cần.",
+              "notes": "Đã đọc (27/11/2026):\n- Transfermarkt: robots.txt chặn bot AI và Scrapy; license.xml cấm dùng cho AI; thông báo pháp lý đòi đồng ý bằng văn bản trước khi nhân bản nội dung. Không scrape trang chấn thương khi chưa có thư cho phép: https://www.transfermarkt.com/robots.txt\n- salimt, withqwerty: không có file LICENSE; README của withqwerty ghi dữ liệu lấy từ Transfermarkt, dùng cho nghiên cứu và phân tích.\n- vaastav: code MIT, dữ liệu gốc của FPL; README ghi cập nhật hằng tuần đã dừng sau 2024-25.\n- football-data.co.uk: miễn phí, chỉ cho cá nhân, cấm sản phẩm thương mại hay huấn luyện bằng bot, scraper: tải tay từng file: https://football-data.co.uk/data.php\n- FBref: cấm truy cập tự động khi chưa có văn bản, cấm dùng để huấn luyện mô hình: không chọn: https://www.sports-reference.com/data_use.html\n- premierleague.com: chỉ cho dùng cá nhân, cấm dựng database từ nội dung tải về: không làm nguồn lịch sử: https://www.premierleague.com/terms-and-conditions\nHỏi chủ dữ liệu khi cần: Transfermarkt (thư xin phép nếu muốn dùng HTML trang chấn thương); football-data.co.uk (đồ án sinh viên phi thương mại có tính là cá nhân không); tác giả bộ Zenodo \"EPL Fixture Congestion and Injury Dataset\" (CC BY 4.0 nhưng file bị khoá): https://zenodo.org/records/17835138",
+              "outs": [
+                {
+                  "key": "licence-log",
+                  "name": "Sổ giấy phép nguồn",
+                  "ref": "docs/licences.md",
+                  "note": "Mỗi nguồn: điều khoản trích nguyên câu, link, cách lấy được phép, có được commit không"
+                }
+              ],
+              "ins": [
+                "source-catalogue"
+              ]
             },
             {
-              "title": "Ghi URL, ngày tải và mã SHA-256 của từng file vào data/manifest.csv."
-            },
-            {
-              "title": "Viết docs/data-card.md: nguồn, điều khoản, cột, giai đoạn."
-            },
-            {
-              "title": "Mở docs/lineage.md."
-            },
-            {
-              "title": "File gốc để ở data/raw/, có tên trong .gitignore."
-            }
-          ],
-          "outs": [
-            {
-              "key": "data-raw-csv",
-              "name": "data/raw/*.csv",
-              "ref": "data/raw/*.csv"
-            },
-            {
-              "key": "data-manifest-csv",
-              "name": "data/manifest.csv",
-              "ref": "data/manifest.csv"
-            },
-            {
-              "key": "docs-data-card-md",
-              "name": "docs/data-card.md",
-              "ref": "docs/data-card.md"
-            },
-            {
-              "key": "docs-lineage-md",
-              "name": "docs/lineage.md",
-              "ref": "docs/lineage.md"
+              "title": "Chốt bộ nguồn và mùa giải (Source Selection)",
+              "doneWhen": "ADR ghi bộ nguồn, mùa, cách lấy từng nguồn, phương án dự phòng khi giảng viên không cho dùng dữ liệu phái sinh Transfermarkt.",
+              "notes": "Bộ đề xuất: chấn thương salimt (CSV), trạng thái theo vòng withqwerty (JSON, để gán CLB và kiểm chéo), exposure vaastav (CSV), trận football-data E0 (CSV, tải tay), trang mùa giải Wikipedia (HTML), định danh reep (CSV). Bronze vì vậy có HTML, CSV, JSON thật.\nGhép thử fixtures FPL với E0 theo (đội nhà, đội khách) sau khi đổi ba tên CLB: khớp đủ 380 trận mỗi mùa, năm mùa (thử 27/11/2026).\nDự phòng: không gọi trang nào bằng bot; clone các repo GitHub (file tĩnh), tải tay file E0; HTML vẫn có từ Wikipedia.",
+              "outs": [
+                {
+                  "key": "source-decision",
+                  "name": "Quyết định bộ nguồn",
+                  "ref": "docs/adr/sources.md",
+                  "note": "Nguồn, mùa, cách lấy, dự phòng; script tải làm theo đây"
+                }
+              ],
+              "ins": [
+                "licence-log",
+                "lecturer-answers"
+              ]
             }
           ]
         },
         {
-          "title": "P1b · Học và viết phương pháp",
-          "goal": "Ví dụ có lời giải, dữ liệu giả lập → bản đầu của src/outliers.py, anom.py, cusum.py, sprt.py; tests/.",
-          "doneWhen": "Mỗi hàm cho đúng kết quả của ví dụ; test xanh.",
-          "notes": "Vai: EDA & ngoại lai, ANOM, CUSUM, SPRT\nCông cụ: numpy, scipy.stats, pytest\nTrang đồ án, pha P1b: https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-build.html#lich",
+          "title": "Hạ tầng trước: dựng và thử khói (Infrastructure as Code)",
+          "goal": "Một lệnh dựng cả lakehouse trên laptop; bài thử khói chứng minh DuckDB ghi, đọc được bảng Iceberg qua Polaris trước khi viết dòng pipeline nào.",
+          "doneWhen": "scripts/up.sh dựng mọi dịch vụ healthy; scripts/smoke.sh tạo bảng Iceberg 10 dòng qua catalog, đọc lại đủ 10, xoá; tắt rồi bật lại vẫn còn catalog.",
+          "notes": "Stack của nhóm, cắt cho một người với dữ liệu dưới 1 GB:\n- Giữ: Docker Compose, object storage, Parquet, Iceberg, Polaris (metastore Postgres), dbt + DuckDB, Superset.\n- Bỏ Kubernetes: một máy, vài người xem; k8s chỉ thêm việc vận hành. Ghi trong báo cáo là hướng mở rộng.\n- Bỏ Spark: DuckDB tự ghi Iceberg qua catalog REST; Spark cần JVM và nhiều RAM cho vài trăm MB. Bảng Iceberg vẫn đọc được bằng Spark, Trino khi dữ liệu lớn lên.\n- Bỏ Hudi: DuckDB không có extension Hudi chính thức (chỉ bản cộng đồng, chỉ đọc); cập nhật dày, CDC không phải nhu cầu ở đây: https://duckdb.org/docs/2.0/core_extensions/overview.html\n- Thay Kafka bằng phát lại theo gameweek (bước 13): không có nguồn sự kiện thật, và CUSUM, SPRT vốn chạy theo từng gameweek.\nHạ tầng và dữ liệu chạy tay được trước, phương pháp sau; đừng viết pipeline trên hạ tầng chưa thử khói.\nSystem design của dự án đặt sẵn hồ sơ (dạng bảng, theo tuần, tự host, miễn phí, lối Scheduled pipeline). Câu \"How much data?\" để trống có chủ ý: trả lời \"Fits in memory\" thì danh mục gợi ý thư mục dự án + một database, đúng với cỡ dữ liệu; đồ án chọn lakehouse vì môn chấm quản trị dữ liệu (giao dịch, snapshot, catalog, lineage), không vì dung lượng.\nApply path ra MinIO, DuckDB, Docker Compose; sau đó tự thêm Apache Iceberg và Apache Polaris vào Raw storage, đổi Processing sang dbt, Data validation sang dbt tests, Analytical store sang DuckDB on Iceberg, chọn Apache Superset ở User interface. Ingestion: cron đủ cho một người; Prefect là tuỳ chọn.",
           "subs": [
             {
-              "title": "Mỗi người viết phương pháp của mình trên ví dụ có lời giải và dữ liệu giả lập, trước khi có dữ liệu thật."
+              "title": "Quyết định stack và phiên bản (Stack ADR)",
+              "doneWhen": "docs/adr/stack.md: mỗi lớp một công cụ, phiên bản ghim, giấy phép, tình trạng bảo trì, lý do; công cụ đã bỏ (Spark, Kubernetes, Hudi, Kafka) có lý do.",
+              "notes": "Object storage: repo cộng đồng minio/minio đã lưu trữ (archived) ngày 25/04/2026, README ghi không còn bảo trì, không còn image dựng sẵn. Dùng MinIO để học thì ghim một bản và ghi rủi ro \"không còn bản vá bảo mật\"; hoặc chọn RustFS (quickstart của Polaris dùng) hay SeaweedFS. Code chỉ nói S3 API thì đổi được: https://github.com/minio/minio\nDuckDB: ghim một bản cho mọi image (pipeline, Superset); file do DuckDB 2.0 tạo thì bản dưới 2.0 không mở được: https://duckdb.org/2026/10/21/announcing-duckdb-200\ndbt: dùng dbt-duckdb (dbt v1). Ghi Iceberg từ dbt + DuckDB chỉ có ở dbt v2 với cờ use_catalogs_v2, tài liệu dbt còn gọi là bản preview: đừng dựa vào nó; Bronze ghi Iceberg bằng script Python + DuckDB: https://docs.getdbt.com/docs/build/iceberg/adapters/duckdb-iceberg-support",
+              "outs": [
+                {
+                  "key": "stack-adr",
+                  "name": "Quyết định stack",
+                  "ref": "docs/adr/stack.md",
+                  "note": "Mỗi lớp: công cụ, phiên bản ghim, giấy phép, bảo trì, lý do; công cụ đã bỏ và vì sao"
+                }
+              ],
+              "ins": [
+                "source-decision"
+              ]
             },
             {
-              "title": "Vai 3, ngoại lai: ví dụ Grubbs và generalized ESD của NIST (mục 1.3.5.17)."
+              "title": "Viết docker-compose.yml (Compose Services)",
+              "doneWhen": "Dịch vụ: storage, storage-init (tạo bucket landing, warehouse), postgres (metastore Polaris + metadata Superset), polaris, polaris-bootstrap, pipeline (chạy bằng docker compose run), superset, superset-init; image ghim tag; healthcheck; volume có tên.",
+              "notes": "Compose chỉ chờ container chạy, không chờ sẵn sàng: dùng healthcheck và depends_on với condition service_healthy; job chạy một lần dùng service_completed_successfully: https://docs.docker.com/compose/how-tos/startup-order/\nImage pipeline: python:3.12 + duckdb (ghim), dbt-duckdb, pandas, scipy, statsmodels, requests, beautifulsoup4. Image Superset thêm duckdb-engine cùng bản DuckDB.\nTuỳ chọn: streamlit, dbt-docs. Không có Spark, Kafka, Kubernetes.",
+              "outs": [
+                {
+                  "key": "compose-file",
+                  "name": "File cấu hình Compose",
+                  "ref": "docker-compose.yml",
+                  "note": "Dịch vụ, image ghim tag, cổng, volume, healthcheck; mọi lệnh dựng đọc file này"
+                }
+              ],
+              "ins": [
+                "stack-adr"
+              ]
             },
             {
-              "title": "Vai 4, ANOM: theo công thức trên trang Minitab, tính tay một bộ tỉ lệ nhỏ rồi so với code."
+              "title": "Tách secret và dọn repo (.env, .gitignore)",
+              "doneWhen": ".env.example đủ biến với giá trị giả; .env, data/, landing/, *.duckdb, *.parquet nằm trong .gitignore; git status sạch sau khi tải dữ liệu.",
+              "outs": [
+                {
+                  "key": "env-template",
+                  "name": "Mẫu biến môi trường",
+                  "ref": ".env.example",
+                  "note": "Mọi biến compose và job cần, giá trị giả; chép thành .env rồi sửa"
+                }
+              ],
+              "ins": [
+                "compose-file"
+              ]
             },
             {
-              "title": "Vai 5, CUSUM: ví dụ CUSUM của NIST (mục 6.3.2.3), rồi CUSUM Bernoulli trên chuỗi 0/1 giả lập có điểm đổi cài sẵn."
+              "title": "Dựng catalog Polaris với Postgres (Iceberg REST Catalog)",
+              "doneWhen": "Polaris dùng metastore Postgres; job bootstrap tạo catalog, namespace bronze, silver, gold, một principal ghi cho pipeline, một principal chỉ đọc; khởi động lại vẫn còn bảng.",
+              "notes": "Quickstart của Polaris dùng metastore trong bộ nhớ, không dành cho production: khởi động lại là mất catalog: https://polaris.apache.org/guides/quickstart/\nPostgreSQL qua JDBC là metastore được khuyên dùng: https://polaris.apache.org/releases/1.9.0/metastores/\nDuckDB gắn catalog REST bằng ATTACH … (TYPE iceberg); cú pháp đổi giữa các bản, mở trang của đúng bản đang ghim: https://duckdb.org/docs/2.0/core_extensions/iceberg/catalogs\nTên image, lệnh bootstrap của Polaris: lấy từ tài liệu của bản đang ghim, đừng chép từ blog.",
+              "outs": [
+                {
+                  "key": "catalog-config",
+                  "name": "Cấu hình catalog",
+                  "ref": "infra/polaris/",
+                  "note": "URL catalog, warehouse, namespace bronze / silver / gold, principal ghi và chỉ đọc"
+                }
+              ],
+              "ins": [
+                "compose-file",
+                "env-template"
+              ]
             },
             {
-              "title": "Vai 6, SPRT: chuỗi Bernoulli giả lập với p biết trước; kiểm tỉ lệ báo nhầm gần α."
-            },
-            {
-              "title": "Viết unit test bằng pytest cho từng hàm."
-            }
-          ],
-          "outs": [
-            {
-              "key": "src-outliers-py",
-              "name": "src/outliers.py",
-              "ref": "src/outliers.py"
-            },
-            {
-              "key": "src-anom-py",
-              "name": "src/anom.py",
-              "ref": "src/anom.py"
-            },
-            {
-              "key": "src-cusum-py",
-              "name": "src/cusum.py",
-              "ref": "src/cusum.py"
-            },
-            {
-              "key": "src-sprt-py",
-              "name": "src/sprt.py",
-              "ref": "src/sprt.py"
-            },
-            {
-              "key": "tests",
-              "name": "tests/",
-              "ref": "tests/"
+              "title": "Script dựng một lệnh và thử khói (Bootstrap and Smoke Test)",
+              "doneWhen": "scripts/up.sh tạo .env nếu thiếu, chạy docker compose up -d --wait, in URL; scripts/smoke.sh ghi bảng Iceberg 10 dòng qua Polaris bằng DuckDB, đếm lại 10, gọi health của Superset; chạy up hai lần không lỗi.",
+              "notes": "docker compose up --wait chờ dịch vụ running hoặc healthy rồi mới trả về: https://docs.docker.com/reference/cli/docker/compose/up/\nPhương án lùi nếu Polaris ngốn quá nhiều thời gian: Parquet trên object storage + DuckDB, không table format; mất snapshot và catalog, ghi rõ trong báo cáo.",
+              "outs": [
+                {
+                  "key": "bootstrap",
+                  "name": "Script dựng và thử khói",
+                  "ref": "scripts/up.sh",
+                  "note": "Một lệnh dựng mọi dịch vụ; scripts/smoke.sh chứng minh ghi, đọc Iceberg qua catalog"
+                }
+              ],
+              "ins": [
+                "compose-file",
+                "catalog-config"
+              ]
             }
           ]
         },
         {
-          "title": "P2 · Làm sạch và tích hợp",
-          "goal": "data/raw/*.csv → data/clean/*.parquet, file DuckDB, báo cáo chất lượng, docs/data-dictionary.md.",
-          "doneWhen": "Báo cáo chất lượng không còn lỗi chặn; mỗi trọng tài chỉ còn một tên.",
-          "notes": "Vai: Dữ liệu & lineage, EDA & ngoại lai\nCông cụ: pandas, DuckDB; src/clean.py, src/quality.py\nTrang đồ án, pha P2: https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-build.html#lich",
+          "title": "Bronze: nạp nguyên dạng (Bronze Ingestion)",
+          "goal": "Mọi file nguồn nằm nguyên byte ở landing; Bronze là bảng Iceberg chỉ thêm, mỗi dòng biết nó đến từ file nào, lúc nào.",
+          "doneWhen": "landing có file của mọi nguồn theo source/season/ingest_date; bảng bronze có số dòng khớp file; nạp lại cùng file không sinh trùng; mỗi lần nạp một dòng log.",
+          "notes": "Medallion: bronze thô chưa kiểm, silver đã kiểm và làm sạch, gold theo nghiệp vụ: https://docs.databricks.com/aws/en/lakehouse/medallion\nMỗi lần nạp là một snapshot Iceberg; bước 13 dùng snapshot để chạy giám sát as-of, vì dữ liệu Transfermarkt được bổ sung muộn: \"lúc đó\" khác \"bây giờ\".\nLog JSONL có layer, source; lỗi có kiểu theo tầng (IngestionError, BronzeWriteError…): ý từ utils/ của repo tham khảo: https://github.com/ivanrivasgr/Sports_Injury_Risk_Intelligence",
           "subs": [
             {
-              "title": "Gộp các mùa thành một bảng; số ô tiêu đề đổi từ 21 (1997/98, chỉ 10 ô có tên) tới 132 (2025/26), có mùa giảm; chỉ giữ cột cần."
+              "title": "Tải nguồn về landing (Landing Zone)",
+              "doneWhen": "scripts/fetch/ tải hay clone từng nguồn theo ADR; file nằm ở landing/{source}/{season}/{ingest_date}/, không sửa; chạy lại không tải trùng.",
+              "notes": "Không giả User-Agent, không gọi trang nào bằng bot khi điều khoản cấm. Repo GitHub: clone hay tải file raw; E0.csv: tải tay vào thư mục nhập, script chép lên landing.",
+              "outs": [
+                {
+                  "key": "landing",
+                  "name": "Vùng landing",
+                  "ref": "landing/",
+                  "note": "File gốc nguyên byte theo source/season/ingest_date; không sửa, không xoá; Bronze đọc từ đây"
+                }
+              ],
+              "ins": [
+                "source-decision",
+                "bootstrap"
+              ]
             },
             {
-              "title": "Đọc cả hai kiểu ngày dd/mm/yy và dd/mm/yyyy."
+              "title": "Tách HTML Wikipedia thành bảng (HTML Parsing)",
+              "doneWhen": "Bảng sân và đổi HLV của mỗi mùa tách ra đúng số dòng; test chạy trên file HTML đã lưu, không cần mạng.",
+              "notes": "HTML không có schema; trang đổi bố cục là bộ tách gãy. Test trên bản đã lưu ở landing, báo lỗi rõ khi không thấy bảng.",
+              "outs": [
+                {
+                  "key": "html-parser",
+                  "name": "Bộ tách HTML",
+                  "ref": "pipeline/parse_wikipedia.py",
+                  "note": "HTML trang mùa giải thành dòng sân, HLV; test trên file đã lưu"
+                }
+              ],
+              "ins": [
+                "landing"
+              ]
             },
             {
-              "title": "Chuẩn hoá tên đội, và tên trọng tài cho phần mở rộng, bằng một bảng ánh xạ: cùng một trọng tài có tới sáu cách ghi tên: đủ tên, viết tắt có hoặc không dấu chấm, họ đứng trước, có cả lỗi gõ. Đừng gộp theo họ: hai trọng tài khác nhau có thể cùng họ."
+              "title": "Ghi bảng Bronze chỉ thêm (Append-only Bronze)",
+              "doneWhen": "Bảng bronze cho chấn thương, trạng thái theo vòng, phút FPL, trận E0, trang Wikipedia: giữ nguyên giá trị chuỗi, thêm _source_file, _ingested_at, _season; nạp lại cùng file không thêm dòng.",
+              "notes": "DuckDB ghi INSERT vào Iceberg qua catalog REST: https://duckdb.org/docs/2.0/core_extensions/iceberg/writing_to_iceberg.html\nChống trùng: so _source_file (hay hash của file) với log trước khi ghi.",
+              "outs": [
+                {
+                  "key": "bronze-tables",
+                  "name": "Bảng Bronze",
+                  "ref": "pipeline/load_bronze.py",
+                  "note": "Namespace bronze trong Polaris: giá trị thô, _source_file, _ingested_at, _season; chỉ thêm"
+                }
+              ],
+              "ins": [
+                "landing",
+                "html-parser"
+              ]
             },
             {
-              "title": "Viết luật chất lượng dữ liệu: HST ≤ HS, số thẻ ≥ 0, FTR khớp số bàn; xuất báo cáo chất lượng."
-            },
-            {
-              "title": "Lưu bảng sạch ra Parquet và nạp vào DuckDB (data/clean/)."
-            },
-            {
-              "title": "Viết docs/data-dictionary.md (data dictionary)."
-            }
-          ],
-          "outs": [
-            {
-              "key": "data-clean-parquet",
-              "name": "data/clean/*.parquet",
-              "ref": "data/clean/*.parquet",
-              "note": "Bảng matches, khoá chính match_id; data dictionary: https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-build.html#mo-hinh-du-lieu"
-            },
-            {
-              "key": "docs-data-dictionary-md",
-              "name": "docs/data-dictionary.md",
-              "ref": "docs/data-dictionary.md"
-            }
-          ],
-          "ins": [
-            "data-raw-csv"
-          ]
-        },
-        {
-          "title": "P3 · EDA",
-          "goal": "data/clean/ → notebooks/01_eda.ipynb, hình EDA, danh sách mùa Phase I.",
-          "doneWhen": "Có một trang tóm tắt EDA; đã chốt các mùa Phase I và tính tham số chỉ từ chúng.",
-          "notes": "Vai: EDA & ngoại lai, ANOM, CUSUM, SPRT\nCông cụ: pandas, matplotlib, Jupyter\nTrang đồ án, pha P3: https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-build.html#lich",
-          "subs": [
-            {
-              "title": "Thống kê mô tả: trung bình, trung vị, độ lệch chuẩn của bàn, thẻ, cú sút."
-            },
-            {
-              "title": "Tỉ số phương sai / trung bình của mỗi số đếm, đơn vị một đội một trận: chọn công cụ ngoại lai."
-            },
-            {
-              "title": "Box plot số bàn và số thẻ theo mùa."
-            },
-            {
-              "title": "Run-sequence plot tỉ lệ thắng sân nhà theo mùa."
-            },
-            {
-              "title": "Histogram số bàn mỗi trận."
-            },
-            {
-              "title": "Chọn các mùa làm mức bình thường (Phase I / Phase II)."
-            },
-            {
-              "title": "Mọi số đi vào tham số (μ0, σ, p0, p1, tỉ lệ hoà) chỉ tính trên các mùa Phase I; các mùa sau chỉ để vẽ, không để chọn tham số."
-            }
-          ],
-          "outs": [
-            {
-              "key": "notebooks-01-eda-ipynb",
-              "name": "notebooks/01_eda.ipynb",
-              "ref": "notebooks/01_eda.ipynb"
-            }
-          ],
-          "ins": [
-            "data-clean-parquet"
-          ]
-        },
-        {
-          "title": "P4 · Thiết kế phân tích, khoá tham số",
-          "goal": "Kết quả EDA, mùa Phase I → docs/analysis-plan.md, tests/.",
-          "doneWhen": "Tham số đã ghi và commit trước khi chạy Phase II; test xanh.",
-          "notes": "Vai: Trưởng nhóm & kể chuyện, ANOM, CUSUM, SPRT\nCông cụ: numpy, pytest\nTrang đồ án, pha P4: https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-build.html#lich",
-          "subs": [
-            {
-              "title": "Viết docs/analysis-plan.md trước khi xem dữ liệu Phase II: câu hỏi, H0/H1, α, β, mức đổi, h."
-            },
-            {
-              "title": "Mô phỏng ARL để chọn k và h."
-            },
-            {
-              "title": "Viết unit test so với ví dụ có lời giải, chẳng hạn ví dụ CUSUM của NIST."
-            }
-          ],
-          "outs": [
-            {
-              "key": "docs-analysis-plan-md",
-              "name": "docs/analysis-plan.md",
-              "ref": "docs/analysis-plan.md"
+              "title": "Nhật ký nạp và đối soát số dòng (Ingestion Log)",
+              "doneWhen": "logs/ingest.jsonl: mỗi lần nạp một dòng (nguồn, file, số dòng landing, số dòng bronze, thời gian, lỗi); số dòng lệch thì job dừng.",
+              "outs": [
+                {
+                  "key": "ingest-log",
+                  "name": "Nhật ký nạp",
+                  "ref": "logs/ingest.jsonl",
+                  "note": "Một dòng JSON mỗi lần nạp; trang chất lượng dữ liệu của dashboard đọc"
+                }
+              ],
+              "ins": [
+                "bronze-tables"
+              ]
             }
           ]
         },
         {
-          "title": "P5 · Chạy bốn phương pháp",
-          "goal": "data/clean/, docs/analysis-plan.md → results/*.csv.",
-          "doneWhen": "Chạy lại từ đầu ra đúng results/; số khớp test.",
-          "notes": "Vai: EDA & ngoại lai, ANOM, CUSUM, SPRT\nCông cụ: numpy, scipy.stats, pandas\nTrang đồ án, pha P5: https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-build.html#lich",
+          "title": "Silver: định danh, schema, chất lượng (Silver Layer)",
+          "goal": "Một cầu thủ, một CLB, một trận có đúng một khoá xuyên mọi nguồn; kiểu, ngày, múi giờ chuẩn; lỗi dữ liệu bị bắt bằng test trước khi lên Gold.",
+          "doneWhen": "dbt build xanh trên Silver; tỉ lệ khớp cầu thủ giữa nguồn được in ra; dòng vi phạm nằm ở dq_flags, không bị xoá.",
+          "notes": "dbt-duckdb: dbt-core ≥ 1.8, đọc S3 bằng secret, materialization external ghi ra Parquet: https://github.com/duckdb/dbt-duckdb\nĐọc Bronze từ dbt: on-run-start ATTACH catalog Iceberg; không được thì source dùng iceberg_scan chỉ đọc. Dành một buổi thử trước khi viết model.\nFile warehouse.duckdb của dbt chỉ pipeline mở. Một file DuckDB: một tiến trình ghi, hoặc nhiều tiến trình chỉ đọc: https://duckdb.org/docs/2.0/connect/concurrency.html",
           "subs": [
             {
-              "title": "Chạy các hàm đã viết ở P1b trên dữ liệu thật: src/outliers.py, anom.py, cusum.py, sprt.py."
+              "title": "Dựng dự án dbt-duckdb (dbt Project)",
+              "doneWhen": "dbt debug xanh trong container pipeline; sources trỏ bảng Bronze; một model thử đếm đúng số dòng Bronze.",
+              "outs": [
+                {
+                  "key": "dbt-project",
+                  "name": "Dự án dbt",
+                  "ref": "dbt/dbt_project.yml",
+                  "note": "Profile DuckDB, sources Bronze, thư mục silver / gold"
+                }
+              ],
+              "ins": [
+                "bronze-tables",
+                "compose-file"
+              ]
             },
             {
-              "title": "Chạy python -m src.pipeline: mọi bước, vài giây."
+              "title": "Bảng ánh xạ CLB (Club Mapping Seed)",
+              "doneWhen": "dbt/seeds/team_xref.csv: một dòng mỗi CLB của các mùa đã chọn, cột tên FPL, tên football-data, ID Transfermarkt, QID Wikidata; test unique, not_null.",
+              "notes": "FPL và football-data chỉ lệch ba tên (Man Utd / Man United, Spurs / Tottenham, Sheffield Utd / Sheffield United); Transfermarkt dùng tên đầy đủ và ID số. Viết seed tay là cách chắc nhất.",
+              "outs": [
+                {
+                  "key": "club-xref",
+                  "name": "Bảng ánh xạ CLB",
+                  "ref": "dbt/seeds/team_xref.csv",
+                  "note": "Một dòng mỗi CLB: tên ở mỗi nguồn, ID Transfermarkt; khoá club_key"
+                }
+              ],
+              "ins": [
+                "dbt-project"
+              ]
             },
             {
-              "title": "Ghi kết quả ra results/*.csv."
+              "title": "Khớp cầu thủ giữa các nguồn (Entity Resolution)",
+              "doneWhen": "player_xref nối FPL code với ID Transfermarkt; in số cầu thủ và số phút chưa nối được mỗi mùa; ca còn lại sửa bằng seed tay.",
+              "notes": "reep (CC0): key_opta_numeric trùng FPL code, có key_transfermarkt. Đếm thử năm mùa 2021-22 → 2025-26: khoảng 99% số phút nối được; phần còn lại nối tay hay bằng tên + ngày sinh: https://github.com/withqwerty/reep\nFPL element đổi mỗi mùa; code trong players_raw.csv ổn định qua mùa: dùng code làm khoá.\nGán CLB cho một đợt chấn thương: nối player_id với availability cùng mùa, lấy CLB có trạng thái khác not_at_club quanh ngày bắt đầu; cầu thủ đổi CLB giữa mùa cần luật riêng, ghi vào docs.",
+              "outs": [
+                {
+                  "key": "player-xref",
+                  "name": "Bảng khớp cầu thủ",
+                  "ref": "dbt/models/silver/player_xref.sql",
+                  "note": "FPL code ↔ ID Transfermarkt, cách khớp (reep, tay); tỉ lệ khớp in ra mỗi lần build"
+                }
+              ],
+              "ins": [
+                "club-xref",
+                "source-catalogue"
+              ]
             },
             {
-              "title": "Ghi vào lineage.md: script nào, đọc gì, ra file nào."
+              "title": "Chuẩn hoá schema, kiểu, ngày (Schema and Types)",
+              "doneWhen": "Bảng silver cho đợt chấn thương, lần ra sân, trận, trạng thái theo vòng: kiểu đúng, ngày ISO, giờ UTC, khử trùng; days_out tính lại từ ngày; mục không phải chấn thương (nghỉ, ốm) gắn loại riêng.",
+              "notes": "Grain: injury_spell một dòng mỗi cầu thủ × đợt nghỉ, khoá (player_id, from_date); appearance một dòng mỗi cầu thủ × trận (double gameweek có hai dòng), khoá (season, player, fixture).\nkickoff_time của FPL là UTC; cột Time của E0 không ghi múi giờ: không lấy giờ từ E0.\nCột team của FPL theo từng dòng: cầu thủ đổi CLB giữa mùa thì lấy CLB theo dòng.\nminutes của FPL tối đa 90 (không tính bù giờ); 2022-23 thiếu GW7 (hoãn cả vòng). README vaastav cảnh báo cột xP có thể nhìn trước: không dùng.",
+              "outs": [
+                {
+                  "key": "silver-models",
+                  "name": "Các model tầng Silver",
+                  "ref": "dbt/models/silver/",
+                  "note": "injury_spell, appearance, fixture, availability: kiểu chuẩn, khoá duy nhất, đã khử trùng"
+                }
+              ],
+              "ins": [
+                "player-xref"
+              ]
+            },
+            {
+              "title": "Kiểm chất lượng bằng dbt test (Data Quality Tests)",
+              "doneWhen": "Generic test: unique, not_null cho khoá, relationships chấn thương → cầu thủ, accepted_values cho loại; singular test: end_date ≥ from_date, 0 ≤ days_out ≤ 365, 20 CLB mỗi mùa, 38 trận mỗi CLB; mức warn / error đặt bằng severity.",
+              "notes": "Danh sách kiểm có mức CRITICAL / HIGH / MEDIUM mượn từ trang Observability của repo tham khảo, viết lại thành dbt test.\nTổng phút một CLB một trận gần 990 (lệch vì thẻ đỏ, thay người muộn): cảnh báo, không lỗi. Dòng vi phạm vào dq_flags, không xoá.",
+              "outs": [
+                {
+                  "key": "dq-tests",
+                  "name": "Bộ kiểm chất lượng",
+                  "ref": "dbt/tests/",
+                  "note": "Generic + singular test, severity warn / error; dq_flags giữ dòng vi phạm"
+                }
+              ],
+              "ins": [
+                "silver-models"
+              ]
             }
-          ],
-          "outs": [
-            {
-              "key": "results-csv",
-              "name": "results/*.csv",
-              "ref": "results/*.csv"
-            }
-          ],
-          "ins": [
-            "data-clean-parquet",
-            "docs-analysis-plan-md"
           ]
         },
         {
-          "title": "P6 · Trực quan hoá",
-          "goal": "results/*.csv → src/charts.py, hình PNG hoặc SVG.",
-          "doneWhen": "Mỗi hình có tiêu đề, trục và nguồn dữ liệu.",
-          "notes": "Vai: Dữ liệu & lineage, EDA & ngoại lai, ANOM, CUSUM, SPRT, Demo & tích hợp\nCông cụ: matplotlib; st.line_chart trong app\nTrang đồ án, pha P6: https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-build.html#lich",
+          "title": "Gold: mô hình dữ liệu, grain, exposure (Gold Data Model)",
+          "goal": "Bảng Gold trả lời đúng bốn câu hỏi: mỗi bảng một grain ghi rõ, tử số và mẫu số cùng grain, mọi tổng chỉ dùng dữ liệu tới thời điểm của nó.",
+          "doneWhen": "docs/data-model.md có sơ đồ bảng, grain, khoá; fact và bảng tổng hợp build xanh; test point-in-time và CI xanh.",
+          "notes": "Khung là mô hình 6 bảng có grain và khoá của repo tham khảo (cầu thủ, trận, lần ra sân, chấn thương, CLB, điều kiện trận); ở đây thêm bảng khớp cầu thủ, CLB và bảng trạng thái theo vòng: https://github.com/ivanrivasgr/Sports_Injury_Risk_Intelligence\nPoint-in-time: tổng tới gameweek t chỉ dùng dữ liệu có trước mốc t; cửa sổ [mốc − w, mốc) không gồm mốc. Thiếu luật này thì CUSUM, SPRT \"biết trước\" tương lai.",
           "subs": [
             {
-              "title": "Biểu đồ quyết định ANOM."
+              "title": "Vẽ mô hình dữ liệu và ghi grain (Data Model and Grain)",
+              "doneWhen": "Mỗi bảng Gold: một câu \"một dòng là …\", khoá, nguồn, cột tính; sơ đồ quan hệ fact ↔ dim.",
+              "notes": "Grain gợi ý: fact_injury một dòng mỗi đợt chấn thương; fact_appearance một dòng mỗi cầu thủ × trận; agg_club_gw một dòng mỗi CLB × gameweek (x = chấn thương mới, e = exposure); agg_club_season; agg_player_season.",
+              "outs": [
+                {
+                  "key": "data-model",
+                  "name": "Mô hình dữ liệu",
+                  "ref": "docs/data-model.md",
+                  "note": "Bảng, grain, khoá, quan hệ; báo cáo dùng nguyên sơ đồ"
+                }
+              ],
+              "ins": [
+                "silver-models",
+                "questions"
+              ]
             },
             {
-              "title": "Biểu đồ CUSUM có vạch h."
+              "title": "Bảng fact và dim (Facts and Dimensions)",
+              "doneWhen": "fact_injury, fact_appearance, dim_player, dim_club, dim_gameweek build từ Silver đã qua test.",
+              "outs": [
+                {
+                  "key": "gold-facts",
+                  "name": "Fact và dim Gold",
+                  "ref": "dbt/models/gold/",
+                  "note": "fact_injury, fact_appearance, dim_player, dim_club, dim_gameweek; khoá ổn định"
+                }
+              ],
+              "ins": [
+                "data-model",
+                "dq-tests"
+              ]
             },
             {
-              "title": "Đường SPRT đi giữa hai ngưỡng."
+              "title": "Exposure và tổng hợp theo CLB, gameweek (Exposure Aggregates)",
+              "doneWhen": "agg_club_gw, agg_club_season có x (chấn thương mới), e (nghìn giờ thi đấu PL), rate; agg_player_season có phút, số chấn thương; tổng khớp với fact.",
+              "notes": "x_t: chấn thương có ngày bắt đầu trong (hạn chót GW t−1, hạn chót GW t]. e_t: tổng phút PL của CLB trong GW t / 60 / 1000; double gameweek tự có e lớn hơn.\nExposure một CLB-mùa gần như hằng số (38 × 11 × 90 phút): giữa các CLB trong một mùa exposure gần bằng nhau; chênh nhiều ở mức gameweek và cầu thủ.",
+              "outs": [
+                {
+                  "key": "gold-aggs",
+                  "name": "Bảng tổng hợp exposure",
+                  "ref": "dbt/models/gold/agg_club_gw.sql",
+                  "note": "agg_club_gw, agg_club_season, agg_player_season: số chấn thương, exposure, rate; bốn phương pháp đọc đây"
+                }
+              ],
+              "ins": [
+                "gold-facts"
+              ]
             },
             {
-              "title": "Box plot và strip plot cho ngoại lai."
+              "title": "Test chống rò rỉ thời gian (Point-in-time Tests)",
+              "doneWhen": "Test: mốc không nằm trong cửa sổ của chính nó, dòng của cầu thủ khác không lọt vào, chấn thương sau hạn chót GW t không vào x_t.",
+              "notes": "Ý từ tests/test_pipeline.py của repo tham khảo (biên cửa sổ, mốc bị loại, cầu thủ khác bị loại), viết lại bằng singular test của dbt.",
+              "outs": [
+                {
+                  "key": "pit-tests",
+                  "name": "Bộ test điểm thời gian (point-in-time)",
+                  "ref": "dbt/tests/point_in_time/",
+                  "note": "Biên cửa sổ, mốc, cầu thủ khác; CI chạy cùng dbt build"
+                }
+              ],
+              "ins": [
+                "gold-aggs"
+              ]
             },
             {
-              "title": "Small multiples: mỗi mùa một ô nhỏ; ở phần mở rộng, mỗi câu lạc bộ một ô."
-            },
-            {
-              "title": "Ghi chú sự kiện lên hình: mùa không khán giả, VAR từ 2019/20."
-            },
-            {
-              "title": "Vai 2: hình luồng dữ liệu (lineage) và bảng chất lượng dữ liệu cho báo cáo."
+              "title": "Kiểm tự động và CI (Tests and CI)",
+              "doneWhen": ".github/workflows/ci.yml chạy lint, pytest cho bộ tách HTML và hàm thống kê, dbt build trên bộ dữ liệu mẫu nhỏ tự tạo; xanh trên nhánh chính.",
+              "notes": "CI không tải dữ liệu thật (điều khoản, repo public): dùng fixture nhỏ tự viết. Ý từ CI của repo tham khảo (job data contract, job chặn rò rỉ thời gian).",
+              "outs": [
+                {
+                  "key": "ci",
+                  "name": "CI của đồ án",
+                  "ref": ".github/workflows/ci.yml",
+                  "note": "Lint, pytest, dbt build trên fixture; README dẫn huy hiệu và cách chạy lại"
+                }
+              ],
+              "ins": [
+                "pit-tests"
+              ]
             }
-          ],
-          "outs": [
-            {
-              "key": "src-charts-py",
-              "name": "src/charts.py",
-              "ref": "src/charts.py"
-            }
-          ],
-          "ins": [
-            "results-csv"
           ]
         },
         {
-          "title": "P7 · Demo",
-          "goal": "data/clean/, src/, results/ → app/streamlit_app.py, kịch bản demo.",
-          "doneWhen": "Demo chạy trơn 3 phút trên máy trình chiếu, không cần mạng.",
-          "notes": "Vai: Dữ liệu & lineage, Demo & tích hợp\nCông cụ: Streamlit\nTrang đồ án, pha P7: https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-build.html#lich",
+          "title": "Khám phá dữ liệu và khoá kế hoạch (Exploratory Data Analysis)",
+          "goal": "Hiểu phân phối, mùa vụ, độ quá phân tán của số chấn thương; chốt tham số của bốn phương pháp trước khi nhìn các mùa giám sát.",
+          "doneWhen": "docs/eda-findings.md trả lời: Poisson hay nhị thức âm, mùa vụ, CLB ít dữ liệu; docs/analysis-plan.md ghi mùa Pha I, mùa giám sát, λ0, λ1, α, β, ARL0, kèm ngày chốt.",
+          "notes": "Chốt tham số trước khi nhìn dữ liệu mùa giám sát: đổi λ1 hay h sau khi nhìn làm mất ý nghĩa của α, β.\nMùa vụ: Ekstrand và cs. (2011, nghiên cứu chấn thương của UEFA) ghi căng cơ đùi sau và chấn thương va chạm nhiều hơn trong mùa giải, chấn thương quá tải nhiều hơn tiền mùa (doi:10.1136/bjsm.2009.060582); lịch dày quanh Giáng sinh.\nQuá phân tán khi so các đơn vị (CLB, cầu thủ) và cách xử lý: Spiegelhalter (2005): https://pmc.ncbi.nlm.nih.gov/articles/PMC1744077",
           "subs": [
             {
-              "title": "app/streamlit_app.py đọc data/clean/ và results/, gọi lại các hàm trong src/ khi kéo thanh trượt; chạy được khi không có mạng."
+              "title": "Hồ sơ dữ liệu (Data Profiling)",
+              "doneWhen": "Notebook đếm: chấn thương mỗi mùa, mỗi CLB, theo loại, theo tháng; phân phối days_out; phút mỗi cầu thủ; số dòng mỗi mùa giải thích được.",
+              "notes": "Số dòng chấn thương Premier League trong bộ salimt tăng dần theo mùa; có thể do cách chọn cầu thủ để scrape, không phải chấn thương thật tăng. Kiểm trước khi kết luận, ghi vào trang giới hạn.",
+              "outs": [
+                {
+                  "key": "eda-notebook",
+                  "name": "Notebook khám phá dữ liệu",
+                  "ref": "notebooks/01_eda.ipynb",
+                  "note": "Đếm, phân phối, mùa vụ; mọi hình chạy lại được từ Gold"
+                }
+              ],
+              "ins": [
+                "gold-aggs"
+              ]
             },
             {
-              "title": "Vai 2: tab \"Dữ liệu\" có báo cáo chất lượng, sơ đồ lineage và nút chạy lại đường ống."
+              "title": "Kiểm Poisson và quá phân tán (Dispersion Check)",
+              "doneWhen": "φ = Pearson χ² / df của GLM Poisson có offset, ở mức cầu thủ-mùa và CLB-mùa; kết luận dùng Poisson hay nhị thức âm, ghi số.",
+              "notes": "Cầu thủ khác nhau thật nên gần như chắc chắn quá phân tán ở mức cầu thủ; mức CLB-mùa phải đo. statsmodels: GLM(…, family=NegativeBinomial(), offset=log(e)).",
+              "outs": [
+                {
+                  "key": "eda-findings",
+                  "name": "Kết luận EDA",
+                  "ref": "docs/eda-findings.md",
+                  "note": "Poisson hay nhị thức âm, φ, mùa vụ, CLB ít dữ liệu; bốn phương pháp đọc"
+                }
+              ],
+              "ins": [
+                "eda-notebook"
+              ]
             },
             {
-              "title": "Mỗi phương pháp một tab có thanh trượt: k và α cho ngoại lai; α cho ANOM; mức đổi và h cho CUSUM; mùa, p0, p1, α, β cho SPRT. Hình cập nhật ngay."
-            },
-            {
-              "title": "Kịch bản demo 3 phút."
+              "title": "Khoá kế hoạch phân tích (Analysis Plan)",
+              "doneWhen": "Mùa Pha I (ước lượng λ0) và mùa Pha II (giám sát) tách rời; λ1 có lý do; α, β, ARL0 mong muốn, ngưỡng FDR; ngày chốt ghi vào Decision log.",
+              "notes": "Gợi ý: λ0 là rate chung của giải từ hai mùa đầu (Pha I), giám sát các mùa sau (Pha II); λ1 = 1,5 λ0 là mức tăng muốn bắt. λ1 là mức có ý nghĩa thực tế, không phải mức \"cho ra kết quả\".",
+              "outs": [
+                {
+                  "key": "analysis-plan",
+                  "name": "Kế hoạch phân tích",
+                  "ref": "docs/analysis-plan.md",
+                  "note": "Pha I / Pha II, λ0, λ1, α, β, ARL0, q; chốt trước khi chạy, đổi thì ghi lý do"
+                }
+              ],
+              "ins": [
+                "eda-findings",
+                "questions"
+              ]
             }
-          ],
-          "outs": [
-            {
-              "key": "app-streamlit-app-py",
-              "name": "app/streamlit_app.py",
-              "ref": "app/streamlit_app.py",
-              "final": true
-            }
-          ],
-          "ins": [
-            "data-clean-parquet",
-            "src-outliers-py",
-            "src-anom-py",
-            "src-cusum-py",
-            "src-sprt-py",
-            "src-charts-py",
-            "results-csv"
           ]
         },
         {
-          "title": "P8 · Kể chuyện: báo cáo, slide, tập dượt",
-          "goal": "Hình, results/, docs/ → report/, slides/.",
-          "doneWhen": "Mọi mục trong Xong khi nào đã đánh dấu.",
-          "notes": "Vai: Trưởng nhóm & kể chuyện, Dữ liệu & lineage, EDA & ngoại lai, ANOM, CUSUM, SPRT, Demo & tích hợp\nCông cụ: Word hoặc LaTeX; PowerPoint hoặc Google Slides\nTrang đồ án, pha P8: https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-build.html#lich\n\nXong khi nào (https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-build.html#xong):\n- Chạy lại từ đầu bằng một lệnh: python -m src.pipeline.\n- README có cách chạy, nguồn, điều khoản.\n- Không có CSV gốc trên repo.\n- Mọi hình có tiêu đề là câu trả lời, trục, nguồn và dòng độ bất định.\n- Có trích dẫn đủ: nguồn dữ liệu, công thức, bài gốc.\n- Đủ chương của từng thành viên.\n- Demo chạy khi không có mạng, từ dữ liệu sạch.\n- Đã tập dượt hai lần, ít nhất một lần đúng thời lượng.",
+          "title": "Phát hiện ngoại lai (Outlier Detection)",
+          "goal": "Tách hai loại ngoại lai: bản ghi lỗi (chất lượng dữ liệu) và cầu thủ-mùa chấn thương nhiều bất thường so với số phút đá.",
+          "doneWhen": "Bảng cờ ngoại lai dữ liệu có modified z-score; bảng outlier_player_season có số kỳ vọng, p-value một phía, q theo Benjamini–Hochberg, cờ; số cờ mỗi mùa ghi trong báo cáo.",
+          "notes": "Grubbs, ESD giả định phân phối chuẩn: không dùng cho số đếm: https://www.itl.nist.gov/div898/handbook/eda/section3/eda35h.htm\nBẫy: nhân quả ngược (chấn thương dài làm giảm phút, nên rate theo phút bị thổi phồng): loại cầu thủ dưới 450 phút, hoặc dùng số ngày có mặt làm exposure thay thế. Hàng trăm cầu thủ là hàng trăm phép thử: bắt buộc kiểm soát FDR.\nBiểu đồ (bước 12): funnel plot, trục x exposure, trục y rate, giới hạn 95% và 99,8% quanh rate chung (Spiegelhalter, 2005); box plot log(days_out) theo loại chấn thương.",
           "subs": [
             {
-              "title": "Viết báo cáo theo dàn ý; mỗi người viết chương của mình."
+              "title": "Ngoại lai dữ liệu bằng modified z-score (Data Outliers)",
+              "doneWhen": "Với log(days_out) theo từng loại chấn thương: M = 0,6745 (x − median) / MAD; gắn cờ khi |M| > 3,5; chỉ gắn cờ, không xoá.",
+              "notes": "Iglewicz và Hoaglin, theo NIST e-Handbook mục 1.3.5.17: https://www.itl.nist.gov/div898/handbook/eda/section3/eda35h.htm",
+              "outs": [
+                {
+                  "key": "outlier-spell",
+                  "name": "Cờ ngoại lai dữ liệu",
+                  "ref": "dbt/models/gold/outlier_spell.sql",
+                  "note": "Mỗi đợt chấn thương: M, cờ; trang chất lượng dữ liệu của dashboard đọc"
+                }
+              ],
+              "ins": [
+                "gold-facts",
+                "analysis-plan"
+              ]
             },
             {
-              "title": "Làm slide theo dàn ý."
+              "title": "Số kỳ vọng bằng GLM có offset (Expected Counts)",
+              "doneWhen": "GLM nhị thức âm (hay Poisson nếu φ gần 1) với offset log(exposure), biến giải thích: tháng, số ngày nghỉ giữa hai trận, đá cúp châu Âu; lưu μ̂ mỗi cầu thủ-mùa và mỗi CLB × gameweek.",
+              "notes": "Đây là phần mô hình của đồ án thay cho học máy: hệ số giải thích được, số kỳ vọng dùng lại cho funnel plot và, nếu muốn, CUSUM điều chỉnh theo mùa vụ.",
+              "outs": [
+                {
+                  "key": "expected-counts",
+                  "name": "Mô hình số kỳ vọng",
+                  "ref": "analysis/expected_counts.py",
+                  "note": "GLM có offset; ghi bảng số kỳ vọng theo cầu thủ-mùa và CLB × gameweek"
+                }
+              ],
+              "ins": [
+                "gold-aggs",
+                "eda-findings"
+              ]
             },
             {
-              "title": "Tập dượt hai lần, bấm giờ."
-            },
-            {
-              "title": "Đi qua danh sách Xong khi nào."
+              "title": "Cầu thủ-mùa bất thường, kiểm soát FDR (Statistical Outliers)",
+              "doneWhen": "p_i = P(X ≥ x_i | μ̂_i) theo phân phối đã chọn; q theo Benjamini–Hochberg; cờ khi q < 0,05; bảng có exposure, x, μ̂, p, q.",
+              "notes": "Hàm dùng: scipy.stats.nbinom, poisson.sf; statsmodels.stats.multitest.multipletests(method=\"fdr_bh\").",
+              "outs": [
+                {
+                  "key": "outlier-table",
+                  "name": "Bảng ngoại lai cầu thủ-mùa",
+                  "ref": "analysis/outliers.py",
+                  "note": "Ghi outlier_player_season: x, e, μ̂, p, q, cờ; funnel plot đọc"
+                }
+              ],
+              "ins": [
+                "expected-counts",
+                "analysis-plan"
+              ]
             }
-          ],
-          "outs": [
+          ]
+        },
+        {
+          "title": "ANOM: so từng CLB với mức chung (Analysis of Means)",
+          "goal": "Trong mỗi mùa, chỉ ra CLB nào có tỉ lệ chấn thương khác hẳn mức chung của giải, kiểm soát sai lầm cho cả 20 CLB.",
+          "doneWhen": "Bảng anom_club_season có ū, UDL_i, LDL_i, cờ, hai bản (Poisson và điều chỉnh quá phân tán), cho từng mùa.",
+          "notes": "Mô hình: c_i ~ Poisson(λ_i n_i), n_i là exposure (nghìn giờ); H0: mọi λ_i bằng nhau.\nĐường giữa ū = Σ c_i / N, N = Σ n_i. Giới hạn UDL_i = ū + h √ū √((N − n_i) / (N n_i)); LDL_i = max(0, ū − h √ū √((N − n_i) / (N n_i))). Nguồn: SAS/QC, PROC ANOM, UCHART: https://support.sas.com/documentation/cdl/en/qcug/68161/HTML/default/qcug_anom_sect080.htm\nKhác u-chart: u-chart dùng ū ± 3 √(ū / n_i), không trừ phần CLB i góp vào ū, không kiểm soát sai lầm cho cả k nhóm.\nBẫy: ANOM có thể bắt khác biệt ghi nhận chứ không phải khác biệt chấn thương; CLB đá cúp châu Âu có thêm chấn thương mà không thêm exposure PL; CLB lên, xuống hạng đổi thành phần nhóm giữa các mùa.\nBiểu đồ (bước 12): mỗi CLB một điểm xếp theo rate, đường ū, hai bậc thang UDL_i, LDL_i, điểm ngoài giới hạn tô màu.",
+          "subs": [
             {
-              "key": "report",
-              "name": "report/",
-              "ref": "report/",
-              "final": true
+              "title": "Chọn hệ số h bằng Monte Carlo (Critical Value)",
+              "doneWhen": "Mô phỏng c_i ~ Poisson(ū n_i) 100 000 lần với n_i thật; h là phân vị 1 − α của max |u_i − ū*| / se_i; ghi h cho α = 0,05 và 0,01.",
+              "notes": "Exposure không đều thì h chưa có bảng tra (SAS ghi rõ); bằng nhau thì tra bảng của Nelson. Sách: Nelson, Wludyka, Copeland (2005), The Analysis of Means: https://epubs.siam.org/doi/10.1137/1.9780898718362.ch3",
+              "outs": [
+                {
+                  "key": "anom-h",
+                  "name": "Hệ số h của ANOM",
+                  "ref": "analysis/anom_h.py",
+                  "note": "h theo mùa và α; seed cố định để chạy lại ra cùng số"
+                }
+              ],
+              "ins": [
+                "gold-aggs",
+                "analysis-plan"
+              ]
             },
             {
-              "key": "slides",
-              "name": "slides/",
-              "ref": "slides/",
-              "final": true
+              "title": "Tính giới hạn và gắn cờ (Decision Limits)",
+              "doneWhen": "Mỗi mùa: ū, UDL_i, LDL_i cho 20 CLB; kiểm c_i > 5 ở mọi nhóm; CLB ngoài giới hạn có cờ.",
+              "outs": [
+                {
+                  "key": "anom-table",
+                  "name": "Bảng ANOM",
+                  "ref": "analysis/anom.py",
+                  "note": "Ghi anom_club_season: c, n, u, ū, UDL, LDL, cờ; bản Poisson và bản điều chỉnh"
+                }
+              ],
+              "ins": [
+                "anom-h"
+              ]
+            },
+            {
+              "title": "Điều chỉnh quá phân tán (Overdispersion)",
+              "doneWhen": "φ = Σ (c_i − ū n_i)² / (ū n_i) / (k − 1); φ > 1 thì nhân nửa độ rộng với √φ; báo cả hai bản, nói CLB nào đổi cờ.",
+              "notes": "Quá phân tán khi so sánh các đơn vị: Spiegelhalter (2005): https://pmc.ncbi.nlm.nih.gov/articles/PMC1744077",
+              "ins": [
+                "anom-table",
+                "eda-findings"
+              ]
             }
-          ],
-          "ins": [
-            "results-csv",
-            "docs-data-card-md",
-            "docs-lineage-md",
-            "docs-data-dictionary-md",
-            "docs-analysis-plan-md"
+          ]
+        },
+        {
+          "title": "CUSUM theo từng vòng đấu (Poisson CUSUM)",
+          "goal": "Phát hiện sớm khi tỉ lệ chấn thương của một CLB tăng lên mức mới, và ước lượng nó bắt đầu từ gameweek nào.",
+          "doneWhen": "Bảng cusum_club_gw có W_t, S_t, h, báo động, gameweek bắt đầu ước lượng cho 20 CLB ở các mùa giám sát; h chọn theo ARL0 bằng mô phỏng, có ARL1.",
+          "notes": "Thống kê (Page, 1954, tỉ số log-likelihood): W_t = x_t ln(λ1 / λ0) − (λ1 − λ0) e_t; S_t = max(0, S_{t−1} + W_t), S_0 = 0; báo động khi S_t ≥ h.\nDạng Lucas khi e_t hằng: S'_t = max(0, S'_{t−1} + x_t − k), k = (λ1 − λ0) e / ln(λ1 / λ0); với λ1 = 1,5 λ0 thì k ≈ 1,233 λ0 e.\nBảng ARL của NIST là cho dữ liệu chuẩn, không dùng cho đếm Poisson nhỏ: https://www.itl.nist.gov/div898/handbook/pmc/section3/pmc323.htm\nBẫy: mùa vụ và lịch dày (λ0 theo tháng, hay số kỳ vọng từ GLM của bước 8); một trận sinh nhiều chấn thương (không độc lập); 20 CLB chạy song song nhân số báo động giả; Transfermarkt được bổ sung muộn.\nBiểu đồ (bước 12): heatmap CLB × gameweek, màu là S_t / h; CUSUM chart một CLB với đường h và điểm báo động.",
+          "subs": [
+            {
+              "title": "Chọn h theo ARL bằng mô phỏng (ARL Simulation)",
+              "doneWhen": "Mô phỏng x_t ~ Poisson(λ0 e_t) với e_t thật, 10 000 chuỗi: ARL0 cho vài giá trị h; lặp với λ1 để có ARL1; chọn h theo ARL0 của kế hoạch; số báo động giả kỳ vọng mỗi mùa cả giải ≈ 20 × 38 / ARL0.",
+              "notes": "Đếm nhỏ nên phân phối rời rạc: tính ARL bằng mô phỏng hay chuỗi Markov, không chép bảng của dữ liệu chuẩn. Đối chiếu bằng R spc::pois.cusum.arl: https://search.r-project.org/CRAN/refmans/spc/html/pois.cusum.crit.html",
+              "outs": [
+                {
+                  "key": "cusum-h",
+                  "name": "Hệ số h của CUSUM",
+                  "ref": "analysis/cusum_arl.py",
+                  "note": "Bảng h → ARL0, ARL1; seed cố định"
+                }
+              ],
+              "ins": [
+                "gold-aggs",
+                "analysis-plan"
+              ]
+            },
+            {
+              "title": "Chạy CUSUM trên và dưới cho 20 CLB (Upper and Lower CUSUM)",
+              "doneWhen": "CUSUM trên (λ1 = 1,5 λ0) và dưới (λ1 ≈ 0,67 λ0); sau báo động ghi gameweek báo động, gameweek bắt đầu ước lượng (lần cuối S_t = 0) rồi đặt lại S = 0.",
+              "notes": "numpy, vòng lặp khoảng 30 dòng; chưa thấy thư viện Python chuẩn cho Poisson CUSUM kèm ARL.",
+              "outs": [
+                {
+                  "key": "cusum-table",
+                  "name": "Bảng CUSUM",
+                  "ref": "analysis/cusum.py",
+                  "note": "Ghi cusum_club_gw: x, e, W, S, h, báo động, gameweek bắt đầu"
+                }
+              ],
+              "ins": [
+                "cusum-h",
+                "gold-aggs"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "SPRT của Wald (Sequential Probability Ratio Test)",
+          "goal": "Với mỗi CLB trong mùa giám sát, kết luận sớm nhất có thể tỉ lệ đang ở mức nền λ0 hay mức cao λ1, với sai lầm α, β đã chốt.",
+          "doneWhen": "Bảng sprt_club_gw có Λ_n, ln A, ln B, quyết định (nhận H0, nhận H1, tiếp tục, chưa kết luận khi hết mùa); OC và ASN có từ mô phỏng.",
+          "notes": "Sau n gameweek: X_n = tổng chấn thương, E_n = tổng exposure; Λ_n = X_n ln(λ1 / λ0) − (λ1 − λ0) E_n.\nBiên Wald: A = (1 − β) / α, B = β / (1 − α); nhận H1 khi Λ_n ≥ ln A, nhận H0 khi Λ_n ≤ ln B. Với α = 0,05, β = 0,10: ln A ≈ 2,890, ln B ≈ −2,251. Wald (1945): https://projecteuclid.org/euclid.aoms/1177731118\nCUSUM là chuỗi SPRT có biên dưới bằng 0 và khởi động lại (Page, 1954): khi trình bày, nói SPRT trước, CUSUM sau, để người nghe thấy cùng một tỉ số hợp lý.\nBẫy: λ0 là ước lượng, không biết chính xác; chạy 20 SPRT thì α là của từng phép thử.\nBiểu đồ (bước 12): đường bậc thang X_n theo E_n giữa hai đường biên song song, vùng nhận H0 / tiếp tục / nhận H1.",
+          "subs": [
+            {
+              "title": "Chạy SPRT từng CLB (Sequential Test)",
+              "doneWhen": "Mỗi CLB, mỗi mùa giám sát: Λ_n theo gameweek, quyết định ở lần đầu chạm biên; hết mùa chưa chạm thì ghi \"chưa kết luận\", không ép quyết định.",
+              "outs": [
+                {
+                  "key": "sprt-table",
+                  "name": "Bảng SPRT",
+                  "ref": "analysis/sprt.py",
+                  "note": "Ghi sprt_club_gw: X, E, Λ, ln A, ln B, quyết định"
+                }
+              ],
+              "ins": [
+                "gold-aggs",
+                "analysis-plan"
+              ]
+            },
+            {
+              "title": "OC và ASN bằng mô phỏng (Operating Characteristics)",
+              "doneWhen": "Mô phỏng bằng numpy.random.poisson: xác suất nhận H0 theo λ thật (đường OC), số gameweek trung bình tới quyết định (ASN); so với công thức của Wald.",
+              "outs": [
+                {
+                  "key": "sprt-oc",
+                  "name": "OC và ASN của SPRT",
+                  "ref": "analysis/sprt_oc.py",
+                  "note": "Bảng λ → P(nhận H0), ASN; báo cáo dùng để nói SPRT dừng sớm cỡ nào"
+                }
+              ],
+              "ins": [
+                "sprt-table"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Trực quan hoá: dashboard Superset (Data Visualization)",
+          "goal": "Một dashboard Superset trả lời bốn câu hỏi và cho thấy chất lượng dữ liệu; mọi giới hạn, biên tính sẵn ở Gold, Superset chỉ vẽ.",
+          "doneWhen": "Dashboard mở được trên máy sạch sau scripts/up.sh; mỗi câu hỏi một biểu đồ đúng loại; dashboard xuất ra file trong repo.",
+          "notes": "Superset nối DuckDB bằng duckdb-engine, chuỗi duckdb:////đường/dẫn/tới/file.duckdb: https://superset.apache.org/user-docs/databases/supported/duckdb\nPipeline không ghi file Superset đang mở: bước publish chép Gold ra file gold.duckdb mới rồi đổi tên, Superset mở chỉ đọc. Ghi nhiều tiến trình (giao thức Quack, DuckLake) còn mới: không dựa vào.\nMotherDuck là dịch vụ cloud: trái yêu cầu tự host.",
+          "subs": [
+            {
+              "title": "Xuất bản Gold cho Superset (Publish Read-only Gold)",
+              "doneWhen": "scripts/publish.sh chép bảng gold sang publish/gold.duckdb (file tạm rồi đổi tên) và xuất Parquet; Superset kết nối read_only; chạy publish khi Superset đang mở không lỗi.",
+              "outs": [
+                {
+                  "key": "gold-duckdb",
+                  "name": "File Gold chỉ đọc",
+                  "ref": "publish/gold.duckdb",
+                  "note": "Bảng gold đã kiểm; Superset mở read_only; thay bằng đổi tên file"
+                }
+              ],
+              "ins": [
+                "outlier-table",
+                "anom-table",
+                "cusum-table",
+                "sprt-table",
+                "outlier-spell"
+              ]
+            },
+            {
+              "title": "Biểu đồ theo từng phương pháp (Charts per Method)",
+              "doneWhen": "Funnel plot (rate theo exposure, giới hạn 95% và 99,8%); ANOM chart (ū, UDL / LDL bậc thang); heatmap CLB × gameweek màu S_t / h; CUSUM chart một CLB; SPRT chart (X_n theo E_n, hai biên).",
+              "notes": "Giới hạn bậc thang vẽ thành nhiều series. Thử sớm một biểu đồ bậc thang trong Superset; không đạt thì vẽ ANOM, SPRT bằng app Streamlit (thẻ cuối của bước này).",
+              "ins": [
+                "gold-duckdb"
+              ]
+            },
+            {
+              "title": "Trang tổng quan và chất lượng dữ liệu (Overview and Data Quality)",
+              "doneWhen": "Tổng quan: số chấn thương và rate mỗi mùa, rate theo CLB, chấn thương theo tháng và loại. Chất lượng dữ liệu: kết quả dbt test, cờ ngoại lai dữ liệu, tỉ lệ khớp cầu thủ, đối soát số dòng nạp.",
+              "notes": "Trang chất lượng dữ liệu là bằng chứng của phần quản trị dữ liệu; đừng bỏ.",
+              "ins": [
+                "gold-duckdb",
+                "ingest-log",
+                "dq-tests"
+              ]
+            },
+            {
+              "title": "Xuất dashboard thành file (Dashboard Export)",
+              "doneWhen": "Dashboard, chart, dataset xuất ra superset/export/; superset-init import lại được trên máy sạch.",
+              "outs": [
+                {
+                  "key": "dashboard-export",
+                  "name": "Bảng điều khiển Superset",
+                  "ref": "superset/export/",
+                  "note": "File xuất của dashboard; superset-init import lúc dựng; demo mở trang này"
+                }
+              ]
+            },
+            {
+              "title": "Phòng thí nghiệm tham số bằng Streamlit, tuỳ chọn (Parameter Lab)",
+              "doneWhen": "App kéo thanh trượt λ1, h, α, β rồi xem ARL, báo động, quyết định SPRT đổi ra sao; đọc publish/gold.duckdb chỉ đọc. Thiếu thời gian thì Skip, giữ bảng ARL tính sẵn.",
+              "notes": "Superset không tính lại theo tham số; đây là chỗ cho thấy chọn tham số đổi kết quả thế nào.",
+              "outs": [
+                {
+                  "key": "param-lab",
+                  "name": "App tham số (tuỳ chọn)",
+                  "ref": "app/param_lab.py",
+                  "note": "Streamlit đọc Gold chỉ đọc; mở trong buổi demo",
+                  "final": true
+                }
+              ],
+              "ins": [
+                "gold-duckdb",
+                "cusum-h"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Phát lại theo vòng đấu, tuỳ chọn (Gameweek Replay)",
+          "goal": "Cho thấy giám sát tuần tự chạy như thật: mỗi gameweek mới vào Bronze là một snapshot, CUSUM và SPRT cập nhật, dashboard đổi theo.",
+          "doneWhen": "scripts/replay.py nạp từng gameweek của một mùa; mỗi lần một snapshot Iceberg, dbt build, chạy lại CUSUM và SPRT, publish; dừng ở gameweek nào thì dashboard đúng như lúc ấy.",
+          "notes": "Luồng giả lập thay Kafka: không có nguồn sự kiện thật, nhịp gameweek là micro-batch, đủ để nói về velocity và xử lý tăng dần.\nBước tuỳ chọn: thiếu thời gian thì Skip; CUSUM, SPRT vẫn chạy trên cả mùa.\nMỗi lần DuckDB ghi vào bảng Iceberg qua catalog là một snapshot mới: https://duckdb.org/docs/2.0/core_extensions/iceberg/writing_to_iceberg.html",
+          "subs": [
+            {
+              "title": "Script phát lại từng gameweek (Replay Script)",
+              "doneWhen": "Mỗi lần chạy nạp đúng một gameweek mới (trận, phút, chấn thương có ngày bắt đầu tới hạn chót gameweek ấy) vào Bronze; chạy lại cùng gameweek không sinh trùng.",
+              "outs": [
+                {
+                  "key": "replay-script",
+                  "name": "Script phát lại gameweek",
+                  "ref": "scripts/replay.py",
+                  "note": "Mùa, gameweek; nạp một gameweek, dbt build, chạy giám sát, publish"
+                }
+              ],
+              "ins": [
+                "bronze-tables",
+                "landing"
+              ]
+            },
+            {
+              "title": "Chạy giám sát as-of bằng snapshot (Time Travel)",
+              "doneWhen": "CUSUM, SPRT chạy trên snapshot Bronze của một ngày cũ ra đúng kết quả lúc ấy; in được danh sách snapshot của bảng Bronze.",
+              "notes": "DuckDB đọc được snapshot cũ của bảng Iceberg; tên hàm liệt kê snapshot và cú pháp đọc theo snapshot: kiểm ở tài liệu extension iceberg của bản đang ghim: https://duckdb.org/docs/2.0/core_extensions/iceberg/overview.html",
+              "ins": [
+                "replay-script",
+                "cusum-table",
+                "sprt-table"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Demo, báo cáo, slide (Demo, Report, Slides)",
+          "goal": "Người chấm thấy sản phẩm chạy thật, hiểu bốn phương pháp trả lời gì, và biết giới hạn của dữ liệu.",
+          "doneWhen": "Máy sạch: clone, scripts/up.sh, chạy pipeline, mở dashboard trong một buổi; báo cáo có chương giới hạn và tuyên bố; slide tập dượt đúng giờ.",
+          "notes": "Khung báo cáo mượn từ các trang của repo tham khảo (Overview, Problem Framing, Data Sources, Architecture, Data Model, Pipeline, Observability, Limitations…); thay trang ML bằng bốn phương pháp: https://github.com/ivanrivasgr/Sports_Injury_Risk_Intelligence\nNói thật về big data: dữ liệu nhỏ (ghi số dòng, MB đo được). Volume: không; Variety: có (HTML, CSV, JSON); Velocity: nhịp gameweek, có phát lại; Veracity: trọng tâm (khai thiếu chấn thương, khớp tên giữa các nguồn). Kiến trúc chọn vì quản trị dữ liệu, không vì dung lượng; cùng bảng Iceberg chạy được với Spark, Trino khi dữ liệu lớn lên.",
+          "subs": [
+            {
+              "title": "Trang giới hạn và tuyên bố (Limitations and Disclaimer)",
+              "doneWhen": "report/limitations.md: khai thiếu chấn thương, ngày bắt đầu là ngày công bố, chỉ có phút PL, gán CLB xấp xỉ, số dòng tăng theo mùa do cách scrape, khác biệt ghi nhận giữa CLB, association ≠ causation; mỗi giới hạn nói ảnh hưởng tới phương pháp nào.",
+              "notes": "Khung L-01 … L-06 lấy từ trang Limitations của repo tham khảo. Đừng chép con số tỉ lệ chấn thương không công bố của repo ấy: nó không dẫn nguồn.",
+              "outs": [
+                {
+                  "key": "limitations",
+                  "name": "Giới hạn và tuyên bố",
+                  "ref": "report/limitations.md",
+                  "note": "Mỗi giới hạn: nguồn gốc, ảnh hưởng tới phương pháp nào, cách đã giảm nhẹ"
+                }
+              ],
+              "ins": [
+                "source-catalogue",
+                "licence-log",
+                "eda-findings"
+              ]
+            },
+            {
+              "title": "README và kịch bản demo (Demo Runbook)",
+              "doneWhen": "README: một lệnh dựng, một lệnh chạy pipeline, URL dashboard, nguồn dữ liệu và cách tải (không kèm file thô); docs/demo.md: các bước demo theo thời lượng giảng viên cho, phương án khi Docker hay mạng lỗi (video quay sẵn).",
+              "outs": [
+                {
+                  "key": "readme",
+                  "name": "README và kịch bản demo",
+                  "ref": "README.md",
+                  "note": "Dựng, chạy, mở dashboard trên máy sạch; docs/demo.md là kịch bản trình diễn",
+                  "final": true
+                }
+              ],
+              "ins": [
+                "bootstrap",
+                "dashboard-export",
+                "ci",
+                "replay-script"
+              ]
+            },
+            {
+              "title": "Viết báo cáo (Report)",
+              "doneWhen": "report/: đề tài, nguồn và giấy phép, kiến trúc lakehouse, mô hình dữ liệu, chất lượng dữ liệu, bốn phương pháp (công thức, tham số, kết quả, biểu đồ), giới hạn, kết luận.",
+              "outs": [
+                {
+                  "key": "report",
+                  "name": "Báo cáo đồ án",
+                  "ref": "report/",
+                  "note": "Bản nộp; mỗi kết quả dẫn về bảng Gold và biểu đồ của nó",
+                  "final": true
+                }
+              ],
+              "ins": [
+                "data-model",
+                "analysis-plan",
+                "outlier-table",
+                "anom-table",
+                "cusum-table",
+                "sprt-oc",
+                "limitations",
+                "stack-adr"
+              ]
+            },
+            {
+              "title": "Slide và tập dượt (Slides)",
+              "doneWhen": "slides/: mỗi phương pháp một câu hỏi, một biểu đồ, một kết luận; tập dượt bấm giờ theo thời lượng giảng viên cho.",
+              "outs": [
+                {
+                  "key": "slides",
+                  "name": "Slide thuyết trình",
+                  "ref": "slides/",
+                  "note": "Câu hỏi, biểu đồ, kết luận của từng phương pháp; giới hạn ở cuối",
+                  "final": true
+                }
+              ],
+              "ins": [
+                "limitations",
+                "dashboard-export"
+              ]
+            }
           ]
         }
       ]

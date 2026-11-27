@@ -28,8 +28,8 @@ Làm xong mục nào thì xoá mục ấy.
 - Sơ đồ System design: ở 1280px chỉ còn 3 cột (khoảng cách cột nới ra cho nhãn bàn giao).
 - Mẫu `data-pipeline`: chỉ kiểm tên khâu qua mục lục sách (Reis & Housley); bước con chưa đối chiếu với chữ trong sách.
   Ba yếu tố của DataOps trong sách chưa ghi vì chưa mở được nguồn.
-- Mẫu `it5425-sports`: pha P7 có 7 đầu vào; đầu ra của P0 và notebook EDA của P3 chưa nơi nào dùng, không phải sản phẩm cuối nên
-  vẫn chấm đỏ (`IO_EXCEPT` trong `tools/test-core.mjs`). Xem lại khi trang đồ án đổi.
+- Mẫu `it5425-sports`: số đếm thử ngày 27/11/2026 ở ghi chú (bộ chấn thương salimt tới khoảng 12/2025, khớp cầu thủ qua reep
+  khoảng 99% số phút, 380/380 trận ghép FPL với E0) sẽ cũ khi nguồn cập nhật; điều khoản Transfermarkt hiện hành chưa mở được.
 - Mẫu `big-data-ds`: sách Lambda (Marz & Warren, 2015) chưa mở được; mô tả Lambda đối chiếu với bài giảng của môn.
 - Mẫu CRISP-DM: thẻ TDSP (Customer Acceptance), Model Cards, Datasheets for Datasets chưa mở lại được nguồn để kiểm.
 - Danh mục System design: luật `non-streamlit-ui-on-streamlit-cloud`, `api-on-streamlit-cloud` suy từ câu "create, deploy,
@@ -44,3 +44,5 @@ Làm xong mục nào thì xoá mục ấy.
 - Luật `free-host-sleeps` ghi Render "dậy mất khoảng một phút": là thời gian, không phải giá hay hạn mức; có hợp luật
   "không ghi số" của danh mục không?
 - Luật GPU trên host không có GPU: chưa thêm vì tài liệu Streamlit Community Cloud, Render không nói rõ. Có cần không?
+- Mẫu `it5425-sports` để trống câu "How much data?" (dữ liệu dưới 1 GB): trả lời thật thì System design gợi ý thư mục dự án
+  + một database thay lakehouse. Giữ trống và dặn tự thêm Iceberg, Polaris, dbt, Superset sau Apply path, hay trả lời "Fits in memory"?

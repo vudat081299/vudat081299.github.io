@@ -1474,8 +1474,12 @@ const check = (name, ok, detail = '') => {
   check('390px: tên dự án một dòng, cắt bớt', topH[1] < 40 && topH[0] < 70, topH.join(','));
   const chevs = await m.page.$$eval('.ws-notes summary, .step-notes summary', (ss) => ss.map((x) => `${getComputedStyle(x).display}:${x.querySelectorAll('svg.i use[href="#i-chev"]').length}`));
   check('ghi chú dự án và ghi chú bước: cùng biểu tượng chevron, không dấu tam giác của trình duyệt', chevs.every((x) => /^(inline-)?flex:1$/.test(x)), [...new Set(chevs)].join(','));
-  check('mẫu đồ án: ghi chú bước gập, có link trang đồ án', (await m.page.$$('.step-notes')).length === 10
-    && (await m.page.$$eval('.step-notes a', (a) => a.filter((x) => /sports-monitoring-build\.html#lich$/.test(x.href)).length)) === 10);
+  { // Mẫu it5425-sports: mỗi bước có ghi chú gập, mỗi ghi chú có ít nhất một link nguồn (https).
+    const nSteps = (await cur(m.page)).steps.length;
+    const notes = await m.page.$$eval('.step-notes', (ns) => ns.map((n) => [n.tagName, [...n.querySelectorAll('a')].filter((x) => x.href.startsWith('https://')).length]));
+    check('mẫu it5425-sports: ghi chú bước gập, mỗi bước có link nguồn', nSteps > 0 && notes.length === nSteps
+      && notes.every(([tag, n]) => tag === 'DETAILS' && n > 0), JSON.stringify(notes));
+  }
   for (const d of ['#dlg-sub', '#dlg-export']) {
     if (d === '#dlg-sub') await m.page.click('.step:nth-child(1) [data-act="edit-sub"]');
     else await m.page.click('#export-btn');
@@ -3595,8 +3599,7 @@ const check = (name, ok, detail = '') => {
     await page.keyboard.press('Escape');
     check('đầu ra cuối: danh sách đầu ra có nhãn "Final", không ghi "Not used yet"', list.tag === 1 && /Final deliverable/.test(list.t) && !/Not used yet/.test(list.t), JSON.stringify(list));
     await ctx.close();
-    /* Mỗi mẫu: dự án mới không có chấm đầu ra đỏ. it5425-sports: P0, P3 là ngoại lệ (IO_EXCEPT trong tools/test-core.mjs). */
-    const except = { 'it5425-sports': 2 };
+    /* Mỗi mẫu: dự án mới không có chấm đầu ra đỏ. */
     const fresh = await seeded(1280, 900, null);
     const tp = fresh.page;
     await tp.waitForSelector('#start:not([hidden]) .tpl[data-tpl="crisp-dm"]');
@@ -3613,7 +3616,7 @@ const check = (name, ok, detail = '') => {
       await waitTo(tp, `bảng của mẫu ${t.id}`, (n) => document.querySelectorAll('#board .step').length === n && !document.querySelector('dialog[open]'), t.steps.length);
       reds[t.id] = await tp.$$eval('#board .io-dot.out.bad', (ds) => ds.length);
     }
-    check('đầu ra cuối: dự án mới từ mỗi mẫu không có chấm đầu ra đỏ (trừ ngoại lệ đã ghi)', tpls.every((t) => reds[t.id] === (except[t.id] || 0)), JSON.stringify(reds));
+    check('đầu ra cuối: dự án mới từ mỗi mẫu không có chấm đầu ra đỏ', tpls.every((t) => !reds[t.id]), JSON.stringify(reds));
     await fresh.ctx.close();
   });
 

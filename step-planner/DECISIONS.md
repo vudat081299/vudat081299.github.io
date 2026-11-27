@@ -38,6 +38,7 @@
 - PLAN-038 · Đầu ra đánh dấu là sản phẩm cuối không cần nơi nhận · `step-planner/`
 - PLAN-039 · Mẫu chia hai nhóm: loại dự án chung và dự án cụ thể đang làm · `step-planner/`
 - PLAN-040 · Mẫu đồ án là mẫu viết tay, theo mọi luật chung của mẫu · `step-planner/data/templates.json`
+- PLAN-041 · Mẫu IT5425: giám sát chấn thương Premier League, một người, từ đề tài tới demo chạy thật · `step-planner/data/templates.json`
 <!-- index:end -->
 
 ## PLAN-001 · Dự án là các bước có thứ tự, mỗi bước có bước con có thứ tự
@@ -227,3 +228,8 @@ Mẫu chia hai nhóm. Mẫu chung là một loại dự án (CRISP-DM, Data Scie
 27/11/2026 · `step-planner/data/templates.json` · thay cho PLAN-008
 
 Có mẫu cho các loại dự án hay gặp (Data Science, phân tích thống kê không học máy, tính năng app, dữ liệu), mẫu cho dự án cụ thể chủ trang đang làm (đồ án môn đang học) và đúng một mẫu trống; danh sách ở `data/templates.json`. Mẫu đồ án không sinh từ trang đồ án và không phải khớp với trang ấy: chủ trang có thể đổi hướng đồ án mà trang môn học chưa đổi theo. Mẫu đồ án theo mọi luật chung của mẫu: dữ liệu chỉ chảy xuôi, sản phẩm cuối đánh dấu, mở ra không có đầu ra lỗi, không ngoại lệ riêng. Không tên người thật.
+
+## PLAN-041 · Mẫu IT5425: giám sát chấn thương Premier League, một người, từ đề tài tới demo chạy thật
+27/11/2026 · `step-planner/data/templates.json`
+
+Mẫu đồ án môn IT5425 (Data Management and Visualization) dẫn một người làm, không chia vai, không họp nhóm, từ đề tài tới một bản demo chạy thật về giám sát chấn thương ở Premier League: cả 20 CLB, vài mùa gần đây, đủ bốn phương pháp của đề (phát hiện ngoại lai, ANOM, CUSUM, SPRT), mỗi phương pháp nói thống kê, cách chọn tham số và biểu đồ. Mẫu cho thấy rõ ba phần của môn: khái niệm big data nói thật (dữ liệu nhỏ, chọn kiến trúc vì quản trị dữ liệu), quản trị dữ liệu (nguồn và giấy phép, medallion, mô hình dữ liệu có grain, khớp định danh giữa nguồn, kiểm chất lượng, đúng thời điểm, lineage), trực quan hoá (dashboard). Không học máy làm lõi: nhãn chấn thương thiếu có hệ thống và đặc trưng ít, nên dùng số kỳ vọng Poisson / nhị thức âm, lý do ghi trong mẫu. Stack là lakehouse mã nguồn mở tự chạy của nhóm (Docker Compose, object storage, Parquet, Iceberg với catalog Polaris, dbt và DuckDB, Superset; nguồn HTML và CSV, luồng giả lập về sau); chỗ nào không hợp đồ án một người thì mẫu vẫn khuyên và ghi lý do ngay trong ghi chú (bỏ Spark, Kubernetes, Hudi; thay Kafka bằng phát lại theo vòng đấu; ghim object storage; dashboard đọc bản Gold chỉ đọc; không dựa vào tính năng còn thử nghiệm). Hạ tầng dựng và thử trước, dữ liệu sau, phương pháp sau nữa. Dữ liệu thô của bên thứ ba không vào repo public. Số liệu và link trong mẫu chỉ lấy từ nguồn đã mở. Repo tham khảo chỉ để học cách làm, không phải đề bài.

@@ -130,7 +130,7 @@
 - Mọi chữ của mẫu tiếng Việt (PLAN-028); tên bước, bước con theo chuẩn: tên tiếng Việt, tên gốc trong ngoặc, ví dụ
   "Hiểu dữ liệu (Data Understanding)". Giữ nguyên tên công cụ, thư viện, file, lệnh, URL.
 - `output`: loại đầu ra, hiện trên thẻ mẫu. `description` nói khi nào chọn mẫu, phần nào bỏ được khi làm một mình.
-- `outs: [{key, name, ref?, note?, final?}]`, `ins: [key]`: `fromTemplate` đổi key thành id mới, key lạ bỏ. Dữ liệu chỉ chảy xuôi (`check_flow`); `test-core` kiểm mọi mẫu: không đầu vào treo (kể cả cùng ô), không đầu vào lơ lửng, không đầu ra lỗi (sản phẩm cuối ghi `final: true`; ngoại lệ ở `IO_EXCEPT`).
+- `outs: [{key, name, ref?, note?, final?}]`, `ins: [key]`: `fromTemplate` đổi key thành id mới, key lạ bỏ. Dữ liệu chỉ chảy xuôi (`check_flow`); `test-core` kiểm mọi mẫu: không đầu vào treo (kể cả cùng ô), không đầu vào lơ lửng, không đầu ra lỗi (sản phẩm cuối ghi `final: true`; không ngoại lệ).
 - `ref` là đường dẫn quy ước (CRISP-DM: Cookiecutter Data Science) hoặc link https; `note`: một dòng là gì, khoá, cách kiểm.
 - `crisp-dm` theo CRISP-DM 1.0 Step-by-step guide (Chapman et al., 2000): bước là sáu pha, bước con là generic task, `doneWhen`
   là output của task, `notes` là câu hỏi gợi ý và bẫy hay gặp. Việc ngoài guide ghi nguồn trong tên thẻ; không thêm việc không có nguồn.
@@ -145,7 +145,8 @@
 - `lakehouse-oss` (PLAN-029): mẫu chung cho mọi lakehouse mã nguồn mở; stack cụ thể chỉ là ví dụ ở ghi chú. Hạ tầng, dữ liệu trước,
   điều phối sau; bước cuối kiểm tuân thủ medallion. Ghi chú về giấy phép, tình trạng bảo trì công cụ ghi kèm link nguồn.
 - `app-feature` không theo chuẩn; việc phát hành theo tài liệu App Store Connect, Google Play, Flutter (link ở ghi chú bước).
-- `it5425-sports` (PLAN-040): mẫu viết tay như mọi mẫu, không sinh từ trang đồ án, theo mọi luật chung ở trên. Không tên người.
+- `it5425-sports` (PLAN-040, PLAN-041): mẫu viết tay, không sinh từ trang đồ án, theo mọi luật chung ở trên. Không tên người.
+  Số liệu, link, lý do bỏ công cụ ở ghi chú bước chỉ lấy từ nguồn đã mở; cỡ dữ liệu trong `design` để trống có chủ ý (ghi chú bước 3).
 
 ## System design (`data/system-design.json`, PLAN-016)
 

@@ -27,7 +27,7 @@
      dùng cùng khoá điều kiện với `checks`, `arch` là kiến trúc của nhóm ("" = nhóm không cần).
      Luật báo {id, title, if, unless?, msg, caveat?}: `caveat: true` = luật nhắc cách dùng, phương án vẫn đúng (Apply path
      không né nó).
-  5. Ngôn ngữ (PLAN-028): mọi chữ của mẫu có chữ Việt (trừ chuỗi chỉ là đường dẫn, tên file, và LATIN_OK); mọi chuỗi của
+  5. Ngôn ngữ (PLAN-028): mọi chữ của mẫu có chữ Việt (trừ chuỗi chỉ là đường dẫn, tên file); mọi chuỗi của
      system-design.json là lời giải thích tiếng Việt, trừ nhãn và tên (DESIGN_EN, tiếng Anh), tên trang ngoài (DESIGN_TITLES,
      giữ chữ của trang), id, URL, lệnh (DESIGN_CODE); chuỗi trong js/**/*.js và chữ của index.html không có chữ Việt, trừ chuỗi
      có chú thích `lang: vi — lý do` trên dòng mở hoặc dòng đóng (một chú thích miễn đúng một chuỗi).
@@ -605,8 +605,6 @@ CSS_COLOR = re.compile(r'#[0-9a-fA-F]{3,8}\b|\b(?:rgba?|hsla?|hwb|lab|lch|oklab|
 
 VI_RE = re.compile('[À-ÃÈ-ÊÌÍÒ-ÕÙÚÝà-ãè-êìíò-õùúýĂăĐđĨĩŨũƠơƯưẠ-ỹ]')  # chữ cái riêng của tiếng Việt
 TPL_TEXT = ('name', 'description', 'output', 'title', 'goal', 'doneWhen', 'notes')  # + outs[].name, outs[].note
-# Chuỗi của mẫu được phép không có chữ Việt (ngoài đường dẫn, tên file).
-LATIN_OK = {'P3 · EDA', 'P7 · Demo'}
 # system-design.json: mọi chuỗi là lời giải thích tiếng Việt (trường mới cũng vậy), trừ ba loại dưới (đường dẫn: khoá nối
 # bằng `.`, phần tử danh sách thêm `[]`, khoá dưới `if`, `unless`, `when`, `fit`, `implies`, `suggest`, `tools`, `paths[].stages` là `*`).
 # Nhãn, tên giao diện: tiếng Anh (`english`).
@@ -637,7 +635,7 @@ def check_tpl_language(data):
             fields = [(k, it.get(k)) for k in TPL_TEXT if k in it and (where or k in ('name', 'description', 'output'))]
             fields += [(f'outs[{n}].{k}', o.get(k)) for n, o in enumerate(it.get('outs') or []) for k in ('name', 'note') if k in o]
             for k, v in fields:
-                if isinstance(v, str) and v.strip() and not VI_RE.search(v) and not path_text(v) and v not in LATIN_OK:
+                if isinstance(v, str) and v.strip() and not VI_RE.search(v) and not path_text(v):
                     err(f'{w0} {where}{"." if where else ""}{k}: nội dung mẫu phải tiếng Việt (tên gốc tiếng Anh để trong ngoặc): "{v[:60]}"')
 
 
