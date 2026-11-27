@@ -49,7 +49,7 @@
   border: solid var(--ink-4); border-width: var(--mark-w) var(--mark-w) 0 0;
 }
 /* Trên bước nhận: dải cao bằng một thẻ ở cột tên bước, mũi tên từ vạch chia xuống, nút ở giữa. */
-.hand-row { grid-column: 1 / -1; order: -2; width: var(--head-w); max-width: 100%; height: var(--card-min); }
+.hand-row { width: var(--head-w); max-width: 100%; height: var(--card-min); }
 .board.compact .hand-row { height: var(--card-min-compact); }
 .hand-row::before { top: calc(-1 * var(--s4)); bottom: var(--mark-w); left: 50%; border-left: var(--mark-w) dashed var(--ink-4); transform: translateX(-50%); }
 .hand-row::after { bottom: var(--mark-w); left: 50%; transform: translateX(-50%) rotate(135deg); }

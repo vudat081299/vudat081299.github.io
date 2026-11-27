@@ -65,9 +65,25 @@
 /* Thẻ không bị kéo cao bằng thẻ cao nhất hàng: mỗi thẻ cao theo nội dung (--card-min … --card-max).
    Rộng theo thẻ: lề phải của hàng cuộn mới được tính vào đoạn cuộn. */
 .cards { display: flex; gap: var(--s3); align-items: flex-start; width: max-content; min-width: 100%; }
-/* Một cột: cùng thứ tự như màn rộng và như DOM (vòng Tab) — băng Reopened, dải tài liệu, đầu bước, hàng thẻ. */
+/* Chỗ của từng khối trong hàng. DOM (vòng Tab): mũi tên bàn giao, đầu bước, băng Reopened, dải tài liệu, hàng thẻ.
+   Màn rộng: mũi tên, băng, tài liệu là các dòng ngang trên cùng, rồi cột tên cạnh hàng thẻ; đặt bằng dòng lưới, không `order`.
+   Dòng của mỗi khối đếm các khối có mặt phía trên nó; `reading-flow` cho Tab đi theo dòng lưới như mắt đọc. */
+.step { --above-mark: 0; --above-band: 0; --above-docs: 0; reading-flow: grid-rows; }
+.step:has(> .hand-row) { --above-mark: 1; }
+.step:has(> .revisit-band) { --above-band: 1; }
+.step:has(> .step-docs) { --above-docs: 1; }
+.dragging-any .step { --above-mark: 0; } /* đang kéo: mũi tên ẩn (hand.css), không giữ dòng trống */
+.step > :is(.hand-row, .revisit-band, .step-docs) { grid-column: 1 / -1; }
+.step > .hand-row { grid-row: 1; }
+.step > .revisit-band { grid-row: calc(1 + var(--above-mark)); }
+.step > .step-docs { grid-row: calc(1 + var(--above-mark) + var(--above-band)); }
+.step > :is(.step-head, .cards-scroll) { grid-row: calc(1 + var(--above-mark) + var(--above-band) + var(--above-docs)); }
+.step > .step-head { grid-column: 1; }
+.step > .cards-scroll { grid-column: 2; }
+/* Một cột: theo đúng DOM — tên bước trước, rồi băng Reopened, dải tài liệu, hàng thẻ. */
 @media (max-width: 640px) {
   .step { grid-template-columns: minmax(0, 1fr); }
+  .step > :is(.hand-row, .revisit-band, .step-docs, .step-head, .cards-scroll) { grid-area: auto; }
   .step-head .acts { gap: 0; }
   .step-head .acts .btn.small { padding: 0 var(--s2); }
 }
@@ -102,7 +118,7 @@
 
 /* ── Băng "Reopened" của một bước (step.revisit): vòng, ngày, lý do, còn mấy việc phải làm lại; xong hết thì mời đóng vòng ── */
 .revisit-band {
-  grid-column: 1 / -1; display: flex; align-items: center; gap: var(--s2) var(--s3); flex-wrap: wrap;
+  display: flex; align-items: center; gap: var(--s2) var(--s3); flex-wrap: wrap;
   padding: var(--s1) var(--s1) var(--s1) var(--s3); border: var(--line-w) solid var(--amber-line); border-radius: var(--r);
   background: var(--amber-soft); color: var(--amber-fg); font-size: var(--fs-sm);
 }

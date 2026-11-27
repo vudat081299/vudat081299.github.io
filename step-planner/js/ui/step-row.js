@@ -1,6 +1,6 @@
 // @ts-check
-/* Dựng một hàng của bảng (stepRow): vạch "Add step", mũi tên bàn giao, băng Reopened, dải tài liệu, đầu bước (số, tên,
-   mục tiêu, Done when, ghi chú, chip In / Out, tiến độ, nút), hàng thẻ theo ô; chip trạng thái, dấu bằng chứng, chip tài liệu.
+/* Dựng một hàng của bảng (stepRow): vạch "Add step", mũi tên bàn giao, đầu bước (số, tên, mục tiêu, Done when, ghi chú,
+   chip In / Out, tiến độ, nút), băng Reopened, dải tài liệu, hàng thẻ theo ô; chip trạng thái, dấu bằng chứng, chip tài liệu.
    Xuất: stepRow.
    Dùng: core/board.js, core/io.js, core/model.js, ui/board.js, ui/clamp.js, ui/dom.js, ui/hand.js, ui/log.js. */
 import { canReopen, progress, redoCount, slotsOf } from '../core/board.js';
@@ -13,7 +13,8 @@ import { gapItem, ioDots, rowMarker, tags } from './hand.js';
 import { iterTag } from './log.js';
 /** @typedef {import('../core/handoffs.js').IoStatus} IoStatus */
 
-/** Dựng một hàng (bước): đầu bước, băng Reopened, dải tài liệu, hàng thẻ theo ô.
+/** Dựng một hàng (bước). Thứ tự DOM là thứ tự đọc ở một cột và vòng Tab: vạch "Add step", mũi tên bàn giao, đầu bước,
+ * băng Reopened, dải tài liệu, hàng thẻ theo ô. Màn rộng xếp chỗ bằng dòng, cột lưới (`css/board.css`), không đổi DOM.
  * @param {any} step @param {number} i @param {any[]} visible
  * @param {{filtering:boolean, todayStr:string, nextIds:Set<string>, labels:Map<string,string>, keep:{notes:Set<string>, open:Set<string>}, reopenedOn:Map<string,string>, hand:any, io:Map<string, IoStatus>}} ctx */
 export function stepRow(step, i, visible, ctx) {
@@ -94,7 +95,7 @@ export function stepRow(step, i, visible, ctx) {
       'aria-label': sl.length > 1 ? `${sl.length} parallel sub-steps` : null }, vis.map(card)), pairs.length > 0 && gapItem(si, pairs)];
   });
   const rowPairs = filtering ? [] : hand.rows.get(i) || [];
-  /* Tài liệu của cả bước: dải chip ngay dưới băng Reopened (hay ở chỗ ấy khi không có băng), trên hàng thẻ. */
+  /* Tài liệu của cả bước: dải chip ngay sau băng Reopened (hay ở chỗ ấy khi không có băng), trước hàng thẻ. */
   const docs = step.docs.length > 0 && h('div', { class: 'step-docs' },
     h('ul', { class: 'doc-chips', 'aria-label': `Docs of step ${i + 1}` }, step.docs.map(docChip)),
     h('button', { type: 'button', class: 'doc-chip add aux', 'data-act': 'add-doc', tabindex: '-1', 'aria-label': 'Add a doc to this step', title: 'Add a link or a Markdown note for the whole step' }, icon('plus'), 'Doc'));
@@ -105,9 +106,9 @@ export function stepRow(step, i, visible, ctx) {
   return h('section', { class: 'step' + (step.revisit ? ' revisit' : '') + (done ? ' is-done' : ''), 'data-step': step.id, 'aria-labelledby': 'st-' + step.id },
     gap,
     rowPairs.length > 0 && rowMarker(rowPairs),
+    head,
     band,
     docs,
-    head,
     h('div', { class: 'cards-scroll' }, h('ol', { class: 'cards', 'aria-label': `Sub-steps of step ${labels.get(step.id) ?? step.title}` }, slots)));
 }
 
