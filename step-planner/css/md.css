@@ -37,7 +37,7 @@
 @media (hover: hover) { .tab:hover { color: var(--ink); } .tab:not([aria-selected="true"]):hover::after { background: var(--line); } }
 .tab[aria-selected="true"] { color: var(--ink); }
 .tab[aria-selected="true"]::after { background: var(--accent); }
-.tab:focus-visible { outline-offset: calc(-1 * var(--ring-w)); border-radius: var(--r-xs); }
+:where(:root:not(.quiet-focus)) .tab:focus-visible { outline-offset: calc(-1 * var(--ring-w)); border-radius: var(--r-xs); }
 .md-hint { margin-left: auto; align-self: center; min-width: 0; font-size: var(--fs-xs); color: var(--ink-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .md-hint code { color: var(--ink-2); }
 .md-dlg:has(#md-panes[data-mode="view"]) .md-hint { visibility: hidden; }
@@ -84,7 +84,7 @@
 .sx-string { color: var(--sx-string); }
 .sx-strike { text-decoration: line-through; }
 .md-view { min-height: 0; overflow: auto; padding: var(--s6) max(var(--s5), calc((100% - var(--md-max)) / 2)); }
-.md-view:focus-visible { outline-offset: calc(-1 * var(--ring-w)); }
+:where(:root:not(.quiet-focus)) .md-view:focus-visible { outline-offset: calc(-1 * var(--ring-w)); }
 @media (max-width: 640px) {
   .dlg.md-dlg { width: 100vw; height: 100dvh; max-height: 100dvh; margin: 0; border-radius: 0; border-width: 0; }
   .dlg.md-dlg .md-head { padding: var(--s3) var(--s2) var(--s3) var(--s4); }

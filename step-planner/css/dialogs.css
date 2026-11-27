@@ -59,7 +59,7 @@ html { scrollbar-gutter: stable; }   /* khoá cuộn không làm trang nhảy ng
 .dlg .field :is(input, select, textarea):focus { background: var(--surface); }
 /* Danh sách chọn tự dựng trong hộp: nền lõm như ô nhập, mở hay focus thì nền hộp. */
 .dlg .field .dd-btn { background: var(--field-bg); }
-.dlg .field .dd-btn:is([aria-expanded="true"], :focus-visible) { background: var(--surface); }
+.dlg .field .dd-btn[aria-expanded="true"], :where(:root:not(.quiet-focus)) .dlg .field .dd-btn:focus-visible { background: var(--surface); }
 .dlg .field textarea { min-height: calc(var(--ctl) * 2); }
 .dlg .field textarea.grow-title { min-height: var(--ctl); }
 .dlg .field-title textarea { font: 600 var(--fs-lg)/var(--lh-tight) var(--sans); padding-top: var(--s2); padding-bottom: var(--s2); }
@@ -151,7 +151,7 @@ html { scrollbar-gutter: stable; }   /* khoá cuộn không làm trang nhảy ng
   border: var(--mark-w) solid var(--ink-4); background: transparent;
 }
 @media (hover: hover) { .st-opt:hover span { border-color: var(--ink-4); color: var(--ink); } }
-.st-opt input:focus-visible + span { outline: var(--ring-w) solid var(--ring); outline-offset: var(--mark-w); }
+:where(:root:not(.quiet-focus)) .st-opt input:focus-visible + span { outline: var(--ring-w) solid var(--ring); outline-offset: var(--mark-w); }
 .st-doing span::before { border-color: var(--blue); background: linear-gradient(90deg, var(--blue) 50%, transparent 50%); }
 .st-pending span::before { border-color: var(--violet); background: radial-gradient(circle closest-side, var(--violet) 0 60%, transparent 70%); }
 .st-done span::before { border-color: var(--done-edge); background: var(--done-edge); }

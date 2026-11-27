@@ -20,7 +20,8 @@
      (không mồ côi). js/core/ là logic thuần: code (đọc bằng `js_scan`: bỏ chú thích, chữ trong chuỗi không tính) không gọi tên
      toàn cục của trình duyệt (`PURE_GLOBALS`), không đọc thuộc tính DOM (`PURE_PROPS`, cả `x['…']`); chỉ import js/core/.
   4. css/: mỗi file css/*.css được link đúng một lần trong index.html, tokens.css trước hết (thứ tự link là cascade); mã màu
-     chỉ nằm trong css/tokens.css.
+     chỉ nằm trong css/tokens.css. Vòng focus chỉ cho bàn phím: mọi selector có `:focus-visible` mở bằng QUIET_GUARD, trừ
+     luật chỉ có `outline: none` (lớp quiet-focus do js/ui/dialogs.js bật khi dùng chuột, chạm).
   5. data/system-design.json (PLAN-016): khuôn hồ sơ, khâu, phương án; id không trùng; `fit` chỉ dùng câu và câu trả lời
      có trong hồ sơ; link https; mỗi câu trả lời đơn lẻ của hồ sơ có ít nhất một phương án hợp ở mọi khâu.
      `architectures`: nhóm kiến trúc {id, label, question, note?, sources?, entries, rules}; kiến trúc {id, name, what, use,
@@ -651,6 +652,29 @@ def check_code():
             m = CSS_COLOR.search(line)
             if m:
                 err(f'css/{f}:{n}: mã màu ngoài css/tokens.css (`{m.group(0)}`)')
+        for sel, body in re.findall(r'([^{}]+)\{([^{}]*)\}', code):
+            if all(re.fullmatch(r'outline\s*:\s*none', d.strip()) for d in body.split(';') if d.strip()):
+                continue
+            for one in top_commas(sel):
+                if ':focus-visible' in one and not one.startswith(QUIET_GUARD):
+                    err(f'css/{f}: `{one}` vẽ vòng focus mà không mở bằng {QUIET_GUARD} (vòng chỉ cho bàn phím)')
+
+
+# Gác của mọi luật vẽ vòng focus: lớp quiet-focus trên <html> (chuột, chạm) ẩn vòng; :where giữ nguyên độ ưu tiên.
+QUIET_GUARD = ':where(:root:not(.quiet-focus))'
+
+
+def top_commas(sel):
+    """Tách danh sách selector ở dấu phẩy ngoài ngoặc (`:is(a, b)` là một selector)."""
+    out, depth, cur = [], 0, ''
+    for ch in sel:
+        depth += (ch in '([') - (ch in ')]')
+        if ch == ',' and depth == 0:
+            out.append(cur.strip())
+            cur = ''
+        else:
+            cur += ch
+    return [x for x in out + [cur.strip()] if x]
 
 
 # Màu chỉ khai ở css/tokens.css: mã hex, hàm màu (rgb, hsl, hwb, lab, lch, oklab, oklch, color, color-mix) và tên màu của CSS.
@@ -1010,6 +1034,10 @@ def self_test():
         ('css: token tên màu, thuộc tính, lớp, chuỗi, transparent không tính',
          css('board.css', '.green .white-x { color: var(--green); white-space: nowrap; background: transparent; border-color: currentColor; content: "red"; }'), None),
         ('css: file không được link', css('extra.css', '.x { color: var(--ink); }'), 'được link đúng một lần'),
+        ('css: vòng focus không gác quiet-focus', css('board.css', '.x:focus-visible .y { stroke: var(--ring); }'), 'không mở bằng'),
+        ('css: gác một selector, quên selector kia', css('board.css', ':where(:root:not(.quiet-focus)) .x:focus-visible, .z:is(.a, :focus-visible) { opacity: 1; }'), 'không mở bằng'),
+        ('css: :focus-visible chỉ tắt outline, có gác: không tính',
+         css('board.css', '.x:focus, .x:focus-visible { outline: none; }\n@media (hover: hover) { :where(:root:not(.quiet-focus)) .x:is(.a, :focus-visible) { opacity: 1; } }'), None),
     ]
     bad = 0
     for name, plant, want in cases:

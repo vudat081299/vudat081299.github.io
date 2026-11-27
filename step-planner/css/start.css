@@ -42,8 +42,7 @@
 .tpl-n { margin-top: auto; padding-top: var(--s1); font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-3); }
 .tpl input { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
 .tpl:has(input:checked) { border-color: var(--accent-line); background: var(--accent-soft); }
-.tpl:has(input:focus-visible) { outline: var(--ring-w) solid var(--ring); outline-offset: var(--mark-w); }
-:root.quiet-focus .tpl:has(input:focus-visible) { outline: none; }
+:where(:root:not(.quiet-focus)) .tpl:has(input:focus-visible) { outline: var(--ring-w) solid var(--ring); outline-offset: var(--mark-w); }
 .tpl-check {
   position: absolute; top: var(--s3); right: var(--s3); display: inline-flex; align-items: center; justify-content: center;
   width: var(--h-xs); height: var(--h-xs); border: var(--line-w) solid var(--line); border-radius: var(--r-pill); background: var(--surface);

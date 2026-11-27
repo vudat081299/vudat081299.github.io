@@ -16,7 +16,7 @@
   font: 600 var(--fs-sm)/1 var(--sans); transition: background var(--dur) var(--ease);
 }
 @media (hover: hover) { .toast-btn:hover { background: var(--toast-btn-hover); } }
-.toast-btn:focus-visible { outline-color: var(--bg); }
+:where(:root:not(.quiet-focus)) .toast-btn:focus-visible { outline-color: var(--bg); }
 @media (prefers-reduced-motion: no-preference) { .toast:not([hidden]) { animation: toast-in var(--dur) var(--ease); } }
 @keyframes toast-in { from { opacity: 0; translate: 0 var(--s2); } to { opacity: 1; translate: 0 0; } }
 @media (max-width: 640px) { .toast { left: var(--s4); right: var(--s4); transform: none; width: auto; max-width: none; } }

@@ -33,7 +33,7 @@
 .log-compose .field { gap: var(--s2); }
 .log-compose .field > span:first-child { font: 600 var(--fs-sm)/var(--lh-tight) var(--sans); color: var(--ink-2); }
 .log-compose .field :is(input, textarea), .log-compose .field .dd-btn { background: var(--field-bg); }
-.log-compose .field :is(input, textarea):focus, .log-compose .field .dd-btn:is([aria-expanded="true"], :focus-visible) { background: var(--surface); }
+.log-compose .field :is(input, textarea):focus, .log-compose .field .dd-btn[aria-expanded="true"], :where(:root:not(.quiet-focus)) .log-compose .field .dd-btn:focus-visible { background: var(--surface); }
 .log-compose .field-title textarea { min-height: var(--ctl); font: 600 var(--fs-lg)/var(--lh-tight) var(--sans); }
 .log-compose-foot { display: flex; align-items: flex-end; gap: var(--s3); flex-wrap: wrap; }
 .log-compose-foot .f-date { flex: 0 1 var(--date-w); }
