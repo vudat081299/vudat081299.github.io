@@ -1000,6 +1000,18 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   check('mẫu đặt sẵn big-data-ds, mọi lối: Raw storage, Analytical store là công cụ lakehouse mà bước của mẫu nhắc tới; lối pipeline có cả hai',
     !bdLake.length && !!bdp('raw') && !!bdp('store') && bdp('store') !== 'clickhouse',
   bdLake.join(' | ') + ' ' + JSON.stringify({ raw: bdp('raw'), store: bdp('store') }));
+  /* big-data-ds: bộ đặt sẵn không nói số người dùng nên kho phân tích là DuckDB trên Iceberg (một người, vài người). Trả lời
+   * "Many people (public)" thì DuckDB lệch hồ sơ (`fit.users`, `avoid` của nó nói dùng Trino): lối pipeline cho Trino, engine
+   * nhiều người dùng của lakehouse, vẫn lakehouse, không luật báo. */
+  {
+    const bdMany = fromTemplate(bdTpl).design;
+    bdMany.profile = { ...bdMany.profile, users: 'public' };
+    const many = applyPath(cat, bdMany, 'pipeline').next;
+    check('mẫu đặt sẵn big-data-ds: không nói số người dùng thì Analytical store là DuckDB trên Iceberg; nhiều người dùng (public) thì Trino, vẫn lakehouse',
+      bdp('store') === 'duckdb-iceberg' && eq(many.stages.store?.pick, ['trino']) && lakeTools.store.includes('trino')
+      && archAdvice(cat, many).find((a) => a.family === 'storage').id === 'lakehouse' && !warnings(cat, many).filter((w) => !w.caveat).length,
+    JSON.stringify({ preset: bdp('store'), many: many.stages.store, warn: warnings(cat, many).map((w) => w.id) }));
+  }
   /* lakehouse-oss: Apply path đóng gói bằng Docker Compose; stack ví dụ của mẫu không làm luật báo với bộ đặt sẵn. Bước giả lập
    * luồng (Kafka + một công cụ lịch ở Ingestion, Spark Structured Streaming + dbt ở Processing) không báo khi đổi câu độ mới
    * sang Continuously, như ghi chú bước 7 dặn. */
