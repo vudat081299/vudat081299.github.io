@@ -106,7 +106,7 @@ Trong một bước, nhiều bước con có thể chạy song song rồi mới 
 ## PLAN-014 · Số thứ tự đứng yên tới khi tải lại trang
 24/11/2026 · `step-planner/`
 
-Trong một lần mở trang, số của bước và bước con không đổi khi đổi chỗ: cái vừa dời giữ số cũ, nên người dùng nhìn hàng là biết mình vừa hoán đổi những gì. Số chỉ đánh lại khi tải lại trang, hoặc khi người dùng tự bấm đánh số lại. Cái mới thêm trong lần mở trang ấy chưa có số, có dấu riêng (không dùng chữ "New", trùng tên trạng thái).
+Trong một lần mở trang, số của bước và bước con không đổi khi đổi chỗ: cái vừa dời giữ số cũ, nên người dùng nhìn hàng là biết mình vừa hoán đổi những gì. Số chỉ đánh lại khi tải lại trang, hoặc khi người dùng tự bấm đánh số lại. Cái mới thêm trong lần mở trang ấy chưa có số, có dấu riêng (không dùng chữ "New", trùng tên trạng thái). Ngoại lệ: dự án còn trống khi số được chụp lần đầu thì cái thêm vào nhận số thật ngay, cho tới lần đầu một số đã có phải đổi (dời, xoá giữa chừng); từ đó dự án ấy theo luật trên như mọi dự án. Lý do: dấu "vừa thêm" chỉ sống tới lần tải lại, mà dự án dựng từ trống thì cái nào cũng mang dấu, nên dấu ấy không còn nói lên gì.
 
 ## PLAN-016 · Mỗi dự án có phần thiết kế hệ thống: chọn theo gợi ý, tự vẽ sơ đồ, đưa thành việc
 25/11/2026 · `step-planner/`
