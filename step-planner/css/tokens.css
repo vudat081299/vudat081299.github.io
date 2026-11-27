@@ -39,6 +39,7 @@
   --red-line:  rgba(180, 35, 24, .38);
   --ring:      var(--ink);
   --chip:      rgba(11, 15, 12, .05);
+  --opt-on:    color-mix(in srgb, var(--ink) 9%, var(--surface));   /* mục đang trỏ (phím, chuột) trong danh sách chọn */
   --sb-thumb:  color-mix(in srgb, var(--ink) 26%, transparent);
   --scrim:     rgba(11, 15, 12, .38);
   --on-danger: #ffffff;
@@ -119,6 +120,8 @@
   --dlg-w: 660px;
   --dlg-sm: 440px;                     /* hộp hỏi lại, hộp tài liệu */
   --dlg-h: 860px;                      /* hộp cao tối đa (máy tính) */
+  --ws-h: 640px;                       /* hộp Dự án: cao cố định, đổi tab không nhảy */
+  --grow-max: 360px;                   /* ô ghi chú trong hộp sửa cao theo chữ tới mức này */
   --pos-w: 104px;                      /* ô Vị trí */
   --date-w: 200px;
   --dlg-wide: 780px;
@@ -180,6 +183,7 @@
     --red-soft: rgba(255, 138, 122, .12); --red-line: rgba(255, 138, 122, .42);
     --ring: var(--accent);
     --chip: rgba(255, 255, 255, .06);
+    --opt-on: color-mix(in srgb, var(--ink) 14%, var(--surface));
     --scrim: rgba(0, 0, 0, .62);
     --on-danger: #2a0905;
     --foot-bg: color-mix(in srgb, var(--bg) 55%, var(--surface));
@@ -209,6 +213,7 @@
   --red-soft: rgba(255, 138, 122, .12); --red-line: rgba(255, 138, 122, .42);
   --ring: var(--accent);
   --chip: rgba(255, 255, 255, .06);
+  --opt-on: color-mix(in srgb, var(--ink) 14%, var(--surface));
   --scrim: rgba(0, 0, 0, .62);
   --on-danger: #2a0905;
   --foot-bg: color-mix(in srgb, var(--bg) 55%, var(--surface));

@@ -34,10 +34,13 @@ function subPosOptions(keep = true) {
   const self = subCtx.subId;
   const slots = slotsOf(target.subs.filter((/** @type {any} */ x) => x.id !== self));
   const opts = [];
+  /* Dòng gợi ý cắt tên ở 40 ký tự (quote); title của option giữ đủ tên cho lúc rê chuột. */
+  const full = (/** @type {string} */ t) => `"${t}"`;
   for (let i = 0; i <= slots.length; i++) {
-    const hint = i < slots.length ? `Before ${quote(slots[i][0].title)}` : slots.length ? `After ${quote(slots[i - 1].at(-1).title)}` : 'First in this step';
-    opts.push(h('option', { value: `n:${i}`, 'data-hint': hint }, `Position ${i + 1}`));
-    if (i < slots.length) opts.push(h('option', { value: `j:${i}`, 'data-hint': `Runs alongside ${slots[i].map((x) => quote(x.title)).join(', ')}` }, `Parallel with ${i + 1}`));
+    const at = (/** @type {(t:string)=>string} */ q) => (i < slots.length ? `Before ${q(slots[i][0].title)}` : slots.length ? `After ${q(slots[i - 1].at(-1).title)}` : 'First in this step');
+    opts.push(h('option', { value: `n:${i}`, 'data-hint': at(quote), title: `Position ${i + 1}: ${at(full)}` }, `Position ${i + 1}`));
+    const par = (/** @type {(t:string)=>string} */ q) => `Runs alongside ${slots[i].map((/** @type {any} */ x) => q(x.title)).join(', ')}`;
+    if (i < slots.length) opts.push(h('option', { value: `j:${i}`, 'data-hint': par(quote), title: `Parallel with ${i + 1}: ${par(full)}` }, `Parallel with ${i + 1}`));
   }
   field(f, 'pos').replaceChildren(...opts);
   const p = self && target.id === subCtx.stepId ? subPlace(ws, self) : null;

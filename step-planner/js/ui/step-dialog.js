@@ -8,12 +8,12 @@ import { EDIT_FIELDS, normStep, pick } from '../core/model.js';
 import { deleteStep } from './actions.js';
 import { askRecreate, closeSaved, mergeSaved, openDlg, tryClose } from './dialogs.js';
 import { clearDocUndo, renderDocsEdit } from './docs.js';
-import { $, field, h, quote } from './dom.js';
+import { $, field, focusFirst, h, quote } from './dom.js';
 import { focusEdit, newlyHeld, paintEdit, readEdit, repaintPlace } from './hand.js';
 import { HELD_TAIL, beginMove, endMove, heldNow, keepHeld } from './move.js';
 import { openRevisit } from './revisit.js';
 import { commit, cur, curId, findWs, stepOf, stepSel } from './state.js';
-import { toast } from './toast.js';
+import { toast, toastUndo } from './toast.js';
 
 /* ── Hộp bước ── */
 
@@ -104,10 +104,15 @@ export function initStepDialog() {
       if (heldMsg) toast(`${i >= 0 ? 'Saved' : 'Added'} step ${quote(step.title)}${heldMsg}`, null, focusSel);
     }
   });
-  $('step-del').addEventListener('click', () => {
+  /* Xoá: deleteStep hỏi lại (bước còn bước con) trên hộp sửa đang mở; Close thì hộp vẫn mở với chữ đang gõ. Xoá xong mới đóng
+   * hộp, rồi focus Hoàn tác của toast (lúc toast hiện, hộp modal còn mở nên chưa focus được). */
+  $('step-del').addEventListener('click', async () => {
     const ctx = stepCtx;
+    if (!ctx || !ctx.stepId) return;
+    await deleteStep(ctx.wsId, ctx.stepId);
+    if (stepOf(findWs(ctx.wsId), ctx.stepId) || stepCtx !== ctx) return;
     closeSaved($('dlg-step'));
-    if (ctx && ctx.stepId) deleteStep(ctx.wsId, ctx.stepId);
+    if (toastUndo) focusFirst($('toast-undo'));
   });
   $('step-revisit').addEventListener('click', async () => {
     const ctx = stepCtx;

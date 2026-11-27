@@ -26,6 +26,8 @@
 .ws-acts { flex: none; display: flex; }
 @media (hover: hover) { .ws-acts .del:hover { color: var(--danger); } }
 .ws-empty { padding: var(--s5) var(--s4); text-align: center; font-size: var(--fs-sm); color: var(--ink-3); border: var(--line-w) dashed var(--line); border-radius: var(--r); }
+/* Hộp Dự án cao cố định: đổi tab Open / New project không làm hộp nhảy chỗ, đổi cỡ; thân cuộn. */
+#dlg-ws .dlg-form { height: calc(min(var(--ws-h), var(--dlg-max)) - 2 * var(--line-w)); }
 .tab-n { margin-left: var(--s1); font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-3); }
 /* Thẻ mẫu (màn đầu và hộp Dự án): tên, mô tả, số bước; trong hộp là radio phủ cả thẻ, dấu chọn ở góc. */
 .tpl-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--tpl-min)), 1fr)); gap: var(--s3); }
@@ -39,7 +41,8 @@
 .tpl > span:first-of-type { display: flex; flex-direction: column; gap: var(--s1); min-width: 0; flex: 1 1 auto; }
 .tpl b { font: 600 var(--fs-md)/var(--lh-tight) var(--display); }
 .tpl small { color: var(--ink-2); font-size: var(--fs-sm); line-height: var(--lh); }
-.tpl-n { margin-top: auto; padding-top: var(--s1); font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-3); }
+.tpl-n { margin-top: auto; padding-top: var(--s1); font: 500 var(--fs-xs)/var(--lh-tight) var(--mono); color: var(--ink-3); }
+.tpl-n > span { white-space: nowrap; }   /* "12 sub-steps" không gãy ở gạch nối */
 .tpl input { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
 .tpl:has(input:checked) { border-color: var(--accent-line); background: var(--accent-soft); }
 :where(:root:not(.quiet-focus)) .tpl:has(input:focus-visible) { outline: var(--ring-w) solid var(--ring); outline-offset: var(--mark-w); }

@@ -3743,6 +3743,177 @@ const check = (name, ok, detail = '') => {
     await fc.close();
   });
 
+  /* ── Hộp hỏi và ô nhập: Enter trong ô hỏi là OK, câu hỏi xoá / bỏ chữ focus Close, xoá bước huỷ giữ hộp sửa, chữ chỉ có
+   * khoảng trắng bị chặn, Enter ngoài ô tên không Lưu, Tab vòng lại thấy ô tên, focus không rơi về body, nhập chữ bất kỳ
+   * bị chặn, danh sách chọn nằm trong hộp, tên miền dài không lấn tên tài liệu ── */
+  await section('Hộp hỏi và ô nhập', async () => {
+    const { page: q } = await open(1440, 900);
+    await q.click('#start .tpl[data-tpl="crisp-dm"]');
+    await q.waitForSelector('.card[data-sub]');
+    const openIds = () => q.evaluate(() => [...document.querySelectorAll('dialog[open]')].map((d) => d.id).join());
+    const focused = () => q.evaluate(() => { const a = document.activeElement; return !a || a === document.body ? 'body' : a.id || a.dataset.k || a.name || a.textContent.trim(); });
+    const closed = (id) => waitTo(q, `#${id} đóng`, (x) => !document.getElementById(x).open, id);
+
+    // Đổi tên dự án: Enter trong ô là OK (gửi ngầm từng dùng nút thứ hai đang ẩn, tên thành "\u0000alt").
+    await q.click('#ws-btn');
+    await q.click('#ws-list .ws-item:first-child [data-act="ws-rename"]');
+    await q.fill('#ask-input', 'Đổi tên bằng Enter');
+    await q.keyboard.press('Enter');
+    await closed('dlg-ask');
+    const renamed = (await cur(q)).name;
+    check('hỏi tên: Enter trong ô là OK', renamed === 'Đổi tên bằng Enter', JSON.stringify(renamed));
+    // Xoá dự án: focus Close, Enter không xoá.
+    await q.click('#ws-list .ws-item:first-child [data-act="ws-del"]');
+    const delFocus = await focused();
+    await q.keyboard.press('Enter');
+    await closed('dlg-ask');
+    check('hỏi xoá dự án: focus Close, Enter không xoá', delFocus === 'Close' && (await stored(q)).workspaces.length === 1, delFocus);
+    await q.keyboard.press('Escape');
+    await closed('dlg-ws');
+
+    // Esc rồi Enter trên "Discard changes?": hộp sửa vẫn mở, chữ còn.
+    const sub0 = await q.$eval('.card[data-sub]', (x) => x.dataset.sub);
+    await q.click(subSel(sub0, 'edit-sub'));
+    await q.fill('#sub-form [name="title"]', 'Chữ chưa lưu');
+    await q.keyboard.press('Escape');
+    const discardFocus = await focused();
+    await q.keyboard.press('Enter');
+    await closed('dlg-ask');
+    check('Esc rồi Enter trên "Discard changes?": focus Close, hộp sửa và chữ còn', discardFocus === 'Close' && (await openIds()) === 'dlg-sub'
+      && (await q.inputValue('#sub-form [name="title"]')) === 'Chữ chưa lưu', discardFocus);
+
+    // Tên chỉ có khoảng trắng: Lưu dừng ở ô tên, có câu báo; tên đầu ra chỉ có khoảng trắng: như thế.
+    const title0 = (await cur(q)).steps[0].subs[0].title;
+    await q.fill('#sub-form [name="title"]', '   ');
+    await q.click('#sub-form button[type="submit"]');
+    const blankTitle = await q.evaluate(() => ({ open: document.getElementById('dlg-sub').open, msg: document.querySelector('#sub-form [name="title"]').validationMessage }));
+    await q.fill('#sub-form [name="title"]', title0);
+    await q.click('#sub-hand [data-out-add]');
+    await q.fill('#sub-hand .out-row:last-child [data-k="name"]', '  ');
+    await q.click('#sub-form button[type="submit"]');
+    const blankOut = await q.evaluate(() => ({ open: document.getElementById('dlg-sub').open, msg: document.querySelector('#sub-hand .out-row:last-child [data-k="name"]').validationMessage }));
+    check('chữ chỉ có khoảng trắng: tên, tên đầu ra báo trên ô, không lưu', blankTitle.open && !!blankTitle.msg && blankOut.open && !!blankOut.msg
+      && (await cur(q)).steps[0].subs[0].title === title0 && !(await cur(q)).steps[0].subs[0].outs.length, JSON.stringify({ blankTitle, blankOut }));
+
+    // Enter ở ô ngoài tên (đầu ra, Path, Contract, Done when, trạng thái) không Lưu, không đóng hộp; Enter ở tên thì Lưu.
+    await q.fill('#sub-hand .out-row:last-child [data-k="name"]', 'bảng.csv');
+    const stay = [];
+    for (const sel of ['#sub-hand .out-row:last-child [data-k="name"]', '#sub-hand .out-row:last-child [data-k="ref"]', '#sub-hand .out-row:last-child [data-k="note"]',
+      '#sub-form [name="doneWhen"]', '#sub-form [name="status"]:checked', '#sub-form [name="due"]']) {
+      await q.focus(sel);
+      await q.keyboard.press('Enter');
+      await afterSave(q);
+      if (!(await q.evaluate(() => document.getElementById('dlg-sub').open))) stay.push(sel);
+    }
+    await q.focus('#sub-form [name="title"]');
+    await q.keyboard.press('Enter');
+    await closed('dlg-sub');
+    const outs = (await cur(q)).steps[0].subs[0].outs;
+    check('Enter ngoài ô tên không Lưu; Enter ở tên Lưu cả đầu ra', !stay.length && outs.length === 1 && outs[0].name === 'bảng.csv', stay.join(' | '));
+
+    // Xoá bước còn bước con: hỏi trên hộp sửa; Close thì hộp và chữ còn; Delete step thì xoá, focus Hoàn tác.
+    const step0 = await q.$eval('.step[data-step]', (x) => x.dataset.step);
+    const nSteps0 = (await cur(q)).steps.length;
+    await q.click(`.step[data-step="${step0}"] .step-head [data-act="edit-step"]`);
+    await q.fill('#step-form [name="goal"]', 'Mục tiêu đang gõ');
+    await q.click('#step-del');
+    await q.waitForSelector('#dlg-ask[open]');
+    const stepDelFocus = await focused();
+    await q.click('#dlg-ask .dlg-foot [data-close]');
+    await closed('dlg-ask');
+    const kept = { open: await openIds(), goal: await q.inputValue('#step-form [name="goal"]'), steps: (await cur(q)).steps.length };
+    await q.click('#step-del');
+    await q.click('#ask-ok');
+    await closed('dlg-step');
+    const gone = { steps: (await cur(q)).steps.length, focus: await focused() };
+    check('xoá bước: Close giữ hộp sửa và chữ; Delete step xoá, focus Hoàn tác', stepDelFocus === 'Close' && kept.open === 'dlg-step' && kept.goal === 'Mục tiêu đang gõ'
+      && kept.steps === nSteps0 && gone.steps === nSteps0 - 1 && gone.focus === 'toast-undo', JSON.stringify({ stepDelFocus, kept, gone }));
+    await q.keyboard.press('Enter'); // Hoàn tác
+    await waitTo(q, 'hoàn tác xoá bước', (n) => JSON.parse(localStorage.getItem('stepPlanner.v2')).workspaces[0].steps.length === n, nSteps0);
+
+    // Tab vòng lại về ô tên (khung thấp, thân đã cuộn): ô tên hiện trong thân hộp.
+    await q.setViewportSize({ width: 1440, height: 600 });
+    await q.click(subSel(sub0, 'edit-sub'));
+    let wrap = null;
+    for (let i = 0; i < 80 && !wrap; i++) {
+      await q.keyboard.press('Tab');
+      if (i > 2) wrap = await q.evaluate(() => { const a = document.activeElement; if (a.name !== 'title') return null;
+        const r = a.getBoundingClientRect(), b = a.closest('.dlg-body').getBoundingClientRect(); return { top: Math.round(r.top - b.top), bottom: Math.round(b.bottom - r.bottom) }; });
+    }
+    check('Tab vòng lại về ô tên: ô tên hiện trong thân hộp', !!wrap && wrap.top >= -1 && wrap.bottom >= -1, JSON.stringify(wrap));
+    await q.keyboard.press('Escape');
+    await closed('dlg-sub');
+    await q.setViewportSize({ width: 1440, height: 900 });
+
+    // Nhập chữ không nhận ra gì: báo, tắt Import; Markdown có bước thì bật lại.
+    await q.click('#import-btn');
+    await q.fill('#import-text', 'chữ bất kỳ\nkhông phải dự án');
+    const junk = await q.evaluate(() => ({ bad: document.getElementById('import-preview').classList.contains('bad'), off: document.getElementById('import-go').disabled, text: document.getElementById('import-preview').textContent }));
+    await q.fill('#import-text', '# Dự án\n\n## 1. Bước\n- [ ] Việc');
+    const good = await q.evaluate(() => !document.getElementById('import-go').disabled);
+    check('nhập chữ không nhận ra gì: báo, tắt Import', junk.bad && junk.off && /Nothing recognised/.test(junk.text) && good, JSON.stringify(junk));
+    await q.keyboard.press('Escape');
+    await q.click('#ask-ok');
+    await closed('dlg-import');
+  });
+
+  /* Danh sách chọn trong hộp, tên miền dài của tài liệu: đo ở 1440 và 390 px. Hộp hỏi đầu vào cuối: focus không về body. */
+  await section('Danh sách chọn và tài liệu trong hộp', async () => {
+    for (const [w, hgt] of [[1440, 900], [390, 844]]) {
+      const { page: q } = await open(w, hgt);
+      await q.click('#start .tpl[data-tpl="crisp-dm"]');
+      await q.waitForSelector('.card[data-sub]');
+      await q.evaluate(() => {
+        const s = JSON.parse(localStorage.getItem('stepPlanner.v2'));
+        const ws = s.workspaces.find((x) => x.id === s.lastId);
+        ws.steps[0].subs[0].docs = [{ id: 'dl1', kind: 'link', title: 'Data card of the project', url: 'https://a-very-long-subdomain-name.some-really-long-domain-name-for-testing.example.com/x', proof: false }];
+        localStorage.setItem('stepPlanner.v2', JSON.stringify(s));
+      });
+      await q.reload();
+      await q.waitForSelector('.card[data-sub]');
+      await q.click('.card[data-sub] [data-act="edit-sub"]');
+      const row = await q.$eval('#sub-docs .doc-row', (r) => {
+        const t = r.querySelector('.doc-link span').getBoundingClientRect(), d = r.querySelector('.doc-link small').getBoundingClientRect(), p = r.querySelector('.proof-btn').getBoundingClientRect();
+        return { title: Math.round(t.width), titleEnd: Math.round(t.right), domain: Math.round(d.left), domainEnd: Math.round(d.right), proof: Math.round(p.left) };
+      });
+      check(`${w}px: tên miền dài không lấn tên tài liệu, không đè nút`, row.title >= 80 && row.titleEnd <= row.domain && row.domainEnd <= row.proof, JSON.stringify(row));
+      await q.click('#sub-form .f-pos .dd-btn');
+      await q.waitForSelector('.dd-pop');
+      const pop = await q.evaluate(() => {
+        const p = document.querySelector('.dd-pop').getBoundingClientRect(), d = document.getElementById('dlg-sub').getBoundingClientRect(), b = document.querySelector('#sub-form .f-pos .dd-btn').getBoundingClientRect();
+        return { left: Math.round(p.left), right: Math.round(p.right), dl: Math.round(d.left), dr: Math.round(d.right), bl: Math.round(b.left), br: Math.round(b.right), vw: innerWidth };
+      });
+      await q.keyboard.press('Escape');
+      const ctl = await q.$eval('#sub-form .f-pos .dd-btn', (b) => b.getAttribute('aria-controls'));
+      check(`${w}px: danh sách Position nằm trong hộp và khung nhìn, canh theo nút (rộng hơn chỗ thì sát mép); đóng thì bỏ aria-controls`, pop.left >= Math.max(pop.dl, 0) && pop.right <= Math.min(pop.dr, pop.vw)
+        && (pop.left === pop.bl || pop.right === pop.br || pop.left === Math.max(pop.dl, 8)) && ctl === null, JSON.stringify({ pop, ctl }));
+    }
+    // Gỡ đầu vào cuối khi "Use existing output" tắt (không đầu ra nào để chọn): focus sang nút còn bật, không về body.
+    const { page: q } = await open(1440, 900);
+    await q.click('#start .tpl[data-tpl="blank"]');
+    await q.waitForSelector('#board');
+    await q.evaluate(() => {
+      const s = JSON.parse(localStorage.getItem('stepPlanner.v2'));
+      const ws = s.workspaces.find((x) => x.id === s.lastId);
+      ws.steps = [{ id: 'gs1', title: 'Bước A', ins: ['mất1'], subs: [{ id: 'gu1', title: 'Việc A', status: 'todo', ins: ['mất2'] }] }];
+      localStorage.setItem('stepPlanner.v2', JSON.stringify(s));
+    });
+    await q.reload();
+    await q.waitForSelector('.card[data-sub="gu1"]');
+    const res = [];
+    for (const [open1, where] of [[subSel('gu1', 'edit-sub'), 'sub'], ['.step[data-step="gs1"] .step-head [data-act="edit-step"]', 'step']]) {
+      await q.click(open1);
+      const off = await q.$eval(`#${where}-hand [data-in-pick]`, (b) => b.disabled);
+      await q.focus(`#${where}-hand [data-in-del]`);
+      await q.keyboard.press('Enter');
+      res.push({ where, off, at: await q.evaluate(() => { const a = document.activeElement; return a === document.body ? 'body' : (a.disabled ? 'disabled ' : '') + a.textContent.trim(); }) });
+      await q.keyboard.press('Escape');
+      await q.click('#ask-ok');
+      await waitTo(q, 'hộp sửa đóng', () => !document.querySelector('dialog[open]'));
+    }
+    check('gỡ đầu vào cuối khi nút chọn tắt: focus nút còn bật, không về body', res.every((r) => r.off && r.at === 'Add output'), JSON.stringify(res));
+  });
+
   /* ── Dữ liệu lưu bị hỏng ── */
   await section('Dữ liệu lưu bị hỏng', async () => { // thân giữ thụt lề cũ cho dễ gộp
   const bad = await browser.newContext();

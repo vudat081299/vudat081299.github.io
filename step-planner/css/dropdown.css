@@ -19,7 +19,8 @@ select.dd-native {
 .dd-btn:disabled { opacity: .45; cursor: default; }
 @media (hover: hover) { .dd-btn:hover:not(:disabled) { border-color: var(--ink-4); } }
 @media (pointer: coarse) { .dd-btn { font-size: var(--fs-lg); } }
-.dd-val { display: flex; align-items: center; gap: var(--s2); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dd-val { flex: 0 1 auto; display: flex; align-items: center; gap: var(--s2); min-width: 0; }
+.dd-txt { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }   /* đủ chữ ở title của nút */
 .dd-pop {
   position: fixed; inset: auto; margin: 0; z-index: var(--z-pop); min-width: var(--dd-min); max-width: min(var(--dd-max), calc(100vw - 2 * var(--s2)));
   overflow: auto; overscroll-behavior: contain; padding: var(--s1);
@@ -34,7 +35,8 @@ select.dd-native {
   display: flex; align-items: center; gap: var(--s2); min-height: var(--hit); padding: var(--s1) var(--s2); border-radius: var(--r-sm);
   font-size: var(--fs-sm); cursor: pointer;
 }
-.dd-opt.active { background: var(--chip); }
+/* Mục đang trỏ: nền đậm hơn và vạch trái, thấy rõ ở cả hai theme. */
+.dd-opt.active { background: var(--opt-on); box-shadow: inset var(--mark-w) 0 0 var(--ring); }
 .dd-opt[aria-selected="true"] .dd-label { font-weight: 600; }
 .dd-opt[aria-disabled="true"] { opacity: .45; cursor: default; }
 .dd-opt > svg.i { margin-left: auto; color: var(--green); }

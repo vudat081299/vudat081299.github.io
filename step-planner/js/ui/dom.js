@@ -2,8 +2,9 @@
 /* Tiện ích DOM dùng chung: $(id), h() dựng phần tử (con là chuỗi thì thành text node), icon() (một <use> của bộ biểu
    tượng), iconBtn() (nút phụ ngoài vòng Tab), withLinks() (URL trong chữ thành thẻ a), field() (ô của form), autosize() (ô
    chữ cao theo nội dung), barFill() (thanh tiến độ), fmtDate() ("24 Nov 2026", không theo locale), quote() (tên trong ngoặc
-   kép, cắt ở 40 ký tự). Chữ người dùng chỉ vào DOM qua text node, không qua HTML.
-   Xuất: $, h, withLinks, icon, iconBtn, MONTHS, fmtDate, field, autosize, quote, barFill.
+   kép, cắt ở 40 ký tự), canFocus() / focusFirst() (không bao giờ focus phần tử tắt hay ẩn: focus rơi về body). Chữ người
+   dùng chỉ vào DOM qua text node, không qua HTML.
+   Xuất: $, h, withLinks, icon, iconBtn, MONTHS, fmtDate, field, autosize, quote, barFill, canFocus, focusFirst.
    Dùng: core/md.js. */
 import { linkParts } from '../core/md.js';
 
@@ -52,6 +53,7 @@ export const fmtDate = (/** @type {string} */ d) => (d ? `${+d.slice(8, 10)} ${M
 
 export const field = (/** @type {any} */ form, /** @type {string} */ name) => form.elements.namedItem(name);
 
+/** Ô chữ cao theo nội dung; CSS `max-height` chặn trên (quá thì ô tự cuộn). */
 export function autosize(/** @type {any} */ el) {
   el.style.height = 'auto';
   el.style.height = el.scrollHeight + 2 + 'px';
@@ -63,4 +65,13 @@ export function barFill(/** @type {number} */ pct) {
   const i = h('i');
   i.style.width = pct + '%';
   return i;
+}
+
+/** Focus được: còn trong trang, không tắt, đang hiện. @param {any} el */
+export const canFocus = (el) => !!el && el.isConnected && !el.disabled && el.getClientRects().length > 0;
+/** Focus phần tử đầu tiên focus được trong danh sách (phần tử tắt hay ẩn thì bỏ qua). @param {...any} els */
+export function focusFirst(...els) {
+  const el = els.find(canFocus);
+  if (el) el.focus();
+  return el || null;
 }
