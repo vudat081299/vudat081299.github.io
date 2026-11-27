@@ -365,8 +365,8 @@ const check = (name, ok, detail = '') => {
   await page.click(`${c12} [data-act="status"]`);
   check('bấm chip Pending: mở danh sách', !!(await page.$('.dd-pop')) && (await page.getAttribute('.dd-pop [aria-selected="true"]', 'data-value')) === 'pending');
   await page.click('.dd-pop [role="option"][data-value="blocked"]');
-  check('Pending → Blocked: giữ ghi chú, nhãn "Blocked by"', (await cur(page)).steps[0].subs[1].reason === 'Chủ dữ liệu duyệt quyền truy cập'
-    && (await page.textContent(`${c12} .card-reason`)) === 'Blocked by Chủ dữ liệu duyệt quyền truy cập');
+  check('Pending → Blocked: giữ ghi chú, nhãn "Blocked by"; Blocked không là Next, ô vẫn giữ Next lại', (await cur(page)).steps[0].subs[1].reason === 'Chủ dữ liệu duyệt quyền truy cập'
+    && (await page.textContent(`${c12} .card-reason`)) === 'Blocked by Chủ dữ liệu duyệt quyền truy cập' && !(await page.$('.card.next')));
   await setSt(page, c12id, 'todo');
   check('Blocked → New: bỏ ghi chú', (await cur(page)).steps[0].subs[1].reason === '' && !(await page.$(`${c12} .card-reason`)));
   await page.click(`${c12} [data-act="edit-sub"]`);

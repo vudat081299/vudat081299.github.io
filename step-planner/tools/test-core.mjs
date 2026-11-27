@@ -364,7 +364,7 @@ const oldMark = fromMarkdown('# A\n## 1. S\n- [/] huỷ cũ\n  Huỷ vì: không
 check('huỷ: dấu [/] và Huỷ vì: đọc được; dòng thụt hai sau đó là ghi chú', oldMark.workspace.steps[0].subs[0].status === 'cancel'
   && oldMark.workspace.steps[0].subs[0].reason === 'không cần' && oldMark.workspace.steps[0].subs[0].notes === 'ghi chú'
   && oldMark.workspace.steps[0].subs[1].status === 'todo');
-check('việc tiếp theo bỏ qua xong và bỏ qua', eq(nextActionIds({ subs: [{ id: 'a', status: 'done' }, { id: 'b', status: 'skip' }, { id: 'c', status: 'blocked' }] }), ['c']));
+check('việc tiếp theo bỏ qua xong và bỏ qua', eq(nextActionIds({ subs: [{ id: 'a', status: 'done' }, { id: 'b', status: 'skip' }, { id: 'c', status: 'doing' }] }), ['c']));
 check('việc tiếp theo của dự án: bước đầu còn việc',
   eq(projectNextIds({ steps: [{ subs: [{ id: 'a', status: 'done' }] }, { subs: [] }, { subs: [{ id: 'b', status: 'todo' }] }] }), ['b']));
 check('bấm chip: New → In progress → Done; trạng thái khác mở danh sách', nextStatus('todo') === 'doing' && nextStatus('doing') === 'done'
@@ -393,11 +393,14 @@ check('bấm chip: New → In progress → Done; trạng thái khác mở danh s
     && p[0].reason === 'duyệt\ndòng hai' && p[0].notes === 'ghi chú' && p[0].due === '2026-01-02' && p[1].status === 'blocked' && p[1].reason === 'nhãn khác vẫn nhận'
     && p[2].reason === '' && p[2].notes === 'Waiting on: là ghi chú' && p[3].notes === 'Huỷ vì: cũng là ghi chú', JSON.stringify(p));
 }
-check('Next: thẻ chờ không là việc tiếp theo; ô chỉ còn thẻ chờ thì Next không vượt qua',
+check('Next: thẻ chờ (Pending, Blocked) không là việc tiếp theo; ô chỉ còn thẻ chờ thì Next không vượt qua',
   eq(nextActionIds({ subs: [{ id: 'a', status: 'pending' }, { id: 'b', status: 'todo', par: true }, { id: 'c', status: 'todo' }] }), ['b'])
+  && eq(nextActionIds({ subs: [{ id: 'a', status: 'blocked' }, { id: 'b', status: 'doing', par: true }, { id: 'c', status: 'todo' }] }), ['b'])
   && eq(nextActionIds({ subs: [{ id: 'a', status: 'done' }, { id: 'b', status: 'pending' }, { id: 'c', status: 'todo' }] }), [])
+  && eq(nextActionIds({ subs: [{ id: 'a', status: 'done' }, { id: 'b', status: 'blocked' }, { id: 'c', status: 'todo' }] }), [])
   && eq(projectNextIds({ steps: [{ subs: [{ id: 'a', status: 'pending' }] }, { subs: [{ id: 'b', status: 'todo' }] }] }), [])
-  && eq(projectNextIds({ steps: [{ subs: [{ id: 'a', status: 'done' }] }, { subs: [{ id: 'b', status: 'blocked' }, { id: 'c', status: 'pending', par: true }] }] }), ['b']));
+  && eq(projectNextIds({ steps: [{ subs: [{ id: 'a', status: 'blocked' }] }, { subs: [{ id: 'b', status: 'todo' }] }] }), [])
+  && eq(projectNextIds({ steps: [{ subs: [{ id: 'a', status: 'done' }] }, { subs: [{ id: 'b', status: 'blocked' }, { id: 'c', status: 'pending', par: true }] }] }), []));
 check('Reopen: chỉ khi bước có bước con Done', canReopen({ subs: [{ status: 'todo' }, { status: 'done' }] })
   && !canReopen({ subs: [{ status: 'doing' }, { status: 'skip' }, { status: 'cancel' }] }) && !canReopen({ subs: [] }));
 check('Next: dấu Redo của thẻ chờ còn tính là còn phải làm', eq(redoCount({ subs: [{ status: 'pending', redo: true }, { status: 'done', redo: true }] }), { total: 2, left: 1 }));
@@ -1118,6 +1121,10 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   check('Next chờ: ô đầu chỉ có Pending thì báo thẻ ấy, Next rỗng', eq(ids(ws([{ title: 'p', status: 'pending' }, { title: 'sau' }])), ['p'])
     && projectNextIds(ws([{ title: 'p', status: 'pending' }])).length === 0);
   check('Next chờ: ô song song Pending + Blocked thì báo cả hai', eq(ids(ws([{ title: 'p', status: 'pending' }, { title: 'b', status: 'blocked', par: true }])), ['p', 'b']));
+  {
+    const bw = ws([{ title: 'b', status: 'blocked' }, { title: 'sau' }]);
+    check('Next chờ: ô đầu chỉ có Blocked thì báo thẻ ấy, Next rỗng (cùng luật với Pending)', eq(ids(bw), ['b']) && projectNextIds(bw).length === 0);
+  }
   check('Next chờ: ô có thẻ làm được thì không báo', eq(ids(ws([{ title: 'p', status: 'pending' }, { title: 'n', par: true }])), [])
     && eq(ids(ws([{ title: 'n' }])), []) && eq(nextWaitingOn(normWorkspace({ steps: [] })), []));
   check('lọc trạng thái: nhóm', inGroup('', 'cancel') && inGroup('act', 'doing') && !inGroup('act', 'pending') && inGroup('wait', 'blocked') && inGroup('out', 'skip') && !inGroup('done', 'todo'));
