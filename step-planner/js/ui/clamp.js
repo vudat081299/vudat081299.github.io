@@ -45,7 +45,7 @@ export const openKeys = (boxes) => boxes.filter((b) => b.classList.contains('ope
  * còn cần thì giữ nguyên nút (focus không mất). @param {HTMLElement[]} boxes @param {Set<string>} [keepOpen] khối đang mở */
 export function markCut(boxes, keepOpen = new Set()) {
   for (const box of boxes) {
-    if (!box.classList.contains('cut')) continue;
+    if (!box.classList.contains('cut') && !box.classList.contains('open')) continue;
     box.classList.remove('open');
     for (const el of box.querySelectorAll('.clip')) el.classList.remove('clip');
     for (const a of box.querySelectorAll('a[data-hid]')) { a.removeAttribute('tabindex'); a.removeAttribute('data-hid'); }
@@ -80,7 +80,8 @@ export function markCut(boxes, keepOpen = new Set()) {
     const { clipped, hidden } = res[k];
     let more = /** @type {HTMLElement|null} */ (box.querySelector(':scope > .more'));
     box.classList.toggle('cut', clipped.length > 0);
-    if (!clipped.length) { more?.remove(); return; }
+    /* Khối hết bị cắt (Compact ẩn phần dài) vẫn nhớ đã mở: bỏ Compact thì mở lại như cũ. */
+    if (!clipped.length) { more?.remove(); if (!box.classList.contains('revisit-band')) box.classList.toggle('open', keepOpen.has(boxKey(box))); return; }
     for (const el of clipped) el.classList.add('clip');
     if (box.classList.contains('revisit-band')) return;
     const open = keepOpen.has(boxKey(box));

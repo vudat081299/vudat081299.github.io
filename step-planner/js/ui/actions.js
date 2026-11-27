@@ -135,6 +135,8 @@ export function initActions() {
       const open = !box.classList.contains('open');
       if (open && box.classList.contains('card')) unclip(box);
       markCut([box], new Set(open ? [boxKey(box)] : []));
+      /* Thu một khối cao: nút đã ở trên khung nhìn, kéo nó về. */
+      if (!open) box.querySelector(':scope > .more')?.scrollIntoView({ block: 'nearest' });
       return;
     }
     const row = b.closest('[data-step]');

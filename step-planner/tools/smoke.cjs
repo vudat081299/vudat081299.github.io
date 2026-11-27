@@ -3753,6 +3753,30 @@ const check = (name, ok, detail = '') => {
     }
   });
 
+  /* Thẻ cao: "Show less" kéo nút về khung nhìn; Compact bật rồi tắt giữ khối đã mở. */
+  await section('Thẻ mở: Show less, Compact', async () => {
+    const long = Array.from({ length: 40 }, (_, i) => `Dòng ghi chú ${i + 1}, đủ dài để thẻ mở ra cao hơn khung nhìn rất nhiều.`).join('\n');
+    const data = { version: 2, lastId: 'wm', workspaces: [{ id: 'wm', name: 'Mở', steps: [{ id: 'tm', title: 'Bước', subs: [
+      { id: 'm1', title: 'Thẻ ghi chú dài', status: 'todo', notes: long }, { id: 'm2', title: 'Thẻ ngắn', status: 'todo' }] }], log: [] }] };
+    for (const [w, hh] of [[1280, 800], [390, 844]]) {
+      const { ctx, page } = await seeded(w, hh, data);
+      await page.waitForSelector('.card[data-sub="m1"] .more');
+      await page.click('.card[data-sub="m1"] .more');
+      const tall = await page.$eval('.card[data-sub="m1"]', (c) => c.getBoundingClientRect().height);
+      await page.$eval('.card[data-sub="m1"] .more', (b) => b.scrollIntoView({ block: 'end' }));
+      await page.click('.card[data-sub="m1"] .more');
+      const r = await page.$eval('.card[data-sub="m1"] .more', (b) => { const x = b.getBoundingClientRect(); return { top: Math.round(x.top), bottom: Math.round(x.bottom), vh: innerHeight, text: b.textContent }; });
+      check(`thẻ cao ${w}px: "Show less" thu thẻ, nút "Show more" vẫn trong khung nhìn`, tall > hh && r.text === 'Show more' && r.top >= 0 && r.bottom <= r.vh,
+        JSON.stringify({ tall: Math.round(tall), ...r }));
+      await page.click('.card[data-sub="m1"] .more');
+      await page.click('#compact-btn');
+      await page.click('#compact-btn');
+      const st = await page.$eval('.card[data-sub="m1"]', (c) => ({ open: c.classList.contains('open'), more: c.querySelector('.more')?.textContent }));
+      check(`thẻ đã mở ${w}px: bật rồi tắt Compact, thẻ vẫn mở`, st.open && st.more === 'Show less', JSON.stringify(st));
+      await ctx.close();
+    }
+  });
+
   /* ── Dữ liệu lưu bị hỏng ── */
   await section('Dữ liệu lưu bị hỏng', async () => { // thân giữ thụt lề cũ cho dễ gộp
   const bad = await browser.newContext();
