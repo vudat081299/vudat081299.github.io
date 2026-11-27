@@ -2,6 +2,11 @@
 
 Chỉ việc còn dở. Xong việc nào thì xoá nó khỏi đây.
 
+## CHƯA LÀM
+
+- Hai trang đồ án (`sports-monitoring-project.html`, `sports-monitoring-build.html`) còn tả kế hoạch cũ (lợi thế sân nhà); chủ trang
+  đã chuyển sang giám sát chấn thương Premier League (mẫu `it5425-sports` của `step-planner/`). Xem lại hai trang khi chủ trang muốn.
+
 ## CHỜ CHỦ TRANG
 
 Câu hỏi của trang đồ án `sports-monitoring-project.html`, mục `#can-xac-nhan` (ba phần: tin nhắn gửi giảng viên,
