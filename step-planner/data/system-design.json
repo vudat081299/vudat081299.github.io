@@ -6273,11 +6273,74 @@
       "msg": "RAG đưa các đoạn tìm được cho một LLM viết câu trả lời; Serving chưa có LLM (API, Hugging Face Inference, Ollama, vLLM). Chọn một LLM ở Serving."
     }
   ],
+  "archNote": "Các nhóm là những lựa chọn độc lập và ghép với nhau, ví dụ lakehouse + medallion + batch ELT + một app; Lambda (xử lý) và medallion (chia tầng) không loại nhau.",
   "architectures": [
     {
       "id": "storage",
       "label": "Where the data lives",
       "question": "Dữ liệu thô và dữ liệu sạch được giữ theo kiểu nào, và cái gì truy vấn chúng?",
+      "guide": [
+        {
+          "q": "Dữ liệu có vừa một máy không (một laptop đọc và xử lý được)?",
+          "answers": [
+            {
+              "text": "Vừa một máy",
+              "picks": [
+                "files-db"
+              ]
+            },
+            {
+              "text": "Không vừa, cần nhiều máy hay object storage",
+              "picks": [
+                "warehouse",
+                "lake",
+                "lakehouse"
+              ]
+            }
+          ]
+        },
+        {
+          "q": "Dữ liệu chủ yếu là bảng cho SQL, hay có nhiều file ảnh, âm thanh, văn bản cho ML?",
+          "answers": [
+            {
+              "text": "Chỉ bảng, câu hỏi SQL và dashboard",
+              "picks": [
+                "warehouse"
+              ]
+            },
+            {
+              "text": "Nhiều file phi cấu trúc, cần giữ bản gốc rẻ và lâu",
+              "picks": [
+                "lake"
+              ]
+            },
+            {
+              "text": "Cả hai trên cùng một bản: SQL lẫn Spark, Python; bảng được sửa và cần quay lại phiên bản cũ",
+              "picks": [
+                "lakehouse"
+              ]
+            }
+          ]
+        },
+        {
+          "q": "Được dùng dịch vụ được quản lý, hay phải tự host bằng mã nguồn mở?",
+          "answers": [
+            {
+              "text": "Dùng dịch vụ được quản lý",
+              "picks": [
+                "warehouse"
+              ]
+            },
+            {
+              "text": "Tự host bằng mã nguồn mở",
+              "picks": [
+                "lakehouse",
+                "files-db"
+              ]
+            }
+          ]
+        }
+      ],
       "note": "Data mesh không phải một kiểu kho mà là cách tổ chức: mỗi nhóm nghiệp vụ tự sở hữu dữ liệu của mình và công bố nó như một sản phẩm, trên một nền tảng tự phục vụ, theo luật quản trị chung. Nó giải bài toán nhiều đội cùng sở hữu dữ liệu trong một tổ chức lớn; dự án một người hay một nhóm nhỏ thì không cần.",
       "sources": [
         {
@@ -6292,6 +6355,7 @@
           "what": "Không dựng nền tảng nào: dữ liệu thô là file trong thư mục dự án, bản sạch là Parquet đọc bằng DuckDB hay một bảng SQLite, PostgreSQL (tự chạy hay được host như Supabase, Neon); mọi thứ chạy trên một máy.",
           "use": "Dữ liệu vừa một máy, một người hay một nhóm nhỏ dùng: phần lớn đồ án và dự án học. Vẫn chia ba thư mục raw, clean, gold theo tinh thần medallion.",
           "avoid": "Dữ liệu vượt một máy; nhiều nhóm, nhiều công cụ cùng đọc ghi và cần phân quyền theo bảng.",
+          "example": "Đồ án phân tích vài file CSV tải từ Kaggle: data/raw giữ file gốc, notebook làm sạch rồi ghi Parquet, DuckDB trả lời truy vấn SQL.",
           "flow": [
             "Files in data/raw",
             "Clean script",
@@ -6380,6 +6444,7 @@
           "what": "Một kho SQL trung tâm giữ bảng đã làm sạch với schema khai trước; dữ liệu từ các hệ nguồn được nạp vào theo lịch để phân tích và báo cáo (BI).",
           "use": "Dữ liệu dạng bảng, câu hỏi chủ yếu là SQL, dashboard, báo cáo định kỳ; muốn dịch vụ được quản lý, không tự vận hành máy.",
           "avoid": "Dữ liệu chủ yếu là ảnh, âm thanh, văn bản thô; app cần trả lời từng yêu cầu nhỏ thật nhanh; ML cần đọc dữ liệu bằng Spark hay Python với khối lượng lớn.",
+          "example": "Báo cáo doanh thu của một chuỗi bán lẻ: đơn hàng từ database của hệ thống bán hàng được nạp mỗi đêm vào BigQuery, dashboard đọc bảng ấy.",
           "flow": [
             "Sources",
             "Load on a schedule",
@@ -6468,6 +6533,7 @@
           "what": "Giữ mọi dữ liệu ở dạng gốc (bảng, JSON, ảnh, âm thanh) trên object storage hay HDFS, không cần khai schema lúc ghi; công cụ đọc tự áp cấu trúc khi dùng.",
           "use": "Nhiều loại dữ liệu, nhất là file phi cấu trúc cho ML; muốn giữ bản gốc rẻ và lâu; Spark, Python cùng đọc.",
           "avoid": "Chỉ có bảng và câu hỏi SQL: warehouse hay lakehouse dễ quản hơn. Không có danh mục, quy ước thư mục, phân quyền thì lake thành \"data swamp\": không ai tìm ra hay tin được dữ liệu.",
+          "example": "Kho ảnh và bản ghi âm để huấn luyện model nhận dạng: file gốc nằm trên S3, nhãn và metadata nằm trong một bảng.",
           "flow": [
             "Sources",
             "Raw files on object storage or HDFS",
@@ -6556,6 +6622,7 @@
           "what": "Lake cộng một lớp bảng có giao dịch ACID (Delta Lake, Iceberg, Hudi) và một catalog giữ danh sách bảng: một bản dữ liệu trên object storage (S3, R2, GCS, MinIO) dùng chung cho SQL, BI và ML. Bảng thường được chia tầng theo medallion (xem nhóm How tables are layered).",
           "use": "Dữ liệu lớn vừa cần SQL vừa cần Spark, Python cho ML; dữ liệu được ghi thêm, sửa nhiều lần; muốn quay lại đúng phiên bản đã dùng để train; hoặc phải tự host bằng mã nguồn mở: MinIO + Iceberg + Polaris thay cho warehouse được quản lý.",
           "avoid": "Dữ liệu vừa một máy: ba thư mục Parquet (raw, clean, gold) cộng DuckDB đã cho đủ ba tầng, không cần table format hay Spark.",
+          "example": "Nền tảng dữ liệu của một trang thương mại điện tử: log truy cập và đơn hàng ghi vào bảng Iceberg hay Delta trên S3; cùng một bản phục vụ dashboard SQL và huấn luyện model gợi ý.",
           "flow": [
             "Object storage (S3, MinIO)",
             "Table format + catalog",
@@ -6667,6 +6734,10 @@
             {
               "title": "What is a data lakehouse? (Databricks)",
               "url": "https://www.databricks.com/blog/what-is-data-lakehouse"
+            },
+            {
+              "title": "Lakehouse: A New Generation of Open Platforms that Unify Data Warehousing and Advanced Analytics (CIDR 2021)",
+              "url": "https://www.cidrdb.org/cidr2021/papers/cidr2021_paper17.pdf"
             }
           ]
         }
@@ -6759,6 +6830,42 @@
       "id": "layers",
       "label": "How tables are layered",
       "question": "Dữ liệu đi qua mấy tầng từ bản thô tới bảng người dùng đọc? Câu này độc lập với nơi lưu: cùng một cách chia tầng dựng được trên thư mục Parquet, lake hay lakehouse.",
+      "guide": [
+        {
+          "q": "Có nhiều nguồn và nhiều nơi dùng (dashboard, model) cần chung một bản đã làm sạch không?",
+          "answers": [
+            {
+              "text": "Một nguồn, một báo cáo hay một model",
+              "picks": [
+                "two-layers"
+              ]
+            },
+            {
+              "text": "Nhiều nguồn, nhiều nơi dùng",
+              "picks": [
+                "medallion"
+              ]
+            }
+          ]
+        },
+        {
+          "q": "Dữ liệu tải về một lần, hay được ghi thêm dần theo thời gian?",
+          "answers": [
+            {
+              "text": "Tải một lần, làm sạch một lần",
+              "picks": [
+                "two-layers"
+              ]
+            },
+            {
+              "text": "Ghi thêm dần, theo lịch hay theo luồng",
+              "picks": [
+                "medallion"
+              ]
+            }
+          ]
+        }
+      ],
       "entries": [
         {
           "id": "two-layers",
@@ -6766,6 +6873,7 @@
           "what": "Hai tầng: dữ liệu thô giữ nguyên như lúc tải về, và một bộ bảng sạch mà báo cáo, model đọc thẳng. Biến đổi chạy một mạch từ thô ra sạch.",
           "use": "Một bộ dữ liệu cố định, một nguồn, ít bảng, một người hay một nhóm nhỏ dùng: phần lớn bài tập và đồ án phân tích.",
           "avoid": "Nhiều nguồn phải khớp với nhau, dữ liệu mới tới đều đặn, hay nhiều bảng tổng hợp được nhiều báo cáo dùng lại: tách thêm tầng như medallion.",
+          "example": "Đồ án theo Cookiecutter Data Science: data/raw giữ nguyên bản tải về, script ghi bảng sạch vào data/processed cho notebook và model.",
           "flow": [
             "Raw files",
             "Clean script",
@@ -6850,6 +6958,7 @@
           "what": "Một cách chia bảng theo mức chất lượng, không phải một kiểu kho. Bronze giữ dữ liệu đúng như nguồn gửi (kể cả file HTML, CSV, Parquet gốc), chỉ thêm cột như thời điểm nạp, tên nguồn. Silver là bản đã làm sạch, ép kiểu, bỏ trùng, mỗi bản ghi một dòng. Gold là bảng tổng hợp theo nghiệp vụ cho báo cáo, dashboard, đặc trưng cho model. Tầng nào lưu Iceberg, tầng nào lưu Parquet hay bảng DuckDB thì vẫn là medallion, miễn mỗi tầng giữ đúng vai trò ấy và tầng sau chỉ đọc từ tầng trước.",
           "use": "Dữ liệu mới tới đều đặn hay từ nhiều nguồn; cần tính lại silver, gold từ bronze khi luật làm sạch đổi mà không tải lại nguồn; nhiều báo cáo, model dùng chung bảng sạch. Đây là cách tổ chức thường gặp của lakehouse; trên một máy chỉ cần ba thư mục.",
           "avoid": "Một bộ dữ liệu cố định cho một báo cáo: ba tầng chỉ thêm việc, thô + sạch là đủ. Theo medallion là khuyến nghị, không bắt buộc; đừng tạo tầng chỉ để chép nguyên bảng sang tầng sau.",
+          "example": "Dữ liệu đặt phòng: Bronze giữ JSON đúng như API trả về, Silver mỗi lượt đặt một dòng đã khử trùng, Gold doanh thu theo tuần cho dashboard và bảng đặc trưng cho model.",
           "flow": [
             "Bronze: as the source sent it",
             "Silver: cleaned, one row per record",
@@ -7015,6 +7124,91 @@
       "id": "processing",
       "label": "How data is processed",
       "question": "Dữ liệu mới được xử lý theo lô định kỳ, hay ngay khi tới?",
+      "guide": [
+        {
+          "q": "Cần kết quả trong vài giây, hay cập nhật theo giờ, theo ngày là đủ?",
+          "answers": [
+            {
+              "text": "Theo giờ, theo ngày",
+              "picks": [
+                "batch-etl",
+                "batch-elt"
+              ]
+            },
+            {
+              "text": "Vài giây sau khi sự kiện tới",
+              "picks": [
+                "streaming",
+                "kappa"
+              ]
+            },
+            {
+              "text": "Cần cả số tức thời lẫn số tính lại chính xác từ toàn bộ lịch sử",
+              "picks": [
+                "lambda"
+              ]
+            }
+          ]
+        },
+        {
+          "q": "Biến đổi chạy ở đâu: trong script trước khi ghi vào kho, hay ngay trong kho sau khi nạp bản thô?",
+          "answers": [
+            {
+              "text": "Trong script (pandas, Spark), kho chỉ giữ bản sạch",
+              "picks": [
+                "batch-etl"
+              ]
+            },
+            {
+              "text": "Nạp thô trước, biến đổi bằng SQL, dbt trong warehouse hay lakehouse",
+              "picks": [
+                "batch-elt"
+              ]
+            }
+          ]
+        },
+        {
+          "q": "Sửa code thì có phải tính lại kết quả từ dữ liệu cũ không?",
+          "answers": [
+            {
+              "text": "Không, chỉ xử lý sự kiện mới",
+              "picks": [
+                "streaming"
+              ]
+            },
+            {
+              "text": "Có: job stream phiên bản mới đọc lại log đã giữ",
+              "picks": [
+                "kappa"
+              ]
+            },
+            {
+              "text": "Có: lớp batch tính lại toàn bộ theo lịch",
+              "picks": [
+                "lambda"
+              ]
+            }
+          ]
+        },
+        {
+          "q": "Có chấp nhận viết và giữ cùng một logic ở hai hệ (batch và stream) không?",
+          "answers": [
+            {
+              "text": "Không, muốn một code base",
+              "picks": [
+                "kappa",
+                "streaming"
+              ]
+            },
+            {
+              "text": "Có, đường batch (Hadoop, Spark) đã có sẵn",
+              "picks": [
+                "lambda"
+              ]
+            }
+          ]
+        }
+      ],
       "entries": [
         {
           "id": "batch-etl",
@@ -7022,6 +7216,7 @@
           "what": "Theo lịch hay chạy một lần, một job lấy dữ liệu (Extract), biến đổi bằng code trên một máy xử lý riêng (Transform), rồi mới ghi bản sạch vào kho (Load).",
           "use": "Dữ liệu cố định hay tới theo ngày, vừa một máy, biến đổi viết bằng Python; nguồn có định dạng cố định chỉ cần biến đổi một lần; cần lọc, gộp dữ liệu tần số cao (cảm biến) trước khi nạp.",
           "avoid": "Đã có warehouse hay lakehouse đủ mạnh: nạp thô rồi biến đổi trong kho (ELT) bớt một chỗ chạy code; cần kết quả trong vài giây.",
+          "example": "Báo cáo hằng ngày: script Python chạy lúc nửa đêm, lấy dữ liệu hôm qua từ API, làm sạch bằng pandas rồi ghi bảng kết quả vào PostgreSQL.",
           "flow": [
             "Extract",
             "Transform in a script",
@@ -7101,6 +7296,7 @@
           "what": "Nạp dữ liệu thô thẳng vào kho trước (Extract, Load), rồi biến đổi bằng SQL hay Spark ngay trong kho khi cần (Transform), thường thành các model dbt có test.",
           "use": "Đã có warehouse hay lakehouse; biến đổi viết được bằng SQL; dữ liệu lớn, muốn biến đổi song song tại chỗ và giữ bản thô để biến đổi lại khi luật đổi.",
           "avoid": "Không có kho SQL nào, chỉ có file nhỏ và pandas: một script ETL đơn giản hơn.",
+          "example": "Đội phân tích nạp nguyên bảng từ các hệ nguồn vào warehouse, rồi viết model dbt bằng SQL để ra bảng sạch và bảng tổng hợp ngay trong kho.",
           "flow": [
             "Extract",
             "Load raw into the warehouse or lake",
@@ -7195,6 +7391,7 @@
           "what": "Mỗi sự kiện được xử lý khi nó tới: nguồn gửi sự kiện vào một log (Kafka), một bộ xử lý stream đọc liên tục rồi cập nhật bảng kết quả, gửi cảnh báo hay gọi model.",
           "use": "Kết quả phải mới trong vài giây: cảnh báo, phát hiện gian lận, cảm biến, bảng điều khiển trực tiếp.",
           "avoid": "Người dùng chỉ xem kết quả theo giờ, theo ngày: gom sự kiện thành lô rồi chạy batch rẻ và dễ hơn nhiều.",
+          "example": "Cảnh báo cảm biến trong nhà máy: mỗi số đo đi qua Kafka, job stream so với ngưỡng và gửi cảnh báo trong vài giây.",
           "flow": [
             "Events",
             "Kafka topic",
@@ -7289,6 +7486,7 @@
           "what": "Hai đường song song trên cùng dữ liệu gốc chỉ ghi thêm: batch layer định kỳ tính lại toàn bộ cho kết quả đúng, speed layer tính phần sự kiện batch chưa kịp tính cho kết quả ngay; serving layer lưu và đánh chỉ mục batch view. Truy vấn đọc cả batch view lẫn real-time view rồi gộp. Batch view mới xong thì phần real-time view nó đã phủ bị bỏ. Mỗi batch view mang mốc batch_as_of, real-time view chỉ tính sau mốc ấy: số chụp nhanh lấy bên mới hơn, số cộng được thì cộng hai bên.",
           "use": "Cần cả kết quả tức thì lẫn kết quả tính lại chính xác trên toàn bộ lịch sử, và đường batch (Hadoop, Spark) đã có sẵn; môn học yêu cầu.",
           "avoid": "Đồ án một người: phải viết và giữ cùng một logic ở hai hệ khác nhau sao cho ra cùng kết quả, chính điểm đau mà bài phê bình của Kreps nêu. Kappa, hay chỉ batch, thường đủ.",
+          "example": "Thống kê lượt xem trang của một website lớn: lớp batch tính lại tổng từ toàn bộ log vài giờ một lần, lớp speed cộng các lượt mới từ lần tính gần nhất; truy vấn gộp hai số.",
           "flow": [
             "Append-only raw events",
             "Batch layer (recompute all) + speed layer (recent events)",
@@ -7399,6 +7597,7 @@
           "what": "Chỉ một đường stream: dữ liệu là log sự kiện giữ đủ lâu (Kafka). Code đổi thì chạy bản job mới đọc lại log từ đầu ra một bảng mới; bắt kịp rồi thì chuyển app sang bảng mới và dừng job cũ.",
           "use": "Cần kết quả tức thì và đôi khi phải tính lại lịch sử; muốn một codebase thay cho hai; log giữ được đủ khoảng lịch sử cần tính lại.",
           "avoid": "Không cần kết quả tức thì: batch đơn giản hơn. Phép tính cần quét lịch sử dài hơn khoảng log giữ được.",
+          "example": "Bảng thống kê sự kiện của một app đọc từ Kafka; sửa cách tính thì chạy job phiên bản mới đọc lại log đã giữ (ví dụ 30 ngày) sang bảng mới, đuổi kịp rồi chuyển app sang bảng ấy, như Jay Kreps mô tả.",
           "flow": [
             "Events",
             "Kafka log (kept long enough)",
@@ -7669,6 +7868,78 @@
       "id": "app",
       "label": "How people use the results",
       "question": "Kết quả tới tay người dùng qua thứ gì, và phần mềm ấy chia thành mấy phần? Ba kiến trúc đầu chính là ba lối ở \"What do you deliver?\".",
+      "guide": [
+        {
+          "q": "Người dùng chỉ đọc kết quả, hay nhập dữ liệu và nhận câu trả lời?",
+          "answers": [
+            {
+              "text": "Chỉ đọc: báo cáo, dashboard",
+              "picks": [
+                "static-report"
+              ]
+            },
+            {
+              "text": "Nhập dữ liệu, nhận dự đoán hay câu trả lời",
+              "picks": [
+                "monolith",
+                "client-server"
+              ]
+            }
+          ]
+        },
+        {
+          "q": "Có app di động hay web front-end riêng cần gọi cùng một logic không?",
+          "answers": [
+            {
+              "text": "Không, một giao diện Python là đủ",
+              "picks": [
+                "monolith"
+              ]
+            },
+            {
+              "text": "Có: app iOS, Android hay web riêng",
+              "picks": [
+                "client-server"
+              ]
+            }
+          ]
+        },
+        {
+          "q": "Có nhiều đội, mỗi đội cần phát hành phần của mình độc lập không?",
+          "answers": [
+            {
+              "text": "Không: một người hay một nhóm nhỏ",
+              "picks": [
+                "monolith",
+                "client-server"
+              ]
+            },
+            {
+              "text": "Có",
+              "picks": [
+                "microservices"
+              ]
+            }
+          ]
+        },
+        {
+          "q": "Yêu cầu tới thế nào?",
+          "answers": [
+            {
+              "text": "Thưa, hay dồn từng đợt; nhiều lúc không ai dùng",
+              "picks": [
+                "serverless"
+              ]
+            },
+            {
+              "text": "Đều đặn, cả yêu cầu đầu tiên cũng phải nhanh (không chịu khởi động lạnh)",
+              "picks": [
+                "client-server"
+              ]
+            }
+          ]
+        }
+      ],
       "entries": [
         {
           "id": "static-report",
@@ -7677,6 +7948,7 @@
           "what": "Không có máy chủ chạy suốt: notebook xuất HTML hay PDF, hoặc dashboard đọc bảng đã tính sẵn; muốn số mới thì chạy lại pipeline.",
           "use": "Người nhận chỉ đọc, lọc kết quả, không gửi dữ liệu mới vào.",
           "avoid": "Người dùng cần nhập dữ liệu và nhận câu trả lời ngay.",
+          "example": "Báo cáo tuần xuất HTML từ notebook, hay dashboard Power BI đọc bảng tổng hợp; người đọc không gửi dữ liệu vào.",
           "flow": [
             "Clean data",
             "Notebook or BI tool",
@@ -7741,6 +8013,7 @@
           "what": "Một chương trình làm mọi thứ: giao diện, đọc dữ liệu, gọi model trong cùng một tiến trình (Streamlit, Gradio), deploy một lần.",
           "use": "Một giao diện Python, một người hay một nhóm nhỏ dùng; muốn ít phần phải dựng nhất. Dự án mới nên bắt đầu ở đây, tách ra khi thật cần.",
           "avoid": "App khác (web, mobile) cũng cần gọi model; nhiều người dùng cùng lúc làm app chậm.",
+          "example": "Demo Streamlit: một file app.py vừa vẽ giao diện vừa nạp model, chạy trên một máy.",
           "flow": [
             "Clean data + model file",
             "One Python app",
@@ -7820,6 +8093,7 @@
           "what": "Hai phần riêng: backend mở API trả JSON theo schema đã hẹn, đọc dữ liệu và gọi model; frontend web hay mobile chỉ gọi API. Hai bên deploy riêng.",
           "use": "Nhiều client dùng chung một logic; giao diện không viết bằng Python; muốn đổi giao diện mà không đụng model.",
           "avoid": "Chỉ một giao diện Python và vài người dùng: thêm một service phải deploy và một schema phải giữ.",
+          "example": "App di động gọi REST API viết bằng FastAPI để lấy dự đoán; web và app iOS, Android dùng chung API ấy.",
           "flow": [
             "Clean tables + model",
             "Backend API",
@@ -7911,6 +8185,7 @@
           "what": "Ứng dụng chia thành nhiều service nhỏ, mỗi service lo một năng lực nghiệp vụ, chạy tiến trình riêng, gọi nhau qua API nhẹ (thường là HTTP) và deploy độc lập.",
           "use": "Nhiều đội cùng làm một sản phẩm lớn, mỗi đội cần deploy phần mình độc lập, và đã tự động hoá deploy, giám sát.",
           "avoid": "Dự án mới, một người hay một nhóm nhỏ: bài MonolithFirst khuyên không bắt đầu dự án mới bằng microservices; bắt đầu bằng một app, tách khi ranh giới đã rõ.",
+          "example": "Lewis và Fowler nêu Amazon, Netflix, The Guardian: hệ lớn chia thành nhiều service, mỗi service do một đội giữ và có database riêng.",
           "flow": [
             "Gateway",
             "Service A + service B + model service",
@@ -8020,6 +8295,7 @@
           "what": "Code chạy thành hàm theo từng yêu cầu trên nền tảng của nhà cung cấp (Functions as a Service): không giữ máy chủ chạy suốt, tự co giãn, trả tiền theo lượt chạy.",
           "use": "Lượt gọi thưa và không đều; mỗi yêu cầu xử lý nhanh, không giữ trạng thái; không muốn quản máy chủ.",
           "avoid": "Model lớn nạp lâu: mỗi lần khởi động lạnh (cold start) phải chờ; job chạy lâu, kết nối giữ lâu; cần GPU.",
+          "example": "API dự đoán cho một công cụ nội bộ ít người dùng: chạy trên nền tảng function, chỉ tính tiền lúc có yêu cầu; yêu cầu đầu tiên sau lúc rảnh chịu khởi động lạnh.",
           "flow": [
             "Request",
             "Function starts (cold or warm)",
@@ -8189,6 +8465,61 @@
       "id": "ml",
       "label": "How the model answers",
       "question": "Dự đoán, hay câu trả lời của model, được tính lúc nào?",
+      "guide": [
+        {
+          "q": "Có biết trước mọi đầu vào cần dự đoán không (mọi khách hàng, mọi sản phẩm)?",
+          "answers": [
+            {
+              "text": "Có, và kết quả tính từ vài giờ trước vẫn dùng được",
+              "picks": [
+                "batch-prediction"
+              ]
+            },
+            {
+              "text": "Không, đầu vào tới lúc người dùng hỏi",
+              "picks": [
+                "online-prediction"
+              ]
+            }
+          ]
+        },
+        {
+          "q": "Dự đoán có cần thông tin của vài phút vừa qua không (số đơn đang chờ, các giao dịch vừa xảy ra)?",
+          "answers": [
+            {
+              "text": "Có",
+              "picks": [
+                "streaming-inference"
+              ]
+            },
+            {
+              "text": "Không, đặc trưng tính theo lịch là đủ",
+              "picks": [
+                "online-prediction",
+                "batch-prediction"
+              ]
+            }
+          ]
+        },
+        {
+          "q": "Câu trả lời có phải dựa trên một bộ tài liệu văn bản có sẵn không?",
+          "answers": [
+            {
+              "text": "Có: LLM trả lời từ tài liệu ấy",
+              "picks": [
+                "rag"
+              ]
+            },
+            {
+              "text": "Không: model dự đoán từ đặc trưng",
+              "picks": [
+                "batch-prediction",
+                "online-prediction"
+              ]
+            }
+          ]
+        }
+      ],
       "note": "Nhóm này chỉ gợi ý khi dự án có model: khâu Training hay Serving đã quyết, hoặc sản phẩm dùng LLM. Chưa quyết hai khâu ấy thì chưa gợi ý; Not needed ở cả hai thì nhóm không cần.",
       "entries": [
         {
@@ -8197,6 +8528,7 @@
           "what": "Chạy model theo lịch trên mọi bản ghi, ghi dự đoán ra bảng; app chỉ đọc kết quả tính sẵn.",
           "use": "Dự đoán vẫn dùng được sau vài giờ, vài ngày (gợi ý hằng ngày, chấm điểm khách hàng); muốn đơn giản, rẻ.",
           "avoid": "Người dùng mới hay dữ liệu vừa nhập chưa có dự đoán cho tới lần chạy sau.",
+          "example": "Gợi ý tính sẵn cho mọi người dùng theo lịch; Chip Huyen nêu gợi ý nhà hàng của DoorDash, gợi ý subreddit của Reddit.",
           "flow": [
             "Scheduled job",
             "Model scores every row",
@@ -8286,6 +8618,7 @@
           "what": "Model nằm sau một API hay trong app; mỗi yêu cầu gửi dữ liệu vào và nhận dự đoán tính ngay lúc đó.",
           "use": "Đầu vào chỉ có khi người dùng gửi (form, ảnh tải lên) và cần trả lời trong khoảng một giây.",
           "avoid": "Tính trước được cho mọi bản ghi: batch rẻ hơn, không có service nào phải chạy suốt.",
+          "example": "Ước giá nhà khi người dùng nhập diện tích và vị trí: API chạy model ngay trong yêu cầu, trả con số trong phản hồi.",
           "flow": [
             "Request with input",
             "Model loaded in the API or app",
@@ -8358,6 +8691,7 @@
           "what": "Đặc trưng được tính liên tục từ luồng sự kiện (vd. số lần bấm trong vài phút vừa qua), model dự đoán ngay khi sự kiện tới hay khi có yêu cầu.",
           "use": "Dự đoán phụ thuộc điều vừa xảy ra trong phiên này, vài phút này: gian lận, gợi ý theo phiên, cảnh báo cảm biến.",
           "avoid": "Đặc trưng tính theo ngày là đủ: online prediction với đặc trưng tính sẵn đơn giản hơn nhiều.",
+          "example": "Ước thời gian giao đồ ăn cần số đơn quán đang có lúc này; phát hiện gian lận thẻ cần các giao dịch vừa xảy ra (Chip Huyen nêu DoorDash, Stripe).",
           "flow": [
             "Events",
             "Stream processor computes features",
@@ -8454,6 +8788,7 @@
           "what": "Câu hỏi được dùng để tìm các đoạn tài liệu liên quan trong một chỉ mục; LLM đọc các đoạn ấy rồi trả lời. Tài liệu đổi thì dựng lại chỉ mục, không train lại model.",
           "use": "Hỏi đáp, chatbot trên tài liệu riêng hay tài liệu hay đổi; cần chỉ ra đoạn nguồn của câu trả lời.",
           "avoid": "Câu trả lời là một con số, một nhãn từ bảng: model học máy thường hay một truy vấn SQL chính xác, rẻ và kiểm được hơn.",
+          "example": "Chatbot hỏi đáp trên tài liệu hướng dẫn sử dụng của một sản phẩm: trả lời từ các đoạn tìm được và dẫn lại đoạn ấy.",
           "flow": [
             "Documents into chunks into an index",
             "Question retrieves the closest chunks",

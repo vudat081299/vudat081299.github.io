@@ -27,6 +27,9 @@
      `architectures`: nhóm kiến trúc {id, label, question, note?, sources?, entries, rules}; kiến trúc {id, name, what, use,
      avoid, flow, diagram, tools, path?, sources}: `tools` trỏ phương án có thật, `path` trỏ lối có thật; luật gợi ý {if, arch, why}
      dùng cùng khoá điều kiện với `checks` (trừ khoá nhóm kiến trúc), `arch` là kiến trúc của nhóm ("" = nhóm không cần).
+     `archNote` (gốc): một dòng nói các nhóm là lựa chọn độc lập, ghép với nhau. Nhóm có `guide` tuỳ chọn: 2–4 câu hỏi chọn
+     {q, answers [{text, picks [id kiến trúc]}]}, mọi kiến trúc của nhóm được ít nhất một câu trả lời trỏ tới. Kiến trúc có
+     `example` tuỳ chọn: một ví dụ hệ thống có thật, loại hay gặp.
      `diagram` (sơ đồ luồng): {nodes [{id, label, note?, kind, row?}], edges [{from, to, dashed?}], group? {label, nodes}};
      ≥ 2 nút, ≥ 1 đường; id không trùng, đường và nhóm trỏ nút có thật; mọi nút nối với nút đầu (bỏ chiều đường); `kind` là một
      trong DIAGRAM_KINDS; `label` là tên chuẩn tiếng Anh như `flow`, `note` và nhãn nhóm tiếng Việt. Xếp lưới (một tầng mỗi
@@ -54,9 +57,9 @@ DESIGN = os.path.join(HERE, 'data/system-design.json')
 LANES = ('data', 'model', 'app', 'ops')
 STAGE_KEYS = {'id', 'title', 'lane', 'question', 'guide', 'multi', 'skipWhen', 'task', 'when', 'options'}
 OPT_KEYS = {'id', 'name', 'kind', 'summary', 'pick', 'avoid', 'cost', 'level', 'fit', 'links', 'setup', 'task'}
-DESIGN_KEYS = {'note', 'paths', 'profile', 'stages', 'checks', 'architectures'}
-FAMILY_KEYS = {'id', 'label', 'question', 'note', 'sources', 'entries', 'rules'}
-ARCH_KEYS = {'id', 'name', 'what', 'use', 'avoid', 'flow', 'diagram', 'tools', 'path', 'sources'}
+DESIGN_KEYS = {'note', 'paths', 'profile', 'stages', 'checks', 'archNote', 'architectures'}
+FAMILY_KEYS = {'id', 'label', 'question', 'guide', 'note', 'sources', 'entries', 'rules'}
+ARCH_KEYS = {'id', 'name', 'what', 'use', 'avoid', 'example', 'flow', 'diagram', 'tools', 'path', 'sources'}
 DIAGRAM_KINDS = ('src', 'run', 'store', 'use')
 CHECK_KEYS = {'id', 'title', 'if', 'unless', 'msg', 'caveat'}
 PATH_KEYS = {'id', 'label', 'summary', 'flow', 'why', 'switch', 'ask', 'implies', 'stages', 'suggest', 'accept'}
@@ -400,14 +403,15 @@ def check_architectures(data, answers, options):
             err(f'{w}: cần ít nhất hai kiến trúc')
         for j, a in enumerate(entries):
             wa = f'{w}.entries[{j}] ({a.get("id")})'
-            if set(a) - ARCH_KEYS or not ARCH_KEYS - {'path'} <= set(a):
-                err(f'{wa}: khoá phải là {sorted(ARCH_KEYS)}, path tuỳ chọn (đang có {sorted(a)})')
+            if set(a) - ARCH_KEYS or not ARCH_KEYS - {'path', 'example'} <= set(a):
+                err(f'{wa}: khoá phải là {sorted(ARCH_KEYS)}, path, example tuỳ chọn (đang có {sorted(a)})')
                 continue
             if not re.fullmatch(ID_RE, str(a['id'])) or a['id'] in ids:
                 err(f'{wa}: id sai hoặc trùng')
             ids.add(a['id'])
             for k in ('name', 'what', 'use', 'avoid'):
                 need_str(wa, a, k)
+            need_str(wa, a, 'example', required=False)
             english(f'{wa}.name', a.get('name', ''))
             flow = a.get('flow')
             if not isinstance(flow, list) or len(flow) < 2 or not all(isinstance(x, str) and x.strip() and '\n' not in x for x in flow):
@@ -426,6 +430,7 @@ def check_architectures(data, answers, options):
             if 'path' in a and a['path'] not in paths:
                 err(f'{wa}: path "{a["path"]}" không có trong `paths`')
             check_sources(wa, a.get('sources'))
+        check_guide(w, f.get('guide'), ids)
         rules = f.get('rules')
         if not isinstance(rules, list) or not rules:
             err(f'{w}: cần ít nhất một luật gợi ý')
@@ -439,6 +444,33 @@ def check_architectures(data, answers, options):
                 err(f'{wr}: arch "{r["arch"]}" không phải kiến trúc của nhóm')
             need_str(wr, r, 'why')
             check_cond(f'{wr}.if', r['if'], answers, options, paths)
+
+
+def check_guide(w, guide, ids):
+    """Câu hỏi chọn của một nhóm: 2–4 câu, mỗi câu ≥ 2 câu trả lời, mỗi câu trả lời trỏ ≥ 1 kiến trúc của nhóm; mọi kiến trúc của
+    nhóm được ít nhất một câu trả lời trỏ tới (chữ tiếng Việt: check_design_language)."""
+    w = f'{w}.guide'
+    if not isinstance(guide, list) or not 2 <= len(guide) <= 4:
+        err(f'{w}: cần 2–4 câu hỏi {{q, answers}}')
+        return
+    hit = set()
+    for i, q in enumerate(guide):
+        if not isinstance(q, dict) or set(q) != {'q', 'answers'} or not isinstance(q['answers'], list) or len(q['answers']) < 2:
+            err(f'{w}[{i}]: là {{q, answers[≥ 2]}}')
+            continue
+        need_str(f'{w}[{i}]', q, 'q')
+        for a in q['answers']:
+            if not isinstance(a, dict) or set(a) != {'text', 'picks'} or not isinstance(a['picks'], list) or not a['picks']:
+                err(f'{w}[{i}]: câu trả lời là {{text, picks[≥ 1]}} (đang có {a})')
+                continue
+            need_str(f'{w}[{i}]', a, 'text')
+            bad = [x for x in a['picks'] if x not in ids]
+            if bad:
+                err(f'{w}[{i}]: picks {bad} không phải kiến trúc của nhóm')
+            hit |= set(a['picks'])
+    miss = sorted(ids - hit)
+    if miss:
+        err(f'{w}: kiến trúc không câu trả lời nào trỏ tới: {", ".join(miss)}')
 
 
 def check_diagram(w, d):
@@ -697,7 +729,7 @@ DESIGN_TITLES = {'stages[].options[].links[].title', 'architectures[].sources[].
 # Id, giá trị liệt kê, URL, lệnh: không xét ngôn ngữ.
 DESIGN_CODE = re.compile(r'(^|\.)(id|arch|path|lane|cost|url)$|\.setup\[\]$|^paths\[\]\.ask\[\]$'
                          r'|\.(if|unless|when|fit|implies|suggest|tools)\.\*(\[\])?$|^paths\[\]\.stages\.\*$'
-                         r'|\.diagram\.(nodes\[\]\.kind|edges\[\]\.(from|to)|group\.nodes\[\])$')
+                         r'|\.diagram\.(nodes\[\]\.kind|edges\[\]\.(from|to)|group\.nodes\[\])$|\.guide\[\]\.answers\[\]\.picks\[\]$')
 JS_VI_MARK = 'lang: vi'  # chú thích trên dòng mở chuỗi: chuỗi tiếng Việt có chủ ý (nội dung sinh ra, nhãn nhập định dạng cũ)
 
 
@@ -986,6 +1018,11 @@ def self_test():
         ('design: tên nút của sơ đồ tiếng Việt', design(lambda d: d['architectures'][0]['entries'][0]['diagram']['nodes'][0].update(label='Thư mục')), 'phải tiếng Anh'),
         ('design: ghi chú nút của sơ đồ tiếng Anh', design(lambda d: d['architectures'][0]['entries'][0]['diagram']['nodes'][0].update(note='raw files')), 'phải tiếng Việt'),
         ('design: sơ đồ — kind lạ', design(lambda d: d['architectures'][0]['entries'][0]['diagram']['nodes'][0].update(kind='db')), 'kind là một trong'),
+        ('design: câu hỏi chọn trỏ kiến trúc của nhóm khác', design(lambda d: d['architectures'][0]['guide'][0]['answers'][0]['picks'].append('kappa')), 'không phải kiến trúc của nhóm'),
+        ('design: câu hỏi chọn bỏ sót một kiến trúc', design(lambda d: d['architectures'][1]['guide'].__setitem__(slice(None), [
+            {'q': 'Một câu?', 'answers': [{'text': 'Có', 'picks': ['medallion']}, {'text': 'Không', 'picks': ['medallion']}]},
+            {'q': 'Hai câu?', 'answers': [{'text': 'Có', 'picks': ['medallion']}, {'text': 'Không', 'picks': ['medallion']}]}])), 'không câu trả lời nào trỏ tới: two-layers'),
+        ('design: câu trả lời tiếng Anh', design(lambda d: d['architectures'][0]['guide'][0]['answers'][0].update(text='Fits one machine')), 'phải tiếng Việt'),
         ('design: tên trang ngoài bị dịch', design(lambda d: d['stages'][0]['options'][0]['links'][0].update(title='Trang chủ')), 'không dịch'),
         ('design: nhãn giao diện tiếng Việt', design(lambda d: d['stages'][0].update(title='Nguồn dữ liệu')), 'phải tiếng Anh'),
         ('mẫu: tên bước con tiếng Anh', tpl, 'nội dung mẫu phải tiếng Việt'),

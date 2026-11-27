@@ -5,7 +5,7 @@
  * Dùng: core/board.js, core/design-plan.js, core/design.js, core/io.js, core/model.js, ui/arch-diagram.js, ui/diagram-view.js,
  *   ui/dialogs.js, ui/dom.js, ui/state.js, ui/toast.js. */
 import { fold as foldText } from '../core/board.js';
-import { archExplain } from './arch-diagram.js';
+import { archCombine, archExplain, archGuide } from './arch-diagram.js';
 import { initDiagramView, attach as attachView, focusFig, resetView } from './diagram-view.js';
 import { PLAN_STEP, applyPlan, bothDecided, diagramNodes, flowEdges, planDiff, snake, viaLabel } from '../core/design-plan.js';
 import { EDGE_MAX, OWN_MAX, VIA, applyPath, archMissing, archState, catalogErrors, decidedCount, effProfile, emptyDesign, isPreset, normDesign, notNeededBy, pathOf, pickNames, presetDesign, rankOptions, stageLists, stageState, warnings } from '../core/design.js';
@@ -676,6 +676,7 @@ function archPane() {
     h('p', { class: 'sd-note', 'data-guide': '1' }, icon('info'),
       h('span', {}, 'Choose one architecture per family, or keep "Not chosen" to follow the recommendation. A choice comes before the profile when Apply path and the stage pages rank tools; tools you already picked stay.')),
     h('p', { class: 'sd-q' }, 'Kiến trúc là hình dạng lớn của hệ thống, quyết trước khi chọn công cụ cho từng khâu. Mỗi nhóm dưới đây trả lời một câu hỏi bằng vài kiến trúc chuẩn; trang gợi ý một kiến trúc mỗi nhóm theo hồ sơ dự án, lối đã chọn và các khâu đã quyết. Chọn khác gợi ý được, vd. dựng lakehouse cho dữ liệu nhỏ để học quản trị dữ liệu.'), // lang: vi — lời giải thích, nội dung
+    archCombine(cat),
     archTip(fams, st.map((a) => ({ id: a.rec })), d),
     ...fams.map((/** @type {any} */ f, /** @type {number} */ i) => archFamily(f, st[i], d)),
   ];
@@ -728,6 +729,7 @@ function archFamily(f, a, d) {
     /* Nhóm đã chọn kiến trúc khác: dòng gợi ý thành nền trung tính, không còn dáng "nên chọn". */
     rec ? h('p', { class: `sd-rec${differs ? ' is-other' : ''}`, 'data-rec': rec.id }, h('span', { class: 'sd-k' }, 'Recommended'), h('b', {}, rec.name), '. ', a.why)
       : a.rec === '' ? h('p', { class: 'sd-rec is-none', 'data-rec': '' }, h('span', { class: 'sd-k' }, 'Not needed'), a.why) : famNeeds(f, d),
+    archGuide(f),
     h('fieldset', { class: 'sd-prof sd-arch-pick' },
       h('legend', {}, h('span', { class: 'sd-k' }, 'Your choice'), h('span', { class: 'sr' }, `: ${f.label}`)),
       h('div', { class: 'sd-pills' }, ...[{ id: '', name: 'Not chosen' }, ...f.entries].map((/** @type {any} */ e) => h('label', { class: 'sd-pill' },

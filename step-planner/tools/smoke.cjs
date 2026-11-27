@@ -2387,6 +2387,65 @@ const check = (name, ok, detail = '') => {
     }
   });
 
+  /* ── Trang Architecture giải thích để chọn: dòng "các nhóm ghép với nhau", câu hỏi chọn ở mỗi nhóm (bấm tên là mở kiến
+   * trúc), mỗi kiến trúc mở ra có sơ đồ luồng (đủ nút, ngang ở máy tính, dọc ở 390px, mô tả bằng luồng chữ), ví dụ; mở hết mọi
+   * kiến trúc ở 390px vẫn không tràn ngang; hai theme đều vẽ (màu hộp theo theme). ── */
+  await section('Architecture: sơ đồ và câu hỏi chọn', async () => {
+    const boxFill = {};
+    for (const [w, hh, scheme] of [[1280, 900, 'light'], [390, 844, 'dark']]) {
+      const { ctx: gx, page: gp } = await open(w, hh, { colorScheme: scheme });
+      const tag = `Architecture ${w}px ${scheme}`;
+      await gp.click('#start .tpl[data-tpl="crisp-dm"]');
+      await gp.waitForSelector('#sd-fig svg');
+      const cat = await gp.evaluate(async () => (await fetch('data/system-design.json')).json());
+      await gp.click('#sd-arch [data-arch-open]');
+      await gp.waitForSelector('#dlg-sd[open] .sd-fam');
+      const guide = await gp.$$eval('#sd-pane .sd-fam', (fs) => fs.map((f) => ({
+        fam: f.dataset.fam, qs: f.querySelectorAll('.ad-guide .ad-qs > li').length,
+        go: [...f.querySelectorAll('.ad-guide [data-arch-go]')].map((b) => b.dataset.archGo),
+        beforeChoice: !!f.querySelector('.ad-guide + .sd-arch-pick, .ad-guide ~ .sd-arch-pick'),
+      })));
+      check(`${tag}: dòng "các nhóm ghép với nhau" ở đầu trang; mỗi nhóm có câu hỏi chọn ngay trước "Your choice", trỏ đủ mọi kiến trúc của nhóm`,
+        (await gp.textContent('#sd-pane .ad-combine')) === cat.archNote
+        && guide.length === cat.architectures.length && guide.every((g, i) => {
+          const f = cat.architectures[i];
+          return g.fam === f.id && g.qs === f.guide.length && g.beforeChoice && f.entries.every((e) => g.go.includes(e.id)) && g.go.every((id) => f.entries.some((e) => e.id === id));
+        }), JSON.stringify(guide));
+      /* Bấm tên kiến trúc trong câu hỏi chọn: thẻ mở, đầu thẻ có focus, sơ đồ vẽ. */
+      await gp.click('#sd-pane [data-fam="processing"] .ad-guide [data-arch-go="kappa"]');
+      await gp.waitForSelector('#sd-pane [data-arch="kappa"] .ad-svg');
+      check(`${tag}: bấm "Kappa" trong câu hỏi chọn mở thẻ ấy, focus đầu thẻ, vẽ sơ đồ`, await gp.$eval('#sd-pane [data-arch="kappa"]',
+        (d) => d.open && document.activeElement === d.querySelector('summary')));
+      for (const id of ['lambda', 'lakehouse', 'batch-elt', 'client-server', 'rag']) {
+        const sum = `#sd-pane [data-arch="${id}"] > summary`;
+        if (!(await gp.$eval(`#sd-pane [data-arch="${id}"]`, (d) => d.open))) await gp.click(sum);
+      }
+      await waitTo(gp, 'mọi sơ đồ đã mở được vẽ', () => [...document.querySelectorAll('#sd-pane .sd-arch[open] .ad-canvas')].every((c) => c.querySelector('.ad-svg')));
+      const figs = await gp.$$eval('#sd-pane .sd-arch[open]', (ds) => ds.map((d) => {
+        const s = d.querySelector('.ad-svg'), cap = s && document.getElementById(s.getAttribute('aria-describedby'));
+        return { id: d.dataset.arch, nodes: d.querySelectorAll('.ad-node').length, dir: s?.classList.contains('is-h') ? 'h' : 'v', role: s?.getAttribute('role'),
+          cap: !!cap && cap.tagName === 'FIGCAPTION' && cap.querySelectorAll('.sd-chain li').length > 1,
+          fits: !!s && s.getBoundingClientRect().width <= s.closest('.ad-canvas').getBoundingClientRect().width + 0.5,
+          example: /^Example/i.test(d.querySelector('.ad-fig')?.closest('.sd-when')?.nextElementSibling?.textContent || '') };
+      }));
+      const want = (id) => cat.architectures.flatMap((f) => f.entries).find((e) => e.id === id);
+      check(`${tag}: mỗi kiến trúc mở có sơ đồ đủ nút, ${w > 640 ? 'ngang' : 'dọc'}, vừa khung, role img mô tả bằng luồng chữ (figcaption), có ví dụ`,
+        figs.length === 6 && figs.every((x) => x.nodes === want(x.id).diagram.nodes.length && x.dir === (w > 640 ? 'h' : 'v') && x.role === 'img' && x.cap && x.fits && x.example),
+        JSON.stringify(figs));
+      boxFill[scheme] = await gp.$eval('#sd-pane .ad-box', (r) => getComputedStyle(r).fill);
+      if (w === 390) {
+        await gp.$$eval('#sd-pane .sd-arch', (ds) => ds.forEach((d) => { d.open = true; }));
+        await waitTo(gp, 'mọi sơ đồ vẽ ở 390px', () => [...document.querySelectorAll('#sd-pane .ad-canvas')].every((c) => c.querySelector('.ad-svg')));
+        const over = await gp.evaluate(() => ({ pane: document.querySelector('#sd-pane').scrollWidth - document.querySelector('#sd-pane').clientWidth,
+          page: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+          wide: [...document.querySelectorAll('#sd-pane .ad-svg')].filter((s) => s.getBoundingClientRect().right > document.querySelector('#sd-pane').getBoundingClientRect().right).length }));
+        check(`${tag}: mở mọi kiến trúc, mọi sơ đồ vẽ mà trang và khung không tràn ngang`, over.pane <= 1 && over.page <= 0 && over.wide === 0, JSON.stringify(over));
+      }
+      await gx.close();
+    }
+    check('Architecture: hộp của sơ đồ đổi màu theo theme', boxFill.light && boxFill.dark && boxFill.light !== boxFill.dark, JSON.stringify(boxFill));
+  });
+
   /* ── Sơ đồ System design như khung nhìn: nhịp dọc của hộp (Handoffs, "Show other options"), nhãn bàn giao trên đường nối,
    * kéo, thu phóng, về khung ban đầu. Thiết kế gieo thẳng vào bộ nhớ rồi tải lại. ── */
   await section('System diagram view', async () => {

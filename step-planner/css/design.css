@@ -339,3 +339,10 @@ li.sd-warnbox { display: block; }
 .ad-legend .is-dashed::before { height: 0; margin-top: calc(1lh / 2); border-top: var(--mark-w) dashed var(--ink-4); border-radius: 0; background: none; }
 .ad-legend .is-group::before { width: var(--s4); background: var(--chip); border: var(--line-w) dashed var(--ink-4); }
 .ad-fig figcaption .sd-chain { margin-top: 0; }
+/* Câu hỏi chọn của một nhóm, ngay trên hàng "Your choice": mỗi câu một khối, câu trả lời dẫn tới kiến trúc (bấm là mở thẻ). */
+.ad-guide { display: flex; flex-direction: column; gap: var(--s2); padding: var(--s3); border: var(--line-w) solid var(--line-2); border-radius: var(--r-sm); }
+.ad-qs { display: flex; flex-direction: column; gap: var(--s3); padding-left: var(--s5); font-size: var(--fs-sm); line-height: var(--lh); }
+.ad-qs > li::marker { font-weight: 600; color: var(--ink-3); }
+.ad-ask { font-weight: 600; color: var(--ink); }
+.ad-ans { display: flex; flex-direction: column; gap: var(--s1); margin-top: var(--s1); padding-left: var(--s4); list-style: disc; color: var(--ink-2); }
+.ad-ans .sd-link { color: var(--ink); }

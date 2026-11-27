@@ -4,7 +4,7 @@
  * (`diagram`, SVG dựng bằng createElementNS) với chú giải, luồng chữ làm chú thích của hình, ví dụ (`example`).
  * Sơ đồ vẽ khi khung có bề rộng (ResizeObserver: thẻ gập thì chưa vẽ, mở ra hay đổi cỡ thì vẽ lại theo bề rộng mới);
  * toán xếp hình ở core/arch-diagram.js, cỡ đọc từ token --ad-*.
- * Xuất: archExplain, initArchDiagram.
+ * Xuất: archCombine, archGuide, archExplain, initArchDiagram.
  * Dùng: core/arch-diagram.js, ui/dom.js. */
 import { KINDS, layoutDiagram } from '../core/arch-diagram.js';
 import { $, h } from './dom.js';
@@ -18,6 +18,25 @@ function svg(tag, attrs = {}, ...kids) {
   for (const [k, v] of Object.entries(attrs)) if (v != null && v !== false) el.setAttribute(k, String(v));
   for (const kid of kids.flat()) if (kid != null && kid !== false && kid !== '') el.append(kid instanceof Node ? kid : String(kid));
   return el;
+}
+
+/** Một dòng dưới lời dẫn của trang: các nhóm là những lựa chọn độc lập, ghép với nhau. @param {any} cat */
+export const archCombine = (cat) => (cat.archNote ? h('p', { class: 'sd-help ad-combine' }, cat.archNote) : null);
+
+/** Câu hỏi chọn của một nhóm: mỗi câu trả lời nêu các kiến trúc nó nghiêng về; bấm tên là mở kiến trúc. @param {any} f */
+export function archGuide(f) {
+  if (!Array.isArray(f.guide) || !f.guide.length) return null;
+  const name = (/** @type {string} */ id) => f.entries.find((/** @type {any} */ e) => e.id === id)?.name || id;
+  return h('div', { class: 'ad-guide', 'data-guide-fam': f.id },
+    h('p', { class: 'sd-k' }, 'How to choose'),
+    h('ol', { class: 'ad-qs' }, ...f.guide.map((/** @type {any} */ q) => h('li', {},
+      h('p', { class: 'ad-ask' }, q.q),
+      h('ul', { class: 'ad-ans' }, ...q.answers.map((/** @type {any} */ a) => h('li', {},
+        h('span', {}, a.text), ': ',
+        ...a.picks.flatMap((/** @type {string} */ id, /** @type {number} */ k) => {
+          const b = h('button', { type: 'button', class: 'sd-link', 'data-arch-go': id }, name(id));
+          return k ? [' · ', b] : [b];
+        }))))))));
 }
 
 /** Trong một kiến trúc: luồng (sơ đồ + chú giải + chữ làm chú thích) rồi ví dụ. Không có sơ đồ thì chỉ luồng chữ.
