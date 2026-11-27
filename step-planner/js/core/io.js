@@ -100,7 +100,7 @@ export function shape(ws) {
     s.outs.forEach((/** @type {any} */ o, /** @type {number} */ k) => at.set(o.id, `${i}.-.${k}`));
     s.subs.forEach((/** @type {any} */ x, /** @type {number} */ j) => x.outs.forEach((/** @type {any} */ o, /** @type {number} */ k) => at.set(o.id, `${i}.${j}.${k}`)));
   });
-  const hand = (/** @type {any} */ h) => ({ outs: h.outs.map((/** @type {any} */ o) => ({ name: o.name, ref: o.ref, note: o.note })), ins: h.ins.map((/** @type {string} */ id) => at.get(id) || '?') });
+  const hand = (/** @type {any} */ h) => ({ outs: h.outs.map((/** @type {any} */ o) => ({ name: o.name, ref: o.ref, note: o.note, final: o.final })), ins: h.ins.map((/** @type {string} */ id) => at.get(id) || '?') });
   return {
     name: ws.name, templateId: ws.templateId, notes: ws.notes,
     steps: ws.steps.map((/** @type {any} */ s) => ({

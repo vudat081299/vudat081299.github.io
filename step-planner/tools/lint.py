@@ -4,7 +4,8 @@
   1. data/templates.json: khuôn mẫu (khoá, kiểu, chuỗi không rỗng, id không trùng, không thẻ HTML, có đúng một mẫu
      trống). Không có khái niệm người làm: mẫu không có `people` / `owner`.
      Mẫu có bước thì có `output`: loại đầu ra, ≤ 30 ký tự.
-     Bàn giao: bước hay bước con có thể có `outs` [{key, name, ref?, note?}] và `ins` [key]. Khoá dạng `[a-z0-9][a-z0-9-]*`
+     Bàn giao: bước hay bước con có thể có `outs` [{key, name, ref?, note?, final?}] và `ins` [key]. `final` chỉ ghi `true`:
+     sản phẩm cuối, không cần nơi nhận (test-core: mở mẫu ra không đầu ra nào lỗi). Khoá dạng `[a-z0-9][a-z0-9-]*`
      (≤ 40), không trùng trong một mẫu; `ins` trỏ tới đầu ra có thật, không phải của chính nó, khai ở bước trước hoặc ở bước
      con đứng trước trong cùng bước (dữ liệu chỉ chảy xuôi). Bước con của mẫu không có `par`: mỗi bước con một ô, nên luật này
      cũng chặn bên nhận cùng ô với bên giao (treo); test-core kiểm lại trên dự án mở từ mẫu. `ref`: đường dẫn hay link https, một dòng.
@@ -13,7 +14,7 @@
      hồ sơ của system-design.json, `path` là lối có thật, hồ sơ không rỗng. Mẫu trống không có `design`.
   2. Mẫu `it5425-sports` khớp từng chữ với bản sinh từ trang đồ án môn (COURSE_JSON, COURSE_HTML): không thêm nội dung
      (trừ `design`: trang đồ án không có, sinh lại thì giữ).
-     outs / ins của nó suy từ đường dẫn trong `io_html` từng pha (`course_flow`).
+     outs / ins của nó suy từ đường dẫn trong `io_html` từng pha (`course_flow`); `final` đặt cho đường dẫn trong COURSE_FINAL.
      Sinh lại:  python3 step-planner/tools/lint.py --write-course
   3. js/**/*.js: không innerHTML / outerHTML / insertAdjacentHTML / document.write — chữ người dùng chỉ qua textContent.
      Import (cả `export … from`) trỏ tới file có thật; `import(…)` chỉ nhận chuỗi cố định; mọi file trừ main.js có nơi import
@@ -53,6 +54,8 @@ PLAN_HTML = os.path.join(REPO, 'masters-degree/data-management-visualization/spo
 COURSE_ID = 'it5425-sports'
 COURSE_URL = 'https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-build.html'
 PLAN_URL = 'https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-project.html'
+# Sản phẩm cuối của đồ án (`final`): app demo, báo cáo, slide — thứ nộp hay trình bày, không pha nào sau dùng.
+COURSE_FINAL = ('app/streamlit_app.py', 'report/', 'slides/')
 DESIGN = os.path.join(HERE, 'data/system-design.json')
 LANES = ('data', 'model', 'app', 'ops')
 STAGE_KEYS = {'id', 'title', 'lane', 'question', 'guide', 'multi', 'skipWhen', 'task', 'when', 'options'}
@@ -115,9 +118,17 @@ def course_flow(phases, page, src):
             out = {'key': key, 'name': path, 'ref': path}
             if path.startswith('data/clean/') and m and pk:
                 out['note'] = f'Bảng {m.group(1)}, khoá chính {pk}; data dictionary: {COURSE_URL}#mo-hinh-du-lieu'
+            if path in COURSE_FINAL:
+                out['final'] = True
             declared[path] = key
             outs.append(out)
         flows.append((outs, ins))
+    used = {k for _, ins in flows for k in ins}
+    for path in COURSE_FINAL:
+        if path not in declared:
+            err(f'{COURSE_HTML}: COURSE_FINAL có "{path}" mà không pha nào ghi nó là đầu ra')
+        elif declared[path] in used:
+            err(f'{COURSE_HTML}: "{path}" trong COURSE_FINAL được pha sau dùng — không còn là sản phẩm cuối')
     return flows
 
 
@@ -166,7 +177,7 @@ def course_template():
 
 STEP_KEYS = {'title', 'goal', 'doneWhen', 'notes', 'subs', 'outs', 'ins'}
 SUB_KEYS = {'title', 'doneWhen', 'notes', 'outs', 'ins'}
-OUT_KEYS = {'key', 'name', 'ref', 'note'}
+OUT_KEYS = {'key', 'name', 'ref', 'note', 'final'}
 KEY_RE = r'[a-z0-9][a-z0-9-]{0,39}'
 TPL_KEYS = {'id', 'name', 'output', 'description', 'design', 'steps'}
 TPL_DESIGN_KEYS = {'profile', 'path'}
@@ -205,7 +216,7 @@ def check_flow(w, steps):
         for n, out in enumerate(outs):
             wo = f'{wi}.outs[{n}]'
             if not isinstance(out, dict):
-                err(f'{wo}: phải là object {{key, name, ref?, note?}}')
+                err(f'{wo}: phải là object {{key, name, ref?, note?, final?}}')
                 continue
             if extra := set(out) - OUT_KEYS:
                 err(f'{wo}: khoá lạ {sorted(extra)}')
@@ -222,6 +233,8 @@ def check_flow(w, steps):
             ref = out.get('ref')
             if isinstance(ref, str) and '://' in ref and not ref.startswith('https://'):
                 err(f'{wo}: ref là link thì phải https')
+            if 'final' in out and out['final'] is not True:
+                err(f'{wo}: `final` chỉ ghi true (bỏ khoá khi không phải sản phẩm cuối)')
     for j, k, it in items:
         wi = f'{w} steps[{j}]' + (f'.subs[{k}]' if k >= 0 else '')
         ins = it.get('ins', [])
@@ -979,6 +992,7 @@ def self_test():
         ('mẫu: đầu vào lấy từ bước con đứng sau, cùng bước', flow(lambda st: st[1]['subs'][1]['ins'].append('bootstrap-script')), 'chỉ lấy từ bước trước'),
         ('mẫu: bước nhận đầu ra của bước con của chính nó (cùng hàng)', flow(lambda st: st[1].update(ins=['compose-file'])), 'chỉ lấy từ bước trước'),
         ('mẫu: bước con có `par` (ô song song)', flow(lambda st: st[1]['subs'][1].update(par=True)), 'khoá lạ'),
+        ('mẫu: `final` không phải true', flow(lambda st: st[0]['subs'][0]['outs'][0].update(final=False)), '`final` chỉ ghi true'),
         ('js: chuỗi tiếng Việt không chú thích', js("export const __a = 'Tới chỗ này';"), 'chữ giao diện phải tiếng Anh'),
         ('js: một chú thích, hai chuỗi tiếng Việt', js("export const __b = ['Một', 'Hải']; // lang: vi — thử"), 'miễn đúng một chuỗi'),
         ('js: chú thích thiếu lý do', js("export const __c = 'Một'; // lang: vi"), 'thiếu lý do'),

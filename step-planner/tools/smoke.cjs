@@ -3503,6 +3503,70 @@ const check = (name, ok, detail = '') => {
     await ic.close();
   });
 
+  /* ── Đầu ra cuối (Final): bật trong hộp sửa bằng phím (Enter không gửi hộp), Lưu thì chấm đỏ của đầu ra không ai dùng thành
+     ổn, bỏ thì đỏ lại; danh sách đầu ra có nhãn "Final". Dự án mới từ mẫu không có chấm đầu ra đỏ (trừ ngoại lệ ghi ở test-core). ── */
+  await section('Đầu ra cuối', async () => {
+    const seeded = async (w, hh, data) => { // `seeded` chung khai ở cuối file, sau phần này
+      const ctx = await browser.newContext({ viewport: { width: w, height: hh } });
+      if (data) await ctx.addInitScript((d) => { if (!localStorage.getItem('stepPlanner.v2')) localStorage.setItem('stepPlanner.v2', d); }, JSON.stringify(data));
+      const page = await ctx.newPage();
+      page.on('pageerror', (e) => errors.push(String(e)));
+      await page.goto(BASE);
+      return { ctx, page };
+    };
+    const seed = { version: 2, lastId: 'wf', workspaces: [{ id: 'wf', name: 'Cuối', steps: [
+      { id: 'f1', title: 'Build', subs: [{ id: 'fa', title: 'Make', outs: [{ id: 'oa', name: 'table' }] }, { id: 'fb', title: 'Use', ins: ['oa'] }] },
+      { id: 'f2', title: 'Ship', outs: [{ id: 'os', name: 'slides', final: true }], subs: [{ id: 'fx', title: 'Write report', outs: [{ id: 'ox', name: 'report' }] }] }], log: [] }] };
+    const { ctx, page } = await seeded(1280, 900, seed);
+    await page.waitForSelector('.card[data-sub="fx"]');
+    const dot = (sel) => page.$eval(sel, (el) => el.dataset.ioOut);
+    const d0 = { sub: await dot('.card[data-sub="fx"] .io'), step: await dot('.step[data-step="f2"] .step-top .io') };
+    await page.click(subSel('fx', 'edit-sub'));
+    await page.focus('#sub-hand .out-row [data-k="final"]');
+    await page.keyboard.press('Enter');
+    const stillOpen = await page.$eval('#dlg-sub', (d) => d.open);
+    await page.keyboard.press('Space');
+    const ticked = await page.$eval('#sub-hand .out-row [data-k="final"]', (c) => c.checked);
+    await page.click('#sub-form button[type="submit"]');
+    await waitTo(page, 'chấm đầu ra ổn sau khi bật Final', () => document.querySelector('.card[data-sub="fx"] .io')?.dataset.ioOut === 'ok');
+    const w1 = await cur(page);
+    const d1 = { sub: await dot('.card[data-sub="fx"] .io'), title: await page.$eval('.card[data-sub="fx"] .io-dot.out', (e) => e.title) };
+    check('đầu ra cuối: Enter trên ô Final không gửi hộp; Space bật; Lưu thì chấm đầu ra không ai dùng từ đỏ thành ổn, nêu "Final"',
+      d0.sub === 'bad' && d0.step === 'ok' && stillOpen && ticked && d1.sub === 'ok' && /Final: "report"/.test(d1.title) && w1.steps[1].subs[0].outs[0].final === true,
+      JSON.stringify({ d0, stillOpen, ticked, d1 }));
+    await page.click(subSel('fx', 'edit-sub'));
+    await page.click('#sub-hand .out-row [data-k="final"]');
+    await page.click('#sub-form button[type="submit"]');
+    await waitTo(page, 'chấm đầu ra đỏ lại sau khi bỏ Final', () => document.querySelector('.card[data-sub="fx"] .io')?.dataset.ioOut === 'bad');
+    const w2 = await cur(page);
+    check('đầu ra cuối: bỏ Final, Lưu thì chấm đỏ lại', (await dot('.card[data-sub="fx"] .io')) === 'bad' && w2.steps[1].subs[0].outs[0].final === false);
+    await page.click('.step[data-step="f2"] [data-act="hand-out"]');
+    const list = await page.$eval('#hand-list', (l) => ({ tag: l.querySelectorAll('.final-tag').length, t: l.textContent }));
+    await page.keyboard.press('Escape');
+    check('đầu ra cuối: danh sách đầu ra có nhãn "Final", không ghi "Not used yet"', list.tag === 1 && /Final deliverable/.test(list.t) && !/Not used yet/.test(list.t), JSON.stringify(list));
+    await ctx.close();
+    /* Mỗi mẫu: dự án mới không có chấm đầu ra đỏ. it5425-sports: P0, P3 là ngoại lệ (IO_EXCEPT trong tools/test-core.mjs). */
+    const except = { 'it5425-sports': 2 };
+    const fresh = await seeded(1280, 900, null);
+    const tp = fresh.page;
+    await tp.waitForSelector('#start:not([hidden]) .tpl[data-tpl="crisp-dm"]');
+    const tpls = await tp.evaluate(async () => (await (await fetch('data/templates.json')).json()).templates);
+    await tp.click('#start .tpl[data-tpl="crisp-dm"]');
+    const reds = {};
+    for (const t of tpls) {
+      if (t.id !== 'crisp-dm') {
+        await tp.click('#ws-btn');
+        await tp.click('#ws-tab-new');
+        await tp.check(`#ws-new-templates input[value="${t.id}"]`);
+        await tp.click('#ws-new button[type="submit"]');
+      }
+      await waitTo(tp, `bảng của mẫu ${t.id}`, (n) => document.querySelectorAll('#board .step').length === n && !document.querySelector('dialog[open]'), t.steps.length);
+      reds[t.id] = await tp.$$eval('#board .io-dot.out.bad', (ds) => ds.length);
+    }
+    check('đầu ra cuối: dự án mới từ mỗi mẫu không có chấm đầu ra đỏ (trừ ngoại lệ đã ghi)', tpls.every((t) => reds[t.id] === (except[t.id] || 0)), JSON.stringify(reds));
+    await fresh.ctx.close();
+  });
+
   /* ── Vòng focus chỉ cho bàn phím: mở bằng chuột rồi Esc thì focus về nút mở, không vòng; tới bằng Tab, Enter / Alt + ↓ mở
      rồi Esc thì có vòng, màu token --ring; cả hai theme. Nút sơ đồ, nhãn bàn giao: vòng là nét khung, so với nút cùng loại. ── */
   await section('Vòng focus chỉ cho bàn phím', async () => {

@@ -31,6 +31,7 @@ Docs:
 Outputs:
   - tên đầu ra · data/clean/x.parquet
     hợp đồng một dòng
+  - Final: báo cáo cuối · report/
 Inputs:
   - tên đầu ra ← tên bên giao
 
@@ -109,6 +110,7 @@ Warnings:
 
 - Nhãn `Outputs:` rồi `Inputs:`, sau `Docs:`. Bước: nhãn không thụt, mục thụt hai. Bước con: nhãn thụt hai, mục thụt bốn.
 - Đầu ra `- tên · ref`; hợp đồng là dòng thụt thêm hai ngay dưới, thoát như dòng ghi chú. Viết tay `- tên · ref · hợp đồng` cũng đọc.
+- Đầu ra cuối (`final`): mục mở bằng `Final: ` (không phân biệt hoa thường). Tên thật mở bằng `Final:` mà không là đầu ra cuối thì ghi `\Final: …`.
 - Đầu vào `- tên đầu ra ← tên bên giao` (tên bước con, hay tên bước nếu đầu ra của cả bước). Có bên giao khác cùng tên đầu ra
   và cùng tên (bỏ dấu, không phân biệt hoa thường; kể cả bước trùng tên bước con) thì bên giao ghi `N. tên bước` hay
   `N. tên bước › tên bước con`, N là số bước như `## N.`. Tên bên giao không số mà mở bằng `N. ` thì ghi `\N. …`.
@@ -149,7 +151,7 @@ Warnings:
 
 - Một dự án: `{format: "step-planner", version: 3, exportedAt, workspace}`. Sao lưu: `{…, workspaces: [...]}`. Trang không
   dựa vào `version`: bản 1 (có người, không tài liệu), bản 2 (không ô song song) vẫn nhập.
-- Trường mới có mặc định (`outs`, `ins`, `doneAt`, `proof`, `sd`, `design.path`, `design.edges`) không tăng `version`: đi qua chuẩn hoá.
+- Trường mới có mặc định (`outs`, `ins`, `doneAt`, `proof`, `final`, `sd`, `design.path`, `design.edges`) không tăng `version`: đi qua chuẩn hoá.
 - `sd` của bước con: `stage:<khâu>@<chữ ký>` hay `edge:<a>><b>@<chữ ký>` (việc sinh từ System design), hay `kept` (đã chọn
   Keep ở "Update plan": không đối chiếu lại). Giá trị khác bị bỏ. Markdown không ghi `sd`.
 - Nhập nhận cả hai, mảng dự án, hoặc một dự án trần. Mục sai khuôn thì bỏ, kèm cảnh báo; không còn dự án nào thì báo lỗi,

@@ -68,7 +68,8 @@ function outText(s, step) {
   if (s.out === 'none') return 'Output: none';
   const held = s.outWhy.filter((w) => w.kind === 'held'), unused = s.outWhy.filter((w) => w.kind === 'unused');
   const notYet = unused.length ? `. Not used yet: ${unused.map((w) => quoteFull(w.name)).join(', ')}` : '';
-  if (s.out === 'ok') return `Output: OK${notYet}`;
+  const finals = s.finals.length ? `. Final: ${s.finals.map(quoteFull).join(', ')}` : '';
+  if (s.out === 'ok') return `Output: OK${finals}${notYet}`;
   if (!step) return `Output: broken. ${s.outWhy.map(outLine).join('; ')}`;
   if (held.length) return `Output: broken. ${held.map(outLine).join('; ')}${notYet}`;
   return `Output: broken. ${unused.length > 1 ? 'None of the step\'s outputs is used: ' : ''}${unused.map(outLine).join('; ')}`;
@@ -172,6 +173,9 @@ function outDetail(o) {
     o.note && h('p', { class: 'hand-note' }, h('span', { class: 'lbl' }, 'Contract '), o.note),
   ];
 }
+/** Dòng tên của một đầu ra trong danh sách; đầu ra cuối có nhãn "Final". @param {any} o @param {string} [ic] */
+const outName = (o, ic = 'out') => h('p', { class: 'hand-name' }, icon(ic), h('b', {}, o.name),
+  o.final && h('span', { class: 'final-tag', title: 'Final deliverable: no later step needs it' }, 'Final'));
 /** Nút một bên: tên đậm, ngữ cảnh mờ. @param {any} ws @param {Holder} hd @param {string} [pre] */
 function whoBtn(ws, hd, pre = '', held = false) {
   const w = who(ws, hd);
@@ -201,7 +205,7 @@ function showIns(ws, hd) {
     if (!src) return h('li', { class: 'hand-item' }, h('p', { class: 'hand-name' }, icon('in'), h('b', {}, GONE)), h('p', { class: 'hand-gone' }, goneText));
     const held = heldKeys.has(heldKey(hd.h.id, src.out.id));
     return h('li', { class: 'hand-item' },
-      h('p', { class: 'hand-name' }, icon('in'), h('b', {}, src.out.name)), outDetail(src.out), whoBtn(ws, src, 'From ', held),
+      outName(src.out, 'in'), outDetail(src.out), whoBtn(ws, src, 'From ', held),
       held && h('p', { class: 'hand-held' }, heldText(holderTitle(src), parKeys.has(heldKey(hd.h.id, src.out.id)))));
   });
   const w = who(ws, hd);
@@ -213,8 +217,8 @@ function showOuts(ws, hd) {
   const items = hd.h.outs.map((/** @type {any} */ o) => {
     const by = used.get(o.id) || [];
     return h('li', { class: 'hand-item' },
-      h('p', { class: 'hand-name' }, icon('out'), h('b', {}, o.name)), outDetail(o),
-      h('div', { class: 'hand-used' }, h('span', { class: 'lbl' }, by.length ? 'Used by' : 'Not used yet'),
+      outName(o), outDetail(o),
+      h('div', { class: 'hand-used' }, h('span', { class: 'lbl' }, by.length ? 'Used by' : o.final ? 'Final deliverable, not needed later' : 'Not used yet'),
         by.map((x) => whoBtn(ws, x, '', heldKeys.has(heldKey(x.h.id, o.id))))));
   });
   const w = who(ws, hd);
@@ -229,7 +233,7 @@ function showPairs(ws, pairs, title, where) {
         h('span', { class: 'hand-end' }, h('b', {}, a.title), h('small', {}, a.ctx)),
         h('span', { class: 'hand-arrow', 'aria-label': 'to' }, icon('hand-right')),
         h('span', { class: 'hand-end' }, h('b', {}, b.title), h('small', {}, b.ctx))), [p.to, p.from], false),
-      h('ul', { class: 'hand-outs' }, p.outs.map((o) => h('li', {}, h('p', { class: 'hand-name' }, icon('out'), h('b', {}, o.name)), outDetail(o)))));
+      h('ul', { class: 'hand-outs' }, p.outs.map((o) => h('li', {}, outName(o), outDetail(o)))));
   });
   openList('Handoff', `${title} · ${plural(pairs.length, 'link')}`, where, items, null);
 }
@@ -418,10 +422,13 @@ function paintOuts(where) {
       h('div', { class: 'out-fields' },
         fld('name', 'Output name', { required: true, maxlength: '200', placeholder: 'E.g. matches.parquet, clean table, API' }),
         fld('ref', 'Path or link', { maxlength: '2000', placeholder: 'data/clean/matches.parquet or https://…' }),
-        fld('note', 'Contract', { maxlength: '400', placeholder: 'Columns, keys, what both sides rely on, how to check' })),
+        fld('note', 'Contract', { maxlength: '400', placeholder: 'Columns, keys, what both sides rely on, how to check' }),
+        h('label', { class: 'out-final' }, h('input', { type: 'checkbox', 'data-k': 'final' }),
+          h('span', {}, 'Final deliverable', h('small', {}, 'No later step needs it, so unused is OK')))),
       h('button', { type: 'button', class: 'icon-btn', 'data-out-del': '', 'aria-label': `Remove output ${o.name || k + 1}`, title: 'Remove output' }, icon('trash')),
       by.length > 0 && h('p', { class: 'out-used' }, h('span', { class: 'lbl' }, 'Used by '), by.map((x) => holderTitle(x) + onHold(x, o.id)).join(', ')));
     for (const key of ['name', 'ref', 'note']) /** @type {any} */ (row.querySelector(`[data-k="${key}"]`)).value = o[key];
+    /** @type {any} */ (row.querySelector('[data-k="final"]')).checked = !!o.final;
     return row;
   });
   s.querySelector('[data-outs]').replaceChildren(...rows);
@@ -437,13 +444,13 @@ function wireEdit(where) {
     const row = e.target.closest('[data-out]');
     const o = row && draft[where].outs.find((x) => x.id === row.dataset.out);
     if (!k || !o) return;
-    o[k] = e.target.value;
+    o[k] = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
     sync(where);
   });
   s.addEventListener('click', (/** @type {any} */ e) => {
     const t = e.target;
     if (t.closest('[data-out-add]')) {
-      draft[where].outs.push({ id: uid('o'), name: '', ref: '', note: '' });
+      draft[where].outs.push({ id: uid('o'), name: '', ref: '', note: '', final: false });
       sync(where);
       paintOuts(where);
       focusField(s.querySelector('.out-row:last-child [data-k="name"]'));

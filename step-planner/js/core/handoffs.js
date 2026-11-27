@@ -103,17 +103,19 @@ export function handoffs(ws) {
  * @typedef {{kind:'unused'|'held', id:string, name:string, to:string[], par:string[], live:number}} OutWhy đầu ra lỗi: không ai
  * dùng, hay có nơi dùng đang treo (to: tên các nơi ấy; par: những nơi trong to cùng ô song song; live: số nơi dùng còn nối,
  * 0 = chỉ có nơi dùng treo)
- * @typedef {{in:'ok'|'bad'|'none', out:'ok'|'bad'|'none', inWhy:InWhy[], outWhy:OutWhy[]}} IoStatus
+ * @typedef {{in:'ok'|'bad'|'none', out:'ok'|'bad'|'none', inWhy:InWhy[], outWhy:OutWhy[], finals:string[]}} IoStatus finals: tên
+ * các đầu ra cuối (`final`) chưa ai dùng
  */
 /**
  * Trạng thái đầu vào / đầu ra của mỗi bước, bước con (id → IoStatus). Đầu vào của bước con: 'bad' nếu có một đầu vào treo hay trỏ
  * tới đầu ra không còn; không có đầu vào: 'none'. Đầu vào của bước gộp đầu vào của nó và mọi bước con: 'bad' nếu một đầu vào trong
  * số ấy lỗi (kể cả đầu vào nhận từ chính bước, từ bước con cùng bước); 'none' nếu không đầu vào nào nhận từ ngoài bước và không cái
  * nào lỗi; còn lại 'ok'. inWhy của bước ghi tên bước con giữ đầu vào lỗi (at).
- * Đầu ra của bước con: 'bad' nếu một đầu ra không có nơi nhận đang nối (không ai dùng, hay chỉ nơi dùng treo) hoặc có nơi dùng treo.
- * Đầu ra của bước gộp đầu ra của nó và mọi bước con: 'bad' khi không đầu ra nào có nơi nhận đang nối, hoặc một đầu ra có nơi dùng
- * treo. Không có đầu ra: 'none'. outWhy nêu mọi đầu ra không ai dùng và mọi đầu ra có nơi dùng treo, kể cả khi nó còn nơi dùng
- * khác đang nối.
+ * Đầu ra cuối (`final`) không ai dùng là ổn (sản phẩm cuối, không cần nơi nhận); có nơi dùng thì xét như đầu ra khác.
+ * Đầu ra của bước con: 'bad' nếu một đầu ra không có nơi nhận đang nối (không ai dùng mà không là đầu ra cuối, hay chỉ nơi dùng
+ * treo) hoặc có nơi dùng treo. Đầu ra của bước gộp đầu ra của nó và mọi bước con: 'bad' khi không đầu ra nào ổn (có nơi nhận
+ * đang nối, hay là đầu ra cuối không ai dùng), hoặc một đầu ra có nơi dùng treo. Không có đầu ra: 'none'. outWhy nêu mọi đầu ra
+ * không ai dùng (trừ đầu ra cuối) và mọi đầu ra có nơi dùng treo, kể cả khi nó còn nơi dùng khác đang nối.
  * @param {{steps:any[]}} ws @param {ReturnType<typeof handoffs>} [hand] @returns {Map<string, IoStatus>}
  */
 export function ioStatus(ws, hand = handoffs(ws)) {
@@ -132,7 +134,7 @@ export function ioStatus(ws, hand = handoffs(ws)) {
   /** @param {any[]} outs @returns {OutWhy[]} */
   const outWhy = (outs) => outs.flatMap((o) => {
     const u = use.get(o.id);
-    if (u && !u.held.length) return [];
+    if ((u && !u.held.length) || (!u && o.final)) return [];
     return [{ kind: u ? 'held' : 'unused', id: o.id, name: o.name, to: u ? u.held : [], par: u ? u.par : [], live: u ? u.live : 0 }];
   });
   /** @param {any} x @param {string} [at] @returns {InWhy[]} */
@@ -144,15 +146,17 @@ export function ioStatus(ws, hand = handoffs(ws)) {
   });
   /** @type {Map<string, IoStatus>} */
   const m = new Map();
+  /** Đầu ra ổn khi tính gộp cho bước: có nơi nhận đang nối, hay là đầu ra cuối chưa ai dùng. @param {any} o */
+  const fine = (o) => !!use.get(o.id)?.live || (o.final && !use.has(o.id));
   /** @param {any} x @param {number} ins số đầu vào xét @param {InWhy[]} iw @param {any[]} outs @param {boolean} all bước: đầu ra
-   * 'bad' khi không đầu ra nào có nơi nhận đang nối hay một đầu ra có nơi dùng treo; bước con: khi một đầu ra lỗi */
+   * 'bad' khi không đầu ra nào ổn (`fine`) hay một đầu ra có nơi dùng treo; bước con: khi một đầu ra lỗi */
   const put = (x, ins, iw, outs, all) => {
     const ow = outWhy(outs);
-    const bad = all ? !outs.some((o) => use.get(o.id)?.live) || ow.some((w) => w.kind === 'held') : ow.length > 0;
+    const bad = all ? !outs.some(fine) || ow.some((w) => w.kind === 'held') : ow.length > 0;
     m.set(x.id, {
       in: iw.length ? 'bad' : ins ? 'ok' : 'none',
       out: !outs.length ? 'none' : bad ? 'bad' : 'ok',
-      inWhy: iw, outWhy: ow,
+      inWhy: iw, outWhy: ow, finals: outs.filter((o) => o.final && !use.has(o.id)).map((o) => o.name),
     });
   };
   for (const step of ws.steps) {

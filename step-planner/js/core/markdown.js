@@ -120,11 +120,14 @@ const fullTitle = (hd) => (hd.sub ? `${hd.step.title} › ${hd.sub.title}` : hd.
 const NUMBERED = /^(\d+)\. ([\s\S]*)$/;
 /** Nhãn bên giao không đánh số mà mở bằng `N. ` thì thoát: `\N. …`. @param {string} s đã escHand */
 const escNum = (s) => (NUMBERED.test(s) ? '\\' + s : s);
+/* Đầu ra cuối (`final`): tên mở bằng `Final: `, như `Evidence: ` của tài liệu. Tên thật mở bằng chữ ấy mà không là đầu ra cuối
+ * thì thêm `\` phía trước (unescHand bỏ nó khi đọc). */
+const FINAL = /^Final:[ \t]*/i;
 /** Các dòng sau nhãn `Outputs:` / `Inputs:` (nhãn do người gọi ghi). @param {any} h @param {any} ws @param {Map<string, any>} idx @param {string} ind */
 function handLines(h, ws, idx, ind) {
   const outs = [], ins = [];
   for (const o of h.outs) {
-    const head = `${ind}  - ${escHand(o.name)}${o.ref ? ' · ' + escHand(o.ref) : ''}`;
+    const head = `${ind}  - ${o.final ? 'Final: ' : FINAL.test(o.name) ? '\\' : ''}${escHand(o.name)}${o.ref ? ' · ' + escHand(o.ref) : ''}`;
     outs.push(...(o.note ? hardBreaks([head, `${ind}    ${escBlock(o.note)}`]) : [head]));
   }
   for (const id of h.ins) {
@@ -150,11 +153,12 @@ function readHand(lines, i, kind, h, min) {
     if (!m || m[1].length < min) break;
     if (kind === 'ins') (h.inRefs = h.inRefs || []).push(m[2]);
     else {
-      const [name, ref = '', ...rest] = splitEsc(m[2], ' · ').map((p) => unescHand(p).trim());
+      const final = FINAL.test(m[2]);
+      const [name, ref = '', ...rest] = splitEsc(m[2].replace(FINAL, ''), ' · ').map((p) => unescHand(p).trim());
       let note = rest.join(' · ');
       const nx = lines[i + 1] ?? '';
       if (nx.trim() && /^\s*/.exec(nx)[0].length > m[1].length && !ITEM_RE.test(nx)) { note = unescBlock(nx.trim()); i++; }
-      (h.outs = h.outs || []).push({ id: uid('o'), name, ref, note });
+      (h.outs = h.outs || []).push({ id: uid('o'), name, ref, note, final });
     }
     i++;
   }

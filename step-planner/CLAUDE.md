@@ -47,7 +47,7 @@
 - `sd`: `stage:<khâu>@<chữ ký>` hoặc `edge:<a>><b>@<chữ ký>`, chỉ ở bước con System design sinh ra; nhân bản bước con thì bỏ. `kept`: đã chọn Keep, nhân bản giữ.
 - Doc `{id, kind: 'link', title, url, proof}` hoặc `{id, kind: 'md', title, body, proof}`. `url` chỉ http(s) (`safeUrl`); link
   khác bị bỏ (nhập thì cảnh báo). `body` giữ nguyên từng dòng. `proof: true` = bằng chứng cho "Done when".
-- Out `{id, name, ref, note}`: `name` bắt buộc (không tên thì bỏ); `ref` đường dẫn file hay link; `note` hợp đồng một dòng.
+- Out `{id, name, ref, note, final}`: `name` bắt buộc (không tên thì bỏ); `ref` đường dẫn file hay link; `note` hợp đồng một dòng; `final: true` = sản phẩm cuối (PLAN-038).
 - `ins`: id đầu ra ở chỗ khác trong dự án; bỏ trùng, bỏ id của chính nó; id không còn đầu ra (mất nguồn) vẫn giữ. `normWorkspace`: id đầu ra duy nhất.
 - `design`: null hoặc `{path, profile, stages: {khâu: {pick[], skip, own, note}}, edges: {"a>b": {via, what, where, promise, check}}}`
   (`normDesign`). Khâu `skip` vẫn giữ `pick`, `own` (ẩn, bỏ qua ở mọi chỗ); bỏ `skip` là chúng về lại.
@@ -109,9 +109,9 @@
 - Thẻ bước con không liệt kê đầu vào, đầu ra; xem và sửa trong hộp sửa. Bước có chip "In n" (mọi đầu vào, kể cả treo, mất nguồn), "Out n".
 - Thẻ và đầu bước hiện trạng thái đầu vào, đầu ra (`ioStatus`, PLAN-025): ổn, lỗi, không có; không có cả hai thì không hiện.
   Đầu vào lỗi: treo hoặc trỏ tới đầu ra không còn. Bước gộp đầu vào của bước con: có đầu vào khi nó hay một bước con nhận từ
-  ngoài bước; lỗi khi một đầu vào nào lỗi, kể cả nhận trong bước. Đầu ra lỗi: không có nơi nhận đang nối
-  (chỉ nơi nhận treo cũng tính) hoặc có một nơi nhận treo. Bước con lỗi khi một đầu ra lỗi; bước gộp đầu ra của bước con, lỗi khi
-  không đầu ra nào có nơi nhận đang nối hoặc một đầu ra có nơi nhận treo.
+  ngoài bước; lỗi khi một đầu vào nào lỗi, kể cả nhận trong bước. Đầu ra lỗi: không có nơi nhận đang nối (chỉ nơi nhận treo cũng tính;
+  đầu ra `final` không ai dùng thì ổn) hoặc có một nơi nhận treo. Bước con lỗi khi một đầu ra lỗi; bước gộp đầu ra của bước con, lỗi khi
+  không đầu ra nào ổn (có nơi nhận đang nối, hay `final` không ai dùng) hoặc một đầu ra có nơi nhận treo.
 - Hàng j nhận từ hàng trước nó (`handoffs().rows`): mũi tên trên hàng j. Ô k + 1 nhận từ ô trước nó cùng hàng (`gaps`): một ô
   mũi tên trước ô k + 1. Nút giữa mũi tên ghi tên đầu ra; bấm thì nêu từng cặp. Chảy ngược hay cùng ô: chỉ trong hộp sửa.
 - Danh sách nêu đường dẫn, hợp đồng, bên giao / nơi dùng, mỗi bên nhảy tới được.
@@ -130,7 +130,7 @@
 - Mọi chữ của mẫu tiếng Việt (PLAN-028); tên bước, bước con theo chuẩn: tên tiếng Việt, tên gốc trong ngoặc, ví dụ
   "Hiểu dữ liệu (Data Understanding)". Giữ nguyên tên công cụ, thư viện, file, lệnh, URL.
 - `output`: loại đầu ra, hiện trên thẻ mẫu. `description` nói khi nào chọn mẫu, phần nào bỏ được khi làm một mình.
-- `outs: [{key, name, ref?, note?}]`, `ins: [key]`: `fromTemplate` đổi key thành id mới, key lạ bỏ. Dữ liệu chỉ chảy xuôi (`check_flow`); `test-core` kiểm mọi mẫu: không đầu vào treo (kể cả cùng ô), không đầu vào lơ lửng.
+- `outs: [{key, name, ref?, note?, final?}]`, `ins: [key]`: `fromTemplate` đổi key thành id mới, key lạ bỏ. Dữ liệu chỉ chảy xuôi (`check_flow`); `test-core` kiểm mọi mẫu: không đầu vào treo (kể cả cùng ô), không đầu vào lơ lửng, không đầu ra lỗi (sản phẩm cuối ghi `final: true`; ngoại lệ ở `IO_EXCEPT`).
 - `ref` là đường dẫn quy ước (CRISP-DM: Cookiecutter Data Science) hoặc link https; `note`: một dòng là gì, khoá, cách kiểm.
 - `crisp-dm` theo CRISP-DM 1.0 Step-by-step guide (Chapman et al., 2000): bước là sáu pha, bước con là generic task, `doneWhen`
   là output của task, `notes` là câu hỏi gợi ý và bẫy hay gặp. Việc ngoài guide ghi nguồn trong tên thẻ; không thêm việc không có nguồn.
@@ -147,7 +147,7 @@
 - `app-feature` không theo chuẩn; việc phát hành theo tài liệu App Store Connect, Google Play, Flutter (link ở ghi chú bước).
 - `it5425-sports` sinh từ `masters-degree/data-management-visualization/data/sports-monitoring-build.json` và "Xong khi nào"
   (`#xong`) của trang 2 đồ án: `python3 step-planner/tools/lint.py --write-course`, không sửa tay; cổng đỏ khi nguồn đổi mà chưa sinh lại.
-- `it5425-sports`: tên việc giữ chữ nguồn; outs / ins suy từ đường dẫn trong `io_html` từng pha (`course_flow`). Không tên người.
+- `it5425-sports`: tên việc giữ chữ nguồn; outs / ins suy từ đường dẫn trong `io_html` từng pha (`course_flow`), `final` theo `COURSE_FINAL`. Không tên người.
 
 ## System design (`data/system-design.json`, PLAN-016)
 

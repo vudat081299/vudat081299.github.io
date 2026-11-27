@@ -42,6 +42,10 @@ const heldStrict = (ws) => {
 };
 
 const tplPath = fileURLToPath(new URL('../data/templates.json', import.meta.url));
+/* Ngoại lệ được ghi của luật "mở mẫu ra không đầu ra nào lỗi": tên bước, bước con. it5425-sports sinh từ trang đồ án; trang không
+ * nêu đầu ra của P0 (README, requirements, .gitignore) và notebook EDA của P3 làm đầu vào của pha sau (P4 ghi "Kết quả EDA" bằng
+ * chữ), mà chúng không phải sản phẩm cuối. */
+const IO_EXCEPT = { 'it5425-sports': ['P0 · Khởi động', 'P3 · EDA'] };
 const { templates } = JSON.parse(readFileSync(tplPath, 'utf8'));
 
 for (const t of templates) {
@@ -60,6 +64,9 @@ for (const t of templates) {
   check(`mẫu ${t.id}: không đầu vào lơ lửng (key không có đầu ra)`, !dangling.length, dangling.join(','));
   const late = heldStrict(ws);
   check(`mẫu ${t.id}: không đầu vào treo, kể cả cùng ô với bên giao`, !late.length, late.join(' | '));
+  const io = CORE.ioStatus(ws);
+  const red = ws.steps.flatMap((s) => [s, ...s.subs]).filter((x) => io.get(x.id).out === 'bad').map((x) => x.title).filter((n) => !(IO_EXCEPT[t.id] || []).includes(n));
+  check(`mẫu ${t.id}: mở mẫu ra không đầu ra nào lỗi (sản phẩm cuối có final)`, !red.length, red.join(' | '));
 }
 { // Bộ kiểm treo chặt bắt được: cùng ô, bước nhận từ bước con của nó, hàng sau, đầu ra không có; ô trước, hàng trước thì sạch.
   const w = normWorkspace({ steps: [
@@ -1171,7 +1178,19 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   const H = await import('../js/core/handoffs.js');
   const sub = normSub({ outs: [{ id: 'o1', name: '  a  b ', ref: 'x\ny', note: 7 }, { name: '' }, 'bad', { id: 'o2', name: 'c' }], ins: ['o1', 'z', 'z', 3, ''] });
   check('bàn giao: normSub — đầu ra không tên bị bỏ, chuỗi một dòng; đầu vào bỏ trùng, bỏ id của chính nó',
-    eq(sub.outs, [{ id: 'o1', name: 'a b', ref: 'x y', note: '7' }, { id: 'o2', name: 'c', ref: '', note: '' }]) && eq(sub.ins, ['z']));
+    eq(sub.outs, [{ id: 'o1', name: 'a b', ref: 'x y', note: '7', final: false }, { id: 'o2', name: 'c', ref: '', note: '', final: false }]) && eq(sub.ins, ['z']));
+  const fo = normSub({ outs: [{ id: 'f1', name: 'r', final: true }, { id: 'f2', name: 's', final: 'yes' }, { id: 'f3', name: 't', final: 1 }] });
+  check('bàn giao: normSub — final chỉ true khi đúng là true, mặc định false', eq(fo.outs.map((o) => o.final), [true, false, false]));
+  const fm = normWorkspace({ steps: [{ title: 'S', outs: [{ name: 'report', ref: 'r/', note: 'n', final: true }, { name: 'Final: not final' },
+    { name: 'Final: also final', final: true }, { name: 'plain · x' }], subs: [{ title: 'x', outs: [{ name: 'deck', final: true }] }] }] });
+  const fmd = toMarkdown(fm);
+  const fb = fromMarkdown(fmd);
+  check('bàn giao: Markdown — đầu ra cuối ghi "Final: ", tên thật mở bằng "Final:" thì thoát; đi rồi về giữ nguyên',
+    eq(shape(fb.workspace), shape(fm)) && !fb.warnings.length && fmd.includes('  - Final: report · r/  \n    n\n') && fmd.includes('  - \\Final: not final\n')
+    && fmd.includes('  - Final: Final: also final\n') && fmd.includes('    - Final: deck\n'), firstDiff(shape(fm), shape(fb.workspace)) + fb.warnings.join(' | '));
+  check('bàn giao: Markdown viết tay — "final:" không phân biệt hoa thường', fromMarkdown('# P\n\n## S\n\nOutputs:\n  - final: x · a.csv\n').workspace.steps[0].outs[0].final === true);
+  check('bàn giao: JSON, freshCopy, nhân bản giữ final', parseImport(toJSON(fm)).workspaces[0].steps[0].outs[0].final === true
+    && freshCopy(fm).steps[0].subs[0].outs[0].final === true);
   const raw = {
     name: 'PL', steps: [
       { id: 't1', title: 'Clean', outs: [{ id: 'm', name: 'matches.parquet', ref: 'data/clean/matches.parquet', note: 'one row per match · key match_id' }],
@@ -1221,7 +1240,7 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   const hb = fromMarkdown(hand);
   const hs = shape(hb.workspace);
   check('bàn giao: Markdown viết tay — note cùng dòng, tên trùng không có bên giao thì lấy cái đầu và cảnh báo, không có thì cảnh báo',
-    eq(hs.steps[0].outs[0], { name: 'clean', ref: 'data/c.csv', note: 'hợp đồng viết cùng dòng' }) && eq(hs.steps[1].ins, ['0.-.0', '0.-.1'])
+    eq(hs.steps[0].outs[0], { name: 'clean', ref: 'data/c.csv', note: 'hợp đồng viết cùng dòng', final: false }) && eq(hs.steps[1].ins, ['0.-.0', '0.-.1'])
     && eq(hs.steps[1].subs[0].ins, ['0.0.0']) && hb.warnings.length === 2 && /matches 2/.test(hb.warnings[0]) && /not found.*missing ← Make/.test(hb.warnings[1]), hb.warnings.join(' | '));
   const tpl = fromTemplate({ id: 't', name: 'T', steps: [
     { title: 'S1', outs: [{ key: 'k1', name: 'snap', ref: 'a.parquet' }, { key: 'k1', name: 'again' }], subs: [{ title: 'x', ins: ['k2', 'nope'] }] },
@@ -1377,6 +1396,27 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
     && eq(ps.get('pp').outWhy, [{ kind: 'held', id: 'op', name: 'cut', to: ['Q'], par: ['Q'], live: 1 }]) && st(ps, 'p1') === 'bad/bad');
   pw.steps[0].subs[1].par = false;
   check('io: tách khỏi ô song song, đứng sau bên giao → nối lại, ok', st(io(pw), 'pq') === 'ok/none' && st(io(pw), 'pp') === 'none/ok');
+  /* Đầu ra cuối (final): không ai dùng là ổn; có nơi dùng treo vẫn lỗi; đầu ra thường không ai dùng vẫn lỗi; bước gộp. */
+  const fw = normWorkspace({ steps: [
+    { id: 'f1', title: 'F1', subs: [{ id: 'fa', title: 'A', outs: [{ id: 'oa', name: 'report', final: true }] },
+      { id: 'fb', title: 'B', outs: [{ id: 'ob', name: 'slides', final: true }, { id: 'ob2', name: 'notes' }] }] },
+    { id: 'f2', title: 'F2', subs: [{ id: 'fc', title: 'C', ins: ['od'] }, { id: 'fd', title: 'D', outs: [{ id: 'od', name: 'app', final: true }] }] },
+    { id: 'f3', title: 'F3', subs: [{ id: 'fe', title: 'E', outs: [{ id: 'oe', name: 'draft' }] }] },
+    { id: 'f4', title: 'F4', subs: [{ id: 'fg', title: 'G', outs: [{ id: 'og', name: 'deck', final: true }] }, { id: 'fh', title: 'H', ins: ['og'] }] }] });
+  const fs = io(fw);
+  check('io: đầu ra cuối không ai dùng → ok, không nêu trong outWhy, có trong finals', st(fs, 'fa') === 'none/ok' && !fs.get('fa').outWhy.length
+    && eq(fs.get('fa').finals, ['report']));
+  check('io: đầu ra thường không ai dùng cạnh đầu ra cuối → bước con vẫn bad, chỉ nêu cái thường', st(fs, 'fb') === 'none/bad'
+    && eq(fs.get('fb').outWhy.map((w) => w.name), ['notes']));
+  check('io: bước — mọi đầu ra là đầu ra cuối không ai dùng (hay có một cái ổn) → ok', st(fs, 'f1') === 'none/ok');
+  check('io: đầu ra cuối có nơi dùng treo → bad như đầu ra khác', st(fs, 'fd') === 'none/bad' && eq(fs.get('fd').outWhy.map((w) => w.kind), ['held'])
+    && !fs.get('fd').finals.length && st(fs, 'f2') === 'bad/bad');
+  check('io: đầu ra thường không ai dùng → bad (cả bước)', st(fs, 'fe') === 'none/bad' && st(fs, 'f3') === 'none/bad');
+  check('io: đầu ra cuối có nơi dùng đang nối → ok', st(fs, 'fg') === 'none/ok' && st(fs, 'fh') === 'ok/none' && !fs.get('fg').finals.length);
+  fw.steps[0].subs[0].outs[0].final = false;
+  check('io: bỏ final → đầu ra không ai dùng lại bad; bước còn một đầu ra cuối không ai dùng thì vẫn ok', st(io(fw), 'fa') === 'none/bad' && st(io(fw), 'f1') === 'none/ok');
+  fw.steps[0].subs[1].outs[0].final = false;
+  check('io: bước — bỏ final hết → bad', st(io(fw), 'f1') === 'none/bad');
 }
 
 /* ── Ảnh chụp gợi ý của System design (tools/design-snapshot.json) ──

@@ -134,6 +134,15 @@
 .out-fields { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--s2) var(--s3); }
 .out-fields .field:first-child { grid-column: 1 / -1; }
 .out-used { grid-column: 1 / -1; font-size: var(--fs-xs); color: var(--ink-2); overflow-wrap: anywhere; }
+/* Đầu ra cuối: ô chọn trong khối sửa, nhãn "Final" trong danh sách. */
+.out-final { grid-column: 1 / -1; display: flex; align-items: center; gap: var(--s2); min-height: var(--hit); font-size: var(--fs-sm); cursor: pointer; }
+.out-final input { flex: none; width: var(--icon); height: var(--icon); margin: 0; accent-color: var(--done-edge); }
+.out-final span { display: flex; flex-direction: column; min-width: 0; line-height: var(--lh-tight); }
+.out-final small { font-size: var(--fs-xs); color: var(--ink-3); }
+.final-tag {
+  flex: none; display: inline-flex; align-items: center; padding: 0 var(--s1); font-size: var(--fs-xs); font-weight: 600;
+  color: var(--green); background: var(--accent-soft); border-radius: var(--r-xs);
+}
 @media (max-width: 640px) { .out-fields { grid-template-columns: minmax(0, 1fr); } }
 /* Hộp chọn: mỗi bước một nhóm, mỗi đầu ra một hàng có ô chọn (dáng danh sách của hộp Reopen). */
 .pick-group { display: flex; flex-direction: column; }

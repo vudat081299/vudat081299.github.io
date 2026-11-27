@@ -105,12 +105,13 @@ export function normDoc(o) {
 }
 const docsOf = (/** @type {any} */ a) => (Array.isArray(a) ? a.map(normDoc).filter(Boolean) : []);
 
-/* Bàn giao (handoff): đầu ra khai ở bước / bước con tạo ra nó, `{id, name, ref, note}` (tên bắt buộc; ref: đường dẫn file
- * hay link; note: hợp đồng — schema, khoá, cam kết, cách kiểm). Đầu vào `ins` là id đầu ra ở chỗ khác trong dự án. */
+/* Bàn giao (handoff): đầu ra khai ở bước / bước con tạo ra nó, `{id, name, ref, note, final}` (tên bắt buộc; ref: đường dẫn
+ * file hay link; note: hợp đồng — schema, khoá, cam kết, cách kiểm; final: sản phẩm cuối, không cần nơi nhận). Đầu vào `ins`
+ * là id đầu ra ở chỗ khác trong dự án. */
 /** Một đầu ra, hoặc null nếu không có tên. @param {any} o */
 export function normOut(o) {
   if (!isObj(o) || !oneLine(o.name)) return null;
-  return { id: idOr(o.id, 'o'), name: oneLine(o.name), ref: oneLine(o.ref), note: oneLine(o.note) };
+  return { id: idOr(o.id, 'o'), name: oneLine(o.name), ref: oneLine(o.ref), note: oneLine(o.note), final: o.final === true };
 }
 const outsOf = (/** @type {any} */ a) => (Array.isArray(a) ? a.map(normOut).filter(Boolean) : []);
 /** Đầu vào: chuỗi id, bỏ trùng, bỏ id đầu ra của chính nó. Id không còn trỏ tới đầu ra nào (bên giao đã xoá) vẫn giữ: bảng báo
@@ -301,7 +302,7 @@ export function fromTemplate(tpl, name) {
   const outs = (/** @type {any} */ o) => objs(o.outs).map((/** @type {any} */ y) => {
     const id = uid('o');
     if (typeof y.key === 'string' && y.key && !keys.has(y.key)) keys.set(y.key, id);
-    return { id, name: y.name, ref: y.ref, note: y.note };
+    return { id, name: y.name, ref: y.ref, note: y.note, final: y.final };
   });
   const steps = objs(t.steps).map((/** @type {any} */ s) => ({
     title: s.title, goal: s.goal, doneWhen: s.doneWhen, notes: s.notes, outs: outs(s), insKeys: s.ins,

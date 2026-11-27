@@ -28,7 +28,8 @@ Làm xong mục nào thì xoá mục ấy.
 - Sơ đồ System design: ở 1280px chỉ còn 3 cột (khoảng cách cột nới ra cho nhãn bàn giao).
 - Mẫu `data-pipeline`: chỉ kiểm tên khâu qua mục lục sách (Reis & Housley); bước con chưa đối chiếu với chữ trong sách.
   Ba yếu tố của DataOps trong sách chưa ghi vì chưa mở được nguồn.
-- Mẫu `it5425-sports`: pha P7 có 7 đầu vào; đầu ra của P0 chưa nơi nào dùng. Xem lại khi trang đồ án đổi.
+- Mẫu `it5425-sports`: pha P7 có 7 đầu vào; đầu ra của P0 và notebook EDA của P3 chưa nơi nào dùng, không phải sản phẩm cuối nên
+  vẫn chấm đỏ (`IO_EXCEPT` trong `tools/test-core.mjs`). Xem lại khi trang đồ án đổi.
 - Mẫu `big-data-ds`: sách Lambda (Marz & Warren, 2015) chưa mở được; mô tả Lambda đối chiếu với bài giảng của môn.
 - Mẫu CRISP-DM: thẻ TDSP (Customer Acceptance), Model Cards, Datasheets for Datasets chưa mở lại được nguồn để kiểm.
 - Danh mục System design: luật `non-streamlit-ui-on-streamlit-cloud`, `api-on-streamlit-cloud` suy từ câu "create, deploy,

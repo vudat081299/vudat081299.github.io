@@ -317,7 +317,8 @@
                   "key": "final-report",
                   "name": "Báo cáo cuối",
                   "ref": "reports/final-report.md",
-                  "note": "Câu hỏi, dữ liệu, phương pháp, kết quả test cạnh baseline, hạn chế, khuyến nghị; mỗi số truy được về một run"
+                  "note": "Câu hỏi, dữ liệu, phương pháp, kết quả test cạnh baseline, hạn chế, khuyến nghị; mỗi số truy được về một run",
+                  "final": true
                 }
               ],
               "ins": [
@@ -854,7 +855,8 @@
                   "key": "dashboard",
                   "name": "Bảng điều khiển (dashboard)",
                   "ref": "dashboards/clickstream/",
-                  "note": "Phễu, phân khúc, điểm mua; trang ghi mốc dữ liệu của batch view và độ trễ của real-time view"
+                  "note": "Phễu, phân khúc, điểm mua; trang ghi mốc dữ liệu của batch view và độ trễ của real-time view",
+                  "final": true
                 }
               ],
               "ins": [
@@ -885,7 +887,8 @@
                   "key": "final-report",
                   "name": "Báo cáo cuối",
                   "ref": "reports/final-report.md",
-                  "note": "Kết quả test cạnh baseline, số đo hệ thống, kiến trúc đã chọn và lý do; mỗi số truy được về một run"
+                  "note": "Kết quả test cạnh baseline, số đo hệ thống, kiến trúc đã chọn và lý do; mỗi số truy được về một run",
+                  "final": true
                 }
               ],
               "ins": [
@@ -1264,7 +1267,8 @@
             {
               "key": "app-streamlit-app-py",
               "name": "app/streamlit_app.py",
-              "ref": "app/streamlit_app.py"
+              "ref": "app/streamlit_app.py",
+              "final": true
             }
           ],
           "ins": [
@@ -1300,12 +1304,14 @@
             {
               "key": "report",
               "name": "report/",
-              "ref": "report/"
+              "ref": "report/",
+              "final": true
             },
             {
               "key": "slides",
               "name": "slides/",
-              "ref": "slides/"
+              "ref": "slides/",
+              "final": true
             }
           ],
           "ins": [
@@ -1509,7 +1515,8 @@
                   "key": "report",
                   "name": "Báo cáo",
                   "ref": "reports/report.md",
-                  "note": "Mỗi số trong báo cáo khớp một dòng của bảng kết quả"
+                  "note": "Mỗi số trong báo cáo khớp một dòng của bảng kết quả",
+                  "final": true
                 }
               ],
               "ins": [
@@ -1932,7 +1939,8 @@
                   "key": "runbook",
                   "name": "Sổ tay vận hành (runbook)",
                   "ref": "docs/runbook.md",
-                  "note": "Mỗi loại cảnh báo: dấu hiệu, kiểm gì, lệnh chạy lại hay lùi bản, khi nào báo bên dùng"
+                  "note": "Mỗi loại cảnh báo: dấu hiệu, kiểm gì, lệnh chạy lại hay lùi bản, khi nào báo bên dùng",
+                  "final": true
                 }
               ],
               "ins": [
@@ -2342,7 +2350,8 @@
               "notes": "dbt có sẵn bốn test unique, not_null, accepted_values, relationships; test trả về các dòng sai: https://docs.getdbt.com/docs/build/data-tests",
               "ins": [
                 "silver-contract",
-                "silver-tables"
+                "silver-tables",
+                "quarantine"
               ],
               "outs": [
                 {
@@ -2644,7 +2653,8 @@
                   "key": "runbook",
                   "name": "Sổ tay vận hành (runbook)",
                   "ref": "docs/runbook.md",
-                  "note": "Mỗi lỗi hay gặp: dấu hiệu, kiểm gì, lệnh sửa hay chạy lại"
+                  "note": "Mỗi lỗi hay gặp: dấu hiệu, kiểm gì, lệnh sửa hay chạy lại",
+                  "final": true
                 }
               ]
             }
@@ -2690,7 +2700,8 @@
                   "key": "conformance-report",
                   "name": "Báo cáo tuân thủ medallion",
                   "ref": "docs/medallion-check.md",
-                  "note": "Mỗi luật: đạt hay không, bằng chứng, việc sửa; kết luận một dòng; ngày kiểm"
+                  "note": "Mỗi luật: đạt hay không, bằng chứng, việc sửa; kết luận một dòng; ngày kiểm",
+                  "final": true
                 }
               ]
             }
