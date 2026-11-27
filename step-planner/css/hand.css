@@ -148,3 +148,29 @@
 .pick-group { display: flex; flex-direction: column; }
 .pick-group .reset-title b { display: block; font-weight: 600; }
 .pick-group .reset-title small { display: block; font-size: var(--fs-xs); color: var(--ink-3); }
+
+/* ── Đầu ra chọn từ bước con (js/ui/sub-outs.js): nút "From sub-steps" cạnh "Add output"; mỗi lựa chọn một hàng chỉ đọc có dấu
+   "from <bước con>", nơi dùng, nút bỏ (sửa đầu ra ở bước con) ── */
+/* Chật: hai nút xuống dòng dưới nhãn (cùng một hàng, canh phải) trước khi tách nhau. */
+.docs-edit-head:has(> .head-acts) { flex-wrap: wrap; }
+.head-acts { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--s2); margin-left: auto; }
+.head-acts .btn > svg.i:last-child:not(:first-child) { color: var(--ink-3); }
+.sub-outs { display: flex; flex-direction: column; gap: var(--s2); }
+.sub-outs:empty { display: none; }
+.sub-out {
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: start; gap: var(--s2); padding: var(--s2) 0 var(--s2) var(--s3);
+  background: var(--surface); border: var(--line-w) solid var(--line); border-radius: var(--r-sm);
+}
+.sub-out > svg.i { margin-top: var(--nudge); color: var(--ink-3); }
+.sub-out-text { display: flex; flex-direction: column; gap: var(--s1); min-width: 0; padding-top: var(--nudge); line-height: var(--lh-tight); overflow-wrap: anywhere; }
+.sub-out-name { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); font-size: var(--fs-md); }
+.sub-out-name b { min-width: 0; font-weight: 600; }
+.sub-out-meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s1) var(--s2); }
+.from-tag {
+  display: inline-flex; align-items: baseline; gap: var(--s1); max-width: 100%; padding: var(--mark-w) var(--s2);
+  font-size: var(--fs-xs); color: var(--ink-2); background: var(--chip); border-radius: var(--r-pill);
+}
+.from-tag b { min-width: 0; font-weight: 600; color: var(--ink); overflow-wrap: anywhere; }
+.sub-out-meta code { font: 500 var(--fs-xs)/var(--lh) var(--mono); padding: 0 var(--s1); color: var(--ink-2); background: var(--chip); border-radius: var(--r-xs); overflow-wrap: anywhere; }
+.sub-out small { font-size: var(--fs-xs); color: var(--ink-3); }
+@media (hover: hover) { .sub-out .icon-btn:hover { color: var(--danger); } }

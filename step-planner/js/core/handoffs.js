@@ -1,9 +1,9 @@
 // @ts-check
 /* Bàn giao (outs / ins), thuần: ai giữ đầu ra, đầu vào (holders, outIndex), cặp bên giao → bên nhận theo hàng và ô,
    đầu vào treo (handoffs), trạng thái đầu vào / đầu ra (ioStatus), nơi dùng (consumersOf, insBackup), "on hold" theo chỗ chưa
-   lưu của hộp sửa (heldInfoAt, handoffsAt).
-   Xuất: holders, outIndex, holderTitle, heldKey, handoffs, ioStatus, insBackup, consumersOf, heldInfoAt,
-     handoffsAt.
+   lưu của hộp sửa (heldInfoAt, handoffsAt), đầu ra bước chọn từ bước con (chosenOuts, pruneSubOuts, subOutsBackup).
+   Xuất: holders, outIndex, holderTitle, heldKey, handoffs, ioStatus, chosenOuts, pruneSubOuts, subOutsBackup, insBackup,
+     consumersOf, heldInfoAt, handoffsAt.
    Dùng: core/board.js. */
 import { placeSub, slotsOf } from './board.js';
 
@@ -114,7 +114,8 @@ export function handoffs(ws) {
  * Một đầu ra lỗi khi không có nơi nhận đang nối (không ai dùng mà không là đầu ra cuối `final`, hay chỉ có nơi dùng treo), hoặc
  * có một nơi dùng treo. Đầu ra cuối không ai dùng là ổn (sản phẩm cuối, không cần nơi nhận).
  * Đầu ra của bước con: 'bad' nếu một đầu ra của nó lỗi. Đầu ra của bước gộp đầu ra của nó và mọi bước con, đối xứng với đầu vào:
- * 'bad' nếu một đầu ra trong số ấy lỗi; outWhy ghi tên bước con giữ đầu ra lỗi (at). Không có đầu ra: 'none'.
+ * 'bad' nếu một đầu ra trong số ấy lỗi; outWhy ghi tên bước con giữ đầu ra lỗi (at). Đầu ra bước chọn từ bước con (`subOuts`)
+ * là chính đầu ra của bước con nên chỉ tính một lần. Không có đầu ra: 'none'.
  * @param {{steps:any[]}} ws @param {ReturnType<typeof handoffs>} [hand] @returns {Map<string, IoStatus>}
  */
 export function ioStatus(ws, hand = handoffs(ws)) {
@@ -165,17 +166,60 @@ export function ioStatus(ws, hand = handoffs(ws)) {
   return m;
 }
 
+/* ── Đầu ra bước chọn từ bước con (`subOuts`): tham chiếu, không chép. Chỉ trỏ tới đầu ra của bước con đang nằm trong chính bước:
+ * bước con rời bước (dời đi, xoá) hay đầu ra bị xoá thì bước thôi chọn nó (pruneSubOuts); Hoàn tác gắn lại (subOutsBackup). ── */
+
+/** Đầu ra bước chọn từ bước con, theo thứ tự chọn, kèm bước con giữ nó; id không còn ở bước con nào của bước bị bỏ qua.
+ * @param {any} step @returns {{out:any, sub:any}[]} */
+export function chosenOuts(step) {
+  const m = new Map();
+  for (const sub of step.subs) for (const out of sub.outs || []) m.set(out.id, { out, sub });
+  return (step.subOuts || []).map((/** @type {string} */ id) => m.get(id)).filter(Boolean);
+}
+/** Bỏ khỏi `subOuts` mọi id không còn là đầu ra của một bước con trong chính bước. Trả các bước vừa bị bỏ, kèm số đã bỏ.
+ * @param {{steps:any[]}} ws @returns {{step:any, n:number}[]} */
+export function pruneSubOuts(ws) {
+  const out = [];
+  for (const step of ws.steps) {
+    if (!step.subOuts?.length) continue;
+    const keep = chosenOuts(step).map((c) => c.out.id);
+    if (keep.length !== step.subOuts.length) out.push({ step, n: step.subOuts.length - keep.length });
+    step.subOuts = keep;
+  }
+  return out;
+}
+/** Trước khi một thao tác có thể làm bước thôi chọn đầu ra của các chủ này (xoá, dời bước con): chụp `subOuts` của những bước
+ * đang chọn chúng. Hàm trả về gắn lại theo thứ tự cũ (id của chủ khác người dùng đã bỏ trong lúc chờ thì thôi, id mới thì giữ ở
+ * cuối); bước không còn thì thôi. Id gắn lại không còn ở bước con của bước thì lần lưu sau bỏ. @param {any} ws @param {any[]} owners
+ * @returns {(w: any) => void} */
+export function subOutsBackup(ws, owners) {
+  const ids = new Set(owners.flatMap((o) => (o.outs || []).map((/** @type {any} */ x) => x.id)));
+  const saved = ws.steps.filter((/** @type {any} */ s) => (s.subOuts || []).some((/** @type {string} */ id) => ids.has(id)))
+    .map((/** @type {any} */ s) => /** @type {[string, string[]]} */ ([s.id, [...s.subOuts]]));
+  return (w) => {
+    for (const [id, old] of saved) {
+      const s = w.steps.find((/** @type {any} */ x) => x.id === id);
+      if (!s) continue;
+      const now = s.subOuts || [];
+      s.subOuts = [...old.filter((x) => ids.has(x) || now.includes(x)), ...now.filter((/** @type {string} */ x) => !old.includes(x))];
+    }
+  };
+}
+
 /**
- * Trước khi xoá các chủ này: chụp đầu vào của nơi khác đang trỏ tới đầu ra của chúng. Xoá không gỡ đầu vào ấy (mất nguồn, bảng
- * báo lỗi); hàm trả về gắn lại chúng khi Hoàn tác, kể cả khi người dùng đã gỡ hay tab khác đã ghi đè dự án.
+ * Trước khi xoá các chủ này: chụp đầu vào của nơi khác đang trỏ tới đầu ra của chúng, và bước đang chọn chúng làm đầu ra
+ * (`subOuts`). Xoá không gỡ đầu vào ấy (mất nguồn, bảng báo lỗi); bước thì thôi chọn. Hàm trả về gắn lại cả hai khi Hoàn tác,
+ * kể cả khi người dùng đã gỡ hay tab khác đã ghi đè dự án.
  * @param {any} ws @param {any[]} owners @returns {(w: any) => void}
  */
 export function insBackup(ws, owners) {
+  const chosen = subOutsBackup(ws, owners);
   const ids = new Set(owners.flatMap((o) => (o.outs || []).map((/** @type {any} */ x) => x.id)));
   const saved = holders(ws).filter((hd) => !owners.includes(hd.h) && hd.h.ins.some((/** @type {string} */ id) => ids.has(id)))
     .map((hd) => /** @type {[string, string[]]} */ ([hd.h.id, [...hd.h.ins]]));
   /* Gắn lại theo thứ tự cũ; đầu vào khác đã gỡ trong lúc chờ thì thôi, đầu vào mới thêm thì giữ ở cuối. */
   return (w) => {
+    chosen(w);
     const byId = new Map(holders(w).map((hd) => [hd.h.id, hd.h]));
     for (const [id, old] of saved) {
       const h = byId.get(id);

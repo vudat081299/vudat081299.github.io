@@ -1,16 +1,19 @@
 // @ts-check
 /* Danh sách chọn tự dựng (mẫu listbox): một nút mở một danh sách nổi. Dùng cho mọi <select> có nghĩa (enhanceSelect: <select>
- * vẫn ở trong DOM, vẫn giữ value, vẫn phát `change`) và cho menu trạng thái của chip (openList).
+ * vẫn ở trong DOM, vẫn giữ value, vẫn phát `change`), cho menu trạng thái của chip (openList), và cho danh sách chọn nhiều có
+ * nhóm (openList với `multi`, mục có `group`: chọn đầu ra bước con làm đầu ra của bước).
  * Danh sách nằm trong lớp trên cùng (popover) nên không đẩy bố cục, nổi được cả trên hộp thoại modal. Chữ chỉ qua text node.
  * Xuất: closeList, openList, consumeJustClosed, enhanceSelect, initDropdown.
  * Dùng: core/board.js, ui/dom.js. */
 import { fold } from '../core/board.js';
 import { h, icon } from './dom.js';
 
-/** tip: chữ đủ khi rê chuột (nhãn, dòng giải thích bị cắt). @typedef {{value:string, label:string, hint?:string, tip?:string, dot?:string, selected?:boolean, disabled?:boolean}} Item */
+/** tip: chữ đủ khi rê chuột (nhãn, dòng giải thích bị cắt). group: tên nhóm; mục liền nhau cùng tên nằm chung một nhóm có tiêu đề.
+ * @typedef {{value:string, label:string, hint?:string, tip?:string, dot?:string, group?:string, selected?:boolean, disabled?:boolean}} Item */
 
 let seq = 0;
-/** @type {null | {pop:HTMLElement, anchor:HTMLElement, items:Item[], active:number, onPick:(v:string)=>void, onClose:()=>void}} */
+/** multi: chọn nhiều — chọn một mục là bật / tắt nó, danh sách vẫn mở.
+ * @type {null | {pop:HTMLElement, anchor:HTMLElement, items:Item[], active:number, multi:boolean, onPick:(v:string)=>void, onClose:()=>void}} */
 let cur = null;
 let typed = '';
 let typedAt = 0;
@@ -81,39 +84,62 @@ function step(from, d) {
   for (let i = from + d; i >= 0 && i < cur.items.length; i += d) if (!cur.items[i].disabled) return i;
   return from;
 }
-/** @param {number} i */
+/** Chọn mục i: danh sách thường thì đóng rồi báo; chọn nhiều thì bật / tắt mục, giữ danh sách mở. @param {number} i */
 function pick(i) {
   if (!cur || !cur.items[i] || cur.items[i].disabled) return;
   const { onPick } = cur;
-  const v = cur.items[i].value;
+  const it = cur.items[i];
+  if (cur.multi) {
+    it.selected = !it.selected;
+    const o = /** @type {HTMLElement} */ (cur.pop.querySelectorAll('[role="option"]')[i]);
+    o.setAttribute('aria-selected', String(it.selected));
+    setActive(i);
+    onPick(it.value);
+    place();
+    return;
+  }
   closeList(true);
-  onPick(v);
+  onPick(it.value);
+}
+/** Một mục của danh sách; chọn nhiều thì có ô đánh dấu ở đầu. @param {Item} it @param {string} id @param {number} i @param {boolean} multi */
+function optEl(it, id, i, multi) {
+  const o = h('div', { class: 'dd-opt', role: 'option', id: `${id}-${i}`, 'data-i': String(i), 'aria-selected': String(!!it.selected), 'data-value': it.value, title: it.tip || null },
+    multi ? h('span', { class: 'dd-box', 'aria-hidden': 'true' }, icon('check')) : '',
+    it.dot ? h('span', { class: `st-dot st-${it.dot}`, 'aria-hidden': 'true' }) : '',
+    h('span', { class: 'dd-text' }, h('span', { class: 'dd-label' }, it.label), it.hint ? h('span', { class: 'dd-hint' }, it.hint) : ''));
+  if (it.selected && !multi) o.append(icon('check'));
+  if (it.disabled) o.setAttribute('aria-disabled', 'true');
+  return o;
 }
 
 /**
  * Mở danh sách dưới `anchor`. Focus vào danh sách (aria-activedescendant); Esc / bấm ra ngoài đóng, Enter / bấm chọn.
+ * `multi`: chọn nhiều (Enter, Space, bấm bật / tắt một mục; Esc, Tab, bấm ra ngoài đóng). Mục có `group`: tiêu đề nhóm không chọn được,
+ * phím mũi tên đi qua nó.
  * @param {HTMLElement} anchor @param {Item[]} items @param {(v:string)=>void} onPick
- * @param {{label?:string, onClose?:()=>void, className?:string}} [opts]
+ * @param {{label?:string, onClose?:()=>void, className?:string, multi?:boolean}} [opts]
  */
 export function openList(anchor, items, onPick, opts = {}) {
   closeList();
   const id = 'dd' + (++seq);
-  const pop = h('div', { class: 'dd-pop' + (opts.className ? ' ' + opts.className : ''), role: 'listbox', tabindex: '-1', id,
-    'aria-label': opts.label || anchor.getAttribute('aria-label') || anchor.textContent?.trim() || '' });
+  const multi = !!opts.multi;
+  const pop = h('div', { class: 'dd-pop' + (multi ? ' dd-multi' : '') + (opts.className ? ' ' + opts.className : ''), role: 'listbox', tabindex: '-1', id,
+    'aria-multiselectable': multi ? 'true' : null, 'aria-label': opts.label || anchor.getAttribute('aria-label') || anchor.textContent?.trim() || '' });
+  /** @type {HTMLElement} */ let box = pop;
   items.forEach((it, i) => {
-    const o = h('div', { class: 'dd-opt', role: 'option', id: `${id}-${i}`, 'aria-selected': String(!!it.selected), 'data-value': it.value, title: it.tip || null },
-      it.dot ? h('span', { class: `st-dot st-${it.dot}`, 'aria-hidden': 'true' }) : '',
-      h('span', { class: 'dd-text' }, h('span', { class: 'dd-label' }, it.label), it.hint ? h('span', { class: 'dd-hint' }, it.hint) : ''));
-    if (it.selected) o.append(icon('check'));
-    if (it.disabled) o.setAttribute('aria-disabled', 'true');
-    pop.append(o);
+    if (it.group != null && (i === 0 || items[i - 1].group !== it.group)) {
+      const gid = `${id}-g${i}`;
+      box = h('div', { role: 'group', class: 'dd-grp', 'aria-labelledby': gid }, h('div', { class: 'dd-group', id: gid, role: 'presentation' }, it.group));
+      pop.append(box);
+    } else if (it.group == null) box = pop;
+    box.append(optEl(it, id, i, multi));
   });
   (anchor.closest('dialog') || document.body).append(pop);
   if (typeof pop.showPopover === 'function') {
     pop.setAttribute('popover', 'manual');
     pop.showPopover();
   }
-  cur = { pop, anchor, items, active: -1, onPick, onClose: opts.onClose || (() => {}) };
+  cur = { pop, anchor, items, active: -1, multi, onPick, onClose: opts.onClose || (() => {}) };
   anchor.setAttribute('aria-expanded', 'true');
   anchor.setAttribute('aria-controls', id);
   place();
@@ -124,11 +150,11 @@ export function openList(anchor, items, onPick, opts = {}) {
   pop.addEventListener('keydown', onKey);
   pop.addEventListener('pointermove', (e) => {
     const o = /** @type {HTMLElement} */ (e.target).closest?.('[role="option"]');
-    if (o && cur) setActive([...pop.children].indexOf(o));
+    if (o && cur && Number(o.dataset.i) !== cur.active) setActive(Number(o.dataset.i));
   });
   pop.addEventListener('click', (e) => {
     const o = /** @type {HTMLElement} */ (e.target).closest?.('[role="option"]');
-    if (o) pick([...pop.children].indexOf(o));
+    if (o) pick(Number(o.dataset.i));
   });
 }
 

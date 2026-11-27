@@ -168,10 +168,10 @@ const markBlanks = (form) => form && form.querySelectorAll && form.querySelector
 /* ── Lưu hộp sửa khi tab khác đã ghi (mergeEdit): chỉ trường mình đổi đè lên bản mới nhất; cùng trường thì hỏi ── */
 
 const FIELD_LABEL = { title: 'Title', status: 'Status', reason: 'Reason', due: 'Due', doneWhen: 'Done when', notes: 'Notes', goal: 'Goal',
-  date: 'Date', decision: 'Decision', why: 'Why', stepId: 'Step', outs: 'Outputs', ins: 'Inputs' };
+  date: 'Date', decision: 'Decision', why: 'Why', stepId: 'Step', outs: 'Outputs', ins: 'Inputs', subOuts: 'Outputs from sub-steps' };
 /** Giá trị một trường để so trong hộp hỏi. @param {any} ws @param {string} k @param {any} v */
 function fieldText(ws, k, v) {
-  const t = k === 'outs' ? (v || []).map((/** @type {any} */ o) => o.name).join(', ') : k === 'ins' ? plural((v || []).length, 'input') : k === 'status' ? STATUS_LABEL[v] : k === 'stepId' ? stepOf(ws, v)?.title || '' : k === 'due' || k === 'date' ? fmtDate(v) : String(v ?? '');
+  const t = k === 'outs' ? (v || []).map((/** @type {any} */ o) => o.name).join(', ') : k === 'ins' ? plural((v || []).length, 'input') : k === 'subOuts' ? plural((v || []).length, 'output') : k === 'status' ? STATUS_LABEL[v] : k === 'stepId' ? stepOf(ws, v)?.title || '' : k === 'due' || k === 'date' ? fmtDate(v) : String(v ?? '');
   const one = oneLine(t);
   return !one ? '(empty)' : one.length > 80 ? one.slice(0, 79) + '…' : one;
 }

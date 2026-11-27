@@ -4,8 +4,9 @@
    Biến dùng chung là `export let`: nơi khác chỉ đọc, gán lại qua hàm của module này (setCur, loadData; `ui` sửa từng trường).
    Xuất: state, curId, templates, ui, findWs, cur, tplOf, stepOf, setCur, persist, commit, refocus, subSel, stepSel,
      loadData, initState.
-   Dùng: ui/docs.js, ui/dom.js, ui/render.js, ui/store.js. */
+   Dùng: core/handoffs.js, ui/docs.js, ui/dom.js, ui/render.js, ui/store.js. */
 import * as S from './store.js';
+import { pruneSubOuts } from '../core/handoffs.js';
 import { refreshDocLists } from './docs.js';
 import { $, h } from './dom.js';
 import { render } from './render.js';
@@ -61,11 +62,12 @@ function flushSave() {
   setBanner('save', S.save(state) ? '' : 'Could not write to browser storage (full or blocked). New changes are not saved — back up as JSON to keep them.');
 }
 
-/** Ghi lại, vẽ lại, rồi đưa focus về phần tử vừa thao tác. @param {string} [focusSel] @param {{preventScroll?:boolean}} [opt] */
+/** Ghi lại, vẽ lại, rồi đưa focus về phần tử vừa thao tác. Bước thôi chọn đầu ra không còn ở bước con của nó (bước con dời đi,
+ * bị xoá, đầu ra bị xoá: pruneSubOuts); Hoàn tác của thao tác ấy gắn lại. @param {string} [focusSel] @param {{preventScroll?:boolean}} [opt] */
 export function commit(focusSel, opt = {}) {
   const ws = cur();
   const now = new Date().toISOString();
-  if (ws) ws.updatedAt = now;
+  if (ws) { ws.updatedAt = now; pruneSubOuts(ws); }
   if (!state.dirtySince) state.dirtySince = now;
   persist();
   render();

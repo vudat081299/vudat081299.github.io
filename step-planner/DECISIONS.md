@@ -41,6 +41,7 @@
 - PLAN-041 · Mẫu IT5425: giám sát chấn thương Premier League, một người, từ đề tài tới demo chạy thật · `step-planner/data/templates.json`
 - PLAN-042 · Kiến trúc là lựa chọn của dự án: chọn thắng hồ sơ, công cụ đã chọn thắng kiến trúc · `step-planner/`
 - PLAN-043 · Trang Architecture giải thích đủ để chọn: sơ đồ luồng, câu hỏi chọn, ví dụ · `step-planner/data/system-design.json`, `step-planner/js/core/arch-diagram.js`, `step-planner/js/ui/arch-diagram.js`
+- PLAN-044 · Đầu ra của bước chọn được từ đầu ra của bước con · `step-planner/`
 <!-- index:end -->
 
 ## PLAN-001 · Dự án là các bước có thứ tự, mỗi bước có bước con có thứ tự
@@ -245,3 +246,8 @@ Mẫu đồ án môn IT5425 (Data Management and Visualization) dẫn một ngư
 27/11/2026 · `step-planner/data/system-design.json`, `step-planner/js/core/arch-diagram.js`, `step-planner/js/ui/arch-diagram.js`
 
 Người học chưa quen kiến trúc dữ liệu phải hiểu đủ để tự chọn. Mỗi kiến trúc có sơ đồ luồng dữ liệu: các thành phần (nguồn, phần xử lý, dữ liệu được lưu, người dùng hay đầu ra), dữ liệu đi từ đâu tới đâu, đường chỉ chạy khi cần, và vùng cho thấy phần nào nằm chung một chỗ (ví dụ biến đổi chạy trong hay ngoài kho); sơ đồ đi kèm luồng chữ có sẵn, đọc được trên điện thoại. Mỗi kiến trúc có một ví dụ là loại hệ thống có thật hay gặp, lấy từ nguồn đã dẫn. Mỗi nhóm mở đầu bằng vài câu hỏi chọn, mỗi câu trả lời chỉ tới kiến trúc nó nghiêng về và mở được kiến trúc ấy; câu hỏi đứng trước chỗ chọn của nhóm. Đầu trang nói các nhóm là những lựa chọn độc lập và ghép với nhau (Lambda là cách xử lý, medallion là cách chia tầng: không loại nhau). Sơ đồ, câu hỏi, ví dụ nằm trong danh mục cùng nguồn, không lưu vào dự án.
+
+## PLAN-044 · Đầu ra của bước chọn được từ đầu ra của bước con
+27/11/2026 · `step-planner/`
+
+Sản phẩm thật của một bước thường đã khai ở một bước con của nó (mô hình ở bước con huấn luyện, báo cáo ở bước con viết báo cáo); khai lại ở bước là chép trùng. Bước chọn được một hay nhiều đầu ra của các bước con của chính nó làm đầu ra của bước. Lựa chọn là tham chiếu, không phải bản sao: tên, đường dẫn, hợp đồng, dấu sản phẩm cuối chỉ nằm ở đầu ra của bước con, sửa ở đó thì bước theo ngay; bỏ chọn ở bước không xoá đầu ra của bước con, còn xoá đầu ra ở bước con thì bước thôi chọn nó. Bước chỉ chọn được đầu ra của bước con đang nằm trong nó, vì đầu ra của bước nói thay cho phần việc của chính bước: bước con dời sang bước khác hay bị xoá thì bước cũ thôi chọn, bước mới không tự chọn; hoàn tác việc dời hay xoá thì lựa chọn trở lại. Nhân bản bước con không làm bản sao thành đầu ra của bước. Đầu ra được chọn vẫn là một đầu ra: nơi khác dùng nó như trước, nơi chọn đầu vào và trạng thái đầu ra (PLAN-025) tính nó một lần, nói rõ nó là đầu ra của bước nào và bước con nào giữ nó. Lựa chọn đi theo khi lưu, khi sửa ở hai tab (gộp theo trường), nhân bản dự án, xuất / nhập Markdown và JSON; file cũ không có lựa chọn nhập như trước.

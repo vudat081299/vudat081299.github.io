@@ -434,11 +434,15 @@
         <p class="docs-note" data-ins-note></p>
         <div class="docs-edit-head">
           <h3 class="dlg-sec-h" id="step-outs-h">Outputs</h3>
-          <button type="button" class="btn small" data-out-add><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg>Add output</button>
+          <div class="head-acts">
+            <button type="button" class="btn small" data-out-pick aria-haspopup="listbox" aria-expanded="false" title="Use outputs of this step's sub-steps as its outputs"><svg class="i" aria-hidden="true"><use href="#i-out"/></svg>From sub-steps<svg class="i" aria-hidden="true"><use href="#i-chev"/></svg></button>
+            <button type="button" class="btn small" data-out-add><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg>Add output</button>
+          </div>
         </div>
         <ul class="out-list" data-outs aria-labelledby="step-outs-h"></ul>
+        <ul class="sub-outs" data-sub-outs aria-label="Outputs taken from sub-steps"></ul>
         <p class="docs-note" data-outs-note></p>
-        <input type="hidden" name="ins"><input type="hidden" name="outs">
+        <input type="hidden" name="ins"><input type="hidden" name="outs"><input type="hidden" name="subOuts">
       </section>
       <section class="docs-edit" id="step-docs" aria-labelledby="step-docs-h">
         <div class="docs-edit-head">

@@ -12,7 +12,8 @@
    Xuất: không (chạy khi nạp).
    Dùng: ui/dropdown.js, ui/state.js, ui/toast.js, ui/board.js, ui/clamp.js, ui/log.js, ui/dialogs.js, ui/start.js, ui/projects.js,
      ui/toolbar.js, ui/actions.js, ui/sub-dialog.js, ui/step-dialog.js, ui/docs.js, ui/md-dialog.js, ui/revisit.js,
-     ui/filter.js, ui/export.js, ui/import.js, ui/move.js, ui/design.js, ui/arch-diagram.js, ui/hand.js, ui/render.js. */
+     ui/filter.js, ui/export.js, ui/import.js, ui/move.js, ui/design.js, ui/arch-diagram.js, ui/hand.js, ui/sub-outs.js,
+     ui/render.js. */
 import { initDropdown } from './ui/dropdown.js';
 import { initState, loadData } from './ui/state.js';
 import { initToast } from './ui/toast.js';
@@ -36,6 +37,7 @@ import { initMove } from './ui/move.js';
 import { initDesign } from './ui/design.js';
 import { initArchDiagram } from './ui/arch-diagram.js';
 import { initHand } from './ui/hand.js';
+import { initSubOuts } from './ui/sub-outs.js';
 import { render } from './ui/render.js';
 
 /* ── Khởi động ── */
@@ -69,4 +71,5 @@ initMove();
 initDesign();
 initArchDiagram();
 initHand();
+initSubOuts();
 boot();

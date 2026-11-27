@@ -23,7 +23,7 @@
 | `js/ui/store.js`, `js/ui/state.js`, `js/ui/dom.js`, `js/ui/toast.js`, `js/ui/dialogs.js` | `localStorage` (dữ liệu, `stepPlanner.hintOff`, `stepPlanner.compact`, `hub-theme`), `sessionStorage` (dự án của tab), mọi truy cập bọc try/catch; `state`, `curId`, `templates`, `ui`, `persist`, `commit`, `refocus`; `$`, `h()`, `icon()`, `withLinks()`, `field()`, `fmtDate()`; toast có Hoàn tác; mở / đóng hộp, `ask` (`#dlg-ask`), `mergeSaved` |
 | `js/ui/render.js`, `js/ui/board.js`, `js/ui/step-row.js`, `js/ui/clamp.js` | vẽ cả trang (`render`); bảng theo hàng (`renderBoard`: khoá mỗi hàng, chỉ hàng đổi dựng lại), số đứng yên; một hàng (`stepRow`); chữ dài bị cắt, "Show more" |
 | `js/ui/actions.js`, `js/ui/move.js`, `js/ui/drag.js`, `js/ui/dropdown.js` | bấm, phím trên bảng, danh sách trạng thái, nhân bản, xoá; dời, toast "Moved", tô; kéo thả bằng pointer events (bóng, "Drop here", FLIP, tự cuộn, Esc; mỗi khung hình một lượt); danh sách chọn tự dựng (`enhanceSelect`, `openList`) |
-| `js/ui/sub-dialog.js`, `js/ui/step-dialog.js`, `js/ui/docs.js`, `js/ui/revisit.js`, `js/ui/hand.js` | hộp sửa bước con, bước; tài liệu (`#dlg-doc`); Reopen (`#dlg-revisit`); bàn giao: chip In / Out, hai chấm (`ioDots`), mũi tên, `#dlg-hand`, Inputs / Outputs, `#dlg-pick` |
+| `js/ui/sub-dialog.js`, `js/ui/step-dialog.js`, `js/ui/docs.js`, `js/ui/revisit.js`, `js/ui/hand.js`, `js/ui/sub-outs.js` | hộp sửa bước con, bước; tài liệu (`#dlg-doc`); Reopen (`#dlg-revisit`); bàn giao: chip In / Out, hai chấm (`ioDots`), mũi tên, `#dlg-hand`, Inputs / Outputs, `#dlg-pick`; đầu ra bước chọn từ bước con (hộp bước) |
 | `js/ui/projects.js`, `js/ui/start.js`, `js/ui/toolbar.js`, `js/ui/filter.js`, `js/ui/log.js`, `js/ui/export.js`, `js/ui/import.js` | dự án (`#dlg-ws`); màn đầu; mẹo, Compact, ghi chú dự án, theme; tìm, lọc, "Next waits on"; nhật ký; xuất, nhắc sao lưu; nhập |
 
 - Ba lớp tách nhau: giao diện (`js/ui/`, `css/`), logic (`js/core/`: dữ liệu vào, dữ liệu ra; không DOM, `window`, bộ nhớ trình duyệt, lớp CSS; chỉ import `js/core/`; `lint.py` kiểm), luật / cấu hình (`data/*.json`, `css/tokens.css`, hằng đầu module).
@@ -37,7 +37,7 @@
   khoá cũ (`OLD_KEYS`) đọc khi khoá mới chưa có rồi ghi sang khoá mới. Trường mới có mặc định thì không đổi khoá.
 - Workspace `{id, name, templateId, createdAt, updatedAt, notes, steps[], log[], design}`.
 - Log `{id, date, decision, why, stepId}`; `stepId`: id một bước hoặc rỗng; bước không còn thì rỗng.
-- Step `{id, title, goal, doneWhen, notes, revisit: null | {reason, date, round}, round, docs[], outs[], ins[], subs[]}`.
+- Step `{id, title, goal, doneWhen, notes, revisit: null | {reason, date, round}, round, docs[], outs[], ins[], subOuts[], subs[]}`.
   `round`: vòng gần nhất (1 = chưa mở lại); đang mở lại thì `round` = `revisit.round` ≥ 2.
 - Sub `{id, title, status, reason, due, doneAt, doneWhen, notes, docs[], outs[], ins[], par, redo, sd?}`.
 - `status` ∈ `todo doing pending blocked done skip cancel`. `reason` (nhiều dòng) chỉ giữ khi `pending`, `blocked`, `cancel`.
@@ -53,7 +53,7 @@
   (`normDesign`). Khâu `skip` vẫn giữ `pick`, `own` (ẩn, bỏ qua ở mọi chỗ); bỏ `skip` là chúng về lại. `arch` không giữ kiến trúc mang lối (đó là `path`).
 - Mọi dữ liệu đi qua `normSub` / `normStep` / `normWorkspace`: chuỗi một dòng gộp khoảng trắng, phần tử sai kiểu bị bỏ,
   ngày phải có thật (`parseDate`). Trường lạ (kể cả `owner`, `people`, `me` cũ) bị bỏ, không lỗi; `cancelReason` cũ đọc thành `reason`.
-- Nhân bản dự án, nhập: id mới cho mọi thứ, đầu vào và quyết định trỏ theo (`freshCopy`). Nhân bản bước con: đầu ra id mới, giữ đầu vào.
+- Nhân bản dự án, nhập: id mới cho mọi thứ, đầu vào, `subOuts`, quyết định trỏ theo (`freshCopy`). Nhân bản bước con: đầu ra id mới, giữ đầu vào; bước không chọn bản sao.
 - Hai mốc sao lưu chỉ ở máy này, không xuất. Dự án đang mở của tab ở `sessionStorage['stepPlanner.tab']`. Bộ nhớ bị chặn: bộ nhớ tạm + banner.
   Hỏng: chép sang `stepPlanner.v2.corrupt`, bắt đầu trống. Lúc mở gọi `navigator.storage.persist()` (Safari xoá dữ liệu script ghi sau 7 ngày không mở).
 
@@ -85,8 +85,7 @@
 - Reopen: đầu ra của bước, của bước con gửi lại đang được nơi khác dùng thì hộp nêu "Also check: …", dòng ấy vào Why của nhật ký.
 - Băng Reopened đếm "k of n redo tasks left"; xong hết thì "Close iteration" là nút chính. Đóng vòng bỏ dấu Redo. Mỗi thao tác một Hoàn tác.
 - Xoá bước con, quyết định, tài liệu: một bấm. Xoá bước còn bước con, xoá dự án (không hoàn tác): hỏi lại. Sau khi xoá, focus vào
-  Hoàn tác của toast; Ctrl/Cmd + Z hoàn tác khi không gõ chữ, không có hộp mở, và không bấm nút toast khác Hoàn tác.
-- Hoàn tác tìm lại dự án và bước theo id (tab khác có thể đã thay `state`).
+  Hoàn tác của toast; Ctrl/Cmd + Z hoàn tác khi không gõ chữ, không có hộp mở, và không bấm nút toast khác Hoàn tác. Hoàn tác tìm lại dự án, bước theo id.
 - Hộp sửa: Enter ở tên lưu; Esc, ×, Close, Duplicate khi chữ đổi thì hỏi lại. Nút đóng ghi "Close", không "Cancel". Đóng: focus về chỗ mở.
 - Lưu hộp sửa (bước con, bước, quyết định): chỉ ghi trường đã đổi so với lúc mở (`EDIT_FIELDS`, `mergeEdit`) lên bản mới nhất. Trường mới của hộp sửa phải thêm vào `EDIT_FIELDS`.
 - Cùng trường bị tab khác đổi khác: `#dlg-ask` liệt kê, "Keep mine" / "Keep the other tab's"; Close thì hộp sửa vẫn mở.
@@ -106,7 +105,9 @@
 
 - Đầu ra khai ở bước / bước con tạo ra nó; nơi dùng chọn "Use existing output". Một đầu ra nhiều nơi dùng; liên kết theo id.
 - Bước không chọn được đầu ra của chính nó và các bước con của nó; có sẵn (dời bước con vào) thì không tính, hộp sửa ghi "inside this step" để gỡ. Inputs / Outputs lưu cùng Save.
-- Thẻ bước con không liệt kê đầu vào, đầu ra; xem và sửa trong hộp sửa. Bước có chip "In n" (mọi đầu vào, kể cả treo, mất nguồn), "Out n".
+- Thẻ bước con không liệt kê đầu vào, đầu ra; xem và sửa trong hộp sửa. Bước có chip "In n" (mọi đầu vào, kể cả treo, mất nguồn), "Out n" (cả đầu ra chọn từ bước con).
+- Đầu ra bước chọn từ bước con (`subOuts`, PLAN-044): tham chiếu, chỉ trỏ vào bước con của chính bước (`normStep`); `commit` bỏ cái bước con đã rời hay đã xoá
+  (`pruneSubOuts`), Hoàn tác xoá, dời gắn lại (`insBackup`, `subOutsBackup`); trạng thái, hộp chọn đầu vào tính nó một lần.
 - Thẻ và đầu bước hiện trạng thái đầu vào, đầu ra (`ioStatus`, PLAN-025): ổn, lỗi, không có; không có cả hai thì không hiện.
   Đầu vào lỗi: treo hoặc trỏ tới đầu ra không còn. Bước gộp đầu vào của bước con: có đầu vào khi nó hay một bước con nhận từ
   ngoài bước; lỗi khi một đầu vào nào lỗi, kể cả nhận trong bước. Đầu ra lỗi: không có nơi nhận đang nối (chỉ nơi nhận treo cũng tính;
@@ -114,9 +115,8 @@
   xứng với đầu vào: lỗi khi một đầu ra nào lỗi, chữ "why" ghi tên bước con giữ nó.
 - Hàng j nhận từ hàng trước nó (`handoffs().rows`): mũi tên trên hàng j. Ô k + 1 nhận từ ô trước nó cùng hàng (`gaps`): một ô
   mũi tên trước ô k + 1. Nút giữa mũi tên ghi tên đầu ra; bấm thì nêu từng cặp. Chảy ngược hay cùng ô: chỉ trong hộp sửa.
-- Danh sách nêu đường dẫn, hợp đồng, bên giao / nơi dùng, mỗi bên nhảy tới được.
-- Chọn dòng trong danh sách cặp: tô hai bên, focus bên nhận, không cuộn; bên nào ngoài tầm nhìn (trang, hàng thẻ) thì toast
-  nói hướng, nút "Show" mới cuộn tới. Nút một bên vẫn bỏ lọc và cuộn tới.
+- Danh sách nêu đường dẫn, hợp đồng, bên giao / nơi dùng, mỗi bên nhảy tới được. Chọn dòng trong danh sách cặp: tô hai bên, focus bên nhận,
+  không cuộn; bên nào ngoài tầm nhìn (trang, hàng thẻ) thì toast nói hướng, nút "Show" mới cuộn tới. Nút một bên vẫn bỏ lọc và cuộn tới.
 - Treo (`handoffs().held`): bên nhận đứng trước bên giao sau khi sắp xếp, hay cùng ô song song với nó (`parKeys`; chữ ghi "runs in parallel"). Giữ nguyên `ins`, không mũi tên; danh sách ghi "on hold";
   toast dời, toast Lưu của hộp sửa báo cái vừa treo. Dời về đúng thứ tự là nối lại, không cần làm gì.
 - Hộp sửa tính "on hold" theo ô Bước / Vị trí đang chọn, chưa Lưu (`heldInfoAt`, `handoffsAt`); hộp chọn đầu ra ghi đầu ra đứng sau hay cùng ô.
