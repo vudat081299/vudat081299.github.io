@@ -1,9 +1,10 @@
 // @ts-check
 /* Nhật ký quyết định (PLAN-005): dòng thời gian theo tháng, mới nhất trước; ô ghi gập; bấm mục là sửa (#dlg-log, gộp khi
-   tab khác đã ghi); chip bước nhảy tới bước; xoá có Hoàn tác; nhãn "Iteration N" của bước đã đóng vòng.
+   tab khác đã ghi); chip bước nhảy tới bước; xoá có Hoàn tác; nhãn "Iteration N" của bước đã đóng vòng; dòng tự ghi (Reopen, kiến trúc chọn).
    Xuất: lastReopened, iterTag, renderLog, initLog.
-   Dùng: core/io.js, core/model.js, ui/board.js, ui/dialogs.js, ui/dom.js, ui/filter.js, ui/move.js, ui/projects.js,
+   Dùng: core/design.js, core/io.js, core/model.js, ui/board.js, ui/dialogs.js, ui/dom.js, ui/filter.js, ui/move.js, ui/projects.js,
      ui/render.js, ui/state.js, ui/toast.js. */
+import { ARCH_LOG } from '../core/design.js';
 import { plural } from '../core/io.js';
 import { EDIT_FIELDS, normLog, pick, today } from '../core/model.js';
 import { labelsOf } from './board.js';
@@ -68,14 +69,17 @@ export function renderLog(ws, opt = {}) {
   }
   const item = (/** @type {any} */ l) => {
     const step = stepOf(ws, l.stepId);
-    const auto = AUTO_LOG.test(l.decision);
+    const reopen = AUTO_LOG.test(l.decision);
+    /* Kiến trúc chọn ở System design (PLAN-042): dòng tự ghi, đi theo lựa chọn. */
+    const arch = !reopen && l.decision.startsWith(ARCH_LOG);
+    const auto = reopen || arch;
     const open = logOpen.has(l.id);
     return h('li', { class: `log-item${auto ? ' auto' : ''}${open ? ' open' : ''}`, 'data-log': l.id },
-      h('span', { class: 'log-dot', 'aria-hidden': 'true' }, auto && icon('redo')),
+      h('span', { class: 'log-dot', 'aria-hidden': 'true' }, reopen ? icon('redo') : arch && icon('flow')),
       h('div', { class: 'log-body' },
         h('p', { class: 'log-meta' },
           h('time', { class: 'log-date', datetime: l.date }, `${+l.date.slice(8, 10)} ${MONTHS[+l.date.slice(5, 7) - 1]}`),
-          auto && h('span', { class: 'log-auto' }, 'Auto-logged'),
+          auto && h('span', { class: 'log-auto', title: arch ? 'Follows your choice in System design → Architecture' : null }, arch ? 'From System design' : 'Auto-logged'),
           step && h('button', { type: 'button', class: 'log-step', 'data-act': 'goto-step', title: 'Go to this step on the board' },
             labels.has(step.id) && h('span', { class: 'log-step-n' }, labels.get(step.id)), h('span', { class: 'log-step-t' }, step.title))),
         h('h4', { class: 'log-title' }, h('button', { type: 'button', class: 'link log-decision', 'data-act': 'edit-log', title: 'Edit decision' }, l.decision)),

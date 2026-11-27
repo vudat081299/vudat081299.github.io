@@ -8,7 +8,7 @@
    của lựa chọn ấy (PLAN-042).
    Xuất: OWN_MAX, EDGE_MAX, VIA, normEdge, normDesign, emptyDesign, presetDesign, isPreset, isPresetStage, pathOf, effProfile,
      stageState, fitOf, rankOptions, notNeededBy, stageLists, applyPath, condTerm, archAdvice, archChosen, archState, archMissing,
-     warnings, decidedCount, pickNames, catalogErrors.
+     warnings, decidedCount, pickNames, ARCH_LOG, archLogFamily, syncArchLog, catalogErrors.
    Dùng: không. */
 
 const ID = /^[a-z0-9][a-z0-9-]{0,39}$/;
@@ -448,6 +448,55 @@ export function pickNames(stage, st) {
   const names = st.pick.map((/** @type {string} */ id) => stage.options.find((/** @type {any} */ o) => o.id === id)?.name).filter(Boolean);
   if (st.own) names.push(st.own);
   return names;
+}
+
+/* ── Nhật ký quyết định của kiến trúc (PLAN-005, PLAN-042): mỗi nhóm có kiến trúc người dùng chọn (cả nhóm app chọn qua lối)
+ * một dòng tự ghi `Architecture · <tên nhóm>: <tên kiến trúc>`, lý do là `archWhy` của nhóm. Nhận ra dòng ấy theo chữ (như dòng
+ * "Reopened" tự ghi), nên xuất / nhập Markdown, JSON không cần trường mới. ── */
+export const ARCH_LOG = 'Architecture · ';
+
+/** Nhóm kiến trúc của một dòng nhật ký tự ghi ('' nếu không phải). @param {any} cat @param {string} decision */
+export function archLogFamily(cat, decision) {
+  if (typeof decision !== 'string' || !decision.startsWith(ARCH_LOG)) return '';
+  const f = (Array.isArray(cat?.architectures) ? cat.architectures : [])
+    .find((/** @type {any} */ x) => decision.startsWith(`${ARCH_LOG}${x.label}: `));
+  return f ? f.id : '';
+}
+
+/**
+ * Nhật ký sau khi đối chiếu với kiến trúc đang chọn: nhóm đã chọn mà chưa có dòng thì thêm (ngày `day`, không gắn bước); có
+ * thì sửa đúng dòng ấy — đổi kiến trúc thì ngày là `day`, chỉ đổi lý do thì giữ ngày; nhóm bỏ chọn thì xoá dòng của nó; dòng
+ * trùng nhóm chỉ giữ dòng đầu. Dòng khác giữ nguyên, đúng thứ tự. Trả mảng mới; dòng mới chưa có id (người gọi chuẩn hoá).
+ * @param {any} cat @param {any} design @param {any[]} log @param {string} day
+ * @returns {{log: any[], changed: boolean}}
+ */
+export function syncArchLog(cat, design, log, day) {
+  const want = new Map();
+  for (const a of archState(cat, design)) {
+    if (!a.chosen) continue;
+    const f = cat.architectures.find((/** @type {any} */ x) => x.id === a.family);
+    const e = f.entries.find((/** @type {any} */ x) => x.id === a.chosen);
+    want.set(a.family, { decision: `${ARCH_LOG}${f.label}: ${e.name}`, why: a.reason });
+  }
+  const seen = new Set();
+  let changed = false;
+  const out = [];
+  for (const l of Array.isArray(log) ? log : []) {
+    const fam = archLogFamily(cat, l.decision);
+    if (!fam) { out.push(l); continue; }
+    const w = want.get(fam);
+    if (!w || seen.has(fam)) { changed = true; continue; }
+    seen.add(fam);
+    if (l.decision === w.decision && l.why === w.why) { out.push(l); continue; }
+    changed = true;
+    out.push({ ...l, date: l.decision === w.decision ? l.date : day, decision: w.decision, why: w.why });
+  }
+  for (const [fam, w] of want) {
+    if (seen.has(fam)) continue;
+    changed = true;
+    out.push({ date: day, decision: w.decision, why: w.why, stepId: '' });
+  }
+  return { log: out, changed };
 }
 
 /* ── Kiểm danh mục (lint.py kiểm khuôn; hàm này cho test và cho trang báo lỗi rõ) ── */

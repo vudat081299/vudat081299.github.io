@@ -8,9 +8,9 @@ import { fold as foldText } from '../core/board.js';
 import { archCombine, archExplain, archGuide } from './arch-diagram.js';
 import { initDiagramView, attach as attachView, focusFig, resetView } from './diagram-view.js';
 import { PLAN_STEP, applyPlan, bothDecided, diagramNodes, flowEdges, planDiff, snake, viaLabel } from '../core/design-plan.js';
-import { EDGE_MAX, OWN_MAX, VIA, applyPath, archMissing, archState, catalogErrors, decidedCount, effProfile, emptyDesign, isPreset, isPresetStage, normDesign, notNeededBy, pathOf, pickNames, presetDesign, rankOptions, stageLists, stageState, warnings } from '../core/design.js';
+import { EDGE_MAX, OWN_MAX, VIA, applyPath, archMissing, archState, catalogErrors, decidedCount, effProfile, emptyDesign, isPreset, isPresetStage, normDesign, syncArchLog, notNeededBy, pathOf, pickNames, presetDesign, rankOptions, stageLists, stageState, warnings } from '../core/design.js';
 import { plural, slug } from '../core/io.js';
-import { normStep, normSub } from '../core/model.js';
+import { normLog, normStep, normSub, today } from '../core/model.js';
 import { showDlg } from './dialogs.js';
 import { $, h, icon } from './dom.js';
 import { commit, cur, findWs, tplOf } from './state.js';
@@ -62,7 +62,14 @@ function edit(fn) {
   const d = w.design ? w.design : emptyDesign();
   fn(d);
   w.design = normDesign(d, cat);
+  syncLog(w);
   commit();
+}
+
+/** Kiến trúc chọn vào nhật ký quyết định (PLAN-005): một dòng mỗi nhóm, đổi thì sửa, bỏ chọn thì xoá. @param {any} w */
+function syncLog(w) {
+  const r = syncArchLog(cat, w.design, w.log, today());
+  if (r.changed) w.log = r.log.map(normLog);
 }
 
 /** Luật đang báo, trừ luật hồ sơ ↔ công cụ mà kiến trúc người dùng chọn giải thích (chỉ là lời nhắc, PLAN-042). @param {any} d */
@@ -626,6 +633,7 @@ function applyPathNow(id) {
   const prev = {};
   for (const k of ids) prev[k] = before?.stages[k] || null;
   w.design = r.next;
+  syncLog(w);
   commit();
   applied = { wsId: w.id, prev: ids.length ? prev : null, text: ids.length
     ? `Filled ${plural(r.filled.length, 'stage')}; marked ${r.skipped.length} Not needed.` : 'Nothing to fill: every stage is already decided.' };

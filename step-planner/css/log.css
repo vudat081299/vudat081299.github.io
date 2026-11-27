@@ -99,6 +99,8 @@
 /* Chip bước và "Show more": vùng bấm nới tới --hit bằng lớp giả, không đổi bố cục; chip nằm trên. Tên không cần: bấm cả mục là sửa. */
 .log-step { z-index: 1; }
 .log-more { position: relative; }
+/* Vùng bấm của "Show more" lấn xuống mục sau (mỗi mục cô lập lớp vẽ): mục có nút ấy vẽ trên mục sau. */
+.log-item:has(.log-more:not([hidden])) { z-index: 1; }
 .log-step::after, .log-more::after {
   content: ''; position: absolute; left: 0; right: 0; top: 50%; height: max(100%, var(--hit)); transform: translateY(-50%);
 }

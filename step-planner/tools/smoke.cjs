@@ -2385,6 +2385,26 @@ const check = (name, ok, detail = '') => {
         st.checked.storage === 'lakehouse' && st.checked.layers === 'medallion' && st.checked.processing === 'batch-elt' && st.checked.ml === ''
         && !st.info.length && st.preset && /lakehouse có chủ đích/.test(st.why) && st.over <= 2, JSON.stringify(st));
       if (w === 1280) {
+        /* Kiến trúc chọn vào nhật ký quyết định (PLAN-005): mẫu có sẵn ba dòng; đổi kiến trúc sửa đúng dòng ấy, sửa lý do theo
+         * từng phím không sinh dòng mới, bỏ chọn thì xoá. */
+        const logRows = () => ip.$$eval('#log-list .log-item', (li) => li.map((x) => ({ d: x.querySelector('.log-decision').textContent,
+          why: x.querySelector('.log-why')?.textContent || '', tag: x.querySelector('.log-auto')?.textContent || '' })));
+        const arch = (rows) => rows.filter((r) => r.d.startsWith('Architecture · '));
+        const l0 = arch(await logRows());
+        check('mẫu it5425-sports: nhật ký có sẵn một dòng mỗi kiến trúc chọn (Lakehouse kèm lý do, Medallion, Batch ELT), ghi "From System design"',
+          l0.length === 3 && l0.every((r) => r.tag === 'From System design')
+          && /lakehouse có chủ đích/.test(l0.find((r) => r.d === 'Architecture · Where the data lives: Lakehouse')?.why || '')
+          && l0.some((r) => r.d === 'Architecture · How data is processed: Batch ELT'), JSON.stringify(l0));
+        await ip.click('#sd-pane input[data-arch-pick="processing"][value="batch-etl"]', { force: true });
+        await ip.fill('#sd-pane input[data-arch-why="processing"]', 'Biến đổi trước khi nạp');
+        const l1 = arch(await logRows());
+        await ip.click('#sd-pane input[data-arch-pick="processing"][value=""]', { force: true });
+        const l2 = arch(await logRows());
+        check('nhật ký kiến trúc: đổi kiến trúc sửa đúng dòng (lý do gõ từng phím không sinh dòng mới); bỏ chọn thì xoá dòng ấy',
+          l1.length === 3 && l1.some((r) => r.d === 'Architecture · How data is processed: Batch ETL' && r.why === 'Biến đổi trước khi nạp')
+          && !l1.some((r) => /Batch ELT/.test(r.d)) && l2.length === 2 && !l2.some((r) => r.d.includes('How data is processed')),
+        JSON.stringify({ l1, l2 }));
+        await ip.click('#sd-pane input[data-arch-pick="processing"][value="batch-elt"]', { force: true });
         await ip.click('#sd-nav [data-at="0"]');
         await ip.click('#sd-pane [data-apply]');
         const d = (await cur(ip)).design;

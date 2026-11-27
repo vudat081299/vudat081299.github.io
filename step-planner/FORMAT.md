@@ -98,6 +98,7 @@ Warnings:
   định dạng 2, `Outputs`, `Inputs`) thêm `\`.
 - Vòng: bước đang mở lại ghi vòng trong `Reopened:`; bước đã đóng vòng mà `round` > 1 có dòng `Iteration: N` thay chỗ ấy.
   Dòng cũ `Quay lại: YYYY-MM-DD · lý do` (không vòng) đọc là vòng 2.
+- Quyết định tự ghi là quyết định thường, nhận ra theo chữ: `Reopened: tên (iteration N)`, `Architecture · <tên nhóm>: <tên kiến trúc>` (PLAN-042).
 - Quyết định: `Step: N. tên` ngay dưới dòng quyết định. Nhập: bước thứ N nếu đúng tên; không thì bước đầu tiên tên đúng cả
   chuỗi (file cũ `Step: tên`), rồi bước đầu tiên tên đúng phần sau số. So tên bỏ dấu, không phân biệt hoa thường; không
   thấy thì cảnh báo, bỏ link. Dòng thụt đầu `Why: ` mở phần lý do.

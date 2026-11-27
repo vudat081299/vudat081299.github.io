@@ -1,11 +1,12 @@
 // @ts-check
 /* Dự án: tạo từ mẫu, mở, đổi tên, nhân bản, xoá; hộp #dlg-ws hai tab (Open, New project).
    Xuất: afterOpen, createFrom, switchTo, initProjects.
-   Dùng: core/board.js, core/io.js, core/model.js, ui/dialogs.js, ui/dom.js, ui/filter.js, ui/render.js, ui/start.js,
+   Dùng: core/board.js, core/io.js, core/model.js, ui/design.js, ui/dialogs.js, ui/dom.js, ui/filter.js, ui/render.js, ui/start.js,
      ui/state.js, ui/toast.js. */
 import { fold, overall } from '../core/board.js';
 import { plural } from '../core/io.js';
 import { freshCopy, fromTemplate, oneLine, tplGroups, uniqueName } from '../core/model.js';
+import { mdLabels } from './design.js';
 import { ask, showDlg } from './dialogs.js';
 import { $, barFill, fmtDate, h, icon } from './dom.js';
 import { resetFilters } from './filter.js';
@@ -28,7 +29,7 @@ export function afterOpen() {
 }
 export function createFrom(/** @type {string} */ tplId, /** @type {string} */ name = '') {
   const tpl = templates.find((t) => t.id === tplId) || { id: 'blank', name: 'Untitled project', steps: [] };
-  addWorkspace(fromTemplate(tpl, name));
+  addWorkspace(fromTemplate(tpl, name, mdLabels()));
   commit();
   afterOpen();
 }

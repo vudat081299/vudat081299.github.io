@@ -66,7 +66,7 @@ Việc dữ liệu lặp (CRISP-DM quay lại pha trước): khi một bước s
 ## PLAN-005 · Mỗi dự án có nhật ký quyết định
 24/11/2026 · `step-planner/`
 
-Mỗi dự án giữ danh sách quyết định: ngày, quyết định, vì sao, và bước liên quan nếu có; thêm, sửa và xoá được (xoá có Hoàn tác). Quyết định tự ghi khi mở lại một bước gắn với bước ấy. Bước gắn với quyết định đi theo khi xuất / nhập Markdown và JSON; file cũ không có thông tin này vẫn nhập được. Markdown ghi bước gắn kèm số thứ tự của nó, nên hai bước trùng tên vẫn phân biệt được.
+Mỗi dự án giữ danh sách quyết định: ngày, quyết định, vì sao, và bước liên quan nếu có; thêm, sửa và xoá được (xoá có Hoàn tác). Quyết định tự ghi khi mở lại một bước gắn với bước ấy. Kiến trúc chọn ở System design (PLAN-042) cũng tự ghi: mỗi nhóm kiến trúc đã chọn một quyết định, gồm kiến trúc đã chọn và lý do của lựa chọn; đổi kiến trúc hay lý do thì sửa đúng quyết định ấy, không thêm quyết định mới (đổi kiến trúc thì ngày là hôm nay); bỏ chọn thì quyết định ấy bị xoá. Dự án tạo từ mẫu có kiến trúc chọn sẵn mở ra đã có các quyết định ấy. Quyết định tự ghi đi qua xuất / nhập Markdown và JSON như mọi quyết định. Bước gắn với quyết định đi theo khi xuất / nhập Markdown và JSON; file cũ không có thông tin này vẫn nhập được. Markdown ghi bước gắn kèm số thứ tự của nó, nên hai bước trùng tên vẫn phân biệt được.
 
 ## PLAN-006 · Xoá hoàn tác được; sắp xếp lại được; tìm theo chữ
 24/11/2026 · `step-planner/`

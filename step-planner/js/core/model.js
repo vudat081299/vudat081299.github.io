@@ -7,7 +7,7 @@
      multiLine, safeUrl, normDoc, normOut, SD_KEPT, normSub, normStep, normLog, normWorkspace, EDIT_FIELDS, pick,
      mergeEdit, freshCopy, uniqueName, fromTemplate, TPL_GROUPS, tplGroups.
    Dùng: core/design.js, core/handoffs.js. */
-import { normDesign, presetDesign } from './design.js';
+import { normDesign, presetDesign, syncArchLog } from './design.js';
 import { holders } from './handoffs.js';
 
 /* Bảy trạng thái (PLAN-003), theo thứ tự: còn mở (mới, đang làm, chờ, bị chặn), xong, ngoài phạm vi (bỏ qua, huỷ).
@@ -293,8 +293,9 @@ export function uniqueName(name, taken, tag = 'imported') {
 }
 
 /** Dự án mới từ một mẫu của data/templates.json. Đầu ra của mẫu có `key` (duy nhất trong mẫu), đầu vào là danh sách key:
- * key thành id mới; key lạ bị bỏ. @param {any} tpl @param {string} [name] */
-export function fromTemplate(tpl, name) {
+ * key thành id mới; key lạ bị bỏ. `cat`: danh mục System design (có thì kiến trúc chọn sẵn vào nhật ký).
+ * @param {any} tpl @param {string} [name] @param {any} [cat] */
+export function fromTemplate(tpl, name, cat = null) {
   const t = isObj(tpl) ? tpl : {};
   const now = new Date().toISOString();
   /** @type {Map<string, string>} */
@@ -313,8 +314,10 @@ export function fromTemplate(tpl, name) {
     Object.assign(s, { ins: ins(s.insKeys) });
     for (const x of s.subs) Object.assign(x, { ins: ins(x.insKeys) });
   }
-  return normWorkspace({ name: oneLine(name) || t.name || 'Project', templateId: t.id || '', createdAt: now, updatedAt: now, steps,
-    design: presetDesign(t) }); // hồ sơ, lối mẫu đặt sẵn (PLAN-033); chỉ lúc tạo
+  const design = presetDesign(t); // hồ sơ, lối, kiến trúc, khâu mẫu đặt sẵn (PLAN-033); chỉ lúc tạo
+  /* Kiến trúc mẫu chọn sẵn vào nhật ký quyết định như lựa chọn của người dùng (PLAN-005); cần danh mục cho tên nhóm, kiến trúc. */
+  const log = cat && design ? syncArchLog(cat, design, [], today()).log : [];
+  return normWorkspace({ name: oneLine(name) || t.name || 'Project', templateId: t.id || '', createdAt: now, updatedAt: now, steps, design, log });
 }
 
 /* Nhóm mẫu (PLAN-039): mẫu chung (không có `group`) rồi dự án cụ thể chủ trang đang làm (`group: "specific"`). */

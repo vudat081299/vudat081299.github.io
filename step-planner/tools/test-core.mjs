@@ -3,7 +3,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { progress, nextActionIds, projectNextIds, slotsOf, subPlace, placeSub, takeSub, shiftTarget, liveLabels, redoCount, canReopen, nextWaitingOn, inGroup, fold } from '../js/core/board.js';
-import { normDesign, rankOptions, decidedCount, catalogErrors, applyPath, effProfile, warnings, notNeededBy, archAdvice, archState, stageLists, pathOf, fitOf, presetDesign, isPreset, isPresetStage, stageState } from '../js/core/design.js';
+import { normDesign, rankOptions, decidedCount, catalogErrors, applyPath, effProfile, warnings, notNeededBy, archAdvice, archState, stageLists, pathOf, fitOf, presetDesign, isPreset, isPresetStage, stageState, syncArchLog, archLogFamily, ARCH_LOG } from '../js/core/design.js';
 import { readStageLine } from '../js/core/design-md.js';
 import { snake, planTasks, diagramNodes, flowEdges, bothDecided, planDiff, applyPlan, PLAN_STEP } from '../js/core/design-plan.js';
 import { parseImport, toJSON, toBackup, shape, counts, slug } from '../js/core/io.js';
@@ -1822,6 +1822,51 @@ function designSnapshot(cat) {
     eq(tw.design.arch, { storage: 'lakehouse', layers: 'medallion', processing: 'batch-elt' }) && isPreset(tw.design, pre) && /lakehouse có chủ đích/.test(tw.design.archWhy.storage)
     && !isPreset({ ...tw.design, archWhy: {} }, pre)
     && !isPreset({ ...tw.design, arch: { ...tw.design.arch, processing: 'batch-etl' } }, pre) && !isPreset({ ...tw.design, arch: {} }, pre));
+}
+
+{ /* Kiến trúc chọn vào nhật ký quyết định (PLAN-005, PLAN-042): một dòng mỗi nhóm `Architecture · nhóm: kiến trúc`, lý do là
+   * `archWhy`; đổi kiến trúc thì sửa dòng ấy (ngày mới), đổi lý do thì giữ ngày; bỏ chọn thì xoá; dòng khác không đụng. */
+  const cat = JSON.parse(readFileSync(fileURLToPath(new URL('../data/system-design.json', import.meta.url)), 'utf8'));
+  const own = { date: '2026-01-02', decision: 'Dùng PR-AUC', why: 'lệch lớp', stepId: '' };
+  const d1 = normDesign({ arch: { storage: 'lakehouse' }, archWhy: { storage: 'Để học' } }, cat);
+  const r1 = syncArchLog(cat, d1, [own], '2026-03-01');
+  check('nhật ký kiến trúc: chọn một kiến trúc thì thêm đúng một dòng, giữ dòng của người dùng',
+    r1.changed && r1.log.length === 2 && r1.log[0] === own
+    && eq(r1.log[1], { date: '2026-03-01', decision: 'Architecture · Where the data lives: Lakehouse', why: 'Để học', stepId: '' })
+    && archLogFamily(cat, r1.log[1].decision) === 'storage' && archLogFamily(cat, own.decision) === '' && archLogFamily(cat, `${ARCH_LOG}Nope: x`) === '', JSON.stringify(r1.log));
+  const again = syncArchLog(cat, d1, r1.log, '2026-04-01');
+  check('nhật ký kiến trúc: không đổi gì thì không đổi, không ghi trùng', !again.changed && eq(again.log, r1.log));
+  const why2 = syncArchLog(cat, { ...d1, archWhy: { storage: 'Lý do mới' } }, r1.log, '2026-04-01').log[1];
+  const arch2 = syncArchLog(cat, normDesign({ arch: { storage: 'warehouse' }, archWhy: { storage: 'Để học' } }, cat), r1.log, '2026-04-02').log;
+  check('nhật ký kiến trúc: đổi lý do thì sửa lý do, giữ ngày; đổi kiến trúc thì sửa cùng dòng, ngày mới',
+    why2.date === '2026-03-01' && why2.why === 'Lý do mới' && arch2.length === 2
+    && arch2[1].decision === 'Architecture · Where the data lives: Data warehouse' && arch2[1].date === '2026-04-02', JSON.stringify(arch2));
+  const cleared = syncArchLog(cat, normDesign({ profile: { size: 'small' } }, cat), [...r1.log, { ...r1.log[1], id: 'dup' }], '2026-04-03');
+  check('nhật ký kiến trúc: bỏ chọn thì xoá dòng của nhóm ấy (cả dòng trùng); dòng của người dùng còn',
+    cleared.changed && eq(cleared.log, [own]) && eq(syncArchLog(cat, null, [own], '2026-04-03'), { log: [own], changed: false }));
+  const viaPath = syncArchLog(cat, normDesign({ path: 'demo', archWhy: { app: 'Một app là đủ' } }, cat), [], '2026-04-04').log;
+  check('nhật ký kiến trúc: nhóm app chọn qua lối cũng ghi', viaPath.length === 1 && viaPath[0].decision === 'Architecture · How people use the results: Single app (monolith)'
+    && viaPath[0].why === 'Một app là đủ', JSON.stringify(viaPath));
+  /* Tạo từ mẫu có danh mục: kiến trúc mẫu chọn sẵn có sẵn trong nhật ký; không danh mục (test cũ, danh mục chưa nạp): nhật ký trống. */
+  const t = templates.find((x) => x.id === 'it5425-sports');
+  const ws = fromTemplate(t, '', cat);
+  check('nhật ký kiến trúc: dự án mới từ it5425-sports có ba dòng (Lakehouse kèm lý do, Medallion, Batch ELT), có id, không gắn bước',
+    eq(ws.log.map((l) => l.decision), ['Architecture · Where the data lives: Lakehouse', 'Architecture · How tables are layered: Medallion (bronze / silver / gold)',
+      'Architecture · How data is processed: Batch ELT'])
+    && /lakehouse có chủ đích/.test(ws.log[0].why) && ws.log.every((l) => l.id && !l.stepId && !syncArchLog(cat, ws.design, ws.log, '2099-01-01').changed)
+    && !fromTemplate(t).log.length && !fromTemplate(templates.find((x) => x.id === 'crisp-dm'), '', cat).log.length, JSON.stringify(ws.log));
+  check('nhật ký kiến trúc: mọi mẫu có kiến trúc chọn (cả qua lối) có đúng một dòng mỗi nhóm đã chọn',
+    templates.filter((x) => x.design).every((x) => {
+      const w = fromTemplate(x, '', cat);
+      return w.log.length === archState(cat, w.design).filter((a) => a.chosen).length;
+    }));
+  /* Markdown, JSON đi rồi về: dòng tự ghi là quyết định thường, nhận lại theo chữ; đối chiếu sau khi nhập không đổi, không trùng. */
+  const back = fromMarkdown(toMarkdown(ws, cat)).workspace;
+  const backJ = parseImport(toJSON(ws), cat).workspaces[0];
+  check('nhật ký kiến trúc: Markdown, JSON đi rồi về giữ ba dòng; đối chiếu lại không đổi gì',
+    eq(back.log.map((l) => [l.date, l.decision, l.why]), ws.log.map((l) => [l.date, l.decision, l.why]))
+    && !syncArchLog(cat, normDesign(back.design, cat), back.log, '2099-01-01').changed
+    && !syncArchLog(cat, backJ.design, backJ.log, '2099-01-01').changed && backJ.log.length === 3, JSON.stringify(back.log));
 }
 
 if (fails) { console.log(`test-core: ${fails} LỖI`); process.exit(1); }
