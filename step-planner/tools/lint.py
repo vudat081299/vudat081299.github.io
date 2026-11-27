@@ -23,8 +23,12 @@
   4. data/system-design.json (PLAN-016): khuôn hồ sơ, khâu, phương án; id không trùng; `fit` chỉ dùng câu và câu trả lời
      có trong hồ sơ; link https; mỗi câu trả lời đơn lẻ của hồ sơ có ít nhất một phương án hợp ở mọi khâu.
      `architectures`: nhóm kiến trúc {id, label, question, note?, sources?, entries, rules}; kiến trúc {id, name, what, use,
-     avoid, flow, tools, path?, sources}: `tools` trỏ phương án có thật, `path` trỏ lối có thật; luật gợi ý {if, arch, why}
+     avoid, flow, diagram, tools, path?, sources}: `tools` trỏ phương án có thật, `path` trỏ lối có thật; luật gợi ý {if, arch, why}
      dùng cùng khoá điều kiện với `checks`, `arch` là kiến trúc của nhóm ("" = nhóm không cần).
+     `diagram` (sơ đồ luồng): {nodes [{id, label, note?, kind, row?}], edges [{from, to, dashed?}], group? {label, nodes}};
+     ≥ 2 nút, ≥ 1 đường; id không trùng, đường và nhóm trỏ nút có thật; mọi nút nối với nút đầu (bỏ chiều đường); `kind` là một
+     trong DIAGRAM_KINDS; `label` là tên chuẩn tiếng Anh như `flow`, `note` và nhãn nhóm tiếng Việt. Xếp lưới (một tầng mỗi
+     đường, số tầng, số làn, không chồng hộp): test-core, qua core/arch-diagram.js.
      Luật báo {id, title, if, unless?, msg, caveat?}: `caveat: true` = luật nhắc cách dùng, phương án vẫn đúng (Apply path
      không né nó).
   5. Ngôn ngữ (PLAN-028): mọi chữ của mẫu có chữ Việt (trừ chuỗi chỉ là đường dẫn, tên file); mọi chuỗi của
@@ -50,7 +54,8 @@ STAGE_KEYS = {'id', 'title', 'lane', 'question', 'guide', 'multi', 'skipWhen', '
 OPT_KEYS = {'id', 'name', 'kind', 'summary', 'pick', 'avoid', 'cost', 'level', 'fit', 'links', 'setup', 'task'}
 DESIGN_KEYS = {'note', 'paths', 'profile', 'stages', 'checks', 'architectures'}
 FAMILY_KEYS = {'id', 'label', 'question', 'note', 'sources', 'entries', 'rules'}
-ARCH_KEYS = {'id', 'name', 'what', 'use', 'avoid', 'flow', 'tools', 'path', 'sources'}
+ARCH_KEYS = {'id', 'name', 'what', 'use', 'avoid', 'flow', 'diagram', 'tools', 'path', 'sources'}
+DIAGRAM_KINDS = ('src', 'run', 'store', 'use')
 CHECK_KEYS = {'id', 'title', 'if', 'unless', 'msg', 'caveat'}
 PATH_KEYS = {'id', 'label', 'summary', 'flow', 'why', 'switch', 'ask', 'implies', 'stages', 'suggest', 'accept'}
 ID_RE = r'[a-z0-9]+(-[a-z0-9]+)*'
@@ -387,6 +392,7 @@ def check_architectures(data, answers, options):
             else:
                 for x in flow:
                     english(f'{wa}.flow', x)
+            check_diagram(wa, a.get('diagram'))
             tools = a.get('tools')
             if not isinstance(tools, dict) or not tools:
                 err(f'{wa}: tools là object khâu → phương án')
@@ -410,6 +416,55 @@ def check_architectures(data, answers, options):
                 err(f'{wr}: arch "{r["arch"]}" không phải kiến trúc của nhóm')
             need_str(wr, r, 'why')
             check_cond(f'{wr}.if', r['if'], answers, options, paths)
+
+
+def check_diagram(w, d):
+    """Sơ đồ luồng của một kiến trúc: khuôn, id, mọi nút nối vào sơ đồ, tên nút tiếng Anh (ghi chú tiếng Việt: check_design_language)."""
+    w = f'{w}.diagram'
+    if not isinstance(d, dict) or set(d) - {'nodes', 'edges', 'group'} or not isinstance(d.get('nodes'), list) or not isinstance(d.get('edges'), list):
+        err(f'{w}: là {{nodes[], edges[], group?}}')
+        return
+    nodes, edges = d['nodes'], d['edges']
+    if len(nodes) < 2 or not edges:
+        err(f'{w}: sơ đồ rỗng (cần ít nhất hai nút và một đường nối)')
+    ids = []
+    for n in nodes:
+        if not isinstance(n, dict) or set(n) - {'id', 'label', 'note', 'kind', 'row'} or not {'id', 'label', 'kind'} <= set(n):
+            err(f'{w}: nút là {{id, label, note?, kind, row?}} (đang có {n})')
+            continue
+        if not re.fullmatch(ID_RE, str(n['id'])) or n['id'] in ids:
+            err(f'{w}: id nút "{n["id"]}" sai hoặc trùng')
+        ids.append(n['id'])
+        need_str(w, n, 'label')
+        need_str(w, n, 'note', required=False)
+        english(f'{w}.nodes[{n["id"]}].label', n.get('label', ''))
+        if n['kind'] not in DIAGRAM_KINDS:
+            err(f'{w}: nút {n["id"]}: kind là một trong {", ".join(DIAGRAM_KINDS)}')
+        if 'row' in n and (isinstance(n['row'], bool) or not isinstance(n['row'], (int, float)) or n['row'] < 0 or (n['row'] * 2) % 1):
+            err(f'{w}: nút {n["id"]}: row là bội của 0.5, ≥ 0')
+    for e in edges:
+        if not isinstance(e, dict) or set(e) - {'from', 'to', 'dashed'} or not {'from', 'to'} <= set(e) or e.get('dashed', True) is not True:
+            err(f'{w}: đường nối là {{from, to, dashed?: true}} (đang có {e})')
+            continue
+        if e['from'] not in ids or e['to'] not in ids or e['from'] == e['to']:
+            err(f'{w}: đường {e["from"]} > {e["to"]} trỏ nút không có (hay nối vào chính nó)')
+    g = d.get('group')
+    if g is not None:
+        if not isinstance(g, dict) or set(g) != {'label', 'nodes'} or not isinstance(g['nodes'], list) or not g['nodes'] or set(g['nodes']) - set(ids):
+            err(f'{w}: group là {{label, nodes[]}}, nodes trỏ nút có thật')
+        else:
+            need_str(w, g, 'label')
+    if ids:
+        seen, grew = {ids[0]}, True
+        while grew:
+            grew = False
+            for e in edges:
+                if isinstance(e, dict) and (e.get('from') in seen) != (e.get('to') in seen):
+                    seen |= {e.get('from'), e.get('to')}
+                    grew = True
+        lone = [i for i in ids if i not in seen]
+        if lone:
+            err(f'{w}: nút không nối với sơ đồ: {", ".join(lone)}')
 
 
 def check_checks(data, answers, options):
@@ -610,12 +665,13 @@ TPL_TEXT = ('name', 'description', 'output', 'title', 'goal', 'doneWhen', 'notes
 # Nhãn, tên giao diện: tiếng Anh (`english`).
 DESIGN_EN = {'stages[].title', 'stages[].options[].name', 'stages[].options[].kind', 'checks[].title', 'paths[].label',
              'profile[].label', 'profile[].choices[].label', 'architectures[].label', 'architectures[].entries[].name',
-             'architectures[].entries[].flow[]'}
+             'architectures[].entries[].flow[]', 'architectures[].entries[].diagram.nodes[].label'}
 # Tên trang ngoài (link, nguồn): giữ đúng tên trang ấy ghi, nên không đòi tiếng Việt; không có chữ Việt trừ trang của repo hay .vn.
 DESIGN_TITLES = {'stages[].options[].links[].title', 'architectures[].sources[].title', 'architectures[].entries[].sources[].title'}
 # Id, giá trị liệt kê, URL, lệnh: không xét ngôn ngữ.
 DESIGN_CODE = re.compile(r'(^|\.)(id|arch|path|lane|cost|url)$|\.setup\[\]$|^paths\[\]\.ask\[\]$'
-                         r'|\.(if|unless|when|fit|implies|suggest|tools)\.\*(\[\])?$|^paths\[\]\.stages\.\*$')
+                         r'|\.(if|unless|when|fit|implies|suggest|tools)\.\*(\[\])?$|^paths\[\]\.stages\.\*$'
+                         r'|\.diagram\.(nodes\[\]\.kind|edges\[\]\.(from|to)|group\.nodes\[\])$')
 JS_VI_MARK = 'lang: vi'  # chú thích trên dòng mở chuỗi: chuỗi tiếng Việt có chủ ý (nội dung sinh ra, nhãn nhập định dạng cũ)
 
 
@@ -892,6 +948,13 @@ def self_test():
                                                                                 "export const __g = (x) => `${x} một ${x} hai ở`; // lang: vi — thử"), None),
         ('design: trường mới chưa khai, chữ tiếng Anh', design(lambda d: d['profile'][0].update(tip='Pick the closest one')), 'phải tiếng Việt'),
         ('design: lời giải thích của luật gợi ý tiếng Anh', design(lambda d: d['architectures'][0]['rules'][0].update(why='Use it.')), 'phải tiếng Việt'),
+        ('design: sơ đồ — đường nối trỏ nút không có', design(lambda d: d['architectures'][0]['entries'][0]['diagram']['edges'].append({'from': 'raw', 'to': 'khong-co'})), 'trỏ nút không có'),
+        ('design: sơ đồ — nút không nối vào sơ đồ', design(lambda d: d['architectures'][0]['entries'][0]['diagram']['nodes'].append({'id': 'le', 'label': 'Alone', 'kind': 'run'})), 'nút không nối với sơ đồ: le'),
+        ('design: sơ đồ rỗng', design(lambda d: d['architectures'][0]['entries'][0].update(diagram={'nodes': [], 'edges': []})), 'sơ đồ rỗng'),
+        ('design: kiến trúc thiếu sơ đồ', design(lambda d: d['architectures'][0]['entries'][0].pop('diagram')), 'khoá phải là'),
+        ('design: tên nút của sơ đồ tiếng Việt', design(lambda d: d['architectures'][0]['entries'][0]['diagram']['nodes'][0].update(label='Thư mục')), 'phải tiếng Anh'),
+        ('design: ghi chú nút của sơ đồ tiếng Anh', design(lambda d: d['architectures'][0]['entries'][0]['diagram']['nodes'][0].update(note='raw files')), 'phải tiếng Việt'),
+        ('design: sơ đồ — kind lạ', design(lambda d: d['architectures'][0]['entries'][0]['diagram']['nodes'][0].update(kind='db')), 'kind là một trong'),
         ('design: tên trang ngoài bị dịch', design(lambda d: d['stages'][0]['options'][0]['links'][0].update(title='Trang chủ')), 'không dịch'),
         ('design: nhãn giao diện tiếng Việt', design(lambda d: d['stages'][0].update(title='Nguồn dữ liệu')), 'phải tiếng Anh'),
         ('mẫu: tên bước con tiếng Anh', tpl, 'nội dung mẫu phải tiếng Việt'),

@@ -310,3 +310,31 @@ li.sd-warnbox { display: block; }
   .sd-opt > p, .sd-det { margin-left: 0; }
   .sd-pos { display: none; }
 }
+
+/* ── Sơ đồ luồng của một kiến trúc (js/ui/arch-diagram.js; cỡ xếp hộp ở token --ad-*): hộp có vạch màu theo loại (nguồn, xử lý,
+   dữ liệu lưu, đầu ra) như làn của sơ đồ System design, mũi tên chữ V hở, vùng nhóm nền nhạt viền đứt; chú giải bên dưới, luồng
+   chữ làm chú thích của hình ── */
+.ad-fig { display: flex; flex-direction: column; gap: var(--s2); min-width: 0; margin: var(--s2) 0 0; }
+.ad-canvas { min-width: 0; max-width: var(--ad-max); }
+.ad-svg { display: block; max-width: 100%; height: auto; }
+.ad-box { fill: var(--surface); stroke: var(--line); stroke-width: var(--line-w); }
+.ad-bar { fill: var(--ink-4); }
+.ad-node.kind-run .ad-bar { fill: var(--violet); }
+.ad-node.kind-store .ad-bar { fill: var(--blue); }
+.ad-node.kind-use .ad-bar { fill: var(--green); }
+.ad-node.kind-use .ad-box { fill: var(--accent-soft); stroke: var(--accent-line); }
+.ad-label { font: 600 var(--fs-xs)/1 var(--sans); fill: var(--ink); }
+.ad-note { font: 400 var(--fs-xs)/1 var(--sans); fill: var(--ink-3); }
+.ad-edge { fill: none; stroke: var(--ink-4); stroke-width: var(--mark-w); stroke-linejoin: round; }
+.ad-edge.is-dashed { stroke-dasharray: var(--sd-dash); }
+.ad-arrow { fill: none; stroke: var(--ink-4); stroke-width: var(--mark-w); stroke-linecap: round; stroke-linejoin: round; }
+.ad-group { fill: var(--chip); stroke: var(--ink-4); stroke-width: var(--line-w); stroke-dasharray: var(--sd-dash); }
+.ad-legend { display: flex; flex-wrap: wrap; gap: var(--s1) var(--s4); list-style: none; font-size: var(--fs-xs); line-height: var(--lh); color: var(--ink-3); }
+.ad-legend li { display: inline-flex; align-items: flex-start; gap: var(--s2); min-width: 0; }
+.ad-legend li::before { content: ''; flex: none; width: var(--s3); height: var(--s3); margin-top: calc((1lh - var(--s3)) / 2); border-radius: var(--r-xs); background: var(--ink-4); }
+.ad-legend .kind-run::before { background: var(--violet); }
+.ad-legend .kind-store::before { background: var(--blue); }
+.ad-legend .kind-use::before { background: var(--green); }
+.ad-legend .is-dashed::before { height: 0; margin-top: calc(1lh / 2); border-top: var(--mark-w) dashed var(--ink-4); border-radius: 0; background: none; }
+.ad-legend .is-group::before { width: var(--s4); background: var(--chip); border: var(--line-w) dashed var(--ink-4); }
+.ad-fig figcaption .sd-chain { margin-top: 0; }

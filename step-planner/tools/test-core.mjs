@@ -1670,5 +1670,60 @@ function designSnapshot(cat) {
     JSON.stringify({ lo, hi }));
 }
 
+{ // Sơ đồ luồng của kiến trúc (core/arch-diagram.js): mọi kiến trúc có sơ đồ xếp được; ở khung máy tính (666px) ngang, ở 390px
+  // (khung 304px) dọc; hộp không chồng nhau, nằm trong khung; đường nối bắt đầu ở mép hộp nguồn, mũi tên dừng trước mép hộp đích.
+  const A = await import('../js/core/arch-diagram.js');
+  const cat = JSON.parse(readFileSync(fileURLToPath(new URL('../data/system-design.json', import.meta.url)), 'utf8'));
+  const dim = { flow: 28, cross: 20, minBox: 104, maxBox: 168, pad: 8, bar: 3, lh: 16, gap: 2, gpad: 8, tip: 3 };
+  const measure = (s) => s.length * 6.6;  // ~ font 12px của trang, rộng tay
+  const bad = [];
+  for (const f of cat.architectures) {
+    for (const e of f.entries) {
+      const errs = A.diagramErrors(e.diagram);
+      if (errs.length) { bad.push(`${e.id}: ${errs.join('; ')}`); continue; }
+      for (const [W, dir] of [[666, 'h'], [304, 'v']]) {
+        const L = A.layoutDiagram(e.diagram, W, dim, measure);
+        if (!L || L.dir !== dir) { bad.push(`${e.id} @${W}: hướng ${L?.dir}, cần ${dir}`); continue; }
+        if (L.width > W + 0.5) bad.push(`${e.id} @${W}: rộng ${L.width}`);
+        const over = L.boxes.filter((a) => L.boxes.some((b) => a !== b && a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h));
+        if (over.length) bad.push(`${e.id} @${W}: hộp chồng ${over.map((b) => b.id).join(', ')}`);
+        if (L.boxes.some((b) => b.x < 0 || b.y < 0 || b.x + b.w > L.width || b.y + b.h > L.height)) bad.push(`${e.id} @${W}: hộp ra ngoài khung`);
+        if (L.boxes.some((b) => b.label.some((t) => measure(t) > b.w - 2 * dim.pad - dim.bar + 0.5))) bad.push(`${e.id} @${W}: chữ tràn hộp`);
+        const at = new Map(L.boxes.map((b) => [b.id, b]));
+        for (const x of L.edges) {
+          const a = at.get(x.from), b = at.get(x.to);
+          const nums = x.d.match(/-?[\d.]+/g).map(Number);
+          const [sx, sy] = nums;
+          const start = dir === 'h' ? Math.abs(sx - (a.x + a.w)) < 0.01 && Math.abs(sy - (a.y + a.h / 2)) < 0.01 : Math.abs(sx - (a.x + a.w / 2)) < 0.01 && Math.abs(sy - (a.y + a.h)) < 0.01;
+          const end = nums.at(-1);
+          const stop = dir === 'h' ? Math.abs(end - (b.x - dim.tip)) < 0.01 : Math.abs(end - (b.y - dim.tip)) < 0.01;
+          if (!start || !stop) bad.push(`${e.id} @${W}: đường ${x.from} > ${x.to} không chạm mép hộp (${x.d})`);
+        }
+        if (L.group) {
+          const inside = L.boxes.filter((b) => !e.diagram.group.nodes.includes(b.id) && b.x < L.group.x + L.group.w && L.group.x < b.x + b.w && b.y < L.group.y + L.group.h && L.group.y < b.y + b.h);
+          if (inside.length) bad.push(`${e.id} @${W}: hộp ngoài nhóm đè khung nhóm: ${inside.map((b) => b.id).join(', ')}`);
+        }
+      }
+    }
+  }
+  check('sơ đồ kiến trúc: mọi kiến trúc có sơ đồ, xếp được ở 666px (ngang) và 304px (dọc), không chồng, không tràn, đường chạm mép hộp', !bad.length, bad.join(' | '));
+  const n = (id, kind = 'run', row) => ({ id, label: id, kind, ...(row == null ? {} : { row }) });
+  const err = (d) => A.diagramErrors(d).join('; ');
+  check('sơ đồ kiến trúc: diagramErrors bắt đường đi qua hai tầng, vòng, nút chồng, nút lạ trong khung nhóm, nút rời, quá số làn',
+    /spans 2 layers/.test(err({ nodes: [n('a'), n('b'), n('c')], edges: [{ from: 'a', to: 'b' }, { from: 'b', to: 'c' }, { from: 'a', to: 'c' }] }))
+    && /cycle/.test(err({ nodes: [n('a'), n('b')], edges: [{ from: 'a', to: 'b' }, { from: 'b', to: 'a' }] }))
+    && /overlap/.test(err({ nodes: [n('a'), n('b', 'run', 0.5), n('c', 'run', 0)], edges: [{ from: 'a', to: 'b' }, { from: 'a', to: 'c' }] }))
+    && /inside its box/.test(err({ nodes: [n('a', 'src', 0), n('b', 'run', 0), n('x', 'src', 1), n('c', 'run', 2)], edges: [{ from: 'a', to: 'b' }, { from: 'x', to: 'b' }, { from: 'c', to: 'b' }], group: { label: 'g', nodes: ['a', 'c'] } }))
+    && /not connected/.test(err({ nodes: [n('a'), n('b'), n('c')], edges: [{ from: 'a', to: 'b' }] }))
+    && /lanes/.test(err({ nodes: [n('a'), n('b'), n('c'), n('d'), n('e')], edges: ['b', 'c', 'd', 'e'].map((x) => ({ from: 'a', to: x })) }))
+    && /kind/.test(err({ nodes: [n('a', 'db'), n('b')], edges: [{ from: 'a', to: 'b' }] })),
+  err({ nodes: [n('a'), n('b'), n('c')], edges: [{ from: 'a', to: 'b' }, { from: 'b', to: 'c' }, { from: 'a', to: 'c' }] }));
+  const g = A.diagramGrid({ nodes: [n('cat', 'store'), n('s', 'src'), n('a'), n('b')], edges: [{ from: 's', to: 'a' }, { from: 'a', to: 'b' }, { from: 'cat', to: 'b' }] });
+  check('sơ đồ kiến trúc: nút gốc đứng sát nút sau nó (catalog cùng tầng với nút trước engine), làn theo thứ tự khai trong tầng',
+    eq(g.nodes.map((x) => [x.id, x.layer, x.row]), [['cat', 1, 0], ['s', 0, 0], ['a', 1, 1], ['b', 2, 0]]), JSON.stringify(g.nodes.map((x) => [x.id, x.layer, x.row])));
+  check('sơ đồ kiến trúc: wrapText ngắt theo từ, từ dài hơn dòng thì cắt theo ký tự',
+    eq(A.wrapText('Spark, Trino, DuckDB', 60, (s) => s.length * 6), ['Spark,', 'Trino,', 'DuckDB']) && eq(A.wrapText('abcdefghij', 30, (s) => s.length * 6), ['abcde', 'fghij']));
+}
+
 if (fails) { console.log(`test-core: ${fails} LỖI`); process.exit(1); }
 console.log('test-core: OK');

@@ -2,9 +2,10 @@
 /* System design (PLAN-016): mục trên trang (sơ đồ tự vẽ, nút) và hộp chọn từng khâu (#dlg-sd).
  * Danh mục: data/system-design.json. Logic thuần: core/design.js, core/design-plan.js. Chữ người dùng chỉ vào DOM qua text node.
  * Xuất: renderSection, initDesign, mdLabels.
- * Dùng: core/board.js, core/design-plan.js, core/design.js, core/io.js, core/model.js, ui/diagram-view.js, ui/dialogs.js,
- *   ui/dom.js, ui/state.js, ui/toast.js. */
+ * Dùng: core/board.js, core/design-plan.js, core/design.js, core/io.js, core/model.js, ui/arch-diagram.js, ui/diagram-view.js,
+ *   ui/dialogs.js, ui/dom.js, ui/state.js, ui/toast.js. */
 import { fold as foldText } from '../core/board.js';
+import { archExplain } from './arch-diagram.js';
 import { initDiagramView, attach as attachView, focusFig, resetView } from './diagram-view.js';
 import { PLAN_STEP, applyPlan, bothDecided, diagramNodes, flowEdges, planDiff, snake, viaLabel } from '../core/design-plan.js';
 import { EDGE_MAX, OWN_MAX, VIA, applyPath, archAdvice, archMissing, catalogErrors, decidedCount, effProfile, emptyDesign, isPreset, normDesign, notNeededBy, pathOf, pickNames, presetDesign, rankOptions, stageState, warnings } from '../core/design.js';
@@ -740,8 +741,7 @@ function archItem(e, on, d) {
         h('button', { type: 'button', class: 'btn small', 'data-arch-path': p.id, 'aria-label': `Use this deliverable: ${p.label}` }, icon('check'), 'Use this deliverable')) : null)),
     row('Use when', e.use),
     row('Avoid when', e.avoid),
-    h('div', { class: 'sd-when' }, h('span', { class: 'sd-k' }, 'Flow'),
-      h('ol', { class: 'sd-chain' }, ...e.flow.map((/** @type {string} */ x) => h('li', {}, h('span', {}, x))))),
+    archExplain(e),
     tools.length ? h('div', { class: 'sd-when' }, h('span', { class: 'sd-k' }, 'Tools by stage'), h('ul', { class: 'sd-arch-tools' }, ...tools)) : null,
     p ? row('Deliverable', p.label, mine ? ' (chosen)' : '') : null,
     (e.sources || []).length ? archLinks(e.sources) : null);

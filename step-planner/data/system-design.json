@@ -6039,6 +6039,56 @@
             "Parquet or one database",
             "Notebook, app"
           ],
+          "diagram": {
+            "nodes": [
+              {
+                "id": "raw",
+                "label": "data/raw",
+                "note": "file gốc: CSV, JSON",
+                "kind": "store"
+              },
+              {
+                "id": "clean",
+                "label": "Clean script",
+                "note": "dùng pandas, Polars",
+                "kind": "run"
+              },
+              {
+                "id": "db",
+                "label": "Parquet + DuckDB",
+                "note": "hoặc SQLite, PostgreSQL",
+                "kind": "store"
+              },
+              {
+                "id": "use",
+                "label": "Notebook, app",
+                "kind": "use"
+              }
+            ],
+            "edges": [
+              {
+                "from": "raw",
+                "to": "clean"
+              },
+              {
+                "from": "clean",
+                "to": "db"
+              },
+              {
+                "from": "db",
+                "to": "use"
+              }
+            ],
+            "group": {
+              "label": "Mọi thứ nằm trên một máy, trong một thư mục dự án",
+              "nodes": [
+                "raw",
+                "clean",
+                "db",
+                "use"
+              ]
+            }
+          },
           "tools": {
             "raw": [
               "project-folder",
@@ -6077,6 +6127,58 @@
             "Warehouse tables",
             "SQL, BI dashboards"
           ],
+          "diagram": {
+            "nodes": [
+              {
+                "id": "app",
+                "label": "App database",
+                "kind": "src"
+              },
+              {
+                "id": "ext",
+                "label": "Files, SaaS APIs",
+                "kind": "src"
+              },
+              {
+                "id": "load",
+                "label": "Scheduled load",
+                "note": "nạp theo lịch, ví dụ mỗi đêm",
+                "kind": "run",
+                "row": 0.5
+              },
+              {
+                "id": "wh",
+                "label": "Warehouse tables",
+                "note": "schema khai trước khi nạp",
+                "kind": "store",
+                "row": 0.5
+              },
+              {
+                "id": "bi",
+                "label": "SQL, BI dashboards",
+                "kind": "use",
+                "row": 0.5
+              }
+            ],
+            "edges": [
+              {
+                "from": "app",
+                "to": "load"
+              },
+              {
+                "from": "ext",
+                "to": "load"
+              },
+              {
+                "from": "load",
+                "to": "wh"
+              },
+              {
+                "from": "wh",
+                "to": "bi"
+              }
+            ]
+          },
           "tools": {
             "process": [
               "dbt"
@@ -6113,6 +6215,58 @@
             "Spark, Python read what they need",
             "ML, ad-hoc analysis"
           ],
+          "diagram": {
+            "nodes": [
+              {
+                "id": "db",
+                "label": "Databases, logs",
+                "kind": "src"
+              },
+              {
+                "id": "media",
+                "label": "Images, audio, text",
+                "kind": "src"
+              },
+              {
+                "id": "lake",
+                "label": "Object storage or HDFS",
+                "note": "file giữ dạng gốc, chưa có schema",
+                "kind": "store",
+                "row": 0.5
+              },
+              {
+                "id": "read",
+                "label": "Spark, Python",
+                "note": "áp cấu trúc lúc đọc",
+                "kind": "run",
+                "row": 0.5
+              },
+              {
+                "id": "use",
+                "label": "ML, ad-hoc analysis",
+                "kind": "use",
+                "row": 0.5
+              }
+            ],
+            "edges": [
+              {
+                "from": "db",
+                "to": "lake"
+              },
+              {
+                "from": "media",
+                "to": "lake"
+              },
+              {
+                "from": "lake",
+                "to": "read"
+              },
+              {
+                "from": "read",
+                "to": "use"
+              }
+            ]
+          },
           "tools": {
             "raw": [
               "cloudflare-r2",
@@ -6149,6 +6303,76 @@
             "Spark, Trino, DuckDB",
             "BI, ML"
           ],
+          "diagram": {
+            "nodes": [
+              {
+                "id": "src",
+                "label": "Sources",
+                "kind": "src"
+              },
+              {
+                "id": "bronze",
+                "label": "Bronze tables",
+                "note": "như nguồn gửi",
+                "kind": "store"
+              },
+              {
+                "id": "silver",
+                "label": "Silver tables",
+                "note": "đã làm sạch",
+                "kind": "store"
+              },
+              {
+                "id": "gold",
+                "label": "Gold tables",
+                "note": "tổng hợp cho BI, ML",
+                "kind": "store"
+              },
+              {
+                "id": "catalog",
+                "label": "Catalog",
+                "note": "danh sách bảng và phiên bản",
+                "kind": "store"
+              },
+              {
+                "id": "engines",
+                "label": "Spark, Trino, DuckDB",
+                "note": "SQL, BI, ML đọc chung một bản",
+                "kind": "run",
+                "row": 0.5
+              }
+            ],
+            "edges": [
+              {
+                "from": "src",
+                "to": "bronze"
+              },
+              {
+                "from": "bronze",
+                "to": "silver"
+              },
+              {
+                "from": "silver",
+                "to": "gold"
+              },
+              {
+                "from": "gold",
+                "to": "engines"
+              },
+              {
+                "from": "catalog",
+                "to": "engines"
+              }
+            ],
+            "group": {
+              "label": "Bảng Delta Lake, Iceberg hay Hudi trên object storage (S3, MinIO): file Parquet cộng lớp metadata có giao dịch",
+              "nodes": [
+                "bronze",
+                "silver",
+                "gold"
+              ]
+            }
+          },
           "tools": {
             "raw": [
               "minio",
@@ -6289,6 +6513,55 @@
             "Clean tables",
             "Report, model"
           ],
+          "diagram": {
+            "nodes": [
+              {
+                "id": "src",
+                "label": "Source files",
+                "kind": "src"
+              },
+              {
+                "id": "raw",
+                "label": "data/raw",
+                "note": "bản gốc, không sửa",
+                "kind": "store"
+              },
+              {
+                "id": "script",
+                "label": "Clean script",
+                "kind": "run"
+              },
+              {
+                "id": "clean",
+                "label": "data/processed",
+                "note": "bảng sạch cuối cùng",
+                "kind": "store"
+              },
+              {
+                "id": "use",
+                "label": "Report, model",
+                "kind": "use"
+              }
+            ],
+            "edges": [
+              {
+                "from": "src",
+                "to": "raw"
+              },
+              {
+                "from": "raw",
+                "to": "script"
+              },
+              {
+                "from": "script",
+                "to": "clean"
+              },
+              {
+                "from": "clean",
+                "to": "use"
+              }
+            ]
+          },
           "tools": {
             "raw": [
               "project-folder",
@@ -6324,6 +6597,77 @@
             "Gold: aggregates for BI and models",
             "Dashboards, ML"
           ],
+          "diagram": {
+            "nodes": [
+              {
+                "id": "src",
+                "label": "Sources",
+                "kind": "src",
+                "row": 0.5
+              },
+              {
+                "id": "bronze",
+                "label": "Bronze",
+                "note": "như nguồn gửi, ghi thêm dần",
+                "kind": "store",
+                "row": 0.5
+              },
+              {
+                "id": "silver",
+                "label": "Silver",
+                "note": "làm sạch, khử trùng, mỗi bản ghi một dòng",
+                "kind": "store",
+                "row": 0.5
+              },
+              {
+                "id": "gbi",
+                "label": "Gold: BI marts",
+                "note": "tổng hợp theo nghiệp vụ",
+                "kind": "store"
+              },
+              {
+                "id": "gml",
+                "label": "Gold: ML features",
+                "kind": "store"
+              },
+              {
+                "id": "dash",
+                "label": "Dashboards",
+                "kind": "use"
+              },
+              {
+                "id": "model",
+                "label": "Models",
+                "kind": "use"
+              }
+            ],
+            "edges": [
+              {
+                "from": "src",
+                "to": "bronze"
+              },
+              {
+                "from": "bronze",
+                "to": "silver"
+              },
+              {
+                "from": "silver",
+                "to": "gbi"
+              },
+              {
+                "from": "silver",
+                "to": "gml"
+              },
+              {
+                "from": "gbi",
+                "to": "dash"
+              },
+              {
+                "from": "gml",
+                "to": "model"
+              }
+            ]
+          },
           "tools": {
             "raw": [
               "project-folder",
@@ -6425,6 +6769,52 @@
             "Load clean tables",
             "Report, model"
           ],
+          "diagram": {
+            "nodes": [
+              {
+                "id": "src",
+                "label": "Sources",
+                "kind": "src"
+              },
+              {
+                "id": "tr",
+                "label": "Extract + transform",
+                "note": "script chạy theo lịch, ngoài kho",
+                "kind": "run"
+              },
+              {
+                "id": "clean",
+                "label": "Clean tables",
+                "note": "chỉ bản sạch được nạp",
+                "kind": "store"
+              },
+              {
+                "id": "use",
+                "label": "Report, model",
+                "kind": "use"
+              }
+            ],
+            "edges": [
+              {
+                "from": "src",
+                "to": "tr"
+              },
+              {
+                "from": "tr",
+                "to": "clean"
+              },
+              {
+                "from": "clean",
+                "to": "use"
+              }
+            ],
+            "group": {
+              "label": "Kho đích (warehouse, database): biến đổi xong mới vào",
+              "nodes": [
+                "clean"
+              ]
+            }
+          },
           "tools": {
             "ingest": [
               "notebook-script",
@@ -6458,6 +6848,63 @@
             "Transform in place (SQL, dbt, Spark)",
             "BI, model"
           ],
+          "diagram": {
+            "nodes": [
+              {
+                "id": "src",
+                "label": "Sources",
+                "kind": "src"
+              },
+              {
+                "id": "raw",
+                "label": "Raw tables",
+                "note": "Extract + Load: nạp thẳng, chưa sửa",
+                "kind": "store"
+              },
+              {
+                "id": "tr",
+                "label": "Transform",
+                "note": "SQL, dbt, Spark chạy trong kho",
+                "kind": "run"
+              },
+              {
+                "id": "clean",
+                "label": "Clean tables",
+                "kind": "store"
+              },
+              {
+                "id": "use",
+                "label": "BI, model",
+                "kind": "use"
+              }
+            ],
+            "edges": [
+              {
+                "from": "src",
+                "to": "raw"
+              },
+              {
+                "from": "raw",
+                "to": "tr"
+              },
+              {
+                "from": "tr",
+                "to": "clean"
+              },
+              {
+                "from": "clean",
+                "to": "use"
+              }
+            ],
+            "group": {
+              "label": "Kho đích (warehouse, lakehouse): nạp thô trước, biến đổi ngay trong kho",
+              "nodes": [
+                "raw",
+                "tr",
+                "clean"
+              ]
+            }
+          },
           "tools": {
             "process": [
               "dbt",
@@ -6495,6 +6942,58 @@
             "Stream processor",
             "Result table or alert"
           ],
+          "diagram": {
+            "nodes": [
+              {
+                "id": "src",
+                "label": "Apps, sensors",
+                "kind": "src",
+                "row": 0.5
+              },
+              {
+                "id": "topic",
+                "label": "Kafka topic",
+                "note": "log sự kiện theo thứ tự",
+                "kind": "store",
+                "row": 0.5
+              },
+              {
+                "id": "proc",
+                "label": "Stream processor",
+                "note": "xử lý từng sự kiện khi tới",
+                "kind": "run",
+                "row": 0.5
+              },
+              {
+                "id": "table",
+                "label": "Result table",
+                "kind": "store"
+              },
+              {
+                "id": "alert",
+                "label": "Alert, action",
+                "kind": "use"
+              }
+            ],
+            "edges": [
+              {
+                "from": "src",
+                "to": "topic"
+              },
+              {
+                "from": "topic",
+                "to": "proc"
+              },
+              {
+                "from": "proc",
+                "to": "table"
+              },
+              {
+                "from": "proc",
+                "to": "alert"
+              }
+            ]
+          },
           "tools": {
             "source": [
               "event-stream",
@@ -6537,6 +7036,73 @@
             "Serving layer (batch views) + real-time views",
             "Queries merge both"
           ],
+          "diagram": {
+            "nodes": [
+              {
+                "id": "data",
+                "label": "New data",
+                "note": "gửi vào cả hai lớp",
+                "kind": "src",
+                "row": 0.5
+              },
+              {
+                "id": "batch",
+                "label": "Batch layer",
+                "note": "giữ bản gốc chỉ ghi thêm, tính lại toàn bộ",
+                "kind": "run"
+              },
+              {
+                "id": "speed",
+                "label": "Speed layer",
+                "note": "chỉ phần mới từ lần tính gần nhất",
+                "kind": "run"
+              },
+              {
+                "id": "bview",
+                "label": "Batch views",
+                "note": "nằm ở serving layer",
+                "kind": "store"
+              },
+              {
+                "id": "rview",
+                "label": "Real-time views",
+                "kind": "store"
+              },
+              {
+                "id": "query",
+                "label": "Query",
+                "note": "gộp hai view",
+                "kind": "use",
+                "row": 0.5
+              }
+            ],
+            "edges": [
+              {
+                "from": "data",
+                "to": "batch"
+              },
+              {
+                "from": "data",
+                "to": "speed"
+              },
+              {
+                "from": "batch",
+                "to": "bview"
+              },
+              {
+                "from": "speed",
+                "to": "rview"
+              },
+              {
+                "from": "bview",
+                "to": "query"
+              },
+              {
+                "from": "rview",
+                "to": "query"
+              }
+            ]
+          },
           "tools": {
             "ingest": [
               "kafka"
@@ -6580,6 +7146,84 @@
             "Stream job v1 writes table v1",
             "Replay with job v2 into table v2, then switch"
           ],
+          "diagram": {
+            "nodes": [
+              {
+                "id": "ev",
+                "label": "Events",
+                "kind": "src",
+                "row": 0.5
+              },
+              {
+                "id": "log",
+                "label": "Kafka log",
+                "note": "giữ đủ lâu để đọc lại",
+                "kind": "store",
+                "row": 0.5
+              },
+              {
+                "id": "v1",
+                "label": "Stream job v1",
+                "kind": "run"
+              },
+              {
+                "id": "v2",
+                "label": "Stream job v2",
+                "note": "code mới đọc lại log từ đầu",
+                "kind": "run"
+              },
+              {
+                "id": "t1",
+                "label": "Table v1",
+                "kind": "store"
+              },
+              {
+                "id": "t2",
+                "label": "Table v2",
+                "kind": "store"
+              },
+              {
+                "id": "app",
+                "label": "App",
+                "note": "đọc bảng mới khi job v2 đuổi kịp",
+                "kind": "use",
+                "row": 0.5
+              }
+            ],
+            "edges": [
+              {
+                "from": "ev",
+                "to": "log"
+              },
+              {
+                "from": "log",
+                "to": "v1"
+              },
+              {
+                "from": "log",
+                "to": "v2",
+                "dashed": true
+              },
+              {
+                "from": "v1",
+                "to": "t1"
+              },
+              {
+                "from": "v2",
+                "to": "t2",
+                "dashed": true
+              },
+              {
+                "from": "t1",
+                "to": "app"
+              },
+              {
+                "from": "t2",
+                "to": "app",
+                "dashed": true
+              }
+            ]
+          },
           "tools": {
             "ingest": [
               "kafka"
@@ -6779,6 +7423,46 @@
             "Notebook or BI tool",
             "HTML, PDF or dashboard"
           ],
+          "diagram": {
+            "nodes": [
+              {
+                "id": "data",
+                "label": "Clean data",
+                "kind": "store"
+              },
+              {
+                "id": "tool",
+                "label": "Notebook or BI tool",
+                "note": "chạy lại khi có dữ liệu mới",
+                "kind": "run"
+              },
+              {
+                "id": "file",
+                "label": "HTML, PDF, dashboard",
+                "kind": "store"
+              },
+              {
+                "id": "readers",
+                "label": "Readers",
+                "note": "chỉ đọc, không gửi gì vào",
+                "kind": "use"
+              }
+            ],
+            "edges": [
+              {
+                "from": "data",
+                "to": "tool"
+              },
+              {
+                "from": "tool",
+                "to": "file"
+              },
+              {
+                "from": "file",
+                "to": "readers"
+              }
+            ]
+          },
           "tools": {
             "app": [
               "notebook-report",
@@ -6803,6 +7487,52 @@
             "One Python app",
             "Users"
           ],
+          "diagram": {
+            "nodes": [
+              {
+                "id": "data",
+                "label": "Data + model file",
+                "kind": "store"
+              },
+              {
+                "id": "logic",
+                "label": "Logic + model",
+                "kind": "run"
+              },
+              {
+                "id": "ui",
+                "label": "UI pages",
+                "note": "ví dụ Streamlit",
+                "kind": "run"
+              },
+              {
+                "id": "users",
+                "label": "Users",
+                "kind": "use"
+              }
+            ],
+            "edges": [
+              {
+                "from": "data",
+                "to": "logic"
+              },
+              {
+                "from": "logic",
+                "to": "ui"
+              },
+              {
+                "from": "ui",
+                "to": "users"
+              }
+            ],
+            "group": {
+              "label": "Một app: một process, một lần deploy",
+              "nodes": [
+                "logic",
+                "ui"
+              ]
+            }
+          },
           "tools": {
             "serve": [
               "in-app",
@@ -6837,6 +7567,61 @@
             "Web or mobile frontend",
             "Users"
           ],
+          "diagram": {
+            "nodes": [
+              {
+                "id": "data",
+                "label": "Tables + model",
+                "kind": "store",
+                "row": 0.5
+              },
+              {
+                "id": "api",
+                "label": "Backend API",
+                "note": "ví dụ FastAPI, trả JSON",
+                "kind": "run",
+                "row": 0.5
+              },
+              {
+                "id": "web",
+                "label": "Web frontend",
+                "kind": "run"
+              },
+              {
+                "id": "mobile",
+                "label": "Mobile app",
+                "kind": "run"
+              },
+              {
+                "id": "users",
+                "label": "Users",
+                "kind": "use",
+                "row": 0.5
+              }
+            ],
+            "edges": [
+              {
+                "from": "data",
+                "to": "api"
+              },
+              {
+                "from": "api",
+                "to": "web"
+              },
+              {
+                "from": "api",
+                "to": "mobile"
+              },
+              {
+                "from": "web",
+                "to": "users"
+              },
+              {
+                "from": "mobile",
+                "to": "users"
+              }
+            ]
+          },
           "tools": {
             "serve": [
               "fastapi",
@@ -6872,6 +7657,83 @@
             "Service A + service B + model service",
             "One database per service"
           ],
+          "diagram": {
+            "nodes": [
+              {
+                "id": "clients",
+                "label": "Web, mobile apps",
+                "kind": "src",
+                "row": 1
+              },
+              {
+                "id": "gw",
+                "label": "API gateway",
+                "note": "một cửa vào cho client",
+                "kind": "run",
+                "row": 1
+              },
+              {
+                "id": "s1",
+                "label": "Orders service",
+                "kind": "run"
+              },
+              {
+                "id": "s2",
+                "label": "Users service",
+                "kind": "run"
+              },
+              {
+                "id": "s3",
+                "label": "Model service",
+                "kind": "run"
+              },
+              {
+                "id": "db1",
+                "label": "Orders DB",
+                "kind": "store"
+              },
+              {
+                "id": "db2",
+                "label": "Users DB",
+                "kind": "store"
+              },
+              {
+                "id": "db3",
+                "label": "Model files",
+                "kind": "store"
+              }
+            ],
+            "edges": [
+              {
+                "from": "clients",
+                "to": "gw"
+              },
+              {
+                "from": "gw",
+                "to": "s1"
+              },
+              {
+                "from": "gw",
+                "to": "s2"
+              },
+              {
+                "from": "gw",
+                "to": "s3"
+              },
+              {
+                "from": "s1",
+                "to": "db1"
+              },
+              {
+                "from": "s2",
+                "to": "db2"
+              },
+              {
+                "from": "s3",
+                "to": "db3"
+              }
+            ]
+          },
           "tools": {
             "package": [
               "docker",
@@ -6905,6 +7767,48 @@
             "Loads model, answers",
             "Scales back to zero"
           ],
+          "diagram": {
+            "nodes": [
+              {
+                "id": "req",
+                "label": "Requests",
+                "kind": "src"
+              },
+              {
+                "id": "model",
+                "label": "Model file",
+                "note": "nạp khi một bản mới khởi động",
+                "kind": "store"
+              },
+              {
+                "id": "fn",
+                "label": "Function instances",
+                "note": "nền tảng bật thêm khi đông, tắt khi rảnh",
+                "kind": "run",
+                "row": 0.5
+              },
+              {
+                "id": "resp",
+                "label": "Responses",
+                "kind": "use",
+                "row": 0.5
+              }
+            ],
+            "edges": [
+              {
+                "from": "req",
+                "to": "fn"
+              },
+              {
+                "from": "model",
+                "to": "fn"
+              },
+              {
+                "from": "fn",
+                "to": "resp"
+              }
+            ]
+          },
           "tools": {
             "serve": [
               "serverless",
@@ -7040,6 +7944,58 @@
             "Predictions table",
             "App reads it"
           ],
+          "diagram": {
+            "nodes": [
+              {
+                "id": "feat",
+                "label": "Feature table",
+                "kind": "store"
+              },
+              {
+                "id": "model",
+                "label": "Model file",
+                "kind": "store"
+              },
+              {
+                "id": "job",
+                "label": "Scheduled scoring job",
+                "note": "chấm mọi dòng, ví dụ mỗi đêm",
+                "kind": "run",
+                "row": 0.5
+              },
+              {
+                "id": "preds",
+                "label": "Predictions table",
+                "kind": "store",
+                "row": 0.5
+              },
+              {
+                "id": "app",
+                "label": "App",
+                "note": "chỉ đọc bảng, không gọi model",
+                "kind": "use",
+                "row": 0.5
+              }
+            ],
+            "edges": [
+              {
+                "from": "feat",
+                "to": "job"
+              },
+              {
+                "from": "model",
+                "to": "job"
+              },
+              {
+                "from": "job",
+                "to": "preds"
+              },
+              {
+                "from": "preds",
+                "to": "app"
+              }
+            ]
+          },
           "tools": {
             "serve": [
               "batch-file"
@@ -7076,6 +8032,48 @@
             "Model loaded in the API or app",
             "Prediction in the response"
           ],
+          "diagram": {
+            "nodes": [
+              {
+                "id": "req",
+                "label": "Request with input",
+                "kind": "src"
+              },
+              {
+                "id": "model",
+                "label": "Model file",
+                "note": "nạp một lần khi API khởi động",
+                "kind": "store"
+              },
+              {
+                "id": "api",
+                "label": "API or app",
+                "note": "tính dự đoán ngay trong yêu cầu",
+                "kind": "run",
+                "row": 0.5
+              },
+              {
+                "id": "resp",
+                "label": "Prediction in response",
+                "kind": "use",
+                "row": 0.5
+              }
+            ],
+            "edges": [
+              {
+                "from": "req",
+                "to": "api"
+              },
+              {
+                "from": "model",
+                "to": "api"
+              },
+              {
+                "from": "api",
+                "to": "resp"
+              }
+            ]
+          },
           "tools": {
             "serve": [
               "in-app",
@@ -7107,6 +8105,66 @@
             "Model scores",
             "Alert or response"
           ],
+          "diagram": {
+            "nodes": [
+              {
+                "id": "ev",
+                "label": "Events",
+                "kind": "src"
+              },
+              {
+                "id": "proc",
+                "label": "Stream processor",
+                "note": "đặc trưng của vài phút gần nhất",
+                "kind": "run"
+              },
+              {
+                "id": "feat",
+                "label": "Fresh features",
+                "note": "cập nhật liên tục",
+                "kind": "store"
+              },
+              {
+                "id": "req",
+                "label": "Prediction request",
+                "kind": "src"
+              },
+              {
+                "id": "model",
+                "label": "Model service",
+                "kind": "run",
+                "row": 0.5
+              },
+              {
+                "id": "out",
+                "label": "Alert or response",
+                "kind": "use",
+                "row": 0.5
+              }
+            ],
+            "edges": [
+              {
+                "from": "ev",
+                "to": "proc"
+              },
+              {
+                "from": "proc",
+                "to": "feat"
+              },
+              {
+                "from": "feat",
+                "to": "model"
+              },
+              {
+                "from": "req",
+                "to": "model"
+              },
+              {
+                "from": "model",
+                "to": "out"
+              }
+            ]
+          },
           "tools": {
             "ingest": [
               "kafka"
@@ -7142,6 +8200,75 @@
             "Question retrieves the closest chunks",
             "LLM answers from those chunks"
           ],
+          "diagram": {
+            "nodes": [
+              {
+                "id": "docs",
+                "label": "Documents",
+                "kind": "src"
+              },
+              {
+                "id": "chunk",
+                "label": "Chunk + embed",
+                "note": "cắt đoạn, đổi thành vector",
+                "kind": "run"
+              },
+              {
+                "id": "index",
+                "label": "Vector index",
+                "kind": "store"
+              },
+              {
+                "id": "q",
+                "label": "Question",
+                "kind": "src"
+              },
+              {
+                "id": "ret",
+                "label": "Retrieve",
+                "note": "lấy các đoạn gần câu hỏi nhất",
+                "kind": "run",
+                "row": 0.5
+              },
+              {
+                "id": "llm",
+                "label": "LLM",
+                "note": "trả lời từ câu hỏi và các đoạn ấy",
+                "kind": "run",
+                "row": 0.5
+              }
+            ],
+            "edges": [
+              {
+                "from": "docs",
+                "to": "chunk"
+              },
+              {
+                "from": "chunk",
+                "to": "index"
+              },
+              {
+                "from": "index",
+                "to": "ret"
+              },
+              {
+                "from": "q",
+                "to": "ret"
+              },
+              {
+                "from": "ret",
+                "to": "llm"
+              }
+            ],
+            "group": {
+              "label": "Lập chỉ mục trước, chạy lại khi tài liệu đổi",
+              "nodes": [
+                "docs",
+                "chunk",
+                "index"
+              ]
+            }
+          },
           "tools": {
             "search": [
               "sqlite-fts5",

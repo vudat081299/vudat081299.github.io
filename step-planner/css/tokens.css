@@ -153,6 +153,10 @@
   --toast-btn: color-mix(in srgb, var(--bg) 14%, transparent);       /* nút trên toast (nền toast là --ink) */
   --toast-btn-hover: color-mix(in srgb, var(--bg) 24%, transparent);
   --log-auto-bg: color-mix(in srgb, var(--amber-soft), var(--bg));   /* chấm của quyết định tự ghi: đặc, không lộ dòng thời gian */
+  /* Sơ đồ luồng của một kiến trúc (js/ui/arch-diagram.js đọc để xếp hộp): khoảng giữa hai tầng (có mũi tên), giữa hai làn,
+     bề rộng hộp (hẹp hơn --ad-box-min thì xếp dọc), lề trong, vạch loại, cao dòng, khoảng tên–ghi chú, lề khung nhóm, bo, mũi tên. */
+  --ad-gap-flow: 28px; --ad-gap-cross: 20px; --ad-box-min: 104px; --ad-box-max: 168px; --ad-pad: 8px; --ad-bar: 3px; --ad-line: 16px;
+  --ad-note-gap: 2px; --ad-group-pad: 8px; --ad-r: 8px; --ad-tip: 3px; --ad-arrow: 6px; --ad-max: 760px;
   --sd-fig-pad: var(--s4);             /* lề trong khung sơ đồ: vẽ trong <svg>, nên sơ đồ phóng to chạm tới viền khung */
   --sd-pct-w: 52px;                    /* nút phần trăm của khung nhìn: "300%" không làm cụm nút nhảy */
   --sa-b: env(safe-area-inset-bottom, 0px);
