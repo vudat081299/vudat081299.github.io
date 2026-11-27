@@ -4,7 +4,8 @@
    Danh mục (data/system-design.json): lối bắt đầu theo thứ bàn giao (`paths`), hồ sơ dự án (câu hỏi → lựa chọn) và các khâu
    theo đường đi của dữ liệu, mỗi khâu nhiều phương án có `fit` (khoá hồ sơ → các câu trả lời hợp).
    Dự án giữ `design = {path, profile, stages, edges, arch}`; không có gì thì null. `edges`: bàn giao trên đường nối hai khâu liền nhau
-   của sơ đồ, khoá `khâu trước>khâu sau`. `arch`: kiến trúc người dùng chọn, nhóm → id kiến trúc (PLAN-042).
+   của sơ đồ, khoá `khâu trước>khâu sau`. `arch`: kiến trúc người dùng chọn, nhóm → id kiến trúc; `archWhy`: nhóm → lý do một dòng
+   của lựa chọn ấy (PLAN-042).
    Xuất: OWN_MAX, EDGE_MAX, VIA, normEdge, normDesign, emptyDesign, presetDesign, isPreset, pathOf, effProfile,
      stageState, fitOf, rankOptions, notNeededBy, stageLists, applyPath, condTerm, archAdvice, archChosen, archState, archMissing,
      warnings, decidedCount, pickNames, catalogErrors.
@@ -59,6 +60,14 @@ export function normDesign(o, cat = null) {
   let path = typeof o.path === 'string' && ID.test(o.path) ? o.path : '';
   /** @type {Record<string,string>} */
   const arch = {};
+  /** @type {Record<string,string>} */
+  const archWhy = {};
+  if (isObj(o.archWhy)) {
+    for (const [k, v] of Object.entries(o.archWhy)) {
+      const t = line(v).slice(0, OWN_MAX);
+      if (ID.test(k) && t && (!cat || (cat.architectures || []).some((/** @type {any} */ f) => f.id === k))) archWhy[k] = t;
+    }
+  }
   if (isObj(o.arch)) {
     for (const [k, v] of Object.entries(o.arch)) {
       if (!ID.test(k) || typeof v !== 'string' || !ID.test(v)) continue;
@@ -86,16 +95,16 @@ export function normDesign(o, cat = null) {
   const edges = {};
   if (isObj(o.edges)) for (const [k, v] of Object.entries(o.edges)) { const e = EDGE_KEY.test(k) ? normEdge(v) : null; if (e) edges[k] = e; }
   return path || Object.keys(profile).length || Object.keys(stages).length || Object.keys(edges).length || Object.keys(arch).length
-    ? { path, profile, stages, edges, arch } : null;
+    || Object.keys(archWhy).length ? { path, profile, stages, edges, arch, archWhy } : null;
 }
 
-/** Bản trống để sửa. @returns {{path: string, profile: Record<string,string>, stages: Record<string,any>, edges: Record<string,any>, arch: Record<string,string>}} */
-export const emptyDesign = () => ({ path: '', profile: {}, stages: {}, edges: {}, arch: {} });
+/** Bản trống để sửa. @returns {{path: string, profile: Record<string,string>, stages: Record<string,any>, edges: Record<string,any>, arch: Record<string,string>, archWhy: Record<string,string>}} */
+export const emptyDesign = () => ({ path: '', profile: {}, stages: {}, edges: {}, arch: {}, archWhy: {} });
 
 /** Thiết kế đặt sẵn của một mẫu (`design` trong templates.json, PLAN-033): hồ sơ, lối, kiến trúc chọn sẵn; không phương án;
  * không có thì null. @param {any} tpl */
 export const presetDesign = (tpl) => (isObj(tpl) && isObj(tpl.design)
-  ? normDesign({ path: tpl.design.path, profile: tpl.design.profile, arch: tpl.design.arch }) : null);
+  ? normDesign({ path: tpl.design.path, profile: tpl.design.profile, arch: tpl.design.arch, archWhy: tpl.design.archWhy }) : null);
 
 /** Hai bản đồ chữ → chữ giống nhau. @param {Record<string,string>} a @param {Record<string,string>} b */
 const sameMap = (a, b) => Object.keys(a).length === Object.keys(b).length && Object.entries(a).every(([k, v]) => b[k] === v);
@@ -103,7 +112,8 @@ const sameMap = (a, b) => Object.keys(a).length === Object.keys(b).length && Obj
 /** Hồ sơ, lối và kiến trúc chọn sẵn còn đúng như mẫu đặt (người dùng chưa đổi câu nào). @param {any} design @param {any} preset */
 export function isPreset(design, preset) {
   if (!design || !preset) return false;
-  return design.path === preset.path && sameMap(design.profile, preset.profile) && sameMap(design.arch || {}, preset.arch || {});
+  return design.path === preset.path && sameMap(design.profile, preset.profile) && sameMap(design.arch || {}, preset.arch || {})
+    && sameMap(design.archWhy || {}, preset.archWhy || {});
 }
 
 /** Lối đã chọn (còn trong danh mục) hay null. @param {any} cat @param {any} design */
@@ -344,15 +354,16 @@ export function archChosen(cat, design) {
 }
 
 /**
- * Kiến trúc của mỗi nhóm (PLAN-042): `chosen` (người dùng chọn, '' = chưa), `rec`, `why` (gợi ý của `archAdvice`, vẫn tính khi đã
- * chọn), `id`: kiến trúc dùng để lái công cụ — chọn rồi thì cái đã chọn, chưa thì cái gợi ý.
+ * Kiến trúc của mỗi nhóm (PLAN-042): `chosen` (người dùng chọn, '' = chưa), `reason` (lý do người dùng ghi cho lựa chọn ấy),
+ * `rec`, `why` (gợi ý của `archAdvice` và lý do của luật, vẫn tính khi đã chọn), `id`: kiến trúc dùng để lái công cụ — chọn rồi thì
+ * cái đã chọn, chưa thì cái gợi ý.
  * @param {any} cat @param {any} design
- * @returns {{family: string, chosen: string, viaPath: boolean, rec: string | null, why: string, id: string | null}[]}
+ * @returns {{family: string, chosen: string, viaPath: boolean, reason: string, rec: string | null, why: string, id: string | null}[]}
  */
 export function archState(cat, design) {
   const ch = archChosen(cat, design);
-  return archAdvice(cat, design).map((a) => ({ family: a.family, chosen: ch[a.family].id, viaPath: ch[a.family].viaPath, rec: a.id, why: a.why,
-    id: ch[a.family].id || a.id }));
+  return archAdvice(cat, design).map((a) => ({ family: a.family, chosen: ch[a.family].id, viaPath: ch[a.family].viaPath,
+    reason: ch[a.family].id ? design?.archWhy?.[a.family] || '' : '', rec: a.id, why: a.why, id: ch[a.family].id || a.id }));
 }
 
 /**

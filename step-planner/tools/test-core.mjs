@@ -549,7 +549,7 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   check('thiết kế: chuẩn hoá bỏ id lạ, khâu trống; "không cần" giữ lựa chọn ẩn', eq(normDesign({
     profile: { size: 'small', Bad: 'x', budget: 'Free!' },
     stages: { serve: { pick: ['fastapi', 'fastapi', 'X Y', 3] }, host: { pick: [] }, ingest: { skip: true, pick: ['cron'], own: 'z' }, 'a b': { pick: ['q'] } },
-  }), { path: '', profile: { size: 'small' }, stages: { serve: { pick: ['fastapi'], skip: false, own: '', note: '' }, ingest: { pick: ['cron'], skip: true, own: 'z', note: '' } }, edges: {}, arch: {} }));
+  }), { path: '', profile: { size: 'small' }, stages: { serve: { pick: ['fastapi'], skip: false, own: '', note: '' }, ingest: { pick: ['cron'], skip: true, own: 'z', note: '' } }, edges: {}, arch: {}, archWhy: {} }));
   check('thiết kế: không còn gì thì null', normDesign({ profile: {}, stages: { a: { pick: [] } } }) === null && normDesign('x') === null);
   const s = { options: [{ id: 'a', level: 3, fit: { size: ['large'] } }, { id: 'b', level: 2, fit: { size: ['small'], budget: ['free'] } }, { id: 'c', level: 1, fit: {} }] };
   const r = rankOptions(s, { size: 'small', budget: 'free' });
@@ -1141,7 +1141,7 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   const md = '# P\n\n## System design\n\nProfile: size small · budget free\n\n- dòng lạ\n- Serving: FastAPI [serve: fastapi]\n';
   const back = fromMarkdown(md);
   check('thiết kế: Markdown viết tay — dòng không có [khâu: …] thì cảnh báo, không thành bước', back.workspace.steps.length === 0
-    && eq(back.workspace.design, { path: '', profile: { size: 'small', budget: 'free' }, stages: { serve: { pick: ['fastapi'], skip: false, own: '', note: '' } }, edges: {}, arch: {} }) && back.warnings.length === 1);
+    && eq(back.workspace.design, { path: '', profile: { size: 'small', budget: 'free' }, stages: { serve: { pick: ['fastapi'], skip: false, own: '', note: '' } }, edges: {}, arch: {}, archWhy: {} }) && back.warnings.length === 1);
 }
 
 /* Quyết định gắn với bước trùng tên: Markdown ghi `Step: N. tên`, nhập lại đúng bước thứ N; file cũ `Step: tên` vẫn đọc. */
@@ -1714,12 +1714,17 @@ function designSnapshot(cat) {
   check('kiến trúc chọn: trang khâu xếp công cụ của kiến trúc chọn lên trước, câu hồ sơ bỏ qua có ghi (relaxed)',
     ui[0].opt.id === 'minio' && ui[0].top && ice.ok && eq(ice.relaxed, ['size']) && ice.arch === 'lakehouse', JSON.stringify(ui.slice(0, 3).map((x) => x.opt.id)));
   /* Lưu: Markdown, JSON; id lạ bị bỏ khi có danh mục; kiến trúc mang lối thành `path`. */
-  const ws = normWorkspace({ name: 'A', steps: [], design: { ...lake, arch: { storage: 'lakehouse', layers: 'medallion', processing: 'batch-elt', app: 'serverless' } } });
+  const ws = normWorkspace({ name: 'A', steps: [], design: { ...lake, arch: { storage: 'lakehouse', layers: 'medallion', processing: 'batch-elt', app: 'serverless' },
+    archWhy: { storage: 'Để học quản trị dữ liệu: snapshot, catalog', app: 'Hàm theo yêu cầu' } } });
   const md = toMarkdown(ws, cat);
   const back = fromMarkdown(md);
   check('kiến trúc chọn: Markdown ghi `Architecture:` (id) kèm tên cho người đọc, nhập lại đúng, không cảnh báo',
     /^Architecture: storage lakehouse · layers medallion · processing batch-elt · app serverless {2}$/m.test(md) && /^ {2}Where the data lives: Lakehouse/m.test(md)
     && eq(back.workspace.design.arch, ws.design.arch) && !back.warnings.length && eq(shape(ws), shape(back.workspace)), md.split('\n').filter((l) => /Architecture|Where/.test(l)).join(' | '));
+  check('kiến trúc chọn: lý do một dòng lưu cùng lựa chọn, Markdown `Why <nhóm>:` đi rồi về, có trong archState',
+    /^ {2}Why storage: Để học quản trị dữ liệu: snapshot, catalog {2}$/m.test(md) && eq(back.workspace.design.archWhy, ws.design.archWhy)
+    && fam(ws.design, 'storage').reason === 'Để học quản trị dữ liệu: snapshot, catalog' && fam(normDesign({ archWhy: { storage: 'x' } }), 'storage').reason === ''
+    && eq(normDesign({ archWhy: { storage: ' a\n b ', mesh: 'y', ml: '' } }, cat).archWhy, { storage: 'a b' }), JSON.stringify(back.workspace.design.archWhy));
   check('kiến trúc chọn: JSON đi rồi về giữ nguyên', eq(parseImport(toJSON(ws)).workspaces[0].design.arch, ws.design.arch));
   const pruned = normDesign({ path: '', arch: { storage: 'mesh', nope: 'lakehouse', processing: 'kappa', app: 'monolith', 'Bad Id': 'x' } }, cat);
   check('kiến trúc chọn: có danh mục thì id lạ bị bỏ; kiến trúc mang lối thành lối (không giữ hai chỗ)',
@@ -1737,7 +1742,8 @@ function designSnapshot(cat) {
   const t = templates.find((x) => x.id === 'it5425-sports');
   const tw = fromTemplate(t), pre = presetDesign(t);
   check('kiến trúc chọn: mẫu it5425-sports đặt sẵn lakehouse, medallion, batch ELT; đổi kiến trúc thì thôi là bộ đặt sẵn',
-    eq(tw.design.arch, { storage: 'lakehouse', layers: 'medallion', processing: 'batch-elt' }) && isPreset(tw.design, pre)
+    eq(tw.design.arch, { storage: 'lakehouse', layers: 'medallion', processing: 'batch-elt' }) && isPreset(tw.design, pre) && /lakehouse có chủ đích/.test(tw.design.archWhy.storage)
+    && !isPreset({ ...tw.design, archWhy: {} }, pre)
     && !isPreset({ ...tw.design, arch: { ...tw.design.arch, processing: 'batch-etl' } }, pre) && !isPreset({ ...tw.design, arch: {} }, pre));
 }
 

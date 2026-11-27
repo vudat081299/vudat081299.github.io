@@ -732,6 +732,7 @@ function archFamily(f, a, d) {
       h('div', { class: 'sd-pills' }, ...[{ id: '', name: 'Not chosen' }, ...f.entries].map((/** @type {any} */ e) => h('label', { class: 'sd-pill' },
         h('input', { type: 'radio', name: `sd-arch-${f.id}`, value: e.id, 'data-arch-pick': f.id, checked: (a.chosen || '') === e.id }),
         h('span', {}, e.name))))),
+    chosen ? archWhyField(f, a) : null,
     differs ? h('p', { class: 'sd-note', 'data-arch-info': f.id }, icon('info'), h('span', {},
       a.rec ? `Your profile and stages point to ${rec.name}. ${chosen.name} stays your choice — fine when the goal is to learn or demonstrate it; Apply path and the stage pages follow it.`
         : `Your profile and stages say this family is not needed. ${chosen.name} stays your choice — fine when the goal is to learn or demonstrate it.`)) : null,
@@ -739,6 +740,11 @@ function archFamily(f, a, d) {
     f.note ? h('p', { class: 'sd-help' }, f.note) : null,
     (f.sources || []).length ? archLinks(f.sources) : null);
 }
+
+/** Lý do một dòng của kiến trúc đã chọn (kiểu ADR), ngay dưới hàng chọn; ghi khi gõ. @param {any} f @param {{reason: string}} a */
+const archWhyField = (f, a) => h('label', { class: 'field' }, h('span', {}, 'Why this choice (optional)'),
+  h('input', { type: 'text', class: 'input', maxlength: OWN_MAX, value: a.reason, 'data-arch-why': f.id,
+    placeholder: 'One line: why this architecture, e.g. to demonstrate data management' }));
 
 /** @param {any[]} list */
 const archLinks = (list) => h('ul', { class: 'sd-links' }, ...list.map((/** @type {any} */ l) =>
@@ -1032,7 +1038,11 @@ function wire() {
       edit((d) => {
         d.arch = d.arch || {};
         if (e?.path) { d.path = e.path; delete d.arch[f.id]; } else if (e) d.arch[f.id] = e.id;
-        else { delete d.arch[f.id]; if (hasPath && f.entries.some((/** @type {any} */ x) => x.path === d.path)) d.path = ''; }
+        else {
+          delete d.arch[f.id];
+          if (d.archWhy) delete d.archWhy[f.id];
+          if (hasPath && f.entries.some((/** @type {any} */ x) => x.path === d.path)) d.path = '';
+        }
       });
       if ((design()?.path || '') !== path0) applied = null;
       repaint(`input[data-arch-pick="${f.id}"][value="${t.value}"]`);
@@ -1054,6 +1064,10 @@ function wire() {
   /* Chữ: ghi khi gõ (không vẽ lại hộp, kẻo mất con trỏ), chỉ cập nhật cột trái và mục trên trang. */
   pane.addEventListener('input', (/** @type {any} */ e) => {
     const t = e.target;
+    if (t.dataset.archWhy) {
+      edit((d) => { d.archWhy = { ...(d.archWhy || {}), [t.dataset.archWhy]: t.value }; });
+      return;
+    }
     if (t.dataset.ef) {
       edit((d) => { edgeRec(d, t.dataset.edge)[t.dataset.ef] = t.value; });
       paintNav();

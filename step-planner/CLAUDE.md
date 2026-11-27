@@ -49,7 +49,7 @@
   khác bị bỏ (nhập thì cảnh báo). `body` giữ nguyên từng dòng. `proof: true` = bằng chứng cho "Done when".
 - Out `{id, name, ref, note, final}`: `name` bắt buộc (không tên thì bỏ); `ref` đường dẫn file hay link; `note` hợp đồng một dòng; `final: true` = sản phẩm cuối (PLAN-038).
 - `ins`: id đầu ra ở chỗ khác trong dự án; bỏ trùng, bỏ id của chính nó; id không còn đầu ra (mất nguồn) vẫn giữ. `normWorkspace`: id đầu ra duy nhất.
-- `design`: null hoặc `{path, profile, stages: {khâu: {pick[], skip, own, note}}, edges: {"a>b": {via, what, where, promise, check}}, arch: {nhóm: kiến trúc}}`
+- `design`: null hoặc `{path, profile, stages: {khâu: {pick[], skip, own, note}}, edges: {"a>b": {via, what, where, promise, check}}, arch: {nhóm: kiến trúc}, archWhy: {nhóm: lý do một dòng}}`
   (`normDesign`). Khâu `skip` vẫn giữ `pick`, `own` (ẩn, bỏ qua ở mọi chỗ); bỏ `skip` là chúng về lại. `arch` không giữ kiến trúc mang lối (đó là `path`).
 - Mọi dữ liệu đi qua `normSub` / `normStep` / `normWorkspace`: chuỗi một dòng gộp khoảng trắng, phần tử sai kiểu bị bỏ,
   ngày phải có thật (`parseDate`). Trường lạ (kể cả `owner`, `people`, `me` cũ) bị bỏ, không lỗi; `cancelReason` cũ đọc thành `reason`.

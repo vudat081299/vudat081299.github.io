@@ -928,6 +928,9 @@
           "storage": "lakehouse",
           "layers": "medallion",
           "processing": "batch-elt"
+        },
+        "archWhy": {
+          "storage": "Dữ liệu nhỏ nhưng chọn lakehouse có chủ đích để thể hiện Big Data và quản trị dữ liệu theo yêu cầu môn."
         }
       },
       "steps": [

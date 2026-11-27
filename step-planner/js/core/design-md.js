@@ -6,7 +6,8 @@ import { OWN_MAX, VIA, pathOf, pickNames, warnings } from './design.js';
 
 /* ── Markdown: mục "## System design" (core/markdown.js gọi designMd, designReader). `Path: tên [path: id]` (dòng thụt dưới nó: luồng
  * và mốc nghiệm thu của lối, chép từ danh mục cho người và AI đọc, nhập bỏ qua). `Profile:` rồi `Architecture: <nhóm> <kiến trúc> · …`
- * (kiến trúc người dùng chọn; dòng thụt dưới nó: tên nhóm, tên kiến trúc cho người đọc, nhập bỏ qua). Mỗi khâu một dòng: chữ đọc được, cuối dòng
+ * (kiến trúc người dùng chọn; dòng thụt dưới nó: tên nhóm, tên kiến trúc cho người đọc, nhập bỏ qua; `Why <nhóm>: lý do` thì nhập).
+ * Mỗi khâu một dòng: chữ đọc được, cuối dòng
  * là `[khâu: id, id]` (hay `[khâu: skip]`; lựa chọn ẩn của khâu "không cần" không ghi) — trang chỉ đọc phần trong ngoặc.
  * Dòng thụt: `Own: …` rồi ghi chú. `Handoffs:` rồi mỗi đường nối một mục `- A → B [handoff: a > b]`, dòng thụt `Via:`, `What:`,
  * `Where:`, `Promise:` (dòng tiếp thụt bốn), `Check:`. `Warnings:` (luật phối hợp đang báo, cho người và AI đọc) nhập bỏ qua. ── */
@@ -61,13 +62,14 @@ export function designMd(d, cat, esc, hard) {
   }
   if (Object.keys(d.profile).length) out.push('', profileLine(d.profile));
   const arch = Object.entries(d.arch || {});
-  if (arch.length) {
+  const why = Object.entries(d.archWhy || {});
+  if (arch.length || why.length) {
     const named = arch.map(([k, v]) => {
       const f = cat && (cat.architectures || []).find((/** @type {any} */ x) => x.id === k);
       const e = f && f.entries.find((/** @type {any} */ x) => x.id === v);
       return e ? `  ${f.label}: ${e.name}` : '';
     }).filter(Boolean);
-    out.push('', ...hard([archLine(d.arch), ...named]));
+    out.push('', ...hard([archLine(d.arch || {}).trimEnd(), ...named, ...why.map(([k, v]) => `  Why ${k}: ${v}`)]));
   }
   const ids = Object.keys(d.stages);
   if (ids.length) out.push('');
@@ -107,8 +109,8 @@ export function designMd(d, cat, esc, hard) {
  */
 export function designReader(warnings, unesc) {
   /** @type {any} */
-  const design = { path: '', profile: {}, stages: {}, edges: {}, arch: {} };
-  let block = /** @type {'' | 'path' | 'stage' | 'edge' | 'warn'} */ ('');
+  const design = { path: '', profile: {}, stages: {}, edges: {}, arch: {}, archWhy: {} };
+  let block = /** @type {'' | 'path' | 'arch' | 'stage' | 'edge' | 'warn'} */ ('');
   let list = /** @type {'' | 'handoffs' | 'warnings'} */ ('');
   let first = false;
   let inPromise = false;
@@ -130,6 +132,11 @@ export function designReader(warnings, unesc) {
           else edge[k] = k === 'promise' ? unesc(m[2]) : m[2];
         } else unread(raw);
         return;
+      }
+      if (block === 'arch') {
+        const w = /^Why\s+([a-z0-9][a-z0-9-]*):\s*(.*)$/i.exec(l);
+        if (w) design.archWhy = { ...(design.archWhy || {}), [w[1].toLowerCase()]: w[2] };
+        return;                          // dòng thụt khác: tên nhóm, tên kiến trúc cho người đọc — bỏ qua
       }
       if (block === 'stage') {
         const own = /^Own:\s?(.*)$/i.exec(l);
@@ -164,7 +171,7 @@ export function designReader(warnings, unesc) {
     } else if (pm) Object.assign(design.profile, readProfile(pm[1]));
     else if (am) {
       design.arch = { ...(design.arch || {}), ...readProfile(am[1]) };
-      block = 'path';                    // dòng thụt: tên nhóm, tên kiến trúc cho người đọc — bỏ qua
+      block = 'arch';
     }
     else if (sl) {
       dst = design.stages[sl.id] = { pick: sl.pick, skip: sl.skip, own: '', note: null };

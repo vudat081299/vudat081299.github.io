@@ -13,7 +13,8 @@
      Link tới trang của repo (https://vudat081299.github.io/…): file có trong repo, neo `#id` có trên trang.
      `design` (tuỳ chọn, PLAN-033): {profile, path?, arch?} đặt sẵn cho System design khi tạo dự án; câu và câu trả lời có trong
      hồ sơ của system-design.json, `path` là lối có thật, hồ sơ không rỗng. `arch` (PLAN-042): nhóm kiến trúc → kiến trúc
-     chọn sẵn, đều có thật; kiến trúc mang lối (nhóm app) không ở đây, ghi `path`. Mẫu trống không có `design`.
+     chọn sẵn, đều có thật; kiến trúc mang lối (nhóm app) không ở đây, ghi `path`. `archWhy`: nhóm → lý do một dòng (≤ 120),
+     chỉ cho nhóm đã chọn sẵn. Mẫu trống không có `design`.
   2. js/**/*.js: không innerHTML / outerHTML / insertAdjacentHTML / document.write — chữ người dùng chỉ qua textContent.
      Import (cả `export … from`) trỏ tới file có thật; `import(…)` chỉ nhận chuỗi cố định; mọi file trừ main.js có nơi import
      (không mồ côi). js/core/ là logic thuần: code (đọc bằng `js_scan`: bỏ chú thích, chữ trong chuỗi không tính) không gọi tên
@@ -69,7 +70,7 @@ OUT_KEYS = {'key', 'name', 'ref', 'note', 'final'}
 KEY_RE = r'[a-z0-9][a-z0-9-]{0,39}'
 TPL_KEYS = {'id', 'group', 'name', 'output', 'description', 'design', 'steps'}
 TPL_GROUPS = ('specific',)  # không có `group`: mẫu chung
-TPL_DESIGN_KEYS = {'profile', 'path', 'arch'}
+TPL_DESIGN_KEYS = {'profile', 'path', 'arch', 'archWhy'}
 
 
 def need_str(where, obj, key, required=True):
@@ -231,7 +232,7 @@ def check_tpl_design(data, design):
         if not t.get('steps'):
             err(f'{w}: mẫu trống không đặt sẵn System design')
         if not isinstance(d, dict) or set(d) - TPL_DESIGN_KEYS or not isinstance(d.get('profile'), dict) or not d['profile']:
-            err(f'{w}: phải là {{profile, path?, arch?}}, `profile` không rỗng')
+            err(f'{w}: phải là {{profile, path?, arch?, archWhy?}}, `profile` không rỗng')
             continue
         for q, a in d['profile'].items():
             if q not in answers:
@@ -251,6 +252,12 @@ def check_tpl_design(data, design):
                 err(f'{w}: nhóm "{f}" không có kiến trúc "{a}" (có {sorted(fams[f])})')
             elif 'path' in fams[f][a]:
                 err(f'{w}: kiến trúc "{a}" mang lối: ghi `path`, không ghi ở `arch`')
+        via_path = {f for f, es in fams.items() if any(e.get('path') == d.get('path') for e in es.values()) and d.get('path')}
+        for f, why in (d.get('archWhy') or {}).items():
+            if f not in arch and f not in via_path:
+                err(f'{w}: archWhy.{f} không có kiến trúc chọn sẵn ở nhóm ấy')
+            elif not isinstance(why, str) or not why.strip() or '\n' in why or len(why) > 120:
+                err(f'{w}: archWhy.{f} là một dòng, không rỗng, tối đa 120 ký tự')
 
 
 def check_design(data):
@@ -890,10 +897,11 @@ def self_test():
         ('mẫu: design — câu hồ sơ không có', preset('lakehouse-oss', lambda t: t['design']['profile'].update(cloud='yes')), 'câu hồ sơ "cloud"'),
         ('mẫu: design — lựa chọn không có', preset('lakehouse-oss', lambda t: t['design']['profile'].update(size='huge')), 'không có lựa chọn "huge"'),
         ('mẫu: design — lối không có', preset('lakehouse-oss', lambda t: t['design'].update(path='etl')), 'lối "etl"'),
-        ('mẫu: design — khoá lạ', preset('lakehouse-oss', lambda t: t['design'].update(stages={})), 'phải là {profile, path?, arch?}'),
-        ('mẫu: design — hồ sơ rỗng', preset('lakehouse-oss', lambda t: t['design'].update(profile={})), 'phải là {profile, path?, arch?}'),
+        ('mẫu: design — khoá lạ', preset('lakehouse-oss', lambda t: t['design'].update(stages={})), 'phải là {profile, path?, arch?, archWhy?}'),
+        ('mẫu: design — hồ sơ rỗng', preset('lakehouse-oss', lambda t: t['design'].update(profile={})), 'phải là {profile, path?, arch?, archWhy?}'),
         ('mẫu: design — nhóm kiến trúc không có', preset('lakehouse-oss', lambda t: t['design'].update(arch={'mesh': 'x'})), 'nhóm kiến trúc "mesh"'),
         ('mẫu: design — kiến trúc không có', preset('lakehouse-oss', lambda t: t['design'].update(arch={'storage': 'mesh'})), 'không có kiến trúc "mesh"'),
+        ('mẫu: design — lý do cho nhóm chưa chọn', preset('lakehouse-oss', lambda t: t['design'].update(archWhy={'ml': 'vì muốn thế'})), 'archWhy.ml không có'),
         ('mẫu: design — kiến trúc mang lối ở arch', preset('lakehouse-oss', lambda t: t['design'].update(arch={'app': 'monolith'})), 'ghi `path`'),
         ('luật báo: nhóm kiến trúc ở unless', design(lambda d: d['checks'][-1].update(unless={'ml': ['rag']})), 'chỉ ở `if`'),
         ('mẫu: design ở mẫu trống', preset('blank', lambda t: t.update(design={'profile': {'size': 'small'}})), 'mẫu trống không đặt sẵn'),

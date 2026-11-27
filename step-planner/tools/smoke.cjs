@@ -2190,7 +2190,7 @@ const check = (name, ok, detail = '') => {
     await pp.waitForSelector('#sd-fig svg');
     let ws = await cur(pp);
     check('mẫu đặt sẵn: dự án lakehouse-oss lưu hồ sơ, lối của mẫu, chưa chọn phương án',
-      JSON.stringify(ws.design) === JSON.stringify({ path: tpl.design.path, profile: tpl.design.profile, stages: {}, edges: {}, arch: tpl.design.arch || {} }), JSON.stringify(ws.design));
+      JSON.stringify(ws.design) === JSON.stringify({ path: tpl.design.path, profile: tpl.design.profile, stages: {}, edges: {}, arch: tpl.design.arch || {}, archWhy: tpl.design.archWhy || {} }), JSON.stringify(ws.design));
     await pp.click('#sd-open');
     await pp.waitForSelector('#dlg-sd[open] .sd-paths');
     const note = async () => (await pp.$('#sd-pane [data-preset="lakehouse-oss"]')) && pp.textContent('#sd-pane [data-preset]');
@@ -2316,6 +2316,9 @@ const check = (name, ok, detail = '') => {
     ws = await cur(cp);
     check('chọn kiến trúc: ← từ Not chosen chọn lại kiến trúc cuối (Lakehouse)', ws.design.arch.storage === 'lakehouse' && (await ring(pickSel('storage', 'lakehouse'))).active);
     await cp.click(pickSel('processing', 'kappa'), { force: true });
+    check('chọn kiến trúc: nhóm chưa chọn không có ô lý do; đã chọn thì có, ngay sau hàng chọn',
+      !(await cp.$('#sd-pane input[data-arch-why="ml"]')) && await cp.$eval('#sd-pane input[data-arch-why="processing"]', (i) => i.closest('label').previousElementSibling.matches('fieldset')));
+    await cp.fill('#sd-pane input[data-arch-why="processing"]', 'Để học xử lý luồng');
     await cp.click('#sd-nav [data-at="0"]');
     await cp.click('#sd-pane input[data-path][value="pipeline"]', { force: true });
     await cp.click('#sd-pane [data-apply]');
@@ -2333,7 +2336,12 @@ const check = (name, ok, detail = '') => {
     await cp.waitForSelector('#dlg-sd[open] .sd-fam');
     check('chọn kiến trúc: tải lại vẫn giữ lựa chọn, mục Architecture ghi số đã chọn',
       await cp.$eval(pickSel('storage', 'lakehouse'), (i) => i.checked) && await cp.$eval(pickSel('processing', 'kappa'), (i) => i.checked)
-      && /2 chosen/.test(await cp.textContent('#sd-nav [data-at="2"]')));
+      && /2 chosen/.test(await cp.textContent('#sd-nav [data-at="2"]'))
+      && await cp.$eval('#sd-pane input[data-arch-why="processing"]', (i) => i.value) === 'Để học xử lý luồng');
+    await cp.click(pickSel('processing', ''), { force: true });
+    await cp.click(pickSel('processing', 'kappa'), { force: true });
+    check('chọn kiến trúc: bỏ chọn thì bỏ cả lý do', await cp.$eval('#sd-pane input[data-arch-why="processing"]', (i) => i.value) === ''
+      && !((await cur(cp)).design.archWhy || {}).processing);
     /* Kiến trúc chọn giải thích luật hồ sơ ↔ công cụ (Kappa cho dữ liệu không liên tục): trang Checks ghi lời nhắc, không đếm là cảnh báo. */
     await cp.click('#sd-nav [data-at="1"]');
     await cp.click('#sd-pane input[data-q="fresh"][value="batch"]', { force: true });
@@ -2358,11 +2366,12 @@ const check = (name, ok, detail = '') => {
         checked: Object.fromEntries([...document.querySelectorAll('#sd-pane input[data-arch-pick]:checked')].map((i) => [i.dataset.archPick, i.value])),
         info: [...document.querySelectorAll('#sd-pane [data-arch-info]')].map((x) => x.dataset.archInfo),
         preset: !!document.querySelector('#sd-pane [data-preset="it5425-sports"]'),
+        why: document.querySelector('#sd-pane input[data-arch-why="storage"]')?.value || '',
         over: document.getElementById('dlg-sd').scrollWidth - document.getElementById('dlg-sd').clientWidth
           + document.getElementById('sd-pane').scrollWidth - document.getElementById('sd-pane').clientWidth }));
       check(`mẫu it5425-sports ${w}px: kiến trúc chọn sẵn (lakehouse, medallion, batch ELT), dòng nhắc hồ sơ nói khác ở lưu trữ và xử lý, không tràn ngang`,
         st.checked.storage === 'lakehouse' && st.checked.layers === 'medallion' && st.checked.processing === 'batch-elt' && st.checked.ml === ''
-        && st.info.includes('storage') && st.info.includes('processing') && st.preset && st.over <= 2, JSON.stringify(st));
+        && st.info.includes('storage') && st.info.includes('processing') && st.preset && /lakehouse có chủ đích/.test(st.why) && st.over <= 2, JSON.stringify(st));
       if (w === 1280) {
         await ip.click('#sd-nav [data-at="0"]');
         await ip.click('#sd-pane [data-apply]');
