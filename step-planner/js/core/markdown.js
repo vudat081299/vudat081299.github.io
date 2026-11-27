@@ -4,7 +4,7 @@
    Dùng: core/board.js, core/design-md.js, core/handoffs.js, core/model.js. */
 import { fold } from './board.js';
 import { DESIGN_HEADING, DESIGN_HEAD_RE, designMd, designReader } from './design-md.js';
-import { holderTitle, holders, outIndex } from './handoffs.js';
+import { chosenOuts, holderTitle, holders, outIndex } from './handoffs.js';
 import { APP_NAME, FROM_MARK, LOG_HEADING, LOOSE_STEP, MARK, MD_VERSION, REASON_LABEL, hasReason, normDoc, normWorkspace, oneLine, parseDate, uid } from './model.js';
 
 /* ── Markdown ── (khuôn ghi đủ ở step-planner/FORMAT.md) */
@@ -123,13 +123,17 @@ const escNum = (s) => (NUMBERED.test(s) ? '\\' + s : s);
 /* Đầu ra cuối (`final`): tên mở bằng `Final: `, như `Evidence: ` của tài liệu. Tên thật mở bằng chữ ấy mà không là đầu ra cuối
  * thì thêm `\` phía trước (unescHand bỏ nó khi đọc). */
 const FINAL = /^Final:[ \t]*/i;
+/* Đầu ra bước chọn từ bước con (`subOuts`): mục `- From sub-step: tên đầu ra ← tên bước con` sau các đầu ra riêng của bước; chỉ
+ * tham chiếu, tên, ref, hợp đồng, `final` ghi ở bước con. Tên đầu ra thật mở bằng chữ ấy thì thêm `\` như `Final:`. */
+const FROM_SUB = /^From sub-step:[ \t]*/i;
 /** Các dòng sau nhãn `Outputs:` / `Inputs:` (nhãn do người gọi ghi). @param {any} h @param {any} ws @param {Map<string, any>} idx @param {string} ind */
 function handLines(h, ws, idx, ind) {
   const outs = [], ins = [];
   for (const o of h.outs) {
-    const head = `${ind}  - ${o.final ? 'Final: ' : FINAL.test(o.name) ? '\\' : ''}${escHand(o.name)}${o.ref ? ' · ' + escHand(o.ref) : ''}`;
+    const head = `${ind}  - ${o.final ? 'Final: ' : FINAL.test(o.name) || FROM_SUB.test(o.name) ? '\\' : ''}${escHand(o.name)}${o.ref ? ' · ' + escHand(o.ref) : ''}`;
     outs.push(...(o.note ? hardBreaks([head, `${ind}    ${escBlock(o.note)}`]) : [head]));
   }
+  if (h.subs) for (const c of chosenOuts(h)) outs.push(`${ind}  - From sub-step: ${escHand(c.out.name)} ← ${escHand(c.sub.title)}`);
   for (const id of h.ins) {
     const src = idx.get(id);
     if (!src) { ins.push(`${ind}  - ${GONE_IN}`); continue; }
@@ -143,15 +147,17 @@ function handLines(h, ws, idx, ind) {
 }
 /**
  * Đọc các mục bàn giao bắt đầu ở dòng i (ngay sau nhãn), thụt ít nhất `min`. Đầu ra vào `h.outs` (id mới); đầu vào giữ chữ ở
- * `h.inRefs`, giải sau khi đọc hết file (resolveIns). Trả dòng đầu tiên không thuộc chúng.
- * @param {string[]} lines @param {number} i @param {'outs'|'ins'} kind @param {any} h @param {number} min
+ * `h.inRefs`, giải sau khi đọc hết file (resolveIns); của bước (`step`), mục `From sub-step:` giữ chữ ở `h.subOutRefs`, giải khi
+ * đã đọc các bước con (resolveSubOuts). Trả dòng đầu tiên không thuộc chúng.
+ * @param {string[]} lines @param {number} i @param {'outs'|'ins'} kind @param {any} h @param {number} min @param {boolean} [step]
  */
-function readHand(lines, i, kind, h, min) {
+function readHand(lines, i, kind, h, min, step = false) {
   const ITEM_RE = /^(\s*)[-*+][ \t]+(.*?)\s*$/;
   while (i < lines.length) {
     const m = ITEM_RE.exec(lines[i]);
     if (!m || m[1].length < min) break;
     if (kind === 'ins') (h.inRefs = h.inRefs || []).push(m[2]);
+    else if (step && FROM_SUB.test(m[2])) (h.subOutRefs = h.subOutRefs || []).push(m[2].replace(FROM_SUB, ''));
     else {
       const final = FINAL.test(m[2]);
       const [name, ref = '', ...rest] = splitEsc(m[2].replace(FINAL, ''), ' · ').map((p) => unescHand(p).trim());
@@ -201,6 +207,28 @@ function resolveIns(ws, warnings) {
       h.ins.push(pick[0].out.id);
     }
     delete h.inRefs;
+  }
+}
+/** `From sub-step: tên đầu ra ← tên bước con` của mỗi bước → id đầu ra của một bước con trong chính bước: theo tên đầu ra (bỏ dấu,
+ * hoa thường), có tên bước con thì theo nó; còn nhiều cái khớp thì ưu tiên chữ đúng hoa thường, lấy cái đầu, cảnh báo.
+ * @param {any} ws @param {string[]} warnings */
+function resolveSubOuts(ws, warnings) {
+  for (const step of ws.steps) {
+    if (!step.subOutRefs) continue;
+    step.subOuts = [];
+    const outs = step.subs.flatMap((/** @type {any} */ sub) => (sub.outs || []).map((/** @type {any} */ out) => ({ out, sub })));
+    for (const raw of step.subOutRefs) {
+      const [nm, ...from] = splitEsc(raw, ' ← ');
+      const name = oneLine(unescHand(nm)), by = oneLine(unescHand(from.join(' ← ')));
+      let hit = outs.filter((c) => fold(oneLine(c.out.name)) === fold(name) && (!from.length || fold(oneLine(c.sub.title)) === fold(by)));
+      if (hit.length > 1 && hit.some((c) => c.out.name === name)) hit = hit.filter((c) => c.out.name === name);
+      if (hit.length > 1 && from.length && hit.some((c) => c.sub.title === by)) hit = hit.filter((c) => c.sub.title === by);
+      const shown = name + (from.length ? ` ← ${by}` : '');
+      if (!hit.length) { warnings.push(`Sub-step output not found, dropped from step "${oneLine(step.title)}": ${shown}`); continue; }
+      if (hit.length > 1) warnings.push(`Sub-step output matches ${hit.length} outputs, linked to the first: ${shown}`);
+      step.subOuts.push(hit[0].out.id);
+    }
+    delete step.subOutRefs;
   }
 }
 /** Bỏ tối đa n dấu cách đầu dòng. @param {string} l @param {number} n */
@@ -491,11 +519,12 @@ export function fromMarkdown(text) {
       step.docs = step.docs || [];
       i = readDocs(lines, i + 1, step.docs, warnings, 0) - 1;
     }
-    else if (meta && (meta[1] === 'outs' || meta[1] === 'ins') && !meta[2].trim()) i = readHand(lines, i + 1, /** @type {any} */ (meta[1]), step, 2) - 1;
+    else if (meta && (meta[1] === 'outs' || meta[1] === 'ins') && !meta[2].trim()) i = readHand(lines, i + 1, /** @type {any} */ (meta[1]), step, 2, true) - 1;
     else addNote(step, 'notes', raw);
   }
   if (!ws.name && !ws.steps.length) throw new Error('No "# …" title, "## …" step or "- [ ] …" task found.');
   resolveIns(ws, warnings);
+  resolveSubOuts(ws, warnings);
   /* `Step: N. tên` của quyết định: bước thứ N nếu đúng tên ấy; không thì bước đầu tiên tên đúng cả chuỗi (file cũ ghi
    * `Step: tên`), rồi bước đầu tiên tên đúng phần sau số. So tên bỏ dấu, không phân biệt hoa thường. */
   const named = (/** @type {string} */ t) => ws.steps.find((/** @type {any} */ x) => fold(oneLine(x.title)) === fold(t));

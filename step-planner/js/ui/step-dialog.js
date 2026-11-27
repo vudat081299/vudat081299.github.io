@@ -2,7 +2,7 @@
 /* Hộp sửa bước (#dlg-step): tên, mục tiêu, Done when, ghi chú, vị trí; Lưu như hộp bước con; Delete, Reopen.
    Xuất: stepCtx, openStep, initStepDialog.
    Dùng: core/board.js, core/model.js, ui/actions.js, ui/dialogs.js, ui/docs.js, ui/dom.js, ui/hand.js, ui/move.js,
-     ui/revisit.js, ui/state.js, ui/toast.js. */
+     ui/revisit.js, ui/state.js, ui/sub-outs.js, ui/toast.js. */
 import { canReopen } from '../core/board.js';
 import { EDIT_FIELDS, normStep, pick } from '../core/model.js';
 import { deleteStep } from './actions.js';
@@ -13,6 +13,7 @@ import { focusEdit, newlyHeld, paintEdit, readEdit, repaintPlace } from './hand.
 import { HELD_TAIL, beginMove, endMove, heldNow, keepHeld } from './move.js';
 import { openRevisit } from './revisit.js';
 import { commit, cur, curId, findWs, stepOf, stepSel } from './state.js';
+import { paintSubOuts } from './sub-outs.js';
 import { toast, toastUndo } from './toast.js';
 
 /* ── Hộp bước ── */
@@ -44,6 +45,7 @@ export function openStep(step, at, opt = {}) {
   $('step-revisit').hidden = !step || (!step.revisit && !canReopen(step));
   clearDocUndo();
   renderDocsEdit('step');
+  paintSubOuts(ws, step);
   paintEdit('step', ws, step, step ? [step, ...step.subs] : [], stepDraftPlace);
   openDlg($('dlg-step'), opt.toHand ? null : field(f, 'title'));
   if (opt.toHand) focusEdit('step', opt.toHand);
@@ -66,9 +68,11 @@ export function initStepDialog() {
     const f = $('step-form');
     const ctx = /** @type {any} */ (stepCtx);
     const F = EDIT_FIELDS.step;
-    const mine = pick(normStep({ title: field(f, 'title').value, goal: field(f, 'goal').value, doneWhen: field(f, 'doneWhen').value, notes: field(f, 'notes').value, ...readEdit(f) }), F);
-    const held0 = heldNow(ctx.wsId);
     const now = () => (ctx.stepId ? stepOf(findWs(ctx.wsId), ctx.stepId) : null);
+    /* subs: đầu ra chọn từ bước con chỉ giữ khi còn là đầu ra của bước con của bước (normStep). */
+    const mine = pick(normStep({ title: field(f, 'title').value, goal: field(f, 'goal').value, doneWhen: field(f, 'doneWhen').value, notes: field(f, 'notes').value,
+      ...readEdit(f), subs: (now() || ctx.orig || {}).subs }), F);
+    const held0 = heldNow(ctx.wsId);
     let ws = findWs(ctx.wsId);
     let step = now();
     /** @type {any} */ let fresh = null;

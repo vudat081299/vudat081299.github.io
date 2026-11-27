@@ -4,7 +4,7 @@
    tên không trùng, tạo dự án từ mẫu (fromTemplate), nhóm mẫu (tplGroups).
    Xuất: STATUSES, STATUS_LABEL, MARK, FROM_MARK, STATUS_HINT, REASON_LABEL, hasReason, outOfScope, nextStatus, setStatus,
      needsEvidence, FORMAT, VERSION, MD_VERSION, APP_NAME, LOG_HEADING, LOOSE_STEP, uid, today, parseDate, isObj, oneLine,
-     multiLine, safeUrl, normDoc, normOut, SD_KEPT, normSub, normStep, normLog, normWorkspace, EDIT_FIELDS, pick,
+     multiLine, safeUrl, normDoc, normOut, subOutsOf, SD_KEPT, normSub, normStep, normLog, normWorkspace, EDIT_FIELDS, pick,
      mergeEdit, freshCopy, uniqueName, fromTemplate, TPL_GROUPS, tplGroups.
    Dùng: core/design.js, core/handoffs.js. */
 import { normDesign, presetDesign, syncArchLog } from './design.js';
@@ -121,6 +121,14 @@ const insOf = (a, outs) => {
   return [...new Set((Array.isArray(a) ? a : []).filter((s) => typeof s === 'string' && s && !own.has(s)))];
 };
 
+/** Đầu ra bước chọn từ bước con của nó (`subOuts`): id đầu ra của một bước con trong chính bước ấy, bỏ trùng, theo thứ tự chọn. Tham
+ * chiếu, không chép: tên, ref, hợp đồng, `final` ở đầu ra của bước con. Id không thuộc bước con nào của bước bị bỏ (không bao giờ
+ * trỏ ra ngoài bước). @param {any} a @param {any[]} subs */
+export function subOutsOf(a, subs) {
+  const mine = new Set(subs.flatMap((x) => (x.outs || []).map((/** @type {any} */ o) => o.id)));
+  return [...new Set((Array.isArray(a) ? a : []).filter((id) => typeof id === 'string' && mine.has(id)))];
+}
+
 /** Dấu `sd` của bước con: việc sinh từ System design (`stage:khâu@chữ ký`, `edge:a>b@chữ ký`), hay `SD_KEPT` — người dùng
  * chọn Keep khi việc không còn trong thiết kế: thành việc của người dùng, không đối chiếu lại (core/design-plan.js). */
 export const SD_KEPT = 'kept';
@@ -176,6 +184,7 @@ export function normStep(o) {
     round: rv ? rv.round : Math.max(1, posInt(x.round)),
     docs: docsOf(x.docs),
     ...handOf(x),
+    subOuts: subOutsOf(x.subOuts, subs),
     subs,
   };
 }
@@ -210,6 +219,7 @@ export function normWorkspace(o) {
     for (const o of h.outs) { if (outIds.has(o.id)) { o.id = uid('o'); renamed = true; } outIds.add(o.id); }
     if (renamed) h.ins = insOf(rawOf.get(h).ins, h.outs);
   }
+  for (const s of steps) s.subOuts = subOutsOf(s.subOuts, s.subs); // id trùng vừa đổi: chỉ giữ cái còn ở bước con của bước
   return {
     id: idOr(x.id, 'w'),
     name: oneLine(x.name) || 'Project',
@@ -229,7 +239,7 @@ export function normWorkspace(o) {
 /** Trường mà hộp sửa của từng loại mục ghi. */
 export const EDIT_FIELDS = {
   sub: ['title', 'status', 'reason', 'due', 'doneWhen', 'notes', 'outs', 'ins'],
-  step: ['title', 'goal', 'doneWhen', 'notes', 'outs', 'ins'],
+  step: ['title', 'goal', 'doneWhen', 'notes', 'outs', 'ins', 'subOuts'],
   log: ['date', 'decision', 'why', 'stepId'],
 };
 /** Bản sao các trường `keys` của o. @param {any} o @param {string[]} keys @returns {Record<string, any>} */
@@ -275,6 +285,7 @@ export function freshCopy(ws) {
   /* Đầu vào mất nguồn cũng lấy id mới (vẫn không trỏ tới đâu), cùng id cũ thì cùng id mới. */
   const fresh = (/** @type {string} */ id) => { if (!outIds.has(id)) outIds.set(id, uid('o')); return outIds.get(id); };
   for (const { h } of holders(c)) h.ins = h.ins.map(fresh);
+  for (const s of c.steps) s.subOuts = s.subOuts.map(fresh);
   for (const l of c.log) {
     l.id = uid('l');
     l.stepId = stepIds.get(l.stepId) || '';

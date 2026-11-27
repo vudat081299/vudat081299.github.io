@@ -3363,7 +3363,7 @@ const check = (name, ok, detail = '') => {
     const labelOf = (sel) => ip.$eval(sel, (el) => ({ a: el.getAttribute('aria-label'), t: el.title, role: el.getAttribute('role') }));
     const io0 = await ioOf();
     const want0 = { gA: 'none/ok', gI: 'ok/none', gN: '-', gB: 'none/bad', gC: 'ok/ok', gD: 'bad/none', gE: 'none/bad', gF: 'ok/none', gG: 'none/bad',
-      g1: 'none/ok', g2: 'bad/ok', g3: 'ok/bad', g4: 'none/bad' };
+      g1: 'none/bad', g2: 'bad/ok', g3: 'ok/bad', g4: 'none/bad' };
     const dIn = await labelOf('.card[data-sub="gD"] .io-dot.in');
     const eOut = await labelOf('.card[data-sub="gE"] .io-dot.out');
     const bOut = await labelOf('.card[data-sub="gB"] .io-dot.out');
@@ -3388,9 +3388,11 @@ const check = (name, ok, detail = '') => {
       && parseFloat(lBad.r) === 0 && clear(lNone.bg) && lNone.t === 'none' && parseFloat(lNone.bw) < parseFloat(lOk.bw), JSON.stringify(looks));
     const s4Out = await labelOf('.step[data-step="g4"] .step-top .io-dot.out');
     const gGOut = await labelOf('.card[data-sub="gG"] .io-dot.out');
-    check('đầu vào / đầu ra: chấm đầu ra của bước nói "không đầu ra nào của bước được dùng", của thẻ thì nêu từng đầu ra',
-      s4Out.a === 'Output: broken. None of the step\'s outputs is used: "z.bin" is not used by any later step; "z2.bin" is not used by any later step'
-      && gGOut.a === 'Output: broken. "z.bin" is not used by any later step; "z2.bin" is not used by any later step', JSON.stringify({ s4Out, gGOut }));
+    const s1Out = await labelOf('.step[data-step="g1"] .step-top .io-dot.out');
+    check('đầu vào / đầu ra: chấm đầu ra của bước lỗi khi một đầu ra của bước con lỗi (đối xứng với đầu vào), nêu từng đầu ra kèm bước con; của thẻ thì nêu từng đầu ra',
+      s4Out.a === 'Output: broken. "Dead end": "z.bin" is not used by any later step; "Dead end": "z2.bin" is not used by any later step'
+      && s1Out.a === 'Output: broken. "Spec": "unused.md" is not used by any later step'
+      && gGOut.a === 'Output: broken. "z.bin" is not used by any later step; "z2.bin" is not used by any later step', JSON.stringify({ s4Out, s1Out, gGOut }));
     check('đầu vào / đầu ra: chấm có nhãn đọc được, nói vì sao; mũi tên chỉ để trang trí',
       dIn.role === 'img' && dIn.a === dIn.t && /^Input: broken\. "late\.json" on hold: "Late producer" now comes after this$/.test(dIn.a)
       && /^Output: broken\. "late\.json" is only used by "Late input", which now comes before it \(on hold\)$/.test(eOut.a)
@@ -3776,16 +3778,17 @@ const check = (name, ok, detail = '') => {
     await page.click('#sub-form button[type="submit"]');
     await waitTo(page, 'chấm đầu ra ổn sau khi bật Final', () => document.querySelector('.card[data-sub="fx"] .io')?.dataset.ioOut === 'ok');
     const w1 = await cur(page);
-    const d1 = { sub: await dot('.card[data-sub="fx"] .io'), title: await page.$eval('.card[data-sub="fx"] .io-dot.out', (e) => e.title) };
-    check('đầu ra cuối: Enter trên ô Final không gửi hộp; Space bật; Lưu thì chấm đầu ra không ai dùng từ đỏ thành ổn, nêu "Final"',
-      d0.sub === 'bad' && d0.step === 'ok' && stillOpen && ticked && d1.sub === 'ok' && /Final: "report"/.test(d1.title) && w1.steps[1].subs[0].outs[0].final === true,
+    const d1 = { sub: await dot('.card[data-sub="fx"] .io'), step: await dot('.step[data-step="f2"] .step-top .io'), title: await page.$eval('.card[data-sub="fx"] .io-dot.out', (e) => e.title) };
+    check('đầu ra cuối: Enter trên ô Final không gửi hộp; Space bật; Lưu thì chấm đầu ra không ai dùng của thẻ và của bước từ đỏ thành ổn, nêu "Final"',
+      d0.sub === 'bad' && d0.step === 'bad' && stillOpen && ticked && d1.sub === 'ok' && d1.step === 'ok' && /Final: "report"/.test(d1.title) && w1.steps[1].subs[0].outs[0].final === true,
       JSON.stringify({ d0, stillOpen, ticked, d1 }));
     await page.click(subSel('fx', 'edit-sub'));
     await page.click('#sub-hand .out-row [data-k="final"]');
     await page.click('#sub-form button[type="submit"]');
     await waitTo(page, 'chấm đầu ra đỏ lại sau khi bỏ Final', () => document.querySelector('.card[data-sub="fx"] .io')?.dataset.ioOut === 'bad');
     const w2 = await cur(page);
-    check('đầu ra cuối: bỏ Final, Lưu thì chấm đỏ lại', (await dot('.card[data-sub="fx"] .io')) === 'bad' && w2.steps[1].subs[0].outs[0].final === false);
+    check('đầu ra cuối: bỏ Final, Lưu thì chấm của thẻ và của bước đỏ lại', (await dot('.card[data-sub="fx"] .io')) === 'bad'
+      && (await dot('.step[data-step="f2"] .step-top .io')) === 'bad' && w2.steps[1].subs[0].outs[0].final === false);
     await page.click('.step[data-step="f2"] [data-act="hand-out"]');
     const list = await page.$eval('#hand-list', (l) => ({ tag: l.querySelectorAll('.final-tag').length, t: l.textContent }));
     await page.keyboard.press('Escape');
@@ -3810,6 +3813,128 @@ const check = (name, ok, detail = '') => {
     }
     check('đầu ra cuối: dự án mới từ mỗi mẫu không có chấm đầu ra đỏ', tpls.every((t) => !reds[t.id]), JSON.stringify(reds));
     await fresh.ctx.close();
+  });
+
+  /* ── Đầu ra của bước chọn từ bước con: chọn bằng chuột và bằng phím trong danh sách nổi (nhóm theo bước con, chọn nhiều, Esc về
+     nút); hàng "from <bước con>"; Lưu; chip Out, danh sách đầu ra; hộp chọn đầu vào nêu một lần; bỏ chọn; đầu ra bước con thành
+     không ai dùng thì chấm của bước đỏ, nêu bước con; dời bước con sang bước khác thì bước thôi chọn, Hoàn tác trả lại; vòng
+     focus chỉ khi dùng phím; 390px không tràn ngang. ── */
+  await section('Đầu ra chọn từ bước con', async () => {
+    const seedWs = { id: 'wo', name: 'Chọn đầu ra', log: [], steps: [
+      { id: 'p1', title: 'Prep', subs: [{ id: 'pa', title: 'Clean', outs: [{ id: 'oa', name: 'clean.parquet' }] },
+        { id: 'pb', title: 'Features', ins: ['oa'], outs: [{ id: 'ob', name: 'features.parquet', ref: 'data/f.parquet' }, { id: 'ob2', name: 'notes.md', final: true }] }] },
+      { id: 'p2', title: 'Model', subs: [{ id: 'pd', title: 'Train', ins: ['ob'], outs: [{ id: 'od', name: 'model.pkl', final: true }] }] }] };
+    const oc = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+    await oc.addInitScript((d) => { if (!sessionStorage.getItem('seeded')) { sessionStorage.setItem('seeded', '1'); localStorage.setItem('stepPlanner.v2', JSON.stringify({ version: 2, workspaces: [d], lastId: d.id })); } }, seedWs);
+    const op = await oc.newPage();
+    op.on('pageerror', (e) => errors.push('chọn đầu ra: ' + e));
+    await op.goto(BASE);
+    await op.waitForSelector('.card[data-sub="pb"]');
+    const io = (id) => op.$eval(`.step[data-step="${id}"] .step-top .io`, (el) => el.dataset.ioOut);
+    const out0 = await io('p1');
+    const rows = () => op.$$eval('#step-hand [data-sub-out]', (rs) => rs.map((r) => `${r.dataset.subOut}|${r.querySelector('.from-tag')?.textContent}`));
+    const quiet = () => op.evaluate(() => document.documentElement.classList.contains('quiet-focus'));
+    const ring = () => op.evaluate(() => { const c = getComputedStyle(document.activeElement); return c.outlineStyle !== 'none' && parseFloat(c.outlineWidth) > 0; });
+    // Chuột: mở danh sách, chọn "features.parquet": hàng hiện, danh sách vẫn mở, mục được đánh dấu; Esc đóng danh sách, hộp vẫn mở, focus về nút.
+    await op.click('.step[data-step="p1"] [data-act="edit-step"]');
+    const pickBtn = '#step-hand [data-out-pick]';
+    await op.click(pickBtn);
+    await op.waitForSelector('.dd-pop[aria-multiselectable="true"]');
+    const pop = await op.$eval('.dd-pop', (p) => ({ groups: [...p.querySelectorAll('[role="group"]')].map((g) => document.getElementById(g.getAttribute('aria-labelledby'))?.textContent),
+      opts: [...p.querySelectorAll('[role="option"]')].map((o) => o.dataset.value), expanded: document.querySelector('#step-hand [data-out-pick]').getAttribute('aria-expanded') }));
+    await op.click('.dd-pop [role="option"][data-value="ob"]');
+    const afterClick = { rows: await rows(), open: !!(await op.$('.dd-pop')), sel: await op.$eval('.dd-pop [data-value="ob"]', (o) => o.getAttribute('aria-selected')) };
+    await op.keyboard.press('Escape');
+    const esc = await op.evaluate((s) => ({ pop: !!document.querySelector('.dd-pop'), dlg: document.querySelector('#dlg-step').open, focus: document.activeElement === document.querySelector(s) }), pickBtn);
+    const mouseQuiet = await quiet();
+    const mouseRing = await ring();
+    check('chọn đầu ra bước con (chuột): danh sách nhóm theo bước con, chọn nhiều; chọn là hiện hàng "from <bước con>", danh sách vẫn mở; Esc đóng danh sách, hộp còn mở, focus về nút, không vòng',
+      JSON.stringify(pop.groups) === JSON.stringify(['1 · Clean', '2 · Features']) && JSON.stringify(pop.opts) === JSON.stringify(['oa', 'ob', 'ob2']) && pop.expanded === 'true'
+      && JSON.stringify(afterClick.rows) === JSON.stringify(['ob|from Features']) && afterClick.open && afterClick.sel === 'true'
+      && !esc.pop && esc.dlg && esc.focus && mouseQuiet && !mouseRing, JSON.stringify({ pop, afterClick, esc, mouseQuiet, mouseRing }));
+    // Phím: Shift+Tab, Tab về nút (vòng hiện), Enter mở, ↓ tới "notes.md", Space chọn, Esc về nút có vòng.
+    await op.keyboard.press('Shift+Tab');
+    await op.keyboard.press('Tab');
+    const kbRing0 = await ring();
+    await op.keyboard.press('Enter');
+    await op.waitForSelector('.dd-pop');
+    await op.keyboard.press('ArrowDown');
+    await op.keyboard.press('ArrowDown');
+    const active = await op.$eval('.dd-pop', (p) => document.getElementById(p.getAttribute('aria-activedescendant'))?.dataset.value);
+    await op.keyboard.press('Space');
+    await op.keyboard.press('Escape');
+    const kb = { rows: await rows(), focus: await op.evaluate((s) => document.activeElement === document.querySelector(s), pickBtn), quiet: await quiet(), ring: await ring() };
+    check('chọn đầu ra bước con (phím): Tab tới nút có vòng; Enter mở, mũi tên đi qua tiêu đề nhóm, Space chọn; Esc về nút, có vòng',
+      kbRing0 && active === 'ob2' && JSON.stringify(kb.rows) === JSON.stringify(['ob|from Features', 'ob2|from Features']) && kb.focus && !kb.quiet && kb.ring,
+      JSON.stringify({ kbRing0, active, kb }));
+    await op.click('#step-form button[type="submit"]');
+    await waitTo(op, 'Out 2 trên đầu bước', () => /Out 2/.test(document.querySelector('.step[data-step="p1"] [data-act="hand-out"]')?.textContent || ''));
+    const w1 = await cur(op);
+    await op.click('.step[data-step="p1"] [data-act="hand-out"]');
+    const list = await op.$eval('#hand-list', (l) => l.textContent);
+    await op.keyboard.press('Escape');
+    // Hộp chọn đầu vào của bước sau: đầu ra đã chọn hiện một lần, ghi "output of the step".
+    await op.click(subSel('pd', 'edit-sub'));
+    await op.click('#sub-hand [data-in-pick]');
+    const offered = await op.$$eval('#pick-groups input[name="pick"]', (cs) => cs.map((c) => c.value + '|' + c.closest('label').textContent));
+    await op.keyboard.press('Escape');
+    await op.keyboard.press('Escape');
+    check('chọn đầu ra bước con: Lưu ghi subOuts; chip "Out 2"; danh sách đầu ra nêu "From Features"; hộp chọn đầu vào nêu một lần, ghi "output of the step"',
+      JSON.stringify(w1.steps[0].subOuts) === JSON.stringify(['ob', 'ob2']) && w1.steps[0].outs.length === 0 && (list.match(/From Features/g) || []).length === 2
+      && offered.filter((x) => x.startsWith('ob|')).length === 1 && /output of the step/.test(offered.find((x) => x.startsWith('ob|')) || '') && out0 === 'ok',
+      JSON.stringify({ subOuts: w1.steps[0].subOuts, list, offered, out0 }));
+    // Bỏ chọn "notes.md" bằng nút x: hàng mất, đầu ra vẫn ở bước con.
+    await op.click('.step[data-step="p1"] [data-act="edit-step"]');
+    await op.click('#step-hand [data-sub-out="ob2"] [data-sub-out-del]');
+    const rm = { rows: await rows(), focus: await op.evaluate(() => document.activeElement?.matches('[data-sub-out="ob"] [data-sub-out-del]')) };
+    await op.click('#step-form button[type="submit"]');
+    await waitTo(op, 'Out 1 trên đầu bước', () => /Out 1/.test(document.querySelector('.step[data-step="p1"] [data-act="hand-out"]')?.textContent || ''));
+    const w2 = await cur(op);
+    check('chọn đầu ra bước con: nút x bỏ khỏi bước (focus sang hàng còn lại), Lưu; đầu ra vẫn ở bước con',
+      JSON.stringify(rm.rows) === JSON.stringify(['ob|from Features']) && rm.focus && JSON.stringify(w2.steps[0].subOuts) === JSON.stringify(['ob'])
+      && w2.steps[0].subs[1].outs.length === 2, JSON.stringify({ rm, subOuts: w2.steps[0].subOuts }));
+    // Đầu ra bước con thành không ai dùng (gỡ đầu vào ở "Train"): chấm đầu ra của thẻ và của bước đỏ, nêu bước con.
+    await op.click(subSel('pd', 'edit-sub'));
+    await op.click('#sub-hand .in-chip [data-in-del]');
+    await op.click('#sub-form button[type="submit"]');
+    await waitTo(op, 'chấm đầu ra của bước đỏ', () => document.querySelector('.step[data-step="p1"] .step-top .io')?.dataset.ioOut === 'bad');
+    const red = { sub: await op.$eval('.card[data-sub="pb"] .io', (el) => el.dataset.ioOut), step: await io('p1'),
+      label: await op.$eval('.step[data-step="p1"] .step-top .io-dot.out', (el) => el.getAttribute('aria-label')) };
+    check('chọn đầu ra bước con: đầu ra bước con thành không ai dùng → chấm của thẻ và của bước đỏ, chữ nêu bước con',
+      red.sub === 'bad' && red.step === 'bad' && red.label === 'Output: broken. "Features": "features.parquet" is not used by any later step', JSON.stringify(red));
+    // Dời "Features" sang bước "Model" (ô Bước của hộp sửa): bước "Prep" thôi chọn, toast nói vậy; Hoàn tác trả lại.
+    await op.click(subSel('pb', 'edit-sub'));
+    const usedLine = await op.$eval('#sub-hand [data-out="ob"]', (r) => r.textContent);
+    await op.click('#sub-form .field:has(select[name="step"]) .dd-btn');
+    await op.click('.dd-pop [role="option"][data-value="p2"]');
+    await op.click('#sub-form button[type="submit"]');
+    await waitTo(op, 'toast dời', () => /No longer an output of step "Prep"/.test(document.querySelector('#toast-text')?.textContent || ''));
+    const w3 = await cur(op);
+    await op.click('#toast-undo');
+    await waitTo(op, 'Features về bước Prep', () => !!document.querySelector('.step[data-step="p1"] .card[data-sub="pb"]'));
+    const w4 = await cur(op);
+    check('chọn đầu ra bước con: hộp bước con nói đầu ra là đầu ra của bước; dời bước con sang bước khác → bước thôi chọn, toast nói vậy; Hoàn tác trả lại',
+      /Also an output of step "Prep"/.test(usedLine) && JSON.stringify(w3.steps[0].subOuts) === '[]' && JSON.stringify(w3.steps[1].subOuts) === '[]'
+      && JSON.stringify(w4.steps[0].subOuts) === JSON.stringify(['ob']), JSON.stringify({ usedLine, s3: w3.steps.map((s) => s.subOuts), s4: w4.steps.map((s) => s.subOuts) }));
+    await oc.close();
+    // 390px: hộp sửa bước, danh sách mở — không tràn ngang, danh sách nằm trong khung nhìn.
+    const nc = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 1, isMobile: true, hasTouch: true });
+    await nc.addInitScript((d) => { if (!sessionStorage.getItem('seeded')) { sessionStorage.setItem('seeded', '1'); localStorage.setItem('stepPlanner.v2', JSON.stringify({ version: 2, workspaces: [d], lastId: d.id })); } },
+      { ...seedWs, steps: [{ ...seedWs.steps[0], subOuts: ['ob', 'ob2'] }, seedWs.steps[1]] });
+    const np = await nc.newPage();
+    np.on('pageerror', (e) => errors.push('chọn đầu ra 390: ' + e));
+    await np.goto(BASE);
+    await np.waitForSelector('.card[data-sub="pb"]');
+    await np.click('.step[data-step="p1"] [data-act="edit-step"]');
+    await np.$eval('#step-outs-h', (el) => el.scrollIntoView({ block: 'start' }));
+    await np.click('#step-hand [data-out-pick]');
+    await np.waitForSelector('.dd-pop');
+    const fit = await np.evaluate(() => {
+      const inside = (sel) => [...document.querySelectorAll(sel)].every((el) => { const r = el.getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth; });
+      return { pop: inside('.dd-pop'), rows: inside('#step-hand .sub-out, #step-hand .head-acts .btn'), n: document.querySelectorAll('#step-hand .sub-out').length };
+    });
+    check('chọn đầu ra bước con 390px: không tràn ngang; hàng đã chọn, nút, danh sách nằm trong khung nhìn', (await hOverflow(np)) <= 0 && fit.pop && fit.rows && fit.n === 2, JSON.stringify(fit));
+    await nc.close();
   });
 
   /* ── Vòng focus chỉ cho bàn phím: mở bằng chuột rồi Esc thì focus về nút mở, không vòng; tới bằng Tab, Enter / Alt + ↓ mở

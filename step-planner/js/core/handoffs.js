@@ -1,9 +1,9 @@
 // @ts-check
 /* Bàn giao (outs / ins), thuần: ai giữ đầu ra, đầu vào (holders, outIndex), cặp bên giao → bên nhận theo hàng và ô,
    đầu vào treo (handoffs), trạng thái đầu vào / đầu ra (ioStatus), nơi dùng (consumersOf, insBackup), "on hold" theo chỗ chưa
-   lưu của hộp sửa (heldInfoAt, handoffsAt).
-   Xuất: holders, outIndex, holderTitle, heldKey, handoffs, ioStatus, insBackup, consumersOf, heldInfoAt,
-     handoffsAt.
+   lưu của hộp sửa (heldInfoAt, handoffsAt), đầu ra bước chọn từ bước con (chosenOuts, pruneSubOuts, subOutsBackup).
+   Xuất: holders, outIndex, holderTitle, heldKey, handoffs, ioStatus, chosenOuts, pruneSubOuts, subOutsBackup, insBackup,
+     consumersOf, heldInfoAt, handoffsAt.
    Dùng: core/board.js. */
 import { placeSub, slotsOf } from './board.js';
 
@@ -100,9 +100,9 @@ export function handoffs(ws) {
  * @typedef {{kind:'held'|'missing', id:string, name:string, from:string, at:string, par:boolean}} InWhy đầu vào lỗi: treo (nguồn
  * giờ đứng sau, hay cùng ô song song: par), hay trỏ tới đầu ra không còn (name, from rỗng); at: tên bước con giữ đầu vào ấy khi
  * xét cho bước, rỗng là của chính chủ
- * @typedef {{kind:'unused'|'held', id:string, name:string, to:string[], par:string[], live:number}} OutWhy đầu ra lỗi: không ai
- * dùng, hay có nơi dùng đang treo (to: tên các nơi ấy; par: những nơi trong to cùng ô song song; live: số nơi dùng còn nối,
- * 0 = chỉ có nơi dùng treo)
+ * @typedef {{kind:'unused'|'held', id:string, name:string, to:string[], par:string[], live:number, at:string}} OutWhy đầu ra lỗi:
+ * không ai dùng, hay có nơi dùng đang treo (to: tên các nơi ấy; par: những nơi trong to cùng ô song song; live: số nơi dùng còn
+ * nối, 0 = chỉ có nơi dùng treo); at: tên bước con giữ đầu ra ấy khi xét cho bước, rỗng là của chính chủ
  * @typedef {{in:'ok'|'bad'|'none', out:'ok'|'bad'|'none', inWhy:InWhy[], outWhy:OutWhy[], finals:string[]}} IoStatus finals: tên
  * các đầu ra cuối (`final`) chưa ai dùng
  */
@@ -111,11 +111,11 @@ export function handoffs(ws) {
  * tới đầu ra không còn; không có đầu vào: 'none'. Đầu vào của bước gộp đầu vào của nó và mọi bước con: 'bad' nếu một đầu vào trong
  * số ấy lỗi (kể cả đầu vào nhận từ chính bước, từ bước con cùng bước); 'none' nếu không đầu vào nào nhận từ ngoài bước và không cái
  * nào lỗi; còn lại 'ok'. inWhy của bước ghi tên bước con giữ đầu vào lỗi (at).
- * Đầu ra cuối (`final`) không ai dùng là ổn (sản phẩm cuối, không cần nơi nhận); có nơi dùng thì xét như đầu ra khác.
- * Đầu ra của bước con: 'bad' nếu một đầu ra không có nơi nhận đang nối (không ai dùng mà không là đầu ra cuối, hay chỉ nơi dùng
- * treo) hoặc có nơi dùng treo. Đầu ra của bước gộp đầu ra của nó và mọi bước con: 'bad' khi không đầu ra nào ổn (có nơi nhận
- * đang nối, hay là đầu ra cuối không ai dùng), hoặc một đầu ra có nơi dùng treo. Không có đầu ra: 'none'. outWhy nêu mọi đầu ra
- * không ai dùng (trừ đầu ra cuối) và mọi đầu ra có nơi dùng treo, kể cả khi nó còn nơi dùng khác đang nối.
+ * Một đầu ra lỗi khi không có nơi nhận đang nối (không ai dùng mà không là đầu ra cuối `final`, hay chỉ có nơi dùng treo), hoặc
+ * có một nơi dùng treo. Đầu ra cuối không ai dùng là ổn (sản phẩm cuối, không cần nơi nhận).
+ * Đầu ra của bước con: 'bad' nếu một đầu ra của nó lỗi. Đầu ra của bước gộp đầu ra của nó và mọi bước con, đối xứng với đầu vào:
+ * 'bad' nếu một đầu ra trong số ấy lỗi; outWhy ghi tên bước con giữ đầu ra lỗi (at). Đầu ra bước chọn từ bước con (`subOuts`)
+ * là chính đầu ra của bước con nên chỉ tính một lần. Không có đầu ra: 'none'.
  * @param {{steps:any[]}} ws @param {ReturnType<typeof handoffs>} [hand] @returns {Map<string, IoStatus>}
  */
 export function ioStatus(ws, hand = handoffs(ws)) {
@@ -131,11 +131,11 @@ export function ioStatus(ws, hand = handoffs(ws)) {
     else u.live++;
     if (parKeys.has(k)) u.par.push(holderTitle(l.to));
   }
-  /** @param {any[]} outs @returns {OutWhy[]} */
-  const outWhy = (outs) => outs.flatMap((o) => {
+  /** @param {any[]} outs @param {string} [at] @returns {OutWhy[]} */
+  const outWhy = (outs, at = '') => outs.flatMap((o) => {
     const u = use.get(o.id);
     if ((u && !u.held.length) || (!u && o.final)) return [];
-    return [{ kind: u ? 'held' : 'unused', id: o.id, name: o.name, to: u ? u.held : [], par: u ? u.par : [], live: u ? u.live : 0 }];
+    return [{ kind: u ? 'held' : 'unused', id: o.id, name: o.name, to: u ? u.held : [], par: u ? u.par : [], live: u ? u.live : 0, at }];
   });
   /** @param {any} x @param {string} [at] @returns {InWhy[]} */
   const inWhy = (x, at = '') => (x.ins || []).flatMap((/** @type {string} */ id) => {
@@ -146,16 +146,11 @@ export function ioStatus(ws, hand = handoffs(ws)) {
   });
   /** @type {Map<string, IoStatus>} */
   const m = new Map();
-  /** Đầu ra ổn khi tính gộp cho bước: có nơi nhận đang nối, hay là đầu ra cuối chưa ai dùng. @param {any} o */
-  const fine = (o) => !!use.get(o.id)?.live || (o.final && !use.has(o.id));
-  /** @param {any} x @param {number} ins số đầu vào xét @param {InWhy[]} iw @param {any[]} outs @param {boolean} all bước: đầu ra
-   * 'bad' khi không đầu ra nào ổn (`fine`) hay một đầu ra có nơi dùng treo; bước con: khi một đầu ra lỗi */
-  const put = (x, ins, iw, outs, all) => {
-    const ow = outWhy(outs);
-    const bad = all ? !outs.some(fine) || ow.some((w) => w.kind === 'held') : ow.length > 0;
+  /** @param {any} x @param {number} ins số đầu vào xét @param {InWhy[]} iw @param {any[]} outs @param {OutWhy[]} ow */
+  const put = (x, ins, iw, outs, ow) => {
     m.set(x.id, {
       in: iw.length ? 'bad' : ins ? 'ok' : 'none',
-      out: !outs.length ? 'none' : bad ? 'bad' : 'ok',
+      out: !outs.length ? 'none' : ow.length ? 'bad' : 'ok',
       inWhy: iw, outWhy: ow, finals: outs.filter((o) => o.final && !use.has(o.id)).map((o) => o.name),
     });
   };
@@ -164,23 +159,67 @@ export function ioStatus(ws, hand = handoffs(ws)) {
      * báo. (Bước nhận đầu ra của bước con của nó chỉ có khi dời bước con ấy vào bước: hộp sửa ghi "inside this step".) */
     const outside = [step, ...step.subs].flatMap((/** @type {any} */ s) => s.ins || []).filter((/** @type {string} */ id) => idx.get(id)?.step !== step).length;
     const iw = [...inWhy(step), ...step.subs.flatMap((/** @type {any} */ s) => inWhy(s, s.title))];
-    put(step, outside, iw, [...(step.outs || []), ...step.subs.flatMap((/** @type {any} */ s) => s.outs || [])], true);
-    for (const sub of step.subs) put(sub, (sub.ins || []).length, inWhy(sub), sub.outs || [], false);
+    const ow = [...outWhy(step.outs || []), ...step.subs.flatMap((/** @type {any} */ s) => outWhy(s.outs || [], s.title))];
+    put(step, outside, iw, [...(step.outs || []), ...step.subs.flatMap((/** @type {any} */ s) => s.outs || [])], ow);
+    for (const sub of step.subs) put(sub, (sub.ins || []).length, inWhy(sub), sub.outs || [], outWhy(sub.outs || []));
   }
   return m;
 }
 
+/* ── Đầu ra bước chọn từ bước con (`subOuts`): tham chiếu, không chép. Chỉ trỏ tới đầu ra của bước con đang nằm trong chính bước:
+ * bước con rời bước (dời đi, xoá) hay đầu ra bị xoá thì bước thôi chọn nó (pruneSubOuts); Hoàn tác gắn lại (subOutsBackup). ── */
+
+/** Đầu ra bước chọn từ bước con, theo thứ tự chọn, kèm bước con giữ nó; id không còn ở bước con nào của bước bị bỏ qua.
+ * @param {any} step @returns {{out:any, sub:any}[]} */
+export function chosenOuts(step) {
+  const m = new Map();
+  for (const sub of step.subs) for (const out of sub.outs || []) m.set(out.id, { out, sub });
+  return (step.subOuts || []).map((/** @type {string} */ id) => m.get(id)).filter(Boolean);
+}
+/** Bỏ khỏi `subOuts` mọi id không còn là đầu ra của một bước con trong chính bước. Trả các bước vừa bị bỏ, kèm số đã bỏ.
+ * @param {{steps:any[]}} ws @returns {{step:any, n:number}[]} */
+export function pruneSubOuts(ws) {
+  const out = [];
+  for (const step of ws.steps) {
+    if (!step.subOuts?.length) continue;
+    const keep = chosenOuts(step).map((c) => c.out.id);
+    if (keep.length !== step.subOuts.length) out.push({ step, n: step.subOuts.length - keep.length });
+    step.subOuts = keep;
+  }
+  return out;
+}
+/** Trước khi một thao tác có thể làm bước thôi chọn đầu ra của các chủ này (xoá, dời bước con): chụp `subOuts` của những bước
+ * đang chọn chúng. Hàm trả về gắn lại theo thứ tự cũ (id của chủ khác người dùng đã bỏ trong lúc chờ thì thôi, id mới thì giữ ở
+ * cuối); bước không còn thì thôi. Id gắn lại không còn ở bước con của bước thì lần lưu sau bỏ. @param {any} ws @param {any[]} owners
+ * @returns {(w: any) => void} */
+export function subOutsBackup(ws, owners) {
+  const ids = new Set(owners.flatMap((o) => (o.outs || []).map((/** @type {any} */ x) => x.id)));
+  const saved = ws.steps.filter((/** @type {any} */ s) => (s.subOuts || []).some((/** @type {string} */ id) => ids.has(id)))
+    .map((/** @type {any} */ s) => /** @type {[string, string[]]} */ ([s.id, [...s.subOuts]]));
+  return (w) => {
+    for (const [id, old] of saved) {
+      const s = w.steps.find((/** @type {any} */ x) => x.id === id);
+      if (!s) continue;
+      const now = s.subOuts || [];
+      s.subOuts = [...old.filter((x) => ids.has(x) || now.includes(x)), ...now.filter((/** @type {string} */ x) => !old.includes(x))];
+    }
+  };
+}
+
 /**
- * Trước khi xoá các chủ này: chụp đầu vào của nơi khác đang trỏ tới đầu ra của chúng. Xoá không gỡ đầu vào ấy (mất nguồn, bảng
- * báo lỗi); hàm trả về gắn lại chúng khi Hoàn tác, kể cả khi người dùng đã gỡ hay tab khác đã ghi đè dự án.
+ * Trước khi xoá các chủ này: chụp đầu vào của nơi khác đang trỏ tới đầu ra của chúng, và bước đang chọn chúng làm đầu ra
+ * (`subOuts`). Xoá không gỡ đầu vào ấy (mất nguồn, bảng báo lỗi); bước thì thôi chọn. Hàm trả về gắn lại cả hai khi Hoàn tác,
+ * kể cả khi người dùng đã gỡ hay tab khác đã ghi đè dự án.
  * @param {any} ws @param {any[]} owners @returns {(w: any) => void}
  */
 export function insBackup(ws, owners) {
+  const chosen = subOutsBackup(ws, owners);
   const ids = new Set(owners.flatMap((o) => (o.outs || []).map((/** @type {any} */ x) => x.id)));
   const saved = holders(ws).filter((hd) => !owners.includes(hd.h) && hd.h.ins.some((/** @type {string} */ id) => ids.has(id)))
     .map((hd) => /** @type {[string, string[]]} */ ([hd.h.id, [...hd.h.ins]]));
   /* Gắn lại theo thứ tự cũ; đầu vào khác đã gỡ trong lúc chờ thì thôi, đầu vào mới thêm thì giữ ở cuối. */
   return (w) => {
+    chosen(w);
     const byId = new Map(holders(w).map((hd) => [hd.h.id, hd.h]));
     for (const [id, old] of saved) {
       const h = byId.get(id);

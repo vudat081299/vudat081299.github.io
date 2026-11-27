@@ -5,7 +5,7 @@
    Dùng: core/board.js, core/handoffs.js, ui/clamp.js, ui/dom.js, ui/drag.js, ui/hand.js, ui/projects.js, ui/render.js,
      ui/state.js, ui/toast.js. */
 import { placeSub, slotsOf, subPlace } from '../core/board.js';
-import { handoffs } from '../core/handoffs.js';
+import { handoffs, pruneSubOuts, subOutsBackup } from '../core/handoffs.js';
 import { updateScrollCues } from './clamp.js';
 import { $, quote } from './dom.js';
 import { initDrag } from './drag.js';
@@ -51,8 +51,9 @@ export function moveSubTo(ws, sub, to, focusSel = subSel(sub.id, 'edit-sub'), he
  * (toast của nó còn hiện) thì Hoàn tác trả về chỗ trước lần dời đầu. ── */
 
 /** redo: dấu Redo của bước con lúc bắt đầu dời (sang bước khác thì mất dấu; Hoàn tác trả lại).
- * held: đầu vào đã treo lúc bắt đầu dời (toast chỉ báo cái vừa treo).
- * @type {null | {kind:'sub'|'step', id:string, wsId:string, from:any, fromStepId:string, redo:boolean, undo:null|(() => void), held:Set<string>}} */
+ * held: đầu vào đã treo lúc bắt đầu dời (toast chỉ báo cái vừa treo). chosen: gắn lại lựa chọn của bước với đầu ra của bước con
+ * (sang bước khác thì bước cũ thôi chọn; Hoàn tác trả lại).
+ * @type {null | {kind:'sub'|'step', id:string, wsId:string, from:any, fromStepId:string, redo:boolean, undo:null|(() => void), held:Set<string>, chosen:(w: any) => void}} */
 let lastMove = null;
 let flashTimer = 0;
 
@@ -90,11 +91,15 @@ export function beginMove(kind, id) {
     && !$('toast').hidden && toastUndo && toastUndo === lastMove.undo) return lastMove;
   const from = placeNow(ws, kind, id);
   const sub = kind === 'sub' && from ? stepOf(ws, from.stepId).subs.find((/** @type {any} */ x) => x.id === id) : null;
-  lastMove = { kind, id, wsId: ws.id, from, fromStepId: kind === 'sub' ? from?.stepId : id, redo: !!sub?.redo, undo: null, held: handoffs(ws).heldKeys };
+  lastMove = { kind, id, wsId: ws.id, from, fromStepId: kind === 'sub' ? from?.stepId : id, redo: !!sub?.redo, undo: null, held: handoffs(ws).heldKeys,
+    chosen: subOutsBackup(ws, sub ? [sub] : []) };
   return lastMove;
 }
-/** Gọi sau khi đổi chỗ: lưu, vẽ, giữ focus, tô, báo. @param {any} m @param {string|null|undefined} swapId @param {string} focusSel */
+/** Gọi sau khi đổi chỗ: lưu, vẽ, giữ focus, tô, báo (kể cả bước vừa thôi chọn đầu ra của bước con dời đi).
+ * @param {any} m @param {string|null|undefined} swapId @param {string} focusSel */
 export function endMove(m, swapId, focusSel) {
+  const w0 = findWs(m.wsId);
+  const lost = w0 ? pruneSubOuts(w0) : [];
   commit(focusSel);
   const ws = findWs(m.wsId);
   const now = ws && placeNow(ws, m.kind, m.id);
@@ -106,7 +111,8 @@ export function endMove(m, swapId, focusSel) {
     return;
   }
   m.undo = () => undoMove(m);
-  toast(movedText(ws, m.kind, m.id, m.fromStepId) + newlyHeld(ws, m.held, undefined, m.id), m.undo, focusSel, false);
+  const dropped = lost.length ? ` · No longer an output of step ${quote(lost[0].step.title)}` + (lost.length > 1 ? ` (+${lost.length - 1} more)` : '') : '';
+  toast(movedText(ws, m.kind, m.id, m.fromStepId) + dropped + newlyHeld(ws, m.held, undefined, m.id), m.undo, focusSel, false);
 }
 function undoMove(/** @type {any} */ m) {
   lastMove = null;
@@ -124,6 +130,7 @@ function undoMove(/** @type {any} */ m) {
     const sub = from.subs.find((/** @type {any} */ x) => x.id === m.id);
     placeSub(w, sub, m.from);
     if (m.redo && stepOf(w, m.from.stepId).revisit) sub.redo = true;
+    m.chosen(w);
   }
   if (curId !== m.wsId) switchTo(m.wsId);
   commit(m.kind === 'step' ? stepSel(m.id, 'edit-step') : subSel(m.id, 'edit-sub'));

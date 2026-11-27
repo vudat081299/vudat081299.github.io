@@ -1396,7 +1396,7 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   check('io: đầu vào treo → bad, nêu tên đầu ra và bên giao', st(b, 'u') === 'bad/none'
     && eq(b.get('u').inWhy, [{ kind: 'held', id: 'ow', name: 'model', from: 'W', at: '', par: false }]));
   check('io: đầu ra chỉ được dùng bởi liên kết treo → bad, nêu nơi dùng', st(b, 'w') === 'none/bad'
-    && eq(b.get('w').outWhy, [{ kind: 'held', id: 'ow', name: 'model', to: ['U'], par: [], live: 0 }]));
+    && eq(b.get('w').outWhy, [{ kind: 'held', id: 'ow', name: 'model', to: ['U'], par: [], live: 0, at: '' }]));
   check('io: bước — mọi đầu ra của bước con không có nơi nhận đang nối → bad', st(b, 't2') === 'none/bad');
   /* Đầu ra không ai dùng; một bước con nhiều đầu ra, một cái không ai dùng; đầu vào trỏ tới đầu ra đã xoá (chưa đọc lại). */
   const c = normWorkspace({ steps: [
@@ -1405,11 +1405,11 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   c.steps[1].subs[0].ins.push('gone');
   c.steps[1].ins.push('gone2');
   const cs = io(c);
-  check('io: đầu ra không ai dùng → bad "unused"', st(cs, 'z') === 'none/bad' && eq(cs.get('z').outWhy, [{ kind: 'unused', id: 'oz', name: 'lonely', to: [], par: [], live: 0 }]));
+  check('io: đầu ra không ai dùng → bad "unused"', st(cs, 'z') === 'none/bad' && eq(cs.get('z').outWhy, [{ kind: 'unused', id: 'oz', name: 'lonely', to: [], par: [], live: 0, at: '' }]));
   check('io: nhiều đầu ra, một cái không ai dùng → bad, nêu đúng cái ấy', st(cs, 'x') === 'none/bad' && eq(cs.get('x').outWhy.map((w) => w.name), ['b']));
   check('io: đầu vào trỏ tới đầu ra không còn → bad "missing"', st(cs, 'y') === 'bad/none' && eq(cs.get('y').inWhy, [{ kind: 'missing', id: 'gone', name: '', from: '', at: '', par: false }]));
-  check('io: bước — một đầu ra (của bước con) được dùng → ok, vẫn nêu cái chưa dùng', st(cs, 'v1') === 'none/ok'
-    && eq(cs.get('v1').outWhy.map((w) => w.name), ['spec', 'b']));
+  check('io: bước — đối xứng với đầu vào: một đầu ra (của bước, của bước con) chưa dùng → bad dù đầu ra khác được dùng, ghi bước con',
+    st(cs, 'v1') === 'none/bad' && eq(cs.get('v1').outWhy.map((w) => [w.name, w.at]), [['spec', ''], ['b', 'X']]), JSON.stringify(cs.get('v1')));
   check('io: bước — đầu vào riêng của bước trỏ tới đầu ra không còn → bad', st(cs, 'v2') === 'bad/bad' && cs.get('v2').inWhy[0].kind === 'missing');
   /* Bước nhận đầu ra của bước con đứng sau nó → đầu vào của bước treo. */
   const d = io(normWorkspace({ steps: [{ id: 'k1', title: 'K1', ins: ['om'] }, { id: 'k2', title: 'K2', subs: [{ id: 'm', title: 'M', outs: [{ id: 'om', name: 'm' }] }] }] }));
@@ -1432,7 +1432,7 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
     { id: 'h2', title: 'H2', subs: [{ id: 'o', title: 'O', outs: [{ id: 'oo', name: 'table' }] }, { id: 'o2', title: 'O2', outs: [{ id: 'oo2', name: 'side' }] }] },
     { id: 'h3', title: 'H3', subs: [{ id: 'hh', title: 'H', ins: ['oo', 'oo2'] }] }] }));
   check('io: đầu ra có một nơi dùng treo, một nơi còn nối → bước con bad, nêu nơi treo và live', st(f, 'o') === 'none/bad'
-    && eq(f.get('o').outWhy, [{ kind: 'held', id: 'oo', name: 'table', to: ['G'], par: [], live: 1 }]) && st(f, 'g') === 'bad/none' && st(f, 'hh') === 'ok/none');
+    && eq(f.get('o').outWhy, [{ kind: 'held', id: 'oo', name: 'table', to: ['G'], par: [], live: 1, at: '' }]) && st(f, 'g') === 'bad/none' && st(f, 'hh') === 'ok/none');
   check('io: bước — một đầu ra có nơi dùng treo → bad dù đầu ra khác còn nối', st(f, 'h2') === 'none/bad' && eq(f.get('h2').outWhy.map((w) => w.name), ['table'])
     && st(f, 'o2') === 'none/ok');
   /* Đầu vào của bước gộp bước con: chỉ nhận trong bước → none; bước con nhận từ bước trước → ok; treo giữa hai bước con cùng
@@ -1459,7 +1459,7 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
     && eq((ph.gaps.get('p1')?.get(0) || []).map((p) => p.to.h.id), ['pr']));
   check('io: cùng ô song song — bên nhận và bên giao đều bad, ghi là song song', st(ps, 'pq') === 'bad/none' && st(ps, 'pp') === 'none/bad'
     && eq(ps.get('pq').inWhy, [{ kind: 'held', id: 'op', name: 'cut', from: 'P', at: '', par: true }])
-    && eq(ps.get('pp').outWhy, [{ kind: 'held', id: 'op', name: 'cut', to: ['Q'], par: ['Q'], live: 1 }]) && st(ps, 'p1') === 'bad/bad');
+    && eq(ps.get('pp').outWhy, [{ kind: 'held', id: 'op', name: 'cut', to: ['Q'], par: ['Q'], live: 1, at: '' }]) && st(ps, 'p1') === 'bad/bad');
   pw.steps[0].subs[1].par = false;
   check('io: tách khỏi ô song song, đứng sau bên giao → nối lại, ok', st(io(pw), 'pq') === 'ok/none' && st(io(pw), 'pp') === 'none/ok');
   /* Đầu ra cuối (final): không ai dùng là ổn; có nơi dùng treo vẫn lỗi; đầu ra thường không ai dùng vẫn lỗi; bước gộp. */
@@ -1474,15 +1474,102 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
     && eq(fs.get('fa').finals, ['report']));
   check('io: đầu ra thường không ai dùng cạnh đầu ra cuối → bước con vẫn bad, chỉ nêu cái thường', st(fs, 'fb') === 'none/bad'
     && eq(fs.get('fb').outWhy.map((w) => w.name), ['notes']));
-  check('io: bước — mọi đầu ra là đầu ra cuối không ai dùng (hay có một cái ổn) → ok', st(fs, 'f1') === 'none/ok');
+  check('io: bước — một bước con có đầu ra thường không ai dùng → bad dù cạnh đầu ra cuối, ghi bước con', st(fs, 'f1') === 'none/bad'
+    && eq(fs.get('f1').outWhy.map((w) => [w.name, w.at]), [['notes', 'B']]) && eq(fs.get('f1').finals, ['report', 'slides']));
   check('io: đầu ra cuối có nơi dùng treo → bad như đầu ra khác', st(fs, 'fd') === 'none/bad' && eq(fs.get('fd').outWhy.map((w) => w.kind), ['held'])
     && !fs.get('fd').finals.length && st(fs, 'f2') === 'bad/bad');
   check('io: đầu ra thường không ai dùng → bad (cả bước)', st(fs, 'fe') === 'none/bad' && st(fs, 'f3') === 'none/bad');
   check('io: đầu ra cuối có nơi dùng đang nối → ok', st(fs, 'fg') === 'none/ok' && st(fs, 'fh') === 'ok/none' && !fs.get('fg').finals.length);
+  fw.steps[0].subs[1].outs.pop();
+  check('io: bước — mọi đầu ra là đầu ra cuối không ai dùng → ok', st(io(fw), 'f1') === 'none/ok' && st(io(fw), 'fb') === 'none/ok');
   fw.steps[0].subs[0].outs[0].final = false;
-  check('io: bỏ final → đầu ra không ai dùng lại bad; bước còn một đầu ra cuối không ai dùng thì vẫn ok', st(io(fw), 'fa') === 'none/bad' && st(io(fw), 'f1') === 'none/ok');
-  fw.steps[0].subs[1].outs[0].final = false;
-  check('io: bước — bỏ final hết → bad', st(io(fw), 'f1') === 'none/bad');
+  check('io: bỏ final → đầu ra không ai dùng lại bad, ở bước con và ở bước (ghi bước con)', st(io(fw), 'fa') === 'none/bad' && st(io(fw), 'f1') === 'none/bad'
+    && eq(io(fw).get('f1').outWhy.map((w) => w.at), ['A']));
+}
+
+/* Đầu ra bước chọn từ bước con (`subOuts`): tham chiếu một nguồn, chỉ trỏ vào bước con của chính bước; trạng thái tính một lần;
+ * dời / xoá bỏ tham chiếu, Hoàn tác gắn lại; nhân bản đổi id; JSON, Markdown đi rồi về; file cũ không đổi. */
+{
+  const mk = () => normWorkspace({ steps: [
+    { id: 'c1', title: 'Build', outs: [{ id: 'own', name: 'spec', final: true }], subOuts: ['oa', 'oa', 'ob', 'oz', 'own', 7, ''],
+      subs: [{ id: 'ca', title: 'Train', outs: [{ id: 'oa', name: 'model.pkl', ref: 'models/m.pkl', note: 'joblib' }] },
+        { id: 'cb', title: 'Report', outs: [{ id: 'ob', name: 'report', final: true }, { id: 'ob2', name: 'scratch', final: true }] }] },
+    { id: 'c2', title: 'Ship', subOuts: ['oa'], subs: [{ id: 'cz', title: 'Deploy', ins: ['oa'], outs: [{ id: 'oz', name: 'app', final: true }] }] }] });
+  const ws = mk();
+  check('subOuts: chuẩn hoá — chỉ id đầu ra của bước con trong chính bước, bỏ trùng, bỏ đầu ra riêng của bước, bỏ id bước khác',
+    eq(ws.steps[0].subOuts, ['oa', 'ob']) && eq(ws.steps[1].subOuts, []), JSON.stringify(ws.steps.map((x) => x.subOuts)));
+  check('subOuts: dữ liệu cũ không có trường → [], không đổi gì khác', eq(normWorkspace({ steps: [{ title: 'S', subs: [{ title: 'x', outs: [{ name: 'o' }] }] }] }).steps[0].subOuts, [])
+    && EDIT_FIELDS.step.includes('subOuts'));
+  check('subOuts: chosenOuts trả đầu ra thật của bước con (tên, ref theo nguồn), theo thứ tự chọn',
+    eq(CORE.chosenOuts(ws.steps[0]).map((c) => [c.out.name, c.sub.id]), [['model.pkl', 'ca'], ['report', 'cb']]));
+  ws.steps[0].subs[0].outs[0].name = 'model-v2.pkl';
+  check('subOuts: đổi tên đầu ra ở bước con thì bước theo ngay', CORE.chosenOuts(ws.steps[0])[0].out.name === 'model-v2.pkl');
+  /* Trạng thái: đầu ra chọn từ bước con tính một lần. */
+  const io = CORE.ioStatus(ws);
+  check('subOuts: trạng thái tính một lần — bước có 4 đầu ra (riêng + bước con), đầu ra đã chọn không lặp ở outWhy, finals',
+    io.get('c1').out === 'ok' && eq(io.get('c1').finals, ['spec', 'report', 'scratch']) && !io.get('c1').outWhy.length, JSON.stringify(io.get('c1')));
+  ws.steps[1].subs[0].ins = [];
+  const io2 = CORE.ioStatus(ws);
+  check('subOuts: đầu ra đã chọn thành không ai dùng → bước con và bước lỗi, nêu một lần, ghi bước con',
+    io2.get('ca').out === 'bad' && io2.get('c1').out === 'bad' && eq(io2.get('c1').outWhy.map((w) => [w.name, w.at]), [['model-v2.pkl', 'Train']]));
+  /* Dời bước con sang bước khác: bước thôi chọn; Hoàn tác (dời về, gắn lại) trả lại. */
+  const mv = mk();
+  const back = CORE.subOutsBackup(mv, [mv.steps[0].subs[0]]);
+  placeSub(mv, mv.steps[0].subs[0], { stepId: 'c2', slot: 1, join: false, at: 0 });
+  const dropped = CORE.pruneSubOuts(mv);
+  check('subOuts: dời bước con sang bước khác → bước cũ thôi chọn đầu ra của nó, bước mới không tự chọn; pruneSubOuts báo bước và số',
+    eq(mv.steps[0].subOuts, ['ob']) && eq(mv.steps[1].subOuts, []) && dropped.length === 1 && dropped[0].step.id === 'c1' && dropped[0].n === 1);
+  check('subOuts: pruneSubOuts lần hai không đổi gì', !CORE.pruneSubOuts(mv).length);
+  placeSub(mv, mv.steps[1].subs[1], { stepId: 'c1', slot: 0, join: false, at: 0 });
+  back(mv);
+  check('subOuts: Hoàn tác dời (về chỗ cũ, gắn lại) → chọn lại đúng thứ tự cũ', eq(mv.steps[0].subOuts, ['oa', 'ob']) && !CORE.pruneSubOuts(mv).length);
+  /* Xoá bước con: insBackup gắn lại cả đầu vào nơi khác lẫn lựa chọn của bước. */
+  const del = mk();
+  const relink = CORE.insBackup(del, [del.steps[0].subs[0]]);
+  const gone = takeSub(del, 'ca');
+  CORE.pruneSubOuts(del);
+  const mid = [...del.steps[0].subOuts];
+  placeSub(del, gone, { stepId: 'c1', slot: 0, join: false, at: 0 });
+  relink(del);
+  check('subOuts: xoá bước con → bước thôi chọn; Hoàn tác gắn lại lựa chọn và đầu vào nơi khác', eq(mid, ['ob']) && eq(del.steps[0].subOuts, ['oa', 'ob'])
+    && eq(del.steps[1].subs[0].ins, ['oa']));
+  /* Xoá đầu ra ở bước con (hộp sửa): bước thôi chọn nó. */
+  const rm = mk();
+  rm.steps[0].subs[1].outs = rm.steps[0].subs[1].outs.filter((o) => o.id !== 'ob');
+  CORE.pruneSubOuts(rm);
+  check('subOuts: xoá đầu ra ở bước con → bước thôi chọn, đầu ra khác giữ', eq(rm.steps[0].subOuts, ['oa']));
+  /* Nhân bản dự án / nhập: id mới, lựa chọn trỏ theo; nhân bản bước con: bản sao không được chọn. */
+  const fc = freshCopy(mk());
+  const ids = fc.steps[0].subs.flatMap((x) => x.outs.map((o) => o.id));
+  check('subOuts: freshCopy đổi id, lựa chọn trỏ theo đúng đầu ra mới', fc.steps[0].subOuts.length === 2 && fc.steps[0].subOuts[0] === ids[0]
+    && fc.steps[0].subOuts[1] === ids[1] && !fc.steps[0].subOuts.includes('oa'));
+  /* JSON, Markdown đi rồi về. */
+  const rt = mk();
+  rt.steps[0].outs.push({ id: 'ow2', name: 'From sub-step: not a ref', ref: '', note: '', final: false });
+  rt.steps[0].subs[1].outs.push({ id: 'ob3', name: 'a · b ← c', ref: '', note: '', final: false });
+  rt.steps[0].subs[1].title = 'Report ← final · v2';
+  rt.steps[0].subOuts.push('ob3');
+  rt.steps[1].subs[0].outs.push({ id: 'oz2', name: 'From sub-step: x', ref: '', note: '', final: true });
+  const md = toMarkdown(rt);
+  const back2 = fromMarkdown(md);
+  const mdOk = md.includes('\nOutputs:\n  - Final: spec\n  - \\From sub-step: not a ref\n  - From sub-step: model.pkl ← Train\n  - From sub-step: report ← Report \\← final \\· v2\n  - From sub-step: a \\· b \\← c ← Report \\← final \\· v2\n')
+    && md.includes('    - Final: From sub-step: x\n');
+  check('subOuts: Markdown ghi "From sub-step: tên ← bước con" sau đầu ra riêng; tên thật mở bằng chữ ấy thì thoát', mdOk, mdOk ? '' : md);
+  check('subOuts: Markdown đi rồi về giữ nguyên, không cảnh báo', eq(shape(rt), shape(back2.workspace)) && !back2.warnings.length,
+    firstDiff(shape(rt), shape(back2.workspace)) + back2.warnings.join(' | '));
+  const js = parseImport(toJSON(rt));
+  check('subOuts: JSON đi rồi về giữ nguyên (id mới)', eq(shape(rt), shape(js.workspaces[0])) && js.workspaces[0].steps[0].subOuts[0] !== 'oa',
+    firstDiff(shape(rt), shape(js.workspaces[0])));
+  const hand = fromMarkdown('# P\n\n## S\n\nOutputs:\n  - own · x.csv\n  - from sub-step: MODEL.PKL\n  - From sub-step: nope ← Train\n\n- [ ] Train\n  Outputs:\n    - model.pkl\n');
+  check('subOuts: Markdown viết tay — nhãn không phân biệt hoa thường, không ghi bước con vẫn khớp theo tên; không thấy thì cảnh báo, bỏ',
+    hand.workspace.steps[0].subOuts.length === 1 && hand.workspace.steps[0].subOuts[0] === hand.workspace.steps[0].subs[0].outs[0].id
+    && hand.workspace.steps[0].outs.length === 1 && hand.warnings.length === 1 && /not found.*nope ← Train/.test(hand.warnings[0]), JSON.stringify(hand.warnings));
+  const old = '# P\n\n## S\n\nOutputs:\n  - own\n\n- [ ] T\n  Outputs:\n    - o\n';
+  check('subOuts: file cũ (không có mục From sub-step) nhập như trước, không chọn gì', eq(fromMarkdown(old).workspace.steps[0].subOuts, [])
+    && toMarkdown(fromMarkdown(old).workspace).includes('Outputs:\n  - own\n\n- [ ] T'));
+  /* Hai tab: subOuts là trường của hộp sửa bước, gộp theo trường. */
+  const mg = mergeEdit({ subOuts: ['oa'], title: 'a' }, { subOuts: ['oa', 'ob'], title: 'a' }, { subOuts: ['oa'], title: 'b' });
+  check('subOuts: gộp khi lưu — mình đổi lựa chọn, tab kia đổi tên → giữ cả hai', eq(mg.merged, { subOuts: ['oa', 'ob'], title: 'b' }) && !mg.conflicts.length);
 }
 
 /* ── Ảnh chụp gợi ý của System design (tools/design-snapshot.json) ──

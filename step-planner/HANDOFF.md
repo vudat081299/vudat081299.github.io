@@ -5,7 +5,6 @@ Làm xong mục nào thì xoá mục ấy.
 ## CHƯA LÀM
 
 - Bằng chứng: tài liệu `proof` của cả bước chưa có dấu trên bảng (chỉ thẻ bước con có).
-- Bàn giao: chưa có "hiện đầu ra của bước con ở cấp bước" (bước bàn giao lại đầu ra của bước con).
 - Bàn giao: đầu vào chỉ chọn được đầu ra đã khai; chưa nhận link / tài liệu bên ngoài làm đầu vào.
 - Bàn giao trên đường nối của System design (`design.edges`) chưa nối với bàn giao `outs` / `ins` trên bảng.
 - Hai tab: bước được tạo lại ("Re-create") sau khi tab kia xoá không gắn lại các quyết định từng gắn với nó.
