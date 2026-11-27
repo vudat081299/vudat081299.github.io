@@ -99,8 +99,11 @@ export function renderBoard(ws, opt = {}) {
     h('button', { type: 'button', class: 'btn', 'data-act': 'clear-filter' }, st ? 'Clear filters' : 'Clear search')));
   placeChildren(board, nodes, moved);
   for (const p of plan) if (p.row) patchRowIndex(p.row, p.i);
-  $('renumber-btn').hidden = !labelsStale(ws);
-  $('filter-note').textContent = filtering ? `${plural(shown, 'sub-step')} match · reordering is off while ${q ? 'searching' : 'filtering'}` : '';
+  /* Đang lọc thì không dời được, số không lệch thêm: Renumber nhường chỗ cho ghi chú số khớp. */
+  $('renumber-btn').hidden = filtering || !labelsStale(ws);
+  const why = `\u00a0· reordering is off while ${q ? 'searching' : 'filtering'}`;
+  $('filter-note').replaceChildren(...(filtering ? [h('span', {}, `${plural(shown, 'sub-step')} match`), h('span', {}, why)] : []));
+  $('filter-note').title = filtering ? `${plural(shown, 'sub-step')} match${why}` : '';
   $('add-step').hidden = filtering;
   /* 4. Đo: thẻ của hàng mới (Compact vừa đổi: mọi thẻ) — một lần dàn trang cho cả lượt. */
   if (compactChanged) markCut(cutBoxes(nodes), new Set([...keep.open, ...openKeys(cutBoxes(nodes))]));

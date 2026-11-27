@@ -3726,6 +3726,33 @@ const check = (name, ok, detail = '') => {
     await ctx.close();
   });
 
+  /* Thanh công cụ: gõ tìm không đẩy hàng xuống dòng (bảng không nhảy); ghi chú rỗng không chiếm dòng; Renumber cao như nút bên cạnh. */
+  await section('Thanh công cụ khi tìm', async () => {
+    for (const [w, hh] of [[1440, 900], [1280, 800], [390, 844]]) {
+      const { ctx, page } = await seeded(w, hh, three);
+      await page.waitForSelector('.card[data-sub="k0a"]');
+      const m = () => page.evaluate(() => {
+        const r = (s) => { const e = document.querySelector(s); return e && e.getClientRects().length ? e.getBoundingClientRect() : null; };
+        return { tools: Math.round(r('.tools').height), board: Math.round(r('#board').top), note: !!r('#filter-note'), q: Math.round(r('#q').left),
+          ren: r('#renumber-btn') && [Math.round(r('#renumber-btn').left), Math.round(r('#renumber-btn').height)], compact: Math.round(r('#compact-btn').height) };
+      });
+      const a = await m();
+      await page.focus('.card[data-sub="k0a"] [data-act="edit-sub"]');
+      await page.keyboard.press('Alt+ArrowRight');
+      const b = await m();
+      check(`thanh công cụ ${w}px: ghi chú lọc rỗng không chiếm chỗ; Renumber cao như nút Compact${w < 500 ? ', thẳng mép ô tìm' : ''}`, !a.note && !b.note
+        && !!b.ren && b.ren[1] === b.compact && (w >= 500 || b.ren[0] === b.q), JSON.stringify({ a, b }));
+      await page.fill('#q', 'việc');
+      const c = await m();
+      const note = await page.evaluate(() => { const n = document.getElementById('filter-note'); return { text: n.textContent, title: n.title }; });
+      check(`thanh công cụ ${w}px: gõ tìm hiện số khớp${w < 500 ? '' : ', hàng không xuống dòng, bảng không nhảy'}`, c.note && /^9 sub-steps match/.test(note.text)
+        && note.title.replace(/ /g, ' ') === '9 sub-steps match · reordering is off while searching' && (w < 500 || (c.tools === a.tools && c.board === b.board)),
+        JSON.stringify({ a, c, note }));
+      check(`thanh công cụ ${w}px: trang không tràn ngang`, (await hOverflow(page)) <= 0);
+      await ctx.close();
+    }
+  });
+
   /* ── Dữ liệu lưu bị hỏng ── */
   await section('Dữ liệu lưu bị hỏng', async () => { // thân giữ thụt lề cũ cho dễ gộp
   const bad = await browser.newContext();
