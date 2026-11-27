@@ -2190,7 +2190,7 @@ const check = (name, ok, detail = '') => {
     await pp.waitForSelector('#sd-fig svg');
     let ws = await cur(pp);
     check('mẫu đặt sẵn: dự án lakehouse-oss lưu hồ sơ, lối của mẫu, chưa chọn phương án',
-      JSON.stringify(ws.design) === JSON.stringify({ path: tpl.design.path, profile: tpl.design.profile, stages: {}, edges: {} }), JSON.stringify(ws.design));
+      JSON.stringify(ws.design) === JSON.stringify({ path: tpl.design.path, profile: tpl.design.profile, stages: {}, edges: {}, arch: tpl.design.arch || {} }), JSON.stringify(ws.design));
     await pp.click('#sd-open');
     await pp.waitForSelector('#dlg-sd[open] .sd-paths');
     const note = async () => (await pp.$('#sd-pane [data-preset="lakehouse-oss"]')) && pp.textContent('#sd-pane [data-preset]');
@@ -2237,7 +2237,7 @@ const check = (name, ok, detail = '') => {
   });
 
   /* ── System design, kiến trúc: trang Architecture vẽ mọi nhóm, mọi kiến trúc; gợi ý đổi theo hồ sơ; công cụ dẫn tới khâu;
-   * "Use this deliverable" đặt lối; dòng kiến trúc trên trang; 390px không tràn ngang ── */
+   * chọn kiến trúc mang lối ở nhóm app là đặt lối; dòng kiến trúc trên trang; 390px không tràn ngang ── */
   await section('System design, kiến trúc', async () => { // thân giữ thụt lề cũ cho dễ gộp
   for (const [w, hh] of [[1280, 900], [390, 844]]) {
     const { ctx: ax, page: ap } = await open(w, hh);
@@ -2272,10 +2272,10 @@ const check = (name, ok, detail = '') => {
     check(`${tag}: mở kiến trúc thấy luồng, công cụ theo khâu, nguồn`, open1);
     if (w === 390) check(`${tag}: trang Architecture không tràn ngang`, await ap.$eval('#dlg-sd', (d) => d.scrollWidth <= d.clientWidth + 1)
       && await ap.$eval('#sd-pane', (p) => p.scrollWidth <= p.clientWidth + 1));
-    await ap.click('#sd-pane [data-arch="monolith"] > summary');
-    await ap.click('#sd-pane [data-arch="monolith"] [data-arch-path]');
+    await ap.click('#sd-pane input[data-arch-pick="app"][value="monolith"]', { force: true });
     const ws = await cur(ap);
-    check(`${tag}: "Use this deliverable" đặt lối, kiến trúc mang dấu Your deliverable; mẹo không còn đòi chọn lối`, ws.design.path === 'demo'
+    check(`${tag}: chọn Single app ở nhóm app đặt lối, kiến trúc mang dấu Your deliverable; mẹo không còn đòi chọn lối`, ws.design.path === 'demo'
+      && !Object.keys(ws.design.arch || {}).length
       && /Your deliverable/.test(await ap.textContent('#sd-pane [data-arch="monolith"] > summary')) && (await recs()).app === 'monolith'
       && !(await ap.$('#sd-pane .sd-tip[data-missing~="path"]')));
     const stage = cat.architectures.find((f) => f.id === 'processing').entries.find((e) => e.id === r.processing);
@@ -2287,6 +2287,66 @@ const check = (name, ok, detail = '') => {
     check(`${tag}: dòng kiến trúc trên trang nêu các kiến trúc gợi ý`, /^Architecture: /.test(line) && line.includes(stage.name), line);
     await ax.close();
   }
+  });
+
+  /* ── System design, chọn kiến trúc (PLAN-042): chọn / bỏ bằng chuột và phím, focus ở lại, vòng focus chỉ cho phím; lưu qua tải
+   * lại; Apply path theo kiến trúc chọn. ── */
+  await section('System design, chọn kiến trúc', async () => {
+    const { ctx: cx, page: cp } = await open(1280, 900);
+    await cp.click('#start .tpl[data-tpl="crisp-dm"]');
+    await cp.waitForSelector('#sd-fig svg');
+    await cp.click('#sd-arch [data-arch-open]');
+    await cp.waitForSelector('#dlg-sd[open] .sd-fam');
+    const pickSel = (f, v) => `#sd-pane input[data-arch-pick="${f}"][value="${v}"]`;
+    const ring = (sel) => cp.$eval(sel, (i) => ({ active: document.activeElement === i, quiet: document.documentElement.classList.contains('quiet-focus'),
+      outline: getComputedStyle(i.nextElementSibling).outlineStyle }));
+    await cp.click(pickSel('storage', 'lakehouse'), { force: true });
+    let ws = await cur(cp);
+    const r1 = await ring(pickSel('storage', 'lakehouse'));
+    check('chọn kiến trúc: bấm chuột lưu ngay, thẻ mang dấu Chosen, focus ở lại ô vừa chọn, không vòng focus (chuột)',
+      ws.design.arch.storage === 'lakehouse' && r1.active && r1.quiet && r1.outline === 'none'
+      && /Chosen/.test(await cp.textContent('#sd-pane [data-arch="lakehouse"] > summary'))
+      && !!(await cp.$('#sd-pane .sd-arch.is-rec[data-arch="lakehouse"]')), JSON.stringify({ arch: ws.design.arch, r1 }));
+    await cp.keyboard.press('ArrowRight');
+    ws = await cur(cp);
+    const r2 = await ring(pickSel('storage', ''));
+    check('chọn kiến trúc: phím mũi tên trong nhóm đổi lựa chọn (Lakehouse → Not chosen là bỏ chọn), focus theo, có vòng focus (phím)',
+      !(ws.design?.arch || {}).storage && r2.active && !r2.quiet && r2.outline !== 'none', JSON.stringify({ arch: ws.design?.arch, r2 }));
+    await cp.keyboard.press('ArrowLeft');
+    ws = await cur(cp);
+    check('chọn kiến trúc: ← từ Not chosen chọn lại kiến trúc cuối (Lakehouse)', ws.design.arch.storage === 'lakehouse' && (await ring(pickSel('storage', 'lakehouse'))).active);
+    await cp.click(pickSel('processing', 'kappa'), { force: true });
+    await cp.click('#sd-nav [data-at="0"]');
+    await cp.click('#sd-pane input[data-path][value="pipeline"]', { force: true });
+    await cp.click('#sd-pane [data-apply]');
+    ws = await cur(cp);
+    const picks = (sid) => (ws.design.stages[sid]?.pick || []);
+    check('chọn kiến trúc: Apply path theo kiến trúc chọn — lakehouse: object storage + Iceberg + catalog; Kappa: Kafka, công cụ stream',
+      picks('raw').includes('iceberg') && picks('raw').includes('polaris') && picks('ingest').includes('kafka')
+      && ['spark-streaming', 'flink'].some((x) => picks('process').includes(x)), JSON.stringify(ws.design.stages));
+    await cp.keyboard.press('Escape');
+    const line = await cp.textContent('#sd-arch');
+    check('chọn kiến trúc: dòng kiến trúc trên trang nêu kiến trúc đã chọn', /^Architecture: chosen Lakehouse · Kappa architecture/.test(line), line);
+    await cp.reload();
+    await cp.waitForSelector('#sd-fig svg');
+    await cp.click('#sd-arch [data-arch-open]');
+    await cp.waitForSelector('#dlg-sd[open] .sd-fam');
+    check('chọn kiến trúc: tải lại vẫn giữ lựa chọn, mục Architecture ghi số đã chọn',
+      await cp.$eval(pickSel('storage', 'lakehouse'), (i) => i.checked) && await cp.$eval(pickSel('processing', 'kappa'), (i) => i.checked)
+      && /2 chosen/.test(await cp.textContent('#sd-nav [data-at="2"]')));
+    /* Kiến trúc chọn giải thích luật hồ sơ ↔ công cụ (Kappa cho dữ liệu không liên tục): trang Checks ghi lời nhắc, không đếm là cảnh báo. */
+    await cp.click('#sd-nav [data-at="1"]');
+    await cp.click('#sd-pane input[data-q="fresh"][value="batch"]', { force: true });
+    await cp.click('#sd-nav li:last-child .sd-nav-btn');
+    const notes = await cp.$$eval('#sd-pane [data-arch-note]', (n) => n.map((x) => x.dataset.archNote));
+    const kTitle = (await cp.evaluate(async () => (await (await fetch('data/system-design.json')).json()).checks)).find((c) => c.id === 'kafka-for-batch-data').title;
+    const hard = await cp.$$eval('#sd-pane .sd-warnbox b', (b) => b.map((x) => x.textContent));
+    const sub = await cp.textContent('#sd-sub');
+    check('chọn kiến trúc: luật hồ sơ ↔ công cụ mà kiến trúc chọn giải thích là lời nhắc (Checks), không vào số cảnh báo',
+      notes.includes('kafka-for-batch-data') && !hard.includes(kTitle) && (hard.length ? sub.includes(`${hard.length} warning`) : !sub.includes('warning')),
+    JSON.stringify({ notes, hard, sub }));
+    await cx.close();
+
   });
 
   /* ── Sơ đồ System design như khung nhìn: nhịp dọc của hộp (Handoffs, "Show other options"), nhãn bàn giao trên đường nối,
@@ -3884,24 +3944,24 @@ const check = (name, ok, detail = '') => {
     await ap.waitForSelector('#dlg-sd[open] .sd-fam');
     const guide = await ap.evaluate(() => {
       const nav = document.querySelector('#sd-nav [data-at="2"]'), app = document.querySelector('#sd-pane [data-fam="app"]');
-      const use = [...app.querySelectorAll('[data-arch-path]')];
+      const picks = [...document.querySelectorAll('#sd-pane .sd-fam')].map((f) => [...f.querySelectorAll('input[data-arch-pick]')]);
       return { note: !!document.querySelector('#sd-pane .sd-note[data-guide]'), cls: nav.className, sr: nav.querySelector('.sr').textContent,
         needs: [...document.querySelectorAll('#sd-pane .sd-fam')].every((f) => !!f.querySelector('.sd-rec, .sd-need')),
         needPath: !!app.querySelector('.sd-need [data-need="path"][data-at="0"]'),
-        use: use.length > 0 && use.every((b) => b.getClientRects().length > 0 && !b.closest('details').open) };
+        use: picks.every((l) => l.length > 2 && l[0].value === '' && l[0].checked && l.every((b) => b.closest('label').getClientRects().length > 0)) };
     });
-    check('Architecture: dòng "guide" ở đầu, mục trái dấu trung tính "(guide)", mỗi nhóm nêu gợi ý hay câu còn thiếu, "Use this deliverable" thấy khi thẻ gập',
+    check('Architecture: dòng "guide" ở đầu, mục trái dấu trung tính "(guide)", mỗi nhóm nêu gợi ý hay câu còn thiếu, mỗi nhóm có hàng chọn (Not chosen đang chọn)',
       guide.note && /\bis-guide\b/.test(guide.cls) && guide.sr.includes('(guide)') && guide.needs && guide.needPath && guide.use, JSON.stringify(guide));
     const card = '#sd-pane [data-fam="storage"] .sd-arch:not(.is-rec)';
     const bc0 = await ap.$eval(card, (d) => getComputedStyle(d).borderColor);
     await ap.hover(`${card} > summary`);
     const hovered = await ap.waitForFunction(([s, c]) => getComputedStyle(document.querySelector(s)).borderColor !== c, [card, bc0], { timeout: 2000 }).then(() => true, () => false);
     check('Architecture: thẻ kiến trúc đổi viền khi rê chuột', hovered);
-    const arch = await ap.$eval('#sd-pane [data-fam="app"] [data-arch-path]', (b) => b.closest('[data-arch]').dataset.arch);
-    await ap.click(`#sd-pane [data-arch="${arch}"] [data-arch-path]`);
+    const arch = await ap.$eval('#sd-pane [data-fam="app"] [data-arch]', (b) => b.dataset.arch);
+    await ap.click(`#sd-pane input[data-arch-pick="app"][value="${arch}"]`, { force: true });
     const used = await ap.$eval(`#sd-pane [data-arch="${arch}"]`, (d) => ({ open: d.open, mine: /Your deliverable/.test(d.querySelector('summary').textContent),
       rec: document.querySelector('#sd-pane [data-fam="app"] .sd-rec')?.dataset.rec }));
-    check('Architecture: "Use this deliverable" đặt lối mà không mở thẻ; nhóm app gợi ý đúng kiến trúc ấy', !used.open && used.mine && used.rec === arch
+    check('Architecture: chọn kiến trúc mang lối đặt lối mà không mở thẻ; nhóm app gợi ý đúng kiến trúc ấy', !used.open && used.mine && used.rec === arch
       && !!(await cur(ap)).design.path, JSON.stringify(used));
     await ap.click(`#sd-nav [data-at="${pageOf('raw')}"]`);
     await ap.click('#sd-pane .sd-opt input');

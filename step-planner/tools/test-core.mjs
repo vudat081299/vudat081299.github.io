@@ -3,7 +3,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { progress, nextActionIds, projectNextIds, slotsOf, subPlace, placeSub, takeSub, shiftTarget, liveLabels, redoCount, canReopen, nextWaitingOn, inGroup, fold } from '../js/core/board.js';
-import { normDesign, rankOptions, decidedCount, catalogErrors, applyPath, effProfile, warnings, notNeededBy, archAdvice, fitOf, presetDesign, isPreset } from '../js/core/design.js';
+import { normDesign, rankOptions, decidedCount, catalogErrors, applyPath, effProfile, warnings, notNeededBy, archAdvice, archState, stageLists, pathOf, fitOf, presetDesign, isPreset } from '../js/core/design.js';
 import { readStageLine } from '../js/core/design-md.js';
 import { snake, planTasks, diagramNodes, flowEdges, bothDecided, planDiff, applyPlan, PLAN_STEP } from '../js/core/design-plan.js';
 import { parseImport, toJSON, toBackup, shape, counts, slug } from '../js/core/io.js';
@@ -549,7 +549,7 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   check('thiết kế: chuẩn hoá bỏ id lạ, khâu trống; "không cần" giữ lựa chọn ẩn', eq(normDesign({
     profile: { size: 'small', Bad: 'x', budget: 'Free!' },
     stages: { serve: { pick: ['fastapi', 'fastapi', 'X Y', 3] }, host: { pick: [] }, ingest: { skip: true, pick: ['cron'], own: 'z' }, 'a b': { pick: ['q'] } },
-  }), { path: '', profile: { size: 'small' }, stages: { serve: { pick: ['fastapi'], skip: false, own: '', note: '' }, ingest: { pick: ['cron'], skip: true, own: 'z', note: '' } }, edges: {} }));
+  }), { path: '', profile: { size: 'small' }, stages: { serve: { pick: ['fastapi'], skip: false, own: '', note: '' }, ingest: { pick: ['cron'], skip: true, own: 'z', note: '' } }, edges: {}, arch: {} }));
   check('thiết kế: không còn gì thì null', normDesign({ profile: {}, stages: { a: { pick: [] } } }) === null && normDesign('x') === null);
   const s = { options: [{ id: 'a', level: 3, fit: { size: ['large'] } }, { id: 'b', level: 2, fit: { size: ['small'], budget: ['free'] } }, { id: 'c', level: 1, fit: {} }] };
   const r = rankOptions(s, { size: 'small', budget: 'free' });
@@ -656,12 +656,14 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   /* Mọi luật trong danh mục bắn được với từng giá trị nêu trong `if` (giá trị ấy ở khoá ấy, khoá khác lấy giá trị đầu), khâu
    * trong `unless` quyết bằng thứ không khớp. */
   const stageIds = new Set(cat.stages.map((x) => x.id));
+  const famIds = new Set(cat.architectures.map((f) => f.id));
   const fires = (c, pickOf) => {
-    const stages = {}, profile = {};
+    const stages = {}, profile = {}, arch = {};
     let path = '';
     for (const [k, vs] of Object.entries(c.if)) {
       const v = pickOf(k, vs);
       if (k === 'path') path = v;
+      else if (!stageIds.has(k) && famIds.has(k)) arch[k] = v;
       else if (!stageIds.has(k)) profile[k] = v;
       else stages[k] = v === 'skip' ? { skip: true } : v === 'own' ? { own: 'x' } : P(v);
     }
@@ -670,7 +672,7 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
       const other = cat.stages.find((x) => x.id === k).options.find((o) => !v.includes(o.id));
       stages[k] = other ? P(other.id) : { skip: true };
     }
-    return W(stages, profile, path).includes(c.id);
+    return warnings(cat, normDesign({ path, profile, stages, arch })).some((x) => x.id === c.id);
   };
   const dead = cat.checks.flatMap((c) => Object.entries(c.if).flatMap(([key, vals]) => vals
     .filter((val) => !fires(c, (k, vs) => (k === key ? val : vs[0]))).map((val) => `${c.id} ${key}=${val}`)));
@@ -923,7 +925,12 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
     'data-pipeline': { layers: 'medallion', processing: 'batch-etl', app: 'static-report' },
     'lakehouse-oss': { storage: 'lakehouse', layers: 'medallion', processing: 'batch-elt', app: 'static-report' },
   };
+  /* Kiến trúc mẫu chọn sẵn (PLAN-042): chỉ khi đúng ý mẫu — lakehouse-oss là lakehouse có medallion; it5425-sports cố ý dựng
+   * lakehouse cho dữ liệu nhỏ để học quản trị dữ liệu. Mẫu khác để trống. */
+  const PRESET_CHOSEN = {};
   const stageOf = (id) => cat.stages.find((x) => x.id === id);
+  /** Phương án hợp hồ sơ, kể cả hồ sơ mà kiến trúc người dùng chọn đứng trên (PLAN-042). */
+  const fitsIn = (d, sid, o) => rankOptions(stageOf(sid), effProfile(cat, d), pathOf(cat, d), stageLists(cat, d, sid, false)).find((x) => x.opt.id === o).ok;
   const plans = {};
   for (const t of templates.filter((x) => x.design)) {
     const ws = fromTemplate(t), pre = presetDesign(t);
@@ -935,6 +942,8 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
     const got = Object.fromEntries(archAdvice(cat, ws.design).map((a) => [a.family, a.id]));
     const want = PRESET_ARCH[t.id] || {};
     check(`mẫu đặt sẵn ${t.id}: gợi ý kiến trúc`, !!PRESET_ARCH[t.id] && Object.entries(want).every(([f, id]) => got[f] === id), JSON.stringify(got));
+    const chosen = Object.fromEntries(archState(cat, ws.design).filter((a) => a.chosen && !a.viaPath).map((a) => [a.family, a.chosen]));
+    check(`mẫu đặt sẵn ${t.id}: kiến trúc chọn sẵn`, eq(chosen, PRESET_CHOSEN[t.id] || {}), JSON.stringify(chosen));
     const prof = effProfile(cat, ws.design);
     const bad = [];
     for (const path of pre.path ? [pre.path] : cat.paths.map((x) => x.id)) {
@@ -942,22 +951,22 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
       if (path === pre.path) plans[t.id] = r.next;
       for (const w of warnings(cat, r.next).filter((x) => !x.caveat)) bad.push(`${path}: luật ${w.id}`);
       for (const [sid, st] of Object.entries(r.next.stages)) {
-        for (const o of st.pick) if (!fitOf(stageOf(sid).options.find((x) => x.id === o), effProfile(cat, r.next)).ok) bad.push(`${path}: ${sid}=${o} lệch hồ sơ`);
+        for (const o of st.pick) if (!fitsIn(r.next, sid, o)) bad.push(`${path}: ${sid}=${o} lệch hồ sơ`);
       }
-      const adv = archAdvice(cat, r.next).find((x) => x.family === 'processing');
+      const adv = archState(cat, r.next).find((x) => x.family === 'processing');
       const tools = adv.id ? cat.architectures.find((f) => f.id === 'processing').entries.find((e) => e.id === adv.id).tools : {};
       for (const sid of ['ingest', 'process']) {
         const st = r.next.stages[sid];
         if (st && !st.skip && tools[sid] && !st.pick.some((o) => tools[sid].includes(o))) bad.push(`${path}: ${sid}=${st.pick} ngoài kiến trúc ${adv.id}`);
       }
-      const sAdv = archAdvice(cat, r.next).find((x) => x.family === 'storage');
+      const sAdv = archState(cat, r.next).find((x) => x.family === 'storage');
       const sTools = sAdv.id ? cat.architectures.find((f) => f.id === 'storage').entries.find((e) => e.id === sAdv.id).tools : {};
       for (const sid of ['raw', 'store']) {
         const st = r.next.stages[sid];
         if (st && !st.skip && sTools[sid] && !st.pick.some((o) => sTools[sid].includes(o))) bad.push(`${path}: ${sid}=${st.pick} ngoài kiến trúc ${sAdv.id}`);
       }
     }
-    check(`mẫu đặt sẵn ${t.id}: Apply path không làm luật báo, không chọn phương án lệch hồ sơ, Ingestion và Processing theo kiến trúc xử lý, Raw storage và Analytical store theo kiến trúc lưu trữ đang gợi ý`, !bad.length && Object.keys(prof).length > 0, bad.join(' | '));
+    check(`mẫu đặt sẵn ${t.id}: Apply path không làm luật báo, không chọn phương án lệch hồ sơ (trừ câu kiến trúc chọn đứng trên), Ingestion và Processing theo kiến trúc xử lý, Raw storage và Analytical store theo kiến trúc lưu trữ (chọn, hay gợi ý)`, !bad.length && Object.keys(prof).length > 0, bad.join(' | '));
   }
   const pick = (id, sid) => plans[id]?.stages[sid]?.skip ? 'skip' : plans[id]?.stages[sid]?.pick.join('+');
   check('mẫu đặt sẵn lakehouse-oss: Apply path chọn công cụ tự host — MinIO, dbt + dbt test, DuckDB trên Iceberg',
@@ -1137,7 +1146,7 @@ check('Markdown: __ dính chữ phía sau không đóng in đậm', under('a = x
   const md = '# P\n\n## System design\n\nProfile: size small · budget free\n\n- dòng lạ\n- Serving: FastAPI [serve: fastapi]\n';
   const back = fromMarkdown(md);
   check('thiết kế: Markdown viết tay — dòng không có [khâu: …] thì cảnh báo, không thành bước', back.workspace.steps.length === 0
-    && eq(back.workspace.design, { path: '', profile: { size: 'small', budget: 'free' }, stages: { serve: { pick: ['fastapi'], skip: false, own: '', note: '' } }, edges: {} }) && back.warnings.length === 1);
+    && eq(back.workspace.design, { path: '', profile: { size: 'small', budget: 'free' }, stages: { serve: { pick: ['fastapi'], skip: false, own: '', note: '' } }, edges: {}, arch: {} }) && back.warnings.length === 1);
 }
 
 /* Quyết định gắn với bước trùng tên: Markdown ghi `Step: N. tên`, nhập lại đúng bước thứ N; file cũ `Step: tên` vẫn đọc. */
@@ -1668,6 +1677,67 @@ function designSnapshot(cat) {
   const lo = V.clampPan({ x: -500, y: -500, k: 1 }, 30, 20, 800, 400), hi = V.clampPan({ x: 5000, y: 5000, k: 1 }, 30, 20, 800, 400);
   check('view-math: clampPan — sơ đồ hẹp hơn KEEP thì kéo hết cỡ vẫn thấy trọn', lo.x === 0 && lo.y === 0 && hi.x === 770 && hi.y === 380,
     JSON.stringify({ lo, hi }));
+}
+
+/* Kiến trúc người dùng chọn (PLAN-042): lưu trong dự án; công cụ đã chọn ở khâu > kiến trúc chọn > hồ sơ; hồ sơ nói khác chỉ là
+ * lời nhắc, khâu đã chọn ngược kiến trúc thì báo; Markdown, JSON đi rồi về; id lạ bị bỏ khi có danh mục. */
+{
+  const cat = JSON.parse(readFileSync(fileURLToPath(new URL('../data/system-design.json', import.meta.url)), 'utf8'));
+  const P = (...ids) => ({ pick: ids, skip: false, own: '', note: '' });
+  const st = (d, sid) => (d.stages[sid]?.skip ? 'skip' : (d.stages[sid]?.pick || []).join('+'));
+  const fam = (d, f) => archState(cat, d).find((a) => a.family === f);
+  const ids = (d) => warnings(cat, d).filter((w) => !w.caveat).map((w) => w.id);
+  const small = { size: 'small', kind: 'tables', fresh: 'batch', latency: 'batch', users: 'few', budget: 'free', selfhost: 'yes' };
+  const base = normDesign({ path: 'pipeline', profile: small });
+  const lake = normDesign({ ...base, arch: { storage: 'lakehouse' } });
+  const r0 = applyPath(cat, base, 'pipeline').next, r1 = applyPath(cat, lake, 'pipeline').next;
+  check('kiến trúc chọn: chưa chọn thì Apply path như cũ (dữ liệu nhỏ: không Iceberg); chọn lakehouse thì kiến trúc thắng hồ sơ: MinIO + Iceberg + Polaris, DuckDB trên Iceberg',
+    !st(r0, 'raw').includes('iceberg') && st(r1, 'raw') === 'minio+iceberg+polaris' && st(r1, 'store') === 'duckdb-iceberg' && !ids(r1).length,
+  `${st(r0, 'raw')} / ${st(r1, 'raw')} ${st(r1, 'store')} ${ids(r1)}`);
+  const s1 = fam(lake, 'storage');
+  check('kiến trúc chọn: gợi ý vẫn tính, khác cái đã chọn (hồ sơ nói khác) — không phải luật báo',
+    s1.chosen === 'lakehouse' && s1.rec === 'files-db' && s1.id === 'lakehouse' && !!s1.why && !warnings(cat, lake).length, JSON.stringify(s1));
+  const mine = normDesign({ ...lake, stages: { raw: P('project-folder') } });
+  const r2 = applyPath(cat, mine, 'pipeline').next;
+  check('kiến trúc chọn: khâu người dùng đã chọn đứng trên kiến trúc (Apply path không đụng); chọn ngược kiến trúc thì báo',
+    st(r2, 'raw') === 'project-folder' && ids(mine).includes('lakehouse-without-table-format')
+    && !ids(normDesign({ ...lake, stages: { raw: P('minio', 'iceberg', 'polaris') } })).includes('lakehouse-without-table-format'), ids(mine).join());
+  const kappa = normDesign({ ...base, arch: { processing: 'kappa' } });
+  const rk = applyPath(cat, kappa, 'pipeline').next;
+  const wk = warnings(cat, rk);
+  check('kiến trúc chọn: Kappa cho dữ liệu theo ngày — Kafka và công cụ stream; luật hồ sơ ↔ công cụ thành lời nhắc gắn với Kappa, không chặn',
+    st(rk, 'ingest').split('+').includes('kafka') && ['python-consumer', 'spark-streaming', 'flink'].some((x) => st(rk, 'process').includes(x))
+    && wk.some((w) => w.id === 'kafka-for-batch-data' && w.caveat && w.arch === 'kappa') && !ids(rk).length,
+  `${st(rk, 'ingest')} ${st(rk, 'process')} ${wk.map((w) => `${w.id}${w.arch ? '@' + w.arch : ''}`).join()}`);
+  check('kiến trúc chọn: chưa chọn thì luật hồ sơ ↔ công cụ vẫn là cảnh báo',
+    ids(normDesign({ ...base, stages: { ingest: P('kafka') } })).includes('kafka-for-batch-data'));
+  const stream = normDesign({ ...base, arch: { processing: 'lambda' }, stages: { ingest: P('kafka'), process: P('dbt') } });
+  check('kiến trúc chọn: Lambda mà Processing chỉ có công cụ lô thì báo thiếu công cụ stream',
+    ids(stream).includes('stream-architecture-without-stream-processor') && !ids(stream).includes('lambda-without-batch-layer'), ids(stream).join());
+  const ui = rankOptions(cat.stages.find((x) => x.id === 'raw'), effProfile(cat, lake), pathOf(cat, lake), stageLists(cat, lake, 'raw', false));
+  const ice = ui.find((x) => x.opt.id === 'iceberg');
+  check('kiến trúc chọn: trang khâu xếp công cụ của kiến trúc chọn lên trước, câu hồ sơ bỏ qua có ghi (relaxed)',
+    ui[0].opt.id === 'minio' && ui[0].top && ice.ok && eq(ice.relaxed, ['size']) && ice.arch === 'lakehouse', JSON.stringify(ui.slice(0, 3).map((x) => x.opt.id)));
+  /* Lưu: Markdown, JSON; id lạ bị bỏ khi có danh mục; kiến trúc mang lối thành `path`. */
+  const ws = normWorkspace({ name: 'A', steps: [], design: { ...lake, arch: { storage: 'lakehouse', layers: 'medallion', processing: 'batch-elt', app: 'serverless' } } });
+  const md = toMarkdown(ws, cat);
+  const back = fromMarkdown(md);
+  check('kiến trúc chọn: Markdown ghi `Architecture:` (id) kèm tên cho người đọc, nhập lại đúng, không cảnh báo',
+    /^Architecture: storage lakehouse · layers medallion · processing batch-elt · app serverless {2}$/m.test(md) && /^ {2}Where the data lives: Lakehouse/m.test(md)
+    && eq(back.workspace.design.arch, ws.design.arch) && !back.warnings.length && eq(shape(ws), shape(back.workspace)), md.split('\n').filter((l) => /Architecture|Where/.test(l)).join(' | '));
+  check('kiến trúc chọn: JSON đi rồi về giữ nguyên', eq(parseImport(toJSON(ws)).workspaces[0].design.arch, ws.design.arch));
+  const pruned = normDesign({ path: '', arch: { storage: 'mesh', nope: 'lakehouse', processing: 'kappa', app: 'monolith', 'Bad Id': 'x' } }, cat);
+  check('kiến trúc chọn: có danh mục thì id lạ bị bỏ; kiến trúc mang lối thành lối (không giữ hai chỗ)',
+    eq(pruned.arch, { processing: 'kappa' }) && pruned.path === 'demo'
+    && eq(normDesign({ arch: { storage: 'mesh', 'Bad Id': 'x' } }).arch, { storage: 'mesh' }), JSON.stringify(pruned));
+  const imp = parseImport(md.replace('app serverless', 'app serverless · ml mesh'), cat);
+  check('kiến trúc chọn: nhập có danh mục bỏ kiến trúc lạ, kèm cảnh báo; không danh mục thì giữ (giao diện bỏ qua)',
+    eq(imp.workspaces[0].design.arch, ws.design.arch) && imp.warnings.some((w) => /unknown architecture ml mesh/.test(w))
+    && parseImport(md.replace('app serverless', 'app serverless · ml mesh')).workspaces[0].design.arch.ml === 'mesh', imp.warnings.join(' | '));
+  check('kiến trúc chọn: lối = kiến trúc của nhóm app (qua lối, không lưu ở arch)', (() => {
+    const a = fam(normDesign({ path: 'demo' }), 'app');
+    return a.chosen === 'monolith' && a.viaPath && !stageLists(cat, normDesign({ path: 'demo' }), 'serve', false).length;
+  })());
 }
 
 if (fails) { console.log(`test-core: ${fails} LỖI`); process.exit(1); }

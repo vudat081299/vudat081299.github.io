@@ -11,8 +11,9 @@
      con đứng trước trong cùng bước (dữ liệu chỉ chảy xuôi). Bước con của mẫu không có `par`: mỗi bước con một ô, nên luật này
      cũng chặn bên nhận cùng ô với bên giao (treo); test-core kiểm lại trên dự án mở từ mẫu. `ref`: đường dẫn hay link https, một dòng.
      Link tới trang của repo (https://vudat081299.github.io/…): file có trong repo, neo `#id` có trên trang.
-     `design` (tuỳ chọn, PLAN-033): {profile, path?} đặt sẵn cho System design khi tạo dự án; câu và câu trả lời có trong
-     hồ sơ của system-design.json, `path` là lối có thật, hồ sơ không rỗng. Mẫu trống không có `design`.
+     `design` (tuỳ chọn, PLAN-033): {profile, path?, arch?} đặt sẵn cho System design khi tạo dự án; câu và câu trả lời có trong
+     hồ sơ của system-design.json, `path` là lối có thật, hồ sơ không rỗng. `arch` (PLAN-042): nhóm kiến trúc → kiến trúc
+     chọn sẵn, đều có thật; kiến trúc mang lối (nhóm app) không ở đây, ghi `path`. Mẫu trống không có `design`.
   2. js/**/*.js: không innerHTML / outerHTML / insertAdjacentHTML / document.write — chữ người dùng chỉ qua textContent.
      Import (cả `export … from`) trỏ tới file có thật; `import(…)` chỉ nhận chuỗi cố định; mọi file trừ main.js có nơi import
      (không mồ côi). js/core/ là logic thuần: code (đọc bằng `js_scan`: bỏ chú thích, chữ trong chuỗi không tính) không gọi tên
@@ -24,9 +25,9 @@
      có trong hồ sơ; link https; mỗi câu trả lời đơn lẻ của hồ sơ có ít nhất một phương án hợp ở mọi khâu.
      `architectures`: nhóm kiến trúc {id, label, question, note?, sources?, entries, rules}; kiến trúc {id, name, what, use,
      avoid, flow, tools, path?, sources}: `tools` trỏ phương án có thật, `path` trỏ lối có thật; luật gợi ý {if, arch, why}
-     dùng cùng khoá điều kiện với `checks`, `arch` là kiến trúc của nhóm ("" = nhóm không cần).
+     dùng cùng khoá điều kiện với `checks` (trừ khoá nhóm kiến trúc), `arch` là kiến trúc của nhóm ("" = nhóm không cần).
      Luật báo {id, title, if, unless?, msg, caveat?}: `caveat: true` = luật nhắc cách dùng, phương án vẫn đúng (Apply path
-     không né nó).
+     không né nó). `if` nhận thêm id nhóm kiến trúc không trùng id khâu (PLAN-042): giá trị là kiến trúc không mang lối.
   5. Ngôn ngữ (PLAN-028): mọi chữ của mẫu có chữ Việt (trừ chuỗi chỉ là đường dẫn, tên file); mọi chuỗi của
      system-design.json là lời giải thích tiếng Việt, trừ nhãn và tên (DESIGN_EN, tiếng Anh), tên trang ngoài (DESIGN_TITLES,
      giữ chữ của trang), id, URL, lệnh (DESIGN_CODE); chuỗi trong js/**/*.js và chữ của index.html không có chữ Việt, trừ chuỗi
@@ -68,7 +69,7 @@ OUT_KEYS = {'key', 'name', 'ref', 'note', 'final'}
 KEY_RE = r'[a-z0-9][a-z0-9-]{0,39}'
 TPL_KEYS = {'id', 'group', 'name', 'output', 'description', 'design', 'steps'}
 TPL_GROUPS = ('specific',)  # không có `group`: mẫu chung
-TPL_DESIGN_KEYS = {'profile', 'path'}
+TPL_DESIGN_KEYS = {'profile', 'path', 'arch'}
 
 
 def need_str(where, obj, key, required=True):
@@ -222,6 +223,7 @@ def check_tpl_design(data, design):
     """`design` của mẫu (PLAN-033): hồ sơ và lối đặt sẵn, chỉ id có trong danh mục System design."""
     answers = {q.get('id'): [c.get('id') for c in q.get('choices') or []] for q in design.get('profile') or []}
     paths = {p.get('id') for p in design.get('paths') or []}
+    fams = {f.get('id'): {e.get('id'): e for e in f.get('entries') or []} for f in design.get('architectures') or []}
     for t in data.get('templates') or []:
         if 'design' not in t:
             continue
@@ -229,7 +231,7 @@ def check_tpl_design(data, design):
         if not t.get('steps'):
             err(f'{w}: mẫu trống không đặt sẵn System design')
         if not isinstance(d, dict) or set(d) - TPL_DESIGN_KEYS or not isinstance(d.get('profile'), dict) or not d['profile']:
-            err(f'{w}: phải là {{profile, path?}}, `profile` không rỗng')
+            err(f'{w}: phải là {{profile, path?, arch?}}, `profile` không rỗng')
             continue
         for q, a in d['profile'].items():
             if q not in answers:
@@ -238,6 +240,17 @@ def check_tpl_design(data, design):
                 err(f'{w}: "{q}" không có lựa chọn "{a}" (có {answers[q]})')
         if 'path' in d and d['path'] not in paths:
             err(f'{w}: lối "{d["path"]}" không có trong system-design.json (có {sorted(paths)})')
+        arch = d.get('arch', {})
+        if not isinstance(arch, dict) or ('arch' in d and not arch):
+            err(f'{w}: `arch` là object nhóm → kiến trúc, không rỗng')
+            continue
+        for f, a in arch.items():
+            if f not in fams:
+                err(f'{w}: nhóm kiến trúc "{f}" không có trong system-design.json')
+            elif a not in fams[f]:
+                err(f'{w}: nhóm "{f}" không có kiến trúc "{a}" (có {sorted(fams[f])})')
+            elif 'path' in fams[f][a]:
+                err(f'{w}: kiến trúc "{a}" mang lối: ghi `path`, không ghi ở `arch`')
 
 
 def check_design(data):
@@ -328,12 +341,15 @@ def check_design(data):
     check_architectures(data, answers, options)
 
 
-def check_cond(w, cond, answers, options, paths):
-    """Điều kiện của luật (`if`, `unless`): khoá là khâu (phương án có thật, `skip`, `own`), câu hồ sơ hay `path`."""
+def check_cond(w, cond, answers, options, paths, fams=None):
+    """Điều kiện của luật (`if`, `unless`): khoá là khâu (phương án có thật, `skip`, `own`), câu hồ sơ hay `path`. `fams`
+    (chỉ luật báo): thêm id nhóm kiến trúc không trùng id khâu, giá trị là kiến trúc người dùng chọn (PLAN-042), không ở `unless`."""
+    fams = fams or {}
     for k, vals in cond.items():
-        ok = options[k] | {'skip', 'own'} if k in options else set(answers[k]) if k in answers else paths if k == 'path' else None
+        ok = (options[k] | {'skip', 'own'} if k in options else set(answers[k]) if k in answers else paths if k == 'path'
+              else fams[k] if k in fams and not w.endswith('unless') else None)
         if ok is None:
-            err(f'{w}.{k} — không phải khâu, câu hồ sơ hay path')
+            err(f'{w}.{k} — không phải khâu, câu hồ sơ, path{" hay nhóm kiến trúc (chỉ ở `if`)" if fams else ""}')
         elif not isinstance(vals, list) or not vals or set(vals) - ok:
             err(f'{w}.{k} có giá trị lạ {vals}')
 
@@ -413,8 +429,11 @@ def check_architectures(data, answers, options):
 
 
 def check_checks(data, answers, options):
-    """Luật phối hợp: khoá điều kiện là khâu (phương án có thật, `skip`, `own`), câu hồ sơ (câu trả lời) hay `path` (id lối)."""
+    """Luật phối hợp: khoá điều kiện là khâu (phương án có thật, `skip`, `own`), câu hồ sơ (câu trả lời), `path` (id lối) hay
+    nhóm kiến trúc không trùng khâu (id kiến trúc không mang lối)."""
     paths = {p.get('id') for p in data.get('paths') or []}
+    fams = {f.get('id'): {e.get('id') for e in f.get('entries') or [] if 'path' not in e}
+            for f in data.get('architectures') or [] if isinstance(f, dict) and f.get('id') not in options}
     seen = set()
     checks = data.get('checks')
     if not isinstance(checks, list):
@@ -438,7 +457,7 @@ def check_checks(data, answers, options):
             err(f'{w}: `if` cần ít nhất một điều kiện')
             continue
         for part in ('if', 'unless'):
-            check_cond(f'{w}: {part}', c.get(part) or {}, answers, options, paths)
+            check_cond(f'{w}: {part}', c.get(part) or {}, answers, options, paths, fams)
 
 
 def check_paths(data, answers, options):
@@ -871,8 +890,12 @@ def self_test():
         ('mẫu: design — câu hồ sơ không có', preset('lakehouse-oss', lambda t: t['design']['profile'].update(cloud='yes')), 'câu hồ sơ "cloud"'),
         ('mẫu: design — lựa chọn không có', preset('lakehouse-oss', lambda t: t['design']['profile'].update(size='huge')), 'không có lựa chọn "huge"'),
         ('mẫu: design — lối không có', preset('lakehouse-oss', lambda t: t['design'].update(path='etl')), 'lối "etl"'),
-        ('mẫu: design — khoá lạ', preset('lakehouse-oss', lambda t: t['design'].update(stages={})), 'phải là {profile, path?}'),
-        ('mẫu: design — hồ sơ rỗng', preset('lakehouse-oss', lambda t: t['design'].update(profile={})), 'phải là {profile, path?}'),
+        ('mẫu: design — khoá lạ', preset('lakehouse-oss', lambda t: t['design'].update(stages={})), 'phải là {profile, path?, arch?}'),
+        ('mẫu: design — hồ sơ rỗng', preset('lakehouse-oss', lambda t: t['design'].update(profile={})), 'phải là {profile, path?, arch?}'),
+        ('mẫu: design — nhóm kiến trúc không có', preset('lakehouse-oss', lambda t: t['design'].update(arch={'mesh': 'x'})), 'nhóm kiến trúc "mesh"'),
+        ('mẫu: design — kiến trúc không có', preset('lakehouse-oss', lambda t: t['design'].update(arch={'storage': 'mesh'})), 'không có kiến trúc "mesh"'),
+        ('mẫu: design — kiến trúc mang lối ở arch', preset('lakehouse-oss', lambda t: t['design'].update(arch={'app': 'monolith'})), 'ghi `path`'),
+        ('luật báo: nhóm kiến trúc ở unless', design(lambda d: d['checks'][-1].update(unless={'ml': ['rag']})), 'chỉ ở `if`'),
         ('mẫu: design ở mẫu trống', preset('blank', lambda t: t.update(design={'profile': {'size': 'small'}})), 'mẫu trống không đặt sẵn'),
         ('mẫu: group lạ', preset('crisp-dm', lambda t: t.update(group='general')), '`group` chỉ ghi "specific"'),
         ('mẫu: group không đứng sau id', preset('crisp-dm', lambda t: t.update(group='specific')), 'đứng ngay sau `id`'),

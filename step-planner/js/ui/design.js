@@ -7,7 +7,7 @@
 import { fold as foldText } from '../core/board.js';
 import { initDiagramView, attach as attachView, focusFig, resetView } from './diagram-view.js';
 import { PLAN_STEP, applyPlan, bothDecided, diagramNodes, flowEdges, planDiff, snake, viaLabel } from '../core/design-plan.js';
-import { EDGE_MAX, OWN_MAX, VIA, applyPath, archAdvice, archMissing, catalogErrors, decidedCount, effProfile, emptyDesign, isPreset, normDesign, notNeededBy, pathOf, pickNames, presetDesign, rankOptions, stageState, warnings } from '../core/design.js';
+import { EDGE_MAX, OWN_MAX, VIA, applyPath, archMissing, archState, catalogErrors, decidedCount, effProfile, emptyDesign, isPreset, normDesign, notNeededBy, pathOf, pickNames, presetDesign, rankOptions, stageLists, stageState, warnings } from '../core/design.js';
 import { plural, slug } from '../core/io.js';
 import { normStep, normSub } from '../core/model.js';
 import { showDlg } from './dialogs.js';
@@ -53,15 +53,22 @@ const extraAt = (/** @type {number} */ k) => EXTRA[k - FIRST_STAGE - cat.stages.
 const extraPage = (/** @type {string} */ kind) => cat.stages.length + FIRST_STAGE + EXTRA.indexOf(kind);
 const stagePage = (/** @type {string} */ id) => cat.stages.findIndex((/** @type {any} */ s) => s.id === id) + FIRST_STAGE;
 
-/** Sửa thiết kế của dự án đang mở rồi ghi; thiết kế trống thì về null. @param {(d: any) => void} fn */
+/** Sửa thiết kế của dự án đang mở rồi ghi; thiết kế trống thì về null; kiến trúc chọn không còn trong danh mục bị bỏ.
+ * @param {(d: any) => void} fn */
 function edit(fn) {
   const w = ws();
   if (!w) return;
   const d = w.design ? w.design : emptyDesign();
   fn(d);
-  w.design = normDesign(d);
+  w.design = normDesign(d, cat);
   commit();
 }
+
+/** Luật đang báo, trừ luật hồ sơ ↔ công cụ mà kiến trúc người dùng chọn giải thích (chỉ là lời nhắc, PLAN-042). @param {any} d */
+const hardWarnings = (d) => warnings(cat, d).filter((x) => !x.arch);
+
+/** Tên một kiến trúc của danh mục theo id. @param {string} id */
+const archName = (id) => (cat.architectures || []).flatMap((/** @type {any} */ f) => f.entries).find((/** @type {any} */ e) => e.id === id)?.name || id;
 
 /** Trạng thái lưu của một khâu (bản sửa được). @param {any} d @param {string} id */
 const stageRec = (d, id) => (d.stages[id] = d.stages[id] || { pick: [], skip: false, own: '', note: '' });
@@ -98,20 +105,24 @@ export function renderSection() {
   renderArchLine(w.design);
   $('sd-svg').hidden = !n.done;
   drawDiagram();
-  const warns = warnings(cat, w.design);
+  const warns = hardWarnings(w.design);
   $('sd-warns').hidden = !warns.length;
   $('sd-warns').replaceChildren(...warns.map((x) => h('li', { class: 'sd-warnbox' },
     h('button', { type: 'button', class: 'sd-link', 'data-warn': x.id, 'data-warn-stage': x.stages[0] || '' }, x.title), ' ', x.msg)));
 }
 
-/** Dòng kiến trúc trên trang: tên các kiến trúc gợi ý (bấm là mở trang Architecture của hộp). @param {any} d */
+/** Dòng kiến trúc trên trang: kiến trúc đã chọn (kể cả qua lối), rồi kiến trúc gợi ý của nhóm chưa chọn (bấm là mở trang
+ * Architecture của hộp). @param {any} d */
 function renderArchLine(d) {
   const el = $('sd-arch');
   const fams = Array.isArray(cat.architectures) ? cat.architectures : [];
   el.hidden = !fams.length;
-  const names = archAdvice(cat, d).map((a, i) => fams[i].entries.find((/** @type {any} */ e) => e.id === a.id)?.name).filter(Boolean);
-  el.replaceChildren(h('button', { type: 'button', class: 'sd-link', 'data-arch-open': '1' }, names.length ? 'Architecture' : 'Architecture guide'),
-    names.length ? `: ${names.join(' · ')}` : ': answer the profile for a recommendation');
+  const st = archState(cat, d);
+  const chosen = st.filter((a) => a.chosen).map((a) => archName(a.chosen));
+  const recs = st.filter((a) => !a.chosen && a.rec).map((a) => archName(/** @type {string} */ (a.rec)));
+  const text = chosen.length ? `: chosen ${chosen.join(' · ')}${recs.length ? `; recommended ${recs.join(' · ')}` : ''}`
+    : recs.length ? `: ${recs.join(' · ')}` : ': answer the profile for a recommendation';
+  el.replaceChildren(h('button', { type: 'button', class: 'sd-link', 'data-arch-open': '1' }, chosen.length || recs.length ? 'Architecture' : 'Architecture guide'), text);
 }
 
 /* ── Sơ đồ (SVG dựng bằng createElementNS; cỡ đọc từ token --sd-*) ── */
@@ -477,22 +488,24 @@ function paint() {
 /** Dòng dưới tên hộp: số khâu đã quyết, số cảnh báo. */
 function paintSub() {
   const n = decidedCount(cat, design());
-  const k = warnings(cat, design()).length;
+  const k = hardWarnings(design()).length;
   $('sd-sub').textContent = `${n.done} of ${n.total} stages decided${k ? ` · ${plural(k, 'warning')}` : ''}. Changes save as you go.`;
 }
 
 function paintNav() {
   const d = design();
-  const warns = warnings(cat, d);
+  const warns = hardWarnings(d);
   const warned = new Set(warns.flatMap((x) => x.stages));
   /** @type {any[]} */
   const p = pathOf(cat, d);
   const items = [h('li', {}, navBtn(0, 'Deliverable', p ? 'done' : 'open', p ? p.label : '')),
     h('li', {}, navBtn(1, 'Project profile', Object.keys(d?.profile || {}).length ? 'done' : 'open', ''))];
-  const adv = archAdvice(cat, d);
-  const recs = adv.filter((a) => a.id !== null).length;
-  /* Architecture chỉ là trang gợi ý (không lưu): dấu trung tính "guide", không phải vòng "chưa quyết" của khâu. */
-  items.push(h('li', {}, navBtn(ARCH_PAGE, 'Architecture', 'guide', adv.length ? `${recs} of ${adv.length} recommended` : '')));
+  const adv = archState(cat, d);
+  const recs = adv.filter((a) => a.rec !== null).length;
+  const mine = adv.filter((a) => a.chosen && !a.viaPath).length;
+  /* Architecture: chưa chọn nhóm nào thì là trang gợi ý — dấu trung tính "guide", không phải vòng "chưa quyết" của khâu. */
+  items.push(h('li', {}, navBtn(ARCH_PAGE, 'Architecture', mine ? 'done' : 'guide',
+    [mine ? `${mine} chosen` : '', adv.length ? `${recs} of ${adv.length} recommended` : ''].filter(Boolean).join(' · '))));
   let lane = '';
   cat.stages.forEach((/** @type {any} */ s, /** @type {number} */ i) => {
     if (s.lane !== lane) { lane = s.lane; items.push(h('li', { class: 'sd-nav-lane', 'aria-hidden': 'true' }, LANE_LABEL[/** @type {'data'} */ (lane)])); }
@@ -647,21 +660,23 @@ function profilePane() {
   ];
 }
 
-/* ── Kiến trúc: các nhóm (danh mục `architectures`), mỗi nhóm một kiến trúc gợi ý từ hồ sơ, lối, khâu đã quyết (`archAdvice`);
- * mỗi kiến trúc gập: khi dùng, khi tránh, luồng, công cụ theo khâu (bấm tới khâu), lối tương ứng, nguồn ── */
+/* ── Kiến trúc (PLAN-042): các nhóm (danh mục `architectures`); mỗi nhóm chọn một kiến trúc hay để "Not chosen" (theo gợi ý từ
+ * hồ sơ, lối, khâu đã quyết — `archState`). Nhóm app: chọn kiến trúc mang lối là chọn lối. Mỗi kiến trúc gập: khi dùng, khi tránh,
+ * luồng, công cụ theo khâu (bấm tới khâu), lối tương ứng, nguồn ── */
 
 function archPane() {
   const d = design();
   const fams = Array.isArray(cat.architectures) ? cat.architectures : [];
-  const adv = archAdvice(cat, d);
+  const st = archState(cat, d);
   return [
-    h('p', { class: 'dlg-kicker' }, 'Guide'),
+    h('p', { class: 'dlg-kicker' }, 'Shape of the system'),
     h('h3', { class: 'sd-h' }, 'Architecture'),
+    presetNote(),
     h('p', { class: 'sd-note', 'data-guide': '1' }, icon('info'),
-      h('span', {}, 'A guide: recommendations follow your profile and decided stages. There is nothing to pick here.')),
-    h('p', { class: 'sd-q' }, 'Kiến trúc là hình dạng lớn của hệ thống, quyết trước khi chọn công cụ cho từng khâu. Mỗi nhóm dưới đây trả lời một câu hỏi bằng vài kiến trúc chuẩn; trang gợi ý một kiến trúc mỗi nhóm theo hồ sơ dự án, lối đã chọn và các khâu đã quyết.'), // lang: vi — lời giải thích, nội dung
-    archTip(fams, adv, d),
-    ...fams.map((/** @type {any} */ f, /** @type {number} */ i) => archFamily(f, adv[i], d)),
+      h('span', {}, 'Choose one architecture per family, or keep "Not chosen" to follow the recommendation. A choice comes before the profile when Apply path and the stage pages rank tools; tools you already picked stay.')),
+    h('p', { class: 'sd-q' }, 'Kiến trúc là hình dạng lớn của hệ thống, quyết trước khi chọn công cụ cho từng khâu. Mỗi nhóm dưới đây trả lời một câu hỏi bằng vài kiến trúc chuẩn; trang gợi ý một kiến trúc mỗi nhóm theo hồ sơ dự án, lối đã chọn và các khâu đã quyết. Chọn khác gợi ý được, vd. dựng lakehouse cho dữ liệu nhỏ để học quản trị dữ liệu.'), // lang: vi — lời giải thích, nội dung
+    archTip(fams, st.map((a) => ({ id: a.rec })), d),
+    ...fams.map((/** @type {any} */ f, /** @type {number} */ i) => archFamily(f, st[i], d)),
   ];
 }
 
@@ -700,15 +715,27 @@ function famNeeds(f, d) {
   return list.length ? h('p', { class: 'sd-need' }, h('span', { class: 'sd-k' }, 'Needs'), ...list.flatMap((b, k) => (k ? [' · ', b] : [b]))) : null;
 }
 
-/** @param {any} f @param {{id: string | null, why: string}} a @param {any} d */
+/** @param {any} f @param {{chosen: string, viaPath: boolean, rec: string | null, why: string, id: string | null}} a @param {any} d */
 function archFamily(f, a, d) {
-  const rec = a.id ? f.entries.find((/** @type {any} */ e) => e.id === a.id) : null;
+  const rec = a.rec ? f.entries.find((/** @type {any} */ e) => e.id === a.rec) : null;
+  const chosen = a.chosen ? f.entries.find((/** @type {any} */ e) => e.id === a.chosen) : null;
+  /* Hồ sơ nói khác kiến trúc đã chọn: không chặn, chỉ nói (PLAN-042). */
+  const differs = chosen && a.rec !== null && a.rec !== a.chosen;
   return h('section', { class: 'sd-fam', 'data-fam': f.id, 'aria-labelledby': `sd-fam-${f.id}` },
     h('h4', { class: 'sd-h4', id: `sd-fam-${f.id}` }, f.label),
     h('p', { class: 'sd-help' }, f.question),
-    rec ? h('p', { class: 'sd-rec', 'data-rec': rec.id }, h('span', { class: 'sd-k' }, 'Recommended'), h('b', {}, rec.name), '. ', a.why)
-      : a.id === '' ? h('p', { class: 'sd-rec is-none', 'data-rec': '' }, h('span', { class: 'sd-k' }, 'Not needed'), a.why) : famNeeds(f, d),
-    h('div', { class: 'sd-archs' }, ...f.entries.map((/** @type {any} */ e) => archItem(e, e.id === a.id, d))),
+    /* Nhóm đã chọn kiến trúc khác: dòng gợi ý thành nền trung tính, không còn dáng "nên chọn". */
+    rec ? h('p', { class: `sd-rec${differs ? ' is-other' : ''}`, 'data-rec': rec.id }, h('span', { class: 'sd-k' }, 'Recommended'), h('b', {}, rec.name), '. ', a.why)
+      : a.rec === '' ? h('p', { class: 'sd-rec is-none', 'data-rec': '' }, h('span', { class: 'sd-k' }, 'Not needed'), a.why) : famNeeds(f, d),
+    h('fieldset', { class: 'sd-prof sd-arch-pick' },
+      h('legend', {}, h('span', { class: 'sd-k' }, 'Your choice'), h('span', { class: 'sr' }, `: ${f.label}`)),
+      h('div', { class: 'sd-pills' }, ...[{ id: '', name: 'Not chosen' }, ...f.entries].map((/** @type {any} */ e) => h('label', { class: 'sd-pill' },
+        h('input', { type: 'radio', name: `sd-arch-${f.id}`, value: e.id, 'data-arch-pick': f.id, checked: (a.chosen || '') === e.id }),
+        h('span', {}, e.name))))),
+    differs ? h('p', { class: 'sd-note', 'data-arch-info': f.id }, icon('info'), h('span', {},
+      a.rec ? `Your profile and stages point to ${rec.name}. ${chosen.name} stays your choice — fine when the goal is to learn or demonstrate it; Apply path and the stage pages follow it.`
+        : `Your profile and stages say this family is not needed. ${chosen.name} stays your choice — fine when the goal is to learn or demonstrate it.`)) : null,
+    h('div', { class: 'sd-archs' }, ...f.entries.map((/** @type {any} */ e) => archItem(e, a, d))),
     f.note ? h('p', { class: 'sd-help' }, f.note) : null,
     (f.sources || []).length ? archLinks(f.sources) : null);
 }
@@ -717,11 +744,12 @@ function archFamily(f, a, d) {
 const archLinks = (list) => h('ul', { class: 'sd-links' }, ...list.map((/** @type {any} */ l) =>
   h('li', {}, h('a', { href: l.url, target: '_blank', rel: 'noopener noreferrer' }, icon('link'), l.title))));
 
-/** @param {any} e @param {boolean} on kiến trúc được gợi ý @param {any} d */
-function archItem(e, on, d) {
+/** @param {any} e @param {{chosen: string, viaPath: boolean, rec: string | null, id: string | null}} a trạng thái của nhóm @param {any} d */
+function archItem(e, a, d) {
   const id = 'arch:' + e.id;
   const p = e.path ? cat.paths.find((/** @type {any} */ x) => x.id === e.path) : null;
   const mine = !!p && d?.path === p.id;
+  const isRec = a.rec === e.id, isChosen = a.chosen === e.id;
   const row = (/** @type {string} */ k, /** @type {any[]} */ ...v) => h('p', { class: 'sd-when' }, h('span', { class: 'sd-k' }, k), ...v);
   const tools = Object.entries(e.tools || {}).map(([sid, ids]) => {
     const s = cat.stages.find((/** @type {any} */ x) => x.id === sid);
@@ -729,21 +757,20 @@ function archItem(e, on, d) {
     const names = /** @type {string[]} */ (ids).map((oid) => s.options.find((/** @type {any} */ o) => o.id === oid)?.name).filter(Boolean);
     return h('li', {}, h('button', { type: 'button', class: 'sd-link', 'data-at': stagePage(sid) }, s.title), `: ${names.join(', ')}`);
   }).filter(Boolean);
-  return fold({ class: `sd-arch${on ? ' is-rec' : ''}`, 'data-more': id, 'data-arch': e.id, open: moreOpen.has(id) },
-    /* "Use this deliverable" (việc duy nhất của trang ghi vào dự án) nằm ngay trên đầu thẻ gập: thấy mà không cần mở;
-     * bấm không gập / mở thẻ (chặn ở sự kiện click). */
+  /* Viền xanh: kiến trúc đang dùng (đã chọn, chưa chọn thì cái gợi ý). Thẻ "Recommended" đặc khi nhóm chưa chọn gì. */
+  return fold({ class: `sd-arch${a.id === e.id ? ' is-rec' : ''}`, 'data-more': id, 'data-arch': e.id, open: moreOpen.has(id) },
     h('summary', {}, icon('chev'), h('span', { class: 'sd-arch-name' },
       h('span', { class: 'sd-arch-head' }, h('b', {}, e.name),
-        on ? h('span', { class: 'sd-tag top' }, 'Recommended') : null, mine ? h('span', { class: 'sd-tag' }, 'Your deliverable') : null),
-      h('small', {}, e.what),
-      p && !mine ? h('span', { class: 'sd-arch-use' },
-        h('button', { type: 'button', class: 'btn small', 'data-arch-path': p.id, 'aria-label': `Use this deliverable: ${p.label}` }, icon('check'), 'Use this deliverable')) : null)),
+        isChosen && !mine ? h('span', { class: 'sd-tag top' }, 'Chosen') : null,
+        isRec ? h('span', { class: `sd-tag ${a.chosen ? 'fit' : 'top'}` }, 'Recommended') : null,
+        mine ? h('span', { class: 'sd-tag top' }, 'Your deliverable') : null),
+      h('small', {}, e.what))),
     row('Use when', e.use),
     row('Avoid when', e.avoid),
     h('div', { class: 'sd-when' }, h('span', { class: 'sd-k' }, 'Flow'),
       h('ol', { class: 'sd-chain' }, ...e.flow.map((/** @type {string} */ x) => h('li', {}, h('span', {}, x))))),
     tools.length ? h('div', { class: 'sd-when' }, h('span', { class: 'sd-k' }, 'Tools by stage'), h('ul', { class: 'sd-arch-tools' }, ...tools)) : null,
-    p ? row('Deliverable', p.label, mine ? ' (chosen)' : '') : null,
+    p ? row('Deliverable', p.label, mine ? ' (chosen)' : ' — choosing this architecture sets it') : null,
     (e.sources || []).length ? archLinks(e.sources) : null);
 }
 
@@ -799,7 +826,8 @@ function edgeItem(e) {
 /* ── Xem lại: các luật phối hợp đang báo (danh mục `checks`), mỗi cái kèm lối tới khâu liên quan ── */
 
 function checksPane() {
-  const warns = warnings(cat, design());
+  const all = warnings(cat, design());
+  const warns = all.filter((x) => !x.arch), notes = all.filter((x) => x.arch);
   const title = (/** @type {string} */ id) => cat.stages.find((/** @type {any} */ s) => s.id === id)?.title || id;
   return [
     h('p', { class: 'dlg-kicker' }, 'Review'),
@@ -809,8 +837,14 @@ function checksPane() {
       h('b', {}, x.title), h('p', {}, x.msg),
       h('p', { class: 'sd-warn-go' }, ...x.stages.map((id) => h('button', { type: 'button', class: 'btn small', 'data-at': stagePage(id) }, title(id)))))))
       : h('p', { class: 'sd-tip' }, 'No conflicts found among the decided stages.'),
+    notes.length ? h('h4', { class: 'sd-h4' }, 'Expected with your chosen architecture') : null,
+    ...notes.map(archNote),
   ];
 }
+
+/** Luật hồ sơ ↔ công cụ mà kiến trúc người dùng chọn giải thích: lời nhắc, không phải cảnh báo (PLAN-042). @param {any} x */
+const archNote = (x) => h('div', { class: 'sd-tip', role: 'note', 'data-arch-note': x.id },
+  h('b', {}, x.title), ` — expected with ${archName(x.arch)}, which you chose. `, x.msg);
 
 /** @param {any} s */
 function stagePane(s) {
@@ -818,11 +852,12 @@ function stagePane(s) {
   const prof = effProfile(cat, d);
   const p = pathOf(cat, d);
   const st = d?.stages[s.id] || { pick: [], skip: false, own: '', note: '' };
-  const ranked = rankOptions(s, prof, p);
+  const lists = stageLists(cat, d, s.id, false);
+  const ranked = rankOptions(s, prof, p, lists);
   const picked = ranked.filter((r) => st.pick.includes(r.opt.id));
   const rest = ranked.filter((r) => !st.pick.includes(r.opt.id));
   const hasPick = picked.length > 0 || !!st.own;
-  const answered = Object.keys(prof).length > 0 || !!p;
+  const answered = Object.keys(prof).length > 0 || !!p || lists.length > 0;
   const card = (/** @type {any} */ r) => optionCard(s, r, st.pick.includes(r.opt.id), answered, prof);
   const need = p ? p.stages[s.id] : '';
   /* Hồ sơ cho là khâu không cần (`when` của khâu): nói câu trả lời nào. */
@@ -840,7 +875,8 @@ function stagePane(s) {
     need === 'skip' ? h('p', { class: 'sd-tip' }, `The ${p.label} path doesn't need this stage.`)
       : notNeeded.length ? h('p', { class: 'sd-tip' }, `Usually not needed for your profile (${notNeeded.join(' · ')}).`)
         : need === 'maybe' ? h('p', { class: 'sd-tip' }, `Optional on the ${p.label} path.`) : null,
-    ...warnings(cat, d).filter((x) => x.stages.includes(s.id)).map((x) => h('div', { class: 'sd-warnbox', role: 'note' }, h('b', {}, x.title), h('p', {}, x.msg))),
+    ...warnings(cat, d).filter((x) => x.stages.includes(s.id)).map((x) => (x.arch ? archNote(x)
+      : h('div', { class: 'sd-warnbox', role: 'note' }, h('b', {}, x.title), h('p', {}, x.msg)))),
     h('div', { class: 'sd-skip' },
       h('button', { type: 'button', class: 'btn small', 'aria-pressed': String(st.skip), 'data-skip': s.id }, 'Not needed'),
       s.skipWhen ? h('span', { class: 'sd-help' }, s.skipWhen) : null),
@@ -859,11 +895,12 @@ function stagePane(s) {
 /** @param {any} s @param {any} r @param {boolean} on @param {boolean} answered @param {Record<string,string>} prof */
 function optionCard(s, r, on, answered, prof) {
   const o = r.opt;
-  const miss = r.miss.map((/** @type {string} */ k) => {
+  const said = (/** @type {string} */ k) => {
     const q = cat.profile.find((/** @type {any} */ x) => x.id === k);
     const c = q?.choices.find((/** @type {any} */ x) => x.id === prof[k]);
     return q && c ? `${q.label}: ${c.label}` : k;
-  });
+  };
+  const miss = r.miss.map(said);
   return h('div', { class: `sd-opt${on ? ' is-on' : ''}${answered && r.ok ? ' is-fit' : ''}${answered && !r.ok ? ' is-miss' : ''}`, 'data-opt': o.id },
     h('label', { class: 'sd-opt-top' },
       h('input', { type: 'checkbox', 'data-pick': s.id, value: o.id, checked: on }),
@@ -871,11 +908,14 @@ function optionCard(s, r, on, answered, prof) {
       h('span', { class: 'sd-tags' },
         r.top ? h('span', { class: 'sd-tag top' }, 'Recommended') : answered && r.ok ? h('span', { class: 'sd-tag fit' }, 'Fits') : null,
         r.sug && !r.top ? h('span', { class: 'sd-tag' }, 'On path') : null,
+        r.arch ? h('span', { class: 'sd-tag', 'data-arch-tag': r.arch }, archName(r.arch)) : null,
         h('span', { class: 'sd-tag' }, COST_LABEL[/** @type {'free'} */ (o.cost)] || o.cost),
         h('span', { class: 'sd-tag' }, LEVEL_LABEL[/** @type {1} */ (o.level)] || ''))),
     h('p', { class: 'sd-sum' }, o.summary),
     h('p', { class: 'sd-when' }, h('span', { class: 'sd-k' }, 'Pick when'), o.pick),
     answered && !r.ok ? h('p', { class: 'sd-when sd-warn' }, h('span', { class: 'sd-k' }, 'Not a fit'), miss.join(' · ')) : null,
+    r.relaxed.length ? h('p', { class: 'sd-when', 'data-relaxed': r.relaxed.join(' ') }, h('span', { class: 'sd-k' }, 'Profile says'),
+      `${r.relaxed.map(said).join(' · ')} — kept: you chose ${archName(r.arch)}.`) : null,
     fold({ class: 'sd-det' },
       h('summary', {}, icon('chev'), 'Details, links, first commands'),
       o.avoid ? h('p', { class: 'sd-when' }, h('span', { class: 'sd-k' }, 'Avoid when'), o.avoid) : null,
@@ -959,15 +999,6 @@ function wire() {
   pane.addEventListener('click', (/** @type {any} */ e) => {
     const b = e.target.closest('[data-at]');
     if (b) { go(+b.dataset.at); return; }
-    const ar = e.target.closest('[data-arch-path]');
-    if (ar) {
-      e.preventDefault();                 // nút nằm trong <summary>: không gập / mở thẻ
-      const arch = ar.closest('[data-arch]').dataset.arch;
-      applied = null;
-      edit((d) => { d.path = ar.dataset.archPath; });
-      repaint(`[data-arch="${arch}"] > summary`);
-      return;
-    }
     const ap = e.target.closest('[data-apply]');
     if (ap) { applyPathNow(ap.dataset.apply); repaint('[data-apply]'); return; }
     if (e.target.closest('[data-unapply]')) { undoApply(); repaint('[data-apply]'); return; }
@@ -992,6 +1023,19 @@ function wire() {
       applied = null;
       edit((d) => { d.path = t.value; });
       repaint(`input[data-path][value="${t.value}"]`);
+    } else if (t.dataset.archPick) {
+      /* Nhóm app: kiến trúc mang lối là lối (một chỗ lưu); "Not chosen" bỏ cả lối. */
+      const f = cat.architectures.find((/** @type {any} */ x) => x.id === t.dataset.archPick);
+      const e = f.entries.find((/** @type {any} */ x) => x.id === t.value);
+      const hasPath = f.entries.some((/** @type {any} */ x) => x.path);
+      const path0 = design()?.path || '';
+      edit((d) => {
+        d.arch = d.arch || {};
+        if (e?.path) { d.path = e.path; delete d.arch[f.id]; } else if (e) d.arch[f.id] = e.id;
+        else { delete d.arch[f.id]; if (hasPath && f.entries.some((/** @type {any} */ x) => x.path === d.path)) d.path = ''; }
+      });
+      if ((design()?.path || '') !== path0) applied = null;
+      repaint(`input[data-arch-pick="${f.id}"][value="${t.value}"]`);
     } else if (t.dataset.q) {
       const q = t.dataset.q;
       edit((d) => { if (t.value) d.profile[q] = t.value; else delete d.profile[q]; });

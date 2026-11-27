@@ -1,11 +1,12 @@
 // @ts-check
 /* System design, thuần: mục "## System design" của Markdown dự án (designMd xuất, designReader nhập).
-   Xuất: DESIGN_HEADING, DESIGN_HEAD_RE, profileLine, readProfile, stageLine, readStageLine, designMd, designReader.
+   Xuất: DESIGN_HEADING, DESIGN_HEAD_RE, profileLine, archLine, readProfile, stageLine, readStageLine, designMd, designReader.
    Dùng: core/design.js. */
 import { OWN_MAX, VIA, pathOf, pickNames, warnings } from './design.js';
 
 /* ── Markdown: mục "## System design" (core/markdown.js gọi designMd, designReader). `Path: tên [path: id]` (dòng thụt dưới nó: luồng
- * và mốc nghiệm thu của lối, chép từ danh mục cho người và AI đọc, nhập bỏ qua). Mỗi khâu một dòng: chữ đọc được, cuối dòng
+ * và mốc nghiệm thu của lối, chép từ danh mục cho người và AI đọc, nhập bỏ qua). `Profile:` rồi `Architecture: <nhóm> <kiến trúc> · …`
+ * (kiến trúc người dùng chọn; dòng thụt dưới nó: tên nhóm, tên kiến trúc cho người đọc, nhập bỏ qua). Mỗi khâu một dòng: chữ đọc được, cuối dòng
  * là `[khâu: id, id]` (hay `[khâu: skip]`; lựa chọn ẩn của khâu "không cần" không ghi) — trang chỉ đọc phần trong ngoặc.
  * Dòng thụt: `Own: …` rồi ghi chú. `Handoffs:` rồi mỗi đường nối một mục `- A → B [handoff: a > b]`, dòng thụt `Via:`, `What:`,
  * `Where:`, `Promise:` (dòng tiếp thụt bốn), `Check:`. `Warnings:` (luật phối hợp đang báo, cho người và AI đọc) nhập bỏ qua. ── */
@@ -17,7 +18,10 @@ const TAIL = /\[([a-z0-9][a-z0-9-]{0,39}):\s*([a-z0-9-]*(?:\s*,\s*[a-z0-9-]+)*)\
 /** @param {Record<string,string>} profile */
 export const profileLine = (profile) => 'Profile: ' + Object.entries(profile).map(([k, v]) => `${k} ${v}`).join(' · ');
 
-/** Đọc `Profile: size small · fresh once`. @param {string} rest */
+/** @param {Record<string,string>} arch */
+export const archLine = (arch) => 'Architecture: ' + Object.entries(arch).map(([k, v]) => `${k} ${v}`).join(' · ');
+
+/** Đọc `Profile: size small · fresh once` (cả `Architecture: storage lakehouse`). @param {string} rest */
 export function readProfile(rest) {
   /** @type {Record<string,string>} */
   const p = {};
@@ -56,6 +60,15 @@ export function designMd(d, cat, esc, hard) {
       ...(p ? [...p.flow.map((/** @type {string} */ f, /** @type {number} */ i) => `  Flow ${i + 1}: ${f}`), ...p.accept.map((/** @type {string} */ a) => `  Accept: ${a}`)] : [])]));
   }
   if (Object.keys(d.profile).length) out.push('', profileLine(d.profile));
+  const arch = Object.entries(d.arch || {});
+  if (arch.length) {
+    const named = arch.map(([k, v]) => {
+      const f = cat && (cat.architectures || []).find((/** @type {any} */ x) => x.id === k);
+      const e = f && f.entries.find((/** @type {any} */ x) => x.id === v);
+      return e ? `  ${f.label}: ${e.name}` : '';
+    }).filter(Boolean);
+    out.push('', ...hard([archLine(d.arch), ...named]));
+  }
   const ids = Object.keys(d.stages);
   if (ids.length) out.push('');
   for (const id of ids) {
@@ -82,7 +95,9 @@ export function designMd(d, cat, esc, hard) {
     }
   }
   const warns = cat ? warnings(cat, d) : [];
-  if (warns.length) out.push('', 'Warnings:', ...hard(warns.map((w) => `- ${w.title}: ${w.msg}`)));
+  /* Luật mà kiến trúc người dùng chọn giải thích (PLAN-042): ghi kèm tên kiến trúc, là lời nhắc. */
+  const named = (/** @type {string} */ id) => (cat.architectures || []).flatMap((/** @type {any} */ f) => f.entries).find((/** @type {any} */ e) => e.id === id)?.name || id;
+  if (warns.length) out.push('', 'Warnings:', ...hard(warns.map((w) => `- ${w.title}${w.arch ? ` (expected with the chosen ${named(w.arch)})` : ''}: ${w.msg}`)));
   return out;
 }
 
@@ -92,7 +107,7 @@ export function designMd(d, cat, esc, hard) {
  */
 export function designReader(warnings, unesc) {
   /** @type {any} */
-  const design = { path: '', profile: {}, stages: {}, edges: {} };
+  const design = { path: '', profile: {}, stages: {}, edges: {}, arch: {} };
   let block = /** @type {'' | 'path' | 'stage' | 'edge' | 'warn'} */ ('');
   let list = /** @type {'' | 'handoffs' | 'warnings'} */ ('');
   let first = false;
@@ -120,7 +135,7 @@ export function designReader(warnings, unesc) {
         const own = /^Own:\s?(.*)$/i.exec(l);
         if (first && own) dst.own = own[1].slice(0, OWN_MAX);
         else dst.note = dst.note == null ? unesc(l) : dst.note + '\n' + unesc(l);
-      } // block 'path': luồng, mốc nghiệm thu chép từ danh mục — bỏ qua
+      } // block 'path': luồng, mốc nghiệm thu, tên kiến trúc chép từ danh mục — bỏ qua
       first = false;
       return;
     }
@@ -138,6 +153,7 @@ export function designReader(warnings, unesc) {
     }
     list = '';
     const pm = /^Profile:\s*(.*)$/i.exec(raw);
+    const am = /^Architecture:\s*(.*)$/i.exec(raw);
     const pa = /^Path:\s*(.*)$/i.exec(raw);
     const item = /^(?:[-*+]|\d+[.)])\s+(.*)$/.exec(raw);
     const sl = item ? readStageLine(item[1]) : null;
@@ -146,6 +162,10 @@ export function designReader(warnings, unesc) {
       if (m) design.path = m[1].toLowerCase(); else unread(raw);
       block = 'path';
     } else if (pm) Object.assign(design.profile, readProfile(pm[1]));
+    else if (am) {
+      design.arch = { ...(design.arch || {}), ...readProfile(am[1]) };
+      block = 'path';                    // dòng thụt: tên nhóm, tên kiến trúc cho người đọc — bỏ qua
+    }
     else if (sl) {
       dst = design.stages[sl.id] = { pick: sl.pick, skip: sl.skip, own: '', note: null };
       block = 'stage'; first = true;

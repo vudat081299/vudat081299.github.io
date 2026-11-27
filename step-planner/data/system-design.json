@@ -6012,6 +6012,265 @@
         ]
       },
       "msg": "Spaces có ba kiểu: Gradio, Docker và HTML tĩnh; app Streamlit phải chạy qua Space Docker, mà Space Gradio hay Docker cần gói trả phí (tài khoản miễn phí chỉ được vài Space Gradio chạy ZeroGPU). Đổi giao diện sang Gradio, hoặc host Streamlit trên Streamlit Community Cloud."
+    },
+    {
+      "id": "lakehouse-without-table-format",
+      "title": "Lakehouse chosen, but Raw storage has no table format",
+      "if": {
+        "storage": [
+          "lakehouse"
+        ]
+      },
+      "unless": {
+        "raw": [
+          "delta-lake",
+          "iceberg",
+          "hudi",
+          "own"
+        ]
+      },
+      "msg": "Kiến trúc lưu trữ đã chọn là lakehouse: dữ liệu là bảng của một table format (Iceberg, Delta Lake, Hudi) trên object storage, có giao dịch ACID và catalog. Raw storage hiện chỉ có file (thư mục dự án, object storage trơn), chưa có lớp bảng nào. Thêm một table format ở Raw storage (Iceberg cần thêm một catalog như Polaris), hoặc bỏ chọn Lakehouse."
+    },
+    {
+      "id": "lake-without-object-storage",
+      "title": "Data lake chosen, but raw files are not on object storage or HDFS",
+      "if": {
+        "storage": [
+          "lake"
+        ]
+      },
+      "unless": {
+        "raw": [
+          "cloudflare-r2",
+          "gcs",
+          "s3",
+          "minio",
+          "hdfs",
+          "own"
+        ]
+      },
+      "msg": "Kiến trúc lưu trữ đã chọn là data lake: file gốc nằm trên object storage (S3, GCS, R2, MinIO) hay HDFS để nhiều công cụ cùng đọc. Raw storage hiện không có chỗ lưu nào như vậy. Thêm một object storage ở Raw storage, hoặc bỏ chọn Data lake."
+    },
+    {
+      "id": "warehouse-without-warehouse-store",
+      "title": "Data warehouse chosen, but the analytical store is not a warehouse",
+      "if": {
+        "storage": [
+          "warehouse"
+        ]
+      },
+      "unless": {
+        "store": [
+          "bigquery",
+          "snowflake",
+          "clickhouse",
+          "own"
+        ]
+      },
+      "msg": "Kiến trúc lưu trữ đã chọn là data warehouse: bảng sạch nằm trong một kho SQL trung tâm (BigQuery, Snowflake, ClickHouse). Analytical store đã chọn không phải kho như vậy. Chọn một warehouse ở Analytical store, hoặc bỏ chọn Data warehouse."
+    },
+    {
+      "id": "stream-architecture-without-stream-processor",
+      "title": "Streaming architecture chosen, but Processing has no stream processor",
+      "if": {
+        "processing": [
+          "streaming",
+          "lambda",
+          "kappa"
+        ]
+      },
+      "unless": {
+        "process": [
+          "python-consumer",
+          "spark-streaming",
+          "flink",
+          "own"
+        ]
+      },
+      "msg": "Kiến trúc xử lý đã chọn (streaming, Lambda, Kappa) xử lý từng sự kiện khi nó tới; Processing chưa có công cụ nào đọc luồng (consumer Python, Spark Structured Streaming, Flink). Thêm một công cụ stream ở Processing, hoặc chọn kiến trúc batch khi kết quả chỉ xem theo lịch."
+    },
+    {
+      "id": "lambda-without-batch-layer",
+      "title": "Lambda chosen, but Processing has no batch layer",
+      "if": {
+        "processing": [
+          "lambda"
+        ]
+      },
+      "unless": {
+        "process": [
+          "pandas",
+          "polars",
+          "duckdb",
+          "dbt",
+          "dask",
+          "spark",
+          "databricks",
+          "hadoop",
+          "own"
+        ]
+      },
+      "msg": "Lambda chạy hai đường trên cùng dữ liệu gốc: lớp batch định kỳ tính lại toàn bộ, lớp speed tính phần mới. Processing chỉ có công cụ stream, nên không có lớp batch cho kết quả đúng sau cùng. Thêm một công cụ lô (Spark, dbt, DuckDB) ở Processing, hoặc chọn Kappa hay streaming."
+    },
+    {
+      "id": "kappa-without-event-log",
+      "title": "Kappa chosen, but Ingestion keeps no event log",
+      "if": {
+        "processing": [
+          "kappa"
+        ]
+      },
+      "unless": {
+        "ingest": [
+          "kafka",
+          "own"
+        ]
+      },
+      "msg": "Kappa tính lại bằng cách chạy bản job mới đọc lại log sự kiện từ đầu, nên log phải giữ đủ lâu (Kafka). Ingestion chưa có log như vậy. Thêm Kafka ở Ingestion, hoặc chọn kiến trúc khác."
+    },
+    {
+      "id": "batch-architecture-with-stream-processor-only",
+      "title": "Batch architecture chosen, but Processing only has stream processors",
+      "if": {
+        "processing": [
+          "batch-etl",
+          "batch-elt"
+        ]
+      },
+      "unless": {
+        "process": [
+          "pandas",
+          "polars",
+          "duckdb",
+          "dbt",
+          "dask",
+          "spark",
+          "databricks",
+          "hadoop",
+          "own"
+        ]
+      },
+      "msg": "Kiến trúc xử lý đã chọn là batch (ETL hay ELT): một job chạy theo lịch hay một lần trên cả lô. Processing chỉ có công cụ stream, chạy suốt và đợi sự kiện. Thêm một công cụ lô ở Processing, hoặc chọn kiến trúc streaming."
+    },
+    {
+      "id": "elt-transform-outside-store",
+      "title": "Batch ELT chosen, but Processing transforms outside the store",
+      "if": {
+        "processing": [
+          "batch-elt"
+        ],
+        "process": [
+          "pandas",
+          "polars",
+          "dask"
+        ]
+      },
+      "unless": {
+        "process": [
+          "dbt",
+          "duckdb",
+          "spark",
+          "databricks",
+          "own"
+        ]
+      },
+      "msg": "Batch ELT nạp dữ liệu thô vào kho trước rồi biến đổi ngay tại kho bằng SQL (dbt, DuckDB) hay Spark. pandas, Polars, Dask kéo dữ liệu ra một tiến trình rồi ghi lại: đó là ETL. Thêm dbt hay DuckDB ở Processing, hoặc chọn Batch ETL."
+    },
+    {
+      "id": "batch-prediction-without-precomputed-results",
+      "title": "Batch prediction chosen, but Serving does not precompute results",
+      "if": {
+        "ml": [
+          "batch-prediction"
+        ]
+      },
+      "unless": {
+        "serve": [
+          "batch-file",
+          "own"
+        ]
+      },
+      "msg": "Batch prediction chạy model theo lịch trên mọi bản ghi rồi ghi dự đoán ra bảng; Serving đã chọn lại trả lời theo từng yêu cầu hay chưa có gì. Chọn kết quả tính sẵn ở Serving, hoặc chọn Online prediction."
+    },
+    {
+      "id": "online-prediction-without-endpoint",
+      "title": "Online prediction chosen, but Serving answers no requests",
+      "if": {
+        "ml": [
+          "online-prediction",
+          "streaming-inference"
+        ]
+      },
+      "unless": {
+        "serve": [
+          "in-app",
+          "fastapi",
+          "bentoml",
+          "serverless",
+          "own"
+        ]
+      },
+      "msg": "Online prediction gọi model theo từng yêu cầu: model phải nằm trong app, sau một API hay trong một hàm serverless. Serving đã chọn không làm việc ấy. Chọn một cách phục vụ theo yêu cầu ở Serving, hoặc chọn Batch prediction."
+    },
+    {
+      "id": "streaming-features-without-stream-processor",
+      "title": "Streaming features chosen, but Processing has no stream processor",
+      "if": {
+        "ml": [
+          "streaming-inference"
+        ]
+      },
+      "unless": {
+        "process": [
+          "python-consumer",
+          "spark-streaming",
+          "flink",
+          "own"
+        ]
+      },
+      "msg": "Đặc trưng từ luồng được tính liên tục từ sự kiện vừa tới; Processing chưa có công cụ đọc luồng. Thêm một công cụ stream ở Processing, hoặc chọn Online prediction với đặc trưng tính theo lô."
+    },
+    {
+      "id": "rag-without-search-index",
+      "title": "RAG chosen, but there is no search index",
+      "if": {
+        "ml": [
+          "rag"
+        ]
+      },
+      "unless": {
+        "search": [
+          "sqlite-fts5",
+          "postgres-fts",
+          "elasticsearch",
+          "opensearch",
+          "chroma",
+          "faiss",
+          "pgvector",
+          "qdrant",
+          "own"
+        ]
+      },
+      "msg": "RAG tìm các đoạn tài liệu liên quan trong một chỉ mục rồi đưa chúng cho LLM; Search chưa có chỉ mục nào (hay đang Not needed). Chọn một chỉ mục ở Search, hoặc chọn kiến trúc model khác."
+    },
+    {
+      "id": "rag-without-llm",
+      "title": "RAG chosen, but Serving has no LLM",
+      "if": {
+        "ml": [
+          "rag"
+        ]
+      },
+      "unless": {
+        "serve": [
+          "llm-api",
+          "hf-inference",
+          "ollama",
+          "vllm",
+          "own"
+        ]
+      },
+      "msg": "RAG đưa các đoạn tìm được cho một LLM viết câu trả lời; Serving chưa có LLM (API, Hugging Face Inference, Ollama, vLLM). Chọn một LLM ở Serving."
     }
   ],
   "architectures": [
@@ -6155,11 +6414,11 @@
               "s3",
               "cloudflare-r2",
               "gcs",
-              "delta-lake",
               "iceberg",
-              "hudi",
               "polaris",
-              "iceberg-jdbc"
+              "iceberg-jdbc",
+              "delta-lake",
+              "hudi"
             ],
             "process": [
               "spark",
@@ -6172,8 +6431,8 @@
               "dbt-tests"
             ],
             "store": [
-              "trino",
               "duckdb-iceberg",
+              "trino",
               "hive"
             ],
             "app": [
