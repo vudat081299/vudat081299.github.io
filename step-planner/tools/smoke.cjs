@@ -1708,10 +1708,21 @@ const check = (name, ok, detail = '') => {
       const r = (s) => row.querySelector(s).getBoundingClientRect();
       return { head: r('.step-head'), band: r('.revisit-band'), docs: r('.step-docs'), cards: r('.cards-scroll') };
     });
-    check(`${w}px: bước đọc liền một khối (${w < 500 ? 'đầu bước, băng, tài liệu, thẻ' : 'băng, tài liệu trên cột tên và hàng thẻ'})`, w < 500
-      ? ord.head.bottom <= ord.band.top + 1 && ord.band.bottom <= ord.docs.top + 1 && ord.docs.bottom <= ord.cards.top + 1
-      : ord.band.bottom <= ord.docs.top + 1 && ord.docs.bottom <= Math.min(ord.head.top, ord.cards.top) + 1,
+    // Mọi khổ cùng thứ tự với DOM (vòng Tab): băng, tài liệu, rồi đầu bước; một cột thì đầu bước trên hàng thẻ.
+    check(`${w}px: bước đọc liền một khối, đúng thứ tự DOM (băng, tài liệu, ${w < 500 ? 'đầu bước, thẻ' : 'cột tên và hàng thẻ'})`,
+      ord.band.bottom <= ord.docs.top + 1 && ord.docs.bottom <= Math.min(ord.head.top, ord.cards.top) + 1
+      && (w >= 500 || ord.head.bottom <= ord.cards.top + 1),
     JSON.stringify(Object.fromEntries(Object.entries(ord).map(([k, v]) => [k, [Math.round(v.top), Math.round(v.bottom)]]))));
+    // Vòng Tab theo thứ tự đọc: điểm dừng Tab đi qua các khối đúng thứ tự vừa đo, không khối nào bị CSS order đảo chỗ.
+    const tabOrd = await lp.evaluate(() => {
+      const row = document.querySelector('.step[data-step="tl1"]');
+      const blocks = ['.revisit-band', '.step-docs', '.step-head', '.cards-scroll'];
+      const stops = [...row.querySelectorAll('a[href], button, summary')].filter((e) => e.tabIndex >= 0 && e.getClientRects().length);
+      return { seq: [...new Set(stops.map((e) => blocks.find((b) => e.closest(b))))].join(' '),
+        order: blocks.map((b) => getComputedStyle(row.querySelector(b)).order).join() };
+    });
+    check(`${w}px: vòng Tab trong một bước theo thứ tự đọc`, tabOrd.seq === '.revisit-band .step-docs .step-head .cards-scroll' && tabOrd.order === '0,0,0,0',
+      JSON.stringify(tabOrd));
     // Hàng nút của đầu bước (Sub-step, Reopen, Doc, xoá) nằm một dòng; nút phụ chỉ biểu tượng, có aria-label và title.
     const acts = await lp.$eval('.step[data-step="tl2"] .step-head .acts', (a) => {
       const bs = [...a.children];
