@@ -13,25 +13,21 @@
      Link tới trang của repo (https://vudat081299.github.io/…): file có trong repo, neo `#id` có trên trang.
      `design` (tuỳ chọn, PLAN-033): {profile, path?} đặt sẵn cho System design khi tạo dự án; câu và câu trả lời có trong
      hồ sơ của system-design.json, `path` là lối có thật, hồ sơ không rỗng. Mẫu trống không có `design`.
-  2. Mẫu `it5425-sports` khớp từng chữ với bản sinh từ trang đồ án môn (COURSE_JSON, COURSE_HTML): không thêm nội dung
-     (trừ `design`: trang đồ án không có, sinh lại thì giữ).
-     outs / ins của nó suy từ đường dẫn trong `io_html` từng pha (`course_flow`); `final` đặt cho đường dẫn trong COURSE_FINAL.
-     Sinh lại:  python3 step-planner/tools/lint.py --write-course
-  3. js/**/*.js: không innerHTML / outerHTML / insertAdjacentHTML / document.write — chữ người dùng chỉ qua textContent.
+  2. js/**/*.js: không innerHTML / outerHTML / insertAdjacentHTML / document.write — chữ người dùng chỉ qua textContent.
      Import (cả `export … from`) trỏ tới file có thật; `import(…)` chỉ nhận chuỗi cố định; mọi file trừ main.js có nơi import
      (không mồ côi). js/core/ là logic thuần: code (đọc bằng `js_scan`: bỏ chú thích, chữ trong chuỗi không tính) không gọi tên
      toàn cục của trình duyệt (`PURE_GLOBALS`), không đọc thuộc tính DOM (`PURE_PROPS`, cả `x['…']`); chỉ import js/core/.
-  4. css/: mỗi file css/*.css được link đúng một lần trong index.html, tokens.css trước hết (thứ tự link là cascade); mã màu
+  3. css/: mỗi file css/*.css được link đúng một lần trong index.html, tokens.css trước hết (thứ tự link là cascade); mã màu
      chỉ nằm trong css/tokens.css. Vòng focus chỉ cho bàn phím: mọi selector có `:focus-visible` mở bằng QUIET_GUARD, trừ
      luật chỉ có `outline: none` (lớp quiet-focus do js/ui/dialogs.js bật khi dùng chuột, chạm).
-  5. data/system-design.json (PLAN-016): khuôn hồ sơ, khâu, phương án; id không trùng; `fit` chỉ dùng câu và câu trả lời
+  4. data/system-design.json (PLAN-016): khuôn hồ sơ, khâu, phương án; id không trùng; `fit` chỉ dùng câu và câu trả lời
      có trong hồ sơ; link https; mỗi câu trả lời đơn lẻ của hồ sơ có ít nhất một phương án hợp ở mọi khâu.
      `architectures`: nhóm kiến trúc {id, label, question, note?, sources?, entries, rules}; kiến trúc {id, name, what, use,
      avoid, flow, tools, path?, sources}: `tools` trỏ phương án có thật, `path` trỏ lối có thật; luật gợi ý {if, arch, why}
      dùng cùng khoá điều kiện với `checks`, `arch` là kiến trúc của nhóm ("" = nhóm không cần).
      Luật báo {id, title, if, unless?, msg, caveat?}: `caveat: true` = luật nhắc cách dùng, phương án vẫn đúng (Apply path
      không né nó).
-  6. Ngôn ngữ (PLAN-028): mọi chữ của mẫu có chữ Việt (trừ chuỗi chỉ là đường dẫn, tên file, và LATIN_OK); mọi chuỗi của
+  5. Ngôn ngữ (PLAN-028): mọi chữ của mẫu có chữ Việt (trừ chuỗi chỉ là đường dẫn, tên file, và LATIN_OK); mọi chuỗi của
      system-design.json là lời giải thích tiếng Việt, trừ nhãn và tên (DESIGN_EN, tiếng Anh), tên trang ngoài (DESIGN_TITLES,
      giữ chữ của trang), id, URL, lệnh (DESIGN_CODE); chuỗi trong js/**/*.js và chữ của index.html không có chữ Việt, trừ chuỗi
      có chú thích `lang: vi — lý do` trên dòng mở hoặc dòng đóng (một chú thích miễn đúng một chuỗi).
@@ -39,7 +35,6 @@
 
 Chạy:  python3 step-planner/tools/lint.py
 """
-import html
 import json
 import os
 import re
@@ -49,14 +44,6 @@ import unicodedata
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPO = os.path.dirname(HERE)
 TEMPLATES = os.path.join(HERE, 'data/templates.json')
-COURSE_JSON = os.path.join(REPO, 'masters-degree/data-management-visualization/data/sports-monitoring-build.json')
-COURSE_HTML = os.path.join(REPO, 'masters-degree/data-management-visualization/sports-monitoring-build.html')
-PLAN_HTML = os.path.join(REPO, 'masters-degree/data-management-visualization/sports-monitoring-project.html')
-COURSE_ID = 'it5425-sports'
-COURSE_URL = 'https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-build.html'
-PLAN_URL = 'https://vudat081299.github.io/masters-degree/data-management-visualization/sports-monitoring-project.html'
-# Sản phẩm cuối của đồ án (`final`): app demo, báo cáo, slide — thứ nộp hay trình bày, không pha nào sau dùng.
-COURSE_FINAL = ('app/streamlit_app.py', 'report/', 'slides/')
 DESIGN = os.path.join(HERE, 'data/system-design.json')
 LANES = ('data', 'model', 'app', 'ops')
 STAGE_KEYS = {'id', 'title', 'lane', 'question', 'guide', 'multi', 'skipWhen', 'task', 'when', 'options'}
@@ -73,108 +60,6 @@ errors = []
 
 def err(msg):
     errors.append(msg)
-
-
-def text(s):
-    """HTML của trang đồ án → chữ thường: bỏ thẻ, giải mã thực thể, gộp khoảng trắng, đổi chỗ trỏ "trang này"."""
-    s = html.unescape(re.sub(r'<[^>]+>', '', s))
-    s = re.sub(r'\s+', ' ', s).strip()
-    s = s.replace('trang này', 'trang đồ án').replace('bên dưới', 'trên trang đồ án')
-    return s
-
-
-def io_paths(part):
-    """Đường dẫn trong <code> của một vế `io_html`; tên trần (không có /) nằm cùng thư mục với đường dẫn ngay trước nó."""
-    out, base = [], ''
-    for c in re.findall(r'<code>(.*?)</code>', part):
-        c = html.unescape(c).strip()
-        if '/' in c:
-            base = c[:c.rfind('/') + 1]
-        else:
-            c = base + c
-        out.append(c)
-    return out
-
-
-def course_flow(phases, page, src):
-    """Bàn giao của mẫu đồ án, suy từ `io_html` của từng pha ("vào → ra"): mỗi đường dẫn bên phải là một đầu ra (khai ở
-    pha đầu tiên nhắc tới nó); đường dẫn bên trái trùng một đầu ra của pha trước, hoặc là thư mục chứa nó, là đầu vào."""
-    m = re.search(r'Data dictionary của bảng (\w+)', page)
-    pk = next((r['col'] for r in src.get('dictionary', []) if 'khoá chính' in r.get('mean_html', '')), '')
-    if 'id="mo-hinh-du-lieu"' not in page:
-        err(f'{COURSE_HTML}: mất neo #mo-hinh-du-lieu mà mẫu {COURSE_ID} trỏ tới')
-    declared, flows = {}, []
-    for p in phases:
-        left, _, right = p['io_html'].partition('→')
-        ins = []
-        for path in io_paths(left):
-            for o, key in declared.items():
-                if (o == path or (path.endswith('/') and o.startswith(path))) and key not in ins:
-                    ins.append(key)
-        outs = []
-        for path in io_paths(right):
-            if path in declared:
-                continue
-            key = re.sub(r'[^a-z0-9]+', '-', path.lower()).strip('-')[:40].strip('-')
-            out = {'key': key, 'name': path, 'ref': path}
-            if path.startswith('data/clean/') and m and pk:
-                out['note'] = f'Bảng {m.group(1)}, khoá chính {pk}; data dictionary: {COURSE_URL}#mo-hinh-du-lieu'
-            if path in COURSE_FINAL:
-                out['final'] = True
-            declared[path] = key
-            outs.append(out)
-        flows.append((outs, ins))
-    used = {k for _, ins in flows for k in ins}
-    for path in COURSE_FINAL:
-        if path not in declared:
-            err(f'{COURSE_HTML}: COURSE_FINAL có "{path}" mà không pha nào ghi nó là đầu ra')
-        elif declared[path] in used:
-            err(f'{COURSE_HTML}: "{path}" trong COURSE_FINAL được pha sau dùng — không còn là sản phẩm cuối')
-    return flows
-
-
-def course_template():
-    src = json.load(open(COURSE_JSON, encoding='utf-8'))
-    roles = [t['role'] for t in src['team']]
-    page = open(COURSE_HTML, encoding='utf-8').read()
-    m = re.search(r'id="xong">.*?<ul class="checklist">(.*?)</ul>', page, re.S)
-    checklist = [text(x) for x in re.findall(r'<li>(.*?)</li>', m.group(1), re.S)] if m else []
-    if not checklist:
-        err(f'{COURSE_HTML}: không tìm thấy danh sách "Xong khi nào" (#xong)')
-    for anchor in ('lich', 'xong'):
-        if f'id="{anchor}"' not in page:
-            err(f'{COURSE_HTML}: mất neo #{anchor} mà mẫu {COURSE_ID} trỏ tới')
-    if 'id="can-xac-nhan"' not in open(PLAN_HTML, encoding='utf-8').read():
-        err(f'{PLAN_HTML}: mất neo #can-xac-nhan mà mẫu {COURSE_ID} trỏ tới')
-    steps = []
-    flows = course_flow(src['phases'], page, src)
-    for p, (outs, ins) in zip(src['phases'], flows):
-        phase_roles = [roles[i - 1] for i in p['roles']]
-        subs = [{'title': text(t)} for t in p['tasks_html']]
-        notes = ['Vai: ' + ', '.join(phase_roles), 'Công cụ: ' + text(p['tools']),
-                 f'Trang đồ án, pha {p["id"]}: {COURSE_URL}#lich']
-        if p['id'] == 'P0':
-            notes.append(f'Câu hỏi gửi giảng viên, thư xin phép: {PLAN_URL}#can-xac-nhan')
-        if p['id'] == 'P8' and checklist:
-            notes += ['', f'Xong khi nào ({COURSE_URL}#xong):'] + ['- ' + c for c in checklist]
-        steps.append({
-            'title': f'{p["id"]} · {p["name"]}',
-            'goal': text(p['io_html']),
-            'doneWhen': text(p['done_html']),
-            'notes': '\n'.join(notes),
-            'subs': subs,
-            **({'outs': outs} if outs else {}),
-            **({'ins': ins} if ins else {}),
-        })
-    return {
-        'id': COURSE_ID,
-        'group': 'specific',
-        'name': 'Đồ án IT5425 — giám sát thể thao (Premier League)',
-        'output': 'Đồ án môn',
-        'description': 'Chọn khi làm đồ án môn Data Management and Visualization (IT5425). Các giai đoạn P0–P8 lấy từ trang đồ án. '
-                       'Làm một mình: Skip việc chia vai, họp tuần; app demo và slide tuỳ yêu cầu nộp.',
-        'steps': steps,
-    }
 
 
 STEP_KEYS = {'title', 'goal', 'doneWhen', 'notes', 'subs', 'outs', 'ins'}
@@ -331,11 +216,6 @@ def check_templates(data):
         check_site_links(f'{w} ({tid})', json.dumps(t, ensure_ascii=False))
     if blanks != 1:
         err(f'templates.json: cần đúng một mẫu trống (steps rỗng), đang có {blanks}')
-    course = next((t for t in tpls if t.get('id') == COURSE_ID), None)
-    if course is None:
-        err(f'templates.json: thiếu mẫu {COURSE_ID}')
-    elif {k: v for k, v in course.items() if k != 'design'} != course_template():
-        err(f'templates.json: mẫu {COURSE_ID} lệch trang đồ án — chạy python3 step-planner/tools/lint.py --write-course')
 
 
 def check_tpl_design(data, design):
@@ -725,7 +605,7 @@ CSS_COLOR = re.compile(r'#[0-9a-fA-F]{3,8}\b|\b(?:rgba?|hsla?|hwb|lab|lch|oklab|
 
 VI_RE = re.compile('[À-ÃÈ-ÊÌÍÒ-ÕÙÚÝà-ãè-êìíò-õùúýĂăĐđĨĩŨũƠơƯưẠ-ỹ]')  # chữ cái riêng của tiếng Việt
 TPL_TEXT = ('name', 'description', 'output', 'title', 'goal', 'doneWhen', 'notes')  # + outs[].name, outs[].note
-# Chuỗi của mẫu được phép không có chữ Việt (ngoài đường dẫn, tên file): tên pha giữ chữ của trang đồ án.
+# Chuỗi của mẫu được phép không có chữ Việt (ngoài đường dẫn, tên file).
 LATIN_OK = {'P3 · EDA', 'P7 · Demo'}
 # system-design.json: mọi chuỗi là lời giải thích tiếng Việt (trường mới cũng vậy), trừ ba loại dưới (đường dẫn: khoá nối
 # bằng `.`, phần tử danh sách thêm `[]`, khoá dưới `if`, `unless`, `when`, `fit`, `implies`, `suggest`, `tools`, `paths[].stages` là `*`).
@@ -999,7 +879,6 @@ def self_test():
         ('mẫu: group lạ', preset('crisp-dm', lambda t: t.update(group='general')), '`group` chỉ ghi "specific"'),
         ('mẫu: group không đứng sau id', preset('crisp-dm', lambda t: t.update(group='specific')), 'đứng ngay sau `id`'),
         ('mẫu: mẫu trống có group', preset('blank', lambda t: (r := dict(t), t.clear(), t.update(id=r['id'], group='specific'), t.update(r))), 'mẫu trống là mẫu chung'),
-        ('mẫu: design của mẫu đồ án không tính là lệch trang đồ án', preset('it5425-sports', lambda t: t['design'].update(path='report')), None),
         ('mẫu: đầu vào lơ lửng (key không có đầu ra)', flow(lambda st: st[1]['subs'][0]['ins'].append('khong-co')), 'không là đầu ra nào'),
         ('mẫu: đầu vào lấy từ bước sau', flow(lambda st: st[1]['subs'][0]['ins'].append('gold-marts')), 'chỉ lấy từ bước trước'),
         ('mẫu: đầu vào lấy từ bước con đứng sau, cùng bước', flow(lambda st: st[1]['subs'][1]['ins'].append('bootstrap-script')), 'chỉ lấy từ bước trước'),
@@ -1090,15 +969,6 @@ def main():
     if '--self-test' in sys.argv:
         return self_test()
     data = json.load(open(TEMPLATES, encoding='utf-8'))
-    if '--write-course' in sys.argv:
-        tpls = data['templates']
-        idx = next(i for i, t in enumerate(tpls) if t.get('id') == COURSE_ID)
-        new, keep = course_template(), tpls[idx].get('design')
-        tpls[idx] = {k: v for k, v in new.items() if k != 'steps'} | ({'design': keep} if keep else {}) | {'steps': new['steps']}
-        with open(TEMPLATES, 'w', encoding='utf-8') as f:
-            json.dump(data, f, ensure_ascii=False, indent=2)
-            f.write('\n')
-        print(f'step-planner: đã sinh lại mẫu {COURSE_ID}')
     check_templates(data)
     design = json.load(open(DESIGN, encoding='utf-8'))
     check_design(design)

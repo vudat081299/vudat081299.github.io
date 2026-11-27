@@ -145,9 +145,7 @@
 - `lakehouse-oss` (PLAN-029): mẫu chung cho mọi lakehouse mã nguồn mở; stack cụ thể chỉ là ví dụ ở ghi chú. Hạ tầng, dữ liệu trước,
   điều phối sau; bước cuối kiểm tuân thủ medallion. Ghi chú về giấy phép, tình trạng bảo trì công cụ ghi kèm link nguồn.
 - `app-feature` không theo chuẩn; việc phát hành theo tài liệu App Store Connect, Google Play, Flutter (link ở ghi chú bước).
-- `it5425-sports` sinh từ `masters-degree/data-management-visualization/data/sports-monitoring-build.json` và "Xong khi nào"
-  (`#xong`) của trang 2 đồ án: `python3 step-planner/tools/lint.py --write-course`, không sửa tay; cổng đỏ khi nguồn đổi mà chưa sinh lại.
-- `it5425-sports`: tên việc giữ chữ nguồn; outs / ins suy từ đường dẫn trong `io_html` từng pha (`course_flow`), `final` theo `COURSE_FINAL`. Không tên người.
+- `it5425-sports` (PLAN-040): mẫu viết tay như mọi mẫu, không sinh từ trang đồ án, theo mọi luật chung ở trên. Không tên người.
 
 ## System design (`data/system-design.json`, PLAN-016)
 
@@ -189,7 +187,7 @@
 
 ## Cổng: `sh step-planner/tools/check.sh`
 
-- `tools/lint.py`: khuôn mẫu và bàn giao trong mẫu, ngôn ngữ (giao diện, mẫu, System design), danh mục System design, mẫu đồ án khớp nguồn và neo, không `innerHTML`, mã màu chỉ trong `css/tokens.css`, vòng focus có gác `quiet-focus`, mọi file CSS được link, `js/core/` thuần, import có file, không file mồ côi.
+- `tools/lint.py`: khuôn mẫu và bàn giao trong mẫu, ngôn ngữ (giao diện, mẫu, System design), danh mục System design, link trang của repo có file và neo, không `innerHTML`, mã màu chỉ trong `css/tokens.css`, vòng focus có gác `quiet-focus`, mọi file CSS được link, `js/core/` thuần, import có file, không file mồ côi.
   `lint.py --self-test`: cài lỗi vào bản sao tạm, mỗi lỗi phải bị bắt.
 - `node --input-type=module --check < file` cho mọi file dưới `js/` (`node --check file.js` bỏ sót lỗi của module).
 - `tools/test-core.mjs`: logic thuần của `js/core/`; danh sách ở chính file.

@@ -1,5 +1,5 @@
 {
-  "note": "Mẫu dự án của Step Planner; trang đọc bằng vòng lặp (REPO-001). Mẫu it5425-sports sinh từ masters-degree/data-management-visualization/data/sports-monitoring-build.json bằng `python3 step-planner/tools/lint.py --write-course`, đừng sửa tay. Khuôn và luật: step-planner/CLAUDE.md; khuôn outs / ins: step-planner/tools/lint.py.",
+  "note": "Mẫu dự án của Step Planner; trang đọc bằng vòng lặp (REPO-001). Khuôn và luật: step-planner/CLAUDE.md; khuôn outs / ins: step-planner/tools/lint.py.",
   "templates": [
     {
       "id": "crisp-dm",

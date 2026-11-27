@@ -8,7 +8,6 @@
 - PLAN-005 · Mỗi dự án có nhật ký quyết định · `step-planner/`
 - PLAN-006 · Xoá hoàn tác được; sắp xếp lại được; tìm theo chữ · `step-planner/`
 - PLAN-007 · Markdown xuất ra đọc được và nhập lại được; nhập không ghi đè ngầm · `step-planner/`
-- PLAN-008 · Mẫu đồ án lấy đúng từ trang đồ án · `step-planner/data/templates.json`
 - PLAN-009 · Mẫu Data Science theo chuẩn CRISP-DM 1.0, áp được cho mọi dự án · `step-planner/data/templates.json`
 - PLAN-010 · Không có khái niệm người làm · `step-planner/`
 - PLAN-011 · Bước và bước con có tài liệu: link hoặc văn bản Markdown · `step-planner/`
@@ -38,6 +37,7 @@
 - PLAN-037 · Processing giữ được nhiều công cụ; công cụ lịch phục vụ dữ liệu liên tục khi kết quả xem theo lịch; Apply path theo kiến trúc xử lý và kiến trúc lưu trữ được gợi ý · `step-planner/data/system-design.json`, `step-planner/js/core/design.js`
 - PLAN-038 · Đầu ra đánh dấu là sản phẩm cuối không cần nơi nhận · `step-planner/`
 - PLAN-039 · Mẫu chia hai nhóm: loại dự án chung và dự án cụ thể đang làm · `step-planner/`
+- PLAN-040 · Mẫu đồ án là mẫu viết tay, theo mọi luật chung của mẫu · `step-planner/data/templates.json`
 <!-- index:end -->
 
 ## PLAN-001 · Dự án là các bước có thứ tự, mỗi bước có bước con có thứ tự
@@ -74,11 +74,6 @@ Xoá bước, bước con hay quyết định đều hoàn tác được, trả 
 24/11/2026 · `step-planner/`
 
 Xuất Markdown cho người đọc, theo một khuôn cố định để nhập lại ra đúng cấu trúc; Markdown viết tay cũng nhập được. Xuất JSON một dự án hoặc sao lưu tất cả; tải file hoặc chép. Nhập (file hay dán) hiện xem trước số bước, bước con và mọi cảnh báo; mặc định tạo dự án mới, hoặc chọn thay dự án đang mở (hoàn tác được). Không bao giờ ghi đè mà không hỏi.
-
-## PLAN-008 · Mẫu đồ án lấy đúng từ trang đồ án
-24/11/2026 · `step-planner/data/templates.json`
-
-Có mẫu cho các loại dự án hay gặp (Data Science, đồ án môn đang học, phân tích thống kê không học máy, tính năng app, dữ liệu) và đúng một mẫu trống; danh sách ở `data/templates.json`. Mẫu đồ án chỉ lấy các giai đoạn, việc, sản phẩm và tiêu chí xong của trang đồ án, không thêm nội dung, không tên người thật.
 
 ## PLAN-009 · Mẫu Data Science theo chuẩn CRISP-DM 1.0, áp được cho mọi dự án
 24/11/2026 · `step-planner/data/templates.json`
@@ -173,7 +168,7 @@ Sau hồ sơ dự án, System design có trang kiến trúc chia bốn nhóm: d�
 ## PLAN-028 · Chữ giao diện tiếng Anh, mọi nội dung mẫu tiếng Việt, tên chuẩn giữ trong ngoặc
 26/11/2026 · `step-planner/` · thay cho PLAN-015
 
-Mọi chữ thuộc giao diện là tiếng Anh: nút, tiêu đề, gợi ý khi rê chuột, nhãn cho trình đọc màn hình, tiêu đề hộp thoại, mục menu, thông báo, chỗ trống, chữ gợi ý trong ô nhập, tên trạng thái; trong System design thêm tên khâu, tên phương án, nhãn câu hỏi hồ sơ và lựa chọn, tên lối, tên kiến trúc. Mọi nội dung của mẫu là tiếng Việt: tên mẫu, tên bước, tên bước con, mục tiêu, tiêu chí xong, ghi chú, tên và mô tả đầu ra, loại đầu ra; lời giải thích, hướng dẫn, cảnh báo của System design cũng tiếng Việt. Tên bước, bước con theo một chuẩn ghi tiếng Việt và giữ tên gốc tiếng Anh trong ngoặc để người học nhận ra thuật ngữ, ví dụ "Hiểu dữ liệu (Data Understanding)". Tên công cụ, thư viện, file, lệnh, URL giữ nguyên. Mẫu đồ án môn học giữ nguyên chữ của trang đồ án. Một cổng kiểm luật này để nó không trôi.
+Mọi chữ thuộc giao diện là tiếng Anh: nút, tiêu đề, gợi ý khi rê chuột, nhãn cho trình đọc màn hình, tiêu đề hộp thoại, mục menu, thông báo, chỗ trống, chữ gợi ý trong ô nhập, tên trạng thái; trong System design thêm tên khâu, tên phương án, nhãn câu hỏi hồ sơ và lựa chọn, tên lối, tên kiến trúc. Mọi nội dung của mẫu là tiếng Việt: tên mẫu, tên bước, tên bước con, mục tiêu, tiêu chí xong, ghi chú, tên và mô tả đầu ra, loại đầu ra; lời giải thích, hướng dẫn, cảnh báo của System design cũng tiếng Việt. Tên bước, bước con theo một chuẩn ghi tiếng Việt và giữ tên gốc tiếng Anh trong ngoặc để người học nhận ra thuật ngữ, ví dụ "Hiểu dữ liệu (Data Understanding)". Tên công cụ, thư viện, file, lệnh, URL giữ nguyên. Một cổng kiểm luật này để nó không trôi.
 
 ## PLAN-029 · Mẫu nền tảng lakehouse mã nguồn mở: hạ tầng và dữ liệu trước, pipeline sau, có bước kiểm tuân thủ medallion
 26/11/2026 · `step-planner/data/templates.json`
@@ -226,4 +221,9 @@ Người dùng đánh dấu được một đầu ra là sản phẩm cuối (b�
 ## PLAN-039 · Mẫu chia hai nhóm: loại dự án chung và dự án cụ thể đang làm
 27/11/2026 · `step-planner/`
 
-Mẫu chia hai nhóm. Mẫu chung là một loại dự án (CRISP-DM, Data Science trên big data, báo cáo thống kê, tính năng app, pipeline dữ liệu, lakehouse) và mẫu trống, áp được cho bài toán bất kỳ. Dự án cụ thể là bài chủ trang đang làm (hiện là đồ án môn IT5425), nội dung lấy từ trang của bài ấy. Nhóm của mẫu ghi ở dữ liệu của mẫu, không suy từ id hay tên; mẫu không ghi nhóm là mẫu chung, mẫu trống luôn là mẫu chung. Mọi nơi chọn mẫu tách hai nhóm, mẫu chung trước; trong mỗi nhóm giữ thứ tự của danh sách mẫu.
+Mẫu chia hai nhóm. Mẫu chung là một loại dự án (CRISP-DM, Data Science trên big data, báo cáo thống kê, tính năng app, pipeline dữ liệu, lakehouse) và mẫu trống, áp được cho bài toán bất kỳ. Dự án cụ thể là bài chủ trang đang làm (hiện là đồ án môn IT5425). Nhóm của mẫu ghi ở dữ liệu của mẫu, không suy từ id hay tên; mẫu không ghi nhóm là mẫu chung, mẫu trống luôn là mẫu chung. Mọi nơi chọn mẫu tách hai nhóm, mẫu chung trước; trong mỗi nhóm giữ thứ tự của danh sách mẫu.
+
+## PLAN-040 · Mẫu đồ án là mẫu viết tay, theo mọi luật chung của mẫu
+27/11/2026 · `step-planner/data/templates.json` · thay cho PLAN-008
+
+Có mẫu cho các loại dự án hay gặp (Data Science, phân tích thống kê không học máy, tính năng app, dữ liệu), mẫu cho dự án cụ thể chủ trang đang làm (đồ án môn đang học) và đúng một mẫu trống; danh sách ở `data/templates.json`. Mẫu đồ án không sinh từ trang đồ án và không phải khớp với trang ấy: chủ trang có thể đổi hướng đồ án mà trang môn học chưa đổi theo. Mẫu đồ án theo mọi luật chung của mẫu: dữ liệu chỉ chảy xuôi, sản phẩm cuối đánh dấu, mở ra không có đầu ra lỗi, không ngoại lệ riêng. Không tên người thật.
