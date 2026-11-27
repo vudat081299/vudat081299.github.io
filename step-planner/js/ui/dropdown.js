@@ -7,7 +7,7 @@
 import { fold } from '../core/board.js';
 import { h, icon } from './dom.js';
 
-/** @typedef {{value:string, label:string, hint?:string, dot?:string, selected?:boolean, disabled?:boolean}} Item */
+/** tip: chữ đủ khi rê chuột (nhãn, dòng giải thích bị cắt). @typedef {{value:string, label:string, hint?:string, tip?:string, dot?:string, selected?:boolean, disabled?:boolean}} Item */
 
 let seq = 0;
 /** @type {null | {pop:HTMLElement, anchor:HTMLElement, items:Item[], active:number, onPick:(v:string)=>void, onClose:()=>void}} */
@@ -23,17 +23,22 @@ export function closeList(refocus = false) {
   try { if (c.pop.matches(':popover-open')) c.pop.hidePopover(); } catch (e) { /* trình duyệt không có popover */ }
   c.pop.remove();
   c.anchor.setAttribute('aria-expanded', 'false');
+  c.anchor.removeAttribute('aria-controls'); // danh sách đã rời trang
   if (refocus) c.anchor.focus({ preventScroll: true });
   c.onClose();
 }
 
-/** Đặt danh sách ngay dưới nút (gần đáy khung nhìn thì lật lên trên), không ra ngoài khung nhìn. */
+/** Đặt danh sách ngay dưới nút (gần đáy khung nhìn thì lật lên trên). Bề ngang nằm trong khung nhìn và trong hộp thoại
+ * chứa nút: canh trái theo nút, tràn phải thì canh phải theo nút, vẫn tràn thì sát mép trái của vùng ấy. */
 function place() {
   if (!cur) return;
   const { pop, anchor } = cur;
   const r = anchor.getBoundingClientRect();
   const gap = 4, edge = 8;
-  pop.style.minWidth = Math.round(r.width) + 'px';
+  const dlg = anchor.closest('dialog')?.getBoundingClientRect();
+  const minX = Math.max(edge, dlg ? dlg.left : 0), maxX = Math.min(innerWidth - edge, dlg ? dlg.right : innerWidth);
+  pop.style.minWidth = Math.round(Math.min(r.width, maxX - minX)) + 'px';
+  pop.style.maxWidth = Math.floor(maxX - minX) + 'px';
   pop.style.maxHeight = '';
   const ph = pop.offsetHeight, pw = pop.offsetWidth;
   const below = innerHeight - r.bottom - gap - edge, above = r.top - gap - edge;
@@ -42,7 +47,8 @@ function place() {
   pop.style.maxHeight = Math.floor(room) + 'px';
   const ht = Math.min(ph, room);
   pop.style.top = Math.round(up ? r.top - gap - ht : r.bottom + gap) + 'px';
-  pop.style.left = Math.round(Math.max(edge, Math.min(r.left, innerWidth - pw - edge))) + 'px';
+  const left = r.left + pw <= maxX ? r.left : r.right - pw >= minX ? r.right - pw : minX;
+  pop.style.left = Math.round(Math.max(minX, left)) + 'px';
   pop.dataset.side = up ? 'up' : 'down';
 }
 
@@ -95,7 +101,7 @@ export function openList(anchor, items, onPick, opts = {}) {
   const pop = h('div', { class: 'dd-pop' + (opts.className ? ' ' + opts.className : ''), role: 'listbox', tabindex: '-1', id,
     'aria-label': opts.label || anchor.getAttribute('aria-label') || anchor.textContent?.trim() || '' });
   items.forEach((it, i) => {
-    const o = h('div', { class: 'dd-opt', role: 'option', id: `${id}-${i}`, 'aria-selected': String(!!it.selected), 'data-value': it.value },
+    const o = h('div', { class: 'dd-opt', role: 'option', id: `${id}-${i}`, 'aria-selected': String(!!it.selected), 'data-value': it.value, title: it.tip || null },
       it.dot ? h('span', { class: `st-dot st-${it.dot}`, 'aria-hidden': 'true' }) : '',
       h('span', { class: 'dd-text' }, h('span', { class: 'dd-label' }, it.label), it.hint ? h('span', { class: 'dd-hint' }, it.hint) : ''));
     if (it.selected) o.append(icon('check'));
@@ -184,24 +190,28 @@ export function consumeJustClosed(anchor) {
 /**
  * Thay giao diện của một <select> bằng nút + danh sách tự dựng. <select> vẫn là nguồn giá trị: ẩn khỏi mắt và khỏi vòng
  * Tab, gán `value` hay thay option thì nút tự cập nhật; chọn một mục thì đặt value và phát `change` như chọn thật.
- * Option có `data-hint` (dòng giải thích) và `data-dot` (chấm trạng thái) thì danh sách hiện thêm. Bỏ qua: `data-native`.
+ * Option có `data-hint` (dòng giải thích) và `data-dot` (chấm trạng thái) thì danh sách hiện thêm; `title` của option (mặc định
+ * nhãn) là chữ đủ khi rê chuột. Bỏ qua: `data-native`.
  * @param {HTMLSelectElement} sel
  */
 export function enhanceSelect(sel) {
   if (sel.dataset.native !== undefined || sel.dataset.enhanced) return;
   sel.dataset.enhanced = '1';
   const val = h('span', { class: 'dd-val' });
+  const txt = h('span', { class: 'dd-txt' });
   const btn = h('button', { type: 'button', class: 'dd-btn', 'aria-haspopup': 'listbox', 'aria-expanded': 'false' }, val, icon('chev'));
   sel.before(btn);
   sel.classList.add('dd-native');
   sel.tabIndex = -1;
   sel.setAttribute('aria-hidden', 'true');
+  /* Chữ dài bị cắt "…" (.dd-txt); đủ chữ ở title của nút. */
   const refresh = () => {
     const o = sel.selectedOptions[0];
-    val.textContent = o ? o.textContent || '' : '';
+    txt.textContent = o ? o.textContent || '' : '';
+    btn.title = txt.textContent || '';
     /** @type {HTMLButtonElement} */ (btn).disabled = sel.disabled;
     const dot = o?.dataset.dot;
-    if (dot) val.prepend(h('span', { class: `st-dot st-${dot}`, 'aria-hidden': 'true' }));
+    val.replaceChildren(...(dot ? [h('span', { class: `st-dot st-${dot}`, 'aria-hidden': 'true' })] : []), txt);
   };
   /* Gán value / selectedIndex bằng JS không phát sự kiện: bọc setter của chính phần tử này. */
   const proto = HTMLSelectElement.prototype;
@@ -212,7 +222,7 @@ export function enhanceSelect(sel) {
   new MutationObserver(refresh).observe(sel, { childList: true, subtree: true, attributes: true, attributeFilter: ['disabled', 'selected'] });
   sel.addEventListener('change', refresh);
   const open = () => openList(btn, [...sel.options].map((o) => ({
-    value: o.value, label: o.textContent || '', hint: o.dataset.hint, dot: o.dataset.dot, selected: o.selected, disabled: o.disabled,
+    value: o.value, label: o.textContent || '', hint: o.dataset.hint, tip: o.title || undefined, dot: o.dataset.dot, selected: o.selected, disabled: o.disabled,
   })), (v) => {
     if (sel.value === v) return;
     sel.value = v;

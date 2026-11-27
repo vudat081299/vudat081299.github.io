@@ -11,7 +11,7 @@ import { plural } from '../core/io.js';
 import { safeUrl, uid } from '../core/model.js';
 import { labelsOf } from './board.js';
 import { focusField, showDlg } from './dialogs.js';
-import { $, h, icon } from './dom.js';
+import { $, focusFirst, h, icon } from './dom.js';
 import { unfilter } from './filter.js';
 import { flashMs } from './move.js';
 import { cur, findWs } from './state.js';
@@ -356,7 +356,7 @@ export function focusEdit(where, which) {
   const s = sec(where);
   const head = s.querySelector(which === 'ins' ? '[data-in-pick]' : '[data-out-add]');
   head.closest('.docs-edit-head').scrollIntoView({ block: 'start' });
-  head.focus({ preventScroll: true });
+  (head.disabled ? s.querySelector('[data-out-add]') : head).focus({ preventScroll: true });
 }
 
 /** Ô Bước / Vị trí của hộp đổi: tính lại dấu "on hold" của đầu vào, của nơi dùng đầu ra. @param {'sub'|'step'} where */
@@ -458,7 +458,7 @@ function wireEdit(where) {
       draft[where].ins = draft[where].ins.filter((x) => x !== id);
       sync(where);
       paintIns(where);
-      s.querySelector('[data-in-pick]').focus();
+      focusFirst(s.querySelector('[data-in-pick]'), s.querySelector('[data-in-del]'), s.querySelector('[data-out-add]'));
     } else if (t.closest('[data-in-pick]')) openPick(where);
   });
 }
@@ -504,7 +504,7 @@ function wirePick() {
     $('dlg-pick').close();
     sync(where);
     paintIns(where);
-    sec(where).querySelector('[data-in-pick]').focus();
+    focusFirst(sec(where).querySelector('[data-in-pick]'), sec(where).querySelector('[data-out-add]'));
   });
 }
 

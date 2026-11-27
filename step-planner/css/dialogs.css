@@ -62,6 +62,11 @@ html { scrollbar-gutter: stable; }   /* khoá cuộn không làm trang nhảy ng
 .dlg .field .dd-btn[aria-expanded="true"], :where(:root:not(.quiet-focus)) .dlg .field .dd-btn:focus-visible { background: var(--surface); }
 .dlg .field textarea { min-height: calc(var(--ctl) * 2); }
 .dlg .field textarea.grow-title { min-height: var(--ctl); }
+/* Ô một dòng tự cao (Goal, Done when): như ô nhập, chữ dài xuống dòng thay vì trôi ngang. Ghi chú: cao theo chữ tới trần. */
+.dlg .field textarea.grow-line { min-height: var(--ctl); resize: none; overflow: hidden; }
+.dlg .field textarea.grow { max-height: var(--grow-max); }
+/* Ô ngày: cao bằng ô bên cạnh (Chromium cộng thêm cho nút lịch). */
+.dlg .field input[type="date"] { height: var(--ctl); }
 .dlg .field-title textarea { font: 600 var(--fs-lg)/var(--lh-tight) var(--sans); padding-top: var(--s2); padding-bottom: var(--s2); }
 .field-help { font-size: var(--fs-xs); line-height: var(--lh); color: var(--ink-3); }
 .field-row { display: grid; gap: var(--s3); grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr) minmax(0, .7fr); align-items: start; }
@@ -133,15 +138,24 @@ html { scrollbar-gutter: stable; }   /* khoá cuộn không làm trang nhảy ng
 @media (prefers-reduced-motion: no-preference) and (max-width: 640px) {
   .dlg[open]:not(.dlg-ask) { animation: sheet-in var(--dur-sheet) var(--ease); }
 }
+/* Màn thấp (điện thoại xoay ngang, cửa sổ thấp): hộp gần chạm mép; đầu bỏ nhãn nhỏ và tay nắm, dòng ngữ cảnh một dòng;
+   chân, thân gọn lề: thân còn chỗ cho ô nhập. */
+@media (max-height: 520px) {
+  .dlg, .dlg:not(.dlg-ask) { --dlg-max: calc(100dvh - 2 * var(--s2)); }
+  .dlg .dlg-kicker, .dlg:not(.dlg-ask) .dlg-head::before { display: none; }
+  .dlg:not(.dlg-ask) .dlg-head { padding: var(--s2) var(--s2) var(--s2) var(--s4); }
+  .dlg:not(.dlg-ask) .dlg-head .dlg-sub { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .dlg .dlg-body { padding: var(--s3) var(--s4); }
+  .dlg .dlg-foot { padding-top: var(--s1); padding-bottom: calc(var(--s1) + var(--sa-b)); }
+}
 
 /* ── Chọn trạng thái trong hộp bước con: bảy viên có chấm hình riêng (như chip trên thẻ); viên đang chọn tô màu trạng thái ── */
-.st-pick { display: flex; flex-direction: column; gap: var(--s2); }
-.st-opts { display: flex; flex-wrap: wrap; gap: var(--s2); }
-@media (max-width: 640px) { .st-opts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); } .st-opt span { width: 100%; justify-content: center; padding: 0 var(--s2); } }
+.st-pick { display: flex; flex-direction: column; gap: var(--s2); container-type: inline-size; }
+.st-opts { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s1); }
 .st-opt { position: relative; display: inline-flex; cursor: pointer; }
 .st-opt input { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
 .st-opt span {
-  display: inline-flex; align-items: center; gap: var(--s2); min-height: var(--ctl-sm); padding: 0 var(--s3);
+  display: inline-flex; align-items: center; gap: var(--s1); min-height: var(--ctl-sm); padding: 0 var(--s2);
   font: 600 var(--fs-sm)/1 var(--sans); color: var(--ink-2); white-space: nowrap;
   background: var(--surface); border: var(--line-w) solid var(--line); border-radius: var(--r-pill);
   transition: background var(--dur) var(--ease), color var(--dur) var(--ease), border-color var(--dur) var(--ease);
@@ -166,3 +180,13 @@ html { scrollbar-gutter: stable; }   /* khoá cuộn không làm trang nhảy ng
 .st-skip input:checked + span { color: var(--ink-2); background: var(--chip); border-color: var(--ink-4); border-style: dashed; }
 .st-cancel input:checked + span { color: var(--danger); background: var(--red-soft); border-color: var(--red-line); }
 .st-opt input:checked + span { box-shadow: inset 0 0 0 var(--line-w) currentColor; }
+/* Bảy viên một hàng ở hộp rộng; hẹp hơn thì lưới 4 + 3, rất hẹp 3 + 2 + 2: không viên nào đứng lẻ một hàng. */
+@container (max-width: 600px) {
+  .st-opts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .st-opt span { width: 100%; justify-content: center; }
+}
+@container (max-width: 440px) {
+  .st-opts { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .st-opt { grid-column: span 3; }
+  .st-opt:nth-child(-n + 3) { grid-column: span 2; }
+}

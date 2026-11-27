@@ -13,7 +13,8 @@ export const BLANK_TPL = { id: 'blank', name: 'Blank', description: '', steps: [
 export function tplInfo(t) {
   const subs = t.steps.reduce((/** @type {number} */ n, /** @type {any} */ s) => n + (s.subs || []).length, 0);
   return h('span', {}, h('b', {}, t.name), t.description && h('small', {}, t.description),
-    t.steps.length > 0 && h('span', { class: 'tpl-n' }, [t.output, plural(t.steps.length, 'step'), plural(subs, 'sub-step')].filter(Boolean).join(' · ')));
+    t.steps.length > 0 && h('span', { class: 'tpl-n' }, t.output ? t.output + ' · ' : '',
+      h('span', {}, plural(t.steps.length, 'step')), ' · ', h('span', {}, plural(subs, 'sub-step'))));
 }
 export function renderStart() {
   const list = templates.length ? templates : [BLANK_TPL];

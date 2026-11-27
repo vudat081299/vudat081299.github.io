@@ -1,13 +1,16 @@
 // @ts-check
 /* Hộp thoại: mở (showDlg, openDlg: thân về đầu, focus ô đầu trừ màn cảm ứng), đóng thì hỏi lại khi chữ chưa lưu
-   (tryClose, closeSaved), hộp hỏi #dlg-ask (ask, thay alert / confirm / prompt), gộp khi Lưu mà tab khác đã ghi
-   (mergeSaved, askRecreate); đóng mà nút mở đã bị vẽ lại thì focus nút mới (openerSel); mọi <select> có nghĩa dùng danh
-   sách tự dựng (ui/dropdown.js); vòng focus chỉ cho bàn phím, ở mọi phần tử của trang (lớp quiet-focus).
+   (tryClose, closeSaved), hộp hỏi #dlg-ask (ask, thay alert / confirm / prompt; Enter trong ô là OK, câu hỏi xoá / bỏ
+   chữ focus nút an toàn), gộp khi Lưu mà tab khác đã ghi (mergeSaved, askRecreate); đóng mà nút mở đã bị vẽ lại thì focus
+   nút mới (openerSel); ô bắt buộc chỉ có khoảng trắng thì báo ngay trên ô (markBlank); ô chữ tự cao (textarea.grow-title:
+   tên, Enter là Lưu; .grow-line: ô một dòng khác, Enter không làm gì; .grow: nhiều dòng, có trần); hộp sửa chỉ Lưu bằng
+   Enter ở ô tên; focus vào ô khuất trong thân hộp thì cuộn tới; mọi <select>
+   có nghĩa dùng danh sách tự dựng (ui/dropdown.js); vòng focus chỉ cho bàn phím, ở mọi phần tử của trang (lớp quiet-focus).
    Xuất: focusField, showDlg, openDlg, tryClose, closeSaved, ask, mergeSaved, askRecreate, initDialogs.
    Dùng: core/io.js, core/model.js, ui/dom.js, ui/dropdown.js, ui/state.js. */
 import { plural } from '../core/io.js';
 import { STATUS_LABEL, mergeEdit, oneLine } from '../core/model.js';
-import { $, autosize, field, fmtDate, h } from './dom.js';
+import { $, autosize, canFocus, field, fmtDate, h } from './dom.js';
 import { enhanceSelect } from './dropdown.js';
 import { refocus, stepOf } from './state.js';
 
@@ -27,7 +30,7 @@ const coarse = matchMedia('(pointer: coarse)');
 const NO_KEYBOARD = ['radio', 'checkbox', 'button', 'submit', 'reset', 'file', 'date', 'range', 'color'];
 /** @param {any} el @param {boolean} [select] */
 export function focusField(el, select = false) {
-  if (!el) return;
+  if (!canFocus(el)) return;
   const typing = el.tagName === 'TEXTAREA' || (el.tagName === 'INPUT' && !NO_KEYBOARD.includes(el.type));
   if (typing && coarse.matches) return;
   el.focus();
@@ -78,7 +81,8 @@ function restoreFocus(dlg) {
   if (a && a !== document.body && !dlg.contains(a)) return;
   const under = [...document.querySelectorAll('dialog[open]')].at(-1);
   if (!under) { refocus(sel); return; }
-  const el = sel.split('||').map((x) => x.trim() && under.querySelector(x.trim())).find(Boolean) || under.querySelector('button');
+  const el = sel.split('||').map((x) => x.trim() && under.querySelector(x.trim())).find(canFocus)
+    || [...under.querySelectorAll('button')].find(canFocus);
   if (el) el.focus();
 }
 
@@ -90,7 +94,7 @@ export function showDlg(dlg) {
 /** @param {any} dlg @param {any} [focusEl] */
 export function openDlg(dlg, focusEl) {
   showDlg(dlg);
-  dlg.querySelectorAll('textarea.grow-title').forEach(autosize);
+  dlg.querySelectorAll('textarea.grow-title, textarea.grow-line, textarea.grow').forEach(autosize);
   const form = formOf(dlg);
   if (form && GUARDED.includes(dlg.id)) snaps.set(dlg, snapshot(form));
   focusField(focusEl, true);
@@ -113,7 +117,8 @@ export function closeSaved(dlg) {
 }
 
 /** Hỏi lại trong #dlg-ask. Trả chữ trong ô (không có ô: ''), ASK_ALT khi bấm nút thứ hai (`alt`), null khi đóng.
- * list: mỗi mục [nhãn, của mình, của tab kia] (xung đột giữa hai tab).
+ * list: mỗi mục [nhãn, của mình, của tab kia] (xung đột giữa hai tab). danger (xoá, bỏ chữ): focus Close, để Enter hay
+ * Esc rồi Enter không làm mất gì; còn lại focus OK, hay ô chữ khi có ô.
  * @param {{title:string, text?:string, label?:string, value?:string, ok:string, alt?:string, danger?:boolean, list?:string[][]}} o
  * @returns {Promise<string|null>} */
 export function ask(o) {
@@ -125,6 +130,7 @@ export function ask(o) {
   $('ask-label').textContent = o.label || '';
   $('ask-input').value = o.value || '';
   $('ask-input').required = !!o.label;
+  markBlank($('ask-input'));
   $('ask-list').replaceChildren(...(o.list || []).map(([k, mine, theirs]) => h('li', {}, h('b', {}, k),
     h('p', {}, h('span', { class: 'lbl' }, 'Yours: '), mine), h('p', {}, h('span', { class: 'lbl' }, 'Other tab: '), theirs))));
   $('ask-list').hidden = !o.list?.length;
@@ -133,14 +139,29 @@ export function ask(o) {
   $('ask-ok').textContent = o.ok;
   $('ask-ok').className = 'btn ' + (o.danger ? 'danger' : 'go');
   dlg.returnValue = '';
-  $('ask-ok').autofocus = coarse.matches;
+  const safe = dlg.querySelector('.dlg-foot [data-close]');
+  const first = o.danger ? safe : $('ask-ok');
+  $('ask-ok').autofocus = coarse.matches && first === $('ask-ok');
+  safe.autofocus = coarse.matches && first === safe;
   showModalFrom(dlg);
-  if (o.label) focusField($('ask-input'), true); else $('ask-ok').focus();
+  if (o.label) focusField($('ask-input'), true); else first.focus();
   return new Promise((resolve) => {
     dlg.addEventListener('close', () => resolve(dlg.returnValue === 'ok' ? $('ask-input').value : dlg.returnValue === 'alt' ? ASK_ALT : null), { once: true });
   });
 }
 const ASK_ALT = '\u0000alt';
+
+/* Ô bắt buộc chỉ có khoảng trắng: `required` của trình duyệt cho qua, rồi chuẩn hoá thay bằng tên mặc định hay bỏ mục.
+ * Đặt lỗi riêng trên ô để Lưu dừng ở đó và trình duyệt hiện câu báo. */
+const BLANK_MSG = 'Type some text, not only spaces.';
+/** @param {any} el */
+function markBlank(el) {
+  if (!el || !('setCustomValidity' in el) || !(el.tagName === 'TEXTAREA' || el.type === 'text')) return;
+  if (el.required && el.value && !el.value.trim()) el.setCustomValidity(BLANK_MSG);
+  else if (el.validationMessage === BLANK_MSG) el.setCustomValidity(''); // ô thôi bắt buộc (#ask-input không có nhãn) cũng gỡ
+}
+/** Trước mỗi lần gửi form: kiểm lại mọi ô bắt buộc (ô vừa dựng lại không có sự kiện input). @param {any} form */
+const markBlanks = (form) => form && form.querySelectorAll && form.querySelectorAll('[required]').forEach(markBlank);
 
 /* ── Lưu hộp sửa khi tab khác đã ghi (mergeEdit): chỉ trường mình đổi đè lên bản mới nhất; cùng trường thì hỏi ── */
 
@@ -179,11 +200,44 @@ export async function askRecreate(what) {
 
 /** Gắn sự kiện, chạy một lần lúc khởi động (main.js gọi theo thứ tự). */
 export function initDialogs() {
+  /* Ô tên tự cao: Enter là Lưu; chuẩn hoá gộp dòng khi lưu (cả .grow-line). */
   document.querySelectorAll('textarea.grow-title').forEach((ta) => {
     ta.addEventListener('input', () => autosize(ta));
     ta.addEventListener('keydown', (/** @type {any} */ e) => {
       if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); ta.form.requestSubmit(); }
     });
+  });
+  document.querySelectorAll('textarea.grow, textarea.grow-line').forEach((ta) => ta.addEventListener('input', () => autosize(ta)));
+  /* Hộp sửa bước, bước con: Enter chỉ Lưu ở ô tên. Ở ô khác (Goal, Done when, Due, trạng thái, Inputs / Outputs) Enter
+   * không gửi form; ô nhiều dòng (ghi chú, lý do) vẫn xuống dòng. */
+  for (const f of [$('sub-form'), $('step-form')]) {
+    f.addEventListener('keydown', (/** @type {any} */ e) => {
+      const t = e.target;
+      if (e.key === 'Enter' && (t.classList.contains('grow-line') || (t.tagName === 'INPUT' && !['button', 'submit', 'reset'].includes(t.type)))) e.preventDefault();
+    });
+  }
+
+  /* Ô bắt buộc chỉ có khoảng trắng: báo khi gõ, và kiểm lại ngay trước khi gửi (Enter, bấm nút gửi). */
+  document.addEventListener('input', (e) => markBlank(e.target), true);
+  document.addEventListener('keydown', (/** @type {any} */ e) => { if (e.key === 'Enter' && e.target.form) markBlanks(e.target.form); }, true);
+  document.addEventListener('click', (/** @type {any} */ e) => {
+    const b = e.target.closest && e.target.closest('button[type="submit"]');
+    if (b && b.form) markBlanks(b.form);
+  }, true);
+
+  /* Hộp hỏi: Enter trong ô là OK. Gửi ngầm dùng nút gửi đầu tiên của form, là nút thứ hai (#ask-alt) dù nó đang ẩn. */
+  $('ask-input').addEventListener('keydown', (/** @type {any} */ e) => {
+    if (e.key !== 'Enter' || e.isComposing) return;
+    e.preventDefault();
+    $('ask-form').requestSubmit($('ask-ok'));
+  });
+
+  /* Focus vào ô khuất trong thân hộp (Tab vòng lại về ô tên đã chọn sẵn chữ): Chromium không cuộn tới; cuộn thân hộp. */
+  document.addEventListener('focusin', (/** @type {any} */ e) => {
+    const t = e.target, body = t.closest && t.closest('.dlg-body');
+    if (!body || t === body) return;
+    const r = t.getBoundingClientRect(), b = body.getBoundingClientRect();
+    if (r.top < b.top || r.bottom > b.bottom) t.scrollIntoView({ block: 'nearest' });
   });
 
   document.addEventListener('close', (/** @type {any} */ e) => { if (e.target instanceof HTMLDialogElement) restoreFocus(e.target); }, true);

@@ -39,6 +39,16 @@ function previewImport() {
   try {
     importParsed = parseImport(text);
     const c = counts(importParsed.workspaces);
+    /* Markdown viết tay nhập được, nhưng chữ bất kỳ cũng thành một dự án trống: không có tiêu đề "# …", bước, bước con hay
+     * quyết định nào thì báo và không cho nhập. */
+    if (importParsed.kind === 'md' && !c.steps && !c.subs && !c.log && !/^#[ \t]+\S/m.test(text)) {
+      importParsed = null;
+      p.replaceChildren(h('p', {}, 'Nothing recognised: no "# Project" heading, "## Step" or "- [ ] Sub-step" line. Paste a project exported as Markdown or JSON.'));
+      p.classList.add('bad');
+      $('import-go').disabled = true;
+      setReplace(false);
+      return;
+    }
     const kind = { md: 'Markdown', json: 'JSON (one project)', backup: 'JSON backup' }[importParsed.kind];
     const w = importParsed.warnings;
     p.replaceChildren(h('p', {}, `${kind}: ${plural(c.workspaces, 'project')} · ${plural(c.steps, 'step')} · ${plural(c.subs, 'sub-step')} · ${plural(c.log, 'decision')}`

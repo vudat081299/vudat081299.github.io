@@ -369,8 +369,8 @@
         <label class="field f-step"><span>Step</span><select name="step"></select></label>
         <label class="field f-pos"><span>Position</span><select name="pos"></select></label>
       </div>
-      <label class="field"><span>Done when</span><input type="text" name="doneWhen" maxlength="300" placeholder="The output that shows this is finished"></label>
-      <label class="field"><span>Notes</span><textarea name="notes" rows="4" placeholder="Questions, pitfalls, links…"></textarea></label>
+      <label class="field"><span>Done when</span><textarea name="doneWhen" class="grow-line" rows="1" maxlength="300" placeholder="The output that shows this is finished"></textarea></label>
+      <label class="field"><span>Notes</span><textarea name="notes" class="grow" rows="4" placeholder="Questions, pitfalls, links…"></textarea></label>
       <!-- Bàn giao (js/ui/hand.js): lưu cùng nút Save qua hai ô ẩn mang JSON -->
       <section class="hand-edit" id="sub-hand" aria-label="Handoff: inputs and outputs">
         <div class="docs-edit-head">
@@ -422,9 +422,9 @@
         <label class="field field-title"><span>Title</span><textarea name="title" class="grow-title" rows="1" required maxlength="200" placeholder="E.g. Data Preparation"></textarea></label>
         <label class="field f-pos"><span>Position</span><select name="pos"></select></label>
       </div>
-      <label class="field"><span>Goal</span><input type="text" name="goal" maxlength="400" placeholder="Why this step exists"></label>
-      <label class="field"><span>Done when</span><input type="text" name="doneWhen" maxlength="400" placeholder="The output that closes this step"></label>
-      <label class="field"><span>Notes</span><textarea name="notes" rows="4" placeholder="Guiding questions, common traps…"></textarea></label>
+      <label class="field"><span>Goal</span><textarea name="goal" class="grow-line" rows="1" maxlength="400" placeholder="Why this step exists"></textarea></label>
+      <label class="field"><span>Done when</span><textarea name="doneWhen" class="grow-line" rows="1" maxlength="400" placeholder="The output that closes this step"></textarea></label>
+      <label class="field"><span>Notes</span><textarea name="notes" class="grow" rows="4" placeholder="Guiding questions, common traps…"></textarea></label>
       <section class="hand-edit" id="step-hand" aria-label="Handoff: inputs and outputs">
         <div class="docs-edit-head">
           <h3 class="dlg-sec-h" id="step-ins-h">Inputs</h3>
@@ -590,6 +590,7 @@
     <footer class="dlg-foot">
       <span class="dlg-status muted" id="export-status" role="status"></span>
       <span class="dlg-gap"></span>
+      <button type="button" class="btn" data-close>Close</button>
       <button type="button" class="btn" id="export-copy"><svg class="i" aria-hidden="true"><use href="#i-copy"/></svg>Copy</button>
       <button type="button" class="btn go" id="export-download"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Download</button>
     </footer>

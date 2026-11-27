@@ -51,6 +51,8 @@
   box-sizing: content-box; padding: var(--s1); border-radius: var(--r-xs); background: var(--chip); color: var(--ink-2);
 }
 .doc-row .doc-link span { flex: 0 1 auto; color: var(--ink); }
+/* Tên miền dài không lấn tên: tối đa nửa hàng, co trước tên, cắt "…". */
+.doc-row .doc-link small { flex: 0 4 auto; min-width: 0; max-width: 50%; overflow: hidden; text-overflow: ellipsis; }
 .doc-row .icon-btn { color: var(--ink-3); }
 @media (hover: hover) { .doc-row .icon-btn:hover { color: var(--danger); } }
 /* Nút Evidence của một tài liệu: bật thì viền và chữ xanh. */
