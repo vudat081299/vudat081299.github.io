@@ -12,6 +12,8 @@ Làm xong mục nào thì xoá mục ấy.
 
 ## NỢ
 
+- Smoke trên CI chập chờn: phần "System design, kiến trúc" ở 1280px, click khâu trong "Tools by stage" sau khi chọn Single app
+  hết 30 s (2 trong 3 lần chạy gần nhất; chạy lại thì xanh; máy cục bộ không tái hiện được). Lỗi phần giờ in nhật ký lệnh của Playwright: lần đỏ tới đọc lý do rồi sửa.
 - System design: chưa mở lại nguồn cho vài câu (kiểu dữ liệu Label Studio nhận, vì sao Streamlit không chạy trên Vercel); CVAT chưa có lệnh
   cài (không mở được trang cài). Lệnh chép từ quickstart có số phiên bản sẽ cũ nhanh: Superset, OpenSearch, faiss, tên model Ollama.
 - System design: Hudi chưa có lệnh cài (lệnh pyspark của quickstart cần nhiều `--conf`); connector Starburst của Power BI chưa thử với

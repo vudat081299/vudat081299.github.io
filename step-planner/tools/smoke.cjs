@@ -27,7 +27,11 @@ const check = (name, ok, detail = '') => {
   const section = async (name, fn) => {
     if (process.env.SMOKE_ONLY && !name.includes(process.env.SMOKE_ONLY)) return;
     const before = new Set(browser.contexts());
-    try { await fn(); } catch (e) { check(`phần "${name}" dừng giữa chừng`, false, String(e && e.message || e).split('\n')[0]); }
+    /* Lỗi của Playwright: dòng đầu, rồi mấy dòng cuối của nhật ký lệnh (vì sao click không được: bị che, chưa đứng yên…). */
+    try { await fn(); } catch (e) {
+      const m = String(e && e.message || e).replace(/\x1b\[[0-9;]*m/g, '').split('\n').map((l) => l.trim()).filter(Boolean);
+      check(`phần "${name}" dừng giữa chừng`, false, [m[0], ...m.slice(1).slice(-8)].join(' | '));
+    }
     for (const c of browser.contexts()) if (!before.has(c)) await c.close().catch(() => { /* đã đóng giữa chừng */ });
   };
   /* Chờ một điều kiện trong trang; hết giờ thì báo LỖI có tên (không ném: phần còn lại vẫn chạy). */
