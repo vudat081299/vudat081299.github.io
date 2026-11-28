@@ -96,7 +96,7 @@
 - Nhật ký (PLAN-005): mới nhất trước, nhóm theo tháng; bấm mục là sửa; bấm chip bước là tới bước ấy (bỏ lọc nếu cần); kiến trúc chọn (cả qua lối) tự ghi một dòng mỗi nhóm (`syncArchLog`, sau mọi lần sửa thiết kế, cả `fromTemplate` khi có danh mục): đổi thì sửa dòng ấy, bỏ chọn thì xoá.
 - Ghi bộ nhớ ở lượt việc kế, không chờ khung hình (tab nền bị hãm); rời, ẩn trang: ghi ngay. Tab khác sửa cùng khoá thì đọc lại (`storage`), giữ dự án của tab.
 - Chữ dài trên bảng dừng ở số dòng của token `--lines-*`, thẻ ở `--card-max`; bị cắt thì "Show more" mở cả thẻ / đầu bước (nút của đầu bước
-  trong vòng Tab), link ở phần bị che ra khỏi vòng Tab. Vẽ lại giữ ghi chú đang mở, khối đã mở, chỗ cuộn ngang; hàng không đổi giữ nút DOM.
+  trong vòng Tab), link ở phần bị che ra khỏi vòng Tab; mở rồi mà ghi chú quá `--lines-open` dòng thì cuộn trong khối. Vẽ lại giữ ghi chú đang mở, khối đã mở, chỗ cuộn ngang; hàng không đổi giữ nút DOM.
 - Mẹo tắt bằng ×; "Compact" ẩn "Done when", ghi chú, lý do (cả hai nhớ ở máy này). "Log (N)" tới nhật ký.
 - Nhắc sao lưu: thay đổi chưa sao lưu ≥ 3 ngày thì nút nhắc hiện cạnh Export, bấm là tải sao lưu mọi dự án.
 - Chữ người dùng chỉ vào DOM qua text node; không `innerHTML` ở `js/`. Không `alert` / `confirm` / `prompt` (`#dlg-ask`).

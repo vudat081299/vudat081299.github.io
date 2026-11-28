@@ -1631,6 +1631,14 @@ const check = (name, ok, detail = '') => {
     await lp.click('.card[data-sub="c1"] [data-act="status"]');
     const c2k = await st('.card[data-sub="c2"] .card-notes');
     check('chữ dài: vẽ lại hàng giữ thẻ đã mở', c2k.open && c2k.more === 'Show less' && !c2k.mask, JSON.stringify(c2k));
+    // Thẻ có ghi chú 20 dòng: mở ra thì ghi chú dừng ở --lines-open dòng, cuộn trong khối, mờ ở đáy; thẻ không dài vô hạn.
+    await lp.click('.card[data-sub="c3"] .more', { force: true });
+    const c3o = await st('.card[data-sub="c3"] .card-notes');
+    const c3fade = await lp.$eval('.card[data-sub="c3"] .card-notes', (el) => [el.classList.contains('fade-up'), el.classList.contains('fade-down'), getComputedStyle(el).overflowY].join());
+    const lo = await tok('--lines-open');
+    check(`chữ dài: thẻ mở, ghi chú 20 dòng dừng ở ${lo} dòng, cuộn trong khối, mờ ở đáy`, c3o.open && c3o.over && Math.abs(c3o.rows - lo) < 0.1 && c3o.mask
+      && c3fade === 'false,true,auto', JSON.stringify([c3o, c3fade]));
+    await lp.click('.card[data-sub="c3"] .more', { force: true });
     await lp.click('.card[data-sub="c2"] .more');
     const c2c = await st('.card[data-sub="c2"] .card-notes');
     check('chữ dài: "Show less" cắt lại, link khuất ra lại khỏi vòng Tab', !c2c.open && c2c.clip && Math.abs(c2c.rows - lt) < 0.1 && c2c.more === 'Show more'
@@ -1665,8 +1673,19 @@ const check = (name, ok, detail = '') => {
     await lp.keyboard.press('Enter');
     const h1 = await st('.step[data-step="l1"] .notes-text');
     const focused = await lp.evaluate(() => document.activeElement?.classList.contains('more'));
-    check('chữ dài: Enter trên "Show more" của bước mở hết tên, mục tiêu, ghi chú; focus giữ ở nút', h1.open && !h1.over && !h1.mask && h1.expanded === 'true'
-      && h1.more === 'Show less' && focused && !(await st('.step[data-step="l1"] .step-title .clamp')).over, JSON.stringify(h1));
+    const lopen = await tok('--lines-open');
+    check(`chữ dài: Enter trên "Show more" của bước mở hết tên, mục tiêu; ghi chú 31 dòng dừng ở ${lopen} dòng, cuộn trong khối; focus giữ ở nút`,
+      h1.open && h1.over && Math.abs(h1.rows - lopen) < 0.1 && h1.expanded === 'true' && h1.more === 'Show less' && focused
+      && !(await st('.step[data-step="l1"] .step-title .clamp')).over && !(await st('.step[data-step="l1"] .step-goal')).over, JSON.stringify(h1));
+    /* Mép còn chữ mờ dần: đầu khối chỉ mờ đáy; cuộn giữa chừng mờ cả hai; cuộn hết chỉ mờ đỉnh. */
+    const fades = async (top) => {
+      await lp.$eval('.step[data-step="l1"] .notes-text', (el, t) => { el.scrollTop = t === 'end' ? el.scrollHeight : t; }, top);
+      await waitTo(lp, 'đo mép mờ sau khi cuộn', () => { const el = document.querySelector('.step[data-step="l1"] .notes-text');
+        return el.classList.contains('fade-up') === el.scrollTop > 1 && el.classList.contains('fade-down') === el.scrollTop + el.clientHeight < el.scrollHeight - 1; });
+      return lp.$eval('.step[data-step="l1"] .notes-text', (el) => [el.classList.contains('fade-up'), el.classList.contains('fade-down'), getComputedStyle(el).maskImage !== 'none'].join());
+    };
+    const fz = [await fades(0), await fades(40), await fades('end')];
+    check('chữ dài: ghi chú đã mở mà vẫn dài — mép còn chữ mờ dần theo chỗ cuộn', JSON.stringify(fz) === JSON.stringify(['false,true,true', 'true,true,true', 'true,false,true']), JSON.stringify(fz));
     await lp.keyboard.press('Enter');
     const h2 = await st('.step[data-step="l1"] .notes-text');
     check('chữ dài: Enter lần nữa cắt lại', !h2.open && h2.clip && h2.expanded === 'false', JSON.stringify(h2));
@@ -4688,7 +4707,8 @@ const check = (name, ok, detail = '') => {
   await section('Thẻ mở: Show less, Compact', async () => {
     const long = Array.from({ length: 40 }, (_, i) => `Dòng ghi chú ${i + 1}, đủ dài để thẻ mở ra cao hơn khung nhìn rất nhiều.`).join('\n');
     const data = { version: 2, lastId: 'wm', workspaces: [{ id: 'wm', name: 'Mở', steps: [{ id: 'tm', title: 'Bước', subs: [
-      { id: 'm1', title: 'Thẻ ghi chú dài', status: 'todo', notes: long }, { id: 'm2', title: 'Thẻ ngắn', status: 'todo' }] }], log: [] }] };
+      /* Ghi chú đã mở dừng ở --lines-open dòng (cuộn trong khối): thẻ cao hơn khung nhìn nhờ lý do dài. */
+      { id: 'm1', title: 'Thẻ ghi chú dài', status: 'blocked', reason: long, notes: long }, { id: 'm2', title: 'Thẻ ngắn', status: 'todo' }] }], log: [] }] };
     for (const [w, hh] of [[1280, 800], [390, 844]]) {
       const { ctx, page } = await seeded(w, hh, data);
       await page.waitForSelector('.card[data-sub="m1"] .more');

@@ -68,6 +68,17 @@
 }
 .clamp.clip { mask-image: linear-gradient(to bottom, var(--mask) calc(100% - var(--clamp-pad) - 1lh), transparent calc(100% - var(--clamp-pad))); }
 :is(.card, .step-head).open .clamp { max-height: none; mask-image: none; }
+/* Đã mở mà ghi chú vẫn quá --lines-open dòng: cuộn trong khối, thẻ và đầu bước không dài vô hạn; mép còn chữ mờ dần (noteFades). */
+:is(.card, .step-head).open :is(.card-notes, .notes-text).clip {
+  --lines: var(--lines-open); max-height: calc(var(--lines) * 1lh + 2 * var(--clamp-pad)); overflow-y: auto; overscroll-behavior: contain;
+  --fade-top: var(--mask); --fade-bottom: var(--mask);
+}
+:is(.card, .step-head).open .clamp:is(.fade-up, .fade-down) {
+  mask-image: linear-gradient(to bottom, var(--fade-top) var(--clamp-pad), var(--mask) calc(var(--clamp-pad) + 1lh),
+    var(--mask) calc(100% - var(--clamp-pad) - 1lh), var(--fade-bottom) calc(100% - var(--clamp-pad)));
+}
+:is(.card, .step-head).open .clamp.fade-up { --fade-top: transparent; }
+:is(.card, .step-head).open .clamp.fade-down { --fade-bottom: transparent; }
 :is(.card-title, .step-title, .badge) .clamp { --clamp-pad: 0px; }
 :is(.card-title, .step-title) .clamp { --lines: var(--lines-title); }
 .step-notes .notes-text { --lines: var(--lines-notes); }

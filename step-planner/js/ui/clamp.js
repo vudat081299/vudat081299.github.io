@@ -1,7 +1,7 @@
 // @ts-check
 /* Chữ dài trên bảng: mỗi khối .clamp dừng ở số dòng của token --lines-*, thẻ ở --card-max; đo khối bị cắt (markCut:
    đọc hết rồi mới ghi), nút "Show more", link ở phần bị che ra khỏi vòng Tab; ghi chú dài trên thẻ chỉ dựng phần đầu; mép mờ
-   của hàng thẻ cuộn ngang; Tab tới thẻ thì cuộn cả thẻ ra khỏi mép mờ. Đo lại khi đổi cỡ cửa sổ, font tải xong, mở ghi chú bước.
+   của hàng thẻ cuộn ngang; ghi chú đã mở mà vẫn quá dài thì cuộn trong khối, mép còn chữ mờ dần; Tab tới thẻ thì cuộn cả thẻ ra khỏi mép mờ. Đo lại khi đổi cỡ cửa sổ, font tải xong, mở ghi chú bước.
    Xuất: cardNotes, unclip, boxKey, cutBoxes, openKeys, markCut, updateScrollCues, initClamp.
    Dùng: ui/dom.js, ui/hand.js, ui/state.js. */
 import { $, h, withLinks } from './dom.js';
@@ -47,7 +47,7 @@ export function markCut(boxes, keepOpen = new Set()) {
   for (const box of boxes) {
     if (!box.classList.contains('cut') && !box.classList.contains('open')) continue;
     box.classList.remove('open');
-    for (const el of box.querySelectorAll('.clip')) el.classList.remove('clip');
+    for (const el of box.querySelectorAll('.clip')) el.classList.remove('clip', 'fade-up', 'fade-down');
     for (const a of box.querySelectorAll('a[data-hid]')) { a.removeAttribute('tabindex'); a.removeAttribute('data-hid'); }
   }
   /** Phần tử bị cắt trong khối, link chạm hay qua chỗ cắt (lấp một phần thì vòng focus cũng bị cắt). @param {HTMLElement} box */
@@ -96,6 +96,16 @@ export function markCut(boxes, keepOpen = new Set()) {
     more.textContent = open ? 'Show less' : 'Show more';
     more.setAttribute('aria-expanded', String(open));
   });
+  noteFades(boxes.filter((b) => b.classList.contains('open')).flatMap((b) => [...b.querySelectorAll(LONG_NOTE)]));
+}
+
+/* ── Ghi chú đã "Show more" vẫn dài quá --lines-open dòng: khối cuộn bên trong (CSS); còn chữ ở phía nào thì mép ấy mờ dần
+ * (.fade-up, .fade-down). Đo khi mở và khi cuộn. ── */
+const LONG_NOTE = ':is(.card-notes, .notes-text).clip';
+/** Đọc hết rồi mới ghi. @param {Element[]} els */
+function noteFades(els) {
+  const m = els.map((el) => [el, el.scrollTop > 1, el.scrollTop + el.clientHeight < el.scrollHeight - 1]);
+  for (const [el, up, down] of m) { el.classList.toggle('fade-up', up); el.classList.toggle('fade-down', down); }
 }
 
 /** Hàng thẻ còn chỗ cuộn thì mờ dần ở mép ấy. Đọc hết rồi mới ghi. @param {Iterable<any>} [list] mặc định mọi hàng */
@@ -135,6 +145,7 @@ export function initClamp() {
   const scrolled = new Set();
   let cueFrame = 0;
   $('board').addEventListener('scroll', (/** @type {any} */ e) => {
+    if (e.target.matches?.(LONG_NOTE)) { noteFades([e.target]); return; }
     if (!e.target.classList?.contains('cards-scroll')) return;
     scrolled.add(e.target);
     if (!cueFrame) cueFrame = requestAnimationFrame(() => { cueFrame = 0; updateScrollCues([...scrolled]); scrolled.clear(); });

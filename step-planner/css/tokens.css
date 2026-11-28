@@ -116,6 +116,7 @@
   --lines-title: 4;                    /* tên bước, tên thẻ: số dòng trước khi mờ dần và có "Show more" */
   --lines-text: 3;                     /* thẻ: lý do, Done when, ghi chú; bước: mục tiêu, Done when; lý do mở lại */
   --lines-notes: 8;                    /* ghi chú của bước (khi mở) */
+  --lines-open: 14;                    /* ghi chú đã "Show more": quá số dòng này thì cuộn trong khối */
   --how-w: 680px;
   --dlg-w: 660px;
   --dlg-sm: 440px;                     /* hộp hỏi lại, hộp tài liệu */
